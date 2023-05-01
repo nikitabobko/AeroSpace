@@ -1,11 +1,10 @@
-//
-//  main.swift
-//  macos-window-manager-swift
-//
-//  Created by Nikita Bobko on 2023-05-01.
-//
-
 import Foundation
+import Cocoa
+import CoreFoundation
+import AppKit
 
-print("Hello, World!")
+//exit(0)
 
+accessibilityPermissions()
+//allWindowsOnCurrentMacOsSpace()
+windows()
