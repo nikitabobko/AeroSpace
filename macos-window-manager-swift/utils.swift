@@ -80,7 +80,7 @@ func windows() {
 //            window.setSize(CGSize(width: 300, height: 200))
 //            window.hide()
 //            window.setPosition(CGPoint(x: 999999, y: 999999))
-            window.axWindow.get(Ax.valueAttr)
+//            window.axWindow.get(Ax.valueAttr)
 //            window.setSize(CGSize(width: 0, height: 0))
         }
     }
@@ -122,6 +122,7 @@ enum Ax {
         var setter: (T) -> CFTypeRef
     }
 
+    // todo wip
     static let valueAttr = ReadableAttrImpl<String>(
             value: kAXValueAttribute,
             getter: { foo in

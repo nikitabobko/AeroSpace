@@ -7,45 +7,79 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		21192B872A00469B00537E5D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B862A00469B00537E5D /* main.swift */; };
-		21192B902A00472200537E5D /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B8F2A00472200537E5D /* Container.swift */; };
-		21192B922A00476200537E5D /* TreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B912A00476200537E5D /* TreeNode.swift */; };
-		21192B942A00476B00537E5D /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B932A00476B00537E5D /* Window.swift */; };
-		218FCD332A19304900B3D559 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 218FCD322A19304900B3D559 /* HotKey */; };
-		598F10B6226925CD6C36BC36 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1E5DE6B847F675940A7E /* utils.swift */; };
-		598F1A2FD7A2E1A0C90E5497 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */; };
-		598F1AF9BCEC51915858DA26 /* resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F10EFC3F374A36040A90F /* resize.swift */; };
+		218FCDA92A1966B800B3D559 /* macos_window_manager_swiftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDA82A1966B800B3D559 /* macos_window_manager_swiftApp.swift */; };
+		218FCDAB2A1966B800B3D559 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDAA2A1966B800B3D559 /* ContentView.swift */; };
+		218FCDAD2A1966B900B3D559 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 218FCDAC2A1966B900B3D559 /* Assets.xcassets */; };
+		218FCDB02A1966B900B3D559 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 218FCDAF2A1966B900B3D559 /* Preview Assets.xcassets */; };
+		218FCDBB2A1966B900B3D559 /* macos_window_manager_swiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDBA2A1966B900B3D559 /* macos_window_manager_swiftTests.swift */; };
+		218FCDC52A1966B900B3D559 /* macos_window_manager_swiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDC42A1966B900B3D559 /* macos_window_manager_swiftUITests.swift */; };
+		218FCDC72A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDC62A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift */; };
+		218FCDD22A1966C200B3D559 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */; };
+		218FCDD32A1966C200B3D559 /* TreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B912A00476200537E5D /* TreeNode.swift */; };
+		218FCDD42A1966C200B3D559 /* resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F10EFC3F374A36040A90F /* resize.swift */; };
+		218FCDD52A1966C200B3D559 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B8F2A00472200537E5D /* Container.swift */; };
+		218FCDD62A1966C200B3D559 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1E5DE6B847F675940A7E /* utils.swift */; };
+		218FCDD72A1966C200B3D559 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B932A00476B00537E5D /* Window.swift */; };
+		218FCDDA2A19682800B3D559 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 218FCDD92A19682800B3D559 /* HotKey */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		21192B812A00469B00537E5D /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
+/* Begin PBXContainerItemProxy section */
+		218FCDB72A1966B900B3D559 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 21192B7B2A00469B00537E5D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 218FCDA52A1966B800B3D559;
+			remoteInfo = "macos-window-manager-swift";
 		};
-/* End PBXCopyFilesBuildPhase section */
+		218FCDC12A1966B900B3D559 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 21192B7B2A00469B00537E5D /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 218FCDA52A1966B800B3D559;
+			remoteInfo = "macos-window-manager-swift";
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		21192B832A00469B00537E5D /* macos-window-manager-swift */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "macos-window-manager-swift"; sourceTree = BUILT_PRODUCTS_DIR; };
-		21192B862A00469B00537E5D /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		21192B8F2A00472200537E5D /* Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
 		21192B912A00476200537E5D /* TreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNode.swift; sourceTree = "<group>"; };
 		21192B932A00476B00537E5D /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
+		218FCDA62A1966B800B3D559 /* macos-window-manager-swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "macos-window-manager-swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		218FCDA82A1966B800B3D559 /* macos_window_manager_swiftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftApp.swift; sourceTree = "<group>"; };
+		218FCDAA2A1966B800B3D559 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		218FCDAC2A1966B900B3D559 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		218FCDAF2A1966B900B3D559 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		218FCDB12A1966B900B3D559 /* macos_window_manager_swift.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macos_window_manager_swift.entitlements; sourceTree = "<group>"; };
+		218FCDB62A1966B900B3D559 /* macos-window-manager-swiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "macos-window-manager-swiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		218FCDBA2A1966B900B3D559 /* macos_window_manager_swiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftTests.swift; sourceTree = "<group>"; };
+		218FCDC02A1966B900B3D559 /* macos-window-manager-swiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "macos-window-manager-swiftUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		218FCDC42A1966B900B3D559 /* macos_window_manager_swiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftUITests.swift; sourceTree = "<group>"; };
+		218FCDC62A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		598F10EFC3F374A36040A90F /* resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = resize.swift; sourceTree = "<group>"; };
 		598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		598F1E5DE6B847F675940A7E /* utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		21192B802A00469B00537E5D /* Frameworks */ = {
+		218FCDA32A1966B800B3D559 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				218FCD332A19304900B3D559 /* HotKey in Frameworks */,
+				218FCDDA2A19682800B3D559 /* HotKey in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		218FCDB32A1966B900B3D559 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		218FCDBD2A1966B900B3D559 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,43 +89,84 @@
 		21192B7A2A00469B00537E5D = {
 			isa = PBXGroup;
 			children = (
-				21192B852A00469B00537E5D /* macos-window-manager-swift */,
+				218FCDA72A1966B800B3D559 /* macos-window-manager-swift */,
+				218FCDB92A1966B900B3D559 /* macos-window-manager-swiftTests */,
+				218FCDC32A1966B900B3D559 /* macos-window-manager-swiftUITests */,
 				21192B842A00469B00537E5D /* Products */,
+				218FCDD82A19682800B3D559 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		21192B842A00469B00537E5D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				21192B832A00469B00537E5D /* macos-window-manager-swift */,
+				218FCDA62A1966B800B3D559 /* macos-window-manager-swift.app */,
+				218FCDB62A1966B900B3D559 /* macos-window-manager-swiftTests.xctest */,
+				218FCDC02A1966B900B3D559 /* macos-window-manager-swiftUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		21192B852A00469B00537E5D /* macos-window-manager-swift */ = {
+		218FCDA72A1966B800B3D559 /* macos-window-manager-swift */ = {
 			isa = PBXGroup;
 			children = (
-				21192B862A00469B00537E5D /* main.swift */,
 				21192B8F2A00472200537E5D /* Container.swift */,
 				21192B912A00476200537E5D /* TreeNode.swift */,
 				21192B932A00476B00537E5D /* Window.swift */,
 				598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */,
 				598F10EFC3F374A36040A90F /* resize.swift */,
 				598F1E5DE6B847F675940A7E /* utils.swift */,
+				218FCDA82A1966B800B3D559 /* macos_window_manager_swiftApp.swift */,
+				218FCDAA2A1966B800B3D559 /* ContentView.swift */,
+				218FCDAC2A1966B900B3D559 /* Assets.xcassets */,
+				218FCDB12A1966B900B3D559 /* macos_window_manager_swift.entitlements */,
+				218FCDAE2A1966B900B3D559 /* Preview Content */,
 			);
 			path = "macos-window-manager-swift";
+			sourceTree = "<group>";
+		};
+		218FCDAE2A1966B900B3D559 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				218FCDAF2A1966B900B3D559 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		218FCDB92A1966B900B3D559 /* macos-window-manager-swiftTests */ = {
+			isa = PBXGroup;
+			children = (
+				218FCDBA2A1966B900B3D559 /* macos_window_manager_swiftTests.swift */,
+			);
+			path = "macos-window-manager-swiftTests";
+			sourceTree = "<group>";
+		};
+		218FCDC32A1966B900B3D559 /* macos-window-manager-swiftUITests */ = {
+			isa = PBXGroup;
+			children = (
+				218FCDC42A1966B900B3D559 /* macos_window_manager_swiftUITests.swift */,
+				218FCDC62A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift */,
+			);
+			path = "macos-window-manager-swiftUITests";
+			sourceTree = "<group>";
+		};
+		218FCDD82A19682800B3D559 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		21192B822A00469B00537E5D /* macos-window-manager-swift */ = {
+		218FCDA52A1966B800B3D559 /* macos-window-manager-swift */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 21192B8A2A00469B00537E5D /* Build configuration list for PBXNativeTarget "macos-window-manager-swift" */;
+			buildConfigurationList = 218FCDC82A1966B900B3D559 /* Build configuration list for PBXNativeTarget "macos-window-manager-swift" */;
 			buildPhases = (
-				21192B7F2A00469B00537E5D /* Sources */,
-				21192B802A00469B00537E5D /* Frameworks */,
-				21192B812A00469B00537E5D /* CopyFiles */,
+				218FCDA22A1966B800B3D559 /* Sources */,
+				218FCDA32A1966B800B3D559 /* Frameworks */,
+				218FCDA42A1966B800B3D559 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -99,11 +174,47 @@
 			);
 			name = "macos-window-manager-swift";
 			packageProductDependencies = (
-				218FCD322A19304900B3D559 /* HotKey */,
+				218FCDD92A19682800B3D559 /* HotKey */,
 			);
 			productName = "macos-window-manager-swift";
-			productReference = 21192B832A00469B00537E5D /* macos-window-manager-swift */;
-			productType = "com.apple.product-type.tool";
+			productReference = 218FCDA62A1966B800B3D559 /* macos-window-manager-swift.app */;
+			productType = "com.apple.product-type.application";
+		};
+		218FCDB52A1966B900B3D559 /* macos-window-manager-swiftTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 218FCDCB2A1966B900B3D559 /* Build configuration list for PBXNativeTarget "macos-window-manager-swiftTests" */;
+			buildPhases = (
+				218FCDB22A1966B900B3D559 /* Sources */,
+				218FCDB32A1966B900B3D559 /* Frameworks */,
+				218FCDB42A1966B900B3D559 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				218FCDB82A1966B900B3D559 /* PBXTargetDependency */,
+			);
+			name = "macos-window-manager-swiftTests";
+			productName = "macos-window-manager-swiftTests";
+			productReference = 218FCDB62A1966B900B3D559 /* macos-window-manager-swiftTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		218FCDBF2A1966B900B3D559 /* macos-window-manager-swiftUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 218FCDCE2A1966B900B3D559 /* Build configuration list for PBXNativeTarget "macos-window-manager-swiftUITests" */;
+			buildPhases = (
+				218FCDBC2A1966B900B3D559 /* Sources */,
+				218FCDBD2A1966B900B3D559 /* Frameworks */,
+				218FCDBE2A1966B900B3D559 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				218FCDC22A1966B900B3D559 /* PBXTargetDependency */,
+			);
+			name = "macos-window-manager-swiftUITests";
+			productName = "macos-window-manager-swiftUITests";
+			productReference = 218FCDC02A1966B900B3D559 /* macos-window-manager-swiftUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -115,8 +226,16 @@
 				LastSwiftUpdateCheck = 1420;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
-					21192B822A00469B00537E5D = {
+					218FCDA52A1966B800B3D559 = {
 						CreatedOnToolsVersion = 14.2;
+					};
+					218FCDB52A1966B900B3D559 = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = 218FCDA52A1966B800B3D559;
+					};
+					218FCDBF2A1966B900B3D559 = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = 218FCDA52A1966B800B3D559;
 					};
 				};
 			};
@@ -136,27 +255,86 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				21192B822A00469B00537E5D /* macos-window-manager-swift */,
+				218FCDA52A1966B800B3D559 /* macos-window-manager-swift */,
+				218FCDB52A1966B900B3D559 /* macos-window-manager-swiftTests */,
+				218FCDBF2A1966B900B3D559 /* macos-window-manager-swiftUITests */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		218FCDA42A1966B800B3D559 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				218FCDB02A1966B900B3D559 /* Preview Assets.xcassets in Resources */,
+				218FCDAD2A1966B900B3D559 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		218FCDB42A1966B900B3D559 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		218FCDBE2A1966B900B3D559 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
-		21192B7F2A00469B00537E5D /* Sources */ = {
+		218FCDA22A1966B800B3D559 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				21192B872A00469B00537E5D /* main.swift in Sources */,
-				21192B902A00472200537E5D /* Container.swift in Sources */,
-				21192B922A00476200537E5D /* TreeNode.swift in Sources */,
-				21192B942A00476B00537E5D /* Window.swift in Sources */,
-				598F1A2FD7A2E1A0C90E5497 /* Workspace.swift in Sources */,
-				598F1AF9BCEC51915858DA26 /* resize.swift in Sources */,
-				598F10B6226925CD6C36BC36 /* utils.swift in Sources */,
+				218FCDAB2A1966B800B3D559 /* ContentView.swift in Sources */,
+				218FCDD22A1966C200B3D559 /* Workspace.swift in Sources */,
+				218FCDD72A1966C200B3D559 /* Window.swift in Sources */,
+				218FCDA92A1966B800B3D559 /* macos_window_manager_swiftApp.swift in Sources */,
+				218FCDD42A1966C200B3D559 /* resize.swift in Sources */,
+				218FCDD52A1966C200B3D559 /* Container.swift in Sources */,
+				218FCDD32A1966C200B3D559 /* TreeNode.swift in Sources */,
+				218FCDD62A1966C200B3D559 /* utils.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		218FCDB22A1966B900B3D559 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				218FCDBB2A1966B900B3D559 /* macos_window_manager_swiftTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		218FCDBC2A1966B900B3D559 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				218FCDC72A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift in Sources */,
+				218FCDC52A1966B900B3D559 /* macos_window_manager_swiftUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		218FCDB82A1966B900B3D559 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 218FCDA52A1966B800B3D559 /* macos-window-manager-swift */;
+			targetProxy = 218FCDB72A1966B900B3D559 /* PBXContainerItemProxy */;
+		};
+		218FCDC22A1966B900B3D559 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 218FCDA52A1966B800B3D559 /* macos-window-manager-swift */;
+			targetProxy = 218FCDC12A1966B900B3D559 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		21192B882A00469B00537E5D /* Debug */ = {
@@ -272,21 +450,121 @@
 			};
 			name = Release;
 		};
-		21192B8B2A00469B00537E5D /* Debug */ = {
+		218FCDC92A1966B900B3D559 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "macos-window-manager-swift/macos_window_manager_swift.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"macos-window-manager-swift/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "bobko.macos-window-manager-swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
-		21192B8C2A00469B00537E5D /* Release */ = {
+		218FCDCA2A1966B900B3D559 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "macos-window-manager-swift/macos_window_manager_swift.entitlements";
 				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"macos-window-manager-swift/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "bobko.macos-window-manager-swift";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		218FCDCC2A1966B900B3D559 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "bobko.macos-window-manager-swiftTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/macos-window-manager-swift.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/macos-window-manager-swift";
+			};
+			name = Debug;
+		};
+		218FCDCD2A1966B900B3D559 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.1;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "bobko.macos-window-manager-swiftTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/macos-window-manager-swift.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/macos-window-manager-swift";
+			};
+			name = Release;
+		};
+		218FCDCF2A1966B900B3D559 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "bobko.macos-window-manager-swiftUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "macos-window-manager-swift";
+			};
+			name = Debug;
+		};
+		218FCDD02A1966B900B3D559 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "bobko.macos-window-manager-swiftUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = "macos-window-manager-swift";
 			};
 			name = Release;
 		};
@@ -302,11 +580,29 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		21192B8A2A00469B00537E5D /* Build configuration list for PBXNativeTarget "macos-window-manager-swift" */ = {
+		218FCDC82A1966B900B3D559 /* Build configuration list for PBXNativeTarget "macos-window-manager-swift" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				21192B8B2A00469B00537E5D /* Debug */,
-				21192B8C2A00469B00537E5D /* Release */,
+				218FCDC92A1966B900B3D559 /* Debug */,
+				218FCDCA2A1966B900B3D559 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		218FCDCB2A1966B900B3D559 /* Build configuration list for PBXNativeTarget "macos-window-manager-swiftTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				218FCDCC2A1966B900B3D559 /* Debug */,
+				218FCDCD2A1966B900B3D559 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		218FCDCE2A1966B900B3D559 /* Build configuration list for PBXNativeTarget "macos-window-manager-swiftUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				218FCDCF2A1966B900B3D559 /* Debug */,
+				218FCDD02A1966B900B3D559 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -325,7 +621,7 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		218FCD322A19304900B3D559 /* HotKey */ = {
+		218FCDD92A19682800B3D559 /* HotKey */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 218FCD312A19304900B3D559 /* XCRemoteSwiftPackageReference "HotKey" */;
 			productName = HotKey;
