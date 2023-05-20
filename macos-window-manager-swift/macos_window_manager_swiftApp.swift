@@ -7,10 +7,24 @@ import SwiftUI
 
 @main
 struct macos_window_manager_swiftApp: App {
+    init() {
+        let hotKey = HotKey(key: .r, modifiers: [.command, .option], keyUpHandler: { print("hi") })
+    }
+
+    @State private var command: String = "A"
+
     var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
+        MenuBarExtra(
+                content: {
+                    Button("A") { command = "A" }
+                    Button("B") { command = "B" }
+                    Divider()
+                    Button("Quit") { NSApplication.shared.terminate(nil) }
+                },
+                label: {
+                    Text(command)
+                }
+        )
     }
 }
 
