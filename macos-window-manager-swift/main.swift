@@ -7,4 +7,5 @@ import AppKit
 
 accessibilityPermissions()
 //allWindowsOnCurrentMacOsSpace()
+
 windows()

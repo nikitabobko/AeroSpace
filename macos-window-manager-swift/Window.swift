@@ -7,6 +7,7 @@ class Window: TreeNode {
     var children: [TreeNode] {
         []
     }
+    private var lastNotHiddenPosition: CGPoint?
 
     init(nsApp: NSRunningApplication, axWindow: AXUIElement) {
         self.nsApp = nsApp
@@ -18,19 +19,37 @@ class Window: TreeNode {
     }
 
     func activate() {
+        // todo it activates the app, not the window right?
         nsApp.activate(options: .activateIgnoringOtherApps)
     }
 
     func hide() -> Bool {
-        nsApp.hide()
+        lastNotHiddenPosition = getPosition()
+//        return setPosition(CGPoint(x: monitorWidth, y: monitorHeight))
+        return setPosition(CGPoint(x: monitorWidth + 1000, y: monitorHeight))
     }
 
     func unhide() -> Bool {
+        guard let lastNotHiddenPosition else { return false }
+        self.lastNotHiddenPosition = nil
+        return setPosition(lastNotHiddenPosition)
+    }
+
+    func hideApp() -> Bool {
+        nsApp.hide()
+    }
+
+    // todo drop?
+    func unhideApp() -> Bool {
         nsApp.unhide()
     }
 
-    var isHidden: Bool {
+    var isHiddenApp: Bool {
         nsApp.isHidden
+    }
+
+    var isHidden: Bool {
+        isHiddenApp || lastNotHiddenPosition != nil
     }
 
     func setSize(_ size: CGSize) -> Bool {

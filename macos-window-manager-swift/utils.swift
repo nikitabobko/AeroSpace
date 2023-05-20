@@ -4,8 +4,8 @@ import CoreFoundation
 import AppKit
 
 // todo compute dynamically later
-let monitorWidth = 1800
-let monitorHeight = 1125
+let monitorWidth = 2560
+let monitorHeight = 1440
 
 func accessibilityPermissions() {
     let options = [
@@ -76,46 +76,65 @@ func windows() {
             .flatMap({ $0.windows })
     print(windows.count)
     for window in windows {
-        print("---")
-        print(window.title)
-        print(window.isHidden)
-        if window.title?.contains("macos") == true {
+        if window.title?.contains("Finder") == true {
 //            window.setSize(CGSize(width: 300, height: 200))
-            window.setPosition(CGPoint(x: 0, y: 0))
+//            window.hide()
+//            window.setPosition(CGPoint(x: 999999, y: 999999))
+            window.axWindow.get(Ax.valueAttr)
+//            window.setSize(CGSize(width: 0, height: 0))
         }
     }
 }
 
 extension NSRunningApplication {
     var windows: [Window] {
-        (AXUIElement.from(processIdentifier, Ax.windowsAttr) ?? [])
+        (AXUIElementCreateApplication(processIdentifier).get(Ax.windowsAttr) ?? [])
                 .map({ Window(nsApp: self, axWindow: $0) })
     }
 }
 
 func stringType(of some: Any) -> String {
+//    kAXMinValueAttribute
+//    kAXValueAttribute
     let string = (some is Any.Type) ? String(describing: some) : String(describing: type(of: some))
     return string
 }
 
-//protocol AttrP {
-//    associatedtype T
-//    func convert(any: AnyObject) -> T
-//}
+protocol ReadableAttr {
+    associatedtype T
+    var getter: (AnyObject) -> T { get }
+    var value: String { get }
+}
+
+protocol WritableAttr : ReadableAttr {
+    var setter: (T) -> CFTypeRef { get }
+}
 
 enum Ax {
-    struct Attr<T> {
-        let value: String
-        let getter: (AnyObject) -> T
-        let setter: (T) -> CFTypeRef
+    struct ReadableAttrImpl<T>: ReadableAttr {
+        var value: String
+        var getter: (AnyObject) -> T
     }
 
-    static let titleAttr = Attr<String>(
+    struct WritableAttrImpl<T>: WritableAttr {
+        var value: String
+        var getter: (AnyObject) -> T
+        var setter: (T) -> CFTypeRef
+    }
+
+    static let valueAttr = ReadableAttrImpl<String>(
+            value: kAXValueAttribute,
+            getter: { foo in
+                print(stringType(of: foo))
+                return ""
+            }
+    )
+    static let titleAttr = WritableAttrImpl<String>(
             value: kAXTitleAttribute,
             getter: { $0 as! String },
             setter: { $0 as CFTypeRef }
     )
-    static let sizeAttr = Attr<CGSize>(
+    static let sizeAttr = WritableAttrImpl<CGSize>(
             value: kAXSizeAttribute,
             getter: {
                 var raw: CGSize = .zero
@@ -127,7 +146,7 @@ enum Ax {
                 return AXValueCreate(.cgSize, &size) as CFTypeRef
             }
     )
-    static let positionAttr = Attr<CGPoint>(
+    static let positionAttr = WritableAttrImpl<CGPoint>(
             value: kAXPositionAttribute,
             getter: {
                 var raw: CGPoint = .zero
@@ -139,34 +158,21 @@ enum Ax {
                 return AXValueCreate(.cgPoint, &size) as CFTypeRef
             }
     )
-    static let windowsAttr = Attr<[AXUIElement]>(
+    static let windowsAttr = ReadableAttrImpl<[AXUIElement]>(
             value: kAXWindowsAttribute,
-            getter: { ($0 as! NSArray).compactMap { $0 as! AXUIElement } },
-            setter: { _ in fatalError("WTF") } // todo
+            getter: { ($0 as! NSArray).compactMap { $0 as! AXUIElement } }
     )
 }
 
 extension AXUIElement {
-    // todo narrow down to windows attr?
-    static func from<T>(_ pid: pid_t, _ attr: Ax.Attr<T>) -> T? {
+    func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
         var raw: AnyObject?
-        if (AXUIElementCopyAttributeValue(AXUIElementCreateApplication(pid), attr.value as CFString, &raw) == .success) {
-            return attr.getter(raw!)
-        } else {
-            return nil
-        }
+        return AXUIElementCopyAttributeValue(self, attr.value as CFString, &raw) == .success
+                ? attr.getter(raw!)
+                : nil
     }
 
-    func get<T>(_ attr: Ax.Attr<T>) -> T? {
-        var raw: AnyObject?
-        if (AXUIElementCopyAttributeValue(self, attr.value as CFString, &raw) == .success) {
-            return attr.getter(raw!)
-        } else {
-            return nil
-        }
-    }
-
-    func set<T>(_ attr: Ax.Attr<T>, _ value: T) -> Bool {
+    func set<Attr: WritableAttr>(_ attr: Attr, _ value: Attr.T) -> Bool {
         AXUIElementSetAttributeValue(self, attr.value as CFString, attr.setter(value)) == .success
     }
 }

@@ -17,6 +17,8 @@ xcodebuild
 - mouse resize events
 - mouse move window events
 - is dialog, is resizable, is modal?
+- close window (because you can select parent and kill several windows at once)
+- select parent -> outline several windows?
 
 ## Features
 
