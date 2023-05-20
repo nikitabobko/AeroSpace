@@ -8,13 +8,10 @@ let monitorWidth = 2560
 let monitorHeight = 1440
 
 func accessibilityPermissions() {
-    let options = [
-        kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true
-    ]
+    let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true]
     AXIsProcessTrustedWithOptions(options as CFDictionary)
     if !AXIsProcessTrusted() {
-        print("untrusted")
-        exit(1)
+        fatalError("untrusted")
     }
 }
 
@@ -76,7 +73,8 @@ func windows() {
             .flatMap({ $0.windows })
     print(windows.count)
     for window in windows {
-        if window.title?.contains("Finder") == true {
+        if window.title?.contains("macos") == true {
+            print(window.title)
 //            window.setSize(CGSize(width: 300, height: 200))
 //            window.hide()
 //            window.setPosition(CGPoint(x: 999999, y: 999999))
@@ -161,7 +159,9 @@ enum Ax {
     )
     static let windowsAttr = ReadableAttrImpl<[AXUIElement]>(
             value: kAXWindowsAttribute,
-            getter: { ($0 as! NSArray).compactMap { $0 as! AXUIElement } }
+            getter: {
+                return ($0 as! NSArray).compactMap { $0 as! AXUIElement }
+            }
     )
 }
 

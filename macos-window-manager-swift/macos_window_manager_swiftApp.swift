@@ -7,8 +7,11 @@ import SwiftUI
 
 @main
 struct macos_window_manager_swiftApp: App {
+    var hotKeys: [HotKey] = []
     init() {
-        let hotKey = HotKey(key: .r, modifiers: [.command, .option], keyUpHandler: { print("hi") })
+        hotKeys.append(HotKey(key: .r, modifiers: [.command, .option], keyUpHandler: { print("hi") }))
+        accessibilityPermissions()
+        windows()
     }
 
     @State private var command: String = "A"
@@ -32,7 +35,7 @@ struct macos_window_manager_swiftApp: App {
 //    print("hi!")
 //})
 //
-//accessibilityPermissions()
+//
 ////allWindowsOnCurrentMacOsSpace()
 //
 //windows()
