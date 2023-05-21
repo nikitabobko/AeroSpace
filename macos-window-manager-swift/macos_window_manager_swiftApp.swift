@@ -12,6 +12,14 @@ struct macos_window_manager_swiftApp: App {
         hotKeys.append(HotKey(key: .r, modifiers: [.command, .option], keyUpHandler: { print("hi") }))
         accessibilityPermissions()
         windows()
+        DispatchQueue.main.asyncAfter(deadline: .now()+2) {
+            foo()
+            print("wtf")
+        }
+    }
+
+    func foo() {
+        command = "C"
     }
 
     @State private var command: String = "A"
