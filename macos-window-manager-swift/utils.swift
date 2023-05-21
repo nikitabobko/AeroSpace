@@ -68,26 +68,34 @@ func allWindowsOnCurrentMacOsSpace() {
 //}
 
 func windows() {
-    let windows: [Window] = NSWorkspace.shared.runningApplications
-            .filter({ $0.activationPolicy == .regular })
-            .flatMap({ $0.windows })
-    print(windows.count)
-    for window in windows {
-        if window.title?.contains("macos") == true {
-            print(window.title)
-//            window.setSize(CGSize(width: 300, height: 200))
-//            window.hide()
-//            window.setPosition(CGPoint(x: 999999, y: 999999))
-//            window.axWindow.get(Ax.valueAttr)
-//            window.setSize(CGSize(width: 0, height: 0))
-        }
+    DispatchQueue.main.asyncAfter(deadline: .now()+1) {
+        let windows: [Window] = NSWorkspace.shared.runningApplications
+                .filter({ $0.activationPolicy == .regular })
+                .flatMap({ $0.windowsOnActiveMacOsSpaces })
+        print(windows.count)
+        let barWindow: Window = windows.filter { $0.title?.contains("Chrome") == true && $0.title?.contains("bar") == true }.first!
+//        barWindow.activateApp()
+//        barWindow.activate()
+        print(barWindow.getPosition())
+//        print(barWindow.axApp.set(Ax.focusedWindowAttribute, barWindow.axWindow))
+//        print(barWindow.axApp.get(Ax.focusedWindowAttribute)?.get(Ax.titleAttr))
     }
+//    for window in windows {
+//        if window.title?.contains("Chrome") == true {
+//            print(window.axApp.get(Ax.focusedWindowAttribute)?.get(Ax.titleAttr))
+//            print(window.getPosition())
+//            print("---")
+//        }
+//    }
 }
 
 extension NSRunningApplication {
-    var windows: [Window] {
-        (AXUIElementCreateApplication(processIdentifier).get(Ax.windowsAttr) ?? [])
-                .map({ Window(nsApp: self, axWindow: $0) })
+    /**
+     If there are several monitors then spaces on those monitors will be active
+     */
+    var windowsOnActiveMacOsSpaces: [Window] {
+        let axApp = AXUIElementCreateApplication(processIdentifier)
+        return (axApp.get(Ax.windowsAttr) ?? []).map({ Window(nsApp: self, axApp: axApp, axWindow: $0) })
     }
 }
 
@@ -159,9 +167,16 @@ enum Ax {
     )
     static let windowsAttr = ReadableAttrImpl<[AXUIElement]>(
             value: kAXWindowsAttribute,
-            getter: {
-                return ($0 as! NSArray).compactMap { $0 as! AXUIElement }
-            }
+            getter: { ($0 as! NSArray).compactMap { $0 as! AXUIElement } }
+    )
+    // todo unused?
+    static let focusedWindowAttr = ReadableAttrImpl<AXUIElement>(
+            value: kAXFocusedWindowAttribute,
+            getter: { $0 as! AXUIElement }
+    )
+    static let closeButtonAttr = ReadableAttrImpl<AXUIElement>(
+            value: kAXCloseButtonAttribute,
+            getter: { $0 as! AXUIElement }
     )
 }
 

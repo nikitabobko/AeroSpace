@@ -3,14 +3,18 @@ import AppKit
 
 class Window: TreeNode {
     private let nsApp: NSRunningApplication
-    private let axWindow: AXUIElement
+    // todo: make private
+    let axWindow: AXUIElement
+    // todo: make private
+    let axApp: AXUIElement
     var children: [TreeNode] {
         []
     }
     private var lastNotHiddenPosition: CGPoint?
 
-    init(nsApp: NSRunningApplication, axWindow: AXUIElement) {
+    init(nsApp: NSRunningApplication, axApp: AXUIElement, axWindow: AXUIElement) {
         self.nsApp = nsApp
+        self.axApp = axApp
         self.axWindow = axWindow
     }
 
@@ -18,9 +22,14 @@ class Window: TreeNode {
         axWindow.get(Ax.titleAttr)
     }
 
-    func activate() {
-        // todo it activates the app, not the window right?
+    func activate() -> Bool {
         nsApp.activate(options: .activateIgnoringOtherApps)
+        return AXUIElementPerformAction(axWindow, kAXRaiseAction as CFString) == AXError.success
+    }
+
+    func close() -> Bool {
+        guard let closeButton = axWindow.get(Ax.closeButtonAttr) else { return false }
+        return AXUIElementPerformAction(closeButton, kAXPressAction as CFString) == AXError.success
     }
 
     func hide() -> Bool {

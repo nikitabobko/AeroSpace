@@ -30,3 +30,10 @@ xcodebuild
 - Window overlapping
 - "floating" window layout
 - windows' min/max sizes
+
+## Known Special windows
+
+- macos welcome screen
+- Toolbox window
+- IntelliJ dialog windows (e.g. "Add to git")
+- IntelliJ project structure modal window

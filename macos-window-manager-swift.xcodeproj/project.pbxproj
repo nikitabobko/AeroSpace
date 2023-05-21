@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		218FCDA92A1966B800B3D559 /* macos_window_manager_swiftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDA82A1966B800B3D559 /* macos_window_manager_swiftApp.swift */; };
+		218FCDA92A1966B800B3D559 /* MyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDA82A1966B800B3D559 /* MyApp.swift */; };
 		218FCDAD2A1966B900B3D559 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 218FCDAC2A1966B900B3D559 /* Assets.xcassets */; };
 		218FCDB02A1966B900B3D559 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 218FCDAF2A1966B900B3D559 /* Preview Assets.xcassets */; };
 		218FCDBB2A1966B900B3D559 /* macos_window_manager_swiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDBA2A1966B900B3D559 /* macos_window_manager_swiftTests.swift */; };
@@ -20,6 +20,7 @@
 		218FCDD62A1966C200B3D559 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1E5DE6B847F675940A7E /* utils.swift */; };
 		218FCDD72A1966C200B3D559 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B932A00476B00537E5D /* Window.swift */; };
 		218FCDDA2A19682800B3D559 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 218FCDD92A19682800B3D559 /* HotKey */; };
+		598F11C1A395A47C47DCC138 /* CurrentWorkspaceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1919F1ED15BE39CA8CAD /* CurrentWorkspaceViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,7 +45,7 @@
 		21192B912A00476200537E5D /* TreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNode.swift; sourceTree = "<group>"; };
 		21192B932A00476B00537E5D /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
 		218FCDA62A1966B800B3D559 /* macos-window-manager-swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "macos-window-manager-swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		218FCDA82A1966B800B3D559 /* macos_window_manager_swiftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftApp.swift; sourceTree = "<group>"; };
+		218FCDA82A1966B800B3D559 /* MyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyApp.swift; sourceTree = "<group>"; };
 		218FCDAC2A1966B900B3D559 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		218FCDAF2A1966B900B3D559 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		218FCDB12A1966B900B3D559 /* macos_window_manager_swift.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macos_window_manager_swift.entitlements; sourceTree = "<group>"; };
@@ -54,6 +55,7 @@
 		218FCDC42A1966B900B3D559 /* macos_window_manager_swiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftUITests.swift; sourceTree = "<group>"; };
 		218FCDC62A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		598F10EFC3F374A36040A90F /* resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = resize.swift; sourceTree = "<group>"; };
+		598F1919F1ED15BE39CA8CAD /* CurrentWorkspaceViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrentWorkspaceViewModel.swift; sourceTree = "<group>"; };
 		598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		598F1E5DE6B847F675940A7E /* utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -114,10 +116,11 @@
 				598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */,
 				598F10EFC3F374A36040A90F /* resize.swift */,
 				598F1E5DE6B847F675940A7E /* utils.swift */,
-				218FCDA82A1966B800B3D559 /* macos_window_manager_swiftApp.swift */,
+				218FCDA82A1966B800B3D559 /* MyApp.swift */,
 				218FCDAC2A1966B900B3D559 /* Assets.xcassets */,
 				218FCDB12A1966B900B3D559 /* macos_window_manager_swift.entitlements */,
 				218FCDAE2A1966B900B3D559 /* Preview Content */,
+				598F1919F1ED15BE39CA8CAD /* CurrentWorkspaceViewModel.swift */,
 			);
 			path = "macos-window-manager-swift";
 			sourceTree = "<group>";
@@ -292,11 +295,12 @@
 			files = (
 				218FCDD22A1966C200B3D559 /* Workspace.swift in Sources */,
 				218FCDD72A1966C200B3D559 /* Window.swift in Sources */,
-				218FCDA92A1966B800B3D559 /* macos_window_manager_swiftApp.swift in Sources */,
+				218FCDA92A1966B800B3D559 /* MyApp.swift in Sources */,
 				218FCDD42A1966C200B3D559 /* resize.swift in Sources */,
 				218FCDD52A1966C200B3D559 /* Container.swift in Sources */,
 				218FCDD32A1966C200B3D559 /* TreeNode.swift in Sources */,
 				218FCDD62A1966C200B3D559 /* utils.swift in Sources */,
+				598F11C1A395A47C47DCC138 /* CurrentWorkspaceViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
