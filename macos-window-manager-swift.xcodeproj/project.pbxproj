@@ -19,10 +19,6 @@
 		218FCDD62A1966C200B3D559 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1E5DE6B847F675940A7E /* utils.swift */; };
 		218FCDD72A1966C200B3D559 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B932A00476B00537E5D /* Window.swift */; };
 		218FCDDA2A19682800B3D559 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 218FCDD92A19682800B3D559 /* HotKey */; };
-		218FCDE22A1A313600B3D559 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDE12A1A313600B3D559 /* AppDelegate.swift */; };
-		218FCDE42A1A313600B3D559 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDE32A1A313600B3D559 /* ViewController.swift */; };
-		218FCDE62A1A313700B3D559 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 218FCDE52A1A313700B3D559 /* Assets.xcassets */; };
-		218FCE0B2A1A328F00B3D559 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCE0A2A1A328F00B3D559 /* main.swift */; };
 		598F144CF2D1F6EA050DE3B3 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1825D2DB884738F9FB87 /* main.swift */; };
 		598F1F209229BB220BB14799 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1637B2DDC7A23F93CDA0 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
@@ -57,12 +53,6 @@
 		218FCDC02A1966B900B3D559 /* macos-window-manager-swiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "macos-window-manager-swiftUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		218FCDC42A1966B900B3D559 /* macos_window_manager_swiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftUITests.swift; sourceTree = "<group>"; };
 		218FCDC62A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftUITestsLaunchTests.swift; sourceTree = "<group>"; };
-		218FCDDF2A1A313600B3D559 /* storyboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = storyboard.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		218FCDE12A1A313600B3D559 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		218FCDE32A1A313600B3D559 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		218FCDE52A1A313700B3D559 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		218FCDEA2A1A313700B3D559 /* storyboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = storyboard.entitlements; sourceTree = "<group>"; };
-		218FCE0A2A1A328F00B3D559 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		598F10EFC3F374A36040A90F /* resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = resize.swift; sourceTree = "<group>"; };
 		598F1637B2DDC7A23F93CDA0 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		598F1825D2DB884738F9FB87 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -93,13 +83,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		218FCDDC2A1A313600B3D559 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -109,7 +92,6 @@
 				218FCDA72A1966B800B3D559 /* macos-window-manager-swift */,
 				218FCDB92A1966B900B3D559 /* macos-window-manager-swiftTests */,
 				218FCDC32A1966B900B3D559 /* macos-window-manager-swiftUITests */,
-				218FCDE02A1A313600B3D559 /* storyboard */,
 				21192B842A00469B00537E5D /* Products */,
 				218FCDD82A19682800B3D559 /* Frameworks */,
 			);
@@ -121,7 +103,6 @@
 				218FCDA62A1966B800B3D559 /* macos-window-manager-swift.app */,
 				218FCDB62A1966B900B3D559 /* macos-window-manager-swiftTests.xctest */,
 				218FCDC02A1966B900B3D559 /* macos-window-manager-swiftUITests.xctest */,
-				218FCDDF2A1A313600B3D559 /* storyboard.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -174,18 +155,6 @@
 			children = (
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		218FCDE02A1A313600B3D559 /* storyboard */ = {
-			isa = PBXGroup;
-			children = (
-				218FCDE12A1A313600B3D559 /* AppDelegate.swift */,
-				218FCDE32A1A313600B3D559 /* ViewController.swift */,
-				218FCDE52A1A313700B3D559 /* Assets.xcassets */,
-				218FCDEA2A1A313700B3D559 /* storyboard.entitlements */,
-				218FCE0A2A1A328F00B3D559 /* main.swift */,
-			);
-			path = storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -247,23 +216,6 @@
 			productReference = 218FCDC02A1966B900B3D559 /* macos-window-manager-swiftUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
-		218FCDDE2A1A313600B3D559 /* storyboard */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 218FCE072A1A313700B3D559 /* Build configuration list for PBXNativeTarget "storyboard" */;
-			buildPhases = (
-				218FCDDB2A1A313600B3D559 /* Sources */,
-				218FCDDC2A1A313600B3D559 /* Frameworks */,
-				218FCDDD2A1A313600B3D559 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = storyboard;
-			productName = storyboard;
-			productReference = 218FCDDF2A1A313600B3D559 /* storyboard.app */;
-			productType = "com.apple.product-type.application";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -284,9 +236,6 @@
 					218FCDBF2A1966B900B3D559 = {
 						CreatedOnToolsVersion = 14.2;
 						TestTargetID = 218FCDA52A1966B800B3D559;
-					};
-					218FCDDE2A1A313600B3D559 = {
-						CreatedOnToolsVersion = 14.2;
 					};
 				};
 			};
@@ -309,7 +258,6 @@
 				218FCDA52A1966B800B3D559 /* macos-window-manager-swift */,
 				218FCDB52A1966B900B3D559 /* macos-window-manager-swiftTests */,
 				218FCDBF2A1966B900B3D559 /* macos-window-manager-swiftUITests */,
-				218FCDDE2A1A313600B3D559 /* storyboard */,
 			);
 		};
 /* End PBXProject section */
@@ -335,14 +283,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		218FCDDD2A1A313600B3D559 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				218FCDE62A1A313700B3D559 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -378,16 +318,6 @@
 			files = (
 				218FCDC72A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift in Sources */,
 				218FCDC52A1966B900B3D559 /* macos_window_manager_swiftUITests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		218FCDDB2A1A313600B3D559 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				218FCDE42A1A313600B3D559 /* ViewController.swift in Sources */,
-				218FCDE22A1A313600B3D559 /* AppDelegate.swift in Sources */,
-				218FCE0B2A1A328F00B3D559 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -640,54 +570,6 @@
 			};
 			name = Release;
 		};
-		218FCE012A1A313700B3D559 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = storyboard/storyboard.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = bobko.storyboard;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Debug;
-		};
-		218FCE022A1A313700B3D559 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = storyboard/storyboard.entitlements;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = bobko.storyboard;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -723,15 +605,6 @@
 			buildConfigurations = (
 				218FCDCF2A1966B900B3D559 /* Debug */,
 				218FCDD02A1966B900B3D559 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		218FCE072A1A313700B3D559 /* Build configuration list for PBXNativeTarget "storyboard" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				218FCE012A1A313700B3D559 /* Debug */,
-				218FCE022A1A313700B3D559 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
