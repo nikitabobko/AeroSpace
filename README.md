@@ -19,6 +19,7 @@ xcodebuild
 - is dialog, is resizable, is modal?
 - close window (because you can select parent and kill several windows at once)
 - select parent -> outline several windows?
+- Handle visible Dock for maximized windows
 
 ## Features
 
