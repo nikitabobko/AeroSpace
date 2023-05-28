@@ -2,14 +2,6 @@ import Foundation
 import AppKit
 
 class Window: TreeNode, Hashable {
-    static func ==(lhs: Window, rhs: Window) -> Bool {
-        lhs.windowId() == rhs.windowId()
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(windowId())
-    }
-
     private let nsApp: NSRunningApplication
     // todo: make private
     let axWindow: AXUIElement
@@ -107,5 +99,13 @@ class Window: TreeNode, Hashable {
 
     func getPosition() -> CGPoint? {
         axWindow.get(Ax.positionAttr)
+    }
+
+    static func ==(lhs: Window, rhs: Window) -> Bool {
+        lhs.windowId() == rhs.windowId()
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(windowId())
     }
 }
