@@ -1,16 +1,6 @@
 import Foundation
 import AppKit
 
-private func foo(
-        _ observer: AXObserver,
-        elem: AXUIElement,
-        notification: CFString,
-        userData: UnsafeMutableRawPointer?
-) {
-    print("notif")
-    let window = userData.unsafelyUnwrapped as! Window
-    print("notif \(window)")
-}
 
 class Window: TreeNode, Hashable {
     private let nsApp: NSRunningApplication
@@ -43,12 +33,17 @@ class Window: TreeNode, Hashable {
         } else {
             var window = Window(nsApp, axApp, axWindow)
 
-            print("subscribed")
+            let windowPtr = UnsafeMutableRawPointer(Unmanaged.passUnretained(window).toOpaque())
+
             var observer: AXObserver? = nil
-            assert(AXObserverCreate(nsApp.processIdentifier, foo, &observer) == .success)
-            window.observer = observer!
-//            assert(AXObserverAddNotification(observer!, axWindow, kAXMovedNotification as CFString, &window) == .success)
-            assert(AXObserverAddNotification(observer!, axWindow, kAXUIElementDestroyedNotification as CFString, &window) == .success)
+            assert(AXObserverCreate(nsApp.processIdentifier, handler, &observer) == .success)
+            guard let observer else { fatalError("Window.get: observer") }
+            window.observer = observer
+            assert(AXObserverAddNotification(observer, axWindow, kAXMovedNotification as CFString, windowPtr) == .success)
+            assert(AXObserverAddNotification(observer, axWindow, kAXResizedNotification as CFString, windowPtr) == .success)
+//            assert(AXObserverAddNotification(observer!, axApp, kAXWindowCreatedNotification as CFString, &window) == .success)
+
+            CFRunLoopAddSource(CFRunLoopGetCurrent(), AXObserverGetRunLoopSource(observer), .defaultMode)
 
             allWindows[id] = window
             return window
@@ -139,4 +134,19 @@ class Window: TreeNode, Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(windowId())
     }
+}
+
+private func handler(
+        _ observer: AXObserver,
+        elem: AXUIElement,
+        notification: CFString,
+        userData: UnsafeMutableRawPointer?
+) {
+    let foo = userData?._rawValue
+    print("notif \(foo)")
+    Unmanaged<Window>.fromOpaque(userData!)
+    guard let userData else { return }
+    let window = Unmanaged<Window>.fromOpaque(userData).takeRetainedValue()
+//    let window = userData as! Window
+    print("notif \(window)")
 }

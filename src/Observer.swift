@@ -16,6 +16,7 @@ class Observer {
         kAXMovedNotification
         kAXResizedNotification
         kAXWindowCreatedNotification
+        kAXSheetCreatedNotification
         kAXWindowDeminiaturizedNotification
         kAXWindowMiniaturizedNotification
         kAXFocusedWindowChangedNotification
