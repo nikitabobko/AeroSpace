@@ -34,6 +34,7 @@ xcodebuild -scheme AeroSpace clean build
   - OR: "shake" windows
 - CLI interface
 - Check all todos in code
+- move vs swap (swap requires position and size proportions decoupling from windows)
 
 ## Challenges
 
@@ -43,7 +44,8 @@ xcodebuild -scheme AeroSpace clean build
 
 ## Known Special windows
 
-- macos welcome screen
+- XCode welcome screen
+- Finder preview
 - Toolbox window
 - IntelliJ dialog windows (e.g. "Add to git")
 - IntelliJ project structure modal window
