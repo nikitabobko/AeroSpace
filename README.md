@@ -1,10 +1,23 @@
-# Title
+# AeroSpace [![Xcode - Build and Analyze](https://github.com/nikitabobko/AeroSpace/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/nikitabobko/AeroSpace/actions/workflows/build.yml)
+
+AeroSpace is a tiling window manager for macOS.
+
+## Key features
+
+- **Manual** tiling WM
+- [i3](https://i3wm.org/) inspired
+- AeroSpace employs its **own implementation of virtual workspaces** instead of relying on native macOS Spaces due to
+  their considerable limitations
+- Plain text configuration (dotfiles friendly)
+- CLI scriptable
+- Doesn't require disabling SIP (System Integrity Protection)
+- Proper multi-monitor support (i3-like paradigm)
 
 ## How to build the project
 
 You would need a mac. Run in terminal:
 ```bash
-xcodebuild
+xcodebuild -scheme AeroSpace clean build
 ```
 
 ## Todo
@@ -17,11 +30,6 @@ xcodebuild
 - select parent and kill several windows at once
 - select parent -> outline several windows?
 - CLI interface
-
-## Features
-
-- Scriptable from cli
-- Own implementation of virtual workspaces (because native macOS "Spaces" desperately suck)
 
 ## Challenges
 
