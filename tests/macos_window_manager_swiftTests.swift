@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import macos_window_manager_swift
+@testable import AeroSpace
 
 final class macos_window_manager_swiftTests: XCTestCase {
 

@@ -46,14 +46,14 @@
 		21192B8F2A00472200537E5D /* Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
 		21192B912A00476200537E5D /* TreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNode.swift; sourceTree = "<group>"; };
 		21192B932A00476B00537E5D /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
-		218FCDA62A1966B800B3D559 /* macos-window-manager-swift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "macos-window-manager-swift.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		218FCDA62A1966B800B3D559 /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		218FCDA82A1966B800B3D559 /* MyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyApp.swift; sourceTree = "<group>"; };
 		218FCDAC2A1966B900B3D559 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		218FCDAF2A1966B900B3D559 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		218FCDB12A1966B900B3D559 /* macos_window_manager_swift.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macos_window_manager_swift.entitlements; sourceTree = "<group>"; };
-		218FCDB62A1966B900B3D559 /* macos-window-manager-swiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "macos-window-manager-swiftTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		218FCDB12A1966B900B3D559 /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
+		218FCDB62A1966B900B3D559 /* AeroSpaceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AeroSpaceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		218FCDBA2A1966B900B3D559 /* macos_window_manager_swiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftTests.swift; sourceTree = "<group>"; };
-		218FCDC02A1966B900B3D559 /* macos-window-manager-swiftUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "macos-window-manager-swiftUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		218FCDC02A1966B900B3D559 /* AeroSpaceUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AeroSpaceUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		218FCDC42A1966B900B3D559 /* macos_window_manager_swiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftUITests.swift; sourceTree = "<group>"; };
 		218FCDC62A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		21AF73D62A2374F70078F25A /* Bridged-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridged-Header.h"; sourceTree = "<group>"; };
@@ -94,9 +94,9 @@
 		21192B7A2A00469B00537E5D = {
 			isa = PBXGroup;
 			children = (
-				218FCDA72A1966B800B3D559 /* macos-window-manager-swift */,
-				218FCDB92A1966B900B3D559 /* macos-window-manager-swiftTests */,
-				218FCDC32A1966B900B3D559 /* macos-window-manager-swiftUITests */,
+				218FCDA72A1966B800B3D559 /* src */,
+				218FCDB92A1966B900B3D559 /* tests */,
+				218FCDC32A1966B900B3D559 /* uiTests */,
 				21192B842A00469B00537E5D /* Products */,
 				218FCDD82A19682800B3D559 /* Frameworks */,
 			);
@@ -105,14 +105,14 @@
 		21192B842A00469B00537E5D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				218FCDA62A1966B800B3D559 /* macos-window-manager-swift.app */,
-				218FCDB62A1966B900B3D559 /* macos-window-manager-swiftTests.xctest */,
-				218FCDC02A1966B900B3D559 /* macos-window-manager-swiftUITests.xctest */,
+				218FCDA62A1966B800B3D559 /* AeroSpace.app */,
+				218FCDB62A1966B900B3D559 /* AeroSpaceTests.xctest */,
+				218FCDC02A1966B900B3D559 /* AeroSpaceUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		218FCDA72A1966B800B3D559 /* macos-window-manager-swift */ = {
+		218FCDA72A1966B800B3D559 /* src */ = {
 			isa = PBXGroup;
 			children = (
 				21192B8F2A00472200537E5D /* Container.swift */,
@@ -124,13 +124,13 @@
 				21AF73D62A2374F70078F25A /* Bridged-Header.h */,
 				218FCDA82A1966B800B3D559 /* MyApp.swift */,
 				218FCDAC2A1966B900B3D559 /* Assets.xcassets */,
-				218FCDB12A1966B900B3D559 /* macos_window_manager_swift.entitlements */,
+				218FCDB12A1966B900B3D559 /* AeroSpace.entitlements */,
 				218FCDAE2A1966B900B3D559 /* Preview Content */,
 				598F1919F1ED15BE39CA8CAD /* ViewModel.swift */,
 				598F1EABE9D4CD0440DE9BF3 /* accessibility.swift */,
 				598F1DBA3C55625E9D944746 /* Observer.swift */,
 			);
-			path = "macos-window-manager-swift";
+			path = src;
 			sourceTree = "<group>";
 		};
 		218FCDAE2A1966B900B3D559 /* Preview Content */ = {
@@ -141,21 +141,21 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		218FCDB92A1966B900B3D559 /* macos-window-manager-swiftTests */ = {
+		218FCDB92A1966B900B3D559 /* tests */ = {
 			isa = PBXGroup;
 			children = (
 				218FCDBA2A1966B900B3D559 /* macos_window_manager_swiftTests.swift */,
 			);
-			path = "macos-window-manager-swiftTests";
+			path = tests;
 			sourceTree = "<group>";
 		};
-		218FCDC32A1966B900B3D559 /* macos-window-manager-swiftUITests */ = {
+		218FCDC32A1966B900B3D559 /* uiTests */ = {
 			isa = PBXGroup;
 			children = (
 				218FCDC42A1966B900B3D559 /* macos_window_manager_swiftUITests.swift */,
 				218FCDC62A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift */,
 			);
-			path = "macos-window-manager-swiftUITests";
+			path = uiTests;
 			sourceTree = "<group>";
 		};
 		218FCDD82A19682800B3D559 /* Frameworks */ = {
@@ -168,9 +168,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		218FCDA52A1966B800B3D559 /* macos-window-manager-swift */ = {
+		218FCDA52A1966B800B3D559 /* AeroSpace */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 218FCDC82A1966B900B3D559 /* Build configuration list for PBXNativeTarget "macos-window-manager-swift" */;
+			buildConfigurationList = 218FCDC82A1966B900B3D559 /* Build configuration list for PBXNativeTarget "AeroSpace" */;
 			buildPhases = (
 				218FCDA22A1966B800B3D559 /* Sources */,
 				218FCDA32A1966B800B3D559 /* Frameworks */,
@@ -180,17 +180,17 @@
 			);
 			dependencies = (
 			);
-			name = "macos-window-manager-swift";
+			name = AeroSpace;
 			packageProductDependencies = (
 				218FCDD92A19682800B3D559 /* HotKey */,
 			);
 			productName = "macos-window-manager-swift";
-			productReference = 218FCDA62A1966B800B3D559 /* macos-window-manager-swift.app */;
+			productReference = 218FCDA62A1966B800B3D559 /* AeroSpace.app */;
 			productType = "com.apple.product-type.application";
 		};
-		218FCDB52A1966B900B3D559 /* macos-window-manager-swiftTests */ = {
+		218FCDB52A1966B900B3D559 /* AeroSpaceTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 218FCDCB2A1966B900B3D559 /* Build configuration list for PBXNativeTarget "macos-window-manager-swiftTests" */;
+			buildConfigurationList = 218FCDCB2A1966B900B3D559 /* Build configuration list for PBXNativeTarget "AeroSpaceTests" */;
 			buildPhases = (
 				218FCDB22A1966B900B3D559 /* Sources */,
 				218FCDB32A1966B900B3D559 /* Frameworks */,
@@ -201,14 +201,14 @@
 			dependencies = (
 				218FCDB82A1966B900B3D559 /* PBXTargetDependency */,
 			);
-			name = "macos-window-manager-swiftTests";
+			name = AeroSpaceTests;
 			productName = "macos-window-manager-swiftTests";
-			productReference = 218FCDB62A1966B900B3D559 /* macos-window-manager-swiftTests.xctest */;
+			productReference = 218FCDB62A1966B900B3D559 /* AeroSpaceTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		218FCDBF2A1966B900B3D559 /* macos-window-manager-swiftUITests */ = {
+		218FCDBF2A1966B900B3D559 /* AeroSpaceUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 218FCDCE2A1966B900B3D559 /* Build configuration list for PBXNativeTarget "macos-window-manager-swiftUITests" */;
+			buildConfigurationList = 218FCDCE2A1966B900B3D559 /* Build configuration list for PBXNativeTarget "AeroSpaceUITests" */;
 			buildPhases = (
 				218FCDBC2A1966B900B3D559 /* Sources */,
 				218FCDBD2A1966B900B3D559 /* Frameworks */,
@@ -219,9 +219,9 @@
 			dependencies = (
 				218FCDC22A1966B900B3D559 /* PBXTargetDependency */,
 			);
-			name = "macos-window-manager-swiftUITests";
+			name = AeroSpaceUITests;
 			productName = "macos-window-manager-swiftUITests";
-			productReference = 218FCDC02A1966B900B3D559 /* macos-window-manager-swiftUITests.xctest */;
+			productReference = 218FCDC02A1966B900B3D559 /* AeroSpaceUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -247,7 +247,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 21192B7E2A00469B00537E5D /* Build configuration list for PBXProject "macos-window-manager-swift" */;
+			buildConfigurationList = 21192B7E2A00469B00537E5D /* Build configuration list for PBXProject "AeroSpace" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -263,9 +263,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				218FCDA52A1966B800B3D559 /* macos-window-manager-swift */,
-				218FCDB52A1966B900B3D559 /* macos-window-manager-swiftTests */,
-				218FCDBF2A1966B900B3D559 /* macos-window-manager-swiftUITests */,
+				218FCDA52A1966B800B3D559 /* AeroSpace */,
+				218FCDB52A1966B900B3D559 /* AeroSpaceTests */,
+				218FCDBF2A1966B900B3D559 /* AeroSpaceUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -336,12 +336,12 @@
 /* Begin PBXTargetDependency section */
 		218FCDB82A1966B900B3D559 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 218FCDA52A1966B800B3D559 /* macos-window-manager-swift */;
+			target = 218FCDA52A1966B800B3D559 /* AeroSpace */;
 			targetProxy = 218FCDB72A1966B900B3D559 /* PBXContainerItemProxy */;
 		};
 		218FCDC22A1966B900B3D559 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 218FCDA52A1966B800B3D559 /* macos-window-manager-swift */;
+			target = 218FCDA52A1966B800B3D559 /* AeroSpace */;
 			targetProxy = 218FCDC12A1966B900B3D559 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -465,13 +465,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "macos-window-manager-swift/macos_window_manager_swift.entitlements";
+				CODE_SIGN_ENTITLEMENTS = src/AeroSpace.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"macos-window-manager-swift/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"src/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = AeroSpace;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -479,10 +481,10 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "bobko.macos-window-manager-swift";
+				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "macos-window-manager-swift/Bridged-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "src/Bridged-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
@@ -492,13 +494,15 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "macos-window-manager-swift/macos_window_manager_swift.entitlements";
+				CODE_SIGN_ENTITLEMENTS = src/AeroSpace.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"macos-window-manager-swift/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"src/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = AeroSpace;
 				INFOPLIST_KEY_LSUIElement = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -506,10 +510,10 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "bobko.macos-window-manager-swift";
+				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = "macos-window-manager-swift/Bridged-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "src/Bridged-Header.h";
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -524,11 +528,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "bobko.macos-window-manager-swiftTests";
+				PRODUCT_BUNDLE_IDENTIFIER = bobko.swiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/macos-window-manager-swift.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/macos-window-manager-swift";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AeroSpace.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AeroSpace";
 			};
 			name = Debug;
 		};
@@ -542,11 +546,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 13.1;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "bobko.macos-window-manager-swiftTests";
+				PRODUCT_BUNDLE_IDENTIFIER = bobko.swiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/macos-window-manager-swift.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/macos-window-manager-swift";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AeroSpace.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/AeroSpace";
 			};
 			name = Release;
 		};
@@ -558,7 +562,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "bobko.macos-window-manager-swiftUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = bobko.swiftUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -574,7 +578,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "bobko.macos-window-manager-swiftUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = bobko.swiftUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -585,7 +589,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		21192B7E2A00469B00537E5D /* Build configuration list for PBXProject "macos-window-manager-swift" */ = {
+		21192B7E2A00469B00537E5D /* Build configuration list for PBXProject "AeroSpace" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				21192B882A00469B00537E5D /* Debug */,
@@ -594,7 +598,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		218FCDC82A1966B900B3D559 /* Build configuration list for PBXNativeTarget "macos-window-manager-swift" */ = {
+		218FCDC82A1966B900B3D559 /* Build configuration list for PBXNativeTarget "AeroSpace" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				218FCDC92A1966B900B3D559 /* Debug */,
@@ -603,7 +607,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		218FCDCB2A1966B900B3D559 /* Build configuration list for PBXNativeTarget "macos-window-manager-swiftTests" */ = {
+		218FCDCB2A1966B900B3D559 /* Build configuration list for PBXNativeTarget "AeroSpaceTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				218FCDCC2A1966B900B3D559 /* Debug */,
@@ -612,7 +616,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		218FCDCE2A1966B900B3D559 /* Build configuration list for PBXNativeTarget "macos-window-manager-swiftUITests" */ = {
+		218FCDCE2A1966B900B3D559 /* Build configuration list for PBXNativeTarget "AeroSpaceUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				218FCDCF2A1966B900B3D559 /* Debug */,

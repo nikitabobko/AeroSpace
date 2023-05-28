@@ -49,7 +49,7 @@ struct MyApp: App {
                 }
             }
             Divider()
-            Button("Quit macos-window-manager") {
+            Button("Quit AeroSpace") {
                 NSApplication.shared.terminate(nil)
             }.keyboardShortcut("Q", modifiers: .command)
         } label: {
