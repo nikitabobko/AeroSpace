@@ -2,13 +2,17 @@ import Foundation
 
 // todo make it configurable
 // todo make default choice
-let defaultWorkspaceContainer = ColumnContainer()
-// todo fetch from bindings
-let initialWorkspace = settings[0].id
+func createDefaultWorkspaceContainer() -> Container {
+    if monitorWidth > monitorHeight {
+        return ColumnContainer()
+    } else {
+        return RowContainer()
+    }
+}
+// todo fetch from real settings
+let initialWorkspaceName = settings[0].id
 
-//var currentWorkspace = initialWorkspace
-
-private var workspaces: [String: Workspace] = [:]
+var workspaces: [String: Workspace] = [:]
 
 func getWorkspace(name: String) -> Workspace {
     if let existing = workspaces[name] {
@@ -23,9 +27,17 @@ func getWorkspace(name: String) -> Workspace {
 class Workspace {
     let name: String
     var floatingWindows: [Window] = []
-    var root: Container = defaultWorkspaceContainer
+    var root: Container = createDefaultWorkspaceContainer()
 
     init(name: String) {
         self.name = name
+    }
+}
+
+extension Workspace {
+    var allWindows: [Window] {
+        get {
+            floatingWindows + root.allWindows
+        }
     }
 }

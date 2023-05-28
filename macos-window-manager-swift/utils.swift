@@ -9,10 +9,23 @@ let monitorHeight = 1440
 
 func accessibilityPermissions() {
     let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true]
-    AXIsProcessTrustedWithOptions(options as CFDictionary)
-    if !AXIsProcessTrusted() {
+    if !AXIsProcessTrustedWithOptions(options as CFDictionary) {
         fatalError("untrusted")
     }
+}
+
+func detectNewWindows() {
+    let currentWorkspace = getWorkspace(name: ViewModel.shared.currentWorkspaceName)
+    for newWindow in Set(windowsOnActiveMacOsSpaces()).subtracting(workspaces.values.flatMap { $0.allWindows }) {
+        print("New window detected: \(newWindow.title) on workspace \(currentWorkspace.name)")
+        currentWorkspace.floatingWindows.append(newWindow)
+    }
+}
+
+func windowsOnActiveMacOsSpaces() -> [Window] {
+    NSWorkspace.shared.runningApplications
+            .filter({ $0.activationPolicy == .regular })
+            .flatMap({ $0.windowsOnActiveMacOsSpaces })
 }
 
 func activateWindowByName(_ name: String) {
@@ -52,6 +65,7 @@ func allWindowsOnCurrentMacOsSpace() {
         print(window)
         print("Name: \(window["kCGWindowOwnerName"].unsafelyUnwrapped)")
         print("PID: \(window["kCGWindowOwnerPID"].unsafelyUnwrapped)")
+        print("window ID: \(window["kCGWindowNumber"])")
         print("---")
     }
 }
@@ -67,26 +81,14 @@ func allWindowsOnCurrentMacOsSpace() {
 //    return Array(Set(windows.map { $0["kCGWindowOwnerPID"].unsafelyUnwrapped as! pid_t }))
 //}
 
-func windows() {
+func test() {
     DispatchQueue.main.asyncAfter(deadline: .now()+1) {
-        let windows: [Window] = NSWorkspace.shared.runningApplications
-                .filter({ $0.activationPolicy == .regular })
-                .flatMap({ $0.windowsOnActiveMacOsSpaces })
+        let windows = windowsOnActiveMacOsSpaces()
         print(windows.count)
         let barWindow: Window = windows.filter { $0.title?.contains("Chrome") == true && $0.title?.contains("bar") == true }.first!
-//        barWindow.activateApp()
-//        barWindow.activate()
         print(barWindow.getPosition())
-//        print(barWindow.axApp.set(Ax.focusedWindowAttribute, barWindow.axWindow))
-//        print(barWindow.axApp.get(Ax.focusedWindowAttribute)?.get(Ax.titleAttr))
+        print("ID: \(barWindow.windowId())")
     }
-//    for window in windows {
-//        if window.title?.contains("Chrome") == true {
-//            print(window.axApp.get(Ax.focusedWindowAttribute)?.get(Ax.titleAttr))
-//            print(window.getPosition())
-//            print("---")
-//        }
-//    }
 }
 
 extension NSRunningApplication {
@@ -95,7 +97,7 @@ extension NSRunningApplication {
      */
     var windowsOnActiveMacOsSpaces: [Window] {
         let axApp = AXUIElementCreateApplication(processIdentifier)
-        return (axApp.get(Ax.windowsAttr) ?? []).map({ Window(nsApp: self, axApp: axApp, axWindow: $0) })
+        return (axApp.get(Ax.windowsAttr) ?? []).compactMap({ Window.get(nsApp: self, axApp: axApp, axWindow: $0) })
     }
 }
 
@@ -190,5 +192,10 @@ extension AXUIElement {
 
     func set<Attr: WritableAttr>(_ attr: Attr, _ value: Attr.T) -> Bool {
         AXUIElementSetAttributeValue(self, attr.value as CFString, attr.setter(value)) == .success
+    }
+
+    func windowId() -> CGWindowID? {
+        var cgWindowId = CGWindowID()
+        return _AXUIElementGetWindow(self, &cgWindowId) == .success ? cgWindowId : nil
     }
 }
