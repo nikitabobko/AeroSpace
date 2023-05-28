@@ -23,13 +23,14 @@ struct MyApp: App {
     @StateObject var viewModel = ViewModel.shared
 
     init() {
-        accessibilityPermissions()
+        checkAccessibilityPermissions()
+        Observer.initObserver()
         for setting in settings {
             hotKeys.append(HotKey(key: setting.hotkey, modifiers: setting.modifiers, keyUpHandler: {
-                detectNewWindows()
                 ViewModel.shared.changeWorkspace(setting.id)
             }))
         }
+        detectNewWindows()
         test()
     }
 
@@ -38,7 +39,6 @@ struct MyApp: App {
             Text("Workspaces:")
             ForEach(settings) { setting in
                 Button {
-                    detectNewWindows()
                     viewModel.changeWorkspace(setting.id)
                 } label: {
                     Toggle(isOn: setting.id == viewModel.currentWorkspaceName

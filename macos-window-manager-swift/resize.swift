@@ -50,12 +50,10 @@ func resizeFrontmostWindow(width: CGFloat, height: CGFloat) {
 
 //extension NSWindow {
 //    var axuiElement: AXUIElement {
-//        get {
-//            guard let windowRef = windowRef else {
-//                fatalError("Unable to get window reference")
-//            }
-//            return AXUIElementCreateWithHIObjectAndPID(windowRef, UInt32(processIdentifier))!.takeRetainedValue()
+//        guard let windowRef = windowRef else {
+//            fatalError("Unable to get window reference")
 //        }
+//        return AXUIElementCreateWithHIObjectAndPID(windowRef, UInt32(processIdentifier))!.takeRetainedValue()
 //    }
 //}
 

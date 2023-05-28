@@ -1,16 +1,30 @@
 import Foundation
 import AppKit
 
+private func foo(
+        _ observer: AXObserver,
+        elem: AXUIElement,
+        notification: CFString,
+        userData: UnsafeMutableRawPointer?
+) {
+    print("notif")
+    let window = userData.unsafelyUnwrapped as! Window
+    print("notif \(window)")
+}
+
 class Window: TreeNode, Hashable {
     private let nsApp: NSRunningApplication
     // todo: make private
     let axWindow: AXUIElement
     // todo: make private
+    // todo unused?
     let axApp: AXUIElement
     var children: [TreeNode] {
         []
     }
-    private var lastNotHiddenPosition: CGPoint?
+    private var prevUnhiddenPosition: CGPoint?
+    private var previousSize: CGSize?
+    private var observer: AXObserver? // keep observer in memory
 
     private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement, _ axWindow: AXUIElement) {
         self.nsApp = nsApp
@@ -27,14 +41,29 @@ class Window: TreeNode, Hashable {
         if let existing = allWindows[id] {
             return existing
         } else {
-            let new = Window(nsApp, axApp, axWindow)
-            allWindows[new.windowId()] = new
-            return new
+            var window = Window(nsApp, axApp, axWindow)
+
+            print("subscribed")
+            var observer: AXObserver? = nil
+            assert(AXObserverCreate(nsApp.processIdentifier, foo, &observer) == .success)
+            window.observer = observer!
+//            assert(AXObserverAddNotification(observer!, axWindow, kAXMovedNotification as CFString, &window) == .success)
+            assert(AXObserverAddNotification(observer!, axWindow, kAXUIElementDestroyedNotification as CFString, &window) == .success)
+
+            allWindows[id] = window
+            return window
         }
     }
 
+//    public typealias AXObserverCallback = @convention(c) (AXObserver, AXUIElement, CFString, UnsafeMutableRawPointer?) -> Void
+
     var title: String? {
         axWindow.get(Ax.titleAttr)
+    }
+
+    var monitor: NSScreen? {
+        guard let position = getPosition() else { return nil }
+        return NSScreen.screens.first { $0.frame.contains(position) }
     }
 
     func windowId() -> CGWindowID {
@@ -55,16 +84,18 @@ class Window: TreeNode, Hashable {
         return AXUIElementPerformAction(closeButton, kAXPressAction as CFString) == AXError.success
     }
 
+    // todo current approach breaks mission control (three fingers up the trackpad). Or is it only because of IDEA?
+    // todo hypnotize: change size to cooperate with mission control (make it configurable)
     @discardableResult func hide() -> Bool {
-        lastNotHiddenPosition = getPosition()
+        prevUnhiddenPosition = getPosition()
 //        return setPosition(CGPoint(x: monitorWidth, y: monitorHeight))
-        return setPosition(CGPoint(x: monitorWidth + 1000, y: monitorHeight))
+        return setPosition(CGPoint(x: monitorWidth, y: monitorHeight))
     }
 
     @discardableResult func unhide() -> Bool {
-        guard let lastNotHiddenPosition else { return false }
-        self.lastNotHiddenPosition = nil
-        return setPosition(lastNotHiddenPosition)
+        guard let prevUnhiddenPosition else { return false }
+        self.prevUnhiddenPosition = nil
+        return setPosition(prevUnhiddenPosition)
     }
 
     func hideApp() -> Bool {
@@ -81,12 +112,12 @@ class Window: TreeNode, Hashable {
     }
 
     var isHidden: Bool {
-        isHiddenApp || lastNotHiddenPosition != nil
+        isHiddenApp || prevUnhiddenPosition != nil
     }
 
-    func setSize(_ size: CGSize) -> Bool {
-        assert(axWindow.set(Ax.sizeAttr, size))
-        return true
+    @discardableResult func setSize(_ size: CGSize) -> Bool {
+        previousSize = getSize()
+        return axWindow.set(Ax.sizeAttr, size)
     }
 
     func getSize() -> CGSize? {

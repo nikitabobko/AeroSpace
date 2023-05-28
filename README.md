@@ -9,17 +9,14 @@ xcodebuild
 
 ## Todo
 
-- activate window
-- resize window, position window
-- hide window
 - subscribe to windows changes (new windows are opened, existing are closed)
 - move window to another monitor (spaces? treat spaces as monitors)
 - mouse resize events
 - mouse move window events
 - is dialog, is resizable, is modal?
-- close window (because you can select parent and kill several windows at once)
+- select parent and kill several windows at once
 - select parent -> outline several windows?
-- Handle visible Dock for maximized windows
+- CLI interface
 
 ## Features
 

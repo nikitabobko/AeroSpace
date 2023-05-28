@@ -26,3 +26,5 @@ class MaximizedColumnContainer: Container {
     var orientation: Orientation { .Column }
     var children: [TreeNode] = []
 }
+
+// todo accordion layout?

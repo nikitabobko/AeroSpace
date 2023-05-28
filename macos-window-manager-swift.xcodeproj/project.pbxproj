@@ -21,6 +21,8 @@
 		218FCDD72A1966C200B3D559 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B932A00476B00537E5D /* Window.swift */; };
 		218FCDDA2A19682800B3D559 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 218FCDD92A19682800B3D559 /* HotKey */; };
 		598F11C1A395A47C47DCC138 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1919F1ED15BE39CA8CAD /* ViewModel.swift */; };
+		598F17DDD360F613F99A4024 /* accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1EABE9D4CD0440DE9BF3 /* accessibility.swift */; };
+		598F18DAC58EE1AF75AA5C8A /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1DBA3C55625E9D944746 /* Observer.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +60,9 @@
 		598F10EFC3F374A36040A90F /* resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = resize.swift; sourceTree = "<group>"; };
 		598F1919F1ED15BE39CA8CAD /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
+		598F1DBA3C55625E9D944746 /* Observer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observer.swift; sourceTree = "<group>"; };
 		598F1E5DE6B847F675940A7E /* utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
+		598F1EABE9D4CD0440DE9BF3 /* accessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = accessibility.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,6 +127,8 @@
 				218FCDB12A1966B900B3D559 /* macos_window_manager_swift.entitlements */,
 				218FCDAE2A1966B900B3D559 /* Preview Content */,
 				598F1919F1ED15BE39CA8CAD /* ViewModel.swift */,
+				598F1EABE9D4CD0440DE9BF3 /* accessibility.swift */,
+				598F1DBA3C55625E9D944746 /* Observer.swift */,
 			);
 			path = "macos-window-manager-swift";
 			sourceTree = "<group>";
@@ -303,6 +309,8 @@
 				218FCDD32A1966C200B3D559 /* TreeNode.swift in Sources */,
 				218FCDD62A1966C200B3D559 /* utils.swift in Sources */,
 				598F11C1A395A47C47DCC138 /* ViewModel.swift in Sources */,
+				598F17DDD360F613F99A4024 /* accessibility.swift in Sources */,
+				598F18DAC58EE1AF75AA5C8A /* Observer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

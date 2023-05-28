@@ -27,7 +27,7 @@ func getWorkspace(name: String) -> Workspace {
 class Workspace {
     let name: String
     var floatingWindows: [Window] = []
-    var root: Container = createDefaultWorkspaceContainer()
+    var rootContainer: Container = createDefaultWorkspaceContainer()
 
     init(name: String) {
         self.name = name
@@ -36,8 +36,6 @@ class Workspace {
 
 extension Workspace {
     var allWindows: [Window] {
-        get {
-            floatingWindows + root.allWindows
-        }
+        floatingWindows + rootContainer.allWindows
     }
 }

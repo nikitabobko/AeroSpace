@@ -6,6 +6,7 @@ class ViewModel: ObservableObject {
     @Published private(set) var currentWorkspaceName: String = initialWorkspaceName
 
     func changeWorkspace(_ newWorkspace: String) {
+        detectNewWindows()
         for window in getWorkspace(name: currentWorkspaceName).allWindows {
             window.hide()
         }
