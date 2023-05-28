@@ -39,13 +39,15 @@ enum Ax {
     )
     static let titleAttr = WritableAttrImpl<String>(
             value: kAXTitleAttribute,
-            getter: { $0 as! String },
+            getter: { $0 as? String ?? errorT("kAXTitleAttribute error") },
             setter: { $0 as CFTypeRef }
     )
     static let sizeAttr = WritableAttrImpl<CGSize>(
             value: kAXSizeAttribute,
             getter: {
                 var raw: CGSize = .zero
+                // I'd be happy to use safe cast, but I can't :(
+                //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
                 assert(AXValueGetValue($0 as! AXValue, .cgSize, &raw))
                 return raw
             },
@@ -58,6 +60,8 @@ enum Ax {
             value: kAXPositionAttribute,
             getter: {
                 var raw: CGPoint = .zero
+                // I'd be happy to use safe cast, but I can't :(
+                //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
                 AXValueGetValue($0 as! AXValue, .cgPoint, &raw)
                 return raw
             },
@@ -68,17 +72,30 @@ enum Ax {
     )
     static let windowsAttr = ReadableAttrImpl<[AXUIElement]>(
             value: kAXWindowsAttribute,
-            getter: { ($0 as! NSArray).compactMap { $0 as! AXUIElement } }
+            getter: {
+                ($0 as? NSArray ?? errorT("kAXWindowsAttribute error"))
+                        // I'd be happy to use safe cast, but I can't :(
+                        //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
+                        .compactMap { $0 as! AXUIElement }
+            }
     )
     // todo unused?
     static let focusedWindowAttr = ReadableAttrImpl<AXUIElement>(
             value: kAXFocusedWindowAttribute,
+            // I'd be happy to use safe cast, but I can't :(
+            //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
             getter: { $0 as! AXUIElement }
     )
     static let closeButtonAttr = ReadableAttrImpl<AXUIElement>(
             value: kAXCloseButtonAttribute,
+            // I'd be happy to use safe cast, but I can't :(
+            //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
             getter: { $0 as! AXUIElement }
     )
+}
+
+func errorT<T>(_ message: String = "") -> T {
+    fatalError(message)
 }
 
 extension AXUIElement {
