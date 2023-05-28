@@ -1,30 +1,28 @@
 enum Orientation {
-    case Row
-    case Column
+    case H
+    case V
 }
 
 protocol Container: TreeNode {
     var orientation: Orientation { get }
 }
 
-class RowContainer: Container {
-    var orientation: Orientation { .Row }
+class HStackContainer: Container {
+    var orientation: Orientation { .H }
     var children: [TreeNode] = []
 }
 
-class ColumnContainer: Container {
-    var orientation: Orientation { .Column }
+class VStackContainer: Container {
+    var orientation: Orientation { .V }
     var children: [TreeNode] = []
 }
 
-class MaximizedRowContainer: Container {
-    var orientation: Orientation { .Row }
+class HAccordionContainer: Container {
+    var orientation: Orientation { .H }
     var children: [TreeNode] = []
 }
 
-class MaximizedColumnContainer: Container {
-    var orientation: Orientation { .Column }
+class VAccordionContainer: Container {
+    var orientation: Orientation { .V }
     var children: [TreeNode] = []
 }
-
-// todo accordion layout?

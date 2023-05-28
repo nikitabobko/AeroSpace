@@ -6,12 +6,13 @@ AeroSpace is a tiling window manager for macOS.
 
 - **Manual** tiling WM
 - [i3](https://i3wm.org/) inspired
-- AeroSpace employs its **own implementation of virtual workspaces** instead of relying on native macOS Spaces due to
+- AeroSpace employs its **own emulation of virtual workspaces** instead of relying on native macOS Spaces due to
   their considerable limitations
 - Plain text configuration (dotfiles friendly)
 - CLI scriptable
 - Doesn't require disabling SIP (System Integrity Protection)
 - Proper multi-monitor support (i3-like paradigm)
+- Status menu icon displays current workspace name
 
 ## How to build the project
 
@@ -29,7 +30,10 @@ xcodebuild -scheme AeroSpace clean build
 - is dialog, is resizable, is modal?
 - select parent and kill several windows at once
 - select parent -> outline several windows?
+  - OR: outline with "SLSSetWindowOpacity"
+  - OR: "shake" windows
 - CLI interface
+- Check all todos in code
 
 ## Challenges
 

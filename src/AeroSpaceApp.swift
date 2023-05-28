@@ -18,7 +18,7 @@ struct Setting: Identifiable {
 }
 
 @main
-struct MyApp: App {
+struct AeroSpaceApp: App {
     var hotKeys: [HotKey] = []
     @StateObject var viewModel = ViewModel.shared
 

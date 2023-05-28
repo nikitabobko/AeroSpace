@@ -4,9 +4,9 @@ import Foundation
 // todo make default choice
 func createDefaultWorkspaceContainer() -> Container {
     if monitorWidth > monitorHeight {
-        return ColumnContainer()
+        return VStackContainer()
     } else {
-        return RowContainer()
+        return HStackContainer()
     }
 }
 // todo fetch from real settings
