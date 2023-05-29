@@ -17,8 +17,8 @@ class MacApp: Hashable {
 
     public static func get(_ nsApp: NSRunningApplication) -> MacApp {
         let pid = nsApp.processIdentifier
-        if let app = apps[pid] {
-            return app
+        if let existing = apps[pid] {
+            return existing
         } else {
             let app = MacApp(nsApp, AXUIElementCreateApplication(nsApp.processIdentifier))
 

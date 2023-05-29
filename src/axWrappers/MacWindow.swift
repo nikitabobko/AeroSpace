@@ -21,7 +21,7 @@ class MacWindow: TreeNode, Hashable {
 
     // todo weak values?
     // todo do I need it?
-    fileprivate(set) static var allWindows: [CGWindowID: MacWindow] = [:]
+    fileprivate static var allWindows: [CGWindowID: MacWindow] = [:]
 
     static func get(app: MacApp, axWindow: AXUIElement) -> MacWindow? {
         guard let id = axWindow.windowId() else { return nil }
