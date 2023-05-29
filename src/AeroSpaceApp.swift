@@ -36,6 +36,8 @@ struct AeroSpaceApp: App {
 
     var body: some Scene {
         MenuBarExtra {
+            Text("AeroSpace v\(Bundle.main.appVersionLong)")
+            Divider()
             Text("Workspaces:")
             // todo show only non empty workspaces
             //      Or create two groups? (non empty group and empty group)

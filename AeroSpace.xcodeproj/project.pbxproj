@@ -22,6 +22,7 @@
 		598F11C1A395A47C47DCC138 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1919F1ED15BE39CA8CAD /* ViewModel.swift */; };
 		598F17DDD360F613F99A4024 /* accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1EABE9D4CD0440DE9BF3 /* accessibility.swift */; };
 		598F18DAC58EE1AF75AA5C8A /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1DBA3C55625E9D944746 /* Observer.swift */; };
+		598F1CC98A5D802D535A92A5 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1B967DAF8BC216635A9F /* Bundle.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		21AF73D62A2374F70078F25A /* Bridged-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridged-Header.h"; sourceTree = "<group>"; };
 		598F1919F1ED15BE39CA8CAD /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
+		598F1B967DAF8BC216635A9F /* Bundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		598F1DBA3C55625E9D944746 /* Observer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observer.swift; sourceTree = "<group>"; };
 		598F1E5DE6B847F675940A7E /* utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		598F1EABE9D4CD0440DE9BF3 /* accessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = accessibility.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 				598F1919F1ED15BE39CA8CAD /* ViewModel.swift */,
 				598F1EABE9D4CD0440DE9BF3 /* accessibility.swift */,
 				598F1DBA3C55625E9D944746 /* Observer.swift */,
+				598F1B967DAF8BC216635A9F /* Bundle.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -307,6 +310,7 @@
 				598F11C1A395A47C47DCC138 /* ViewModel.swift in Sources */,
 				598F17DDD360F613F99A4024 /* accessibility.swift in Sources */,
 				598F18DAC58EE1AF75AA5C8A /* Observer.swift in Sources */,
+				598F1CC98A5D802D535A92A5 /* Bundle.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,7 +480,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -505,7 +509,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 0.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
