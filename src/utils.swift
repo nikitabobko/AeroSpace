@@ -17,6 +17,7 @@ func test() {
     for screen in NSScreen.screens {
         print("---")
         print(screen.localizedName)
+        print(screen.debugDescription)
         print(screen.visibleFrame.origin)
         print("minX: \(screen.visibleFrame.minX)")
         print("width: \(screen.visibleFrame.width)")
@@ -57,5 +58,24 @@ func error(_ message: String = "") -> Never {
 }
 
 extension NSScreen {
+    /**
+     Because "main" is a misleading name
+     */
     static var focusedMonitor: NSScreen? { main }
+}
+
+extension CGPoint: Hashable {
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(x)
+        hasher.combine(y)
+    }
+}
+
+extension Sequence where Element: Hashable {
+    func toSet() -> Set<Element> { Set(self) }
+}
+
+extension Set {
+    // todo unused?
+    func toArray() -> [Element] { Array(self) }
 }

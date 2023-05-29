@@ -36,6 +36,11 @@ xcodebuild -scheme AeroSpace clean build
 - Check all todos in code
 - move vs swap (swap requires position and size proportions decoupling from windows)
 
+## Tests
+
+- Test main monitor change
+- Test monitor add/remove
+
 ## Challenges
 
 - Window overlapping

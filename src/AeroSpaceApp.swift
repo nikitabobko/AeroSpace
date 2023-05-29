@@ -7,8 +7,8 @@ import SwiftUI
 
 // todo extract into settings
 let settings = [
-    Setting(id: "RRR", hotkey: .r, modifiers: [.option]),
-    Setting(id: "PPP", hotkey: .p, modifiers: [.option]),
+    Setting(id: "111", hotkey: .one, modifiers: [.option]),
+    Setting(id: "222", hotkey: .two, modifiers: [.option]),
 ]
 
 struct Setting: Identifiable {

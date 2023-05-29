@@ -1,6 +1,6 @@
 import Foundation
 
-class MacApp {
+class MacApp: Hashable {
     let nsApp: NSRunningApplication
     // todo: make private
     let axApp: AXUIElement
@@ -21,7 +21,11 @@ class MacApp {
             return app
         } else {
             let app = MacApp(nsApp, AXUIElementCreateApplication(nsApp.processIdentifier))
-            app.observe(genericObs, kAXWindowCreatedNotification)
+
+            app.observe(refreshObs, kAXWindowCreatedNotification)
+            app.observe(refreshObs, kAXFocusedWindowChangedNotification)
+            // todo subscribe on app destroy
+
             apps[pid] = app
             return app
         }
@@ -30,6 +34,14 @@ class MacApp {
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) {
         let observer = AXObserver.new(nsApp.processIdentifier, notifKey, axApp, self, handler)
         axObservers.append(AXObserverWrapper(obs: observer, ax: axApp, notif: notifKey as CFString))
+    }
+
+    static func ==(lhs: MacApp, rhs: MacApp) -> Bool {
+        lhs.nsApp.processIdentifier == rhs.nsApp.processIdentifier
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(nsApp.processIdentifier)
     }
 }
 

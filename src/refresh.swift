@@ -1,20 +1,25 @@
 import Foundation
 
 /**
- It's one of the most important function of the whole application. Call it as often as possible
+ It's one of the most important function of the whole application.
+ The function is called as a feedback response on every user input
  */
 func refresh() {
-    let allWindows = windowsOnActiveMacOsSpaces()
+    if let monitor = NSScreen.focusedMonitor {
+        // todo doesn't work if the window is moved from one monitor to another
+        ViewModel.shared.focusWorkspaceOnDifferentMonitor(Workspace.get(byMonitor: monitor).name)
+    }
+    let visibleWindows = windowsOnActiveMacOsSpaces()
     // Hide windows that were manually unhidden by user
-    allWindows.filter { $0.isHiddenEmulation }.forEach { $0.hideEmulation() }
-    layoutNewWindows(allWindows: allWindows)
+    visibleWindows.filter { $0.isHiddenEmulation }.forEach { $0.hideEmulation() }
+    layoutNewWindows(visibleWindows: visibleWindows)
 }
 
-private func layoutNewWindows(allWindows: [MacWindow]) {
-    let currentWorkspace = getWorkspace(name: ViewModel.shared.currentWorkspaceName)
-    for newWindow in Set(allWindows).subtracting(workspaces.values.flatMap { $0.allWindows }) {
+private func layoutNewWindows(visibleWindows: [MacWindow]) {
+    let currentWorkspace = getWorkspace(byName: ViewModel.shared.currentWorkspaceName)
+    for newWindow in Set(visibleWindows).subtracting(allWorkspaces.flatMap { $0.allWindows }) {
         print("New window \(newWindow.title) layoted on workspace \(currentWorkspace.name)")
-        currentWorkspace.floatingWindows.append(newWindow)
+        currentWorkspace.add(window: newWindow)
     }
 }
 

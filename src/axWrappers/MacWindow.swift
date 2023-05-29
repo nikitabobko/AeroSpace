@@ -31,11 +31,12 @@ class MacWindow: TreeNode, Hashable {
             let window = MacWindow(id, app, axWindow)
             print("New window detected: \(window.title)")
 
-            window.observe(windowDestroyedObs, kAXUIElementDestroyedNotification)
-            window.observe(genericObs, kAXWindowDeminiaturizedNotification)
-            window.observe(genericObs, kAXWindowMiniaturizedNotification)
-            window.observe(genericObs, kAXMovedNotification)
-            window.observe(genericObs, kAXResizedNotification)
+            window.observe(windowIsDestroyedObs, kAXUIElementDestroyedNotification)
+            window.observe(refreshObs, kAXWindowDeminiaturizedNotification)
+            window.observe(refreshObs, kAXWindowMiniaturizedNotification)
+            window.observe(refreshObs, kAXMovedNotification)
+            window.observe(refreshObs, kAXResizedNotification)
+//            window.observe(refreshObs, kAXFocusedUIElementChangedNotification)
 
             allWindows[id] = window
             return window
@@ -83,6 +84,7 @@ class MacWindow: TreeNode, Hashable {
             prevUnhiddenEmulationSize = getSize()
         }
         guard let monitor else { return }
+        // todo hiding is broken for secondary monitor
         setPosition(CGPoint(x: monitor.frame.maxX, y: monitor.frame.maxY))
 //        setSize(CGSize(width: 0, height: 0))
     }
@@ -136,12 +138,12 @@ private extension UnsafeMutableRawPointer {
     var window: MacWindow { Unmanaged.fromOpaque(self).takeUnretainedValue() }
 }
 
-private func windowDestroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
+private func windowIsDestroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
     guard let window = data?.window else { return }
-    print("Destroyed: \(window)")
-    MacWindow.allWindows.removeValue(forKey: window.windowId)
-    for workspace in workspaces.values {
-        workspace.floatingWindows.removeAll { $0 == window }
+    print("Destroyed: \(window.title)")
+    assert(MacWindow.allWindows.removeValue(forKey: window.windowId) != nil)
+    for workspace in allWorkspaces {
+        workspace.remove(window: window)
     }
     window.free()
     refresh()

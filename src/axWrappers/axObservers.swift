@@ -6,7 +6,7 @@ struct AXObserverWrapper {
     let notif: CFString
 }
 
-func genericObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
-    print("genericObs")
+func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
+    print("refreshObs")
     refresh()
 }

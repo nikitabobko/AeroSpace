@@ -9,29 +9,74 @@ func createDefaultWorkspaceContainer() -> Container {
 // todo fetch from real settings
 let initialWorkspaceName = settings[0].id
 
-var workspaces: [String: Workspace] = [:]
+private var workspaceNameToWorkspace: [String: Workspace] = [:]
+private var monitorOriginToWorkspace: [CGPoint: Workspace] = [:]
 
-func getWorkspace(name: String) -> Workspace {
-    if let existing = workspaces[name] {
+var allWorkspaces: some Collection<Workspace> { workspaceNameToWorkspace.values }
+
+func getWorkspace(byName name: String) -> Workspace {
+    if let existing = workspaceNameToWorkspace[name] {
         return existing
     } else {
         let workspace = Workspace(name: name)
-        workspaces[name] = workspace
+        workspaceNameToWorkspace[name] = workspace
         return workspace
     }
 }
 
-class Workspace {
+class Workspace: Hashable {
     let name: String
-    var floatingWindows: [MacWindow] = []
+    var floatingWindows: Set<MacWindow> = []
     var rootContainer: Container = createDefaultWorkspaceContainer()
 
-    init(name: String) {
+    private init(name: String) {
         self.name = name
     }
 
-    func layout(window: MacWindow) {
-        floatingWindows.append(window)
+    func add(window: MacWindow) {
+        floatingWindows.insert(window)
+    }
+
+    func remove(window: MacWindow) {
+        floatingWindows.remove(window)
+    }
+
+    static func get(byMonitor monitor: NSScreen) -> Workspace {
+        if let existing = monitorOriginToWorkspace[monitor.frame.origin] {
+            return existing
+        }
+        let monitorWorkspaces: [CGPoint: Workspace] = monitorOriginToWorkspace
+        monitorOriginToWorkspace = [:]
+        let origins = NSScreen.screens.map { $0.frame.origin }.toSet()
+        var notAssignedWorkspaces: [Workspace] =
+                monitorWorkspaces.filter { oldOrigin, oldWorkspace in !origins.contains(oldOrigin) }
+                        .map { _, workspace -> Workspace in workspace }
+                        + settings.map { getWorkspace(byName: $0.id) }.toSet()
+                            .subtracting(monitorWorkspaces.values)
+
+        for monitor in NSScreen.screens {
+            let origin = monitor.frame.origin
+            if let existing = monitorWorkspaces[origin] {
+                monitorOriginToWorkspace[origin] = existing
+            } else {
+                monitorOriginToWorkspace[origin] = notAssignedWorkspaces.popLast()
+                        // todo show user friendly dialog
+                        ?? errorT("""
+                                  Not enough number of workspaces for the number of monitors. 
+                                  Please add more workspaces to the config
+                                  """)
+            }
+        }
+        // Normally, recursion should happen only once more (Unless, NSScreen data race happens)
+        return get(byMonitor: monitor)
+    }
+
+    static func ==(lhs: Workspace, rhs: Workspace) -> Bool {
+        lhs.name == rhs.name
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
     }
 }
 
