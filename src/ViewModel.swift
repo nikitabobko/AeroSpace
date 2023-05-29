@@ -6,12 +6,12 @@ class ViewModel: ObservableObject {
     @Published private(set) var currentWorkspaceName: String = initialWorkspaceName
 
     func changeWorkspace(_ newWorkspace: String) {
-        detectNewWindows()
+        refresh()
         for window in getWorkspace(name: currentWorkspaceName).allWindows {
-            window.hide()
+            window.hideEmulation()
         }
         for window in getWorkspace(name: newWorkspace).allWindows {
-            window.unhide()
+            window.unhideEmulation()
         }
         currentWorkspaceName = newWorkspace
     }

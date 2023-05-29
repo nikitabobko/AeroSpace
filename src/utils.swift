@@ -3,24 +3,6 @@ import Cocoa
 import CoreFoundation
 import AppKit
 
-// todo compute dynamically later
-let monitorWidth = 2560
-let monitorHeight = 1440
-
-func detectNewWindows() {
-    let currentWorkspace = getWorkspace(name: ViewModel.shared.currentWorkspaceName)
-    for newWindow in Set(windowsOnActiveMacOsSpaces()).subtracting(workspaces.values.flatMap { $0.allWindows }) {
-        print("New window detected: \(newWindow.title) on workspace \(currentWorkspace.name)")
-        currentWorkspace.floatingWindows.append(newWindow)
-    }
-}
-
-func windowsOnActiveMacOsSpaces() -> [Window] {
-    NSWorkspace.shared.runningApplications
-            .filter({ $0.activationPolicy == .regular })
-            .flatMap({ $0.windowsOnActiveMacOsSpaces })
-}
-
 //func activeSpace() {
 ////    CGSCopyManagedDisplaySpaces(CGSMainConnectionID())?.takeRetainedValue()
 ////    CGSpacesInfo
@@ -53,16 +35,6 @@ func test() {
 //    }
 }
 
-extension NSRunningApplication {
-    /**
-     If there are several monitors then spaces on those monitors will be active
-     */
-    var windowsOnActiveMacOsSpaces: [Window] {
-        let axApp = AXUIElementCreateApplication(processIdentifier)
-        return (axApp.get(Ax.windowsAttr) ?? []).compactMap({ Window.get(nsApp: self, axApp: axApp, axWindow: $0) })
-    }
-}
-
 func stringType(of some: Any) -> String {
 //    kAXMinValueAttribute
 //    kAXValueAttribute
@@ -82,4 +54,8 @@ func errorT<T>(_ message: String = "") -> T {
 
 func error(_ message: String = "") -> Never {
     fatalError(message)
+}
+
+extension NSScreen {
+    static var focusedMonitor: NSScreen? { main }
 }

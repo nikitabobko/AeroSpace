@@ -3,11 +3,8 @@ import Foundation
 // todo make it configurable
 // todo make default choice
 func createDefaultWorkspaceContainer() -> Container {
-    if monitorWidth > monitorHeight {
-        return VStackContainer()
-    } else {
-        return HStackContainer()
-    }
+    guard let monitorFrame = NSScreen.focusedMonitor?.frame else { return HStackContainer() }
+    return monitorFrame.width > monitorFrame.height ? VStackContainer() : HStackContainer()
 }
 // todo fetch from real settings
 let initialWorkspaceName = settings[0].id
@@ -26,16 +23,20 @@ func getWorkspace(name: String) -> Workspace {
 
 class Workspace {
     let name: String
-    var floatingWindows: [Window] = []
+    var floatingWindows: [MacWindow] = []
     var rootContainer: Container = createDefaultWorkspaceContainer()
 
     init(name: String) {
         self.name = name
     }
+
+    func layout(window: MacWindow) {
+        floatingWindows.append(window)
+    }
 }
 
 extension Workspace {
-    var allWindows: [Window] {
+    var allWindows: [MacWindow] {
         floatingWindows + rootContainer.allWindows
     }
 }

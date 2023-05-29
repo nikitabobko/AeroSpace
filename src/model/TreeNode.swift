@@ -5,8 +5,8 @@ protocol TreeNode {
 }
 
 extension TreeNode {
-    private func visit(node: TreeNode, result: inout [Window]) {
-        if let node = node as? Window {
+    private func visit(node: TreeNode, result: inout [MacWindow]) {
+        if let node = node as? MacWindow {
             result.append(node)
         }
         for child in node.children {
@@ -14,8 +14,8 @@ extension TreeNode {
         }
     }
 
-    var allWindows: [Window] {
-        var result: [Window] = []
+    var allWindows: [MacWindow] {
+        var result: [MacWindow] = []
         visit(node: self, result: &result)
         return result
     }

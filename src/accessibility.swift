@@ -10,7 +10,7 @@ func checkAccessibilityPermissions() {
 protocol ReadableAttr {
     associatedtype T
     var getter: (AnyObject) -> T { get }
-    var value: String { get }
+    var key: String { get }
 }
 
 protocol WritableAttr : ReadableAttr {
@@ -19,31 +19,31 @@ protocol WritableAttr : ReadableAttr {
 
 enum Ax {
     struct ReadableAttrImpl<T>: ReadableAttr {
-        var value: String
+        var key: String
         var getter: (AnyObject) -> T
     }
 
     struct WritableAttrImpl<T>: WritableAttr {
-        var value: String
+        var key: String
         var getter: (AnyObject) -> T
         var setter: (T) -> CFTypeRef
     }
 
     // todo wip
     static let valueAttr = ReadableAttrImpl<String>(
-            value: kAXValueAttribute,
+            key: kAXValueAttribute,
             getter: { foo in
                 print(stringType(of: foo))
                 return ""
             }
     )
     static let titleAttr = WritableAttrImpl<String>(
-            value: kAXTitleAttribute,
+            key: kAXTitleAttribute,
             getter: { $0 as! String },
             setter: { $0 as CFTypeRef }
     )
     static let sizeAttr = WritableAttrImpl<CGSize>(
-            value: kAXSizeAttribute,
+            key: kAXSizeAttribute,
             getter: {
                 var raw: CGSize = .zero
                 assert(AXValueGetValue($0 as! AXValue, .cgSize, &raw))
@@ -55,7 +55,7 @@ enum Ax {
             }
     )
     static let positionAttr = WritableAttrImpl<CGPoint>(
-            value: kAXPositionAttribute,
+            key: kAXPositionAttribute,
             getter: {
                 var raw: CGPoint = .zero
                 AXValueGetValue($0 as! AXValue, .cgPoint, &raw)
@@ -67,20 +67,20 @@ enum Ax {
             }
     )
     static let windowsAttr = ReadableAttrImpl<[AXUIElement]>(
-            value: kAXWindowsAttribute,
+            key: kAXWindowsAttribute,
             getter: {
                 ($0 as! NSArray).compactMap { $0 as! AXUIElement }
             }
     )
     // todo unused?
     static let focusedWindowAttr = ReadableAttrImpl<AXUIElement>(
-            value: kAXFocusedWindowAttribute,
+            key: kAXFocusedWindowAttribute,
             // I'd be happy to use safe cast, but I can't :(
             //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
             getter: { $0 as! AXUIElement }
     )
     static let closeButtonAttr = ReadableAttrImpl<AXUIElement>(
-            value: kAXCloseButtonAttribute,
+            key: kAXCloseButtonAttribute,
             // I'd be happy to use safe cast, but I can't :(
             //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
             getter: { $0 as! AXUIElement }
@@ -90,13 +90,13 @@ enum Ax {
 extension AXUIElement {
     func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
         var raw: AnyObject?
-        return AXUIElementCopyAttributeValue(self, attr.value as CFString, &raw) == .success
+        return AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success
                 ? attr.getter(raw!)
                 : nil
     }
 
-    func set<Attr: WritableAttr>(_ attr: Attr, _ value: Attr.T) -> Bool {
-        AXUIElementSetAttributeValue(self, attr.value as CFString, attr.setter(value)) == .success
+    @discardableResult func set<Attr: WritableAttr>(_ attr: Attr, _ value: Attr.T) -> Bool {
+        AXUIElementSetAttributeValue(self, attr.key as CFString, attr.setter(value)) == .success
     }
 
     func windowId() -> CGWindowID? {
@@ -106,9 +106,17 @@ extension AXUIElement {
 }
 
 extension AXObserver {
-    static func new(_ pid: pid_t, _ handler: AXObserverCallback) -> AXObserver {
+    private static func newImpl(_ pid: pid_t, _ handler: AXObserverCallback) -> AXObserver {
         var observer: AXObserver? = nil
         assert(AXObserverCreate(pid, handler, &observer) == .success)
         return observer!
+    }
+
+    static func new(_ pid: pid_t, _ notifKey: String, _ ax: AXUIElement, _ data: AnyObject, _ handler: AXObserverCallback) -> AXObserver {
+        let observer = newImpl(pid, handler)
+        let dataPtr = Unmanaged.passUnretained(data).toOpaque()
+        assert(AXObserverAddNotification(observer, ax, notifKey as CFString, dataPtr) == .success)
+        CFRunLoopAddSource(CFRunLoopGetCurrent(), AXObserverGetRunLoopSource(observer), .defaultMode)
+        return observer
     }
 }

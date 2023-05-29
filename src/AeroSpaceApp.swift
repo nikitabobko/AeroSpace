@@ -19,7 +19,7 @@ struct Setting: Identifiable {
 
 @main
 struct AeroSpaceApp: App {
-    var hotKeys: [HotKey] = []
+    var hotKeys: [HotKey] = [] // Keep hotkeys in memory
     @StateObject var viewModel = ViewModel.shared
 
     init() {
@@ -30,13 +30,13 @@ struct AeroSpaceApp: App {
                 ViewModel.shared.changeWorkspace(setting.id)
             }))
         }
-        detectNewWindows()
+        refresh()
         test()
     }
 
     var body: some Scene {
         MenuBarExtra {
-            Text("AeroSpace v\(Bundle.main.appVersionLong)")
+            Text("AeroSpace v\(Bundle.main.appVersion)")
             Divider()
             Text("Workspaces:")
             // todo show only non empty workspaces

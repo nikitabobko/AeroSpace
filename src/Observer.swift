@@ -17,11 +17,9 @@ class Observer {
         kAXResizedNotification
         kAXWindowCreatedNotification
         kAXSheetCreatedNotification
-        kAXWindowDeminiaturizedNotification
-        kAXWindowMiniaturizedNotification
         kAXFocusedWindowChangedNotification
         kAXFocusedUIElementChangedNotification
-        kAXUIElementDestroyedNotification
+        kAXApplicationActivatedNotification
 
 //        subscribe(NSWorkspace.notification)
     }

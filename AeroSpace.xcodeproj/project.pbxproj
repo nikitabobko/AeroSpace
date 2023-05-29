@@ -13,16 +13,19 @@
 		218FCDBB2A1966B900B3D559 /* macos_window_manager_swiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDBA2A1966B900B3D559 /* macos_window_manager_swiftTests.swift */; };
 		218FCDC52A1966B900B3D559 /* macos_window_manager_swiftUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDC42A1966B900B3D559 /* macos_window_manager_swiftUITests.swift */; };
 		218FCDC72A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDC62A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift */; };
-		218FCDD22A1966C200B3D559 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */; };
-		218FCDD32A1966C200B3D559 /* TreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B912A00476200537E5D /* TreeNode.swift */; };
-		218FCDD52A1966C200B3D559 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B8F2A00472200537E5D /* Container.swift */; };
 		218FCDD62A1966C200B3D559 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1E5DE6B847F675940A7E /* utils.swift */; };
-		218FCDD72A1966C200B3D559 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B932A00476B00537E5D /* Window.swift */; };
 		218FCDDA2A19682800B3D559 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 218FCDD92A19682800B3D559 /* HotKey */; };
 		598F11C1A395A47C47DCC138 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1919F1ED15BE39CA8CAD /* ViewModel.swift */; };
+		598F15B66E967D6AB2A3457E /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F13664EBDD41421A0E4C0 /* Container.swift */; };
+		598F1708D12004FD01407689 /* TreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1F150DAFA199846815BA /* TreeNode.swift */; };
+		598F174CFDFBAC17DE26B3C0 /* refresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F11271E317294862CFE7A /* refresh.swift */; };
+		598F17A653B5F5F82AB92469 /* axObservers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F197B70B5D4765A039B05 /* axObservers.swift */; };
 		598F17DDD360F613F99A4024 /* accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1EABE9D4CD0440DE9BF3 /* accessibility.swift */; };
+		598F17ED72D8CA5F86963DFC /* MacWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1DD5BDD0520E4144995E /* MacWindow.swift */; };
 		598F18DAC58EE1AF75AA5C8A /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1DBA3C55625E9D944746 /* Observer.swift */; };
 		598F1CC98A5D802D535A92A5 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1B967DAF8BC216635A9F /* Bundle.swift */; };
+		598F1DD091322677FDA900C2 /* MacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F17E70A7DD34F47795210 /* MacApp.swift */; };
+		598F1E560BF37484F529B9BD /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1C137874EA3093CEB770 /* Workspace.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,9 +46,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		21192B8F2A00472200537E5D /* Container.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Container.swift; sourceTree = "<group>"; };
-		21192B912A00476200537E5D /* TreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNode.swift; sourceTree = "<group>"; };
-		21192B932A00476B00537E5D /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
 		218FCDA62A1966B800B3D559 /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		218FCDA82A1966B800B3D559 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
 		218FCDAC2A1966B900B3D559 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -57,12 +57,18 @@
 		218FCDC42A1966B900B3D559 /* macos_window_manager_swiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftUITests.swift; sourceTree = "<group>"; };
 		218FCDC62A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		21AF73D62A2374F70078F25A /* Bridged-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridged-Header.h"; sourceTree = "<group>"; };
+		598F11271E317294862CFE7A /* refresh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = refresh.swift; sourceTree = "<group>"; };
+		598F13664EBDD41421A0E4C0 /* Container.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Container.swift; path = model/Container.swift; sourceTree = "<group>"; };
+		598F17E70A7DD34F47795210 /* MacApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MacApp.swift; path = axWrappers/MacApp.swift; sourceTree = "<group>"; };
 		598F1919F1ED15BE39CA8CAD /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
-		598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
+		598F197B70B5D4765A039B05 /* axObservers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = axObservers.swift; path = axWrappers/axObservers.swift; sourceTree = "<group>"; };
 		598F1B967DAF8BC216635A9F /* Bundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
+		598F1C137874EA3093CEB770 /* Workspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Workspace.swift; path = model/Workspace.swift; sourceTree = "<group>"; };
 		598F1DBA3C55625E9D944746 /* Observer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observer.swift; sourceTree = "<group>"; };
+		598F1DD5BDD0520E4144995E /* MacWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MacWindow.swift; path = axWrappers/MacWindow.swift; sourceTree = "<group>"; };
 		598F1E5DE6B847F675940A7E /* utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		598F1EABE9D4CD0440DE9BF3 /* accessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = accessibility.swift; sourceTree = "<group>"; };
+		598F1F150DAFA199846815BA /* TreeNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TreeNode.swift; path = model/TreeNode.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,10 +121,6 @@
 		218FCDA72A1966B800B3D559 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				21192B8F2A00472200537E5D /* Container.swift */,
-				21192B912A00476200537E5D /* TreeNode.swift */,
-				21192B932A00476B00537E5D /* Window.swift */,
-				598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */,
 				598F1E5DE6B847F675940A7E /* utils.swift */,
 				21AF73D62A2374F70078F25A /* Bridged-Header.h */,
 				218FCDA82A1966B800B3D559 /* AeroSpaceApp.swift */,
@@ -129,6 +131,13 @@
 				598F1EABE9D4CD0440DE9BF3 /* accessibility.swift */,
 				598F1DBA3C55625E9D944746 /* Observer.swift */,
 				598F1B967DAF8BC216635A9F /* Bundle.swift */,
+				598F17E70A7DD34F47795210 /* MacApp.swift */,
+				598F1DD5BDD0520E4144995E /* MacWindow.swift */,
+				598F197B70B5D4765A039B05 /* axObservers.swift */,
+				598F13664EBDD41421A0E4C0 /* Container.swift */,
+				598F1F150DAFA199846815BA /* TreeNode.swift */,
+				598F1C137874EA3093CEB770 /* Workspace.swift */,
+				598F11271E317294862CFE7A /* refresh.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -301,16 +310,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				218FCDD22A1966C200B3D559 /* Workspace.swift in Sources */,
-				218FCDD72A1966C200B3D559 /* Window.swift in Sources */,
 				218FCDA92A1966B800B3D559 /* AeroSpaceApp.swift in Sources */,
-				218FCDD52A1966C200B3D559 /* Container.swift in Sources */,
-				218FCDD32A1966C200B3D559 /* TreeNode.swift in Sources */,
 				218FCDD62A1966C200B3D559 /* utils.swift in Sources */,
 				598F11C1A395A47C47DCC138 /* ViewModel.swift in Sources */,
 				598F17DDD360F613F99A4024 /* accessibility.swift in Sources */,
 				598F18DAC58EE1AF75AA5C8A /* Observer.swift in Sources */,
 				598F1CC98A5D802D535A92A5 /* Bundle.swift in Sources */,
+				598F1DD091322677FDA900C2 /* MacApp.swift in Sources */,
+				598F17ED72D8CA5F86963DFC /* MacWindow.swift in Sources */,
+				598F17A653B5F5F82AB92469 /* axObservers.swift in Sources */,
+				598F15B66E967D6AB2A3457E /* Container.swift in Sources */,
+				598F1708D12004FD01407689 /* TreeNode.swift in Sources */,
+				598F1E560BF37484F529B9BD /* Workspace.swift in Sources */,
+				598F174CFDFBAC17DE26B3C0 /* refresh.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,11 +478,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = src/AeroSpace.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"src/Preview Content\"";
+				DEVELOPMENT_TEAM = 4MWP47XA68;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = AeroSpace;
@@ -495,11 +508,12 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = src/AeroSpace.entitlements;
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"src/Preview Content\"";
+				DEVELOPMENT_TEAM = 4MWP47XA68;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = AeroSpace;
