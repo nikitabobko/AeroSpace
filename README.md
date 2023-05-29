@@ -4,7 +4,7 @@ AeroSpace is a tiling window manager for macOS.
 
 ## Key features
 
-- **Manual** tiling WM
+- **Manual** tiling window manager
 - [i3](https://i3wm.org/) inspired
 - AeroSpace employs its **own emulation of virtual workspaces** instead of relying on native macOS Spaces due to
   their considerable limitations
