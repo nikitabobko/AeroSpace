@@ -2,7 +2,7 @@ import Foundation
 
 // todo make it configurable
 // todo make default choice
-func createDefaultWorkspaceContainer() -> Container {
+private func createDefaultWorkspaceContainer() -> Container {
     guard let monitorFrame = NSScreen.focusedMonitor?.frame else { return HStackContainer() }
     return monitorFrame.width > monitorFrame.height ? VStackContainer() : HStackContainer()
 }
@@ -11,18 +11,6 @@ let initialWorkspaceName = settings[0].id
 
 private var workspaceNameToWorkspace: [String: Workspace] = [:]
 private var monitorOriginToWorkspace: [CGPoint: Workspace] = [:]
-
-var allWorkspaces: some Collection<Workspace> { workspaceNameToWorkspace.values }
-
-func getWorkspace(byName name: String) -> Workspace {
-    if let existing = workspaceNameToWorkspace[name] {
-        return existing
-    } else {
-        let workspace = Workspace(name: name)
-        workspaceNameToWorkspace[name] = workspace
-        return workspace
-    }
-}
 
 class Workspace: Hashable {
     let name: String
@@ -41,6 +29,18 @@ class Workspace: Hashable {
         floatingWindows.remove(window)
     }
 
+    static var all: some Collection<Workspace> { workspaceNameToWorkspace.values }
+
+    static func get(byName name: String) -> Workspace {
+        if let existing = workspaceNameToWorkspace[name] {
+            return existing
+        } else {
+            let workspace = Workspace(name: name)
+            workspaceNameToWorkspace[name] = workspace
+            return workspace
+        }
+    }
+
     static func get(byMonitor monitor: NSScreen) -> Workspace {
         if let existing = monitorOriginToWorkspace[monitor.frame.origin] {
             return existing
@@ -51,7 +51,7 @@ class Workspace: Hashable {
         var notAssignedWorkspaces: [Workspace] =
                 monitorWorkspaces.filter { oldOrigin, oldWorkspace in !origins.contains(oldOrigin) }
                         .map { _, workspace -> Workspace in workspace }
-                        + settings.map { getWorkspace(byName: $0.id) }.toSet()
+                        + settings.map { Workspace.get(byName: $0.id) }.toSet()
                             .subtracting(monitorWorkspaces.values)
 
         for monitor in NSScreen.screens {
@@ -81,7 +81,5 @@ class Workspace: Hashable {
 }
 
 extension Workspace {
-    var allWindows: [MacWindow] {
-        floatingWindows + rootContainer.allWindows
-    }
+    var allWindows: [MacWindow] { floatingWindows + rootContainer.allWindows }
 }

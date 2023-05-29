@@ -16,8 +16,8 @@ func refresh() {
 }
 
 private func layoutNewWindows(visibleWindows: [MacWindow]) {
-    let currentWorkspace = getWorkspace(byName: ViewModel.shared.currentWorkspaceName)
-    for newWindow in Set(visibleWindows).subtracting(allWorkspaces.flatMap { $0.allWindows }) {
+    let currentWorkspace = Workspace.get(byName: ViewModel.shared.currentWorkspaceName)
+    for newWindow in Set(visibleWindows).subtracting(Workspace.all.flatMap { $0.allWindows }) {
         print("New window \(newWindow.title) layoted on workspace \(currentWorkspace.name)")
         currentWorkspace.add(window: newWindow)
     }

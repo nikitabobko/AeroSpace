@@ -12,10 +12,10 @@ class ViewModel: ObservableObject {
     func changeWorkspace(_ newWorkspace: String) {
         // todo what if the newWorkspace is already active but on different monitor?
         refresh()
-        for window in getWorkspace(byName: currentWorkspaceName).allWindows {
+        for window in Workspace.get(byName: currentWorkspaceName).allWindows {
             window.hideEmulation()
         }
-        for window in getWorkspace(byName: newWorkspace).allWindows {
+        for window in Workspace.get(byName: newWorkspace).allWindows {
             window.unhideEmulation()
         }
         currentWorkspaceName = newWorkspace

@@ -142,7 +142,7 @@ private func windowIsDestroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFS
     guard let window = data?.window else { return }
     print("Destroyed: \(window.title)")
     assert(MacWindow.allWindows.removeValue(forKey: window.windowId) != nil)
-    for workspace in allWorkspaces {
+    for workspace in Workspace.all {
         workspace.remove(window: window)
     }
     window.free()
