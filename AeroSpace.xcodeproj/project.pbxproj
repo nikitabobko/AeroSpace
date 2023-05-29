@@ -15,7 +15,6 @@
 		218FCDC72A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218FCDC62A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift */; };
 		218FCDD22A1966C200B3D559 /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */; };
 		218FCDD32A1966C200B3D559 /* TreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B912A00476200537E5D /* TreeNode.swift */; };
-		218FCDD42A1966C200B3D559 /* resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F10EFC3F374A36040A90F /* resize.swift */; };
 		218FCDD52A1966C200B3D559 /* Container.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B8F2A00472200537E5D /* Container.swift */; };
 		218FCDD62A1966C200B3D559 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1E5DE6B847F675940A7E /* utils.swift */; };
 		218FCDD72A1966C200B3D559 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21192B932A00476B00537E5D /* Window.swift */; };
@@ -57,7 +56,6 @@
 		218FCDC42A1966B900B3D559 /* macos_window_manager_swiftUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftUITests.swift; sourceTree = "<group>"; };
 		218FCDC62A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		21AF73D62A2374F70078F25A /* Bridged-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridged-Header.h"; sourceTree = "<group>"; };
-		598F10EFC3F374A36040A90F /* resize.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = resize.swift; sourceTree = "<group>"; };
 		598F1919F1ED15BE39CA8CAD /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
 		598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		598F1DBA3C55625E9D944746 /* Observer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observer.swift; sourceTree = "<group>"; };
@@ -119,7 +117,6 @@
 				21192B912A00476200537E5D /* TreeNode.swift */,
 				21192B932A00476B00537E5D /* Window.swift */,
 				598F1942A41A3D7EF7A4EFD3 /* Workspace.swift */,
-				598F10EFC3F374A36040A90F /* resize.swift */,
 				598F1E5DE6B847F675940A7E /* utils.swift */,
 				21AF73D62A2374F70078F25A /* Bridged-Header.h */,
 				218FCDA82A1966B800B3D559 /* AeroSpaceApp.swift */,
@@ -304,7 +301,6 @@
 				218FCDD22A1966C200B3D559 /* Workspace.swift in Sources */,
 				218FCDD72A1966C200B3D559 /* Window.swift in Sources */,
 				218FCDA92A1966B800B3D559 /* AeroSpaceApp.swift in Sources */,
-				218FCDD42A1966C200B3D559 /* resize.swift in Sources */,
 				218FCDD52A1966C200B3D559 /* Container.swift in Sources */,
 				218FCDD32A1966C200B3D559 /* TreeNode.swift in Sources */,
 				218FCDD62A1966C200B3D559 /* utils.swift in Sources */,

@@ -3,7 +3,7 @@ import Foundation
 func checkAccessibilityPermissions() {
     let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true]
     if !AXIsProcessTrustedWithOptions(options as CFDictionary) {
-        fatalError("Accessibility permission isn't granted")
+        error("Accessibility permission isn't granted")
     }
 }
 
@@ -39,15 +39,13 @@ enum Ax {
     )
     static let titleAttr = WritableAttrImpl<String>(
             value: kAXTitleAttribute,
-            getter: { $0 as? String ?? errorT("kAXTitleAttribute error") },
+            getter: { $0 as! String },
             setter: { $0 as CFTypeRef }
     )
     static let sizeAttr = WritableAttrImpl<CGSize>(
             value: kAXSizeAttribute,
             getter: {
                 var raw: CGSize = .zero
-                // I'd be happy to use safe cast, but I can't :(
-                //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
                 assert(AXValueGetValue($0 as! AXValue, .cgSize, &raw))
                 return raw
             },
@@ -60,8 +58,6 @@ enum Ax {
             value: kAXPositionAttribute,
             getter: {
                 var raw: CGPoint = .zero
-                // I'd be happy to use safe cast, but I can't :(
-                //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
                 AXValueGetValue($0 as! AXValue, .cgPoint, &raw)
                 return raw
             },
@@ -73,10 +69,7 @@ enum Ax {
     static let windowsAttr = ReadableAttrImpl<[AXUIElement]>(
             value: kAXWindowsAttribute,
             getter: {
-                ($0 as? NSArray ?? errorT("kAXWindowsAttribute error"))
-                        // I'd be happy to use safe cast, but I can't :(
-                        //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
-                        .compactMap { $0 as! AXUIElement }
+                ($0 as! NSArray).compactMap { $0 as! AXUIElement }
             }
     )
     // todo unused?
@@ -94,10 +87,6 @@ enum Ax {
     )
 }
 
-func errorT<T>(_ message: String = "") -> T {
-    fatalError(message)
-}
-
 extension AXUIElement {
     func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
         var raw: AnyObject?
@@ -113,5 +102,13 @@ extension AXUIElement {
     func windowId() -> CGWindowID? {
         var cgWindowId = CGWindowID()
         return _AXUIElementGetWindow(self, &cgWindowId) == .success ? cgWindowId : nil
+    }
+}
+
+extension AXObserver {
+    static func new(_ pid: pid_t, _ handler: AXObserverCallback) -> AXObserver {
+        var observer: AXObserver? = nil
+        assert(AXObserverCreate(pid, handler, &observer) == .success)
+        return observer!
     }
 }

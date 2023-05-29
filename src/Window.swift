@@ -1,7 +1,6 @@
 import Foundation
 import AppKit
 
-
 class Window: TreeNode, Hashable {
     private let nsApp: NSRunningApplication
     // todo: make private
@@ -14,6 +13,7 @@ class Window: TreeNode, Hashable {
     }
     private var prevUnhiddenPosition: CGPoint?
     private var previousSize: CGSize?
+    // todo free resources
     private var observer: AXObserver? // keep observer in memory
 
     private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement, _ axWindow: AXUIElement) {
@@ -35,9 +35,7 @@ class Window: TreeNode, Hashable {
 
             let windowPtr = UnsafeMutableRawPointer(Unmanaged.passUnretained(window).toOpaque())
 
-            var observer: AXObserver? = nil
-            assert(AXObserverCreate(nsApp.processIdentifier, handler, &observer) == .success)
-            guard let observer else { fatalError("Window.get: observer") }
+            let observer = AXObserver.new(nsApp.processIdentifier, handler)
             window.observer = observer
             assert(AXObserverAddNotification(observer, axWindow, kAXMovedNotification as CFString, windowPtr) == .success)
             assert(AXObserverAddNotification(observer, axWindow, kAXResizedNotification as CFString, windowPtr) == .success)
@@ -62,11 +60,7 @@ class Window: TreeNode, Hashable {
     }
 
     func windowId() -> CGWindowID {
-        if let id = axWindow.windowId() {
-            return id
-        } else {
-            fatalError("Can't get ID of \(self)")
-        }
+        axWindow.windowId() ?? errorT("Can't get ID of \(self)")
     }
 
     func activate() -> Bool {

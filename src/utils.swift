@@ -21,21 +21,6 @@ func windowsOnActiveMacOsSpaces() -> [Window] {
             .flatMap({ $0.windowsOnActiveMacOsSpaces })
 }
 
-func activateWindowByName(_ name: String) {
-    // Get all running applications
-    let runningApps = NSWorkspace.shared.runningApplications
-
-    // Find the first application with a window whose title matches the given name
-    let appWithWindow = runningApps.first { app in
-        // guard let window = app.windows.first else { return false }
-        // return window.title == name
-        app.localizedName == name
-    }
-
-    // Activate the found application (and bring its window to the front)
-    appWithWindow?.activate(options: .activateIgnoringOtherApps)
-}
-
 //func activeSpace() {
 ////    CGSCopyManagedDisplaySpaces(CGSMainConnectionID())?.takeRetainedValue()
 ////    CGSpacesInfo
@@ -44,17 +29,6 @@ func activateWindowByName(_ name: String) {
 
 //func observeSpaceChanges() {
 //    NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(self.spaceChange), name: NSWorkspace.activeSpaceDidChangeNotification, object: nil)
-//}
-
-// NSWorkspace.shared.runningApplications.filter({ $0.activationPolicy == .regular }) also returns garbage
-// "Finder virtual desktop window" or something
-//func appPidsOnCurrentMacOsSpace() -> [pid_t] {
-//    // todo what is excludeDesktopElements?
-//    let options = CGWindowListOption(arrayLiteral: .excludeDesktopElements, .optionOnScreenOnly)
-//    let windowsListInfo = CGWindowListCopyWindowInfo(options, CGWindowID(0))
-//    let infoList = windowsListInfo as! [[String:Any]]
-//    let windows = infoList.filter { $0["kCGWindowLayer"] as! Int == 0 }
-//    return Array(Set(windows.map { $0["kCGWindowOwnerPID"].unsafelyUnwrapped as! pid_t }))
 //}
 
 func test() {
@@ -100,4 +74,12 @@ extension NSScreen {
     var isMainMonitor: Bool {
         visibleFrame.minX == 0 && visibleFrame.minY == 0
     }
+}
+
+func errorT<T>(_ message: String = "") -> T {
+    fatalError(message)
+}
+
+func error(_ message: String = "") -> Never {
+    fatalError(message)
 }

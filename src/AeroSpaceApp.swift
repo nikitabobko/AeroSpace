@@ -37,6 +37,8 @@ struct AeroSpaceApp: App {
     var body: some Scene {
         MenuBarExtra {
             Text("Workspaces:")
+            // todo show only non empty workspaces
+            //      Or create two groups? (non empty group and empty group)
             ForEach(settings) { setting in
                 Button {
                     viewModel.changeWorkspace(setting.id)
@@ -49,9 +51,8 @@ struct AeroSpaceApp: App {
                 }
             }
             Divider()
-            Button("Quit AeroSpace") {
-                NSApplication.shared.terminate(nil)
-            }.keyboardShortcut("Q", modifiers: .command)
+            Button("Quit AeroSpace") { NSApplication.shared.terminate(nil) }
+                    .keyboardShortcut("Q", modifiers: .command)
         } label: {
             // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
             Text(viewModel.currentWorkspaceName)
