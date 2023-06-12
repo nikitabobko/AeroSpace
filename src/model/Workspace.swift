@@ -3,8 +3,8 @@ import Foundation
 // todo make it configurable
 // todo make default choice
 private func createDefaultWorkspaceContainer() -> Container {
-    guard let monitorFrame = NSScreen.focusedMonitor?.frame else { return HStackContainer() }
-    return monitorFrame.width > monitorFrame.height ? VStackContainer() : HStackContainer()
+    guard let monitorFrame = NSScreen.focusedMonitor?.frame else { return HListContainer() }
+    return monitorFrame.width > monitorFrame.height ? VListContainer() : HListContainer()
 }
 // todo fetch from real settings
 let initialWorkspaceName = settings[0].id

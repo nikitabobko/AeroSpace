@@ -7,12 +7,12 @@ protocol Container: TreeNode {
     var orientation: Orientation { get }
 }
 
-class HStackContainer: Container {
+class HListContainer: Container {
     var orientation: Orientation { .H }
     var children: [TreeNode] = []
 }
 
-class VStackContainer: Container {
+class VListContainer: Container {
     var orientation: Orientation { .V }
     var children: [TreeNode] = []
 }
