@@ -9,6 +9,7 @@ private func createDefaultWorkspaceContainer() -> Container {
 // todo fetch from real settings
 let initialWorkspaceName = settings[0].id
 
+// todo minor: clean this "cache"
 private var workspaceNameToWorkspace: [String: Workspace] = [:]
 private var monitorOriginToWorkspace: [CGPoint: Workspace] = [:]
 
@@ -29,6 +30,13 @@ class Workspace: Hashable {
         floatingWindows.remove(window)
     }
 
+    // todo Implement properly
+    func moveTo(monitor: NSScreen) {
+        for window in floatingWindows {
+            window.setPosition(monitor.visibleFrame.origin)
+        }
+    }
+
     static var all: some Collection<Workspace> { workspaceNameToWorkspace.values }
 
     static func get(byName name: String) -> Workspace {
@@ -45,18 +53,20 @@ class Workspace: Hashable {
         if let existing = monitorOriginToWorkspace[monitor.frame.origin] {
             return existing
         }
-        let monitorWorkspaces: [CGPoint: Workspace] = monitorOriginToWorkspace
+        let oldMonitorToWorkspace: [CGPoint: Workspace] = monitorOriginToWorkspace
         monitorOriginToWorkspace = [:]
         let origins = NSScreen.screens.map { $0.frame.origin }.toSet()
         var notAssignedWorkspaces: [Workspace] =
-                monitorWorkspaces.filter { oldOrigin, oldWorkspace in !origins.contains(oldOrigin) }
-                        .map { _, workspace -> Workspace in workspace }
-                        + settings.map { Workspace.get(byName: $0.id) }.toSet()
-                            .subtracting(monitorWorkspaces.values)
+                settings.map { Workspace.get(byName: $0.id) }
+                        .toSet()
+                        .subtracting(oldMonitorToWorkspace.values) +
+                        oldMonitorToWorkspace.filter { oldOrigin, oldWorkspace in !origins.contains(oldOrigin) }
+                                .map { _, workspace -> Workspace in workspace }
 
         for monitor in NSScreen.screens {
             let origin = monitor.frame.origin
-            if let existing = monitorWorkspaces[origin] {
+            // If monitors change, most likely we will preserve only the main monitor (It always has (0, 0) origin)
+            if let existing = oldMonitorToWorkspace[origin] {
                 monitorOriginToWorkspace[origin] = existing
             } else {
                 monitorOriginToWorkspace[origin] = notAssignedWorkspaces.popLast()
@@ -82,4 +92,8 @@ class Workspace: Hashable {
 
 extension Workspace {
     var allWindows: [MacWindow] { floatingWindows + rootContainer.allWindows }
+
+    var monitor: NSScreen? { NSScreen.screens.first { Workspace.get(byMonitor: $0) === self } }
+
+    var isVisible: Bool { monitor != nil }
 }

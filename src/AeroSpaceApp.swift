@@ -9,6 +9,7 @@ import SwiftUI
 let settings = [
     Setting(id: "111", hotkey: .one, modifiers: [.option]),
     Setting(id: "222", hotkey: .two, modifiers: [.option]),
+    Setting(id: "333", hotkey: .two, modifiers: [.option]),
 ]
 
 struct Setting: Identifiable {
@@ -24,10 +25,10 @@ struct AeroSpaceApp: App {
 
     init() {
         checkAccessibilityPermissions()
-        Observer.initObserver()
+        GlobalObserver.initObserver()
         for setting in settings {
             hotKeys.append(HotKey(key: setting.hotkey, modifiers: setting.modifiers, keyUpHandler: {
-                ViewModel.shared.changeWorkspace(setting.id)
+                ViewModel.shared.changeWorkspace(Workspace.get(byName: setting.id))
             }))
         }
         refresh()
@@ -43,12 +44,12 @@ struct AeroSpaceApp: App {
             //      Or create two groups? (non empty group and empty group)
             ForEach(settings) { setting in
                 Button {
-                    viewModel.changeWorkspace(setting.id)
+                    viewModel.changeWorkspace(Workspace.get(byName: setting.id))
                 } label: {
-                    Toggle(isOn: setting.id == viewModel.currentWorkspaceName
+                    Toggle(isOn: setting.id == viewModel.focusedWorkspace?.name
                             ? Binding(get: { true }, set: { _, _ in })
                             : Binding(get: { false }, set: { _, _ in })) {
-                        Text(setting.id).font(.system(.body, design: .monospaced))
+                        Text("\(setting.id)").font(.system(.body, design: .monospaced))
                     }
                 }
             }
@@ -57,7 +58,8 @@ struct AeroSpaceApp: App {
                     .keyboardShortcut("Q", modifiers: .command)
         } label: {
             // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
-            Text(viewModel.currentWorkspaceName)
+            // todo reserve "???" workspace name
+            Text(viewModel.focusedWorkspace?.name ?? "???")
         }
     }
 }

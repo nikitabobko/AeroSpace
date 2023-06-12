@@ -13,15 +13,21 @@ import AppKit
 //    NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(self.spaceChange), name: NSWorkspace.activeSpaceDidChangeNotification, object: nil)
 //}
 
+func windowsOnActiveMacOsSpacesTest() -> [MacWindow] {
+    NSWorkspace.shared.runningApplications
+            .filter { $0.activationPolicy == .regular }
+            .flatMap { $0.macApp.windowsOnActiveMacOsSpaces }
+}
+
 func test() {
     for screen in NSScreen.screens {
-        print("---")
-        print(screen.localizedName)
-        print(screen.debugDescription)
-        print(screen.visibleFrame.origin)
-        print("minX: \(screen.visibleFrame.minX)")
-        print("width: \(screen.visibleFrame.width)")
-        print(screen.visibleFrame)
+        debug("---")
+        debug(screen.localizedName)
+        debug(screen.debugDescription)
+        debug(screen.visibleFrame.origin)
+        debug("minX: \(screen.visibleFrame.minX)")
+        debug("width: \(screen.visibleFrame.width)")
+        debug(screen.visibleFrame)
     }
 //    let bar = windowsOnActiveMacOsSpaces().filter { $0.title?.contains("bar") == true }.first!
 //    bar.setSize(CGSize(width: monitorWidth, height: monitorHeight))
@@ -59,15 +65,31 @@ func error(_ message: String = "") -> Never {
 
 extension NSScreen {
     /**
-     Because "main" is a misleading name
+     Because:
+     1. NSScreen.main is a misleading name.
+     2. NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
+        kAXFocusedWindowChangedNotification callbacks.
      */
-    static var focusedMonitor: NSScreen? { main }
+    static var focusedMonitor: NSScreen? {
+        guard let app = NSWorkspace.shared.frontmostApplication?.macApp else { return nil }
+        let focusedWindow = app.focusedWindow
+        // Desktop is in focus. We can do nothing to get current focused monitor reliably (well, I didn't manage to)
+        if app.isFinder && focusedWindow == nil {
+            return nil
+        }
+        return focusedWindow?.monitor
+    }
 }
 
 extension CGPoint: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(x)
         hasher.combine(y)
+    }
+
+    // todo unused?
+    var monitor: NSScreen? {
+        NSScreen.screens.first { $0.frame.contains(self) }
     }
 }
 
@@ -78,4 +100,12 @@ extension Sequence where Element: Hashable {
 extension Set {
     // todo unused?
     func toArray() -> [Element] { Array(self) }
+}
+
+private let DEBUG = true
+
+func debug(_ msg: Any) {
+    if DEBUG {
+        print(msg)
+    }
 }

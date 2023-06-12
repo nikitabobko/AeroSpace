@@ -33,7 +33,7 @@ enum Ax {
     static let valueAttr = ReadableAttrImpl<String>(
             key: kAXValueAttribute,
             getter: { foo in
-                print(stringType(of: foo))
+                debug(stringType(of: foo))
                 return ""
             }
     )
@@ -79,6 +79,21 @@ enum Ax {
             //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
             getter: { $0 as! AXUIElement }
     )
+    static let identifierAttr = ReadableAttrImpl<String>(
+            key: kAXIdentifierAttribute,
+            // I'd be happy to use safe cast, but I can't :(
+            //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
+            getter: {
+                debug("id: \($0)")
+                return $0 as! String
+            }
+    )
+    static let focusedUiElementAttr = ReadableAttrImpl<AXUIElement>(
+            key: kAXFocusedUIElementAttribute,
+            // I'd be happy to use safe cast, but I can't :(
+            //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
+            getter: { $0 as! AXUIElement }
+    )
     static let closeButtonAttr = ReadableAttrImpl<AXUIElement>(
             key: kAXCloseButtonAttribute,
             // I'd be happy to use safe cast, but I can't :(
@@ -88,6 +103,9 @@ enum Ax {
 }
 
 extension AXUIElement {
+    // todo unused?
+    static let systemWide = AXUIElementCreateSystemWide()
+
     func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
         var raw: AnyObject?
         return AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success
@@ -112,9 +130,10 @@ extension AXObserver {
         return observer!
     }
 
-    static func new(_ pid: pid_t, _ notifKey: String, _ ax: AXUIElement, _ data: AnyObject, _ handler: AXObserverCallback) -> AXObserver {
+    static func observe(_ pid: pid_t, _ notifKey: String, _ ax: AXUIElement, _ data: AnyObject, _ handler: AXObserverCallback) -> AXObserver {
         let observer = newImpl(pid, handler)
         let dataPtr = Unmanaged.passUnretained(data).toOpaque()
+        // todo assertion fails (workspace switching?)
         assert(AXObserverAddNotification(observer, ax, notifKey as CFString, dataPtr) == .success)
         CFRunLoopAddSource(CFRunLoopGetCurrent(), AXObserverGetRunLoopSource(observer), .defaultMode)
         return observer

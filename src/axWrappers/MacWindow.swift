@@ -5,7 +5,7 @@ class MacWindow: TreeNode, Hashable {
     let windowId: CGWindowID
     // todo: make private
     let axWindow: AXUIElement
-    private let app: MacApp
+    let app: MacApp
     var children: [TreeNode] { [] }
     private var prevUnhiddenEmulationPosition: CGPoint?
     // todo redundant?
@@ -29,7 +29,7 @@ class MacWindow: TreeNode, Hashable {
             return existing
         } else {
             let window = MacWindow(id, app, axWindow)
-            print("New window detected: \(window.title)")
+            debug("New window detected: \(window.title)")
 
             window.observe(windowIsDestroyedObs, kAXUIElementDestroyedNotification)
             window.observe(refreshObs, kAXWindowDeminiaturizedNotification)
@@ -51,7 +51,7 @@ class MacWindow: TreeNode, Hashable {
     }
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) {
-        let observer = AXObserver.new(app.nsApp.processIdentifier, notifKey, axWindow, self, handler)
+        let observer = AXObserver.observe(app.nsApp.processIdentifier, notifKey, axWindow, self, handler)
         axObservers.append(AXObserverWrapper(obs: observer, ax: axWindow, notif: notifKey as CFString))
     }
 
@@ -60,8 +60,8 @@ class MacWindow: TreeNode, Hashable {
     }
 
     var monitor: NSScreen? {
-        guard let position = getPosition() else { return nil }
-        return NSScreen.screens.first { $0.frame.contains(position) }
+        guard let postion = getPosition() else { return nil }
+        return NSScreen.screens.first { $0.frame.contains(postion) }
     }
 
     func activate() -> Bool {
@@ -83,6 +83,7 @@ class MacWindow: TreeNode, Hashable {
             prevUnhiddenEmulationPosition = getPosition()
             prevUnhiddenEmulationSize = getSize()
         }
+//        let foo = if true { true } else {false}
         guard let monitor else { return }
         // todo hiding is broken for secondary monitor
         setPosition(CGPoint(x: monitor.frame.maxX, y: monitor.frame.maxY))
@@ -140,7 +141,7 @@ private extension UnsafeMutableRawPointer {
 
 private func windowIsDestroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
     guard let window = data?.window else { return }
-    print("Destroyed: \(window.title)")
+    debug("Destroyed: \(window.title)")
     assert(MacWindow.allWindows.removeValue(forKey: window.windowId) != nil)
     for workspace in Workspace.all {
         workspace.remove(window: window)

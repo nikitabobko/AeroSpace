@@ -15,7 +15,7 @@ class MacApp: Hashable {
 
     private static var apps: [pid_t: MacApp] = [:]
 
-    public static func get(_ nsApp: NSRunningApplication) -> MacApp {
+    fileprivate static func get(_ nsApp: NSRunningApplication) -> MacApp {
         let pid = nsApp.processIdentifier
         if let existing = apps[pid] {
             return existing
@@ -24,6 +24,7 @@ class MacApp: Hashable {
 
             app.observe(refreshObs, kAXWindowCreatedNotification)
             app.observe(refreshObs, kAXFocusedWindowChangedNotification)
+
             // todo subscribe on app destroy
 
             apps[pid] = app
@@ -31,8 +32,10 @@ class MacApp: Hashable {
         }
     }
 
+    var title: String? { nsApp.localizedName }
+
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) {
-        let observer = AXObserver.new(nsApp.processIdentifier, notifKey, axApp, self, handler)
+        let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, self, handler)
         axObservers.append(AXObserverWrapper(obs: observer, ax: axApp, notif: notifKey as CFString))
     }
 
@@ -43,6 +46,14 @@ class MacApp: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(nsApp.processIdentifier)
     }
+
+    var focusedWindow: MacWindow? {
+        axApp.get(Ax.focusedWindowAttr).flatMap { MacWindow.get(app: self, axWindow: $0) }
+    }
+}
+
+extension NSRunningApplication {
+    var macApp: MacApp { MacApp.get(self) }
 }
 
 // todo unused
@@ -57,4 +68,6 @@ extension MacApp {
     var windowsOnActiveMacOsSpaces: [MacWindow] {
         (axApp.get(Ax.windowsAttr) ?? []).compactMap({ MacWindow.get(app: self, axWindow: $0) })
     }
+
+    var isFinder: Bool { title == "Finder" }
 }

@@ -22,7 +22,7 @@
 		598F17A653B5F5F82AB92469 /* axObservers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F197B70B5D4765A039B05 /* axObservers.swift */; };
 		598F17DDD360F613F99A4024 /* accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1EABE9D4CD0440DE9BF3 /* accessibility.swift */; };
 		598F17ED72D8CA5F86963DFC /* MacWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1DD5BDD0520E4144995E /* MacWindow.swift */; };
-		598F18DAC58EE1AF75AA5C8A /* Observer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1DBA3C55625E9D944746 /* Observer.swift */; };
+		598F18DAC58EE1AF75AA5C8A /* GlobalObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1DBA3C55625E9D944746 /* GlobalObserver.swift */; };
 		598F1CC98A5D802D535A92A5 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1B967DAF8BC216635A9F /* Bundle.swift */; };
 		598F1DD091322677FDA900C2 /* MacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F17E70A7DD34F47795210 /* MacApp.swift */; };
 		598F1E560BF37484F529B9BD /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1C137874EA3093CEB770 /* Workspace.swift */; };
@@ -64,7 +64,7 @@
 		598F197B70B5D4765A039B05 /* axObservers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = axObservers.swift; path = axWrappers/axObservers.swift; sourceTree = "<group>"; };
 		598F1B967DAF8BC216635A9F /* Bundle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 		598F1C137874EA3093CEB770 /* Workspace.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Workspace.swift; path = model/Workspace.swift; sourceTree = "<group>"; };
-		598F1DBA3C55625E9D944746 /* Observer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observer.swift; sourceTree = "<group>"; };
+		598F1DBA3C55625E9D944746 /* GlobalObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GlobalObserver.swift; sourceTree = "<group>"; };
 		598F1DD5BDD0520E4144995E /* MacWindow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MacWindow.swift; path = axWrappers/MacWindow.swift; sourceTree = "<group>"; };
 		598F1E5DE6B847F675940A7E /* utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		598F1EABE9D4CD0440DE9BF3 /* accessibility.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = accessibility.swift; sourceTree = "<group>"; };
@@ -129,7 +129,7 @@
 				218FCDAE2A1966B900B3D559 /* Preview Content */,
 				598F1919F1ED15BE39CA8CAD /* ViewModel.swift */,
 				598F1EABE9D4CD0440DE9BF3 /* accessibility.swift */,
-				598F1DBA3C55625E9D944746 /* Observer.swift */,
+				598F1DBA3C55625E9D944746 /* GlobalObserver.swift */,
 				598F1B967DAF8BC216635A9F /* Bundle.swift */,
 				598F17E70A7DD34F47795210 /* MacApp.swift */,
 				598F1DD5BDD0520E4144995E /* MacWindow.swift */,
@@ -314,7 +314,7 @@
 				218FCDD62A1966C200B3D559 /* utils.swift in Sources */,
 				598F11C1A395A47C47DCC138 /* ViewModel.swift in Sources */,
 				598F17DDD360F613F99A4024 /* accessibility.swift in Sources */,
-				598F18DAC58EE1AF75AA5C8A /* Observer.swift in Sources */,
+				598F18DAC58EE1AF75AA5C8A /* GlobalObserver.swift in Sources */,
 				598F1CC98A5D802D535A92A5 /* Bundle.swift in Sources */,
 				598F1DD091322677FDA900C2 /* MacApp.swift in Sources */,
 				598F17ED72D8CA5F86963DFC /* MacWindow.swift in Sources */,

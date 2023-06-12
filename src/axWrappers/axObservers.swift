@@ -7,6 +7,6 @@ struct AXObserverWrapper {
 }
 
 func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
-    print("refreshObs")
+    debug("refreshObs")
     refresh()
 }
