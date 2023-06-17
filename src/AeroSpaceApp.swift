@@ -9,7 +9,7 @@ import SwiftUI
 let settings = [
     Setting(id: "111", hotkey: .one, modifiers: [.option]),
     Setting(id: "222", hotkey: .two, modifiers: [.option]),
-    Setting(id: "333", hotkey: .two, modifiers: [.option]),
+    Setting(id: "333", hotkey: .three, modifiers: [.option]),
 ]
 
 struct Setting: Identifiable {
@@ -28,7 +28,7 @@ struct AeroSpaceApp: App {
         GlobalObserver.initObserver()
         for setting in settings {
             hotKeys.append(HotKey(key: setting.hotkey, modifiers: setting.modifiers, keyUpHandler: {
-                ViewModel.shared.changeWorkspace(Workspace.get(byName: setting.id))
+                ViewModel.shared.switchToWorkspace(Workspace.get(byName: setting.id))
             }))
         }
         refresh()
@@ -37,14 +37,14 @@ struct AeroSpaceApp: App {
 
     var body: some Scene {
         MenuBarExtra {
-            Text("AeroSpace v\(Bundle.main.appVersion)")
+            Text("AeroSpace v\(Bundle.appVersion)")
             Divider()
             Text("Workspaces:")
             // todo show only non empty workspaces
             //      Or create two groups? (non empty group and empty group)
             ForEach(settings) { setting in
                 Button {
-                    viewModel.changeWorkspace(Workspace.get(byName: setting.id))
+                    viewModel.switchToWorkspace(Workspace.get(byName: setting.id))
                 } label: {
                     Toggle(isOn: setting.id == viewModel.focusedWorkspace?.name
                             ? Binding(get: { true }, set: { _, _ in })

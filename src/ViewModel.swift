@@ -7,7 +7,7 @@ class ViewModel: ObservableObject {
     }
 
     /**
-     This value changes when active monitor changes. nil when desktop is selected
+     This value changes when active monitor changes. `nil` when the the active app doesn't have any windows
      */
     @Published private(set) var focusedWorkspace: Workspace? = nil
     /**
@@ -20,7 +20,7 @@ class ViewModel: ObservableObject {
 
     // todo use fake anchor windows to switch the focus?
     //  https://github.com/bigbearlabs/SpaceSwitcher/blob/master/SpaceSwitcher/SpaceSwitcher.swift
-    func changeWorkspace(_ newWorkspace: Workspace) {
+    func switchToWorkspace(_ newWorkspace: Workspace) {
         refresh()
         for window in focusedWorkspace?.allWindows ?? [] {
             window.hideEmulation()
@@ -29,7 +29,7 @@ class ViewModel: ObservableObject {
             window.unhideEmulation()
         }
         let focusedMonitor = NSScreen.focusedMonitor ?? NSScreen.main
-        if let alreadyAllocatedOn = newWorkspace.monitor, let focusedMonitor {
+        if let focusedMonitor, let alreadyAllocatedOn = newWorkspace.monitor {
             if alreadyAllocatedOn.frame.origin != focusedMonitor.frame.origin {
                 newWorkspace.moveTo(monitor: focusedMonitor)
             }

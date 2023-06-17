@@ -71,13 +71,7 @@ extension NSScreen {
         kAXFocusedWindowChangedNotification callbacks.
      */
     static var focusedMonitor: NSScreen? {
-        guard let app = NSWorkspace.shared.frontmostApplication?.macApp else { return nil }
-        let focusedWindow = app.focusedWindow
-        // Desktop is in focus. We can do nothing to get current focused monitor reliably (well, I didn't manage to)
-        if app.isFinder && focusedWindow == nil {
-            return nil
-        }
-        return focusedWindow?.monitor
+        NSWorkspace.shared.frontmostApplication?.macApp.focusedWindow?.monitor
     }
 }
 

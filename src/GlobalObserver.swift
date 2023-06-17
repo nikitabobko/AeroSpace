@@ -18,7 +18,7 @@ class GlobalObserver {
         // todo subscribe on finder desktop click on different monitors
         subscribe(NSWorkspace.didActivateApplicationNotification)
         subscribe(NSWorkspace.activeSpaceDidChangeNotification)
-        subscribe(NSWorkspace.accessibilityDisplayOptionsDidChangeNotification)
+//        subscribe(NSWorkspace.didTerminateApplicationNotification)
 
 
 
