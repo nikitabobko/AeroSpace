@@ -1,10 +1,11 @@
 name: Xcode - Build and Analyze
 
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+# Temporarily disable GH Actions until I fix it :)
+#on:
+#  push:
+#    branches: [ "main" ]
+#  pull_request:
+#    branches: [ "main" ]
 
 jobs:
   build:
