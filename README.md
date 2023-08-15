@@ -14,7 +14,7 @@ AeroSpace is a tiling window manager for macOS.
 - Proper multi-monitor support (i3-like paradigm)
 - Status menu icon displays current workspace name
 
-## How to build the project
+## How to compile the project
 
 You would need a mac. Run in terminal:
 ```bash
