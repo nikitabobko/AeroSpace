@@ -14,7 +14,7 @@ extension TreeNode {
         }
     }
 
-    var allWindows: [MacWindow] {
+    var allWindowsRecursive: [MacWindow] {
         var result: [MacWindow] = []
         visit(node: self, result: &result)
         return result

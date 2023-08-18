@@ -7,9 +7,9 @@ import SwiftUI
 
 // todo extract into settings
 let settings = [
-    Setting(id: "111", hotkey: .one, modifiers: [.option]),
-    Setting(id: "222", hotkey: .two, modifiers: [.option]),
-    Setting(id: "333", hotkey: .three, modifiers: [.option]),
+    Setting(id: "W: 1", hotkey: .one, modifiers: [.option]),
+    Setting(id: "W: 2", hotkey: .two, modifiers: [.option]),
+    Setting(id: "W: 3", hotkey: .three, modifiers: [.option]),
 ]
 
 struct Setting: Identifiable {
@@ -28,6 +28,7 @@ struct AeroSpaceApp: App {
         GlobalObserver.initObserver()
         for setting in settings {
             hotKeys.append(HotKey(key: setting.hotkey, modifiers: setting.modifiers, keyUpHandler: {
+                refresh()
                 ViewModel.shared.switchToWorkspace(Workspace.get(byName: setting.id))
             }))
         }
@@ -46,7 +47,7 @@ struct AeroSpaceApp: App {
                 Button {
                     viewModel.switchToWorkspace(Workspace.get(byName: setting.id))
                 } label: {
-                    Toggle(isOn: setting.id == viewModel.focusedWorkspace?.name
+                    Toggle(isOn: setting.id == viewModel.focusedWorkspaceTrayText
                             ? Binding(get: { true }, set: { _, _ in })
                             : Binding(get: { false }, set: { _, _ in })) {
                         Text("\(setting.id)").font(.system(.body, design: .monospaced))
@@ -59,7 +60,7 @@ struct AeroSpaceApp: App {
         } label: {
             // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
             // todo reserve "???" workspace name
-            Text(viewModel.focusedWorkspace?.name ?? "???")
+            Text(viewModel.focusedWorkspaceTrayText)
         }
     }
 }

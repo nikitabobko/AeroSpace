@@ -3,20 +3,35 @@ import Foundation
 // todo make it configurable
 // todo make default choice
 private func createDefaultWorkspaceContainer() -> Container {
-    guard let monitorFrame = NSScreen.focusedMonitor?.frame else { return HListContainer() }
-    return monitorFrame.width > monitorFrame.height ? VListContainer() : HListContainer()
+    guard let monitorRect = NSScreen.focusedMonitorOrNilIfDesktop?.rect else { return HListContainer() }
+    return monitorRect.width > monitorRect.height ? VListContainer() : HListContainer()
 }
 // todo fetch from real settings
-let initialWorkspaceName = settings[0].id
+let initialWorkspace = settings[0]
 
-// todo minor: clean this "cache"
 private var workspaceNameToWorkspace: [String: Workspace] = [:]
-private var monitorOriginToWorkspace: [CGPoint: Workspace] = [:]
+
+/// Empty workspace is spread over all monitors. That's why it's tracked separately. See ``monitorTopLeftCornerToNotEmptyWorkspace``,
+var currentEmptyWorkspace: Workspace = Workspace.get(byName: "???") // todo assign unique default name
+/// macOS doesn't provide an API to check for currently active/selected monitor
+/// (see ``NSScreen.focusedMonitorOrNilIfDesktop``) => when users changes the active monitor by clicking the
+/// desktop on different monitor AeroSpace can't detect it => AeroSpace assumes that the empty workspace occupies
+/// both monitors.
+///
+/// If, at the same time, another monitor already contains another not empty workspace `B` then we assume that this
+/// monitor contains two workspaces: the empty one and `B` which displayed on top of empty one
+///
+/// That's why the mental model is the following: the empty workspace is spread over all monitors. And each monitor
+/// optionally can have a not empty workspace assigned to it
+///
+/// When this map contains `nil` it means that the monitor displays the "empty"/"background" workspace
+private var monitorTopLeftCornerToNotEmptyWorkspace: [CGPoint: Workspace?] = [:]
 
 class Workspace: Hashable {
     let name: String
     var floatingWindows: Set<MacWindow> = []
     var rootContainer: Container = createDefaultWorkspaceContainer()
+    var isVisible: Bool = false
 
     private init(name: String) {
         self.name = name
@@ -30,14 +45,27 @@ class Workspace: Hashable {
         floatingWindows.remove(window)
     }
 
+    var isEmpty: Bool {
+        floatingWindows.isEmpty && rootContainer.allWindowsRecursive.isEmpty
+    }
+
     // todo Implement properly
     func moveTo(monitor: NSScreen) {
         for window in floatingWindows {
-            window.setPosition(monitor.visibleFrame.origin)
+            window.setPosition(monitor.visibleRect.topLeft)
         }
     }
 
-    static var all: some Collection<Workspace> { workspaceNameToWorkspace.values }
+    static var all: some Collection<Workspace> {
+        let preservedNames = settings.map { $0.id }.toSet()
+        for name in preservedNames {
+            _ = get(byName: name) // Make sure that all preserved workspaces are "cached"
+        }
+        workspaceNameToWorkspace = workspaceNameToWorkspace.filter {
+            preservedNames.contains($0.value.name) || !$0.value.isEmpty
+        }
+        return workspaceNameToWorkspace.values
+    }
 
     static func get(byName name: String) -> Workspace {
         if let existing = workspaceNameToWorkspace[name] {
@@ -49,40 +77,8 @@ class Workspace: Hashable {
         }
     }
 
-    static func get(byMonitor monitor: NSScreen) -> Workspace {
-        if let existing = monitorOriginToWorkspace[monitor.frame.origin] {
-            return existing
-        }
-        let oldMonitorToWorkspace: [CGPoint: Workspace] = monitorOriginToWorkspace
-        monitorOriginToWorkspace = [:]
-        let origins = NSScreen.screens.map { $0.frame.origin }.toSet()
-        var notAssignedWorkspaces: [Workspace] =
-                settings.map { Workspace.get(byName: $0.id) }
-                        .toSet()
-                        .subtracting(oldMonitorToWorkspace.values) +
-                        oldMonitorToWorkspace.filter { oldOrigin, oldWorkspace in !origins.contains(oldOrigin) }
-                                .map { _, workspace -> Workspace in workspace }
-
-        for monitor in NSScreen.screens {
-            let origin = monitor.frame.origin
-            // If monitors change, most likely we will preserve only the main monitor (It always has (0, 0) origin)
-            if let existing = oldMonitorToWorkspace[origin] {
-                monitorOriginToWorkspace[origin] = existing
-            } else {
-                monitorOriginToWorkspace[origin] = notAssignedWorkspaces.popLast()
-                        // todo show user friendly dialog
-                        ?? errorT("""
-                                  Not enough number of workspaces for the number of monitors. 
-                                  Please add more workspaces to the config
-                                  """)
-            }
-        }
-        // Normally, recursion should happen only once more (Unless, NSScreen data race happens)
-        return get(byMonitor: monitor)
-    }
-
     static func ==(lhs: Workspace, rhs: Workspace) -> Bool {
-        lhs.name == rhs.name
+        lhs === rhs
     }
 
     func hash(into hasher: inout Hasher) {
@@ -90,10 +86,53 @@ class Workspace: Hashable {
     }
 }
 
+extension NSScreen {
+    /// Don't forget that there is always an empty additional "background" workspace on every monitor ``currentEmptyWorkspace``
+    var notEmptyWorkspace: Workspace? {
+        get {
+            if let existing = monitorTopLeftCornerToNotEmptyWorkspace[rect.topLeft] {
+                return existing
+            }
+            // What if monitor configuration changed? (frame.origin is changed)
+            rearrangeWorkspacesOnMonitors()
+            // Normally, recursion should happen only once more because we must take the value from the cache
+            // (Unless, monitor configuration data race happens)
+            return self.notEmptyWorkspace
+        }
+    }
+}
+
+private func rearrangeWorkspacesOnMonitors() {
+    let oldMonitorToWorkspaces: [CGPoint: Workspace?] = monitorTopLeftCornerToNotEmptyWorkspace
+    monitorTopLeftCornerToNotEmptyWorkspace = [:]
+    let monitors = NSScreen.screens
+    let origins = monitors.map { $0.rect.topLeft }.toSet()
+    let preservedWorkspaces: [Workspace] = oldMonitorToWorkspaces
+            .filter { oldOrigin, oldWorkspace in origins.contains(oldOrigin) }
+            .map { $0.value }
+            .filterNotNil()
+    let lostWorkspaces: [Workspace] = oldMonitorToWorkspaces
+            .filter { oldOrigin, oldWorkspace in !origins.contains(oldOrigin) }
+            .map { $0.value }
+            .filterNotNil()
+    var poolOfWorkspaces: [Workspace] =
+            Workspace.all.toSet().subtracting(preservedWorkspaces + lostWorkspaces) + lostWorkspaces
+    for monitor in monitors {
+        let origin = monitor.rect.topLeft
+        // If monitors change, most likely we will preserve only the main monitor (It always has (0, 0) origin)
+        if let existing = oldMonitorToWorkspaces[origin] {
+            monitorTopLeftCornerToNotEmptyWorkspace[origin] = existing
+        } else {
+            monitorTopLeftCornerToNotEmptyWorkspace[origin] = poolOfWorkspaces.popLast()
+                    // todo generate workspace names
+                    ?? errorT("""
+                              Not enough number of workspaces for the number of monitors. 
+                              Please add more workspaces to the config
+                              """)
+        }
+    }
+}
+
 extension Workspace {
-    var allWindows: [MacWindow] { floatingWindows + rootContainer.allWindows }
-
-    var monitor: NSScreen? { NSScreen.screens.first { Workspace.get(byMonitor: $0) === self } }
-
-    var isVisible: Bool { monitor != nil }
+    var allWindowsRecursive: [MacWindow] { floatingWindows + rootContainer.allWindowsRecursive }
 }

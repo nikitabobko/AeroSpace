@@ -60,8 +60,9 @@ class MacWindow: TreeNode, Hashable {
     }
 
     var monitor: NSScreen? {
-        guard let postion = getPosition() else { return nil }
-        return NSScreen.screens.first { $0.frame.contains(postion) }
+        guard let position = getPosition() else { return nil }
+        // todo if top left corner of the window is on the left monitor, does it still work?
+        return NSScreen.screens.first { $0.rect.contains(position) }
     }
 
     func activate() -> Bool {
@@ -76,7 +77,7 @@ class MacWindow: TreeNode, Hashable {
 
     // todo current approach breaks mission control (three fingers up the trackpad). Or is it only because of IDEA?
     // todo hypnotize: change size to cooperate with mission control (make it configurable)
-    func hideEmulation() {
+    func hideByEmulation() {
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent
         // `hideEmulation` calls
         if !isHiddenEmulation {
@@ -86,11 +87,11 @@ class MacWindow: TreeNode, Hashable {
 //        let foo = if true { true } else {false}
         guard let monitor else { return }
         // todo hiding is broken for secondary monitor
-        setPosition(CGPoint(x: monitor.frame.maxX, y: monitor.frame.maxY))
+        setPosition(monitor.rect.bottomRight)
 //        setSize(CGSize(width: 0, height: 0))
     }
 
-    func unhideEmulation() {
+    func unhideByEmulation() {
         assert((prevUnhiddenEmulationPosition != nil) == (prevUnhiddenEmulationSize != nil))
         guard let prevUnhiddenEmulationPosition else { return }
         guard let prevUnhiddenEmulationSize else { return }
