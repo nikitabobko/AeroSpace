@@ -47,10 +47,16 @@ xcodebuild -scheme AeroSpace clean build
 - "floating" window layout
 - windows' min/max sizes
 
-## Known Special windows
+## Known Special windows to check
 
 - XCode welcome screen
 - Finder preview
 - Toolbox window
 - IntelliJ dialog windows (e.g. "Add to git")
 - IntelliJ project structure modal window
+- VLC full screen window (eh, I wish every fullscreen window in macOS worked like that)
+
+## Limitations of macOS API
+
+- It's not possible to find to what monitor window is assigned
+- It's not possible to __reliably__ know what monitor is currently active

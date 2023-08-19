@@ -7,6 +7,7 @@ import Foundation
 func refresh() {
     ViewModel.shared.updateFocusedMonitor()
     let visibleWindows = windowsOnActiveMacOsSpaces()
+
     debug("----------")
     for screen in NSScreen.screens {
         debug("screen \(screen.isMainMonitor) \(screen.localizedName) \(screen.rect)")
@@ -14,8 +15,11 @@ func refresh() {
     }
     debug("----------")
     for window in visibleWindows {
-        debug("window \(window.title): \(window.getPosition()) \(window.monitor?.localizedName)")
+        debug("window \(window.title): \(window.monitorApproximation?.localizedName)")
     }
+
+    debug(NSScreen.main)
+
     // Hide windows that were manually unhidden by user
     visibleWindows.filter { $0.isHiddenEmulation }.forEach { $0.hideByEmulation() }
     layoutNewWindows(visibleWindows: visibleWindows)
@@ -23,7 +27,7 @@ func refresh() {
 
 private func layoutNewWindows(visibleWindows: [MacWindow]) {
     for newWindow: MacWindow in visibleWindows.toSet().subtracting(Workspace.all.flatMap { $0.allWindowsRecursive }) {
-        if let workspace: Workspace = newWindow.monitor?.notEmptyWorkspace {
+        if let workspace: Workspace = newWindow.monitorApproximation?.notEmptyWorkspace {
             debug("New window \(newWindow.title) layoted on workspace \(workspace.name)")
             workspace.add(window: newWindow)
         }

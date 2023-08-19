@@ -54,7 +54,7 @@ enum Ax {
                 return AXValueCreate(.cgSize, &size) as CFTypeRef
             }
     )
-    static let positionAttr = WritableAttrImpl<CGPoint>(
+    static let topLeftCornerAttr = WritableAttrImpl<CGPoint>(
             key: kAXPositionAttribute,
             getter: {
                 var raw: CGPoint = .zero

@@ -59,12 +59,6 @@ class MacWindow: TreeNode, Hashable {
         axWindow.get(Ax.titleAttr)
     }
 
-    var monitor: NSScreen? {
-        guard let position = getPosition() else { return nil }
-        // todo if top left corner of the window is on the left monitor, does it still work?
-        return NSScreen.screens.first { $0.rect.contains(position) }
-    }
-
     func activate() -> Bool {
         app.nsApp.activate(options: .activateIgnoringOtherApps)
         return AXUIElementPerformAction(axWindow, kAXRaiseAction as CFString) == AXError.success
@@ -81,13 +75,13 @@ class MacWindow: TreeNode, Hashable {
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent
         // `hideEmulation` calls
         if !isHiddenEmulation {
-            prevUnhiddenEmulationPosition = getPosition()
+            prevUnhiddenEmulationPosition = getTopLeftCorner()
             prevUnhiddenEmulationSize = getSize()
         }
+        guard let monitorApproximation else { return }
 //        let foo = if true { true } else {false}
-        guard let monitor else { return }
         // todo hiding is broken for secondary monitor
-        setPosition(monitor.rect.bottomRight)
+        setPosition(monitorApproximation.rect.bottomRight)
 //        setSize(CGSize(width: 0, height: 0))
     }
 
@@ -115,16 +109,16 @@ class MacWindow: TreeNode, Hashable {
         axWindow.set(Ax.sizeAttr, size)
     }
 
-    func getSize() -> CGSize? {
-        axWindow.get(Ax.sizeAttr)
+    func getSize() -> CGSize {
+        axWindow.get(Ax.sizeAttr)!
     }
 
     func setPosition(_ position: CGPoint) {
-        axWindow.set(Ax.positionAttr, position)
+        axWindow.set(Ax.topLeftCornerAttr, position)
     }
 
-    func getPosition() -> CGPoint? {
-        axWindow.get(Ax.positionAttr)
+    func getTopLeftCorner() -> CGPoint? {
+        axWindow.get(Ax.topLeftCornerAttr)
     }
 
     static func ==(lhs: MacWindow, rhs: MacWindow) -> Bool {
@@ -133,6 +127,12 @@ class MacWindow: TreeNode, Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(windowId)
+    }
+}
+
+extension MacWindow {
+    var monitorApproximation: NSScreen? {
+        getTopLeftCorner()?.monitorApproximation
     }
 }
 

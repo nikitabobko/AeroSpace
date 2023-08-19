@@ -55,19 +55,21 @@ func error(_ message: String = "") -> Never {
     fatalError(message)
 }
 
+func TODO(_ message: String = "") -> Never {
+    fatalError(message)
+}
+
 extension NSScreen {
-    /**
-     Because:
-     1. NSScreen.main is a misleading name.
-     2. NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
-        kAXFocusedWindowChangedNotification callbacks.
-
-     I hate you Apple
-
-     Returns `nil` if the desktop is selected (which is Finder special window)
-     */
+    /// Because:
+    /// 1. NSScreen.main is a misleading name.
+    /// 2. NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
+    ///    kAXFocusedWindowChangedNotification callbacks.
+    ///
+    /// I hate you Apple
+    ///
+    /// Returns `nil` if the desktop is selected (which is Finder special window)
     static var focusedMonitorOrNilIfDesktop: NSScreen? {
-        NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow?.monitor ?? NSScreen.screens.singleOrNil()
+        NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow?.monitorApproximation ?? NSScreen.screens.singleOrNil()
     }
 
     var isMainMonitor: Bool {
@@ -76,7 +78,7 @@ extension NSScreen {
 
     /// This property normalizes crazy Apple API
     /// ``NSScreen.frame`` assumes that main screen bottom left corner is (0, 0) and positive y-axis goes up.
-    /// But for windows it's top left corner and y-axis goes down
+    /// But for windows it's top left corner and positive y-axis goes down
     var rect: Rect {
         let mainMonitorHeight: CGFloat = NSScreen.screens.firstOrThrow { $0.isMainMonitor }.frame.height
         let rect = frame.toRect()
@@ -101,6 +103,60 @@ struct Rect {
     let topLeftY: CGFloat
     let width: CGFloat
     let height: CGFloat
+}
+
+struct Pair<F, S> {
+    let first: F
+    let second: S
+}
+
+extension Double {
+    var squared: Double { self * self }
+}
+
+extension CGPoint {
+    func copy(x: Double? = nil, y: Double? = nil) -> CGPoint {
+        CGPoint(x: x ?? self.x, y: y ?? self.y)
+    }
+
+    /// Distance to ``Rect`` outline frame
+    func distanceToRectFrame(to rect: Rect) -> CGFloat {
+        let list: [CGFloat] = ((rect.minY..<rect.maxY).contains(y) ? [abs(rect.minX - x), abs(rect.maxX - x)] : []) +
+                ((rect.minX..<rect.maxX).contains(x) ? [abs(rect.minY - y), abs(rect.maxY - y)] : []) +
+                [distance(to: rect.topLeft),
+                 distance(to: rect.bottomRight),
+                 distance(to: rect.topRight),
+                 distance(to: rect.bottomLeft)]
+        return list.minOrThrow()
+    }
+
+    func distance(to point: CGPoint) -> Double {
+        sqrt((x - point.x).squared + (y - point.y).squared)
+    }
+
+    var monitorApproximation: NSScreen {
+        let monitors: [Pair<NSScreen, Rect>] = NSScreen.screens.map { Pair(first: $0, second: $0.rect) }
+        if let monitor = monitors.first(where: { $0.second.contains(self) }) {
+            return monitor.first
+        }
+        return monitors
+                .minOrThrow(by: { a, b in distanceToRectFrame(to: a.second) < distanceToRectFrame(to: b.second) })
+                .first
+    }
+}
+
+extension CGSize {
+    func copy(width: Double? = nil, height: Double? = nil) -> CGSize {
+        CGSize(width: width ?? self.width, height: height ?? self.height)
+    }
+}
+
+extension Rect {
+    func contains(_ point: CGPoint) -> Bool {
+        let x = point.x
+        let y = point.y
+        return (minX..<maxX).contains(x) && (minY..<maxY).contains(y)
+    }
 
     func copy(topLeftX: CGFloat? = nil, topLeftY: CGFloat? = nil, width: CGFloat? = nil, height: CGFloat? = nil) -> Rect {
         Rect(
@@ -110,27 +166,31 @@ struct Rect {
                 height: height ?? self.height
         )
     }
-}
 
-extension Rect {
-    func contains(_ point: CGPoint) -> Bool {
-        let x = point.x
-        let y = point.y
-        return x >= topLeftX && x <= topLeftX + width && y >= topLeftY && y <= topLeftY + height
-    }
+    var topLeft: CGPoint { CGPoint(x: topLeftX, y: topLeftY) }
+    var topRight: CGPoint { CGPoint(x: maxX, y: minY) }
+    var bottomRight: CGPoint { CGPoint(x: maxX, y: maxY) }
+    var bottomLeft: CGPoint { CGPoint(x: minX, y: maxY) }
 
-    var topLeft: CGPoint {
-        CGPoint(x: topLeftX, y: topLeftY)
-    }
-
-    var bottomRight: CGPoint {
-        CGPoint(x: topLeftX + width, y: topLeftY + height)
-    }
+    var minY: CGFloat { topLeftY }
+    var maxY: CGFloat { topLeftY + height }
+    var minX: CGFloat { topLeftX }
+    var maxX: CGFloat { topLeftX + width }
 }
 
 extension Sequence {
     public func filterNotNil<Unwrapped>() -> [Unwrapped] where Element == Unwrapped? {
         compactMap { $0 }
+    }
+
+    public func minOrThrow(by: (Self.Element, Self.Element) throws -> Bool) rethrows -> Self.Element {
+        try self.min(by: by) ?? errorT("Empty sequence")
+    }
+}
+
+extension Sequence where Self.Element : Comparable {
+    public func minOrThrow() -> Self.Element {
+        self.min() ?? errorT("Empty sequence")
     }
 }
 
