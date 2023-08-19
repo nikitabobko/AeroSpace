@@ -6,21 +6,21 @@ class MacWindow: TreeNode, Hashable {
     // todo: make private
     let axWindow: AXUIElement
     let app: MacApp
-    var children: [TreeNode] { [] }
+    var children: WeakArray<TreeNodeClass> = WeakArray()
+    var parent: TreeNode
     private var prevUnhiddenEmulationPosition: CGPoint?
     // todo redundant?
     private var prevUnhiddenEmulationSize: CGSize?
     fileprivate var previousSize: CGSize?
     private var axObservers: [AXObserverWrapper] = [] // keep observers in memory
 
-    private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement) {
+    private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, _ parent: some TreeNode) {
         self.windowId = id
         self.app = app
         self.axWindow = axWindow
+        self.parent = parent
     }
 
-    // todo weak values?
-    // todo do I need it?
     fileprivate static var allWindows: [CGWindowID: MacWindow] = [:]
 
     static func get(app: MacApp, axWindow: AXUIElement) -> MacWindow? {

@@ -62,12 +62,8 @@ private extension UnsafeMutableRawPointer {
 }
 
 extension MacApp {
-    /**
-     If there are several monitors then spaces on those monitors will be active
-     */
+    /// If there are several monitors then spaces on those monitors will be active
     var windowsOnActiveMacOsSpaces: [MacWindow] {
         (axApp.get(Ax.windowsAttr) ?? []).compactMap({ MacWindow.get(app: self, axWindow: $0) })
     }
-
-    var isFinder: Bool { title == "Finder" }
 }

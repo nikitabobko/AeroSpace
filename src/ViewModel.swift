@@ -27,12 +27,8 @@ class ViewModel: ObservableObject {
         //// todo change active app when workspace is empty? Hahaha :facepalm:
     }
 
-    func updateFocusedMonitor() {
-        // todo
-        //let workspace: Workspace? = NSScreen.focusedMonitorOrNilIfDesktop?.workspace
-        //focusedWorkspaceTrayText = workspace
-        ////        if let workspace {
-        ////            focusedWorkspaceApproximation = workspace
-        ////        }
+    func updateTrayText() {
+        let workspace = NSScreen.focusedMonitorOrNilIfDesktop?.notEmptyWorkspace ?? currentEmptyWorkspace
+        focusedWorkspaceTrayText = workspace.name
     }
 }

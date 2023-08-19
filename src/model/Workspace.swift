@@ -2,9 +2,9 @@ import Foundation
 
 // todo make it configurable
 // todo make default choice
-private func createDefaultWorkspaceContainer() -> Container {
-    guard let monitorRect = NSScreen.focusedMonitorOrNilIfDesktop?.rect else { return HListContainer() }
-    return monitorRect.width > monitorRect.height ? VListContainer() : HListContainer()
+private func createDefaultWorkspaceContainer(_ workspace: Workspace) -> TilingContainer {
+    guard let monitorRect = NSScreen.focusedMonitorOrNilIfDesktop?.rect else { return HListContainer(workspace) }
+    return monitorRect.width > monitorRect.height ? VListContainer(workspace) : HListContainer(workspace)
 }
 // todo fetch from real settings
 let initialWorkspace = settings[0]
@@ -27,18 +27,24 @@ var currentEmptyWorkspace: Workspace = Workspace.get(byName: "???") // todo assi
 /// When this map contains `nil` it means that the monitor displays the "empty"/"background" workspace
 private var monitorTopLeftCornerToNotEmptyWorkspace: [CGPoint: Workspace?] = [:]
 
-class Workspace: Hashable {
+class Workspace: Hashable, TreeNode {
     let name: String
-    var floatingWindows: Set<MacWindow> = []
-    var rootContainer: Container = createDefaultWorkspaceContainer()
+    var floatingWindows = WeakArray<MacWindow>()
+    var rootContainer: TilingContainer
     var isVisible: Bool = false
+    var children: WeakArray<TreeNodeClass> = WeakArray()
+    var parent: TreeNode
 
     private init(name: String) {
+        rootContainer = createDefaultWorkspaceContainer(self)
+        parent = self
         self.name = name
     }
 
     func add(window: MacWindow) {
-        floatingWindows.insert(window)
+        var foo = [1]
+        foo.insert(2)
+        floatingWindows.raw.insert(Weak(window))
     }
 
     func remove(window: MacWindow) {
@@ -124,11 +130,6 @@ private func rearrangeWorkspacesOnMonitors() {
             monitorTopLeftCornerToNotEmptyWorkspace[origin] = existing
         } else {
             monitorTopLeftCornerToNotEmptyWorkspace[origin] = poolOfWorkspaces.popLast()
-                    // todo generate workspace names
-                    ?? errorT("""
-                              Not enough number of workspaces for the number of monitors. 
-                              Please add more workspaces to the config
-                              """)
         }
     }
 }
