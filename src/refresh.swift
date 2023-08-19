@@ -8,6 +8,8 @@ func refresh() {
     // Hide windows that were manually unhidden by user
     visibleWindows.filter { $0.isHiddenEmulation }.forEach { $0.hideByEmulation() }
     layoutNewWindows(visibleWindows: visibleWindows)
+
+
 }
 
 private func layoutNewWindows(visibleWindows: [MacWindow]) {

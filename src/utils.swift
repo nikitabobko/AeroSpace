@@ -60,34 +60,42 @@ func TODO(_ message: String = "") -> Never {
 }
 
 extension NSScreen {
-    /// Because:
+    /// Motivation:
     /// 1. NSScreen.main is a misleading name.
     /// 2. NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
     ///    kAXFocusedWindowChangedNotification callbacks.
     ///
     /// I hate you Apple
     ///
-    /// Returns `nil` if the desktop is selected (which is Finder special window)
+    /// Returns `nil` if the desktop is selected (which is when the app is active but doesn't show any window)
     static var focusedMonitorOrNilIfDesktop: NSScreen? {
-        NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow?.monitorApproximation ?? NSScreen.screens.singleOrNil()
+        //NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow?.monitorApproximation
+        // todo what's the difference between? NSWorkspace.shared.frontmostApplication
+        NSWorkspace.shared.menuBarOwningApplication?.macApp.axFocusedWindow?
+                .get(Ax.topLeftCornerAttr)?.monitorApproximation
+                ?? NSScreen.screens.singleOrNil()
     }
 
     var isMainMonitor: Bool {
         frame.minX == 0 && frame.minY == 0
     }
 
-    /// This property normalizes crazy Apple API
-    /// ``NSScreen.frame`` assumes that main screen bottom left corner is (0, 0) and positive y-axis goes up.
-    /// But for windows it's top left corner and positive y-axis goes down
-    var rect: Rect {
-        let mainMonitorHeight: CGFloat = NSScreen.screens.firstOrThrow { $0.isMainMonitor }.frame.height
-        let rect = frame.toRect()
-        return rect.copy(topLeftY: mainMonitorHeight - rect.topLeftY)
-    }
+    /// The property is a replacement for Apple's crazy ``frame``
+    ///
+    /// - For ``MacWindow.topLeftCorner``, (0, 0) is main screen top left corner, and positive y-axis goes down.
+    /// - For ``frame``, (0, 0) is main screen bottom left corner, and positive y-axis goes up (which is crazy).
+    ///
+    /// The property "normalizes" ``frame``
+    var rect: Rect { frame.monitorFrameNormalized() }
 
-    var visibleRect: Rect {
+    /// Same as ``rect`` but for ``visibleFrame``
+    var visibleRect: Rect { visibleFrame.monitorFrameNormalized() }
+}
+
+extension CGRect {
+    func monitorFrameNormalized() -> Rect {
         let mainMonitorHeight: CGFloat = NSScreen.screens.firstOrThrow { $0.isMainMonitor }.frame.height
-        let rect = visibleFrame.toRect()
+        let rect = toRect()
         return rect.copy(topLeftY: mainMonitorHeight - rect.topLeftY)
     }
 }
@@ -194,6 +202,18 @@ extension Sequence where Self.Element : Comparable {
     }
 }
 
+extension Array where Self.Element : Equatable {
+    @discardableResult
+    public mutating func remove(element: Self.Element) -> Bool {
+        if let index = firstIndex(of: element) {
+            remove(at: index)
+            return true
+        } else {
+            return false
+        }
+    }
+}
+
 extension CGPoint: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(x)
@@ -213,6 +233,11 @@ extension Array {
     func firstOrThrow(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Element {
         try first(where: predicate) ?? errorT("Can't find the element")
     }
+}
+
+func -<T>(lhs: [T], rhs: [T]) -> [T] where T: Hashable {
+    let r = rhs.toSet()
+    return lhs.filter { !r.contains($0) }
 }
 
 extension Set {

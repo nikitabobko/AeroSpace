@@ -1,37 +1,51 @@
 import Foundation
 
-protocol TreeNode: AnyObject {
-    var children: WeakArray<TreeNodeClass> { set get }
-    var parent: TreeNode { get set }
-}
+class TreeNode : Equatable {
+    private var _children: [TreeNode] = []
+    var children: [TreeNode] { _children }
+    fileprivate weak var _parent: TreeNode? = nil
+    var parent: TreeNode { _parent ?? errorT("TreeNode invariants are broken") }
 
-/// Workaround for https://github.com/apple/swift/issues/48596
-class TreeNodeClass {
-    var value: TreeNode
-    init(value: TreeNode) {
-        self.value = value
+    init(parent: TreeNode) {
+        bindTo(parent: parent)
     }
-}
 
-extension WeakArray where T == TreeNodeClass {
-    mutating func derefTreeNode() -> [TreeNode] {
-        deref().map { $0.value }
+    fileprivate init() {
     }
-}
 
-extension TreeNode {
-    private func visit(node: TreeNode, result: inout [MacWindow]) {
-        if let node = node as? MacWindow {
-            result.append(node)
+    func bindTo(parent newParent: TreeNode) {
+        let prevParent: TreeNode? = _parent
+        if prevParent === newParent {
+            return
         }
-        for child in node.children.derefTreeNode() {
-            visit(node: child, result: &result)
-        }
+        prevParent?._children.remove(element: self)
+        newParent._children.append(self)
+        _parent = newParent
     }
 
-    var allWindowsRecursive: [MacWindow] {
-        var result: [MacWindow] = []
-        visit(node: self, result: &result)
-        return result
+    static func ==(lhs: TreeNode, rhs: TreeNode) -> Bool {
+        lhs === rhs
     }
 }
+
+class RootTreeNode: TreeNode {
+    private override init() {
+        super.init()
+        _parent = self
+    }
+    static let instance = RootTreeNode()
+}
+
+///// Workaround for https://github.com/apple/swift/issues/48596
+//class TreeNodeClass {
+//    var value: TreeNode
+//    init(value: TreeNode) {
+//        self.value = value
+//    }
+//}
+
+//extension WeakArray where T == TreeNodeClass {
+//    mutating func derefTreeNode() -> [TreeNode] {
+//        deref().map { $0.value }
+//    }
+//}

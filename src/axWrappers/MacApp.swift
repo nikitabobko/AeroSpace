@@ -1,6 +1,6 @@
 import Foundation
 
-class MacApp: Hashable {
+class MacApp: Hashable { // todo rename to App?
     let nsApp: NSRunningApplication
     // todo: make private
     let axApp: AXUIElement
@@ -48,7 +48,11 @@ class MacApp: Hashable {
     }
 
     var focusedWindow: MacWindow? {
-        axApp.get(Ax.focusedWindowAttr).flatMap { MacWindow.get(app: self, axWindow: $0) }
+        axFocusedWindow.flatMap { MacWindow.get(app: self, axWindow: $0) }
+    }
+
+    var axFocusedWindow: AXUIElement? {
+        axApp.get(Ax.focusedWindowAttr)
     }
 }
 

@@ -17,6 +17,7 @@
 		218FCDDA2A19682800B3D559 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 218FCDD92A19682800B3D559 /* HotKey */; };
 		598F11C1A395A47C47DCC138 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1919F1ED15BE39CA8CAD /* ViewModel.swift */; };
 		598F15B66E967D6AB2A3457E /* TilingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F13664EBDD41421A0E4C0 /* TilingContainer.swift */; };
+		598F15F0E88CD0B17BF80376 /* TeeNodeEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F11FA35D706C1FD41481C /* TeeNodeEx.swift */; };
 		598F169DFF8896EA426B3564 /* Weak.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1CE2FEA2A56C49F45B48 /* Weak.swift */; };
 		598F1708D12004FD01407689 /* TreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1F150DAFA199846815BA /* TreeNode.swift */; };
 		598F174CFDFBAC17DE26B3C0 /* refresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F11271E317294862CFE7A /* refresh.swift */; };
@@ -59,6 +60,7 @@
 		218FCDC62A1966B900B3D559 /* macos_window_manager_swiftUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = macos_window_manager_swiftUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		21AF73D62A2374F70078F25A /* Bridged-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridged-Header.h"; sourceTree = "<group>"; };
 		598F11271E317294862CFE7A /* refresh.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = refresh.swift; sourceTree = "<group>"; };
+		598F11FA35D706C1FD41481C /* TeeNodeEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TeeNodeEx.swift; path = model/TeeNodeEx.swift; sourceTree = "<group>"; };
 		598F13664EBDD41421A0E4C0 /* TilingContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TilingContainer.swift; path = model/TilingContainer.swift; sourceTree = "<group>"; };
 		598F17E70A7DD34F47795210 /* MacApp.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MacApp.swift; path = axWrappers/MacApp.swift; sourceTree = "<group>"; };
 		598F1919F1ED15BE39CA8CAD /* ViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
@@ -141,6 +143,7 @@
 				598F1C137874EA3093CEB770 /* Workspace.swift */,
 				598F11271E317294862CFE7A /* refresh.swift */,
 				598F1CE2FEA2A56C49F45B48 /* Weak.swift */,
+				598F11FA35D706C1FD41481C /* TeeNodeEx.swift */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -327,6 +330,7 @@
 				598F1E560BF37484F529B9BD /* Workspace.swift in Sources */,
 				598F174CFDFBAC17DE26B3C0 /* refresh.swift in Sources */,
 				598F169DFF8896EA426B3564 /* Weak.swift in Sources */,
+				598F15F0E88CD0B17BF80376 /* TeeNodeEx.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

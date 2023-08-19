@@ -1,24 +1,22 @@
 import Foundation
 import AppKit
 
-class MacWindow: TreeNode, Hashable {
+class MacWindow: TreeNode, Hashable { // todo rename to Window?
     let windowId: CGWindowID
     // todo: make private
     let axWindow: AXUIElement
     let app: MacApp
-    var children: WeakArray<TreeNodeClass> = WeakArray()
-    var parent: TreeNode
     private var prevUnhiddenEmulationPosition: CGPoint?
     // todo redundant?
     private var prevUnhiddenEmulationSize: CGSize?
     fileprivate var previousSize: CGSize?
     private var axObservers: [AXObserverWrapper] = [] // keep observers in memory
 
-    private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, _ parent: some TreeNode) {
+    private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: TreeNode) {
         self.windowId = id
         self.app = app
         self.axWindow = axWindow
-        self.parent = parent
+        super.init(parent: parent)
     }
 
     fileprivate static var allWindows: [CGWindowID: MacWindow] = [:]
@@ -28,7 +26,11 @@ class MacWindow: TreeNode, Hashable {
         if let existing = allWindows[id] {
             return existing
         } else {
-            let window = MacWindow(id, app, axWindow)
+            guard let topLeftCorner = axWindow.get(Ax.topLeftCornerAttr) else { return nil }
+            let workspace = topLeftCorner.monitorApproximation.workspace
+            // Layout the window in the container of the last active window
+            let parent = workspace.lastActiveWindow?.parent ?? workspace.rootContainer
+            let window = MacWindow(id, app, axWindow, parent: parent)
             debug("New window detected: \(window.title)")
 
             window.observe(windowIsDestroyedObs, kAXUIElementDestroyedNotification)
@@ -75,7 +77,7 @@ class MacWindow: TreeNode, Hashable {
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent
         // `hideEmulation` calls
         if !isHiddenEmulation {
-            prevUnhiddenEmulationPosition = getTopLeftCorner()
+            prevUnhiddenEmulationPosition = topLeftCorner
             prevUnhiddenEmulationSize = getSize()
         }
         guard let monitorApproximation else { return }
@@ -117,13 +119,13 @@ class MacWindow: TreeNode, Hashable {
         axWindow.set(Ax.topLeftCornerAttr, position)
     }
 
-    func getTopLeftCorner() -> CGPoint? {
+    var topLeftCorner: CGPoint? {
         axWindow.get(Ax.topLeftCornerAttr)
     }
 
-    static func ==(lhs: MacWindow, rhs: MacWindow) -> Bool {
-        lhs.windowId == rhs.windowId
-    }
+    //static func ==(lhs: MacWindow, rhs: MacWindow) -> Bool {
+    //    lhs.windowId == rhs.windowId
+    //}
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(windowId)
@@ -132,7 +134,7 @@ class MacWindow: TreeNode, Hashable {
 
 extension MacWindow {
     var monitorApproximation: NSScreen? {
-        getTopLeftCorner()?.monitorApproximation
+        topLeftCorner?.monitorApproximation
     }
 }
 

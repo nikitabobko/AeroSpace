@@ -3,8 +3,8 @@ import Foundation
 // todo make it configurable
 // todo make default choice
 private func createDefaultWorkspaceContainer(_ workspace: Workspace) -> TilingContainer {
-    guard let monitorRect = NSScreen.focusedMonitorOrNilIfDesktop?.rect else { return HListContainer(workspace) }
-    return monitorRect.width > monitorRect.height ? VListContainer(workspace) : HListContainer(workspace)
+    guard let monitorRect = NSScreen.focusedMonitorOrNilIfDesktop?.rect else { return HListContainer(parent: workspace) }
+    return monitorRect.width > monitorRect.height ? VListContainer(parent: workspace) : HListContainer(parent: workspace)
 }
 // todo fetch from real settings
 let initialWorkspace = settings[0]
@@ -27,42 +27,39 @@ var currentEmptyWorkspace: Workspace = Workspace.get(byName: "???") // todo assi
 /// When this map contains `nil` it means that the monitor displays the "empty"/"background" workspace
 private var monitorTopLeftCornerToNotEmptyWorkspace: [CGPoint: Workspace?] = [:]
 
-class Workspace: Hashable, TreeNode {
+class Workspace: TreeNode, Hashable {
     let name: String
-    var floatingWindows = WeakArray<MacWindow>()
-    var rootContainer: TilingContainer
+    var floatingWindows = WeakSet<MacWindow>()
+    var rootContainer: TilingContainer = HListContainer(parent: RootTreeNode.instance)
     var isVisible: Bool = false
-    var children: WeakArray<TreeNodeClass> = WeakArray()
-    var parent: TreeNode
+    weak var lastActiveWindow: MacWindow?
 
     private init(name: String) {
-        rootContainer = createDefaultWorkspaceContainer(self)
-        parent = self
         self.name = name
+        super.init(parent: RootTreeNode.instance)
+        rootContainer = createDefaultWorkspaceContainer(self)
     }
 
     func add(window: MacWindow) {
-        var foo = [1]
-        foo.insert(2)
         floatingWindows.raw.insert(Weak(window))
     }
 
     func remove(window: MacWindow) {
-        floatingWindows.remove(window)
+        floatingWindows.raw.remove(Weak(window))
     }
 
     var isEmpty: Bool {
-        floatingWindows.isEmpty && rootContainer.allWindowsRecursive.isEmpty
+        floatingWindows.deref().isEmpty && rootContainer.allWindowsRecursive.isEmpty
     }
 
     // todo Implement properly
     func moveTo(monitor: NSScreen) {
-        for window in floatingWindows {
+        for window in floatingWindows.deref() {
             window.setPosition(monitor.visibleRect.topLeft)
         }
     }
 
-    static var all: some Collection<Workspace> {
+    static var all: [Workspace] {
         let preservedNames = settings.map { $0.id }.toSet()
         for name in preservedNames {
             _ = get(byName: name) // Make sure that all preserved workspaces are "cached"
@@ -70,7 +67,7 @@ class Workspace: Hashable, TreeNode {
         workspaceNameToWorkspace = workspaceNameToWorkspace.filter {
             preservedNames.contains($0.value.name) || !$0.value.isEmpty
         }
-        return workspaceNameToWorkspace.values
+        return workspaceNameToWorkspace.values.sorted { a, b in a.name < b.name }
     }
 
     static func get(byName name: String) -> Workspace {
@@ -106,6 +103,10 @@ extension NSScreen {
             return self.notEmptyWorkspace
         }
     }
+
+    var workspace: Workspace {
+        notEmptyWorkspace ?? currentEmptyWorkspace
+    }
 }
 
 private func rearrangeWorkspacesOnMonitors() {
@@ -122,7 +123,7 @@ private func rearrangeWorkspacesOnMonitors() {
             .map { $0.value }
             .filterNotNil()
     var poolOfWorkspaces: [Workspace] =
-            Workspace.all.toSet().subtracting(preservedWorkspaces + lostWorkspaces) + lostWorkspaces
+            Workspace.all.reversed() - (preservedWorkspaces + lostWorkspaces) + lostWorkspaces
     for monitor in monitors {
         let origin = monitor.rect.topLeft
         // If monitors change, most likely we will preserve only the main monitor (It always has (0, 0) origin)
@@ -132,8 +133,4 @@ private func rearrangeWorkspacesOnMonitors() {
             monitorTopLeftCornerToNotEmptyWorkspace[origin] = poolOfWorkspaces.popLast()
         }
     }
-}
-
-extension Workspace {
-    var allWindowsRecursive: [MacWindow] { floatingWindows + rootContainer.allWindowsRecursive }
 }
