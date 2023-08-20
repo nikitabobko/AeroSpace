@@ -160,6 +160,9 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					B00BE37A79171B0EE995EB83 = {
+						ProvisioningStyle = Automatic;
+					};
 				};
 			};
 			buildConfigurationList = D6982B0C3E92C5AF28BCD315 /* Build configuration list for PBXProject "AeroSpace" */;
@@ -287,6 +290,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = src/AeroSpace.entitlements;
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
@@ -296,7 +300,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 0.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = xyz.bobko.debug.AeroSpace;
+				PRODUCT_BUNDLE_IDENTIFIER = bobko.debug.AeroSpace;
 				PRODUCT_NAME = "AeroSpace-Debug";
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "src/Bridged-Header.h";
@@ -378,7 +382,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 0.0.1;
-				PRODUCT_BUNDLE_IDENTIFIER = xyz.bobko.AeroSpace;
+				PRODUCT_BUNDLE_IDENTIFIER = bobko.AeroSpace;
 				PRODUCT_NAME = AeroSpace;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "src/Bridged-Header.h";
