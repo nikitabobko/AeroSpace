@@ -20,7 +20,6 @@ targets:
         # Otherwise it fails for release
         SWIFT_OPTIMIZATION_LEVEL: -Onone
         GENERATE_INFOPLIST_FILE: YES
-        # todo what will happen if I drop it?
         MARKETING_VERSION: 0.0.1
         SWIFT_OBJC_BRIDGING_HEADER: "src/Bridged-Header.h"
         # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
