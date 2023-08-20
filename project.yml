@@ -1,10 +1,6 @@
 # Project configuration for https://github.com/yonaskolb/XcodeGen
 
 name: AeroSpace
-# options:
-#   # Try to drop xyz Maybe XCode/macOS caches will reset by that time
-#   bundleIdPrefix: xyz.bobko
-      # PRODUCT_BUNDLE_IDENTIFIER: 
 packages:
   HotKey:
     url: https://github.com/soffes/HotKey
@@ -16,11 +12,6 @@ targets:
     deploymentTarget: "13.0"
     sources: [src]
     dependencies:
-      # - target: MyFramework
-      # - carthage: Alamofire
-      # - framework: Vendor/MyFramework.framework
-      # - sdk: Contacts.framework
-      # - sdk: libc++.tbd
       - package: HotKey
     settings:
       base:
@@ -39,9 +30,11 @@ targets:
       configs:
         debug:
           PRODUCT_NAME: AeroSpace-Debug
+          # todo: Try to drop xyz Maybe XCode/macOS caches will reset by that time
           PRODUCT_BUNDLE_IDENTIFIER: xyz.bobko.debug.AeroSpace
         release:
           PRODUCT_NAME: AeroSpace
+          # todo: Try to drop xyz Maybe XCode/macOS caches will reset by that time
           PRODUCT_BUNDLE_IDENTIFIER: xyz.bobko.AeroSpace
           CODE_SIGN_IDENTITY: Apple Development
           "CODE_SIGN_IDENTITY[sdk=macosx*]": Apple Development
