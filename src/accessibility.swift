@@ -3,7 +3,8 @@ import Foundation
 func checkAccessibilityPermissions() {
     let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true]
     if !AXIsProcessTrustedWithOptions(options as CFDictionary) {
-        error("Accessibility permission isn't granted")
+        NSApplication.shared.terminate(nil)
+        error("unreachable")
     }
 }
 
