@@ -1,0 +1,52 @@
+# Project configuration for https://github.com/yonaskolb/XcodeGen
+
+name: AeroSpace
+# options:
+#   # Try to drop xyz Maybe XCode/macOS caches will reset by that time
+#   bundleIdPrefix: xyz.bobko
+      # PRODUCT_BUNDLE_IDENTIFIER: 
+packages:
+  HotKey:
+    url: https://github.com/soffes/HotKey
+    exactVersion: 0.1.3
+targets:
+  AeroSpace:
+    type: application
+    platform: macOS
+    deploymentTarget: "13.0"
+    sources: [src]
+    dependencies:
+      # - target: MyFramework
+      # - carthage: Alamofire
+      # - framework: Vendor/MyFramework.framework
+      # - sdk: Contacts.framework
+      # - sdk: libc++.tbd
+      - package: HotKey
+    settings:
+      base:
+        SWIFT_VERSION: 5.8
+        GENERATE_INFOPLIST_FILE: YES
+        # todo what will happen if I drop it?
+        MARKETING_VERSION: 0.0.1
+        # path: resources/Info.plist
+        SWIFT_OBJC_BRIDGING_HEADER: "src/Bridged-Header.h"
+        # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
+        # Specifies whether the app runs as an agent app. If this key is set to YES, Launch Services runs the app as an agent app.
+        # Agent apps do not appear in the Dock or in the Force Quit window
+        INFOPLIST_KEY_LSUIElement: YES
+      configs:
+        debug:
+          PRODUCT_NAME: AeroSpace-Debug
+          PRODUCT_BUNDLE_IDENTIFIER: xyz.bobko.debug.AeroSpace
+        release:
+          PRODUCT_NAME: AeroSpace
+          PRODUCT_BUNDLE_IDENTIFIER: xyz.bobko.AeroSpace
+          CODE_SIGN_IDENTITY: Apple Development
+          "CODE_SIGN_IDENTITY[sdk=macosx*]": Apple Development
+          CODE_SIGN_STYLE: Automatic
+          DEVELOPMENT_TEAM: 4MWP47XA68
+    entitlements:
+      path: src/AeroSpace.entitlements
+      properties:
+        # Accessibility API doesn't work in sandboxed app
+        com.apple.security.app-sandbox: false

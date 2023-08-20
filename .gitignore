@@ -1,5 +1,5 @@
 /.idea
-/build
+/*.app
 
 # XCode User settings
 xcuserdata/
