@@ -25,6 +25,8 @@ targets:
     settings:
       base:
         SWIFT_VERSION: 5.8
+        # Otherwise it fails for release
+        SWIFT_OPTIMIZATION_LEVEL: -Onone
         GENERATE_INFOPLIST_FILE: YES
         # todo what will happen if I drop it?
         MARKETING_VERSION: 0.0.1

@@ -300,6 +300,7 @@
 				PRODUCT_NAME = "AeroSpace-Debug";
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "src/Bridged-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.8;
 			};
 			name = Debug;
@@ -381,6 +382,7 @@
 				PRODUCT_NAME = AeroSpace;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "src/Bridged-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.8;
 			};
 			name = Release;
