@@ -10,7 +10,7 @@ class MacWindow: TreeNode, Hashable { // todo rename to Window?
     // todo redundant?
     private var prevUnhiddenEmulationSize: CGSize?
     fileprivate var previousSize: CGSize?
-    private var axObservers: [AXObserverWrapper] = [] // keep observers in memory
+    private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 
     private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: TreeNode) {
         self.windowId = id
@@ -22,7 +22,7 @@ class MacWindow: TreeNode, Hashable { // todo rename to Window?
     fileprivate static var allWindows: [CGWindowID: MacWindow] = [:]
 
     static func get(app: MacApp, axWindow: AXUIElement) -> MacWindow? {
-        guard let id = axWindow.windowId() else { return nil }
+        let id = axWindow.windowId() ?? errorT("Can't get window id")
         if let existing = allWindows[id] {
             return existing
         } else {
@@ -54,7 +54,7 @@ class MacWindow: TreeNode, Hashable { // todo rename to Window?
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) {
         let observer = AXObserver.observe(app.nsApp.processIdentifier, notifKey, axWindow, self, handler)
-        axObservers.append(AXObserverWrapper(obs: observer, ax: axWindow, notif: notifKey as CFString))
+        axObservers.append(AxObserverWrapper(obs: observer, ax: axWindow, notif: notifKey as CFString))
     }
 
     var title: String? {

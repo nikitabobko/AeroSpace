@@ -113,6 +113,20 @@ struct Rect {
     let height: CGFloat
 }
 
+extension [Rect] {
+    func union() -> Rect {
+        let rects: [Rect] = self
+        let topLeftY = rects.map { $0.minY }.minOrThrow()
+        let topLeftX = rects.map { $0.minX }.maxOrThrow()
+        return Rect(
+                topLeftX: topLeftX,
+                topLeftY: topLeftY,
+                width: rects.map { $0.maxX }.maxOrThrow() - topLeftX,
+                height: rects.map { $0.maxY}.maxOrThrow() - topLeftY
+        )
+    }
+}
+
 struct Pair<F, S> {
     let first: F
     let second: S
@@ -148,7 +162,7 @@ extension CGPoint {
             return monitor.first
         }
         return monitors
-                .minOrThrow(by: { a, b in distanceToRectFrame(to: a.second) < distanceToRectFrame(to: b.second) })
+                .minByOrThrow { distanceToRectFrame(to: $0.second) }
                 .first
     }
 }
@@ -191,14 +205,30 @@ extension Sequence {
         compactMap { $0 }
     }
 
-    public func minOrThrow(by: (Self.Element, Self.Element) throws -> Bool) rethrows -> Self.Element {
-        try self.min(by: by) ?? errorT("Empty sequence")
+    public func minByOrThrow<S: Comparable>(_ selector: (Self.Element) -> S) -> Self.Element {
+        minBy(selector) ?? errorT("Empty sequence")
+    }
+
+    public func minBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
+        self.min(by: { a, b in selector(a) < selector(b) })
+    }
+
+    public func maxByOrThrow<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
+        self.maxBy(selector) ?? errorT("Empty sequence")
+    }
+
+    public func maxBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
+        self.max(by: { a, b in selector(a) < selector(b) })
     }
 }
 
 extension Sequence where Self.Element : Comparable {
     public func minOrThrow() -> Self.Element {
         self.min() ?? errorT("Empty sequence")
+    }
+
+    public func maxOrThrow() -> Self.Element {
+        self.max() ?? errorT("Empty sequence")
     }
 }
 

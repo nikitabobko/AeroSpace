@@ -9,7 +9,7 @@ func checkAccessibilityPermissions() {
 
 protocol ReadableAttr {
     associatedtype T
-    var getter: (AnyObject) -> T { get }
+    var getter: (AnyObject) -> T? { get }
     var key: String { get }
 }
 
@@ -20,12 +20,12 @@ protocol WritableAttr : ReadableAttr {
 enum Ax {
     struct ReadableAttrImpl<T>: ReadableAttr {
         var key: String
-        var getter: (AnyObject) -> T
+        var getter: (AnyObject) -> T?
     }
 
     struct WritableAttrImpl<T>: WritableAttr {
         var key: String
-        var getter: (AnyObject) -> T
+        var getter: (AnyObject) -> T?
         var setter: (T) -> CFTypeRef
     }
 
@@ -69,15 +69,19 @@ enum Ax {
     static let windowsAttr = ReadableAttrImpl<[AXUIElement]>(
             key: kAXWindowsAttribute,
             getter: {
-                ($0 as! NSArray).compactMap { $0 as! AXUIElement }
+                // Filter out non-window objects (e.g. Finder's desktop)
+                ($0 as! NSArray).compactMap { $0 as! AXUIElement }.filter { $0.windowId() != nil }
             }
     )
-    // todo unused?
     static let focusedWindowAttr = ReadableAttrImpl<AXUIElement>(
             key: kAXFocusedWindowAttribute,
-            // I'd be happy to use safe cast, but I can't :(
-            //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
-            getter: { $0 as! AXUIElement }
+            getter: {
+                // I'd be happy to use safe cast, but I can't :(
+                //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
+                let potentialWindow = $0 as! AXUIElement
+                // Filter out non-window objects (e.g. Finder's desktop)
+                return potentialWindow.windowId() != nil ? potentialWindow : nil
+            }
     )
     static let identifierAttr = ReadableAttrImpl<String>(
             key: kAXIdentifierAttribute,

@@ -1,6 +1,6 @@
 import Foundation
 
-struct AXObserverWrapper {
+struct AxObserverWrapper {
     let obs: AXObserver
     let ax: AXUIElement
     let notif: CFString

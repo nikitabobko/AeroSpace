@@ -6,7 +6,7 @@ class MacApp: Hashable { // todo rename to App?
     let axApp: AXUIElement
 
     // todo cleanup resource
-    private var axObservers: [AXObserverWrapper] = [] // keep observers in memory
+    private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 
     private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement) {
         self.nsApp = nsApp
@@ -36,7 +36,7 @@ class MacApp: Hashable { // todo rename to App?
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) {
         let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, self, handler)
-        axObservers.append(AXObserverWrapper(obs: observer, ax: axApp, notif: notifKey as CFString))
+        axObservers.append(AxObserverWrapper(obs: observer, ax: axApp, notif: notifKey as CFString))
     }
 
     static func ==(lhs: MacApp, rhs: MacApp) -> Bool {

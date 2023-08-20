@@ -15,4 +15,12 @@ extension TreeNode {
         visit(node: self, result: &result)
         return result
     }
+
+    var workspace: Workspace {
+        if let workspace = self as? Workspace {
+            return workspace
+        } else {
+            return parent.workspace
+        }
+    }
 }

@@ -7,13 +7,13 @@ import SwiftUI
 
 // todo extract into settings
 let settings = [
-    Setting(id: "W: 1", hotkey: .one, modifiers: [.option]),
-    Setting(id: "W: 2", hotkey: .two, modifiers: [.option]),
-    Setting(id: "W: 3", hotkey: .three, modifiers: [.option]),
+    Setting(name: "W: 1", hotkey: .one, modifiers: [.option]),
+    Setting(name: "W: 2", hotkey: .two, modifiers: [.option]),
+    Setting(name: "W: 3", hotkey: .three, modifiers: [.option]),
 ]
 
-struct Setting: Identifiable {
-    let id: String
+struct Setting {
+    let name: String
     let hotkey: Key
     let modifiers: NSEvent.ModifierFlags
 }
@@ -29,7 +29,7 @@ struct AeroSpaceApp: App {
         for setting in settings {
             hotKeys.append(HotKey(key: setting.hotkey, modifiers: setting.modifiers, keyUpHandler: {
                 refresh()
-                ViewModel.shared.switchToWorkspace(Workspace.get(byName: setting.id))
+                ViewModel.shared.switchToWorkspace(Workspace.get(byName: setting.name))
             }))
         }
         refresh()
@@ -43,14 +43,14 @@ struct AeroSpaceApp: App {
             Text("Workspaces:")
             // todo show only non empty workspaces
             //      Or create two groups? (non empty group and empty group)
-            ForEach(settings) { setting in
+            ForEach(Workspace.all) { workspace in
                 Button {
-                    viewModel.switchToWorkspace(Workspace.get(byName: setting.id))
+                    viewModel.switchToWorkspace(workspace)
                 } label: {
-                    Toggle(isOn: setting.id == viewModel.focusedWorkspaceTrayText
+                    Toggle(isOn: workspace.name == viewModel.focusedWorkspaceTrayText
                             ? Binding(get: { true }, set: { _, _ in })
                             : Binding(get: { false }, set: { _, _ in })) {
-                        Text("\(setting.id)").font(.system(.body, design: .monospaced))
+                        Text("\(workspace.name)").font(.system(.body, design: .monospaced))
                     }
                 }
             }

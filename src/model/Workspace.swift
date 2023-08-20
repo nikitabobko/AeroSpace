@@ -6,13 +6,11 @@ private func createDefaultWorkspaceContainer(_ workspace: Workspace) -> TilingCo
     guard let monitorRect = NSScreen.focusedMonitorOrNilIfDesktop?.rect else { return HListContainer(parent: workspace) }
     return monitorRect.width > monitorRect.height ? VListContainer(parent: workspace) : HListContainer(parent: workspace)
 }
-// todo fetch from real settings
-let initialWorkspace = settings[0]
 
 private var workspaceNameToWorkspace: [String: Workspace] = [:]
 
 /// Empty workspace is spread over all monitors. That's why it's tracked separately. See ``monitorTopLeftCornerToNotEmptyWorkspace``,
-var currentEmptyWorkspace: Workspace = Workspace.get(byName: "???") // todo assign unique default name
+var currentEmptyWorkspace: Workspace = getOrCreateNextEmptyWorkspace()
 /// macOS doesn't provide an API to check for currently active/selected monitor
 /// (see ``NSScreen.focusedMonitorOrNilIfDesktop``) => when users changes the active monitor by clicking the
 /// desktop on different monitor AeroSpace can't detect it => AeroSpace assumes that the empty workspace occupies
@@ -27,45 +25,70 @@ var currentEmptyWorkspace: Workspace = Workspace.get(byName: "???") // todo assi
 /// When this map contains `nil` it means that the monitor displays the "empty"/"background" workspace
 private var monitorTopLeftCornerToNotEmptyWorkspace: [CGPoint: Workspace?] = [:]
 
-class Workspace: TreeNode, Hashable {
+func getOrCreateNextEmptyWorkspace() -> Workspace {
+    let all = Workspace.all
+    if let existing = all.first(where: { $0.isEmpty }) {
+        return existing
+    }
+    let occupiedNames = all.map { $0.name }.toSet()
+    let newName = (0..<Int.max).lazy.map { "EMPTY\($0)" }.first { !occupiedNames.contains($0) }
+            ?? errorT("Can't create empty workspace")
+    return Workspace.get(byName: newName)
+}
+
+var allMonitorsRectsUnion: Rect {
+    NSScreen.screens.map { $0.rect }.union()
+}
+
+class Workspace: TreeNode, Hashable, Identifiable {
     let name: String
-    var floatingWindows = WeakSet<MacWindow>()
+    var floatingWindows = Set<MacWindow>()
     var rootContainer: TilingContainer = HListContainer(parent: RootTreeNode.instance)
     var isVisible: Bool = false
+    var id: String { name } // satisfy Identifiable
+    private var _assignedMonitorRect: Rect
+    var assignedMonitorRect: Rect {
+        get { _assignedMonitorRect }
+        set {
+            _assignedMonitorRect = newValue
+            // TODO("implement windows relative move")
+        }
+    }
     weak var lastActiveWindow: MacWindow?
 
-    private init(name: String) {
+    private init(_ name: String, _ assignedMonitorRect: Rect) {
         self.name = name
+        self._assignedMonitorRect = assignedMonitorRect
         super.init(parent: RootTreeNode.instance)
         rootContainer = createDefaultWorkspaceContainer(self)
     }
 
     func add(window: MacWindow) {
-        floatingWindows.raw.insert(Weak(window))
+        floatingWindows.insert(window)
     }
 
     func remove(window: MacWindow) {
-        floatingWindows.raw.remove(Weak(window))
+        floatingWindows.remove(window)
     }
 
     var isEmpty: Bool {
-        floatingWindows.deref().isEmpty && rootContainer.allWindowsRecursive.isEmpty
+        floatingWindows.isEmpty && rootContainer.allWindowsRecursive.isEmpty
     }
 
     // todo Implement properly
     func moveTo(monitor: NSScreen) {
-        for window in floatingWindows.deref() {
+        for window in floatingWindows {
             window.setPosition(monitor.visibleRect.topLeft)
         }
     }
 
     static var all: [Workspace] {
-        let preservedNames = settings.map { $0.id }.toSet()
+        let preservedNames = settings.map { $0.name }.toSet()
         for name in preservedNames {
             _ = get(byName: name) // Make sure that all preserved workspaces are "cached"
         }
-        workspaceNameToWorkspace = workspaceNameToWorkspace.filter {
-            preservedNames.contains($0.value.name) || !$0.value.isEmpty
+        workspaceNameToWorkspace = workspaceNameToWorkspace.filter { (_, workspace: Workspace) in
+            preservedNames.contains(workspace.name) || !workspace.isEmpty || workspace == currentEmptyWorkspace
         }
         return workspaceNameToWorkspace.values.sorted { a, b in a.name < b.name }
     }
@@ -74,7 +97,7 @@ class Workspace: TreeNode, Hashable {
         if let existing = workspaceNameToWorkspace[name] {
             return existing
         } else {
-            let workspace = Workspace(name: name)
+            let workspace = Workspace(name, allMonitorsRectsUnion)
             workspaceNameToWorkspace[name] = workspace
             return workspace
         }

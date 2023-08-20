@@ -6,7 +6,7 @@ class ViewModel: ObservableObject {
     private init() {
     }
 
-    @Published var focusedWorkspaceTrayText: String = initialWorkspace.id
+    @Published var focusedWorkspaceTrayText: String = currentEmptyWorkspace.name
 
     func switchToWorkspace(_ newWorkspace: Workspace) {
         // todo

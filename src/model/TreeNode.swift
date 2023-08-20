@@ -14,6 +14,9 @@ class TreeNode : Equatable {
     }
 
     func bindTo(parent newParent: TreeNode) {
+        if (newParent === RootTreeNode.instance) {
+            return
+        }
         let prevParent: TreeNode? = _parent
         if prevParent === newParent {
             return
@@ -21,6 +24,12 @@ class TreeNode : Equatable {
         prevParent?._children.remove(element: self)
         newParent._children.append(self)
         _parent = newParent
+        // Change currentEmptyWorkspace if necessary
+        if let window = self as? MacWindow, newParent.workspace == currentEmptyWorkspace {
+            let newParentWorkspace = currentEmptyWorkspace
+            currentEmptyWorkspace = getOrCreateNextEmptyWorkspace()
+            newParentWorkspace.assignedMonitorRect = window.monitorApproximation?.rect ?? allMonitorsRectsUnion
+        }
     }
 
     static func ==(lhs: TreeNode, rhs: TreeNode) -> Bool {
@@ -31,7 +40,6 @@ class TreeNode : Equatable {
 class RootTreeNode: TreeNode {
     private override init() {
         super.init()
-        _parent = self
     }
     static let instance = RootTreeNode()
 }
