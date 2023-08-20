@@ -38,7 +38,7 @@ struct AeroSpaceApp: App {
 
     var body: some Scene {
         MenuBarExtra {
-            Text("AeroSpace v\(Bundle.appVersion)")
+            Text("\(Bundle.appName) v\(Bundle.appVersion)")
             Divider()
             Text("Workspaces:")
             // todo show only non empty workspaces
@@ -55,7 +55,7 @@ struct AeroSpaceApp: App {
                 }
             }
             Divider()
-            Button("Quit AeroSpace") { NSApplication.shared.terminate(nil) }
+            Button("Quit \(Bundle.appName)") { NSApplication.shared.terminate(nil) }
                     .keyboardShortcut("Q", modifiers: .command)
         } label: {
             // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
