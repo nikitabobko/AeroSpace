@@ -127,11 +127,6 @@ extension [Rect] {
     }
 }
 
-struct Pair<F, S> {
-    let first: F
-    let second: S
-}
-
 extension Double {
     var squared: Double { self * self }
 }
@@ -157,13 +152,13 @@ extension CGPoint {
     }
 
     var monitorApproximation: NSScreen {
-        let monitors: [Pair<NSScreen, Rect>] = NSScreen.screens.map { Pair(first: $0, second: $0.rect) }
-        if let monitor = monitors.first(where: { $0.second.contains(self) }) {
-            return monitor.first
+        let pairs: [(monitor: NSScreen, rect: Rect)] = NSScreen.screens.map { ($0, $0.rect) }
+        if let pair = pairs.first(where: { $0.rect.contains(self) }) {
+            return pair.monitor
         }
-        return monitors
-                .minByOrThrow { distanceToRectFrame(to: $0.second) }
-                .first
+        return pairs
+                .minByOrThrow { distanceToRectFrame(to: $0.rect) }
+                .monitor
     }
 }
 
