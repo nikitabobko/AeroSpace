@@ -15,7 +15,7 @@ protocol ReadableAttr {
 }
 
 protocol WritableAttr : ReadableAttr {
-    var setter: (T) -> CFTypeRef { get }
+    var setter: (T) -> CFTypeRef? { get }
 }
 
 enum Ax {
@@ -27,7 +27,7 @@ enum Ax {
     struct WritableAttrImpl<T>: WritableAttr {
         var key: String
         var getter: (AnyObject) -> T?
-        var setter: (T) -> CFTypeRef
+        var setter: (T) -> CFTypeRef?
     }
 
     // todo wip
@@ -40,7 +40,7 @@ enum Ax {
     )
     static let titleAttr = WritableAttrImpl<String>(
             key: kAXTitleAttribute,
-            getter: { $0 as! String },
+            getter: { $0 as? String },
             setter: { $0 as CFTypeRef }
     )
     static let sizeAttr = WritableAttrImpl<CGSize>(
@@ -71,7 +71,7 @@ enum Ax {
             key: kAXWindowsAttribute,
             getter: {
                 // Filter out non-window objects (e.g. Finder's desktop)
-                ($0 as! NSArray).compactMap { $0 as! AXUIElement }.filter { $0.windowId() != nil }
+                ($0 as! NSArray).compactMap { ($0 as! AXUIElement) }.filter { $0.windowId() != nil }
             }
     )
     static let focusedWindowAttr = ReadableAttrImpl<AXUIElement>(
@@ -90,7 +90,7 @@ enum Ax {
             //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
             getter: {
                 debug("id: \($0)")
-                return $0 as! String
+                return $0 as? String
             }
     )
     static let focusedUiElementAttr = ReadableAttrImpl<AXUIElement>(
@@ -119,7 +119,8 @@ extension AXUIElement {
     }
 
     @discardableResult func set<Attr: WritableAttr>(_ attr: Attr, _ value: Attr.T) -> Bool {
-        AXUIElementSetAttributeValue(self, attr.key as CFString, attr.setter(value)) == .success
+        guard let value = attr.setter(value) else { return false }
+        return AXUIElementSetAttributeValue(self, attr.key as CFString, value) == .success
     }
 
     func windowId() -> CGWindowID? {
