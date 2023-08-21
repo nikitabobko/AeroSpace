@@ -88,7 +88,7 @@ class MacWindow: TreeNode, Hashable { // todo rename to Window?
     }
 
     func unhideByEmulation() {
-        assert((prevUnhiddenEmulationPosition != nil) == (prevUnhiddenEmulationSize != nil))
+        precondition((prevUnhiddenEmulationPosition != nil) == (prevUnhiddenEmulationSize != nil))
         guard let prevUnhiddenEmulationPosition else { return }
         guard let prevUnhiddenEmulationSize else { return }
         self.prevUnhiddenEmulationPosition = nil
@@ -102,7 +102,7 @@ class MacWindow: TreeNode, Hashable { // todo rename to Window?
     }
 
     var isHiddenEmulation: Bool {
-        assert((prevUnhiddenEmulationPosition != nil) == (prevUnhiddenEmulationSize != nil))
+        precondition((prevUnhiddenEmulationPosition != nil) == (prevUnhiddenEmulationSize != nil))
         return prevUnhiddenEmulationPosition != nil
     }
 
@@ -145,7 +145,7 @@ private extension UnsafeMutableRawPointer {
 private func windowIsDestroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
     guard let window = data?.window else { return }
     debug("Destroyed: \(window.title)")
-    assert(MacWindow.allWindows.removeValue(forKey: window.windowId) != nil)
+    precondition(MacWindow.allWindows.removeValue(forKey: window.windowId) != nil)
     for workspace in Workspace.all {
         workspace.remove(window: window)
     }

@@ -47,7 +47,7 @@ enum Ax {
             key: kAXSizeAttribute,
             getter: {
                 var raw: CGSize = .zero
-                assert(AXValueGetValue($0 as! AXValue, .cgSize, &raw))
+                precondition(AXValueGetValue($0 as! AXValue, .cgSize, &raw))
                 return raw
             },
             setter: {
@@ -131,7 +131,7 @@ extension AXUIElement {
 extension AXObserver {
     private static func newImpl(_ pid: pid_t, _ handler: AXObserverCallback) -> AXObserver {
         var observer: AXObserver? = nil
-        assert(AXObserverCreate(pid, handler, &observer) == .success)
+        precondition(AXObserverCreate(pid, handler, &observer) == .success)
         return observer!
     }
 
@@ -139,7 +139,7 @@ extension AXObserver {
         let observer = newImpl(pid, handler)
         let dataPtr = Unmanaged.passUnretained(data).toOpaque()
         // todo assertion fails (workspace switching?)
-        assert(AXObserverAddNotification(observer, ax, notifKey as CFString, dataPtr) == .success)
+        precondition(AXObserverAddNotification(observer, ax, notifKey as CFString, dataPtr) == .success)
         CFRunLoopAddSource(CFRunLoopGetCurrent(), AXObserverGetRunLoopSource(observer), .defaultMode)
         return observer
     }

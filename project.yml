@@ -17,8 +17,6 @@ targets:
       base:
         SWIFT_VERSION: 5.8
         CODE_SIGN_STYLE: Automatic
-        # Otherwise it fails for release
-        SWIFT_OPTIMIZATION_LEVEL: -Onone
         GENERATE_INFOPLIST_FILE: YES
         MARKETING_VERSION: 0.0.1
         SWIFT_OBJC_BRIDGING_HEADER: "src/Bridged-Header.h"
