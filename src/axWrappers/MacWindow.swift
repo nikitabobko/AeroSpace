@@ -77,13 +77,13 @@ class MacWindow: TreeNode, Hashable { // todo rename to Window?
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent
         // `hideEmulation` calls
         if !isHiddenEmulation {
-            prevUnhiddenEmulationPosition = topLeftCorner
+            prevUnhiddenEmulationPosition = getTopLeftCorner()
             prevUnhiddenEmulationSize = getSize()
         }
         guard let monitorApproximation else { return }
 //        let foo = if true { true } else {false}
         // todo hiding is broken for secondary monitor
-        setPosition(monitorApproximation.rect.bottomRight)
+        setTopLeftCorner(monitorApproximation.rect.bottomRight)
 //        setSize(CGSize(width: 0, height: 0))
     }
 
@@ -93,7 +93,7 @@ class MacWindow: TreeNode, Hashable { // todo rename to Window?
         guard let prevUnhiddenEmulationSize else { return }
         self.prevUnhiddenEmulationPosition = nil
         self.prevUnhiddenEmulationSize = nil
-        setPosition(prevUnhiddenEmulationPosition)
+        setTopLeftCorner(prevUnhiddenEmulationPosition)
 
         // Restore the size because during hiding the window can end up on different monitor with different density,
         // size, etc. And macOS changes the size of the window when the window is moved on different monitor in that
@@ -115,11 +115,11 @@ class MacWindow: TreeNode, Hashable { // todo rename to Window?
         axWindow.get(Ax.sizeAttr)!
     }
 
-    func setPosition(_ position: CGPoint) {
-        axWindow.set(Ax.topLeftCornerAttr, position)
+    func setTopLeftCorner(_ point: CGPoint) {
+        axWindow.set(Ax.topLeftCornerAttr, point)
     }
 
-    var topLeftCorner: CGPoint? {
+    func getTopLeftCorner() -> CGPoint? {
         axWindow.get(Ax.topLeftCornerAttr)
     }
 
@@ -134,7 +134,7 @@ class MacWindow: TreeNode, Hashable { // todo rename to Window?
 
 extension MacWindow {
     var monitorApproximation: NSScreen? {
-        topLeftCorner?.monitorApproximation
+        getTopLeftCorner()?.monitorApproximation
     }
 }
 

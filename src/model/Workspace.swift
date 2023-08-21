@@ -78,7 +78,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
     // todo Implement properly
     func moveTo(monitor: NSScreen) {
         for window in floatingWindows {
-            window.setPosition(monitor.visibleRect.topLeft)
+            window.setTopLeftCorner(monitor.visibleRect.topLeft)
         }
     }
 
