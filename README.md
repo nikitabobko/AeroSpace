@@ -18,7 +18,7 @@ AeroSpace is a tiling window manager for macOS.
 
 You would need a mac. Run in terminal:
 ```bash
-./build.sh
+./build-debug.sh
 ```
 
 ## Todo
@@ -56,6 +56,7 @@ You would need a mac. Run in terminal:
 - IntelliJ dialog windows (e.g. "Add to git")
 - IntelliJ project structure modal window
 - VLC full screen window (eh, I wish every fullscreen window in macOS worked like that)
+- iTerm drop down window
 
 ## Limitations of macOS API
 

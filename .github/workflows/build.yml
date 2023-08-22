@@ -18,4 +18,4 @@ jobs:
         uses: xavierLowmiller/xcodegen-action@1.1.2
       - name: Build
         run: |
-          ./build-debug.sh
+          ./ci-build.sh
