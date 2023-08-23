@@ -14,8 +14,7 @@ class GlobalObserver {
     }
 
     static func initObserver() {
-//        subscribe(NSWorkspace.didLaunchApplicationNotification)
-        // todo subscribe on finder desktop click on different monitors
+        subscribe(NSWorkspace.didLaunchApplicationNotification)
         subscribe(NSWorkspace.didActivateApplicationNotification)
         subscribe(NSWorkspace.didHideApplicationNotification)
         subscribe(NSWorkspace.didUnhideApplicationNotification)

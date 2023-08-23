@@ -28,6 +28,7 @@ You would need a mac. Run in terminal:
 - select parent -> outline several windows?
   - OR: outline with "SLSSetWindowOpacity"
   - OR: "shake" windows
+- settings
 - CLI interface
 - Check all todos in code
 - move vs swap (swap requires position and size proportions decoupling from windows)

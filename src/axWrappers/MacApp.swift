@@ -1,9 +1,8 @@
 import Foundation
 
-class MacApp: Hashable { // todo rename to App?
+class MacApp: Hashable {
     let nsApp: NSRunningApplication
-    // todo: make private
-    let axApp: AXUIElement
+    private let axApp: AXUIElement
 
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 
@@ -33,7 +32,7 @@ class MacApp: Hashable { // todo rename to App?
         apps = apps.filter { pid, app in
             let isTerminated = app.nsApp.isTerminated
             if isTerminated {
-                debug("terminated \(app.title.toString())")
+                debug("terminated \(app.title ?? "")")
             }
             return !isTerminated
         }
@@ -65,11 +64,6 @@ class MacApp: Hashable { // todo rename to App?
 
 extension NSRunningApplication {
     var macApp: MacApp { MacApp.get(self) }
-}
-
-// todo unused
-private extension UnsafeMutableRawPointer {
-    var app: MacApp { Unmanaged.fromOpaque(self).takeRetainedValue() }
 }
 
 extension MacApp {

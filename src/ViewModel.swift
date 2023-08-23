@@ -18,8 +18,7 @@ class ViewModel: ObservableObject {
         //}
         //let focusedMonitor = NSScreen.focusedMonitorOrNilIfDesktop ?? NSScreen.main
         //if let focusedMonitor, let alreadyAllocatedOn = newWorkspace.monitorIfWorkspaceVisibleOrNil {
-        //    // todo .frame -> .rect
-        //    if alreadyAllocatedOn.frame.origin != focusedMonitor.frame.origin {
+        //    if alreadyAllocatedOn.rect.topLeft != focusedMonitor.rect.topLeft {
         //        newWorkspace.moveTo(monitor: focusedMonitor)
         //    }
         //}

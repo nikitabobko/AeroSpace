@@ -108,9 +108,6 @@ enum Ax {
 }
 
 extension AXUIElement {
-    // todo unused?
-    static let systemWide = AXUIElementCreateSystemWide()
-
     func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
         var raw: AnyObject?
         return AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success

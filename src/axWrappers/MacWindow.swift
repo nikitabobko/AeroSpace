@@ -1,11 +1,10 @@
 import Foundation
 import AppKit
 
-class MacWindow: TreeNode, Hashable { // todo rename to Window?
+class MacWindow: TreeNode, Hashable {
     let windowId: CGWindowID
-    // todo: make private
-    let axWindow: AXUIElement
-    let app: MacApp
+    private let axWindow: AXUIElement
+    private let app: MacApp
     private var prevUnhiddenEmulationPosition: CGPoint?
     // todo redundant?
     private var prevUnhiddenEmulationSize: CGSize?
@@ -54,7 +53,7 @@ class MacWindow: TreeNode, Hashable { // todo rename to Window?
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) {
         let observer = AXObserver.observe(app.nsApp.processIdentifier, notifKey, axWindow, data: self, handler)
-                ?? errorT("Can't subscribe window to observe \(notifKey)")
+                ?? errorT("Can't subscribe window \(title ?? "") (app=\(app.title)) to observe \(notifKey)")
         axObservers.append(AxObserverWrapper(obs: observer, ax: axWindow, notif: notifKey as CFString))
     }
 
@@ -82,8 +81,6 @@ class MacWindow: TreeNode, Hashable { // todo rename to Window?
             prevUnhiddenEmulationSize = getSize()
         }
         guard let monitorApproximation else { return }
-//        let foo = if true { true } else {false}
-        // todo hiding is broken for secondary monitor
         setTopLeftCorner(monitorApproximation.rect.bottomRight)
 //        setSize(CGSize(width: 0, height: 0))
     }

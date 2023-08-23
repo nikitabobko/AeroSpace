@@ -5,7 +5,6 @@ import CoreFoundation
 import AppKit
 import SwiftUI
 
-// todo extract into settings
 let settings = [
     Setting(name: "W: 1", hotkey: .one, modifiers: [.option]),
     Setting(name: "W: 2", hotkey: .two, modifiers: [.option]),
@@ -41,8 +40,6 @@ struct AeroSpaceApp: App {
             Text("\(Bundle.appName) v\(Bundle.appVersion)")
             Divider()
             Text("Workspaces:")
-            // todo show only non empty workspaces
-            //      Or create two groups? (non empty group and empty group)
             ForEach(Workspace.all) { workspace in
                 Button {
                     viewModel.switchToWorkspace(workspace)
@@ -59,7 +56,6 @@ struct AeroSpaceApp: App {
                     .keyboardShortcut("Q", modifiers: .command)
         } label: {
             // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
-            // todo reserve "???" workspace name
             Text(viewModel.focusedWorkspaceTrayText)
         }
     }
