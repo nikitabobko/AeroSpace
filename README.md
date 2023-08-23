@@ -23,10 +23,6 @@ You would need a mac. Run in terminal:
 
 ## Todo
 
-- subscribe to windows changes (new windows are opened, existing are closed)
-- move window to another monitor (spaces? treat spaces as monitors)
-- mouse resize events
-- mouse move window events
 - is dialog, is resizable, is modal?
 - select parent and kill several windows at once
 - select parent -> outline several windows?

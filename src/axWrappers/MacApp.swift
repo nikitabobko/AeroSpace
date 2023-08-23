@@ -35,7 +35,7 @@ class MacApp: Hashable { // todo rename to App?
     var title: String? { nsApp.localizedName }
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) {
-        let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, self, handler)
+        guard let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, data: nil, handler) else { return }
         axObservers.append(AxObserverWrapper(obs: observer, ax: axApp, notif: notifKey as CFString))
     }
 

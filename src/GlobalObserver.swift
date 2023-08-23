@@ -17,19 +17,15 @@ class GlobalObserver {
 //        subscribe(NSWorkspace.didLaunchApplicationNotification)
         // todo subscribe on finder desktop click on different monitors
         subscribe(NSWorkspace.didActivateApplicationNotification)
-//        subscribe(NSWorkspace.didDeactivateApplicationNotification)
+        subscribe(NSWorkspace.didHideApplicationNotification)
+        subscribe(NSWorkspace.didUnhideApplicationNotification)
+        subscribe(NSWorkspace.didDeactivateApplicationNotification)
         subscribe(NSWorkspace.activeSpaceDidChangeNotification)
-//        subscribe(NSWorkspace.didTerminateApplicationNotification)
-
-
-
-
+        subscribe(NSWorkspace.didTerminateApplicationNotification)
 
 //        window.observe(windowIsDestroyedObs, kAXUIElementDestroyedNotification)
 
 
-//        subscribe(NSWorkspace.didDeactivateApplicationNotification)
-//        subscribe(NSWorkspace.didTerminateApplicationNotification)
 //        AXObserverCreate(<#T##application: pid_t##pid_t#>, <#T##callback: AXObserverCallback##ApplicationServices.AXObserverCallback#>, <#T##outObserver: UnsafeMutablePointer<AXObserver?>##Swift.UnsafeMutablePointer<ApplicationServices.AXObserver?>#>)
 //        AXObserverAddNotification()
 

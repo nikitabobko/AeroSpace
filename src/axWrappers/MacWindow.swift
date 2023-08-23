@@ -53,7 +53,8 @@ class MacWindow: TreeNode, Hashable { // todo rename to Window?
     }
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) {
-        let observer = AXObserver.observe(app.nsApp.processIdentifier, notifKey, axWindow, self, handler)
+        let observer = AXObserver.observe(app.nsApp.processIdentifier, notifKey, axWindow, data: self, handler)
+                ?? errorT("Can't subscribe window to observe \(notifKey)")
         axObservers.append(AxObserverWrapper(obs: observer, ax: axWindow, notif: notifKey as CFString))
     }
 

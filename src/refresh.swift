@@ -3,11 +3,12 @@ import Foundation
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input
 func refresh() {
+    debug("refresh")
     ViewModel.shared.updateTrayText()
     let visibleWindows = windowsOnActiveMacOsSpaces()
     // Hide windows that were manually unhidden by user
     visibleWindows.filter { $0.isHiddenEmulation }.forEach { $0.hideByEmulation() }
-    layoutNewWindows(visibleWindows: visibleWindows)
+    //layoutNewWindows(visibleWindows: visibleWindows)
 
 
 }
