@@ -5,7 +5,6 @@ class MacApp: Hashable { // todo rename to App?
     // todo: make private
     let axApp: AXUIElement
 
-    // todo cleanup resource
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 
     private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement) {
@@ -25,10 +24,18 @@ class MacApp: Hashable { // todo rename to App?
             app.observe(refreshObs, kAXWindowCreatedNotification)
             app.observe(refreshObs, kAXFocusedWindowChangedNotification)
 
-            // todo subscribe on app destroy
-
             apps[pid] = app
             return app
+        }
+    }
+
+    static func garbageCollectTerminatedApps() {
+        apps = apps.filter { pid, app in
+            let isTerminated = app.nsApp.isTerminated
+            if isTerminated {
+                debug("terminated \(app.title.toString())")
+            }
+            return !isTerminated
         }
     }
 

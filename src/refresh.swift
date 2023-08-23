@@ -10,7 +10,7 @@ func refresh() {
     visibleWindows.filter { $0.isHiddenEmulation }.forEach { $0.hideByEmulation() }
     //layoutNewWindows(visibleWindows: visibleWindows)
 
-
+    MacApp.garbageCollectTerminatedApps()
 }
 
 private func layoutNewWindows(visibleWindows: [MacWindow]) {

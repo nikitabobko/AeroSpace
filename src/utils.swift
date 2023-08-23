@@ -92,6 +92,12 @@ extension NSScreen {
     var visibleRect: Rect { visibleFrame.monitorFrameNormalized() }
 }
 
+extension String? {
+    func toString() -> String {
+        self ?? "NULL STRING"
+    }
+}
+
 extension CGRect {
     func monitorFrameNormalized() -> Rect {
         let mainMonitorHeight: CGFloat = NSScreen.screens.firstOrThrow { $0.isMainMonitor }.frame.height
