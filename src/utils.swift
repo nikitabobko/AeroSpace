@@ -72,7 +72,7 @@ extension NSScreen {
         //NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow?.monitorApproximation
         // todo what's the difference between? NSWorkspace.shared.frontmostApplication
 
-        NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow?.monitorApproximation
+        NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow?.monitorApproximationLowLevel
                 ?? NSScreen.screens.singleOrNil()
 
         //NSWorkspace.shared.menuBarOwningApplication?.macApp.axFocusedWindow?

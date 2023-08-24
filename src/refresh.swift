@@ -16,7 +16,7 @@ func refresh() {
 
 private func layoutNewWindows(visibleWindows: [MacWindow]) {
     for newWindow: MacWindow in visibleWindows.toSet().subtracting(Workspace.all.flatMap { $0.allWindowsRecursive }) {
-        if let workspace: Workspace = newWindow.monitorApproximation?.notEmptyWorkspace {
+        if let workspace: Workspace = newWindow.monitorApproximationLowLevel?.notEmptyWorkspace {
             debug("New window \(newWindow.title) layoted on workspace \(workspace.name)")
             workspace.add(window: newWindow)
         }

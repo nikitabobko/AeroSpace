@@ -90,8 +90,8 @@ class MacWindow: TreeNode, Hashable {
             prevUnhiddenEmulationPosition = getTopLeftCorner()
             prevUnhiddenEmulationSize = getSize()
         }
-        guard let monitorApproximation else { return }
-        setTopLeftCorner(monitorApproximation.rect.bottomRightCorner)
+        guard let monitorApproximationLowLevel else { return }
+        setTopLeftCorner(monitorApproximationLowLevel.rect.bottomRightCorner)
 //        setSize(CGSize(width: 0, height: 0))
     }
 
@@ -141,7 +141,8 @@ class MacWindow: TreeNode, Hashable {
 }
 
 extension MacWindow {
-    var monitorApproximation: NSScreen? {
+    // Please prefer window.workspace.assignedRect
+    var monitorApproximationLowLevel: NSScreen? { // todo inline?
         getTopLeftCorner()?.monitorApproximation
     }
 }
