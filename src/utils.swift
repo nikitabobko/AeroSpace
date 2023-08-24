@@ -24,7 +24,7 @@ func test() {
         debug("---")
         debug(screen.localizedName)
         debug(screen.debugDescription)
-        debug(screen.visibleRect.topLeft)
+        debug(screen.visibleRect.topLeftCorner)
         debug(screen.visibleRect)
     }
 //    let bar = windowsOnActiveMacOsSpaces().filter { $0.title?.contains("bar") == true }.first!
@@ -145,10 +145,10 @@ extension CGPoint {
     func distanceToRectFrame(to rect: Rect) -> CGFloat {
         let list: [CGFloat] = ((rect.minY..<rect.maxY).contains(y) ? [abs(rect.minX - x), abs(rect.maxX - x)] : []) +
                 ((rect.minX..<rect.maxX).contains(x) ? [abs(rect.minY - y), abs(rect.maxY - y)] : []) +
-                [distance(to: rect.topLeft),
-                 distance(to: rect.bottomRight),
-                 distance(to: rect.topRight),
-                 distance(to: rect.bottomLeft)]
+                [distance(to: rect.topLeftCorner),
+                 distance(to: rect.bottomRightCorner),
+                 distance(to: rect.topRightCorner),
+                 distance(to: rect.bottomLeftCorner)]
         return list.minOrThrow()
     }
 
@@ -189,10 +189,10 @@ extension Rect {
         )
     }
 
-    var topLeft: CGPoint { CGPoint(x: topLeftX, y: topLeftY) }
-    var topRight: CGPoint { CGPoint(x: maxX, y: minY) }
-    var bottomRight: CGPoint { CGPoint(x: maxX, y: maxY) }
-    var bottomLeft: CGPoint { CGPoint(x: minX, y: maxY) }
+    var topLeftCorner: CGPoint { CGPoint(x: topLeftX, y: topLeftY) }
+    var topRightCorner: CGPoint { CGPoint(x: maxX, y: minY) }
+    var bottomRightCorner: CGPoint { CGPoint(x: maxX, y: maxY) }
+    var bottomLeftCorner: CGPoint { CGPoint(x: minX, y: maxY) }
 
     var minY: CGFloat { topLeftY }
     var maxY: CGFloat { topLeftY + height }

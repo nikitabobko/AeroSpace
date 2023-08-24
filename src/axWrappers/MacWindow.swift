@@ -91,7 +91,7 @@ class MacWindow: TreeNode, Hashable {
             prevUnhiddenEmulationSize = getSize()
         }
         guard let monitorApproximation else { return }
-        setTopLeftCorner(monitorApproximation.rect.bottomRight)
+        setTopLeftCorner(monitorApproximation.rect.bottomRightCorner)
 //        setSize(CGSize(width: 0, height: 0))
     }
 

@@ -71,7 +71,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
     // todo Implement properly
     func moveTo(monitor: NSScreen) {
         for window in floatingWindows {
-            window.setTopLeftCorner(monitor.visibleRect.topLeft)
+            window.setTopLeftCorner(monitor.visibleRect.topLeftCorner)
         }
     }
 
@@ -116,7 +116,7 @@ extension NSScreen {
     /// Don't forget that there is always an empty additional "background" workspace on every monitor ``currentEmptyWorkspace``
     var notEmptyWorkspace: Workspace? {
         get {
-            if let existing = monitorTopLeftCornerToNotEmptyWorkspace[rect.topLeft] {
+            if let existing = monitorTopLeftCornerToNotEmptyWorkspace[rect.topLeftCorner] {
                 return existing
             }
             // What if monitor configuration changed? (frame.origin is changed)
@@ -132,7 +132,7 @@ private func rearrangeWorkspacesOnMonitors() {
     let oldMonitorToWorkspaces: [CGPoint: Workspace?] = monitorTopLeftCornerToNotEmptyWorkspace
     monitorTopLeftCornerToNotEmptyWorkspace = [:]
     let monitors = NSScreen.screens
-    let origins = monitors.map { $0.rect.topLeft }.toSet()
+    let origins = monitors.map { $0.rect.topLeftCorner }.toSet()
     let preservedWorkspaces: [Workspace] = oldMonitorToWorkspaces
             .filter { oldOrigin, oldWorkspace in origins.contains(oldOrigin) }
             .map { $0.value }
@@ -144,7 +144,7 @@ private func rearrangeWorkspacesOnMonitors() {
     var poolOfWorkspaces: [Workspace] =
             Workspace.all.reversed() - (preservedWorkspaces + lostWorkspaces) + lostWorkspaces
     for monitor in monitors {
-        let origin = monitor.rect.topLeft
+        let origin = monitor.rect.topLeftCorner
         // If monitors change, most likely we will preserve only the main monitor (It always has (0, 0) origin)
         if let existing = oldMonitorToWorkspaces[origin] {
             monitorTopLeftCornerToNotEmptyWorkspace[origin] = existing
