@@ -5,11 +5,12 @@ import Foundation
 func refresh() {
     debug("refresh")
     ViewModel.shared.updateTrayText()
-    let visibleWindows = windowsOnActiveMacOsSpaces()
+    let visibleWindows = visibleWindowsOnAllMonitors()
     // Hide windows that were manually unhidden by user
     visibleWindows.filter { $0.isHiddenEmulation }.forEach { $0.hideByEmulation() }
     //layoutNewWindows(visibleWindows: visibleWindows)
 
+    Workspace.garbageCollectUnusedWorkspaces()
     MacApp.garbageCollectTerminatedApps()
 }
 
@@ -22,8 +23,8 @@ private func layoutNewWindows(visibleWindows: [MacWindow]) {
     }
 }
 
-private func windowsOnActiveMacOsSpaces() -> [MacWindow] {
+private func visibleWindowsOnAllMonitors() -> [MacWindow] {
     NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-            .flatMap { $0.macApp.windowsOnActiveMacOsSpaces }
+            .flatMap { $0.macApp.visibleWindowsOnAllMonitors }
 }

@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		07FF7938628995F68DFEB524 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F99E8C4FD17A1D939C41F1 /* ViewModel.swift */; };
 		080DAA83BADA766D94A2BD3C /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A4C333EA5B4D4527DD97D4 /* Workspace.swift */; };
-		19675866ED9F188B67631DB7 /* TeeNodeEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49A9E06C1151E6CFF4B1541E /* TeeNodeEx.swift */; };
 		2F8DC074DAB97DC87E07A559 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CAC977020A08D0227FAFB2 /* Bundle.swift */; };
+		4005ECE237BD9230F74CA917 /* TreeNodeEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C39B0C4E4888832129C4C7 /* TreeNodeEx.swift */; };
 		518B9E5AC031C24C7C84CD70 /* MacWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243F29F496F7463F3482DD10 /* MacWindow.swift */; };
 		6317AB471F4C4F5D66A25784 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEDBFFCA7A77D96B18FB0732 /* Assets.xcassets */; };
 		66E6CDA75DDD5E4B9647EDE2 /* AeroSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E81623E8954701269A22322 /* AeroSpaceApp.swift */; };
@@ -33,7 +33,6 @@
 		38A4C333EA5B4D4527DD97D4 /* Workspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		3C2E5977331398421A4FC168 /* GlobalObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalObserver.swift; sourceTree = "<group>"; };
 		3E05FB0C7158C8B6DECBD603 /* TilingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilingContainer.swift; sourceTree = "<group>"; };
-		49A9E06C1151E6CFF4B1541E /* TeeNodeEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeeNodeEx.swift; sourceTree = "<group>"; };
 		4CAA43D9C8FF059B23C405FD /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		526B113159987FA43EA41120 /* refresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = refresh.swift; sourceTree = "<group>"; };
 		7E6F3930E3BF5D8196A20E9B /* axObservers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = axObservers.swift; sourceTree = "<group>"; };
@@ -43,6 +42,7 @@
 		EC2F56249A233EC9806D0F08 /* Bridged-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridged-Header.h"; sourceTree = "<group>"; };
 		EE605CF46DE6377C69B9D49D /* accessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = accessibility.swift; sourceTree = "<group>"; };
 		EEDBFFCA7A77D96B18FB0732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F8C39B0C4E4888832129C4C7 /* TreeNodeEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeEx.swift; sourceTree = "<group>"; };
 		F9CAC977020A08D0227FAFB2 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -61,9 +61,9 @@
 		38E5F06C862662755065FF1D /* model */ = {
 			isa = PBXGroup;
 			children = (
-				49A9E06C1151E6CFF4B1541E /* TeeNodeEx.swift */,
 				3E05FB0C7158C8B6DECBD603 /* TilingContainer.swift */,
 				D295CA45172ADBDB1E4DF708 /* TreeNode.swift */,
+				F8C39B0C4E4888832129C4C7 /* TreeNodeEx.swift */,
 				38A4C333EA5B4D4527DD97D4 /* Workspace.swift */,
 			);
 			path = model;
@@ -192,9 +192,9 @@
 				B0D0C37BAE7E7F0D0FF1E9FC /* GlobalObserver.swift in Sources */,
 				7FE92DDAC2F094C83A177914 /* MacApp.swift in Sources */,
 				518B9E5AC031C24C7C84CD70 /* MacWindow.swift in Sources */,
-				19675866ED9F188B67631DB7 /* TeeNodeEx.swift in Sources */,
 				783B0B965BA45D7A2943F7BF /* TilingContainer.swift in Sources */,
 				B1E2002BB8F70F2555AAA82D /* TreeNode.swift in Sources */,
+				4005ECE237BD9230F74CA917 /* TreeNodeEx.swift in Sources */,
 				07FF7938628995F68DFEB524 /* ViewModel.swift in Sources */,
 				080DAA83BADA766D94A2BD3C /* Workspace.swift in Sources */,
 				E2FD8E2B2D2BE6B88BF8E8AD /* accessibility.swift in Sources */,

@@ -16,7 +16,7 @@ import AppKit
 func windowsOnActiveMacOsSpacesTest() -> [MacWindow] {
     NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-            .flatMap { $0.macApp.windowsOnActiveMacOsSpaces }
+            .flatMap { $0.macApp.visibleWindowsOnAllMonitors }
 }
 
 func test() {
@@ -71,9 +71,14 @@ extension NSScreen {
     static var focusedMonitorOrNilIfDesktop: NSScreen? {
         //NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow?.monitorApproximation
         // todo what's the difference between? NSWorkspace.shared.frontmostApplication
-        NSWorkspace.shared.menuBarOwningApplication?.macApp.axFocusedWindow?
-                .get(Ax.topLeftCornerAttr)?.monitorApproximation
+
+        NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow?.monitorApproximation
                 ?? NSScreen.screens.singleOrNil()
+
+        //NSWorkspace.shared.menuBarOwningApplication?.macApp.axFocusedWindow?
+        //        .get(Ax.topLeftCornerAttr)?.monitorApproximation
+        //        ?? NSScreen.screens.singleOrNil()
+
     }
 
     var isMainMonitor: Bool {

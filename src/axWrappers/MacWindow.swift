@@ -18,43 +18,53 @@ class MacWindow: TreeNode, Hashable {
         super.init(parent: parent)
     }
 
-    fileprivate static var allWindows: [CGWindowID: MacWindow] = [:]
+    private static var allWindows: [CGWindowID: MacWindow] = [:]
 
     static func get(app: MacApp, axWindow: AXUIElement) -> MacWindow? {
-        let id = axWindow.windowId() ?? errorT("Can't get window id")
+        guard let id = axWindow.windowId() else { return nil }
         if let existing = allWindows[id] {
             return existing
         } else {
-            guard let topLeftCorner = axWindow.get(Ax.topLeftCornerAttr) else { return nil }
-            let workspace = topLeftCorner.monitorApproximation.workspace
+            let activeWorkspace = Workspace.get(byName: ViewModel.shared.focusedWorkspaceTrayText)
+            let workspace: Workspace
+            if activeWorkspace == currentEmptyWorkspace {
+                workspace = activeWorkspace
+            } else {
+                guard let topLeftCorner = axWindow.get(Ax.topLeftCornerAttr) else { return nil }
+                workspace = topLeftCorner.monitorApproximation.notEmptyWorkspace ?? currentEmptyWorkspace
+            }
             // Layout the window in the container of the last active window
             let parent = workspace.lastActiveWindow?.parent ?? workspace.rootContainer
             let window = MacWindow(id, app, axWindow, parent: parent)
-            debug("New window detected: \(window.title)")
-
-            window.observe(windowIsDestroyedObs, kAXUIElementDestroyedNotification)
-            window.observe(refreshObs, kAXWindowDeminiaturizedNotification)
-            window.observe(refreshObs, kAXWindowMiniaturizedNotification)
-            window.observe(refreshObs, kAXMovedNotification)
-            window.observe(refreshObs, kAXResizedNotification)
-//            window.observe(refreshObs, kAXFocusedUIElementChangedNotification)
-
+            debug("New window detected: \(window.title ?? "")")
             allWindows[id] = window
-            return window
+
+            if window.observe(windowIsDestroyedObs, kAXUIElementDestroyedNotification) &&
+                       window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
+                       window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
+                       window.observe(refreshObs, kAXMovedNotification) &&
+                       window.observe(refreshObs, kAXResizedNotification) {
+                return window
+            } else {
+                window.free()
+                return nil
+            }
         }
     }
 
     func free() {
+        precondition(MacWindow.allWindows.removeValue(forKey: windowId) != nil)
+        unbindFromParent()
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
         }
         axObservers = []
     }
 
-    private func observe(_ handler: AXObserverCallback, _ notifKey: String) {
-        let observer = AXObserver.observe(app.nsApp.processIdentifier, notifKey, axWindow, data: self, handler)
-                ?? errorT("Can't subscribe window \(title ?? "") (app=\(app.title)) to observe \(notifKey)")
+    private func observe(_ handler: AXObserverCallback, _ notifKey: String) -> Bool {
+        guard let observer = AXObserver.observe(app.nsApp.processIdentifier, notifKey, axWindow, data: self, handler) else { return false }
         axObservers.append(AxObserverWrapper(obs: observer, ax: axWindow, notif: notifKey as CFString))
+        return true
     }
 
     var title: String? {
@@ -143,10 +153,6 @@ private extension UnsafeMutableRawPointer {
 private func windowIsDestroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
     guard let window = data?.window else { return }
     debug("Destroyed: \(window.title)")
-    precondition(MacWindow.allWindows.removeValue(forKey: window.windowId) != nil)
-    for workspace in Workspace.all {
-        workspace.remove(window: window)
-    }
     window.free()
     refresh()
 }

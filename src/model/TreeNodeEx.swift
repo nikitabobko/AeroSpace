@@ -10,6 +10,7 @@ extension TreeNode {
         }
     }
 
+    // todo drop. because performance
     var allWindowsRecursive: [MacWindow] {
         var result: [MacWindow] = []
         visit(node: self, result: &result)
@@ -22,5 +23,15 @@ extension TreeNode {
         } else {
             return parent.workspace
         }
+    }
+
+    var doesContainWindows: Bool {
+        if children.contains(where: { $0 is MacWindow }) {
+            return true
+        }
+        if children.contains(where: { $0.doesContainWindows }) {
+            return true
+        }
+        return false
     }
 }

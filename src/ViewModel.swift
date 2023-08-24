@@ -6,7 +6,7 @@ class ViewModel: ObservableObject {
     private init() {
     }
 
-    @Published var focusedWorkspaceTrayText: String = currentEmptyWorkspace.name
+    @Published var focusedWorkspaceTrayText: String = currentEmptyWorkspace.name // settings.first?.name ?? "W: 1"
 
     func switchToWorkspace(_ newWorkspace: Workspace) {
         // todo
@@ -27,7 +27,10 @@ class ViewModel: ObservableObject {
     }
 
     func updateTrayText() {
-        let workspace = NSScreen.focusedMonitorOrNilIfDesktop?.notEmptyWorkspace ?? currentEmptyWorkspace
-        focusedWorkspaceTrayText = workspace.name
+        focusedWorkspaceTrayText =
+                (NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow?.workspace ?? currentEmptyWorkspace).name
+        //focusedWorkspaceTrayText =
+        //        (NSScreen.focusedMonitorOrNilIfDesktop?.notEmptyWorkspace ?? currentEmptyWorkspace).name
     }
 }
+

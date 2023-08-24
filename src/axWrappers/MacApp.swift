@@ -57,6 +57,7 @@ class MacApp: Hashable {
         axFocusedWindow.flatMap { MacWindow.get(app: self, axWindow: $0) }
     }
 
+    // todo drop?
     var axFocusedWindow: AXUIElement? {
         axApp.get(Ax.focusedWindowAttr)
     }
@@ -67,8 +68,7 @@ extension NSRunningApplication {
 }
 
 extension MacApp {
-    /// If there are several monitors then spaces on those monitors will be active
-    var windowsOnActiveMacOsSpaces: [MacWindow] {
+    var visibleWindowsOnAllMonitors: [MacWindow] {
         (axApp.get(Ax.windowsAttr) ?? []).compactMap({ MacWindow.get(app: self, axWindow: $0) })
     }
 }

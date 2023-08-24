@@ -27,7 +27,7 @@ private var monitorTopLeftCornerToNotEmptyWorkspace: [CGPoint: Workspace?] = [:]
 
 func getOrCreateNextEmptyWorkspace() -> Workspace {
     let all = Workspace.all
-    if let existing = all.first(where: { $0.isEmpty }) {
+    if let existing = all.first(where: { !$0.doesContainWindows }) {
         return existing
     }
     let occupiedNames = all.map { $0.name }.toSet()
@@ -43,7 +43,7 @@ var allMonitorsRectsUnion: Rect {
 class Workspace: TreeNode, Hashable, Identifiable {
     let name: String
     var floatingWindows = Set<MacWindow>()
-    var rootContainer: TilingContainer = HListContainer(parent: RootTreeNode.instance)
+    var rootContainer: TilingContainer = HListContainer(parent: NilTreeNode.instance)
     var isVisible: Bool = false
     var id: String { name } // satisfy Identifiable
     private var _assignedMonitorRect: Rect
@@ -59,20 +59,13 @@ class Workspace: TreeNode, Hashable, Identifiable {
     private init(_ name: String, _ assignedMonitorRect: Rect) {
         self.name = name
         self._assignedMonitorRect = assignedMonitorRect
-        super.init(parent: RootTreeNode.instance)
-        rootContainer = createDefaultWorkspaceContainer(self)
+        super.init(parent: NilTreeNode.instance)
+        rootContainer = HListContainer(parent: self)
+                // todo createDefaultWorkspaceContainer(self)
     }
 
     func add(window: MacWindow) {
         floatingWindows.insert(window)
-    }
-
-    func remove(window: MacWindow) {
-        floatingWindows.remove(window)
-    }
-
-    var isEmpty: Bool {
-        floatingWindows.isEmpty && rootContainer.allWindowsRecursive.isEmpty
     }
 
     // todo Implement properly
@@ -83,13 +76,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
     }
 
     static var all: [Workspace] {
-        let preservedNames = settings.map { $0.name }.toSet()
-        for name in preservedNames {
-            _ = get(byName: name) // Make sure that all preserved workspaces are "cached"
-        }
-        workspaceNameToWorkspace = workspaceNameToWorkspace.filter { (_, workspace: Workspace) in
-            preservedNames.contains(workspace.name) || !workspace.isEmpty || workspace == currentEmptyWorkspace
-        }
+        garbageCollectUnusedWorkspaces()
         return workspaceNameToWorkspace.values.sorted { a, b in a.name < b.name }
     }
 
@@ -100,6 +87,19 @@ class Workspace: TreeNode, Hashable, Identifiable {
             let workspace = Workspace(name, allMonitorsRectsUnion)
             workspaceNameToWorkspace[name] = workspace
             return workspace
+        }
+    }
+
+    static func garbageCollectUnusedWorkspaces() {
+        let preservedNames = settings.map { $0.name }.toSet()
+        for name in preservedNames {
+            _ = get(byName: name) // Make sure that all preserved workspaces are "cached"
+        }
+        workspaceNameToWorkspace = workspaceNameToWorkspace.filter { (_, workspace: Workspace) in
+            preservedNames.contains(workspace.name) ||
+                    workspace.doesContainWindows ||
+                    workspace == currentEmptyWorkspace ||
+                    workspace.name == ViewModel.shared.focusedWorkspaceTrayText
         }
     }
 
@@ -125,10 +125,6 @@ extension NSScreen {
             // (Unless, monitor configuration data race happens)
             return self.notEmptyWorkspace
         }
-    }
-
-    var workspace: Workspace {
-        notEmptyWorkspace ?? currentEmptyWorkspace
     }
 }
 

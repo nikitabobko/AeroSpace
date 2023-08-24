@@ -14,14 +14,14 @@ class TreeNode : Equatable {
     }
 
     func bindTo(parent newParent: TreeNode) {
-        if (newParent === RootTreeNode.instance) {
+        if (newParent === NilTreeNode.instance) {
             return
         }
         let prevParent: TreeNode? = _parent
         if prevParent === newParent {
             return
         }
-        prevParent?._children.remove(element: self)
+        unbind(parent: prevParent)
         newParent._children.append(self)
         _parent = newParent
         // Change currentEmptyWorkspace if necessary
@@ -32,16 +32,30 @@ class TreeNode : Equatable {
         }
     }
 
+    private func unbind(parent: TreeNode?) {
+        guard let parent else { return }
+        parent._children.remove(element: self)
+        let workspace: Workspace = parent.workspace
+        if !workspace.doesContainWindows { // It became empty
+            currentEmptyWorkspace = workspace
+            currentEmptyWorkspace.assignedMonitorRect = allMonitorsRectsUnion
+        }
+    }
+
+    func unbindFromParent() {
+        unbind(parent: parent)
+    }
+
     static func ==(lhs: TreeNode, rhs: TreeNode) -> Bool {
         lhs === rhs
     }
 }
 
-class RootTreeNode: TreeNode {
+class NilTreeNode: TreeNode {
     private override init() {
         super.init()
     }
-    static let instance = RootTreeNode()
+    static let instance = NilTreeNode()
 }
 
 ///// Workaround for https://github.com/apple/swift/issues/48596
