@@ -23,11 +23,11 @@ var currentEmptyWorkspace: Workspace = getOrCreateNextEmptyWorkspace()
 /// optionally can have a not empty workspace assigned to it
 ///
 /// When this map contains `nil` it means that the monitor displays the "empty"/"background" workspace
-private var monitorTopLeftCornerToNotEmptyWorkspace: [CGPoint: Workspace?] = [:]
+var monitorTopLeftCornerToNotEmptyWorkspace: [CGPoint: Workspace?] = [:]
 
 func getOrCreateNextEmptyWorkspace() -> Workspace {
     let all = Workspace.all
-    if let existing = all.first(where: { !$0.doesContainWindows }) {
+    if let existing = all.first(where: { $0.isEffectivelyEmpty }) {
         return existing
     }
     let occupiedNames = all.map { $0.name }.toSet()
@@ -64,17 +64,6 @@ class Workspace: TreeNode, Hashable, Identifiable {
                 // todo createDefaultWorkspaceContainer(self)
     }
 
-    func add(window: MacWindow) {
-        floatingWindows.insert(window)
-    }
-
-    // todo Implement properly
-    func moveTo(monitor: NSScreen) {
-        for window in floatingWindows {
-            window.setTopLeftCorner(monitor.visibleRect.topLeftCorner)
-        }
-    }
-
     static var all: [Workspace] {
         garbageCollectUnusedWorkspaces()
         return workspaceNameToWorkspace.values.sorted { a, b in a.name < b.name }
@@ -97,7 +86,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
         }
         workspaceNameToWorkspace = workspaceNameToWorkspace.filter { (_, workspace: Workspace) in
             preservedNames.contains(workspace.name) ||
-                    workspace.doesContainWindows ||
+                    !workspace.isEffectivelyEmpty ||
                     workspace == currentEmptyWorkspace ||
                     workspace.name == ViewModel.shared.focusedWorkspaceTrayText
         }

@@ -25,13 +25,20 @@ extension TreeNode {
         }
     }
 
-    var doesContainWindows: Bool {
-        if children.contains(where: { $0 is MacWindow }) {
-            return true
+    var anyChildWindowRecursive: MacWindow? {
+        if let window = children.first(where: { $0 is MacWindow }) {
+            return (window as! MacWindow)
         }
-        if children.contains(where: { $0.doesContainWindows }) {
-            return true
+        for child in children {
+            if let window = child.anyChildWindowRecursive {
+                return window
+            }
         }
-        return false
+        return nil
+    }
+
+    // Doesn't contain at least one window
+    var isEffectivelyEmpty: Bool {
+        anyChildWindowRecursive == nil
     }
 }

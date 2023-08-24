@@ -136,6 +136,14 @@ extension Double {
     var squared: Double { self * self }
 }
 
+func -(a: CGPoint, b: CGPoint) -> CGPoint {
+    CGPoint(x: a.x - b.x, y: a.y - b.y)
+}
+
+func +(a: CGPoint, b: CGPoint) -> CGPoint {
+    CGPoint(x: a.x + b.x, y: a.y + b.y)
+}
+
 extension CGPoint {
     func copy(x: Double? = nil, y: Double? = nil) -> CGPoint {
         CGPoint(x: x ?? self.x, y: y ?? self.y)

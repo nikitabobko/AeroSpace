@@ -5,7 +5,7 @@ class MacWindow: TreeNode, Hashable {
     let windowId: CGWindowID
     private let axWindow: AXUIElement
     private let app: MacApp
-    private var prevUnhiddenEmulationPosition: CGPoint?
+    private var prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect: CGPoint?
     // todo redundant?
     private var prevUnhiddenEmulationSize: CGSize?
     fileprivate var previousSize: CGSize?
@@ -27,8 +27,10 @@ class MacWindow: TreeNode, Hashable {
         } else {
             let activeWorkspace = Workspace.get(byName: ViewModel.shared.focusedWorkspaceTrayText)
             let workspace: Workspace
-            if activeWorkspace == currentEmptyWorkspace {
-                workspace = activeWorkspace
+            if activeWorkspace == currentEmptyWorkspace &&
+                       NSWorkspace.shared.menuBarOwningApplication == app.nsApp &&
+                       app.axFocusedWindow?.windowId() == axWindow.windowId() {
+                workspace = currentEmptyWorkspace
             } else {
                 guard let topLeftCorner = axWindow.get(Ax.topLeftCornerAttr) else { return nil }
                 workspace = topLeftCorner.monitorApproximation.notEmptyWorkspace ?? currentEmptyWorkspace
@@ -71,9 +73,15 @@ class MacWindow: TreeNode, Hashable {
         axWindow.get(Ax.titleAttr)
     }
 
+    @discardableResult
     func activate() -> Bool {
-        app.nsApp.activate(options: .activateIgnoringOtherApps)
-        return AXUIElementPerformAction(axWindow, kAXRaiseAction as CFString) == AXError.success
+        if app.nsApp.activate(options: .activateIgnoringOtherApps) &&
+                   AXUIElementPerformAction(axWindow, kAXRaiseAction as CFString) == AXError.success {
+            workspace.lastActiveWindow = self
+            return true
+        } else {
+            return false
+        }
     }
 
     func close() -> Bool {
@@ -83,35 +91,38 @@ class MacWindow: TreeNode, Hashable {
 
     // todo current approach breaks mission control (three fingers up the trackpad). Or is it only because of IDEA?
     // todo hypnotize: change size to cooperate with mission control (make it configurable)
-    func hideByEmulation() {
+    func hideViaEmulation() {
+        //guard let monitorApproximation else { return }
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent
         // `hideEmulation` calls
-        if !isHiddenEmulation {
-            prevUnhiddenEmulationPosition = getTopLeftCorner()
-            prevUnhiddenEmulationSize = getSize()
+        if !isHiddenViaEmulation {
+            guard let topLeftCorner = getTopLeftCorner() else { return }
+            guard let size = getSize() else { return }
+            prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
+                    topLeftCorner - workspace.assignedMonitorRect.topLeftCorner
+            prevUnhiddenEmulationSize = size
         }
-        guard let monitorApproximationLowLevel else { return }
-        setTopLeftCorner(monitorApproximationLowLevel.rect.bottomRightCorner)
-//        setSize(CGSize(width: 0, height: 0))
+        setTopLeftCorner(allMonitorsRectsUnion.bottomRightCorner)
     }
 
-    func unhideByEmulation() {
-        precondition((prevUnhiddenEmulationPosition != nil) == (prevUnhiddenEmulationSize != nil))
-        guard let prevUnhiddenEmulationPosition else { return }
+    func unhideViaEmulation() {
+        precondition((prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect != nil) == (prevUnhiddenEmulationSize != nil))
+        guard let prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect else { return }
         guard let prevUnhiddenEmulationSize else { return }
-        self.prevUnhiddenEmulationPosition = nil
-        self.prevUnhiddenEmulationSize = nil
-        setTopLeftCorner(prevUnhiddenEmulationPosition)
 
+        setTopLeftCorner(workspace.assignedMonitorRect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
         // Restore the size because during hiding the window can end up on different monitor with different density,
-        // size, etc. And macOS changes the size of the window when the window is moved on different monitor in that
+        // size, etc. And macOS can change the size of the window when the window is moved on different monitor in that
         // case. So we need to restore the size of the window
-//        setSize(prevUnhiddenEmulationSize)
+        setSize(prevUnhiddenEmulationSize)
+
+        self.prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect = nil
+        self.prevUnhiddenEmulationSize = nil
     }
 
-    var isHiddenEmulation: Bool {
-        precondition((prevUnhiddenEmulationPosition != nil) == (prevUnhiddenEmulationSize != nil))
-        return prevUnhiddenEmulationPosition != nil
+    var isHiddenViaEmulation: Bool {
+        precondition((prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect != nil) == (prevUnhiddenEmulationSize != nil))
+        return prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect != nil
     }
 
     func setSize(_ size: CGSize) {
@@ -119,8 +130,8 @@ class MacWindow: TreeNode, Hashable {
         axWindow.set(Ax.sizeAttr, size)
     }
 
-    func getSize() -> CGSize {
-        axWindow.get(Ax.sizeAttr)!
+    func getSize() -> CGSize? {
+        axWindow.get(Ax.sizeAttr)
     }
 
     func setTopLeftCorner(_ point: CGPoint) {

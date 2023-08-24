@@ -57,7 +57,6 @@ class MacApp: Hashable {
         axFocusedWindow.flatMap { MacWindow.get(app: self, axWindow: $0) }
     }
 
-    // todo drop?
     var axFocusedWindow: AXUIElement? {
         axApp.get(Ax.focusedWindowAttr)
     }

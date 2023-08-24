@@ -36,7 +36,7 @@ class TreeNode : Equatable {
         guard let parent else { return }
         parent._children.remove(element: self)
         let workspace: Workspace = parent.workspace
-        if !workspace.doesContainWindows { // It became empty
+        if workspace.isEffectivelyEmpty { // It became empty
             currentEmptyWorkspace = workspace
             currentEmptyWorkspace.assignedMonitorRect = allMonitorsRectsUnion
         }

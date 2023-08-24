@@ -39,11 +39,8 @@ class VAccordionContainer: TreeNode, TilingContainer {
     }
 }
 
-//class FloatingChildrenContainer: TreeNode {
-//    var children: WeakArray<TreeNodeClass> = WeakArray()
-//    var parent: TreeNode
-//
-//    init(_ parent: TreeNode) {
-//        self.parent = parent
-//    }
-//}
+class FloatingChildrenContainer: TreeNode {
+    //convenience init(_ parent: TreeNode) {
+    //    self.init(parent)
+    //}
+}

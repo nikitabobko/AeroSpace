@@ -27,8 +27,8 @@ struct AeroSpaceApp: App {
         GlobalObserver.initObserver()
         for setting in settings {
             hotKeys.append(HotKey(key: setting.hotkey, modifiers: setting.modifiers, keyUpHandler: {
-                refresh()
-                ViewModel.shared.switchToWorkspace(Workspace.get(byName: setting.name))
+                let workspace = Workspace.get(byName: setting.name)
+                switchToWorkspace(workspace)
             }))
         }
         refresh()
@@ -42,7 +42,7 @@ struct AeroSpaceApp: App {
             Text("Workspaces:")
             ForEach(Workspace.all) { workspace in
                 Button {
-                    viewModel.switchToWorkspace(workspace)
+                    switchToWorkspace(workspace)
                 } label: {
                     Toggle(isOn: workspace.name == viewModel.focusedWorkspaceTrayText
                             ? Binding(get: { true }, set: { _, _ in })
