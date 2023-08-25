@@ -12,6 +12,7 @@
 		2F8DC074DAB97DC87E07A559 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CAC977020A08D0227FAFB2 /* Bundle.swift */; };
 		4005ECE237BD9230F74CA917 /* TreeNodeEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C39B0C4E4888832129C4C7 /* TreeNodeEx.swift */; };
 		518B9E5AC031C24C7C84CD70 /* MacWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243F29F496F7463F3482DD10 /* MacWindow.swift */; };
+		598F112C32CE7E7D556DD00B /* Monitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F1EA3A9615F6D46E81A4F /* Monitor.swift */; };
 		6317AB471F4C4F5D66A25784 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEDBFFCA7A77D96B18FB0732 /* Assets.xcassets */; };
 		66E6CDA75DDD5E4B9647EDE2 /* AeroSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E81623E8954701269A22322 /* AeroSpaceApp.swift */; };
 		783B0B965BA45D7A2943F7BF /* TilingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E05FB0C7158C8B6DECBD603 /* TilingContainer.swift */; };
@@ -35,6 +36,7 @@
 		3E05FB0C7158C8B6DECBD603 /* TilingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilingContainer.swift; sourceTree = "<group>"; };
 		4CAA43D9C8FF059B23C405FD /* utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = utils.swift; sourceTree = "<group>"; };
 		526B113159987FA43EA41120 /* refresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = refresh.swift; sourceTree = "<group>"; };
+		598F1EA3A9615F6D46E81A4F /* Monitor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Monitor.swift; sourceTree = "<group>"; };
 		7E6F3930E3BF5D8196A20E9B /* axObservers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = axObservers.swift; sourceTree = "<group>"; };
 		BEF353340822CD20E9DAB3EC /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
 		D295CA45172ADBDB1E4DF708 /* TreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNode.swift; sourceTree = "<group>"; };
@@ -65,6 +67,7 @@
 				D295CA45172ADBDB1E4DF708 /* TreeNode.swift */,
 				F8C39B0C4E4888832129C4C7 /* TreeNodeEx.swift */,
 				38A4C333EA5B4D4527DD97D4 /* Workspace.swift */,
+				598F1EA3A9615F6D46E81A4F /* Monitor.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -201,6 +204,7 @@
 				96593DF93A69CA2E05189A3F /* axObservers.swift in Sources */,
 				B3702BB393A9B03CCAE4C60E /* refresh.swift in Sources */,
 				B209E364EA9C2FB810425A13 /* utils.swift in Sources */,
+				598F112C32CE7E7D556DD00B /* Monitor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

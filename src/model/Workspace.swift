@@ -45,19 +45,19 @@ class Workspace: TreeNode, Hashable, Identifiable {
     var floatingWindows = Set<MacWindow>()
     var rootContainer: TilingContainer = HListContainer(parent: NilTreeNode.instance)
     var id: String { name } // satisfy Identifiable
-    private var _assignedMonitorRect: Rect
-    var assignedMonitorRect: Rect {
-        get { _assignedMonitorRect }
+    private var _assignedMonitor: Monitor
+    var assignedMonitor: Monitor {
+        get { _assignedMonitor }
         set {
-            _assignedMonitorRect = newValue
+            _assignedMonitor = newValue
             // TODO("implement windows relative move")
         }
     }
     weak var lastActiveWindow: MacWindow?
 
-    private init(_ name: String, _ assignedMonitorRect: Rect) {
+    private init(_ name: String, _ assignedMonitorRect: Monitor) {
         self.name = name
-        self._assignedMonitorRect = assignedMonitorRect
+        self._assignedMonitor = assignedMonitorRect
         super.init(parent: NilTreeNode.instance)
         rootContainer = HListContainer(parent: self)
                 // todo createDefaultWorkspaceContainer(self)
@@ -72,7 +72,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
         if let existing = workspaceNameToWorkspace[name] {
             return existing
         } else {
-            let workspace = Workspace(name, allMonitorsRectsUnion)
+            let workspace = Workspace(name, Monitor(name: nil, rect: allMonitorsRectsUnion))
             workspaceNameToWorkspace[name] = workspace
             return workspace
         }
@@ -103,7 +103,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
 extension Workspace {
     var isVisible: Bool {
         self == currentEmptyWorkspace ||
-                monitorTopLeftCornerToNotEmptyWorkspace[assignedMonitorRect.topLeftCorner] == self
+                monitorTopLeftCornerToNotEmptyWorkspace[assignedMonitor.rect.topLeftCorner] == self
     }
 }
 

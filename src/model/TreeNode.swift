@@ -28,7 +28,8 @@ class TreeNode : Equatable {
         if let window = self as? MacWindow, newParent.workspace == currentEmptyWorkspace {
             let newParentWorkspace = currentEmptyWorkspace
             currentEmptyWorkspace = getOrCreateNextEmptyWorkspace()
-            newParentWorkspace.assignedMonitorRect = window.monitorApproximationLowLevel?.rect ?? allMonitorsRectsUnion
+            newParentWorkspace.assignedMonitor = window.monitorApproximationLowLevel?.monitor
+                    ?? Monitor(name: nil, rect: allMonitorsRectsUnion)
         }
     }
 
@@ -38,7 +39,7 @@ class TreeNode : Equatable {
         let workspace: Workspace = parent.workspace
         if workspace.isEffectivelyEmpty { // It became empty
             currentEmptyWorkspace = workspace
-            currentEmptyWorkspace.assignedMonitorRect = allMonitorsRectsUnion
+            currentEmptyWorkspace.assignedMonitor = Monitor(name: nil, rect: allMonitorsRectsUnion)
         }
     }
 

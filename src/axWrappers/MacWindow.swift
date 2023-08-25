@@ -95,7 +95,7 @@ class MacWindow: TreeNode, Hashable {
             guard let topLeftCorner = getTopLeftCorner() else { return }
             guard let size = getSize() else { return }
             prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
-                    topLeftCorner - workspace.assignedMonitorRect.topLeftCorner
+                    topLeftCorner - workspace.assignedMonitor.rect.topLeftCorner
             prevUnhiddenEmulationSize = size
         }
         setTopLeftCorner(allMonitorsRectsUnion.bottomRightCorner)
@@ -106,7 +106,7 @@ class MacWindow: TreeNode, Hashable {
         guard let prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect else { return }
         guard let prevUnhiddenEmulationSize else { return }
 
-        setTopLeftCorner(workspace.assignedMonitorRect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
+        setTopLeftCorner(workspace.assignedMonitor.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
         // Restore the size because during hiding the window can end up on different monitor with different density,
         // size, etc. And macOS can change the size of the window when the window is moved on different monitor in that
         // case. So we need to restore the size of the window

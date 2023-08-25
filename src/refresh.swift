@@ -31,6 +31,7 @@ func switchToWorkspace(_ workspace: Workspace) {
         guard let activeMonitor = NSScreen.focusedMonitorOrNilIfDesktop ?? NSScreen.main else { return }
         monitorTopLeftCornerToNotEmptyWorkspace[activeMonitor.rect.topLeftCorner] = nil
         currentEmptyWorkspace = workspace
+        // todo click desktop
     }
     refresh()
 }
@@ -38,7 +39,7 @@ func switchToWorkspace(_ workspace: Workspace) {
 private func refreshWorkspaces() {
     if let focusedWindow = NSWorkspace.shared.menuBarOwningApplication?.macApp?.focusedWindow {
         let focusedWorkspace = focusedWindow.workspace
-        monitorTopLeftCornerToNotEmptyWorkspace[focusedWorkspace.assignedMonitorRect.topLeftCorner] = focusedWorkspace
+        monitorTopLeftCornerToNotEmptyWorkspace[focusedWorkspace.assignedMonitor.rect.topLeftCorner] = focusedWorkspace
         ViewModel.shared.focusedWorkspaceTrayText = focusedWorkspace.name
     } else {
         ViewModel.shared.focusedWorkspaceTrayText = currentEmptyWorkspace.name

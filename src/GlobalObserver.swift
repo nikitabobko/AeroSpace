@@ -14,6 +14,8 @@ class GlobalObserver {
     }
 
     static func initObserver() {
+        // todo subscribe main monitor changed?
+        // todo subscribe monitor configuration changed?
         subscribe(NSWorkspace.didLaunchApplicationNotification)
         subscribe(NSWorkspace.didActivateApplicationNotification)
         subscribe(NSWorkspace.didHideApplicationNotification)
