@@ -75,13 +75,8 @@ class MacWindow: TreeNode, Hashable {
 
     @discardableResult
     func activate() -> Bool {
-        if app.nsApp.activate(options: .activateIgnoringOtherApps) &&
-                   AXUIElementPerformAction(axWindow, kAXRaiseAction as CFString) == AXError.success {
-            workspace.lastActiveWindow = self
-            return true
-        } else {
-            return false
-        }
+        app.nsApp.activate(options: .activateIgnoringOtherApps) &&
+                AXUIElementPerformAction(axWindow, kAXRaiseAction as CFString) == AXError.success
     }
 
     func close() -> Bool {

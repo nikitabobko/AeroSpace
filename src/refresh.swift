@@ -11,8 +11,15 @@ func refresh() {
     visibleWindows.filter { $0.isHiddenViaEmulation }.forEach { $0.hideViaEmulation() }
     //layoutNewWindows(visibleWindows: visibleWindows)
 
+    updateLastActiveWindow()
+
     Workspace.garbageCollectUnusedWorkspaces()
     MacApp.garbageCollectTerminatedApps()
+}
+
+func updateLastActiveWindow() {
+    guard let window = NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow else { return }
+    window.workspace.lastActiveWindow = window
 }
 
 func switchToWorkspace(_ workspace: Workspace) {
