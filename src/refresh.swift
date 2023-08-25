@@ -13,8 +13,8 @@ func refresh() {
 
     updateLastActiveWindow()
 
-    Workspace.garbageCollectUnusedWorkspaces()
     MacApp.garbageCollectTerminatedApps()
+    Workspace.garbageCollectUnusedWorkspaces()
 }
 
 func updateLastActiveWindow() {
