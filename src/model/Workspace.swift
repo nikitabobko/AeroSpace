@@ -44,7 +44,6 @@ class Workspace: TreeNode, Hashable, Identifiable {
     let name: String
     var floatingWindows = Set<MacWindow>()
     var rootContainer: TilingContainer = HListContainer(parent: NilTreeNode.instance)
-    var isVisible: Bool = false
     var id: String { name } // satisfy Identifiable
     private var _assignedMonitorRect: Rect
     var assignedMonitorRect: Rect {
@@ -98,6 +97,13 @@ class Workspace: TreeNode, Hashable, Identifiable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(name)
+    }
+}
+
+extension Workspace {
+    var isVisible: Bool {
+        self == currentEmptyWorkspace ||
+                monitorTopLeftCornerToNotEmptyWorkspace[assignedMonitorRect.topLeftCorner] == self
     }
 }
 

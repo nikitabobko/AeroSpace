@@ -10,7 +10,6 @@ extension TreeNode {
         }
     }
 
-    // todo drop. because performance
     var allWindowsRecursive: [MacWindow] {
         var result: [MacWindow] = []
         visit(node: self, result: &result)

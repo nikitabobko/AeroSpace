@@ -5,11 +5,9 @@ import Foundation
 func refresh() {
     debug("refresh")
     refreshWorkspaces()
-    //ViewModel.shared.updateTrayText()
-    let visibleWindows = getWindowsVisibleOnAllMonitors()
-    // Hide windows that were manually unhidden by user
-    visibleWindows.filter { $0.isHiddenViaEmulation }.forEach { $0.hideViaEmulation() }
-    //layoutNewWindows(visibleWindows: visibleWindows)
+    materializeWorkspaces()
+    // Detect new windows and layout them
+    let _ = getWindowsVisibleOnAllMonitors()
 
     updateLastActiveWindow()
 
@@ -38,8 +36,6 @@ func switchToWorkspace(_ workspace: Workspace) {
 }
 
 private func refreshWorkspaces() {
-    //focusedWorkspaceTrayText =
-    //        (NSScreen.focusedMonitorOrNilIfDesktop?.notEmptyWorkspace ?? currentEmptyWorkspace).name
     if let focusedWindow = NSWorkspace.shared.menuBarOwningApplication?.macApp?.focusedWindow {
         let focusedWorkspace = focusedWindow.workspace
         monitorTopLeftCornerToNotEmptyWorkspace[focusedWorkspace.assignedMonitorRect.topLeftCorner] = focusedWorkspace
@@ -49,14 +45,15 @@ private func refreshWorkspaces() {
     }
 }
 
-//private func layoutNewWindows(visibleWindows: [MacWindow]) {
-//    for newWindow: MacWindow in visibleWindows.toSet().subtracting(Workspace.all.flatMap { $0.allWindowsRecursive }) {
-//        if let workspace: Workspace = newWindow.monitorApproximation?.notEmptyWorkspace {
-//            debug("New window \(newWindow.title) layoted on workspace \(workspace.name)")
-//            workspace.add(window: newWindow)
-//        }
-//    }
-//}
+private func materializeWorkspaces() {
+    for workspace in Workspace.all {
+        if workspace.isVisible {
+            workspace.allWindowsRecursive.forEach { $0.unhideViaEmulation() }
+        } else {
+            workspace.allWindowsRecursive.forEach { $0.hideViaEmulation() }
+        }
+    }
+}
 
 private func getWindowsVisibleOnAllMonitors() -> [MacWindow] {
     NSWorkspace.shared.runningApplications
