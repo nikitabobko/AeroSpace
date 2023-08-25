@@ -61,5 +61,5 @@ private func refreshWorkspaces() {
 private func getWindowsVisibleOnAllMonitors() -> [MacWindow] {
     NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-            .flatMap { $0.macApp?.visibleWindowsOnAllMonitors ?? [] }
+            .flatMap { $0.macApp?.windowsVisibleOnAllMonitors ?? [] }
 }

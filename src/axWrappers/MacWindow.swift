@@ -4,7 +4,7 @@ import AppKit
 class MacWindow: TreeNode, Hashable {
     let windowId: CGWindowID
     private let axWindow: AXUIElement
-    private let app: MacApp
+    let app: MacApp
     private var prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect: CGPoint?
     // todo redundant?
     private var prevUnhiddenEmulationSize: CGSize?
@@ -18,11 +18,12 @@ class MacWindow: TreeNode, Hashable {
         super.init(parent: parent)
     }
 
-    private static var allWindows: [CGWindowID: MacWindow] = [:]
+    private static var allWindowsMap: [CGWindowID: MacWindow] = [:]
+    static var allWindows: [MacWindow] { Array(allWindowsMap.values) }
 
     static func get(app: MacApp, axWindow: AXUIElement) -> MacWindow? {
         guard let id = axWindow.windowId() else { return nil }
-        if let existing = allWindows[id] {
+        if let existing = allWindowsMap[id] {
             return existing
         } else {
             let activeWorkspace = Workspace.get(byName: ViewModel.shared.focusedWorkspaceTrayText)
@@ -39,7 +40,7 @@ class MacWindow: TreeNode, Hashable {
             let parent = workspace.lastActiveWindow?.parent ?? workspace.rootContainer
             let window = MacWindow(id, app, axWindow, parent: parent)
             debug("New window detected: \(window.title ?? "")")
-            allWindows[id] = window
+            allWindowsMap[id] = window
 
             if window.observe(windowIsDestroyedObs, kAXUIElementDestroyedNotification) &&
                        window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
@@ -55,7 +56,7 @@ class MacWindow: TreeNode, Hashable {
     }
 
     func free() {
-        precondition(MacWindow.allWindows.removeValue(forKey: windowId) != nil)
+        MacWindow.allWindowsMap.removeValue(forKey: windowId)
         unbindFromParent()
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)

@@ -11,18 +11,18 @@ class MacApp: Hashable {
         self.axApp = axApp
     }
 
-    private static var apps: [pid_t: MacApp] = [:]
+    private static var allApps: [pid_t: MacApp] = [:]
 
     fileprivate static func get(_ nsApp: NSRunningApplication) -> MacApp? {
         let pid = nsApp.processIdentifier
-        if let existing = apps[pid] {
+        if let existing = allApps[pid] {
             return existing
         } else {
             let app = MacApp(nsApp, AXUIElementCreateApplication(nsApp.processIdentifier))
 
             if app.observe(refreshObs, kAXWindowCreatedNotification) &&
                        app.observe(refreshObs, kAXFocusedWindowChangedNotification) {
-                apps[pid] = app
+                allApps[pid] = app
                 return app
             } else {
                 app.free()
@@ -31,21 +31,21 @@ class MacApp: Hashable {
         }
     }
 
-    func free() {
+    private func free() {
+        MacApp.allApps.removeValue(forKey: nsApp.processIdentifier)
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
         }
+        MacWindow.allWindows.lazy.filter { $0.app == self }.forEach { $0.free() }
         axObservers = []
     }
 
     static func garbageCollectTerminatedApps() {
-        apps = apps.filter { pid, app in
-            let isTerminated = app.nsApp.isTerminated
-            if isTerminated {
+        for app in Array(allApps.values) {
+            if app.nsApp.isTerminated {
                 app.free()
-                debug("terminated \(app.title ?? "")")
+                debug("garbageCollectTerminatedApps: terminated \(app.title ?? "")")
             }
-            return !isTerminated
         }
     }
 
@@ -79,7 +79,7 @@ extension NSRunningApplication {
 }
 
 extension MacApp {
-    var visibleWindowsOnAllMonitors: [MacWindow] {
+    var windowsVisibleOnAllMonitors: [MacWindow] {
         (axApp.get(Ax.windowsAttr) ?? []).compactMap({ MacWindow.get(app: self, axWindow: $0) })
     }
 }
