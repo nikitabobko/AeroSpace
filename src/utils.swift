@@ -13,12 +13,6 @@ import AppKit
 //    NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(self.spaceChange), name: NSWorkspace.activeSpaceDidChangeNotification, object: nil)
 //}
 
-func windowsOnActiveMacOsSpacesTest() -> [MacWindow] {
-    NSWorkspace.shared.runningApplications
-            .filter { $0.activationPolicy == .regular }
-            .flatMap { $0.macApp.visibleWindowsOnAllMonitors }
-}
-
 func test() {
     for screen in NSScreen.screens {
         debug("---")
@@ -72,7 +66,7 @@ extension NSScreen {
         //NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow?.monitorApproximation
         // todo what's the difference between? NSWorkspace.shared.frontmostApplication
 
-        NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow?.monitorApproximationLowLevel
+        NSWorkspace.shared.menuBarOwningApplication?.macApp?.focusedWindow?.monitorApproximationLowLevel
                 ?? NSScreen.screens.singleOrNil()
 
         //NSWorkspace.shared.menuBarOwningApplication?.macApp.axFocusedWindow?

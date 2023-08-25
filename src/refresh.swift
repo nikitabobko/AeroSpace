@@ -6,7 +6,7 @@ func refresh() {
     debug("refresh")
     refreshWorkspaces()
     //ViewModel.shared.updateTrayText()
-    let visibleWindows = visibleWindowsOnAllMonitors()
+    let visibleWindows = getWindowsVisibleOnAllMonitors()
     // Hide windows that were manually unhidden by user
     visibleWindows.filter { $0.isHiddenViaEmulation }.forEach { $0.hideViaEmulation() }
     //layoutNewWindows(visibleWindows: visibleWindows)
@@ -18,7 +18,7 @@ func refresh() {
 }
 
 func updateLastActiveWindow() {
-    guard let window = NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow else { return }
+    guard let window = NSWorkspace.shared.menuBarOwningApplication?.macApp?.focusedWindow else { return }
     window.workspace.lastActiveWindow = window
 }
 
@@ -40,7 +40,7 @@ func switchToWorkspace(_ workspace: Workspace) {
 private func refreshWorkspaces() {
     //focusedWorkspaceTrayText =
     //        (NSScreen.focusedMonitorOrNilIfDesktop?.notEmptyWorkspace ?? currentEmptyWorkspace).name
-    if let focusedWindow = NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow {
+    if let focusedWindow = NSWorkspace.shared.menuBarOwningApplication?.macApp?.focusedWindow {
         let focusedWorkspace = focusedWindow.workspace
         monitorTopLeftCornerToNotEmptyWorkspace[focusedWorkspace.assignedMonitorRect.topLeftCorner] = focusedWorkspace
         ViewModel.shared.focusedWorkspaceTrayText = focusedWorkspace.name
@@ -58,8 +58,8 @@ private func refreshWorkspaces() {
 //    }
 //}
 
-private func visibleWindowsOnAllMonitors() -> [MacWindow] {
+private func getWindowsVisibleOnAllMonitors() -> [MacWindow] {
     NSWorkspace.shared.runningApplications
             .filter { $0.activationPolicy == .regular }
-            .flatMap { $0.macApp.visibleWindowsOnAllMonitors }
+            .flatMap { $0.macApp?.visibleWindowsOnAllMonitors ?? [] }
 }

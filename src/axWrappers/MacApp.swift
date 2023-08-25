@@ -13,25 +13,36 @@ class MacApp: Hashable {
 
     private static var apps: [pid_t: MacApp] = [:]
 
-    fileprivate static func get(_ nsApp: NSRunningApplication) -> MacApp {
+    fileprivate static func get(_ nsApp: NSRunningApplication) -> MacApp? {
         let pid = nsApp.processIdentifier
         if let existing = apps[pid] {
             return existing
         } else {
             let app = MacApp(nsApp, AXUIElementCreateApplication(nsApp.processIdentifier))
 
-            app.observe(refreshObs, kAXWindowCreatedNotification)
-            app.observe(refreshObs, kAXFocusedWindowChangedNotification)
-
-            apps[pid] = app
-            return app
+            if app.observe(refreshObs, kAXWindowCreatedNotification) &&
+                       app.observe(refreshObs, kAXFocusedWindowChangedNotification) {
+                apps[pid] = app
+                return app
+            } else {
+                app.free()
+                return nil
+            }
         }
+    }
+
+    func free() {
+        for obs in axObservers {
+            AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
+        }
+        axObservers = []
     }
 
     static func garbageCollectTerminatedApps() {
         apps = apps.filter { pid, app in
             let isTerminated = app.nsApp.isTerminated
             if isTerminated {
+                app.free()
                 debug("terminated \(app.title ?? "")")
             }
             return !isTerminated
@@ -40,9 +51,10 @@ class MacApp: Hashable {
 
     var title: String? { nsApp.localizedName }
 
-    private func observe(_ handler: AXObserverCallback, _ notifKey: String) {
-        guard let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, data: nil, handler) else { return }
+    private func observe(_ handler: AXObserverCallback, _ notifKey: String) -> Bool {
+        guard let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, data: nil, handler) else { return false }
         axObservers.append(AxObserverWrapper(obs: observer, ax: axApp, notif: notifKey as CFString))
+        return true
     }
 
     static func ==(lhs: MacApp, rhs: MacApp) -> Bool {
@@ -63,7 +75,7 @@ class MacApp: Hashable {
 }
 
 extension NSRunningApplication {
-    var macApp: MacApp { MacApp.get(self) }
+    var macApp: MacApp? { MacApp.get(self) }
 }
 
 extension MacApp {
