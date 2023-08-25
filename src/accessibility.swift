@@ -3,8 +3,16 @@ import Foundation
 func checkAccessibilityPermissions() {
     let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true]
     if !AXIsProcessTrustedWithOptions(options as CFDictionary) {
+        resetAccessibility() // Because macOS doesn't reset it for us...
         NSApplication.shared.terminate(nil)
         error("unreachable")
+    }
+}
+
+private func resetAccessibility() {
+    do {
+        try Process.run(URL(filePath: "/usr/bin/tccutil"), arguments: ["reset", "Accessibility", Bundle.appId])
+    } catch {
     }
 }
 
