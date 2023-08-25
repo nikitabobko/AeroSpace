@@ -31,7 +31,7 @@ func getOrCreateNextEmptyWorkspace() -> Workspace {
         return existing
     }
     let occupiedNames = all.map { $0.name }.toSet()
-    let newName = (0..<Int.max).lazy.map { "EMPTY\($0)" }.first { !occupiedNames.contains($0) }
+    let newName = (0...Int.max).lazy.map { "EMPTY\($0)" }.first { !occupiedNames.contains($0) }
             ?? errorT("Can't create empty workspace")
     return Workspace.get(byName: newName)
 }
