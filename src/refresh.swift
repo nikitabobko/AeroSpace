@@ -3,16 +3,18 @@ import Foundation
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input
 func refresh() {
-    debug("refresh")
+    debug("refresh \(Date.now.formatted(date: .abbreviated, time: .standard))")
+    // Garbage collect terminated apps and windows before working with all windows
+    MacApp.garbageCollectTerminatedApps()
+    // Garbage collect workspaces after apps, because workspaces contain apps.
+    Workspace.garbageCollectUnusedWorkspaces()
+
     refreshWorkspaces()
     materializeWorkspaces()
     // Detect new windows and layout them
     let _ = getWindowsVisibleOnAllMonitors()
 
     updateLastActiveWindow()
-
-    MacApp.garbageCollectTerminatedApps()
-    Workspace.garbageCollectUnusedWorkspaces()
 }
 
 func updateLastActiveWindow() {
