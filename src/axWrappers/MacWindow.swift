@@ -28,6 +28,7 @@ class MacWindow: TreeNode, Hashable {
         } else {
             let activeWorkspace = Workspace.get(byName: ViewModel.shared.focusedWorkspaceTrayText)
             let workspace: Workspace
+            // todo rewrite
             if activeWorkspace == currentEmptyWorkspace &&
                        NSWorkspace.activeApp == app.nsApp &&
                        app.axFocusedWindow?.windowId() == axWindow.windowId() {
@@ -157,8 +158,5 @@ class MacWindow: TreeNode, Hashable {
 }
 
 extension MacWindow {
-    // Please prefer window.workspace.assignedRect
-    var monitorApproximationLowLevel: Monitor? { // todo inline?
-        getTopLeftCorner()?.monitorApproximation
-    }
+    var isFloating: Bool { parent is Workspace }
 }

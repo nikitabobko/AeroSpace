@@ -22,7 +22,7 @@ var currentEmptyWorkspace: Workspace = getOrCreateNextEmptyWorkspace()
 /// That's why the mental model is the following: the empty workspace is spread over all monitors. And each monitor
 /// optionally can have a not empty workspace assigned to it
 ///
-/// When this map contains `Maybe.Nothing` it means that the monitor displays the "empty"/"background" workspace
+/// When this map contains `Maybe.Nothing` value it means that the monitor displays the "empty"/"background" workspace
 private var monitorToNotEmptyWorkspace: [Monitor: Maybe<Workspace>] = [:]
 
 func getOrCreateNextEmptyWorkspace() -> Workspace {
@@ -102,12 +102,12 @@ extension Workspace {
         case 1:
             return containers.singleOrNil()!
         default:
-            error("Workspace must contain only one tiling container as its child")
+            error("Workspace must contain zero or one tiling container as its child")
         }
     }
 
     var assignedMonitorOfNotEmptyWorkspace: Monitor {
-        assignedMonitor ?? errorT("Not empty workspace must have an assigned monitor")
+        assignedMonitor ?? errorT("Not empty workspace \(workspace.name) must have an assigned monitor")
     }
 }
 

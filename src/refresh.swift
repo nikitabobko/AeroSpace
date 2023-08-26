@@ -37,8 +37,8 @@ func switchToWorkspace(_ workspace: Workspace) {
         precondition(workspace.isEffectivelyEmpty)
         // It's the only place in the app where I allow myself to use NSScreen.main.
         // This function isn't invoked from callbacks that's why .main should be fine
-        if let activeMonitor = NSScreen.focusedMonitorOrNilIfDesktop ?? NSScreen.main?.monitor {
-            activeMonitor.setActiveWorkspace(workspace)
+        if let focusedMonitor = NSScreen.focusedMonitorOrNilIfDesktop ?? NSScreen.main?.monitor {
+            focusedMonitor.setActiveWorkspace(workspace)
         }
         defocusAllWindows()
     }
