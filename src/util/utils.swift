@@ -39,9 +39,9 @@ extension NSScreen {
     /// I hate you Apple
     ///
     /// Returns `nil` if the desktop is selected (which is when the app is active but doesn't show any window)
-    static var focusedMonitorOrNilIfDesktop: NSScreen? {
+    static var focusedMonitorOrNilIfDesktop: Monitor? {
         NSWorkspace.activeApp?.macApp?.focusedWindow?.monitorApproximationLowLevel
-                ?? NSScreen.screens.singleOrNil()
+                ?? NSScreen.screens.singleOrNil()?.monitor
 
         //NSWorkspace.activeApp?.macApp?.axFocusedWindow?
         //        .get(Ax.topLeftCornerAttr)?.monitorApproximation
@@ -79,7 +79,7 @@ extension CGRect {
     }
 }
 
-struct Rect {
+struct Rect: Hashable {
     let topLeftX: CGFloat
     let topLeftY: CGFloat
     let width: CGFloat
@@ -132,8 +132,8 @@ extension CGPoint {
         sqrt((x - point.x).squared + (y - point.y).squared)
     }
 
-    var monitorApproximation: NSScreen {
-        let pairs: [(monitor: NSScreen, rect: Rect)] = NSScreen.screens.map { ($0, $0.rect) }
+    var monitorApproximation: Monitor {
+        let pairs: [(monitor: Monitor, rect: Rect)] = NSScreen.screens.map { ($0.monitor, $0.rect) }
         if let pair = pairs.first(where: { $0.rect.contains(self) }) {
             return pair.monitor
         }

@@ -158,7 +158,7 @@ class MacWindow: TreeNode, Hashable {
 
 extension MacWindow {
     // Please prefer window.workspace.assignedRect
-    var monitorApproximationLowLevel: NSScreen? { // todo inline?
+    var monitorApproximationLowLevel: Monitor? { // todo inline?
         getTopLeftCorner()?.monitorApproximation
     }
 }

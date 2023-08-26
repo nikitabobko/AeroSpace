@@ -23,7 +23,7 @@ var currentEmptyWorkspace: Workspace = getOrCreateNextEmptyWorkspace()
 /// optionally can have a not empty workspace assigned to it
 ///
 /// When this map contains `Maybe.Nothing` it means that the monitor displays the "empty"/"background" workspace
-var monitorToNotEmptyWorkspace: [CGPoint: Maybe<Workspace>] = [:]
+var monitorToNotEmptyWorkspace: [Monitor: Maybe<Workspace>] = [:]
 
 func getOrCreateNextEmptyWorkspace() -> Workspace {
     let all = Workspace.all
@@ -98,8 +98,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
 
 extension Workspace {
     var isVisible: Bool {
-        self == currentEmptyWorkspace ||
-                monitorToNotEmptyWorkspace[assignedMonitor.rect.topLeftCorner]?.valueOrNil == self
+        self == currentEmptyWorkspace || monitorToNotEmptyWorkspace[assignedMonitor]?.valueOrNil == self
     }
 
     var rootTilingContainer: TilingContainer {
@@ -115,11 +114,11 @@ extension Workspace {
     }
 }
 
-extension NSScreen {
+extension Monitor {
     /// Don't forget that there is always an empty additional "background" workspace on every monitor ``currentEmptyWorkspace``
     var notEmptyWorkspace: Workspace? {
         get {
-            if let existing = monitorToNotEmptyWorkspace[rect.topLeftCorner] {
+            if let existing = monitorToNotEmptyWorkspace[self] {
                 return existing.valueOrNil
             }
             // What if monitor configuration changed? (frame.origin is changed)
@@ -132,27 +131,25 @@ extension NSScreen {
 }
 
 private func rearrangeWorkspacesOnMonitors() {
-    let oldMonitorToWorkspaces: [CGPoint: Maybe<Workspace>] = monitorToNotEmptyWorkspace
+    let oldMonitorToWorkspaces: [Monitor: Maybe<Workspace>] = monitorToNotEmptyWorkspace
     monitorToNotEmptyWorkspace = [:]
-    let monitors = NSScreen.screens
-    let origins = monitors.map { $0.rect.topLeftCorner }.toSet()
+    let monitors = NSScreen.screens.map { $0.monitor }.toSet()
     let preservedWorkspaces: [Workspace] = oldMonitorToWorkspaces
-            .filter { oldOrigin, oldWorkspace in origins.contains(oldOrigin) }
+            .filter { oldMonitor, oldWorkspace in monitors.contains(oldMonitor) }
             .map { $0.value.valueOrNil }
             .filterNotNil()
     let lostWorkspaces: [Workspace] = oldMonitorToWorkspaces
-            .filter { oldOrigin, oldWorkspace in !origins.contains(oldOrigin) }
+            .filter { oldMonitor, oldWorkspace in !monitors.contains(oldMonitor) }
             .map { $0.value.valueOrNil }
             .filterNotNil()
     var poolOfWorkspaces: [Workspace] =
             Workspace.all.reversed() - (preservedWorkspaces + lostWorkspaces) + lostWorkspaces
     for monitor in monitors {
-        let origin = monitor.rect.topLeftCorner
         // If monitors change, most likely we will preserve only the main monitor (It always has (0, 0) origin)
-        if let existing = oldMonitorToWorkspaces[origin] {
-            monitorToNotEmptyWorkspace[origin] = existing
+        if let existing = oldMonitorToWorkspaces[monitor] {
+            monitorToNotEmptyWorkspace[monitor] = existing
         } else {
-            monitorToNotEmptyWorkspace[origin] = Maybe.from(poolOfWorkspaces.popLast())
+            monitorToNotEmptyWorkspace[monitor] = Maybe.from(poolOfWorkspaces.popLast())
         }
     }
 }
