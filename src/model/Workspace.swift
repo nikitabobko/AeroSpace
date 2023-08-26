@@ -134,6 +134,7 @@ extension Monitor {
     }
 }
 
+// todo rewrite. Create old monitor -> new monitor mapping Need to update assignedMonitors.
 private func rearrangeWorkspacesOnMonitors() {
     let oldMonitorToWorkspaces: [Monitor: Maybe<Workspace>] = monitorToNotEmptyWorkspace
     monitorToNotEmptyWorkspace = [:]

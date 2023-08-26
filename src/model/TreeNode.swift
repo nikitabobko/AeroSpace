@@ -62,17 +62,3 @@ class NilTreeNode: TreeNode {
     }
     static let instance = NilTreeNode()
 }
-
-///// Workaround for https://github.com/apple/swift/issues/48596
-//class TreeNodeClass {
-//    var value: TreeNode
-//    init(value: TreeNode) {
-//        self.value = value
-//    }
-//}
-
-//extension WeakArray where T == TreeNodeClass {
-//    mutating func derefTreeNode() -> [TreeNode] {
-//        deref().map { $0.value }
-//    }
-//}

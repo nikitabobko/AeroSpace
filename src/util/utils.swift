@@ -30,41 +30,6 @@ func stringType(of some: Any) -> String {
     fatalError(message)
 }
 
-extension NSScreen {
-    /// Motivation:
-    /// 1. NSScreen.main is a misleading name.
-    /// 2. NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
-    ///    kAXFocusedWindowChangedNotification callbacks.
-    ///
-    /// I hate you Apple
-    ///
-    /// Returns `nil` if the desktop is selected (which is when the app is active but doesn't show any window)
-    static var focusedMonitorOrNilIfDesktop: Monitor? {
-        NSWorkspace.activeApp?.macApp?.focusedWindow?.getTopLeftCorner()?.monitorApproximation
-                ?? NSScreen.screens.singleOrNil()?.monitor
-
-        //NSWorkspace.activeApp?.macApp?.axFocusedWindow?
-        //        .get(Ax.topLeftCornerAttr)?.monitorApproximation
-        //        ?? NSScreen.screens.singleOrNil()
-
-    }
-
-    var isMainMonitor: Bool {
-        frame.minX == 0 && frame.minY == 0
-    }
-
-    /// The property is a replacement for Apple's crazy ``frame``
-    ///
-    /// - For ``MacWindow.topLeftCorner``, (0, 0) is main screen top left corner, and positive y-axis goes down.
-    /// - For ``frame``, (0, 0) is main screen bottom left corner, and positive y-axis goes up (which is crazy).
-    ///
-    /// The property "normalizes" ``frame``
-    var rect: Rect { frame.monitorFrameNormalized() }
-
-    /// Same as ``rect`` but for ``visibleFrame``
-    var visibleRect: Rect { visibleFrame.monitorFrameNormalized() }
-}
-
 extension Double {
     var squared: Double { self * self }
 }
@@ -114,102 +79,11 @@ extension CGSize {
     }
 }
 
-extension Sequence {
-    public func filterNotNil<Unwrapped>() -> [Unwrapped] where Element == Unwrapped? {
-        compactMap { $0 }
-    }
-
-    public func filterIsInstance<R>(of _: R.Type) -> [R] {
-        var result: [R] = []
-        for elem in self {
-            if let elemR = elem as? R {
-                result.append(elemR)
-            }
-        }
-        return result
-    }
-
-    @inlinable public func minByOrThrow<S: Comparable>(_ selector: (Self.Element) -> S) -> Self.Element {
-        minBy(selector) ?? errorT("Empty sequence")
-    }
-
-    @inlinable public func minBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
-        self.min(by: { a, b in selector(a) < selector(b) })
-    }
-
-    @inlinable public func maxByOrThrow<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
-        self.maxBy(selector) ?? errorT("Empty sequence")
-    }
-
-    @inlinable public func maxBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
-        self.max(by: { a, b in selector(a) < selector(b) })
-    }
-
-    @inlinable public func sortedBy<S : Comparable>(_ selector: (Self.Element) -> S) -> [Self.Element] {
-        sorted(by: { a, b in selector(a) < selector(b) })
-    }
-}
-
-extension Sequence where Self.Element : Comparable {
-    public func minOrThrow() -> Self.Element {
-        self.min() ?? errorT("Empty sequence")
-    }
-
-    public func maxOrThrow() -> Self.Element {
-        self.max() ?? errorT("Empty sequence")
-    }
-}
-
-extension Array where Self.Element : Equatable {
-    @discardableResult
-    public mutating func remove(element: Self.Element) -> Bool {
-        if let index = firstIndex(of: element) {
-            remove(at: index)
-            return true
-        } else {
-            return false
-        }
-    }
-}
-
 extension CGPoint: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(x)
         hasher.combine(y)
     }
-}
-
-extension Sequence where Element: Hashable {
-    func toSet() -> Set<Element> { Set(self) }
-}
-
-extension Array {
-    func singleOrNil() -> Element? {
-        count == 1 ? first : nil
-    }
-
-    func singleOrNil(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Element? {
-        var found: Self.Element? = nil
-        for elem in self {
-            if try predicate(elem) {
-                if found == nil {
-                    found = elem
-                } else {
-                    return nil
-                }
-            }
-        }
-        return found
-    }
-
-    func firstOrThrow(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Element {
-        try first(where: predicate) ?? errorT("Can't find the element")
-    }
-}
-
-func -<T>(lhs: [T], rhs: [T]) -> [T] where T: Hashable {
-    let r = rhs.toSet()
-    return lhs.filter { !r.contains($0) }
 }
 
 extension Set {
