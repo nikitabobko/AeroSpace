@@ -24,7 +24,10 @@ class TreeNode : Equatable {
         unbind(parent: prevParent)
         newParent._children.append(self)
         _parent = newParent
-        // Change currentEmptyWorkspace if necessary
+        if let window = self as? MacWindow, prevParent?.workspace.lastActiveWindow == window {
+            prevParent?.workspace.lastActiveWindow = nil
+        }
+        // Bind window to empty workspace
         if let window = self as? MacWindow, newParent.workspace == currentEmptyWorkspace {
             let newParentWorkspace = currentEmptyWorkspace
             currentEmptyWorkspace = getOrCreateNextEmptyWorkspace()

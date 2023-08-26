@@ -14,8 +14,8 @@ func refresh(startSession: Bool = true, endSession: Bool = true) {
     }
 
     refreshWorkspaces()
-    materializeWorkspaces()
     detectNewWindowsAndAttachThemToWorkspaces()
+    materializeWorkspaces()
 
     if endSession {
         updateLastActiveWindow()
@@ -56,7 +56,14 @@ private func defocusAllWindows() {
 private func refreshWorkspaces() {
     if let focusedWindow = NSWorkspace.activeApp?.macApp?.focusedWindow {
         debug("refreshWorkspaces: not empty")
-        let focusedWorkspace = focusedWindow.workspace
+        let focusedWorkspace: Workspace
+        if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation {
+            focusedWorkspace = focusedWindow.getTopLeftCorner()?.monitorApproximation.getActiveWorkspace()
+                    ?? focusedWindow.workspace
+            focusedWindow.bindTo(parent: focusedWorkspace)
+        } else {
+            focusedWorkspace = focusedWindow.workspace
+        }
         focusedWorkspace.assignedMonitorOfNotEmptyWorkspace.setActiveWorkspace(focusedWorkspace)
         ViewModel.shared.focusedWorkspaceTrayText = focusedWorkspace.name
     } else {
