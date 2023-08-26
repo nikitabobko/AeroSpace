@@ -17,6 +17,7 @@
 		66E6CDA75DDD5E4B9647EDE2 /* AeroSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E81623E8954701269A22322 /* AeroSpaceApp.swift */; };
 		6820E6846AE51B6988B6F673 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD02433B4415EEB163074CE5 /* utils.swift */; };
 		783B0B965BA45D7A2943F7BF /* TilingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E05FB0C7158C8B6DECBD603 /* TilingContainer.swift */; };
+		78EE0CEF814ABDBA67941B84 /* Rect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B788A95DD3C267878E05B5 /* Rect.swift */; };
 		7FE92DDAC2F094C83A177914 /* MacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6296D5F9AFE5F266EE4B1D0 /* MacApp.swift */; };
 		852F88894A3B9FC385563665 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 42BC1E757EF69233C2262FF4 /* HotKey */; };
 		920FDF8498DCCB62149D1719 /* Monitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6507EBAA795220FD0C05384 /* Monitor.swift */; };
@@ -33,6 +34,7 @@
 		1E81623E8954701269A22322 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
 		243F29F496F7463F3482DD10 /* MacWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacWindow.swift; sourceTree = "<group>"; };
 		24F99E8C4FD17A1D939C41F1 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		28B788A95DD3C267878E05B5 /* Rect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rect.swift; sourceTree = "<group>"; };
 		345148B22F8A8F85109229AE /* Maybe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Maybe.swift; sourceTree = "<group>"; };
 		38A4C333EA5B4D4527DD97D4 /* Workspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		3C2E5977331398421A4FC168 /* GlobalObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalObserver.swift; sourceTree = "<group>"; };
@@ -126,6 +128,7 @@
 				345148B22F8A8F85109229AE /* Maybe.swift */,
 				F6507EBAA795220FD0C05384 /* Monitor.swift */,
 				6935AF0A2DB3D186D1C6218F /* NSWorkspaceEx.swift */,
+				28B788A95DD3C267878E05B5 /* Rect.swift */,
 				BD02433B4415EEB163074CE5 /* utils.swift */,
 			);
 			path = util;
@@ -212,6 +215,7 @@
 				1CB4082BE5C95CA8CD52BED9 /* Maybe.swift in Sources */,
 				920FDF8498DCCB62149D1719 /* Monitor.swift in Sources */,
 				A4F66097ADF0FD58C6B715AE /* NSWorkspaceEx.swift in Sources */,
+				78EE0CEF814ABDBA67941B84 /* Rect.swift in Sources */,
 				783B0B965BA45D7A2943F7BF /* TilingContainer.swift in Sources */,
 				B1E2002BB8F70F2555AAA82D /* TreeNode.swift in Sources */,
 				4005ECE237BD9230F74CA917 /* TreeNodeEx.swift in Sources */,
