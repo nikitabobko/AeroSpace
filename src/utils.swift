@@ -41,15 +41,15 @@ func stringType(of some: Any) -> String {
     return string
 }
 
-func errorT<T>(_ message: String = "") -> T {
+@inlinable func errorT<T>(_ message: String = "") -> T {
     fatalError(message)
 }
 
-func error(_ message: String = "") -> Never {
+@inlinable func error(_ message: String = "") -> Never {
     fatalError(message)
 }
 
-func TODO(_ message: String = "") -> Never {
+@inlinable func TODO(_ message: String = "") -> Never {
     fatalError(message)
 }
 
@@ -207,20 +207,24 @@ extension Sequence {
         compactMap { $0 }
     }
 
-    public func minByOrThrow<S: Comparable>(_ selector: (Self.Element) -> S) -> Self.Element {
+    @inlinable public func minByOrThrow<S: Comparable>(_ selector: (Self.Element) -> S) -> Self.Element {
         minBy(selector) ?? errorT("Empty sequence")
     }
 
-    public func minBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
+    @inlinable public func minBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
         self.min(by: { a, b in selector(a) < selector(b) })
     }
 
-    public func maxByOrThrow<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
+    @inlinable public func maxByOrThrow<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
         self.maxBy(selector) ?? errorT("Empty sequence")
     }
 
-    public func maxBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
+    @inlinable public func maxBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
         self.max(by: { a, b in selector(a) < selector(b) })
+    }
+
+    @inlinable public func sortedBy<S : Comparable>(_ selector: (Self.Element) -> S) -> [Self.Element] {
+        sorted(by: { a, b in selector(a) < selector(b) })
     }
 }
 

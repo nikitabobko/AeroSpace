@@ -65,7 +65,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
 
     static var all: [Workspace] {
         garbageCollectUnusedWorkspaces()
-        return workspaceNameToWorkspace.values.sorted { a, b in a.name < b.name }
+        return workspaceNameToWorkspace.values.sortedBy { $0.name }
     }
 
     static func get(byName name: String) -> Workspace {
