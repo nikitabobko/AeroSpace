@@ -23,7 +23,7 @@ var currentEmptyWorkspace: Workspace = getOrCreateNextEmptyWorkspace()
 /// optionally can have a not empty workspace assigned to it
 ///
 /// When this map contains `Maybe.Nothing` it means that the monitor displays the "empty"/"background" workspace
-var monitorToNotEmptyWorkspace: [Monitor: Maybe<Workspace>] = [:]
+private var monitorToNotEmptyWorkspace: [Monitor: Maybe<Workspace>] = [:]
 
 func getOrCreateNextEmptyWorkspace() -> Workspace {
     let all = Workspace.all
@@ -91,7 +91,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
 
 extension Workspace {
     var isVisible: Bool {
-        self == currentEmptyWorkspace || assignedMonitor.flatMap { monitorToNotEmptyWorkspace[$0] }?.valueOrNil == self
+        self == currentEmptyWorkspace || assignedMonitor?.getActiveWorkspace() == self
     }
 
     var rootTilingContainer: TilingContainer {
@@ -112,17 +112,24 @@ extension Workspace {
 }
 
 extension Monitor {
-    /// Don't forget that there is always an empty additional "background" workspace on every monitor ``currentEmptyWorkspace``
-    var notEmptyWorkspace: Workspace? {
-        get {
-            if let existing = monitorToNotEmptyWorkspace[self] {
-                return existing.valueOrNil
-            }
-            // What if monitor configuration changed? (frame.origin is changed)
-            rearrangeWorkspacesOnMonitors()
-            // Normally, recursion should happen only once more because we must take the value from the cache
-            // (Unless, monitor configuration data race happens)
-            return self.notEmptyWorkspace
+    func getActiveWorkspace() -> Workspace {
+        if let existing = monitorToNotEmptyWorkspace[self] {
+            return existing.valueOrNil ?? currentEmptyWorkspace
+        }
+        // What if monitor configuration changed? (frame.origin is changed)
+        rearrangeWorkspacesOnMonitors()
+        // Normally, recursion should happen only once more because we must take the value from the cache
+        // (Unless, monitor configuration data race happens)
+        return self.getActiveWorkspace()
+    }
+
+    func setActiveWorkspace(_ workspace: Workspace) {
+        if workspace.isEffectivelyEmpty {
+            monitorToNotEmptyWorkspace[self] = Maybe.Nothing
+            currentEmptyWorkspace = workspace
+        } else {
+            monitorToNotEmptyWorkspace[self] = Maybe.Just(workspace)
+            workspace.assignedMonitor = self
         }
     }
 }

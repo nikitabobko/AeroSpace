@@ -34,7 +34,7 @@ class MacWindow: TreeNode, Hashable {
                 workspace = currentEmptyWorkspace
             } else {
                 guard let topLeftCorner = axWindow.get(Ax.topLeftCornerAttr) else { return nil }
-                workspace = topLeftCorner.monitorApproximation.notEmptyWorkspace ?? currentEmptyWorkspace
+                workspace = topLeftCorner.monitorApproximation.getActiveWorkspace()
             }
             // Layout the window in the container of the last active window
             let parent = workspace.lastActiveWindow?.parent ?? workspace.rootTilingContainer
