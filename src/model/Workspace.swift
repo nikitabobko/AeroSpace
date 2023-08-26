@@ -119,8 +119,8 @@ extension NSScreen {
     /// Don't forget that there is always an empty additional "background" workspace on every monitor ``currentEmptyWorkspace``
     var notEmptyWorkspace: Workspace? {
         get {
-            if let existing = monitorTopLeftCornerToNotEmptyWorkspace[rect.topLeftCorner] {
-                return existing
+            if monitorTopLeftCornerToNotEmptyWorkspace.keys.contains(rect.topLeftCorner) {
+                return monitorTopLeftCornerToNotEmptyWorkspace[rect.topLeftCorner].flatMap { $0 }
             }
             // What if monitor configuration changed? (frame.origin is changed)
             rearrangeWorkspacesOnMonitors()
