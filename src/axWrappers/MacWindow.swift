@@ -29,7 +29,7 @@ class MacWindow: TreeNode, Hashable {
             let activeWorkspace = Workspace.get(byName: ViewModel.shared.focusedWorkspaceTrayText)
             let workspace: Workspace
             if activeWorkspace == currentEmptyWorkspace &&
-                       NSWorkspace.shared.menuBarOwningApplication == app.nsApp &&
+                       NSWorkspace.activeApp == app.nsApp &&
                        app.axFocusedWindow?.windowId() == axWindow.windowId() {
                 workspace = currentEmptyWorkspace
             } else {
@@ -77,8 +77,12 @@ class MacWindow: TreeNode, Hashable {
 
     @discardableResult
     func activate() -> Bool {
-        app.nsApp.activate(options: .activateIgnoringOtherApps) &&
-                AXUIElementPerformAction(axWindow, kAXRaiseAction as CFString) == AXError.success
+        if app.nsApp.activate(options: .activateIgnoringOtherApps) && axWindow.raise() {
+            NSWorkspace.activeApp = app.nsApp
+            return true
+        } else {
+            return false
+        }
     }
 
     func close() -> Bool {

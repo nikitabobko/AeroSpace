@@ -27,8 +27,7 @@ struct AeroSpaceApp: App {
         GlobalObserver.initObserver()
         for setting in settings {
             hotKeys.append(HotKey(key: setting.hotkey, modifiers: setting.modifiers, keyUpHandler: {
-                let workspace = Workspace.get(byName: setting.name)
-                switchToWorkspace(workspace)
+                switchToWorkspace(Workspace.get(byName: setting.name))
             }))
         }
         refresh()

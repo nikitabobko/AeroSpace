@@ -58,7 +58,13 @@ class MacApp: Hashable {
     }
 
     static func ==(lhs: MacApp, rhs: MacApp) -> Bool {
-        lhs.nsApp.processIdentifier == rhs.nsApp.processIdentifier
+        if lhs.nsApp.processIdentifier == rhs.nsApp.processIdentifier {
+            precondition(lhs === rhs)
+            return true
+        } else {
+            precondition(lhs !== rhs)
+            return false
+        }
     }
 
     func hash(into hasher: inout Hasher) {
@@ -72,14 +78,12 @@ class MacApp: Hashable {
     var axFocusedWindow: AXUIElement? {
         axApp.get(Ax.focusedWindowAttr)
     }
+
+    var windows: [MacWindow] {
+        (axApp.get(Ax.windowsAttr) ?? []).compactMap({ MacWindow.get(app: self, axWindow: $0) })
+    }
 }
 
 extension NSRunningApplication {
     var macApp: MacApp? { MacApp.get(self) }
-}
-
-extension MacApp {
-    var windowsVisibleOnAllMonitors: [MacWindow] {
-        (axApp.get(Ax.windowsAttr) ?? []).compactMap({ MacWindow.get(app: self, axWindow: $0) })
-    }
 }

@@ -2,14 +2,6 @@ import Foundation
 
 class GlobalObserver {
     @objc private static func action() {
-//        guard let frontmostApp = NSWorkspace.shared.frontmostApplication else { return }
-//        print("notif \(frontmostApp.localizedName)")
-//        let window = MacApp.get(frontmostApp).axApp.get(Ax.focusedWindowAttr)
-//        print("notif window \(window?.get(Ax.titleAttr))")
-//        window
-
-//        let window = NSWorkspace.shared.frontmostApplication?.macApp.focusedWindow
-//        print("notif window \(window?.title)")
         refresh()
     }
 

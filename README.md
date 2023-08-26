@@ -33,6 +33,9 @@ You would need a mac. Run in terminal:
 - Check all todos in code
 - move vs swap (swap requires position and size proportions decoupling from windows)
 - what is src/Assets.xcassets ?
+- license
+- unminimize apps automatically
+- unhide apps automatically
 
 ## Tests
 

@@ -3,16 +3,6 @@ import Cocoa
 import CoreFoundation
 import AppKit
 
-//func activeSpace() {
-////    CGSCopyManagedDisplaySpaces(CGSMainConnectionID())?.takeRetainedValue()
-////    CGSpacesInfo
-////    CGSGetActiveSpace()
-//}
-
-//func observeSpaceChanges() {
-//    NSWorkspace.shared.notificationCenter.addObserver(self, selector: #selector(self.spaceChange), name: NSWorkspace.activeSpaceDidChangeNotification, object: nil)
-//}
-
 func test() {
     for screen in NSScreen.screens {
         debug("---")
@@ -21,22 +11,9 @@ func test() {
         debug(screen.visibleRect.topLeftCorner)
         debug(screen.visibleRect)
     }
-//    let bar = windowsOnActiveMacOsSpaces().filter { $0.title?.contains("bar") == true }.first!
-//    bar.setSize(CGSize(width: monitorWidth, height: monitorHeight))
-//    print(bar.getSize())
-
-//    DispatchQueue.main.asyncAfter(deadline: .now()+1) {
-//        let windows = windowsOnActiveMacOsSpaces()
-//        print(windows.count)
-//        let barWindow: Window = windows.filter { $0.title?.contains("Chrome") == true && $0.title?.contains("bar") == true }.first!
-//        print(barWindow.getPosition())
-//        print("ID: \(barWindow.windowId())")
-//    }
 }
 
 func stringType(of some: Any) -> String {
-//    kAXMinValueAttribute
-//    kAXValueAttribute
     let string = (some is Any.Type) ? String(describing: some) : String(describing: type(of: some))
     return string
 }
@@ -63,13 +40,10 @@ extension NSScreen {
     ///
     /// Returns `nil` if the desktop is selected (which is when the app is active but doesn't show any window)
     static var focusedMonitorOrNilIfDesktop: NSScreen? {
-        //NSWorkspace.shared.menuBarOwningApplication?.macApp.focusedWindow?.monitorApproximation
-        // todo what's the difference between? NSWorkspace.shared.frontmostApplication
-
-        NSWorkspace.shared.menuBarOwningApplication?.macApp?.focusedWindow?.monitorApproximationLowLevel
+        NSWorkspace.activeApp?.macApp?.focusedWindow?.monitorApproximationLowLevel
                 ?? NSScreen.screens.singleOrNil()
 
-        //NSWorkspace.shared.menuBarOwningApplication?.macApp.axFocusedWindow?
+        //NSWorkspace.activeApp?.macApp.axFocusedWindow?
         //        .get(Ax.topLeftCornerAttr)?.monitorApproximation
         //        ?? NSScreen.screens.singleOrNil()
 

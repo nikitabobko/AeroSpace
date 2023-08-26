@@ -3,7 +3,7 @@ import Foundation
 func checkAccessibilityPermissions() {
     let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true]
     if !AXIsProcessTrustedWithOptions(options as CFDictionary) {
-        resetAccessibility() // Because macOS doesn't reset it for us...
+        resetAccessibility() // Because macOS doesn't reset it for us when app signature changes...
         NSApplication.shared.terminate(nil)
         error("unreachable")
     }
@@ -75,6 +75,8 @@ enum Ax {
                 return AXValueCreate(.cgPoint, &size) as CFTypeRef
             }
     )
+    /// Returns windows visible on all monitors
+    /// If some windows are located on not active macOS Spaces then they won't be returned
     static let windowsAttr = ReadableAttrImpl<[AXUIElement]>(
             key: kAXWindowsAttribute,
             getter: {
@@ -91,21 +93,6 @@ enum Ax {
                 // Filter out non-window objects (e.g. Finder's desktop)
                 return potentialWindow.windowId() != nil ? potentialWindow : nil
             }
-    )
-    static let identifierAttr = ReadableAttrImpl<String>(
-            key: kAXIdentifierAttribute,
-            // I'd be happy to use safe cast, but I can't :(
-            //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
-            getter: {
-                debug("id: \($0)")
-                return $0 as? String
-            }
-    )
-    static let focusedUiElementAttr = ReadableAttrImpl<AXUIElement>(
-            key: kAXFocusedUIElementAttribute,
-            // I'd be happy to use safe cast, but I can't :(
-            //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
-            getter: { $0 as! AXUIElement }
     )
     static let closeButtonAttr = ReadableAttrImpl<AXUIElement>(
             key: kAXCloseButtonAttribute,
@@ -131,6 +118,10 @@ extension AXUIElement {
     func windowId() -> CGWindowID? {
         var cgWindowId = CGWindowID()
         return _AXUIElementGetWindow(self, &cgWindowId) == .success ? cgWindowId : nil
+    }
+
+    func raise() -> Bool {
+        AXUIElementPerformAction(self, kAXRaiseAction as CFString) == AXError.success
     }
 }
 
