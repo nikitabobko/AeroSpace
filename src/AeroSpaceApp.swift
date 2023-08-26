@@ -46,7 +46,7 @@ struct AeroSpaceApp: App {
                     Toggle(isOn: workspace.name == viewModel.focusedWorkspaceTrayText
                             ? Binding(get: { true }, set: { _, _ in })
                             : Binding(get: { false }, set: { _, _ in })) {
-                        let monitor = workspace.assignedMonitor.name.flatMap { " - \($0)" } ?? ""
+                        let monitor = (workspace.assignedMonitor?.name).flatMap { " - \($0)" } ?? ""
                         Text(workspace.name + monitor).font(.system(.body, design: .monospaced))
                     }
                 }

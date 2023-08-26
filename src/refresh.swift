@@ -58,7 +58,7 @@ private func refreshWorkspaces() {
     if let focusedWindow = NSWorkspace.activeApp?.macApp?.focusedWindow {
         debug("refreshWorkspaces: not empty")
         let focusedWorkspace = focusedWindow.workspace
-        monitorToNotEmptyWorkspace[focusedWorkspace.assignedMonitor] = Maybe.Just(focusedWorkspace)
+        monitorToNotEmptyWorkspace[focusedWorkspace.assignedMonitorOfNotEmptyWorkspace] = Maybe.Just(focusedWorkspace)
         ViewModel.shared.focusedWorkspaceTrayText = focusedWorkspace.name
     } else {
         debug("refreshWorkspaces: empty")

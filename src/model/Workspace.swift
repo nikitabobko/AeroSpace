@@ -43,19 +43,12 @@ var allMonitorsRectsUnion: Rect {
 class Workspace: TreeNode, Hashable, Identifiable {
     let name: String
     var id: String { name } // satisfy Identifiable
-    private var _assignedMonitor: Monitor
-    var assignedMonitor: Monitor {
-        get { _assignedMonitor }
-        set {
-            _assignedMonitor = newValue
-            // TODO("implement windows relative move")
-        }
-    }
+    var assignedMonitor: Monitor?
     weak var lastActiveWindow: MacWindow?
 
-    private init(_ name: String, _ assignedMonitorRect: Monitor) {
+    private init(_ name: String, _ assignedMonitor: Monitor?) {
         self.name = name
-        self._assignedMonitor = assignedMonitorRect
+        self.assignedMonitor = assignedMonitor
         super.init(parent: NilTreeNode.instance)
     }
 
@@ -68,7 +61,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
         if let existing = workspaceNameToWorkspace[name] {
             return existing
         } else {
-            let workspace = Workspace(name, Monitor(name: nil, rect: allMonitorsRectsUnion))
+            let workspace = Workspace(name, nil)
             workspaceNameToWorkspace[name] = workspace
             return workspace
         }
@@ -98,7 +91,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
 
 extension Workspace {
     var isVisible: Bool {
-        self == currentEmptyWorkspace || monitorToNotEmptyWorkspace[assignedMonitor]?.valueOrNil == self
+        self == currentEmptyWorkspace || assignedMonitor.flatMap { monitorToNotEmptyWorkspace[$0] }?.valueOrNil == self
     }
 
     var rootTilingContainer: TilingContainer {
@@ -111,6 +104,10 @@ extension Workspace {
         default:
             error("Workspace must contain only one tiling container as its child")
         }
+    }
+
+    var assignedMonitorOfNotEmptyWorkspace: Monitor {
+        assignedMonitor ?? errorT("Not empty workspace must have an assigned monitor")
     }
 }
 

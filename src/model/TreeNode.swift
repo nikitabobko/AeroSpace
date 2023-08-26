@@ -29,7 +29,6 @@ class TreeNode : Equatable {
             let newParentWorkspace = currentEmptyWorkspace
             currentEmptyWorkspace = getOrCreateNextEmptyWorkspace()
             newParentWorkspace.assignedMonitor = window.monitorApproximationLowLevel
-                    ?? Monitor(name: nil, rect: allMonitorsRectsUnion)
         }
     }
 
@@ -39,7 +38,7 @@ class TreeNode : Equatable {
         let workspace: Workspace = parent.workspace
         if workspace.isEffectivelyEmpty { // It became empty
             currentEmptyWorkspace = workspace
-            currentEmptyWorkspace.assignedMonitor = Monitor(name: nil, rect: allMonitorsRectsUnion)
+            currentEmptyWorkspace.assignedMonitor = nil
         }
     }
 
