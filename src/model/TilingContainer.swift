@@ -38,9 +38,3 @@ class VAccordionContainer: TreeNode, TilingContainer {
         super.init(parent: parent)
     }
 }
-
-class FloatingChildrenContainer: TreeNode {
-    //convenience init(_ parent: TreeNode) {
-    //    self.init(parent)
-    //}
-}

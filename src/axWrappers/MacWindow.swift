@@ -37,7 +37,7 @@ class MacWindow: TreeNode, Hashable {
                 workspace = topLeftCorner.monitorApproximation.notEmptyWorkspace ?? currentEmptyWorkspace
             }
             // Layout the window in the container of the last active window
-            let parent = workspace.lastActiveWindow?.parent ?? workspace.rootContainer
+            let parent = workspace.lastActiveWindow?.parent ?? workspace.rootTilingContainer
             let window = MacWindow(id, app, axWindow, parent: parent)
             debug("New window detected: \(window.title ?? "")")
             allWindowsMap[id] = window

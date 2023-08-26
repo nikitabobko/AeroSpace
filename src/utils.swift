@@ -43,7 +43,7 @@ extension NSScreen {
         NSWorkspace.activeApp?.macApp?.focusedWindow?.monitorApproximationLowLevel
                 ?? NSScreen.screens.singleOrNil()
 
-        //NSWorkspace.activeApp?.macApp.axFocusedWindow?
+        //NSWorkspace.activeApp?.macApp?.axFocusedWindow?
         //        .get(Ax.topLeftCornerAttr)?.monitorApproximation
         //        ?? NSScreen.screens.singleOrNil()
 
@@ -181,6 +181,16 @@ extension Sequence {
         compactMap { $0 }
     }
 
+    public func filterIsInstance<R>(of _: R.Type) -> [R] {
+        var result: [R] = []
+        for elem in self {
+            if let elemR = elem as? R {
+                result.append(elemR)
+            }
+        }
+        return result
+    }
+
     @inlinable public func minByOrThrow<S: Comparable>(_ selector: (Self.Element) -> S) -> Self.Element {
         minBy(selector) ?? errorT("Empty sequence")
     }
@@ -238,6 +248,20 @@ extension Sequence where Element: Hashable {
 extension Array {
     func singleOrNil() -> Element? {
         count == 1 ? first : nil
+    }
+
+    func singleOrNil(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Element? {
+        var found: Self.Element? = nil
+        for elem in self {
+            if try predicate(elem) {
+                if found == nil {
+                    found = elem
+                } else {
+                    return nil
+                }
+            }
+        }
+        return found
     }
 
     func firstOrThrow(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Element {

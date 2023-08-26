@@ -42,8 +42,6 @@ var allMonitorsRectsUnion: Rect {
 
 class Workspace: TreeNode, Hashable, Identifiable {
     let name: String
-    var floatingWindows = Set<MacWindow>()
-    var rootContainer: TilingContainer = HListContainer(parent: NilTreeNode.instance)
     var id: String { name } // satisfy Identifiable
     private var _assignedMonitor: Monitor
     var assignedMonitor: Monitor {
@@ -59,8 +57,6 @@ class Workspace: TreeNode, Hashable, Identifiable {
         self.name = name
         self._assignedMonitor = assignedMonitorRect
         super.init(parent: NilTreeNode.instance)
-        rootContainer = HListContainer(parent: self)
-                // todo createDefaultWorkspaceContainer(self)
     }
 
     static var all: [Workspace] {
@@ -104,6 +100,18 @@ extension Workspace {
     var isVisible: Bool {
         self == currentEmptyWorkspace ||
                 monitorTopLeftCornerToNotEmptyWorkspace[assignedMonitor.rect.topLeftCorner] == self
+    }
+
+    var rootTilingContainer: TilingContainer {
+        let containers = children.filterIsInstance(of: TilingContainer.self)
+        switch containers.count {
+        case 0:
+            return HListContainer(parent: self) // todo createDefaultWorkspaceContainer(self)
+        case 1:
+            return containers.singleOrNil()!
+        default:
+            error("Workspace must contain only one tiling container as its child")
+        }
     }
 }
 
