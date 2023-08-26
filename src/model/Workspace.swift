@@ -9,7 +9,7 @@ private func createDefaultWorkspaceContainer(_ workspace: Workspace) -> TilingCo
 
 private var workspaceNameToWorkspace: [String: Workspace] = [:]
 
-/// Empty workspace is spread over all monitors. That's why it's tracked separately. See ``monitorTopLeftCornerToNotEmptyWorkspace``,
+/// Empty workspace is spread over all monitors. That's why it's tracked separately. See ``monitorToNotEmptyWorkspace``,
 var currentEmptyWorkspace: Workspace = getOrCreateNextEmptyWorkspace()
 /// macOS doesn't provide an API to check for currently active/selected monitor
 /// (see ``NSScreen.focusedMonitorOrNilIfDesktop``) => when users changes the active monitor by clicking the
@@ -22,8 +22,8 @@ var currentEmptyWorkspace: Workspace = getOrCreateNextEmptyWorkspace()
 /// That's why the mental model is the following: the empty workspace is spread over all monitors. And each monitor
 /// optionally can have a not empty workspace assigned to it
 ///
-/// When this map contains `nil` it means that the monitor displays the "empty"/"background" workspace
-var monitorTopLeftCornerToNotEmptyWorkspace: [CGPoint: Workspace?] = [:]
+/// When this map contains `Maybe.Nothing` it means that the monitor displays the "empty"/"background" workspace
+var monitorToNotEmptyWorkspace: [CGPoint: Maybe<Workspace>] = [:]
 
 func getOrCreateNextEmptyWorkspace() -> Workspace {
     let all = Workspace.all
@@ -99,7 +99,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
 extension Workspace {
     var isVisible: Bool {
         self == currentEmptyWorkspace ||
-                monitorTopLeftCornerToNotEmptyWorkspace[assignedMonitor.rect.topLeftCorner] == self
+                monitorToNotEmptyWorkspace[assignedMonitor.rect.topLeftCorner]?.valueOrNil == self
     }
 
     var rootTilingContainer: TilingContainer {
@@ -119,8 +119,8 @@ extension NSScreen {
     /// Don't forget that there is always an empty additional "background" workspace on every monitor ``currentEmptyWorkspace``
     var notEmptyWorkspace: Workspace? {
         get {
-            if monitorTopLeftCornerToNotEmptyWorkspace.keys.contains(rect.topLeftCorner) {
-                return monitorTopLeftCornerToNotEmptyWorkspace[rect.topLeftCorner].flatMap { $0 }
+            if let existing = monitorToNotEmptyWorkspace[rect.topLeftCorner] {
+                return existing.valueOrNil
             }
             // What if monitor configuration changed? (frame.origin is changed)
             rearrangeWorkspacesOnMonitors()
@@ -132,17 +132,17 @@ extension NSScreen {
 }
 
 private func rearrangeWorkspacesOnMonitors() {
-    let oldMonitorToWorkspaces: [CGPoint: Workspace?] = monitorTopLeftCornerToNotEmptyWorkspace
-    monitorTopLeftCornerToNotEmptyWorkspace = [:]
+    let oldMonitorToWorkspaces: [CGPoint: Maybe<Workspace>] = monitorToNotEmptyWorkspace
+    monitorToNotEmptyWorkspace = [:]
     let monitors = NSScreen.screens
     let origins = monitors.map { $0.rect.topLeftCorner }.toSet()
     let preservedWorkspaces: [Workspace] = oldMonitorToWorkspaces
             .filter { oldOrigin, oldWorkspace in origins.contains(oldOrigin) }
-            .map { $0.value }
+            .map { $0.value.valueOrNil }
             .filterNotNil()
     let lostWorkspaces: [Workspace] = oldMonitorToWorkspaces
             .filter { oldOrigin, oldWorkspace in !origins.contains(oldOrigin) }
-            .map { $0.value }
+            .map { $0.value.valueOrNil }
             .filterNotNil()
     var poolOfWorkspaces: [Workspace] =
             Workspace.all.reversed() - (preservedWorkspaces + lostWorkspaces) + lostWorkspaces
@@ -150,9 +150,9 @@ private func rearrangeWorkspacesOnMonitors() {
         let origin = monitor.rect.topLeftCorner
         // If monitors change, most likely we will preserve only the main monitor (It always has (0, 0) origin)
         if let existing = oldMonitorToWorkspaces[origin] {
-            monitorTopLeftCornerToNotEmptyWorkspace[origin] = existing
+            monitorToNotEmptyWorkspace[origin] = existing
         } else {
-            monitorTopLeftCornerToNotEmptyWorkspace[origin] = poolOfWorkspaces.popLast()
+            monitorToNotEmptyWorkspace[origin] = Maybe.from(poolOfWorkspaces.popLast())
         }
     }
 }

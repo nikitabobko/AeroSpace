@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		07FF7938628995F68DFEB524 /* ViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 24F99E8C4FD17A1D939C41F1 /* ViewModel.swift */; };
 		080DAA83BADA766D94A2BD3C /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38A4C333EA5B4D4527DD97D4 /* Workspace.swift */; };
+		1CB4082BE5C95CA8CD52BED9 /* Maybe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345148B22F8A8F85109229AE /* Maybe.swift */; };
 		2F8DC074DAB97DC87E07A559 /* Bundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9CAC977020A08D0227FAFB2 /* Bundle.swift */; };
 		4005ECE237BD9230F74CA917 /* TreeNodeEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C39B0C4E4888832129C4C7 /* TreeNodeEx.swift */; };
 		518B9E5AC031C24C7C84CD70 /* MacWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243F29F496F7463F3482DD10 /* MacWindow.swift */; };
@@ -32,6 +33,7 @@
 		1E81623E8954701269A22322 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
 		243F29F496F7463F3482DD10 /* MacWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacWindow.swift; sourceTree = "<group>"; };
 		24F99E8C4FD17A1D939C41F1 /* ViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModel.swift; sourceTree = "<group>"; };
+		345148B22F8A8F85109229AE /* Maybe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Maybe.swift; sourceTree = "<group>"; };
 		38A4C333EA5B4D4527DD97D4 /* Workspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		3C2E5977331398421A4FC168 /* GlobalObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalObserver.swift; sourceTree = "<group>"; };
 		3E05FB0C7158C8B6DECBD603 /* TilingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilingContainer.swift; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 		C136937AA077E63558E9707C /* util */ = {
 			isa = PBXGroup;
 			children = (
+				345148B22F8A8F85109229AE /* Maybe.swift */,
 				F6507EBAA795220FD0C05384 /* Monitor.swift */,
 				BD02433B4415EEB163074CE5 /* utils.swift */,
 			);
@@ -206,6 +209,7 @@
 				B0D0C37BAE7E7F0D0FF1E9FC /* GlobalObserver.swift in Sources */,
 				7FE92DDAC2F094C83A177914 /* MacApp.swift in Sources */,
 				518B9E5AC031C24C7C84CD70 /* MacWindow.swift in Sources */,
+				1CB4082BE5C95CA8CD52BED9 /* Maybe.swift in Sources */,
 				920FDF8498DCCB62149D1719 /* Monitor.swift in Sources */,
 				FF7350E27A14B62466624076 /* NSWorkspaceEx.swift in Sources */,
 				783B0B965BA45D7A2943F7BF /* TilingContainer.swift in Sources */,

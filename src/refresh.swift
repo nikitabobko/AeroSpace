@@ -38,7 +38,7 @@ func switchToWorkspace(_ workspace: Workspace) {
         // It's the only place in the app where I allow myself to use NSScreen.main.
         // This function isn't invoked from callbacks that's why .main should be fine
         if let activeMonitor = NSScreen.focusedMonitorOrNilIfDesktop ?? NSScreen.main {
-            monitorTopLeftCornerToNotEmptyWorkspace[activeMonitor.rect.topLeftCorner] = nil
+            monitorToNotEmptyWorkspace[activeMonitor.rect.topLeftCorner] = Maybe.Nothing
         }
         currentEmptyWorkspace = workspace
         defocusAllWindows()
@@ -58,7 +58,7 @@ private func refreshWorkspaces() {
     if let focusedWindow = NSWorkspace.activeApp?.macApp?.focusedWindow {
         debug("refreshWorkspaces: not empty")
         let focusedWorkspace = focusedWindow.workspace
-        monitorTopLeftCornerToNotEmptyWorkspace[focusedWorkspace.assignedMonitor.rect.topLeftCorner] = focusedWorkspace
+        monitorToNotEmptyWorkspace[focusedWorkspace.assignedMonitor.rect.topLeftCorner] = Maybe.Just(focusedWorkspace)
         ViewModel.shared.focusedWorkspaceTrayText = focusedWorkspace.name
     } else {
         debug("refreshWorkspaces: empty")
