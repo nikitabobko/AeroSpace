@@ -25,13 +25,13 @@ class MacApp: Hashable {
                 allApps[pid] = app
                 return app
             } else {
-                app.free()
+                app.garbageCollect()
                 return nil
             }
         }
     }
 
-    private func free() {
+    private func garbageCollect() {
         MacApp.allApps.removeValue(forKey: nsApp.processIdentifier)
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
@@ -43,7 +43,7 @@ class MacApp: Hashable {
     static func garbageCollectTerminatedApps() {
         for app in Array(allApps.values) {
             if app.nsApp.isTerminated {
-                app.free()
+                app.garbageCollect()
                 debug("garbageCollectTerminatedApps: terminated \(app.title ?? "")")
             }
         }
