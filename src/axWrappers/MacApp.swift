@@ -32,11 +32,12 @@ class MacApp: Hashable {
     }
 
     private func garbageCollect() {
+        debug("garbageCollectApp: terminated \(self.title ?? "")")
         MacApp.allApps.removeValue(forKey: nsApp.processIdentifier)
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
         }
-        MacWindow.allWindows.lazy.filter { $0.app == self }.forEach { $0.free() }
+        MacWindow.allWindows.lazy.filter { $0.app == self }.forEach { $0.garbageCollect() }
         axObservers = []
     }
 
@@ -44,7 +45,6 @@ class MacApp: Hashable {
         for app in Array(allApps.values) {
             if app.nsApp.isTerminated {
                 app.garbageCollect()
-                debug("garbageCollectTerminatedApps: terminated \(app.title ?? "")")
             }
         }
     }
@@ -52,7 +52,7 @@ class MacApp: Hashable {
     var title: String? { nsApp.localizedName }
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) -> Bool {
-        guard let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, data: nil, handler) else { return false }
+        guard let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, handler) else { return false }
         axObservers.append(AxObserverWrapper(obs: observer, ax: axApp, notif: notifKey as CFString))
         return true
     }

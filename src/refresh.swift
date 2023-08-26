@@ -4,6 +4,7 @@ import Foundation
 /// The function is called as a feedback response on every user input
 func refresh() {
     debug("refresh \(Date.now.formatted(date: .abbreviated, time: .standard))")
+    MacWindow.garbageCollectClosedWindows()
     // Garbage collect terminated apps and windows before working with all windows
     MacApp.garbageCollectTerminatedApps()
     // Garbage collect workspaces after apps, because workspaces contain apps.

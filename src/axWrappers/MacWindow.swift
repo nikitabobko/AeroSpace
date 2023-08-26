@@ -3,7 +3,7 @@ import AppKit
 
 class MacWindow: TreeNode, Hashable {
     let windowId: CGWindowID
-    private let axWindow: AXUIElement
+    let axWindow: AXUIElement
     let app: MacApp
     private var prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect: CGPoint?
     // todo redundant?
@@ -42,20 +42,21 @@ class MacWindow: TreeNode, Hashable {
             debug("New window detected: \(window.title ?? "")")
             allWindowsMap[id] = window
 
-            if window.observe(windowIsDestroyedObs, kAXUIElementDestroyedNotification) &&
+            if window.observe(refreshObs, kAXUIElementDestroyedNotification) &&
                        window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
                        window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
                        window.observe(refreshObs, kAXMovedNotification) &&
                        window.observe(refreshObs, kAXResizedNotification) {
                 return window
             } else {
-                window.free()
+                window.garbageCollect()
                 return nil
             }
         }
     }
 
-    func free() {
+    func garbageCollect() {
+        debug("garbageCollectWindow of \(app.title ?? "NO TITLE")")
         MacWindow.allWindowsMap.removeValue(forKey: windowId)
         unbindFromParent()
         for obs in axObservers {
@@ -65,7 +66,7 @@ class MacWindow: TreeNode, Hashable {
     }
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) -> Bool {
-        guard let observer = AXObserver.observe(app.nsApp.processIdentifier, notifKey, axWindow, data: self, handler) else { return false }
+        guard let observer = AXObserver.observe(app.nsApp.processIdentifier, notifKey, axWindow, handler) else { return false }
         axObservers.append(AxObserverWrapper(obs: observer, ax: axWindow, notif: notifKey as CFString))
         return true
     }
@@ -138,9 +139,13 @@ class MacWindow: TreeNode, Hashable {
         axWindow.get(Ax.topLeftCornerAttr)
     }
 
-    //static func ==(lhs: MacWindow, rhs: MacWindow) -> Bool {
-    //    lhs.windowId == rhs.windowId
-    //}
+    static func garbageCollectClosedWindows() {
+        for window in allWindows {
+            if window.axWindow.windowId() == nil {
+                window.garbageCollect()
+            }
+        }
+    }
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(windowId)
@@ -152,15 +157,4 @@ extension MacWindow {
     var monitorApproximationLowLevel: NSScreen? { // todo inline?
         getTopLeftCorner()?.monitorApproximation
     }
-}
-
-private extension UnsafeMutableRawPointer {
-    var window: MacWindow { Unmanaged.fromOpaque(self).takeUnretainedValue() }
-}
-
-private func windowIsDestroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
-    guard let window = data?.window else { return }
-    debug("Destroyed: \(window.title)")
-    window.free()
-    refresh()
 }
