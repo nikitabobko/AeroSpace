@@ -33,6 +33,10 @@ func stringType(of some: Any) -> String {
     fatalError(message)
 }
 
+extension String? {
+    var isNilOrEmpty: Bool { self == nil || self == "" }
+}
+
 extension Double {
     var squared: Double { self * self }
 }

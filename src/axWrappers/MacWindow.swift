@@ -23,6 +23,11 @@ class MacWindow: TreeNode, Hashable {
 
     static func get(app: MacApp, axWindow: AXUIElement) -> MacWindow? {
         guard let id = axWindow.windowId() else { return nil }
+        // The app is still loading (e.g. IntelliJ IDEA)
+        // Or it's tooltips, context menus, and drop downs (e.g. IntelliJ IDEA)
+        if axWindow.get(Ax.titleAttr).isNilOrEmpty {
+            return nil
+        }
         if let existing = allWindowsMap[id] {
             return existing
         } else {
@@ -37,20 +42,27 @@ class MacWindow: TreeNode, Hashable {
                 guard let topLeftCorner = axWindow.get(Ax.topLeftCornerAttr) else { return nil }
                 workspace = topLeftCorner.monitorApproximation.getActiveWorkspace()
             }
-            // Layout the window in the tiling container of the last active window
-            let tilingParent: TilingContainer =
-                    (workspace.lastActiveWindow?.parent).filterIsInstance(of: TilingContainer.self)
-                            ?? workspace.rootTilingContainer
-            let weight: CGFloat = tilingParent.children.sumOf { $0.getWeight(tilingParent.orientation) }
-                            .div(tilingParent.children.count, orIfZero: 1)
-            let window = MacWindow(id, app, axWindow, parent: tilingParent, adaptiveWeight: weight)
-            debug("New window detected: \(window.title ?? "")")
+            let shouldFloat = shouldFloat(axWindow)
+            let parent: TreeNode
+            let weight: CGFloat
+            if shouldFloat {
+                parent = workspace
+                weight = FLOATING_ADAPTIVE_WEIGHT
+            } else {
+                let tilingParent = (workspace.lastActiveWindow?.parent).filterIsInstance(of: TilingContainer.self)
+                        ?? workspace.rootTilingContainer
+                parent = tilingParent
+                weight = parent.children.sumOf { $0.getWeight(tilingParent.orientation) }
+                        .div(parent.children.count, orIfZero: 1)
+            }
+            let window = MacWindow(id, app, axWindow, parent: parent, adaptiveWeight: weight)
 
             if window.observe(refreshObs, kAXUIElementDestroyedNotification) &&
                        window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
                        window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
                        window.observe(refreshObs, kAXMovedNotification) &&
                        window.observe(refreshObs, kAXResizedNotification) {
+                debug("New window detected: \(window.title ?? "")")
                 allWindowsMap[id] = window
                 return window
             } else {
@@ -102,6 +114,7 @@ class MacWindow: TreeNode, Hashable {
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent
         // `hideEmulation` calls
         if !isHiddenViaEmulation {
+            debug("Hide \(app.title) - \(title)")
             guard let topLeftCorner = getTopLeftCorner() else { return }
             guard let size = getSize() else { return }
             prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
@@ -159,6 +172,10 @@ class MacWindow: TreeNode, Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(windowId)
     }
+}
+
+func shouldFloat(_ axWindow: AXUIElement) -> Bool { // todo
+    false
 }
 
 extension MacWindow {
