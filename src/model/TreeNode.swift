@@ -58,8 +58,6 @@ class TreeNode: Equatable {
         if newParent === NilTreeNode.instance {
             return result
         }
-        newParent._children.insert(self, at: index == -1 ? newParent._children.count : index)
-        _parent = newParent
         if let window = self as? MacWindow {
             if prevParent?.workspace.lastActiveWindow == window {
                 prevParent?.workspace.lastActiveWindow = nil
@@ -72,6 +70,8 @@ class TreeNode: Equatable {
                 currentEmptyWorkspace = getOrCreateNextEmptyWorkspace()
             }
         }
+        newParent._children.insert(self, at: index == -1 ? newParent._children.count : index)
+        _parent = newParent
         return result
     }
 
