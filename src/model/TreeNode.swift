@@ -79,7 +79,7 @@ class TreeNode: Equatable {
         if _parent == nil {
             return nil
         }
-        let index = parent._children.remove(element: self)
+        let index = parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
         let workspace: Workspace = parent.workspace
         if workspace.isEffectivelyEmpty { // It became empty
             currentEmptyWorkspace = workspace

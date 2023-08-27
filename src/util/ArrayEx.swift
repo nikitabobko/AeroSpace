@@ -24,12 +24,12 @@ extension Array {
 
 extension Array where Self.Element : Equatable {
     @discardableResult
-    public mutating func remove(element: Self.Element) -> Int {
+    public mutating func remove(element: Self.Element) -> Int? {
         if let index = firstIndex(of: element) {
             remove(at: index)
             return index
         } else {
-            return -1
+            return nil
         }
     }
 }
