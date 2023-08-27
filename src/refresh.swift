@@ -94,10 +94,10 @@ private func normalizeContainers() {
 }
 
 private func layoutWindows() {
-    for monitor in NSScreen.screens.map({ $0.monitor }) {
-        let workspace = monitor.getActiveWorkspace()
+    for screen in NSScreen.screens {
+        let workspace = screen.monitor.getActiveWorkspace()
         if workspace.isEffectivelyEmpty { continue }
-        let rect = monitor.rect
+        let rect = screen.visibleRect
         workspace.rootTilingContainer.normalizeWeightsRecursive()
         workspace.layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height)
     }
