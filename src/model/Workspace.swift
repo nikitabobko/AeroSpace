@@ -44,12 +44,11 @@ var allMonitorsRectsUnion: Rect {
 class Workspace: TreeNode, Hashable, Identifiable {
     let name: String
     var id: String { name } // satisfy Identifiable
-    var assignedMonitor: Monitor?
+    var assignedMonitor: Monitor? = nil
     weak var lastActiveWindow: MacWindow?
 
-    private init(_ name: String, _ assignedMonitor: Monitor?) {
+    private init(_ name: String) {
         self.name = name
-        self.assignedMonitor = assignedMonitor
         super.init(parent: NilTreeNode.instance, adaptiveWeight: 0)
     }
 
@@ -62,7 +61,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
         if let existing = workspaceNameToWorkspace[name] {
             return existing
         } else {
-            let workspace = Workspace(name, nil)
+            let workspace = Workspace(name)
             workspaceNameToWorkspace[name] = workspace
             return workspace
         }

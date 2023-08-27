@@ -28,7 +28,7 @@ class MacWindow: TreeNode, Hashable {
         } else {
             let activeWorkspace = Workspace.get(byName: ViewModel.shared.focusedWorkspaceTrayText)
             let workspace: Workspace
-            // todo rewrite
+            // todo rewrite. Window is appeared on empty space
             if activeWorkspace == currentEmptyWorkspace &&
                        NSWorkspace.activeApp == app.nsApp &&
                        app.axFocusedWindow?.windowId() == axWindow.windowId() {
@@ -166,6 +166,8 @@ extension MacWindow {
 
     @discardableResult
     func bindAsFloatingWindowTo(workspace: Workspace) -> PreviousBindingData? {
-        parent != workspace ? bindTo(parent: workspace, adaptiveWeight: 0) : nil
+        parent != workspace ? bindTo(parent: workspace, adaptiveWeight: FLOATING_ADAPTIVE_WEIGHT) : nil
     }
 }
+
+let FLOATING_ADAPTIVE_WEIGHT = CGFloat(0)
