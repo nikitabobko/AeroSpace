@@ -15,7 +15,11 @@ func refresh(startSession: Bool = true, endSession: Bool = true) {
 
     refreshWorkspaces()
     detectNewWindowsAndAttachThemToWorkspaces()
-    materializeWorkspaces()
+
+    normalizeContainers()
+
+    layoutWorkspaces()
+    layoutWindows()
 
     if endSession {
         updateLastActiveWindow()
@@ -60,7 +64,7 @@ private func refreshWorkspaces() {
         if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation {
             focusedWorkspace = focusedWindow.getTopLeftCorner()?.monitorApproximation.getActiveWorkspace()
                     ?? focusedWindow.workspace
-            focusedWindow.bindTo(parent: focusedWorkspace)
+            focusedWindow.bindAsFloatingWindowTo(workspace: focusedWorkspace)
         } else {
             focusedWorkspace = focusedWindow.workspace
         }
@@ -72,7 +76,7 @@ private func refreshWorkspaces() {
     }
 }
 
-private func materializeWorkspaces() {
+private func layoutWorkspaces() {
     for workspace in Workspace.all {
         debug("materializeWorkspaces: \(workspace.name) visible=\(workspace.isVisible)")
         if workspace.isVisible {
@@ -80,6 +84,22 @@ private func materializeWorkspaces() {
         } else {
             workspace.allWindowsRecursive.forEach { $0.hideViaEmulation() }
         }
+    }
+}
+
+private func normalizeContainers() {
+    for workspace in Workspace.all {
+        workspace.rootTilingContainer.normalizeContainersRecursive()
+    }
+}
+
+private func layoutWindows() {
+    for monitor in NSScreen.screens.map({ $0.monitor }) {
+        let workspace = monitor.getActiveWorkspace()
+        if workspace.isEffectivelyEmpty { continue }
+        let rect = monitor.rect
+        workspace.rootTilingContainer.normalizeWeightsRecursive()
+        workspace.layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height)
     }
 }
 

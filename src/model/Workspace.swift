@@ -2,10 +2,11 @@ import Foundation
 
 // todo make it configurable
 // todo make default choice
-private func createDefaultWorkspaceContainer(_ workspace: Workspace) -> TilingContainer {
-    guard let monitorRect = NSScreen.focusedMonitorOrNilIfDesktop?.rect else { return HListContainer(parent: workspace) }
-    return monitorRect.width > monitorRect.height ? VListContainer(parent: workspace) : HListContainer(parent: workspace)
-}
+
+//private func createDefaultWorkspaceContainer(_ workspace: Workspace) -> TilingContainer {
+//    guard let monitorRect = NSScreen.focusedMonitorOrNilIfDesktop?.rect else { return TilingContainer.newHList(parent: workspace) }
+//    return monitorRect.width > monitorRect.height ? TilingContainer.newVList(parent: workspace) : TilingContainer.newHList(parent: workspace)
+//}
 
 private var workspaceNameToWorkspace: [String: Workspace] = [:]
 
@@ -49,7 +50,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
     private init(_ name: String, _ assignedMonitor: Monitor?) {
         self.name = name
         self.assignedMonitor = assignedMonitor
-        super.init(parent: NilTreeNode.instance)
+        super.init(parent: NilTreeNode.instance, adaptiveWeight: 0)
     }
 
     static var all: [Workspace] {
@@ -65,6 +66,19 @@ class Workspace: TreeNode, Hashable, Identifiable {
             workspaceNameToWorkspace[name] = workspace
             return workspace
         }
+    }
+
+    override func getWeight(_ targetOrientation: Orientation) -> CGFloat {
+        switch targetOrientation {
+        case .H:
+            return assignedMonitor?.rect.width ?? errorT("Why do you need to know weight of empty workspace?")
+        case .V:
+            return assignedMonitor?.rect.height ?? errorT("Why do you need to know weight of empty workspace?")
+        }
+    }
+
+    override func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {
+        error("It's not possible to change weight of Workspace")
     }
 
     static func garbageCollectUnusedWorkspaces() {
@@ -98,7 +112,7 @@ extension Workspace {
         let containers = children.filterIsInstance(of: TilingContainer.self)
         switch containers.count {
         case 0:
-            return HListContainer(parent: self) // todo createDefaultWorkspaceContainer(self)
+            return TilingContainer.newHList(parent: self, adaptiveWeight: 0) // todo createDefaultWorkspaceContainer(self)
         case 1:
             return containers.singleOrNil()!
         default:

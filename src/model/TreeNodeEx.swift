@@ -40,4 +40,42 @@ extension TreeNode {
     var isEffectivelyEmpty: Bool {
         anyChildWindowRecursive == nil
     }
+
+    var hWeight: CGFloat {
+        get { getWeight(.H) }
+        set { setWeight(.H, newValue) }
+    }
+
+    var vWeight: CGFloat {
+        get { getWeight(.V) }
+        set { setWeight(.V, newValue) }
+    }
+
+    /// Containers' weights must be normalized before calling this function
+    func layoutRecursive(_ _point: CGPoint, width: CGFloat, height: CGFloat) {
+        if let workspace = self as? Workspace {
+            workspace.rootTilingContainer.layoutRecursive(_point, width: width, height: height)
+        } else if let window = self as? MacWindow {
+            window.setTopLeftCorner(_point)
+            window.setSize(CGSize(width: width, height: height))
+        } else if let container = self as? TilingContainer {
+            var point = _point
+            for child in container.children {
+                switch container.layout {
+                case .Accordion:
+                    child.layoutRecursive(point, width: width, height: height)
+                case .List:
+                    child.layoutRecursive(point, width: child.hWeight, height: child.vWeight)
+                    switch container.orientation {
+                    case .H:
+                        point = point.copy(x: point.x + child.hWeight)
+                    case .V:
+                        point = point.copy(y: point.y + child.vWeight)
+                    }
+                }
+            }
+        } else {
+            error("Not supported TreeNode type: \(Self.self)")
+        }
+    }
 }

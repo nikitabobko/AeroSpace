@@ -11,11 +11,11 @@ class MacWindow: TreeNode, Hashable {
     fileprivate var previousSize: CGSize?
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 
-    private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: TreeNode) {
+    private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: TreeNode, adaptiveWeight: CGFloat) {
         self.windowId = id
         self.app = app
         self.axWindow = axWindow
-        super.init(parent: parent)
+        super.init(parent: parent, adaptiveWeight: adaptiveWeight)
     }
 
     private static var allWindowsMap: [CGWindowID: MacWindow] = [:]
@@ -37,18 +37,21 @@ class MacWindow: TreeNode, Hashable {
                 guard let topLeftCorner = axWindow.get(Ax.topLeftCornerAttr) else { return nil }
                 workspace = topLeftCorner.monitorApproximation.getActiveWorkspace()
             }
-            // Layout the window in the container of the last active window
-            //let parent = workspace.lastActiveWindow?.parent ?? workspace.rootTilingContainer
-            let parent = workspace
-            let window = MacWindow(id, app, axWindow, parent: parent)
+            // Layout the window in the tiling container of the last active window
+            let tilingParent: TilingContainer =
+                    (workspace.lastActiveWindow?.parent).filterIsInstance(of: TilingContainer.self)
+                            ?? workspace.rootTilingContainer
+            let weight: CGFloat = tilingParent.children.sumOf { $0.getWeight(tilingParent.orientation) }
+                            .div(tilingParent.children.count, orIfZero: 1)
+            let window = MacWindow(id, app, axWindow, parent: tilingParent, adaptiveWeight: weight)
             debug("New window detected: \(window.title ?? "")")
-            allWindowsMap[id] = window
 
             if window.observe(refreshObs, kAXUIElementDestroyedNotification) &&
                        window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
                        window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
                        window.observe(refreshObs, kAXMovedNotification) &&
                        window.observe(refreshObs, kAXResizedNotification) {
+                allWindowsMap[id] = window
                 return window
             } else {
                 window.garbageCollect()
@@ -160,4 +163,9 @@ class MacWindow: TreeNode, Hashable {
 
 extension MacWindow {
     var isFloating: Bool { parent is Workspace }
+
+    @discardableResult
+    func bindAsFloatingWindowTo(workspace: Workspace) -> PreviousBindingData? {
+        parent != workspace ? bindTo(parent: workspace, adaptiveWeight: 0) : nil
+    }
 }

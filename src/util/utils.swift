@@ -19,14 +19,17 @@ func stringType(of some: Any) -> String {
 }
 
 @inlinable func errorT<T>(_ message: String = "") -> T {
+    Thread.callStackSymbols.forEach{ print($0) }
     fatalError(message)
 }
 
 @inlinable func error(_ message: String = "") -> Never {
+    Thread.callStackSymbols.forEach{ print($0) }
     fatalError(message)
 }
 
 @inlinable func TODO(_ message: String = "") -> Never {
+    Thread.callStackSymbols.forEach{ print($0) }
     fatalError(message)
 }
 
@@ -70,6 +73,16 @@ extension CGPoint {
         return pairs
                 .minByOrThrow { distanceToRectFrame(to: $0.rect) }
                 .monitor
+    }
+}
+
+extension CGFloat {
+    func div(_ denominator: Int, orIfZero: CGFloat) -> CGFloat {
+        denominator == 0 ? orIfZero : self / CGFloat(denominator)
+    }
+
+    func div(_ denominator: Int) -> CGFloat? {
+        denominator == 0 ? nil : self / CGFloat(denominator)
     }
 }
 

@@ -1,5 +1,3 @@
-import Foundation
-
 extension Array {
     func singleOrNil() -> Element? {
         count == 1 ? first : nil
@@ -26,12 +24,12 @@ extension Array {
 
 extension Array where Self.Element : Equatable {
     @discardableResult
-    public mutating func remove(element: Self.Element) -> Bool {
+    public mutating func remove(element: Self.Element) -> Int {
         if let index = firstIndex(of: element) {
             remove(at: index)
-            return true
+            return index
         } else {
-            return false
+            return -1
         }
     }
 }

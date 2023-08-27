@@ -1,5 +1,3 @@
-import Foundation
-
 struct Rect: Hashable {
     let topLeftX: CGFloat
     let topLeftY: CGFloat

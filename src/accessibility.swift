@@ -3,7 +3,7 @@ import Foundation
 func checkAccessibilityPermissions() {
     let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true]
     if !AXIsProcessTrustedWithOptions(options as CFDictionary) {
-        resetAccessibility() // Because macOS doesn't reset it for us when app signature changes...
+        resetAccessibility() // Because macOS doesn't reset it for us when the app signature changes...
         NSApplication.shared.terminate(nil)
         error("unreachable")
     }

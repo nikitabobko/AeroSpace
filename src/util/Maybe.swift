@@ -1,5 +1,3 @@
-import Foundation
-
 /// Yes, I know that Swift has its own Optional.
 /// I introduce my own because Swift has problems with Optional<Optional<T>>
 enum Maybe<T> {
@@ -22,15 +20,6 @@ extension Maybe {
             return Maybe.Just(value)
         } else {
             return Maybe.Nothing
-        }
-    }
-
-    var isEmpty: Bool {
-        switch self {
-        case .Nothing:
-            return true
-        case .Just(_):
-            return false
         }
     }
 }

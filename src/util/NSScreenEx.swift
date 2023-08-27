@@ -1,5 +1,3 @@
-import Foundation
-
 extension NSScreen {
     /// Motivation:
     /// 1. NSScreen.main is a misleading name.

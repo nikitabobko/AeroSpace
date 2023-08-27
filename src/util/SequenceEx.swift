@@ -34,9 +34,17 @@ extension Sequence {
     @inlinable public func sortedBy<S : Comparable>(_ selector: (Self.Element) -> S) -> [Self.Element] {
         sorted(by: { a, b in selector(a) < selector(b) })
     }
+
+    func sumOf(_ selector: (Self.Element) -> CGFloat) -> CGFloat {
+        var result: CGFloat = 0
+        for elem in self {
+            result += selector(elem)
+        }
+        return result
+    }
 }
 
-extension Sequence where Self.Element : Comparable {
+extension Sequence where Self.Element: Comparable {
     public func minOrThrow() -> Self.Element {
         self.min() ?? errorT("Empty sequence")
     }
