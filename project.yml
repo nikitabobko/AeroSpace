@@ -5,6 +5,9 @@ packages:
   HotKey:
     url: https://github.com/soffes/HotKey
     exactVersion: 0.1.3
+  TOMLKit:
+    url: https://github.com/LebJe/TOMLKit
+    exactVersion: 0.5.5
 targets:
   AeroSpace:
     type: application
@@ -13,6 +16,7 @@ targets:
     sources: [src]
     dependencies:
       - package: HotKey
+      - package: TOMLKit
     settings:
       base:
         SWIFT_VERSION: 5.8
