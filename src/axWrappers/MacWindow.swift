@@ -53,7 +53,7 @@ class MacWindow: TreeNode, Hashable {
                         ?? workspace.rootTilingContainer
                 parent = tilingParent
                 weight = parent.children.sumOf { $0.getWeight(tilingParent.orientation) }
-                        .div(parent.children.count, orIfZero: 1)
+                        .div(parent.children.count) ?? 1
             }
             let window = MacWindow(id, app, axWindow, parent: parent, adaptiveWeight: weight)
 

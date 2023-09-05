@@ -35,7 +35,7 @@ class TreeNode: Equatable {
             return tilingParent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
         } else {
             precondition(parent is Workspace)
-            if self is MacWindow { // self is floating window
+            if self is MacWindow { // self is a floating window
                 error("Weight doesn't make sense for floating windows")
             } else { // root tiling container
                 precondition(self is TilingContainer)

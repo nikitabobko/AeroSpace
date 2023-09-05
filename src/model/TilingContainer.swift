@@ -30,7 +30,7 @@ extension TilingContainer {
     }
 
     func normalizeContainersRecursive() {
-        if children.isEmpty && !(parent is Workspace) {
+        if children.isEmpty && !isRootContainer {
             unbindFromParent()
         }
         // todo make it configurable
@@ -38,13 +38,16 @@ extension TilingContainer {
             let previousBinding = unbindFromParent()
             child.bindTo(parent: parent, adaptiveWeight: previousBinding.adaptiveWeight, index: previousBinding.index)
             child.normalizeContainersRecursive()
-        }
-        for child in children {
-            if let tilingChild = child as? TilingContainer {
-                tilingChild.normalizeContainersRecursive()
+        } else {
+            for child in children {
+                if let tilingChild = child as? TilingContainer {
+                    tilingChild.normalizeContainersRecursive()
+                }
             }
         }
     }
+
+    var isRootContainer: Bool { parent is Workspace }
 }
 
 enum Orientation {
