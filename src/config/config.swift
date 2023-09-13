@@ -39,17 +39,16 @@ private func parseConfigRoot(_ rawToml: String) -> ConfigRoot {
     } catch let e {
         error(e.localizedDescription)
     }
-    let backtrace: TomlBacktrace = .root
     var config: Config? = nil
     var modes: [Mode] = []
     for (key, value) in rawTable {
         switch key {
         case "config":
-            config = parseConfig(value, backtrace + .key("config"))
+            config = parseConfig(value, .root("config"))
         case "mode":
-            modes = parseModes(value, backtrace + .key("mode"))
+            modes = parseModes(value, .root("mode"))
         default:
-            unknownKeyError(key, backtrace + .key(key))
+            unknownKeyError(key, .root(key))
         }
     }
     return ConfigRoot(
@@ -140,15 +139,15 @@ class HotkeyBinding {
 }
 
 private indirect enum TomlBacktrace: CustomStringConvertible {
-    case root
+    case root(String)
     case key(String)
     case index(Int)
     case pair((TomlBacktrace, TomlBacktrace))
 
     var description: String {
         switch self {
-        case .root:
-            return "<root>" // todo rework
+        case .root(let value):
+            return value
         case .key(let value):
             return "." + value
         case .index(let index):
