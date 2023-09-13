@@ -17,11 +17,7 @@ extension TreeNode {
     }
 
     var workspace: Workspace {
-        if let workspace = self as? Workspace {
-            return workspace
-        } else {
-            return parent.workspace
-        }
+        self as? Workspace ?? parent.workspace
     }
 
     var anyChildWindowRecursive: MacWindow? {

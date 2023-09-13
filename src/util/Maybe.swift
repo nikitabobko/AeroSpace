@@ -16,10 +16,6 @@ extension Maybe {
     }
 
     static func from(_ value: T?) -> Maybe<T> {
-        if let value {
-            return Maybe.Just(value)
-        } else {
-            return Maybe.Nothing
-        }
+        value.flatMap { Maybe.Just($0) } ?? Maybe.Nothing
     }
 }
