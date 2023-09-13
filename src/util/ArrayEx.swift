@@ -1,8 +1,4 @@
 extension Array {
-    func singleOrNil() -> Element? {
-        count == 1 ? first : nil
-    }
-
     func singleOrNil(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Element? {
         var found: Self.Element? = nil
         for elem in self {

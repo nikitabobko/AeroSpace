@@ -153,15 +153,15 @@ private func rearrangeWorkspacesOnMonitors() {
     monitorToNotEmptyWorkspace = [:]
     let monitors = NSScreen.screens.map { $0.monitor }.toSet()
     let preservedWorkspaces: [Workspace] = oldMonitorToWorkspaces
-            .filter { oldMonitor, oldWorkspace in monitors.contains(oldMonitor) }
-            .map { $0.value.valueOrNil }
-            .filterNotNil()
+        .filter { oldMonitor, oldWorkspace in monitors.contains(oldMonitor) }
+        .map { $0.value.valueOrNil }
+        .filterNotNil()
     let lostWorkspaces: [Workspace] = oldMonitorToWorkspaces
-            .filter { oldMonitor, oldWorkspace in !monitors.contains(oldMonitor) }
-            .map { $0.value.valueOrNil }
-            .filterNotNil()
+        .filter { oldMonitor, oldWorkspace in !monitors.contains(oldMonitor) }
+        .map { $0.value.valueOrNil }
+        .filterNotNil()
     var poolOfWorkspaces: [Workspace] =
-            Workspace.all.reversed() - (preservedWorkspaces + lostWorkspaces) + lostWorkspaces
+        Workspace.all.reversed() - (preservedWorkspaces + lostWorkspaces) + lostWorkspaces
     for monitor in monitors {
         // If monitors change, most likely we will preserve only the main monitor (It always has (0, 0) origin)
         if let existing = oldMonitorToWorkspaces[monitor] {

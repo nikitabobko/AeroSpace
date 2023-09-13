@@ -37,6 +37,20 @@ extension String? {
     var isNilOrEmpty: Bool { self == nil || self == "" }
 }
 
+extension String {
+    static func fromUrl(_ url: URL) -> String? {
+        do {
+            return try String(contentsOf: url)
+        } catch {
+            return nil
+        }
+    }
+
+    func removePrefix(_ prefix: String) -> String {
+        hasPrefix(prefix) ? String(dropFirst(prefix.count)) : self
+    }
+}
+
 extension Double {
     var squared: Double { self * self }
 }
@@ -57,11 +71,11 @@ extension CGPoint {
     /// Distance to ``Rect`` outline frame
     func distanceToRectFrame(to rect: Rect) -> CGFloat {
         let list: [CGFloat] = ((rect.minY..<rect.maxY).contains(y) ? [abs(rect.minX - x), abs(rect.maxX - x)] : []) +
-                ((rect.minX..<rect.maxX).contains(x) ? [abs(rect.minY - y), abs(rect.maxY - y)] : []) +
-                [distance(to: rect.topLeftCorner),
-                 distance(to: rect.bottomRightCorner),
-                 distance(to: rect.topRightCorner),
-                 distance(to: rect.bottomLeftCorner)]
+            ((rect.minX..<rect.maxX).contains(x) ? [abs(rect.minY - y), abs(rect.maxY - y)] : []) +
+            [distance(to: rect.topLeftCorner),
+             distance(to: rect.bottomRightCorner),
+             distance(to: rect.topRightCorner),
+             distance(to: rect.bottomLeftCorner)]
         return list.minOrThrow()
     }
 
@@ -75,8 +89,8 @@ extension CGPoint {
             return pair.monitor
         }
         return pairs
-                .minByOrThrow { distanceToRectFrame(to: $0.rect) }
-                .monitor
+            .minByOrThrow { distanceToRectFrame(to: $0.rect) }
+            .monitor
     }
 }
 

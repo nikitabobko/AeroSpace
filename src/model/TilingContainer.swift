@@ -20,7 +20,7 @@ class TilingContainer: TreeNode {
 extension TilingContainer {
     func normalizeWeightsRecursive() {
         guard let delta = (getWeight(orientation) - children.sumOf { $0.getWeight(orientation) })
-                .div(children.count) else { return }
+            .div(children.count) else { return }
         for child in children {
             child.setWeight(orientation, child.getWeight(orientation) + delta)
             if let tilingChild = child as? TilingContainer {

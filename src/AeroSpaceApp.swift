@@ -17,21 +17,29 @@ struct Setting {
     let modifiers: NSEvent.ModifierFlags
 }
 
+//osascript -e 'tell app "Terminal"
+//activate
+//do script "tail -f ~/log/0.txt"
+//end tell'
+
 @main
 struct AeroSpaceApp: App {
     var hotKeys: [HotKey] = [] // Keep hotkeys in memory
     @StateObject var viewModel = ViewModel.shared
 
     init() {
-        checkAccessibilityPermissions()
-        GlobalObserver.initObserver()
-        for setting in settings {
-            hotKeys.append(HotKey(key: setting.hotkey, modifiers: setting.modifiers, keyUpHandler: {
-                switchToWorkspace(Workspace.get(byName: setting.name))
-            }))
-        }
-        refresh()
-        test()
+        reloadConfig()
+
+        //checkAccessibilityPermissions()
+        //GlobalObserver.initObserver()
+        //for setting in settings {
+        //    hotKeys.append(HotKey(key: setting.hotkey, modifiers: setting.modifiers, keyUpHandler: {
+        //        switchToWorkspace(Workspace.get(byName: setting.name))
+        //    }))
+        //}
+        //refresh()
+        //test()
+
     }
 
     var body: some Scene {
@@ -44,16 +52,20 @@ struct AeroSpaceApp: App {
                     switchToWorkspace(workspace)
                 } label: {
                     Toggle(isOn: workspace.name == viewModel.focusedWorkspaceTrayText
-                            ? Binding(get: { true }, set: { _, _ in })
-                            : Binding(get: { false }, set: { _, _ in })) {
+                        ? Binding(get: { true }, set: { _, _ in })
+                        : Binding(get: { false }, set: { _, _ in })) {
                         let monitor = (workspace.assignedMonitor?.name).flatMap { " - \($0)" } ?? ""
                         Text(workspace.name + monitor).font(.system(.body, design: .monospaced))
                     }
                 }
             }
             Divider()
-            Button("Quit \(Bundle.appName)") { NSApplication.shared.terminate(nil) }
-                    .keyboardShortcut("Q", modifiers: .command)
+            Button("Reload config") {
+            } // todo
+            Button("Quit \(Bundle.appName)") {
+                NSApplication.shared.terminate(nil)
+            }
+                .keyboardShortcut("Q", modifiers: .command)
         } label: {
             // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
             Text(viewModel.focusedWorkspaceTrayText)

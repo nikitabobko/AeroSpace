@@ -6,6 +6,6 @@ class ViewModel: ObservableObject {
     private init() {
     }
 
-    @Published var focusedWorkspaceTrayText: String = currentEmptyWorkspace.name // settings.first?.name ?? "W: 1"
+    @Published var focusedWorkspaceTrayText: String = currentEmptyWorkspace.name // config.first?.name ?? "W: 1"
 }
 
