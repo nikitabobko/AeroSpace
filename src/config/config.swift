@@ -67,11 +67,15 @@ private func unknownKeyError(_ key: String, _ backtrace: TomlBacktrace) -> Never
 }
 
 private func expectedActualTypeError<T>(expected: TOMLType, actual: TOMLType, _ backtrace: TomlBacktrace) -> T {
-    expectedActualTypeError(expected: [expected], actual: actual, backtrace)
+    error("\(backtrace): Expected type is \(expected). But actual type is \(actual)")
 }
 
 private func expectedActualTypeError<T>(expected: [TOMLType], actual: TOMLType, _ backtrace: TomlBacktrace) -> T {
-    error("\(backtrace): Expected type is \(expected.map { $0.description }.joined(separator: " or ")). But actual type is \(actual)")
+    if let single = expected.singleOrNil() {
+        return expectedActualTypeError(expected: single, actual: actual, backtrace)
+    } else {
+        error("\(backtrace): Expected types are \(expected.map { $0.description }.joined(separator: " or ")). But actual type is \(actual)")
+    }
 }
 
 private func parseConfig(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Config {
