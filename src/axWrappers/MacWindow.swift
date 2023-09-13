@@ -49,8 +49,7 @@ class MacWindow: TreeNode, Hashable {
                 parent = workspace
                 weight = FLOATING_ADAPTIVE_WEIGHT
             } else {
-                let tilingParent = (workspace.lastActiveWindow?.parent).filterIsInstance(of: TilingContainer.self)
-                        ?? workspace.rootTilingContainer
+                let tilingParent = workspace.lastActiveWindow?.parent as? TilingContainer ?? workspace.rootTilingContainer
                 parent = tilingParent
                 weight = parent.children.sumOf { $0.getWeight(tilingParent.orientation) }
                         .div(parent.children.count) ?? 1
