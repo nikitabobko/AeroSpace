@@ -36,8 +36,8 @@
 		B3702BB393A9B03CCAE4C60E /* refresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B113159987FA43EA41120 /* refresh.swift */; };
 		C0A88261ECF505FC5648FC0A /* OptionalEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EDFD4A9F45182CA6E0BD7B /* OptionalEx.swift */; };
 		D4F68F33C6E354856C80E729 /* ConfigModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D6C3C4DD77B74C92C8C01E39 /* ConfigModel.swift */; };
+		E2F0C6DCC51CC7685FEF712E /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = F73A72D792FC2A0B6B5CAD04 /* Command.swift */; };
 		E2FD8E2B2D2BE6B88BF8E8AD /* accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE605CF46DE6377C69B9D49D /* accessibility.swift */; };
-		F2AFA702961A1D653EB7D269 /* command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 776E3F4EE298A9C69C97EF7F /* command.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,7 +55,6 @@
 		526B113159987FA43EA41120 /* refresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = refresh.swift; sourceTree = "<group>"; };
 		67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parseConfig.swift; sourceTree = "<group>"; };
 		6935AF0A2DB3D186D1C6218F /* NSWorkspaceEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWorkspaceEx.swift; sourceTree = "<group>"; };
-		776E3F4EE298A9C69C97EF7F /* command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = command.swift; sourceTree = "<group>"; };
 		7E6F3930E3BF5D8196A20E9B /* axObservers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = axObservers.swift; sourceTree = "<group>"; };
 		883D7F7F87FBE7D0BDE4E87F /* ArrayEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayEx.swift; sourceTree = "<group>"; };
 		A9EDFD4A9F45182CA6E0BD7B /* OptionalEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionalEx.swift; sourceTree = "<group>"; };
@@ -71,6 +70,7 @@
 		EE605CF46DE6377C69B9D49D /* accessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = accessibility.swift; sourceTree = "<group>"; };
 		EEDBFFCA7A77D96B18FB0732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F6507EBAA795220FD0C05384 /* Monitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monitor.swift; sourceTree = "<group>"; };
+		F73A72D792FC2A0B6B5CAD04 /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		F8C39B0C4E4888832129C4C7 /* TreeNodeEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeEx.swift; sourceTree = "<group>"; };
 		F9CAC977020A08D0227FAFB2 /* Bundle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bundle.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -110,7 +110,7 @@
 		50A41C4CCFC95C514CA1EAD5 /* config */ = {
 			isa = PBXGroup;
 			children = (
-				776E3F4EE298A9C69C97EF7F /* command.swift */,
+				F73A72D792FC2A0B6B5CAD04 /* Command.swift */,
 				D6C3C4DD77B74C92C8C01E39 /* ConfigModel.swift */,
 				BA7CD89E786588324DFB5575 /* defaultConfig.swift */,
 				1C0D40CBD65704BA9595C2FA /* keysMap.swift */,
@@ -253,6 +253,7 @@
 				A2CBF9674964F9083BB198D2 /* ArrayEx.swift in Sources */,
 				2F8DC074DAB97DC87E07A559 /* Bundle.swift in Sources */,
 				1C46EBB55D401C0D1AFD50F0 /* CollectionEx.swift in Sources */,
+				E2F0C6DCC51CC7685FEF712E /* Command.swift in Sources */,
 				D4F68F33C6E354856C80E729 /* ConfigModel.swift in Sources */,
 				B0D0C37BAE7E7F0D0FF1E9FC /* GlobalObserver.swift in Sources */,
 				7FE92DDAC2F094C83A177914 /* MacApp.swift in Sources */,
@@ -271,7 +272,6 @@
 				080DAA83BADA766D94A2BD3C /* Workspace.swift in Sources */,
 				E2FD8E2B2D2BE6B88BF8E8AD /* accessibility.swift in Sources */,
 				96593DF93A69CA2E05189A3F /* axObservers.swift in Sources */,
-				F2AFA702961A1D653EB7D269 /* command.swift in Sources */,
 				082EECCB2607F31DCBBF3870 /* defaultConfig.swift in Sources */,
 				45EA2D1C90430C432E123B51 /* keysMap.swift in Sources */,
 				A0765C31043BCFB0420BF1C9 /* parseConfig.swift in Sources */,
