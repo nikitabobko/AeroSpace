@@ -1,0 +1,65 @@
+# Reference: https://github.com/i3/i3/blob/next/etc/config
+
+auto-flatten-containers = false
+
+[mode.main.binding]
+alt-enter = 'bash /usr/bin/open /System/Applications/Utilities/Terminal.app'
+
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
+
+alt-shift-h = 'move_through left'
+alt-shift-j = 'move_through down'
+alt-shift-k = 'move_through up'
+alt-shift-l = 'move_through right'
+
+# alt-h = 'split h' # todo support split command?
+# alt-v = 'split v' # todo support split command?
+
+# alt-f = 'fullscreen' # todo support fullscreen command?
+
+alt-s = 'layout v_accordion' # 'layout stacking' in i3
+alt-w = 'layout h_accordion' # 'layout tabbed' in i3
+alt-e = 'layout h_list v_list' # 'layout toggle list' in i3
+
+alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
+alt-space = 'focus toggle_tiling_floating'
+
+alt-a = 'focus parent'
+
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+alt-0 = 'workspace 10'
+
+alt-shift-1 = 'move container to workspace 1'
+alt-shift-2 = 'move container to workspace 2'
+alt-shift-3 = 'move container to workspace 3'
+alt-shift-4 = 'move container to workspace 4'
+alt-shift-5 = 'move container to workspace 5'
+alt-shift-6 = 'move container to workspace 6'
+alt-shift-7 = 'move container to workspace 7'
+alt-shift-8 = 'move container to workspace 8'
+alt-shift-9 = 'move container to workspace 9'
+alt-shift-0 = 'move container to workspace 10'
+
+alt-shift-c = 'reload_config'
+
+alt-r = 'mode resize'
+
+[mode.resize.binding]
+# todo does it work?
+h = 'resize shrink width 10'
+j = 'resize grow height 10'
+k = 'resize shrink height 10'
+l = 'resize grow width 10'
+enter = 'mode main'
+esc = 'mode esc'

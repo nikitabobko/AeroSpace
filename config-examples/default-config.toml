@@ -1,0 +1,114 @@
+# For the whole reference of possible keys and modifiers see: https://github.com/nikitabobko/AeroSpace/blob/main/src/config/keysMap.swift
+
+[config]
+use-padding-for-nested-containers-with-the-same-orientation = true
+auto-flatten-containers = true
+# auto-different-orientation-for-nested-containers = true
+# start-at-login = true
+floating-windows-on-top = true
+
+[mode.main.binding]
+alt-enter = 'bash /usr/bin/open /System/Applications/Utilities/Terminal.app'
+
+alt-shift-quote = 'focus child'
+alt-quote       = 'focus parent'
+alt-slash       = 'layout toggle h_list v_list'
+alt-comma       = 'layout toggle h_accordion v_accordion'
+
+# todo focus floating binding
+
+# Focus window
+alt-k = ['focus tiling', 'focus up']
+alt-h = ['focus tiling', 'focus left']
+alt-j = ['focus tiling', 'focus down']
+alt-l = ['focus tiling', 'focus right']
+
+# Move window
+alt-shift-k = 'move_through up'
+alt-shift-h = 'move_through left'
+alt-shift-j = 'move_through down'
+alt-shift-l = 'move_through right'
+
+# Resize window
+alt-shift-minus  = 'resize shrink height 2 px'
+alt-shift-equal  = 'resize grow height 2 px'
+alt-shift-comma  = 'resize shrink width 2 px'
+alt-shift-period = 'resize grow width 2 px'
+
+alt-0 = 'workspace 000'
+alt-1 = 'workspace 111'
+alt-2 = 'workspace 222'
+alt-3 = 'workspace 333'
+alt-4 = 'workspace 444'
+alt-5 = 'workspace 555'
+alt-6 = 'workspace 666'
+alt-7 = 'workspace 777'
+alt-8 = 'workspace 888'
+alt-9 = 'workspace 999'
+alt-a = 'workspace AAA'
+alt-b = 'workspace BBB'
+alt-c = 'workspace CCC'
+alt-d = 'workspace DDD'
+alt-e = 'workspace EEE'
+alt-f = 'workspace FFF'
+alt-g = 'workspace GGG'
+alt-i = 'workspace III'
+alt-m = 'workspace MMM'
+alt-n = 'workspace NNN'
+alt-o = 'workspace OOO'
+alt-p = 'workspace PPP'
+alt-q = 'workspace QQQ'
+alt-r = 'workspace RRR'
+alt-s = 'workspace SSS'
+alt-t = 'workspace TTT'
+alt-u = 'workspace UUU'
+alt-v = 'workspace VVV'
+alt-w = 'workspace WWW'
+alt-x = 'workspace XXX'
+alt-y = 'workspace YYY'
+alt-z = 'workspace ZZZ'
+
+alt-shift-0 = 'move container to workspace 000'
+alt-shift-1 = 'move container to workspace 111'
+alt-shift-2 = 'move container to workspace 222'
+alt-shift-3 = 'move container to workspace 333'
+alt-shift-4 = 'move container to workspace 444'
+alt-shift-5 = 'move container to workspace 555'
+alt-shift-6 = 'move container to workspace 666'
+alt-shift-7 = 'move container to workspace 777'
+alt-shift-8 = 'move container to workspace 888'
+alt-shift-9 = 'move container to workspace 999'
+alt-shift-a = 'move container to workspace AAA'
+alt-shift-b = 'move container to workspace BBB'
+alt-shift-c = 'move container to workspace CCC'
+alt-shift-d = 'move container to workspace DDD'
+alt-shift-e = 'move container to workspace EEE'
+alt-shift-f = 'move container to workspace FFF'
+alt-shift-g = 'move container to workspace GGG'
+alt-shift-i = 'move container to workspace III'
+alt-shift-m = 'move container to workspace MMM'
+alt-shift-n = 'move container to workspace NNN'
+alt-shift-o = 'move container to workspace OOO'
+alt-shift-p = 'move container to workspace PPP'
+alt-shift-q = 'move container to workspace QQQ'
+alt-shift-r = 'move container to workspace RRR'
+alt-shift-s = 'move container to workspace SSS'
+alt-shift-t = 'move container to workspace TTT'
+alt-shift-u = 'move container to workspace UUU'
+alt-shift-v = 'move container to workspace VVV'
+alt-shift-w = 'move container to workspace WWW'
+alt-shift-x = 'move container to workspace XXX'
+alt-shift-y = 'move container to workspace YYY'
+alt-shift-z = 'move container to workspace ZZZ'
+
+alt-tab = 'workspace_back_and_forth'
+
+alt-shift-slash.alt-shift-k = 'move_in up'
+alt-shift-slash.alt-shift-h = 'move_in left'
+alt-shift-slash.alt-shift-j = 'move_in down'
+alt-shift-slash.alt-shift-l = 'move_in right'
+
+# aerospace config set mode.main.binding.alt-l 'focus tiling' 'focus right'
+# aerospace config set mode.main.binding.alt-enter 'basn alacritty'
+# aerospace config set mode.main.binding.alt-shift-slash.alt-shift-l 'move_in right'
+# aerospace config set config.start-at-login false

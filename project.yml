@@ -22,8 +22,8 @@ targets:
         SWIFT_VERSION: 5.8
         CODE_SIGN_STYLE: Automatic
         GENERATE_INFOPLIST_FILE: YES
-        CURRENT_PROJECT_VERSION: 1 # Build number           CFBundleVersion
-        MARKETING_VERSION: 0.0.1   # User visible version   CFBundleShortVersionString
+        CURRENT_PROJECT_VERSION: 1       # Build number           CFBundleVersion
+        MARKETING_VERSION: 0.0.1-Alpha   # User visible version   CFBundleShortVersionString
         SWIFT_OBJC_BRIDGING_HEADER: "src/Bridged-Header.h"
         # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
         # Specifies whether the app runs as an agent app. If this key is set to YES, Launch Services runs the app as an agent app.

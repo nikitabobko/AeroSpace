@@ -2,6 +2,15 @@
 
 AeroSpace is a tiling window manager for macOS.
 
+## Status
+
+🚧 **Work in progress.** Alpha quality. 🚧
+
+- Please expect a lot of bugs
+- Please expect that documentation isn't complete
+- Please expect that something doesn't work as expected, or doesn't work at all
+- Please expect breaking changes in config format in future releases
+
 ## Key features
 
 - **Manual** tiling window manager
@@ -16,7 +25,9 @@ AeroSpace is a tiling window manager for macOS.
 
 ## How to build the project
 
-You would need a mac. Run in terminal:
+You would need a mac.
+
+Firstly, install [xcodegen](https://github.com/yonaskolb/XcodeGen). Then run in terminal:
 ```bash
 ./build-debug.sh
 ```
@@ -28,19 +39,15 @@ You would need a mac. Run in terminal:
 - select parent -> outline several windows?
   - OR: outline with "SLSSetWindowOpacity"
   - OR: "shake" windows
-- settings
 - CLI interface
 - Check all todos in code
-- move vs swap (swap requires position and size proportions decoupling from windows)
+- move vs swap
 - what is src/Assets.xcassets ?
 - license
 - unminimize apps automatically
+- minimized apps handling
+- macOS fullscreen apps handling
 - unhide apps automatically
-
-## Tests
-
-- Test main monitor change
-- Test monitor add/remove
 
 ## Challenges
 

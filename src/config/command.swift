@@ -32,13 +32,11 @@ struct ModeCommand: Command {
     let idToActivate: String
 
     func run() {
-        for mode in config.modes {
-            for binding in mode.bindings {
-                if mode.id == idToActivate {
-                    binding.activate()
-                } else {
-                    binding.deactivate()
-                }
+        for (modeId, mode) in config.modes {
+            if modeId == idToActivate {
+                mode.activate()
+            } else {
+                mode.deactivate()
             }
         }
     }
@@ -52,6 +50,24 @@ struct BashCommand: Command {
             try Process.run(URL(filePath: "/bin/bash"), arguments: ["-c", bashCommand])
         } catch {
         }
+    }
+}
+
+/// Syntax:
+/// layout (main|h_accordion|v_accordion|h_list|v_list|floating|tiling)...
+struct LayoutCommand: Command {
+    let toggleTo: [Layout]
+    enum Layout {
+        case main
+        case h_accordion
+        case v_accordion
+        case h_list
+        case v_list
+        case floating
+    }
+
+    func run() {
+        // todo
     }
 }
 
@@ -73,5 +89,12 @@ struct FocusCommand: Command {
 
     func run() {
         // todo
+    }
+}
+
+struct ReloadConfigCommand: Command {
+    func run() {
+        reloadConfig()
+        refresh()
     }
 }

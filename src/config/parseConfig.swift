@@ -4,25 +4,7 @@ import HotKey
 
 // todo convert all `error` during config parsing to returning defaults and reporting errors to where? Some kind of log?
 
-struct Config {
-    let afterStartupCommand: Command
-    let usePaddingForNestedContainersWithTheSameOrientation: Bool
-    let autoFlattenContainers: Bool
-    let floatingWindowsOnTop: Bool
-}
-
-struct ConfigRoot {
-    let config: Config
-    let modes: [Mode]
-}
-
-struct Mode {
-    let id: String
-    /// User visible name. Optional. todo drop it?
-    let name: String?
-    let bindings: [HotkeyBinding]
-}
-
+let mainModeId = "main"
 var config: ConfigRoot = defaultConfig
 
 func reloadConfig() {
@@ -40,7 +22,7 @@ private func parseConfigRoot(_ rawToml: String) -> ConfigRoot {
         error(e.localizedDescription)
     }
     var config: Config? = nil
-    var modes: [Mode] = []
+    var modes: [String: Mode] = defaultConfig.modes
     for (key, value) in rawTable {
         switch key {
         case "config":
@@ -48,7 +30,7 @@ private func parseConfigRoot(_ rawToml: String) -> ConfigRoot {
         case "mode":
             modes = parseModes(value, .root("mode"))
         default:
-            unknownKeyError(key, .root(key))
+            unknownKeyError(.root(key))
         }
     }
     return ConfigRoot(
@@ -57,25 +39,54 @@ private func parseConfigRoot(_ rawToml: String) -> ConfigRoot {
     )
 }
 
-private func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> [Mode] {
-    // todo
-    []
-}
-
-private func unknownKeyError(_ key: String, _ backtrace: TomlBacktrace) -> Never {
-    error("\(backtrace): Unknown key '\(key)'")
-}
-
-private func expectedActualTypeError<T>(expected: TOMLType, actual: TOMLType, _ backtrace: TomlBacktrace) -> T {
-    error("\(backtrace): Expected type is \(expected). But actual type is \(actual)")
-}
-
-private func expectedActualTypeError<T>(expected: [TOMLType], actual: TOMLType, _ backtrace: TomlBacktrace) -> T {
-    if let single = expected.singleOrNil() {
-        return expectedActualTypeError(expected: single, actual: actual, backtrace)
-    } else {
-        error("\(backtrace): Expected types are \(expected.map { $0.description }.joined(separator: " or ")). But actual type is \(actual)")
+private func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> [String: Mode] {
+    let rawTable = raw.table ?? expectedActualTypeError(expected: .table, actual: raw.type, backtrace)
+    var result: [String: Mode] = [:]
+    for (key, value) in rawTable {
+        result[key] = parseMode(value, backtrace + .key(key))
     }
+    if !result.keys.contains(mainModeId) {
+        error("\(backtrace) is expected to contain 'main' mode")
+    }
+    return result
+}
+
+private func parseMode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Mode {
+    let rawTable = raw.table ?? expectedActualTypeError(expected: .table, actual: raw.type, backtrace)
+
+    let key1 = "binding"
+    var value1: [HotkeyBinding] = []
+
+    for (key, value) in rawTable {
+        let keyBacktrace = backtrace + .key(key)
+        switch key {
+        case key1:
+            value1 = parseBindings(value, keyBacktrace)
+        default:
+            unknownKeyError(keyBacktrace)
+        }
+    }
+    return Mode(
+        name: nil,
+        bindings: value1
+    )
+}
+
+private func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> [HotkeyBinding] {
+    let rawTable = raw.table ?? expectedActualTypeError(expected: .table, actual: raw.type, backtrace)
+    return rawTable.map { (binding: String, value: TOMLValueConvertible) in
+        let keyBacktrace = backtrace + .key(binding)
+        let (modifiers, key) = parseBinding(binding, keyBacktrace)
+        return HotkeyBinding(modifiers, key, parseCommand(value, keyBacktrace))
+    }
+}
+
+private func parseBinding(_ raw: String, _ backtrace: TomlBacktrace) -> (NSEvent.ModifierFlags, Key) {
+    let rawKeys = raw.split(separator: "-")
+    let modifiers: [NSEvent.ModifierFlags] = rawKeys.dropLast()
+        .map { modifiersMap[String($0)] ?? errorT("\(backtrace): Can't parse '\(raw)' binding") }
+    let key = rawKeys.last.flatMap { keysMap[String($0)] } ?? errorT("\(backtrace): Can't parse '\(raw)' binding")
+    return (NSEvent.ModifierFlags(modifiers), key)
 }
 
 private func parseConfig(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Config {
@@ -105,7 +116,7 @@ private func parseConfig(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace
         case key4:
             value4 = parseBool(value, keyBacktrace)
         default:
-            unknownKeyError(key, backtrace + .key(key))
+            unknownKeyError(backtrace + .key(key))
         }
     }
 
@@ -119,51 +130,6 @@ private func parseConfig(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace
 
 private func parseBool(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Bool {
     raw.bool ?? expectedActualTypeError(expected: .bool, actual: raw.type, backtrace)
-}
-
-class HotkeyBinding {
-    let modifiers: NSEvent.ModifierFlags
-    let key: Key
-    let command: Command
-    private var hotKey: HotKey? = nil
-
-    init(_ modifiers: NSEvent.ModifierFlags, _ key: Key, _ command: Command) {
-        self.modifiers = modifiers
-        self.key = key
-        self.command = command
-    }
-
-    func activate() {
-        hotKey = HotKey(key: key, modifiers: modifiers, keyUpHandler: command.run)
-    }
-
-    func deactivate() {
-        hotKey = nil
-    }
-}
-
-private indirect enum TomlBacktrace: CustomStringConvertible {
-    case root(String)
-    case key(String)
-    case index(Int)
-    case pair((TomlBacktrace, TomlBacktrace))
-
-    var description: String {
-        switch self {
-        case .root(let value):
-            return value
-        case .key(let value):
-            return "." + value
-        case .index(let index):
-            return "[\(index)]"
-        case .pair((let first, let second)):
-            return first.description + second.description
-        }
-    }
-
-    static func +(lhs: TomlBacktrace, rhs: TomlBacktrace) -> TomlBacktrace {
-        pair((lhs, rhs))
-    }
 }
 
 private func parseCommand(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Command {
@@ -202,5 +168,45 @@ private func parseSingleCommand(_ raw: String, _ backtrace: TomlBacktrace) -> Co
         error("\(backtrace): Can't parse empty string command")
     default:
         error("\(backtrace): Can't parse '\(raw)' command")
+    }
+}
+
+private indirect enum TomlBacktrace: CustomStringConvertible {
+    case root(String)
+    case key(String)
+    case index(Int)
+    case pair((TomlBacktrace, TomlBacktrace))
+
+    var description: String {
+        switch self {
+        case .root(let value):
+            return value
+        case .key(let value):
+            return "." + value
+        case .index(let index):
+            return "[\(index)]"
+        case .pair((let first, let second)):
+            return first.description + second.description
+        }
+    }
+
+    static func +(lhs: TomlBacktrace, rhs: TomlBacktrace) -> TomlBacktrace {
+        pair((lhs, rhs))
+    }
+}
+
+private func unknownKeyError(_ backtrace: TomlBacktrace) -> Never {
+    error("Unknown key '\(backtrace)'")
+}
+
+private func expectedActualTypeError<T>(expected: TOMLType, actual: TOMLType, _ backtrace: TomlBacktrace) -> T {
+    error("\(backtrace): Expected type is \(expected). But actual type is \(actual)")
+}
+
+private func expectedActualTypeError<T>(expected: [TOMLType], actual: TOMLType, _ backtrace: TomlBacktrace) -> T {
+    if let single = expected.singleOrNil() {
+        return expectedActualTypeError(expected: single, actual: actual, backtrace)
+    } else {
+        error("\(backtrace): Expected types are \(expected.map { $0.description }.joined(separator: " or ")). But actual type is \(actual)")
     }
 }
