@@ -19,17 +19,17 @@ func stringType(of some: Any) -> String {
 }
 
 @inlinable func errorT<T>(_ message: String = "") -> T {
-    Thread.callStackSymbols.forEach{ print($0) }
+    Thread.callStackSymbols.forEach { print($0) }
     fatalError(message)
 }
 
 @inlinable func error(_ message: String = "") -> Never {
-    Thread.callStackSymbols.forEach{ print($0) }
+    Thread.callStackSymbols.forEach { print($0) }
     fatalError(message)
 }
 
 @inlinable func TODO(_ message: String = "") -> Never {
-    Thread.callStackSymbols.forEach{ print($0) }
+    Thread.callStackSymbols.forEach { print($0) }
     fatalError(message)
 }
 
