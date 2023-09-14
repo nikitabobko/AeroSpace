@@ -49,8 +49,7 @@ class TreeNode: Equatable {
         if newParent is MacWindow {
             error("Windows can't have children")
         }
-        let prevParent: TreeNode? = _parent
-        if prevParent === newParent {
+        if _parent === newParent {
             error("Binding to the same parent doesn't make sense")
         }
         let result = unbindIfPossible()
@@ -59,9 +58,6 @@ class TreeNode: Equatable {
             return result
         }
         if let window = self as? MacWindow {
-            if prevParent?.workspace.lastActiveWindow == window {
-                prevParent?.workspace.lastActiveWindow = nil
-            }
             let newParentWorkspace = newParent.workspace
             newParentWorkspace.lastActiveWindow = window
             newParentWorkspace.assignedMonitor = window.getTopLeftCorner()?.monitorApproximation
@@ -84,6 +80,9 @@ class TreeNode: Equatable {
         if workspace.isEffectivelyEmpty { // It became empty
             currentEmptyWorkspace = workspace
             currentEmptyWorkspace.assignedMonitor = nil
+        }
+        if let window = self as? MacWindow, parent.workspace.lastActiveWindow == window {
+            parent.workspace.lastActiveWindow = nil
         }
         return PreviousBindingData(adaptiveWeight: adaptiveWeight, index: index)
     }
