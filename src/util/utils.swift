@@ -38,14 +38,6 @@ extension String? {
 }
 
 extension String {
-    static func fromUrl(_ url: URL) -> String? {
-        do {
-            return try String(contentsOf: url)
-        } catch {
-            return nil
-        }
-    }
-
     func removePrefix(_ prefix: String) -> String {
         hasPrefix(prefix) ? String(dropFirst(prefix.count)) : self
     }

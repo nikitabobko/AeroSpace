@@ -5,14 +5,16 @@ import HotKey
 // todo convert all `error` during config parsing to returning defaults and reporting errors to where? Some kind of log?
 
 let mainModeId = "main"
+let defaultConfig =
+    parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!))
 var config: Config = defaultConfig
 
 func reloadConfig() {
-    let rawConfig = String.fromUrl(FileManager.default.homeDirectoryForCurrentUser.appending(path: ".aerospace.toml"))
+    let rawConfig = try? String(contentsOf: FileManager.default.homeDirectoryForCurrentUser.appending(path: ".aerospace.toml"))
     config = parseConfig(rawConfig ?? "")
 }
 
-private func parseConfig(_ rawToml: String) -> Config {
+func parseConfig(_ rawToml: String) -> Config {
     let rawTable: TOMLTable
     do {
         rawTable = try TOMLTable(string: rawToml)
@@ -22,19 +24,19 @@ private func parseConfig(_ rawToml: String) -> Config {
         error(e.localizedDescription)
     }
 
-    var modes: [String: Mode] = defaultConfig.modes
+    var modes: [String: Mode]? = nil
 
     let key1 = "after-startup-command"
-    var value1: Command = defaultConfig.afterStartupCommand
+    var value1: Command? = nil
 
     let key2 = "use-padding-for-nested-containers-with-the-same-orientation"
-    var value2: Bool = defaultConfig.usePaddingForNestedContainersWithTheSameOrientation
+    var value2: Bool? = nil
 
     let key3 = "auto-flatten-containers"
-    var value3: Bool = defaultConfig.autoFlattenContainers
+    var value3: Bool? = nil
 
     let key4 = "floating-windows-on-top"
-    var value4: Bool = defaultConfig.floatingWindowsOnTop
+    var value4: Bool? = nil
 
     for (key, value) in rawTable {
         let backtrace: TomlBacktrace = .root(key)
@@ -55,11 +57,11 @@ private func parseConfig(_ rawToml: String) -> Config {
     }
 
     return Config(
-        afterStartupCommand: value1,
-        usePaddingForNestedContainersWithTheSameOrientation: value2,
-        autoFlattenContainers: value3,
-        floatingWindowsOnTop: value4,
-        modes: modes
+        afterStartupCommand: value1 ?? defaultConfig.afterStartupCommand,
+        usePaddingForNestedContainersWithTheSameOrientation: value2 ?? defaultConfig.usePaddingForNestedContainersWithTheSameOrientation,
+        autoFlattenContainers: value3 ?? defaultConfig.autoFlattenContainers,
+        floatingWindowsOnTop: value4 ?? defaultConfig.floatingWindowsOnTop,
+        modes: modes ?? defaultConfig.modes
     )
 }
 
@@ -127,7 +129,7 @@ private func parseCommand(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrac
                 expectedActualTypeError(expected: .string, actual: rawArray[index].type, indexBacktrace)
             return parseSingleCommand(rawString, indexBacktrace)
         }
-        return ChainedCommand(subCommands: commands)
+        return CompositeCommand(subCommands: commands)
     } else {
         return expectedActualTypeError(expected: [.string, .array], actual: raw.type, backtrace)
     }
@@ -136,24 +138,31 @@ private func parseCommand(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrac
 private func parseSingleCommand(_ raw: String, _ backtrace: TomlBacktrace) -> Command {
     let words = raw.split(separator: " ")
     let args = words[1...]
-    switch words.first {
+    let command = String(words.first ?? "")
+    switch command {
     case "workspace":
-        let name = args.singleOrNil() ?? errorT(
-                "\(backtrace): Can't parse 'workspace' command arguments: '\(args.joined())'. Expected: a single arg"
-        )
-        return WorkspaceCommand(workspaceName: String(name))
+        return WorkspaceCommand(workspaceName: parseSingleArg(args, command, backtrace))
     case "mode":
-        let id = args.singleOrNil() ?? errorT(
-                "\(backtrace): Can't parse 'mode' command arguments: '\(args.joined())'. Expected: a single arg"
-        )
-        return ModeCommand(idToActivate: String(id))
+        return ModeCommand(idToActivate: parseSingleArg(args, command, backtrace))
     case "bash":
         return BashCommand(bashCommand: raw.removePrefix("bash"))
+    case "focus":
+        let direction = FocusCommand.Direction(rawValue: parseSingleArg(args, command, backtrace))
+            ?? errorT("\(backtrace): Can't parse 'focus' direction")
+        return FocusCommand(direction: direction)
+    case "reload_config":
+        return ReloadConfigCommand()
     case "":
         error("\(backtrace): Can't parse empty string command")
     default:
         error("\(backtrace): Can't parse '\(raw)' command")
     }
+}
+
+private func parseSingleArg(_ args: ArraySlice<Swift.String.SubSequence>, _ command: String, _ backtrace: TomlBacktrace) -> String {
+    args.singleOrNil().flatMap { String($0) } ?? errorT(
+        "\(backtrace): \(command) must have only a single argument. But passed: '\(args.joined(separator: " "))'"
+    )
 }
 
 private indirect enum TomlBacktrace: CustomStringConvertible {
@@ -185,13 +194,13 @@ private func unknownKeyError(_ backtrace: TomlBacktrace) -> Never {
 }
 
 private func expectedActualTypeError<T>(expected: TOMLType, actual: TOMLType, _ backtrace: TomlBacktrace) -> T {
-    error("\(backtrace): Expected type is \(expected). But actual type is \(actual)")
+    error("\(backtrace): Expected type is '\(expected)'. But actual type is '\(actual)'")
 }
 
 private func expectedActualTypeError<T>(expected: [TOMLType], actual: TOMLType, _ backtrace: TomlBacktrace) -> T {
     if let single = expected.singleOrNil() {
         return expectedActualTypeError(expected: single, actual: actual, backtrace)
     } else {
-        error("\(backtrace): Expected types are \(expected.map { $0.description }.joined(separator: " or ")). But actual type is \(actual)")
+        error("\(backtrace): Expected types are \(expected.map { "'\($0.description)'" }.joined(separator: " or ")). But actual type is '\(actual)'")
     }
 }

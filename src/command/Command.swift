@@ -1,0 +1,3 @@
+protocol Command {
+    func run()
+}

@@ -1,5 +1,7 @@
 # Reference: https://github.com/i3/i3/blob/next/etc/config
 
+# todo finish
+
 auto-flatten-containers = false
 
 [mode.main.binding]
