@@ -5,14 +5,14 @@ import HotKey
 // todo convert all `error` during config parsing to returning defaults and reporting errors to where? Some kind of log?
 
 let mainModeId = "main"
-var config: ConfigRoot = defaultConfig
+var config: Config = defaultConfig
 
 func reloadConfig() {
     let rawConfig = String.fromUrl(FileManager.default.homeDirectoryForCurrentUser.appending(path: ".aerospace.toml"))
-    config = parseConfigRoot(rawConfig ?? "")
+    config = parseConfig(rawConfig ?? "")
 }
 
-private func parseConfigRoot(_ rawToml: String) -> ConfigRoot {
+private func parseConfig(_ rawToml: String) -> Config {
     let rawTable: TOMLTable
     do {
         rawTable = try TOMLTable(string: rawToml)
@@ -21,20 +21,44 @@ private func parseConfigRoot(_ rawToml: String) -> ConfigRoot {
     } catch let e {
         error(e.localizedDescription)
     }
-    var config: Config? = nil
+
     var modes: [String: Mode] = defaultConfig.modes
+
+    let key1 = "after-startup-command"
+    var value1: Command = defaultConfig.afterStartupCommand
+
+    let key2 = "use-padding-for-nested-containers-with-the-same-orientation"
+    var value2: Bool = defaultConfig.usePaddingForNestedContainersWithTheSameOrientation
+
+    let key3 = "auto-flatten-containers"
+    var value3: Bool = defaultConfig.autoFlattenContainers
+
+    let key4 = "floating-windows-on-top"
+    var value4: Bool = defaultConfig.floatingWindowsOnTop
+
     for (key, value) in rawTable {
+        let backtrace: TomlBacktrace = .root(key)
         switch key {
-        case "config":
-            config = parseConfig(value, .root("config"))
+        case key1:
+            value1 = parseCommand(value, backtrace)
+        case key2:
+            value2 = parseBool(value, backtrace)
+        case key3:
+            value3 = parseBool(value, backtrace)
+        case key4:
+            value4 = parseBool(value, backtrace)
         case "mode":
-            modes = parseModes(value, .root("mode"))
+            modes = parseModes(value, backtrace)
         default:
-            unknownKeyError(.root(key))
+            unknownKeyError(backtrace)
         }
     }
-    return ConfigRoot(
-        config: config ?? defaultConfig.config,
+
+    return Config(
+        afterStartupCommand: value1,
+        usePaddingForNestedContainersWithTheSameOrientation: value2,
+        autoFlattenContainers: value3,
+        floatingWindowsOnTop: value4,
         modes: modes
     )
 }
@@ -87,45 +111,6 @@ private func parseBinding(_ raw: String, _ backtrace: TomlBacktrace) -> (NSEvent
         .map { modifiersMap[String($0)] ?? errorT("\(backtrace): Can't parse '\(raw)' binding") }
     let key = rawKeys.last.flatMap { keysMap[String($0)] } ?? errorT("\(backtrace): Can't parse '\(raw)' binding")
     return (NSEvent.ModifierFlags(modifiers), key)
-}
-
-private func parseConfig(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Config {
-    let rawTable = raw.table ?? expectedActualTypeError(expected: .table, actual: raw.type, backtrace)
-
-    let key1 = "after-startup-command"
-    var value1: Command = defaultConfig.config.afterStartupCommand
-
-    let key2 = "use-padding-for-nested-containers-with-the-same-orientation"
-    var value2: Bool = defaultConfig.config.usePaddingForNestedContainersWithTheSameOrientation
-
-    let key3 = "auto-flatten-containers"
-    var value3: Bool = defaultConfig.config.autoFlattenContainers
-
-    let key4 = "floating-windows-on-top"
-    var value4: Bool = defaultConfig.config.floatingWindowsOnTop
-
-    for (key, value) in rawTable {
-        let keyBacktrace = backtrace + .key(key)
-        switch key {
-        case key1:
-            value1 = parseCommand(value, keyBacktrace)
-        case key2:
-            value2 = parseBool(value, keyBacktrace)
-        case key3:
-            value3 = parseBool(value, keyBacktrace)
-        case key4:
-            value4 = parseBool(value, keyBacktrace)
-        default:
-            unknownKeyError(backtrace + .key(key))
-        }
-    }
-
-    return Config(
-        afterStartupCommand: value1,
-        usePaddingForNestedContainersWithTheSameOrientation: value2,
-        autoFlattenContainers: value3,
-        floatingWindowsOnTop: value4
-    )
 }
 
 private func parseBool(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Bool {

@@ -1,10 +1,8 @@
-let defaultConfig = ConfigRoot(
-    config: Config(
-        afterStartupCommand: NoOpCommand.instance,
-        usePaddingForNestedContainersWithTheSameOrientation: false,
-        autoFlattenContainers: true,
-        floatingWindowsOnTop: true
-    ),
+let defaultConfig = Config(
+    afterStartupCommand: NoOpCommand.instance,
+    usePaddingForNestedContainersWithTheSameOrientation: false,
+    autoFlattenContainers: true,
+    floatingWindowsOnTop: true,
     modes: [
         mainModeId: Mode(
             name: nil,

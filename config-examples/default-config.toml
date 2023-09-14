@@ -1,6 +1,5 @@
 # For the whole reference of possible keys and modifiers see: https://github.com/nikitabobko/AeroSpace/blob/main/src/config/keysMap.swift
 
-[config]
 use-padding-for-nested-containers-with-the-same-orientation = true
 auto-flatten-containers = true
 # auto-different-orientation-for-nested-containers = true

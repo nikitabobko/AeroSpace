@@ -1,15 +1,11 @@
 import HotKey
 
-struct ConfigRoot {
-    let config: Config
-    let modes: [String: Mode]
-}
-
 struct Config {
     let afterStartupCommand: Command
     let usePaddingForNestedContainersWithTheSameOrientation: Bool
     let autoFlattenContainers: Bool
     let floatingWindowsOnTop: Bool
+    let modes: [String: Mode]
 }
 
 struct Mode {
