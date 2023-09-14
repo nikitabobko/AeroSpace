@@ -44,3 +44,14 @@ targets:
       properties:
         # Accessibility API doesn't work in sandboxed app
         com.apple.security.app-sandbox: false
+  AeroSpace-Tests:
+    type: bundle.unit-test
+    platform: macOS
+    sources: [test]
+    dependencies:
+      - target: AeroSpace
+    settings:
+      base:
+        # SWIFT_VERSION: 5.8
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug"
+        GENERATE_INFOPLIST_FILE: YES

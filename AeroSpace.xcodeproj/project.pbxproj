@@ -26,6 +26,7 @@
 		6317AB471F4C4F5D66A25784 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEDBFFCA7A77D96B18FB0732 /* Assets.xcassets */; };
 		64A058E536F1EEF7F01043AF /* TOMLKit in Frameworks */ = {isa = PBXBuildFile; productRef = EC8E4F2CA4FF8884F9F59975 /* TOMLKit */; };
 		66E6CDA75DDD5E4B9647EDE2 /* AeroSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E81623E8954701269A22322 /* AeroSpaceApp.swift */; };
+		6715CC184E718828173DFBD5 /* ConfigTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12EA50A972BA714F2BA3BBC1 /* ConfigTest.swift */; };
 		6820E6846AE51B6988B6F673 /* utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD02433B4415EEB163074CE5 /* utils.swift */; };
 		6E4E235FDA41307B19F16182 /* ModeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */; };
 		783B0B965BA45D7A2943F7BF /* TilingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E05FB0C7158C8B6DECBD603 /* TilingContainer.swift */; };
@@ -42,13 +43,25 @@
 		B1E2002BB8F70F2555AAA82D /* TreeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D295CA45172ADBDB1E4DF708 /* TreeNode.swift */; };
 		B3702BB393A9B03CCAE4C60E /* refresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B113159987FA43EA41120 /* refresh.swift */; };
 		E2FD8E2B2D2BE6B88BF8E8AD /* accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE605CF46DE6377C69B9D49D /* accessibility.swift */; };
+		F74FC5ECBCE9C8A6D09AE9F5 /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7910D7B9C0A232187CCA1F10 /* util.swift */; };
 		F982DB924450BBBB4FDF4C2C /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD90FB41FD41602120F67FF5 /* Command.swift */; };
 		FC35D6D0A678CC802972C6FE /* ReloadConfigCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3C9038C846369FDD71D1D2 /* ReloadConfigCommand.swift */; };
 		FD4386BC632BAA6A4105FFD8 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9752080BBA547C2A0EF076F0 /* Config.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		B514A502AE8B3770CB8BEA61 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0B585B3093DA0FC12E7983E2 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B00BE37A79171B0EE995EB83;
+			remoteInfo = AeroSpace;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		09685297933511208058F7CF /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		12EA50A972BA714F2BA3BBC1 /* ConfigTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigTest.swift; sourceTree = "<group>"; };
 		1A2B673C67B00DBFCC27FFE7 /* LayoutCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutCommand.swift; sourceTree = "<group>"; };
 		1C0D40CBD65704BA9595C2FA /* keysMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = keysMap.swift; sourceTree = "<group>"; };
 		1E81623E8954701269A22322 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
@@ -64,9 +77,11 @@
 		4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeCommand.swift; sourceTree = "<group>"; };
 		51CE37C1B8D858C81A396F40 /* CollectionEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionEx.swift; sourceTree = "<group>"; };
 		526B113159987FA43EA41120 /* refresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = refresh.swift; sourceTree = "<group>"; };
+		5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AeroSpace-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		55E2A2BBD8A32FFCD6A88BC7 /* BashCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BashCommand.swift; sourceTree = "<group>"; };
 		67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parseConfig.swift; sourceTree = "<group>"; };
 		6935AF0A2DB3D186D1C6218F /* NSWorkspaceEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWorkspaceEx.swift; sourceTree = "<group>"; };
+		7910D7B9C0A232187CCA1F10 /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
 		7E6F3930E3BF5D8196A20E9B /* axObservers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = axObservers.swift; sourceTree = "<group>"; };
 		883D7F7F87FBE7D0BDE4E87F /* ArrayEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayEx.swift; sourceTree = "<group>"; };
 		8B7A2DF0D1F72B80B1F04240 /* BundleEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleEx.swift; sourceTree = "<group>"; };
@@ -126,6 +141,7 @@
 			children = (
 				0E0109AE5F7881520B0D2384 /* config-examples */,
 				8338180CE208CBDCD6D8E911 /* src */,
+				A6E1E25AB6F33B13B0633B9C /* test */,
 				62BEA6F49E6648E2EE3C208F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -143,6 +159,7 @@
 		62BEA6F49E6648E2EE3C208F /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */,
 				09685297933511208058F7CF /* AeroSpace.app */,
 			);
 			name = Products;
@@ -176,6 +193,15 @@
 				243F29F496F7463F3482DD10 /* MacWindow.swift */,
 			);
 			path = axWrappers;
+			sourceTree = "<group>";
+		};
+		A6E1E25AB6F33B13B0633B9C /* test */ = {
+			isa = PBXGroup;
+			children = (
+				12EA50A972BA714F2BA3BBC1 /* ConfigTest.swift */,
+				7910D7B9C0A232187CCA1F10 /* util.swift */,
+			);
+			path = test;
 			sourceTree = "<group>";
 		};
 		A711A25EEC57098295B90C17 /* command */ = {
@@ -235,6 +261,22 @@
 			productReference = 09685297933511208058F7CF /* AeroSpace.app */;
 			productType = "com.apple.product-type.application";
 		};
+		D2B85A91A03DA984483CF473 /* AeroSpace-Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = D7CB5528090130BA2AF93D7A /* Build configuration list for PBXNativeTarget "AeroSpace-Tests" */;
+			buildPhases = (
+				101761F785765CD965E9741C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A6E9756DC2D01D6E286DFADF /* PBXTargetDependency */,
+			);
+			name = "AeroSpace-Tests";
+			productName = "AeroSpace-Tests";
+			productReference = 5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -266,6 +308,7 @@
 			projectRoot = "";
 			targets = (
 				B00BE37A79171B0EE995EB83 /* AeroSpace */,
+				D2B85A91A03DA984483CF473 /* AeroSpace-Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -283,6 +326,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		101761F785765CD965E9741C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6715CC184E718828173DFBD5 /* ConfigTest.swift in Sources */,
+				F74FC5ECBCE9C8A6D09AE9F5 /* util.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D7A18303C03F2CB26F7BB54B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -325,6 +377,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A6E9756DC2D01D6E286DFADF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B00BE37A79171B0EE995EB83 /* AeroSpace */;
+			targetProxy = B514A502AE8B3770CB8BEA61 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		175127AAF914899705FABF12 /* Debug */ = {
@@ -468,6 +528,38 @@
 			};
 			name = Release;
 		};
+		B3F7FD8336104A3B49E648F4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug";
+			};
+			name = Release;
+		};
+		CBE2FDFF787AFE0FB33E335B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/../Frameworks",
+				);
+				SDKROOT = macosx;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug";
+			};
+			name = Debug;
+		};
 		D1D1A9E07F0AB40E14CAC0F6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -512,6 +604,15 @@
 			buildConfigurations = (
 				175127AAF914899705FABF12 /* Debug */,
 				A991F90908318BCD1655E904 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		D7CB5528090130BA2AF93D7A /* Build configuration list for PBXNativeTarget "AeroSpace-Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CBE2FDFF787AFE0FB33E335B /* Debug */,
+				B3F7FD8336104A3B49E648F4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
