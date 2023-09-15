@@ -25,11 +25,17 @@ AeroSpace is a tiling window manager for macOS.
 
 ## How to build the project
 
-You would need a mac.
+You would need a Mac.
 
 Firstly, install [xcodegen](https://github.com/yonaskolb/XcodeGen). Then run in terminal:
 ```bash
 ./build-debug.sh
+```
+
+## How to run the tests
+
+```bash
+./run-tests.sh
 ```
 
 ## Todo
