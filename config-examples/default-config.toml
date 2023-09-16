@@ -20,10 +20,10 @@ alt-quote       = 'focus parent'
 # todo focus floating binding
 
 # Focus window
-alt-h = ['focus tiling', 'focus left']
-alt-j = ['focus tiling', 'focus down']
-alt-k = ['focus tiling', 'focus up']
-alt-l = ['focus tiling', 'focus right']
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
 
 # Move window
 
