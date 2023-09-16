@@ -20,17 +20,17 @@ alt-quote       = 'focus parent'
 # todo focus floating binding
 
 # Focus window
-alt-k = ['focus tiling', 'focus up']
 alt-h = ['focus tiling', 'focus left']
 alt-j = ['focus tiling', 'focus down']
+alt-k = ['focus tiling', 'focus up']
 alt-l = ['focus tiling', 'focus right']
 
 # Move window
 
-# alt-shift-k = 'move_through up'
-# alt-shift-h = 'move_through left'
-# alt-shift-j = 'move_through down'
-# alt-shift-l = 'move_through right'
+alt-shift-k = 'move_through up'
+alt-shift-h = 'move_through left'
+alt-shift-j = 'move_through down'
+alt-shift-l = 'move_through right'
 
 # Resize window
 # alt-shift-minus  = 'resize shrink height 2 px'

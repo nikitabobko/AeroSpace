@@ -149,6 +149,10 @@ private func parseSingleCommand(_ raw: String, _ backtrace: TomlBacktrace) -> Co
         let direction = FocusCommand.Direction(rawValue: parseSingleArg(args, firstWord, backtrace))
             ?? errorT("\(backtrace): Can't parse 'focus' direction")
         return FocusCommand(direction: direction)
+    } else if firstWord == "move_through" {
+        let direction = MoveThroughCommand.Direction(rawValue: parseSingleArg(args, firstWord, backtrace))
+            ?? errorT("\(backtrace): Can't parse 'move_through' direction")
+        return MoveThroughCommand(direction: direction)
     } else if raw == "reload_config" {
         return ReloadConfigCommand()
     } else if raw == "" {

@@ -1,7 +1,7 @@
 struct MoveThroughCommand: Command {
     let direction: Direction
 
-    enum Direction {
+    enum Direction: String {
         case left, down, up, right
     }
 

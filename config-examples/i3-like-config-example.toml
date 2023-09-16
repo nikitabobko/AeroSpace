@@ -12,11 +12,10 @@ alt-j = 'focus down'
 alt-k = 'focus up'
 alt-l = 'focus right'
 
-#todo support parsing
-#alt-shift-h = 'move_through left'
-#alt-shift-j = 'move_through down'
-#alt-shift-k = 'move_through up'
-#alt-shift-l = 'move_through right'
+alt-shift-h = 'move_through left'
+alt-shift-j = 'move_through down'
+alt-shift-k = 'move_through up'
+alt-shift-l = 'move_through right'
 
 # alt-h = 'split h' # todo support split command?
 # alt-v = 'split v' # todo support split command?
