@@ -7,7 +7,8 @@ struct FocusCommand: Command {
         case parent, child, floating, tiling, toggle_tiling_floating
     }
 
-    func run() {
+    func run() async {
+        precondition(Thread.current.isMainThread)
         // todo
     }
 }

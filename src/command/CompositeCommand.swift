@@ -1,9 +1,10 @@
 struct CompositeCommand: Command {
     let subCommands: [Command]
 
-    func run() {
+    func run() async {
+        precondition(Thread.current.isMainThread)
         for command in subCommands {
-            command.run()
+            await command.run()
         }
     }
 }

@@ -1,7 +1,8 @@
 struct WorkspaceCommand : Command {
     let workspaceName: String
 
-    func run() {
+    func run() async {
+        precondition(Thread.current.isMainThread)
         switchToWorkspace(Workspace.get(byName: workspaceName))
     }
 }

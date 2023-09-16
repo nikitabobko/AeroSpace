@@ -39,7 +39,9 @@ class HotkeyBinding {
     }
 
     func activate() {
-        hotKey = HotKey(key: key, modifiers: modifiers, keyUpHandler: command.run)
+        hotKey = HotKey(key: key, modifiers: modifiers, keyUpHandler: { [self] in
+            Task { await command.run() }
+        })
     }
 
     func deactivate() {

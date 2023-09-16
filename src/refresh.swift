@@ -3,6 +3,7 @@ import Foundation
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input
 func refresh(startSession: Bool = true, endSession: Bool = true) {
+    precondition(Thread.current.isMainThread)
     debug("refresh (startSession=\(startSession), endSession=\(endSession)) \(Date.now.formatted(date: .abbreviated, time: .standard))")
     if startSession {
         NSWorkspace.activeApp = nil

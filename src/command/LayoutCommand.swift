@@ -11,7 +11,8 @@ struct LayoutCommand: Command {
         case floating
     }
 
-    func run() {
+    func run() async {
+        precondition(Thread.current.isMainThread)
         // todo
     }
 }

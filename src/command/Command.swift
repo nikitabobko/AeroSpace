@@ -1,3 +1,3 @@
 protocol Command {
-    func run()
+    func run() async
 }
