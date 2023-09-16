@@ -1,4 +1,4 @@
-struct BashCommand: Command {
+struct ExecAndWaitCommand: Command {
     let bashCommand: String
 
     func run() async {

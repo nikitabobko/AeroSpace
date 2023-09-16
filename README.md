@@ -17,7 +17,7 @@ I will publish first release once I believe it's usable, so subscribe to release
 - AeroSpace employs its **own emulation of virtual workspaces** instead of relying on native macOS Spaces due to
   their considerable limitations
 - Plain text configuration (dotfiles friendly)
-- [PLANNED] CLI scriptable
+- **[PLANNED]** CLI scriptable
 - Doesn't require disabling SIP (System Integrity Protection)
 - Proper multi-monitor support (i3-like paradigm)
 - Status menu icon displays current workspace name

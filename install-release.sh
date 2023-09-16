@@ -7,4 +7,4 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 cd "$(dirname "$0")"
 ./build-release.sh
 rm -rf /Applications/AeroSpace.app
-cp -r build/AeroSpace.app /Applications
+cp -r .build/AeroSpace.app /Applications

@@ -31,11 +31,11 @@ class MacWindow: TreeNode, Hashable {
         if let existing = allWindowsMap[id] {
             return existing
         } else {
-            let activeWorkspace = Workspace.get(byName: ViewModel.shared.focusedWorkspaceTrayText)
+            let focusedWorkspace = Workspace.get(byName: TrayModel.shared.focusedWorkspaceTrayText)
             let workspace: Workspace
             // todo rewrite. Window is appeared on empty space
-            if activeWorkspace == currentEmptyWorkspace &&
-                       NSWorkspace.activeApp == app.nsApp &&
+            if focusedWorkspace == currentEmptyWorkspace &&
+                       NSWorkspace.focusedApp == app.nsApp &&
                        app.axFocusedWindow?.windowId() == axWindow.windowId() {
                 workspace = currentEmptyWorkspace
             } else {
@@ -49,7 +49,7 @@ class MacWindow: TreeNode, Hashable {
                 parent = workspace
                 weight = FLOATING_ADAPTIVE_WEIGHT
             } else {
-                let tilingParent = workspace.lastActiveWindow?.parent as? TilingContainer ?? workspace.rootTilingContainer
+                let tilingParent = workspace.mruWindows.mru?.parent as? TilingContainer ?? workspace.rootTilingContainer
                 parent = tilingParent
                 weight = parent.children.sumOf { $0.getWeight(tilingParent.orientation) }
                         .div(parent.children.count) ?? 1
@@ -92,9 +92,10 @@ class MacWindow: TreeNode, Hashable {
     }
 
     @discardableResult
-    func activate() -> Bool {
+    func focus() -> Bool {
         if app.nsApp.activate(options: .activateIgnoringOtherApps) && axWindow.raise() {
-            NSWorkspace.activeApp = app.nsApp
+            workspace.mruWindows.pushOrRaise(self)
+            NSWorkspace.focusedApp = app.nsApp
             return true
         } else {
             return false
@@ -156,9 +157,17 @@ class MacWindow: TreeNode, Hashable {
         axWindow.set(Ax.topLeftCornerAttr, point)
     }
 
-    func getTopLeftCorner() -> CGPoint? {
+    private func getTopLeftCorner() -> CGPoint? {
         axWindow.get(Ax.topLeftCornerAttr)
     }
+
+    func getRect() -> Rect? {
+        guard let topLeftCorner = getTopLeftCorner() else { return nil }
+        guard let size = getSize() else { return nil }
+        return Rect(topLeftX: topLeftCorner.x, topLeftY: topLeftCorner.y, width: size.width, height: size.height)
+    }
+
+    func getCenter() -> CGPoint? { getRect()?.center }
 
     static func garbageCollectClosedWindows() {
         for window in allWindows {
@@ -186,4 +195,4 @@ extension MacWindow {
     }
 }
 
-let FLOATING_ADAPTIVE_WEIGHT = CGFloat(0)
+let FLOATING_ADAPTIVE_WEIGHT = CGFloat(-1)

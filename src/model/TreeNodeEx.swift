@@ -9,23 +9,42 @@ extension TreeNode {
             visit(node: child, result: &result)
         }
     }
-
-    var allWindowsRecursive: [MacWindow] {
+    var allLeafWindowsRecursive: [MacWindow] {
         var result: [MacWindow] = []
         visit(node: self, result: &result)
         return result
     }
 
+    var parents: [TreeNode] { self is Workspace ? [] : [parent] + parent.parents }
+    var parentsWithSelf: [TreeNode] { self is Workspace ? [self] : [self] + parent.parentsWithSelf }
+
     var workspace: Workspace {
         self as? Workspace ?? parent.workspace
     }
 
-    var anyChildWindowRecursive: MacWindow? {
+    func allLeafWindowsRecursive(snappedTo: Direction) -> [MacWindow] {
+        if let workspace = self as? Workspace {
+            return workspace.rootTilingContainer.allLeafWindowsRecursive(snappedTo: snappedTo)
+        } else if let window = self as? MacWindow {
+            return [window]
+        } else if let container = self as? TilingContainer {
+            if snappedTo.orientation == container.orientation {
+                return (snappedTo.isPositive ? container.children.last : container.children.first)?
+                    .allLeafWindowsRecursive(snappedTo: snappedTo) ?? []
+            } else {
+                return children.flatMap { $0.allLeafWindowsRecursive(snappedTo: snappedTo) }
+            }
+        } else {
+            error("Not supported TreeNode type: \(Self.self)")
+        }
+    }
+
+    var anyLeafWindowRecursive: MacWindow? {
         if let window = children.first(where: { $0 is MacWindow }) {
             return (window as! MacWindow)
         }
         for child in children {
-            if let window = child.anyChildWindowRecursive {
+            if let window = child.anyLeafWindowRecursive {
                 return window
             }
         }
@@ -34,7 +53,7 @@ extension TreeNode {
 
     // Doesn't contain at least one window
     var isEffectivelyEmpty: Bool {
-        anyChildWindowRecursive == nil
+        anyLeafWindowRecursive == nil
     }
 
     var hWeight: CGFloat {

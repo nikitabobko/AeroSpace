@@ -25,21 +25,17 @@ struct Setting {
 @main
 struct AeroSpaceApp: App {
     var hotKeys: [HotKey] = [] // Keep hotkeys in memory
-    @StateObject var viewModel = ViewModel.shared
+    @StateObject var viewModel = TrayModel.shared
 
     init() {
-        reloadConfig()
+        if NSClassFromString("XCTestCase") == nil { // Prevent SwiftUI app loading during unit testing
+            reloadConfig()
 
-        //checkAccessibilityPermissions()
-        //GlobalObserver.initObserver()
-        //for setting in settings {
-        //    hotKeys.append(HotKey(key: setting.hotkey, modifiers: setting.modifiers, keyUpHandler: {
-        //        switchToWorkspace(Workspace.get(byName: setting.name))
-        //    }))
-        //}
-        //refresh()
-        //test()
-
+            checkAccessibilityPermissions()
+            GlobalObserver.initObserver()
+            config.mainMode.activate()
+            refresh()
+        }
     }
 
     var body: some Scene {
@@ -49,7 +45,7 @@ struct AeroSpaceApp: App {
             Text("Workspaces:")
             ForEach(Workspace.all) { workspace in
                 Button {
-                    switchToWorkspace(workspace)
+                    WorkspaceCommand.switchToWorkspace(workspace)
                 } label: {
                     Toggle(isOn: workspace.name == viewModel.focusedWorkspaceTrayText
                         ? Binding(get: { true }, set: { _, _ in })

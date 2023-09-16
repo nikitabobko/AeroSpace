@@ -6,6 +6,8 @@ struct Config {
     let autoFlattenContainers: Bool
     let floatingWindowsOnTop: Bool
     let modes: [String: Mode]
+    var workspaceNames: [String]
+    var mainMode: Mode { modes[mainModeId] ?? errorT("Invalid config. main mode must be always presented") }
 }
 
 struct Mode {
@@ -39,7 +41,7 @@ class HotkeyBinding {
     }
 
     func activate() {
-        hotKey = HotKey(key: key, modifiers: modifiers, keyUpHandler: { [self] in
+        hotKey = HotKey(key: key, modifiers: modifiers, keyUpHandler: { [command] in
             Task { await command.run() }
         })
     }

@@ -59,9 +59,9 @@ class TreeNode: Equatable {
         }
         if let window = self as? MacWindow {
             let newParentWorkspace = newParent.workspace
-            newParentWorkspace.lastActiveWindow = window
-            newParentWorkspace.assignedMonitor = window.getTopLeftCorner()?.monitorApproximation
-            // Update currentEmptyWorkspace if it's no longer empty
+            newParentWorkspace.mruWindows.pushOrRaise(window)
+            newParentWorkspace.assignedMonitor = window.getCenter()?.monitorApproximation
+            // Update currentEmptyWorkspace since it's no longer effectively empty
             if newParentWorkspace == currentEmptyWorkspace {
                 currentEmptyWorkspace = getOrCreateNextEmptyWorkspace()
             }
@@ -75,14 +75,17 @@ class TreeNode: Equatable {
         if _parent == nil {
             return nil
         }
+        let workspace = workspace
+        if let window = self as? MacWindow {
+            workspace.mruWindows.remove(window)
+        }
+
         let index = parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
-        let workspace: Workspace = parent.workspace
+        _parent = nil
+
         if workspace.isEffectivelyEmpty { // It became empty
             currentEmptyWorkspace = workspace
             currentEmptyWorkspace.assignedMonitor = nil
-        }
-        if let window = self as? MacWindow, parent.workspace.lastActiveWindow == window {
-            parent.workspace.lastActiveWindow = nil
         }
         return PreviousBindingData(adaptiveWeight: adaptiveWeight, index: index)
     }

@@ -10,7 +10,7 @@ auto-flatten-containers = true
 floating-windows-on-top = true
 
 [mode.main.binding]
-alt-enter = 'bash /usr/bin/open /System/Applications/Utilities/Terminal.app'
+alt-enter = 'exec_and_forget open /System/Applications/Utilities/Terminal.app'
 
 alt-shift-quote = 'focus child'
 alt-quote       = 'focus parent'
@@ -24,6 +24,8 @@ alt-h = 'focus left'
 alt-j = 'focus down'
 alt-k = 'focus up'
 alt-l = 'focus right'
+
+alt-backslash = 'close_all_windows_but_current'
 
 # Move window
 
@@ -104,7 +106,7 @@ alt-z = 'workspace ZZZ'
 # alt-shift-y = 'move container to workspace YYY'
 # alt-shift-z = 'move container to workspace ZZZ'
 
-# alt-tab = 'workspace_back_and_forth'
+alt-tab = 'workspace_back_and_forth'
 
 # alt-shift-slash.alt-shift-k = 'move_in up'
 # alt-shift-slash.alt-shift-h = 'move_in left'

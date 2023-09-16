@@ -45,7 +45,8 @@ class Workspace: TreeNode, Hashable, Identifiable {
     let name: String
     var id: String { name } // satisfy Identifiable
     var assignedMonitor: Monitor? = nil
-    weak var lastActiveWindow: MacWindow?
+    var mruWindows: MruStack<MacWindow> = MruStack()
+    //weak var lastActiveWindow: MacWindow?
 
     private init(_ name: String) {
         self.name = name
@@ -81,7 +82,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
     }
 
     static func garbageCollectUnusedWorkspaces() {
-        let preservedNames = settings.map { $0.name }.toSet()
+        let preservedNames = config.workspaceNames.toSet()
         for name in preservedNames {
             _ = get(byName: name) // Make sure that all preserved workspaces are "cached"
         }
@@ -89,7 +90,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
             preservedNames.contains(workspace.name) ||
                     !workspace.isEffectivelyEmpty ||
                     workspace == currentEmptyWorkspace ||
-                    workspace.name == ViewModel.shared.focusedWorkspaceTrayText
+                    workspace.name == TrayModel.shared.focusedWorkspaceTrayText
         }
     }
 

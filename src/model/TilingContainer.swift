@@ -51,9 +51,9 @@ extension TilingContainer {
 }
 
 enum Orientation {
-    /// Windows are aligned along the **horizontal** line
+    /// Windows are planced along the **horizontal** line
     case H
-    /// Windows are aligned along the **vertical** line
+    /// Windows are planced along the **vertical** line
     case V
 }
 

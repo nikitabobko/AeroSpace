@@ -5,7 +5,7 @@
 auto-flatten-containers = false
 
 [mode.main.binding]
-alt-enter = 'bash /usr/bin/open /System/Applications/Utilities/Terminal.app'
+alt-enter = 'exec_and_forget open /System/Applications/Utilities/Terminal.app'
 
 alt-h = 'focus left'
 alt-j = 'focus down'
@@ -29,7 +29,10 @@ alt-shift-l = 'move_through right'
 
 #todo support parsing
 #alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
-alt-space = 'focus toggle_tiling_floating'
+
+# Not supported, because this command is redundant in AeroSpace mental model.
+# Floating windows are part of the tree from the perspective of 'focus' command.
+#alt-space = 'focus toggle_tiling_floating'
 
 alt-a = 'focus parent'
 

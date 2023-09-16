@@ -3,16 +3,6 @@ import Cocoa
 import CoreFoundation
 import AppKit
 
-func test() {
-    for screen in NSScreen.screens {
-        debug("---")
-        debug(screen.localizedName)
-        debug(screen.debugDescription)
-        debug(screen.visibleRect.topLeftCorner)
-        debug(screen.visibleRect)
-    }
-}
-
 func stringType(of some: Any) -> String {
     let string = (some is Any.Type) ? String(describing: some) : String(describing: type(of: some))
     return string

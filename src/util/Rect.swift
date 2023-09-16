@@ -49,6 +49,10 @@ extension Rect {
         )
     }
 
+    var center: CGPoint {
+        CGPoint(x: topLeftX + width / 2, y: topLeftY + height / 2)
+    }
+
     var topLeftCorner: CGPoint { CGPoint(x: topLeftX, y: topLeftY) }
     var topRightCorner: CGPoint { CGPoint(x: maxX, y: minY) }
     var bottomRightCorner: CGPoint { CGPoint(x: maxX, y: maxY) }
