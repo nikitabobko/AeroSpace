@@ -4,12 +4,11 @@ AeroSpace is a tiling window manager for macOS.
 
 ## Status
 
-🚧 **Work in progress.** Alpha quality. 🚧
+🚧 **Work in progress.** Not usable yet 🚧
 
-- Please expect a lot of bugs
-- Please expect that documentation isn't complete
-- Please expect that something doesn't work as expected, or doesn't work at all
-- Please expect breaking changes in config format in future releases
+I will publish first release once I believe it's usable, so subscribe to releases on GitHub:
+
+<img src="./docs/.resources/github-subscribe-releases.png" width="40%" height="40%">
 
 ## Key features
 
@@ -18,7 +17,7 @@ AeroSpace is a tiling window manager for macOS.
 - AeroSpace employs its **own emulation of virtual workspaces** instead of relying on native macOS Spaces due to
   their considerable limitations
 - Plain text configuration (dotfiles friendly)
-- CLI scriptable
+- [PLANNED] CLI scriptable
 - Doesn't require disabling SIP (System Integrity Protection)
 - Proper multi-monitor support (i3-like paradigm)
 - Status menu icon displays current workspace name
