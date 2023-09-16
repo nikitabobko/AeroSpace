@@ -138,23 +138,22 @@ private func parseCommand(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrac
 private func parseSingleCommand(_ raw: String, _ backtrace: TomlBacktrace) -> Command {
     let words = raw.split(separator: " ")
     let args = words[1...]
-    let command = String(words.first ?? "")
-    switch command {
-    case "workspace":
-        return WorkspaceCommand(workspaceName: parseSingleArg(args, command, backtrace))
-    case "mode":
-        return ModeCommand(idToActivate: parseSingleArg(args, command, backtrace))
-    case "bash":
+    let firstWord = String(words.first ?? "")
+    if firstWord == "workspace" {
+        return WorkspaceCommand(workspaceName: parseSingleArg(args, firstWord, backtrace))
+    } else if firstWord == "mode" {
+        return ModeCommand(idToActivate: parseSingleArg(args, firstWord, backtrace))
+    } else if firstWord == "bash" {
         return BashCommand(bashCommand: raw.removePrefix("bash"))
-    case "focus":
-        let direction = FocusCommand.Direction(rawValue: parseSingleArg(args, command, backtrace))
+    } else if firstWord == "focus" {
+        let direction = FocusCommand.Direction(rawValue: parseSingleArg(args, firstWord, backtrace))
             ?? errorT("\(backtrace): Can't parse 'focus' direction")
         return FocusCommand(direction: direction)
-    case "reload_config":
+    } else if raw == "reload_config" {
         return ReloadConfigCommand()
-    case "":
+    } else if raw == "" {
         error("\(backtrace): Can't parse empty string command")
-    default:
+    } else {
         error("\(backtrace): Can't parse '\(raw)' command")
     }
 }
