@@ -29,6 +29,6 @@ struct WorkspaceCommand : Command {
         // Since AeroSpace doesn't show any windows, focusing AeroSpace defocuses all windows
         let current = NSRunningApplication.current
         current.activate(options: .activateIgnoringOtherApps)
-        NSWorkspace.focusedApp = current
+        focusedApp = current
     }
 }

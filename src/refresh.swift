@@ -6,7 +6,7 @@ func refresh(startSession: Bool = true, endSession: Bool = true) {
     precondition(Thread.current.isMainThread)
     debug("refresh (startSession=\(startSession), endSession=\(endSession)) \(Date.now.formatted(date: .abbreviated, time: .standard))")
     if startSession {
-        NSWorkspace.focusedApp = nil
+        focusedApp = nil
         MacWindow.garbageCollectClosedWindows()
         // Garbage collect terminated apps and windows before working with all windows
         MacApp.garbageCollectTerminatedApps()
@@ -32,12 +32,12 @@ func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
 }
 
 func updateLastActiveWindow() {
-    guard let window = NSWorkspace.focusedApp?.macApp?.focusedWindow else { return }
+    guard let window = focusedWindow else { return }
     window.workspace.mruWindows.pushOrRaise(window)
 }
 
 private func refreshWorkspaces() {
-    if let focusedWindow = NSWorkspace.focusedApp?.macApp?.focusedWindow {
+    if let focusedWindow = focusedWindow {
         debug("refreshWorkspaces: not empty")
         let focusedWorkspace: Workspace
         if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation {

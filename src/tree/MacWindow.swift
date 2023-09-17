@@ -35,7 +35,7 @@ class MacWindow: TreeNode, Hashable {
             let workspace: Workspace
             // todo rewrite. Window is appeared on empty space
             if focusedWorkspace == currentEmptyWorkspace &&
-                       NSWorkspace.focusedApp == app.nsApp &&
+                       focusedApp == app.nsApp &&
                        app.axFocusedWindow?.windowId() == axWindow.windowId() {
                 workspace = currentEmptyWorkspace
             } else {
@@ -95,7 +95,7 @@ class MacWindow: TreeNode, Hashable {
     func focus() -> Bool {
         if app.nsApp.activate(options: .activateIgnoringOtherApps) && axWindow.raise() {
             workspace.mruWindows.pushOrRaise(self)
-            NSWorkspace.focusedApp = app.nsApp
+            focusedApp = app.nsApp
             return true
         } else {
             return false

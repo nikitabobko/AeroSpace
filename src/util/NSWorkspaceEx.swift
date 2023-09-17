@@ -1,13 +1,9 @@
-extension NSWorkspace {
-    static var finderApp: NSRunningApplication? {
-        NSWorkspace.shared.runningApplications.first { $0.bundleIdentifier == "com.apple.finder" }
-    }
+private var _focusedApp: NSRunningApplication? = nil
 
-    private static var _activeApp: NSRunningApplication? = nil
-
-    static var focusedApp: NSRunningApplication? {
-        /// Force assign currently active app in scope of this session
-        set { _activeApp = newValue }
-        get { _activeApp ?? NSWorkspace.shared.frontmostApplication }
-    }
+var focusedApp: NSRunningApplication? {
+    /// Force assign currently active app in scope of this session
+    set { _focusedApp = newValue }
+    get { _focusedApp ?? NSWorkspace.shared.frontmostApplication }
 }
+
+var focusedWindow: MacWindow? { focusedApp?.macApp?.focusedWindow }
