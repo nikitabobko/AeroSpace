@@ -22,17 +22,17 @@ extension TreeNode {
         self as? Workspace ?? parent.workspace
     }
 
-    func allLeafWindowsRecursive(snappedTo: CardinalDirection) -> [MacWindow] {
+    func allLeafWindowsRecursive(snappedTo direction: CardinalDirection) -> [MacWindow] {
         if let workspace = self as? Workspace {
-            return workspace.rootTilingContainer.allLeafWindowsRecursive(snappedTo: snappedTo)
+            return workspace.rootTilingContainer.allLeafWindowsRecursive(snappedTo: direction)
         } else if let window = self as? MacWindow {
             return [window]
         } else if let container = self as? TilingContainer {
-            if snappedTo.orientation == container.orientation {
-                return (snappedTo.isPositive ? container.children.last : container.children.first)?
-                    .allLeafWindowsRecursive(snappedTo: snappedTo) ?? []
+            if direction.orientation == container.orientation {
+                return (direction.isPositive ? container.children.last : container.children.first)?
+                    .allLeafWindowsRecursive(snappedTo: direction) ?? []
             } else {
-                return children.flatMap { $0.allLeafWindowsRecursive(snappedTo: snappedTo) }
+                return children.flatMap { $0.allLeafWindowsRecursive(snappedTo: direction) }
             }
         } else {
             error("Not supported TreeNode type: \(Self.self)")
@@ -77,7 +77,7 @@ extension TreeNode {
             var point = _point
             for child in container.children {
                 switch container.layout {
-                case .Accordion:
+                case .Accordion: // todo layout with accordion offset
                     child.layoutRecursive(point, width: width, height: height)
                 case .List:
                     child.layoutRecursive(point, width: child.hWeight, height: child.vWeight)

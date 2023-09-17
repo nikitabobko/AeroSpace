@@ -37,6 +37,11 @@ private func parseSingleCommand(_ raw: String, _ backtrace: TomlBacktrace) -> Co
         let direction = MoveThroughCommand.Direction(rawValue: parseSingleArg(args, firstWord, backtrace))
             ?? errorT("\(backtrace): Can't parse '\(firstWord)' direction")
         return MoveThroughCommand(direction: direction)
+    } else if firstWord == "layout" {
+        let layouts = args.map {
+            LayoutCommand.Layout(rawValue: String($0)) ?? errorT("Can't parse layout arg '\($0)'")
+        }
+        return LayoutCommand(toggleBetween: layouts) ?? errorT("Can't create layout command") // todo nicer message
     } else if raw == "workspace_back_and_forth" {
         return WorkspaceBackAndForth()
     } else if raw == "reload_config" {

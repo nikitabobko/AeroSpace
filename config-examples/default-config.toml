@@ -14,8 +14,8 @@ alt-enter = 'exec_and_forget open /System/Applications/Utilities/Terminal.app'
 
 alt-shift-quote = 'focus child'
 alt-quote       = 'focus parent'
-# alt-slash       = 'layout h_list v_list'
-# alt-comma       = 'layout h_accordion v_accordion'
+alt-slash       = 'layout h_list v_list'
+alt-comma       = 'layout h_accordion v_accordion'
 
 # todo focus floating binding
 

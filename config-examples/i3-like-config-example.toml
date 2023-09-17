@@ -22,13 +22,11 @@ alt-shift-l = 'move_through right'
 
 # alt-f = 'fullscreen' # todo support fullscreen command?
 
-# todo support layout parsing
-#alt-s = 'layout v_accordion' # 'layout stacking' in i3
-#alt-w = 'layout h_accordion' # 'layout tabbed' in i3
-#alt-e = 'layout h_list v_list' # 'layout toggle list' in i3
+alt-s = 'layout v_accordion' # 'layout stacking' in i3
+alt-w = 'layout h_accordion' # 'layout tabbed' in i3
+alt-e = 'layout h_list v_list' # 'layout toggle list' in i3
 
-#todo support parsing
-#alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
+alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
 
 # Not supported, because this command is redundant in AeroSpace mental model.
 # Floating windows are part of the tree from the perspective of 'focus' command.
