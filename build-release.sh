@@ -19,6 +19,28 @@ pushd ~/Library/Developer/Xcode/DerivedData > /dev/null
 popd > /dev/null
 cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Release/AeroSpace.app .build
 
+expected_layout=$(cat <<EOF
+.build/AeroSpace.app
+└── Contents
+    ├── Info.plist
+    ├── MacOS
+    │   └── AeroSpace
+    ├── PkgInfo
+    ├── Resources
+    │   └── default-config.toml
+    └── _CodeSignature
+        └── CodeResources
+
+5 directories, 5 files
+EOF
+)
+
+if [ "$expected_layout" != "$(tree .build/AeroSpace.app)" ]; then
+    echo "!!! Expect/Actual layout don't match !!!"
+    tree .build
+    exit 1
+fi
+
 pushd .build
     zip -r AeroSpace.zip AeroSpace.app
 popd
