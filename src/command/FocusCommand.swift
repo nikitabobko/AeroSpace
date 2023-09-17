@@ -12,19 +12,20 @@ struct FocusCommand: Command {
 
     func run() async {
         precondition(Thread.current.isMainThread)
-        guard let window = focusedWindow ?? Workspace.focused.mruWindows.mostRecent else { return }
+        guard let currentWindow = focusedWindow ?? Workspace.focused.mruWindows.mostRecent else { return }
         if let direction = direction.cardinalOrNil {
             let orientation = direction.orientation
-            guard let topMostChild = window.parentsWithSelf.first(where: {
+            guard let topMostChild = currentWindow.parentsWithSelf.first(where: {
                 $0.parent is Workspace || ($0.parent as? TilingContainer)?.orientation == orientation
             }) else { return }
             guard let parent = topMostChild.parent as? TilingContainer else { return }
             guard let index = parent.children.firstIndex(of: topMostChild) else { return }
-            let mruIndexMap = window.workspace.mruWindows.mruIndexMap
-            let window: MacWindow? = parent.children.getOrNil(atIndex: direction.isPositive ? index + 1 : index - 1)?
+            let mruIndexMap = currentWindow.workspace.mruWindows.mruIndexMap
+            let windowToFocus: MacWindow? = parent.children
+                .getOrNil(atIndex: direction.isPositive ? index + 1 : index - 1)?
                 .allLeafWindowsRecursive(snappedTo: direction.opposite)
                 .minBy { mruIndexMap[$0] ?? Int.max }
-            window?.focus()
+            windowToFocus?.focus()
         } else {
             // todo direction == .child || direction == .parent
         }
