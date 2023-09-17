@@ -15,11 +15,11 @@ extension TreeNode {
         return result
     }
 
-    var parents: [TreeNode] { self is Workspace ? [] : [parent] + parent.parents }
-    var parentsWithSelf: [TreeNode] { self is Workspace ? [self] : [self] + parent.parentsWithSelf }
+    var parents: [TreeNode] { parent.flatMap { [$0] + $0.parents } ?? [] }
+    var parentsWithSelf: [TreeNode] { parent.flatMap { [self] + $0.parentsWithSelf } ?? [self] }
 
     var workspace: Workspace {
-        self as? Workspace ?? parent.workspace
+        self as? Workspace ?? parent?.workspace ?? errorT("Unknown type \(Self.self)")
     }
 
     func allLeafWindowsRecursive(snappedTo direction: CardinalDirection) -> [MacWindow] {

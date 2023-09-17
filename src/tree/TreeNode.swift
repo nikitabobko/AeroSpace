@@ -4,7 +4,7 @@ class TreeNode: Equatable {
     private var _children: [TreeNode] = []
     var children: [TreeNode] { _children }
     fileprivate weak var _parent: TreeNode? = nil
-    var parent: TreeNode { _parent ?? errorT("TreeNode invariants are broken") }
+    var parent: TreeNode? { _parent }
     private var adaptiveWeight: CGFloat
 
     init(parent: TreeNode, adaptiveWeight: CGFloat) {
@@ -32,15 +32,16 @@ class TreeNode: Equatable {
     /// Weight itself doesn't make sense. The parent container controls semantics of weight
     func getWeight(_ targetOrientation: Orientation) -> CGFloat {
         if let tilingParent = parent as? TilingContainer {
-            return tilingParent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
-        } else {
-            precondition(parent is Workspace)
+            return tilingParent.orientation == targetOrientation ? adaptiveWeight : tilingParent.getWeight(targetOrientation)
+        } else if let parent = parent as? Workspace {
             if self is MacWindow { // self is a floating window
                 error("Weight doesn't make sense for floating windows")
             } else { // root tiling container
                 precondition(self is TilingContainer)
                 return parent.getWeight(targetOrientation)
             }
+        } else {
+            error("Not possible")
         }
     }
 
@@ -72,16 +73,14 @@ class TreeNode: Equatable {
     }
 
     private func unbindIfPossible() -> PreviousBindingData? {
-        if _parent == nil {
-            return nil
-        }
+        guard let _parent else { return nil }
         let workspace = workspace
         if let window = self as? MacWindow {
             workspace.mruWindows.remove(window)
         }
 
-        let index = parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
-        _parent = nil
+        let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
+        self._parent = nil
 
         if workspace.isEffectivelyEmpty { // It became empty
             currentEmptyWorkspace = workspace

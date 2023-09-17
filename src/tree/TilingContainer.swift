@@ -1,6 +1,7 @@
 class TilingContainer: TreeNode {
     var orientation: Orientation
     var layout: Layout
+    override var parent: TreeNode { super.parent ?? errorT("TilingContainers always have parent") }
 
     init(parent: TreeNode, adaptiveWeight: CGFloat, _ orientation: Orientation, _ layout: Layout) {
         self.orientation = orientation

@@ -10,6 +10,7 @@ class MacWindow: TreeNode, Hashable {
     private var prevUnhiddenEmulationSize: CGSize?
     fileprivate var previousSize: CGSize?
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
+    override var parent: TreeNode { super.parent ?? errorT("MacWindows always have parent") }
 
     private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: TreeNode, adaptiveWeight: CGFloat) {
         self.windowId = id
