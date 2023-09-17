@@ -31,7 +31,7 @@ class MacWindow: TreeNode, Hashable {
         if let existing = allWindowsMap[id] {
             return existing
         } else {
-            let focusedWorkspace = Workspace.get(byName: TrayModel.shared.focusedWorkspaceTrayText)
+            let focusedWorkspace = Workspace.focused
             let workspace: Workspace
             // todo rewrite. Window is appeared on empty space
             if focusedWorkspace == currentEmptyWorkspace &&

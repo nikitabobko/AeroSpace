@@ -123,6 +123,8 @@ extension Workspace {
     var assignedMonitorOfNotEmptyWorkspace: Monitor {
         assignedMonitor ?? errorT("Not empty workspace \(workspace.name) must have an assigned monitor")
     }
+
+    static var focused: Workspace { Workspace.get(byName: TrayModel.shared.focusedWorkspaceTrayText) }
 }
 
 extension Monitor {
