@@ -35,6 +35,7 @@ struct AeroSpaceApp: App {
             GlobalObserver.initObserver()
             config.mainMode.activate()
             refresh()
+            Task { await config.afterStartupCommand.run() }
         }
     }
 
