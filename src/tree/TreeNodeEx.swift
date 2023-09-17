@@ -22,7 +22,7 @@ extension TreeNode {
         self as? Workspace ?? parent.workspace
     }
 
-    func allLeafWindowsRecursive(snappedTo: Direction) -> [MacWindow] {
+    func allLeafWindowsRecursive(snappedTo: CardinalDirection) -> [MacWindow] {
         if let workspace = self as? Workspace {
             return workspace.rootTilingContainer.allLeafWindowsRecursive(snappedTo: snappedTo)
         } else if let window = self as? MacWindow {

@@ -30,7 +30,7 @@ private func parseSingleCommand(_ raw: String, _ backtrace: TomlBacktrace) -> Co
     } else if firstWord == "exec_and_forget" {
         return ExecAndForgetCommand(bashCommand: raw.removePrefix(firstWord))
     } else if firstWord == "focus" {
-        let direction = FocusCommand.FDirection(rawValue: parseSingleArg(args, firstWord, backtrace))
+        let direction = FocusCommand.Direction(rawValue: parseSingleArg(args, firstWord, backtrace))
             ?? errorT("\(backtrace): Can't parse '\(firstWord)' direction")
         return FocusCommand(direction: direction)
     } else if firstWord == "move_through" {

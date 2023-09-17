@@ -1,7 +1,7 @@
 struct FocusCommand: Command {
-    let direction: FDirection
+    let direction: Direction
 
-    enum FDirection: String {
+    enum Direction: String {
         case up, down, left, right
 
         case parent, child //, floating, tiling, toggle_tiling_floating // not needed
@@ -13,7 +13,7 @@ struct FocusCommand: Command {
     func run() async {
         precondition(Thread.current.isMainThread)
         guard let window = NSWorkspace.focusedApp?.macApp?.focusedWindow ?? Workspace.focused.mruWindows.mostRecent else { return }
-        if let direction = direction.direction {
+        if let direction = direction.cardinalOrNil {
             let orientation = direction.orientation
             guard let topMostChild = window.parentsWithSelf.first(where: {
                 $0.parent is Workspace || ($0.parent as? TilingContainer)?.orientation == orientation
@@ -31,8 +31,8 @@ struct FocusCommand: Command {
     }
 }
 
-extension FocusCommand.FDirection {
-    var direction: Direction? {
+extension FocusCommand.Direction {
+    var cardinalOrNil: CardinalDirection? {
         switch self {
         case .up:
             return .up

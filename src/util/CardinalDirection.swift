@@ -1,11 +1,11 @@
-enum Direction: String {
+enum CardinalDirection: String {
     case left, down, up, right
 }
 
-extension Direction {
+extension CardinalDirection {
     var orientation: Orientation { self == .up || self == .down ? .V : .H }
     var isPositive: Bool { self == .down || self == .right }
-    var opposite: Direction {
+    var opposite: CardinalDirection {
         switch self {
         case .left:
             return .right
