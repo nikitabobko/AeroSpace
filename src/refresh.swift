@@ -4,7 +4,7 @@ func refresh(startSession: Bool = true) {
     precondition(Thread.current.isMainThread)
     debug("refresh (startSession=\(startSession)) \(Date.now.formatted(date: .abbreviated, time: .standard))")
     if startSession {
-        focusedApp = nil
+        setFocusedAppForCurrentRefreshSession(app: nil)
     }
 
     MacWindow.garbageCollectClosedWindows()
