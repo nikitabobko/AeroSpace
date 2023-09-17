@@ -2,17 +2,18 @@ import Foundation
 
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input
-func refresh(startSession: Bool = true, endSession: Bool = true) {
+func refresh(startSession: Bool = true) {
     precondition(Thread.current.isMainThread)
-    debug("refresh (startSession=\(startSession), endSession=\(endSession)) \(Date.now.formatted(date: .abbreviated, time: .standard))")
+    debug("refresh (startSession=\(startSession)) \(Date.now.formatted(date: .abbreviated, time: .standard))")
     if startSession {
         focusedApp = nil
-        MacWindow.garbageCollectClosedWindows()
-        // Garbage collect terminated apps and windows before working with all windows
-        MacApp.garbageCollectTerminatedApps()
-        // Garbage collect workspaces after apps, because workspaces contain apps.
-        Workspace.garbageCollectUnusedWorkspaces()
     }
+
+    MacWindow.garbageCollectClosedWindows()
+    // Garbage collect terminated apps and windows before working with all windows
+    MacApp.garbageCollectTerminatedApps()
+    // Garbage collect workspaces after apps, because workspaces contain apps.
+    Workspace.garbageCollectUnusedWorkspaces()
 
     refreshWorkspaces()
     detectNewWindowsAndAttachThemToWorkspaces()
@@ -22,9 +23,7 @@ func refresh(startSession: Bool = true, endSession: Bool = true) {
     layoutWorkspaces()
     layoutWindows()
 
-    if endSession {
-        updateLastActiveWindow()
-    }
+    updateLastActiveWindow()
 }
 
 func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
