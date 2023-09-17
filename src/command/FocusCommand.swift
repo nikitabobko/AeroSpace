@@ -12,7 +12,7 @@ struct FocusCommand: Command {
 
     func run() async {
         precondition(Thread.current.isMainThread)
-        guard let window = NSWorkspace.focusedApp?.macApp?.focusedWindow ?? Workspace.focused.mruWindows.mru else { return }
+        guard let window = NSWorkspace.focusedApp?.macApp?.focusedWindow ?? Workspace.focused.mruWindows.mostRecent else { return }
         if let direction = direction.direction {
             let orientation = direction.orientation
             guard let topMostChild = window.parentsWithSelf.first(where: {

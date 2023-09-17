@@ -9,7 +9,7 @@ struct MruStack<T: Equatable>: Sequence {
         MruStackIterator(mruNode)
     }
 
-    var mru: T? { mruNode?.value }
+    var mostRecent: T? { mruNode?.value }
 
     mutating func pushOrRaise(_ value: T) {
         remove(value)

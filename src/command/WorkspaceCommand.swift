@@ -9,7 +9,7 @@ struct WorkspaceCommand : Command {
     static func switchToWorkspace(_ workspace: Workspace) {
         debug("Switch to workspace: \(workspace.name)")
         refresh(endSession: false)
-        if let window = workspace.mruWindows.mru ?? workspace.anyLeafWindowRecursive { // switch to not empty workspace
+        if let window = workspace.mruWindows.mostRecent ?? workspace.anyLeafWindowRecursive { // switch to not empty workspace
             window.focus()
             // The switching itself will be done by refreshWorkspaces and layoutWorkspaces later in refresh
         } else { // switch to empty workspace
