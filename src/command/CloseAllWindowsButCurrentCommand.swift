@@ -1,5 +1,5 @@
 class CloseAllWindowsButCurrentCommand: Command {
-    func run() {
+    func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
         // todo
     }

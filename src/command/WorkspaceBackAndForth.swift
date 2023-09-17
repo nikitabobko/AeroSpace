@@ -1,5 +1,5 @@
 struct WorkspaceBackAndForth: Command {
-    func run() async {
+    func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
         // todo
     }

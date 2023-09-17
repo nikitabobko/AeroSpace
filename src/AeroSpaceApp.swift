@@ -46,7 +46,7 @@ struct AeroSpaceApp: App {
             Text("Workspaces:")
             ForEach(Workspace.all) { workspace in
                 Button {
-                    WorkspaceCommand.switchToWorkspace(workspace)
+                    Task { await WorkspaceCommand(workspaceName: workspace.name).run() }
                 } label: {
                     Toggle(isOn: workspace.name == viewModel.focusedWorkspaceTrayText
                         ? Binding(get: { true }, set: { _, _ in })

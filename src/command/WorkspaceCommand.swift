@@ -1,14 +1,10 @@
 struct WorkspaceCommand : Command {
     let workspaceName: String
 
-    func run() async {
+    func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
-        WorkspaceCommand.switchToWorkspace(Workspace.get(byName: workspaceName))
-    }
-
-    static func switchToWorkspace(_ workspace: Workspace) {
+        let workspace = Workspace.get(byName: workspaceName)
         debug("Switch to workspace: \(workspace.name)")
-        refresh()
         if let window = workspace.mruWindows.mostRecent ?? workspace.anyLeafWindowRecursive { // switch to not empty workspace
             window.focus()
             // The switching itself will be done by refreshWorkspaces and layoutWorkspaces later in refresh
@@ -19,10 +15,13 @@ struct WorkspaceCommand : Command {
             if let focusedMonitor = NSScreen.focusedMonitorOrNilIfDesktop ?? NSScreen.main?.monitor {
                 focusedMonitor.setActiveWorkspace(workspace)
             }
-            defocusAllWindows()
+            WorkspaceCommand.defocusAllWindows()
         }
-        refresh(startSession: false)
         debug("End switch to workspace: \(workspace.name)")
+    }
+
+    static func switchToWorkspace(_ workspace: Workspace) async {
+        await WorkspaceCommand(workspaceName: workspace.name).run()
     }
 
     private static func defocusAllWindows() {

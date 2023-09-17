@@ -1,7 +1,6 @@
 struct ReloadConfigCommand: Command {
-    func run() async {
+    func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
         reloadConfig()
-        refresh()
     }
 }

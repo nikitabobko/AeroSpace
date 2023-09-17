@@ -5,7 +5,7 @@ struct MoveThroughCommand: Command {
         case left, down, up, right
     }
 
-    func run() async {
+    func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
 
     }

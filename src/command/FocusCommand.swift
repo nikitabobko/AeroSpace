@@ -10,7 +10,7 @@ struct FocusCommand: Command {
         //case next, prev
     }
 
-    func run() async {
+    func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
         guard let currentWindow = focusedWindow ?? Workspace.focused.mruWindows.mostRecent else { return }
         if let direction = direction.cardinalOrNil {

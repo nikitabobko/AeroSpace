@@ -15,7 +15,7 @@ struct LayoutCommand: Command {
         self.toggleBetween = toggleBetween
     }
 
-    func run() async {
+    func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
         guard let window = focusedWindow ?? Workspace.focused.mruWindows.mostRecent else { return }
         let targetLayout = toggleBetween.firstIndex(of: window.verboseLayout)
@@ -23,7 +23,6 @@ struct LayoutCommand: Command {
         if let parent = window.parent as? TilingContainer {
             parent.layout = targetLayout?.simpleLayout ?? errorT("TODO")
             parent.orientation = targetLayout?.orientation ?? errorT("TODO")
-            refresh()
         } else {
             precondition(window.parent is Workspace)
             // todo
