@@ -1,5 +1,3 @@
-import Foundation
-
 func checkAccessibilityPermissions() {
     let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true]
     if !AXIsProcessTrustedWithOptions(options as CFDictionary) {

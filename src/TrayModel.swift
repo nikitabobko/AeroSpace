@@ -1,5 +1,3 @@
-import Foundation
-
 class TrayModel: ObservableObject {
     static let shared = TrayModel()
 

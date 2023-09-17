@@ -1,5 +1,3 @@
-import Foundation
-
 extension Sequence {
     public func filterNotNil<Unwrapped>() -> [Unwrapped] where Element == Unwrapped? {
         compactMap { $0 }

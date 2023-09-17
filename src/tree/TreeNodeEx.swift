@@ -1,5 +1,3 @@
-import Foundation
-
 extension TreeNode {
     private func visit(node: TreeNode, result: inout [MacWindow]) {
         if let node = node as? MacWindow {

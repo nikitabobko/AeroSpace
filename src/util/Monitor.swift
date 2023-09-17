@@ -1,5 +1,3 @@
-import Foundation
-
 struct Monitor: Hashable {
     let name: String?
     let rect: Rect

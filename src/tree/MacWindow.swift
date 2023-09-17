@@ -1,6 +1,3 @@
-import Foundation
-import AppKit
-
 class MacWindow: TreeNode, Hashable {
     let windowId: CGWindowID
     let axWindow: AXUIElement

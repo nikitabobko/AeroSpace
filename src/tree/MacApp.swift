@@ -1,5 +1,3 @@
-import Foundation
-
 class MacApp: Hashable {
     let nsApp: NSRunningApplication
     private let axApp: AXUIElement

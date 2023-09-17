@@ -1,8 +1,3 @@
-import Foundation
-import Cocoa
-import CoreFoundation
-import AppKit
-
 func stringType(of some: Any) -> String {
     let string = (some is Any.Type) ? String(describing: some) : String(describing: type(of: some))
     return string

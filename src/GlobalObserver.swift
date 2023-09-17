@@ -1,5 +1,3 @@
-import Foundation
-
 class GlobalObserver {
     @objc private static func action() {
         refresh()

@@ -1,5 +1,3 @@
-import Foundation
-
 // todo make it configurable
 // todo make default choice
 

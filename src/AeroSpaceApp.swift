@@ -1,8 +1,4 @@
-import Foundation
 import HotKey
-import Cocoa
-import CoreFoundation
-import AppKit
 import SwiftUI
 
 let settings = [
