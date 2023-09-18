@@ -13,7 +13,7 @@ struct LayoutCommand: Command {
     func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
         guard let window = focusedWindow ?? Workspace.focused.mruWindows.mostRecent else { return }
-        let targetLayout: ConfigLayout? = toggleBetween.firstIndex(of: window.verboseLayout)
+        let targetLayout: ConfigLayout? = toggleBetween.firstIndex(of: window.configLayout)
             .flatMap { toggleBetween.getOrNil(atIndex: $0 + 1) }
             .orElse { toggleBetween.first }
             .map { $0 == .main ? config.mainLayout : $0 }
@@ -52,7 +52,7 @@ private extension ConfigLayout {
 }
 
 private extension MacWindow {
-    var verboseLayout: ConfigLayout {
+    var configLayout: ConfigLayout {
         if let parent = parent as? TilingContainer {
             switch parent.layout {
             case .List:

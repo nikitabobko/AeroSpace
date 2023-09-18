@@ -1,12 +1,8 @@
 struct MoveThroughCommand: Command {
-    let direction: Direction
-
-    enum Direction: String {
-        case left, down, up, right
-    }
+    let direction: CardinalDirection
 
     func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
-
+        // todo
     }
 }

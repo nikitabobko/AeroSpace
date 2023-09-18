@@ -34,7 +34,7 @@ private func parseSingleCommand(_ raw: String, _ backtrace: TomlBacktrace) -> Co
             ?? errorT("\(backtrace): Can't parse '\(firstWord)' direction")
         return FocusCommand(direction: direction)
     } else if firstWord == "move_through" {
-        let direction = MoveThroughCommand.Direction(rawValue: parseSingleArg(args, firstWord, backtrace))
+        let direction = CardinalDirection(rawValue: parseSingleArg(args, firstWord, backtrace))
             ?? errorT("\(backtrace): Can't parse '\(firstWord)' direction")
         return MoveThroughCommand(direction: direction)
     } else if firstWord == "layout" {
