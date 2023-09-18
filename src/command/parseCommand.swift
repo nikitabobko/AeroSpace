@@ -38,14 +38,14 @@ private func parseSingleCommand(_ raw: String, _ backtrace: TomlBacktrace) -> Co
             ?? errorT("\(backtrace): Can't parse '\(firstWord)' direction")
         return MoveThroughCommand(direction: direction)
     } else if firstWord == "layout" {
-        let layouts = args.map {
-            LayoutCommand.Layout(rawValue: String($0)) ?? errorT("Can't parse layout arg '\($0)'")
-        }
-        return LayoutCommand(toggleBetween: layouts) ?? errorT("Can't create layout command") // todo nicer message
+        return LayoutCommand(toggleBetween: args.map { parseLayout(String($0), backtrace) })
+            ?? errorT("\(backtrace): Can't create layout command") // todo nicer message
     } else if raw == "workspace_back_and_forth" {
         return WorkspaceBackAndForth()
     } else if raw == "reload_config" {
         return ReloadConfigCommand()
+    } else if raw == "flatten_workspace_tree" {
+        return FlattenWorkspaceTreeCommand()
     } else if raw == "close_all_windows_but_current" {
         return CloseAllWindowsButCurrentCommand()
     } else if raw == "" {
@@ -53,6 +53,10 @@ private func parseSingleCommand(_ raw: String, _ backtrace: TomlBacktrace) -> Co
     } else {
         error("\(backtrace): Can't parse '\(raw)' command")
     }
+}
+
+func parseLayout(_ raw: String, _ backtrace: TomlBacktrace) -> ConfigLayout {
+    ConfigLayout(rawValue: raw) ?? errorT("\(backtrace): Can't parse layout '\(raw)'")
 }
 
 private func parseSingleArg(_ args: ArraySlice<Swift.String.SubSequence>, _ command: String, _ backtrace: TomlBacktrace) -> String {

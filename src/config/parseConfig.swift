@@ -10,6 +10,7 @@ var config: Config = defaultConfig
 
 func reloadConfig() {
     let rawConfig = try? String(contentsOf: FileManager.default.homeDirectoryForCurrentUser.appending(path: ".aerospace.toml"))
+    // todo mainMode activate/deactivate
     config = parseConfig(rawConfig ?? "")
 }
 
@@ -37,6 +38,9 @@ func parseConfig(_ rawToml: String) -> Config {
     let key4 = "floating-windows-on-top"
     var value4: Bool? = nil
 
+    let key5 = "main-layout"
+    var value5: ConfigLayout? = nil
+
     for (key, value) in rawTable {
         let backtrace: TomlBacktrace = .root(key)
         switch key {
@@ -48,6 +52,8 @@ func parseConfig(_ rawToml: String) -> Config {
             value3 = parseBool(value, backtrace)
         case key4:
             value4 = parseBool(value, backtrace)
+        case key5:
+            value5 = parseMainLayout(value, backtrace)
         case "mode":
             modes = parseModes(value, backtrace)
         default:
@@ -62,6 +68,7 @@ func parseConfig(_ rawToml: String) -> Config {
         usePaddingForNestedContainersWithTheSameOrientation: value2 ?? defaultConfig.usePaddingForNestedContainersWithTheSameOrientation,
         autoFlattenContainers: value3 ?? defaultConfig.autoFlattenContainers,
         floatingWindowsOnTop: value4 ?? defaultConfig.floatingWindowsOnTop,
+        mainLayout: value5 ?? defaultConfig.mainLayout,
         modes: modesOrDefault,
         workspaceNames: modesOrDefault.values.lazy
             .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
@@ -70,6 +77,15 @@ func parseConfig(_ rawToml: String) -> Config {
             }
             .compactMap { (command: Command) -> String? in (command as? WorkspaceCommand)?.workspaceName ?? nil }
     )
+}
+
+private func parseMainLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ConfigLayout {
+    let rawString = raw.string ?? expectedActualTypeError(expected: .string, actual: raw.type, backtrace)
+    let layout = parseLayout(rawString, backtrace)
+    if layout == .main {
+        error("\(backtrace): main layout can't be '\(layout)'")
+    }
+    return layout
 }
 
 private func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> [String: Mode] {

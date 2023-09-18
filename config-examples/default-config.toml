@@ -8,14 +8,13 @@ auto-flatten-containers = true
 # auto-different-orientation-for-nested-containers = true
 # start-at-login = true
 floating-windows-on-top = true
+main-layout = 'h_list' # todo change
 
 [mode.main.binding]
 alt-enter = 'exec_and_forget open /System/Applications/Utilities/Terminal.app'
 
-alt-shift-quote = 'focus child'
-alt-quote       = 'focus parent'
-alt-slash       = 'layout h_list v_list'
-alt-comma       = 'layout h_accordion v_accordion'
+alt-slash = 'layout h_list v_list'
+alt-comma = 'layout h_accordion v_accordion'
 
 # todo focus floating binding
 
@@ -73,6 +72,8 @@ alt-x = 'workspace XXX'
 alt-y = 'workspace YYY'
 alt-z = 'workspace ZZZ'
 
+alt-shift-semicolon = 'mode service'
+
 # alt-shift-0 = 'move container to workspace 000'
 # alt-shift-1 = 'move container to workspace 111'
 # alt-shift-2 = 'move container to workspace 222'
@@ -112,3 +113,13 @@ alt-tab = 'workspace_back_and_forth'
 # alt-shift-slash.alt-shift-h = 'move_in left'
 # alt-shift-slash.alt-shift-j = 'move_in down'
 # alt-shift-slash.alt-shift-l = 'move_in right'
+
+[mode.service.binding]
+r = ['flatten_workspace_tree', 'mode main']
+o = ['reload_config', 'mode main']
+s = ['layout sticky', 'mode main']
+f = ['layout floating', 'mode main']
+k = 'focus parent'
+j = 'focus child'
+esc = 'mode main'
+enter = 'mode main'

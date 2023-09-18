@@ -5,9 +5,16 @@ struct Config {
     let usePaddingForNestedContainersWithTheSameOrientation: Bool
     let autoFlattenContainers: Bool
     let floatingWindowsOnTop: Bool
+    let mainLayout: ConfigLayout
     let modes: [String: Mode]
     var workspaceNames: [String]
     var mainMode: Mode { modes[mainModeId] ?? errorT("Invalid config. main mode must be always presented") }
+}
+
+enum ConfigLayout: String {
+    case main
+    case h_accordion, v_accordion, h_list, v_list
+    case tiling, floating, sticky // todo can sticky windows be tiling?
 }
 
 struct Mode {
