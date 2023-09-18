@@ -21,7 +21,7 @@ struct Setting {
 @main
 struct AeroSpaceApp: App {
     var hotKeys: [HotKey] = [] // Keep hotkeys in memory
-    @StateObject var viewModel = TrayModel.shared
+    @StateObject var viewModel = TrayMenuModel.shared
 
     init() {
         if NSClassFromString("XCTestCase") == nil { // Prevent SwiftUI app loading during unit testing

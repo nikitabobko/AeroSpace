@@ -45,10 +45,10 @@ private func refreshWorkspaces() {
             focusedWorkspace = focusedWindow.workspace
         }
         focusedWorkspace.assignedMonitorOfNotEmptyWorkspace.setActiveWorkspace(focusedWorkspace)
-        TrayModel.shared.focusedWorkspaceTrayText = focusedWorkspace.name
+        TrayMenuModel.shared.focusedWorkspaceTrayText = focusedWorkspace.name
     } else {
         debug("refreshWorkspaces: empty")
-        TrayModel.shared.focusedWorkspaceTrayText = currentEmptyWorkspace.name
+        TrayMenuModel.shared.focusedWorkspaceTrayText = currentEmptyWorkspace.name
     }
 }
 

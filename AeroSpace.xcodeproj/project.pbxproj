@@ -21,6 +21,7 @@
 		42197B9C71A0CDDE65804A6A /* accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D31BF26EAFA96F675D2C14B /* accessibility.swift */; };
 		45AA5FD4A023AF751922BC22 /* BundleEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7A2DF0D1F72B80B1F04240 /* BundleEx.swift */; };
 		45EA2D1C90430C432E123B51 /* keysMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0D40CBD65704BA9595C2FA /* keysMap.swift */; };
+		56E72B24303F5F337B31B776 /* TrayMenuModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5F52E346D024960EAF5938 /* TrayMenuModel.swift */; };
 		5DA2DA21600E8B5BCA3DCFC0 /* LayoutCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B673C67B00DBFCC27FFE7 /* LayoutCommand.swift */; };
 		6317AB471F4C4F5D66A25784 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEDBFFCA7A77D96B18FB0732 /* Assets.xcassets */; };
 		635733FDDF37E44364372B74 /* MruStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954A434EE57D76F5A9D4140D /* MruStack.swift */; };
@@ -45,7 +46,6 @@
 		BD6301B2CFC16FDE4223ACB8 /* MacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DB782C527ABE0CF31740EB /* MacApp.swift */; };
 		BF16873111EEDE60A8AACD6B /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F068BCC50ED846DCBFDE57 /* Workspace.swift */; };
 		C0A88261ECF505FC5648FC0A /* OptionalEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EDFD4A9F45182CA6E0BD7B /* OptionalEx.swift */; };
-		D941E6DBC319F08676B40E5B /* TrayModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A8D2390FEF4421BBCA411C6 /* TrayModel.swift */; };
 		E5682579AEC6B84CF6FCE90D /* TilingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C848D6E57FDF22AAF0FB45E6 /* TilingContainer.swift */; };
 		EDFDE707B4DC5E500B1709B1 /* MoveThroughCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B9FFF81EB0327ABD51A7FE /* MoveThroughCommand.swift */; };
 		EECC59858691B99A95542D72 /* MacWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9245C6FACF389672EA71173B /* MacWindow.swift */; };
@@ -78,12 +78,12 @@
 		3A262B442A94C1964509B691 /* TreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNode.swift; sourceTree = "<group>"; };
 		3C2E5977331398421A4FC168 /* GlobalObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalObserver.swift; sourceTree = "<group>"; };
 		43DD32B1711B8EFCC834B68E /* WorkspaceCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceCommand.swift; sourceTree = "<group>"; };
-		4A8D2390FEF4421BBCA411C6 /* TrayModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrayModel.swift; sourceTree = "<group>"; };
 		4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeCommand.swift; sourceTree = "<group>"; };
 		51CE37C1B8D858C81A396F40 /* CollectionEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionEx.swift; sourceTree = "<group>"; };
 		526B113159987FA43EA41120 /* refresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = refresh.swift; sourceTree = "<group>"; };
 		5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AeroSpace-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		569422C0C4C23EF3E024C8E6 /* ExecAndForgetCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecAndForgetCommand.swift; sourceTree = "<group>"; };
+		5F5F52E346D024960EAF5938 /* TrayMenuModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrayMenuModel.swift; sourceTree = "<group>"; };
 		67B9FFF81EB0327ABD51A7FE /* MoveThroughCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveThroughCommand.swift; sourceTree = "<group>"; };
 		67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parseConfig.swift; sourceTree = "<group>"; };
 		6935AF0A2DB3D186D1C6218F /* NSWorkspaceEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSWorkspaceEx.swift; sourceTree = "<group>"; };
@@ -190,7 +190,7 @@
 				EC2F56249A233EC9806D0F08 /* Bridged-Header.h */,
 				3C2E5977331398421A4FC168 /* GlobalObserver.swift */,
 				526B113159987FA43EA41120 /* refresh.swift */,
-				4A8D2390FEF4421BBCA411C6 /* TrayModel.swift */,
+				5F5F52E346D024960EAF5938 /* TrayMenuModel.swift */,
 				A711A25EEC57098295B90C17 /* command */,
 				50A41C4CCFC95C514CA1EAD5 /* config */,
 				297CAFE291FBC024407F4378 /* tree */,
@@ -381,7 +381,7 @@
 				FC35D6D0A678CC802972C6FE /* ReloadConfigCommand.swift in Sources */,
 				AE76A183D0454E4C8ADCE380 /* SequenceEx.swift in Sources */,
 				E5682579AEC6B84CF6FCE90D /* TilingContainer.swift in Sources */,
-				D941E6DBC319F08676B40E5B /* TrayModel.swift in Sources */,
+				56E72B24303F5F337B31B776 /* TrayMenuModel.swift in Sources */,
 				F892B5DCB4F731B3E173FF4C /* TreeNode.swift in Sources */,
 				03D8ABD4597EDB00D79807E1 /* TreeNodeEx.swift in Sources */,
 				BF16873111EEDE60A8AACD6B /* Workspace.swift in Sources */,

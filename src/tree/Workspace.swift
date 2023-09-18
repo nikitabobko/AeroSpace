@@ -88,7 +88,7 @@ class Workspace: TreeNode, Hashable, Identifiable {
             preservedNames.contains(workspace.name) ||
                     !workspace.isEffectivelyEmpty ||
                     workspace == currentEmptyWorkspace ||
-                    workspace.name == TrayModel.shared.focusedWorkspaceTrayText
+                    workspace.name == TrayMenuModel.shared.focusedWorkspaceTrayText
         }
     }
 
@@ -122,7 +122,7 @@ extension Workspace {
         assignedMonitor ?? errorT("Not empty workspace \(workspace.name) must have an assigned monitor")
     }
 
-    static var focused: Workspace { Workspace.get(byName: TrayModel.shared.focusedWorkspaceTrayText) }
+    static var focused: Workspace { Workspace.get(byName: TrayMenuModel.shared.focusedWorkspaceTrayText) }
 }
 
 extension Monitor {
