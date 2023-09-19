@@ -12,7 +12,7 @@ struct FocusCommand: Command {
 
     func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
-        guard let currentWindow = focusedWindow ?? Workspace.focused.mruWindows.mostRecent else { return }
+        guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
         if let direction = direction.cardinalOrNil {
             let orientation = direction.orientation
             guard let topMostChild = currentWindow.parentsWithSelf.first(where: {

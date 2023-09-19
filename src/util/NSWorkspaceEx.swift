@@ -7,3 +7,7 @@ func setFocusedAppForCurrentRefreshSession(app: NSRunningApplication?) {
 var focusedApp: MacApp? { _focusedApp?.macApp ?? NSWorkspace.shared.frontmostApplication?.macApp }
 
 var focusedWindow: MacWindow? { focusedApp?.focusedWindow }
+
+var focusedWindowOrEffectivelyFocused: MacWindow? {
+    focusedWindow ?? Workspace.focused.mruWindows.mostRecent ?? Workspace.focused.anyLeafWindowRecursive
+}

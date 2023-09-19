@@ -12,7 +12,7 @@ struct LayoutCommand: Command {
 
     func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
-        guard let window = focusedWindow ?? Workspace.focused.mruWindows.mostRecent else { return }
+        guard let window = focusedWindowOrEffectivelyFocused else { return }
         let targetLayout: ConfigLayout? = toggleBetween.firstIndex(of: window.configLayout)
             .flatMap { toggleBetween.getOrNil(atIndex: $0 + 1) }
             .orElse { toggleBetween.first }
