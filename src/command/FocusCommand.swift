@@ -14,9 +14,8 @@ struct FocusCommand: Command {
         precondition(Thread.current.isMainThread)
         guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
         if let direction = direction.cardinalOrNil {
-            let orientation = direction.orientation
             guard let topMostChild = currentWindow.parentsWithSelf.first(where: {
-                $0.parent is Workspace || ($0.parent as? TilingContainer)?.orientation == orientation
+                $0.parent is Workspace || ($0.parent as? TilingContainer)?.orientation == direction.orientation
             }) else { return }
             guard let parent = topMostChild.parent as? TilingContainer else { return }
             guard let index = parent.children.firstIndex(of: topMostChild) else { return }

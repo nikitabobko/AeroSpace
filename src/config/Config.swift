@@ -6,9 +6,17 @@ struct Config {
     let autoFlattenContainers: Bool
     let floatingWindowsOnTop: Bool
     let mainLayout: ConfigLayout
+    let focusWrapping: FocusWrapping
+
     let modes: [String: Mode]
     var workspaceNames: [String]
     var mainMode: Mode { modes[mainModeId] ?? errorT("Invalid config. main mode must be always presented") }
+}
+
+enum FocusWrapping: String { // todo think about mental model
+    case disable
+    case workspace
+    case container
 }
 
 enum ConfigLayout: String {

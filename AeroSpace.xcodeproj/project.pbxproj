@@ -34,6 +34,7 @@
 		852F88894A3B9FC385563665 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 42BC1E757EF69233C2262FF4 /* HotKey */; };
 		920FDF8498DCCB62149D1719 /* Monitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6507EBAA795220FD0C05384 /* Monitor.swift */; };
 		93D44EA41776738B4758C28D /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976540EBEACF846D598CD6E1 /* util.swift */; };
+		9C0A4EE922F146B3D0E62CFF /* FocusCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFEE1096AFFF0995C8B935AC /* FocusCommandTest.swift */; };
 		A0765C31043BCFB0420BF1C9 /* parseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */; };
 		A2CBF9674964F9083BB198D2 /* ArrayEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D7F7F87FBE7D0BDE4E87F /* ArrayEx.swift */; };
 		A4F66097ADF0FD58C6B715AE /* NSWorkspaceEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6935AF0A2DB3D186D1C6218F /* NSWorkspaceEx.swift */; };
@@ -104,6 +105,7 @@
 		AF3BB3DD434C75536217CB88 /* NSScreenEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSScreenEx.swift; sourceTree = "<group>"; };
 		B7DB782C527ABE0CF31740EB /* MacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacApp.swift; sourceTree = "<group>"; };
 		BEF353340822CD20E9DAB3EC /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
+		BFEE1096AFFF0995C8B935AC /* FocusCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusCommandTest.swift; sourceTree = "<group>"; };
 		C3F068BCC50ED846DCBFDE57 /* Workspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		C848D6E57FDF22AAF0FB45E6 /* TilingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilingContainer.swift; sourceTree = "<group>"; };
 		CB03A4736BC3F6D19E4E69F3 /* parseCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parseCommand.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				12EA50A972BA714F2BA3BBC1 /* ConfigTest.swift */,
+				BFEE1096AFFF0995C8B935AC /* FocusCommandTest.swift */,
 				7910D7B9C0A232187CCA1F10 /* util.swift */,
 			);
 			path = test;
@@ -344,6 +347,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6715CC184E718828173DFBD5 /* ConfigTest.swift in Sources */,
+				9C0A4EE922F146B3D0E62CFF /* FocusCommandTest.swift in Sources */,
 				F74FC5ECBCE9C8A6D09AE9F5 /* util.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

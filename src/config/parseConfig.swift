@@ -41,6 +41,9 @@ func parseConfig(_ rawToml: String) -> Config {
     let key5 = "main-layout"
     var value5: ConfigLayout? = nil
 
+    let key6 = "focus-wrapping"
+    var value6: FocusWrapping? = nil
+
     for (key, value) in rawTable {
         let backtrace: TomlBacktrace = .root(key)
         switch key {
@@ -54,6 +57,8 @@ func parseConfig(_ rawToml: String) -> Config {
             value4 = parseBool(value, backtrace)
         case key5:
             value5 = parseMainLayout(value, backtrace)
+        case key6:
+            value6 = parseFocusWrapping(value, backtrace)
         case "mode":
             modes = parseModes(value, backtrace)
         default:
@@ -69,6 +74,8 @@ func parseConfig(_ rawToml: String) -> Config {
         autoFlattenContainers: value3 ?? defaultConfig.autoFlattenContainers,
         floatingWindowsOnTop: value4 ?? defaultConfig.floatingWindowsOnTop,
         mainLayout: value5 ?? defaultConfig.mainLayout,
+        focusWrapping: value6 ?? defaultConfig.focusWrapping,
+
         modes: modesOrDefault,
         workspaceNames: modesOrDefault.values.lazy
             .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
@@ -77,6 +84,11 @@ func parseConfig(_ rawToml: String) -> Config {
             }
             .compactMap { (command: Command) -> String? in (command as? WorkspaceCommand)?.workspaceName ?? nil }
     )
+}
+
+private func parseFocusWrapping(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> FocusWrapping {
+    let rawString = raw.string ?? expectedActualTypeError(expected: .string, actual: raw.type, backtrace)
+    return FocusWrapping(rawValue: rawString) ?? errorT("\(backtrace): Can't parse focus wrapping")
 }
 
 private func parseMainLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ConfigLayout {

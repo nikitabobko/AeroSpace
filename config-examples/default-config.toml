@@ -8,6 +8,7 @@ auto-flatten-containers = true
 # auto-different-orientation-for-nested-containers = true
 # start-at-login = true
 floating-windows-on-top = true
+focus-wrapping = 'workspace'
 main-layout = 'h_list' # todo change
 
 [mode.main.binding]
