@@ -34,8 +34,7 @@ extension TilingContainer {
         if children.isEmpty && !isRootContainer {
             unbindFromParent()
         }
-        // todo make it configurable
-        if let child = children.singleOrNil() as? TilingContainer { // flatten containers
+        if let child = children.singleOrNil() as? TilingContainer, config.autoFlattenContainers {
             let previousBinding = unbindFromParent()
             child.bindTo(parent: parent, adaptiveWeight: previousBinding.adaptiveWeight, index: previousBinding.index)
             child.normalizeContainersRecursive()
