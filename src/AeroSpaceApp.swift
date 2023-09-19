@@ -1,18 +1,6 @@
 import HotKey
 import SwiftUI
 
-let settings = [
-    Setting(name: "W: 1", hotkey: .one, modifiers: [.option]),
-    Setting(name: "W: 2", hotkey: .two, modifiers: [.option]),
-    Setting(name: "W: 3", hotkey: .three, modifiers: [.option]),
-]
-
-struct Setting {
-    let name: String
-    let hotkey: Key
-    let modifiers: NSEvent.ModifierFlags
-}
-
 //osascript -e 'tell app "Terminal"
 //activate
 //do script "tail -f ~/log/0.txt"
