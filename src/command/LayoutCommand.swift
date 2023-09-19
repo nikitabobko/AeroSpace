@@ -51,7 +51,7 @@ private extension ConfigLayout {
     }
 }
 
-private extension MacWindow {
+private extension Window {
     var configLayout: ConfigLayout {
         if let parent = parent as? TilingContainer {
             switch parent.layout {

@@ -20,10 +20,10 @@ extension TreeNode {
         self as? Workspace ?? parent?.workspace ?? errorT("Unknown type \(Self.self)")
     }
 
-    func allLeafWindowsRecursive(snappedTo direction: CardinalDirection) -> [MacWindow] {
+    func allLeafWindowsRecursive(snappedTo direction: CardinalDirection) -> [Window] {
         if let workspace = self as? Workspace {
             return workspace.rootTilingContainer.allLeafWindowsRecursive(snappedTo: direction)
-        } else if let window = self as? MacWindow {
+        } else if let window = self as? Window {
             return [window]
         } else if let container = self as? TilingContainer {
             if direction.orientation == container.orientation {

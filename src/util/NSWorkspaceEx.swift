@@ -8,6 +8,6 @@ var focusedApp: MacApp? { _focusedApp?.macApp ?? NSWorkspace.shared.frontmostApp
 
 var focusedWindow: MacWindow? { focusedApp?.focusedWindow }
 
-var focusedWindowOrEffectivelyFocused: MacWindow? {
+var focusedWindowOrEffectivelyFocused: Window? {
     focusedWindow ?? Workspace.focused.mruWindows.mostRecent ?? Workspace.focused.anyLeafWindowRecursive
 }

@@ -1,5 +1,4 @@
-class MacWindow: TreeNode, Hashable {
-    let windowId: CGWindowID
+final class MacWindow: Window {
     let axWindow: AXUIElement
     let app: MacApp
     private var prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect: CGPoint?
@@ -10,10 +9,9 @@ class MacWindow: TreeNode, Hashable {
     override var parent: TreeNode { super.parent ?? errorT("MacWindows always have parent") }
 
     private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: TreeNode, adaptiveWeight: CGFloat) {
-        self.windowId = id
         self.app = app
         self.axWindow = axWindow
-        super.init(parent: parent, adaptiveWeight: adaptiveWeight)
+        super.init(id: id, parent: parent, adaptiveWeight: adaptiveWeight)
     }
 
     private static var allWindowsMap: [CGWindowID: MacWindow] = [:]
@@ -90,7 +88,7 @@ class MacWindow: TreeNode, Hashable {
     }
 
     @discardableResult
-    func focus() -> Bool {
+    override func focus() -> Bool {
         if app.nsApp.activate(options: .activateIgnoringOtherApps) && axWindow.raise() {
             workspace.mruWindows.pushOrRaise(self)
             setFocusedAppForCurrentRefreshSession(app: app.nsApp)
@@ -173,10 +171,6 @@ class MacWindow: TreeNode, Hashable {
                 window.garbageCollect()
             }
         }
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(windowId)
     }
 }
 

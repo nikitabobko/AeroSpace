@@ -20,7 +20,7 @@ struct FocusCommand: Command {
             guard let parent = topMostChild.parent as? TilingContainer else { return }
             guard let index = parent.children.firstIndex(of: topMostChild) else { return }
             let mruIndexMap = currentWindow.workspace.mruWindows.mruIndexMap
-            let windowToFocus: MacWindow? = parent.children
+            let windowToFocus: Window? = parent.children
                 .getOrNil(atIndex: direction.isPositive ? index + 1 : index - 1)?
                 .allLeafWindowsRecursive(snappedTo: direction.opposite)
                 .minBy { mruIndexMap[$0] ?? Int.max }
