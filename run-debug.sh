@@ -8,4 +8,4 @@ cd "$(dirname "$0")"
 
 xcodegen # https://github.com/yonaskolb/XcodeGen
 ./build-debug.sh
-./build/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug
+./.build/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug
