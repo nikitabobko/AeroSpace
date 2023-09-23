@@ -3,11 +3,6 @@ import HotKey
 
 // todo convert all `error` during config parsing to returning defaults and reporting errors to where? Some kind of log?
 
-let mainModeId = "main"
-let defaultConfig =
-    parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!))
-var config: Config = defaultConfig
-
 func reloadConfig() {
     let rawConfig = try? String(contentsOf: FileManager.default.homeDirectoryForCurrentUser.appending(path: ".aerospace.toml"))
     // todo mainMode activate/deactivate

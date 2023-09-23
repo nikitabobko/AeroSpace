@@ -1,5 +1,10 @@
 import HotKey
 
+let mainModeId = "main"
+let defaultConfig =
+    parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!))
+var config: Config = defaultConfig
+
 struct Config {
     let afterStartupCommand: Command
     let usePaddingForNestedContainersWithTheSameOrientation: Bool
