@@ -1,4 +1,4 @@
-class MacApp: Hashable {
+final class MacApp: AeroApp {
     let nsApp: NSRunningApplication
     private let axApp: AXUIElement
 
@@ -7,6 +7,7 @@ class MacApp: Hashable {
     private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement) {
         self.nsApp = nsApp
         self.axApp = axApp
+        super.init(id: nsApp.processIdentifier)
     }
 
     private static var allApps: [pid_t: MacApp] = [:]
@@ -55,21 +56,7 @@ class MacApp: Hashable {
         return true
     }
 
-    static func ==(lhs: MacApp, rhs: MacApp) -> Bool {
-        if lhs.nsApp.processIdentifier == rhs.nsApp.processIdentifier {
-            precondition(lhs === rhs)
-            return true
-        } else {
-            precondition(lhs !== rhs)
-            return false
-        }
-    }
-
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(nsApp.processIdentifier)
-    }
-
-    var focusedWindow: MacWindow? {
+    override var focusedWindow: MacWindow? {
         axFocusedWindow.flatMap { MacWindow.get(app: self, axWindow: $0) }
     }
 

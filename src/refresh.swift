@@ -34,7 +34,7 @@ func updateLastActiveWindow() {
 }
 
 private func refreshWorkspaces() {
-    if let focusedWindow = focusedWindow {
+    if let focusedWindow = focusedWindow as! MacWindow? { // todo
         debug("refreshWorkspaces: not empty")
         let focusedWorkspace: Workspace
         if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation {

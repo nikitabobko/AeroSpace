@@ -8,8 +8,9 @@ extension NSScreen {
     ///
     /// Returns `nil` if the desktop is selected (which is when the app is active but doesn't show any window)
     static var focusedMonitorOrNilIfDesktop: Monitor? {
-        focusedWindow?.getCenter()?.monitorApproximation
-                ?? NSScreen.screens.singleOrNil()?.monitor
+        let window = focusedWindow as! MacWindow? // todo
+        return window?.getCenter()?.monitorApproximation
+                        ?? NSScreen.screens.singleOrNil()?.monitor
 
         //NSWorkspace.activeApp?.macApp?.axFocusedWindow?
         //        .get(Ax.topLeftCornerAttr)?.monitorApproximation

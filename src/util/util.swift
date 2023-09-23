@@ -22,6 +22,8 @@ extension String? {
     var isNilOrEmpty: Bool { self == nil || self == "" }
 }
 
+var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
+
 extension String {
     func removePrefix(_ prefix: String) -> String {
         hasPrefix(prefix) ? String(dropFirst(prefix.count)) : self

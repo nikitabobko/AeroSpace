@@ -1,7 +1,7 @@
 import XCTest
 @testable import AeroSpace_Debug
 
-final class CommandTest: XCTestCase {
+final class ExecCommandTest: XCTestCase {
     func testExecAndWait() async throws {
         let before = Date().timeIntervalSince1970
         await ExecAndWaitCommand(bashCommand: "sleep 2").runWithoutRefresh()

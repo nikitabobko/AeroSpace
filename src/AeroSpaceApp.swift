@@ -12,7 +12,7 @@ struct AeroSpaceApp: App {
     @StateObject var viewModel = TrayMenuModel.shared
 
     init() {
-        if NSClassFromString("XCTestCase") == nil { // Prevent SwiftUI app loading during unit testing
+        if !isUnitTest { // Prevent SwiftUI app loading during unit testing
             reloadConfig()
 
             checkAccessibilityPermissions()

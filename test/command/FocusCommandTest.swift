@@ -1,3 +1,6 @@
+import XCTest
+@testable import AeroSpace_Debug
+
 /*
 todo write tests
 
@@ -17,3 +20,9 @@ action: focus up
 expected: mru(window3, window4) is focused
 
 */
+
+final class FocusCommandTest: XCTestCase {
+    func testFocus() async throws {
+        await FocusCommand(direction: .left).runWithoutRefresh()
+    }
+}
