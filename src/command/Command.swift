@@ -8,6 +8,6 @@ extension Command {
     func run() async  {
         refresh()
         await runWithoutRefresh()
-        refresh(startSession: false)
+        refresh()
     }
 }

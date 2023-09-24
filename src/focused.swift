@@ -1,10 +1,18 @@
 private var _focusedApp: NSRunningApplication? = nil
 
-func setFocusedAppForCurrentRefreshSession(app: NSRunningApplication?) {
-    _focusedApp = app
+func defocusAllWindows() {
+    // Since AeroSpace doesn't show any windows, focusing AeroSpace defocuses all windows
+    let current = NSRunningApplication.current
+    precondition(current.activate(options: .activateIgnoringOtherApps))
+    _focusedApp = current
 }
 
-var focusedApp: AeroApp? { _focusedApp?.macApp ?? NSWorkspace.shared.frontmostApplication?.macApp }
+var focusedApp: AeroApp? {
+    if NSWorkspace.shared.frontmostApplication == _focusedApp {
+        _focusedApp = nil
+    }
+    return _focusedApp?.macApp ?? NSWorkspace.shared.frontmostApplication?.macApp
+}
 
 var focusedWindow: Window? { focusedApp?.focusedWindow }
 

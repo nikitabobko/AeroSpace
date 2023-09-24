@@ -10,18 +10,18 @@ final class MacApp: AeroApp {
         super.init(id: nsApp.processIdentifier)
     }
 
-    private static var allApps: [pid_t: MacApp] = [:]
+    private static var allAppsMap: [pid_t: MacApp] = [:]
 
     fileprivate static func get(_ nsApp: NSRunningApplication) -> MacApp? {
         let pid = nsApp.processIdentifier
-        if let existing = allApps[pid] {
+        if let existing = allAppsMap[pid] {
             return existing
         } else {
             let app = MacApp(nsApp, AXUIElementCreateApplication(nsApp.processIdentifier))
 
             if app.observe(refreshObs, kAXWindowCreatedNotification) &&
                        app.observe(refreshObs, kAXFocusedWindowChangedNotification) {
-                allApps[pid] = app
+                allAppsMap[pid] = app
                 return app
             } else {
                 app.garbageCollect()
@@ -32,7 +32,7 @@ final class MacApp: AeroApp {
 
     private func garbageCollect() {
         debug("garbageCollectApp: terminated \(self.title ?? "")")
-        MacApp.allApps.removeValue(forKey: nsApp.processIdentifier)
+        MacApp.allAppsMap.removeValue(forKey: nsApp.processIdentifier)
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
         }
@@ -41,7 +41,7 @@ final class MacApp: AeroApp {
     }
 
     static func garbageCollectTerminatedApps() {
-        for app in Array(allApps.values) {
+        for app in Array(allAppsMap.values) {
             if app.nsApp.isTerminated {
                 app.garbageCollect()
             }

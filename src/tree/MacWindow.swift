@@ -91,7 +91,6 @@ final class MacWindow: Window {
     override func focus() -> Bool {
         if app.nsApp.activate(options: .activateIgnoringOtherApps) && axWindow.raise() {
             workspace.mruWindows.pushOrRaise(self)
-            setFocusedAppForCurrentRefreshSession(app: app.nsApp)
             return true
         } else {
             return false

@@ -15,19 +15,12 @@ struct WorkspaceCommand : Command {
             if let focusedMonitor = NSScreen.focusedMonitorOrNilIfDesktop ?? NSScreen.main?.monitor {
                 focusedMonitor.setActiveWorkspace(workspace)
             }
-            WorkspaceCommand.defocusAllWindows()
+            defocusAllWindows()
         }
         debug("End switch to workspace: \(workspace.name)")
     }
 
     static func switchToWorkspace(_ workspace: Workspace) async {
         await WorkspaceCommand(workspaceName: workspace.name).run()
-    }
-
-    private static func defocusAllWindows() {
-        // Since AeroSpace doesn't show any windows, focusing AeroSpace defocuses all windows
-        let current = NSRunningApplication.current
-        current.activate(options: .activateIgnoringOtherApps)
-        setFocusedAppForCurrentRefreshSession(app: current)
     }
 }

@@ -1,11 +1,8 @@
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input
-func refresh(startSession: Bool = true) {
+func refresh() {
     precondition(Thread.current.isMainThread)
-    debug("refresh (startSession=\(startSession)) \(Date.now.formatted(date: .abbreviated, time: .standard))")
-    if startSession {
-        setFocusedAppForCurrentRefreshSession(app: nil)
-    }
+    debug("refresh \(Date.now.formatted(date: .abbreviated, time: .standard))")
 
     MacWindow.garbageCollectClosedWindows()
     // Garbage collect terminated apps and windows before working with all windows
