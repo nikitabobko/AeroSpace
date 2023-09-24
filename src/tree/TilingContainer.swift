@@ -31,18 +31,18 @@ extension TilingContainer {
     }
 
     func normalizeContainersRecursive() {
-        if children.isEmpty && !isRootContainer {
-            unbindFromParent()
-        }
         if let child = children.singleOrNil() as? TilingContainer, config.autoFlattenContainers {
+            child.unbindFromParent()
+            let parent = parent
             let previousBinding = unbindFromParent()
             child.bindTo(parent: parent, adaptiveWeight: previousBinding.adaptiveWeight, index: previousBinding.index)
             child.normalizeContainersRecursive()
         } else {
             for child in children {
-                if let tilingChild = child as? TilingContainer {
-                    tilingChild.normalizeContainersRecursive()
-                }
+                (child as? TilingContainer)?.normalizeContainersRecursive()
+            }
+            if children.isEmpty && !isRootContainer {
+                unbindFromParent()
             }
         }
     }

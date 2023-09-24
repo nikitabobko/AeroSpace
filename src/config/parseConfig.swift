@@ -74,9 +74,7 @@ func parseConfig(_ rawToml: String) -> Config {
         modes: modesOrDefault,
         workspaceNames: modesOrDefault.values.lazy
             .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
-            .flatMap { (binding: HotkeyBinding) -> [any Command] in
-                (binding.command as? CompositeCommand)?.subCommands ?? [binding.command]
-            }
+            .map { (binding: HotkeyBinding) -> any Command in binding.command }
             .compactMap { (command: Command) -> String? in (command as? WorkspaceCommand)?.workspaceName ?? nil }
     )
 }

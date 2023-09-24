@@ -1,17 +1,17 @@
 import HotKey
 
-let mainModeId = "main"
+let mainModeId = "main" // todo rename to "default"
 let defaultConfig =
     parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!))
 var config: Config = defaultConfig
 
 struct Config {
-    let afterStartupCommand: Command
-    let usePaddingForNestedContainersWithTheSameOrientation: Bool
-    let autoFlattenContainers: Bool
-    let floatingWindowsOnTop: Bool
-    let mainLayout: ConfigLayout
-    let focusWrapping: FocusWrapping
+    var afterStartupCommand: Command
+    var usePaddingForNestedContainersWithTheSameOrientation: Bool // todo
+    var autoFlattenContainers: Bool
+    var floatingWindowsOnTop: Bool
+    var mainLayout: ConfigLayout // todo rename to defaultLayout
+    var focusWrapping: FocusWrapping
 
     let modes: [String: Mode]
     var workspaceNames: [String]

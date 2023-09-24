@@ -156,13 +156,11 @@ final class MacWindow: Window {
         axWindow.get(Ax.topLeftCornerAttr)
     }
 
-    func getRect() -> Rect? {
+    override func getRect() -> Rect? {
         guard let topLeftCorner = getTopLeftCorner() else { return nil }
         guard let size = getSize() else { return nil }
         return Rect(topLeftX: topLeftCorner.x, topLeftY: topLeftCorner.y, width: size.width, height: size.height)
     }
-
-    func getCenter() -> CGPoint? { getRect()?.center }
 
     static func garbageCollectClosedWindows() {
         for window in allWindows {

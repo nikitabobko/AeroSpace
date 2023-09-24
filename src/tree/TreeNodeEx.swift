@@ -37,9 +37,9 @@ extension TreeNode {
         }
     }
 
-    var anyLeafWindowRecursive: MacWindow? {
-        if let window = children.first(where: { $0 is MacWindow }) {
-            return (window as! MacWindow)
+    var anyLeafWindowRecursive: Window? {
+        if let window = children.first(where: { $0 is Window }) {
+            return (window as! Window)
         }
         for child in children {
             if let window = child.anyLeafWindowRecursive {
@@ -63,6 +63,8 @@ extension TreeNode {
         get { getWeight(.V) }
         set { setWeight(.V, newValue) }
     }
+
+    func getCenter() -> CGPoint? { getRect()?.center }
 
     /// Containers' weights must be normalized before calling this function
     func layoutRecursive(_ _point: CGPoint, width: CGFloat, height: CGFloat) {

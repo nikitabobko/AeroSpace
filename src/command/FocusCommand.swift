@@ -1,4 +1,4 @@
-struct FocusCommand: Command {
+struct FocusCommand: Command { // todo speed up. Now it's slightly slow (probably because of refresh)
     let direction: Direction
 
     enum Direction: String {
@@ -18,6 +18,7 @@ struct FocusCommand: Command {
                 $0.parent is Workspace || ($0.parent as? TilingContainer)?.orientation == direction.orientation
             }) else { return }
             guard let parent = topMostChild.parent as? TilingContainer else { return }
+            precondition(parent.orientation == direction.orientation)
             guard let index = parent.children.firstIndex(of: topMostChild) else { return }
             let mruIndexMap = currentWindow.workspace.mruWindows.mruIndexMap
             let windowToFocus: Window? = parent.children

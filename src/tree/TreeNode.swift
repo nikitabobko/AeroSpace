@@ -32,7 +32,7 @@ class TreeNode: Equatable {
         if let tilingParent = parent as? TilingContainer {
             return tilingParent.orientation == targetOrientation ? adaptiveWeight : tilingParent.getWeight(targetOrientation)
         } else if let parent = parent as? Workspace {
-            if self is MacWindow { // self is a floating window
+            if self is Window { // self is a floating window
                 error("Weight doesn't make sense for floating windows")
             } else { // root tiling container
                 precondition(self is TilingContainer)
@@ -45,7 +45,7 @@ class TreeNode: Equatable {
 
     @discardableResult
     func bindTo(parent newParent: TreeNode, adaptiveWeight: CGFloat, index: Int = -1) -> PreviousBindingData? {
-        if newParent is MacWindow {
+        if newParent is Window {
             error("Windows can't have children")
         }
         if _parent === newParent {
@@ -56,7 +56,9 @@ class TreeNode: Equatable {
         if newParent === NilTreeNode.instance {
             return result
         }
-        if let window = self as? MacWindow {
+        newParent._children.insert(self, at: index == -1 ? newParent._children.count : index)
+        _parent = newParent
+        if let window = self as? Window {
             let newParentWorkspace = newParent.workspace
             newParentWorkspace.mruWindows.pushOrRaise(window)
             newParentWorkspace.assignedMonitor = window.getCenter()?.monitorApproximation
@@ -65,15 +67,13 @@ class TreeNode: Equatable {
                 currentEmptyWorkspace = getOrCreateNextEmptyWorkspace()
             }
         }
-        newParent._children.insert(self, at: index == -1 ? newParent._children.count : index)
-        _parent = newParent
         return result
     }
 
     private func unbindIfPossible() -> PreviousBindingData? {
         guard let _parent else { return nil }
         let workspace = workspace
-        if let window = self as? MacWindow {
+        if let window = self as? Window {
             workspace.mruWindows.remove(window)
         }
 
@@ -95,6 +95,11 @@ class TreeNode: Equatable {
     static func ==(lhs: TreeNode, rhs: TreeNode) -> Bool {
         lhs === rhs
     }
+
+
+    @discardableResult
+    func focus() -> Bool { error("Not implemented") }
+    func getRect() -> Rect? { error("Not implemented") }
 }
 
 struct PreviousBindingData {

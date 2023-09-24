@@ -6,9 +6,6 @@ class Window: TreeNode, Hashable {
         super.init(parent: parent, adaptiveWeight: adaptiveWeight)
     }
 
-    @discardableResult
-    func focus() -> Bool { error("Not implemented") }
-
     func hash(into hasher: inout Hasher) {
         hasher.combine(windowId)
     }
