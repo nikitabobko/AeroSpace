@@ -23,23 +23,22 @@ expected: mru(window3, window4) is focused
 
 final class FocusCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
-
     override func tearDownWithError() throws { tearDownWorkspacesForTests() }
 
     func testFocus() async {
         XCTAssertEqual(focusedWindow, nil)
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0, adaptiveWeight: 1)
-            TestWindow(id: 2, parent: $0, adaptiveWeight: 1).focus()
-            TestWindow(id: 3, parent: $0, adaptiveWeight: 1)
+            TestWindow(id: 1, parent: $0)
+            TestWindow(id: 2, parent: $0).focus()
+            TestWindow(id: 3, parent: $0)
         }
         XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
     func testFocusAlongTheContainerOrientation() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0, adaptiveWeight: 1).focus()
-            TestWindow(id: 2, parent: $0, adaptiveWeight: 1)
+            TestWindow(id: 1, parent: $0).focus()
+            TestWindow(id: 2, parent: $0)
         }
 
         await FocusCommand(direction: .right).runWithoutRefresh()
@@ -48,8 +47,8 @@ final class FocusCommandTest: XCTestCase {
 
     func testFocusAcrossTheContainerOrientation() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0, adaptiveWeight: 1).focus()
-            TestWindow(id: 2, parent: $0, adaptiveWeight: 1)
+            TestWindow(id: 1, parent: $0).focus()
+            TestWindow(id: 2, parent: $0)
         }
 
         await FocusCommand(direction: .up).runWithoutRefresh()
@@ -60,8 +59,8 @@ final class FocusCommandTest: XCTestCase {
 
     func testFocusNoWrapping() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0, adaptiveWeight: 1).focus()
-            TestWindow(id: 2, parent: $0, adaptiveWeight: 1)
+            TestWindow(id: 1, parent: $0).focus()
+            TestWindow(id: 2, parent: $0)
         }
 
         await FocusCommand(direction: .left).runWithoutRefresh()
@@ -75,13 +74,13 @@ final class FocusCommandTest: XCTestCase {
         var window3: Window!
         var unrelatedWindow: Window!
         workspace.rootTilingContainer.apply {
-            startWindow = TestWindow(id: 1, parent: $0, adaptiveWeight: 1).apply { $0.focus() }
+            startWindow = TestWindow(id: 1, parent: $0).apply { $0.focus() }
             TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
                 TilingContainer.newHList(parent: $0, adaptiveWeight: 1).apply {
-                    window2 = TestWindow(id: 2, parent: $0, adaptiveWeight: 1)
-                    unrelatedWindow = TestWindow(id: 5, parent: $0, adaptiveWeight: 1)
+                    window2 = TestWindow(id: 2, parent: $0)
+                    unrelatedWindow = TestWindow(id: 5, parent: $0)
                 }
-                window3 = TestWindow(id: 3, parent: $0, adaptiveWeight: 1)
+                window3 = TestWindow(id: 3, parent: $0)
             }
         }
 

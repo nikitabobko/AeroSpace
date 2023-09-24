@@ -11,7 +11,9 @@ final class TestApp: AeroApp {
     var windows: [TestWindow]  {
         get { _windows }
         set {
-            focusedWindow.map { precondition(newValue.contains($0)) }
+            if let focusedWindow {
+                precondition(newValue.contains(focusedWindow))
+            }
             _windows = newValue
         }
     }
@@ -20,7 +22,9 @@ final class TestApp: AeroApp {
     override var focusedWindow: TestWindow? {
         get { _focusedWindow }
         set {
-            newValue.map { precondition(windows.contains($0)) }
+            if let window = newValue {
+                precondition(windows.contains(window))
+            }
             _focusedWindow = newValue
         }
     }

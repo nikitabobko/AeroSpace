@@ -1,14 +1,14 @@
 extension TreeNode {
-    private func visit(node: TreeNode, result: inout [MacWindow]) {
-        if let node = node as? MacWindow {
+    private func visit(node: TreeNode, result: inout [Window]) {
+        if let node = node as? Window {
             result.append(node)
         }
         for child in node.children {
             visit(node: child, result: &result)
         }
     }
-    var allLeafWindowsRecursive: [MacWindow] {
-        var result: [MacWindow] = []
+    var allLeafWindowsRecursive: [Window] {
+        var result: [Window] = []
         visit(node: self, result: &result)
         return result
     }

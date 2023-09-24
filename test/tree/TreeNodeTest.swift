@@ -3,12 +3,11 @@ import XCTest
 
 final class TreeNodeTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
-
     override func tearDownWithError() throws { tearDownWorkspacesForTests() }
 
     func testChildParentCyclicReferenceMemoryLeak() {
         let workspace = Workspace.get(byName: name) // Don't cache root node
-        let window = TestWindow(id: 1, parent: workspace.rootTilingContainer, adaptiveWeight: 1)
+        let window = TestWindow(id: 1, parent: workspace.rootTilingContainer)
 
         XCTAssertNotEqual(window.parent, nil)
         workspace.rootTilingContainer.unbindFromParent()
@@ -19,14 +18,14 @@ final class TreeNodeTest: XCTestCase {
         let workspace = Workspace.get(byName: name)
 
         XCTAssertTrue(workspace.isEffectivelyEmpty)
-        weak var window: TestWindow? = TestWindow(id: 1, parent: workspace.rootTilingContainer, adaptiveWeight: 1)
+        weak var window: TestWindow? = TestWindow(id: 1, parent: workspace.rootTilingContainer)
         XCTAssertNotEqual(window, nil)
         XCTAssertTrue(!workspace.isEffectivelyEmpty)
         window!.unbindFromParent()
         XCTAssertTrue(workspace.isEffectivelyEmpty)
 
         // Don't save to local variable
-        TestWindow(id: 2, parent: workspace.rootTilingContainer, adaptiveWeight: 1)
+        TestWindow(id: 2, parent: workspace.rootTilingContainer)
         XCTAssertTrue(!workspace.isEffectivelyEmpty)
     }
 
@@ -66,7 +65,7 @@ final class TreeNodeTest: XCTestCase {
 
     func testCurrentEmptyWorkspaceChangesOnceNotEmpty() {
         let emptyBefore = currentEmptyWorkspace
-        TestWindow(id: 1, parent: emptyBefore, adaptiveWeight: 1)
+        TestWindow(id: 1, parent: emptyBefore)
         XCTAssertNotEqual(emptyBefore, currentEmptyWorkspace)
     }
 }
