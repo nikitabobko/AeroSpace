@@ -1,4 +1,4 @@
-struct Rect: Hashable {
+struct Rect {
     let topLeftX: CGFloat
     let topLeftY: CGFloat
     let width: CGFloat
