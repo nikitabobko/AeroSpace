@@ -1,5 +1,5 @@
 /// Stack with most recently element on top
-struct MruStack<T: Equatable>: Sequence {
+class MruStack<T: Equatable>: Sequence {
     typealias Iterator = MruStackIterator
     typealias Element = T
 
@@ -11,7 +11,7 @@ struct MruStack<T: Equatable>: Sequence {
 
     var mostRecent: T? { mruNode?.value }
 
-    mutating func pushOrRaise(_ value: T) {
+    func pushOrRaise(_ value: T) {
         remove(value)
         mruNode = Node(value, mruNode)
     }
@@ -22,7 +22,11 @@ struct MruStack<T: Equatable>: Sequence {
         var current = mruNode
         while current != nil {
             if current?.value == value {
-                prev?.next = current?.next
+                if let prev {
+                    prev.next = current?.next
+                } else {
+                    mruNode = nil
+                }
                 current?.next = nil
                 return true
             }
