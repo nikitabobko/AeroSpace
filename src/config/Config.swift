@@ -12,6 +12,7 @@ struct Config {
     var floatingWindowsOnTop: Bool
     var mainLayout: ConfigLayout // todo rename to defaultLayout
     var focusWrapping: FocusWrapping
+    var debugAllWindowsAreFloating: Bool
 
     let modes: [String: Mode]
     var workspaceNames: [String]

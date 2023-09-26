@@ -11,6 +11,7 @@ func setUpWorkspacesForTests() {
         floatingWindowsOnTop: defaultConfig.floatingWindowsOnTop,
         mainLayout: .h_list, // Make default layout predictable
         focusWrapping: defaultConfig.focusWrapping,
+        debugAllWindowsAreFloating: defaultConfig.debugAllWindowsAreFloating,
 
         // Don't create any workspaces for tests
         modes: [mainModeId: Mode(name: nil, bindings: [])],

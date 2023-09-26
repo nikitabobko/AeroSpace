@@ -10,6 +10,7 @@ auto-flatten-containers = true
 floating-windows-on-top = true
 focus-wrapping = 'workspace'
 main-layout = 'h_list' # todo change
+DEBUG-all-windows-are-floating = false
 
 [mode.main.binding]
 alt-enter = 'exec_and_forget open /System/Applications/Utilities/Terminal.app'

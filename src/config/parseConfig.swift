@@ -39,6 +39,9 @@ func parseConfig(_ rawToml: String) -> Config {
     let key6 = "focus-wrapping"
     var value6: FocusWrapping? = nil
 
+    let key7 = "DEBUG-all-windows-are-floating"
+    var value7: Bool? = nil
+
     for (key, value) in rawTable {
         let backtrace: TomlBacktrace = .root(key)
         switch key {
@@ -54,6 +57,8 @@ func parseConfig(_ rawToml: String) -> Config {
             value5 = parseMainLayout(value, backtrace)
         case key6:
             value6 = parseFocusWrapping(value, backtrace)
+        case key7:
+            value7 = parseBool(value, backtrace)
         case "mode":
             modes = parseModes(value, backtrace)
         default:
@@ -70,6 +75,7 @@ func parseConfig(_ rawToml: String) -> Config {
         floatingWindowsOnTop: value4 ?? defaultConfig.floatingWindowsOnTop,
         mainLayout: value5 ?? defaultConfig.mainLayout,
         focusWrapping: value6 ?? defaultConfig.focusWrapping,
+        debugAllWindowsAreFloating: value7 ?? defaultConfig.debugAllWindowsAreFloating,
 
         modes: modesOrDefault,
         workspaceNames: modesOrDefault.values.lazy

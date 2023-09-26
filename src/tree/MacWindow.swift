@@ -41,7 +41,7 @@ final class MacWindow: Window {
             let shouldFloat = shouldFloat(axWindow)
             let parent: TreeNode
             let weight: CGFloat
-            if shouldFloat {
+            if shouldFloat || config.debugAllWindowsAreFloating {
                 parent = workspace
                 weight = FLOATING_ADAPTIVE_WEIGHT
             } else {
