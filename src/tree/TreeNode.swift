@@ -58,6 +58,7 @@ class TreeNode: Equatable {
         }
         newParent._children.insert(self, at: index == -1 ? newParent._children.count : index)
         _parent = newParent
+        self.adaptiveWeight = adaptiveWeight
         if let window = self as? Window {
             let newParentWorkspace = newParent.workspace
             newParentWorkspace.mruWindows.pushOrRaise(window)
@@ -74,7 +75,7 @@ class TreeNode: Equatable {
         guard let _parent else { return nil }
         let workspace = workspace
         if let window = self as? Window {
-            workspace.mruWindows.remove(window)
+            precondition(workspace.mruWindows.remove(window))
         }
 
         let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")

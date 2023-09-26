@@ -19,6 +19,8 @@ final class TestWindow: Window, CustomStringConvertible {
         return true
     }
 
+    override var title: String? { description }
+
     override func getRect() -> Rect? { // todo change to not Optional
         _rect
     }

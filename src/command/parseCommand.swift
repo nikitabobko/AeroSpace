@@ -23,6 +23,8 @@ private func parseSingleCommand(_ raw: String, _ backtrace: TomlBacktrace) -> Co
     let firstWord = String(words.first ?? "")
     if firstWord == "workspace" {
         return WorkspaceCommand(workspaceName: parseSingleArg(args, firstWord, backtrace))
+    } else if firstWord == "move_container_to_workspace" {
+        return MoveContainerToWorkspaceCommand(targetWorkspace: Workspace.get(byName: parseSingleArg(args, firstWord, backtrace)))
     } else if firstWord == "mode" {
         return ModeCommand(idToActivate: parseSingleArg(args, firstWord, backtrace))
     } else if firstWord == "exec_and_wait" {

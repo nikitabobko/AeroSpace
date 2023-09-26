@@ -51,7 +51,6 @@ private func refreshWorkspaces() {
 
 private func layoutWorkspaces() {
     for workspace in Workspace.all {
-        debug("layoutWorkspaces: \(workspace.name) visible=\(workspace.isVisible)")
         if workspace.isVisible {
             workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideViaEmulation() } // todo as!
         } else {

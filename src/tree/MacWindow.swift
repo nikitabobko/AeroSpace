@@ -83,7 +83,7 @@ final class MacWindow: Window {
         return true
     }
 
-    var title: String? {
+    override var title: String? {
         axWindow.get(Ax.titleAttr)
     }
 

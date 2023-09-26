@@ -9,4 +9,6 @@ class Window: TreeNode, Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(windowId)
     }
+
+    var title: String? { error("Not implemented") }
 }
