@@ -20,18 +20,18 @@ class MruStack<T: Equatable>: Sequence {
     func remove(_ value: T) -> Bool {
         var prev: Node<T>? = nil
         var current = mruNode
-        while current != nil {
-            if current?.value == value {
+        while let cur = current {
+            if cur.value == value {
                 if let prev {
-                    prev.next = current?.next
+                    prev.next = cur.next
                 } else {
                     mruNode = nil
                 }
-                current?.next = nil
+                cur.next = nil
                 return true
             }
-            prev = current
-            current = current?.next
+            prev = cur
+            current = cur.next
         }
         return false
     }
