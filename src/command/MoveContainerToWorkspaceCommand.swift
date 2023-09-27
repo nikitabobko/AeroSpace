@@ -1,9 +1,10 @@
 struct MoveContainerToWorkspaceCommand: Command {
-    let targetWorkspace: Workspace
+    let targetWorkspaceName: String
 
     func runWithoutRefresh() async {
         guard let focused = focusedWindow else { return }
         let preserveWorkspace = focused.workspace
+        let targetWorkspace = Workspace.get(byName: targetWorkspaceName)
         let targetContainer = targetWorkspace.rootTilingContainer
         focused.unbindFromParent()
         let weight = targetContainer.children.sumOf { $0.getWeight(targetContainer.orientation) }
