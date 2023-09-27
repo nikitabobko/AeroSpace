@@ -12,3 +12,12 @@ class Window: TreeNode, Hashable {
 
     var title: String? { error("Not implemented") }
 }
+
+extension Window {
+    var isFloating: Bool { parent is Workspace }
+
+    @discardableResult
+    func bindAsFloatingWindowTo(workspace: Workspace) -> PreviousBindingData? {
+        parent != workspace ? bindTo(parent: workspace, adaptiveWeight: FLOATING_ADAPTIVE_WEIGHT) : nil
+    }
+}

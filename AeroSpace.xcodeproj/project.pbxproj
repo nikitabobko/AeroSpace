@@ -42,6 +42,7 @@
 		9A138A729245BD2723148583 /* focused.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61FE8B343B068F0FFFC2373 /* focused.swift */; };
 		A0765C31043BCFB0420BF1C9 /* parseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */; };
 		A2CBF9674964F9083BB198D2 /* ArrayEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D7F7F87FBE7D0BDE4E87F /* ArrayEx.swift */; };
+		A55F31B0CC357B37108B8F54 /* MoveContainerToWorkspaceCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD002C4A68AED07BB63EFA /* MoveContainerToWorkspaceCommandTest.swift */; };
 		A5BFF75CF8021A585BC1F9D5 /* parseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB03A4736BC3F6D19E4E69F3 /* parseCommand.swift */; };
 		AE76A183D0454E4C8ADCE380 /* SequenceEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE5DCAEC5EE619CE33859E7 /* SequenceEx.swift */; };
 		B0D0C37BAE7E7F0D0FF1E9FC /* GlobalObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E5977331398421A4FC168 /* GlobalObserver.swift */; };
@@ -101,6 +102,7 @@
 		6F1905935B0C61590A96EFEF /* TestWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWindow.swift; sourceTree = "<group>"; };
 		7910D7B9C0A232187CCA1F10 /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
 		7A247B616D1951777C565D02 /* MoveThroughCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveThroughCommandTest.swift; sourceTree = "<group>"; };
+		7DBD002C4A68AED07BB63EFA /* MoveContainerToWorkspaceCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveContainerToWorkspaceCommandTest.swift; sourceTree = "<group>"; };
 		883D7F7F87FBE7D0BDE4E87F /* ArrayEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayEx.swift; sourceTree = "<group>"; };
 		8B7A2DF0D1F72B80B1F04240 /* BundleEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleEx.swift; sourceTree = "<group>"; };
 		8FE45A887100EB70912B07F0 /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 			children = (
 				3A6EF465EF4129BCB10FE247 /* ExecCommandTest.swift */,
 				D0EAADE8D2FB5D05FA5456B0 /* FocusCommandTest.swift */,
+				7DBD002C4A68AED07BB63EFA /* MoveContainerToWorkspaceCommandTest.swift */,
 				7A247B616D1951777C565D02 /* MoveThroughCommandTest.swift */,
 			);
 			path = command;
@@ -389,6 +392,7 @@
 				6715CC184E718828173DFBD5 /* ConfigTest.swift in Sources */,
 				E1E35DC5D9D74D54E92AB5F3 /* ExecCommandTest.swift in Sources */,
 				1311398A83B998908773C54D /* FocusCommandTest.swift in Sources */,
+				A55F31B0CC357B37108B8F54 /* MoveContainerToWorkspaceCommandTest.swift in Sources */,
 				B1E527CF4941A4E9B8D9C3D0 /* MoveThroughCommandTest.swift in Sources */,
 				7ED8C2A66DD6F903796F090C /* TestApp.swift in Sources */,
 				E22ACB36C90695FBAC78226E /* TestWindow.swift in Sources */,

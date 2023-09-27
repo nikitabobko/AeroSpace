@@ -175,13 +175,4 @@ func shouldFloat(_ axWindow: AXUIElement) -> Bool { // todo
     false
 }
 
-extension MacWindow {
-    var isFloating: Bool { parent is Workspace }
-
-    @discardableResult
-    func bindAsFloatingWindowTo(workspace: Workspace) -> PreviousBindingData? {
-        parent != workspace ? bindTo(parent: workspace, adaptiveWeight: FLOATING_ADAPTIVE_WEIGHT) : nil
-    }
-}
-
 let FLOATING_ADAPTIVE_WEIGHT = CGFloat(-1)
