@@ -43,7 +43,7 @@ private func parseSingleCommand(_ raw: String, _ backtrace: TomlBacktrace) -> Co
         return LayoutCommand(toggleBetween: args.map { parseLayout(String($0), backtrace) })
             ?? errorT("\(backtrace): Can't create layout command") // todo nicer message
     } else if raw == "workspace_back_and_forth" {
-        return WorkspaceBackAndForth()
+        return WorkspaceBackAndForthCommand()
     } else if raw == "reload_config" {
         return ReloadConfigCommand()
     } else if raw == "flatten_workspace_tree" {

@@ -13,7 +13,6 @@
 		0A9DAD847B5340FBE3D9CF88 /* FlattenWorkspaceTreeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C5B6719EF0BC14D7CF868C /* FlattenWorkspaceTreeCommand.swift */; };
 		115F5CA4BEB80B645E66D198 /* NSScreenEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3BB3DD434C75536217CB88 /* NSScreenEx.swift */; };
 		1311398A83B998908773C54D /* FocusCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0EAADE8D2FB5D05FA5456B0 /* FocusCommandTest.swift */; };
-		18C28195ACBE96C8CAC5D45E /* WorkspaceBackAndForth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0624BD31CE77758353BA61 /* WorkspaceBackAndForth.swift */; };
 		1C46EBB55D401C0D1AFD50F0 /* CollectionEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CE37C1B8D858C81A396F40 /* CollectionEx.swift */; };
 		1CB4082BE5C95CA8CD52BED9 /* Maybe.swift in Sources */ = {isa = PBXBuildFile; fileRef = 345148B22F8A8F85109229AE /* Maybe.swift */; };
 		1D408CDF1A489E527327EB15 /* CompositeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82CD9670B7A6050073E0F76 /* CompositeCommand.swift */; };
@@ -45,6 +44,7 @@
 		A2CBF9674964F9083BB198D2 /* ArrayEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D7F7F87FBE7D0BDE4E87F /* ArrayEx.swift */; };
 		A55F31B0CC357B37108B8F54 /* MoveContainerToWorkspaceCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD002C4A68AED07BB63EFA /* MoveContainerToWorkspaceCommandTest.swift */; };
 		A5BFF75CF8021A585BC1F9D5 /* parseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB03A4736BC3F6D19E4E69F3 /* parseCommand.swift */; };
+		AC47DF43EFF42358F033C87C /* WorkspaceBackAndForthCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED7EE20910D7BE4D0150CED /* WorkspaceBackAndForthCommand.swift */; };
 		AE76A183D0454E4C8ADCE380 /* SequenceEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE5DCAEC5EE619CE33859E7 /* SequenceEx.swift */; };
 		B0D0C37BAE7E7F0D0FF1E9FC /* GlobalObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E5977331398421A4FC168 /* GlobalObserver.swift */; };
 		B1E527CF4941A4E9B8D9C3D0 /* MoveThroughCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A247B616D1951777C565D02 /* MoveThroughCommandTest.swift */; };
@@ -85,7 +85,6 @@
 		1E81623E8954701269A22322 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
 		2431BEAFFF1AC12D3001317A /* TestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestApp.swift; sourceTree = "<group>"; };
 		28B788A95DD3C267878E05B5 /* Rect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rect.swift; sourceTree = "<group>"; };
-		2F0624BD31CE77758353BA61 /* WorkspaceBackAndForth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceBackAndForth.swift; sourceTree = "<group>"; };
 		345148B22F8A8F85109229AE /* Maybe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Maybe.swift; sourceTree = "<group>"; };
 		3A262B442A94C1964509B691 /* TreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNode.swift; sourceTree = "<group>"; };
 		3A6EF465EF4129BCB10FE247 /* ExecCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecCommandTest.swift; sourceTree = "<group>"; };
@@ -134,6 +133,7 @@
 		D82CD9670B7A6050073E0F76 /* CompositeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompositeCommand.swift; sourceTree = "<group>"; };
 		E761155C73F06E2CF5E292A4 /* FocusCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusCommand.swift; sourceTree = "<group>"; };
 		EC2F56249A233EC9806D0F08 /* Bridged-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridged-Header.h"; sourceTree = "<group>"; };
+		EED7EE20910D7BE4D0150CED /* WorkspaceBackAndForthCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceBackAndForthCommand.swift; sourceTree = "<group>"; };
 		EEDBFFCA7A77D96B18FB0732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F3C5B6719EF0BC14D7CF868C /* FlattenWorkspaceTreeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlattenWorkspaceTreeCommand.swift; sourceTree = "<group>"; };
 		F6507EBAA795220FD0C05384 /* Monitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monitor.swift; sourceTree = "<group>"; };
@@ -263,7 +263,7 @@
 				67B9FFF81EB0327ABD51A7FE /* MoveThroughCommand.swift */,
 				CB03A4736BC3F6D19E4E69F3 /* parseCommand.swift */,
 				CF3C9038C846369FDD71D1D2 /* ReloadConfigCommand.swift */,
-				2F0624BD31CE77758353BA61 /* WorkspaceBackAndForth.swift */,
+				EED7EE20910D7BE4D0150CED /* WorkspaceBackAndForthCommand.swift */,
 				43DD32B1711B8EFCC834B68E /* WorkspaceCommand.swift */,
 			);
 			path = command;
@@ -444,7 +444,7 @@
 				03D8ABD4597EDB00D79807E1 /* TreeNodeEx.swift in Sources */,
 				2CC46A952773F148AC398144 /* Window.swift in Sources */,
 				BF16873111EEDE60A8AACD6B /* Workspace.swift in Sources */,
-				18C28195ACBE96C8CAC5D45E /* WorkspaceBackAndForth.swift in Sources */,
+				AC47DF43EFF42358F033C87C /* WorkspaceBackAndForthCommand.swift in Sources */,
 				29AC28A25E1A66C608EBD7ED /* WorkspaceCommand.swift in Sources */,
 				42197B9C71A0CDDE65804A6A /* accessibility.swift in Sources */,
 				9A138A729245BD2723148583 /* focused.swift in Sources */,
