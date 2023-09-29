@@ -75,7 +75,8 @@ class TreeNode: Equatable {
         guard let _parent else { return nil }
         let workspace = workspace
         if let window = self as? Window {
-            precondition(workspace.mruWindows.remove(window))
+            precondition(workspace.mruWindows.remove(window)) /* todo lock screen -> false assert (for some reasons
+                                                                 all windows are placed into current active workspace) */
         }
 
         let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
