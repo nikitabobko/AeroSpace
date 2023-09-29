@@ -21,6 +21,7 @@
 		29AC28A25E1A66C608EBD7ED /* WorkspaceCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DD32B1711B8EFCC834B68E /* WorkspaceCommand.swift */; };
 		2CC46A952773F148AC398144 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6352ADEE6625D9703CFCA99A /* Window.swift */; };
 		2E06134604F2510189F1FA85 /* ExecAndWaitCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EDB8770FBA8B2E6FE91BBB /* ExecAndWaitCommand.swift */; };
+		374CE35B85B941B8F584C113 /* FlattenWorkspaceTreeCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FDECECC773EBA30661EB8A /* FlattenWorkspaceTreeCommandTest.swift */; };
 		42197B9C71A0CDDE65804A6A /* accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D31BF26EAFA96F675D2C14B /* accessibility.swift */; };
 		45AA5FD4A023AF751922BC22 /* BundleEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7A2DF0D1F72B80B1F04240 /* BundleEx.swift */; };
 		45EA2D1C90430C432E123B51 /* keysMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0D40CBD65704BA9595C2FA /* keysMap.swift */; };
@@ -94,6 +95,7 @@
 		51CE37C1B8D858C81A396F40 /* CollectionEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionEx.swift; sourceTree = "<group>"; };
 		526B113159987FA43EA41120 /* refresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = refresh.swift; sourceTree = "<group>"; };
 		5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AeroSpace-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		53FDECECC773EBA30661EB8A /* FlattenWorkspaceTreeCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlattenWorkspaceTreeCommandTest.swift; sourceTree = "<group>"; };
 		569422C0C4C23EF3E024C8E6 /* ExecAndForgetCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecAndForgetCommand.swift; sourceTree = "<group>"; };
 		5F5F52E346D024960EAF5938 /* TrayMenuModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrayMenuModel.swift; sourceTree = "<group>"; };
 		6352ADEE6625D9703CFCA99A /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
@@ -163,6 +165,7 @@
 			isa = PBXGroup;
 			children = (
 				3A6EF465EF4129BCB10FE247 /* ExecCommandTest.swift */,
+				53FDECECC773EBA30661EB8A /* FlattenWorkspaceTreeCommandTest.swift */,
 				D0EAADE8D2FB5D05FA5456B0 /* FocusCommandTest.swift */,
 				7DBD002C4A68AED07BB63EFA /* MoveContainerToWorkspaceCommandTest.swift */,
 				7A247B616D1951777C565D02 /* MoveThroughCommandTest.swift */,
@@ -391,6 +394,7 @@
 			files = (
 				6715CC184E718828173DFBD5 /* ConfigTest.swift in Sources */,
 				E1E35DC5D9D74D54E92AB5F3 /* ExecCommandTest.swift in Sources */,
+				374CE35B85B941B8F584C113 /* FlattenWorkspaceTreeCommandTest.swift in Sources */,
 				1311398A83B998908773C54D /* FocusCommandTest.swift in Sources */,
 				A55F31B0CC357B37108B8F54 /* MoveContainerToWorkspaceCommandTest.swift in Sources */,
 				B1E527CF4941A4E9B8D9C3D0 /* MoveThroughCommandTest.swift in Sources */,

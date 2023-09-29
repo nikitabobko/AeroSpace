@@ -14,7 +14,7 @@ struct MoveContainerToWorkspaceCommand: Command {
         } else {
             weight = 1
         }
-        focused.bindTo(parent: targetContainer, adaptiveWeight: weight)
+        focused.bindTo(parent: targetContainer, adaptiveWeight: weight) // todo different monitor
 
         WorkspaceCommand(workspaceName: preserveWorkspace.name).runWithoutRefresh()
     }

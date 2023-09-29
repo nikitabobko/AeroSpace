@@ -36,7 +36,7 @@ func tearDownWorkspacesForTests() {
 
 extension TreeNode {
     @discardableResult
-    func apply(_ block: (TreeNode) -> Void) -> Self {
+    func apply(_ block: (Self) -> Void) -> Self {
         block(self)
         return self
     }
