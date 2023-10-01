@@ -23,7 +23,7 @@ struct FocusCommand: Command { // todo speed up. Now it's slightly slow (probabl
             guard let index = topMostChild.ownIndexOrNil else { return }
             let mruIndexMap = currentWindow.workspace.mruWindows.mruIndexMap
             let windowToFocus: Window? = parent.children
-                .getOrNil(atIndex: index + direction.offset)?
+                .getOrNil(atIndex: index + direction.focusOffset)?
                 .allLeafWindowsRecursive(snappedTo: direction.opposite)
                 .minBy { mruIndexMap[$0] ?? Int.max }
             windowToFocus?.focus()

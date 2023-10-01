@@ -17,6 +17,6 @@ extension CardinalDirection {
             return .left
         }
     }
-    var offset: Int { isPositive ? 1 : -1 }
+    var focusOffset: Int { isPositive ? 1 : -1 }
     var insertionOffset: Int { isPositive ? 1 : 0 }
 }

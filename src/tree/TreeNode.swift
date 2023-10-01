@@ -93,7 +93,7 @@ class TreeNode: Equatable {
         if let window = self as? Window {
             let newParentWorkspace = newParent.workspace
             newParentWorkspace.mruWindows.pushOrRaise(window)
-            newParentWorkspace.assignedMonitor = window.getCenter()?.monitorApproximation
+            newParentWorkspace.assignedMonitor = window.getCenter()?.monitorApproximation // todo here we may write nil
             // Update currentEmptyWorkspace since it's no longer effectively empty
             if newParentWorkspace == currentEmptyWorkspace {
                 currentEmptyWorkspace = getOrCreateNextEmptyWorkspace()
@@ -106,8 +106,9 @@ class TreeNode: Equatable {
         guard let _parent else { return nil }
         let workspace = workspace
         if let window = self as? Window {
-            precondition(workspace.mruWindows.remove(window)) /* todo lock screen -> false assert (for some reasons
-                                                                 all windows are placed into current active workspace) */
+            // todo lock screen -> false assert (for some reasons all windows are placed into current active workspace)
+            // todo chrome close "cmd F" window with esc -> false assert
+            precondition(workspace.mruWindows.remove(window), "mru.remove \(window.title)")
         }
 
         let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")

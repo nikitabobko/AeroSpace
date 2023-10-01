@@ -6,7 +6,7 @@ struct MoveThroughCommand: Command {
         guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
         if let parent = currentWindow.parent as? TilingContainer {
             let indexOfCurrent = currentWindow.ownIndex
-            let indexOfSiblingTarget = indexOfCurrent + direction.offset
+            let indexOfSiblingTarget = indexOfCurrent + direction.focusOffset
             if parent.orientation == direction.orientation && parent.children.indices.contains(indexOfSiblingTarget) {
                 switch parent.children[indexOfSiblingTarget].kind {
                 case .tilingContainer(let topLevelSiblingTargetContainer):
@@ -68,7 +68,7 @@ private func deepMoveIn(window: Window, into container: TilingContainer, moveDir
         .drop(while: { $0 != container })
         .dropFirst()
         .toArray()
-    let deepTarget = container.findContainerWithOrientOrPreferredPath(moveDirection.orientation, preferredPath)
+    let deepTarget = container.findDeepMoveInTargetRecursive(moveDirection.orientation, preferredPath)
     switch deepTarget.kind {
     case .tilingContainer:
         window.unbindFromParent()
@@ -86,7 +86,7 @@ private func deepMoveIn(window: Window, into container: TilingContainer, moveDir
 }
 
 private extension TreeNode {
-    func findContainerWithOrientOrPreferredPath(_ orientation: Orientation, _ preferredPath: [TreeNode]) -> TreeNode {
+    func findDeepMoveInTargetRecursive(_ orientation: Orientation, _ preferredPath: [TreeNode]) -> TreeNode {
         switch kind {
         case .window:
             return self
@@ -96,7 +96,7 @@ private extension TreeNode {
             } else {
                 assert(children.contains(preferredPath.first!))
                 return preferredPath.first!
-                    .findContainerWithOrientOrPreferredPath(orientation, Array(preferredPath.dropFirst()))
+                    .findDeepMoveInTargetRecursive(orientation, Array(preferredPath.dropFirst()))
             }
         case .workspace:
             error("Impossible")
