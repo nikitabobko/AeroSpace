@@ -5,5 +5,6 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 # set -x # Print shell commands as they are executed (or you can try -v which is less verbose)
 
 cd "$(dirname "$0")"
-xcodegen # https://github.com/yonaskolb/XcodeGen
+
+./build-debug.sh || exit 125 # `git bisect run` compatible
 xcodebuild -scheme AeroSpace test
