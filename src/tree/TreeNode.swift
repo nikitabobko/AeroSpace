@@ -74,7 +74,14 @@ class TreeNode: Equatable {
                     .div(newParent.children.count)
                     ?? 1
             case .workspace:
-                self.adaptiveWeight = WEIGHT_FLOATING
+                switch self.kind {
+                case .window:
+                    self.adaptiveWeight = WEIGHT_FLOATING
+                case .tilingContainer:
+                    self.adaptiveWeight = 1
+                case .workspace:
+                    error("Binding workspace to workspace is illegal")
+                }
             case .window:
                 error("Windows can't have children")
             }

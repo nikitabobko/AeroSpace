@@ -103,22 +103,50 @@ final class MoveThroughCommandTest: XCTestCase {
         XCTAssertEqual(window1.hWeight, 1)
     }
 
-    //func testCreateImplicitContainer() async {
-    //    let root = Workspace.get(byName: name).rootTilingContainer.apply {
-    //        TestWindow(id: 1, parent: $0).focus()
-    //        TestWindow(id: 2, parent: $0)
-    //        TestWindow(id: 3, parent: $0)
-    //    }
-    //
-    //    await MoveThroughCommand(direction: .up).runWithoutRefresh()
-    //    XCTAssertEqual(
-    //        root.layoutDescription,
-    //        .v_list([
-    //            .window(1),
-    //            .h_list([.window(2), .window(3)])
-    //        ])
-    //    )
-    //}
+    func testCreateImplicitContainer() async {
+        let workspace = Workspace.get(byName: name).apply { // Don't cache root
+            ($0 as! Workspace).rootTilingContainer.apply {
+                TestWindow(id: 1, parent: $0)
+                TestWindow(id: 2, parent: $0).focus()
+                TestWindow(id: 3, parent: $0)
+            }
+        }
+
+        await MoveThroughCommand(direction: .up).runWithoutRefresh()
+        XCTAssertEqual(
+            workspace.layoutDescription,
+            .workspace([
+                .v_list([
+                    .window(2),
+                    .h_list([.window(1), .window(3)])
+                ])
+            ])
+        )
+    }
+
+    func testMoveOut() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            TestWindow(id: 1, parent: $0)
+            TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow(id: 2, parent: $0).focus()
+                TestWindow(id: 3, parent: $0)
+                TestWindow(id: 4, parent: $0)
+            }
+        }
+
+        await MoveThroughCommand(direction: .left).runWithoutRefresh()
+        XCTAssertEqual(
+            root.layoutDescription,
+            .h_list([
+                .window(1),
+                .window(2),
+                .v_list([
+                    .window(3),
+                    .window(4),
+                ])
+            ])
+        )
+    }
 }
 
 extension TreeNode {

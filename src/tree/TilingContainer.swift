@@ -47,6 +47,7 @@ extension TilingContainer {
         }
     }
 
+    var ownIndex: Int { parent.children.firstIndex(of: self)! }
     var isRootContainer: Bool { parent is Workspace }
 }
 

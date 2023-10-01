@@ -6,19 +6,19 @@ struct MoveThroughCommand: Command {
         guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
         if let parent = currentWindow.parent as? TilingContainer {
             let indexOfCurrent = currentWindow.ownIndex
-            let indexOfSiblingTarget = direction.isPositive ? indexOfCurrent + 1 : indexOfCurrent - 1
+            let indexOfSiblingTarget = indexOfCurrent + direction.offset
             if parent.orientation == direction.orientation && parent.children.indices.contains(indexOfSiblingTarget) {
                 switch parent.children[indexOfSiblingTarget].kind {
                 case .tilingContainer(let topLevelSiblingTargetContainer):
-                    deepMove(window: currentWindow, into: topLevelSiblingTargetContainer, moveDirection: direction)
+                    deepMoveIn(window: currentWindow, into: topLevelSiblingTargetContainer, moveDirection: direction)
                 case .window: // "swap windows"
                     let prevBinding = currentWindow.unbindFromParent()
                     currentWindow.bindTo(parent: parent, adaptiveWeight: prevBinding.adaptiveWeight, index: indexOfSiblingTarget)
                 case .workspace:
                     error("Impossible")
                 }
-            } else { // "move out"
-
+            } else {
+                moveOut(window: currentWindow, direction: direction)
             }
         } else if let _ = currentWindow.parent as? Workspace { // floating window
             // todo
@@ -26,7 +26,40 @@ struct MoveThroughCommand: Command {
     }
 }
 
-private func deepMove(window: Window, into container: TilingContainer, moveDirection: CardinalDirection) {
+private func moveOut(window: Window, direction: CardinalDirection) {
+    let topMostChild = window.parents.first(where: {
+        // todo rewrite "is Workspace" part once "sticky" is introduced
+        $0.parent is Workspace || ($0.parent as? TilingContainer)?.orientation == direction.orientation
+    }) as! TilingContainer
+    let bindTo: TilingContainer
+    let bindToIndex: Int
+    switch topMostChild.parent.kind {
+    case .tilingContainer(let parent):
+        precondition(parent.orientation == direction.orientation)
+        bindTo = parent
+        bindToIndex = topMostChild.ownIndex + direction.insertionOffset
+    case .workspace(let parent): // create implicit container
+        let prevRoot = parent.rootTilingContainer
+        prevRoot.unbindFromParent()
+        precondition(prevRoot != parent.rootTilingContainer)
+        parent.rootTilingContainer.orientation = direction.orientation
+        prevRoot.bindTo(parent: parent.rootTilingContainer, adaptiveWeight: WEIGHT_AUTO)
+
+        bindTo = parent.rootTilingContainer
+        bindToIndex = direction.insertionOffset
+    case .window:
+        error("Window can't contain children nodes")
+    }
+
+    window.unbindFromParent()
+    window.bindTo(
+        parent: bindTo,
+        adaptiveWeight: WEIGHT_AUTO,
+        index: bindToIndex
+    )
+}
+
+private func deepMoveIn(window: Window, into container: TilingContainer, moveDirection: CardinalDirection) {
     let mruIndexMap = window.workspace.mruWindows.mruIndexMap
     let preferredPath: [TreeNode] = container.allLeafWindowsRecursive
         .minBy { mruIndexMap[$0] ?? Int.max }!
