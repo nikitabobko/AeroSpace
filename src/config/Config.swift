@@ -7,12 +7,14 @@ var config: Config = defaultConfig
 
 struct Config {
     var afterStartupCommand: Command
+    var afterLoginCommand: Command
     var usePaddingForNestedContainersWithTheSameOrientation: Bool // todo
     var autoFlattenContainers: Bool
     var floatingWindowsOnTop: Bool
     var mainLayout: ConfigLayout // todo rename to defaultLayout
     var focusWrapping: FocusWrapping
     var debugAllWindowsAreFloating: Bool
+    var startAtLogin: Bool
 
     let modes: [String: Mode]
     var workspaceNames: [String]

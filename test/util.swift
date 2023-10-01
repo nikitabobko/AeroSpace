@@ -6,12 +6,14 @@ let projectRoot: URL = URL(filePath: #file).appending(component: "../..").standa
 func setUpWorkspacesForTests() {
     config = Config(
         afterStartupCommand: defaultConfig.afterStartupCommand,
+        afterLoginCommand: defaultConfig.afterLoginCommand,
         usePaddingForNestedContainersWithTheSameOrientation: defaultConfig.usePaddingForNestedContainersWithTheSameOrientation,
         autoFlattenContainers: false, // Make layout tests more predictable
         floatingWindowsOnTop: defaultConfig.floatingWindowsOnTop,
         mainLayout: .h_list, // Make default layout predictable
         focusWrapping: defaultConfig.focusWrapping,
         debugAllWindowsAreFloating: defaultConfig.debugAllWindowsAreFloating,
+        startAtLogin: defaultConfig.startAtLogin,
 
         // Don't create any workspaces for tests
         modes: [mainModeId: Mode(name: nil, bindings: [])],

@@ -7,6 +7,7 @@ func reloadConfig() {
     let rawConfig = try? String(contentsOf: FileManager.default.homeDirectoryForCurrentUser.appending(path: ".aerospace.toml"))
     // todo mainMode activate/deactivate
     config = parseConfig(rawConfig ?? "")
+    syncStartAtLogin()
 }
 
 func parseConfig(_ rawToml: String) -> Config {
@@ -42,6 +43,12 @@ func parseConfig(_ rawToml: String) -> Config {
     let key7 = "DEBUG-all-windows-are-floating"
     var value7: Bool? = nil
 
+    let key8 = "start-at-login"
+    var value8: Bool? = nil
+
+    let key9 = "after-login-command"
+    var value9: Command? = nil
+
     for (key, value) in rawTable {
         let backtrace: TomlBacktrace = .root(key)
         switch key {
@@ -59,6 +66,10 @@ func parseConfig(_ rawToml: String) -> Config {
             value6 = parseFocusWrapping(value, backtrace)
         case key7:
             value7 = parseBool(value, backtrace)
+        case key8:
+            value8 = parseBool(value, backtrace)
+        case key9:
+            value9 = parseCommand(value, backtrace)
         case "mode":
             modes = parseModes(value, backtrace)
         default:
@@ -70,12 +81,14 @@ func parseConfig(_ rawToml: String) -> Config {
 
     return Config(
         afterStartupCommand: value1 ?? defaultConfig.afterStartupCommand,
+        afterLoginCommand: value9 ?? defaultConfig.afterLoginCommand,
         usePaddingForNestedContainersWithTheSameOrientation: value2 ?? defaultConfig.usePaddingForNestedContainersWithTheSameOrientation,
         autoFlattenContainers: value3 ?? defaultConfig.autoFlattenContainers,
         floatingWindowsOnTop: value4 ?? defaultConfig.floatingWindowsOnTop,
         mainLayout: value5 ?? defaultConfig.mainLayout,
         focusWrapping: value6 ?? defaultConfig.focusWrapping,
         debugAllWindowsAreFloating: value7 ?? defaultConfig.debugAllWindowsAreFloating,
+        startAtLogin: value8 ?? defaultConfig.startAtLogin,
 
         modes: modesOrDefault,
         workspaceNames: modesOrDefault.values.lazy

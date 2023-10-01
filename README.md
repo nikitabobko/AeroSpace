@@ -69,6 +69,7 @@ Firstly, install [xcodegen](https://github.com/yonaskolb/XcodeGen). Then run in 
 - IntelliJ project structure modal window
 - VLC full screen window (eh, I wish every fullscreen window in macOS worked like that)
 - iTerm drop down window
+- Chrome cmd+f window
 
 ## Limitations of macOS API
 

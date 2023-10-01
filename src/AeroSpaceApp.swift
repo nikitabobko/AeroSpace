@@ -19,6 +19,9 @@ struct AeroSpaceApp: App {
             GlobalObserver.initObserver()
             config.mainMode.activate()
             refresh()
+            if CommandLine.arguments.getOrNil(atIndex: 1) == "--run-after-login-command" {
+                Task { await config.afterLoginCommand.run() }
+            }
             Task { await config.afterStartupCommand.run() }
         }
     }

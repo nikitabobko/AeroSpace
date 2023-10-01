@@ -2,11 +2,12 @@
 
 # todo review defaults
 
+after-login-command = [] # You can use it to add command or commands that run after login to macOS user session.
 after-startup-command = [] # You can use it to add command or commands that run after startup.
 use-padding-for-nested-containers-with-the-same-orientation = true
 auto-flatten-containers = true
 # auto-different-orientation-for-nested-containers = true
-# start-at-login = true
+start-at-login = false
 floating-windows-on-top = true
 focus-wrapping = 'workspace'
 main-layout = 'h_list' # todo change
