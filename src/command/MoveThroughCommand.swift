@@ -5,31 +5,16 @@ struct MoveThroughCommand: Command {
         precondition(Thread.current.isMainThread)
         guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
         if let parent = currentWindow.parent as? TilingContainer {
-            let indexOfCurrent = parent.children.firstIndex(of: currentWindow) ?? errorT("Can't find child")
-            let indexOfTarget = direction.isPositive ? indexOfCurrent + 1 : indexOfCurrent - 1
-            if parent.orientation == direction.orientation && parent.children.indices.contains(indexOfTarget) {
-                if let targetContainer = parent.children[indexOfTarget] as? TilingContainer { // "move in"
-                    let mruIndexMap = currentWindow.workspace.mruWindows.mruIndexMap
-                    let recursive = targetContainer.allLeafWindowsRecursive
-                    let reversed = recursive.minBy { mruIndexMap[$0] ?? Int.max }!
-                        .parentsWithSelf
-                        .reversed()
-                    let preferredPath: [TreeNode] = Array(Array(Array(reversed).drop(while: { $0 != targetContainer })).dropFirst())
-                    let pizdets = targetContainer.findNodeOrientRecursive(direction.orientation, preferredPath)
-                    if pizdets is TilingContainer {
-                        currentWindow.unbindFromParent()
-                        currentWindow.bindTo(parent: pizdets, adaptiveWeight: 1, index: 0) // todo adaptiveWeight
-                    } else if pizdets is Window {
-                        currentWindow.unbindFromParent()
-                        currentWindow.bindTo(parent: (pizdets.parent as! TilingContainer), adaptiveWeight: 1,
-                             index: pizdets.parent!.children.firstIndex(of: pizdets)! + 1) // todo mess
-                    } else {
-                        error("Impossible")
-                    }
-                } else if parent.children[indexOfTarget] is Window {
+            let indexOfCurrent = currentWindow.ownIndex
+            let indexOfSiblingTarget = direction.isPositive ? indexOfCurrent + 1 : indexOfCurrent - 1
+            if parent.orientation == direction.orientation && parent.children.indices.contains(indexOfSiblingTarget) {
+                switch parent.children[indexOfSiblingTarget].kind {
+                case .tilingContainer(let topLevelSiblingTargetContainer):
+                    deepMove(window: currentWindow, into: topLevelSiblingTargetContainer, moveDirection: direction)
+                case .window: // "swap windows"
                     let prevBinding = currentWindow.unbindFromParent()
-                    currentWindow.bindTo(parent: parent, adaptiveWeight: prevBinding.adaptiveWeight, index: indexOfTarget)
-                } else {
+                    currentWindow.bindTo(parent: parent, adaptiveWeight: prevBinding.adaptiveWeight, index: indexOfSiblingTarget)
+                case .workspace:
                     error("Impossible")
                 }
             } else { // "move out"
@@ -41,19 +26,46 @@ struct MoveThroughCommand: Command {
     }
 }
 
+private func deepMove(window: Window, into container: TilingContainer, moveDirection: CardinalDirection) {
+    let mruIndexMap = window.workspace.mruWindows.mruIndexMap
+    let preferredPath: [TreeNode] = container.allLeafWindowsRecursive
+        .minBy { mruIndexMap[$0] ?? Int.max }!
+        .parentsWithSelf
+        .reversed()
+        .drop(while: { $0 != container })
+        .dropFirst()
+        .toArray()
+    let deepTarget = container.findContainerWithOrientOrPreferredPath(moveDirection.orientation, preferredPath)
+    switch deepTarget.kind {
+    case .tilingContainer:
+        window.unbindFromParent()
+        window.bindTo(parent: deepTarget, adaptiveWeight: WEIGHT_AUTO, index: 0)
+    case .window(let target):
+        window.unbindFromParent()
+        window.bindTo(
+            parent: (target.parent as! TilingContainer),
+            adaptiveWeight: WEIGHT_AUTO,
+            index: target.ownIndex + 1
+        )
+    case .workspace:
+        error("Impossible")
+    }
+}
+
 private extension TreeNode {
-    func findNodeOrientRecursive(_ orientation: Orientation, _ preferredPath: [TreeNode]) -> TreeNode {
-        if let window = self as? Window {
-            return window
-        } else if let container = self as? TilingContainer {
+    func findContainerWithOrientOrPreferredPath(_ orientation: Orientation, _ preferredPath: [TreeNode]) -> TreeNode {
+        switch kind {
+        case .window:
+            return self
+        case .tilingContainer(let container):
             if container.orientation == orientation {
                 return container
             } else {
                 assert(children.contains(preferredPath.first!))
                 return preferredPath.first!
-                    .findNodeOrientRecursive(orientation, Array(preferredPath.dropFirst()))
+                    .findContainerWithOrientOrPreferredPath(orientation, Array(preferredPath.dropFirst()))
             }
-        } else {
+        case .workspace:
             error("Impossible")
         }
     }

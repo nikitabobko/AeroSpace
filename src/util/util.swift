@@ -8,10 +8,7 @@ func stringType(of some: Any) -> String {
     fatalError(message)
 }
 
-@inlinable func error(_ message: String = "") -> Never {
-    Thread.callStackSymbols.forEach { print($0) }
-    fatalError(message)
-}
+@inlinable func error(_ message: String = "") -> Never { errorT(message) }
 
 @inlinable func TODO(_ message: String = "") -> Never {
     Thread.callStackSymbols.forEach { print($0) }
@@ -32,6 +29,10 @@ extension String {
 
 extension Double {
     var squared: Double { self * self }
+}
+
+extension Slice {
+    func toArray() -> [Base.Element] { Array(self) }
 }
 
 func -(a: CGPoint, b: CGPoint) -> CGPoint {

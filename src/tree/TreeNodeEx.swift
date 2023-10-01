@@ -13,6 +13,11 @@ extension TreeNode {
         return result
     }
 
+    var ownIndexOrNil: Int? {
+        guard let parent else { return nil }
+        return parent.children.firstIndex(of: self)!
+    }
+
     var parents: [TreeNode] { parent.flatMap { [$0] + $0.parents } ?? [] }
     var parentsWithSelf: [TreeNode] { parent.flatMap { [self] + $0.parentsWithSelf } ?? [self] }
 
@@ -21,19 +26,18 @@ extension TreeNode {
     }
 
     func allLeafWindowsRecursive(snappedTo direction: CardinalDirection) -> [Window] {
-        if let workspace = self as? Workspace {
+        switch kind {
+        case .workspace(let workspace):
             return workspace.rootTilingContainer.allLeafWindowsRecursive(snappedTo: direction)
-        } else if let window = self as? Window {
+        case .window(let window):
             return [window]
-        } else if let container = self as? TilingContainer {
+        case .tilingContainer(let container):
             if direction.orientation == container.orientation {
                 return (direction.isPositive ? container.children.last : container.children.first)?
                     .allLeafWindowsRecursive(snappedTo: direction) ?? []
             } else {
                 return children.flatMap { $0.allLeafWindowsRecursive(snappedTo: direction) }
             }
-        } else {
-            error("Not supported TreeNode type: \(Self.self)")
         }
     }
 
@@ -68,12 +72,13 @@ extension TreeNode {
 
     /// Containers' weights must be normalized before calling this function
     func layoutRecursive(_ _point: CGPoint, width: CGFloat, height: CGFloat) {
-        if let workspace = self as? Workspace {
+        switch kind {
+        case .workspace(let workspace):
             workspace.rootTilingContainer.layoutRecursive(_point, width: width, height: height)
-        } else if let window = self as? MacWindow {
+        case .window(let window):
             window.setTopLeftCorner(_point)
             window.setSize(CGSize(width: width, height: height))
-        } else if let container = self as? TilingContainer {
+        case .tilingContainer(let container):
             var point = _point
             for child in container.children {
                 switch container.layout {
@@ -89,8 +94,18 @@ extension TreeNode {
                     }
                 }
             }
+        }
+    }
+
+    var kind: TreeNodeKind {
+        if let window = self as? Window {
+            return .window(window)
+        } else if let workspace = self as? Workspace {
+            return .workspace(workspace)
+        } else if let tilingContainer = self as? TilingContainer {
+            return .tilingContainer(tilingContainer)
         } else {
-            error("Not supported TreeNode type: \(Self.self)")
+            error("Unknown tree")
         }
     }
 }

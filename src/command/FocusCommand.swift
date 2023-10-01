@@ -19,7 +19,7 @@ struct FocusCommand: Command { // todo speed up. Now it's slightly slow (probabl
             }) else { return }
             guard let parent = topMostChild.parent as? TilingContainer else { return }
             precondition(parent.orientation == direction.orientation)
-            guard let index = parent.children.firstIndex(of: topMostChild) else { return }
+            guard let index = topMostChild.ownIndexOrNil else { return }
             let mruIndexMap = currentWindow.workspace.mruWindows.mruIndexMap
             let windowToFocus: Window? = parent.children
                 .getOrNil(atIndex: direction.isPositive ? index + 1 : index - 1)?

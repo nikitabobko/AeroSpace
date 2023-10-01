@@ -16,49 +16,73 @@ class TreeNode: Equatable {
 
     /// See: ``getWeight(_:)``
     func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {
-        if let tilingParent = parent as? TilingContainer {
-            if tilingParent.orientation == targetOrientation {
+        switch parent?.kind {
+        case .tilingContainer(let parent):
+            if parent.orientation == targetOrientation {
                 adaptiveWeight = newValue
             } else {
-                error("You can't change \(targetOrientation) weight of nodes located in \(tilingParent.orientation) container")
+                error("You can't change \(targetOrientation) weight of nodes located in \(parent.orientation) container")
             }
-        } else {
-            error("You can't change weight for floating windows and workspace root containers")
+        case .workspace:
+            error("Can't change weight for floating windows and workspace root containers")
+        case .window:
+            error("Windows can't be parent containers")
+        case nil:
+            error("Can't change weight if TreeNode doesn't have parent")
         }
     }
 
     /// Weight itself doesn't make sense. The parent container controls semantics of weight
     func getWeight(_ targetOrientation: Orientation) -> CGFloat {
-        if let tilingParent = parent as? TilingContainer {
-            return tilingParent.orientation == targetOrientation ? adaptiveWeight : tilingParent.getWeight(targetOrientation)
-        } else if let parent = parent as? Workspace {
-            if self is Window { // self is a floating window
+        switch parent?.kind {
+        case .tilingContainer(let parent):
+            return parent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
+        case .workspace(let parent):
+            switch self.kind {
+            case .window: // self is a floating window
                 error("Weight doesn't make sense for floating windows")
-            } else { // root tiling container
+            case .tilingContainer: // root tiling container
                 precondition(self is TilingContainer)
                 return parent.getWeight(targetOrientation)
+            case .workspace:
+                error("Workspaces can't be child")
             }
-        } else {
-            error("Not possible")
+        case .window:
+            error("Windows can't be parent containers")
+        case nil:
+            error("Weight doesn't make sense for containers without parent")
         }
     }
 
     @discardableResult
     func bindTo(parent newParent: TreeNode, adaptiveWeight: CGFloat, index: Int = -1) -> PreviousBindingData? {
-        if newParent is Window {
-            error("Windows can't have children")
-        }
         if _parent === newParent {
             error("Binding to the same parent doesn't make sense")
+        }
+        if newParent is Window {
+            error("Windows can't have children")
         }
         let result = unbindIfPossible()
 
         if newParent === NilTreeNode.instance {
             return result
         }
+        if adaptiveWeight == WEIGHT_AUTO {
+            switch newParent.kind {
+            case .tilingContainer(let newParent):
+                self.adaptiveWeight = newParent.children.sumOf { $0.getWeight(newParent.orientation) }
+                    .div(newParent.children.count)
+                    ?? 1
+            case .workspace:
+                self.adaptiveWeight = WEIGHT_FLOATING
+            case .window:
+                error("Windows can't have children")
+            }
+        } else {
+            self.adaptiveWeight = adaptiveWeight
+        }
         newParent._children.insert(self, at: index == -1 ? newParent._children.count : index)
         _parent = newParent
-        self.adaptiveWeight = adaptiveWeight
         if let window = self as? Window {
             let newParentWorkspace = newParent.workspace
             newParentWorkspace.mruWindows.pushOrRaise(window)
@@ -103,6 +127,12 @@ class TreeNode: Equatable {
     func focus() -> Bool { error("Not implemented") }
     func getRect() -> Rect? { error("Not implemented") }
 }
+
+private let WEIGHT_FLOATING = CGFloat(-2)
+/// Splits containers evenly if tiling.
+///
+/// Reset weight is bind to workspace (aka "floating windows")
+let WEIGHT_AUTO = CGFloat(-1)
 
 struct PreviousBindingData {
     let adaptiveWeight: CGFloat

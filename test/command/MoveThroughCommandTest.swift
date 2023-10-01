@@ -5,7 +5,7 @@ final class MoveThroughCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
     override func tearDownWithError() throws { tearDownWorkspacesForTests() }
 
-    func testMove() async {
+    func testMove_swapWindows() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0).focus()
             TestWindow(id: 2, parent: $0)
@@ -41,6 +41,68 @@ final class MoveThroughCommandTest: XCTestCase {
         )
     }
 
+    func testMove_mru() async {
+        var window3: Window!
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            TestWindow(id: 0, parent: $0)
+            TestWindow(id: 1, parent: $0).focus()
+            TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
+                TilingContainer.newHList(parent: $0, adaptiveWeight: 1).apply {
+                    TestWindow(id: 2, parent: $0)
+                    window3 = TestWindow(id: 3, parent: $0)
+                }
+                TestWindow(id: 4, parent: $0)
+            }
+        }
+        root.workspace.mruWindows.pushOrRaise(window3)
+
+        await MoveThroughCommand(direction: .right).runWithoutRefresh()
+        XCTAssertEqual(
+            root.layoutDescription,
+            .h_list([
+                .window(0),
+                .v_list([
+                    .h_list([
+                        .window(1),
+                        .window(2),
+                        .window(3),
+                    ]),
+                    .window(4)
+                ])
+            ])
+        )
+    }
+
+    func testSwap_preserveWeight() async {
+        let root = Workspace.get(byName: name).rootTilingContainer
+        let window1 = TestWindow(id: 1, parent: root, adaptiveWeight: 1)
+        let window2 = TestWindow(id: 2, parent: root, adaptiveWeight: 2)
+        window2.focus()
+
+        await MoveThroughCommand(direction: .left).runWithoutRefresh() // todo replace all 'runWithoutRefresh' with 'run' in tests
+        XCTAssertEqual(window2.hWeight, 2)
+        XCTAssertEqual(window1.hWeight, 1)
+    }
+
+    func testMoveIn_newWeight() async {
+        var window1: Window!
+        var window2: Window!
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            TestWindow(id: 0, parent: $0, adaptiveWeight: 1)
+            window1 = TestWindow(id: 1, parent: $0, adaptiveWeight: 2)
+            TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
+                window2 = TestWindow(id: 2, parent: $0, adaptiveWeight: 1)
+            }
+        }
+        window1.focus()
+
+        await MoveThroughCommand(direction: .right).runWithoutRefresh()
+        XCTAssertEqual(window2.hWeight, 1)
+        XCTAssertEqual(window2.vWeight, 1)
+        XCTAssertEqual(window1.vWeight, 1)
+        XCTAssertEqual(window1.hWeight, 1)
+    }
+
     //func testCreateImplicitContainer() async {
     //    let root = Workspace.get(byName: name).rootTilingContainer.apply {
     //        TestWindow(id: 1, parent: $0).focus()
@@ -61,9 +123,10 @@ final class MoveThroughCommandTest: XCTestCase {
 
 extension TreeNode {
     var layoutDescription: LayoutDescription {
-        if let window = self as? Window {
+        switch kind {
+        case .window(let window):
             return .window(window.windowId)
-        } else if let container = self as? TilingContainer {
+        case .tilingContainer(let container):
             switch container.layout {
             case .List:
                 switch container.orientation {
@@ -80,10 +143,8 @@ extension TreeNode {
                     return .v_accordion(container.children.map { $0.layoutDescription })
                 }
             }
-        } else if let workspace = self as? Workspace {
+        case .workspace:
             return .workspace(workspace.children.map { $0.layoutDescription })
-        } else {
-            error("Unknown type: \(Self.self)")
         }
     }
 }

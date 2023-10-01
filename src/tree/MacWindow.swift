@@ -6,7 +6,6 @@ final class MacWindow: Window {
     private var prevUnhiddenEmulationSize: CGSize?
     fileprivate var previousSize: CGSize?
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
-    override var parent: TreeNode { super.parent ?? errorT("MacWindows always have parent") }
 
     private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: TreeNode, adaptiveWeight: CGFloat) {
         self.app = app
@@ -40,17 +39,13 @@ final class MacWindow: Window {
             }
             let shouldFloat = shouldFloat(axWindow)
             let parent: TreeNode
-            let weight: CGFloat
             if shouldFloat || config.debugAllWindowsAreFloating {
                 parent = workspace
-                weight = FLOATING_ADAPTIVE_WEIGHT
             } else {
                 let tilingParent = workspace.mruWindows.mostRecent?.parent as? TilingContainer ?? workspace.rootTilingContainer
                 parent = tilingParent
-                weight = parent.children.sumOf { $0.getWeight(tilingParent.orientation) }
-                        .div(parent.children.count) ?? 1
             }
-            let window = MacWindow(id, app, axWindow, parent: parent, adaptiveWeight: weight)
+            let window = MacWindow(id, app, axWindow, parent: parent, adaptiveWeight: WEIGHT_AUTO)
 
             if window.observe(refreshObs, kAXUIElementDestroyedNotification) &&
                        window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
@@ -139,7 +134,7 @@ final class MacWindow: Window {
         return prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect != nil
     }
 
-    func setSize(_ size: CGSize) {
+    override func setSize(_ size: CGSize) {
         previousSize = getSize()
         axWindow.set(Ax.sizeAttr, size)
     }
@@ -148,7 +143,7 @@ final class MacWindow: Window {
         axWindow.get(Ax.sizeAttr)
     }
 
-    func setTopLeftCorner(_ point: CGPoint) {
+    override func setTopLeftCorner(_ point: CGPoint) {
         axWindow.set(Ax.topLeftCornerAttr, point)
     }
 
@@ -174,5 +169,3 @@ final class MacWindow: Window {
 func shouldFloat(_ axWindow: AXUIElement) -> Bool { // todo
     false
 }
-
-let FLOATING_ADAPTIVE_WEIGHT = CGFloat(-1)
