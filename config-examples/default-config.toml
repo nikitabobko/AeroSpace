@@ -14,7 +14,7 @@ main-layout = 'h_list' # todo change
 DEBUG-all-windows-are-floating = false
 
 [mode.main.binding]
-alt-enter = 'exec_and_forget open /System/Applications/Utilities/Terminal.app'
+alt-enter = 'exec_and_forget open -n /System/Applications/Utilities/Terminal.app'
 
 alt-slash = 'layout h_list v_list'
 alt-comma = 'layout h_accordion v_accordion'
