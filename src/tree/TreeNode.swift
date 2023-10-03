@@ -90,10 +90,12 @@ class TreeNode: Equatable {
         }
         newParent._children.insert(self, at: index == -1 ? newParent._children.count : index)
         _parent = newParent
-        if let window = self as? Window {
+        if let window = anyLeafWindowRecursive {
             let newParentWorkspace = newParent.workspace
             newParentWorkspace.mruWindows.pushOrRaise(window)
-            newParentWorkspace.assignedMonitor = window.getCenter()?.monitorApproximation // todo here we may write nil
+            newParentWorkspace.assignedMonitor = window.getCenter()?.monitorApproximation
+                //?? NSScreen.focusedMonitorOrNilIfDesktop // todo uncomment once Monitor mock is done
+                //?? errorT("Can't set assignedMonitor") // todo uncomment once Monitor mock is done
             // Update currentEmptyWorkspace since it's no longer effectively empty
             if newParentWorkspace == currentEmptyWorkspace {
                 currentEmptyWorkspace = getOrCreateNextEmptyWorkspace()

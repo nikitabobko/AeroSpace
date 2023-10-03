@@ -42,8 +42,8 @@ extension TreeNode {
     }
 
     var anyLeafWindowRecursive: Window? {
-        if let window = children.first(where: { $0 is Window }) {
-            return (window as! Window)
+        if let window = self as? Window {
+            return window
         }
         for child in children {
             if let window = child.anyLeafWindowRecursive {
