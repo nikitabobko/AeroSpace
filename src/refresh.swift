@@ -26,8 +26,7 @@ func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
 }
 
 func updateLastActiveWindow() {
-    guard let window = focusedWindow else { return }
-    window.workspace.mruWindows.pushOrRaise(window)
+    focusedWindow?.markAsMostRecentChild()
 }
 
 private func refreshWorkspaces() {

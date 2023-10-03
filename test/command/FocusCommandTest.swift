@@ -84,20 +84,20 @@ final class FocusCommandTest: XCTestCase {
             }
         }
 
-        XCTAssertEqual(workspace.mruWindows.mostRecent?.windowId, 3) // The latest binded
+        XCTAssertEqual(workspace.mostRecentWindow?.windowId, 3) // The latest binded
         await FocusCommand(direction: .right).runWithoutRefresh()
         XCTAssertEqual(focusedWindow?.windowId, 3)
 
         startWindow.focus()
-        workspace.mruWindows.pushOrRaise(window2)
+        window2.markAsMostRecentChild()
         await FocusCommand(direction: .right).runWithoutRefresh()
         XCTAssertEqual(focusedWindow?.windowId, 2)
 
         startWindow.focus()
-        workspace.mruWindows.pushOrRaise(window3)
-        workspace.mruWindows.pushOrRaise(unrelatedWindow)
+        window3.markAsMostRecentChild()
+        unrelatedWindow.markAsMostRecentChild()
         await FocusCommand(direction: .right).runWithoutRefresh()
-        XCTAssertEqual(focusedWindow?.windowId, 3)
+        XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
     func testFocusOutsideOfTheContainer() async {

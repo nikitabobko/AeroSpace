@@ -27,5 +27,5 @@ var focusedApp: AeroApp? {
 var focusedWindow: Window? { focusedApp?.focusedWindow }
 
 var focusedWindowOrEffectivelyFocused: Window? {
-    focusedWindow ?? Workspace.focused.mruWindows.mostRecent ?? Workspace.focused.anyLeafWindowRecursive
+    focusedWindow ?? Workspace.focused.mostRecentWindow ?? Workspace.focused.anyLeafWindowRecursive
 }

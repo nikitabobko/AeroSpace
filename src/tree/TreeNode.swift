@@ -4,6 +4,8 @@ class TreeNode: Equatable {
     fileprivate weak var _parent: TreeNode? = nil
     var parent: TreeNode? { _parent }
     private var adaptiveWeight: CGFloat
+    private var _mostRecentChild: TreeNode?
+    var mostRecentChild: TreeNode? { _mostRecentChild ?? children.first }
 
     init(parent: TreeNode, adaptiveWeight: CGFloat) {
         self.adaptiveWeight = adaptiveWeight
@@ -90,12 +92,12 @@ class TreeNode: Equatable {
         }
         newParent._children.insert(self, at: index == -1 ? newParent._children.count : index)
         _parent = newParent
+        markAsMostRecentChild()
         if let window = anyLeafWindowRecursive {
             let newParentWorkspace = newParent.workspace
-            newParentWorkspace.mruWindows.pushOrRaise(window)
             newParentWorkspace.assignedMonitor = window.getCenter()?.monitorApproximation
-                //?? NSScreen.focusedMonitorOrNilIfDesktop // todo uncomment once Monitor mock is done
-                //?? errorT("Can't set assignedMonitor") // todo uncomment once Monitor mock is done
+            //?? NSScreen.focusedMonitorOrNilIfDesktop // todo uncomment once Monitor mock is done
+            //?? errorT("Can't set assignedMonitor") // todo uncomment once Monitor mock is done
             // Update currentEmptyWorkspace since it's no longer effectively empty
             if newParentWorkspace == currentEmptyWorkspace {
                 currentEmptyWorkspace = getOrCreateNextEmptyWorkspace()
@@ -107,13 +109,12 @@ class TreeNode: Equatable {
     private func unbindIfPossible() -> PreviousBindingData? {
         guard let _parent else { return nil }
         let workspace = workspace
-        if let window = self as? Window {
-            // todo lock screen -> false assert (for some reasons all windows are placed into current active workspace)
-            // todo chrome close "cmd F" window with esc -> false assert
-            precondition(workspace.mruWindows.remove(window), "mru.remove \(window.title)")
-        }
 
         let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
+        // todo lock screen -> windows are reset
+        if _parent._mostRecentChild == self {
+            _parent._mostRecentChild = nil
+        }
         self._parent = nil
 
         if workspace.isEffectivelyEmpty { // It became empty
@@ -121,6 +122,12 @@ class TreeNode: Equatable {
             currentEmptyWorkspace.assignedMonitor = nil
         }
         return PreviousBindingData(adaptiveWeight: adaptiveWeight, index: index)
+    }
+
+    func markAsMostRecentChild() {
+        guard let _parent else { return }
+        _parent._mostRecentChild = self
+        _parent.markAsMostRecentChild()
     }
 
     @discardableResult

@@ -42,7 +42,7 @@ final class MacWindow: Window {
             if shouldFloat || config.debugAllWindowsAreFloating {
                 parent = workspace
             } else {
-                let tilingParent = workspace.mruWindows.mostRecent?.parent as? TilingContainer ?? workspace.rootTilingContainer
+                let tilingParent = workspace.mostRecentWindow?.parent as? TilingContainer ?? workspace.rootTilingContainer
                 parent = tilingParent
             }
             let window = MacWindow(id, app, axWindow, parent: parent, adaptiveWeight: WEIGHT_AUTO)
@@ -85,7 +85,7 @@ final class MacWindow: Window {
     @discardableResult
     override func focus() -> Bool {
         if app.nsApp.activate(options: .activateIgnoringOtherApps) && axWindow.raise() {
-            workspace.mruWindows.pushOrRaise(self)
+            markAsMostRecentChild()
             return true
         } else {
             return false

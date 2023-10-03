@@ -54,7 +54,7 @@ final class MoveThroughCommandTest: XCTestCase {
                 TestWindow(id: 4, parent: $0)
             }
         }
-        root.workspace.mruWindows.pushOrRaise(window3)
+        window3.markAsMostRecentChild()
 
         await MoveThroughCommand(direction: .right).runWithoutRefresh()
         XCTAssertEqual(

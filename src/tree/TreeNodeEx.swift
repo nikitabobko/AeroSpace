@@ -25,6 +25,10 @@ extension TreeNode {
         self as? Workspace ?? parent?.workspace ?? errorT("Unknown type \(Self.self)")
     }
 
+    var mostRecentWindow: Window? {
+        self as? Window ?? mostRecentChild?.mostRecentWindow
+    }
+
     func allLeafWindowsRecursive(snappedTo direction: CardinalDirection) -> [Window] {
         switch kind {
         case .workspace(let workspace):

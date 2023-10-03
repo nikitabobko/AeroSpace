@@ -60,25 +60,17 @@ private func moveOut(window: Window, direction: CardinalDirection) {
 }
 
 private func deepMoveIn(window: Window, into container: TilingContainer, moveDirection: CardinalDirection) {
-    let mruIndexMap = window.workspace.mruWindows.mruIndexMap
-    let preferredPath: [TreeNode] = container.allLeafWindowsRecursive
-        .minBy { mruIndexMap[$0] ?? Int.max }!
-        .parentsWithSelf
-        .reversed()
-        .drop(while: { $0 != container })
-        .dropFirst()
-        .toArray()
-    let deepTarget = container.findDeepMoveInTargetRecursive(moveDirection.orientation, preferredPath)
+    let deepTarget = container.findDeepMoveInTargetRecursive(moveDirection.orientation)
     switch deepTarget.kind {
     case .tilingContainer:
         window.unbindFromParent()
         window.bindTo(parent: deepTarget, adaptiveWeight: WEIGHT_AUTO, index: 0)
-    case .window(let target):
+    case .window(let deepTarget):
         window.unbindFromParent()
         window.bindTo(
-            parent: (target.parent as! TilingContainer),
+            parent: (deepTarget.parent as! TilingContainer),
             adaptiveWeight: WEIGHT_AUTO,
-            index: target.ownIndex + 1
+            index: deepTarget.ownIndex + 1
         )
     case .workspace:
         error("Impossible")
@@ -86,7 +78,7 @@ private func deepMoveIn(window: Window, into container: TilingContainer, moveDir
 }
 
 private extension TreeNode {
-    func findDeepMoveInTargetRecursive(_ orientation: Orientation, _ preferredPath: [TreeNode]) -> TreeNode {
+    func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TreeNode {
         switch kind {
         case .window:
             return self
@@ -94,9 +86,8 @@ private extension TreeNode {
             if container.orientation == orientation {
                 return container
             } else {
-                assert(children.contains(preferredPath.first!))
-                return preferredPath.first!
-                    .findDeepMoveInTargetRecursive(orientation, Array(preferredPath.dropFirst()))
+                return (mostRecentChild ?? errorT("Empty containers must be detached during normalization"))
+                    .findDeepMoveInTargetRecursive(orientation)
             }
         case .workspace:
             error("Impossible")

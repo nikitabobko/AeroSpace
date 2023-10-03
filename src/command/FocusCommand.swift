@@ -20,15 +20,31 @@ struct FocusCommand: Command { // todo speed up. Now it's slightly slow (probabl
             })!
             guard let parent = topMostChild.parent as? TilingContainer else { return }
             precondition(parent.orientation == direction.orientation)
-            guard let index = topMostChild.ownIndexOrNil else { return }
-            let mruIndexMap = currentWindow.workspace.mruWindows.mruIndexMap
-            let windowToFocus: Window? = parent.children
-                .getOrNil(atIndex: index + direction.focusOffset)?
-                .allLeafWindowsRecursive(snappedTo: direction.opposite)
-                .minBy { mruIndexMap[$0] ?? Int.max }
+            let windowToFocus = parent.children
+                .getOrNil(atIndex: topMostChild.ownIndexOrNil! + direction.focusOffset)?
+                .findFocusTargetRecursive(snappedTo: direction.opposite)
+
             windowToFocus?.focus()
         } else {
             // todo direction == .child || direction == .parent
+        }
+    }
+}
+
+private extension TreeNode {
+    func findFocusTargetRecursive(snappedTo direction: CardinalDirection) -> Window? {
+        switch kind {
+        case .workspace(let workspace):
+            return workspace.rootTilingContainer.findFocusTargetRecursive(snappedTo: direction)
+        case .window(let window):
+            return window
+        case .tilingContainer(let container):
+            if direction.orientation == container.orientation {
+                return (direction.isPositive ? container.children.last : container.children.first)?
+                    .findFocusTargetRecursive(snappedTo: direction)
+            } else {
+                return mostRecentChild?.findFocusTargetRecursive(snappedTo: direction)
+            }
         }
     }
 }

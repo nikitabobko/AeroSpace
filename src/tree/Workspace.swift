@@ -43,8 +43,6 @@ class Workspace: TreeNode, Hashable, Identifiable {
     let name: String
     var id: String { name } // satisfy Identifiable
     var assignedMonitor: Monitor? = nil
-    var mruWindows: MruStack<Window> = MruStack()
-    //weak var lastActiveWindow: MacWindow?
 
     private init(_ name: String) {
         self.name = name
