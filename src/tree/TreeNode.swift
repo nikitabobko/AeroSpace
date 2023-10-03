@@ -90,18 +90,20 @@ class TreeNode: Equatable {
         } else {
             self.adaptiveWeight = adaptiveWeight
         }
-        newParent._children.insert(self, at: index == -1 ? newParent._children.count : index)
-        _parent = newParent
-        markAsMostRecentChild()
-        if let window = anyLeafWindowRecursive {
-            let newParentWorkspace = newParent.workspace
+        let window = anyLeafWindowRecursive
+        let newParentWorkspace = newParent.workspace
+        // "effectively empty" -> not "effectively empty" transition
+        if let window, newParentWorkspace.assignedMonitor == nil {
             newParentWorkspace.assignedMonitor = window.getCenter()?.monitorApproximation
             //?? NSScreen.focusedMonitorOrNilIfDesktop // todo uncomment once Monitor mock is done
             //?? errorT("Can't set assignedMonitor") // todo uncomment once Monitor mock is done
-            // Update currentEmptyWorkspace since it's no longer effectively empty
-            if newParentWorkspace == currentEmptyWorkspace {
-                currentEmptyWorkspace = getOrCreateNextEmptyWorkspace()
-            }
+        }
+        newParent._children.insert(self, at: index == -1 ? newParent._children.count : index)
+        _parent = newParent
+        markAsMostRecentChild()
+        // Update currentEmptyWorkspace since it's no longer effectively empty
+        if window != nil && newParentWorkspace == currentEmptyWorkspace {
+            currentEmptyWorkspace = getOrCreateNextEmptyWorkspace()
         }
         return result
     }
