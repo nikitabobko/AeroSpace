@@ -24,6 +24,6 @@ func syncStartAtLogin() {
     } else {
         // todo try!
         try! Process.run(URL(filePath: "/bin/launchctl"), arguments: ["unload", url.absoluteString])
-        try! FileManager.default.removeItem(at: url)
+        try? FileManager.default.removeItem(at: url)
     }
 }

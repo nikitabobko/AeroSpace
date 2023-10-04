@@ -41,11 +41,12 @@ private func refreshWorkspaces() {
             focusedWorkspace = focusedWindow.workspace
         }
         focusedWorkspace.assignedMonitorOfNotEmptyWorkspace.setActiveWorkspace(focusedWorkspace)
-        updateFocusedWorkspaceTrayText(newWorkspace: focusedWorkspace.name)
+        focusedWorkspaceName = focusedWorkspace.name
     } else {
         debug("refreshWorkspaces: empty")
-        updateFocusedWorkspaceTrayText(newWorkspace: currentEmptyWorkspace.name)
+        focusedWorkspaceName = currentEmptyWorkspace.name
     }
+    updateTrayText()
 }
 
 private func layoutWorkspaces() {

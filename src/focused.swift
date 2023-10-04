@@ -29,3 +29,15 @@ var focusedWindow: Window? { focusedApp?.focusedWindow }
 var focusedWindowOrEffectivelyFocused: Window? {
     focusedWindow ?? Workspace.focused.mostRecentWindow ?? Workspace.focused.anyLeafWindowRecursive
 }
+
+private var _focusedWorkspaceName: String = currentEmptyWorkspace.name
+var focusedWorkspaceName: String {
+    get { _focusedWorkspaceName }
+    set {
+        if newValue != _focusedWorkspaceName {
+            previousFocusedWorkspaceName = _focusedWorkspaceName
+        }
+        _focusedWorkspaceName = newValue
+    }
+}
+var previousFocusedWorkspaceName: String? = nil

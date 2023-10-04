@@ -15,10 +15,18 @@ struct Config {
     var focusWrapping: FocusWrapping
     var debugAllWindowsAreFloating: Bool
     var startAtLogin: Bool
+    var trayIconContent: TrayIconContent
+    var trayIconWorkspacesSeparator: String
 
     let modes: [String: Mode]
     var workspaceNames: [String]
     var mainMode: Mode { modes[mainModeId] ?? errorT("Invalid config. main mode must be always presented") }
+}
+
+enum TrayIconContent: String {
+    case active_workspace
+    case active_workspaces
+    case icon
 }
 
 enum FocusWrapping: String { // todo think about mental model

@@ -49,6 +49,12 @@ func parseConfig(_ rawToml: String) -> Config {
     let key9 = "after-login-command"
     var value9: Command? = nil
 
+    let key10 = "tray-icon-content"
+    var value10: TrayIconContent? = nil
+
+    let key11 = "tray-icon-workspaces-separator"
+    var value11: String? = nil
+
     for (key, value) in rawTable {
         let backtrace: TomlBacktrace = .root(key)
         switch key {
@@ -70,6 +76,10 @@ func parseConfig(_ rawToml: String) -> Config {
             value8 = parseBool(value, backtrace)
         case key9:
             value9 = parseCommand(value, backtrace)
+        case key10:
+            value10 = parseTrayIconContent(value, backtrace)
+        case key11:
+            value11 = parseString(value, backtrace)
         case "mode":
             modes = parseModes(value, backtrace)
         default:
@@ -89,6 +99,8 @@ func parseConfig(_ rawToml: String) -> Config {
         focusWrapping: value6 ?? defaultConfig.focusWrapping,
         debugAllWindowsAreFloating: value7 ?? defaultConfig.debugAllWindowsAreFloating,
         startAtLogin: value8 ?? defaultConfig.startAtLogin,
+        trayIconContent: value10 ?? defaultConfig.trayIconContent,
+        trayIconWorkspacesSeparator: value11 ?? defaultConfig.trayIconWorkspacesSeparator,
 
         modes: modesOrDefault,
         workspaceNames: modesOrDefault.values.lazy
@@ -98,14 +110,21 @@ func parseConfig(_ rawToml: String) -> Config {
     )
 }
 
-private func parseFocusWrapping(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> FocusWrapping {
+private func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> String {
     let rawString = raw.string ?? expectedActualTypeError(expected: .string, actual: raw.type, backtrace)
-    return FocusWrapping(rawValue: rawString) ?? errorT("\(backtrace): Can't parse focus wrapping")
+    return rawString
+}
+
+private func parseTrayIconContent(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> TrayIconContent {
+    TrayIconContent(rawValue: parseString(raw, backtrace)) ?? errorT("\(backtrace): Can't parse tray-icon-content")
+}
+
+private func parseFocusWrapping(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> FocusWrapping {
+    FocusWrapping(rawValue: parseString(raw, backtrace)) ?? errorT("\(backtrace): Can't parse focus wrapping")
 }
 
 private func parseMainLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ConfigLayout {
-    let rawString = raw.string ?? expectedActualTypeError(expected: .string, actual: raw.type, backtrace)
-    let layout = parseLayout(rawString, backtrace)
+    let layout = parseLayout(parseString(raw, backtrace), backtrace)
     if layout == .main {
         error("\(backtrace): main layout can't be '\(layout)'")
     }

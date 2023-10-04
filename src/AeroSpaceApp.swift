@@ -39,7 +39,7 @@ struct AeroSpaceApp: App {
                 Button {
                     Task { await WorkspaceCommand(workspaceName: workspace.name).run() }
                 } label: {
-                    Toggle(isOn: workspace.name == viewModel.focusedWorkspaceTrayText
+                    Toggle(isOn: workspace == Workspace.focused
                         ? Binding(get: { true }, set: { _, _ in })
                         : Binding(get: { false }, set: { _, _ in })) {
                         let monitor = (workspace.assignedMonitor?.name).flatMap { " - \($0)" } ?? ""
@@ -56,7 +56,7 @@ struct AeroSpaceApp: App {
                 .keyboardShortcut("Q", modifiers: .command)
         } label: {
             // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
-            Text(viewModel.focusedWorkspaceTrayText)
+            Text(viewModel.trayText)
         }
     }
 }

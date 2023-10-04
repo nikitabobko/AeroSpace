@@ -14,13 +14,15 @@ func setUpWorkspacesForTests() {
         focusWrapping: defaultConfig.focusWrapping,
         debugAllWindowsAreFloating: defaultConfig.debugAllWindowsAreFloating,
         startAtLogin: defaultConfig.startAtLogin,
+        trayIconContent: defaultConfig.trayIconContent,
+        trayIconWorkspacesSeparator: defaultConfig.trayIconWorkspacesSeparator,
 
         // Don't create any workspaces for tests
         modes: [mainModeId: Mode(name: nil, bindings: [])],
         workspaceNames: []
     )
     currentEmptyWorkspace = Workspace.get(byName: "EMPTY WORKSPACE FOR TESTS")
-    TrayMenuModel.shared.focusedWorkspaceTrayText = currentEmptyWorkspace.name
+    focusedWorkspaceName = currentEmptyWorkspace.name
     precondition(Workspace.all.singleOrNil() === currentEmptyWorkspace)
     precondition(currentEmptyWorkspace.isEffectivelyEmpty)
 
