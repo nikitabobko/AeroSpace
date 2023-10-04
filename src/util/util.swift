@@ -21,6 +21,11 @@ extension String? {
 
 var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
 
+func terminateApp() -> Never {
+    NSApplication.shared.terminate(nil)
+    error("Unreachable code")
+}
+
 extension String {
     func removePrefix(_ prefix: String) -> String {
         hasPrefix(prefix) ? String(dropFirst(prefix.count)) : self

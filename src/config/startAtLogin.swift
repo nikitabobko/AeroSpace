@@ -11,19 +11,19 @@ func syncStartAtLogin() {
             <key>ProgramArguments</key>
             <array>
                 <string>\(URL(filePath: CommandLine.arguments.first ?? errorT("Can't get first argument")).absoluteString)</string>
-                <string>--run-after-login-command</string>
+                <string>--started-at-login</string>
             </array>
             <key>RunAtLoad</key>
             <true/>
         </dict>
         </plist>
         """
-        (try? plist.write(to: url, atomically: true, encoding: .ascii)) ?? errorT("Can't write to \(url)")
+        (try? plist.write(to: url, atomically: true, encoding: .utf8)) ?? errorT("Can't write to \(url)")
         // todo try!
         try! Process.run(URL(filePath: "/bin/launchctl"), arguments: ["load", url.absoluteString])
     } else {
-        // todo delete file
+        // todo try!
         try! Process.run(URL(filePath: "/bin/launchctl"), arguments: ["unload", url.absoluteString])
-
+        try! FileManager.default.removeItem(at: url)
     }
 }

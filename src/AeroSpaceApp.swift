@@ -13,13 +13,17 @@ struct AeroSpaceApp: App {
 
     init() {
         if !isUnitTest { // Prevent SwiftUI app loading during unit testing
+            let startedAtLogin = CommandLine.arguments.getOrNil(atIndex: 1) == "--started-at-login"
             reloadConfig()
+            if startedAtLogin && !config.startAtLogin {
+                terminateApp()
+            }
 
             checkAccessibilityPermissions()
             GlobalObserver.initObserver()
             config.mainMode.activate()
             refresh()
-            if CommandLine.arguments.getOrNil(atIndex: 1) == "--run-after-login-command" {
+            if startedAtLogin {
                 Task { await config.afterLoginCommand.run() }
             }
             Task { await config.afterStartupCommand.run() }
@@ -47,7 +51,7 @@ struct AeroSpaceApp: App {
             Button("Reload config") {
             } // todo
             Button("Quit \(Bundle.appName)") {
-                NSApplication.shared.terminate(nil)
+                terminateApp()
             }
                 .keyboardShortcut("Q", modifiers: .command)
         } label: {
