@@ -23,32 +23,32 @@ private func parseSingleCommand(_ raw: String, _ backtrace: TomlBacktrace) -> Co
     let firstWord = String(words.first ?? "")
     if firstWord == "workspace" {
         return WorkspaceCommand(workspaceName: parseSingleArg(args, firstWord, backtrace))
-    } else if firstWord == "move_container_to_workspace" {
+    } else if firstWord == "move-container-to-workspace" {
         return MoveContainerToWorkspaceCommand(targetWorkspaceName: parseSingleArg(args, firstWord, backtrace))
     } else if firstWord == "mode" {
         return ModeCommand(idToActivate: parseSingleArg(args, firstWord, backtrace))
-    } else if firstWord == "exec_and_wait" {
+    } else if firstWord == "exec-and-wait" {
         return ExecAndWaitCommand(bashCommand: raw.removePrefix(firstWord))
-    } else if firstWord == "exec_and_forget" {
+    } else if firstWord == "exec-and-forget" {
         return ExecAndForgetCommand(bashCommand: raw.removePrefix(firstWord))
     } else if firstWord == "focus" {
         let direction = FocusCommand.Direction(rawValue: parseSingleArg(args, firstWord, backtrace))
             ?? errorT("\(backtrace): Can't parse '\(firstWord)' direction")
         return FocusCommand(direction: direction)
-    } else if firstWord == "move_through" {
+    } else if firstWord == "move-through" {
         let direction = CardinalDirection(rawValue: parseSingleArg(args, firstWord, backtrace))
             ?? errorT("\(backtrace): Can't parse '\(firstWord)' direction")
         return MoveThroughCommand(direction: direction)
     } else if firstWord == "layout" {
         return LayoutCommand(toggleBetween: args.map { parseLayout(String($0), backtrace) })
             ?? errorT("\(backtrace): Can't create layout command") // todo nicer message
-    } else if raw == "workspace_back_and_forth" {
+    } else if raw == "workspace-back-and-forth" {
         return WorkspaceBackAndForthCommand()
-    } else if raw == "reload_config" {
+    } else if raw == "reload-config" {
         return ReloadConfigCommand()
-    } else if raw == "flatten_workspace_tree" {
+    } else if raw == "flatten-workspace-tree" {
         return FlattenWorkspaceTreeCommand()
-    } else if raw == "close_all_windows_but_current" {
+    } else if raw == "close-all-windows-but-current" {
         return CloseAllWindowsButCurrentCommand()
     } else if raw == "" {
         error("\(backtrace): Can't parse empty string command")
