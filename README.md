@@ -64,9 +64,11 @@ Firstly, install [xcodegen](https://github.com/yonaskolb/XcodeGen). Then run in 
 
 - XCode welcome screen
 - Finder preview
+- Finder tabs
+- Chrome create bookmark window
 - Toolbox window
 - IntelliJ dialog windows (e.g. "Add to git")
-- IntelliJ project structure modal window
+- IntelliJ project structure modal window blocks main window resize
 - VLC full screen window (eh, I wish every fullscreen window in macOS worked like that)
 - iTerm drop down window
 - Chrome cmd+f window
