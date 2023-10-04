@@ -2,8 +2,6 @@ final class MacWindow: Window {
     let axWindow: AXUIElement
     let app: MacApp
     private var prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect: CGPoint?
-    // todo redundant?
-    private var prevUnhiddenEmulationSize: CGSize?
     fileprivate var previousSize: CGSize?
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 
@@ -109,28 +107,19 @@ final class MacWindow: Window {
             guard let size = getSize() else { return }
             prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
                     topLeftCorner - workspace.assignedMonitorOfNotEmptyWorkspace.rect.topLeftCorner
-            prevUnhiddenEmulationSize = size
         }
         setTopLeftCorner(allMonitorsRectsUnion.bottomRightCorner)
     }
 
     func unhideViaEmulation() {
-        precondition((prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect != nil) == (prevUnhiddenEmulationSize != nil))
         guard let prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect else { return }
-        guard let prevUnhiddenEmulationSize else { return }
 
         setTopLeftCorner(workspace.assignedMonitorOfNotEmptyWorkspace.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
-        // Restore the size because during hiding the window can end up on different monitor with different density,
-        // size, etc. And macOS can change the size of the window when the window is moved on different monitor in that
-        // case. So we need to restore the size of the window
-        setSize(prevUnhiddenEmulationSize)
 
         self.prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect = nil
-        self.prevUnhiddenEmulationSize = nil
     }
 
     var isHiddenViaEmulation: Bool {
-        precondition((prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect != nil) == (prevUnhiddenEmulationSize != nil))
         return prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect != nil
     }
 
