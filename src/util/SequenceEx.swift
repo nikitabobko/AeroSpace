@@ -13,6 +13,19 @@ extension Sequence {
         return result
     }
 
+    func mapOrFailure<T, E>(_ transform: (Self.Element) throws -> Result<T, E>) rethrows -> Result<[T], E> {
+        var result: [T] = []
+        for element in self {
+            switch try transform(element) {
+            case .success(let element):
+                result.append(element)
+            case .failure(let errors):
+                return .failure(errors)
+            }
+        }
+        return .success(result)
+    }
+
     @inlinable public func minByOrThrow<S: Comparable>(_ selector: (Self.Element) -> S) -> Self.Element {
         minBy(selector) ?? errorT("Empty sequence")
     }

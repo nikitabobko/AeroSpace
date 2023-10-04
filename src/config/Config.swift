@@ -2,7 +2,7 @@ import HotKey
 
 let mainModeId = "main" // todo rename to "default"
 let defaultConfig =
-    parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!))
+    parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!)).value
 var config: Config = defaultConfig
 
 struct Config {
@@ -20,7 +20,6 @@ struct Config {
 
     let modes: [String: Mode]
     var workspaceNames: [String]
-    var mainMode: Mode { modes[mainModeId] ?? errorT("Invalid config. main mode must be always presented") }
 }
 
 enum TrayIconContent: String {
@@ -41,10 +40,10 @@ enum ConfigLayout: String {
     case tiling, floating, sticky // todo can sticky windows be tiling?
 }
 
-struct Mode {
+struct Mode: Copyable {
     /// User visible name. Optional. todo drop it?
-    let name: String?
-    let bindings: [HotkeyBinding]
+    var name: String?
+    var bindings: [HotkeyBinding]
 
     func activate() {
         for binding in bindings {

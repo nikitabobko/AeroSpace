@@ -1,80 +1,83 @@
 import TOMLKit
 
-// todo drop TomlBacktrace
-func parseCommand(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Command {
+typealias ParsedCommand<T> = Result<T, String>
+extension String: Error {}
+
+func parseCommand(_ raw: TOMLValueConvertible) -> ParsedCommand<Command> {
     if let rawString = raw.string {
-        return parseSingleCommand(rawString, backtrace)
+        return parseSingleCommand(rawString)
     } else if let rawArray = raw.array {
-        let commands: [Command] = (0..<rawArray.count).map { index in
-            let indexBacktrace = backtrace + .index(index)
-            let rawString: String = rawArray[index].string ??
-                expectedActualTypeError(expected: .string, actual: rawArray[index].type, indexBacktrace)
-            return parseSingleCommand(rawString, indexBacktrace)
+        let commands: ParsedCommand<[Command]> = (0..<rawArray.count).mapOrFailure { index in
+            let rawString: String = rawArray[index].string ?? expectedActualTypeError(expected: .string, actual: rawArray[index].type)
+            return parseSingleCommand(rawString)
         }
-        return CompositeCommand(subCommands: commands)
+        return commands.map { CompositeCommand(subCommands: $0) }
     } else {
-        return expectedActualTypeError(expected: [.string, .array], actual: raw.type, backtrace)
+        return .failure(expectedActualTypeError(expected: [.string, .array], actual: raw.type))
     }
 }
 
-private func parseSingleCommand(_ raw: String, _ backtrace: TomlBacktrace) -> Command {
+private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
     let words = raw.split(separator: " ")
     let args = words[1...]
     let firstWord = String(words.first ?? "")
     if firstWord == "workspace" {
-        return WorkspaceCommand(workspaceName: parseSingleArg(args, firstWord, backtrace))
+        return parseSingleArg(args, firstWord).map { WorkspaceCommand(workspaceName: $0) }
     } else if firstWord == "move-container-to-workspace" {
-        return MoveContainerToWorkspaceCommand(targetWorkspaceName: parseSingleArg(args, firstWord, backtrace))
+        return parseSingleArg(args, firstWord).map { MoveContainerToWorkspaceCommand(targetWorkspaceName: $0) }
     } else if firstWord == "mode" {
-        return ModeCommand(idToActivate: parseSingleArg(args, firstWord, backtrace))
+        return parseSingleArg(args, firstWord).map { ModeCommand(idToActivate: $0) }
     } else if firstWord == "exec-and-wait" {
-        return ExecAndWaitCommand(bashCommand: raw.removePrefix(firstWord))
+        return .success(ExecAndWaitCommand(bashCommand: raw.removePrefix(firstWord)))
     } else if firstWord == "exec-and-forget" {
-        return ExecAndForgetCommand(bashCommand: raw.removePrefix(firstWord))
+        return .success(ExecAndForgetCommand(bashCommand: raw.removePrefix(firstWord)))
     } else if firstWord == "focus" {
-        let direction = FocusCommand.Direction(rawValue: parseSingleArg(args, firstWord, backtrace))
-            ?? errorT("\(backtrace): Can't parse '\(firstWord)' direction")
-        return FocusCommand(direction: direction)
+        return parseSingleArg(args, firstWord)
+            .flatMap { FocusCommand.Direction(rawValue: $0).orFailure { "Can't parse '\(firstWord)' direction" } }
+            .map { FocusCommand(direction: $0) }
     } else if firstWord == "move-through" {
-        let direction = CardinalDirection(rawValue: parseSingleArg(args, firstWord, backtrace))
-            ?? errorT("\(backtrace): Can't parse '\(firstWord)' direction")
-        return MoveThroughCommand(direction: direction)
+        let bar: ParsedCommand<Command> = parseSingleArg(args, firstWord)
+            .flatMap { CardinalDirection(rawValue: $0).orFailure { "Can't parse '\(firstWord)' direction" } }
+            .map { MoveThroughCommand(direction: $0) }
+        return bar
     } else if firstWord == "layout" {
-        return LayoutCommand(toggleBetween: args.map { parseLayout(String($0), backtrace) })
-            ?? errorT("\(backtrace): Can't create layout command") // todo nicer message
+        return args.mapOrFailure { parseLayout(String($0)) }
+            .flatMap {
+                (LayoutCommand(toggleBetween: $0) as Command?).orFailure { "Can't create layout command" } // todo nicer message
+            }
     } else if raw == "workspace-back-and-forth" {
-        return WorkspaceBackAndForthCommand()
+        return .success(WorkspaceBackAndForthCommand())
     } else if raw == "reload-config" {
-        return ReloadConfigCommand()
+        return .success(ReloadConfigCommand())
     } else if raw == "flatten-workspace-tree" {
-        return FlattenWorkspaceTreeCommand()
+        return .success(FlattenWorkspaceTreeCommand())
     } else if raw == "close-all-windows-but-current" {
-        return CloseAllWindowsButCurrentCommand()
+        return .success(CloseAllWindowsButCurrentCommand())
     } else if raw == "" {
-        error("\(backtrace): Can't parse empty string command")
+        return .failure("Can't parse empty string command")
     } else {
-        error("\(backtrace): Can't parse '\(raw)' command")
+        return .failure("Can't parse '\(raw)' command")
     }
 }
 
-func parseLayout(_ raw: String, _ backtrace: TomlBacktrace) -> ConfigLayout {
-    ConfigLayout(rawValue: raw) ?? errorT("\(backtrace): Can't parse layout '\(raw)'")
+func parseLayout(_ raw: String) -> ParsedCommand<ConfigLayout> {
+    ConfigLayout(rawValue: raw).orFailure { "Can't parse layout '\(raw)'" }
 }
 
-private func parseSingleArg(_ args: ArraySlice<Swift.String.SubSequence>, _ command: String, _ backtrace: TomlBacktrace) -> String {
-    args.singleOrNil().flatMap { String($0) } ?? errorT(
-        "\(backtrace): \(command) must have only a single argument. But passed: '\(args.joined(separator: " "))'"
-    )
+private func parseSingleArg(_ args: ArraySlice<Swift.String.SubSequence>, _ command: String) -> ParsedCommand<String> {
+    args.singleOrNil().flatMap { String($0) }.orFailure {
+        "\(command) must have only a single argument. But passed: '\(args.joined(separator: " "))'"
+    }
 }
 
-private func expectedActualTypeError<T>(expected: TOMLType, actual: TOMLType, _ backtrace: TomlBacktrace) -> T {
-    error("\(backtrace): Expected type is '\(expected)'. But actual type is '\(actual)'")
+private func expectedActualTypeError(expected: TOMLType, actual: TOMLType) -> String {
+    "Expected type is '\(expected)'. But actual type is '\(actual)'"
 }
 
-private func expectedActualTypeError<T>(expected: [TOMLType], actual: TOMLType, _ backtrace: TomlBacktrace) -> T {
+private func expectedActualTypeError(expected: [TOMLType], actual: TOMLType) -> String {
     if let single = expected.singleOrNil() {
-        return expectedActualTypeError(expected: single, actual: actual, backtrace)
+        return expectedActualTypeError(expected: single, actual: actual)
     } else {
-        error("\(backtrace): Expected types are \(expected.map { "'\($0.description)'" }.joined(separator: " or ")). But actual type is '\(actual)'")
+        return "Expected types are \(expected.map { "'\($0.description)'" }.joined(separator: " or ")). But actual type is '\(actual)'"
     }
 }
