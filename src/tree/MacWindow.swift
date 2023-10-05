@@ -82,7 +82,8 @@ final class MacWindow: Window {
 
     @discardableResult
     override func focus() -> Bool {
-        if app.nsApp.activate(options: .activateIgnoringOtherApps) && axWindow.raise() {
+        // Raise firstly to make sure that by that time we activate the app, particular window would be already on top
+        if axWindow.raise() && app.nsApp.activate(options: .activateIgnoringOtherApps) {
             markAsMostRecentChild()
             return true
         } else {
