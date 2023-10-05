@@ -39,10 +39,10 @@ alt-shift-j = 'move-through down'
 alt-shift-l = 'move-through right'
 
 # Resize window
-# alt-shift-minus  = 'resize shrink height 2 px'
-# alt-shift-equal  = 'resize grow height 2 px'
-# alt-shift-comma  = 'resize shrink width 2 px'
-# alt-shift-period = 'resize grow width 2 px'
+# alt-shift-minus  = 'resize height -10'
+# alt-shift-equal  = 'resize height +10'
+# alt-shift-comma  = 'resize width -10'
+# alt-shift-period = 'resize width +10'
 
 alt-0 = 'workspace 000'
 alt-1 = 'workspace 111'

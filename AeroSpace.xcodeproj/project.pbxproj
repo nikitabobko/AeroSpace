@@ -58,6 +58,7 @@
 		BD6301B2CFC16FDE4223ACB8 /* MacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DB782C527ABE0CF31740EB /* MacApp.swift */; };
 		BF16873111EEDE60A8AACD6B /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F068BCC50ED846DCBFDE57 /* Workspace.swift */; };
 		C0A88261ECF505FC5648FC0A /* OptionalEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EDFD4A9F45182CA6E0BD7B /* OptionalEx.swift */; };
+		D24D02B1FD87424B908986AF /* ResizeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB371951459F8CB0137788C2 /* ResizeCommand.swift */; };
 		E1E35DC5D9D74D54E92AB5F3 /* ExecCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6EF465EF4129BCB10FE247 /* ExecCommandTest.swift */; };
 		E22ACB36C90695FBAC78226E /* TestWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1905935B0C61590A96EFEF /* TestWindow.swift */; };
 		E5682579AEC6B84CF6FCE90D /* TilingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C848D6E57FDF22AAF0FB45E6 /* TilingContainer.swift */; };
@@ -134,6 +135,7 @@
 		C3F068BCC50ED846DCBFDE57 /* Workspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
 		C848D6E57FDF22AAF0FB45E6 /* TilingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilingContainer.swift; sourceTree = "<group>"; };
 		CB03A4736BC3F6D19E4E69F3 /* parseCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parseCommand.swift; sourceTree = "<group>"; };
+		CB371951459F8CB0137788C2 /* ResizeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizeCommand.swift; sourceTree = "<group>"; };
 		CD62043D7F5113A8BA635FDF /* MoveContainerToWorkspaceCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveContainerToWorkspaceCommand.swift; sourceTree = "<group>"; };
 		CD90FB41FD41602120F67FF5 /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		CF3C9038C846369FDD71D1D2 /* ReloadConfigCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadConfigCommand.swift; sourceTree = "<group>"; };
@@ -283,6 +285,7 @@
 				67B9FFF81EB0327ABD51A7FE /* MoveThroughCommand.swift */,
 				CB03A4736BC3F6D19E4E69F3 /* parseCommand.swift */,
 				CF3C9038C846369FDD71D1D2 /* ReloadConfigCommand.swift */,
+				CB371951459F8CB0137788C2 /* ResizeCommand.swift */,
 				EED7EE20910D7BE4D0150CED /* WorkspaceBackAndForthCommand.swift */,
 				43DD32B1711B8EFCC834B68E /* WorkspaceCommand.swift */,
 			);
@@ -461,6 +464,7 @@
 				C0A88261ECF505FC5648FC0A /* OptionalEx.swift in Sources */,
 				78EE0CEF814ABDBA67941B84 /* Rect.swift in Sources */,
 				FC35D6D0A678CC802972C6FE /* ReloadConfigCommand.swift in Sources */,
+				D24D02B1FD87424B908986AF /* ResizeCommand.swift in Sources */,
 				991943D50DF9EDBF321A66F1 /* SelectorComparator.swift in Sources */,
 				AE76A183D0454E4C8ADCE380 /* SequenceEx.swift in Sources */,
 				E5682579AEC6B84CF6FCE90D /* TilingContainer.swift in Sources */,
