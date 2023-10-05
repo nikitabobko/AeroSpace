@@ -43,6 +43,7 @@ private func moveOut(window: Window, direction: CardinalDirection) {
         prevRoot.unbindFromParent()
         precondition(prevRoot != parent.rootTilingContainer)
         parent.rootTilingContainer.orientation = direction.orientation
+        parent.rootTilingContainer.layout = .List // todo force List layout for implicit containers?
         prevRoot.bindTo(parent: parent.rootTilingContainer, adaptiveWeight: WEIGHT_AUTO)
 
         bindTo = parent.rootTilingContainer
