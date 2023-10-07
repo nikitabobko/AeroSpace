@@ -2,7 +2,7 @@
 /// The function is called as a feedback response on every user input
 func refresh() {
     precondition(Thread.current.isMainThread)
-    debug("refresh \(Date.now.formatted(date: .abbreviated, time: .standard))")
+    //debug("refresh \(Date.now.formatted(date: .abbreviated, time: .standard))")
 
     MacWindow.garbageCollectClosedWindows()
     // Garbage collect terminated apps and windows before working with all windows
@@ -31,7 +31,7 @@ func updateLastActiveWindow() {
 
 private func refreshWorkspaces() {
     if let focusedWindow = focusedWindow as! MacWindow? { // todo
-        debug("refreshWorkspaces: not empty")
+        //debug("refreshWorkspaces: not empty")
         let focusedWorkspace: Workspace
         if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation {
             focusedWorkspace = focusedWindow.getCenter()?.monitorApproximation.getActiveWorkspace()
@@ -43,7 +43,7 @@ private func refreshWorkspaces() {
         focusedWorkspace.assignedMonitorOfNotEmptyWorkspace.setActiveWorkspace(focusedWorkspace)
         focusedWorkspaceName = focusedWorkspace.name
     } else {
-        debug("refreshWorkspaces: empty")
+        //debug("refreshWorkspaces: empty")
         focusedWorkspaceName = currentEmptyWorkspace.name
     }
     updateTrayText()
