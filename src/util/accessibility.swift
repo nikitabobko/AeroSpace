@@ -282,12 +282,13 @@ extension AXObserver {
         return observer!
     }
 
-    static func observe(_ pid: pid_t, _ notifKey: String, _ ax: AXUIElement, _ handler: AXObserverCallback) -> AXObserver? {
+    static func observe(_ pid: pid_t, _ notifKey: String, _ ax: AXUIElement, _ handler: AXObserverCallback, data: AnyObject?) -> AXObserver? {
         let observer = newImpl(pid, handler)
+        let dataPtr: UnsafeMutableRawPointer? = data.flatMap { Unmanaged.passUnretained($0).toOpaque() }
         // kAXWindowCreatedNotification takes more than 1 attempt to subscribe. Probably, it's because the application
         // is still initializing
         for _ in 1...SUBSCRIBE_OBSERVER_ATTEMPTS_THRESHOLD {
-            if AXObserverAddNotification(observer, ax, notifKey as CFString, nil) == .success {
+            if AXObserverAddNotification(observer, ax, notifKey as CFString, dataPtr) == .success {
                 CFRunLoopAddSource(CFRunLoopGetCurrent(), AXObserverGetRunLoopSource(observer), .defaultMode)
                 return observer
             }
@@ -303,4 +304,4 @@ struct AxObserverWrapper {
 }
 
 /// Pure heuristic. Usually it takes around 1000 attempts to subscribe
-private let SUBSCRIBE_OBSERVER_ATTEMPTS_THRESHOLD = 10_000
+private let SUBSCRIBE_OBSERVER_ATTEMPTS_THRESHOLD = 10_000 // todo drop

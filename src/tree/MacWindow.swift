@@ -39,7 +39,7 @@ final class MacWindow: Window, CustomStringConvertible {
             }
             let window = MacWindow(id, app, axWindow, parent: parent, adaptiveWeight: WEIGHT_AUTO)
 
-            if window.observe(refreshObs, kAXUIElementDestroyedNotification) &&
+            if window.observe(destroyedObs, kAXUIElementDestroyedNotification) &&
                        window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
                        window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
                        window.observe(refreshObs, kAXMovedNotification) &&
@@ -77,7 +77,7 @@ final class MacWindow: Window, CustomStringConvertible {
     }
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) -> Bool {
-        guard let observer = AXObserver.observe(app.nsApp.processIdentifier, notifKey, axWindow, handler) else { return false }
+        guard let observer = AXObserver.observe(app.nsApp.processIdentifier, notifKey, axWindow, handler, data: self) else { return false }
         axObservers.append(AxObserverWrapper(obs: observer, ax: axWindow, notif: notifKey as CFString))
         return true
     }
@@ -152,14 +152,6 @@ final class MacWindow: Window, CustomStringConvertible {
         guard let size = getSize() else { return nil }
         return Rect(topLeftX: topLeftCorner.x, topLeftY: topLeftCorner.y, width: size.width, height: size.height)
     }
-
-    static func garbageCollectClosedWindows() {
-        for window in allWindows {
-            if window.axWindow.windowId() == nil {
-                window.garbageCollect()
-            }
-        }
-    }
 }
 
 func shouldFloat(_ axWindow: AXUIElement) -> Bool {
@@ -172,4 +164,13 @@ func shouldFloat(_ axWindow: AXUIElement) -> Bool {
     //
     // Minimized windows or windows of a hidden app have subrole "AXDialog"
     axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole || config.debugAllWindowsAreFloating
+}
+
+extension UnsafeMutableRawPointer {
+    var window: MacWindow? { Unmanaged.fromOpaque(self).takeUnretainedValue() }
+}
+
+private func destroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
+    data?.window?.garbageCollect()
+    refresh()
 }

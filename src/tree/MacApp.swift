@@ -51,7 +51,7 @@ final class MacApp: AeroApp {
     var title: String? { nsApp.localizedName }
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) -> Bool {
-        guard let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, handler) else { return false }
+        guard let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, handler, data: nil) else { return false }
         axObservers.append(AxObserverWrapper(obs: observer, ax: axApp, notif: notifKey as CFString))
         return true
     }

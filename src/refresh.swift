@@ -4,7 +4,6 @@ func refresh() {
     precondition(Thread.current.isMainThread)
     //debug("refresh \(Date.now.formatted(date: .abbreviated, time: .standard))")
 
-    MacWindow.garbageCollectClosedWindows()
     // Garbage collect terminated apps and windows before working with all windows
     MacApp.garbageCollectTerminatedApps()
     // Garbage collect workspaces after apps, because workspaces contain apps.
