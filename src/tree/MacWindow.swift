@@ -1,4 +1,4 @@
-final class MacWindow: Window {
+final class MacWindow: Window, CustomStringConvertible {
     let axWindow: AXUIElement
     let app: MacApp
     private var prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect: CGPoint?
@@ -16,11 +16,6 @@ final class MacWindow: Window {
 
     static func get(app: MacApp, axWindow: AXUIElement) -> MacWindow? {
         guard let id = axWindow.windowId() else { return nil }
-        // The app is still loading (e.g. IntelliJ IDEA)
-        // Or it's tooltips, context menus, and drop downs (e.g. IntelliJ IDEA)
-        if axWindow.get(Ax.titleAttr).isNilOrEmpty {
-            return nil
-        }
         if let existing = allWindowsMap[id] {
             return existing
         } else {
@@ -35,9 +30,8 @@ final class MacWindow: Window {
                 guard let topLeftCorner = axWindow.get(Ax.topLeftCornerAttr) else { return nil }
                 workspace = topLeftCorner.monitorApproximation.getActiveWorkspace()
             }
-            let shouldFloat = shouldFloat(axWindow)
             let parent: TreeNode
-            if shouldFloat || config.debugAllWindowsAreFloating {
+            if shouldFloat(axWindow) {
                 parent = workspace
             } else {
                 let tilingParent = workspace.mostRecentWindow?.parent as? TilingContainer ?? workspace.rootTilingContainer
@@ -50,7 +44,7 @@ final class MacWindow: Window {
                        window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
                        window.observe(refreshObs, kAXMovedNotification) &&
                        window.observe(refreshObs, kAXResizedNotification) {
-                debug("New window detected: \(window.title ?? "")")
+                debug("New window detected: \(window)")
                 allWindowsMap[id] = window
                 return window
             } else {
@@ -58,6 +52,18 @@ final class MacWindow: Window {
                 return nil
             }
         }
+    }
+
+    var description: String {
+        let description = [
+            ("title", title),
+            ("role", axWindow.get(Ax.roleAttr)),
+            ("subrole", axWindow.get(Ax.subroleAttr)),
+            ("value", axWindow.get(Ax.valueAttr)),
+            ("modal", axWindow.get(Ax.modalAttr).map { String($0) } ?? ""),
+            ("windowId", String(windowId))
+        ].map { "\($0.0): '\(String(describing: $0.1))'" }.joined(separator: ", ")
+        return "Window(\(description))"
     }
 
     func garbageCollect() {
@@ -103,7 +109,7 @@ final class MacWindow: Window {
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent
         // `hideEmulation` calls
         if !isHiddenViaEmulation {
-            debug("Hide \(app.title) - \(title)")
+            debug("hideViaEmulation: Hide \(self)")
             guard let topLeftCorner = getTopLeftCorner() else { return }
             guard let size = getSize() else { return }
             prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
@@ -156,6 +162,14 @@ final class MacWindow: Window {
     }
 }
 
-func shouldFloat(_ axWindow: AXUIElement) -> Bool { // todo
-    false
+func shouldFloat(_ axWindow: AXUIElement) -> Bool {
+    // Don't tile:
+    // - Chrome cmd+f window ("AXUnknown" value)
+    // - login screen (Yes fuck, it's also a window from Apple's API perspective) ("AXUnknown" value)
+    // - XCode "Build succeeded" popup
+    // - IntelliJ tooltips, context menus, drop downs
+    // - macOS native file picker ("Open..." menu)
+    //
+    // Minimized windows or windows of a hidden app have subrole "AXDialog"
+    axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole || config.debugAllWindowsAreFloating
 }
