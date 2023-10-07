@@ -86,14 +86,22 @@ final class ConfigTest: XCTestCase {
     }
 
     func testTypeMismatch() {
-        let (_, errors) = parseConfig(
+        let errors = parseConfig(
             """
             auto-flatten-containers = 'true'
             """
-        ).toTuple()
+        ).log
         XCTAssertEqual(
             errors.descriptions,
             ["auto-flatten-containers: Expected type is \'bool\'. But actual type is \'string\'"]
+        )
+    }
+
+    func testTomlParseError() {
+        let errors = parseConfig("true").log
+        XCTAssertEqual(
+            errors.descriptions,
+            ["TOML parse error: Error while parsing key-value pair: encountered end-of-file (at line 1, column 5)"]
         )
     }
 }

@@ -10,16 +10,18 @@ func reloadConfig() {
     syncStartAtLogin()
 }
 
-struct TomlParseError: Error, CustomStringConvertible {
-    let backtrace: TomlBacktrace
-    let message: String
+enum TomlParseError: Error, CustomStringConvertible {
+    case semantic(_ backtrace: TomlBacktrace, _ message: String)
+    case syntax(_ message: String)
 
-    init(_ backtrace: TomlBacktrace, _ message: String) {
-        self.backtrace = backtrace
-        self.message = message
+    var description: String {
+        switch self {
+        case .semantic(let backtrace, let message):
+            return "\(backtrace): \(message)"
+        case .syntax(let message):
+            return "TOML parse error: \(message)"
+        }
     }
-
-    var description: String { "\(backtrace): \(message)" }
 }
 
 private typealias ParsedTomlResult<T> = Result<T, TomlParseError>
@@ -50,9 +52,9 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
     do {
         rawTable = try TOMLTable(string: rawToml)
     } catch let e as TOMLParseError {
-        error(e.debugDescription)
+        return ParsedTomlWriter(value: defaultConfig, log: [.syntax(e.debugDescription)])
     } catch let e {
-        error(e.localizedDescription)
+        return ParsedTomlWriter(value: defaultConfig, log: [.syntax(e.localizedDescription)])
     }
 
     var modes: [String: Mode]? = nil
@@ -154,21 +156,21 @@ private func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace
 
 private func parseTrayIconContent(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<TrayIconContent> {
     parseString(raw, backtrace).flatMap {
-        TrayIconContent(rawValue: $0).orFailure { TomlParseError(backtrace, "Can't parse tray-icon-content") }
+        TrayIconContent(rawValue: $0).orFailure { .semantic(backtrace, "Can't parse tray-icon-content") }
     }
 }
 
 private func parseFocusWrapping(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<FocusWrapping> {
     parseString(raw, backtrace).flatMap {
-        FocusWrapping(rawValue: $0).orFailure { TomlParseError(backtrace, "Can't parse focus wrapping") }
+        FocusWrapping(rawValue: $0).orFailure { .semantic(backtrace, "Can't parse focus wrapping") }
     }
 }
 
 private func parseMainLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<ConfigLayout> {
     parseString(raw, backtrace)
-        .flatMap { parseLayout($0).mapError { TomlParseError(backtrace, $0) } }
+        .flatMap { parseLayout($0).mapError { .semantic(backtrace, $0) } }
         .flatMap { (layout: ConfigLayout) -> ParsedTomlResult<ConfigLayout> in
-            layout == .main ? .failure(TomlParseError(backtrace, "main layout can't be 'main'")) : .success(layout)
+            layout == .main ? .failure(.semantic(backtrace, "main layout can't be 'main'")) : .success(layout)
         }
 }
 
@@ -188,7 +190,7 @@ private func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace)
         }
     }
     if !writer.value.keys.contains(mainModeId) {
-        writer = writer.tell(TomlParseError(backtrace, "Please specify '\(mainModeId)' mode"))
+        writer = writer.tell(.semantic(backtrace, "Please specify '\(mainModeId)' mode"))
     }
     return writer
 }
@@ -217,7 +219,7 @@ private func parseMode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) 
 
 private extension ParsedCommand where Failure == String {
     func toParsedTomlResult(_ backtrace: TomlBacktrace) -> ParsedTomlResult<Success> {
-        mapError { TomlParseError(backtrace, $0) }
+        mapError { .semantic(backtrace, $0) }
     }
 }
 
@@ -248,11 +250,11 @@ private func parseBinding(_ raw: String, _ backtrace: TomlBacktrace) -> ParsedTo
     let rawKeys = raw.split(separator: "-")
     let modifiers: ParsedTomlResult<NSEvent.ModifierFlags> = rawKeys.dropLast()
         .mapOrFailure {
-            modifiersMap[String($0)].orFailure { TomlParseError(backtrace, "Can't parse modifiers in '\(raw)' binding") }
+            modifiersMap[String($0)].orFailure { .semantic(backtrace, "Can't parse modifiers in '\(raw)' binding") }
         }
         .map { NSEvent.ModifierFlags($0) }
     let key: ParsedTomlResult<Key> = rawKeys.last.flatMap { keysMap[String($0)] }
-        .orFailure { TomlParseError(backtrace, "Can't parse the key in '\(raw)' binding") }
+        .orFailure { .semantic(backtrace, "Can't parse the key in '\(raw)' binding") }
     return modifiers.flatMap { modifiers -> ParsedTomlResult<(NSEvent.ModifierFlags, Key)> in
         key.flatMap { key -> ParsedTomlResult<(NSEvent.ModifierFlags, Key)> in
             .success((modifiers, key))
@@ -290,9 +292,9 @@ indirect enum TomlBacktrace: CustomStringConvertible {
 }
 
 private func unknownKeyError(_ backtrace: TomlBacktrace) -> TomlParseError {
-    TomlParseError(backtrace, "Unknown key")
+    .semantic(backtrace, "Unknown key")
 }
 
 private func expectedActualTypeError(expected: TOMLType, actual: TOMLType, _ backtrace: TomlBacktrace) -> TomlParseError {
-    TomlParseError(backtrace, "Expected type is '\(expected)'. But actual type is '\(actual)'")
+    .semantic(backtrace, "Expected type is '\(expected)'. But actual type is '\(actual)'")
 }
