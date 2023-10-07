@@ -142,6 +142,7 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
         workspaceNames: modesOrDefault.values.lazy
             .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
             .map { (binding: HotkeyBinding) -> Command in binding.command }
+            .map { (command: Command) -> Command in (command as? CompositeCommand)?.subCommands.singleOrNil() ?? command }
             .compactMap { (command: Command) -> String? in (command as? WorkspaceCommand)?.workspaceName ?? nil }
     )
     return Writer(value: config, log: errors)

@@ -57,6 +57,20 @@ final class ConfigTest: XCTestCase {
         )
     }
 
+    func testPermanentWorkspaceNames() {
+        let (config, errors) = parseConfig(
+            """
+            [mode.main.binding]
+            alt-1 = 'workspace 1'
+            alt-2 = 'workspace 2'
+            alt-3 = ['workspace 3']
+            alt-4 = ['workspace 4', 'focus left']
+            """
+        ).toTuple()
+        XCTAssertEqual(errors.descriptions, [])
+        XCTAssertEqual(config.workspaceNames, ["1", "2", "3"])
+    }
+
     func testUnknownKeyParseError() {
         let (config, errors) = parseConfig(
             """
