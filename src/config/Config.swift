@@ -2,7 +2,13 @@ import HotKey
 
 let mainModeId = "main" // todo rename to "default"
 let defaultConfig =
-    parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!)).value
+    parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!))
+        .also {
+            if !$0.log.isEmpty {
+                error("Can't parse default config: \($0)")
+            }
+        }
+        .value
 var config: Config = defaultConfig
 
 struct Config {

@@ -42,6 +42,7 @@
 		991943D50DF9EDBF321A66F1 /* SelectorComparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1316FFED5D1044CB693EA45 /* SelectorComparator.swift */; };
 		9A138A729245BD2723148583 /* focused.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61FE8B343B068F0FFFC2373 /* focused.swift */; };
 		9D34BD7DE311254BF52F5EA2 /* testUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77C03164B8BFD1E59779C6E /* testUtil.swift */; };
+		9FF829BA48F9AE6E46D8467C /* ScopeFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D113ECDD9173131C0C89630 /* ScopeFunctions.swift */; };
 		A0765C31043BCFB0420BF1C9 /* parseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */; };
 		A2CBF9674964F9083BB198D2 /* ArrayEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D7F7F87FBE7D0BDE4E87F /* ArrayEx.swift */; };
 		A55F31B0CC357B37108B8F54 /* MoveContainerToWorkspaceCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DBD002C4A68AED07BB63EFA /* MoveContainerToWorkspaceCommandTest.swift */; };
@@ -97,6 +98,7 @@
 		3C2E5977331398421A4FC168 /* GlobalObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalObserver.swift; sourceTree = "<group>"; };
 		43DD32B1711B8EFCC834B68E /* WorkspaceCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceCommand.swift; sourceTree = "<group>"; };
 		4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeCommand.swift; sourceTree = "<group>"; };
+		4D113ECDD9173131C0C89630 /* ScopeFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScopeFunctions.swift; sourceTree = "<group>"; };
 		51CE37C1B8D858C81A396F40 /* CollectionEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionEx.swift; sourceTree = "<group>"; };
 		526B113159987FA43EA41120 /* refresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = refresh.swift; sourceTree = "<group>"; };
 		5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AeroSpace-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -317,6 +319,7 @@
 				AF3BB3DD434C75536217CB88 /* NSScreenEx.swift */,
 				A9EDFD4A9F45182CA6E0BD7B /* OptionalEx.swift */,
 				28B788A95DD3C267878E05B5 /* Rect.swift */,
+				4D113ECDD9173131C0C89630 /* ScopeFunctions.swift */,
 				B1316FFED5D1044CB693EA45 /* SelectorComparator.swift */,
 				AAE5DCAEC5EE619CE33859E7 /* SequenceEx.swift */,
 				976540EBEACF846D598CD6E1 /* util.swift */,
@@ -465,6 +468,7 @@
 				78EE0CEF814ABDBA67941B84 /* Rect.swift in Sources */,
 				FC35D6D0A678CC802972C6FE /* ReloadConfigCommand.swift in Sources */,
 				D24D02B1FD87424B908986AF /* ResizeCommand.swift in Sources */,
+				9FF829BA48F9AE6E46D8467C /* ScopeFunctions.swift in Sources */,
 				991943D50DF9EDBF321A66F1 /* SelectorComparator.swift in Sources */,
 				AE76A183D0454E4C8ADCE380 /* SequenceEx.swift in Sources */,
 				E5682579AEC6B84CF6FCE90D /* TilingContainer.swift in Sources */,
