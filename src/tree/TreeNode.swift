@@ -28,7 +28,7 @@ class TreeNode: Equatable {
         case .workspace:
             error("Can't change weight for floating windows and workspace root containers")
         case .window:
-            error("Windows can't be parent containers")
+            windowsCantHaveChildren()
         case nil:
             error("Can't change weight if TreeNode doesn't have parent")
         }
@@ -140,10 +140,21 @@ class TreeNode: Equatable {
         lhs === rhs
     }
 
+    private var userData: [String:Any] = [:]
+    func getUserData<T>(key: TreeNodeUserDataKey<T>) -> T? { userData[key.key] as! T? }
+    func putUserData<T>(key: TreeNodeUserDataKey<T>, data: T) {
+        userData[key.key] = data
+    }
+    @discardableResult
+    func cleanUserData<T>(key: TreeNodeUserDataKey<T>) -> T? { userData.removeValue(forKey: key.key) as! T? }
 
     @discardableResult
     func focus() -> Bool { error("Not implemented") }
     func getRect() -> Rect? { error("Not implemented") }
+}
+
+struct TreeNodeUserDataKey<T> {
+    let key: String
 }
 
 private let WEIGHT_FLOATING = CGFloat(-2)

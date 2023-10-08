@@ -27,17 +27,17 @@ struct MoveThroughCommand: Command {
 }
 
 private func moveOut(window: Window, direction: CardinalDirection) {
-    let topMostChild = window.parents.first(where: {
+    let innerMostChild = window.parents.first(where: {
         // todo rewrite "is Workspace" part once "sticky" is introduced
         $0.parent is Workspace || ($0.parent as? TilingContainer)?.orientation == direction.orientation
     }) as! TilingContainer
     let bindTo: TilingContainer
     let bindToIndex: Int
-    switch topMostChild.parent.kind {
+    switch innerMostChild.parent.kind {
     case .tilingContainer(let parent):
         precondition(parent.orientation == direction.orientation)
         bindTo = parent
-        bindToIndex = topMostChild.ownIndex + direction.insertionOffset
+        bindToIndex = innerMostChild.ownIndex + direction.insertionOffset
     case .workspace(let parent): // create implicit container
         let prevRoot = parent.rootTilingContainer
         prevRoot.unbindFromParent()

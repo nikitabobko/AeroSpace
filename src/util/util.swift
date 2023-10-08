@@ -1,3 +1,5 @@
+let EPS = 10e-5
+
 func stringType(of some: Any) -> String {
     let string = (some is Any.Type) ? String(describing: some) : String(describing: type(of: some))
     return string

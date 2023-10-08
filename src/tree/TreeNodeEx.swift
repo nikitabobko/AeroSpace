@@ -80,8 +80,11 @@ extension TreeNode {
         case .workspace(let workspace):
             workspace.rootTilingContainer.layoutRecursive(_point, width: width, height: height)
         case .window(let window):
-            window.setTopLeftCorner(_point)
-            window.setSize(CGSize(width: width, height: height))
+            if window.windowId != currentlyResizedWithMouseWindowId {
+                window.setTopLeftCorner(_point)
+                window.setSize(CGSize(width: width, height: height))
+                window.lastLayoutedRect = window.getRect()
+            }
         case .tilingContainer(let container):
             var point = _point
             for child in container.children {

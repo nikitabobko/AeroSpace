@@ -14,6 +14,10 @@ class GlobalObserver {
         subscribe(NSWorkspace.activeSpaceDidChangeNotification)
         subscribe(NSWorkspace.didTerminateApplicationNotification)
 
+        NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseUp]) { event in
+            resetResizeWithMouseIfPossible()
+        }
+
 //        window.observe(windowIsDestroyedObs, kAXUIElementDestroyedNotification)
 
 

@@ -43,7 +43,7 @@ final class MacWindow: Window, CustomStringConvertible {
                        window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
                        window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
                        window.observe(refreshObs, kAXMovedNotification) &&
-                       window.observe(refreshObs, kAXResizedNotification) {
+                       window.observe(resizedObs, kAXResizedNotification) {
                 debug("New window detected: \(window)")
                 allWindowsMap[id] = window
                 return window
