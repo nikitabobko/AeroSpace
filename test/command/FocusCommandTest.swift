@@ -111,4 +111,16 @@ final class FocusCommandTest: XCTestCase {
         await FocusCommand(direction: .left).runWithoutRefresh()
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
+
+    func testFocusOutsideOfTheContainer2() async {
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            TestWindow(id: 1, parent: $0)
+            TilingContainer.newHList(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow(id: 2, parent: $0).focus()
+            }
+        }
+
+        await FocusCommand(direction: .left).runWithoutRefresh()
+        XCTAssertEqual(focusedWindow?.windowId, 1)
+    }
 }

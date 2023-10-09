@@ -44,13 +44,12 @@ class TreeNode: Equatable {
             case .window: // self is a floating window
                 error("Weight doesn't make sense for floating windows")
             case .tilingContainer: // root tiling container
-                precondition(self is TilingContainer)
                 return parent.getWeight(targetOrientation)
             case .workspace:
                 error("Workspaces can't be child")
             }
         case .window:
-            error("Windows can't be parent containers")
+            windowsCantHaveChildren()
         case nil:
             error("Weight doesn't make sense for containers without parent")
         }
@@ -62,7 +61,7 @@ class TreeNode: Equatable {
             error("Binding to the same parent doesn't make sense")
         }
         if newParent is Window {
-            error("Windows can't have children")
+            windowsCantHaveChildren()
         }
         let result = unbindIfPossible()
 
@@ -85,7 +84,7 @@ class TreeNode: Equatable {
                     error("Binding workspace to workspace is illegal")
                 }
             case .window:
-                error("Windows can't have children")
+                windowsCantHaveChildren()
             }
         } else {
             self.adaptiveWeight = adaptiveWeight

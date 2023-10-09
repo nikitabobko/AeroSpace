@@ -29,3 +29,7 @@ extension Window {
 
     var ownIndex: Int { parent.children.firstIndex(of: self)! }
 }
+
+@inlinable func windowsCantHaveChildren() -> Never {
+    error("Windows are leaf nodes. They can't have children")
+}

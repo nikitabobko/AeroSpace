@@ -14,14 +14,8 @@ struct FocusCommand: Command { // todo speed up. Now it's slightly slow (probabl
         precondition(Thread.current.isMainThread)
         guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
         if let direction = direction.cardinalOrNil {
-            let topMostChild = currentWindow.parentsWithSelf.first(where: {
-                // todo rewrite "is Workspace" part once "sticky" is introduced
-                $0.parent is Workspace || ($0.parent as? TilingContainer)?.orientation == direction.orientation
-            })!
-            guard let parent = topMostChild.parent as? TilingContainer else { return }
-            precondition(parent.orientation == direction.orientation)
-            let windowToFocus = parent.children
-                .getOrNil(atIndex: topMostChild.ownIndexOrNil! + direction.focusOffset)?
+            guard let (parent, ownIndex) = currentWindow.closestParent(hasChildrenInDirection: direction) else { return }
+            let windowToFocus = parent.children[ownIndex + direction.focusOffset]
                 .findFocusTargetRecursive(snappedTo: direction.opposite)
 
             windowToFocus?.focus()

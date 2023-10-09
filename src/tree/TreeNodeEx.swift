@@ -112,4 +112,27 @@ extension TreeNode {
             error("Unknown tree")
         }
     }
+
+    /// Returns closest parent that has children in specified direction relative to `self`
+    func closestParent(hasChildrenInDirection direction: CardinalDirection) -> (parent: TilingContainer, ownIndex: Int)? {
+        let innermostChild = parentsWithSelf.first(where: { (node: TreeNode) -> Bool in
+            switch node.parent?.kind {
+            case .workspace:
+                return true
+            case .tilingContainer(let parent):
+                return parent.orientation == direction.orientation &&
+                    parent.children.indices.contains(node.ownIndexOrNil! + direction.focusOffset)
+            case .window:
+                windowsCantHaveChildren()
+            case nil:
+                return true
+            }
+        })!
+        if let parent = innermostChild.parent as? TilingContainer {
+            precondition(parent.orientation == direction.orientation)
+            return (parent, innermostChild.ownIndexOrNil!)
+        } else {
+            return nil
+        }
+    }
 }
