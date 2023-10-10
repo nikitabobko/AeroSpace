@@ -7,9 +7,9 @@ class TreeNode: Equatable {
     private let _mruChildren: MruStack<TreeNode> = MruStack()
     var mostRecentChildren: some Sequence<TreeNode> { _mruChildren }
 
-    init(parent: TreeNode, adaptiveWeight: CGFloat) {
+    init(parent: TreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.adaptiveWeight = adaptiveWeight
-        bindTo(parent: parent, adaptiveWeight: adaptiveWeight)
+        bindTo(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
     fileprivate init() {
@@ -56,7 +56,7 @@ class TreeNode: Equatable {
     }
 
     @discardableResult
-    func bindTo(parent newParent: TreeNode, adaptiveWeight: CGFloat, index: Int = -1) -> PreviousBindingData? {
+    func bindTo(parent newParent: TreeNode, adaptiveWeight: CGFloat, index: Int = BIND_LAST_INDEX) -> PreviousBindingData? {
         if _parent === newParent {
             error("Binding to the same parent doesn't make sense")
         }
@@ -97,7 +97,7 @@ class TreeNode: Equatable {
             //?? NSScreen.focusedMonitorOrNilIfDesktop // todo uncomment once Monitor mock is done
             //?? errorT("Can't set assignedMonitor") // todo uncomment once Monitor mock is done
         }
-        newParent._children.insert(self, at: index == -1 ? newParent._children.count : index)
+        newParent._children.insert(self, at: index != BIND_LAST_INDEX ? index : newParent._children.count)
         _parent = newParent
         markAsMostRecentChild()
         // Update currentEmptyWorkspace since it's no longer effectively empty
@@ -160,6 +160,8 @@ private let WEIGHT_FLOATING = CGFloat(-2)
 ///
 /// Reset weight is bind to workspace (aka "floating windows")
 let WEIGHT_AUTO = CGFloat(-1)
+
+let BIND_LAST_INDEX = -1
 
 struct PreviousBindingData {
     let adaptiveWeight: CGFloat

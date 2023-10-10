@@ -34,6 +34,7 @@
 		64A058E536F1EEF7F01043AF /* TOMLKit in Frameworks */ = {isa = PBXBuildFile; productRef = EC8E4F2CA4FF8884F9F59975 /* TOMLKit */; };
 		66E6CDA75DDD5E4B9647EDE2 /* AeroSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E81623E8954701269A22322 /* AeroSpaceApp.swift */; };
 		6E4E235FDA41307B19F16182 /* ModeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */; };
+		70A82A4A9DFC89286C4F7696 /* TilingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00ECDFE176777828D560A737 /* TilingContainer.swift */; };
 		77FA83225024151CD556E1ED /* CloseAllWindowsButCurrentCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99853C505D93E41F6531C324 /* CloseAllWindowsButCurrentCommand.swift */; };
 		78EE0CEF814ABDBA67941B84 /* Rect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B788A95DD3C267878E05B5 /* Rect.swift */; };
 		7ED8C2A66DD6F903796F090C /* TestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2431BEAFFF1AC12D3001317A /* TestApp.swift */; };
@@ -86,6 +87,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00ECDFE176777828D560A737 /* TilingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilingContainer.swift; sourceTree = "<group>"; };
 		09685297933511208058F7CF /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1A2B673C67B00DBFCC27FFE7 /* LayoutCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutCommand.swift; sourceTree = "<group>"; };
 		1C0D40CBD65704BA9595C2FA /* keysMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = keysMap.swift; sourceTree = "<group>"; };
@@ -302,6 +304,7 @@
 			children = (
 				2431BEAFFF1AC12D3001317A /* TestApp.swift */,
 				6F1905935B0C61590A96EFEF /* TestWindow.swift */,
+				00ECDFE176777828D560A737 /* TilingContainer.swift */,
 				AD1645D9939F3F896EF21393 /* TreeNodeTest.swift */,
 			);
 			path = tree;
@@ -432,6 +435,7 @@
 				B1E527CF4941A4E9B8D9C3D0 /* MoveThroughCommandTest.swift in Sources */,
 				7ED8C2A66DD6F903796F090C /* TestApp.swift in Sources */,
 				E22ACB36C90695FBAC78226E /* TestWindow.swift in Sources */,
+				70A82A4A9DFC89286C4F7696 /* TilingContainer.swift in Sources */,
 				BB3C35BE40958AE6E7B4A9FD /* TreeNodeTest.swift in Sources */,
 				9D34BD7DE311254BF52F5EA2 /* testUtil.swift in Sources */,
 			);

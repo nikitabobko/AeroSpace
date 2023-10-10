@@ -4,9 +4,9 @@ class Window: TreeNode, Hashable {
     var parentOrNilForTests: TreeNode? { super.parent }
     var lastLayoutedRect: Rect? = nil
 
-    init(id: UInt32, parent: TreeNode, adaptiveWeight: CGFloat) {
+    init(id: UInt32, parent: TreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.windowId = id
-        super.init(parent: parent, adaptiveWeight: adaptiveWeight)
+        super.init(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
     func hash(into hasher: inout Hasher) {

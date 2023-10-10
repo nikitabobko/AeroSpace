@@ -5,10 +5,10 @@ final class MacWindow: Window, CustomStringConvertible {
     fileprivate var previousSize: CGSize?
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 
-    private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: TreeNode, adaptiveWeight: CGFloat) {
+    private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: TreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.app = app
         self.axWindow = axWindow
-        super.init(id: id, parent: parent, adaptiveWeight: adaptiveWeight)
+        super.init(id: id, parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
     private static var allWindowsMap: [CGWindowID: MacWindow] = [:]
@@ -31,13 +31,17 @@ final class MacWindow: Window, CustomStringConvertible {
                 workspace = topLeftCorner.monitorApproximation.getActiveWorkspace()
             }
             let parent: TreeNode
+            let index: Int
             if shouldFloat(axWindow) {
                 parent = workspace
+                index = BIND_LAST_INDEX
             } else {
-                let tilingParent = workspace.mostRecentWindow?.parent as? TilingContainer ?? workspace.rootTilingContainer
+                let mruWindow = workspace.mostRecentWindow
+                let tilingParent = mruWindow?.parent as? TilingContainer ?? workspace.rootTilingContainer
                 parent = tilingParent
+                index = mruWindow?.ownIndex.lets { $0 + 1 } ?? BIND_LAST_INDEX
             }
-            let window = MacWindow(id, app, axWindow, parent: parent, adaptiveWeight: WEIGHT_AUTO)
+            let window = MacWindow(id, app, axWindow, parent: parent, adaptiveWeight: WEIGHT_AUTO, index: index)
 
             if window.observe(destroyedObs, kAXUIElementDestroyedNotification) &&
                        window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&

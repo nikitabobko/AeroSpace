@@ -3,18 +3,18 @@ class TilingContainer: TreeNode {
     var layout: Layout
     override var parent: TreeNode { super.parent ?? errorT("TilingContainers always have parent") }
 
-    init(parent: TreeNode, adaptiveWeight: CGFloat, _ orientation: Orientation, _ layout: Layout) {
+    init(parent: TreeNode, adaptiveWeight: CGFloat, _ orientation: Orientation, _ layout: Layout, index: Int) {
         self.orientation = orientation
         self.layout = layout
-        super.init(parent: parent, adaptiveWeight: adaptiveWeight)
+        super.init(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
-    static func newHList(parent: TreeNode, adaptiveWeight: CGFloat) -> TilingContainer {
-        TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .H, .List)
+    static func newHList(parent: TreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
+        TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .H, .List, index: index)
     }
 
-    static func newVList(parent: TreeNode, adaptiveWeight: CGFloat) -> TilingContainer {
-        TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .V, .List)
+    static func newVList(parent: TreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
+        TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .V, .List, index: index)
     }
 }
 
