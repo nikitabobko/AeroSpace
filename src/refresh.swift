@@ -1,6 +1,6 @@
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input
-func refresh() {
+func refresh(firstStart: Bool = false) {
     precondition(Thread.current.isMainThread)
     //debug("refresh \(Date.now.formatted(date: .abbreviated, time: .standard))")
 
@@ -15,7 +15,7 @@ func refresh() {
     normalizeContainers()
 
     layoutWorkspaces()
-    layoutWindows()
+    layoutWindows(firstStart: firstStart)
 
     updateLastActiveWindow()
 }
@@ -64,13 +64,13 @@ private func normalizeContainers() {
     }
 }
 
-private func layoutWindows() {
+private func layoutWindows(firstStart: Bool) {
     for screen in NSScreen.screens {
         let workspace = screen.monitor.getActiveWorkspace()
         if workspace.isEffectivelyEmpty { continue }
         let rect = screen.visibleRect
         workspace.rootTilingContainer.normalizeWeightsRecursive()
-        workspace.layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height)
+        workspace.layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height, firstStart: firstStart)
     }
 }
 

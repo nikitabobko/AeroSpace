@@ -80,24 +80,27 @@ extension TreeNode {
     func getCenter() -> CGPoint? { getRect()?.center }
 
     /// Containers' weights must be normalized before calling this function
-    func layoutRecursive(_ _point: CGPoint, width: CGFloat, height: CGFloat) {
+    func layoutRecursive(_ _point: CGPoint, width: CGFloat, height: CGFloat, firstStart: Bool) {
         switch kind {
         case .workspace(let workspace):
-            workspace.rootTilingContainer.layoutRecursive(_point, width: width, height: height)
+            workspace.rootTilingContainer.layoutRecursive(_point, width: width, height: height, firstStart: firstStart)
         case .window(let window):
             if window.windowId != currentlyResizedWithMouseWindowId {
                 window.setTopLeftCorner(_point)
                 window.setSize(CGSize(width: width, height: height))
                 window.lastLayoutedRect = window.getRect()
+                if firstStart { // It makes the layout more good-looking on the start. Good first impression
+                    window.focus()
+                }
             }
         case .tilingContainer(let container):
             var point = _point
             for child in container.children {
                 switch container.layout {
                 case .Accordion: // todo layout with accordion offset
-                    child.layoutRecursive(point, width: width, height: height)
+                    child.layoutRecursive(point, width: width, height: height, firstStart: firstStart)
                 case .List:
-                    child.layoutRecursive(point, width: child.hWeight, height: child.vWeight)
+                    child.layoutRecursive(point, width: child.hWeight, height: child.vWeight, firstStart: firstStart)
                     switch container.orientation {
                     case .H:
                         point = point.copy(x: point.x + child.hWeight)
