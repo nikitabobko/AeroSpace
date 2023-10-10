@@ -25,7 +25,7 @@ class MruStack<T: Equatable>: Sequence {
                 if let prev {
                     prev.next = cur.next
                 } else {
-                    mruNode = nil
+                    mruNode = current?.next
                 }
                 cur.next = nil
                 return true

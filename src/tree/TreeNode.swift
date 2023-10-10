@@ -4,8 +4,8 @@ class TreeNode: Equatable {
     fileprivate weak var _parent: TreeNode? = nil
     var parent: TreeNode? { _parent }
     private var adaptiveWeight: CGFloat
-    private var _mostRecentChild: TreeNode?
-    var mostRecentChild: TreeNode? { _mostRecentChild ?? children.first }
+    private let _mruChildren: MruStack<TreeNode> = MruStack()
+    var mostRecentChildren: some Sequence<TreeNode> { _mruChildren }
 
     init(parent: TreeNode, adaptiveWeight: CGFloat) {
         self.adaptiveWeight = adaptiveWeight
@@ -113,9 +113,7 @@ class TreeNode: Equatable {
 
         let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
         // todo lock screen -> windows are reset
-        if _parent._mostRecentChild == self {
-            _parent._mostRecentChild = nil
-        }
+        precondition(_parent._mruChildren.remove(self))
         self._parent = nil
 
         if workspace.isEffectivelyEmpty { // It became empty
@@ -127,7 +125,7 @@ class TreeNode: Equatable {
 
     func markAsMostRecentChild() {
         guard let _parent else { return }
-        _parent._mostRecentChild = self
+        _parent._mruChildren.pushOrRaise(self)
         _parent.markAsMostRecentChild()
     }
 

@@ -45,6 +45,11 @@ extension TreeNode {
         }
     }
 
+    var mostRecentChild: TreeNode? {
+        var iterator = mostRecentChildren.makeIterator()
+        return iterator.next()
+    }
+
     var anyLeafWindowRecursive: Window? {
         if let window = self as? Window {
             return window
