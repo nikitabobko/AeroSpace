@@ -75,9 +75,7 @@ private func layoutWindows() {
 }
 
 private func detectNewWindowsAndAttachThemToWorkspaces() {
-    for app in NSWorkspace.shared.runningApplications {
-        if app.activationPolicy == .regular {
-            let _ = app.macApp?.windows
-        }
+    for app in apps {
+        let _ = app.macApp?.windows
     }
 }

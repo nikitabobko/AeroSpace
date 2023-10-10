@@ -16,9 +16,11 @@ extension AeroAny {
     }
 
     @inlinable func takeIf(_ predicate: (Self) -> Bool) -> Self? { predicate(self) ? self : nil }
+    @inlinable func lets<R>(_ body: (Self) -> R) -> R { body(self) }
 }
 
 extension TreeNode: AeroAny {}
 extension Writer: AeroAny {}
 extension Int: AeroAny {}
 extension CGFloat: AeroAny {}
+extension Rect: AeroAny {}

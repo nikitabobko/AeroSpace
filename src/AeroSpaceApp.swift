@@ -51,6 +51,14 @@ struct AeroSpaceApp: App {
             Button("Reload config") {
             } // todo
             Button("Quit \(Bundle.appName)") {
+                for app in apps { // Make all windows fullscreen before Quit
+                    for window in app.macApp?.windows ?? [] {
+                        if let rect = (window.workspace.assignedMonitor?.visibleRect ?? NSScreen.main?.visibleRect) {
+                            window.setSize(CGSize(width: rect.width, height: rect.height))
+                            window.setTopLeftCorner(rect.topLeftCorner)
+                        }
+                    }
+                }
                 terminateApp()
             }
                 .keyboardShortcut("Q", modifiers: .command)

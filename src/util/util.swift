@@ -23,6 +23,10 @@ extension String? {
 
 var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
 
+var apps: [NSRunningApplication] {
+    NSWorkspace.shared.runningApplications.filter { $0.activationPolicy == .regular }
+}
+
 func terminateApp() -> Never {
     NSApplication.shared.terminate(nil)
     error("Unreachable code")
