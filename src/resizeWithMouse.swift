@@ -37,26 +37,28 @@ private func resizeWithMouseIfTheCase(_ window: MacWindow) {
         return // Nothing to do for floating windows
     case .tilingContainer:
         guard let rect = window.getRect() else { return }
-        guard let lastLayoutedRect = window.lastLayoutedRect else { return }
+        guard let lastAppliedLayoutRect = window.lastAppliedLayoutRect else { return }
         let (lParent, lOwnIndex) = window.closestParent(hasChildrenInDirection: .left) ?? (nil, nil)
         let (dParent, dOwnIndex) = window.closestParent(hasChildrenInDirection: .down) ?? (nil, nil)
         let (uParent, uOwnIndex) = window.closestParent(hasChildrenInDirection: .up) ?? (nil, nil)
         let (rParent, rOwnIndex) = window.closestParent(hasChildrenInDirection: .right) ?? (nil, nil)
-        let table: [(CGFloat, TilingContainer?, Int?, Int?, Int?)] = [
-            (lastLayoutedRect.minX - rect.minX, lParent, lOwnIndex, 0,                        lOwnIndex),               // Horizontal, to the left of the window
-            (rect.maxY - lastLayoutedRect.maxY, dParent, dOwnIndex, dOwnIndex.map { $0 + 1 }, dParent?.children.count), // Vertical, to the down of the window
-            (lastLayoutedRect.minY - rect.minY, uParent, uOwnIndex, 0,                        uOwnIndex),               // Vertical, to the up of the window
-            (rect.maxX - lastLayoutedRect.maxX, rParent, rOwnIndex, rOwnIndex.map { $0 + 1 }, rParent?.children.count), // Horizontal, to the right of the window
+        let table: [(CGFloat, TilingContainer?, Int?, Int?)] = [
+            (lastAppliedLayoutRect.minX - rect.minX, lParent, 0,                        lOwnIndex),               // Horizontal, to the left of the window
+            (rect.maxY - lastAppliedLayoutRect.maxY, dParent, dOwnIndex.map { $0 + 1 }, dParent?.children.count), // Vertical, to the down of the window
+            (lastAppliedLayoutRect.minY - rect.minY, uParent, 0,                        uOwnIndex),               // Vertical, to the up of the window
+            (rect.maxX - lastAppliedLayoutRect.maxX, rParent, rOwnIndex.map { $0 + 1 }, rParent?.children.count), // Horizontal, to the right of the window
         ]
-        for (diff, parent, ownIndex, startIndex, endIndexExclusive) in table {
-            if let parent, let ownIndex, let startIndex, let endIndexExclusive, let child = parent.children.getOrNil(atIndex: ownIndex),
-               endIndexExclusive - startIndex > 0 && abs(diff) > EPS {
-                let delta = diff.div(endIndexExclusive - startIndex)!
+        for (diff, parent, startIndex, pastTheEndIndex) in table {
+            if let parent, let startIndex, let pastTheEndIndex, pastTheEndIndex - startIndex > 0 && abs(diff) > EPS {
+                let siblingDiff = diff.div(pastTheEndIndex - startIndex)!
                 let orientation = parent.orientation
 
-                child.setWeight(orientation, child.getWeightBeforeResize(orientation) + diff)
-                for sibling in parent.children[startIndex..<endIndexExclusive] {
-                    sibling.setWeight(orientation, sibling.getWeightBeforeResize(orientation) - delta)
+                window.parentsWithSelf.lazy
+                    .prefix(while: { $0 != parent })
+                    .filter { ($0.parent as? TilingContainer)?.orientation == orientation }
+                    .forEach { $0.setWeight(orientation, $0.getWeightBeforeResize(orientation) + diff) }
+                for sibling in parent.children[startIndex..<pastTheEndIndex] {
+                    sibling.setWeight(orientation, sibling.getWeightBeforeResize(orientation) - siblingDiff)
                 }
             }
         }
@@ -66,8 +68,10 @@ private func resizeWithMouseIfTheCase(_ window: MacWindow) {
 
 private extension TreeNode {
     func getWeightBeforeResize(_ orientation: Orientation) -> CGFloat {
-        getUserData(key: adaptiveWeightBeforeResizeWithMouseKey)
-            ?? getWeight(orientation).also { putUserData(key: adaptiveWeightBeforeResizeWithMouseKey, data: $0) }
+        let currentWeight = getWeight(orientation) // Check preconditions
+        return getUserData(key: adaptiveWeightBeforeResizeWithMouseKey)
+            ?? (lastAppliedLayoutRect?.getDimension(orientation) ?? currentWeight)
+            .also { putUserData(key: adaptiveWeightBeforeResizeWithMouseKey, data: $0) }
     }
 
     func resetResizeWeightBeforeResizeRecursive() {

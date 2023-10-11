@@ -6,6 +6,7 @@ class TreeNode: Equatable {
     private var adaptiveWeight: CGFloat
     private let _mruChildren: MruStack<TreeNode> = MruStack()
     var mostRecentChildren: some Sequence<TreeNode> { _mruChildren }
+    var lastAppliedLayoutRect: Rect? = nil
 
     init(parent: TreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.adaptiveWeight = adaptiveWeight

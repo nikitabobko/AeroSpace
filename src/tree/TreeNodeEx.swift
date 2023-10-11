@@ -80,32 +80,35 @@ extension TreeNode {
     func getCenter() -> CGPoint? { getRect()?.center }
 
     /// Containers' weights must be normalized before calling this function
-    func layoutRecursive(_ _point: CGPoint, width: CGFloat, height: CGFloat, firstStart: Bool) {
+    func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat, firstStart: Bool) {
+        let rect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
         switch kind {
         case .workspace(let workspace):
-            workspace.rootTilingContainer.layoutRecursive(_point, width: width, height: height, firstStart: firstStart)
+            workspace.lastAppliedLayoutRect = rect
+            workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, firstStart: firstStart)
         case .window(let window):
             if window.windowId != currentlyResizedWithMouseWindowId {
-                window.setTopLeftCorner(_point)
+                lastAppliedLayoutRect = rect
+                window.setTopLeftCorner(point)
                 window.setSize(CGSize(width: width, height: height))
-                window.lastLayoutedRect = window.getRect()
                 if firstStart { // It makes the layout more good-looking on the start. Good first impression
                     window.focus()
                 }
             }
         case .tilingContainer(let container):
-            var point = _point
+            container.lastAppliedLayoutRect = rect
+            var childPoint = point
             for child in container.children {
                 switch container.layout {
                 case .Accordion: // todo layout with accordion offset
-                    child.layoutRecursive(point, width: width, height: height, firstStart: firstStart)
+                    child.layoutRecursive(childPoint, width: width, height: height, firstStart: firstStart)
                 case .List:
-                    child.layoutRecursive(point, width: child.hWeight, height: child.vWeight, firstStart: firstStart)
+                    child.layoutRecursive(childPoint, width: child.hWeight, height: child.vWeight, firstStart: firstStart)
                     switch container.orientation {
                     case .H:
-                        point = point.copy(x: point.x + child.hWeight)
+                        childPoint = childPoint.copy(x: childPoint.x + child.hWeight)
                     case .V:
-                        point = point.copy(y: point.y + child.vWeight)
+                        childPoint = childPoint.copy(y: childPoint.y + child.vWeight)
                     }
                 }
             }
