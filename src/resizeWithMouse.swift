@@ -43,10 +43,10 @@ private func resizeWithMouseIfTheCase(_ window: MacWindow) {
         let (uParent, uOwnIndex) = window.closestParent(hasChildrenInDirection: .up) ?? (nil, nil)
         let (rParent, rOwnIndex) = window.closestParent(hasChildrenInDirection: .right) ?? (nil, nil)
         let table: [(CGFloat, TilingContainer?, Int?, Int?)] = [
-            (lastAppliedLayoutRect.minX - rect.minX, lParent, 0,                        lOwnIndex),               // Horizontal, to the left of the window
-            (rect.maxY - lastAppliedLayoutRect.maxY, dParent, dOwnIndex.map { $0 + 1 }, dParent?.children.count), // Vertical, to the down of the window
-            (lastAppliedLayoutRect.minY - rect.minY, uParent, 0,                        uOwnIndex),               // Vertical, to the up of the window
-            (rect.maxX - lastAppliedLayoutRect.maxX, rParent, rOwnIndex.map { $0 + 1 }, rParent?.children.count), // Horizontal, to the right of the window
+            (lastAppliedLayoutRect.minX - rect.minX, lParent, 0,                          lOwnIndex),               // Horizontal, to the left of the window
+            (rect.maxY - lastAppliedLayoutRect.maxY, dParent, dOwnIndex?.lets { $0 + 1 }, dParent?.children.count), // Vertical, to the down of the window
+            (lastAppliedLayoutRect.minY - rect.minY, uParent, 0,                          uOwnIndex),               // Vertical, to the up of the window
+            (rect.maxX - lastAppliedLayoutRect.maxX, rParent, rOwnIndex?.lets { $0 + 1 }, rParent?.children.count), // Horizontal, to the right of the window
         ]
         for (diff, parent, startIndex, pastTheEndIndex) in table {
             if let parent, let startIndex, let pastTheEndIndex, pastTheEndIndex - startIndex > 0 && abs(diff) > EPS {

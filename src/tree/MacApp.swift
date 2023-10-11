@@ -57,7 +57,7 @@ final class MacApp: AeroApp {
     }
 
     override var focusedWindow: MacWindow? {
-        axFocusedWindow.flatMap { MacWindow.get(app: self, axWindow: $0) }
+        axFocusedWindow?.lets { MacWindow.get(app: self, axWindow: $0) }
     }
 
     var axFocusedWindow: AXUIElement? {

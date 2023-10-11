@@ -67,7 +67,7 @@ func parseLayout(_ raw: String) -> ParsedCommand<ConfigLayout> {
 }
 
 private func parseSingleArg(_ args: ArraySlice<Swift.String.SubSequence>, _ command: String) -> ParsedCommand<String> {
-    args.singleOrNil().flatMap { String($0) }.orFailure {
+    args.singleOrNil().map { String($0) }.orFailure {
         "\(command) must have only a single argument. But passed: '\(args.joined(separator: " "))'"
     }
 }
