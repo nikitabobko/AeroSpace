@@ -32,7 +32,8 @@ alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
 # Floating windows are part of the tree from the perspective of 'focus' command.
 #alt-space = 'focus toggle_tiling_floating'
 
-alt-a = 'focus parent'
+# `focus parent`/`focus child` are not yet supported, and it's not clear whether they should be supported at all
+# alt-a = 'focus parent'
 
 alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'

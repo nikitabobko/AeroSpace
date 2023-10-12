@@ -35,7 +35,7 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
         return .success(ExecAndForgetCommand(bashCommand: raw.removePrefix(firstWord)))
     } else if firstWord == "focus" {
         return parseSingleArg(args, firstWord)
-            .flatMap { FocusCommand.Direction(rawValue: $0).orFailure { "Can't parse '\(firstWord)' direction" } }
+            .flatMap { CardinalDirection(rawValue: $0).orFailure { "Can't parse '\(firstWord)' direction" } }
             .map { FocusCommand(direction: $0) }
     } else if firstWord == "move-through" {
         let bar: ParsedCommand<Command> = parseSingleArg(args, firstWord)

@@ -132,5 +132,5 @@ extension Command {
 }
 
 enum CommandDescription: Equatable {
-    case focusCommand(FocusCommand.Direction)
+    case focusCommand(CardinalDirection)
 }
