@@ -12,8 +12,6 @@ floating-windows-on-top = true
 focus-wrapping = 'workspace'
 main-layout = 'h_list' # todo change
 DEBUG-all-windows-are-floating = false
-tray-icon-content = 'active_workspaces' # Possible values: (active_workspace|active_workspaces|icon) # todo drop this setting
-tray-icon-workspaces-separator = ' │ '
 accordion-padding = 30 # todo dp?
 
 [mode.main.binding]

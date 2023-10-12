@@ -14,8 +14,6 @@ func setUpWorkspacesForTests() {
         focusWrapping: defaultConfig.focusWrapping,
         debugAllWindowsAreFloating: defaultConfig.debugAllWindowsAreFloating,
         startAtLogin: defaultConfig.startAtLogin,
-        trayIconContent: defaultConfig.trayIconContent,
-        trayIconWorkspacesSeparator: defaultConfig.trayIconWorkspacesSeparator,
         accordionPadding: defaultConfig.accordionPadding,
 
         // Don't create any workspaces for tests

@@ -87,9 +87,6 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
     let key9 = "after-login-command"
     var value9: Command? = nil
 
-    let key10 = "tray-icon-content"
-    var value10: TrayIconContent? = nil
-
     let key11 = "tray-icon-workspaces-separator"
     var value11: String? = nil
 
@@ -117,8 +114,6 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
             (value8, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
         case key9:
             (value9, errors) = parseCommand(value).toParsedTomlResult(backtrace).prependErrorsAndUnwrap(errors)
-        case key10:
-            (value10, errors) = parseTrayIconContent(value, backtrace).prependErrorsAndUnwrap(errors)
         case key11:
             (value11, errors) = parseString(value, backtrace).prependErrorsAndUnwrap(errors)
         case key12:
@@ -142,8 +137,6 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
         focusWrapping: value6 ?? defaultConfig.focusWrapping,
         debugAllWindowsAreFloating: value7 ?? defaultConfig.debugAllWindowsAreFloating,
         startAtLogin: value8 ?? defaultConfig.startAtLogin,
-        trayIconContent: value10 ?? defaultConfig.trayIconContent,
-        trayIconWorkspacesSeparator: value11 ?? defaultConfig.trayIconWorkspacesSeparator,
         accordionPadding: value12 ?? defaultConfig.accordionPadding,
 
         modes: modesOrDefault,
@@ -162,12 +155,6 @@ private func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -
 
 private func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<String> {
     raw.string.orFailure { expectedActualTypeError(expected: .string, actual: raw.type, backtrace) }
-}
-
-private func parseTrayIconContent(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<TrayIconContent> {
-    parseString(raw, backtrace).flatMap {
-        TrayIconContent(rawValue: $0).orFailure { .semantic(backtrace, "Can't parse tray-icon-content") }
-    }
 }
 
 private func parseFocusWrapping(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<FocusWrapping> {

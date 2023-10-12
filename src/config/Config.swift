@@ -21,18 +21,10 @@ struct Config {
     var focusWrapping: FocusWrapping
     var debugAllWindowsAreFloating: Bool
     var startAtLogin: Bool
-    var trayIconContent: TrayIconContent
-    var trayIconWorkspacesSeparator: String
     var accordionPadding: Int
 
     let modes: [String: Mode]
     var workspaceNames: [String]
-}
-
-enum TrayIconContent: String {
-    case active_workspace
-    case active_workspaces
-    case icon
 }
 
 enum FocusWrapping: String { // todo think about mental model
