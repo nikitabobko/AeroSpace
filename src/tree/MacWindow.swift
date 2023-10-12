@@ -37,9 +37,13 @@ final class MacWindow: Window, CustomStringConvertible {
                 index = BIND_LAST_INDEX
             } else {
                 let mruWindow = workspace.mostRecentWindow
-                let tilingParent = mruWindow?.parent as? TilingContainer ?? workspace.rootTilingContainer
-                parent = tilingParent
-                index = mruWindow?.ownIndex.lets { $0 + 1 } ?? BIND_LAST_INDEX
+                if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
+                    parent = tilingParent
+                    index = mruWindow.ownIndex + 1
+                } else {
+                    parent = workspace.rootTilingContainer
+                    index = BIND_LAST_INDEX
+                }
             }
             let window = MacWindow(id, app, axWindow, parent: parent, adaptiveWeight: WEIGHT_AUTO, index: index)
 
