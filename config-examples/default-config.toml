@@ -28,8 +28,6 @@ alt-j = 'focus down'
 alt-k = 'focus up'
 alt-l = 'focus right'
 
-alt-backslash = 'close-all-windows-but-current'
-
 # Move window
 
 alt-shift-k = 'move-through up'
@@ -123,5 +121,6 @@ r = ['flatten-workspace-tree', 'mode main']
 o = ['reload-config', 'mode main']
 s = ['layout sticky', 'mode main']
 f = ['layout floating', 'mode main']
+backslash = 'close-all-windows-but-current'
 esc = 'mode main'
 enter = 'mode main'

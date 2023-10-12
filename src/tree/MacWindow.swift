@@ -105,7 +105,7 @@ final class MacWindow: Window, CustomStringConvertible {
         }
     }
 
-    func close() -> Bool {
+    override func close() -> Bool {
         guard let closeButton = axWindow.get(Ax.closeButtonAttr) else { return false }
         return AXUIElementPerformAction(closeButton, kAXPressAction as CFString) == AXError.success
     }
@@ -135,7 +135,7 @@ final class MacWindow: Window, CustomStringConvertible {
     }
 
     var isHiddenViaEmulation: Bool {
-        return prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect != nil
+        prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect != nil
     }
 
     override func setSize(_ size: CGSize) {

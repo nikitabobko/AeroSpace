@@ -229,8 +229,6 @@ enum Ax {
     static let focusedWindowAttr = ReadableAttrImpl<AXUIElement>(
             key: kAXFocusedWindowAttribute,
             getter: {
-                // I'd be happy to use safe cast, but I can't :(
-                //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
                 let potentialWindow = $0 as! AXUIElement
                 // Filter out non-window objects (e.g. Finder's desktop)
                 return potentialWindow.windowId() != nil ? potentialWindow : nil
@@ -238,9 +236,7 @@ enum Ax {
     )
     static let closeButtonAttr = ReadableAttrImpl<AXUIElement>(
             key: kAXCloseButtonAttribute,
-            // I'd be happy to use safe cast, but I can't :(
-            //      "Conditional downcast to CoreFoundation type 'AXValue' will always succeed"
-            getter: { $0 as! AXUIElement }
+            getter: { ($0 as! AXUIElement) }
     )
 }
 

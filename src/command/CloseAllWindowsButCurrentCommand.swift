@@ -1,6 +1,11 @@
 class CloseAllWindowsButCurrentCommand: Command {
     func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
-        // todo
+        guard let focused = focusedWindowOrEffectivelyFocused else { return }
+        for window in focused.workspace.allLeafWindowsRecursive {
+            if window != focused {
+                window.close()
+            }
+        }
     }
 }
