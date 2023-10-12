@@ -12,11 +12,6 @@ func stringType(of some: Any) -> String {
 
 @inlinable func error(_ message: String = "") -> Never { errorT(message) }
 
-@inlinable func TODO(_ message: String = "") -> Never {
-    Thread.callStackSymbols.forEach { print($0) }
-    fatalError(message)
-}
-
 extension String? {
     var isNilOrEmpty: Bool { self == nil || self == "" }
 }

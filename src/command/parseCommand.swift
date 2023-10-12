@@ -28,7 +28,7 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
     } else if firstWord == "mode" {
         return parseSingleArg(args, firstWord).map { ModeCommand(idToActivate: $0) }
     } else if firstWord == "resize" {
-        TODO()
+        error("'resize' command doesn't work yet")
     } else if firstWord == "exec-and-wait" {
         return .success(ExecAndWaitCommand(bashCommand: raw.removePrefix(firstWord)))
     } else if firstWord == "exec-and-forget" {
