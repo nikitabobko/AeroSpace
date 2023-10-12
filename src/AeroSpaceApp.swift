@@ -49,7 +49,8 @@ struct AeroSpaceApp: App {
             }
             Divider()
             Button("Reload config") {
-            } // todo
+                Task { await ReloadConfigCommand().run() }
+            }
             Button("Quit \(Bundle.appName)") {
                 for app in apps { // Make all windows fullscreen before Quit
                     for window in app.macApp?.windows ?? [] {

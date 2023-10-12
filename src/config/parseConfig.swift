@@ -1,8 +1,6 @@
 import TOMLKit
 import HotKey
 
-// todo convert all `error` during config parsing to returning defaults and reporting errors to where? Some kind of log?
-
 func reloadConfig() {
     let rawConfig = try? String(contentsOf: FileManager.default.homeDirectoryForCurrentUser.appending(path: ".aerospace.toml"))
     // todo mainMode activate/deactivate
@@ -263,7 +261,6 @@ private func parseBool(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) 
     raw.bool.orFailure { expectedActualTypeError(expected: .bool, actual: raw.type, backtrace) }
 }
 
-// todo make private
 indirect enum TomlBacktrace: CustomStringConvertible {
     case root(String)
     case key(String)

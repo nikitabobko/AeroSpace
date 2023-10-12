@@ -10,6 +10,7 @@ struct ExecAndWaitCommand: Command {
             process.terminationHandler = { _ in
                 continuation.resume()
             }
+            // It doesn't throw if exit code is non-zero
             try! process.run()
         }
     }

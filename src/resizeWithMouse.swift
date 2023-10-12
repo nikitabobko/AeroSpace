@@ -20,7 +20,7 @@ var currentlyResizedWithMouseWindowId: UInt32? = nil
 
 private let adaptiveWeightBeforeResizeWithMouseKey = TreeNodeUserDataKey<CGFloat>(key: "adaptiveWeightBeforeResizeWithMouseKey")
 
-private func resizeWithMouseIfTheCase(_ window: MacWindow) {
+private func resizeWithMouseIfTheCase(_ window: MacWindow) { // todo cover with tests
     if window.workspace != Workspace.focused {
         return // Don't allow to resize windows of hidden workspaces
     }

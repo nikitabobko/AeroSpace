@@ -59,7 +59,7 @@ class TreeNode: Equatable {
     }
 
     @discardableResult
-    func bindTo(parent newParent: TreeNode, adaptiveWeight: CGFloat, index: Int = BIND_LAST_INDEX) -> PreviousBindingData? {
+    func bindTo(parent newParent: TreeNode, adaptiveWeight: CGFloat, index: Int = BIND_LAST_INDEX) -> PreviousBindingData? { // todo make index parameter mandatory
         if _parent === newParent {
             error("Binding to the same parent doesn't make sense")
         }
@@ -115,7 +115,6 @@ class TreeNode: Equatable {
         let workspace = workspace
 
         let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
-        // todo lock screen -> windows are reset
         precondition(_parent._mruChildren.remove(self))
         self._parent = nil
 
