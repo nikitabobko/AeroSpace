@@ -1,4 +1,4 @@
-struct FocusCommand: Command { // todo speed up. Now it's slightly slow (probably because of refresh)
+struct FocusCommand: Command {
     let direction: CardinalDirection
 
     func runWithoutRefresh() {
