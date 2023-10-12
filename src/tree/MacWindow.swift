@@ -67,7 +67,6 @@ final class MacWindow: Window, CustomStringConvertible {
             ("title", title),
             ("role", axWindow.get(Ax.roleAttr)),
             ("subrole", axWindow.get(Ax.subroleAttr)),
-            ("value", axWindow.get(Ax.valueAttr)),
             ("modal", axWindow.get(Ax.modalAttr).map { String($0) } ?? ""),
             ("windowId", String(windowId))
         ].map { "\($0.0): '\(String(describing: $0.1))'" }.joined(separator: ", ")

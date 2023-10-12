@@ -173,14 +173,6 @@ enum Ax {
         var setter: (T) -> CFTypeRef?
     }
 
-    // todo wip
-    static let valueAttr = ReadableAttrImpl<String>(
-            key: kAXValueAttribute,
-            getter: { foo in
-                debug(stringType(of: foo))
-                return ""
-            }
-    )
     static let titleAttr = WritableAttrImpl<String>(
             key: kAXTitleAttribute,
             getter: { $0 as? String },
