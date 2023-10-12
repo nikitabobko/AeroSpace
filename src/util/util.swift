@@ -54,11 +54,9 @@ func +(a: CGPoint, b: CGPoint) -> CGPoint {
     CGPoint(x: a.x + b.x, y: a.y + b.y)
 }
 
-extension CGPoint {
-    func copy(x: Double? = nil, y: Double? = nil) -> CGPoint {
-        CGPoint(x: x ?? self.x, y: y ?? self.y)
-    }
+extension CGPoint: Copyable {}
 
+extension CGPoint {
     /// Distance to ``Rect`` outline frame
     func distanceToRectFrame(to rect: Rect) -> CGFloat {
         let list: [CGFloat] = ((rect.minY..<rect.maxY).contains(y) ? [abs(rect.minX - x), abs(rect.maxX - x)] : []) +

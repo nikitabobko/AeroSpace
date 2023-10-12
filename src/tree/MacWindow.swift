@@ -99,6 +99,7 @@ final class MacWindow: Window, CustomStringConvertible {
         // Raise firstly to make sure that by that time we activate the app, particular window would be already on top
         if axWindow.raise() && app.nsApp.activate(options: .activateIgnoringOtherApps) {
             markAsMostRecentChild()
+            markAsMostRecentChildForAccordion()
             return true
         } else {
             return false

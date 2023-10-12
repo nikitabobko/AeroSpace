@@ -17,15 +17,18 @@ func refresh(firstStart: Bool = false) {
     layoutWorkspaces()
     layoutWindows(firstStart: firstStart)
 
-    updateLastActiveWindow()
+    updateMostRecentWindow()
 }
 
 func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
     refresh()
 }
 
-func updateLastActiveWindow() {
+func updateMostRecentWindow() {
     focusedWindow?.markAsMostRecentChild()
+    if focusedWindow?.workspace.mostRecentWindowForAccordion == focusedWindow {
+        focusedWindow?.workspace.resetMruForAccordionRecursive()
+    }
 }
 
 private func refreshWorkspaces() {

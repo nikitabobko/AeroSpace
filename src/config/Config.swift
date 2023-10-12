@@ -23,6 +23,7 @@ struct Config {
     var startAtLogin: Bool
     var trayIconContent: TrayIconContent
     var trayIconWorkspacesSeparator: String
+    var accordionPadding: Int
 
     let modes: [String: Mode]
     var workspaceNames: [String]

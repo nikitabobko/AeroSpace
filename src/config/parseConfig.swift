@@ -93,6 +93,9 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
     let key11 = "tray-icon-workspaces-separator"
     var value11: String? = nil
 
+    let key12 = "accordion-padding"
+    var value12: Int? = nil
+
     for (key, value) in rawTable {
         let backtrace: TomlBacktrace = .root(key)
         switch key {
@@ -118,6 +121,8 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
             (value10, errors) = parseTrayIconContent(value, backtrace).prependErrorsAndUnwrap(errors)
         case key11:
             (value11, errors) = parseString(value, backtrace).prependErrorsAndUnwrap(errors)
+        case key12:
+            (value12, errors) = parseInt(value, backtrace).prependErrorsAndUnwrap(errors)
         case "mode":
             (modes, errors) = parseModes(value, backtrace).prependLogAndUnwrap(errors)
         default:
@@ -139,6 +144,7 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
         startAtLogin: value8 ?? defaultConfig.startAtLogin,
         trayIconContent: value10 ?? defaultConfig.trayIconContent,
         trayIconWorkspacesSeparator: value11 ?? defaultConfig.trayIconWorkspacesSeparator,
+        accordionPadding: value12 ?? defaultConfig.accordionPadding,
 
         modes: modesOrDefault,
         workspaceNames: modesOrDefault.values.lazy
@@ -148,6 +154,10 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
             .compactMap { (command: Command) -> String? in (command as? WorkspaceCommand)?.workspaceName ?? nil }
     )
     return Writer(value: config, log: errors)
+}
+
+private func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<Int> {
+    raw.int.orFailure { expectedActualTypeError(expected: .int, actual: raw.type, backtrace) }
 }
 
 private func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<String> {

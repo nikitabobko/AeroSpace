@@ -54,18 +54,13 @@ extension Sequence {
         return result
     }
 
-    var withIndex: [Indexed<Element>] {
+    var withIndex: [(index: Int, value: Element)] {
         var index = -1
         return map {
             index += 1
-            return Indexed(index: index, value: $0)
+            return (index, $0)
         }
     }
-}
-
-struct Indexed<T> {
-    let index: Int
-    let value: T
 }
 
 extension Sequence where Self.Element: Comparable {

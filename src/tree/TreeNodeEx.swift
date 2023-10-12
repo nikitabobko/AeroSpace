@@ -29,6 +29,18 @@ extension TreeNode {
         self as? Window ?? mostRecentChild?.mostRecentWindow
     }
 
+    var mostRecentWindowForAccordion: Window? {
+        self as? Window ?? mostRecentChildIndexForAccordion?
+            .lets { children.getOrNil(atIndex: $0) }?.mostRecentWindowForAccordion
+    }
+
+    func resetMruForAccordionRecursive() {
+        mostRecentChildIndexForAccordion = nil
+        for child in children {
+            child.resetMruForAccordionRecursive()
+        }
+    }
+
     func allLeafWindowsRecursive(snappedTo direction: CardinalDirection) -> [Window] {
         switch kind {
         case .workspace(let workspace):
@@ -78,42 +90,6 @@ extension TreeNode {
     }
 
     func getCenter() -> CGPoint? { getRect()?.center }
-
-    /// Containers' weights must be normalized before calling this function
-    func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat, firstStart: Bool) {
-        let rect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
-        switch kind {
-        case .workspace(let workspace):
-            workspace.lastAppliedLayoutRect = rect
-            workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, firstStart: firstStart)
-        case .window(let window):
-            if window.windowId != currentlyResizedWithMouseWindowId {
-                lastAppliedLayoutRect = rect
-                window.setTopLeftCorner(point)
-                window.setSize(CGSize(width: width, height: height))
-                if firstStart { // It makes the layout more good-looking on the start. Good first impression
-                    window.focus()
-                }
-            }
-        case .tilingContainer(let container):
-            container.lastAppliedLayoutRect = rect
-            var childPoint = point
-            for child in container.children {
-                switch container.layout {
-                case .Accordion: // todo layout with accordion offset
-                    child.layoutRecursive(childPoint, width: width, height: height, firstStart: firstStart)
-                case .List:
-                    child.layoutRecursive(childPoint, width: child.hWeight, height: child.vWeight, firstStart: firstStart)
-                    switch container.orientation {
-                    case .H:
-                        childPoint = childPoint.copy(x: childPoint.x + child.hWeight)
-                    case .V:
-                        childPoint = childPoint.copy(y: childPoint.y + child.vWeight)
-                    }
-                }
-            }
-        }
-    }
 
     var kind: TreeNodeKind {
         if let window = self as? Window {

@@ -6,6 +6,8 @@ class TreeNode: Equatable {
     private var adaptiveWeight: CGFloat
     private let _mruChildren: MruStack<TreeNode> = MruStack()
     var mostRecentChildren: some Sequence<TreeNode> { _mruChildren }
+    /// Helps to avoid flickering when cycling children of accordion container with focus command
+    var mostRecentChildIndexForAccordion: Int? = nil
     var lastAppliedLayoutRect: Rect? = nil
 
     init(parent: TreeNode, adaptiveWeight: CGFloat, index: Int) {
@@ -128,6 +130,12 @@ class TreeNode: Equatable {
         guard let _parent else { return }
         _parent._mruChildren.pushOrRaise(self)
         _parent.markAsMostRecentChild()
+    }
+
+    func markAsMostRecentChildForAccordion() {
+        guard let _parent else { return }
+        _parent.mostRecentChildIndexForAccordion = ownIndexOrNil!
+        _parent.markAsMostRecentChildForAccordion()
     }
 
     @discardableResult
