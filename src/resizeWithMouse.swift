@@ -38,10 +38,10 @@ private func resizeWithMouseIfTheCase(_ window: MacWindow) {
     case .tilingContainer:
         guard let rect = window.getRect() else { return }
         guard let lastAppliedLayoutRect = window.lastAppliedLayoutRect else { return }
-        let (lParent, lOwnIndex) = window.closestParent(hasChildrenInDirection: .left) ?? (nil, nil)
-        let (dParent, dOwnIndex) = window.closestParent(hasChildrenInDirection: .down) ?? (nil, nil)
-        let (uParent, uOwnIndex) = window.closestParent(hasChildrenInDirection: .up) ?? (nil, nil)
-        let (rParent, rOwnIndex) = window.closestParent(hasChildrenInDirection: .right) ?? (nil, nil)
+        let (lParent, lOwnIndex) = window.closestParent(hasChildrenInDirection: .left, withLayout: .List) ?? (nil, nil)
+        let (dParent, dOwnIndex) = window.closestParent(hasChildrenInDirection: .down, withLayout: .List) ?? (nil, nil)
+        let (uParent, uOwnIndex) = window.closestParent(hasChildrenInDirection: .up, withLayout: .List) ?? (nil, nil)
+        let (rParent, rOwnIndex) = window.closestParent(hasChildrenInDirection: .right, withLayout: .List) ?? (nil, nil)
         let table: [(CGFloat, TilingContainer?, Int?, Int?)] = [
             (lastAppliedLayoutRect.minX - rect.minX, lParent, 0,                          lOwnIndex),               // Horizontal, to the left of the window
             (rect.maxY - lastAppliedLayoutRect.maxY, dParent, dOwnIndex?.lets { $0 + 1 }, dParent?.children.count), // Vertical, to the down of the window
@@ -55,7 +55,10 @@ private func resizeWithMouseIfTheCase(_ window: MacWindow) {
 
                 window.parentsWithSelf.lazy
                     .prefix(while: { $0 != parent })
-                    .filter { ($0.parent as? TilingContainer)?.orientation == orientation }
+                    .filter {
+                        let parent = $0.parent as? TilingContainer
+                        return parent?.orientation == orientation && parent?.layout == .List
+                    }
                     .forEach { $0.setWeight(orientation, $0.getWeightBeforeResize(orientation) + diff) }
                 for sibling in parent.children[startIndex..<pastTheEndIndex] {
                     sibling.setWeight(orientation, sibling.getWeightBeforeResize(orientation) - siblingDiff)
