@@ -19,7 +19,7 @@ accordion-padding = 30 # todo dp?
 [mode.main.binding]
 alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
-alt-slash = 'layout h_list v_list'
+alt-slash = 'layout h_list v_list' # todo layout vs change-parent-container-kind
 alt-comma = 'layout h_accordion v_accordion'
 
 # todo focus floating binding
