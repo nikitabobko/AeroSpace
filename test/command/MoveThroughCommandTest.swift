@@ -151,7 +151,7 @@ final class MoveThroughCommandTest: XCTestCase {
 
 extension TreeNode {
     var layoutDescription: LayoutDescription {
-        switch kind {
+        switch genericKind {
         case .window(let window):
             return .window(window.windowId)
         case .tilingContainer(let container):

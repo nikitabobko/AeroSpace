@@ -18,7 +18,7 @@ extension TreeNode {
         return parent.children.firstIndex(of: self)!
     }
 
-    var parents: [TreeNode] { parent.flatMap { [$0] + $0.parents } ?? [] }
+    var parents: [NonLeafTreeNode] { parent.flatMap { [$0] + $0.parents } ?? [] }
     var parentsWithSelf: [TreeNode] { parent.flatMap { [self] + $0.parentsWithSelf } ?? [self] }
 
     var workspace: Workspace {
@@ -42,7 +42,7 @@ extension TreeNode {
     }
 
     func allLeafWindowsRecursive(snappedTo direction: CardinalDirection) -> [Window] {
-        switch kind {
+        switch genericKind {
         case .workspace(let workspace):
             return workspace.rootTilingContainer.allLeafWindowsRecursive(snappedTo: direction)
         case .window(let window):
@@ -91,18 +91,6 @@ extension TreeNode {
 
     func getCenter() -> CGPoint? { getRect()?.center }
 
-    var kind: TreeNodeKind {
-        if let window = self as? Window {
-            return .window(window)
-        } else if let workspace = self as? Workspace {
-            return .workspace(workspace)
-        } else if let tilingContainer = self as? TilingContainer {
-            return .tilingContainer(tilingContainer)
-        } else {
-            error("Unknown tree")
-        }
-    }
-
     /// Returns closest parent that has children in specified direction relative to `self`
     func closestParent(
         hasChildrenInDirection direction: CardinalDirection,
@@ -116,8 +104,6 @@ extension TreeNode {
                 return (layout == nil || parent.layout == layout) &&
                     parent.orientation == direction.orientation &&
                     parent.children.indices.contains(node.ownIndexOrNil! + direction.focusOffset)
-            case .window:
-                windowsCantHaveChildren()
             case nil:
                 return true
             }

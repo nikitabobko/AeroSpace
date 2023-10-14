@@ -1,7 +1,7 @@
 extension TreeNode {
     func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat, firstStart: Bool) {
         let rect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
-        switch kind {
+        switch genericKind {
         case .workspace(let workspace):
             lastAppliedLayoutRect = rect
             workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, firstStart: firstStart)

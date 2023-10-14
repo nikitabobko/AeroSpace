@@ -6,6 +6,8 @@ struct WorkspaceCommand : Command {
         let workspace = Workspace.get(byName: workspaceName)
         debug("Switch to workspace: \(workspace.name)")
         if let window = workspace.mostRecentWindow ?? workspace.anyLeafWindowRecursive { // switch to not empty workspace
+            // Make sure that stack of windows is correct from macOS perspective (important for closing windows)
+            // Alternative: focus mru window in destroyedObs (con: possible flickering when windows are closed)
             workspace.focusMruReversedRecursive()
             // Technically, it must not be necessary. But this way, it's more chances
             // that the correct window will end up focused at the end

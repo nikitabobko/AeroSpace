@@ -9,9 +9,9 @@ final class TreeNodeTest: XCTestCase {
         let workspace = Workspace.get(byName: name) // Don't cache root node
         let window = TestWindow(id: 1, parent: workspace.rootTilingContainer)
 
-        XCTAssertNotEqual(window.parentOrNilForTests, nil)
+        XCTAssertTrue(window.parentOrNilForTests != nil)
         workspace.rootTilingContainer.unbindFromParent()
-        XCTAssertEqual(window.parentOrNilForTests, nil)
+        XCTAssertTrue(window.parentOrNilForTests == nil)
     }
 
     func testIsEffectivelyEmpty() {

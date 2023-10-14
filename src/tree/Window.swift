@@ -1,9 +1,9 @@
 class Window: TreeNode, Hashable {
     let windowId: UInt32
-    override var parent: TreeNode { super.parent ?? errorT("Windows always have parent") }
-    var parentOrNilForTests: TreeNode? { super.parent }
+    override var parent: NonLeafTreeNode { super.parent ?? errorT("Windows always have parent") }
+    var parentOrNilForTests: NonLeafTreeNode? { super.parent }
 
-    init(id: UInt32, parent: TreeNode, adaptiveWeight: CGFloat, index: Int) {
+    init(id: UInt32, parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.windowId = id
         super.init(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }

@@ -1,8 +1,8 @@
 class TreeNode: Equatable {
     private var _children: [TreeNode] = []
     var children: [TreeNode] { _children }
-    fileprivate weak var _parent: TreeNode? = nil
-    var parent: TreeNode? { _parent }
+    fileprivate weak var _parent: NonLeafTreeNode? = nil
+    var parent: NonLeafTreeNode? { _parent }
     private var adaptiveWeight: CGFloat
     private let _mruChildren: MruStack<TreeNode> = MruStack()
     var mostRecentChildren: some Sequence<TreeNode> { _mruChildren }
@@ -10,7 +10,7 @@ class TreeNode: Equatable {
     var mostRecentChildIndexForAccordion: Int? = nil
     var lastAppliedLayoutRect: Rect? = nil
 
-    init(parent: TreeNode, adaptiveWeight: CGFloat, index: Int) {
+    init(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.adaptiveWeight = adaptiveWeight
         bindTo(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
@@ -30,8 +30,6 @@ class TreeNode: Equatable {
             }
         case .workspace:
             error("Can't change weight for floating windows and workspace root containers")
-        case .window:
-            windowsCantHaveChildren()
         case nil:
             error("Can't change weight if TreeNode doesn't have parent")
         }
@@ -43,7 +41,7 @@ class TreeNode: Equatable {
         case .tilingContainer(let parent):
             return parent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
         case .workspace(let parent):
-            switch self.kind {
+            switch genericKind {
             case .window: // self is a floating window
                 error("Weight doesn't make sense for floating windows")
             case .tilingContainer: // root tiling container
@@ -51,15 +49,13 @@ class TreeNode: Equatable {
             case .workspace:
                 error("Workspaces can't be child")
             }
-        case .window:
-            windowsCantHaveChildren()
         case nil:
             error("Weight doesn't make sense for containers without parent")
         }
     }
 
     @discardableResult
-    func bindTo(parent newParent: TreeNode, adaptiveWeight: CGFloat, index: Int = BIND_LAST_INDEX) -> PreviousBindingData? { // todo make index parameter mandatory
+    func bindTo(parent newParent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int = BIND_LAST_INDEX) -> PreviousBindingData? { // todo make index parameter mandatory
         if _parent === newParent {
             error("Binding to the same parent doesn't make sense")
         }
@@ -78,7 +74,7 @@ class TreeNode: Equatable {
                     .div(newParent.children.count)
                     ?? 1
             case .workspace:
-                switch self.kind {
+                switch genericKind {
                 case .window:
                     self.adaptiveWeight = WEIGHT_FLOATING
                 case .tilingContainer:
@@ -86,8 +82,6 @@ class TreeNode: Equatable {
                 case .workspace:
                     error("Binding workspace to workspace is illegal")
                 }
-            case .window:
-                windowsCantHaveChildren()
             }
         } else {
             self.adaptiveWeight = adaptiveWeight
@@ -176,7 +170,7 @@ struct PreviousBindingData {
     let index: Int
 }
 
-class NilTreeNode: TreeNode {
+class NilTreeNode: TreeNode, NonLeafTreeNode {
     private override init() {
         super.init()
     }

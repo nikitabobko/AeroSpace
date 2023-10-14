@@ -14,7 +14,7 @@ struct FocusCommand: Command {
 
 private extension TreeNode {
     func findFocusTargetRecursive(snappedTo direction: CardinalDirection) -> Window? {
-        switch kind {
+        switch genericKind {
         case .workspace(let workspace):
             return workspace.rootTilingContainer.findFocusTargetRecursive(snappedTo: direction)
         case .window(let window):

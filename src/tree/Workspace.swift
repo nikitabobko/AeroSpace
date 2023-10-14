@@ -39,7 +39,7 @@ var allMonitorsRectsUnion: Rect {
     NSScreen.screens.map { $0.rect }.union()
 }
 
-class Workspace: TreeNode, Hashable, Identifiable {
+class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable {
     let name: String
     var id: String { name } // satisfy Identifiable
     var assignedMonitor: Monitor? = nil

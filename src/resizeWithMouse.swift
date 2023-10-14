@@ -31,8 +31,6 @@ private func resizeWithMouseIfTheCase(_ window: MacWindow) { // todo cover with 
         return
     }
     switch window.parent.kind {
-    case .window:
-        windowsCantHaveChildren()
     case .workspace:
         return // Nothing to do for floating windows
     case .tilingContainer:

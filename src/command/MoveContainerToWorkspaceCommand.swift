@@ -5,7 +5,7 @@ struct MoveContainerToWorkspaceCommand: Command {
         guard let focused = focusedWindow else { return }
         let preserveWorkspace = focused.workspace
         let targetWorkspace = Workspace.get(byName: targetWorkspaceName)
-        let targetContainer = focused.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
+        let targetContainer: NonLeafTreeNode = focused.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
         focused.unbindFromParent()
         focused.bindTo(parent: targetContainer, adaptiveWeight: WEIGHT_AUTO) // todo different monitor
 

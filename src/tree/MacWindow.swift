@@ -5,7 +5,7 @@ final class MacWindow: Window, CustomStringConvertible {
     fileprivate var previousSize: CGSize?
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 
-    private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: TreeNode, adaptiveWeight: CGFloat, index: Int) {
+    private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.app = app
         self.axWindow = axWindow
         super.init(id: id, parent: parent, adaptiveWeight: adaptiveWeight, index: index)
@@ -30,7 +30,7 @@ final class MacWindow: Window, CustomStringConvertible {
                 guard let topLeftCorner = axWindow.get(Ax.topLeftCornerAttr) else { return nil }
                 workspace = topLeftCorner.monitorApproximation.getActiveWorkspace()
             }
-            let parent: TreeNode
+            let parent: NonLeafTreeNode
             let index: Int
             if shouldFloat(axWindow) {
                 parent = workspace

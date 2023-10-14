@@ -8,7 +8,7 @@ struct MoveThroughCommand: Command {
             let indexOfCurrent = currentWindow.ownIndex
             let indexOfSiblingTarget = indexOfCurrent + direction.focusOffset
             if parent.orientation == direction.orientation && parent.children.indices.contains(indexOfSiblingTarget) {
-                switch parent.children[indexOfSiblingTarget].kind {
+                switch parent.children[indexOfSiblingTarget].genericKind {
                 case .tilingContainer(let topLevelSiblingTargetContainer):
                     deepMoveIn(window: currentWindow, into: topLevelSiblingTargetContainer, moveDirection: direction)
                 case .window: // "swap windows"
@@ -33,7 +33,7 @@ private func moveOut(window: Window, direction: CardinalDirection) {
     }) as! TilingContainer
     let bindTo: TilingContainer
     let bindToIndex: Int
-    switch innerMostChild.parent.kind {
+    switch innerMostChild.parent.genericKind {
     case .tilingContainer(let parent):
         precondition(parent.orientation == direction.orientation)
         bindTo = parent
@@ -62,8 +62,8 @@ private func moveOut(window: Window, direction: CardinalDirection) {
 
 private func deepMoveIn(window: Window, into container: TilingContainer, moveDirection: CardinalDirection) {
     let deepTarget = container.findDeepMoveInTargetRecursive(moveDirection.orientation)
-    switch deepTarget.kind {
-    case .tilingContainer:
+    switch deepTarget.genericKind {
+    case .tilingContainer(let deepTarget):
         window.unbindFromParent()
         window.bindTo(parent: deepTarget, adaptiveWeight: WEIGHT_AUTO, index: 0)
     case .window(let deepTarget):
@@ -80,7 +80,7 @@ private func deepMoveIn(window: Window, into container: TilingContainer, moveDir
 
 private extension TreeNode {
     func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TreeNode {
-        switch kind {
+        switch genericKind {
         case .window:
             return self
         case .tilingContainer(let container):

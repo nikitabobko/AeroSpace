@@ -4,7 +4,7 @@ final class TestWindow: Window, CustomStringConvertible {
     private var _rect: Rect?
 
     @discardableResult
-    init(id: UInt32, parent: TreeNode, adaptiveWeight: CGFloat = 1, rect: Rect? = nil) {
+    init(id: UInt32, parent: NonLeafTreeNode, adaptiveWeight: CGFloat = 1, rect: Rect? = nil) {
         _rect = rect
         super.init(id: id, parent: parent, adaptiveWeight: adaptiveWeight, index: BIND_LAST_INDEX)
         TestApp.shared.windows.append(self)

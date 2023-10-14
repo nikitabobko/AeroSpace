@@ -1,19 +1,19 @@
-class TilingContainer: TreeNode {
+class TilingContainer: TreeNode, NonLeafTreeNode {
     var orientation: Orientation
     var layout: Layout
-    override var parent: TreeNode { super.parent ?? errorT("TilingContainers always have parent") }
+    override var parent: NonLeafTreeNode { super.parent ?? errorT("TilingContainers always have parent") }
 
-    init(parent: TreeNode, adaptiveWeight: CGFloat, _ orientation: Orientation, _ layout: Layout, index: Int) {
+    init(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, _ orientation: Orientation, _ layout: Layout, index: Int) {
         self.orientation = orientation
         self.layout = layout
         super.init(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
-    static func newHList(parent: TreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
+    static func newHList(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
         TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .H, .List, index: index)
     }
 
-    static func newVList(parent: TreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
+    static func newVList(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
         TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .V, .List, index: index)
     }
 }
