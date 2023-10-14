@@ -21,7 +21,6 @@ struct AeroSpaceApp: App {
 
             checkAccessibilityPermissions()
             GlobalObserver.initObserver()
-            config.modes[mainModeId]?.activate()
             refresh(firstStart: true)
             if startedAtLogin {
                 Task { await config.afterLoginCommand.run() }

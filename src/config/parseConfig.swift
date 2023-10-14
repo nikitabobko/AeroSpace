@@ -5,6 +5,7 @@ func reloadConfig() {
     let rawConfig = try? String(contentsOf: FileManager.default.homeDirectoryForCurrentUser.appending(path: ".aerospace.toml"))
     // todo mainMode activate/deactivate
     config = parseConfig(rawConfig ?? "").value // todo show errors to user
+    config.modes[mainModeId]?.activate()
     syncStartAtLogin()
 }
 
