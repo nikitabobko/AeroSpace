@@ -72,7 +72,6 @@ private func layoutWindows(firstStart: Bool) {
         let workspace = screen.monitor.getActiveWorkspace()
         if workspace.isEffectivelyEmpty { continue }
         let rect = screen.visibleRect
-        workspace.rootTilingContainer.normalizeWeightsRecursive()
         workspace.layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height, firstStart: firstStart)
     }
 }

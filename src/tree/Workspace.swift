@@ -65,12 +65,8 @@ class Workspace: TreeNode, Hashable, Identifiable {
     }
 
     override func getWeight(_ targetOrientation: Orientation) -> CGFloat {
-        switch targetOrientation {
-        case .H:
-            return assignedMonitor?.visibleRect.width ?? errorT("Why do you need to know weight of empty workspace?")
-        case .V:
-            return assignedMonitor?.visibleRect.height ?? errorT("Why do you need to know weight of empty workspace?")
-        }
+        assignedMonitor?.visibleRect.getDimension(targetOrientation)
+            ?? errorT("Why do you need to know weight of empty workspace?")
     }
 
     override func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {

@@ -1,10 +1,9 @@
 extension TreeNode {
-    /// Containers' weights must be normalized before calling this function
     func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat, firstStart: Bool) {
         let rect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
         switch kind {
         case .workspace(let workspace):
-            workspace.lastAppliedLayoutRect = rect
+            lastAppliedLayoutRect = rect
             workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, firstStart: firstStart)
         case .window(let window):
             if window.windowId != currentlyResizedWithMouseWindowId {
@@ -16,7 +15,7 @@ extension TreeNode {
                 }
             }
         case .tilingContainer(let container):
-            container.lastAppliedLayoutRect = rect
+            lastAppliedLayoutRect = rect
             switch container.layout {
             case .List:
                 container.layoutList(point, width: width, height: height, firstStart: firstStart)
@@ -29,15 +28,20 @@ extension TreeNode {
 
 private extension TilingContainer {
     func layoutList(_ point: CGPoint, width: CGFloat, height: CGFloat, firstStart: Bool) {
+        guard let delta = ((orientation == .H ? width : height) - children.sumOf { $0.getWeight(orientation) })
+            .div(children.count) else { return }
         var childPoint = point
         for child in children {
-            child.layoutRecursive(childPoint, width: child.hWeight, height: child.vWeight, firstStart: firstStart)
-            switch orientation {
-            case .H:
-                childPoint = childPoint.copy(\.x, childPoint.x + child.hWeight)
-            case .V:
-                childPoint = childPoint.copy(\.y, childPoint.y + child.vWeight)
-            }
+            child.setWeight(orientation, child.getWeight(orientation) + delta)
+            child.layoutRecursive(
+                childPoint,
+                width: orientation == .H ? child.hWeight : width,
+                height: orientation == .V ? child.vWeight : height,
+                firstStart: firstStart
+            )
+            childPoint = orientation == .H
+                ? childPoint.copy(\.x, childPoint.x + child.hWeight)
+                : childPoint.copy(\.y, childPoint.y + child.vWeight)
         }
     }
 

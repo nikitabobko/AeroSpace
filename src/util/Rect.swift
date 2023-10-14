@@ -63,12 +63,5 @@ extension Rect {
     var minX: CGFloat { topLeftX }
     var maxX: CGFloat { topLeftX + width }
 
-    func getDimension(_ orientation: Orientation) -> CGFloat {
-        switch orientation {
-        case .H:
-            return width
-        case .V:
-            return height
-        }
-    }
+    func getDimension(_ orientation: Orientation) -> CGFloat { orientation == .H ? width : height }
 }

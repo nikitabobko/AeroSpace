@@ -157,19 +157,13 @@ extension TreeNode {
         case .tilingContainer(let container):
             switch container.layout {
             case .List:
-                switch container.orientation {
-                case .H:
-                    return .h_list(container.children.map { $0.layoutDescription })
-                case .V:
-                    return .v_list(container.children.map { $0.layoutDescription })
-                }
+                return container.orientation == .H
+                    ? .h_list(container.children.map { $0.layoutDescription })
+                    : .v_list(container.children.map { $0.layoutDescription })
             case .Accordion:
-                switch container.orientation {
-                case .H:
-                    return .h_accordion(container.children.map { $0.layoutDescription })
-                case .V:
-                    return .v_accordion(container.children.map { $0.layoutDescription })
-                }
+                return container.orientation == .H
+                    ? .h_accordion(container.children.map { $0.layoutDescription })
+                    : .v_accordion(container.children.map { $0.layoutDescription })
             }
         case .workspace:
             return .workspace(workspace.children.map { $0.layoutDescription })
