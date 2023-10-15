@@ -2,10 +2,10 @@
 
 extension TilingContainer {
     static func newHList(parent: NonLeafTreeNode, adaptiveWeight: CGFloat) -> TilingContainer {
-        newHList(parent: parent, adaptiveWeight: adaptiveWeight, index: BIND_LAST_INDEX)
+        newHList(parent: parent, adaptiveWeight: adaptiveWeight, index: INDEX_BIND_LAST)
     }
 
     static func newVList(parent: NonLeafTreeNode, adaptiveWeight: CGFloat) -> TilingContainer {
-        newVList(parent: parent, adaptiveWeight: adaptiveWeight, index: BIND_LAST_INDEX)
+        newVList(parent: parent, adaptiveWeight: adaptiveWeight, index: INDEX_BIND_LAST)
     }
 }

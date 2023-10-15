@@ -42,10 +42,9 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
             .flatMap { CardinalDirection(rawValue: $0).orFailure("Can't parse '\(firstWord)' direction") }
             .map { FocusCommand(direction: $0) }
     } else if firstWord == "move-through" {
-        let bar: ParsedCommand<Command> = parseSingleArg(args, firstWord)
+        return parseSingleArg(args, firstWord)
             .flatMap { CardinalDirection(rawValue: $0).orFailure("Can't parse '\(firstWord)' direction") }
             .map { MoveThroughCommand(direction: $0) }
-        return bar
     } else if firstWord == "layout" {
         return args.mapOrFailure { parseLayout(String($0)) }
             .flatMap {

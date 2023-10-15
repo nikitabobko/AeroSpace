@@ -17,12 +17,12 @@ struct LayoutCommand: Command {
             .flatMap { toggleBetween.getOrNil(atIndex: $0 + 1) }
             .orElse { toggleBetween.first }
             .map { $0 == .main ? config.mainLayout : $0 }
-        if let parent = window.parent as? TilingContainer {
+        switch window.parent.kind {
+        case .tilingContainer(let parent):
             parent.layout = targetLayout?.simpleLayout ?? errorT("TODO")
             parent.orientation = targetLayout?.orientation ?? errorT("TODO")
-        } else {
-            precondition(window.parent is Workspace)
-            // todo
+        case .workspace:
+            break // todo
         }
     }
 }
@@ -53,14 +53,15 @@ private extension ConfigLayout {
 
 private extension Window {
     var configLayout: ConfigLayout {
-        if let parent = parent as? TilingContainer {
+        switch parent.kind {
+        case .tilingContainer(let parent):
             switch parent.layout {
             case .List:
                 return parent.orientation == .H ? .h_list : .v_list
             case .Accordion:
                 return parent.orientation == .H ? .h_accordion : .v_accordion
             }
-        } else {
+        case .workspace:
             return .floating
         }
     }

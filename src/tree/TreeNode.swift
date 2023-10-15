@@ -55,7 +55,7 @@ class TreeNode: Equatable {
     }
 
     @discardableResult
-    func bindTo(parent newParent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int = BIND_LAST_INDEX) -> PreviousBindingData? { // todo make index parameter mandatory
+    func bindTo(parent newParent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int = INDEX_BIND_LAST) -> PreviousBindingData? { // todo make index parameter mandatory
         if _parent === newParent {
             error("Binding to the same parent doesn't make sense")
         }
@@ -86,7 +86,7 @@ class TreeNode: Equatable {
         } else {
             self.adaptiveWeight = adaptiveWeight
         }
-        newParent._children.insert(self, at: index != BIND_LAST_INDEX ? index : newParent._children.count)
+        newParent._children.insert(self, at: index != INDEX_BIND_LAST ? index : newParent._children.count)
         _parent = newParent
         markAsMostRecentChild()
         return result
@@ -146,7 +146,7 @@ private let WEIGHT_FLOATING = CGFloat(-2)
 /// Reset weight is bind to workspace (aka "floating windows")
 let WEIGHT_AUTO = CGFloat(-1)
 
-let BIND_LAST_INDEX = -1
+let INDEX_BIND_LAST = -1
 
 struct PreviousBindingData {
     let adaptiveWeight: CGFloat

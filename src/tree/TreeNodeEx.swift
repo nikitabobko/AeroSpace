@@ -108,10 +108,11 @@ extension TreeNode {
                 return true
             }
         })!
-        if let parent = innermostChild.parent as? TilingContainer {
+        switch innermostChild.parent?.kind {
+        case .tilingContainer(let parent):
             precondition(parent.orientation == direction.orientation)
             return (parent, innermostChild.ownIndexOrNil!)
-        } else {
+        case .workspace, nil:
             return nil
         }
     }

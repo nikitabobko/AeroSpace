@@ -25,7 +25,7 @@ final class MacWindow: Window, CustomStringConvertible {
             let index: Int
             if shouldFloat(axWindow) {
                 parent = workspace
-                index = BIND_LAST_INDEX
+                index = INDEX_BIND_LAST
             } else {
                 let mruWindow = workspace.mostRecentWindow
                 if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
@@ -33,7 +33,7 @@ final class MacWindow: Window, CustomStringConvertible {
                     index = mruWindow.ownIndex + 1
                 } else {
                     parent = workspace.rootTilingContainer
-                    index = BIND_LAST_INDEX
+                    index = INDEX_BIND_LAST
                 }
             }
             let window = MacWindow(id, app, axWindow, parent: parent, adaptiveWeight: WEIGHT_AUTO, index: index)

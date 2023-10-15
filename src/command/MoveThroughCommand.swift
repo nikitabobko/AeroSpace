@@ -4,7 +4,8 @@ struct MoveThroughCommand: Command {
     func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
         guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
-        if let parent = currentWindow.parent as? TilingContainer {
+        switch currentWindow.parent.kind {
+        case .tilingContainer(let parent):
             let indexOfCurrent = currentWindow.ownIndex
             let indexOfSiblingTarget = indexOfCurrent + direction.focusOffset
             if parent.orientation == direction.orientation && parent.children.indices.contains(indexOfSiblingTarget) {
@@ -20,16 +21,20 @@ struct MoveThroughCommand: Command {
             } else {
                 moveOut(window: currentWindow, direction: direction)
             }
-        } else if let _ = currentWindow.parent as? Workspace { // floating window
-            // todo
+        case .workspace: // floating window
+            break // todo
         }
     }
 }
 
 private func moveOut(window: Window, direction: CardinalDirection) {
     let innerMostChild = window.parents.first(where: {
-        // todo rewrite "is Workspace" part once "sticky" is introduced
-        $0.parent is Workspace || ($0.parent as? TilingContainer)?.orientation == direction.orientation
+        switch $0.parent?.kind {
+        case .workspace, nil:
+            return true // Stop searching
+        case .tilingContainer(let parent):
+            return parent.orientation == direction.orientation
+        }
     }) as! TilingContainer
     let bindTo: TilingContainer
     let bindToIndex: Int

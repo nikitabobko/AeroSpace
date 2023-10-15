@@ -102,7 +102,7 @@ extension Workspace {
         let containers = children.filterIsInstance(of: TilingContainer.self)
         switch containers.count {
         case 0:
-            return TilingContainer.newHList(parent: self, adaptiveWeight: 1, index: BIND_LAST_INDEX) // todo createDefaultWorkspaceContainer(self)
+            return TilingContainer.newHList(parent: self, adaptiveWeight: 1, index: INDEX_BIND_LAST) // todo createDefaultWorkspaceContainer(self)
         case 1:
             return containers.singleOrNil()!
         default:
