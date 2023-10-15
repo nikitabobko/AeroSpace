@@ -3,12 +3,19 @@ struct ModeCommand: Command {
 
     func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
-        for (modeId, mode) in config.modes {
-            if modeId == idToActivate {
-                mode.activate()
-            } else {
-                mode.deactivate()
-            }
+        activateMode(idToActivate)
+    }
+}
+
+func activateMode(_ modeToActivate: String) {
+    for (modeId, mode) in config.modes {
+        if modeId != modeToActivate {
+            mode.deactivate()
+        }
+    }
+    for (modeId, mode) in config.modes {
+        if modeId == modeToActivate {
+            mode.activate()
         }
     }
 }

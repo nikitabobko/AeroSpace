@@ -4,7 +4,7 @@ import HotKey
 func reloadConfig() {
     let rawConfig = try? String(contentsOf: FileManager.default.homeDirectoryForCurrentUser.appending(path: ".aerospace.toml"))
     config = parseConfig(rawConfig ?? "").value // todo show errors to user
-    config.modes[mainModeId]?.activate()
+    activateMode(mainModeId)
     if !Bundle.appId.contains("debug") {
         syncStartAtLogin()
     }
