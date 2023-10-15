@@ -10,7 +10,7 @@ func refresh(startup: Bool = false) {
     Workspace.garbageCollectUnusedWorkspaces()
 
     refreshWorkspaces()
-    detectNewWindowsAndAttachThemToWorkspaces()
+    detectNewWindowsAndAttachThemToWorkspaces(startup: startup)
 
     normalizeContainers()
 
@@ -74,8 +74,13 @@ private func layoutWindows(startup: Bool) {
     }
 }
 
-private func detectNewWindowsAndAttachThemToWorkspaces() {
+private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
     for app in apps {
-        let _ = app.windows
+        let windows = app.windows // Calling windows has side-effects
+        if startup {
+            for window in windows {
+                window.rectBeforeAeroStart = window.getRect()
+            }
+        }
     }
 }

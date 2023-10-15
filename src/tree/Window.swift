@@ -2,6 +2,7 @@ class Window: TreeNode, Hashable {
     let windowId: UInt32
     override var parent: NonLeafTreeNode { super.parent ?? errorT("Windows always have parent") }
     var parentOrNilForTests: NonLeafTreeNode? { super.parent }
+    var rectBeforeAeroStart: Rect? = nil
 
     init(id: UInt32, parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.windowId = id

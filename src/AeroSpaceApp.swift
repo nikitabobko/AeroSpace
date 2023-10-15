@@ -53,7 +53,9 @@ struct AeroSpaceApp: App {
             Button("Quit \(Bundle.appName)") {
                 for app in apps { // Make all windows fullscreen before Quit
                     for window in app.windows {
-                        let rect = window.workspace.monitor.visibleRect
+                        let rect = window.rectBeforeAeroStart?
+                            .takeIf { window.workspace.monitor.rect.contains($0.topLeftCorner) }
+                            ?? window.workspace.monitor.visibleRect
                         window.setSize(CGSize(width: rect.width, height: rect.height))
                         window.setTopLeftCorner(rect.topLeftCorner)
                     }
