@@ -37,7 +37,7 @@ EOF
 
 if [ "$expected_layout" != "$(tree .build/AeroSpace.app)" ]; then
     echo "!!! Expect/Actual layout don't match !!!"
-    tree .build
+    tree .build/AeroSpace.app
     exit 1
 fi
 
