@@ -27,6 +27,10 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
         return parseSingleArg(args, firstWord).map { MoveContainerToWorkspaceCommand(targetWorkspaceName: $0) }
     } else if firstWord == "mode" {
         return parseSingleArg(args, firstWord).map { ModeCommand(idToActivate: $0) }
+    } else if firstWord == "move-in" {
+        return parseSingleArg(args, firstWord)
+            .flatMap { CardinalDirection(rawValue: $0).orFailure("Can't parse '\(firstWord)' direction") }
+            .map { MoveInCommand(direction: $0) }
     } else if firstWord == "move-workspace-to-display" {
         return parseSingleArg(args, firstWord)
             .flatMap { MoveWorkspaceToDisplayCommand.DisplayTarget(rawValue: $0).orFailure("Can't parse '\(firstWord)' display target") }

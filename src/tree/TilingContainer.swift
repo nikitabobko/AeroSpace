@@ -47,6 +47,10 @@ enum Orientation {
     case V
 }
 
+extension Orientation {
+    var opposite: Orientation { self == .H ? .V : .H }
+}
+
 enum Layout {
     case List
     case Accordion
