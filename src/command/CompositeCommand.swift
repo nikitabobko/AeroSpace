@@ -1,4 +1,4 @@
-struct CompositeCommand: Command {
+struct CompositeCommand: Command { // todo drop
     let subCommands: [Command]
 
     func runWithoutRefresh() async {
