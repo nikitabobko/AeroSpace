@@ -44,7 +44,7 @@ var focusedMonitorUnsafe: Monitor? {
     NSScreen.main?.monitor
 }
 
-var monitors: [Monitor] { NSScreen.screens.map { $0.monitor } }
+var monitors: [Monitor] { NSScreen.screens.map(\.monitor) }
 
 var focusedWindow: Window? { focusedApp?.focusedWindow }
 

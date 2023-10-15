@@ -15,4 +15,4 @@ extension NSScreen {
     var visibleRect: Rect { visibleFrame.monitorFrameNormalized() }
 }
 
-var mainMonitor: Monitor { LazyMonitor(NSScreen.screens.singleOrNil(where: { $0.isMainScreen })!) }
+var mainMonitor: Monitor { LazyMonitor(NSScreen.screens.singleOrNil(where: \.isMainScreen)!) }

@@ -13,17 +13,17 @@ private var visibleWorkspaceToScreenPoint: [Workspace: CGPoint] = [:]
 
 func getOrCreateNextEmptyWorkspace() -> Workspace { // todo drop
     let all = Workspace.all
-    if let existing = all.first(where: { $0.isEffectivelyEmpty }) {
+    if let existing = all.first(where: \.isEffectivelyEmpty) {
         return existing
     }
-    let occupiedNames = all.map { $0.name }.toSet()
+    let occupiedNames = all.map(\.name).toSet()
     let newName = (0...Int.max).lazy.map { "EMPTY\($0)" }.first { !occupiedNames.contains($0) }
             ?? errorT("Can't create empty workspace")
     return Workspace.get(byName: newName)
 }
 
 var allMonitorsRectsUnion: Rect {
-    monitors.map { $0.rect }.union()
+    monitors.map(\.rect).union()
 }
 
 class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable {
@@ -38,7 +38,7 @@ class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable {
     }
 
     static var all: [Workspace] {
-        workspaceNameToWorkspace.values.sortedBy { $0.name }
+        workspaceNameToWorkspace.values.sortedBy(\.name)
     }
 
     static func get(byName name: String) -> Workspace {
@@ -140,7 +140,7 @@ private extension CGPoint {
 private func rearrangeWorkspacesOnMonitors() {
     var oldVisibleScreens: Set<CGPoint> = screenPointToVisibleWorkspace.keys.toSet()
 
-    let newScreens = NSScreen.screens.map { $0.rect.topLeftCorner }
+    let newScreens = NSScreen.screens.map(\.rect.topLeftCorner)
     var newScreenToOldScreenMapping: [CGPoint:CGPoint] = [:]
     var preservedOldScreens: [CGPoint] = []
     for newScreen in newScreens {

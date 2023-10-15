@@ -107,7 +107,7 @@ final class ConfigTest: XCTestCase {
 }
 
 private extension [TomlParseError] {
-    var descriptions: [String] { map { $0.description } }
+    var descriptions: [String] { map(\.description) }
 }
 
 extension Mode: Equatable {

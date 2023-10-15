@@ -8,13 +8,13 @@ struct Rect: Copyable {
 extension [Rect] {
     func union() -> Rect {
         let rects: [Rect] = self
-        let topLeftY = rects.map { $0.minY }.minOrThrow()
-        let topLeftX = rects.map { $0.minX }.maxOrThrow()
+        let topLeftY = rects.map(\.minY).minOrThrow()
+        let topLeftX = rects.map(\.minX).maxOrThrow()
         return Rect(
                 topLeftX: topLeftX,
                 topLeftY: topLeftY,
-                width: rects.map { $0.maxX }.maxOrThrow() - topLeftX,
-                height: rects.map { $0.maxY}.maxOrThrow() - topLeftY
+                width: rects.map(\.maxX).maxOrThrow() - topLeftX,
+                height: rects.map(\.maxY).maxOrThrow() - topLeftY
         )
     }
 }

@@ -158,15 +158,15 @@ extension TreeNode {
             switch container.layout {
             case .List:
                 return container.orientation == .H
-                    ? .h_list(container.children.map { $0.layoutDescription })
-                    : .v_list(container.children.map { $0.layoutDescription })
+                    ? .h_list(container.children.map(\.layoutDescription))
+                    : .v_list(container.children.map(\.layoutDescription))
             case .Accordion:
                 return container.orientation == .H
-                    ? .h_accordion(container.children.map { $0.layoutDescription })
-                    : .v_accordion(container.children.map { $0.layoutDescription })
+                    ? .h_accordion(container.children.map(\.layoutDescription))
+                    : .v_accordion(container.children.map(\.layoutDescription))
             }
         case .workspace:
-            return .workspace(workspace.children.map { $0.layoutDescription })
+            return .workspace(workspace.children.map(\.layoutDescription))
         }
     }
 }
