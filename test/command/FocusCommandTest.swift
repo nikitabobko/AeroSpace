@@ -23,7 +23,6 @@ expected: mru(window3, window4) is focused
 
 final class FocusCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
-    override func tearDownWithError() throws { tearDownWorkspacesForTests() }
 
     func testFocus() async {
         XCTAssertEqual(focusedWindow, nil)

@@ -16,8 +16,8 @@ struct WorkspaceCommand : Command {
             // The switching itself will be done by refreshWorkspaces and layoutWorkspaces later in refresh
         } else { // switch to empty workspace
             precondition(workspace.isEffectivelyEmpty)
-            // It's the only place in the app where I allow myself to use NSScreen.main.
-            // This function isn't invoked from callbacks that's why .main should be fine
+            // It's fine to call Unsafe from here because commands are not invoked from callbacks,
+            // the callbacks are triggered by user
             if let focusedMonitor = focusedMonitorOrNilIfDesktop ?? focusedMonitorUnsafe {
                 focusedMonitor.setActiveWorkspace(workspace)
             }

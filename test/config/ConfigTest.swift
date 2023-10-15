@@ -68,7 +68,7 @@ final class ConfigTest: XCTestCase {
             """
         ).toTuple()
         XCTAssertEqual(errors.descriptions, [])
-        XCTAssertEqual(config.workspaceNames, ["1", "2", "3"])
+        XCTAssertEqual(config.preservedWorkspaceNames, ["1", "2", "3"])
     }
 
     func testUnknownKeyParseError() {

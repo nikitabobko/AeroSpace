@@ -64,7 +64,7 @@ final class MacApp: AeroApp {
         axApp.get(Ax.focusedWindowAttr)
     }
 
-    var windows: [MacWindow] {
+    override var windows: [Window] {
         (axApp.get(Ax.windowsAttr) ?? []).compactMap({ MacWindow.get(app: self, axWindow: $0) })
     }
 }

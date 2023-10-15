@@ -3,7 +3,6 @@ import XCTest
 
 final class TreeNodeTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
-    override func tearDownWithError() throws { tearDownWorkspacesForTests() }
 
     func testChildParentCyclicReferenceMemoryLeak() {
         let workspace = Workspace.get(byName: name) // Don't cache root node
@@ -61,12 +60,6 @@ final class TreeNodeTest: XCTestCase {
         config.autoFlattenContainers = true
         workspace.rootTilingContainer.normalizeContainersRecursive()
         XCTAssertTrue(workspace.rootTilingContainer.children.singleOrNil() is TestWindow)
-    }
-
-    func testCurrentEmptyWorkspaceChangesOnceNotEmpty() {
-        let emptyBefore = currentEmptyWorkspace
-        TestWindow(id: 1, parent: emptyBefore)
-        XCTAssertNotEqual(emptyBefore, currentEmptyWorkspace)
     }
 
     //func testBindNotEmptyContainer_updatesAssignedMonitor() { // todo Uncomment once Monitor mock is ready

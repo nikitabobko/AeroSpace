@@ -140,7 +140,7 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
         accordionPadding: value12 ?? defaultConfig.accordionPadding,
 
         modes: modesOrDefault,
-        workspaceNames: modesOrDefault.values.lazy
+        preservedWorkspaceNames: modesOrDefault.values.lazy
             .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
             .map { (binding: HotkeyBinding) -> Command in binding.command }
             .map { (command: Command) -> Command in (command as? CompositeCommand)?.subCommands.singleOrNil() ?? command }

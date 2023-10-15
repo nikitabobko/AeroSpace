@@ -11,7 +11,6 @@
 		059308740527CC10D1A79DDD /* AeroApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996BDAB685567E430DF7D962 /* AeroApp.swift */; };
 		0A90EEEAC020DD3A56736014 /* FocusCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = E761155C73F06E2CF5E292A4 /* FocusCommand.swift */; };
 		0A9DAD847B5340FBE3D9CF88 /* FlattenWorkspaceTreeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C5B6719EF0BC14D7CF868C /* FlattenWorkspaceTreeCommand.swift */; };
-		115F5CA4BEB80B645E66D198 /* NSScreenEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF3BB3DD434C75536217CB88 /* NSScreenEx.swift */; };
 		1311398A83B998908773C54D /* FocusCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0EAADE8D2FB5D05FA5456B0 /* FocusCommandTest.swift */; };
 		1C46EBB55D401C0D1AFD50F0 /* CollectionEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CE37C1B8D858C81A396F40 /* CollectionEx.swift */; };
 		1D408CDF1A489E527327EB15 /* CompositeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82CD9670B7A6050073E0F76 /* CompositeCommand.swift */; };
@@ -36,13 +35,13 @@
 		70A82A4A9DFC89286C4F7696 /* TilingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00ECDFE176777828D560A737 /* TilingContainer.swift */; };
 		77FA83225024151CD556E1ED /* CloseAllWindowsButCurrentCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99853C505D93E41F6531C324 /* CloseAllWindowsButCurrentCommand.swift */; };
 		78EE0CEF814ABDBA67941B84 /* Rect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B788A95DD3C267878E05B5 /* Rect.swift */; };
-		7ED8C2A66DD6F903796F090C /* TestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2431BEAFFF1AC12D3001317A /* TestApp.swift */; };
 		852F88894A3B9FC385563665 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 42BC1E757EF69233C2262FF4 /* HotKey */; };
 		89064BDDB5E9D17BEDE52E8C /* MoveContainerToWorkspaceCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD62043D7F5113A8BA635FDF /* MoveContainerToWorkspaceCommand.swift */; };
 		920FDF8498DCCB62149D1719 /* Monitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6507EBAA795220FD0C05384 /* Monitor.swift */; };
 		93D44EA41776738B4758C28D /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976540EBEACF846D598CD6E1 /* util.swift */; };
 		991943D50DF9EDBF321A66F1 /* SelectorComparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1316FFED5D1044CB693EA45 /* SelectorComparator.swift */; };
 		9A138A729245BD2723148583 /* focused.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61FE8B343B068F0FFFC2373 /* focused.swift */; };
+		9C6B3FEFCC73DA17B2D6246F /* TestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34B239D50676DD5C78936C0B /* TestApp.swift */; };
 		9D34BD7DE311254BF52F5EA2 /* testUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77C03164B8BFD1E59779C6E /* testUtil.swift */; };
 		A0765C31043BCFB0420BF1C9 /* parseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */; };
 		A2CBF9674964F9083BB198D2 /* ArrayEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D7F7F87FBE7D0BDE4E87F /* ArrayEx.swift */; };
@@ -92,8 +91,8 @@
 		1A2B673C67B00DBFCC27FFE7 /* LayoutCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutCommand.swift; sourceTree = "<group>"; };
 		1C0D40CBD65704BA9595C2FA /* keysMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = keysMap.swift; sourceTree = "<group>"; };
 		1E81623E8954701269A22322 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
-		2431BEAFFF1AC12D3001317A /* TestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestApp.swift; sourceTree = "<group>"; };
 		28B788A95DD3C267878E05B5 /* Rect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rect.swift; sourceTree = "<group>"; };
+		34B239D50676DD5C78936C0B /* TestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestApp.swift; sourceTree = "<group>"; };
 		381743262EB4D8AB365235C8 /* Writer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Writer.swift; sourceTree = "<group>"; };
 		3A262B442A94C1964509B691 /* TreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNode.swift; sourceTree = "<group>"; };
 		3A6EF465EF4129BCB10FE247 /* ExecCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecCommandTest.swift; sourceTree = "<group>"; };
@@ -133,7 +132,6 @@
 		A9EDFD4A9F45182CA6E0BD7B /* OptionalEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionalEx.swift; sourceTree = "<group>"; };
 		AAE5DCAEC5EE619CE33859E7 /* SequenceEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceEx.swift; sourceTree = "<group>"; };
 		AD1645D9939F3F896EF21393 /* TreeNodeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeTest.swift; sourceTree = "<group>"; };
-		AF3BB3DD434C75536217CB88 /* NSScreenEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSScreenEx.swift; sourceTree = "<group>"; };
 		B1316FFED5D1044CB693EA45 /* SelectorComparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorComparator.swift; sourceTree = "<group>"; };
 		B7DB782C527ABE0CF31740EB /* MacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacApp.swift; sourceTree = "<group>"; };
 		BEF353340822CD20E9DAB3EC /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
@@ -198,6 +196,7 @@
 				DAC5AF4019D1F5DAB5AF2B56 /* layoutRecursive.swift */,
 				B7DB782C527ABE0CF31740EB /* MacApp.swift */,
 				9245C6FACF389672EA71173B /* MacWindow.swift */,
+				34B239D50676DD5C78936C0B /* TestApp.swift */,
 				C848D6E57FDF22AAF0FB45E6 /* TilingContainer.swift */,
 				3A262B442A94C1964509B691 /* TreeNode.swift */,
 				9F6B8A501483ACBB62560101 /* TreeNodeEx.swift */,
@@ -303,7 +302,6 @@
 		BAC4E4D413715557A1BBDCC8 /* tree */ = {
 			isa = PBXGroup;
 			children = (
-				2431BEAFFF1AC12D3001317A /* TestApp.swift */,
 				6F1905935B0C61590A96EFEF /* TestWindow.swift */,
 				00ECDFE176777828D560A737 /* TilingContainer.swift */,
 				AD1645D9939F3F896EF21393 /* TreeNodeTest.swift */,
@@ -323,7 +321,6 @@
 				54B4C778D2594EB23C295741 /* Copyable.swift */,
 				F6507EBAA795220FD0C05384 /* Monitor.swift */,
 				954A434EE57D76F5A9D4140D /* MruStack.swift */,
-				AF3BB3DD434C75536217CB88 /* NSScreenEx.swift */,
 				A9EDFD4A9F45182CA6E0BD7B /* OptionalEx.swift */,
 				28B788A95DD3C267878E05B5 /* Rect.swift */,
 				B1316FFED5D1044CB693EA45 /* SelectorComparator.swift */,
@@ -433,7 +430,6 @@
 				1311398A83B998908773C54D /* FocusCommandTest.swift in Sources */,
 				A55F31B0CC357B37108B8F54 /* MoveContainerToWorkspaceCommandTest.swift in Sources */,
 				B1E527CF4941A4E9B8D9C3D0 /* MoveThroughCommandTest.swift in Sources */,
-				7ED8C2A66DD6F903796F090C /* TestApp.swift in Sources */,
 				E22ACB36C90695FBAC78226E /* TestWindow.swift in Sources */,
 				70A82A4A9DFC89286C4F7696 /* TilingContainer.swift in Sources */,
 				BB3C35BE40958AE6E7B4A9FD /* TreeNodeTest.swift in Sources */,
@@ -470,13 +466,13 @@
 				89064BDDB5E9D17BEDE52E8C /* MoveContainerToWorkspaceCommand.swift in Sources */,
 				EDFDE707B4DC5E500B1709B1 /* MoveThroughCommand.swift in Sources */,
 				635733FDDF37E44364372B74 /* MruStack.swift in Sources */,
-				115F5CA4BEB80B645E66D198 /* NSScreenEx.swift in Sources */,
 				C0A88261ECF505FC5648FC0A /* OptionalEx.swift in Sources */,
 				78EE0CEF814ABDBA67941B84 /* Rect.swift in Sources */,
 				FC35D6D0A678CC802972C6FE /* ReloadConfigCommand.swift in Sources */,
 				D24D02B1FD87424B908986AF /* ResizeCommand.swift in Sources */,
 				991943D50DF9EDBF321A66F1 /* SelectorComparator.swift in Sources */,
 				AE76A183D0454E4C8ADCE380 /* SequenceEx.swift in Sources */,
+				9C6B3FEFCC73DA17B2D6246F /* TestApp.swift in Sources */,
 				E5682579AEC6B84CF6FCE90D /* TilingContainer.swift in Sources */,
 				56E72B24303F5F337B31B776 /* TrayMenuModel.swift in Sources */,
 				F892B5DCB4F731B3E173FF4C /* TreeNode.swift in Sources */,

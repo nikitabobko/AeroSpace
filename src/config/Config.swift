@@ -24,7 +24,7 @@ struct Config {
     var accordionPadding: Int
 
     let modes: [String: Mode]
-    var workspaceNames: [String]
+    var preservedWorkspaceNames: [String]
 }
 
 enum FocusWrapping: String { // todo think about mental model

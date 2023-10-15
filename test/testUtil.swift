@@ -18,21 +18,18 @@ func setUpWorkspacesForTests() {
 
         // Don't create any workspaces for tests
         modes: [mainModeId: Mode(name: nil, bindings: [])],
-        workspaceNames: []
+        preservedWorkspaceNames: []
     )
-    currentEmptyWorkspace = Workspace.get(byName: "EMPTY WORKSPACE FOR TESTS")
-    focusedWorkspaceName = currentEmptyWorkspace.name
-    precondition(Workspace.all.singleOrNil() === currentEmptyWorkspace)
-    precondition(currentEmptyWorkspace.isEffectivelyEmpty)
-
-    TestApp.shared.focusedWindow = nil
-    TestApp.shared.windows = []
-}
-
-func tearDownWorkspacesForTests() {
     for workspace in Workspace.all {
         for child in workspace.children {
             child.unbindFromParent()
         }
     }
+    focusedWorkspaceName = mainMonitor.activeWorkspace.name
+    Workspace.garbageCollectUnusedWorkspaces()
+    precondition(Workspace.focused.isEffectivelyEmpty)
+    precondition(Workspace.focused === Workspace.all.singleOrNil(), Workspace.all.map(\.description).joined(separator: ", "))
+
+    TestApp.shared.focusedWindow = nil
+    TestApp.shared.windows = []
 }

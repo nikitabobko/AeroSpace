@@ -36,7 +36,7 @@ private func refreshWorkspaces() {
         //debug("refreshWorkspaces: not empty")
         let focusedWorkspace: Workspace
         if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation { // todo maybe drop once move with mouse is supported
-            focusedWorkspace = focusedWindow.getCenter()?.monitorApproximation.getActiveWorkspace()
+            focusedWorkspace = focusedWindow.getCenter()?.monitorApproximation.activeWorkspace
                     ?? focusedWindow.workspace
             focusedWindow.bindAsFloatingWindowTo(workspace: focusedWorkspace)
         } else {
@@ -67,7 +67,7 @@ private func normalizeContainers() {
 
 private func layoutWindows(firstStart: Bool) {
     for monitor in monitors {
-        let workspace = monitor.getActiveWorkspace()
+        let workspace = monitor.activeWorkspace
         if workspace.isEffectivelyEmpty { continue }
         let rect = monitor.visibleRect
         workspace.layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height, firstStart: firstStart)
@@ -76,6 +76,6 @@ private func layoutWindows(firstStart: Bool) {
 
 private func detectNewWindowsAndAttachThemToWorkspaces() {
     for app in apps {
-        let _ = app.macApp?.windows
+        let _ = app.windows
     }
 }

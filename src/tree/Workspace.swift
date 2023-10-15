@@ -26,7 +26,7 @@ var allMonitorsRectsUnion: Rect {
     monitors.map(\.rect).union()
 }
 
-class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable {
+class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable, CustomStringConvertible {
     let name: String
     var id: String { name } // satisfy Identifiable
     /// This variable must be interpreted only when the workspace is invisible
@@ -59,8 +59,17 @@ class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable {
         error("It's not possible to change weight of Workspace")
     }
 
+    var description: String {
+        let description = [
+            ("name", name),
+            ("isVisible", String(isVisible)),
+            ("isEffectivelyEmpty", String(isEffectivelyEmpty)),
+        ].map { "\($0.0): '\(String(describing: $0.1))'" }.joined(separator: ", ")
+        return "Workspace(\(description))"
+    }
+
     static func garbageCollectUnusedWorkspaces() {
-        let preservedNames = config.workspaceNames.toSet()
+        let preservedNames = config.preservedWorkspaceNames.toSet()
         for name in preservedNames {
             _ = get(byName: name) // Make sure that all preserved workspaces are "cached"
         }
@@ -105,7 +114,7 @@ extension Workspace {
 }
 
 extension Monitor {
-    func getActiveWorkspace() -> Workspace {
+    var activeWorkspace: Workspace {
         if let existing = screenPointToVisibleWorkspace[rect.topLeftCorner] {
             return existing
         }
@@ -113,9 +122,11 @@ extension Monitor {
         rearrangeWorkspacesOnMonitors()
         // Normally, recursion should happen only once more because we must take the value from the cache
         // (Unless, monitor configuration data race happens)
-        return getActiveWorkspace()
+        return self.activeWorkspace
     }
 
+    // It can't be converted to property because stupid Swift requires Monitor to be `var`
+    // if you want to assign to calculated property
     func setActiveWorkspace(_ workspace: Workspace) {
         rect.topLeftCorner.setActiveWorkspace(workspace)
     }
@@ -133,14 +144,16 @@ private extension CGPoint {
         }
         visibleWorkspaceToScreenPoint[workspace] = self
         screenPointToVisibleWorkspace[self] = workspace
-        workspace.assignedMonitorPoint = self
+        if workspace.assignedMonitorPoint == nil {
+            workspace.assignedMonitorPoint = self
+        }
     }
 }
 
 private func rearrangeWorkspacesOnMonitors() {
     var oldVisibleScreens: Set<CGPoint> = screenPointToVisibleWorkspace.keys.toSet()
 
-    let newScreens = NSScreen.screens.map(\.rect.topLeftCorner)
+    let newScreens = monitors.map(\.rect.topLeftCorner)
     var newScreenToOldScreenMapping: [CGPoint:CGPoint] = [:]
     var preservedOldScreens: [CGPoint] = []
     for newScreen in newScreens {

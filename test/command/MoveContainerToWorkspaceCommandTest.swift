@@ -3,7 +3,6 @@ import XCTest
 
 final class MoveContainerToWorkspaceCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
-    override func tearDownWithError() throws { tearDownWorkspacesForTests() }
 
     func testSimple() async {
         let workspaceA = Workspace.get(byName: "a")

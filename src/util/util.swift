@@ -18,8 +18,10 @@ extension String? {
 
 var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
 
-var apps: [NSRunningApplication] {
-    NSWorkspace.shared.runningApplications.filter { $0.activationPolicy == .regular }
+var apps: [AeroApp] {
+    isUnitTest
+        ? [TestApp.shared]
+        : NSWorkspace.shared.runningApplications.lazy.filter { $0.activationPolicy == .regular }.map(\.macApp).filterNotNil()
 }
 
 func terminateApp() -> Never {

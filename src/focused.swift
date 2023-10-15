@@ -24,36 +24,15 @@ var focusedApp: AeroApp? {
     }
 }
 
-/// Motivation:
-/// 1. NSScreen.main is a misleading name.
-/// 2. NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
-///    kAXFocusedWindowChangedNotification callbacks.
-///
-/// Returns `nil` if the desktop is selected (which is when the app is active but doesn't show any window)
-var focusedMonitorOrNilIfDesktop: Monitor? {
-    let window = focusedWindow as! MacWindow? // todo
-    return window?.getCenter()?.monitorApproximation ?? monitors.singleOrNil()
-    //NSWorkspace.activeApp?.macApp?.axFocusedWindow?
-    //        .get(Ax.topLeftCornerAttr)?.monitorApproximation
-    //        ?? NSScreen.screens.singleOrNil()
-}
-
-/// It's unsafe because NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
-/// kAXFocusedWindowChangedNotification callbacks.
-var focusedMonitorUnsafe: Monitor? {
-    NSScreen.main?.monitor
-}
-
-var monitors: [Monitor] { NSScreen.screens.map(\.monitor) }
-
 var focusedWindow: Window? { focusedApp?.focusedWindow }
 
 var focusedWindowOrEffectivelyFocused: Window? {
     focusedWindow ?? Workspace.focused.mostRecentWindow ?? Workspace.focused.anyLeafWindowRecursive
 }
 
-private var _focusedWorkspaceName: String = focusedMonitorUnsafe?.getActiveWorkspace().name
-    ?? mainMonitor.getActiveWorkspace().name
+// It's fine to call this Unsafe during startup
+private var _focusedWorkspaceName: String = focusedMonitorUnsafe?.activeWorkspace.name
+    ?? mainMonitor.activeWorkspace.name
 var focusedWorkspaceName: String {
     get { _focusedWorkspaceName }
     set {

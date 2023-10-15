@@ -3,7 +3,6 @@ import XCTest
 
 final class FlattenWorkspaceTreeCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
-    override func tearDownWithError() throws { tearDownWorkspacesForTests() }
 
     func testSimple() async {
         let workspace = Workspace.get(byName: name).apply {

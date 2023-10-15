@@ -20,7 +20,7 @@ final class MacWindow: Window, CustomStringConvertible {
         if let existing = allWindowsMap[id] {
             return existing
         } else {
-            let workspace: Workspace = (axWindow.center?.monitorApproximation ?? mainMonitor).getActiveWorkspace()
+            let workspace: Workspace = (axWindow.center?.monitorApproximation ?? mainMonitor).activeWorkspace
             let parent: NonLeafTreeNode
             let index: Int
             if shouldFloat(axWindow) {

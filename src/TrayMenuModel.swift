@@ -7,8 +7,8 @@ class TrayMenuModel: ObservableObject {
 }
 
 func updateTrayText() {
-    TrayMenuModel.shared.trayText = NSScreen.screens
+    TrayMenuModel.shared.trayText = monitors
         .sorted(using: [SelectorComparator(selector: \.rect.minX), SelectorComparator(selector: \.rect.minY)])
-        .map { $0.monitor.getActiveWorkspace().name }
+        .map(\.activeWorkspace.name)
         .joined(separator: " │ ")
 }

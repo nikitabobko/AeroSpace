@@ -20,4 +20,5 @@ class AeroApp: Hashable {
     }
 
     var focusedWindow: Window? { error("Not implemented") }
+    var windows: [Window] { error("Not implemented") }
 }

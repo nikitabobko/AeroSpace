@@ -3,7 +3,6 @@ import XCTest
 
 final class MoveThroughCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
-    override func tearDownWithError() throws { tearDownWorkspacesForTests() }
 
     func testMove_swapWindows() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {

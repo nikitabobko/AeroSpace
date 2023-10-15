@@ -1,5 +1,3 @@
-@testable import AeroSpace_Debug
-
 final class TestApp: AeroApp {
     static var shared = TestApp(id: 0)
 
@@ -7,8 +5,8 @@ final class TestApp: AeroApp {
         super.init(id: id)
     }
 
-    var _windows: [TestWindow] = []
-    var windows: [TestWindow]  {
+    var _windows: [Window] = []
+    override var windows: [Window]  {
         get { _windows }
         set {
             if let focusedWindow {
@@ -18,8 +16,8 @@ final class TestApp: AeroApp {
         }
     }
 
-    private var _focusedWindow: TestWindow? = nil
-    override var focusedWindow: TestWindow? {
+    private var _focusedWindow: Window? = nil
+    override var focusedWindow: Window? {
         get { _focusedWindow }
         set {
             if let window = newValue {
