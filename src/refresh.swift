@@ -1,6 +1,6 @@
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input
-func refresh(firstStart: Bool = false) {
+func refresh(startup: Bool = false) {
     precondition(Thread.current.isMainThread)
     //debug("refresh \(Date.now.formatted(date: .abbreviated, time: .standard))")
 
@@ -15,7 +15,7 @@ func refresh(firstStart: Bool = false) {
     normalizeContainers()
 
     layoutWorkspaces()
-    layoutWindows(firstStart: firstStart)
+    layoutWindows(startup: startup)
 
     updateMostRecentWindow()
 }
@@ -65,12 +65,12 @@ private func normalizeContainers() {
     }
 }
 
-private func layoutWindows(firstStart: Bool) {
+private func layoutWindows(startup: Bool) {
     for monitor in monitors {
         let workspace = monitor.activeWorkspace
         if workspace.isEffectivelyEmpty { continue }
         let rect = monitor.visibleRect
-        workspace.layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height, firstStart: firstStart)
+        workspace.layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height, startup: startup)
     }
 }
 

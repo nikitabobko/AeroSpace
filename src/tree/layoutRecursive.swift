@@ -1,16 +1,16 @@
 extension TreeNode {
-    func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat, firstStart: Bool) {
+    func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat, startup: Bool) {
         let rect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
         switch genericKind {
         case .workspace(let workspace):
             lastAppliedLayoutRect = rect
-            workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, firstStart: firstStart)
+            workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, startup: startup)
         case .window(let window):
             if window.windowId != currentlyResizedWithMouseWindowId {
                 lastAppliedLayoutRect = rect
                 window.setTopLeftCorner(point)
                 window.setSize(CGSize(width: width, height: height))
-                if firstStart { // It makes the layout more good-looking on the start. Good first impression
+                if startup { // It makes the layout more good-looking on the start. Good first impression
                     window.focus()
                 }
             }
@@ -18,16 +18,16 @@ extension TreeNode {
             lastAppliedLayoutRect = rect
             switch container.layout {
             case .List:
-                container.layoutList(point, width: width, height: height, firstStart: firstStart)
+                container.layoutList(point, width: width, height: height, startup: startup)
             case .Accordion:
-                container.layoutAccordion(point, width: width, height: height, firstStart: firstStart)
+                container.layoutAccordion(point, width: width, height: height, startup: startup)
             }
         }
     }
 }
 
 private extension TilingContainer {
-    func layoutList(_ point: CGPoint, width: CGFloat, height: CGFloat, firstStart: Bool) {
+    func layoutList(_ point: CGPoint, width: CGFloat, height: CGFloat, startup: Bool) {
         guard let delta = ((orientation == .H ? width : height) - children.sumOf { $0.getWeight(orientation) })
             .div(children.count) else { return }
         var childPoint = point
@@ -37,7 +37,7 @@ private extension TilingContainer {
                 childPoint,
                 width: orientation == .H ? child.hWeight : width,
                 height: orientation == .V ? child.vWeight : height,
-                firstStart: firstStart
+                startup: startup
             )
             childPoint = orientation == .H
                 ? childPoint.copy(\.x, childPoint.x + child.hWeight)
@@ -45,7 +45,7 @@ private extension TilingContainer {
         }
     }
 
-    func layoutAccordion(_ point: CGPoint, width: CGFloat, height: CGFloat, firstStart: Bool) {
+    func layoutAccordion(_ point: CGPoint, width: CGFloat, height: CGFloat, startup: Bool) {
         guard let mruIndex: Int = mostRecentChildIndexForAccordion ?? mostRecentChild?.ownIndexOrNil else { return }
         for (index, child) in children.withIndex {
             let lPadding: CGFloat
@@ -76,14 +76,14 @@ private extension TilingContainer {
                     point + CGPoint(x: lPadding, y: 0),
                     width: width - rPadding - lPadding,
                     height: height,
-                    firstStart: firstStart
+                    startup: startup
                 )
             case .V:
                 child.layoutRecursive(
                     point + CGPoint(x: 0, y: lPadding),
                     width: width,
                     height: height - lPadding - rPadding,
-                    firstStart: firstStart
+                    startup: startup
                 )
             }
         }
