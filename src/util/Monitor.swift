@@ -88,3 +88,7 @@ var mainMonitor: Monitor {
 }
 
 var monitors: [Monitor] { isUnitTest ? [testMonitor] : NSScreen.screens.map(\.monitor) }
+
+var sortedMonitors: [Monitor] {
+    monitors.sorted(using: [SelectorComparator(selector: \.rect.minX), SelectorComparator(selector: \.rect.minY)])
+}

@@ -8,4 +8,6 @@ extension Optional {
             return .failure(or())
         }
     }
+
+    func orFailure<F: Error>(_ or: F) -> Result<Wrapped, F> { orFailure { or } }
 }

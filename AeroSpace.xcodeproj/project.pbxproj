@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		03D8ABD4597EDB00D79807E1 /* TreeNodeEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F6B8A501483ACBB62560101 /* TreeNodeEx.swift */; };
+		05407EA2B9AC3F9371B56E6B /* MoveWorkspaceToDisplayCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF221FD5C0CB4163E322D6D /* MoveWorkspaceToDisplayCommand.swift */; };
 		059308740527CC10D1A79DDD /* AeroApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996BDAB685567E430DF7D962 /* AeroApp.swift */; };
 		0A90EEEAC020DD3A56736014 /* FocusCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = E761155C73F06E2CF5E292A4 /* FocusCommand.swift */; };
 		0A9DAD847B5340FBE3D9CF88 /* FlattenWorkspaceTreeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C5B6719EF0BC14D7CF868C /* FlattenWorkspaceTreeCommand.swift */; };
@@ -88,6 +89,7 @@
 /* Begin PBXFileReference section */
 		00ECDFE176777828D560A737 /* TilingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilingContainer.swift; sourceTree = "<group>"; };
 		09685297933511208058F7CF /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0FF221FD5C0CB4163E322D6D /* MoveWorkspaceToDisplayCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveWorkspaceToDisplayCommand.swift; sourceTree = "<group>"; };
 		1A2B673C67B00DBFCC27FFE7 /* LayoutCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutCommand.swift; sourceTree = "<group>"; };
 		1C0D40CBD65704BA9595C2FA /* keysMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = keysMap.swift; sourceTree = "<group>"; };
 		1E81623E8954701269A22322 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
@@ -290,6 +292,7 @@
 				4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */,
 				CD62043D7F5113A8BA635FDF /* MoveContainerToWorkspaceCommand.swift */,
 				67B9FFF81EB0327ABD51A7FE /* MoveThroughCommand.swift */,
+				0FF221FD5C0CB4163E322D6D /* MoveWorkspaceToDisplayCommand.swift */,
 				CB03A4736BC3F6D19E4E69F3 /* parseCommand.swift */,
 				CF3C9038C846369FDD71D1D2 /* ReloadConfigCommand.swift */,
 				CB371951459F8CB0137788C2 /* ResizeCommand.swift */,
@@ -465,6 +468,7 @@
 				920FDF8498DCCB62149D1719 /* Monitor.swift in Sources */,
 				89064BDDB5E9D17BEDE52E8C /* MoveContainerToWorkspaceCommand.swift in Sources */,
 				EDFDE707B4DC5E500B1709B1 /* MoveThroughCommand.swift in Sources */,
+				05407EA2B9AC3F9371B56E6B /* MoveWorkspaceToDisplayCommand.swift in Sources */,
 				635733FDDF37E44364372B74 /* MruStack.swift in Sources */,
 				C0A88261ECF505FC5648FC0A /* OptionalEx.swift in Sources */,
 				78EE0CEF814ABDBA67941B84 /* Rect.swift in Sources */,

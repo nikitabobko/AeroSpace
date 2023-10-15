@@ -110,6 +110,7 @@ alt-shift-y = 'move-container-to-workspace Y'
 alt-shift-z = 'move-container-to-workspace Z'
 
 alt-tab = 'workspace-back-and-forth'
+alt-shift-tab = 'move-workspace-to-display next'
 
 # alt-shift-slash.alt-shift-k = 'move-in up'
 # alt-shift-slash.alt-shift-h = 'move-in left'

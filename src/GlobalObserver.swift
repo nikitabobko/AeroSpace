@@ -14,6 +14,11 @@ class GlobalObserver {
 
         NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseUp]) { event in
             resetResizeWithMouseIfPossible()
+            // Approximation to detect when focused display changes
+            if focusedMonitorOrNilIfDesktop == nil &&
+                   focusedMonitorUnsafe?.rect.topLeftCorner != Workspace.focused.monitor.rect.topLeftCorner {
+                refresh()
+            }
         }
     }
 

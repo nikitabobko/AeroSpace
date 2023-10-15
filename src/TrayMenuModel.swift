@@ -7,8 +7,5 @@ class TrayMenuModel: ObservableObject {
 }
 
 func updateTrayText() {
-    TrayMenuModel.shared.trayText = monitors
-        .sorted(using: [SelectorComparator(selector: \.rect.minX), SelectorComparator(selector: \.rect.minY)])
-        .map(\.activeWorkspace.name)
-        .joined(separator: " │ ")
+    TrayMenuModel.shared.trayText = sortedMonitors.map(\.activeWorkspace.name).joined(separator: " │ ")
 }

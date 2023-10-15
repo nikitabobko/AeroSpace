@@ -27,6 +27,10 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
         return parseSingleArg(args, firstWord).map { MoveContainerToWorkspaceCommand(targetWorkspaceName: $0) }
     } else if firstWord == "mode" {
         return parseSingleArg(args, firstWord).map { ModeCommand(idToActivate: $0) }
+    } else if firstWord == "move-workspace-to-display" {
+        return parseSingleArg(args, firstWord)
+            .flatMap { MoveWorkspaceToDisplayCommand.DisplayTarget(rawValue: $0).orFailure("Can't parse '\(firstWord)' display target") }
+            .map { MoveWorkspaceToDisplayCommand(displayTarget: $0) }
     } else if firstWord == "resize" {
         error("'resize' command doesn't work yet")
     } else if firstWord == "exec-and-wait" {
@@ -35,17 +39,17 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
         return .success(ExecAndForgetCommand(bashCommand: raw.removePrefix(firstWord)))
     } else if firstWord == "focus" {
         return parseSingleArg(args, firstWord)
-            .flatMap { CardinalDirection(rawValue: $0).orFailure { "Can't parse '\(firstWord)' direction" } }
+            .flatMap { CardinalDirection(rawValue: $0).orFailure("Can't parse '\(firstWord)' direction") }
             .map { FocusCommand(direction: $0) }
     } else if firstWord == "move-through" {
         let bar: ParsedCommand<Command> = parseSingleArg(args, firstWord)
-            .flatMap { CardinalDirection(rawValue: $0).orFailure { "Can't parse '\(firstWord)' direction" } }
+            .flatMap { CardinalDirection(rawValue: $0).orFailure("Can't parse '\(firstWord)' direction") }
             .map { MoveThroughCommand(direction: $0) }
         return bar
     } else if firstWord == "layout" {
         return args.mapOrFailure { parseLayout(String($0)) }
             .flatMap {
-                (LayoutCommand(toggleBetween: $0) as Command?).orFailure { "Can't create layout command" } // todo nicer message
+                (LayoutCommand(toggleBetween: $0) as Command?).orFailure("Can't create layout command") // todo nicer message
             }
     } else if raw == "workspace-back-and-forth" {
         return .success(WorkspaceBackAndForthCommand())
@@ -63,7 +67,7 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
 }
 
 func parseLayout(_ raw: String) -> ParsedCommand<ConfigLayout> {
-    ConfigLayout(rawValue: raw).orFailure { "Can't parse layout '\(raw)'" }
+    ConfigLayout(rawValue: raw).orFailure("Can't parse layout '\(raw)'")
 }
 
 private func parseSingleArg(_ args: ArraySlice<Swift.String.SubSequence>, _ command: String) -> ParsedCommand<String> {
