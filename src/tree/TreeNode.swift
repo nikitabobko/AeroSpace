@@ -86,36 +86,19 @@ class TreeNode: Equatable {
         } else {
             self.adaptiveWeight = adaptiveWeight
         }
-        let window = anyLeafWindowRecursive
-        let newParentWorkspace = newParent.workspace
-        // "effectively empty" -> not "effectively empty" transition
-        if let window, newParentWorkspace.assignedMonitor == nil {
-            newParentWorkspace.assignedMonitor = window.getCenter()?.monitorApproximation
-            //?? NSScreen.focusedMonitorOrNilIfDesktop // todo uncomment once Monitor mock is done
-            //?? errorT("Can't set assignedMonitor") // todo uncomment once Monitor mock is done
-        }
         newParent._children.insert(self, at: index != BIND_LAST_INDEX ? index : newParent._children.count)
         _parent = newParent
         markAsMostRecentChild()
-        // Update currentEmptyWorkspace since it's no longer effectively empty
-        if window != nil && newParentWorkspace == currentEmptyWorkspace {
-            currentEmptyWorkspace = getOrCreateNextEmptyWorkspace()
-        }
         return result
     }
 
     private func unbindIfPossible() -> PreviousBindingData? {
         guard let _parent else { return nil }
-        let workspace = workspace
 
         let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
         precondition(_parent._mruChildren.remove(self))
         self._parent = nil
 
-        if workspace.isEffectivelyEmpty { // It became empty
-            currentEmptyWorkspace = workspace
-            currentEmptyWorkspace.assignedMonitor = nil
-        }
         return PreviousBindingData(adaptiveWeight: adaptiveWeight, index: index)
     }
 

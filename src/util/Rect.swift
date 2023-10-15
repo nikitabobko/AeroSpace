@@ -1,8 +1,8 @@
-struct Rect {
-    let topLeftX: CGFloat
-    let topLeftY: CGFloat
-    let width: CGFloat
-    let height: CGFloat
+struct Rect: Copyable {
+    var topLeftX: CGFloat
+    var topLeftY: CGFloat
+    var width: CGFloat
+    var height: CGFloat
 }
 
 extension [Rect] {
@@ -21,9 +21,9 @@ extension [Rect] {
 
 extension CGRect {
     func monitorFrameNormalized() -> Rect {
-        let mainMonitorHeight: CGFloat = NSScreen.screens.firstOrThrow { $0.isMainMonitor }.frame.height
+        let mainMonitorHeight: CGFloat = mainMonitor.height
         let rect = toRect()
-        return rect.copy(topLeftY: mainMonitorHeight - rect.topLeftY)
+        return rect.copy(\.topLeftY, mainMonitorHeight - rect.topLeftY)
     }
 }
 
@@ -38,15 +38,6 @@ extension Rect {
         let x = point.x
         let y = point.y
         return (minX..<maxX).contains(x) && (minY..<maxY).contains(y)
-    }
-
-    func copy(topLeftX: CGFloat? = nil, topLeftY: CGFloat? = nil, width: CGFloat? = nil, height: CGFloat? = nil) -> Rect {
-        Rect(
-                topLeftX: topLeftX ?? self.topLeftX,
-                topLeftY: topLeftY ?? self.topLeftY,
-                width: width ?? self.width,
-                height: height ?? self.height
-        )
     }
 
     var center: CGPoint {

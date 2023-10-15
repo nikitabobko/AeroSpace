@@ -63,12 +63,14 @@ extension CGPoint {
         return list.minOrThrow()
     }
 
+    var vectorLength: CGFloat { sqrt(x*x - y*y) }
+
     func distance(to point: CGPoint) -> Double {
         sqrt((x - point.x).squared + (y - point.y).squared)
     }
 
     var monitorApproximation: Monitor {
-        let pairs: [(monitor: Monitor, rect: Rect)] = NSScreen.screens.map { ($0.monitor, $0.rect) }
+        let pairs: [(monitor: Monitor, rect: Rect)] = monitors.map { ($0, $0.rect) }
         if let pair = pairs.first(where: { $0.rect.contains(self) }) {
             return pair.monitor
         }

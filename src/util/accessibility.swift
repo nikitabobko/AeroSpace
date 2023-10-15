@@ -258,6 +258,12 @@ extension AXUIElement {
         return _AXUIElementGetWindow(self, &cgWindowId) == .success ? cgWindowId : nil
     }
 
+    var center: CGPoint? {
+        guard let topLeft = get(Ax.topLeftCornerAttr) else { return nil }
+        guard let size = get(Ax.sizeAttr) else { return nil }
+        return CGPoint(x: topLeft.x + size.width / 2, y: topLeft.y + size.height)
+    }
+
     func raise() -> Bool {
         AXUIElementPerformAction(self, kAXRaiseAction as CFString) == AXError.success
     }

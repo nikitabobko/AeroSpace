@@ -2,29 +2,16 @@
 // todo make default choice
 
 //private func createDefaultWorkspaceContainer(_ workspace: Workspace) -> TilingContainer {
-//    guard let monitorRect = NSScreen.focusedMonitorOrNilIfDesktop?.rect else { return TilingContainer.newHList(parent: workspace) }
+//    guard let monitorRect = focusedMonitorOrNilIfDesktop?.rect else { return TilingContainer.newHList(parent: workspace) }
 //    return monitorRect.width > monitorRect.height ? TilingContainer.newVList(parent: workspace) : TilingContainer.newHList(parent: workspace)
 //}
 
 private var workspaceNameToWorkspace: [String: Workspace] = [:]
 
-/// Empty workspace is spread over all monitors. That's why it's tracked separately. See ``monitorToNotEmptyWorkspace``,
-var currentEmptyWorkspace: Workspace = getOrCreateNextEmptyWorkspace()
-/// macOS doesn't provide an API to check for currently active/selected monitor
-/// (see ``NSScreen.focusedMonitorOrNilIfDesktop``) => when users changes the active monitor by clicking the
-/// desktop on different monitor AeroSpace can't detect it => AeroSpace assumes that the empty workspace occupies
-/// both monitors.
-///
-/// If, at the same time, another monitor already contains another not empty workspace `B` then we assume that this
-/// monitor contains two workspaces: the empty one and `B` which displayed on top of empty one
-///
-/// That's why the mental model is the following: the empty workspace is spread over all monitors. And each monitor
-/// optionally can have a not empty workspace assigned to it
-///
-/// When this map contains `Maybe.Nothing` value it means that the monitor displays the "empty"/"background" workspace
-private var monitorToNotEmptyWorkspace: [Monitor: Maybe<Workspace>] = [:]
+private var screenPointToVisibleWorkspace: [CGPoint: Workspace] = [:]
+private var visibleWorkspaceToScreenPoint: [Workspace: CGPoint] = [:]
 
-func getOrCreateNextEmptyWorkspace() -> Workspace {
+func getOrCreateNextEmptyWorkspace() -> Workspace { // todo drop
     let all = Workspace.all
     if let existing = all.first(where: { $0.isEffectivelyEmpty }) {
         return existing
@@ -36,13 +23,14 @@ func getOrCreateNextEmptyWorkspace() -> Workspace {
 }
 
 var allMonitorsRectsUnion: Rect {
-    NSScreen.screens.map { $0.rect }.union()
+    monitors.map { $0.rect }.union()
 }
 
 class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable {
     let name: String
     var id: String { name } // satisfy Identifiable
-    var assignedMonitor: Monitor? = nil
+    /// This variable must be interpreted only when the workspace is invisible
+    fileprivate var assignedMonitorPoint: CGPoint? = nil
 
     private init(_ name: String) {
         self.name = name
@@ -50,8 +38,7 @@ class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable {
     }
 
     static var all: [Workspace] {
-        garbageCollectUnusedWorkspaces()
-        return workspaceNameToWorkspace.values.sortedBy { $0.name }
+        workspaceNameToWorkspace.values.sortedBy { $0.name }
     }
 
     static func get(byName name: String) -> Workspace {
@@ -65,8 +52,7 @@ class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable {
     }
 
     override func getWeight(_ targetOrientation: Orientation) -> CGFloat {
-        assignedMonitor?.visibleRect.getDimension(targetOrientation)
-            ?? errorT("Why do you need to know weight of empty workspace?")
+        monitor.visibleRect.getDimension(targetOrientation)
     }
 
     override func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {
@@ -80,9 +66,9 @@ class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable {
         }
         workspaceNameToWorkspace = workspaceNameToWorkspace.filter { (_, workspace: Workspace) in
             preservedNames.contains(workspace.name) ||
-                    !workspace.isEffectivelyEmpty ||
-                    workspace == currentEmptyWorkspace ||
-                    workspace.name == focusedWorkspaceName
+                !workspace.isEffectivelyEmpty ||
+                workspace.isVisible ||
+                workspace.name == focusedWorkspaceName
         }
     }
 
@@ -96,8 +82,11 @@ class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable {
 }
 
 extension Workspace {
-    var isVisible: Bool {
-        self == currentEmptyWorkspace || assignedMonitor?.getActiveWorkspace() == self
+    var isVisible: Bool { visibleWorkspaceToScreenPoint.keys.contains(self) }
+    var monitor: Monitor {
+        visibleWorkspaceToScreenPoint[self]?.monitorApproximation
+            ?? assignedMonitorPoint?.monitorApproximation
+            ?? mainMonitor
     }
 
     var rootTilingContainer: TilingContainer {
@@ -112,57 +101,68 @@ extension Workspace {
         }
     }
 
-    var assignedMonitorOfNotEmptyWorkspace: Monitor {
-        assignedMonitor ?? errorT("Not empty workspace \(workspace.name) must have an assigned monitor")
-    }
-
-    static var focused: Workspace { Workspace.get(byName: focusedWorkspaceName) }
+    static var focused: Workspace { Workspace.get(byName: focusedWorkspaceName) } // todo drop?
 }
 
 extension Monitor {
     func getActiveWorkspace() -> Workspace {
-        if let existing = monitorToNotEmptyWorkspace[self] {
-            return existing.valueOrNil ?? currentEmptyWorkspace
+        if let existing = screenPointToVisibleWorkspace[rect.topLeftCorner] {
+            return existing
         }
         // What if monitor configuration changed? (frame.origin is changed)
         rearrangeWorkspacesOnMonitors()
         // Normally, recursion should happen only once more because we must take the value from the cache
         // (Unless, monitor configuration data race happens)
-        return self.getActiveWorkspace()
+        return getActiveWorkspace()
     }
 
     func setActiveWorkspace(_ workspace: Workspace) {
-        if workspace.isEffectivelyEmpty {
-            monitorToNotEmptyWorkspace[self] = Maybe.Nothing
-            currentEmptyWorkspace = workspace
-        } else {
-            monitorToNotEmptyWorkspace[self] = Maybe.Just(workspace)
-            workspace.assignedMonitor = self
-        }
+        rect.topLeftCorner.setActiveWorkspace(workspace)
     }
 }
 
-// todo rewrite. Create old monitor -> new monitor mapping Need to update assignedMonitors.
+private extension CGPoint {
+    func setActiveWorkspace(_ workspace: Workspace) {
+        if let prevMonitorPoint = visibleWorkspaceToScreenPoint[workspace] {
+            visibleWorkspaceToScreenPoint.removeValue(forKey: workspace)
+            screenPointToVisibleWorkspace.removeValue(forKey: prevMonitorPoint)
+        }
+        if let prevWorkspace = screenPointToVisibleWorkspace[self] {
+            screenPointToVisibleWorkspace.removeValue(forKey: self)
+            visibleWorkspaceToScreenPoint.removeValue(forKey: prevWorkspace)
+        }
+        visibleWorkspaceToScreenPoint[workspace] = self
+        screenPointToVisibleWorkspace[self] = workspace
+        workspace.assignedMonitorPoint = self
+    }
+}
+
 private func rearrangeWorkspacesOnMonitors() {
-    let oldMonitorToWorkspaces: [Monitor: Maybe<Workspace>] = monitorToNotEmptyWorkspace
-    monitorToNotEmptyWorkspace = [:]
-    let monitors = NSScreen.screens.map { $0.monitor }.toSet()
-    let preservedWorkspaces: [Workspace] = oldMonitorToWorkspaces
-        .filter { oldMonitor, oldWorkspace in monitors.contains(oldMonitor) }
-        .map { $0.value.valueOrNil }
-        .filterNotNil()
-    let lostWorkspaces: [Workspace] = oldMonitorToWorkspaces
-        .filter { oldMonitor, oldWorkspace in !monitors.contains(oldMonitor) }
-        .map { $0.value.valueOrNil }
-        .filterNotNil()
-    var poolOfWorkspaces: [Workspace] =
-        Workspace.all.reversed() - (preservedWorkspaces + lostWorkspaces) + lostWorkspaces
-    for monitor in monitors {
-        // If monitors change, most likely we will preserve only the main monitor (It always has (0, 0) origin)
-        if let existing = oldMonitorToWorkspaces[monitor] {
-            monitorToNotEmptyWorkspace[monitor] = existing
+    var oldVisibleScreens: Set<CGPoint> = screenPointToVisibleWorkspace.keys.toSet()
+
+    let newScreens = NSScreen.screens.map { $0.rect.topLeftCorner }
+    var newScreenToOldScreenMapping: [CGPoint:CGPoint] = [:]
+    var preservedOldScreens: [CGPoint] = []
+    for newScreen in newScreens {
+        if let oldScreen = oldVisibleScreens.minBy({ ($0 - newScreen).vectorLength }) {
+            precondition(oldVisibleScreens.remove(oldScreen) != nil)
+            newScreenToOldScreenMapping[newScreen] = oldScreen
+            preservedOldScreens.append(oldScreen)
+        }
+    }
+
+    let oldScreenPointToVisibleWorkspace = screenPointToVisibleWorkspace.filter { preservedOldScreens.contains($0.key) }
+    var nextWorkspace = (Workspace.all - Array(oldScreenPointToVisibleWorkspace.values)).makeIterator()
+    var nextEmptyWorkspace = (0...Int.max).lazy.map { Workspace.get(byName: "EMPTY\($0)")  }.makeIterator()
+    screenPointToVisibleWorkspace = [:]
+    visibleWorkspaceToScreenPoint = [:]
+
+    for newScreen in newScreens {
+        if let existingVisibleWorkspace = newScreenToOldScreenMapping[newScreen]?.lets({ oldScreenPointToVisibleWorkspace[$0] }) {
+            newScreen.setActiveWorkspace(existingVisibleWorkspace)
         } else {
-            monitorToNotEmptyWorkspace[monitor] = Maybe.from(poolOfWorkspaces.popLast())
+            let workspace = nextWorkspace.next() ?? nextEmptyWorkspace.next() ?? errorT("Can't create next empty workspace")
+            newScreen.setActiveWorkspace(workspace)
         }
     }
 }

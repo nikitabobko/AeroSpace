@@ -1,6 +1,7 @@
 final class MacWindow: Window, CustomStringConvertible {
     let axWindow: AXUIElement
     let app: MacApp
+    // todo take into account monitor proportions
     private var prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect: CGPoint?
     fileprivate var previousSize: CGSize?
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
@@ -19,17 +20,7 @@ final class MacWindow: Window, CustomStringConvertible {
         if let existing = allWindowsMap[id] {
             return existing
         } else {
-            let focusedWorkspace = Workspace.focused
-            let workspace: Workspace
-            // todo rewrite. Window is appeared on empty space
-            if focusedWorkspace == currentEmptyWorkspace &&
-                       focusedApp == app &&
-                       app.axFocusedWindow?.windowId() == axWindow.windowId() {
-                workspace = currentEmptyWorkspace
-            } else {
-                guard let topLeftCorner = axWindow.get(Ax.topLeftCornerAttr) else { return nil }
-                workspace = topLeftCorner.monitorApproximation.getActiveWorkspace()
-            }
+            let workspace: Workspace = (axWindow.center?.monitorApproximation ?? mainMonitor).getActiveWorkspace()
             let parent: NonLeafTreeNode
             let index: Int
             if shouldFloat(axWindow) {
@@ -119,9 +110,8 @@ final class MacWindow: Window, CustomStringConvertible {
         if !isHiddenViaEmulation {
             debug("hideViaEmulation: Hide \(self)")
             guard let topLeftCorner = getTopLeftCorner() else { return }
-            guard let size = getSize() else { return }
             prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
-                    topLeftCorner - workspace.assignedMonitorOfNotEmptyWorkspace.rect.topLeftCorner
+                    topLeftCorner - workspace.monitor.rect.topLeftCorner
         }
         setTopLeftCorner(allMonitorsRectsUnion.bottomRightCorner)
     }
@@ -129,7 +119,7 @@ final class MacWindow: Window, CustomStringConvertible {
     func unhideViaEmulation() {
         guard let prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect else { return }
 
-        setTopLeftCorner(workspace.assignedMonitorOfNotEmptyWorkspace.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
+        setTopLeftCorner(workspace.monitor.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
 
         self.prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect = nil
     }

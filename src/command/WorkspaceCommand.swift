@@ -7,17 +7,18 @@ struct WorkspaceCommand : Command {
         debug("Switch to workspace: \(workspace.name)")
         if let window = workspace.mostRecentWindow ?? workspace.anyLeafWindowRecursive { // switch to not empty workspace
             // Make sure that stack of windows is correct from macOS perspective (important for closing windows)
-            // Alternative: focus mru window in destroyedObs (con: possible flickering when windows are closed)
-            workspace.focusMruReversedRecursive()
-            // Technically, it must not be necessary. But this way, it's more chances
-            // that the correct window will end up focused at the end
+            // Alternative: focus mru window in destroyedObs (con: possible flickering when windows are closed,
+            // because focusedWindow is source of truth for workspaces)
+            if !workspace.isVisible { // Only do it for invisible workspaces to avoid flickering when switch to already visible workspace
+                workspace.focusMruReversedRecursive()
+            }
             window.focus()
             // The switching itself will be done by refreshWorkspaces and layoutWorkspaces later in refresh
         } else { // switch to empty workspace
             precondition(workspace.isEffectivelyEmpty)
             // It's the only place in the app where I allow myself to use NSScreen.main.
             // This function isn't invoked from callbacks that's why .main should be fine
-            if let focusedMonitor = NSScreen.focusedMonitorOrNilIfDesktop ?? NSScreen.main?.monitor {
+            if let focusedMonitor = focusedMonitorOrNilIfDesktop ?? focusedMonitorUnsafe {
                 focusedMonitor.setActiveWorkspace(workspace)
             }
             defocusAllWindows()

@@ -34,14 +34,14 @@ struct AeroSpaceApp: App {
             Text("\(Bundle.appName) v\(Bundle.appVersion)")
             Divider()
             Text("Workspaces:")
-            ForEach(Workspace.all) { workspace in
+            ForEach(Workspace.all) { (workspace: Workspace) in
                 Button {
                     Task { await WorkspaceCommand(workspaceName: workspace.name).run() }
                 } label: {
                     Toggle(isOn: workspace == Workspace.focused
                         ? Binding(get: { true }, set: { _, _ in })
                         : Binding(get: { false }, set: { _, _ in })) {
-                        let monitor = (workspace.assignedMonitor?.name).flatMap { " - \($0)" } ?? ""
+                        let monitor = workspace.isVisible || !workspace.isEffectivelyEmpty ? " - \(workspace.monitor.name)" : ""
                         Text(workspace.name + monitor).font(.system(.body, design: .monospaced))
                     }
                 }
@@ -53,10 +53,9 @@ struct AeroSpaceApp: App {
             Button("Quit \(Bundle.appName)") {
                 for app in apps { // Make all windows fullscreen before Quit
                     for window in app.macApp?.windows ?? [] {
-                        if let rect = (window.workspace.assignedMonitor?.visibleRect ?? NSScreen.main?.visibleRect) {
-                            window.setSize(CGSize(width: rect.width, height: rect.height))
-                            window.setTopLeftCorner(rect.topLeftCorner)
-                        }
+                        let rect = window.workspace.monitor.visibleRect
+                        window.setSize(CGSize(width: rect.width, height: rect.height))
+                        window.setTopLeftCorner(rect.topLeftCorner)
                     }
                 }
                 terminateApp()

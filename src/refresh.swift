@@ -32,21 +32,18 @@ func updateMostRecentWindow() {
 }
 
 private func refreshWorkspaces() {
-    if let focusedWindow = focusedWindow as! MacWindow? { // todo
+    if let focusedWindow = focusedWindow as! MacWindow? { // todo as!
         //debug("refreshWorkspaces: not empty")
         let focusedWorkspace: Workspace
-        if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation {
+        if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation { // todo maybe drop once move with mouse is supported
             focusedWorkspace = focusedWindow.getCenter()?.monitorApproximation.getActiveWorkspace()
                     ?? focusedWindow.workspace
             focusedWindow.bindAsFloatingWindowTo(workspace: focusedWorkspace)
         } else {
             focusedWorkspace = focusedWindow.workspace
         }
-        focusedWorkspace.assignedMonitorOfNotEmptyWorkspace.setActiveWorkspace(focusedWorkspace)
+        focusedWorkspace.monitor.setActiveWorkspace(focusedWorkspace)
         focusedWorkspaceName = focusedWorkspace.name
-    } else {
-        //debug("refreshWorkspaces: empty")
-        focusedWorkspaceName = currentEmptyWorkspace.name
     }
     updateTrayText()
 }
@@ -54,6 +51,7 @@ private func refreshWorkspaces() {
 private func layoutWorkspaces() {
     for workspace in Workspace.all {
         if workspace.isVisible {
+            // todo no need to unhide tiling windows (except for keeping hide/unhide state variables invariants)
             workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideViaEmulation() } // todo as!
         } else {
             workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).hideViaEmulation() } // todo as!
@@ -68,10 +66,10 @@ private func normalizeContainers() {
 }
 
 private func layoutWindows(firstStart: Bool) {
-    for screen in NSScreen.screens {
-        let workspace = screen.monitor.getActiveWorkspace()
+    for monitor in monitors {
+        let workspace = monitor.getActiveWorkspace()
         if workspace.isEffectivelyEmpty { continue }
-        let rect = screen.visibleRect
+        let rect = monitor.visibleRect
         workspace.layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height, firstStart: firstStart)
     }
 }

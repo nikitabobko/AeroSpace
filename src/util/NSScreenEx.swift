@@ -1,24 +1,5 @@
 extension NSScreen {
-    /// Motivation:
-    /// 1. NSScreen.main is a misleading name.
-    /// 2. NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
-    ///    kAXFocusedWindowChangedNotification callbacks.
-    ///
-    /// I hate you Apple
-    ///
-    /// Returns `nil` if the desktop is selected (which is when the app is active but doesn't show any window)
-    static var focusedMonitorOrNilIfDesktop: Monitor? {
-        let window = focusedWindow as! MacWindow? // todo
-        return window?.getCenter()?.monitorApproximation
-                        ?? NSScreen.screens.singleOrNil()?.monitor
-
-        //NSWorkspace.activeApp?.macApp?.axFocusedWindow?
-        //        .get(Ax.topLeftCornerAttr)?.monitorApproximation
-        //        ?? NSScreen.screens.singleOrNil()
-
-    }
-
-    var isMainMonitor: Bool {
+    var isMainScreen: Bool {
         frame.minX == 0 && frame.minY == 0
     }
 
@@ -33,3 +14,5 @@ extension NSScreen {
     /// Same as ``rect`` but for ``visibleFrame``
     var visibleRect: Rect { visibleFrame.monitorFrameNormalized() }
 }
+
+var mainMonitor: Monitor { LazyMonitor(NSScreen.screens.singleOrNil(where: { $0.isMainScreen })!) }

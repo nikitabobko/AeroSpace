@@ -25,3 +25,4 @@ extension Int: AeroAny {}
 extension CGFloat: AeroAny {}
 extension Rect: AeroAny {}
 extension AXUIElement: AeroAny {}
+extension CGPoint: AeroAny {}
