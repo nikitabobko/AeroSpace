@@ -30,10 +30,31 @@ final class TreeNodeTest: XCTestCase {
 
     func testNormalizeContainers_dontRemoveRoot() {
         weak var root = Workspace.get(byName: name).rootTilingContainer
-        XCTAssertNotEqual(root, nil)
-        XCTAssertTrue(root!.isEffectivelyEmpty)
-        root?.normalizeContainersRecursive()
-        XCTAssertNotEqual(root, nil)
+        func test() {
+            XCTAssertNotEqual(root, nil)
+            XCTAssertTrue(root!.isEffectivelyEmpty)
+            root?.normalizeContainersRecursive()
+            XCTAssertNotEqual(root, nil)
+        }
+        test()
+
+        config.autoFlattenContainers = true
+        test()
+    }
+
+    func testNormalizeContainers_singleWindowChild() {
+        config.autoFlattenContainers = true
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            TestWindow(id: 0, parent: $0)
+            TilingContainer.newHList(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow(id: 1, parent: $0)
+            }
+        }
+        root.normalizeContainersRecursive()
+        XCTAssertEqual(
+            .h_list([.window(0), .window(1)]),
+            root.layoutDescription
+        )
     }
 
     func testNormalizeContainers_removeEffectivelyEmpty() {
