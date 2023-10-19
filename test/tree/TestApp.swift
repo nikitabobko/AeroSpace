@@ -1,3 +1,5 @@
+@testable import AeroSpace_Debug
+
 final class TestApp: AeroApp {
     static var shared = TestApp(id: 0)
 

@@ -14,7 +14,7 @@ final class TestWindow: Window, CustomStringConvertible {
 
     @discardableResult
     override func focus() -> Bool {
-        focusedAppForTests = TestApp.shared
+        appForTests = TestApp.shared
         TestApp.shared.focusedWindow = self
         return true
     }
