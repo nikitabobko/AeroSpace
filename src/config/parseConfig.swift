@@ -87,11 +87,11 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
     let key9 = "after-login-command"
     var value9: Command? = nil
 
-    let key11 = "tray-icon-workspaces-separator"
-    var value11: String? = nil
-
     let key12 = "accordion-padding"
     var value12: Int? = nil
+
+    let key13 = "auto-opposite-orientation-for-nested-containers"
+    var value13: Bool? = nil
 
     for (key, value) in rawTable {
         let backtrace: TomlBacktrace = .root(key)
@@ -114,10 +114,10 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
             (value8, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
         case key9:
             (value9, errors) = parseCommand(value).toParsedTomlResult(backtrace).prependErrorsAndUnwrap(errors)
-        case key11:
-            (value11, errors) = parseString(value, backtrace).prependErrorsAndUnwrap(errors)
         case key12:
             (value12, errors) = parseInt(value, backtrace).prependErrorsAndUnwrap(errors)
+        case key13:
+            (value13, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
         case "mode":
             (modes, errors) = parseModes(value, backtrace).prependLogAndUnwrap(errors)
         default:
@@ -138,6 +138,7 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
         debugAllWindowsAreFloating: value7 ?? defaultConfig.debugAllWindowsAreFloating,
         startAtLogin: value8 ?? defaultConfig.startAtLogin,
         accordionPadding: value12 ?? defaultConfig.accordionPadding,
+        autoOppositeOrientationForNestedContainers: value13 ?? defaultConfig.autoOppositeOrientationForNestedContainers,
 
         modes: modesOrDefault,
         preservedWorkspaceNames: modesOrDefault.values.lazy

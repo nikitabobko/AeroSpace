@@ -19,27 +19,6 @@ class TilingContainer: TreeNode, NonLeafTreeNode {
 }
 
 extension TilingContainer {
-    func normalizeContainersRecursive() {
-        if isRootContainer { // Never unbind root node
-            for child in children {
-                (child as? TilingContainer)?.normalizeContainersRecursive()
-            }
-        } else if let child = children.singleOrNil(), config.autoFlattenContainers {
-            child.unbindFromParent()
-            let parent = parent
-            let previousBinding = unbindFromParent()
-            child.bindTo(parent: parent, adaptiveWeight: previousBinding.adaptiveWeight, index: previousBinding.index)
-            (child as? TilingContainer)?.normalizeContainersRecursive()
-        } else {
-            for child in children {
-                (child as? TilingContainer)?.normalizeContainersRecursive()
-            }
-            if children.isEmpty {
-                unbindFromParent()
-            }
-        }
-    }
-
     var ownIndex: Int { parent.children.firstIndex(of: self)! }
     var isRootContainer: Bool { parent is Workspace }
 }

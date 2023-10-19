@@ -16,7 +16,7 @@ final class FlattenWorkspaceTreeCommandTest: XCTestCase {
         }
 
         await FlattenWorkspaceTreeCommand().runWithoutRefresh()
-        workspace.rootTilingContainer.normalizeContainersRecursive()
+        workspace.normalizeContainers()
         XCTAssertEqual(workspace.layoutDescription, .workspace([.h_list([.window(1), .window(2)]), .window(3)]))
     }
 }

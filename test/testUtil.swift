@@ -15,6 +15,7 @@ func setUpWorkspacesForTests() {
         debugAllWindowsAreFloating: defaultConfig.debugAllWindowsAreFloating,
         startAtLogin: defaultConfig.startAtLogin,
         accordionPadding: defaultConfig.accordionPadding,
+        autoOppositeOrientationForNestedContainers: false, // Make layout tests more predictable
 
         // Don't create any workspaces for tests
         modes: [mainModeId: Mode(name: nil, bindings: [])],

@@ -61,7 +61,7 @@ private func layoutWorkspaces() {
 
 private func normalizeContainers() {
     for workspace in Workspace.all {
-        workspace.rootTilingContainer.normalizeContainersRecursive()
+        workspace.normalizeContainers()
     }
 }
 

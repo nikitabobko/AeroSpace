@@ -103,12 +103,11 @@ final class MoveThroughCommandTest: XCTestCase {
     }
 
     func testCreateImplicitContainer() async {
-        let workspace = Workspace.get(byName: name).apply { // Don't cache root
-            $0.rootTilingContainer.apply {
-                TestWindow(id: 1, parent: $0)
-                TestWindow(id: 2, parent: $0).focus()
-                TestWindow(id: 3, parent: $0)
-            }
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            TestWindow(id: 1, parent: $0)
+            TestWindow(id: 2, parent: $0).focus()
+            TestWindow(id: 3, parent: $0)
         }
 
         await MoveThroughCommand(direction: .up).runWithoutRefresh()

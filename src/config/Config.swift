@@ -22,6 +22,7 @@ struct Config {
     var debugAllWindowsAreFloating: Bool
     var startAtLogin: Bool
     var accordionPadding: Int
+    var autoOppositeOrientationForNestedContainers: Bool
 
     let modes: [String: Mode]
     var preservedWorkspaceNames: [String]

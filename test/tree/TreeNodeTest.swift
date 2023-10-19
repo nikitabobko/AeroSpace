@@ -29,11 +29,12 @@ final class TreeNodeTest: XCTestCase {
     }
 
     func testNormalizeContainers_dontRemoveRoot() {
-        weak var root = Workspace.get(byName: name).rootTilingContainer
+        let workspace = Workspace.get(byName: name)
+        weak var root = workspace.rootTilingContainer
         func test() {
             XCTAssertNotEqual(root, nil)
             XCTAssertTrue(root!.isEffectivelyEmpty)
-            root?.normalizeContainersRecursive()
+            workspace.normalizeContainers()
             XCTAssertNotEqual(root, nil)
         }
         test()
@@ -44,28 +45,30 @@ final class TreeNodeTest: XCTestCase {
 
     func testNormalizeContainers_singleWindowChild() {
         config.autoFlattenContainers = true
-        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
             TestWindow(id: 0, parent: $0)
             TilingContainer.newHList(parent: $0, adaptiveWeight: 1).apply {
                 TestWindow(id: 1, parent: $0)
             }
         }
-        root.normalizeContainersRecursive()
+        workspace.normalizeContainers()
         XCTAssertEqual(
             .h_list([.window(0), .window(1)]),
-            root.layoutDescription
+            workspace.rootTilingContainer.layoutDescription
         )
     }
 
     func testNormalizeContainers_removeEffectivelyEmpty() {
-        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
             TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
                 let _ = TilingContainer.newHList(parent: $0, adaptiveWeight: 1)
             }
         }
-        XCTAssertEqual(root.children.count, 1)
-        root.normalizeContainersRecursive()
-        XCTAssertEqual(root.children.count, 0)
+        XCTAssertEqual(workspace.rootTilingContainer.children.count, 1)
+        workspace.normalizeContainers()
+        XCTAssertEqual(workspace.rootTilingContainer.children.count, 0)
     }
 
     func testNormalizeContainers_flattenContainers() {
@@ -75,11 +78,11 @@ final class TreeNodeTest: XCTestCase {
                 TestWindow(id: 1, parent: $0, adaptiveWeight: 1)
             }
         }
-        workspace.rootTilingContainer.normalizeContainersRecursive()
+        workspace.normalizeContainers()
         XCTAssertTrue(workspace.rootTilingContainer.children.singleOrNil() is TilingContainer)
 
         config.autoFlattenContainers = true
-        workspace.rootTilingContainer.normalizeContainersRecursive()
+        workspace.normalizeContainers()
         XCTAssertTrue(workspace.rootTilingContainer.children.singleOrNil() is TestWindow)
     }
 
