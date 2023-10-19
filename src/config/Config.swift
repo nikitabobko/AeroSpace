@@ -14,7 +14,7 @@ var config: Config = defaultConfig
 struct Config {
     var afterStartupCommand: Command
     var afterLoginCommand: Command
-    var usePaddingForNestedContainersWithTheSameOrientation: Bool // todo
+    var indentForNestedContainersWithTheSameOrientation: Int
     var autoFlattenContainers: Bool
     var floatingWindowsOnTop: Bool
     var mainLayout: ConfigLayout // todo rename to defaultLayout

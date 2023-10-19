@@ -1,5 +1,11 @@
 extension TreeNode {
     func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat, startup: Bool) {
+        var point = point
+        if let orientation = (self as? TilingContainer)?.orientation, orientation == (parent as? TilingContainer)?.orientation {
+            point = orientation == .H
+                ? point + CGPoint(x: 0, y: config.indentForNestedContainersWithTheSameOrientation)
+                : point + CGPoint(x: config.indentForNestedContainersWithTheSameOrientation, y: 0)
+        }
         let rect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
         switch genericKind {
         case .workspace(let workspace):
@@ -28,20 +34,20 @@ extension TreeNode {
 
 private extension TilingContainer {
     func layoutList(_ point: CGPoint, width: CGFloat, height: CGFloat, startup: Bool) {
+        var point = point
         guard let delta = ((orientation == .H ? width : height) - children.sumOf { $0.getWeight(orientation) })
             .div(children.count) else { return }
-        var childPoint = point
         for child in children {
             child.setWeight(orientation, child.getWeight(orientation) + delta)
             child.layoutRecursive(
-                childPoint,
+                point,
                 width: orientation == .H ? child.hWeight : width,
                 height: orientation == .V ? child.vWeight : height,
                 startup: startup
             )
-            childPoint = orientation == .H
-                ? childPoint.copy(\.x, childPoint.x + child.hWeight)
-                : childPoint.copy(\.y, childPoint.y + child.vWeight)
+            point = orientation == .H
+                ? point.copy(\.x, point.x + child.hWeight)
+                : point.copy(\.y, point.y + child.vWeight)
         }
     }
 

@@ -63,8 +63,8 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
     let key1 = "after-startup-command"
     var value1: Command? = nil
 
-    let key2 = "use-padding-for-nested-containers-with-the-same-orientation"
-    var value2: Bool? = nil
+    let key2 = "indent-for-nested-containers-with-the-same-orientation"
+    var value2: Int? = nil
 
     let key3 = "auto-flatten-containers"
     var value3: Bool? = nil
@@ -99,7 +99,7 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
         case key1:
             (value1, errors) = parseCommand(value).toParsedTomlResult(backtrace).prependErrorsAndUnwrap(errors)
         case key2:
-            (value2, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
+            (value2, errors) = parseInt(value, backtrace).prependErrorsAndUnwrap(errors)
         case key3:
             (value3, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
         case key4:
@@ -130,7 +130,7 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
     let config =  Config(
         afterStartupCommand: value1 ?? defaultConfig.afterStartupCommand,
         afterLoginCommand: value9 ?? defaultConfig.afterLoginCommand,
-        usePaddingForNestedContainersWithTheSameOrientation: value2 ?? defaultConfig.usePaddingForNestedContainersWithTheSameOrientation,
+        indentForNestedContainersWithTheSameOrientation: value2 ?? defaultConfig.indentForNestedContainersWithTheSameOrientation,
         autoFlattenContainers: value3 ?? defaultConfig.autoFlattenContainers,
         floatingWindowsOnTop: value4 ?? defaultConfig.floatingWindowsOnTop,
         mainLayout: value5 ?? defaultConfig.mainLayout,

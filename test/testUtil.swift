@@ -7,7 +7,7 @@ func setUpWorkspacesForTests() {
     config = Config(
         afterStartupCommand: defaultConfig.afterStartupCommand,
         afterLoginCommand: defaultConfig.afterLoginCommand,
-        usePaddingForNestedContainersWithTheSameOrientation: defaultConfig.usePaddingForNestedContainersWithTheSameOrientation,
+        indentForNestedContainersWithTheSameOrientation: defaultConfig.indentForNestedContainersWithTheSameOrientation,
         autoFlattenContainers: false, // Make layout tests more predictable
         floatingWindowsOnTop: defaultConfig.floatingWindowsOnTop,
         mainLayout: .h_list, // Make default layout predictable

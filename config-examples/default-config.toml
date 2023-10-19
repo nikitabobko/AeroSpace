@@ -4,7 +4,7 @@
 
 after-login-command = [] # You can use it to add command or commands that run after login to macOS user session.
 after-startup-command = [] # You can use it to add command or commands that run after startup.
-use-padding-for-nested-containers-with-the-same-orientation = true
+indent-for-nested-containers-with-the-same-orientation = 30
 auto-flatten-containers = true
 # auto-different-orientation-for-nested-containers = true
 start-at-login = false
