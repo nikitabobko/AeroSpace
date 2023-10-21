@@ -22,10 +22,12 @@ struct AeroSpaceApp: App {
             checkAccessibilityPermissions()
             GlobalObserver.initObserver()
             refresh(startup: true)
-            if startedAtLogin {
-                Task { await config.afterLoginCommand.run() }
+            Task {
+                if startedAtLogin {
+                    await config.afterLoginCommand.run()
+                }
+                await config.afterStartupCommand.run()
             }
-            Task { await config.afterStartupCommand.run() }
         }
     }
 
