@@ -1,8 +1,6 @@
 private var _focusedApp: NSRunningApplication? = nil
 var appForTests: AeroApp? = nil
 
-var pidForEmptyWorkspace: Int32? = nil
-
 var focusedApp: AeroApp? {
     if isUnitTest {
         return appForTests
@@ -21,8 +19,8 @@ var focusedWindowOrEffectivelyFocused: Window? {
     focusedWindow ?? Workspace.focused.mostRecentWindow ?? Workspace.focused.anyLeafWindowRecursive
 }
 
-// It's fine to call this Unsafe during startup
-private var _focusedWorkspaceName: String = focusedMonitorUnsafe?.activeWorkspace.name
+// It's fine to call this inaccurate during startup
+private var _focusedWorkspaceName: String = focusedMonitorInaccurate?.activeWorkspace.name
     ?? mainMonitor.activeWorkspace.name
 var focusedWorkspaceName: String {
     get { _focusedWorkspaceName }

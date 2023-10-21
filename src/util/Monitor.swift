@@ -77,9 +77,9 @@ var focusedMonitorOrNilIfDesktop: Monitor? {
     //        ?? NSScreen.screens.singleOrNil()
 }
 
-/// It's unsafe because NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
+/// It's inaccurate because NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
 /// kAXFocusedWindowChangedNotification callbacks.
-var focusedMonitorUnsafe: Monitor? {
+var focusedMonitorInaccurate: Monitor? {
     isUnitTest ? testMonitor : NSScreen.main?.monitor
 }
 

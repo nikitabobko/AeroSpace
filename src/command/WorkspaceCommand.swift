@@ -4,31 +4,22 @@ struct WorkspaceCommand : Command {
     func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
         let workspace = Workspace.get(byName: workspaceName)
-        debug("Switch to workspace: \(workspace.name)")
-        if let window = workspace.mostRecentWindow ?? workspace.anyLeafWindowRecursive { // switch to not empty workspace
+        if let window = workspace.mostRecentWindow { // switch to not empty workspace
             // Make sure that stack of windows is correct from macOS perspective (important for closing windows)
             // Alternative: focus mru window in destroyedObs (con: possible flickering when windows are closed,
             // because focusedWindow is source of truth for workspaces)
             if !workspace.isVisible { // Only do it for invisible workspaces to avoid flickering when switch to already visible workspace
                 workspace.focusMruReversedRecursive()
             }
-            pidForEmptyWorkspace = nil
+            focusedWorkspaceSourceOfTruth = .macOs
             window.focus()
             // The switching itself will be done by refreshWorkspaces and layoutWorkspaces later in refresh
         } else { // switch to empty workspace
             precondition(workspace.isEffectivelyEmpty)
-            // It's fine to call Unsafe from here because commands are not invoked from callbacks,
-            // the callbacks are triggered by user
-            if let focusedMonitor = focusedMonitorOrNilIfDesktop ?? focusedMonitorUnsafe {
-                focusedMonitor.setActiveWorkspace(workspace)
-            }
-            pidForEmptyWorkspace = focusedApp?.id
+            workspace.monitor.setActiveWorkspace(workspace)
+            focusedWorkspaceName = workspace.name
+            focusedWorkspaceSourceOfTruth = .ownModel
         }
-        debug("End switch to workspace: \(workspace.name)")
-    }
-
-    static func switchToWorkspace(_ workspace: Workspace) async {
-        await WorkspaceCommand(workspaceName: workspace.name).run()
     }
 }
 

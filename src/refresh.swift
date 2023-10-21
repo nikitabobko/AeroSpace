@@ -33,19 +33,20 @@ func updateMostRecentWindow() {
 }
 
 private func refreshFocusedWorkspaceBasedOnFocusedWindow() {
-    if focusedApp?.id != pidForEmptyWorkspace {
-        pidForEmptyWorkspace = nil
-    }
-    if let focusedWindow = focusedWindow?.takeIf({ $0.app.id != pidForEmptyWorkspace }) {
-        let focusedWorkspace: Workspace
-        if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation { // todo maybe drop once move with mouse is supported
-            focusedWorkspace = mouseLocation.monitorApproximation.activeWorkspace
-            focusedWindow.bindAsFloatingWindowTo(workspace: focusedWorkspace)
+    if focusedWorkspaceSourceOfTruth == .macOs {
+        if let focusedWindow = focusedWindow {
+            let focusedWorkspace: Workspace
+            if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation { // todo maybe drop once move with mouse is supported
+                focusedWorkspace = mouseLocation.monitorApproximation.activeWorkspace
+                focusedWindow.bindAsFloatingWindowTo(workspace: focusedWorkspace)
+            } else {
+                focusedWorkspace = focusedWindow.workspace
+            }
+            focusedWorkspace.monitor.setActiveWorkspace(focusedWorkspace)
+            focusedWorkspaceName = focusedWorkspace.name
         } else {
-            focusedWorkspace = focusedWindow.workspace
+            focusedMonitorInaccurate?.activeWorkspace.name.lets { focusedWorkspaceName = $0 }
         }
-        focusedWorkspace.monitor.setActiveWorkspace(focusedWorkspace)
-        focusedWorkspaceName = focusedWorkspace.name
     }
 }
 
@@ -78,6 +79,10 @@ private func layoutWindows(startup: Bool) {
 private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
     for app in apps {
         let windows = app.windows // Calling .windows has side-effects
+        if app.id == NSRunningApplication.current.processIdentifier {
+            windows.singleOrNil()?.focus()
+            windows.singleOrNil()?.close()
+        }
         if startup {
             for window in windows {
                 window.rectBeforeAeroStart = window.getRect()

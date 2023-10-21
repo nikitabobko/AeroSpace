@@ -7,3 +7,7 @@ extension Collection {
         indices.contains(index) ? self[index] : nil
     }
 }
+
+extension Collection where Index == Int {
+    func get(wrappingIndex: Int) -> Element { self[(count + wrappingIndex) % count] }
+}

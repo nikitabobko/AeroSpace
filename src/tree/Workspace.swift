@@ -11,15 +11,16 @@ private var workspaceNameToWorkspace: [String: Workspace] = [:]
 private var screenPointToVisibleWorkspace: [CGPoint: Workspace] = [:]
 private var visibleWorkspaceToScreenPoint: [Workspace: CGPoint] = [:]
 
-func getOrCreateNextEmptyWorkspace() -> Workspace { // todo drop
-    let all = Workspace.all
-    if let existing = all.first(where: \.isEffectivelyEmpty) {
-        return existing
-    }
-    let occupiedNames = all.map(\.name).toSet()
-    let newName = (0...Int.max).lazy.map { "EMPTY\($0)" }.first { !occupiedNames.contains($0) }
-            ?? errorT("Can't create empty workspace")
-    return Workspace.get(byName: newName)
+private var emptyInvisibleWorkspaceGenerator: some IteratorProtocol<Workspace> {
+    (0...Int.max).lazy
+        .map { Workspace.get(byName: "EMPTY\($0)") }
+        .filter { $0.isEffectivelyEmpty || !$0.isVisible }
+        .makeIterator()
+}
+
+func getOrCreateNextEmptyInvisibleWorkspace() -> Workspace {
+    var generator = emptyInvisibleWorkspaceGenerator
+    return generator.next() ?? errorT("Can't create empty workspace")
 }
 
 var allMonitorsRectsUnion: Rect {
@@ -144,9 +145,7 @@ private extension CGPoint {
         }
         visibleWorkspaceToScreenPoint[workspace] = self
         screenPointToVisibleWorkspace[self] = workspace
-        if workspace.assignedMonitorPoint == nil {
-            workspace.assignedMonitorPoint = self
-        }
+        workspace.assignedMonitorPoint = self
     }
 }
 
@@ -166,7 +165,7 @@ private func rearrangeWorkspacesOnMonitors() {
 
     let oldScreenPointToVisibleWorkspace = screenPointToVisibleWorkspace.filter { preservedOldScreens.contains($0.key) }
     var nextWorkspace = (Workspace.all - Array(oldScreenPointToVisibleWorkspace.values)).makeIterator()
-    var nextEmptyWorkspace = (0...Int.max).lazy.map { Workspace.get(byName: "EMPTY\($0)")  }.makeIterator()
+    var nextEmptyWorkspace = emptyInvisibleWorkspaceGenerator
     screenPointToVisibleWorkspace = [:]
     visibleWorkspaceToScreenPoint = [:]
 

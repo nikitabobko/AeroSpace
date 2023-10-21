@@ -21,7 +21,7 @@ var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
 var apps: [AeroApp] {
     isUnitTest
         ? (appForTests?.lets { [$0] } ?? [])
-        : NSWorkspace.shared.runningApplications.lazy.filter { $0.activationPolicy == .regular }.map(\.macApp).filterNotNil()
+        : NSWorkspace.shared.runningApplications.lazy.filter { $0.activationPolicy == .regular || $0.processIdentifier == NSRunningApplication.current.processIdentifier }.map(\.macApp).filterNotNil()
 }
 
 func terminateApp() -> Never {

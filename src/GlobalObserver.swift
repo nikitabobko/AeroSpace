@@ -16,7 +16,7 @@ class GlobalObserver {
             resetManipulatedWithMouseIfPossible()
             // Approximation to detect when focused display changes
             if focusedMonitorOrNilIfDesktop == nil &&
-                   focusedMonitorUnsafe?.rect.topLeftCorner != Workspace.focused.monitor.rect.topLeftCorner {
+                   focusedMonitorInaccurate?.rect.topLeftCorner != Workspace.focused.monitor.rect.topLeftCorner {
                 refresh()
             }
         }
