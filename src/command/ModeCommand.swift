@@ -7,6 +7,7 @@ struct ModeCommand: Command {
     }
 }
 
+var activeMode: String = mainModeId
 func activateMode(_ modeToActivate: String) {
     for (modeId, mode) in config.modes {
         if modeId != modeToActivate {
@@ -15,7 +16,10 @@ func activateMode(_ modeToActivate: String) {
     }
     for (modeId, mode) in config.modes {
         if modeId == modeToActivate {
-            mode.activate()
+            for binding in mode.bindings {
+                binding.activate()
+            }
         }
     }
+    activeMode = modeToActivate
 }

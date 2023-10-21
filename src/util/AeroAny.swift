@@ -26,3 +26,5 @@ extension CGFloat: AeroAny {}
 extension Rect: AeroAny {}
 extension AXUIElement: AeroAny {}
 extension CGPoint: AeroAny {}
+extension String: AeroAny {}
+extension Character: AeroAny {}

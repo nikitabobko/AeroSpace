@@ -45,12 +45,6 @@ struct Mode: Copyable {
     var name: String?
     var bindings: [HotkeyBinding]
 
-    func activate() {
-        for binding in bindings {
-            binding.activate()
-        }
-    }
-
     func deactivate() {
         for binding in bindings {
             binding.deactivate()

@@ -7,5 +7,6 @@ class TrayMenuModel: ObservableObject {
 }
 
 func updateTrayText() {
-    TrayMenuModel.shared.trayText = sortedMonitors.map(\.activeWorkspace.name).joined(separator: " │ ")
+    TrayMenuModel.shared.trayText = (activeMode.takeIf { $0 != mainModeId }?.first?.lets { "[\($0)] " } ?? "") +
+        sortedMonitors.map(\.activeWorkspace.name).joined(separator: " │ ")
 }
