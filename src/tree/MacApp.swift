@@ -48,7 +48,7 @@ final class MacApp: AeroApp {
         }
     }
 
-    var title: String? { nsApp.localizedName }
+    override var title: String? { nsApp.localizedName }
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) -> Bool {
         guard let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, handler, data: nil) else { return false }

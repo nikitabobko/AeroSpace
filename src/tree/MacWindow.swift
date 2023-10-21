@@ -1,15 +1,15 @@
 final class MacWindow: Window, CustomStringConvertible {
     let axWindow: AXUIElement
-    let app: MacApp
+    private let macApp: MacApp
     // todo take into account monitor proportions
     private var prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect: CGPoint?
     fileprivate var previousSize: CGSize?
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 
     private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
-        self.app = app
         self.axWindow = axWindow
-        super.init(id: id, parent: parent, adaptiveWeight: adaptiveWeight, index: index)
+        self.macApp = app
+        super.init(id: id, app, parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
     private static var allWindowsMap: [CGWindowID: MacWindow] = [:]
@@ -41,7 +41,7 @@ final class MacWindow: Window, CustomStringConvertible {
             if window.observe(destroyedObs, kAXUIElementDestroyedNotification) &&
                        window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
                        window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
-                       window.observe(refreshObs, kAXMovedNotification) &&
+                       window.observe(movedObs, kAXMovedNotification) &&
                        window.observe(resizedObs, kAXResizedNotification) {
                 debug("New window detected: \(window)")
                 allWindowsMap[id] = window
@@ -75,7 +75,7 @@ final class MacWindow: Window, CustomStringConvertible {
     }
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) -> Bool {
-        guard let observer = AXObserver.observe(app.nsApp.processIdentifier, notifKey, axWindow, handler, data: self) else { return false }
+        guard let observer = AXObserver.observe(app.id, notifKey, axWindow, handler, data: self) else { return false }
         axObservers.append(AxObserverWrapper(obs: observer, ax: axWindow, notif: notifKey as CFString))
         return true
     }
@@ -87,7 +87,7 @@ final class MacWindow: Window, CustomStringConvertible {
     @discardableResult
     override func focus() -> Bool {
         // Raise firstly to make sure that by that time we activate the app, particular window would be already on top
-        if axWindow.raise() && app.nsApp.activate(options: .activateIgnoringOtherApps) {
+        if axWindow.raise() && macApp.nsApp.activate(options: .activateIgnoringOtherApps) {
             markAsMostRecentChild()
             markAsMostRecentChildForAccordion()
             return true
@@ -124,7 +124,7 @@ final class MacWindow: Window, CustomStringConvertible {
         self.prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect = nil
     }
 
-    var isHiddenViaEmulation: Bool {
+    override var isHiddenViaEmulation: Bool {
         prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect != nil
     }
 

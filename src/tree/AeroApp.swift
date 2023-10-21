@@ -19,6 +19,7 @@ class AeroApp: Hashable {
         hasher.combine(id)
     }
 
+    var title: String? { nil }
     var focusedWindow: Window? { error("Not implemented") }
     var windows: [Window] { error("Not implemented") }
 }

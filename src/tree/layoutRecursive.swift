@@ -12,7 +12,7 @@ extension TreeNode {
             lastAppliedLayoutRect = rect
             workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, startup: startup)
         case .window(let window):
-            if window.windowId != currentlyResizedWithMouseWindowId {
+            if window.windowId != currentlyManipulatedWithMouseWindowId {
                 lastAppliedLayoutRect = rect
                 window.setTopLeftCorner(point)
                 window.setSize(CGSize(width: width, height: height))

@@ -65,6 +65,8 @@ extension CGPoint {
         return list.minOrThrow()
     }
 
+    func getCoordinate(_ orientation: Orientation) -> Double { orientation == .H ? x : y }
+
     var vectorLength: CGFloat { sqrt(x*x - y*y) }
 
     func distance(to point: CGPoint) -> Double {

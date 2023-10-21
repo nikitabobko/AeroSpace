@@ -5,10 +5,10 @@ func resizedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     refresh()
 }
 
-func resetResizeWithMouseIfPossible() {
+func resetManipulatedWithMouseIfPossible() {
     precondition(Thread.current.isMainThread)
-    if currentlyResizedWithMouseWindowId != nil {
-        currentlyResizedWithMouseWindowId = nil
+    if currentlyManipulatedWithMouseWindowId != nil {
+        currentlyManipulatedWithMouseWindowId = nil
         for workspace in Workspace.all {
             workspace.resetResizeWeightBeforeResizeRecursive()
         }
@@ -16,18 +16,13 @@ func resetResizeWithMouseIfPossible() {
     }
 }
 
-var currentlyResizedWithMouseWindowId: UInt32? = nil
-
 private let adaptiveWeightBeforeResizeWithMouseKey = TreeNodeUserDataKey<CGFloat>(key: "adaptiveWeightBeforeResizeWithMouseKey")
 
-private func resizeWithMouseIfTheCase(_ window: MacWindow) { // todo cover with tests
-    if window.workspace != Workspace.focused {
-        return // Don't allow to resize windows of hidden workspaces
-    }
-    if focusedWindow != window {
-        return
-    }
-    if NSEvent.pressedMouseButtons != 1 { // If mouse left button isn't pressed
+private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tests
+    if window.isHiddenViaEmulation || // Don't allow to resize windows of hidden workspaces
+           focusedWindow != window ||
+           !isLeftMouseButtonPressed ||
+           currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId {
         return
     }
     switch window.parent.kind {
@@ -63,7 +58,7 @@ private func resizeWithMouseIfTheCase(_ window: MacWindow) { // todo cover with 
                 }
             }
         }
-        currentlyResizedWithMouseWindowId = window.windowId
+        currentlyManipulatedWithMouseWindowId = window.windowId
     }
 }
 
