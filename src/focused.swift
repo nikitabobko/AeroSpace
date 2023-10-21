@@ -1,16 +1,7 @@
 private var _focusedApp: NSRunningApplication? = nil
 var appForTests: AeroApp? = nil
 
-func defocusAllWindows() {
-    if isUnitTest {
-        error("defocusAllWindows needs to be dropped anyway")
-    } else {
-        // Since AeroSpace doesn't show any windows, focusing AeroSpace defocuses all windows
-        let current = NSRunningApplication.current
-        precondition(current.activate(options: .activateIgnoringOtherApps))
-        _focusedApp = current
-    }
-}
+var pidForEmptyWorkspace: Int32? = nil
 
 var focusedApp: AeroApp? {
     if isUnitTest {

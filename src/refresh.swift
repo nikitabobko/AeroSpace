@@ -32,7 +32,10 @@ func updateMostRecentWindow() {
 }
 
 private func refreshWorkspaces() {
-    if let focusedWindow = focusedWindow as! MacWindow? { // todo as!
+    if focusedApp?.id != pidForEmptyWorkspace {
+        pidForEmptyWorkspace = nil
+    }
+    if let focusedWindow = (focusedWindow as! MacWindow?)?.takeIf({ $0.app.id != pidForEmptyWorkspace }) { // todo as!
         //debug("refreshWorkspaces: not empty")
         let focusedWorkspace: Workspace
         if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation { // todo maybe drop once move with mouse is supported

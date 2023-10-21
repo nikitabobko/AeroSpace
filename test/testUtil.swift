@@ -26,6 +26,7 @@ func setUpWorkspacesForTests() {
             child.unbindFromParent()
         }
     }
+    pidForEmptyWorkspace = nil
     focusedWorkspaceName = mainMonitor.activeWorkspace.name
     Workspace.garbageCollectUnusedWorkspaces()
     precondition(Workspace.focused.isEffectivelyEmpty)

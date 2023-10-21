@@ -12,6 +12,7 @@ struct WorkspaceCommand : Command {
             if !workspace.isVisible { // Only do it for invisible workspaces to avoid flickering when switch to already visible workspace
                 workspace.focusMruReversedRecursive()
             }
+            pidForEmptyWorkspace = nil
             window.focus()
             // The switching itself will be done by refreshWorkspaces and layoutWorkspaces later in refresh
         } else { // switch to empty workspace
@@ -21,7 +22,7 @@ struct WorkspaceCommand : Command {
             if let focusedMonitor = focusedMonitorOrNilIfDesktop ?? focusedMonitorUnsafe {
                 focusedMonitor.setActiveWorkspace(workspace)
             }
-            defocusAllWindows()
+            pidForEmptyWorkspace = focusedApp?.id
         }
         debug("End switch to workspace: \(workspace.name)")
     }
