@@ -79,10 +79,6 @@ private func layoutWindows(startup: Bool) {
 private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
     for app in apps {
         let windows = app.windows // Calling .windows has side-effects
-        if app.id == NSRunningApplication.current.processIdentifier {
-            windows.singleOrNil()?.focus()
-            windows.singleOrNil()?.close()
-        }
         if startup {
             for window in windows {
                 window.rectBeforeAeroStart = window.getRect()
