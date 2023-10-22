@@ -30,9 +30,9 @@ alt-l = 'focus right'
 
 # Move window
 
-alt-shift-k = 'move-through up'
 alt-shift-h = 'move-through left'
 alt-shift-j = 'move-through down'
+alt-shift-k = 'move-through up'
 alt-shift-l = 'move-through right'
 
 # Resize window

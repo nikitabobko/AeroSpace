@@ -3,6 +3,7 @@
 # todo finish
 
 auto-flatten-containers = false
+auto-opposite-orientation-for-nested-containers = false
 
 [mode.main.binding]
 alt-enter = 'exec-and-forget open /System/Applications/Utilities/Terminal.app'
