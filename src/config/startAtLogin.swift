@@ -1,5 +1,5 @@
 func syncStartAtLogin() {
-    let url: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: "Library/LaunchAgents/\(Bundle.appId).plist")
+    let url: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: "Library/LaunchAgents/bobko.aerospace.plist")
     if config.startAtLogin {
         let plist = """
         <?xml version="1.0" encoding="UTF-8"?>
@@ -10,7 +10,7 @@ func syncStartAtLogin() {
             <string>\(Bundle.appId)</string>
             <key>ProgramArguments</key>
             <array>
-                <string>\(URL(filePath: CommandLine.arguments.first ?? errorT("Can't get first argument")).absoluteString)</string>
+                <string>\(URL(filePath: CommandLine.arguments.first ?? errorT("Can't get first argument")).absoluteURL.path)</string>
                 <string>--started-at-login</string>
             </array>
             <key>RunAtLoad</key>
@@ -18,7 +18,7 @@ func syncStartAtLogin() {
         </dict>
         </plist>
         """
-        (try? plist.write(to: url, atomically: true, encoding: .utf8)) ?? errorT("Can't write to \(url)")
+        (try? plist.write(to: url, atomically: false, encoding: .utf8)) ?? errorT("Can't write to \(url)")
         // todo try!
         try! Process.run(URL(filePath: "/bin/launchctl"), arguments: ["load", url.absoluteString])
     } else {

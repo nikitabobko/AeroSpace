@@ -14,12 +14,8 @@ func activateMode(_ modeToActivate: String) {
             mode.deactivate()
         }
     }
-    for (modeId, mode) in config.modes {
-        if modeId == modeToActivate {
-            for binding in mode.bindings {
-                binding.activate()
-            }
-        }
+    for binding in config.modes[modeToActivate]?.bindings ?? [] {
+        binding.activate()
     }
     activeMode = modeToActivate
 }

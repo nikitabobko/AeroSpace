@@ -1,11 +1,6 @@
 import HotKey
 import SwiftUI
 
-//osascript -e 'tell app "Terminal"
-//activate
-//do script "tail -f ~/log/0.txt"
-//end tell'
-
 @main
 struct AeroSpaceApp: App {
     var hotKeys: [HotKey] = [] // Keep hotkeys in memory

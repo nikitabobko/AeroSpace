@@ -2,12 +2,45 @@ import TOMLKit
 import HotKey
 
 func reloadConfig() {
-    let rawConfig = try? String(contentsOf: FileManager.default.homeDirectoryForCurrentUser.appending(path: ".aerospace.toml"))
-    config = parseConfig(rawConfig ?? "").value // todo show errors to user
+    let configUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: ".aerospace.toml")
+    let rawConfig = try? String(contentsOf: configUrl)
+    let parsedConfig = rawConfig?.lets { parseConfig($0) } ?? Writer(value: defaultConfig, log: [])
+
+    if !parsedConfig.log.isEmpty {
+        activateMode(mainModeId)
+        showErrorsToUser(parsedConfig.log, configUrl: configUrl)
+        return
+    }
+    config = parsedConfig.value
     activateMode(mainModeId)
     if !Bundle.appId.contains("debug") {
         syncStartAtLogin()
     }
+}
+
+private func showErrorsToUser(_ errors: [TomlParseError], configUrl: URL) {
+    let cachesDir = FileManager.default.homeDirectoryForCurrentUser.appending(component: "Library/Caches/bobko.aerospace/")
+    try! FileManager.default.createDirectory(at: cachesDir, withIntermediateDirectories: true)
+    let configParseError = cachesDir.appending(component: "config-parse-error.txt")
+    let header = """
+    ############################################################
+    ### AEROSPACE CONFIG PARSE ERROR. SEE THE MESSAGES BELOW ###
+    ############################################################
+    Failed to parse \(configUrl.absoluteURL.path)
+    """
+    try! ("\(header)\n\n" + errors.map(\.description).joined(separator: "\n") + "\n")
+        .write(to: configParseError, atomically: false, encoding: .utf8)
+    try! Process.run(URL(filePath: "/usr/bin/osascript"),
+        arguments: [
+            "-e",
+            """
+            tell app "Terminal"
+                activate
+                do script "less \(configParseError.absoluteURL.path)"
+            end tell
+            """
+        ]
+    )
 }
 
 enum TomlParseError: Error, CustomStringConvertible {

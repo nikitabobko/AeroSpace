@@ -10,7 +10,7 @@ auto-opposite-orientation-for-nested-containers = true
 start-at-login = false
 floating-windows-on-top = true
 main-layout = 'h_list' # todo change
-DEBUG-all-windows-are-floating = false
+DEBUG-all-windows-are-floating = false # todo drop
 accordion-padding = 30 # todo dp?
 
 [mode.main.binding]
