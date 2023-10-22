@@ -9,7 +9,8 @@ func refresh(startup: Bool = false) {
     // Garbage collect workspaces after apps, because workspaces contain apps.
     Workspace.garbageCollectUnusedWorkspaces()
 
-    refreshWorkspaces()
+    refreshFocusedWorkspaceBasedOnFocusedWindow()
+    updateTrayText()
     detectNewWindowsAndAttachThemToWorkspaces(startup: startup)
 
     normalizeContainers()
@@ -31,7 +32,7 @@ func updateMostRecentWindow() {
     }
 }
 
-private func refreshWorkspaces() {
+private func refreshFocusedWorkspaceBasedOnFocusedWindow() {
     if focusedApp?.id != pidForEmptyWorkspace {
         pidForEmptyWorkspace = nil
     }
@@ -46,7 +47,6 @@ private func refreshWorkspaces() {
         focusedWorkspace.monitor.setActiveWorkspace(focusedWorkspace)
         focusedWorkspaceName = focusedWorkspace.name
     }
-    updateTrayText()
 }
 
 private func layoutWorkspaces() {
@@ -77,7 +77,7 @@ private func layoutWindows(startup: Bool) {
 
 private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
     for app in apps {
-        let windows = app.windows // Calling windows has side-effects
+        let windows = app.windows // Calling .windows has side-effects
         if startup {
             for window in windows {
                 window.rectBeforeAeroStart = window.getRect()

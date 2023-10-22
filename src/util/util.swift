@@ -74,13 +74,9 @@ extension CGPoint {
     }
 
     var monitorApproximation: Monitor {
-        let pairs: [(monitor: Monitor, rect: Rect)] = monitors.map { ($0, $0.rect) }
-        if let pair = pairs.first(where: { $0.rect.contains(self) }) {
-            return pair.monitor
-        }
-        return pairs
-            .minByOrThrow { distanceToRectFrame(to: $0.rect) }
-            .monitor
+        let monitors = monitors
+        return monitors.first(where: { $0.rect.contains(self) })
+            ?? monitors.minByOrThrow { distanceToRectFrame(to: $0.rect) }
     }
 }
 
