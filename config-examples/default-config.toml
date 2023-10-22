@@ -9,7 +9,6 @@ auto-flatten-containers = true
 auto-opposite-orientation-for-nested-containers = true
 start-at-login = false
 floating-windows-on-top = true
-focus-wrapping = 'workspace' # todo doesn't work yet
 main-layout = 'h_list' # todo change
 DEBUG-all-windows-are-floating = false
 accordion-padding = 30 # todo dp?

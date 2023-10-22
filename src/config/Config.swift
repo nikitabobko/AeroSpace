@@ -18,7 +18,6 @@ struct Config {
     var autoFlattenContainers: Bool
     var floatingWindowsOnTop: Bool
     var mainLayout: ConfigLayout // todo rename to defaultLayout
-    var focusWrapping: FocusWrapping
     var debugAllWindowsAreFloating: Bool
     var startAtLogin: Bool
     var accordionPadding: Int
@@ -26,12 +25,6 @@ struct Config {
 
     let modes: [String: Mode]
     var preservedWorkspaceNames: [String]
-}
-
-enum FocusWrapping: String { // todo think about mental model
-    case disable
-    case workspace
-    case container
 }
 
 enum ConfigLayout: String {

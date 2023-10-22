@@ -11,7 +11,6 @@ func setUpWorkspacesForTests() {
         autoFlattenContainers: false, // Make layout tests more predictable
         floatingWindowsOnTop: defaultConfig.floatingWindowsOnTop,
         mainLayout: .h_list, // Make default layout predictable
-        focusWrapping: defaultConfig.focusWrapping,
         debugAllWindowsAreFloating: defaultConfig.debugAllWindowsAreFloating,
         startAtLogin: defaultConfig.startAtLogin,
         accordionPadding: defaultConfig.accordionPadding,

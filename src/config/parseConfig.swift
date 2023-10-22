@@ -75,9 +75,6 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
     let key5 = "main-layout"
     var value5: ConfigLayout? = nil
 
-    let key6 = "focus-wrapping"
-    var value6: FocusWrapping? = nil
-
     let key7 = "DEBUG-all-windows-are-floating"
     var value7: Bool? = nil
 
@@ -106,8 +103,6 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
             (value4, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
         case key5:
             (value5, errors) = parseMainLayout(value, backtrace).prependErrorsAndUnwrap(errors)
-        case key6:
-            (value6, errors) = parseFocusWrapping(value, backtrace).prependErrorsAndUnwrap(errors)
         case key7:
             (value7, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
         case key8:
@@ -134,7 +129,6 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
         autoFlattenContainers: value3 ?? defaultConfig.autoFlattenContainers,
         floatingWindowsOnTop: value4 ?? defaultConfig.floatingWindowsOnTop,
         mainLayout: value5 ?? defaultConfig.mainLayout,
-        focusWrapping: value6 ?? defaultConfig.focusWrapping,
         debugAllWindowsAreFloating: value7 ?? defaultConfig.debugAllWindowsAreFloating,
         startAtLogin: value8 ?? defaultConfig.startAtLogin,
         accordionPadding: value12 ?? defaultConfig.accordionPadding,
@@ -156,12 +150,6 @@ private func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -
 
 private func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<String> {
     raw.string.orFailure { expectedActualTypeError(expected: .string, actual: raw.type, backtrace) }
-}
-
-private func parseFocusWrapping(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<FocusWrapping> {
-    parseString(raw, backtrace).flatMap {
-        FocusWrapping(rawValue: $0).orFailure { .semantic(backtrace, "Can't parse focus wrapping") }
-    }
 }
 
 private func parseMainLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<ConfigLayout> {
