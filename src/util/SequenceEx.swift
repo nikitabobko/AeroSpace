@@ -13,7 +13,7 @@ extension Sequence {
         return result
     }
 
-    func mapOrFailure<T, E>(_ transform: (Self.Element) throws -> Result<T, E>) rethrows -> Result<[T], E> {
+    func mapAllOrFailure<T, E>(_ transform: (Self.Element) throws -> Result<T, E>) rethrows -> Result<[T], E> {
         var result: [T] = []
         for element in self {
             switch try transform(element) {

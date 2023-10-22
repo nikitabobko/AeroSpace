@@ -7,7 +7,7 @@ func parseCommand(_ raw: TOMLValueConvertible) -> ParsedCommand<Command> {
     if let rawString = raw.string {
         return parseSingleCommand(rawString)
     } else if let rawArray = raw.array {
-        let commands: ParsedCommand<[Command]> = (0..<rawArray.count).mapOrFailure { index in
+        let commands: ParsedCommand<[Command]> = (0..<rawArray.count).mapAllOrFailure { index in
             let rawString: String = rawArray[index].string ?? expectedActualTypeError(expected: .string, actual: rawArray[index].type)
             return parseSingleCommand(rawString)
         }
@@ -19,7 +19,7 @@ func parseCommand(_ raw: TOMLValueConvertible) -> ParsedCommand<Command> {
 
 private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
     let words = raw.split(separator: " ")
-    let args = words[1...]
+    let args = words[1...].map { String($0) }
     let firstWord = String(words.first ?? "")
     if firstWord == "workspace" {
         return parseSingleArg(args, firstWord).map { WorkspaceCommand(workspaceName: $0) }
@@ -36,7 +36,15 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
             .flatMap { MoveWorkspaceToDisplayCommand.DisplayTarget(rawValue: $0).orFailure("Can't parse '\(firstWord)' display target") }
             .map { MoveWorkspaceToDisplayCommand(displayTarget: $0) }
     } else if firstWord == "resize" {
-        error("'resize' command doesn't work yet")
+        let arg1 = args.getOrNil(atIndex: 0).orFailure("''\(firstWord)' must have two parameters")
+            .flatMap { ResizeCommand.Dimension(rawValue: String($0)).orFailure("Can't parse '\(firstWord)' first arg") }
+        let arg2 = args.getOrNil(atIndex: 1).orFailure("''\(firstWord)' must have two parameters")
+            .flatMap { Int($0).orFailure("Can't parse '\(firstWord)' second arg") }
+        return arg1.flatMap { arg1 in
+            arg2.map { arg2 in
+                ResizeCommand(dimension: arg1, diff: arg2)
+            }
+        }
     } else if firstWord == "exec-and-wait" {
         return .success(ExecAndWaitCommand(bashCommand: raw.removePrefix(firstWord)))
     } else if firstWord == "exec-and-forget" {
@@ -50,7 +58,7 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
             .flatMap { CardinalDirection(rawValue: $0).orFailure("Can't parse '\(firstWord)' direction") }
             .map { MoveThroughCommand(direction: $0) }
     } else if firstWord == "layout" {
-        return args.mapOrFailure { parseLayout(String($0)) }
+        return args.mapAllOrFailure { parseLayout(String($0)) }
             .flatMap {
                 (LayoutCommand(toggleBetween: $0) as Command?).orFailure("Can't create layout command") // todo nicer message
             }
@@ -73,8 +81,8 @@ func parseLayout(_ raw: String) -> ParsedCommand<ConfigLayout> {
     ConfigLayout(rawValue: raw).orFailure("Can't parse layout '\(raw)'")
 }
 
-private func parseSingleArg(_ args: ArraySlice<Swift.String.SubSequence>, _ command: String) -> ParsedCommand<String> {
-    args.singleOrNil().map { String($0) }.orFailure {
+private func parseSingleArg(_ args: [String], _ command: String) -> ParsedCommand<String> {
+    args.singleOrNil().orFailure {
         "\(command) must have only a single argument. But passed: '\(args.joined(separator: " "))'"
     }
 }

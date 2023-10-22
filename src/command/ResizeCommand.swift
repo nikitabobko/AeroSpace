@@ -1,28 +1,44 @@
 struct ResizeCommand: Command { // todo cover with tests
-    enum Dimension {
+    enum Dimension: String {
         case width, height, smart
     }
 
     let dimension: Dimension
-    let units: CGFloat
+    let diff: Int
 
-    func runWithoutRefresh() {
+    func runWithoutRefresh() { // todo support key repeat
         precondition(Thread.current.isMainThread)
         guard let window = focusedWindowOrEffectivelyFocused else { return }
 
-        let orientation: Orientation
-        switch dimension {
-        case .width:
-             orientation = .H
-        case .height:
-            orientation = .V
-        case .smart:
-            // todo
-            //orientation = window.parent
-            orientation = .H
-            break
-        }
+        switch window.parent.kind {
+        case .tilingContainer(let directParent):
+            let orientation: Orientation
+            let parent: TilingContainer
+            switch dimension {
+            case .width:
+                orientation = .H
+                guard let first = window.parents.filterIsInstance(of: TilingContainer.self)
+                    .first(where: { $0.orientation == orientation }) else { return }
+                parent = first
+            case .height:
+                orientation = .V
+                guard let first = window.parents.filterIsInstance(of: TilingContainer.self)
+                    .first(where: { $0.orientation == orientation }) else { return }
+                parent = first
+            case .smart:
+                parent = directParent
+                orientation = parent.orientation
+            }
+            let diff = CGFloat(diff)
 
-        window.setWeight(orientation, window.getWeight(orientation) + units)
+            guard let childDiff = diff.div(parent.children.count - 1) else { return }
+            parent.children.lazy
+                .filter { $0 != window }
+                .forEach { $0.setWeight(parent.orientation, $0.getWeight(parent.orientation) - childDiff) }
+
+            window.setWeight(orientation, window.getWeight(orientation) + diff)
+        case .workspace:
+            return // todo support floating windows
+        }
     }
 }

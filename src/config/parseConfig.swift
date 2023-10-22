@@ -236,7 +236,7 @@ private func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktra
 private func parseBinding(_ raw: String, _ backtrace: TomlBacktrace) -> ParsedTomlResult<(NSEvent.ModifierFlags, Key)> {
     let rawKeys = raw.split(separator: "-")
     let modifiers: ParsedTomlResult<NSEvent.ModifierFlags> = rawKeys.dropLast()
-        .mapOrFailure {
+        .mapAllOrFailure {
             modifiersMap[String($0)].orFailure { .semantic(backtrace, "Can't parse modifiers in '\(raw)' binding") }
         }
         .map { NSEvent.ModifierFlags($0) }
