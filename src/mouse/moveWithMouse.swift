@@ -42,21 +42,19 @@ private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
 
 func swapWindows(_ window1: Window, _ window2: Window) {
     if window1 == window2 { return }
-    let parent1 = window1.parent
-    let parent2 = window2.parent
 
     if window1.ownIndex < window2.ownIndex {
         let binding2 = window2.unbindFromParent()
         let binding1 = window1.unbindFromParent()
 
-        window2.bindTo(parent: parent1, adaptiveWeight: binding1.adaptiveWeight, index: binding1.index)
-        window1.bindTo(parent: parent2, adaptiveWeight: binding2.adaptiveWeight, index: binding2.index)
+        window2.bindTo(parent: binding1.parent, adaptiveWeight: binding1.adaptiveWeight, index: binding1.index)
+        window1.bindTo(parent: binding2.parent, adaptiveWeight: binding2.adaptiveWeight, index: binding2.index)
     } else {
         let binding1 = window1.unbindFromParent()
         let binding2 = window2.unbindFromParent()
 
-        window1.bindTo(parent: parent2, adaptiveWeight: binding2.adaptiveWeight, index: binding2.index)
-        window2.bindTo(parent: parent1, adaptiveWeight: binding1.adaptiveWeight, index: binding1.index)
+        window1.bindTo(parent: binding2.parent, adaptiveWeight: binding2.adaptiveWeight, index: binding2.index)
+        window2.bindTo(parent: binding1.parent, adaptiveWeight: binding1.adaptiveWeight, index: binding1.index)
     }
 }
 

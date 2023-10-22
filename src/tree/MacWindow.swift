@@ -20,23 +20,8 @@ final class MacWindow: Window, CustomStringConvertible {
         if let existing = allWindowsMap[id] {
             return existing
         } else {
-            let workspace: Workspace = Workspace.focused
-            let parent: NonLeafTreeNode
-            let index: Int
-            if shouldFloat(axWindow) {
-                parent = workspace
-                index = INDEX_BIND_LAST
-            } else {
-                let mruWindow = workspace.mostRecentWindow
-                if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
-                    parent = tilingParent
-                    index = mruWindow.ownIndex + 1
-                } else {
-                    parent = workspace.rootTilingContainer
-                    index = INDEX_BIND_LAST
-                }
-            }
-            let window = MacWindow(id, app, axWindow, parent: parent, adaptiveWeight: WEIGHT_AUTO, index: index)
+            let data = getBindingDataForNewWindow(axWindow, Workspace.focused)
+            let window = MacWindow(id, app, axWindow, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
 
             if window.observe(destroyedObs, kAXUIElementDestroyedNotification) &&
                        window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
@@ -162,6 +147,25 @@ func shouldFloat(_ axWindow: AXUIElement) -> Bool {
     //
     // Minimized windows or windows of a hidden app have subrole "AXDialog"
     axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole || config.debugAllWindowsAreFloating
+}
+
+func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace) -> BindingData {
+    let parent: NonLeafTreeNode
+    let index: Int
+    if shouldFloat(axWindow) {
+        parent = workspace
+        index = INDEX_BIND_LAST
+    } else {
+        let mruWindow = workspace.mostRecentWindow
+        if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
+            parent = tilingParent
+            index = mruWindow.ownIndex + 1
+        } else {
+            parent = workspace.rootTilingContainer
+            index = INDEX_BIND_LAST
+        }
+    }
+    return BindingData(parent: parent, adaptiveWeight: WEIGHT_AUTO, index: index)
 }
 
 extension UnsafeMutableRawPointer {

@@ -11,9 +11,8 @@ private extension TilingContainer {
     func unbindEmptyAndAutoFlatten() {
         if let child = children.singleOrNil(), config.autoFlattenContainers && (child is TilingContainer || !isRootContainer) {
             child.unbindFromParent()
-            let parent = parent
             let previousBinding = unbindFromParent()
-            child.bindTo(parent: parent, adaptiveWeight: previousBinding.adaptiveWeight, index: previousBinding.index)
+            child.bindTo(parent: previousBinding.parent, adaptiveWeight: previousBinding.adaptiveWeight, index: previousBinding.index)
             (child as? TilingContainer)?.unbindEmptyAndAutoFlatten()
         } else {
             for child in children {

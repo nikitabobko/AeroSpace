@@ -31,7 +31,7 @@ extension Window {
     var isFloating: Bool { parent is Workspace } // todo drop. It will be a source of bugs when sticky is introduced
 
     @discardableResult
-    func bindAsFloatingWindowTo(workspace: Workspace) -> PreviousBindingData? {
+    func bindAsFloatingWindowTo(workspace: Workspace) -> BindingData? {
         parent != workspace ? bindTo(parent: workspace, adaptiveWeight: WEIGHT_AUTO) : nil
     }
 

@@ -55,7 +55,7 @@ class TreeNode: Equatable {
     }
 
     @discardableResult
-    func bindTo(parent newParent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int = INDEX_BIND_LAST) -> PreviousBindingData? { // todo make index parameter mandatory
+    func bindTo(parent newParent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int = INDEX_BIND_LAST) -> BindingData? { // todo make index parameter mandatory
         if _parent === newParent {
             error("Binding to the same parent doesn't make sense")
         }
@@ -92,14 +92,14 @@ class TreeNode: Equatable {
         return result
     }
 
-    private func unbindIfPossible() -> PreviousBindingData? {
+    private func unbindIfPossible() -> BindingData? {
         guard let _parent else { return nil }
 
         let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
         precondition(_parent._mruChildren.remove(self))
         self._parent = nil
 
-        return PreviousBindingData(adaptiveWeight: adaptiveWeight, index: index)
+        return BindingData(parent: _parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
     func markAsMostRecentChild() {
@@ -115,7 +115,7 @@ class TreeNode: Equatable {
     }
 
     @discardableResult
-    func unbindFromParent() -> PreviousBindingData {
+    func unbindFromParent() -> BindingData {
         unbindIfPossible() ?? errorT("\(self) is already unbinded")
     }
 
@@ -148,7 +148,8 @@ let WEIGHT_AUTO = CGFloat(-1)
 
 let INDEX_BIND_LAST = -1
 
-struct PreviousBindingData {
+struct BindingData {
+    let parent: NonLeafTreeNode
     let adaptiveWeight: CGFloat
     let index: Int
 }
