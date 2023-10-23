@@ -9,10 +9,8 @@ struct ModeCommand: Command {
 
 var activeMode: String = mainModeId
 func activateMode(_ modeToActivate: String) {
-    for (modeId, mode) in config.modes {
-        if modeId != modeToActivate {
-            mode.deactivate()
-        }
+    for (_, mode) in config.modes {
+        mode.deactivate()
     }
     for binding in config.modes[modeToActivate]?.bindings ?? [] {
         binding.activate()
