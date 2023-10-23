@@ -52,7 +52,7 @@ enum TomlParseError: Error, CustomStringConvertible {
         case .semantic(let backtrace, let message):
             return "\(backtrace): \(message)"
         case .syntax(let message):
-            return "TOML parse error: \(message)"
+            return message
         }
     }
 }

@@ -101,7 +101,7 @@ final class ConfigTest: XCTestCase {
         let errors = parseConfig("true").log
         XCTAssertEqual(
             errors.descriptions,
-            ["TOML parse error: Error while parsing key-value pair: encountered end-of-file (at line 1, column 5)"]
+            ["Error while parsing key-value pair: encountered end-of-file (at line 1, column 5)"]
         )
     }
 }
