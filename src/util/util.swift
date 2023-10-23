@@ -5,12 +5,45 @@ func stringType(of some: Any) -> String {
     return string
 }
 
-@inlinable func errorT<T>(_ message: String = "") -> T {
-    Thread.callStackSymbols.forEach { print($0) }
+@inlinable func errorT<T>(
+    _ message: String = "",
+    file: String = #file,
+    line: Int = #line,
+    column: Int = #column,
+    function: String = #function
+) -> T {
+    let message =
+        """
+        ###############################
+        ### AEROSPACE RUNTIME ERROR ###
+        ###############################
+
+        Please report to:
+            https://github.com/nikitabobko/AeroSpace/issues/new
+
+        Message: \(message)
+        Version: \(Bundle.appVersion)
+        Coordinate: \(file):\(line):\(column) \(function)
+
+        Stacktrace:
+        \(Thread.callStackSymbols.joined(separator: "\n"))
+        """
+    showMessageToUser(
+        filename: "runtime-error.txt",
+        message: message
+    )
     fatalError(message)
 }
 
-@inlinable func error(_ message: String = "") -> Never { errorT(message) }
+@inlinable func error(
+    _ message: String = "",
+    file: String = #file,
+    line: Int = #line,
+    column: Int = #column,
+    function: String = #function
+) -> Never {
+    errorT(message, file: file, line: line, column: column, function: function)
+}
 
 extension String? {
     var isNilOrEmpty: Bool { self == nil || self == "" }

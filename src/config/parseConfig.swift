@@ -8,7 +8,7 @@ func reloadConfig() {
 
     if !parsedConfig.log.isEmpty {
         activateMode(mainModeId)
-        showErrorsToUser(parsedConfig.log, configUrl: configUrl)
+        showConfigParsingErrorsToUser(parsedConfig.log, configUrl: configUrl)
         return
     }
     config = parsedConfig.value
@@ -18,28 +18,20 @@ func reloadConfig() {
     }
 }
 
-private func showErrorsToUser(_ errors: [TomlParseError], configUrl: URL) {
-    let cachesDir = FileManager.default.homeDirectoryForCurrentUser.appending(component: "Library/Caches/bobko.aerospace/")
-    try! FileManager.default.createDirectory(at: cachesDir, withIntermediateDirectories: true)
-    let configParseError = cachesDir.appending(component: "config-parse-error.txt")
-    let header = """
-    ############################################################
-    ### AEROSPACE CONFIG PARSE ERROR. SEE THE MESSAGES BELOW ###
-    ############################################################
-    Failed to parse \(configUrl.absoluteURL.path)
-    """
-    try! ("\(header)\n\n" + errors.map(\.description).joined(separator: "\n") + "\n")
-        .write(to: configParseError, atomically: false, encoding: .utf8)
-    try! Process.run(URL(filePath: "/usr/bin/osascript"),
-        arguments: [
-            "-e",
-            """
-            tell app "Terminal"
-                activate
-                do script "less \(configParseError.absoluteURL.path)"
-            end tell
-            """
-        ]
+private func showConfigParsingErrorsToUser(_ errors: [TomlParseError], configUrl: URL) {
+    let message =
+        """
+        ####################################
+        ### AEROSPACE CONFIG PARSE ERROR ###
+        ####################################
+
+        Failed to parse \(configUrl.absoluteURL.path)
+
+        \(errors.map(\.description).joined(separator: "\n"))
+        """
+    showMessageToUser(
+        filename: "config-parse-error.txt",
+        message: message
     )
 }
 
