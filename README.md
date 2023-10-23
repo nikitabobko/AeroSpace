@@ -2,7 +2,7 @@
 
 AeroSpace is a tiling window manager for macOS.
 
-## Status
+## Project status
 
 🚧 **Work in progress.** Not usable yet 🚧
 
@@ -14,13 +14,16 @@ I will publish first release once I believe it's usable, so subscribe to release
 
 - **Manual** tiling window manager
 - [i3](https://i3wm.org/) inspired
-- AeroSpace employs its **own emulation of virtual workspaces** instead of relying on native macOS Spaces due to
+- AeroSpace employs its [own emulation of virtual workspaces](./docs/guide.md#emulation-of-virtual-workspaces) instead of relying
+  on native macOS Spaces due to
   their considerable limitations
 - Plain text configuration (dotfiles friendly)
 - **[PLANNED]** CLI scriptable
 - Doesn't require disabling SIP (System Integrity Protection)
 - Proper multi-monitor support (i3-like paradigm)
 - Status menu icon displays current workspace name
+
+## [AeroSpace Guide](./docs/guide.md)
 
 ## How to build the project
 
@@ -37,43 +40,43 @@ Firstly, install [xcodegen](https://github.com/yonaskolb/XcodeGen). Then run in 
 ./run-tests.sh
 ```
 
-## Todo
+## Values of the project
 
-- is dialog, is resizable, is modal?
-- select parent and kill several windows at once
-- select parent -> outline several windows?
-  - OR: outline with "SLSSetWindowOpacity"
-  - OR: "shake" windows
-- CLI interface
-- Check all todos in code
-- move vs swap
-- what is src/Assets.xcassets ?
-- license
-- unminimize apps automatically
-- minimized apps handling
-- macOS fullscreen apps handling
-- unhide apps automatically
+**Values**
+- AeroSpace is targeted at advanced users and developers
+- Keyboard centric
+- Never break configuration files or existing workflows (Guaranteed once AeroSpace reaches 1.0 version)
+- AeroSpace doesn't use GUI, unless necessarily
+  - AeroSpace will never provide a GUI for configuration. For advanced users, it's easier to edit a configuration file in text
+    editor rather than navigating through checkboxes in GUI.
+  - Status menu icon is ok, because visual feedback is needed
+- Provide _practical_ features. Fancy appearance features are not _practical_
+- If "dark magic" (aka "private APIs", "code injections", etc) can be avoided, it must be avoided
+  - Right now, AeroSpace uses only a [single private API](./src/Bridged-Header.h). Everything else is [macOS public accessibility
+    API](https://developer.apple.com/documentation/applicationservices/axuielement_h).
+  - AeroSpace will never require you to disable SIP (System Integrity Protection). For example, yabai [requires you to disable
+    SIP](https://github.com/koekeishiya/yabai/issues/1863) to use some of its features. AeroSpace will either find another way
+    (e.g. [emulation of workspaces](./docs/guide.md#emulation-of-virtual-workspaces)) or will not implement this feature at all
+    (window transparency and window shadowing are not _practical_ features)
 
-## Challenges
+**Non Values**
+- Play nicely with existing macOS features. If limitations are imposed then AeroSpace won't play nicely with existing macOS
+  features
+  - E.g. AeroSpace doesn't acknowledge the existence of macOS Spaces, and it uses [emulation of its own
+    workspaces](./docs/guide.md#emulation-of-virtual-workspaces)
 
-- Window overlapping
-- "floating" window layout
-- windows' min/max sizes
+## Tip of the day
 
-## Known Special windows to check
+```bash
+defaults write -g NSWindowShouldDragOnGesture YES
+```
 
-- XCode welcome screen
-- Finder preview
-- Finder tabs
-- Chrome create bookmark window
-- Toolbox window
-- IntelliJ dialog windows (e.g. "Add to git")
-- IntelliJ project structure modal window blocks main window resize
-- VLC full screen window (eh, I wish every fullscreen window in macOS worked like that)
-- iTerm drop down window
-- Chrome cmd+f window
+Now, you can move windows by holding `ctrl`+`cmd` and dragging any part of the window (not necessarily the window title)
 
-## Limitations of macOS API
+Source: [reddit](https://www.reddit.com/r/MacOS/comments/k6hiwk/keyboard_modifier_to_simplify_click_drag_of/)
 
-- It's not possible to find to what monitor window is assigned
-- It's not possible to __reliably__ know what monitor is currently active
+## Related projects
+
+If AeroSpace doesn't work for you, take a look at projects by other authors:
+- [Amethyst](https://github.com/ianyh/Amethyst)
+- [yabai](https://github.com/koekeishiya/yabai)

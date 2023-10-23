@@ -1,25 +1,49 @@
-# For all possible keys and modifiers see: https://github.com/nikitabobko/AeroSpace/blob/main/src/config/keysMap.swift
+# You can use it to add commands that run after login to macOS user session.
+# 'start-at-login' needs to be 'true' for 'after-login-command' to work
+# For the list of available commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
+after-login-command = []
 
-# todo review defaults
+# You can use it to add commands that run after AeroSpace startup.
+# 'after-startup-command' is run after 'after-login-command'
+# For the list of available commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
+after-startup-command = []
 
-after-login-command = [] # You can use it to add command or commands that run after login to macOS user session.
-after-startup-command = [] # You can use it to add command or commands that run after startup.
+# Visual indent makes it easier to understand that containers of the same orientation are nested.
+# If you have 'auto-opposite-orientation-for-nested-containers' enabled then there is no way to observe the indent
 indent-for-nested-containers-with-the-same-orientation = 30
+
+# todo Not tested
+start-at-login = false
+
+# todo drop. I don't see any value in providing configuration for this option. Why would anyone may want to set it
+#  to 'false'?
+floating-windows-on-top = true
+
+# Normalization. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
-start-at-login = false
-floating-windows-on-top = true
-main-layout = 'h_list' # todo change
-DEBUG-all-windows-are-floating = false # todo drop
-accordion-padding = 30 # todo dp?
 
+# Accordion is a layout where windows are placed on top of each other.
+# - Horizontal accordion puts paddings on left and right to make it clear that containers exist in these directions
+# - Vertical accordion puts paddings on above and below to make it clear that containers exist in these directions
+# The 'accordion-padding' specifies the size of the padding. You can set 0 to disable the padding feature
+accordion-padding = 30
+main-layout = 'h_list' # TODO SUBJECT TO CHANGE
+
+# DEBUG KEY. DON'T USE IT
+DEBUG-all-windows-are-floating = false # TODO DROP
+
+# It's a declaration of 'main' binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
+# 'main' binding mode must be always presented
 [mode.main.binding]
+
+# For all possible keys and modifiers see: https://github.com/nikitabobko/AeroSpace/blob/main/src/config/keysMap.swift
+# For all possible commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
+
 alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
 alt-slash = 'layout h_list v_list' # todo layout vs change-parent-container-kind
 alt-comma = 'layout h_accordion v_accordion'
-
-# todo focus floating binding
 
 alt-h = 'focus left'
 alt-j = 'focus down'
@@ -106,6 +130,7 @@ alt-shift-z = 'move-container-to-workspace Z'
 alt-tab = 'workspace-back-and-forth'
 alt-shift-tab = 'move-workspace-to-display next'
 
+# It's a declaration of binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 [mode.service.binding]
 r = ['flatten-workspace-tree', 'mode main']
 o = ['reload-config', 'mode main']
@@ -115,6 +140,7 @@ backslash = ['close-all-windows-but-current', 'mode main']
 esc = 'mode main'
 enter = 'mode main'
 
+# It's a declaration of binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 [mode.move-in.binding]
 alt-shift-h = ['move-in left', 'mode main']
 alt-shift-j = ['move-in down', 'mode main']
