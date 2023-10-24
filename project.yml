@@ -32,10 +32,10 @@ targets:
       configs:
         debug:
           PRODUCT_NAME: AeroSpace-Debug
-          PRODUCT_BUNDLE_IDENTIFIER: bobko.debug.AeroSpace
+          PRODUCT_BUNDLE_IDENTIFIER: bobko.debug.aerospace
         release:
           PRODUCT_NAME: AeroSpace
-          PRODUCT_BUNDLE_IDENTIFIER: bobko.AeroSpace
+          PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace
           CODE_SIGN_IDENTITY: Apple Development
           "CODE_SIGN_IDENTITY[sdk=macosx*]": Apple Development
           DEVELOPMENT_TEAM: 4MWP47XA68 # Team: Nikita Bobko (Personal Team)
