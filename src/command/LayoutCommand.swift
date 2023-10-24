@@ -20,7 +20,7 @@ struct LayoutCommand: Command {
         switch window.parent.kind {
         case .tilingContainer(let parent):
             parent.layout = targetLayout?.simpleLayout ?? errorT("TODO")
-            if config.autoOppositeOrientationForNestedContainers {
+            if config.enableNormalizationOppositeOrientationForNestedContainers {
                 var orientation = targetLayout?.orientation ?? errorT("TODO")
                 parent.parentsWithSelf
                     .prefix(while: { $0 is TilingContainer })

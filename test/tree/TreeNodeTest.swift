@@ -39,12 +39,12 @@ final class TreeNodeTest: XCTestCase {
         }
         test()
 
-        config.autoFlattenContainers = true
+        config.enableNormalizationFlattenContainers = true
         test()
     }
 
     func testNormalizeContainers_singleWindowChild() {
-        config.autoFlattenContainers = true
+        config.enableNormalizationFlattenContainers = true
         let workspace = Workspace.get(byName: name)
         workspace.rootTilingContainer.apply {
             TestWindow(id: 0, parent: $0)
@@ -81,7 +81,7 @@ final class TreeNodeTest: XCTestCase {
         workspace.normalizeContainers()
         XCTAssertTrue(workspace.rootTilingContainer.children.singleOrNil() is TilingContainer)
 
-        config.autoFlattenContainers = true
+        config.enableNormalizationFlattenContainers = true
         workspace.normalizeContainers()
         XCTAssertTrue(workspace.rootTilingContainer.children.singleOrNil() is TestWindow)
     }

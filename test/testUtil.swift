@@ -8,13 +8,13 @@ func setUpWorkspacesForTests() {
         afterStartupCommand: defaultConfig.afterStartupCommand,
         afterLoginCommand: defaultConfig.afterLoginCommand,
         indentForNestedContainersWithTheSameOrientation: defaultConfig.indentForNestedContainersWithTheSameOrientation,
-        autoFlattenContainers: false, // Make layout tests more predictable
+        enableNormalizationFlattenContainers: false, // Make layout tests more predictable
         floatingWindowsOnTop: defaultConfig.floatingWindowsOnTop,
         mainLayout: .h_list, // Make default layout predictable
         debugAllWindowsAreFloating: defaultConfig.debugAllWindowsAreFloating,
         startAtLogin: defaultConfig.startAtLogin,
         accordionPadding: defaultConfig.accordionPadding,
-        autoOppositeOrientationForNestedContainers: false, // Make layout tests more predictable
+        enableNormalizationOppositeOrientationForNestedContainers: false, // Make layout tests more predictable
 
         // Don't create any workspaces for tests
         modes: [mainModeId: Mode(name: nil, bindings: [])],

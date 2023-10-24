@@ -15,13 +15,13 @@ struct Config {
     var afterStartupCommand: Command
     var afterLoginCommand: Command
     var indentForNestedContainersWithTheSameOrientation: Int
-    var autoFlattenContainers: Bool
+    var enableNormalizationFlattenContainers: Bool
     var floatingWindowsOnTop: Bool
     var mainLayout: ConfigLayout // todo rename to defaultLayout
     var debugAllWindowsAreFloating: Bool
     var startAtLogin: Bool
     var accordionPadding: Int
-    var autoOppositeOrientationForNestedContainers: Bool
+    var enableNormalizationOppositeOrientationForNestedContainers: Bool
 
     let modes: [String: Mode]
     var preservedWorkspaceNames: [String]

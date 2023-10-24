@@ -91,7 +91,7 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
     let key2 = "indent-for-nested-containers-with-the-same-orientation"
     var value2: Int? = nil
 
-    let key3 = "auto-flatten-containers"
+    let key3 = "enable-normalization-flatten-containers"
     var value3: Bool? = nil
 
     let key4 = "floating-windows-on-top"
@@ -112,7 +112,7 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
     let key12 = "accordion-padding"
     var value12: Int? = nil
 
-    let key13 = "auto-opposite-orientation-for-nested-containers"
+    let key13 = "enable-normalization-opposite-orientation-for-nested-containers"
     var value13: Bool? = nil
 
     for (key, value) in rawTable {
@@ -151,13 +151,13 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
         afterStartupCommand: value1 ?? defaultConfig.afterStartupCommand,
         afterLoginCommand: value9 ?? defaultConfig.afterLoginCommand,
         indentForNestedContainersWithTheSameOrientation: value2 ?? defaultConfig.indentForNestedContainersWithTheSameOrientation,
-        autoFlattenContainers: value3 ?? defaultConfig.autoFlattenContainers,
+        enableNormalizationFlattenContainers: value3 ?? defaultConfig.enableNormalizationFlattenContainers,
         floatingWindowsOnTop: value4 ?? defaultConfig.floatingWindowsOnTop,
         mainLayout: value5 ?? defaultConfig.mainLayout,
         debugAllWindowsAreFloating: value7 ?? defaultConfig.debugAllWindowsAreFloating,
         startAtLogin: value8 ?? defaultConfig.startAtLogin,
         accordionPadding: value12 ?? defaultConfig.accordionPadding,
-        autoOppositeOrientationForNestedContainers: value13 ?? defaultConfig.autoOppositeOrientationForNestedContainers,
+        enableNormalizationOppositeOrientationForNestedContainers: value13 ?? defaultConfig.enableNormalizationOppositeOrientationForNestedContainers,
 
         modes: modesOrDefault,
         preservedWorkspaceNames: modesOrDefault.values.lazy

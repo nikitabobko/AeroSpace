@@ -1,7 +1,7 @@
 extension Workspace {
     func normalizeContainers() {
         rootTilingContainer.unbindEmptyAndAutoFlatten() // Beware! rootTilingContainer may change after this line of code
-        if config.autoOppositeOrientationForNestedContainers {
+        if config.enableNormalizationOppositeOrientationForNestedContainers {
             rootTilingContainer.normalizeOppositeOrientationForNestedContainers()
         }
     }
@@ -9,7 +9,7 @@ extension Workspace {
 
 private extension TilingContainer {
     func unbindEmptyAndAutoFlatten() {
-        if let child = children.singleOrNil(), config.autoFlattenContainers && (child is TilingContainer || !isRootContainer) {
+        if let child = children.singleOrNil(), config.enableNormalizationFlattenContainers && (child is TilingContainer || !isRootContainer) {
             child.unbindFromParent()
             let previousBinding = unbindFromParent()
             child.bindTo(parent: previousBinding.parent, adaptiveWeight: previousBinding.adaptiveWeight, index: previousBinding.index)

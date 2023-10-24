@@ -6,7 +6,7 @@ final class ConfigTest: XCTestCase {
         let toml = try! String(contentsOf: projectRoot.appending(component: "config-examples/i3-like-config-example.toml"))
         let (i3Config, errors) = parseConfig(toml).toTuple()
         XCTAssertEqual(errors.descriptions, [])
-        XCTAssertEqual(i3Config.autoFlattenContainers, false)
+        XCTAssertEqual(i3Config.enableNormalizationFlattenContainers, false)
     }
 
     func testParseMode() {
@@ -75,25 +75,25 @@ final class ConfigTest: XCTestCase {
         let (config, errors) = parseConfig(
             """
             unknownKey = true
-            auto-flatten-containers = false
+            enable-normalization-flatten-containers = false
             """
         ).toTuple()
         XCTAssertEqual(
             errors.descriptions,
             ["unknownKey: Unknown key"]
         )
-        XCTAssertEqual(config.autoFlattenContainers, false)
+        XCTAssertEqual(config.enableNormalizationFlattenContainers, false)
     }
 
     func testTypeMismatch() {
         let errors = parseConfig(
             """
-            auto-flatten-containers = 'true'
+            enable-normalization-flatten-containers = 'true'
             """
         ).log
         XCTAssertEqual(
             errors.descriptions,
-            ["auto-flatten-containers: Expected type is \'bool\'. But actual type is \'string\'"]
+            ["enable-normalization-flatten-containers: Expected type is \'bool\'. But actual type is \'string\'"]
         )
     }
 
