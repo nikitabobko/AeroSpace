@@ -23,6 +23,7 @@ func stringType(of some: Any) -> String {
 
         Message: \(message)
         Version: \(Bundle.appVersion)
+        Git hash: \(gitHash)
         Coordinate: \(file):\(line):\(column) \(function)
 
         Stacktrace:
@@ -65,6 +66,12 @@ func terminateApp() -> Never {
 extension String {
     func removePrefix(_ prefix: String) -> String {
         hasPrefix(prefix) ? String(dropFirst(prefix.count)) : self
+    }
+
+    func copyToClipboard() {
+        let pasteboard = NSPasteboard.general
+        pasteboard.declareTypes([.string], owner: nil)
+        pasteboard.setString(self, forType: .string)
     }
 }
 

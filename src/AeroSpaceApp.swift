@@ -28,7 +28,10 @@ struct AeroSpaceApp: App {
 
     var body: some Scene {
         MenuBarExtra {
-            Text("\(Bundle.appName) v\(Bundle.appVersion)")
+            let shortIdentification = "\(Bundle.appName) v\(Bundle.appVersion) \(gitShortHash)"
+            let identification      = "\(Bundle.appName) v\(Bundle.appVersion) \(gitHash)"
+            Text(shortIdentification)
+            Button("Copy to clipboard") { identification.copyToClipboard() }
             Divider()
             Text("Workspaces:")
             ForEach(Workspace.all) { (workspace: Workspace) in

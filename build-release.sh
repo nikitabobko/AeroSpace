@@ -6,8 +6,26 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 
 cd "$(dirname "$0")"
 
+checkCleanGitWorkingDir() {
+    if [ ! -z "$(git status --porcelain)" ]; then
+        echo "git working directory must be clean"
+        exit 1
+    fi
+}
+
+generateGitHash() {
+cat > src/gitHashGenerated.swift <<-EOF
+public let gitHash = "$(git rev-parse HEAD)"
+public let gitShortHash = "$(git rev-parse --short HEAD)"
+EOF
+}
+
 xcodegen # https://github.com/yonaskolb/XcodeGen
+checkCleanGitWorkingDir
+generateGitHash
 xcodebuild -scheme AeroSpace build -configuration Release
+
+git checkout src/gitHashGenerated.swift
 
 rm -rf .build && mkdir .build
 pushd ~/Library/Developer/Xcode/DerivedData > /dev/null
