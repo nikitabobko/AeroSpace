@@ -4,11 +4,24 @@ AeroSpace is a tiling window manager for macOS.
 
 ## Project status
 
-🚧 **Work in progress.** Not usable yet 🚧
+🚧 **Active development** 🚧
 
-I will publish first release once I believe it's usable, so subscribe to releases on GitHub:
+Preproduction quality
+- Expect bugs
+- Expect not polished experience
+- Expect breaking changes in the config format
+- [The documentation](./docs/guide.md) is not yet ready
+  - But [config](./config-examples/default-config.toml) is self-explanatory
+  - If you're familiar with i3, you can already make it usable for yourself
 
-<img src="./docs/.resources/github-subscribe-releases.png" width="40%" height="40%">
+## Installation
+
+1. Download the latest available zip from [releases page](https://github.com/nikitabobko/AeroSpace/releases)
+2. Unpack zip
+3. Move unpacked `AeroSpace.app` to `/Applications`
+
+Homebrew cask will be provided in the future. For now, it's better to subscribe to GitHub releases page to get notifications about
+updates
 
 ## Key features
 
