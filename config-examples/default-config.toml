@@ -1,3 +1,5 @@
+# Place a copy of this config to ~/.aerospace.toml. After that you can edit ~/.aerospace.toml to your liking
+
 # You can use it to add commands that run after login to macOS user session.
 # 'start-at-login' needs to be 'true' for 'after-login-command' to work
 # For the list of available commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
