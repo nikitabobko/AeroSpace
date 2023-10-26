@@ -34,6 +34,9 @@ accordion-padding = 30
 # Possible values: list|accordion
 default-root-container-layout = 'list'
 
+# Possible values: horizontal|vertical|auto
+default-root-container-orientation = 'auto'
+
 # It's a declaration of 'main' binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 # 'main' binding mode must be always presented
 [mode.main.binding]

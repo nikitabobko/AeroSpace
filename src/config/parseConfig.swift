@@ -104,6 +104,7 @@ private let parsers: [String: any ParserProtocol] = [
     "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, { parseBool($0, $1) }),
     "floating-windows-on-top": Parser(\.floatingWindowsOnTop, { parseBool($0, $1) }),
     "default-root-container-layout": Parser(\.defaultRootContainerLayout, { parseLayout($0, $1) }),
+    "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, { parseDefaultContainerOrientation($0, $1) }),
     "start-at-login": Parser(\.startAtLogin, { parseBool($0, $1) }),
     "accordion-padding": Parser(\.accordionPadding, { parseInt($0, $1) }),
     "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, { parseBool($0, $1) }),
@@ -144,6 +145,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         enableNormalizationFlattenContainers: raw.enableNormalizationFlattenContainers ?? defaultConfig.enableNormalizationFlattenContainers,
         floatingWindowsOnTop: raw.floatingWindowsOnTop ?? defaultConfig.floatingWindowsOnTop,
         defaultRootContainerLayout: raw.defaultRootContainerLayout ?? defaultConfig.defaultRootContainerLayout,
+        defaultRootContainerOrientation: raw.defaultRootContainerOrientation ?? defaultConfig.defaultRootContainerOrientation,
         startAtLogin: raw.startAtLogin ?? defaultConfig.startAtLogin,
         accordionPadding: raw.accordionPadding ?? defaultConfig.accordionPadding,
         enableNormalizationOppositeOrientationForNestedContainers: raw.enableNormalizationOppositeOrientationForNestedContainers ?? defaultConfig.enableNormalizationOppositeOrientationForNestedContainers,
@@ -169,6 +171,13 @@ private func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace
 private func parseLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<Layout> {
     parseString(raw, backtrace)
         .flatMap { Layout(rawValue: $0).orFailure(.semantic(backtrace, "Can't parse layout '\($0)'")) }
+}
+
+private func parseDefaultContainerOrientation(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<DefaultContainerOrientation> {
+    parseString(raw, backtrace).flatMap {
+        DefaultContainerOrientation(rawValue: $0)
+            .orFailure(.semantic(backtrace, "Can't parse default container orientation '\($0)'"))
+    }
 }
 
 private func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: Mode] {
