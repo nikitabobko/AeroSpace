@@ -10,7 +10,7 @@ struct RawConfig: Copyable {
     var indentForNestedContainersWithTheSameOrientation: Int?
     var enableNormalizationFlattenContainers: Bool?
     var floatingWindowsOnTop: Bool?
-    var mainLayout: ConfigLayout?
+    var defaultRootContainerLayout: Layout?
     var startAtLogin: Bool?
     var accordionPadding: Int?
     var enableNormalizationOppositeOrientationForNestedContainers: Bool?
@@ -21,13 +21,17 @@ struct Config {
     var indentForNestedContainersWithTheSameOrientation: Int
     var enableNormalizationFlattenContainers: Bool
     var floatingWindowsOnTop: Bool
-    var mainLayout: ConfigLayout // todo rename to defaultLayout
+    var defaultRootContainerLayout: Layout
     var startAtLogin: Bool
     var accordionPadding: Int
     var enableNormalizationOppositeOrientationForNestedContainers: Bool
 
     let modes: [String: Mode]
     var preservedWorkspaceNames: [String]
+}
+
+enum RootContainerOrientation: String {
+    case horizontal, vertical
 }
 
 enum ConfigLayout: String {

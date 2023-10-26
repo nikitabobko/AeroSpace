@@ -30,7 +30,9 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # - Vertical accordion puts paddings on above and below to make it clear that containers exist in these directions
 # The 'accordion-padding' specifies the size of the padding. You can set 0 to disable the padding feature
 accordion-padding = 30
-main-layout = 'h_list' # TODO SUBJECT TO CHANGE
+
+# Possible values: list|accordion
+default-root-container-layout = 'list'
 
 # It's a declaration of 'main' binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 # 'main' binding mode must be always presented

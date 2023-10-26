@@ -58,7 +58,7 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
             .flatMap { CardinalDirection(rawValue: $0).orFailure("Can't parse '\(firstWord)' direction") }
             .map { MoveThroughCommand(direction: $0) }
     } else if firstWord == "layout" {
-        return args.mapAllOrFailure { parseLayout(String($0)) }
+        return args.mapAllOrFailure { parseConfigLayout(String($0)) }
             .flatMap {
                 (LayoutCommand(toggleBetween: $0) as Command?).orFailure("Can't create layout command") // todo nicer message
             }
@@ -77,7 +77,7 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
     }
 }
 
-func parseLayout(_ raw: String) -> ParsedCommand<ConfigLayout> {
+func parseConfigLayout(_ raw: String) -> ParsedCommand<ConfigLayout> {
     ConfigLayout(rawValue: raw).orFailure("Can't parse layout '\(raw)'")
 }
 

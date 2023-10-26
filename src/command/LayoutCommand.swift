@@ -16,7 +16,6 @@ struct LayoutCommand: Command {
         let targetLayout: ConfigLayout? = toggleBetween.firstIndex(of: window.configLayout)
             .flatMap { toggleBetween.getOrNil(atIndex: $0 + 1) }
             .orElse { toggleBetween.first }
-            .map { $0 == .main ? config.mainLayout : $0 }
         switch window.parent.kind {
         case .tilingContainer(let parent):
             parent.layout = targetLayout?.simpleLayout ?? errorT("TODO")

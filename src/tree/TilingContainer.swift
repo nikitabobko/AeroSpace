@@ -34,7 +34,7 @@ extension Orientation {
     var opposite: Orientation { self == .h ? .v : .h }
 }
 
-enum Layout {
+enum Layout: String {
     case list
     case accordion
 }

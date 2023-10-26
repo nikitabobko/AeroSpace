@@ -103,7 +103,7 @@ private let parsers: [String: any ParserProtocol] = [
     "indent-for-nested-containers-with-the-same-orientation": Parser(\.indentForNestedContainersWithTheSameOrientation, { parseInt($0, $1) }),
     "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, { parseBool($0, $1) }),
     "floating-windows-on-top": Parser(\.floatingWindowsOnTop, { parseBool($0, $1) }),
-    "main-layout": Parser(\.mainLayout, { parseMainLayout($0, $1) }),
+    "default-root-container-layout": Parser(\.defaultRootContainerLayout, { parseLayout($0, $1) }),
     "start-at-login": Parser(\.startAtLogin, { parseBool($0, $1) }),
     "accordion-padding": Parser(\.accordionPadding, { parseInt($0, $1) }),
     "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, { parseBool($0, $1) }),
@@ -143,7 +143,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         indentForNestedContainersWithTheSameOrientation: raw.indentForNestedContainersWithTheSameOrientation ?? defaultConfig.indentForNestedContainersWithTheSameOrientation,
         enableNormalizationFlattenContainers: raw.enableNormalizationFlattenContainers ?? defaultConfig.enableNormalizationFlattenContainers,
         floatingWindowsOnTop: raw.floatingWindowsOnTop ?? defaultConfig.floatingWindowsOnTop,
-        mainLayout: raw.mainLayout ?? defaultConfig.mainLayout,
+        defaultRootContainerLayout: raw.defaultRootContainerLayout ?? defaultConfig.defaultRootContainerLayout,
         startAtLogin: raw.startAtLogin ?? defaultConfig.startAtLogin,
         accordionPadding: raw.accordionPadding ?? defaultConfig.accordionPadding,
         enableNormalizationOppositeOrientationForNestedContainers: raw.enableNormalizationOppositeOrientationForNestedContainers ?? defaultConfig.enableNormalizationOppositeOrientationForNestedContainers,
@@ -166,12 +166,9 @@ private func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace
     raw.string.orFailure { expectedActualTypeError(expected: .string, actual: raw.type, backtrace) }
 }
 
-private func parseMainLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<ConfigLayout> {
+private func parseLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<Layout> {
     parseString(raw, backtrace)
-        .flatMap { parseLayout($0).mapError { .semantic(backtrace, $0) } }
-        .flatMap { (layout: ConfigLayout) -> ParsedTomlResult<ConfigLayout> in
-            layout == .main ? .failure(.semantic(backtrace, "main layout can't be 'main'")) : .success(layout)
-        }
+        .flatMap { Layout(rawValue: $0).orFailure(.semantic(backtrace, "Can't parse layout '\($0)'")) }
 }
 
 private func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: Mode] {
