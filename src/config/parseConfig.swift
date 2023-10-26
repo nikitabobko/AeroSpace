@@ -72,6 +72,43 @@ private extension Result {
     }
 }
 
+private extension ParserProtocol {
+    func transformRawConfig(_ raw: RawConfig,
+                            _ value: TOMLValueConvertible,
+                            _ backtrace: TomlBacktrace,
+                            _ errors: inout [TomlParseError]) -> RawConfig {
+        raw.copy(keyPath, parse(value, backtrace).unwrapAndAppendErrors(&errors))
+    }
+}
+
+private protocol ParserProtocol<T> {
+    associatedtype T
+    var keyPath: WritableKeyPath<RawConfig, T?> { get }
+    var parse: (TOMLValueConvertible, TomlBacktrace) -> ParsedTomlResult<T> { get }
+}
+
+private struct Parser<T>: ParserProtocol {
+    let keyPath: WritableKeyPath<RawConfig, T?>
+    let parse: (TOMLValueConvertible, TomlBacktrace) -> ParsedTomlResult<T>
+
+    init(_ keyPath: WritableKeyPath<RawConfig, T?>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace) -> ParsedTomlResult<T>) {
+        self.keyPath = keyPath
+        self.parse = parse
+    }
+}
+
+private let parsers: [String: any ParserProtocol] = [
+    "after-login-command": Parser(\.afterLoginCommand, { parseCommand($0).toParsedTomlResult($1) }),
+    "after-startup-command": Parser(\.afterStartupCommand, { parseCommand($0).toParsedTomlResult($1) }),
+    "indent-for-nested-containers-with-the-same-orientation": Parser(\.indentForNestedContainersWithTheSameOrientation, { parseInt($0, $1) }),
+    "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, { parseBool($0, $1) }),
+    "floating-windows-on-top": Parser(\.floatingWindowsOnTop, { parseBool($0, $1) }),
+    "main-layout": Parser(\.mainLayout, { parseMainLayout($0, $1) }),
+    "start-at-login": Parser(\.startAtLogin, { parseBool($0, $1) }),
+    "accordion-padding": Parser(\.accordionPadding, { parseInt($0, $1) }),
+    "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, { parseBool($0, $1) }),
+]
+
 func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]) {
     let rawTable: TOMLTable
     do {
@@ -85,57 +122,15 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
     var modes: [String: Mode]? = nil
     var errors: [TomlParseError] = []
 
-    let key1 = "after-startup-command"
-    var value1: Command? = nil
-
-    let key2 = "indent-for-nested-containers-with-the-same-orientation"
-    var value2: Int? = nil
-
-    let key3 = "enable-normalization-flatten-containers"
-    var value3: Bool? = nil
-
-    let key4 = "floating-windows-on-top"
-    var value4: Bool? = nil
-
-    let key5 = "main-layout"
-    var value5: ConfigLayout? = nil
-
-    let key8 = "start-at-login"
-    var value8: Bool? = nil
-
-    let key9 = "after-login-command"
-    var value9: Command? = nil
-
-    let key12 = "accordion-padding"
-    var value12: Int? = nil
-
-    let key13 = "enable-normalization-opposite-orientation-for-nested-containers"
-    var value13: Bool? = nil
+    var raw = RawConfig()
 
     for (key, value) in rawTable {
         let backtrace: TomlBacktrace = .root(key)
-        switch key {
-        case key1:
-            value1 = parseCommand(value).toParsedTomlResult(backtrace).unwrapAndAppendErrors(&errors)
-        case key2:
-            value2 = parseInt(value, backtrace).unwrapAndAppendErrors(&errors)
-        case key3:
-            value3 = parseBool(value, backtrace).unwrapAndAppendErrors(&errors)
-        case key4:
-            value4 = parseBool(value, backtrace).unwrapAndAppendErrors(&errors)
-        case key5:
-            value5 = parseMainLayout(value, backtrace).unwrapAndAppendErrors(&errors)
-        case key8:
-            value8 = parseBool(value, backtrace).unwrapAndAppendErrors(&errors)
-        case key9:
-            value9 = parseCommand(value).toParsedTomlResult(backtrace).unwrapAndAppendErrors(&errors)
-        case key12:
-            value12 = parseInt(value, backtrace).unwrapAndAppendErrors(&errors)
-        case key13:
-            value13 = parseBool(value, backtrace).unwrapAndAppendErrors(&errors)
-        case "mode":
+        if key == "mode" {
             modes = parseModes(value, backtrace, &errors)
-        default:
+        } else if let parser = parsers[key] {
+            raw = parser.transformRawConfig(raw, value, backtrace, &errors)
+        } else {
             errors += [unknownKeyError(backtrace)]
         }
     }
@@ -143,15 +138,15 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
     let modesOrDefault = modes ?? defaultConfig.modes
 
     let config =  Config(
-        afterStartupCommand: value1 ?? defaultConfig.afterStartupCommand,
-        afterLoginCommand: value9 ?? defaultConfig.afterLoginCommand,
-        indentForNestedContainersWithTheSameOrientation: value2 ?? defaultConfig.indentForNestedContainersWithTheSameOrientation,
-        enableNormalizationFlattenContainers: value3 ?? defaultConfig.enableNormalizationFlattenContainers,
-        floatingWindowsOnTop: value4 ?? defaultConfig.floatingWindowsOnTop,
-        mainLayout: value5 ?? defaultConfig.mainLayout,
-        startAtLogin: value8 ?? defaultConfig.startAtLogin,
-        accordionPadding: value12 ?? defaultConfig.accordionPadding,
-        enableNormalizationOppositeOrientationForNestedContainers: value13 ?? defaultConfig.enableNormalizationOppositeOrientationForNestedContainers,
+        afterLoginCommand: raw.afterLoginCommand ?? defaultConfig.afterLoginCommand,
+        afterStartupCommand: raw.afterStartupCommand ?? defaultConfig.afterStartupCommand,
+        indentForNestedContainersWithTheSameOrientation: raw.indentForNestedContainersWithTheSameOrientation ?? defaultConfig.indentForNestedContainersWithTheSameOrientation,
+        enableNormalizationFlattenContainers: raw.enableNormalizationFlattenContainers ?? defaultConfig.enableNormalizationFlattenContainers,
+        floatingWindowsOnTop: raw.floatingWindowsOnTop ?? defaultConfig.floatingWindowsOnTop,
+        mainLayout: raw.mainLayout ?? defaultConfig.mainLayout,
+        startAtLogin: raw.startAtLogin ?? defaultConfig.startAtLogin,
+        accordionPadding: raw.accordionPadding ?? defaultConfig.accordionPadding,
+        enableNormalizationOppositeOrientationForNestedContainers: raw.enableNormalizationOppositeOrientationForNestedContainers ?? defaultConfig.enableNormalizationOppositeOrientationForNestedContainers,
 
         modes: modesOrDefault,
         preservedWorkspaceNames: modesOrDefault.values.lazy

@@ -4,9 +4,20 @@ let mainModeId = "main" // todo rename to "default"
 let defaultConfig = initDefaultConfig(parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!)))
 var config: Config = defaultConfig
 
+struct RawConfig: Copyable {
+    var afterLoginCommand: Command?
+    var afterStartupCommand: Command?
+    var indentForNestedContainersWithTheSameOrientation: Int?
+    var enableNormalizationFlattenContainers: Bool?
+    var floatingWindowsOnTop: Bool?
+    var mainLayout: ConfigLayout?
+    var startAtLogin: Bool?
+    var accordionPadding: Int?
+    var enableNormalizationOppositeOrientationForNestedContainers: Bool?
+}
 struct Config {
-    var afterStartupCommand: Command
     var afterLoginCommand: Command
+    var afterStartupCommand: Command
     var indentForNestedContainersWithTheSameOrientation: Int
     var enableNormalizationFlattenContainers: Bool
     var floatingWindowsOnTop: Bool

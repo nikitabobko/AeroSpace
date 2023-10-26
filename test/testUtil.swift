@@ -5,8 +5,8 @@ let projectRoot: URL = URL(filePath: #file).appending(component: "../..").standa
 
 func setUpWorkspacesForTests() {
     config = Config(
-        afterStartupCommand: defaultConfig.afterStartupCommand,
         afterLoginCommand: defaultConfig.afterLoginCommand,
+        afterStartupCommand: defaultConfig.afterStartupCommand,
         indentForNestedContainersWithTheSameOrientation: defaultConfig.indentForNestedContainersWithTheSameOrientation,
         enableNormalizationFlattenContainers: false, // Make layout tests more predictable
         floatingWindowsOnTop: defaultConfig.floatingWindowsOnTop,
