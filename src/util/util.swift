@@ -29,10 +29,12 @@ func stringType(of some: Any) -> String {
         Stacktrace:
         \(Thread.callStackSymbols.joined(separator: "\n"))
         """
-    showMessageToUser(
-        filename: "runtime-error.txt",
-        message: message
-    )
+    if !isUnitTest {
+        showMessageToUser(
+            filename: "runtime-error.txt",
+            message: message
+        )
+    }
     fatalError(message)
 }
 
@@ -50,7 +52,7 @@ extension String? {
     var isNilOrEmpty: Bool { self == nil || self == "" }
 }
 
-var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
+public var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
 
 var apps: [AeroApp] {
     isUnitTest

@@ -100,9 +100,6 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
     let key5 = "main-layout"
     var value5: ConfigLayout? = nil
 
-    let key7 = "DEBUG-all-windows-are-floating"
-    var value7: Bool? = nil
-
     let key8 = "start-at-login"
     var value8: Bool? = nil
 
@@ -128,8 +125,6 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
             (value4, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
         case key5:
             (value5, errors) = parseMainLayout(value, backtrace).prependErrorsAndUnwrap(errors)
-        case key7:
-            (value7, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
         case key8:
             (value8, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
         case key9:
@@ -154,7 +149,6 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
         enableNormalizationFlattenContainers: value3 ?? defaultConfig.enableNormalizationFlattenContainers,
         floatingWindowsOnTop: value4 ?? defaultConfig.floatingWindowsOnTop,
         mainLayout: value5 ?? defaultConfig.mainLayout,
-        debugAllWindowsAreFloating: value7 ?? defaultConfig.debugAllWindowsAreFloating,
         startAtLogin: value8 ?? defaultConfig.startAtLogin,
         accordionPadding: value12 ?? defaultConfig.accordionPadding,
         enableNormalizationOppositeOrientationForNestedContainers: value13 ?? defaultConfig.enableNormalizationOppositeOrientationForNestedContainers,

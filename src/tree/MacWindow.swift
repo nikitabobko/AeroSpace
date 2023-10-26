@@ -146,7 +146,7 @@ func shouldFloat(_ axWindow: AXUIElement) -> Bool {
     // - macOS native file picker ("Open..." menu)
     //
     // Minimized windows or windows of a hidden app have subrole "AXDialog"
-    axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole || config.debugAllWindowsAreFloating
+    axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole
 }
 
 func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace) -> BindingData {

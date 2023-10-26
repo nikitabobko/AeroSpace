@@ -18,7 +18,6 @@ struct Config {
     var enableNormalizationFlattenContainers: Bool
     var floatingWindowsOnTop: Bool
     var mainLayout: ConfigLayout // todo rename to defaultLayout
-    var debugAllWindowsAreFloating: Bool
     var startAtLogin: Bool
     var accordionPadding: Int
     var enableNormalizationOppositeOrientationForNestedContainers: Bool

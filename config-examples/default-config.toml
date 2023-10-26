@@ -32,9 +32,6 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 accordion-padding = 30
 main-layout = 'h_list' # TODO SUBJECT TO CHANGE
 
-# DEBUG KEY. DON'T USE IT
-DEBUG-all-windows-are-floating = false # TODO DROP
-
 # It's a declaration of 'main' binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 # 'main' binding mode must be always presented
 [mode.main.binding]
