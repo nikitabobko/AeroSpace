@@ -5,6 +5,19 @@ func stringType(of some: Any) -> String {
     return string
 }
 
+func check(
+    _ condition: Bool,
+    _ message: String = "",
+    file: String = #file,
+    line: Int = #line,
+    column: Int = #column,
+    function: String = #function
+) {
+    if !condition {
+        error(message, file: file, line: line, column: column, function: function)
+    }
+}
+
 @inlinable func errorT<T>(
     _ message: String = "",
     file: String = #file,

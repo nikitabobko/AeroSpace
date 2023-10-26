@@ -2,7 +2,7 @@ struct WorkspaceCommand : Command {
     let workspaceName: String
 
     func runWithoutRefresh() {
-        precondition(Thread.current.isMainThread)
+        check(Thread.current.isMainThread)
         let workspace = Workspace.get(byName: workspaceName)
         // todo drop anyLeafWindowRecursive. It must not be necessary
         if let window = workspace.mostRecentWindow ?? workspace.anyLeafWindowRecursive { // switch to not empty workspace
@@ -16,7 +16,7 @@ struct WorkspaceCommand : Command {
             window.focus()
             // The switching itself will be done by refreshWorkspaces and layoutWorkspaces later in refresh
         } else { // switch to empty workspace
-            precondition(workspace.isEffectivelyEmpty)
+            check(workspace.isEffectivelyEmpty)
             workspace.monitor.setActiveWorkspace(workspace)
             focusedWorkspaceName = workspace.name
             focusedWorkspaceSourceOfTruth = .ownModel

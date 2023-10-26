@@ -2,7 +2,7 @@ struct FocusCommand: Command {
     let direction: CardinalDirection
 
     func runWithoutRefresh() {
-        precondition(Thread.current.isMainThread)
+        check(Thread.current.isMainThread)
         guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
         guard let (parent, ownIndex) = currentWindow.closestParent(hasChildrenInDirection: direction, withLayout: nil) else { return }
         let windowToFocus = parent.children[ownIndex + direction.focusOffset]

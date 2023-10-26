@@ -2,7 +2,7 @@ struct MoveThroughCommand: Command {
     let direction: CardinalDirection
 
     func runWithoutRefresh() {
-        precondition(Thread.current.isMainThread)
+        check(Thread.current.isMainThread)
         guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
         switch currentWindow.parent.kind {
         case .tilingContainer(let parent):
@@ -40,13 +40,13 @@ private func moveOut(window: Window, direction: CardinalDirection) {
     let bindToIndex: Int
     switch innerMostChild.parent.genericKind {
     case .tilingContainer(let parent):
-        precondition(parent.orientation == direction.orientation)
+        check(parent.orientation == direction.orientation)
         bindTo = parent
         bindToIndex = innerMostChild.ownIndex + direction.insertionOffset
     case .workspace(let parent): // create implicit container
         let prevRoot = parent.rootTilingContainer
         prevRoot.unbindFromParent()
-        precondition(prevRoot != parent.rootTilingContainer)
+        check(prevRoot != parent.rootTilingContainer)
         parent.rootTilingContainer.orientation = direction.orientation
         parent.rootTilingContainer.layout = .list // todo force List layout for implicit containers?
         prevRoot.bindTo(parent: parent.rootTilingContainer, adaptiveWeight: WEIGHT_AUTO)

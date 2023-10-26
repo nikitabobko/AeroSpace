@@ -197,7 +197,7 @@ enum Ax {
             key: kAXSizeAttribute,
             getter: {
                 var raw: CGSize = .zero
-                precondition(AXValueGetValue($0 as! AXValue, .cgSize, &raw))
+                check(AXValueGetValue($0 as! AXValue, .cgSize, &raw))
                 return raw
             },
             setter: {
@@ -272,7 +272,7 @@ extension AXUIElement {
 extension AXObserver {
     private static func newImpl(_ pid: pid_t, _ handler: AXObserverCallback) -> AXObserver {
         var observer: AXObserver? = nil
-        precondition(AXObserverCreate(pid, handler, &observer) == .success)
+        check(AXObserverCreate(pid, handler, &observer) == .success)
         return observer!
     }
 

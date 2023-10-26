@@ -7,7 +7,7 @@ struct ResizeCommand: Command { // todo cover with tests
     let diff: Int
 
     func runWithoutRefresh() { // todo support key repeat
-        precondition(Thread.current.isMainThread)
+        check(Thread.current.isMainThread)
         guard let window = focusedWindowOrEffectivelyFocused else { return }
 
         switch window.parent.kind {

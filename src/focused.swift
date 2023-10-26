@@ -5,7 +5,7 @@ var focusedApp: AeroApp? {
     if isUnitTest {
         return appForTests
     } else {
-        precondition(appForTests == nil)
+        check(appForTests == nil)
         if NSWorkspace.shared.frontmostApplication == _focusedApp {
             _focusedApp = nil
         }

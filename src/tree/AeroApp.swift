@@ -7,10 +7,10 @@ class AeroApp: Hashable {
 
     static func ==(lhs: AeroApp, rhs: AeroApp) -> Bool {
         if lhs.id == rhs.id {
-            precondition(lhs === rhs)
+            check(lhs === rhs)
             return true
         } else {
-            precondition(lhs !== rhs)
+            check(lhs !== rhs)
             return false
         }
     }

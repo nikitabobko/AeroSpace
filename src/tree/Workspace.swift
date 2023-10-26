@@ -158,7 +158,7 @@ private func rearrangeWorkspacesOnMonitors() {
     var preservedOldScreens: [CGPoint] = []
     for newScreen in newScreens {
         if let oldScreen = oldVisibleScreens.minBy({ ($0 - newScreen).vectorLength }) {
-            precondition(oldVisibleScreens.remove(oldScreen) != nil)
+            check(oldVisibleScreens.remove(oldScreen) != nil)
             newScreenToOldScreenMapping[newScreen] = oldScreen
             preservedOldScreens.append(oldScreen)
         }

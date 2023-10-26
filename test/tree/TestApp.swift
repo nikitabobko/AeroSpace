@@ -12,7 +12,7 @@ final class TestApp: AeroApp {
         get { _windows }
         set {
             if let focusedWindow {
-                precondition(newValue.contains(focusedWindow))
+                check(newValue.contains(focusedWindow))
             }
             _windows = newValue
         }
@@ -23,7 +23,7 @@ final class TestApp: AeroApp {
         get { _focusedWindow }
         set {
             if let window = newValue {
-                precondition(windows.contains(window))
+                check(windows.contains(window))
             }
             _focusedWindow = newValue
         }

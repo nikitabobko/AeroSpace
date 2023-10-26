@@ -1,6 +1,6 @@
 struct FlattenWorkspaceTreeCommand: Command {
     func runWithoutRefresh() {
-        precondition(Thread.current.isMainThread)
+        check(Thread.current.isMainThread)
         guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
         let workspace = currentWindow.workspace
         let windows = workspace.rootTilingContainer.allLeafWindowsRecursive

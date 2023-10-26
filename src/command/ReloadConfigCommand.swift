@@ -1,6 +1,6 @@
 struct ReloadConfigCommand: Command {
     func runWithoutRefresh() {
-        precondition(Thread.current.isMainThread)
+        check(Thread.current.isMainThread)
         reloadConfig()
     }
 }

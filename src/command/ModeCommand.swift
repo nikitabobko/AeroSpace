@@ -2,7 +2,7 @@ struct ModeCommand: Command {
     let idToActivate: String
 
     func runWithoutRefresh() {
-        precondition(Thread.current.isMainThread)
+        check(Thread.current.isMainThread)
         activateMode(idToActivate)
     }
 }

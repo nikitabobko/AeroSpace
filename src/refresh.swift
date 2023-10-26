@@ -1,7 +1,7 @@
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input
 func refresh(startup: Bool = false) {
-    precondition(Thread.current.isMainThread)
+    check(Thread.current.isMainThread)
     //debug("refresh \(Date.now.formatted(date: .abbreviated, time: .standard))")
 
     // Garbage collect terminated apps and windows before working with all windows

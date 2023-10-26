@@ -6,7 +6,7 @@ struct MoveWorkspaceToDisplayCommand: Command {
     }
 
     func runWithoutRefresh() {
-        precondition(Thread.current.isMainThread)
+        check(Thread.current.isMainThread)
         let focusedWorkspace = Workspace.focused
         let prevMonitor = focusedWorkspace.monitor
         let sortedMonitors = sortedMonitors

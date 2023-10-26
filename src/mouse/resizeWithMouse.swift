@@ -6,7 +6,7 @@ func resizedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
 }
 
 func resetManipulatedWithMouseIfPossible() {
-    precondition(Thread.current.isMainThread)
+    check(Thread.current.isMainThread)
     if currentlyManipulatedWithMouseWindowId != nil {
         currentlyManipulatedWithMouseWindowId = nil
         for workspace in Workspace.all {
