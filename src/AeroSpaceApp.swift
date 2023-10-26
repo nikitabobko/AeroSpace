@@ -59,7 +59,7 @@ struct AeroSpaceApp: App {
                 .keyboardShortcut("R", modifiers: .command)
             Button("Quit \(Bundle.appName)") {
                 for app in apps { // Make all windows fullscreen before Quit
-                    for window in app.windows {
+                    for window in app.windows { // todo make all windows visible. Restore only the size?
                         let rect = window.rectBeforeAeroStart?
                             .takeIf { window.workspace.monitor.rect.contains($0.topLeftCorner) }
                             ?? window.workspace.monitor.visibleRect
