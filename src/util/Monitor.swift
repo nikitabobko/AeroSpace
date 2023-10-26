@@ -10,7 +10,7 @@ extension MonitorImpl: Monitor {
 }
 
 /// Use it instead of NSScreen for testing purposes
-protocol Monitor {
+protocol Monitor: AeroAny {
     var name: String { get }
     var rect: Rect { get }
     var visibleRect: Rect { get }

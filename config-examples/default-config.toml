@@ -35,6 +35,8 @@ accordion-padding = 30
 default-root-container-layout = 'list'
 
 # Possible values: horizontal|vertical|auto
+# 'auto' means: wide display (anything wider than high) gets horizontal orientation,
+#               tall display (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
 # It's a declaration of 'main' binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes

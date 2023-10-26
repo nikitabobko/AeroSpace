@@ -1,11 +1,3 @@
-// todo make it configurable
-// todo make default choice
-
-//private func createDefaultWorkspaceContainer(_ workspace: Workspace) -> TilingContainer {
-//    guard let monitorRect = focusedMonitorOrNilIfDesktop?.rect else { return TilingContainer.newHList(parent: workspace) }
-//    return monitorRect.width > monitorRect.height ? TilingContainer.newVList(parent: workspace) : TilingContainer.newHList(parent: workspace)
-//}
-
 private var workspaceNameToWorkspace: [String: Workspace] = [:]
 
 private var screenPointToVisibleWorkspace: [CGPoint: Workspace] = [:]
@@ -103,7 +95,16 @@ extension Workspace {
         let containers = children.filterIsInstance(of: TilingContainer.self)
         switch containers.count {
         case 0:
-            return TilingContainer.newHList(parent: self, adaptiveWeight: 1, index: INDEX_BIND_LAST) // todo createDefaultWorkspaceContainer(self)
+            let orientation: Orientation
+            switch config.defaultRootContainerOrientation {
+            case .horizontal:
+                orientation = .h
+            case .vertical:
+                orientation = .v
+            case .auto:
+                orientation = monitor.lets { $0.width >= $0.height } ? .h : .v
+            }
+            return TilingContainer(parent: self, adaptiveWeight: 1, orientation, config.defaultRootContainerLayout, index: INDEX_BIND_LAST)
         case 1:
             return containers.singleOrNil()!
         default:
