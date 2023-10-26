@@ -1,14 +1,7 @@
 import HotKey
 
 let mainModeId = "main" // todo rename to "default"
-let defaultConfig =
-    parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!))
-        .also {
-            if !$0.log.isEmpty {
-                error("Can't parse default config: \($0.log)")
-            }
-        }
-        .value
+let defaultConfig = initDefaultConfig(parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!)))
 var config: Config = defaultConfig
 
 struct Config {
@@ -36,6 +29,8 @@ struct Mode: Copyable {
     /// User visible name. Optional. todo drop it?
     var name: String?
     var bindings: [HotkeyBinding]
+
+    static let zero = Mode(name: nil, bindings: [])
 
     func deactivate() {
         for binding in bindings {
@@ -67,4 +62,11 @@ class HotkeyBinding {
     func deactivate() {
         hotKey = nil
     }
+}
+
+private func initDefaultConfig(_ parsedConfig: (config: Config, errors: [TomlParseError])) -> Config {
+    if !parsedConfig.errors.isEmpty {
+        error("Can't parse default config: \(parsedConfig.errors)")
+    }
+    return parsedConfig.config
 }

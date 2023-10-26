@@ -20,7 +20,6 @@ extension AeroAny {
 }
 
 extension TreeNode: AeroAny {}
-extension Writer: AeroAny {}
 extension Int: AeroAny {}
 extension CGFloat: AeroAny {}
 extension Rect: AeroAny {}

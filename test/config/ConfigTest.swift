@@ -4,7 +4,7 @@ import XCTest
 final class ConfigTest: XCTestCase {
     func testParseI3Config() {
         let toml = try! String(contentsOf: projectRoot.appending(component: "config-examples/i3-like-config-example.toml"))
-        let (i3Config, errors) = parseConfig(toml).toTuple()
+        let (i3Config, errors) = parseConfig(toml)
         XCTAssertEqual(errors.descriptions, [])
         XCTAssertEqual(i3Config.enableNormalizationFlattenContainers, false)
     }
@@ -15,7 +15,7 @@ final class ConfigTest: XCTestCase {
             [mode.main.binding]
             alt-h = 'focus left'
             """
-        ).toTuple()
+        )
         XCTAssertEqual(errors.descriptions, [])
         XCTAssertEqual(
             config.modes[mainModeId],
@@ -29,7 +29,7 @@ final class ConfigTest: XCTestCase {
             [mode.foo.binding]
             alt-h = 'focus left'
             """
-        ).toTuple()
+        )
         XCTAssertEqual(
             errors.descriptions,
             ["mode: Please specify \'main\' mode"]
@@ -45,7 +45,7 @@ final class ConfigTest: XCTestCase {
             aalt-j = 'focus down'
             alt-k = 'focus up'
             """
-        ).toTuple()
+        )
         XCTAssertEqual(
             errors.descriptions,
             ["mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
@@ -66,7 +66,7 @@ final class ConfigTest: XCTestCase {
             alt-3 = ['workspace 3']
             alt-4 = ['workspace 4', 'focus left']
             """
-        ).toTuple()
+        )
         XCTAssertEqual(errors.descriptions, [])
         XCTAssertEqual(config.preservedWorkspaceNames, ["1", "2", "3"])
     }
@@ -77,7 +77,7 @@ final class ConfigTest: XCTestCase {
             unknownKey = true
             enable-normalization-flatten-containers = false
             """
-        ).toTuple()
+        )
         XCTAssertEqual(
             errors.descriptions,
             ["unknownKey: Unknown key"]
@@ -86,11 +86,11 @@ final class ConfigTest: XCTestCase {
     }
 
     func testTypeMismatch() {
-        let errors = parseConfig(
+        let (_, errors) = parseConfig(
             """
             enable-normalization-flatten-containers = 'true'
             """
-        ).log
+        )
         XCTAssertEqual(
             errors.descriptions,
             ["enable-normalization-flatten-containers: Expected type is \'bool\'. But actual type is \'string\'"]
@@ -98,7 +98,7 @@ final class ConfigTest: XCTestCase {
     }
 
     func testTomlParseError() {
-        let errors = parseConfig("true").log
+        let (_, errors) = parseConfig("true")
         XCTAssertEqual(
             errors.descriptions,
             ["Error while parsing key-value pair: encountered end-of-file (at line 1, column 5)"]

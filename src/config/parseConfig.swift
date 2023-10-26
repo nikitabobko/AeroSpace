@@ -4,14 +4,14 @@ import HotKey
 func reloadConfig() {
     let configUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: ".aerospace.toml")
     let rawConfig = try? String(contentsOf: configUrl)
-    let parsedConfig = rawConfig?.lets { parseConfig($0) } ?? Writer(value: defaultConfig, log: [])
+    let (parsedConfig, errors) = rawConfig?.lets { parseConfig($0) } ?? (defaultConfig, [])
 
-    if !parsedConfig.log.isEmpty {
+    if !errors.isEmpty {
         activateMode(mainModeId)
-        showConfigParsingErrorsToUser(parsedConfig.log, configUrl: configUrl)
+        showConfigParsingErrorsToUser(errors, configUrl: configUrl)
         return
     }
-    config = parsedConfig.value
+    config = parsedConfig
     activateMode(mainModeId)
     if !Bundle.appId.contains("debug") {
         syncStartAtLogin()
@@ -50,15 +50,15 @@ enum TomlParseError: Error, CustomStringConvertible {
 }
 
 private typealias ParsedTomlResult<T> = Result<T, TomlParseError>
-typealias ParsedTomlWriter<T> = Writer<T, TomlParseError>
 
 private extension Result {
-    func prependErrorsAndUnwrap(_ existingErrors: [Failure]) -> (Success?, [Failure]) {
+    func unwrapAndAppendErrors(_ errors: inout [Failure]) -> Success? {
         switch self {
         case .success(let success):
-            return (success, existingErrors)
+            return success
         case .failure(let error):
-            return (nil, existingErrors + [error])
+            errors += [error]
+            return nil
         }
     }
 
@@ -72,14 +72,14 @@ private extension Result {
     }
 }
 
-func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
+func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]) {
     let rawTable: TOMLTable
     do {
         rawTable = try TOMLTable(string: rawToml)
     } catch let e as TOMLParseError {
-        return ParsedTomlWriter(value: defaultConfig, log: [.syntax(e.debugDescription)])
+        return (defaultConfig, [.syntax(e.debugDescription)])
     } catch let e {
-        return ParsedTomlWriter(value: defaultConfig, log: [.syntax(e.localizedDescription)])
+        return (defaultConfig, [.syntax(e.localizedDescription)])
     }
 
     var modes: [String: Mode]? = nil
@@ -116,25 +116,25 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
         let backtrace: TomlBacktrace = .root(key)
         switch key {
         case key1:
-            (value1, errors) = parseCommand(value).toParsedTomlResult(backtrace).prependErrorsAndUnwrap(errors)
+            value1 = parseCommand(value).toParsedTomlResult(backtrace).unwrapAndAppendErrors(&errors)
         case key2:
-            (value2, errors) = parseInt(value, backtrace).prependErrorsAndUnwrap(errors)
+            value2 = parseInt(value, backtrace).unwrapAndAppendErrors(&errors)
         case key3:
-            (value3, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
+            value3 = parseBool(value, backtrace).unwrapAndAppendErrors(&errors)
         case key4:
-            (value4, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
+            value4 = parseBool(value, backtrace).unwrapAndAppendErrors(&errors)
         case key5:
-            (value5, errors) = parseMainLayout(value, backtrace).prependErrorsAndUnwrap(errors)
+            value5 = parseMainLayout(value, backtrace).unwrapAndAppendErrors(&errors)
         case key8:
-            (value8, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
+            value8 = parseBool(value, backtrace).unwrapAndAppendErrors(&errors)
         case key9:
-            (value9, errors) = parseCommand(value).toParsedTomlResult(backtrace).prependErrorsAndUnwrap(errors)
+            value9 = parseCommand(value).toParsedTomlResult(backtrace).unwrapAndAppendErrors(&errors)
         case key12:
-            (value12, errors) = parseInt(value, backtrace).prependErrorsAndUnwrap(errors)
+            value12 = parseInt(value, backtrace).unwrapAndAppendErrors(&errors)
         case key13:
-            (value13, errors) = parseBool(value, backtrace).prependErrorsAndUnwrap(errors)
+            value13 = parseBool(value, backtrace).unwrapAndAppendErrors(&errors)
         case "mode":
-            (modes, errors) = parseModes(value, backtrace).prependLogAndUnwrap(errors)
+            modes = parseModes(value, backtrace, &errors)
         default:
             errors += [unknownKeyError(backtrace)]
         }
@@ -160,7 +160,7 @@ func parseConfig(_ rawToml: String) -> ParsedTomlWriter<Config> {
             .map { (command: Command) -> Command in (command as? CompositeCommand)?.subCommands.singleOrNil() ?? command }
             .compactMap { (command: Command) -> String? in (command as? WorkspaceCommand)?.workspaceName ?? nil }
     )
-    return Writer(value: config, log: errors)
+    return (config, errors)
 }
 
 private func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<Int> {
@@ -179,47 +179,38 @@ private func parseMainLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBackt
         }
 }
 
-private func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlWriter<[String: Mode]> {
-    var writer: ParsedTomlWriter<[String: Mode]> = ParsedTomlWriter(value: [:], log: [])
+private func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: Mode] {
     guard let rawTable = raw.table else {
-        return writer.tell(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))
+        errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
+        return [:]
     }
-    writer = rawTable.reduce(writer) { (accumulator: ParsedTomlWriter<[String: Mode]>, element: (String, TOMLValueConvertible)) -> ParsedTomlWriter<[String: Mode]> in
-        let (key, value) = element
-        return accumulator.flatMap {
-            var prev: [String: Mode] = $0
-            return parseMode(value, backtrace + .key(key)).map {
-                prev[key] = $0
-                return prev
-            }
-        }
+    var result: [String: Mode] = [:]
+    for (key, value) in rawTable {
+        result[key] = parseMode(value, backtrace + .key(key), &errors)
     }
-    if !writer.value.keys.contains(mainModeId) {
-        writer = writer.tell(.semantic(backtrace, "Please specify '\(mainModeId)' mode"))
+    if !result.keys.contains(mainModeId) {
+        errors += [.semantic(backtrace, "Please specify '\(mainModeId)' mode")]
     }
-    return writer
+    return result
 }
 
-private func parseMode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlWriter<Mode> {
-    var writer = ParsedTomlWriter(
-        value: Mode(name: nil, bindings: []),
-        log: []
-    )
+private func parseMode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> Mode {
     guard let rawTable: TOMLTable = raw.table else {
-        return writer.tell(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))
+        errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
+        return .zero
     }
 
+    var result: Mode = .zero
     for (key, value) in rawTable {
-        let keyBacktrace = backtrace + .key(key)
+        let backtrace = backtrace + .key(key)
         switch key {
         case "binding":
-            let (value1, errors) = parseBindings(value, keyBacktrace).toTuple()
-            writer = writer.tell(errors).map { $0.copy(\.bindings, value1) }
+            result.bindings = parseBindings(value, backtrace, &errors)
         default:
-            writer = writer.tell(unknownKeyError(keyBacktrace))
+            errors += [unknownKeyError(backtrace)]
         }
     }
-    return writer
+    return result
 }
 
 private extension ParsedCommand where Failure == String {
@@ -228,28 +219,28 @@ private extension ParsedCommand where Failure == String {
     }
 }
 
-private func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlWriter<[HotkeyBinding]> {
+private func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [HotkeyBinding] {
     guard let rawTable = raw.table else {
-        return ParsedTomlWriter(value: [], log: [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)])
+        errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
+        return []
     }
-    var bindings: [HotkeyBinding] = []
-    var errors: [TomlParseError] = []
+    var result: [HotkeyBinding] = []
     for (binding, rawCommand): (String, TOMLValueConvertible) in rawTable {
-        let keyBacktrace = backtrace + .key(binding)
-        let (binding, error): (HotkeyBinding?, TomlParseError?) = parseBinding(binding, keyBacktrace)
+        let backtrace = backtrace + .key(binding)
+        let (binding, error): (HotkeyBinding?, TomlParseError?) = parseBinding(binding, backtrace)
             .flatMap { (modifiers, key) -> ParsedTomlResult<HotkeyBinding> in
                 // todo support parsing of implicit modes?
-                parseCommand(rawCommand).toParsedTomlResult(keyBacktrace).map { HotkeyBinding(modifiers, key, $0) }
+                parseCommand(rawCommand).toParsedTomlResult(backtrace).map { HotkeyBinding(modifiers, key, $0) }
             }
             .getOrNils()
         if let binding {
-            bindings += [binding]
+            result += [binding]
         }
         if let error {
             errors += [error]
         }
     }
-    return Writer(value: bindings, log: errors)
+    return result
 }
 
 private func parseBinding(_ raw: String, _ backtrace: TomlBacktrace) -> ParsedTomlResult<(NSEvent.ModifierFlags, Key)> {
