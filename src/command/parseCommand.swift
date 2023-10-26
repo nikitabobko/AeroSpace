@@ -73,7 +73,7 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
     } else if raw == "" {
         return .failure("Can't parse empty string command")
     } else {
-        return .failure("Can't parse '\(raw)' command")
+        return .failure("Unrecognized command '\(raw)'")
     }
 }
 
