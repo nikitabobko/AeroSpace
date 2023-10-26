@@ -44,7 +44,7 @@ private extension ConfigLayout {
             return .accordion
         case .h_list, .v_list:
             return .list
-        case .floating, .tiling, .sticky, .main:
+        case .floating, .tiling, .sticky:
             return nil
         }
     }
@@ -55,7 +55,7 @@ private extension ConfigLayout {
             return .h
         case .v_accordion, .v_list:
             return .v
-        case .floating, .tiling, .sticky, .main:
+        case .floating, .tiling, .sticky:
             return nil
         }
     }

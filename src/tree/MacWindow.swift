@@ -86,8 +86,6 @@ final class MacWindow: Window, CustomStringConvertible {
         return AXUIElementPerformAction(closeButton, kAXPressAction as CFString) == AXError.success
     }
 
-    // todo current approach breaks mission control (three fingers up the trackpad). Or is it only because of IDEA?
-    // todo hypnotize: change size to cooperate with mission control (make it configurable)
     func hideViaEmulation() {
         //guard let monitorApproximation else { return }
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent

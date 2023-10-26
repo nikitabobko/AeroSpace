@@ -37,9 +37,8 @@ enum DefaultContainerOrientation: String {
 }
 
 enum ConfigLayout: String {
-    case main
     case h_accordion, v_accordion, h_list, v_list
-    case tiling, floating, sticky // todo can sticky windows be tiling?
+    case tiling, floating, sticky
 }
 
 struct Mode: Copyable {

@@ -49,7 +49,7 @@ default-root-container-orientation = 'auto'
 # You can uncomment this line to open up terminal with alt + enter shortcut
 # alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
-alt-slash = 'layout h_list v_list' # todo layout vs change-parent-container-kind
+alt-slash = 'layout h_list v_list'
 alt-comma = 'layout h_accordion v_accordion'
 
 alt-h = 'focus left'
