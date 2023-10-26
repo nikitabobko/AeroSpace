@@ -141,7 +141,7 @@ alt-shift-tab = 'move-workspace-to-display next'
 [mode.service.binding]
 r = ['flatten-workspace-tree', 'mode main']
 o = ['reload-config', 'mode main']
-s = ['layout sticky', 'mode main']
+#s = ['layout sticky', 'mode main'] # todo sticky is not yet supported
 f = ['layout floating', 'mode main']
 backslash = ['close-all-windows-but-current', 'mode main']
 esc = 'mode main'

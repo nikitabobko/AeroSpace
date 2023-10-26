@@ -38,7 +38,7 @@ enum DefaultContainerOrientation: String {
 
 enum ConfigLayout: String {
     case h_accordion, v_accordion, h_list, v_list
-    case tiling, floating, sticky
+    case tiling, floating
 }
 
 struct Mode: Copyable {
