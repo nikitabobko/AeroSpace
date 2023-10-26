@@ -13,14 +13,14 @@ struct LayoutCommand: Command {
     func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
         guard let window = focusedWindowOrEffectivelyFocused else { return }
-        let targetLayout: ConfigLayout? = toggleBetween.firstIndex(of: window.configLayout)
+        let targetLayout: ConfigLayout = toggleBetween.firstIndex(of: window.configLayout)
             .flatMap { toggleBetween.getOrNil(atIndex: $0 + 1) }
-            .orElse { toggleBetween.first }
+            .orElse { toggleBetween.first! }
         switch window.parent.kind {
         case .tilingContainer(let parent):
-            parent.layout = targetLayout?.simpleLayout ?? errorT("TODO")
+            parent.layout = targetLayout.simpleLayout ?? errorT("TODO")
             if config.enableNormalizationOppositeOrientationForNestedContainers {
-                var orientation = targetLayout?.orientation ?? errorT("TODO")
+                var orientation = targetLayout.orientation ?? errorT("TODO")
                 parent.parentsWithSelf
                     .prefix(while: { $0 is TilingContainer })
                     .filterIsInstance(of: TilingContainer.self)
@@ -29,7 +29,7 @@ struct LayoutCommand: Command {
                         orientation = orientation.opposite
                     }
             } else {
-                parent.orientation = targetLayout?.orientation ?? errorT("TODO")
+                parent.orientation = targetLayout.orientation ?? errorT("TODO")
             }
         case .workspace:
             break // todo

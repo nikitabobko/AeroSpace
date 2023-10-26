@@ -32,7 +32,7 @@ TODO DOCUMENTATION the idea behind default keybindings
 ## Configuring AeroSpace
 
 AeroSpace will read config file from `~/.aerospace.toml`. Please see the following config samples:
-- The default config with comments: [default-config.toml](../config-examples/default-config.toml)
+- The default config contains all possible keys with comments: [default-config.toml](../config-examples/default-config.toml)
 - i3 like config: [i3-like-config-example.toml](../config-examples/i3-like-config-example.toml)
 
 AeroSpace uses TOML format for the config. TOML is a popular format with open specification. TOML is easy to read, and it supports
