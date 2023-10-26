@@ -11,7 +11,7 @@ struct MoveInCommand: Command {
             parent: parent,
             adaptiveWeight: prevBinding.adaptiveWeight,
             parent.orientation.opposite,
-            .List,
+            .list,
             index: prevBinding.index
         )
         currentWindow.unbindFromParent()

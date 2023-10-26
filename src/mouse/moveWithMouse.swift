@@ -63,9 +63,9 @@ private extension CGPoint {
         let point = self
         let target: TreeNode?
         switch tree.layout {
-        case .List:
+        case .list:
             target = tree.children.first(where: { $0.lastAppliedLayoutRect?.contains(point) == true })
-        case .Accordion:
+        case .accordion:
             target = tree.mostRecentChild
         }
         switch target?.genericKind {

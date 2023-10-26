@@ -10,11 +10,11 @@ class TilingContainer: TreeNode, NonLeafTreeNode {
     }
 
     static func newHList(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
-        TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .H, .List, index: index)
+        TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .h, .list, index: index)
     }
 
     static func newVList(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
-        TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .V, .List, index: index)
+        TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .v, .list, index: index)
     }
 }
 
@@ -25,16 +25,16 @@ extension TilingContainer {
 
 enum Orientation {
     /// Windows are planced along the **horizontal** line
-    case H
+    case h
     /// Windows are planced along the **vertical** line
-    case V
+    case v
 }
 
 extension Orientation {
-    var opposite: Orientation { self == .H ? .V : .H }
+    var opposite: Orientation { self == .h ? .v : .h }
 }
 
 enum Layout {
-    case List
-    case Accordion
+    case list
+    case accordion
 }

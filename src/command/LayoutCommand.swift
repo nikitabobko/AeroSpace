@@ -42,9 +42,9 @@ private extension ConfigLayout {
     var simpleLayout: Layout? {
         switch self {
         case .h_accordion, .v_accordion:
-            return .Accordion
+            return .accordion
         case .h_list, .v_list:
-            return .List
+            return .list
         case .floating, .tiling, .sticky, .main:
             return nil
         }
@@ -53,9 +53,9 @@ private extension ConfigLayout {
     var orientation: Orientation? {
         switch self {
         case .h_accordion, .h_list:
-            return .H
+            return .h
         case .v_accordion, .v_list:
-            return .V
+            return .v
         case .floating, .tiling, .sticky, .main:
             return nil
         }
@@ -67,10 +67,10 @@ private extension Window {
         switch parent.kind {
         case .tilingContainer(let parent):
             switch parent.layout {
-            case .List:
-                return parent.orientation == .H ? .h_list : .v_list
-            case .Accordion:
-                return parent.orientation == .H ? .h_accordion : .v_accordion
+            case .list:
+                return parent.orientation == .h ? .h_list : .v_list
+            case .accordion:
+                return parent.orientation == .h ? .h_accordion : .v_accordion
             }
         case .workspace:
             return .floating

@@ -154,12 +154,12 @@ extension TreeNode {
             return .window(window.windowId)
         case .tilingContainer(let container):
             switch container.layout {
-            case .List:
-                return container.orientation == .H
+            case .list:
+                return container.orientation == .h
                     ? .h_list(container.children.map(\.layoutDescription))
                     : .v_list(container.children.map(\.layoutDescription))
-            case .Accordion:
-                return container.orientation == .H
+            case .accordion:
+                return container.orientation == .h
                     ? .h_accordion(container.children.map(\.layoutDescription))
                     : .v_accordion(container.children.map(\.layoutDescription))
             }

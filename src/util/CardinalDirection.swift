@@ -3,7 +3,7 @@ enum CardinalDirection: String {
 }
 
 extension CardinalDirection {
-    var orientation: Orientation { self == .up || self == .down ? .V : .H }
+    var orientation: Orientation { self == .up || self == .down ? .v : .h }
     var isPositive: Bool { self == .down || self == .right }
     var opposite: CardinalDirection {
         switch self {

@@ -16,12 +16,12 @@ struct ResizeCommand: Command { // todo cover with tests
             let parent: TilingContainer
             switch dimension {
             case .width:
-                orientation = .H
+                orientation = .h
                 guard let first = window.parents.filterIsInstance(of: TilingContainer.self)
                     .first(where: { $0.orientation == orientation }) else { return }
                 parent = first
             case .height:
-                orientation = .V
+                orientation = .v
                 guard let first = window.parents.filterIsInstance(of: TilingContainer.self)
                     .first(where: { $0.orientation == orientation }) else { return }
                 parent = first

@@ -2,7 +2,7 @@ extension TreeNode {
     func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat, startup: Bool) {
         var point = point
         if let orientation = (self as? TilingContainer)?.orientation, orientation == (parent as? TilingContainer)?.orientation {
-            point = orientation == .H
+            point = orientation == .h
                 ? point + CGPoint(x: 0, y: config.indentForNestedContainersWithTheSameOrientation)
                 : point + CGPoint(x: config.indentForNestedContainersWithTheSameOrientation, y: 0)
         }
@@ -23,9 +23,9 @@ extension TreeNode {
         case .tilingContainer(let container):
             lastAppliedLayoutRect = rect
             switch container.layout {
-            case .List:
+            case .list:
                 container.layoutList(point, width: width, height: height, startup: startup)
-            case .Accordion:
+            case .accordion:
                 container.layoutAccordion(point, width: width, height: height, startup: startup)
             }
         }
@@ -35,17 +35,17 @@ extension TreeNode {
 private extension TilingContainer {
     func layoutList(_ point: CGPoint, width: CGFloat, height: CGFloat, startup: Bool) {
         var point = point
-        guard let delta = ((orientation == .H ? width : height) - children.sumOf { $0.getWeight(orientation) })
+        guard let delta = ((orientation == .h ? width : height) - children.sumOf { $0.getWeight(orientation) })
             .div(children.count) else { return }
         for child in children {
             child.setWeight(orientation, child.getWeight(orientation) + delta)
             child.layoutRecursive(
                 point,
-                width: orientation == .H ? child.hWeight : width,
-                height: orientation == .V ? child.vWeight : height,
+                width: orientation == .h ? child.hWeight : width,
+                height: orientation == .v ? child.vWeight : height,
                 startup: startup
             )
-            point = orientation == .H
+            point = orientation == .h
                 ? point.copy(\.x, point.x + child.hWeight)
                 : point.copy(\.y, point.y + child.vWeight)
         }
@@ -77,14 +77,14 @@ private extension TilingContainer {
                 rPadding = padding
             }
             switch orientation {
-            case .H:
+            case .h:
                 child.layoutRecursive(
                     point + CGPoint(x: lPadding, y: 0),
                     width: width - rPadding - lPadding,
                     height: height,
                     startup: startup
                 )
-            case .V:
+            case .v:
                 child.layoutRecursive(
                     point + CGPoint(x: 0, y: lPadding),
                     width: width,

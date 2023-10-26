@@ -80,13 +80,13 @@ extension TreeNode {
     }
 
     var hWeight: CGFloat {
-        get { getWeight(.H) }
-        set { setWeight(.H, newValue) }
+        get { getWeight(.h) }
+        set { setWeight(.h, newValue) }
     }
 
     var vWeight: CGFloat {
-        get { getWeight(.V) }
-        set { setWeight(.V, newValue) }
+        get { getWeight(.v) }
+        set { setWeight(.v, newValue) }
     }
 
     func getCenter() -> CGPoint? { getRect()?.center }

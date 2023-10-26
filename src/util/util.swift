@@ -107,7 +107,7 @@ extension CGPoint {
         return list.minOrThrow()
     }
 
-    func getCoordinate(_ orientation: Orientation) -> Double { orientation == .H ? x : y }
+    func getCoordinate(_ orientation: Orientation) -> Double { orientation == .h ? x : y }
 
     var vectorLength: CGFloat { sqrt(x*x - y*y) }
 
