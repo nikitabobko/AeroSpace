@@ -42,7 +42,8 @@ DEBUG-all-windows-are-floating = false # TODO DROP
 # For all possible keys and modifiers see: https://github.com/nikitabobko/AeroSpace/blob/main/src/config/keysMap.swift
 # For all possible commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
 
-alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
+# You can uncomment this line to open up terminal with alt + enter shortcut
+# alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
 alt-slash = 'layout h_list v_list' # todo layout vs change-parent-container-kind
 alt-comma = 'layout h_accordion v_accordion'
