@@ -58,7 +58,9 @@ class HotkeyBinding {
 
     func activate() {
         hotKey = HotKey(key: key, modifiers: modifiers, keyUpHandler: { [command] in
-            Task { await command.run() }
+            if TrayMenuModel.shared.isEnabled {
+                Task { await command.run() }
+            }
         })
     }
 

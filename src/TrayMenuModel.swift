@@ -4,6 +4,8 @@ class TrayMenuModel: ObservableObject {
     private init() {}
 
     @Published var trayText: String = ""
+    /// Is "layouting" enabled
+    @Published var isEnabled: Bool = true
 }
 
 func updateTrayText() {

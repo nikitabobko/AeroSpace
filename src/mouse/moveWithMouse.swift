@@ -1,5 +1,5 @@
 func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
-    if let window = data?.window {
+    if let window = data?.window, TrayMenuModel.shared.isEnabled {
         moveWithMouseIfTheCase(window)
     }
     refresh()

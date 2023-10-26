@@ -32,6 +32,7 @@ struct AeroSpaceApp: App {
             let identification      = "\(Bundle.appName) v\(Bundle.appVersion) \(gitHash)"
             Text(shortIdentification)
             Button("Copy to clipboard") { identification.copyToClipboard() }
+                .keyboardShortcut("C", modifiers: .command)
             Divider()
             Text("Workspaces:")
             ForEach(Workspace.all) { (workspace: Workspace) in
@@ -47,9 +48,15 @@ struct AeroSpaceApp: App {
                 }
             }
             Divider()
+            Button(viewModel.isEnabled ? "Disable" : "Enable") {
+                viewModel.isEnabled = !viewModel.isEnabled
+                refresh()
+            }
+                .keyboardShortcut("E", modifiers: .command)
             Button("Reload config") {
                 Task { await ReloadConfigCommand().run() }
             }
+                .keyboardShortcut("R", modifiers: .command)
             Button("Quit \(Bundle.appName)") {
                 for app in apps { // Make all windows fullscreen before Quit
                     for window in app.windows {
@@ -65,7 +72,7 @@ struct AeroSpaceApp: App {
                 .keyboardShortcut("Q", modifiers: .command)
         } label: {
             // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
-            Text(viewModel.trayText)
+            Text(viewModel.isEnabled ? viewModel.trayText : "⏸️")
         }
     }
 }

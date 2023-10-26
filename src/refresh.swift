@@ -9,6 +9,10 @@ func refresh(startup: Bool = false) {
     // Garbage collect workspaces after apps, because workspaces contain apps.
     Workspace.garbageCollectUnusedWorkspaces()
 
+    if !TrayMenuModel.shared.isEnabled {
+        return
+    }
+
     refreshFocusedWorkspaceBasedOnFocusedWindow()
     updateTrayText()
     detectNewWindowsAndAttachThemToWorkspaces(startup: startup)
