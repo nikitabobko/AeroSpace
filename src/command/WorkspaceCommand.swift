@@ -4,7 +4,8 @@ struct WorkspaceCommand : Command {
     func runWithoutRefresh() {
         precondition(Thread.current.isMainThread)
         let workspace = Workspace.get(byName: workspaceName)
-        if let window = workspace.mostRecentWindow { // switch to not empty workspace
+        // todo drop anyLeafWindowRecursive. It must not be necessary
+        if let window = workspace.mostRecentWindow ?? workspace.anyLeafWindowRecursive { // switch to not empty workspace
             // Make sure that stack of windows is correct from macOS perspective (important for closing windows)
             // Alternative: focus mru window in destroyedObs (con: possible flickering when windows are closed,
             // because focusedWindow is source of truth for workspaces)
