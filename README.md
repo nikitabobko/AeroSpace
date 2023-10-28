@@ -31,7 +31,7 @@ updates
   on native macOS Spaces due to
   their considerable limitations
 - Plain text configuration (dotfiles friendly)
-- **[PLANNED]** CLI scriptable
+- ~~CLI scriptable~~ [[PLANNED]](https://github.com/nikitabobko/AeroSpace/issues/3)
 - Doesn't require disabling SIP (System Integrity Protection)
 - Proper multi-monitor support (i3-like paradigm)
 - Status menu icon displays current workspace name
