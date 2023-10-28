@@ -54,6 +54,10 @@ extension Sequence {
         return result
     }
 
+    func grouped<Group>(by criterion: (_ transforming: Element) -> Group) -> [Group: [Element]] {
+        Dictionary(grouping: self, by: criterion)
+    }
+
     var withIndex: [(index: Int, value: Element)] {
         var index = -1
         return map {

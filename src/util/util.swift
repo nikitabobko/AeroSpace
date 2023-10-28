@@ -136,10 +136,14 @@ extension CGPoint {
         return list.minOrThrow()
     }
 
+    func coerceIn(rect: Rect) -> CGPoint {
+        CGPoint(x: x.coerceIn(rect.minX...(rect.maxX - 1)), y: y.coerceIn(rect.minY...(rect.maxY - 1)))
+    }
+
     func addingXOffset(_ offset: CGFloat) -> CGPoint { CGPoint(x: x + offset, y: y) }
     func addingYOffset(_ offset: CGFloat) -> CGPoint { CGPoint(x: x, y: y + offset) }
 
-    func getCoordinate(_ orientation: Orientation) -> Double { orientation == .h ? x : y }
+    func getProjection(_ orientation: Orientation) -> Double { orientation == .h ? x : y }
 
     var vectorLength: CGFloat { sqrt(x*x - y*y) }
 
@@ -157,6 +161,16 @@ extension CGPoint {
 extension CGFloat {
     func div(_ denominator: Int) -> CGFloat? {
         denominator == 0 ? nil : self / CGFloat(denominator)
+    }
+
+    func coerceIn(_ range: ClosedRange<CGFloat>) -> CGFloat {
+        if self > range.upperBound {
+            return range.upperBound
+        } else if self < range.lowerBound {
+            return range.lowerBound
+        } else {
+            return self
+        }
     }
 }
 

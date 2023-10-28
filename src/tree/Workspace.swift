@@ -10,7 +10,7 @@ private var emptyInvisibleWorkspaceGenerator: some IteratorProtocol<Workspace> {
         .makeIterator()
 }
 
-func getOrCreateNextEmptyInvisibleWorkspace() -> Workspace {
+func getOrCreateNextEmptyInvisibleWorkspace() -> Workspace { // todo make monitor oriented
     var generator = emptyInvisibleWorkspaceGenerator
     return generator.next() ?? errorT("Can't create empty workspace")
 }

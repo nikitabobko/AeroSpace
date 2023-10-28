@@ -1,12 +1,13 @@
 extension TreeNode {
     func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat, startup: Bool) {
         var point = point
+        // lastAppliedLayoutRect shouldn't be indented
+        let rect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
         if let orientation = (self as? TilingContainer)?.orientation, orientation == (parent as? TilingContainer)?.orientation {
             point = orientation == .h
                 ? point + CGPoint(x: 0, y: config.indentForNestedContainersWithTheSameOrientation)
                 : point + CGPoint(x: config.indentForNestedContainersWithTheSameOrientation, y: 0)
         }
-        let rect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
         switch genericKind {
         case .workspace(let workspace):
             lastAppliedLayoutRect = rect

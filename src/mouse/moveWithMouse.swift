@@ -23,7 +23,7 @@ private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
     if targetWorkspace != window.workspace { // Move window to a different display
         let index: Int
         if let swapTarget, let parent = swapTarget.parent as? TilingContainer, let targetRect = swapTarget.lastAppliedLayoutRect {
-            index = mouseLocation.getCoordinate(parent.orientation) >= targetRect.center.getCoordinate(parent.orientation)
+            index = mouseLocation.getProjection(parent.orientation) >= targetRect.center.getProjection(parent.orientation)
                 ? swapTarget.ownIndex + 1
                 : swapTarget.ownIndex
         } else {
@@ -58,7 +58,7 @@ func swapWindows(_ window1: Window, _ window2: Window) {
     }
 }
 
-private extension CGPoint {
+extension CGPoint {
     func findIn(tree: TilingContainer) -> Window? {
         let point = self
         let target: TreeNode?
