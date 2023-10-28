@@ -1,11 +1,11 @@
 struct CompositeCommand: Command {
     let subCommands: [Command]
 
-    func runWithoutRefresh() async {
+    func runWithoutLayout() async {
         check(Thread.current.isMainThread)
         for command in subCommands {
-            await command.runWithoutRefresh()
-            normalizeContainers()
+            await command.runWithoutLayout()
+            refresh(layout: false)
         }
     }
 }

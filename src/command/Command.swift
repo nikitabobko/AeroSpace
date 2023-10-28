@@ -1,13 +1,13 @@
 protocol Command {
     @MainActor
-    func runWithoutRefresh() async
+    func runWithoutLayout() async
 }
 
 extension Command {
     @MainActor
     func run() async  {
-        refresh()
-        await runWithoutRefresh()
+        refresh(layout: false)
+        await runWithoutLayout()
         refresh()
     }
 }

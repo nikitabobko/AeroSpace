@@ -1,7 +1,7 @@
 struct MoveInCommand: Command {
     let direction: CardinalDirection
 
-    func runWithoutRefresh() {
+    func runWithoutLayout() {
         check(Thread.current.isMainThread)
         guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
         guard let (parent, ownIndex) = currentWindow.closestParent(hasChildrenInDirection: direction, withLayout: nil) else { return }

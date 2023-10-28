@@ -15,7 +15,7 @@ final class FlattenWorkspaceTreeCommandTest: XCTestCase {
             TestWindow(id: 3, parent: $0) // floating
         }
 
-        await FlattenWorkspaceTreeCommand().runWithoutRefresh()
+        await FlattenWorkspaceTreeCommand().runWithoutLayout()
         workspace.normalizeContainers()
         XCTAssertEqual(workspace.layoutDescription, .workspace([.h_list([.window(1), .window(2)]), .window(3)]))
     }

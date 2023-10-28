@@ -11,7 +11,7 @@ final class MoveInCommandTest: XCTestCase {
             TestWindow(id: 2, parent: $0)
         }
 
-        await MoveInCommand(direction: .right).runWithoutRefresh()
+        await MoveInCommand(direction: .right).runWithoutLayout()
         XCTAssertEqual(root.layoutDescription, .h_list([
             .window(0),
             .v_list([

@@ -40,7 +40,7 @@ final class FocusCommandTest: XCTestCase {
             TestWindow(id: 2, parent: $0)
         }
 
-        await FocusCommand(direction: .right).runWithoutRefresh()
+        await FocusCommand(direction: .right).runWithoutLayout()
         XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
@@ -50,9 +50,9 @@ final class FocusCommandTest: XCTestCase {
             TestWindow(id: 2, parent: $0)
         }
 
-        await FocusCommand(direction: .up).runWithoutRefresh()
+        await FocusCommand(direction: .up).runWithoutLayout()
         XCTAssertEqual(focusedWindow?.windowId, 1)
-        await FocusCommand(direction: .down).runWithoutRefresh()
+        await FocusCommand(direction: .down).runWithoutLayout()
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
@@ -62,7 +62,7 @@ final class FocusCommandTest: XCTestCase {
             TestWindow(id: 2, parent: $0)
         }
 
-        await FocusCommand(direction: .left).runWithoutRefresh()
+        await FocusCommand(direction: .left).runWithoutLayout()
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
@@ -84,18 +84,18 @@ final class FocusCommandTest: XCTestCase {
         }
 
         XCTAssertEqual(workspace.mostRecentWindow?.windowId, 3) // The latest binded
-        await FocusCommand(direction: .right).runWithoutRefresh()
+        await FocusCommand(direction: .right).runWithoutLayout()
         XCTAssertEqual(focusedWindow?.windowId, 3)
 
         startWindow.focus()
         window2.markAsMostRecentChild()
-        await FocusCommand(direction: .right).runWithoutRefresh()
+        await FocusCommand(direction: .right).runWithoutLayout()
         XCTAssertEqual(focusedWindow?.windowId, 2)
 
         startWindow.focus()
         window3.markAsMostRecentChild()
         unrelatedWindow.markAsMostRecentChild()
-        await FocusCommand(direction: .right).runWithoutRefresh()
+        await FocusCommand(direction: .right).runWithoutLayout()
         XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
@@ -107,7 +107,7 @@ final class FocusCommandTest: XCTestCase {
             }
         }
 
-        await FocusCommand(direction: .left).runWithoutRefresh()
+        await FocusCommand(direction: .left).runWithoutLayout()
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
@@ -119,7 +119,7 @@ final class FocusCommandTest: XCTestCase {
             }
         }
 
-        await FocusCommand(direction: .left).runWithoutRefresh()
+        await FocusCommand(direction: .left).runWithoutLayout()
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 }

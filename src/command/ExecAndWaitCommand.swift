@@ -1,7 +1,7 @@
 struct ExecAndWaitCommand: Command {
     let bashCommand: String
 
-    func runWithoutRefresh() async {
+    func runWithoutLayout() async {
         check(Thread.current.isMainThread)
         await withCheckedContinuation { (continuation: CheckedContinuation<(), Never>) in
             let process = Process()

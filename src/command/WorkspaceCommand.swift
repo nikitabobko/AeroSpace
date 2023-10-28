@@ -1,7 +1,7 @@
 struct WorkspaceCommand : Command {
     let workspaceName: String
 
-    func runWithoutRefresh() {
+    func runWithoutLayout() {
         check(Thread.current.isMainThread)
         let workspace = Workspace.get(byName: workspaceName)
         // todo drop anyLeafWindowRecursive. It must not be necessary

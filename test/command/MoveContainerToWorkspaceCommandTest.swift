@@ -11,7 +11,7 @@ final class MoveContainerToWorkspaceCommandTest: XCTestCase {
         }
 
         XCTAssertTrue(focusedWorkspaceSourceOfTruth == .macOs)
-        await MoveContainerToWorkspaceCommand(targetWorkspaceName: "b").runWithoutRefresh()
+        await MoveContainerToWorkspaceCommand(targetWorkspaceName: "b").runWithoutLayout()
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         XCTAssertTrue(focusedWorkspaceSourceOfTruth == .ownModel)
         XCTAssertEqual((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
@@ -23,7 +23,7 @@ final class MoveContainerToWorkspaceCommandTest: XCTestCase {
         }
 
         XCTAssertTrue(focusedWorkspaceSourceOfTruth == .macOs)
-        await MoveContainerToWorkspaceCommand(targetWorkspaceName: "b").runWithoutRefresh()
+        await MoveContainerToWorkspaceCommand(targetWorkspaceName: "b").runWithoutLayout()
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         XCTAssertTrue(focusedWorkspaceSourceOfTruth == .ownModel)
         XCTAssertEqual(Workspace.get(byName: "b").children.filterIsInstance(of: Window.self).singleOrNil()?.windowId, 1)

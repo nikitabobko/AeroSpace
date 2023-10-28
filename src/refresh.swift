@@ -1,7 +1,7 @@
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input.
 /// The function is idempotent.
-func refresh(startup: Bool = false) {
+func refresh(startup: Bool = false, layout: Bool = true) {
     check(Thread.current.isMainThread)
     //debug("refresh \(Date.now.formatted(date: .abbreviated, time: .standard))")
 
@@ -20,8 +20,10 @@ func refresh(startup: Bool = false) {
 
     normalizeContainers()
 
-    layoutWorkspaces()
-    layoutWindows(startup: startup)
+    if layout {
+        layoutWorkspaces()
+        layoutWindows(startup: startup)
+    }
 
     updateMostRecentWindow()
 }
@@ -69,7 +71,7 @@ private func layoutWorkspaces() {
     }
 }
 
-func normalizeContainers() {
+private func normalizeContainers() {
     for workspace in Workspace.all { // todo do it only for visible workspaces?
         workspace.normalizeContainers()
     }

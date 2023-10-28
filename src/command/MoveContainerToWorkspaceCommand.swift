@@ -1,7 +1,7 @@
 struct MoveContainerToWorkspaceCommand: Command {
     let targetWorkspaceName: String
 
-    func runWithoutRefresh() async {
+    func runWithoutLayout() async {
         guard let focused = focusedWindow else { return }
         let preserveWorkspace = focused.workspace
         let targetWorkspace = Workspace.get(byName: targetWorkspaceName)
@@ -9,6 +9,6 @@ struct MoveContainerToWorkspaceCommand: Command {
         focused.unbindFromParent()
         focused.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO) // todo different monitor
 
-        WorkspaceCommand(workspaceName: preserveWorkspace.name).runWithoutRefresh()
+        WorkspaceCommand(workspaceName: preserveWorkspace.name).runWithoutLayout()
     }
 }
