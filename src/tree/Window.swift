@@ -21,6 +21,8 @@ class Window: TreeNode, Hashable {
         hasher.combine(windowId)
     }
 
+    func getTopLeftCorner() -> CGPoint? { error("Not implemented") }
+    func getSize() -> CGSize? { error("Not implemented") }
     var title: String? { error("Not implemented") }
     var isHiddenViaEmulation: Bool { error("Not implemented") }
     func setSize(_ size: CGSize) { error("Not implemented") }

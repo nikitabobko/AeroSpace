@@ -36,11 +36,6 @@ enum DefaultContainerOrientation: String {
     case horizontal, vertical, auto
 }
 
-enum ConfigLayout: String {
-    case h_accordion, v_accordion, h_list, v_list
-    case tiling, floating
-}
-
 struct Mode: Copyable {
     /// User visible name. Optional. todo drop it?
     var name: String?

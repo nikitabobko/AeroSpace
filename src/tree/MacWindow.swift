@@ -116,7 +116,7 @@ final class MacWindow: Window, CustomStringConvertible {
         axWindow.set(Ax.sizeAttr, size)
     }
 
-    func getSize() -> CGSize? {
+    override func getSize() -> CGSize? {
         axWindow.get(Ax.sizeAttr)
     }
 
@@ -124,7 +124,7 @@ final class MacWindow: Window, CustomStringConvertible {
         axWindow.set(Ax.topLeftCornerAttr, point)
     }
 
-    private func getTopLeftCorner() -> CGPoint? {
+    override func getTopLeftCorner() -> CGPoint? {
         axWindow.get(Ax.topLeftCornerAttr)
     }
 
@@ -148,22 +148,26 @@ func shouldFloat(_ axWindow: AXUIElement) -> Bool {
 }
 
 func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace) -> BindingData {
-    let parent: NonLeafTreeNode
-    let index: Int
-    if shouldFloat(axWindow) {
-        parent = workspace
-        index = INDEX_BIND_LAST
+    shouldFloat(axWindow)
+        ? BindingData(parent: workspace as NonLeafTreeNode, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+        : getBindingDataForNewTilingWindow(workspace)
+}
+
+func getBindingDataForNewTilingWindow(_ workspace: Workspace) -> BindingData {
+    let mruWindow = workspace.mostRecentWindow
+    if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
+        return BindingData(
+            parent: tilingParent,
+            adaptiveWeight: WEIGHT_AUTO,
+            index: mruWindow.ownIndex + 1
+        )
     } else {
-        let mruWindow = workspace.mostRecentWindow
-        if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
-            parent = tilingParent
-            index = mruWindow.ownIndex + 1
-        } else {
-            parent = workspace.rootTilingContainer
-            index = INDEX_BIND_LAST
-        }
+        return BindingData(
+            parent: workspace.rootTilingContainer,
+            adaptiveWeight: WEIGHT_AUTO,
+            index: INDEX_BIND_LAST
+        )
     }
-    return BindingData(parent: parent, adaptiveWeight: WEIGHT_AUTO, index: index)
 }
 
 extension UnsafeMutableRawPointer {

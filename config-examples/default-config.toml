@@ -49,22 +49,27 @@ default-root-container-orientation = 'auto'
 # You can uncomment this line to open up terminal with alt + enter shortcut
 # alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#layout
 alt-slash = 'layout h_list v_list'
 alt-comma = 'layout h_accordion v_accordion'
 
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#focus
 alt-h = 'focus left'
 alt-j = 'focus down'
 alt-k = 'focus up'
 alt-l = 'focus right'
 
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#move-through
 alt-shift-h = 'move-through left'
 alt-shift-j = 'move-through down'
 alt-shift-k = 'move-through up'
 alt-shift-l = 'move-through right'
 
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#resize
 alt-shift-minus = 'resize smart -50'
 alt-shift-equal = 'resize smart +50'
 
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#workspace
 alt-0 = 'workspace 0'
 alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
@@ -98,9 +103,7 @@ alt-x = 'workspace X'
 alt-y = 'workspace Y'
 alt-z = 'workspace Z'
 
-alt-shift-semicolon = 'mode service'
-alt-shift-slash = 'mode move-in'
-
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#move-container-to-workspace
 alt-shift-0 = 'move-container-to-workspace 0'
 alt-shift-1 = 'move-container-to-workspace 1'
 alt-shift-2 = 'move-container-to-workspace 2'
@@ -134,15 +137,21 @@ alt-shift-x = 'move-container-to-workspace X'
 alt-shift-y = 'move-container-to-workspace Y'
 alt-shift-z = 'move-container-to-workspace Z'
 
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#move-workspace-to-display
 alt-shift-tab = 'move-workspace-to-display next'
+
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#mode
+alt-shift-semicolon = 'mode service'
+alt-shift-slash = 'mode move-in'
 
 # It's a declaration of binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 [mode.service.binding]
 r = ['flatten-workspace-tree', 'mode main']
 o = ['reload-config', 'mode main']
-#s = ['layout sticky', 'mode main'] # todo sticky is not yet supported
-f = ['layout floating', 'mode main']
+#s = ['layout sticky tiling', 'mode main'] # todo sticky is not yet supported
+f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 backslash = ['close-all-windows-but-current', 'mode main']
 esc = 'mode main'
 enter = 'mode main'

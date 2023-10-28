@@ -45,9 +45,7 @@ private extension TilingContainer {
                 height: orientation == .v ? child.vWeight : height,
                 startup: startup
             )
-            point = orientation == .h
-                ? point.copy(\.x, point.x + child.hWeight)
-                : point.copy(\.y, point.y + child.vWeight)
+            point = orientation == .h ? point.addingXOffset(child.hWeight) : point.addingYOffset(child.vWeight)
         }
     }
 

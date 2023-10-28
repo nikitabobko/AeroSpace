@@ -1,10 +1,15 @@
-/// Syntax:
-/// layout (main|h_accordion|v_accordion|h_list|v_list|floating|tiling)...
 struct LayoutCommand: Command {
-    let toggleBetween: [ConfigLayout]
+    let toggleBetween: [LayoutDescription]
 
-    init?(toggleBetween: [ConfigLayout]) {
-        if toggleBetween.isEmpty || toggleBetween.toSet().count != toggleBetween.count {
+    enum LayoutDescription: String {
+        case accordion, list
+        case horizontal, vertical
+        case h_accordion, v_accordion, h_list, v_list
+        case tiling, floating // todo add sticky
+    }
+
+    init?(toggleBetween: [LayoutDescription]) {
+        if toggleBetween.isEmpty {
             return nil
         }
         self.toggleBetween = toggleBetween
@@ -13,66 +18,91 @@ struct LayoutCommand: Command {
     func runWithoutRefresh() {
         check(Thread.current.isMainThread)
         guard let window = focusedWindowOrEffectivelyFocused else { return }
-        let targetLayout: ConfigLayout = toggleBetween.firstIndex(of: window.configLayout)
+        let targetDescription: LayoutDescription = toggleBetween.firstIndex(where: { window.matchesDescription($0) })
             .flatMap { toggleBetween.getOrNil(atIndex: $0 + 1) }
             .orElse { toggleBetween.first! }
-        switch window.parent.kind {
-        case .tilingContainer(let parent):
-            parent.layout = targetLayout.simpleLayout ?? errorT("TODO")
-            if config.enableNormalizationOppositeOrientationForNestedContainers {
-                var orientation = targetLayout.orientation ?? errorT("TODO")
-                parent.parentsWithSelf
-                    .prefix(while: { $0 is TilingContainer })
-                    .filterIsInstance(of: TilingContainer.self)
-                    .forEach {
-                        $0.orientation = orientation
-                        orientation = orientation.opposite
-                    }
-            } else {
-                parent.orientation = targetLayout.orientation ?? errorT("TODO")
-            }
-        case .workspace:
-            break // todo
+        if window.matchesDescription(targetDescription) {
+            return
+        }
+        switch targetDescription {
+        case .h_accordion:
+            changeTilingLayout(targetLayout: .accordion, targetOrientation: .h, window: window)
+        case .v_accordion:
+            changeTilingLayout(targetLayout: .accordion, targetOrientation: .v, window: window)
+        case .h_list:
+            changeTilingLayout(targetLayout: .list, targetOrientation: .h, window: window)
+        case .v_list:
+            changeTilingLayout(targetLayout: .list, targetOrientation: .v, window: window)
+        case .accordion:
+            changeTilingLayout(targetLayout: .accordion, targetOrientation: nil, window: window)
+        case .list:
+            changeTilingLayout(targetLayout: .list, targetOrientation: nil, window: window)
+        case .horizontal:
+            changeTilingLayout(targetLayout: nil, targetOrientation: .h, window: window)
+        case .vertical:
+            changeTilingLayout(targetLayout: nil, targetOrientation: .v, window: window)
+        case .tiling:
+            let data = getBindingDataForNewTilingWindow(window.unbindFromParent().parent.workspace)
+            window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
+        case .floating:
+            let workspace = window.unbindFromParent().parent.workspace
+            window.bindAsFloatingWindow(to: workspace)
+            let padding = CGFloat(30)
+            guard let size = window.getSize() else { break }
+            guard let topLeftCorner = window.getTopLeftCorner() else { break }
+            window.setTopLeftCorner(topLeftCorner.addingXOffset(padding).addingYOffset(padding))
+            window.setSize(window.appearedWithSize
+                ?? CGSize(width: size.width - 2 * padding, height: size.height - 2 * padding))
         }
     }
 }
 
-private extension ConfigLayout {
-    var simpleLayout: Layout? {
-        switch self {
-        case .h_accordion, .v_accordion:
-            return .accordion
-        case .h_list, .v_list:
-            return .list
-        case .floating, .tiling:
-            return nil
+private func changeTilingLayout(targetLayout: Layout?, targetOrientation: Orientation?, window: Window) {
+    switch window.parent.kind {
+    case .tilingContainer(let parent):
+        let targetOrientation = targetOrientation ?? parent.orientation
+        let targetLayout = targetLayout ?? parent.layout
+        parent.layout = targetLayout
+        if config.enableNormalizationOppositeOrientationForNestedContainers {
+            var orientation = targetOrientation
+            parent.parentsWithSelf
+                .prefix(while: { $0 is TilingContainer })
+                .filterIsInstance(of: TilingContainer.self)
+                .forEach {
+                    $0.orientation = orientation
+                    orientation = orientation.opposite
+                }
+        } else {
+            parent.orientation = targetOrientation
         }
-    }
-
-    var orientation: Orientation? {
-        switch self {
-        case .h_accordion, .h_list:
-            return .h
-        case .v_accordion, .v_list:
-            return .v
-        case .floating, .tiling:
-            return nil
-        }
+    case .workspace:
+        break // Do nothing for non-tiling windows
     }
 }
 
 private extension Window {
-    var configLayout: ConfigLayout {
-        switch parent.kind {
-        case .tilingContainer(let parent):
-            switch parent.layout {
-            case .list:
-                return parent.orientation == .h ? .h_list : .v_list
-            case .accordion:
-                return parent.orientation == .h ? .h_accordion : .v_accordion
-            }
-        case .workspace:
-            return .floating
+    func matchesDescription(_ layout: LayoutCommand.LayoutDescription) -> Bool {
+        switch layout {
+        case .accordion:
+            return (parent as? TilingContainer)?.layout == .accordion
+        case .list:
+            return (parent as? TilingContainer)?.layout == .list
+        case .horizontal:
+            return (parent as? TilingContainer)?.orientation == .h
+        case .vertical:
+            return (parent as? TilingContainer)?.orientation == .v
+        case .h_accordion:
+            return (parent as? TilingContainer)?.lets { $0.layout == .accordion && $0.orientation == .h } == true
+        case .v_accordion:
+            return (parent as? TilingContainer)?.lets { $0.layout == .accordion && $0.orientation == .v } == true
+        case .h_list:
+            return (parent as? TilingContainer)?.lets { $0.layout == .list && $0.orientation == .h } == true
+        case .v_list:
+            return (parent as? TilingContainer)?.lets { $0.layout == .list && $0.orientation == .v } == true
+        case .tiling:
+            return parent is TilingContainer
+        case .floating:
+            return parent is Workspace
         }
     }
 }

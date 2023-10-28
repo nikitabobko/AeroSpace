@@ -136,6 +136,9 @@ extension CGPoint {
         return list.minOrThrow()
     }
 
+    func addingXOffset(_ offset: CGFloat) -> CGPoint { CGPoint(x: x + offset, y: y) }
+    func addingYOffset(_ offset: CGFloat) -> CGPoint { CGPoint(x: x, y: y + offset) }
+
     func getCoordinate(_ orientation: Orientation) -> Double { orientation == .h ? x : y }
 
     var vectorLength: CGFloat { sqrt(x*x - y*y) }
