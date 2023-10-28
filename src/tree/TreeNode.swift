@@ -116,7 +116,7 @@ class TreeNode: Equatable {
 
     @discardableResult
     func unbindFromParent() -> BindingData {
-        unbindIfPossible() ?? errorT("\(self) is already unbinded")
+        unbindIfPossible() ?? errorT("\(self) is already unbound")
     }
 
     static func ==(lhs: TreeNode, rhs: TreeNode) -> Bool {

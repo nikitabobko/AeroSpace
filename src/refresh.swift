@@ -40,9 +40,12 @@ private func refreshFocusedWorkspaceBasedOnFocusedWindow() {
     if focusedWorkspaceSourceOfTruth == .macOs {
         if let focusedWindow = focusedWindow {
             let focusedWorkspace: Workspace
-            if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation { // todo maybe drop once move with mouse is supported
-                focusedWorkspace = mouseLocation.monitorApproximation.activeWorkspace
-                focusedWindow.bindAsFloatingWindowTo(workspace: focusedWorkspace)
+            if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation {
+                focusedWorkspace = focusedWindow.getCenter()?.monitorApproximation.activeWorkspace ?? focusedWindow.workspace
+                if focusedWindow.parent != focusedWorkspace {
+                    focusedWindow.unbindFromParent()
+                    focusedWindow.bindAsFloatingWindowTo(workspace: focusedWorkspace)
+                }
             } else {
                 focusedWorkspace = focusedWindow.workspace
             }
