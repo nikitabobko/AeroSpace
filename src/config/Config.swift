@@ -9,7 +9,6 @@ struct RawConfig: Copyable {
     var afterStartupCommand: Command?
     var indentForNestedContainersWithTheSameOrientation: Int?
     var enableNormalizationFlattenContainers: Bool?
-    var floatingWindowsOnTop: Bool?
     var defaultRootContainerLayout: Layout?
     var defaultRootContainerOrientation: DefaultContainerOrientation?
     var startAtLogin: Bool?
@@ -21,7 +20,6 @@ struct Config {
     var afterStartupCommand: Command
     var indentForNestedContainersWithTheSameOrientation: Int
     var enableNormalizationFlattenContainers: Bool
-    var floatingWindowsOnTop: Bool
     var defaultRootContainerLayout: Layout
     var defaultRootContainerOrientation: DefaultContainerOrientation
     var startAtLogin: Bool

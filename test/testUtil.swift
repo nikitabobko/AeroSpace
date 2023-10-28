@@ -9,7 +9,6 @@ func setUpWorkspacesForTests() {
         afterStartupCommand: defaultConfig.afterStartupCommand,
         indentForNestedContainersWithTheSameOrientation: defaultConfig.indentForNestedContainersWithTheSameOrientation,
         enableNormalizationFlattenContainers: false, // Make layout tests more predictable
-        floatingWindowsOnTop: defaultConfig.floatingWindowsOnTop,
         defaultRootContainerLayout: .list, // Make default layout predictable
         defaultRootContainerOrientation: .horizontal, // Make default layout predictable
         startAtLogin: defaultConfig.startAtLogin,

@@ -17,10 +17,6 @@ indent-for-nested-containers-with-the-same-orientation = 30
 # todo Not tested
 start-at-login = false
 
-# todo drop. I don't see any value in providing configuration for this option. Why would anyone may want to set it
-#  to 'false'?
-floating-windows-on-top = true
-
 # Normalization. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
