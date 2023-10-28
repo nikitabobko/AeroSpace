@@ -6,21 +6,20 @@ struct WorkspaceCommand : Command {
         let workspace = Workspace.get(byName: workspaceName)
         // todo drop anyLeafWindowRecursive. It must not be necessary
         if let window = workspace.mostRecentWindow ?? workspace.anyLeafWindowRecursive { // switch to not empty workspace
-            // Make sure that stack of windows is correct from macOS perspective (important for closing windows)
-            // Alternative: focus mru window in destroyedObs (con: possible flickering when windows are closed,
-            // because focusedWindow is source of truth for workspaces)
             if !workspace.isVisible { // Only do it for invisible workspaces to avoid flickering when switch to already visible workspace
+                // Make sure that stack of windows is correct from macOS perspective (important for closing windows)
+                // Alternative: focus mru window in destroyedObs (con: possible flickering when windows are closed,
+                // because focusedWindow is source of truth for workspaces)
                 workspace.focusMruReversedRecursive()
             }
             focusedWorkspaceSourceOfTruth = .macOs
             window.focus()
-            // The switching itself will be done by refreshWorkspaces and layoutWorkspaces later in refresh
         } else { // switch to empty workspace
             check(workspace.isEffectivelyEmpty)
-            workspace.monitor.setActiveWorkspace(workspace)
-            focusedWorkspaceName = workspace.name
             focusedWorkspaceSourceOfTruth = .ownModel
         }
+        workspace.monitor.setActiveWorkspace(workspace)
+        focusedWorkspaceName = workspace.name
     }
 }
 

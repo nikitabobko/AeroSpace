@@ -68,8 +68,8 @@ private func layoutWorkspaces() {
     }
 }
 
-private func normalizeContainers() {
-    for workspace in Workspace.all {
+func normalizeContainers() {
+    for workspace in Workspace.all { // todo do it only for visible workspaces?
         workspace.normalizeContainers()
     }
 }

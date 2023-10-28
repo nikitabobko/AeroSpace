@@ -9,10 +9,11 @@ class TrayMenuModel: ObservableObject {
 }
 
 func updateTrayText() {
+    let sortedMonitors = sortedMonitors
     TrayMenuModel.shared.trayText = (activeMode.takeIf { $0 != mainModeId }?.first?.lets { "[\($0)] " } ?? "") +
         sortedMonitors
             .map {
-                ($0.activeWorkspace == Workspace.focused && monitors.count > 1 ? "*" : "") + $0.activeWorkspace.name
+                ($0.activeWorkspace == Workspace.focused && sortedMonitors.count > 1 ? "*" : "") + $0.activeWorkspace.name
             }
             .joined(separator: " │ ")
 }
