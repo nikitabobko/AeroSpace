@@ -47,28 +47,25 @@ alt-8 = 'workspace 8'
 alt-9 = 'workspace 9'
 alt-0 = 'workspace 10'
 
-#todo support parsing
-#alt-shift-1 = 'move container to workspace 1'
-#alt-shift-2 = 'move container to workspace 2'
-#alt-shift-3 = 'move container to workspace 3'
-#alt-shift-4 = 'move container to workspace 4'
-#alt-shift-5 = 'move container to workspace 5'
-#alt-shift-6 = 'move container to workspace 6'
-#alt-shift-7 = 'move container to workspace 7'
-#alt-shift-8 = 'move container to workspace 8'
-#alt-shift-9 = 'move container to workspace 9'
-#alt-shift-0 = 'move container to workspace 10'
+alt-shift-1 = 'move-container-to-workspace 1'
+alt-shift-2 = 'move-container-to-workspace 2'
+alt-shift-3 = 'move-container-to-workspace 3'
+alt-shift-4 = 'move-container-to-workspace 4'
+alt-shift-5 = 'move-container-to-workspace 5'
+alt-shift-6 = 'move-container-to-workspace 6'
+alt-shift-7 = 'move-container-to-workspace 7'
+alt-shift-8 = 'move-container-to-workspace 8'
+alt-shift-9 = 'move-container-to-workspace 9'
+alt-shift-0 = 'move-container-to-workspace 10'
 
 alt-shift-c = 'reload-config'
 
 alt-r = 'mode resize'
 
-#todo support parsing
-#[mode.resize.binding]
-## todo does it work?
-#h = 'resize shrink width 10'
-#j = 'resize grow height 10'
-#k = 'resize shrink height 10'
-#l = 'resize grow width 10'
-#enter = 'mode main'
-#esc = 'mode esc'
+[mode.resize.binding]
+h = 'resize width -50'
+j = 'resize height +50'
+k = 'resize height -50'
+l = 'resize width +50'
+enter = 'mode main'
+esc = 'mode esc'
