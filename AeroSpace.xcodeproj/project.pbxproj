@@ -18,6 +18,7 @@
 		1D408CDF1A489E527327EB15 /* CompositeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82CD9670B7A6050073E0F76 /* CompositeCommand.swift */; };
 		238EF26CAAADD1FE11312D7C /* default-config.toml in Resources */ = {isa = PBXBuildFile; fileRef = 8FE45A887100EB70912B07F0 /* default-config.toml */; };
 		29AC28A25E1A66C608EBD7ED /* WorkspaceCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DD32B1711B8EFCC834B68E /* WorkspaceCommand.swift */; };
+		2C73CDB1A933FCA5616CDFB3 /* WorkspaceEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B60F7A58DAD4D3AF2788E4 /* WorkspaceEx.swift */; };
 		2CC46A952773F148AC398144 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6352ADEE6625D9703CFCA99A /* Window.swift */; };
 		2E06134604F2510189F1FA85 /* ExecAndWaitCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EDB8770FBA8B2E6FE91BBB /* ExecAndWaitCommand.swift */; };
 		374CE35B85B941B8F584C113 /* FlattenWorkspaceTreeCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FDECECC773EBA30661EB8A /* FlattenWorkspaceTreeCommandTest.swift */; };
@@ -119,6 +120,7 @@
 		54679FCD1EC1196B27E964D5 /* ConfigTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigTest.swift; sourceTree = "<group>"; };
 		54B4C778D2594EB23C295741 /* Copyable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Copyable.swift; sourceTree = "<group>"; };
 		569422C0C4C23EF3E024C8E6 /* ExecAndForgetCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecAndForgetCommand.swift; sourceTree = "<group>"; };
+		57B60F7A58DAD4D3AF2788E4 /* WorkspaceEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceEx.swift; sourceTree = "<group>"; };
 		5F5F52E346D024960EAF5938 /* TrayMenuModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrayMenuModel.swift; sourceTree = "<group>"; };
 		6352ADEE6625D9703CFCA99A /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
 		67B9FFF81EB0327ABD51A7FE /* MoveThroughCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveThroughCommand.swift; sourceTree = "<group>"; };
@@ -220,6 +222,7 @@
 				A60709210745C60D64F82D53 /* TreeNodeKind.swift */,
 				6352ADEE6625D9703CFCA99A /* Window.swift */,
 				C3F068BCC50ED846DCBFDE57 /* Workspace.swift */,
+				57B60F7A58DAD4D3AF2788E4 /* WorkspaceEx.swift */,
 			);
 			path = tree;
 			sourceTree = "<group>";
@@ -518,6 +521,7 @@
 				BF16873111EEDE60A8AACD6B /* Workspace.swift in Sources */,
 				AC47DF43EFF42358F033C87C /* WorkspaceBackAndForthCommand.swift in Sources */,
 				29AC28A25E1A66C608EBD7ED /* WorkspaceCommand.swift in Sources */,
+				2C73CDB1A933FCA5616CDFB3 /* WorkspaceEx.swift in Sources */,
 				42197B9C71A0CDDE65804A6A /* accessibility.swift in Sources */,
 				9A138A729245BD2723148583 /* focused.swift in Sources */,
 				B10FEEE51CF00B24BE9E2306 /* gitHashGenerated.swift in Sources */,

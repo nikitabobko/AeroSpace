@@ -19,8 +19,7 @@ struct FocusCommand: Command {
 }
 
 private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingWindowData] {
-    let floatingWindows: [FloatingWindowData] = workspace.children
-        .filterIsInstance(of: Window.self)
+    let floatingWindows: [FloatingWindowData] = workspace.floatingWindows
         .map { (window: Window) -> FloatingWindowData? in
             guard let center = window.getCenter() else { return nil }
             guard let target = center.coerceIn(rect: window.workspace.monitor.rect).findIn(tree: workspace.rootTilingContainer) else { return nil }

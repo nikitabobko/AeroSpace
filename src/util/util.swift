@@ -77,6 +77,10 @@ public func makeAllWindowsVisibleAndRestoreSize() {
     }
 }
 
+var allMonitorsRectsUnion: Rect {
+    monitors.map(\.rect).union()
+}
+
 extension String? {
     var isNilOrEmpty: Bool { self == nil || self == "" }
 }
