@@ -12,7 +12,7 @@ private extension TilingContainer {
         if let child = children.singleOrNil(), config.enableNormalizationFlattenContainers && (child is TilingContainer || !isRootContainer) {
             child.unbindFromParent()
             let previousBinding = unbindFromParent()
-            child.bindTo(parent: previousBinding.parent, adaptiveWeight: previousBinding.adaptiveWeight, index: previousBinding.index)
+            child.bind(to: previousBinding.parent, adaptiveWeight: previousBinding.adaptiveWeight, index: previousBinding.index)
             (child as? TilingContainer)?.unbindEmptyAndAutoFlatten()
         } else {
             for child in children {

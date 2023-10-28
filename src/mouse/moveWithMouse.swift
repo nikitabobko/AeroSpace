@@ -30,8 +30,8 @@ private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
             index = 0
         }
         window.unbindFromParent()
-        window.bindTo(
-            parent: swapTarget?.parent ?? targetWorkspace.rootTilingContainer,
+        window.bind(
+            to: swapTarget?.parent ?? targetWorkspace.rootTilingContainer,
             adaptiveWeight: WEIGHT_AUTO,
             index: index
         )
@@ -47,14 +47,14 @@ func swapWindows(_ window1: Window, _ window2: Window) {
         let binding2 = window2.unbindFromParent()
         let binding1 = window1.unbindFromParent()
 
-        window2.bindTo(parent: binding1.parent, adaptiveWeight: binding1.adaptiveWeight, index: binding1.index)
-        window1.bindTo(parent: binding2.parent, adaptiveWeight: binding2.adaptiveWeight, index: binding2.index)
+        window2.bind(to: binding1.parent, adaptiveWeight: binding1.adaptiveWeight, index: binding1.index)
+        window1.bind(to: binding2.parent, adaptiveWeight: binding2.adaptiveWeight, index: binding2.index)
     } else {
         let binding1 = window1.unbindFromParent()
         let binding2 = window2.unbindFromParent()
 
-        window1.bindTo(parent: binding2.parent, adaptiveWeight: binding2.adaptiveWeight, index: binding2.index)
-        window2.bindTo(parent: binding1.parent, adaptiveWeight: binding1.adaptiveWeight, index: binding1.index)
+        window1.bind(to: binding2.parent, adaptiveWeight: binding2.adaptiveWeight, index: binding2.index)
+        window2.bind(to: binding1.parent, adaptiveWeight: binding1.adaptiveWeight, index: binding1.index)
     }
 }
 

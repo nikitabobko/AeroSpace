@@ -14,7 +14,7 @@ struct MoveThroughCommand: Command {
                     deepMoveIn(window: currentWindow, into: topLevelSiblingTargetContainer, moveDirection: direction)
                 case .window: // "swap windows"
                     let prevBinding = currentWindow.unbindFromParent()
-                    currentWindow.bindTo(parent: parent, adaptiveWeight: prevBinding.adaptiveWeight, index: indexOfSiblingTarget)
+                    currentWindow.bind(to: parent, adaptiveWeight: prevBinding.adaptiveWeight, index: indexOfSiblingTarget)
                 case .workspace:
                     error("Impossible")
                 }
@@ -49,7 +49,7 @@ private func moveOut(window: Window, direction: CardinalDirection) {
         check(prevRoot != parent.rootTilingContainer)
         parent.rootTilingContainer.orientation = direction.orientation
         parent.rootTilingContainer.layout = .list // todo force List layout for implicit containers?
-        prevRoot.bindTo(parent: parent.rootTilingContainer, adaptiveWeight: WEIGHT_AUTO)
+        prevRoot.bind(to: parent.rootTilingContainer, adaptiveWeight: WEIGHT_AUTO)
 
         bindTo = parent.rootTilingContainer
         bindToIndex = direction.insertionOffset
@@ -58,8 +58,8 @@ private func moveOut(window: Window, direction: CardinalDirection) {
     }
 
     window.unbindFromParent()
-    window.bindTo(
-        parent: bindTo,
+    window.bind(
+        to: bindTo,
         adaptiveWeight: WEIGHT_AUTO,
         index: bindToIndex
     )
@@ -70,11 +70,11 @@ private func deepMoveIn(window: Window, into container: TilingContainer, moveDir
     switch deepTarget.genericKind {
     case .tilingContainer(let deepTarget):
         window.unbindFromParent()
-        window.bindTo(parent: deepTarget, adaptiveWeight: WEIGHT_AUTO, index: 0)
+        window.bind(to: deepTarget, adaptiveWeight: WEIGHT_AUTO, index: 0)
     case .window(let deepTarget):
         window.unbindFromParent()
-        window.bindTo(
-            parent: (deepTarget.parent as! TilingContainer),
+        window.bind(
+            to: (deepTarget.parent as! TilingContainer),
             adaptiveWeight: WEIGHT_AUTO,
             index: deepTarget.ownIndex + 1
         )

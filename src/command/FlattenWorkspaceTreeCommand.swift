@@ -6,7 +6,7 @@ struct FlattenWorkspaceTreeCommand: Command {
         let windows = workspace.rootTilingContainer.allLeafWindowsRecursive
         for window in windows {
             window.unbindFromParent()
-            window.bindTo(parent: workspace.rootTilingContainer, adaptiveWeight: 1)
+            window.bind(to: workspace.rootTilingContainer, adaptiveWeight: 1)
         }
     }
 }

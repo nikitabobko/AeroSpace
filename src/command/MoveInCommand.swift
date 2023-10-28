@@ -16,7 +16,7 @@ struct MoveInCommand: Command {
         )
         currentWindow.unbindFromParent()
 
-        moveInTarget.bindTo(parent: newParent, adaptiveWeight: WEIGHT_AUTO, index: 0)
-        currentWindow.bindTo(parent: newParent, adaptiveWeight: WEIGHT_AUTO, index: direction.isPositive ? 0 : INDEX_BIND_LAST)
+        moveInTarget.bind(to: newParent, adaptiveWeight: WEIGHT_AUTO, index: 0)
+        currentWindow.bind(to: newParent, adaptiveWeight: WEIGHT_AUTO, index: direction.isPositive ? 0 : INDEX_BIND_LAST)
     }
 }

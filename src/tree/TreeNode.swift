@@ -12,7 +12,7 @@ class TreeNode: Equatable {
 
     init(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.adaptiveWeight = adaptiveWeight
-        bindTo(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
+        bind(to: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
     fileprivate init() {
@@ -55,7 +55,7 @@ class TreeNode: Equatable {
     }
 
     @discardableResult
-    func bindTo(parent newParent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int = INDEX_BIND_LAST) -> BindingData? { // todo make index parameter mandatory
+    func bind(to newParent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int = INDEX_BIND_LAST) -> BindingData? { // todo make index parameter mandatory
         if _parent === newParent {
             error("Binding to the same parent doesn't make sense")
         }

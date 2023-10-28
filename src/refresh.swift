@@ -44,7 +44,7 @@ private func refreshFocusedWorkspaceBasedOnFocusedWindow() {
                 focusedWorkspace = focusedWindow.getCenter()?.monitorApproximation.activeWorkspace ?? focusedWindow.workspace
                 if focusedWindow.parent != focusedWorkspace {
                     focusedWindow.unbindFromParent()
-                    focusedWindow.bindAsFloatingWindowTo(workspace: focusedWorkspace)
+                    focusedWindow.bindAsFloatingWindow(to: focusedWorkspace)
                 }
             } else {
                 focusedWorkspace = focusedWindow.workspace
@@ -92,7 +92,7 @@ private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
                 if let workspace = window.getCenter()?.monitorApproximation.activeWorkspace {
                     window.unbindFromParent()
                     let bindingData = getBindingDataForNewWindow((window as! MacWindow).axWindow, workspace)
-                    window.bindTo(parent: bindingData.parent, adaptiveWeight: bindingData.adaptiveWeight, index: bindingData.index)
+                    window.bind(to: bindingData.parent, adaptiveWeight: bindingData.adaptiveWeight, index: bindingData.index)
                 }
             }
         }
