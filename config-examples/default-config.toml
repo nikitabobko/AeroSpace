@@ -47,6 +47,7 @@ default-root-container-orientation = 'auto'
 # For all possible commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
 
 # You can uncomment this line to open up terminal with alt + enter shortcut
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#exec-and-forget
 # alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#layout

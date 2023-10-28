@@ -1,5 +1,6 @@
 /// It's one of the most important function of the whole application.
-/// The function is called as a feedback response on every user input
+/// The function is called as a feedback response on every user input.
+/// The function is idempotent.
 func refresh(startup: Bool = false) {
     check(Thread.current.isMainThread)
     //debug("refresh \(Date.now.formatted(date: .abbreviated, time: .standard))")

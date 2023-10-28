@@ -53,7 +53,7 @@ let keysMap: [String: Key] = [
     "space": .space,
     "enter": .return,
     "esc": .escape,
-    //"delete": .delete, // todo backspace?
+    "backspace": .delete,
     "tab": .tab,
 
     "left": .leftArrow,
