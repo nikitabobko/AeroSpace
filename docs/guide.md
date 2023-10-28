@@ -23,8 +23,8 @@ TODO DOCUMENTATION
 ### Floating windows
 TODO DOCUMENTATION
 
-Normally, floating windows are not part of the tiling tree except for the 'focus' command. From 'focus' command perspective,
-floating windows are part of the tree.
+Normally, floating windows are not part of the tiling tree. But it's not the case with `focus` command. From `focus` command
+perspective, floating windows are part of the tree. 
 
 ## Default keybindings
 TODO DOCUMENTATION the idea behind default keybindings

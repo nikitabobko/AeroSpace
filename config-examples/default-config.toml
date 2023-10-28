@@ -1,4 +1,4 @@
-# Place a copy of this config to ~/.aerospace.toml. After that you can edit ~/.aerospace.toml to your liking
+# Place a copy of this config to ~/.aerospace.toml. After that, you can edit ~/.aerospace.toml to your liking
 
 # You can use it to add commands that run after login to macOS user session.
 # 'start-at-login' needs to be 'true' for 'after-login-command' to work
@@ -47,8 +47,8 @@ default-root-container-orientation = 'auto'
 # alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#layout
-alt-slash = 'layout h_list v_list'
-alt-comma = 'layout h_accordion v_accordion'
+alt-slash = 'layout list horizontal vertical'
+alt-comma = 'layout accordion horizontal vertical'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#focus
 alt-h = 'focus left'
@@ -147,9 +147,9 @@ alt-shift-slash = 'mode move-in'
 [mode.service.binding]
 r = ['flatten-workspace-tree', 'mode main']
 o = ['reload-config', 'mode main']
-#s = ['layout sticky tiling', 'mode main'] # todo sticky is not yet supported
+#s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
-backslash = ['close-all-windows-but-current', 'mode main']
+backspace = ['close-all-windows-but-current', 'mode main']
 esc = 'mode main'
 enter = 'mode main'
 

@@ -1,7 +1,5 @@
 # Reference: https://github.com/i3/i3/blob/next/etc/config
 
-# todo finish
-
 enable-normalization-flatten-containers = false
 enable-normalization-opposite-orientation-for-nested-containers = false
 
@@ -21,11 +19,11 @@ alt-shift-l = 'move-through right'
 # alt-h = 'split h' # todo support split command?
 # alt-v = 'split v' # todo support split command?
 
-# alt-f = 'fullscreen' # todo support fullscreen command?
+# alt-f = 'fullscreen' # todo support fullscreen command? https://github.com/nikitabobko/AeroSpace/issues/7
 
 alt-s = 'layout v_accordion' # 'layout stacking' in i3
 alt-w = 'layout h_accordion' # 'layout tabbed' in i3
-alt-e = 'layout h_list v_list' # 'layout toggle list' in i3
+alt-e = 'layout list horizontal vertical' # 'layout toggle split' in i3
 
 alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
 
@@ -34,6 +32,7 @@ alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
 #alt-space = 'focus toggle_tiling_floating'
 
 # `focus parent`/`focus child` are not yet supported, and it's not clear whether they should be supported at all
+# https://github.com/nikitabobko/AeroSpace/issues/5
 # alt-a = 'focus parent'
 
 alt-1 = 'workspace 1'

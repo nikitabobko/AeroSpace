@@ -5,6 +5,7 @@ struct FocusCommand: Command {
         check(Thread.current.isMainThread)
         guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
         let workspace = currentWindow.workspace
+        // todo floating windows break mru
         let floatingWindows = makeFloatingWindowsSeenAsTiling(workspace: workspace)
         defer {
             restoreFloatingWindows(floatingWindows: floatingWindows, workspace: workspace)
