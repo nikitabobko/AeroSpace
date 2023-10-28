@@ -58,7 +58,7 @@ Firstly, install [xcodegen](https://github.com/yonaskolb/XcodeGen). Then run in 
 **Values**
 - AeroSpace is targeted at advanced users and developers
 - Keyboard centric
-- Never break configuration files or existing workflows (Guaranteed once AeroSpace reaches 1.0 version)
+- Never break configuration files (Guaranteed once AeroSpace reaches 1.0 version)
 - AeroSpace doesn't use GUI, unless necessarily
   - AeroSpace will never provide a GUI for configuration. For advanced users, it's easier to edit a configuration file in text
     editor rather than navigating through checkboxes in GUI.
