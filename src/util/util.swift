@@ -70,7 +70,7 @@ public func makeAllWindowsVisibleAndRestoreSize() {
             } else {
                 let monitor = window.workspace.monitor
                 window.setTopLeftCorner(monitor.rect.topLeftCorner)
-                window.setSize(window.appearedWithSize
+                window.setSize(window.lastFloatingSize
                     ?? CGSize(width: monitor.visibleRect.width, height: monitor.visibleRect.height))
             }
         }

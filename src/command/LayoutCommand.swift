@@ -42,6 +42,12 @@ struct LayoutCommand: Command {
         case .vertical:
             changeTilingLayout(targetLayout: nil, targetOrientation: .v, window: window)
         case .tiling:
+            switch window.parent.kind {
+            case .workspace:
+                window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
+            case .tilingContainer:
+                error("Impossible")
+            }
             let data = getBindingDataForNewTilingWindow(window.unbindFromParent().parent.workspace)
             window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
         case .floating:
@@ -51,7 +57,7 @@ struct LayoutCommand: Command {
             guard let size = window.getSize() else { break }
             guard let topLeftCorner = window.getTopLeftCorner() else { break }
             window.setTopLeftCorner(topLeftCorner.addingXOffset(padding).addingYOffset(padding))
-            window.setSize(window.appearedWithSize
+            window.setSize(window.lastFloatingSize
                 ?? CGSize(width: size.width - 2 * padding, height: size.height - 2 * padding))
         }
     }

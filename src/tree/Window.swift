@@ -3,12 +3,12 @@ class Window: TreeNode, Hashable {
     let app: AeroApp
     override var parent: NonLeafTreeNode { super.parent ?? errorT("Windows always have parent") }
     var parentOrNilForTests: NonLeafTreeNode? { super.parent }
-    let appearedWithSize: CGSize?
+    var lastFloatingSize: CGSize?
 
-    init(id: UInt32, _ app: AeroApp, appearedWithSize: CGSize?, parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
+    init(id: UInt32, _ app: AeroApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.windowId = id
         self.app = app
-        self.appearedWithSize = appearedWithSize
+        self.lastFloatingSize = lastFloatingSize
         super.init(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
