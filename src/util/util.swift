@@ -48,6 +48,7 @@ func check(
             message: message
         )
     }
+    makeAllWindowsVisibleAndRestoreSize()
     fatalError(message)
 }
 
@@ -59,6 +60,21 @@ func check(
     function: String = #function
 ) -> Never {
     errorT(message, file: file, line: line, column: column, function: function)
+}
+
+public func makeAllWindowsVisibleAndRestoreSize() {
+    for app in apps { // Make all windows fullscreen before Quit
+        for window in app.windows {
+            if window.isFloating {
+                (window as! MacWindow).unhideViaEmulation()
+            } else {
+                let monitor = window.workspace.monitor
+                window.setTopLeftCorner(monitor.rect.topLeftCorner)
+                window.setSize(window.appearedWithSize
+                    ?? CGSize(width: monitor.visibleRect.width, height: monitor.visibleRect.height))
+            }
+        }
+    }
 }
 
 extension String? {

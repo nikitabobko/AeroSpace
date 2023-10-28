@@ -50,7 +50,11 @@ struct AeroSpaceApp: App {
             Divider()
             Button(viewModel.isEnabled ? "Disable" : "Enable") {
                 viewModel.isEnabled = !viewModel.isEnabled
-                refresh()
+                if !viewModel.isEnabled {
+                    makeAllWindowsVisibleAndRestoreSize()
+                } else {
+                    refresh()
+                }
             }
                 .keyboardShortcut("E", modifiers: .command)
             Button("Reload config") {
@@ -58,15 +62,7 @@ struct AeroSpaceApp: App {
             }
                 .keyboardShortcut("R", modifiers: .command)
             Button("Quit \(Bundle.appName)") {
-                for app in apps { // Make all windows fullscreen before Quit
-                    for window in app.windows { // todo make all windows visible. Restore only the size?
-                        let rect = window.rectBeforeAeroStart?
-                            .takeIf { window.workspace.monitor.rect.contains($0.topLeftCorner) }
-                            ?? window.workspace.monitor.visibleRect
-                        window.setSize(CGSize(width: rect.width, height: rect.height))
-                        window.setTopLeftCorner(rect.topLeftCorner)
-                    }
-                }
+                makeAllWindowsVisibleAndRestoreSize()
                 terminateApp()
             }
                 .keyboardShortcut("Q", modifiers: .command)

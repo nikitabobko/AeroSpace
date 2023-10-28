@@ -9,7 +9,7 @@ final class MacWindow: Window, CustomStringConvertible {
     private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.axWindow = axWindow
         self.macApp = app
-        super.init(id: id, app, parent: parent, adaptiveWeight: adaptiveWeight, index: index)
+        super.init(id: id, app, appearedWithSize: axWindow.get(Ax.sizeAttr), parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
     private static var allWindowsMap: [CGWindowID: MacWindow] = [:]

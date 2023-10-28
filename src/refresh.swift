@@ -88,7 +88,6 @@ private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
         let windows = app.windows // Calling .windows has side-effects
         if startup {
             for window in windows {
-                window.rectBeforeAeroStart = window.getRect()
                 if let workspace = window.getCenter()?.monitorApproximation.activeWorkspace {
                     window.unbindFromParent()
                     let bindingData = getBindingDataForNewWindow((window as! MacWindow).axWindow, workspace)
