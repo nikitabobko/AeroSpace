@@ -5,7 +5,7 @@ class TrayMenuModel: ObservableObject {
 
     @Published var trayText: String = ""
     /// Is "layouting" enabled
-    @Published var isEnabled: Bool = true // todo make all windows visible once disabled
+    @Published var isEnabled: Bool = true
 }
 
 func updateTrayText() {

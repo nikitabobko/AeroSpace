@@ -1,6 +1,6 @@
 import HotKey
 
-let mainModeId = "main" // todo rename to "default"
+let mainModeId = "main"
 let defaultConfig = initDefaultConfig(parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!)))
 var config: Config = defaultConfig
 

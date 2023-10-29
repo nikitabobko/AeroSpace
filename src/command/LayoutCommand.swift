@@ -5,7 +5,7 @@ struct LayoutCommand: Command {
         case accordion, list
         case horizontal, vertical
         case h_accordion, v_accordion, h_list, v_list
-        case tiling, floating // todo add sticky
+        case tiling, floating
     }
 
     init?(toggleBetween: [LayoutDescription]) {
