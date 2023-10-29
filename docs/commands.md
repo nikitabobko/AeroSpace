@@ -89,8 +89,8 @@ layout (h_list|v_list|h_accordion|v_accordion|list|accordion|horizontal|vertical
 
 Changes layout of the focused window to the given layout.
 
-If several arguments are supplied then the first layout that describes the currently active is found. The layout specified after
-the found one will be applied. If the currently active layout is not in the list, the first layout in the list will be activated.
+If several layouts are supplied then finds the first layout that doesn't describe the currently active layout, and applies the
+found layout.
 
 `layout tiling` is the only command that makes the focused floating window tiled.
 

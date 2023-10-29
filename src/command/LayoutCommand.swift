@@ -18,9 +18,8 @@ struct LayoutCommand: Command {
     func runWithoutLayout() {
         check(Thread.current.isMainThread)
         guard let window = focusedWindowOrEffectivelyFocused else { return }
-        let targetDescription: LayoutDescription = toggleBetween.firstIndex(where: { window.matchesDescription($0) })
-            .flatMap { toggleBetween.getOrNil(atIndex: $0 + 1) }
-            .orElse { toggleBetween.first! }
+        let targetDescription: LayoutDescription = toggleBetween.first(where: { !window.matchesDescription($0) })
+            ?? toggleBetween.first!
         if window.matchesDescription(targetDescription) {
             return
         }
