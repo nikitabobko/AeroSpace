@@ -59,6 +59,7 @@ if [ "$expected_layout" != "$(tree .build/AeroSpace.app)" ]; then
     exit 1
 fi
 
+VERSION=$(grep MARKETING_VERSION project.yml | awk '{print $2}')
 pushd .build
-    zip -r AeroSpace.zip AeroSpace.app
+    zip -r AeroSpace-v${VERSION}.zip AeroSpace.app
 popd
