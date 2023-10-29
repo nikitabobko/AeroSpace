@@ -6,6 +6,7 @@ struct FocusCommand: Command {
         guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
         let workspace = currentWindow.workspace
         // todo floating windows break mru
+        // todo floating non AXStandardWindow shouldn't be part of the tree
         let floatingWindows = makeFloatingWindowsSeenAsTiling(workspace: workspace)
         defer {
             restoreFloatingWindows(floatingWindows: floatingWindows, workspace: workspace)

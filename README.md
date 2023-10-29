@@ -14,15 +14,6 @@ Preproduction quality
   - But [config](./config-examples/default-config.toml) is self-explanatory
   - If you're familiar with i3, you can already make it usable for yourself
 
-## Installation
-
-1. Download the latest available zip from [releases page](https://github.com/nikitabobko/AeroSpace/releases)
-2. Unpack zip
-3. Move unpacked `AeroSpace.app` to `/Applications`
-
-Homebrew cask will be provided in the future. For now, it's better to subscribe to GitHub releases page to get notifications about
-updates
-
 ## Key features
 
 - **Manual** tiling window manager
@@ -36,20 +27,52 @@ updates
 - Proper multi-monitor support (i3-like paradigm)
 - Status menu icon displays current workspace name
 
-## [AeroSpace Guide](./docs/guide.md)
+## Installation
+
+Install via Homebrew to get autoupdates (Preferred)
+```
+brew install --cask nikitabobko/tap/aerospace
+xattr -d com.apple.quarantine /Applications/AeroSpace.app
+```
+
+### Manual installation
+
+1. Download the latest available zip from [releases page](https://github.com/nikitabobko/AeroSpace/releases)
+2. Unpack zip
+3. Move unpacked `AeroSpace.app` to `/Applications`
+
+If you see this message
+
+> "AeroSpace.app" can't be opened because Apple cannot check it for malicious software.
+
+then you can resolve it this way
+```
+xattr -d com.apple.quarantine /Applications/AeroSpace.app
+```
+
+or:
+1. navigate in Finder to /Applications/AeroSpace.app
+2. Right mouse click
+3. Open (yes, it's that stupid)
+
+## Docs
+
+- [AeroSpace Guide](./docs/guide.md)
+- [AeroSpace list of all commands](./docs/commands.md)
 
 ## How to build the project
 
 You would need a Mac.
 
-Firstly, install [xcodegen](https://github.com/yonaskolb/XcodeGen). Then run in terminal:
 ```bash
+brew install xcodegen # https://github.com/yonaskolb/XcodeGen
 ./build-debug.sh
 ```
 
 ## How to run the tests
 
 ```bash
+brew install xcodegen # https://github.com/yonaskolb/XcodeGen
 ./run-tests.sh
 ```
 

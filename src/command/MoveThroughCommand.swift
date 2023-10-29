@@ -22,7 +22,7 @@ struct MoveThroughCommand: Command {
                 moveOut(window: currentWindow, direction: direction)
             }
         case .workspace: // floating window
-            break // todo
+            break // todo support moving floating windows
         }
     }
 }

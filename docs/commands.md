@@ -107,10 +107,96 @@ mode name_of_the_target_mode
 ## move-through
 
 ```
-move-through (left|down|up|right)
+move-through (left|down|up|right) [floating_pixel]
 ```
 
+Moves the window in the given direction. The optional `floating_pixel` argument specifies how far the window should be moved if
+it is floating. The default is 50 pixels
+
 This command is an analog of [i3's move command](https://i3wm.org/docs/userguide.html#move_direction)
+
+**Example 1**
+
+Given this layout
+```
+h_list
+├── window 1 (focused)
+└── window 2
+```
+
+`move-through right` will result in the following layout
+```
+h_list
+├── window 2
+└── window 1 (focused)
+```
+
+**Example 2**
+
+Given this layout
+```
+h_list
+├── window 1
+├── window 2 (focused)
+└── v_list
+    ├── window 3
+    └── window 4
+```
+
+`move-through right` will result in the following layout
+```
+h_list
+├── window 1
+└── v_list
+    ├── window 3
+    ├── window 2 (focused)
+    └── window 4
+```
+
+**Example 3**
+
+Given this layout
+```
+h_list
+├── window 1
+└── v_list
+    ├── window 3
+    ├── window 2 (focused)
+    └── window 4
+```
+
+`move-through left` will result in the following layout
+```
+h_list
+├── window 1
+├── window 2 (focused)
+└── v_list
+    ├── window 3
+    └── window 4
+```
+
+**Implicit container example**
+
+In some cases, `move-through` needs to implicitly create a container to fullfill your command.
+
+Given this layout
+```
+h_list
+├── window 1
+├── window 2 (focused)
+└── window 3
+```
+
+`move-through up` will result in the following layout
+```
+v_list
+├── window 2  (focused)
+└── h_list
+    ├── window 1
+    └── window 3
+```
+
+`v_list` is an implicitly created container.
 
 ## move-workspace-to-display
 

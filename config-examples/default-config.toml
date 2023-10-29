@@ -21,9 +21,7 @@ start-at-login = false
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
-# Accordion is a layout where windows are placed on top of each other.
-# - Horizontal accordion puts paddings on left and right to make it clear that containers exist in these directions
-# - Vertical accordion puts paddings on above and below to make it clear that containers exist in these directions
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#layouts
 # The 'accordion-padding' specifies the size of the padding. You can set 0 to disable the padding feature
 accordion-padding = 30
 
