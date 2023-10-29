@@ -18,7 +18,9 @@ func check(
     }
 }
 
-@inlinable func errorT<T>(
+private var recursionDetectorDuringFailure: Bool = false
+
+public func errorT<T>(
     _ message: String = "",
     file: String = #file,
     line: Int = #line,
@@ -38,17 +40,21 @@ func check(
         Version: \(Bundle.appVersion)
         Git hash: \(gitHash)
         Coordinate: \(file):\(line):\(column) \(function)
+        recursionDetectorDuringFailure: \(recursionDetectorDuringFailure)
 
         Stacktrace:
         \(Thread.callStackSymbols.joined(separator: "\n"))
         """
     if !isUnitTest {
         showMessageToUser(
-            filename: "runtime-error.txt",
+            filename: recursionDetectorDuringFailure ? "runtime-error-recursion.txt" : "runtime-error.txt",
             message: message
         )
     }
-    makeAllWindowsVisibleAndRestoreSize()
+    if !recursionDetectorDuringFailure {
+        recursionDetectorDuringFailure = true
+        makeAllWindowsVisibleAndRestoreSize()
+    }
     fatalError(message)
 }
 
@@ -65,14 +71,12 @@ func check(
 public func makeAllWindowsVisibleAndRestoreSize() {
     for app in apps { // Make all windows fullscreen before Quit
         for window in app.windows {
-            if window.isFloating {
-                (window as! MacWindow).unhideViaEmulation()
-            } else {
-                let monitor = window.workspace.monitor
-                window.setTopLeftCorner(monitor.rect.topLeftCorner)
-                window.setSize(window.lastFloatingSize
-                    ?? CGSize(width: monitor.visibleRect.width, height: monitor.visibleRect.height))
-            }
+            // makeAllWindowsVisibleAndRestoreSize may be invoked when something went wrong (e.g. some windows are unbound)
+            // that's why it's not allowed to use `.parent` call in here
+            let monitor = window.getCenter()?.monitorApproximation ?? mainMonitor
+            window.setTopLeftCorner(monitor.rect.topLeftCorner)
+            window.setSize(window.lastFloatingSize
+                ?? CGSize(width: monitor.visibleRect.width, height: monitor.visibleRect.height))
         }
     }
 }
