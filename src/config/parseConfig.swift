@@ -79,13 +79,16 @@ private struct Parser<T>: ParserProtocol {
 private let parsers: [String: any ParserProtocol] = [
     "after-login-command": Parser(\.afterLoginCommand, { parseCommand($0).toParsedTomlResult($1) }),
     "after-startup-command": Parser(\.afterStartupCommand, { parseCommand($0).toParsedTomlResult($1) }),
-    "indent-for-nested-containers-with-the-same-orientation": Parser(\.indentForNestedContainersWithTheSameOrientation, { parseInt($0, $1) }),
+
     "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, { parseBool($0, $1) }),
+    "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, { parseBool($0, $1) }),
+
     "default-root-container-layout": Parser(\.defaultRootContainerLayout, { parseLayout($0, $1) }),
     "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, { parseDefaultContainerOrientation($0, $1) }),
+
+    "indent-for-nested-containers-with-the-same-orientation": Parser(\.indentForNestedContainersWithTheSameOrientation, { parseInt($0, $1) }),
     "start-at-login": Parser(\.startAtLogin, { parseBool($0, $1) }),
     "accordion-padding": Parser(\.accordionPadding, { parseInt($0, $1) }),
-    "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, { parseBool($0, $1) }),
 ]
 
 func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]) {
