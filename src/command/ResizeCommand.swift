@@ -51,7 +51,7 @@ struct ResizeCommand: Command { // todo cover with tests
 
             window.setWeight(orientation, window.getWeight(orientation) + diff)
         case .workspace:
-            return // todo support floating windows
+            return
         }
     }
 }

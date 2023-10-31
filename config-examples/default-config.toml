@@ -14,7 +14,7 @@ after-startup-command = []
 # If you have 'auto-opposite-orientation-for-nested-containers' enabled then there is no way to observe the indent
 indent-for-nested-containers-with-the-same-orientation = 30
 
-# todo Not tested
+# Start AeroSpace at login
 start-at-login = false
 
 # Normalization. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#normalization
