@@ -19,6 +19,8 @@ jobs:
       - name: xcodegen
         uses: xavierLowmiller/xcodegen-action@1.1.2
       - name: Build
-        run: ./build-and-check-uncommitted-files.sh
+        run: |
+          ./build-debug.sh
+          ./check-uncommitted-files.sh
       - name: Test
         run: ./run-tests.sh
