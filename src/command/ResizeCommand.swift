@@ -3,8 +3,13 @@ struct ResizeCommand: Command { // todo cover with tests
         case width, height, smart
     }
 
+    enum ResizeMode: String {
+        case set, add, subtract
+    }
+
     let dimension: Dimension
-    let diff: Int
+    let mode: ResizeMode
+    let unit: UInt
 
     func runWithoutLayout() { // todo support key repeat
         check(Thread.current.isMainThread)
@@ -29,7 +34,15 @@ struct ResizeCommand: Command { // todo cover with tests
                 parent = directParent
                 orientation = parent.orientation
             }
-            let diff = CGFloat(diff)
+            let diff: CGFloat
+            switch mode {
+            case .set:
+                diff = CGFloat(unit) - window.getWeight(orientation)
+            case .add:
+                diff = CGFloat(unit)
+            case .subtract:
+                diff = -CGFloat(unit)
+            }
 
             guard let childDiff = diff.div(parent.children.count - 1) else { return }
             parent.children.lazy

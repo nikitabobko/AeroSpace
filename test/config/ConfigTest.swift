@@ -126,6 +126,8 @@ extension Command {
     var describe: CommandDescription {
         if let focus = self as? FocusCommand {
             return .focusCommand(focus.direction)
+        } else if let resize = self as? ResizeCommand {
+            return .resizeCommand(dimension: resize.dimension, mode: resize.mode, unit: resize.unit)
         }
         error("Unsupported command: \(self)")
     }
@@ -133,4 +135,5 @@ extension Command {
 
 enum CommandDescription: Equatable {
     case focusCommand(CardinalDirection)
+    case resizeCommand(dimension: ResizeCommand.Dimension, mode: ResizeCommand.ResizeMode, unit: UInt)
 }

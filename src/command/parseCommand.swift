@@ -17,7 +17,7 @@ func parseCommand(_ raw: TOMLValueConvertible) -> ParsedCommand<Command> {
     }
 }
 
-private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
+func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
     let words = raw.split(separator: " ")
     let args = words[1...].map { String($0) }
     let firstWord = String(words.first ?? "")
@@ -36,15 +36,7 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
             .flatMap { MoveWorkspaceToDisplayCommand.DisplayTarget(rawValue: $0).orFailure("Can't parse '\(firstWord)' display target") }
             .map { MoveWorkspaceToDisplayCommand(displayTarget: $0) }
     } else if firstWord == "resize" {
-        let arg1 = args.getOrNil(atIndex: 0).orFailure("''\(firstWord)' must have two parameters")
-            .flatMap { ResizeCommand.Dimension(rawValue: String($0)).orFailure("Can't parse '\(firstWord)' first arg") }
-        let arg2 = args.getOrNil(atIndex: 1).orFailure("''\(firstWord)' must have two parameters")
-            .flatMap { Int($0).orFailure("Can't parse '\(firstWord)' second arg") }
-        return arg1.flatMap { arg1 in
-            arg2.map { arg2 in
-                ResizeCommand(dimension: arg1, diff: arg2)
-            }
-        }
+        return parseResizeCommand(firstWord: firstWord, args: args)
     } else if firstWord == "exec-and-wait" {
         return .success(ExecAndWaitCommand(bashCommand: raw.removePrefix(firstWord)))
     } else if firstWord == "exec-and-forget" {
@@ -75,6 +67,33 @@ private func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
         return .failure("Can't parse empty string command")
     } else {
         return .failure("Unrecognized command '\(raw)'")
+    }
+}
+
+private func parseResizeCommand(firstWord: String, args: [String]) -> ParsedCommand<Command> {
+    let mustHaveTwoArgsMessage = "''\(firstWord)' command must have two parameters"
+    let dimension = args.getOrNil(atIndex: 0).orFailure(mustHaveTwoArgsMessage)
+        .flatMap { ResizeCommand.Dimension(rawValue: String($0)).orFailure("Can't parse '\(firstWord)' first arg") }
+    let secondArg: Result<String, String> = args.getOrNil(atIndex: 1).orFailure(mustHaveTwoArgsMessage)
+    let mode = secondArg.map { (secondArg: String) in
+        if secondArg.starts(with: "+") {
+            return ResizeCommand.ResizeMode.add
+        } else if secondArg.starts(with: "-") {
+            return ResizeCommand.ResizeMode.subtract
+        } else {
+            return ResizeCommand.ResizeMode.set
+        }
+    }
+    let unit = secondArg.flatMap {
+        UInt($0.removePrefix("+").removePrefix("-"))
+            .orFailure("'\(firstWord)' command: Second arg must be a number")
+    }
+    return dimension.flatMap { dimension in
+        mode.flatMap { mode in
+            unit.map { unit in
+                ResizeCommand(dimension: dimension, mode: mode, unit: unit)
+            }
+        }
     }
 }
 

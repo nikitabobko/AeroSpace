@@ -16,6 +16,7 @@
 		1311398A83B998908773C54D /* FocusCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0EAADE8D2FB5D05FA5456B0 /* FocusCommandTest.swift */; };
 		1C46EBB55D401C0D1AFD50F0 /* CollectionEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CE37C1B8D858C81A396F40 /* CollectionEx.swift */; };
 		1D408CDF1A489E527327EB15 /* CompositeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D82CD9670B7A6050073E0F76 /* CompositeCommand.swift */; };
+		22175400298B985658E774EE /* ResizeCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD4E9C6C0C08F1B0622C57 /* ResizeCommandTest.swift */; };
 		238EF26CAAADD1FE11312D7C /* default-config.toml in Resources */ = {isa = PBXBuildFile; fileRef = 8FE45A887100EB70912B07F0 /* default-config.toml */; };
 		29AC28A25E1A66C608EBD7ED /* WorkspaceCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DD32B1711B8EFCC834B68E /* WorkspaceCommand.swift */; };
 		2C73CDB1A933FCA5616CDFB3 /* WorkspaceEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B60F7A58DAD4D3AF2788E4 /* WorkspaceEx.swift */; };
@@ -36,6 +37,7 @@
 		635733FDDF37E44364372B74 /* MruStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 954A434EE57D76F5A9D4140D /* MruStack.swift */; };
 		64A058E536F1EEF7F01043AF /* TOMLKit in Frameworks */ = {isa = PBXBuildFile; productRef = EC8E4F2CA4FF8884F9F59975 /* TOMLKit */; };
 		66E6CDA75DDD5E4B9647EDE2 /* AeroSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E81623E8954701269A22322 /* AeroSpaceApp.swift */; };
+		6A16BC0B4B67A45EF90F9DFE /* ResultEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07A342893BEB5525BA1F8B74 /* ResultEx.swift */; };
 		6E4E235FDA41307B19F16182 /* ModeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */; };
 		70A82A4A9DFC89286C4F7696 /* TilingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00ECDFE176777828D560A737 /* TilingContainer.swift */; };
 		77FA83225024151CD556E1ED /* CloseAllWindowsButCurrentCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99853C505D93E41F6531C324 /* CloseAllWindowsButCurrentCommand.swift */; };
@@ -96,6 +98,7 @@
 
 /* Begin PBXFileReference section */
 		00ECDFE176777828D560A737 /* TilingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilingContainer.swift; sourceTree = "<group>"; };
+		07A342893BEB5525BA1F8B74 /* ResultEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultEx.swift; sourceTree = "<group>"; };
 		09685297933511208058F7CF /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AEE5470AF418906B180A593 /* mouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mouse.swift; sourceTree = "<group>"; };
 		0D9301F99737BE4888DBC2A3 /* FocusedWorkspaceSourceOfTruth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusedWorkspaceSourceOfTruth.swift; sourceTree = "<group>"; };
@@ -128,6 +131,7 @@
 		6E330182A6FACBABABB6FC51 /* MoveInCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveInCommand.swift; sourceTree = "<group>"; };
 		6F1905935B0C61590A96EFEF /* TestWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWindow.swift; sourceTree = "<group>"; };
 		7A247B616D1951777C565D02 /* MoveThroughCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveThroughCommandTest.swift; sourceTree = "<group>"; };
+		7ACD4E9C6C0C08F1B0622C57 /* ResizeCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizeCommandTest.swift; sourceTree = "<group>"; };
 		7DBD002C4A68AED07BB63EFA /* MoveContainerToWorkspaceCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveContainerToWorkspaceCommandTest.swift; sourceTree = "<group>"; };
 		82476B9BEBAC00EB9E32256F /* AeroAny.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroAny.swift; sourceTree = "<group>"; };
 		883D7F7F87FBE7D0BDE4E87F /* ArrayEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayEx.swift; sourceTree = "<group>"; };
@@ -204,6 +208,7 @@
 				7DBD002C4A68AED07BB63EFA /* MoveContainerToWorkspaceCommandTest.swift */,
 				13E5ED8E885494CAEEC70A90 /* MoveInCommandTest.swift */,
 				7A247B616D1951777C565D02 /* MoveThroughCommandTest.swift */,
+				7ACD4E9C6C0C08F1B0622C57 /* ResizeCommandTest.swift */,
 			);
 			path = command;
 			sourceTree = "<group>";
@@ -358,6 +363,7 @@
 				954A434EE57D76F5A9D4140D /* MruStack.swift */,
 				A9EDFD4A9F45182CA6E0BD7B /* OptionalEx.swift */,
 				28B788A95DD3C267878E05B5 /* Rect.swift */,
+				07A342893BEB5525BA1F8B74 /* ResultEx.swift */,
 				B1316FFED5D1044CB693EA45 /* SelectorComparator.swift */,
 				AAE5DCAEC5EE619CE33859E7 /* SequenceEx.swift */,
 				14FABE2521026C8394254D97 /* showMessageToUser.swift */,
@@ -466,6 +472,7 @@
 				A55F31B0CC357B37108B8F54 /* MoveContainerToWorkspaceCommandTest.swift in Sources */,
 				3BE358D5C209F279BB71AC95 /* MoveInCommandTest.swift in Sources */,
 				B1E527CF4941A4E9B8D9C3D0 /* MoveThroughCommandTest.swift in Sources */,
+				22175400298B985658E774EE /* ResizeCommandTest.swift in Sources */,
 				7ED8C2A66DD6F903796F090C /* TestApp.swift in Sources */,
 				E22ACB36C90695FBAC78226E /* TestWindow.swift in Sources */,
 				70A82A4A9DFC89286C4F7696 /* TilingContainer.swift in Sources */,
@@ -510,6 +517,7 @@
 				78EE0CEF814ABDBA67941B84 /* Rect.swift in Sources */,
 				FC35D6D0A678CC802972C6FE /* ReloadConfigCommand.swift in Sources */,
 				D24D02B1FD87424B908986AF /* ResizeCommand.swift in Sources */,
+				6A16BC0B4B67A45EF90F9DFE /* ResultEx.swift in Sources */,
 				991943D50DF9EDBF321A66F1 /* SelectorComparator.swift in Sources */,
 				AE76A183D0454E4C8ADCE380 /* SequenceEx.swift in Sources */,
 				E5682579AEC6B84CF6FCE90D /* TilingContainer.swift in Sources */,

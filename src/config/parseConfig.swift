@@ -51,33 +51,12 @@ enum TomlParseError: Error, CustomStringConvertible {
 
 private typealias ParsedTomlResult<T> = Result<T, TomlParseError>
 
-private extension Result {
-    func unwrapAndAppendErrors(_ errors: inout [Failure]) -> Success? {
-        switch self {
-        case .success(let success):
-            return success
-        case .failure(let error):
-            errors += [error]
-            return nil
-        }
-    }
-
-    func getOrNils() -> (Success?, Failure?) {
-        switch self {
-        case .success(let success):
-            return (success, nil)
-        case .failure(let failure):
-            return (nil, failure)
-        }
-    }
-}
-
 private extension ParserProtocol {
     func transformRawConfig(_ raw: RawConfig,
                             _ value: TOMLValueConvertible,
                             _ backtrace: TomlBacktrace,
                             _ errors: inout [TomlParseError]) -> RawConfig {
-        raw.copy(keyPath, parse(value, backtrace).unwrapAndAppendErrors(&errors))
+        raw.copy(keyPath, parse(value, backtrace).getOrNil(appendErrorTo: &errors))
     }
 }
 
