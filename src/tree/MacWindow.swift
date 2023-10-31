@@ -147,7 +147,7 @@ func shouldFloat(_ axWindow: AXUIElement) -> Bool {
     axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole
 }
 
-func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace) -> BindingData {
+private func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace) -> BindingData {
     shouldFloat(axWindow)
         ? BindingData(parent: workspace as NonLeafTreeNode, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         : getBindingDataForNewTilingWindow(workspace)

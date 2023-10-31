@@ -87,14 +87,48 @@ private func layoutWindows(startup: Bool) {
 }
 
 private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
-    for app in apps {
-        let windows = app.windows // Calling .windows has side-effects
-        if startup {
+    if startup {
+        putWindowsOnWorkspacesOfTheirMonitors()
+        putWindowsInDecks()
+    } else {
+        for app in apps {
+            let _ = app.windows // Calling .windows has side-effects
+        }
+    }
+}
+
+private func putWindowsInDecks() {
+    let windowGroups: [Workspace: [Window]] =
+        apps.flatMap(\.windows).filter { !$0.isFloating }.grouped(by: \.workspace)
+    for (workspace, windows) in windowGroups {
+        let root = workspace.rootTilingContainer
+        switch root.layout {
+        case .list:
+            var deckIndex = 0
+            let decks = [
+                TilingContainer(parent: root, adaptiveWeight: 1, root.orientation.opposite, .accordion, index: INDEX_BIND_LAST),
+                TilingContainer(parent: root, adaptiveWeight: 1, root.orientation.opposite, .accordion, index: INDEX_BIND_LAST),
+            ]
             for window in windows {
-                if let workspace = window.getCenter()?.monitorApproximation.activeWorkspace {
-                    window.unbindFromParent()
-                    let bindingData = getBindingDataForNewWindow((window as! MacWindow).axWindow, workspace)
-                    window.bind(to: bindingData.parent, adaptiveWeight: bindingData.adaptiveWeight, index: bindingData.index)
+                window.unbindFromParent()
+                window.bind(to: decks[deckIndex], adaptiveWeight: WEIGHT_AUTO, index: 0)
+                deckIndex = (deckIndex + 1) % decks.count
+            }
+        case .accordion:
+            break
+        }
+    }
+}
+
+private func putWindowsOnWorkspacesOfTheirMonitors() {
+    for app in apps {
+        for window in app.windows {
+            if let workspace = window.getCenter()?.monitorApproximation.activeWorkspace {
+                switch window.unbindFromParent().parent.kind {
+                case .workspace:
+                    window.bind(to: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+                case .tilingContainer:
+                    window.bind(to: workspace.rootTilingContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
                 }
             }
         }
