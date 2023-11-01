@@ -217,7 +217,7 @@ h_list
 `move-through up` will result in the following layout
 ```
 v_list
-├── window 2  (focused)
+├── window 2 (focused)
 └── h_list
     ├── window 1
     └── window 3

@@ -142,7 +142,7 @@ AeroSpace uses TOML format for the config. TOML is easy to read, and it supports
 info](https://toml.io/en/)
 
 ### Binding modes
-TODO DOCUMENTATION
+TODO DOCUMENTATION. For now you can refer to https://i3wm.org/docs/userguide.html#binding_modes
 
 ### Commands
 
