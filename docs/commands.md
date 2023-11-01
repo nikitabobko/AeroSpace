@@ -6,10 +6,10 @@
 - [exec-and-wait](#exec-and-wait)
 - [flatten-workspace-tree](#flatten-workspace-tree)
 - [focus](#focus)
+- [join-with](#join-with)
 - [layout](#layout)
 - [mode](#mode)
 - [move-container-to-workspace](#move-container-to-workspace)
-- [move-in](#move-in)
 - [move-through](#move-through)
 - [move-workspace-to-display](#move-workspace-to-display)
 - [reload-config](#reload-config)
@@ -81,6 +81,31 @@ This technique eliminates the need for an additional binding for floating window
 
 `focus child|parent` [isn't yet supported](https://github.com/nikitabobko/AeroSpace/issues/5) because of a low priority.
 
+## join-with
+
+```
+join-with (left|down|up|right)
+```
+
+Puts the currently focused window and the nearest container in the specified direction under a common parent container.
+
+Given this layout
+```
+h_list
+├── window 1
+├── window 2 (focused)
+└── window 3
+```
+
+`join-with right` will result in the following layout
+```
+h_list
+├── window 1
+└── v_list
+    ├── window 2 (focused)
+    └── window 3
+```
+
 ## layout
 
 ```
@@ -101,31 +126,6 @@ mode name_of_the_target_mode
 ```
 
 ## move-container-to-workspace
-
-## move-in
-
-```
-move-in (left|down|up|right)
-```
-
-Puts the currently focused window and the window in specified direction under one parent container
-
-Given this layout
-```
-h_list
-├── window 1
-├── window 2 (focused)
-└── window 3
-```
-
-`move-in right` will result in the following layout
-```
-h_list
-├── window 1
-└── v_list
-    ├── window 2 (focused)
-    └── window 3
-```
 
 ## move-through
 

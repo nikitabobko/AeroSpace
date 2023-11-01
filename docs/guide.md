@@ -41,7 +41,7 @@ command](./commands.md#focus) to navigate in the tree.
 
 The tree structure can be changed with two commands:
 - [move-through](./commands.md#move-through)
-- [move-in](./commands.md#move-in)
+- [join-with](./commands.md#join-with)
 
 ### Layouts
 

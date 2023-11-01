@@ -1,4 +1,4 @@
-struct MoveInCommand: Command {
+struct JoinWithCommand: Command {
     let direction: CardinalDirection
 
     func runWithoutLayout() {

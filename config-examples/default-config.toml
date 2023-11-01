@@ -139,7 +139,7 @@ alt-shift-tab = 'move-workspace-to-display next'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#mode
 alt-shift-semicolon = 'mode service'
-alt-shift-slash = 'mode move-in'
+alt-shift-slash = 'mode join'
 
 # It's a declaration of binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 [mode.service.binding]
@@ -152,10 +152,10 @@ esc = 'mode main'
 enter = 'mode main'
 
 # It's a declaration of binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
-[mode.move-in.binding]
-alt-shift-h = ['move-in left', 'mode main']
-alt-shift-j = ['move-in down', 'mode main']
-alt-shift-k = ['move-in up', 'mode main']
-alt-shift-l = ['move-in right', 'mode main']
+[mode.join.binding]
+alt-shift-h = ['join-with left', 'mode main']
+alt-shift-j = ['join-with down', 'mode main']
+alt-shift-k = ['join-with up', 'mode main']
+alt-shift-l = ['join-with right', 'mode main']
 esc = 'mode main'
 enter = 'mode main'
