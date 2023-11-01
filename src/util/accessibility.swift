@@ -298,4 +298,4 @@ struct AxObserverWrapper {
 }
 
 /// Pure heuristic. Usually it takes around 1000 attempts to subscribe
-private let SUBSCRIBE_OBSERVER_ATTEMPTS_THRESHOLD = 10_000 // todo drop
+private let SUBSCRIBE_OBSERVER_ATTEMPTS_THRESHOLD = 1 // todo drop
