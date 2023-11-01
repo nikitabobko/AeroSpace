@@ -75,8 +75,9 @@ Accordion padding is configurable via `accordion-padding` option (see [default-c
 ### Normalization
 
 By default, AeroSpace does two types of tree normalizations:
-- Containers that have only one child are "flattened"
-- Containers that nest into each other must have opposite orientations
+- Containers that have only one child are "flattened". Configured by `enable-normalization-flatten-containers`
+- Containers that nest into each other must have opposite orientations. Configured by
+  `enable-normalization-opposite-orientation-for-nested-containers`
 
 **Example 1**
 
