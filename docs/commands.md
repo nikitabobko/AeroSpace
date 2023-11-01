@@ -104,6 +104,29 @@ mode name_of_the_target_mode
 
 ## move-in
 
+```
+move-in (left|down|up|right)
+```
+
+Puts the currently focused window and the window in specified direction under one parent container
+
+Given this layout
+```
+h_list
+├── window 1
+├── window 2 (focused)
+└── window 3
+```
+
+`move-in right` will result in the following layout
+```
+h_list
+├── window 1
+└── v_list
+    ├── window 2 (focused)
+    └── window 3
+```
+
 ## move-through
 
 ```
