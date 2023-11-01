@@ -16,6 +16,7 @@ final class MacWindow: Window, CustomStringConvertible {
     static var allWindows: [MacWindow] { Array(allWindowsMap.values) }
 
     static func get(app: MacApp, axWindow: AXUIElement) -> MacWindow? {
+        if !isWindow(axWindow) { return nil }
         guard let id = axWindow.windowId() else { return nil }
         if let existing = allWindowsMap[id] {
             return existing
@@ -135,13 +136,18 @@ final class MacWindow: Window, CustomStringConvertible {
     }
 }
 
-func shouldFloat(_ axWindow: AXUIElement) -> Bool {
+private func isWindow(_ axWindow: AXUIElement) -> Bool {
+    let subrole = axWindow.get(Ax.subroleAttr)
+    return subrole == kAXStandardWindowSubrole || subrole == kAXDialogSubrole
+}
+
+func shouldFloat(_ axWindow: AXUIElement) -> Bool { // Note: a lot of windows don't have title on startup
     // Don't tile:
     // - Chrome cmd+f window ("AXUnknown" value)
     // - login screen (Yes fuck, it's also a window from Apple's API perspective) ("AXUnknown" value)
     // - XCode "Build succeeded" popup
     // - IntelliJ tooltips, context menus, drop downs
-    // - macOS native file picker ("Open..." menu)
+    // - macOS native file picker ("Open..." menu) (kAXDialogSubrole value)
     //
     // Minimized windows or windows of a hidden app have subrole "AXDialog"
     axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole
