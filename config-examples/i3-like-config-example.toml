@@ -16,8 +16,8 @@ alt-shift-j = 'move-through down'
 alt-shift-k = 'move-through up'
 alt-shift-l = 'move-through right'
 
-# alt-h = 'split h' # todo support split command?
-# alt-v = 'split v' # todo support split command?
+# alt-h = 'split h' # todo support split command? https://github.com/nikitabobko/AeroSpace/issues/10
+# alt-v = 'split v' # todo support split command? https://github.com/nikitabobko/AeroSpace/issues/10
 
 # alt-f = 'fullscreen' # todo support fullscreen command? https://github.com/nikitabobko/AeroSpace/issues/7
 
