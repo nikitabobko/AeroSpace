@@ -5,6 +5,7 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 # set -x # Print shell commands as they are executed (or you can try -v which is less verbose)
 
 cd "$(dirname "$0")"
+rm -rf AeroSpace.xcodeproj
 xcodegen # https://github.com/yonaskolb/XcodeGen
 xcodebuild clean
 rm -rf ~/Library/Developer/Xcode/DerivedData/AeroSpace-*
