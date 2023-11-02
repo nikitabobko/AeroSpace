@@ -636,7 +636,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = "0.2.0-Alpha";
+				MARKETING_VERSION = "0.2.0-Beta";
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.debug.aerospace;
 				PRODUCT_NAME = "AeroSpace-Debug";
 				SDKROOT = macosx;
@@ -750,7 +750,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = "0.2.0-Alpha";
+				MARKETING_VERSION = "0.2.0-Beta";
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace;
 				PRODUCT_NAME = AeroSpace;
 				SDKROOT = macosx;
