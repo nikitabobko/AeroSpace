@@ -4,27 +4,25 @@ AeroSpace is a tiling window manager for macOS.
 
 ## Project status
 
-🚧 **Active development** 🚧
+Public Beta. Feedback is very much welcome
 
-Preproduction quality
-- Expect bugs
-- Expect not polished experience
-- Expect breaking changes in the config format
-- [The documentation](./docs/guide.md) is not yet ready
-  - But [config](./config-examples/default-config.toml) is self-explanatory
-  - If you're familiar with i3, you can already make it usable for yourself
+- I encourage you to try AeroSpace and [share the general feedback](https://github.com/nikitabobko/AeroSpace/issues/11).
+  In particular, I'm interested in issues that block you from using AeroSpace.
+- I already use AeroSpace on daily basis and I'm happy with it
+- [The documentation](./docs/guide.md) covers all major things you need to know
+- Expect minor breaking changes in the config format. Once the project reaches 1.0 the config is guaranteed to preserve backwards
+  compatibility
 
 ## Key features
 
-- **Manual** tiling window manager
+- **Manual** tiling window manager based on a [tree paradigm](./docs/guide.md#tree)
 - [i3](https://i3wm.org/) inspired
 - AeroSpace employs its [own emulation of virtual workspaces](./docs/guide.md#emulation-of-virtual-workspaces) instead of relying
-  on native macOS Spaces due to
-  their considerable limitations
-- Plain text configuration (dotfiles friendly)
+  on native macOS Spaces due to [their considerable limitations](./docs/guide.md#emulation-of-virtual-workspaces)
+- Plain text configuration (dotfiles friendly). See: [default-config.toml](./config-examples/default-config.toml)
 - ~~CLI scriptable~~ [[PLANNED]](https://github.com/nikitabobko/AeroSpace/issues/3)
 - Doesn't require disabling SIP (System Integrity Protection)
-- Proper multi-monitor support (i3-like paradigm)
+- [Proper multi-display support](./docs/guide.md#multiple-displays) (i3-like paradigm)
 - Status menu icon displays current workspace name
 
 ## Installation

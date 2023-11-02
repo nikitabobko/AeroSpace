@@ -75,7 +75,8 @@ Sets focus to the nearest window in [the tree](./guide.md#tree) in the given dir
 
 [Contrary to i3](https://i3wm.org/docs/userguide.html#_focusing_moving_containers), `focus` command doesn't have a separate
 argument to focus floating windows. From `focus` command perspective, floating windows are part of [the tree](./guide.md#tree).
-The floating window parent is determined as the smallest tiling container that contains the center of the floating window.
+The floating window parent container is determined as the smallest tiling container that contains the center of the floating
+window.
 
 This technique eliminates the need for an additional binding for floating windows.
 
@@ -87,7 +88,7 @@ This technique eliminates the need for an additional binding for floating window
 join-with (left|down|up|right)
 ```
 
-Puts the currently focused window and the nearest container in the specified direction under a common parent container.
+Puts the currently focused window and the nearest node in the specified direction under a common parent container.
 
 Given this layout
 ```
@@ -129,7 +130,15 @@ found layout.
 mode name_of_the_target_mode
 ```
 
+Activates the specified [binding mode](./guide.md#bindings-modes)
+
 ## move-container-to-workspace
+
+```
+move-container-to-workspace target_workspace_name
+```
+
+Moves currently focused window to the specified workspace
 
 ## move-through
 
@@ -227,10 +236,53 @@ v_list
 
 ## move-workspace-to-display
 
+```
+move-workspace-to-display (next|prev)
+```
+
+Moves currently active workspace to the next or previous display
+
 ## reload-config
+
+```
+reload-config
+```
+
+Reloads currently active config. This command doesn't have any arguments.
 
 ## resize
 
+```
+resize (smart|width|height) [+|-]number
+```
+
+Resizes the currently active window
+
+The dimension to resize is chosen by the first argument
+
+- `width` changes width
+- `height` changes height
+- `smart` changes width if the parent has horizontal orientation, and it changes height if the parent has vertical orientation
+
+Second argument controls how much the size is changes
+
+- If the `number` is prefixed with `+` then the dimension is increased
+- If the `number` is prefixed with `-` then the dimension is decreased
+- If the `number` is prefixed with neither `+` nor `-` then the command changes the absolute value of the dimension
+
 ## workspace-back-and-forth
 
+```
+workspace-back-and-forth
+```
+
+Switches between currently active workspace and previously active workspace back and forth. This command doesn't have any
+arguments.
+
 ## workspace
+
+```
+workspace target_workspace_name
+```
+
+Activates the specified workspace
