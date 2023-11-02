@@ -9,7 +9,7 @@
 - [join-with](#join-with)
 - [layout](#layout)
 - [mode](#mode)
-- [move-container-to-workspace](#move-container-to-workspace)
+- [move-node-to-workspace](#move-node-to-workspace)
 - [move-through](#move-through)
 - [move-workspace-to-display](#move-workspace-to-display)
 - [reload-config](#reload-config)
@@ -107,9 +107,10 @@ h_list
     └── window 3
 ```
 
-`join-with` command is supposed to be a replacement for i3's [split command](https://i3wm.org/docs/userguide.html#_splitting_containers).
-It seems that the only reason why you might want to split a container is to put several windows under a common "umbrella" parent.
-Contrary to `split`, `join-with` can be used with [enable-normalization-flatten-containers](./guide.md#normalization)
+> [!NOTE]
+> `join-with` command is supposed to be a replacement for i3's [split command](https://i3wm.org/docs/userguide.html#_splitting_containers).
+> It seems that the only reason why you might want to split a node is to put several windows under a common "umbrella" parent.
+> Contrary to `split`, `join-with` can be used with [enable-normalization-flatten-containers](./guide.md#normalization)
 
 ## layout
 
@@ -132,10 +133,10 @@ mode name_of_the_target_mode
 
 Activates the specified [binding mode](./guide.md#bindings-modes)
 
-## move-container-to-workspace
+## move-node-to-workspace
 
 ```
-move-container-to-workspace target_workspace_name
+move-node-to-workspace target_workspace_name
 ```
 
 Moves currently focused window to the specified workspace
@@ -149,7 +150,8 @@ move-through (left|down|up|right) [floating_pixel]
 Moves the window in the given direction. The optional `floating_pixel` argument specifies how far the window should be moved if
 it is floating. The default is 50 pixels
 
-This command is an analog of [i3's move command](https://i3wm.org/docs/userguide.html#move_direction)
+> [!NOTE]
+> This command is an analog of [i3's move command](https://i3wm.org/docs/userguide.html#move_direction)
 
 **Example 1**
 

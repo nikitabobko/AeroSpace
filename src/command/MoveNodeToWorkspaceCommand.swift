@@ -1,4 +1,4 @@
-struct MoveContainerToWorkspaceCommand: Command {
+struct MoveNodeToWorkspaceCommand: Command {
     let targetWorkspaceName: String
 
     func runWithoutLayout() async {

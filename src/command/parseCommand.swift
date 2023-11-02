@@ -23,8 +23,8 @@ func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
     let firstWord = String(words.first ?? "")
     if firstWord == "workspace" {
         return parseSingleArg(args, firstWord).map { WorkspaceCommand(workspaceName: $0) }
-    } else if firstWord == "move-container-to-workspace" {
-        return parseSingleArg(args, firstWord).map { MoveContainerToWorkspaceCommand(targetWorkspaceName: $0) }
+    } else if firstWord == "move-node-to-workspace" {
+        return parseSingleArg(args, firstWord).map { MoveNodeToWorkspaceCommand(targetWorkspaceName: $0) }
     } else if firstWord == "mode" {
         return parseSingleArg(args, firstWord).map { ModeCommand(idToActivate: $0) }
     } else if firstWord == "join-with" {
