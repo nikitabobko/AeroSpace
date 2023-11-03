@@ -177,8 +177,9 @@ Native macOS Spaces have a lot of problems.
   - You can't disable animation for Spaces switching (you can only make it slightly faster by turning on `Reduce motion` setting,
     but it's suboptimal)
 - You have a limit of Spaces (up to 16 Spaces with one monitor)
-- You can't create, delete, reorder Spaces with hotkeys
-- Apple doesn't provide public API to create, delete, reorder and switch Spaces
+- You can't create/delete/reorder Space and move windows between Spaces with hotkeys (you can only switch between Spaces with
+  hotkeys)
+- Apple doesn't provide public API to communicate with Spaces (create/delete/reorder/switch Space and move windows between Spaces)
 
 Since Spaces are so hard to deal with, AeroSpace reimplements Spaces and calls them "Workspaces". The idea is that if the
 workspace isn't active then all of its windows are placed outside of the visible area of the screen, at the bottom right corner.
