@@ -2,6 +2,8 @@
 
 AeroSpace is a tiling window manager for macOS.
 
+[YouTube Demo](https://www.youtube.com/watch?v=UOl7ErqWbrk)
+
 ## Project status
 
 Public Beta. Feedback is very much welcome
