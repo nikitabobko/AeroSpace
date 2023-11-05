@@ -42,7 +42,11 @@ enum TomlParseError: Error, CustomStringConvertible {
     var description: String {
         switch self {
         case .semantic(let backtrace, let message):
-            return "\(backtrace): \(message)"
+            if case .root("") = backtrace { // todo Make 'split' + flatten normalization prettier
+                return message
+            } else {
+                return "\(backtrace): \(message)"
+            }
         case .syntax(let message):
             return message
         }
@@ -119,7 +123,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
 
     let modesOrDefault = modes ?? defaultConfig.modes
 
-    let config =  Config(
+    let config: Config = Config(
         afterLoginCommand: raw.afterLoginCommand ?? defaultConfig.afterLoginCommand,
         afterStartupCommand: raw.afterStartupCommand ?? defaultConfig.afterStartupCommand,
         indentForNestedContainersWithTheSameOrientation: raw.indentForNestedContainersWithTheSameOrientation ?? defaultConfig.indentForNestedContainersWithTheSameOrientation,
@@ -137,6 +141,22 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
             .map { (command: Command) -> Command in (command as? CompositeCommand)?.subCommands.singleOrNil() ?? command }
             .compactMap { (command: Command) -> String? in (command as? WorkspaceCommand)?.workspaceName ?? nil }
     )
+    if config.enableNormalizationFlattenContainers {
+        let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings }
+            .map { $0.command }
+            .flatMap { ($0 as? CompositeCommand)?.subCommands ?? [$0] }
+            .contains { $0 is SplitCommand }
+        if containsSplitCommand {
+            errors += [.semantic(.root(""), // todo Make 'split' + flatten normalization prettier
+                """
+                The config contains:
+                1. usage of 'split' command
+                2. enable-normalization-flatten-containers = true
+                These two settings don't play nicely together. 'split' command has no effect in this case
+                """
+            )]
+        }
+    }
     return (config, errors)
 }
 

@@ -25,6 +25,11 @@ func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
         return parseSingleArg(args, firstWord).map { WorkspaceCommand(workspaceName: $0) }
     } else if firstWord == "move-node-to-workspace" {
         return parseSingleArg(args, firstWord).map { MoveNodeToWorkspaceCommand(targetWorkspaceName: $0) }
+    } else if firstWord == "split" {
+        let arg = parseSingleArg(args, firstWord).flatMap {
+            SplitCommand.SplitArg(rawValue: $0).orFailure("'\(firstWord)' command: the argument must be (horizontal|vertical|opposite)")
+        }
+        return arg.map { SplitCommand(splitArg: $0) }
     } else if firstWord == "mode" {
         return parseSingleArg(args, firstWord).map { ModeCommand(idToActivate: $0) }
     } else if firstWord == "join-with" {
@@ -99,7 +104,7 @@ private func parseResizeCommand(firstWord: String, args: [String]) -> ParsedComm
 
 private func parseSingleArg(_ args: [String], _ command: String) -> ParsedCommand<String> {
     args.singleOrNil().orFailure {
-        "\(command) must have only a single argument. But passed: '\(args.joined(separator: " "))'"
+        "\(command) must have only a single argument. But passed: '\(args.joined(separator: " "))' (\(args.count) args)"
     }
 }
 

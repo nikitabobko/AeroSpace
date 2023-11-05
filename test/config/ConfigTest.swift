@@ -7,6 +7,7 @@ final class ConfigTest: XCTestCase {
         let (i3Config, errors) = parseConfig(toml)
         XCTAssertEqual(errors.descriptions, [])
         XCTAssertEqual(i3Config.enableNormalizationFlattenContainers, false)
+        XCTAssertEqual(i3Config.enableNormalizationOppositeOrientationForNestedContainers, false)
     }
 
     func testParseMode() {
@@ -102,6 +103,26 @@ final class ConfigTest: XCTestCase {
         XCTAssertEqual(
             errors.descriptions,
             ["Error while parsing key-value pair: encountered end-of-file (at line 1, column 5)"]
+        )
+    }
+
+    func testSplitCommandAndFlattenContainersNormalization() {
+        let (_, errors) = parseConfig(
+            """
+            enable-normalization-flatten-containers = true
+            [mode.main.binding]
+            [mode.foo.binding]
+            alt-s = 'split horizontal'
+            """
+        )
+        XCTAssertEqual(
+            ["""
+             The config contains:
+             1. usage of 'split' command
+             2. enable-normalization-flatten-containers = true
+             These two settings don't play nicely together. 'split' command has no effect in this case
+             """],
+            errors.descriptions
         )
     }
 }
