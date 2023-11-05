@@ -1,4 +1,5 @@
 import Foundation
+import XCTest
 @testable import AeroSpace_Debug
 
 let projectRoot: URL = URL(filePath: #file).appending(component: "../..").standardized
@@ -32,4 +33,24 @@ func setUpWorkspacesForTests() {
 
     TestApp.shared.focusedWindow = nil
     TestApp.shared.windows = []
+}
+
+func testParseCommandSucc(_ command: String, _ expected: CommandDescription) {
+    let parsed = parseSingleCommand(command)
+    switch parsed {
+    case .success(let command):
+        XCTAssertEqual(command.describe, expected)
+    case .failure(let msg):
+        XCTFail(msg)
+    }
+}
+
+func testParseCommandFail(_ command: String, msg expected: String) {
+    let parsed = parseSingleCommand(command)
+    switch parsed {
+    case .success(let command):
+        XCTFail("\(command) isn't supposed to be parcelable")
+    case .failure(let msg):
+        XCTAssertEqual(msg, expected)
+    }
 }

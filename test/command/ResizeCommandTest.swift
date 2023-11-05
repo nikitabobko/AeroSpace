@@ -16,23 +16,3 @@ final class ResizeCommandTest: XCTestCase {
         testParseCommandFail("resize smart foo", msg: "'resize' command: Second arg must be a number")
     }
 }
-
-private func testParseCommandSucc(_ command: String, _ expected: CommandDescription) {
-    let parsed = parseSingleCommand(command)
-    switch parsed {
-    case .success(let command):
-        XCTAssertEqual(command.describe, expected)
-    case .failure(let msg):
-        XCTFail(msg)
-    }
-}
-
-private func testParseCommandFail(_ command: String, msg expected: String) {
-    let parsed = parseSingleCommand(command)
-    switch parsed {
-    case .success(let command):
-        XCTFail("\(command) isn't supposed to be parcelable")
-    case .failure(let msg):
-        XCTAssertEqual(msg, expected)
-    }
-}

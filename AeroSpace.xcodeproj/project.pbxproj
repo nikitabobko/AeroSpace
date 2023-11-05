@@ -55,6 +55,7 @@
 		9A138A729245BD2723148583 /* focused.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61FE8B343B068F0FFFC2373 /* focused.swift */; };
 		9D34BD7DE311254BF52F5EA2 /* testUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77C03164B8BFD1E59779C6E /* testUtil.swift */; };
 		A0765C31043BCFB0420BF1C9 /* parseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */; };
+		A249B6511A9BD20A298C0DE7 /* SplitCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F0D298D61D85CEB29CE77 /* SplitCommand.swift */; };
 		A2CBF9674964F9083BB198D2 /* ArrayEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D7F7F87FBE7D0BDE4E87F /* ArrayEx.swift */; };
 		A5BFF75CF8021A585BC1F9D5 /* parseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB03A4736BC3F6D19E4E69F3 /* parseCommand.swift */; };
 		AC439551A737C73168CC5BF9 /* TreeNodeKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60709210745C60D64F82D53 /* TreeNodeKind.swift */; };
@@ -73,6 +74,7 @@
 		BF16873111EEDE60A8AACD6B /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F068BCC50ED846DCBFDE57 /* Workspace.swift */; };
 		C0A88261ECF505FC5648FC0A /* OptionalEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EDFD4A9F45182CA6E0BD7B /* OptionalEx.swift */; };
 		D24D02B1FD87424B908986AF /* ResizeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB371951459F8CB0137788C2 /* ResizeCommand.swift */; };
+		DCCC05496BDAAFB745E99624 /* SplitCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D96FF3675C63A83DC8B8969 /* SplitCommandTest.swift */; };
 		E1E35DC5D9D74D54E92AB5F3 /* ExecCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6EF465EF4129BCB10FE247 /* ExecCommandTest.swift */; };
 		E22ACB36C90695FBAC78226E /* TestWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1905935B0C61590A96EFEF /* TestWindow.swift */; };
 		E5682579AEC6B84CF6FCE90D /* TilingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C848D6E57FDF22AAF0FB45E6 /* TilingContainer.swift */; };
@@ -110,6 +112,7 @@
 		2431BEAFFF1AC12D3001317A /* TestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestApp.swift; sourceTree = "<group>"; };
 		25AC44D0E9450867215FCBEC /* MoveNodeToWorkspaceCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveNodeToWorkspaceCommand.swift; sourceTree = "<group>"; };
 		28B788A95DD3C267878E05B5 /* Rect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rect.swift; sourceTree = "<group>"; };
+		2D96FF3675C63A83DC8B8969 /* SplitCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitCommandTest.swift; sourceTree = "<group>"; };
 		3A262B442A94C1964509B691 /* TreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNode.swift; sourceTree = "<group>"; };
 		3A6EF465EF4129BCB10FE247 /* ExecCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecCommandTest.swift; sourceTree = "<group>"; };
 		3C2E5977331398421A4FC168 /* GlobalObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalObserver.swift; sourceTree = "<group>"; };
@@ -153,6 +156,7 @@
 		AD0938DE74E687A8959E3F9C /* moveWithMouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moveWithMouse.swift; sourceTree = "<group>"; };
 		AD1645D9939F3F896EF21393 /* TreeNodeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeTest.swift; sourceTree = "<group>"; };
 		B1316FFED5D1044CB693EA45 /* SelectorComparator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectorComparator.swift; sourceTree = "<group>"; };
+		B65F0D298D61D85CEB29CE77 /* SplitCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitCommand.swift; sourceTree = "<group>"; };
 		B7DB782C527ABE0CF31740EB /* MacApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacApp.swift; sourceTree = "<group>"; };
 		BEF353340822CD20E9DAB3EC /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
 		C3F068BCC50ED846DCBFDE57 /* Workspace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Workspace.swift; sourceTree = "<group>"; };
@@ -209,6 +213,7 @@
 				E9589EFDEBA4EB9C7DBAFCFD /* MoveNodeToWorkspaceCommandTest.swift */,
 				7A247B616D1951777C565D02 /* MoveThroughCommandTest.swift */,
 				7ACD4E9C6C0C08F1B0622C57 /* ResizeCommandTest.swift */,
+				2D96FF3675C63A83DC8B8969 /* SplitCommandTest.swift */,
 			);
 			path = command;
 			sourceTree = "<group>";
@@ -332,6 +337,7 @@
 				CB03A4736BC3F6D19E4E69F3 /* parseCommand.swift */,
 				CF3C9038C846369FDD71D1D2 /* ReloadConfigCommand.swift */,
 				CB371951459F8CB0137788C2 /* ResizeCommand.swift */,
+				B65F0D298D61D85CEB29CE77 /* SplitCommand.swift */,
 				EED7EE20910D7BE4D0150CED /* WorkspaceBackAndForthCommand.swift */,
 				43DD32B1711B8EFCC834B68E /* WorkspaceCommand.swift */,
 			);
@@ -473,6 +479,7 @@
 				9305D5380C7A1D293F24FF41 /* MoveNodeToWorkspaceCommandTest.swift in Sources */,
 				B1E527CF4941A4E9B8D9C3D0 /* MoveThroughCommandTest.swift in Sources */,
 				22175400298B985658E774EE /* ResizeCommandTest.swift in Sources */,
+				DCCC05496BDAAFB745E99624 /* SplitCommandTest.swift in Sources */,
 				7ED8C2A66DD6F903796F090C /* TestApp.swift in Sources */,
 				E22ACB36C90695FBAC78226E /* TestWindow.swift in Sources */,
 				70A82A4A9DFC89286C4F7696 /* TilingContainer.swift in Sources */,
@@ -520,6 +527,7 @@
 				6A16BC0B4B67A45EF90F9DFE /* ResultEx.swift in Sources */,
 				991943D50DF9EDBF321A66F1 /* SelectorComparator.swift in Sources */,
 				AE76A183D0454E4C8ADCE380 /* SequenceEx.swift in Sources */,
+				A249B6511A9BD20A298C0DE7 /* SplitCommand.swift in Sources */,
 				E5682579AEC6B84CF6FCE90D /* TilingContainer.swift in Sources */,
 				56E72B24303F5F337B31B776 /* TrayMenuModel.swift in Sources */,
 				F892B5DCB4F731B3E173FF4C /* TreeNode.swift in Sources */,
