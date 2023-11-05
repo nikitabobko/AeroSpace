@@ -42,16 +42,7 @@ func updateMostRecentWindow() {
 private func refreshFocusedWorkspaceBasedOnFocusedWindow() {
     if focusedWorkspaceSourceOfTruth == .macOs {
         if let focusedWindow = focusedWindow {
-            let focusedWorkspace: Workspace
-            if focusedWindow.isFloating && !focusedWindow.isHiddenViaEmulation {
-                focusedWorkspace = focusedWindow.getCenter()?.monitorApproximation.activeWorkspace ?? focusedWindow.workspace
-                if focusedWindow.parent != focusedWorkspace {
-                    focusedWindow.unbindFromParent()
-                    focusedWindow.bindAsFloatingWindow(to: focusedWorkspace)
-                }
-            } else {
-                focusedWorkspace = focusedWindow.workspace
-            }
+            let focusedWorkspace: Workspace = focusedWindow.workspace
             focusedWorkspace.monitor.setActiveWorkspace(focusedWorkspace)
             focusedWorkspaceName = focusedWorkspace.name
         } else {

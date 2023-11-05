@@ -12,9 +12,23 @@ private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
            currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId {
         return
     }
-    if !(window.parent is TilingContainer) {
-        return
+    switch window.parent.kind {
+    case .workspace:
+        moveFloatingWindow(window)
+    case .tilingContainer:
+        moveTilingWindow(window)
     }
+}
+
+private func moveFloatingWindow(_ window: Window) {
+    guard let targetWorkspace = window.getCenter()?.monitorApproximation.activeWorkspace else { return }
+    if targetWorkspace != window.parent {
+        window.unbindFromParent()
+        window.bindAsFloatingWindow(to: targetWorkspace)
+    }
+}
+
+private func moveTilingWindow(_ window: Window) {
     currentlyManipulatedWithMouseWindowId = window.windowId
     window.lastAppliedLayoutRect = nil
     let mouseLocation = mouseLocation
