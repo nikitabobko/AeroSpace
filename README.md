@@ -1,6 +1,6 @@
 # AeroSpace [![Build](https://github.com/nikitabobko/AeroSpace/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/nikitabobko/AeroSpace/actions/workflows/build.yml)
 
-AeroSpace is a tiling window manager for macOS.
+AeroSpace is an i3-like tiling window manager for macOS.
 
 [YouTube Demo](https://www.youtube.com/watch?v=UOl7ErqWbrk)
 
