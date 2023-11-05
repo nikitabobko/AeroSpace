@@ -81,7 +81,8 @@ window.
 
 This technique eliminates the need for an additional binding for floating windows.
 
-`focus child|parent` [isn't yet supported](https://github.com/nikitabobko/AeroSpace/issues/5) because of a low priority.
+`focus child|parent` [isn't yet supported](https://github.com/nikitabobko/AeroSpace/issues/5) because the necessaty of this
+operation is under the question.
 
 ## join-with
 
@@ -124,7 +125,7 @@ Changes layout of the focused window to the given layout.
 If several layouts are supplied then finds the first layout that doesn't describe the currently active layout, and applies the
 found layout.
 
-`layout tiling` is the only command that makes the focused floating window tiled.
+`tiling` is the only argument that makes the focused floating window tiled.
 
 ## mode
 
