@@ -52,12 +52,12 @@ struct LayoutCommand: Command {
         case .floating:
             let workspace = window.unbindFromParent().parent.workspace
             window.bindAsFloatingWindow(to: workspace)
-            let padding = CGFloat(30)
+            let offset = CGFloat(30)
             guard let size = window.getSize() else { break }
             guard let topLeftCorner = window.getTopLeftCorner() else { break }
-            window.setTopLeftCorner(topLeftCorner.addingXOffset(padding).addingYOffset(padding))
+            window.setTopLeftCorner(topLeftCorner.addingXOffset(offset).addingYOffset(offset))
             window.setSize(window.lastFloatingSize
-                ?? CGSize(width: size.width - 2 * padding, height: size.height - 2 * padding))
+                ?? CGSize(width: size.width - 2 * offset, height: size.height - 2 * offset))
         }
     }
 }
