@@ -6,18 +6,18 @@ enable-normalization-opposite-orientation-for-nested-containers = false
 [mode.main.binding]
 alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
-alt-h = 'focus left'
-alt-j = 'focus down'
-alt-k = 'focus up'
-alt-l = 'focus right'
+alt-j = 'focus left'
+alt-k = 'focus down'
+alt-l = 'focus up'
+alt-semicolon = 'focus right'
 
-alt-shift-h = 'move-through left'
-alt-shift-j = 'move-through down'
-alt-shift-k = 'move-through up'
-alt-shift-l = 'move-through right'
+alt-shift-j = 'move-through left'
+alt-shift-k = 'move-through down'
+alt-shift-l = 'move-through up'
+alt-shift-semicolon = 'move-through right'
 
-# alt-h = 'split h' # todo support split command? https://github.com/nikitabobko/AeroSpace/issues/10
-# alt-v = 'split v' # todo support split command? https://github.com/nikitabobko/AeroSpace/issues/10
+alt-h = 'split horizontal'
+alt-v = 'split vertical'
 
 # alt-f = 'fullscreen' # todo support fullscreen command? https://github.com/nikitabobko/AeroSpace/issues/7
 

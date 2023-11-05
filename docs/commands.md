@@ -14,6 +14,7 @@
 - [move-workspace-to-display](#move-workspace-to-display)
 - [reload-config](#reload-config)
 - [resize](#resize)
+- [split](#split)
 - [workspace-back-and-forth](#workspace-back-and-forth)
 - [workspace](#workspace)
 
@@ -271,6 +272,28 @@ Second argument controls how much the size is changes
 - If the `number` is prefixed with `+` then the dimension is increased
 - If the `number` is prefixed with `-` then the dimension is decreased
 - If the `number` is prefixed with neither `+` nor `-` then the command changes the absolute value of the dimension
+
+## split
+
+```
+split (horizontal|vertical|opposite)
+```
+
+**If the parent of currently focused window contains more than one child**, then the command
+
+1. Creates a new tiling container
+2. Replaces currently focused window with the container
+3. Puts the currently focused window into the container as its the only child
+
+The argument configures orientation of the newly created container. `opposite` means opposite orientation compared to the parent
+container.
+
+**If the parent of currently focused window contains only a single child** (the window itself), then `split` command changes the
+orientation of the parent container
+
+> [!IMPORTANT]
+> `split` command does nothing if `enable-normalization-flatten-containers` is turned on. Consider using `join-with` if you want
+> to keep `enable-normalization-flatten-containers` enabled
 
 ## workspace-back-and-forth
 
