@@ -55,7 +55,7 @@ class TreeNode: Equatable {
     }
 
     @discardableResult
-    func bind(to newParent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int = INDEX_BIND_LAST) -> BindingData? { // todo make index parameter mandatory
+    func bind(to newParent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) -> BindingData? {
         if _parent === newParent {
             error("Binding to the same parent doesn't make sense")
         }

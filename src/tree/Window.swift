@@ -35,7 +35,7 @@ extension Window {
 
     @discardableResult
     func bindAsFloatingWindow(to workspace: Workspace) -> BindingData? {
-        bind(to: workspace, adaptiveWeight: WEIGHT_AUTO)
+        bind(to: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
     }
 
     var ownIndex: Int { ownIndexOrNil! }
