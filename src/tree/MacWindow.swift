@@ -138,10 +138,12 @@ final class MacWindow: Window, CustomStringConvertible {
 
 private func isWindow(_ axWindow: AXUIElement) -> Bool {
     let subrole = axWindow.get(Ax.subroleAttr)
-    return subrole == kAXStandardWindowSubrole || subrole == kAXDialogSubrole
+    return subrole == kAXStandardWindowSubrole ||
+        subrole == kAXDialogSubrole || // macOS native file picker ("Open..." menu) (kAXDialogSubrole value)
+        subrole == kAXFloatingWindowSubrole // telegram image viewer
 }
 
-func shouldFloat(_ axWindow: AXUIElement) -> Bool { // Note: a lot of windows don't have title on startup
+private func shouldFloat(_ axWindow: AXUIElement) -> Bool { // Note: a lot of windows don't have title on startup
     // Don't tile:
     // - Chrome cmd+f window ("AXUnknown" value)
     // - login screen (Yes fuck, it's also a window from Apple's API perspective) ("AXUnknown" value)
