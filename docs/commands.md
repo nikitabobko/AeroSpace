@@ -280,6 +280,8 @@ Second argument controls how much the size is changes
 split (horizontal|vertical|opposite)
 ```
 
+- Available since: 0.3.0-Beta
+
 **If the parent of currently focused window contains more than one child**, then the command
 
 1. Creates a new tiling container
