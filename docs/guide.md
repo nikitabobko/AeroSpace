@@ -74,11 +74,12 @@ It's easier to understand tree tiling model by looking at examples
 You can nest containers as deeply as you want to.
 
 You can navigate in the tree in 4 possible cardinal directions (left, down, up, right). You use [focus
-command](./commands.md#focus) to navigate in the tree.
+command](./commands.md#focus) to do that.
 
-The tree structure can be changed with two commands:
+The tree structure can be changed with three commands:
 - [move-through](./commands.md#move-through)
 - [join-with](./commands.md#join-with)
+- [split](./commands.md#split)
 
 ### Layouts
 
@@ -112,7 +113,8 @@ Accordion padding is configurable via `accordion-padding` option (see [default-c
 ### Normalization
 
 By default, AeroSpace does two types of tree normalizations:
-- Containers that have only one child are "flattened". Configured by `enable-normalization-flatten-containers`
+- Containers that have only one child are "flattened". The root container is an exception, it is allowed to have a single window
+  child. Configured by `enable-normalization-flatten-containers`
 - Containers that nest into each other must have opposite orientations. Configured by
   `enable-normalization-opposite-orientation-for-nested-containers`
 
@@ -120,14 +122,14 @@ By default, AeroSpace does two types of tree normalizations:
 
 According to the first normalization, such layout isn't possible:
 ```
-h_list
+h_list (root node)
 └── v_list
     └── window 1
 ```
 
 it will be immediately transformed into
 ```
-v_list
+v_list (new root node)
 └── window 1
 ```
 
@@ -188,6 +190,9 @@ back to the visible area of the screen.
 
 When you quit the AeroSpace or when the AeroSpace is about to crash, AeroSpace will place all windows back to the visible area of
 the screen.
+
+AeroSpace shows the name of currently active workspace in its tray icon (top right corner), to give users a visual feedback on
+what workspace is currently active.
 
 > [!NOTE]
 > For better or worse, macOS doesn't allow to place windows outside of the visible area entirely. You will still be able to see a

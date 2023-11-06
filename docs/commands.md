@@ -112,7 +112,7 @@ h_list
 > [!NOTE]
 > `join-with` command is supposed to be a replacement for i3's [split command](https://i3wm.org/docs/userguide.html#_splitting_containers).
 > It seems that the only reason why you might want to split a node is to put several windows under a common "umbrella" parent.
-> Contrary to `split`, `join-with` can be used with [enable-normalization-flatten-containers](./guide.md#normalization)
+> Unlike `split`, `join-with` can be used with [enable-normalization-flatten-containers](./guide.md#normalization)
 
 ## layout
 
