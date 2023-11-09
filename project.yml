@@ -13,7 +13,7 @@ targets:
     type: application
     platform: macOS
     deploymentTarget: "13.0"
-    sources: [src, config-examples/default-config.toml]
+    sources: [src/, config-examples/default-config.toml]
     dependencies:
       - package: HotKey
       - package: TOMLKit
@@ -47,7 +47,7 @@ targets:
   AeroSpace-Tests:
     type: bundle.unit-test
     platform: macOS
-    sources: [test]
+    sources: [test/]
     dependencies:
       - target: AeroSpace
     settings:
@@ -55,3 +55,17 @@ targets:
         # SWIFT_VERSION: 5.8
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug"
         GENERATE_INFOPLIST_FILE: YES
+  AeroSpace-cli:
+    type: tool
+    platform: macOS
+    sources: [cli/]
+    settings:
+      base:
+        CODE_SIGN_STYLE: Automatic
+      configs:
+        release:
+          PRODUCT_NAME: aerospace
+          PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace.cli
+          CODE_SIGN_IDENTITY: Apple Development
+          "CODE_SIGN_IDENTITY[sdk=macosx*]": Apple Development
+          DEVELOPMENT_TEAM: 4MWP47XA68 # Team: Nikita Bobko (Personal Team)

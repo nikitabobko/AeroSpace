@@ -24,6 +24,7 @@ xcodegen # https://github.com/yonaskolb/XcodeGen
 checkCleanGitWorkingDir
 generateGitHash
 xcodebuild -scheme AeroSpace build -configuration Release
+xcodebuild -scheme AeroSpace-cli build -configuration Release
 
 git checkout src/gitHashGenerated.swift
 
@@ -36,6 +37,7 @@ pushd ~/Library/Developer/Xcode/DerivedData > /dev/null
     fi
 popd > /dev/null
 cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Release/AeroSpace.app .build
+cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Debug/AeroSpace-cli .build/aerospace
 
 expected_layout=$(cat <<EOF
 .build/AeroSpace.app
@@ -61,5 +63,8 @@ fi
 
 VERSION=$(grep MARKETING_VERSION project.yml | awk '{print $2}')
 pushd .build
-    zip -r AeroSpace-v${VERSION}.zip AeroSpace.app
+    mkdir AeroSpace-v$VERSION
+    cp -r AeroSpace.app AeroSpace-v$VERSION
+    cp -r aerospace AeroSpace-v$VERSION
+    zip -r AeroSpace-v${VERSION}.zip AeroSpace-v$VERSION
 popd

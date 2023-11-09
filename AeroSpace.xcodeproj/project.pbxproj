@@ -74,6 +74,7 @@
 		BF16873111EEDE60A8AACD6B /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F068BCC50ED846DCBFDE57 /* Workspace.swift */; };
 		C0A88261ECF505FC5648FC0A /* OptionalEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EDFD4A9F45182CA6E0BD7B /* OptionalEx.swift */; };
 		D24D02B1FD87424B908986AF /* ResizeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB371951459F8CB0137788C2 /* ResizeCommand.swift */; };
+		D4281F11EC10B5CD6470DF97 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 083785CBAE36EC57F5F51BC8 /* main.swift */; };
 		DCCC05496BDAAFB745E99624 /* SplitCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D96FF3675C63A83DC8B8969 /* SplitCommandTest.swift */; };
 		E1E35DC5D9D74D54E92AB5F3 /* ExecCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6EF465EF4129BCB10FE247 /* ExecCommandTest.swift */; };
 		E22ACB36C90695FBAC78226E /* TestWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1905935B0C61590A96EFEF /* TestWindow.swift */; };
@@ -101,6 +102,7 @@
 /* Begin PBXFileReference section */
 		00ECDFE176777828D560A737 /* TilingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilingContainer.swift; sourceTree = "<group>"; };
 		07A342893BEB5525BA1F8B74 /* ResultEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultEx.swift; sourceTree = "<group>"; };
+		083785CBAE36EC57F5F51BC8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		09685297933511208058F7CF /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AEE5470AF418906B180A593 /* mouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mouse.swift; sourceTree = "<group>"; };
 		0D9301F99737BE4888DBC2A3 /* FocusedWorkspaceSourceOfTruth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusedWorkspaceSourceOfTruth.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 		3A6EF465EF4129BCB10FE247 /* ExecCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecCommandTest.swift; sourceTree = "<group>"; };
 		3C2E5977331398421A4FC168 /* GlobalObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalObserver.swift; sourceTree = "<group>"; };
 		43DD32B1711B8EFCC834B68E /* WorkspaceCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceCommand.swift; sourceTree = "<group>"; };
+		458AD0CD907B56A99DA821C4 /* AeroSpace-cli */ = {isa = PBXFileReference; includeInIndex = 0; path = "AeroSpace-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		49B99DD05BF656B8351E12CE /* gitHashGenerated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gitHashGenerated.swift; sourceTree = "<group>"; };
 		4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeCommand.swift; sourceTree = "<group>"; };
 		51CE37C1B8D858C81A396F40 /* CollectionEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionEx.swift; sourceTree = "<group>"; };
@@ -195,6 +198,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0C2FD7C5A12AF81966A50406 /* cli */ = {
+			isa = PBXGroup;
+			children = (
+				083785CBAE36EC57F5F51BC8 /* main.swift */,
+			);
+			path = cli;
+			sourceTree = "<group>";
+		};
 		0E0109AE5F7881520B0D2384 /* config-examples */ = {
 			isa = PBXGroup;
 			children = (
@@ -240,6 +251,7 @@
 		393942C56466FDBBE35F9EC0 = {
 			isa = PBXGroup;
 			children = (
+				0C2FD7C5A12AF81966A50406 /* cli */,
 				0E0109AE5F7881520B0D2384 /* config-examples */,
 				8338180CE208CBDCD6D8E911 /* src */,
 				A6E1E25AB6F33B13B0633B9C /* test */,
@@ -271,6 +283,7 @@
 		62BEA6F49E6648E2EE3C208F /* Products */ = {
 			isa = PBXGroup;
 			children = (
+				458AD0CD907B56A99DA821C4 /* AeroSpace-cli */,
 				5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */,
 				09685297933511208058F7CF /* AeroSpace.app */,
 			);
@@ -418,6 +431,21 @@
 			productReference = 5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		EC578B8B237802840B887002 /* AeroSpace-cli */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 864ED77DD1B09CFD612863EC /* Build configuration list for PBXNativeTarget "AeroSpace-cli" */;
+			buildPhases = (
+				0CFF67628941154DC17DDD8D /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "AeroSpace-cli";
+			productName = "AeroSpace-cli";
+			productReference = 458AD0CD907B56A99DA821C4 /* AeroSpace-cli */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -428,6 +456,9 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					B00BE37A79171B0EE995EB83 = {
+						ProvisioningStyle = Automatic;
+					};
+					EC578B8B237802840B887002 = {
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -450,6 +481,7 @@
 			targets = (
 				B00BE37A79171B0EE995EB83 /* AeroSpace */,
 				D2B85A91A03DA984483CF473 /* AeroSpace-Tests */,
+				EC578B8B237802840B887002 /* AeroSpace-cli */,
 			);
 		};
 /* End PBXProject section */
@@ -467,6 +499,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		0CFF67628941154DC17DDD8D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D4281F11EC10B5CD6470DF97 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		101761F785765CD965E9741C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -629,6 +669,37 @@
 			};
 			name = Debug;
 		};
+		19A063F59D839D36F175903F /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		22B3F92CF84B526A2CE144C2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 4MWP47XA68;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace.cli;
+				PRODUCT_NAME = aerospace;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 		31B702864571F51814E4F12C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -775,6 +846,15 @@
 			buildConfigurations = (
 				31B702864571F51814E4F12C /* Debug */,
 				D1D1A9E07F0AB40E14CAC0F6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		864ED77DD1B09CFD612863EC /* Build configuration list for PBXNativeTarget "AeroSpace-cli" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				19A063F59D839D36F175903F /* Debug */,
+				22B3F92CF84B526A2CE144C2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
