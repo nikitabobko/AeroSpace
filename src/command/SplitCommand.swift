@@ -25,7 +25,7 @@ struct SplitCommand: Command {
                 orientation = parent.orientation.opposite
             }
             if parent.children.count == 1 {
-                parent.orientation = orientation
+                parent.changeOrientation(orientation)
             } else {
                 let data = window.unbindFromParent()
                 let newParent = TilingContainer(

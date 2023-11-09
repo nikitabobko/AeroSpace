@@ -68,18 +68,7 @@ private func changeTilingLayout(targetLayout: Layout?, targetOrientation: Orient
         let targetOrientation = targetOrientation ?? parent.orientation
         let targetLayout = targetLayout ?? parent.layout
         parent.layout = targetLayout
-        if config.enableNormalizationOppositeOrientationForNestedContainers {
-            var orientation = targetOrientation
-            parent.parentsWithSelf
-                .prefix(while: { $0 is TilingContainer })
-                .filterIsInstance(of: TilingContainer.self)
-                .forEach {
-                    $0.orientation = orientation
-                    orientation = orientation.opposite
-                }
-        } else {
-            parent.orientation = targetOrientation
-        }
+        parent.changeOrientation(targetOrientation)
     case .workspace:
         break // Do nothing for non-tiling windows
     }

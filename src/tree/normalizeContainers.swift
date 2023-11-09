@@ -23,13 +23,4 @@ private extension TilingContainer {
             }
         }
     }
-
-    func normalizeOppositeOrientationForNestedContainers() {
-        if orientation == (parent as? TilingContainer)?.orientation {
-            orientation = orientation.opposite
-        }
-        for child in children {
-            (child as? TilingContainer)?.normalizeOppositeOrientationForNestedContainers()
-        }
-    }
 }
