@@ -22,7 +22,7 @@ func refresh(startup: Bool = false, layout: Bool = true) {
 
     if layout {
         layoutWorkspaces()
-        layoutWindows(startup: startup)
+        layoutWindows()
     }
 
     updateMostRecentWindow()
@@ -68,12 +68,12 @@ private func normalizeContainers() {
     }
 }
 
-private func layoutWindows(startup: Bool) {
+private func layoutWindows() {
     for monitor in monitors {
         let workspace = monitor.activeWorkspace
         if workspace.isEffectivelyEmpty { continue }
         let rect = monitor.visibleRect
-        workspace.layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height, startup: startup)
+        workspace.layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height)
     }
 }
 
