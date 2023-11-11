@@ -84,6 +84,21 @@ This technique eliminates the need for an additional binding for floating window
 `focus child|parent` [isn't yet supported](https://github.com/nikitabobko/AeroSpace/issues/5) because the necessaty of this
 operation is under the question.
 
+## fullscreen
+
+```
+fullscreen
+```
+
+- Available since: 0.3.0-Beta
+
+Toggles the fullscreen mode for the currently focused window.
+
+Switching to a different window within the same workspace while the current focused window is in fullscreen mode results
+in the fullscreen window exiting fullscreen mode.
+
+This command doesn't have any arguments.
+
 ## join-with
 
 ```
@@ -252,7 +267,9 @@ Moves currently active workspace to the next or previous display
 reload-config
 ```
 
-Reloads currently active config. This command doesn't have any arguments.
+Reloads currently active config.
+
+This command doesn't have any arguments.
 
 ## resize
 
@@ -304,8 +321,9 @@ orientation of the parent container
 workspace-back-and-forth
 ```
 
-Switches between currently active workspace and previously active workspace back and forth. This command doesn't have any
-arguments.
+Switches between currently active workspace and previously active workspace back and forth.
+
+This command doesn't have any arguments.
 
 ## workspace
 

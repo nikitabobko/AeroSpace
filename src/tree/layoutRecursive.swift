@@ -1,5 +1,5 @@
 extension TreeNode {
-    func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat) {
+    func layoutRecursive(_ point: CGPoint, focusedWindow: Window?, width: CGFloat, height: CGFloat) {
         var point = point
         // lastAppliedLayoutRect shouldn't be indented
         let rect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
@@ -11,27 +11,34 @@ extension TreeNode {
         switch genericKind {
         case .workspace(let workspace):
             lastAppliedLayoutRect = rect
-            workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height)
+            workspace.rootTilingContainer.layoutRecursive(point, focusedWindow: focusedWindow, width: width, height: height)
         case .window(let window):
             if window.windowId != currentlyManipulatedWithMouseWindowId {
-                lastAppliedLayoutRect = rect
-                window.setTopLeftCorner(point)
-                window.setSize(CGSize(width: width, height: height))
+                lastAppliedLayoutRect = rect // todo rename
+                if window.isFullscreen && window == focusedWindow {
+                    let monitorRect = window.workspace.monitor.visibleRect
+                    window.setTopLeftCorner(monitorRect.topLeftCorner)
+                    window.setSize(CGSize(width: monitorRect.width, height: monitorRect.height))
+                } else {
+                    window.isFullscreen = false
+                    window.setTopLeftCorner(point)
+                    window.setSize(CGSize(width: width, height: height))
+                }
             }
         case .tilingContainer(let container):
             lastAppliedLayoutRect = rect
             switch container.layout {
             case .list:
-                container.layoutList(point, width: width, height: height)
+                container.layoutList(point, focusedWindow: focusedWindow, width: width, height: height)
             case .accordion:
-                container.layoutAccordion(point, width: width, height: height)
+                container.layoutAccordion(point, focusedWindow: focusedWindow, width: width, height: height)
             }
         }
     }
 }
 
 private extension TilingContainer {
-    func layoutList(_ point: CGPoint, width: CGFloat, height: CGFloat) {
+    func layoutList(_ point: CGPoint, focusedWindow: Window?, width: CGFloat, height: CGFloat) {
         var point = point
         guard let delta = ((orientation == .h ? width : height) - children.sumOf { $0.getWeight(orientation) })
             .div(children.count) else { return }
@@ -39,6 +46,7 @@ private extension TilingContainer {
             child.setWeight(orientation, child.getWeight(orientation) + delta)
             child.layoutRecursive(
                 point,
+                focusedWindow: focusedWindow,
                 width: orientation == .h ? child.hWeight : width,
                 height: orientation == .v ? child.vWeight : height
             )
@@ -46,7 +54,7 @@ private extension TilingContainer {
         }
     }
 
-    func layoutAccordion(_ point: CGPoint, width: CGFloat, height: CGFloat) {
+    func layoutAccordion(_ point: CGPoint, focusedWindow: Window?, width: CGFloat, height: CGFloat) {
         guard let mruIndex: Int = mostRecentChildIndexForAccordion ?? mostRecentChild?.ownIndexOrNil else { return }
         for (index, child) in children.withIndex {
             let lPadding: CGFloat
@@ -75,12 +83,14 @@ private extension TilingContainer {
             case .h:
                 child.layoutRecursive(
                     point + CGPoint(x: lPadding, y: 0),
+                    focusedWindow: focusedWindow,
                     width: width - rPadding - lPadding,
                     height: height
                 )
             case .v:
                 child.layoutRecursive(
                     point + CGPoint(x: 0, y: lPadding),
+                    focusedWindow: focusedWindow,
                     width: width,
                     height: height - lPadding - rPadding
                 )

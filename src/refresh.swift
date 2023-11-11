@@ -69,11 +69,12 @@ private func normalizeContainers() {
 }
 
 private func layoutWindows() {
+    let focusedWindow = focusedWindow
     for monitor in monitors {
         let workspace = monitor.activeWorkspace
         if workspace.isEffectivelyEmpty { continue }
         let rect = monitor.visibleRect
-        workspace.layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height)
+        workspace.layoutRecursive(rect.topLeftCorner, focusedWindow: focusedWindow, width: rect.width, height: rect.height)
     }
 }
 
