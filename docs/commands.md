@@ -6,6 +6,7 @@
 - [exec-and-wait](#exec-and-wait)
 - [flatten-workspace-tree](#flatten-workspace-tree)
 - [focus](#focus)
+- [fullscreen](#fullscreen)
 - [join-with](#join-with)
 - [layout](#layout)
 - [mode](#mode)
