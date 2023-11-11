@@ -19,7 +19,7 @@ alt-shift-semicolon = 'move-through right'
 alt-h = 'split horizontal'
 alt-v = 'split vertical'
 
-# alt-f = 'fullscreen' # todo support fullscreen command? https://github.com/nikitabobko/AeroSpace/issues/7
+alt-f = 'fullscreen'
 
 alt-s = 'layout v_accordion' # 'layout stacking' in i3
 alt-w = 'layout h_accordion' # 'layout tabbed' in i3
@@ -28,7 +28,7 @@ alt-e = 'layout list horizontal vertical' # 'layout toggle split' in i3
 alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
 
 # Not supported, because this command is redundant in AeroSpace mental model.
-# Floating windows are part of the tree from the perspective of 'focus' command.
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#floating-windows
 #alt-space = 'focus toggle_tiling_floating'
 
 # `focus parent`/`focus child` are not yet supported, and it's not clear whether they should be supported at all
