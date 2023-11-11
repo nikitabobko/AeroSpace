@@ -29,31 +29,13 @@ Public Beta. Feedback is very much welcome
 
 ## Installation
 
-Install via Homebrew to get autoupdates (Preferred)
+Install via [Homebrew](https://brew.sh/) to get autoupdates (Preferred)
 ```
 brew install --cask nikitabobko/tap/aerospace
 xattr -d com.apple.quarantine /Applications/AeroSpace.app
 ```
 
-### Manual installation
-
-1. Download the latest available zip from [releases page](https://github.com/nikitabobko/AeroSpace/releases)
-2. Unpack zip
-3. Move unpacked `AeroSpace.app` to `/Applications`
-
-If you see this message
-
-> "AeroSpace.app" can't be opened because Apple cannot check it for malicious software.
-
-then you can resolve it this way
-```
-xattr -d com.apple.quarantine /Applications/AeroSpace.app
-```
-
-or:
-1. navigate in Finder to /Applications/AeroSpace.app
-2. Right mouse click
-3. Open (yes, it's that stupid)
+[Manual installation](./docs/manual-installation.md)
 
 ## Docs
 
