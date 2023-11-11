@@ -16,7 +16,7 @@ final class MacWindow: Window, CustomStringConvertible {
     static var allWindows: [MacWindow] { Array(allWindowsMap.values) }
 
     static func get(app: MacApp, axWindow: AXUIElement) -> MacWindow? {
-        if !isWindow(axWindow) { return nil }
+        if !isWindow(axWindow, app) { return nil }
         guard let id = axWindow.windowId() else { return nil }
         if let existing = allWindowsMap[id] {
             return existing
@@ -136,8 +136,11 @@ final class MacWindow: Window, CustomStringConvertible {
     }
 }
 
-private func isWindow(_ axWindow: AXUIElement) -> Bool {
+private func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     let subrole = axWindow.get(Ax.subroleAttr)
+    if app.nsApp.bundleIdentifier == "com.jetbrains.toolbox" {
+        return false
+    }
     return subrole == kAXStandardWindowSubrole ||
         subrole == kAXDialogSubrole || // macOS native file picker ("Open..." menu) (kAXDialogSubrole value)
         subrole == kAXFloatingWindowSubrole // telegram image viewer
