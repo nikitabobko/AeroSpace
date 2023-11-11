@@ -101,9 +101,9 @@ private func putWindowsInDecks() {
                 TilingContainer(parent: root, adaptiveWeight: 1, root.orientation.opposite, .accordion, index: INDEX_BIND_LAST),
                 TilingContainer(parent: root, adaptiveWeight: 1, root.orientation.opposite, .accordion, index: INDEX_BIND_LAST),
             ]
-            for window in windows {
+            for window in windows.reversed() {
                 window.unbindFromParent()
-                window.bind(to: decks[deckIndex], adaptiveWeight: WEIGHT_AUTO, index: 0)
+                window.bind(to: decks[deckIndex], adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
                 deckIndex = (deckIndex + 1) % decks.count
             }
         case .accordion:
