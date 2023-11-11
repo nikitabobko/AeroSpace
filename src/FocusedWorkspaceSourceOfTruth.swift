@@ -1,4 +1,4 @@
-private var pidOfFocusedAppWhenOwnSourceOfTruth: Int32? = nil
+private var idOfFocusedWindowWhenOwnSourceOfTruth: UInt32? = nil
 
 enum FocusedWorkspaceSourceOfTruth {
     case macOs, ownModel
@@ -10,14 +10,14 @@ var focusedWorkspaceSourceOfTruth: FocusedWorkspaceSourceOfTruth {
     set {
         switch newValue {
         case .macOs:
-            pidOfFocusedAppWhenOwnSourceOfTruth = nil
+            idOfFocusedWindowWhenOwnSourceOfTruth = nil
         case .ownModel:
-            pidOfFocusedAppWhenOwnSourceOfTruth = focusedApp?.id
+            idOfFocusedWindowWhenOwnSourceOfTruth = focusedWindow?.windowId
         }
     }
     get {
-        if pidOfFocusedAppWhenOwnSourceOfTruth != focusedApp?.id {
-            pidOfFocusedAppWhenOwnSourceOfTruth = nil
+        if let focusedWindow, focusedWindow.windowId != idOfFocusedWindowWhenOwnSourceOfTruth {
+            idOfFocusedWindowWhenOwnSourceOfTruth = nil
             return .macOs
         } else {
             return .ownModel
