@@ -1,8 +1,11 @@
 import TOMLKit
 import HotKey
 
+private let isRelease = !Bundle.appId.contains("debug")
+
 func reloadConfig() {
-    let configUrl = FileManager.default.homeDirectoryForCurrentUser.appending(path: ".aerospace.toml")
+    let configUrl = FileManager.default.homeDirectoryForCurrentUser
+        .appending(path: isRelease ? ".aerospace.toml" : ".aerospace.debug.toml")
     let rawConfig = try? String(contentsOf: configUrl)
     let (parsedConfig, errors) = rawConfig?.lets { parseConfig($0) } ?? (defaultConfig, [])
 
