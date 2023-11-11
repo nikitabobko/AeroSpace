@@ -47,14 +47,14 @@ xattr -d com.apple.quarantine /Applications/AeroSpace.app
 You would need a Mac.
 
 ```bash
-brew install xcodegen # https://github.com/yonaskolb/XcodeGen
+brew install gsed xcodegen # https://github.com/yonaskolb/XcodeGen
 ./build-debug.sh
 ```
 
 ## How to run the tests
 
 ```bash
-brew install xcodegen # https://github.com/yonaskolb/XcodeGen
+brew install gsed xcodegen # https://github.com/yonaskolb/XcodeGen
 ./run-tests.sh
 ```
 

@@ -6,6 +6,6 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 
 cd "$(dirname "$0")"
 rm -rf AeroSpace.xcodeproj
-xcodegen # https://github.com/yonaskolb/XcodeGen
+./generate.sh
 xcodebuild clean
 rm -rf ~/Library/Developer/Xcode/DerivedData/AeroSpace-*

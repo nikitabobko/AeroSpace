@@ -1,5 +1,7 @@
 # Commands
 
+Commands listed in this file can be used in the config and CLI
+
 **Table of contents**
 - [close-all-windows-but-current](#close-all-windows-but-current)
 - [exec-and-forget](#exec-and-forget)

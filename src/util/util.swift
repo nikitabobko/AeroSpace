@@ -199,10 +199,14 @@ extension Set {
     func toArray() -> [Element] { Array(self) }
 }
 
-private let DEBUG = true
-
 func debug(_ msg: Any) {
-    if DEBUG {
+    if !isRelease {
         print(msg)
     }
 }
+
+#if DEBUG
+let isRelease = false
+#else
+let isRelease = true
+#endif

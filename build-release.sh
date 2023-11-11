@@ -14,19 +14,20 @@ checkCleanGitWorkingDir() {
 }
 
 generateGitHash() {
-cat > src/gitHashGenerated.swift <<-EOF
+tee src/gitHashGenerated.swift cli/gitHashGenerated.swift > /dev/null <<EOF
 public let gitHash = "$(git rev-parse HEAD)"
 public let gitShortHash = "$(git rev-parse --short HEAD)"
 EOF
 }
 
-xcodegen # https://github.com/yonaskolb/XcodeGen
+./generate.sh
 checkCleanGitWorkingDir
 generateGitHash
 xcodebuild -scheme AeroSpace build -configuration Release
 xcodebuild -scheme AeroSpace-cli build -configuration Release
 
 git checkout src/gitHashGenerated.swift
+git checkout cli/gitHashGenerated.swift
 
 rm -rf .build && mkdir .build
 pushd ~/Library/Developer/Xcode/DerivedData > /dev/null

@@ -3,6 +3,18 @@ import TOMLKit
 typealias ParsedCommand<T> = Result<T, String>
 extension String: Error {}
 
+func parseQueryCommand(_ raw: String) -> ParsedCommand<QueryCommand> {
+    if raw.contains("'") {
+        return .failure("Single quotation mark is reserved for future use")
+    } else if raw == "version" || raw == "--version" || raw == "-v" {
+        return .success(VersionCommand())
+    } else if raw == "" {
+        return .failure("Can't parse empty string query command")
+    } else {
+        return .failure("Unrecognized query command '\(raw)'")
+    }
+}
+
 func parseCommand(_ raw: TOMLValueConvertible) -> ParsedCommand<Command> {
     if let rawString = raw.string {
         return parseSingleCommand(rawString)
@@ -18,10 +30,12 @@ func parseCommand(_ raw: TOMLValueConvertible) -> ParsedCommand<Command> {
 }
 
 func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
-    let words = raw.split(separator: " ")
-    let args = words[1...].map { String($0) }
+    let words: [String] = raw.split(separator: " ").map { String($0) }
+    let args: [String] = Array(words[1...])
     let firstWord = String(words.first ?? "")
-    if firstWord == "workspace" {
+    if raw.contains("'") {
+        return .failure("Single quotation mark is reserved for future use")
+    } else if firstWord == "workspace" {
         return parseSingleArg(args, firstWord).map { WorkspaceCommand(workspaceName: $0) }
     } else if firstWord == "move-node-to-workspace" {
         return parseSingleArg(args, firstWord).map { MoveNodeToWorkspaceCommand(targetWorkspaceName: $0) }
@@ -71,9 +85,9 @@ func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
     } else if raw == "close-all-windows-but-current" {
         return .success(CloseAllWindowsButCurrentCommand())
     } else if raw == "" {
-        return .failure("Can't parse empty string command")
+        return .failure("Can't parse empty string action command")
     } else {
-        return .failure("Unrecognized command '\(raw)'")
+        return .failure("Unrecognized action command '\(raw)'")
     }
 }
 

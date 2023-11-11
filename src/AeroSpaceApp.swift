@@ -15,6 +15,7 @@ struct AeroSpaceApp: App {
             }
 
             checkAccessibilityPermissions()
+            startServer()
             GlobalObserver.initObserver()
             refresh(startup: true)
             Task {

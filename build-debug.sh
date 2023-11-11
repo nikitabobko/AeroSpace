@@ -6,7 +6,7 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 
 cd "$(dirname "$0")"
 
-xcodegen # https://github.com/yonaskolb/XcodeGen
+./generate.sh
 xcodebuild -scheme AeroSpace build -configuration Debug # no clean because it may lead to accessibility permission loss
 xcodebuild -scheme AeroSpace-cli build -configuration Debug # no clean because it may lead to accessibility permission loss
 
@@ -19,4 +19,4 @@ pushd ~/Library/Developer/Xcode/DerivedData > /dev/null
     fi
 popd > /dev/null
 cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Debug/AeroSpace-Debug.app .build
-cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Debug/AeroSpace-cli .build/aerospace
+cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Debug/AeroSpace-cli .build/aerospace-debug
