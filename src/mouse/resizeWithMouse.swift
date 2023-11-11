@@ -30,7 +30,7 @@ private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tes
         return // Nothing to do for floating windows
     case .tilingContainer:
         guard let rect = window.getRect() else { return }
-        guard let lastAppliedLayoutRect = window.lastAppliedLayoutRect else { return }
+        guard let lastAppliedLayoutRect = window.lastAppliedLayoutTilingRectForMouse else { return }
         let (lParent, lOwnIndex) = window.closestParent(hasChildrenInDirection: .left, withLayout: .list) ?? (nil, nil)
         let (dParent, dOwnIndex) = window.closestParent(hasChildrenInDirection: .down, withLayout: .list) ?? (nil, nil)
         let (uParent, uOwnIndex) = window.closestParent(hasChildrenInDirection: .up, withLayout: .list) ?? (nil, nil)
@@ -66,7 +66,7 @@ private extension TreeNode {
     func getWeightBeforeResize(_ orientation: Orientation) -> CGFloat {
         let currentWeight = getWeight(orientation) // Check preconditions
         return getUserData(key: adaptiveWeightBeforeResizeWithMouseKey)
-            ?? (lastAppliedLayoutRect?.getDimension(orientation) ?? currentWeight)
+            ?? (lastAppliedLayoutTilingRectForMouse?.getDimension(orientation) ?? currentWeight)
             .also { putUserData(key: adaptiveWeightBeforeResizeWithMouseKey, data: $0) }
     }
 

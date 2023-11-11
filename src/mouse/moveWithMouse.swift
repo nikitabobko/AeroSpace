@@ -30,13 +30,13 @@ private func moveFloatingWindow(_ window: Window) {
 
 private func moveTilingWindow(_ window: Window) {
     currentlyManipulatedWithMouseWindowId = window.windowId
-    window.lastAppliedLayoutRect = nil
+    window.lastAppliedLayoutTilingRectForMouse = nil
     let mouseLocation = mouseLocation
     let targetWorkspace = mouseLocation.monitorApproximation.activeWorkspace
     let swapTarget = mouseLocation.findIn(tree: targetWorkspace.workspace.rootTilingContainer)?.takeIf({ $0 != window })
     if targetWorkspace != window.workspace { // Move window to a different display
         let index: Int
-        if let swapTarget, let parent = swapTarget.parent as? TilingContainer, let targetRect = swapTarget.lastAppliedLayoutRect {
+        if let swapTarget, let parent = swapTarget.parent as? TilingContainer, let targetRect = swapTarget.lastAppliedLayoutTilingRectForMouse {
             index = mouseLocation.getProjection(parent.orientation) >= targetRect.center.getProjection(parent.orientation)
                 ? swapTarget.ownIndex + 1
                 : swapTarget.ownIndex
@@ -78,7 +78,7 @@ extension CGPoint {
         let target: TreeNode?
         switch tree.layout {
         case .list:
-            target = tree.children.first(where: { $0.lastAppliedLayoutRect?.contains(point) == true })
+            target = tree.children.first(where: { $0.lastAppliedLayoutTilingRectForMouse?.contains(point) == true })
         case .accordion:
             target = tree.mostRecentChild
         }

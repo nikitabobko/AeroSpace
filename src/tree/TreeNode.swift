@@ -8,7 +8,7 @@ class TreeNode: Equatable {
     var mostRecentChildren: some Sequence<TreeNode> { _mruChildren }
     /// Helps to avoid flickering when cycling children of accordion container with focus command
     var mostRecentChildIndexForAccordion: Int? = nil
-    var lastAppliedLayoutRect: Rect? = nil
+    var lastAppliedLayoutTilingRectForMouse: Rect? = nil
 
     init(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.adaptiveWeight = adaptiveWeight

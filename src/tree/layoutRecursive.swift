@@ -10,11 +10,11 @@ extension TreeNode {
         }
         switch genericKind {
         case .workspace(let workspace):
-            lastAppliedLayoutRect = rect
+            lastAppliedLayoutTilingRectForMouse = rect
             workspace.rootTilingContainer.layoutRecursive(point, focusedWindow: focusedWindow, width: width, height: height)
         case .window(let window):
             if window.windowId != currentlyManipulatedWithMouseWindowId {
-                lastAppliedLayoutRect = rect // todo rename
+                lastAppliedLayoutTilingRectForMouse = rect
                 if window.isFullscreen && window == focusedWindow {
                     let monitorRect = window.workspace.monitor.visibleRect
                     window.setTopLeftCorner(monitorRect.topLeftCorner)
@@ -26,7 +26,7 @@ extension TreeNode {
                 }
             }
         case .tilingContainer(let container):
-            lastAppliedLayoutRect = rect
+            lastAppliedLayoutTilingRectForMouse = rect
             switch container.layout {
             case .list:
                 container.layoutList(point, focusedWindow: focusedWindow, width: width, height: height)
