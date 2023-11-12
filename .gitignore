@@ -1,5 +1,6 @@
 /.idea
-/.build
+/.debug
+/.release
 # IDK, AppCode randomly creates this EMPTY file. I have no idea what this is
 /default.profraw
 /.DS_Store

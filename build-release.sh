@@ -29,7 +29,7 @@ xcodebuild -scheme AeroSpace-cli build -configuration Release
 git checkout src/gitHashGenerated.swift
 git checkout cli/gitHashGenerated.swift
 
-rm -rf .build && mkdir .build
+rm -rf .release && mkdir .release
 pushd ~/Library/Developer/Xcode/DerivedData > /dev/null
     if [ "$(ls | grep AeroSpace | wc -l)" -ne 1 ]; then
         echo "Found several AeroSpace dirs in $(pwd)"
@@ -37,11 +37,11 @@ pushd ~/Library/Developer/Xcode/DerivedData > /dev/null
         exit 1
     fi
 popd > /dev/null
-cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Release/AeroSpace.app .build
-cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Release/aerospace .build/aerospace
+cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Release/AeroSpace.app .release
+cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Release/aerospace .release/aerospace
 
 expected_layout=$(cat <<EOF
-.build/AeroSpace.app
+.release/AeroSpace.app
 └── Contents
     ├── Info.plist
     ├── MacOS
@@ -56,14 +56,14 @@ expected_layout=$(cat <<EOF
 EOF
 )
 
-if [ "$expected_layout" != "$(tree .build/AeroSpace.app)" ]; then
+if [ "$expected_layout" != "$(tree .release/AeroSpace.app)" ]; then
     echo "!!! Expect/Actual layout don't match !!!"
-    tree .build/AeroSpace.app
+    tree .release/AeroSpace.app
     exit 1
 fi
 
 VERSION=$(grep MARKETING_VERSION project.yml | awk '{print $2}')
-pushd .build
+pushd .release
     mkdir AeroSpace-v$VERSION
     cp -r AeroSpace.app AeroSpace-v$VERSION
     cp -r aerospace AeroSpace-v$VERSION

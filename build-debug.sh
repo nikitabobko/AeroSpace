@@ -10,7 +10,7 @@ cd "$(dirname "$0")"
 xcodebuild -scheme AeroSpace build -configuration Debug # no clean because it may lead to accessibility permission loss
 xcodebuild -scheme AeroSpace-cli build -configuration Debug # no clean because it may lead to accessibility permission loss
 
-rm -rf .build && mkdir .build
+rm -rf .debug && mkdir .debug
 pushd ~/Library/Developer/Xcode/DerivedData > /dev/null
     if [ "$(ls | grep AeroSpace | wc -l)" -ne 1 ]; then
         echo "Found several AeroSpace dirs in $(pwd)"
@@ -18,5 +18,5 @@ pushd ~/Library/Developer/Xcode/DerivedData > /dev/null
         exit 1
     fi
 popd > /dev/null
-cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Debug/AeroSpace-Debug.app .build
-cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Debug/AeroSpace-cli .build/aerospace-debug
+cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Debug/AeroSpace-Debug.app .debug
+cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Debug/AeroSpace-cli .debug/aerospace-debug
