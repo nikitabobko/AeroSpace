@@ -64,9 +64,8 @@ fi
 
 VERSION=$(grep MARKETING_VERSION project.yml | awk '{print $2}')
 pushd .build
-    zip -r AeroSpace-v${VERSION}.zip AeroSpace.app
-    # mkdir AeroSpace-v$VERSION
-    # cp -r AeroSpace.app AeroSpace-v$VERSION
-    # cp -r aerospace AeroSpace-v$VERSION
-    # zip -r AeroSpace-v${VERSION}.zip AeroSpace-v$VERSION
+    mkdir AeroSpace-v$VERSION
+    cp -r AeroSpace.app AeroSpace-v$VERSION
+    cp -r aerospace AeroSpace-v$VERSION
+    zip -r AeroSpace-v${VERSION}.zip AeroSpace-v$VERSION
 popd
