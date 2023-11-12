@@ -18,6 +18,11 @@ struct EnableCommand: Command {
         }
         TrayMenuModel.shared.isEnabled = isEnabled
         if isEnabled {
+            for app in apps {
+                for window in app.windows {
+                    window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
+                }
+            }
             activateMode(mainModeId)
         } else {
             for (_, mode) in config.modes {
