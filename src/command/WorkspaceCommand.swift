@@ -8,8 +8,8 @@ struct WorkspaceCommand : Command {
         if let window = workspace.mostRecentWindow ?? workspace.anyLeafWindowRecursive { // switch to not empty workspace
             if !workspace.isVisible { // Only do it for invisible workspaces to avoid flickering when switch to already visible workspace
                 // Make sure that stack of windows is correct from macOS perspective (important for closing windows)
-                // Alternative: focus mru window in destroyedObs (con: possible flickering when windows are closed,
-                // because focusedWindow is source of truth for workspaces)
+                // Alternative: focus mru window in destroyedObs (con: flickering when windows are closed, because
+                // focusedWindow is source of truth for workspaces)
                 workspace.focusMruReversedRecursive()
             }
             focusedWorkspaceSourceOfTruth = .macOs
