@@ -6,7 +6,7 @@ struct AeroSpaceApp: App {
     var hotKeys: [HotKey] = [] // Keep hotkeys in memory
     @StateObject var viewModel = TrayMenuModel.shared
 
-    init() {
+    init() { // todo disable release server on debug server startup
         if !isUnitTest { // Prevent SwiftUI app loading during unit testing
             let startedAtLogin = CommandLine.arguments.getOrNil(atIndex: 1) == "--started-at-login"
             reloadConfig()

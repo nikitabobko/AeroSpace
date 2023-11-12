@@ -12,7 +12,7 @@ func startServer() {
     }
 }
 
-private func newConnection(_ socket: Socket) async {
+private func newConnection(_ socket: Socket) async { // todo add exit codes
     defer {
         debug("Close connection")
         socket.close()

@@ -1,4 +1,6 @@
-protocol Command: AeroAny {
+protocol Command: AeroAny { // todo add exit code and messages
+    // todo Aero: aggregate focus events for sequence of commands
+    //  example: ['focus right', 'focus right'] doesn't work
     @MainActor
     func runWithoutLayout() async
 }

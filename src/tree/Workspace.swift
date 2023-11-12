@@ -10,7 +10,7 @@ private var emptyInvisibleWorkspaceGenerator: some IteratorProtocol<Workspace> {
         .makeIterator()
 }
 
-func getOrCreateNextEmptyInvisibleWorkspace() -> Workspace { // todo make monitor oriented
+func getOrCreateNextEmptyInvisibleWorkspace() -> Workspace { // todo rework. it should accept target monitor as a parameter
     var generator = emptyInvisibleWorkspaceGenerator
     return generator.next() ?? errorT("Can't create empty workspace")
 }

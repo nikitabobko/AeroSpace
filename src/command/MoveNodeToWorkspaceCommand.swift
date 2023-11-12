@@ -10,7 +10,8 @@ struct MoveNodeToWorkspaceCommand: Command {
         }
         let targetContainer: NonLeafTreeNode = focused.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
         focused.unbindFromParent()
-        focused.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST) // todo different monitor
+        // todo different monitor for floating windows
+        focused.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
 
         WorkspaceCommand(workspaceName: preserveWorkspace.name).runWithoutLayout()
     }
