@@ -1,11 +1,11 @@
 import Socket
 import Foundation
 
-let command: [String] = Array(CommandLine.arguments.dropFirst())
+let args: [String] = Array(CommandLine.arguments.dropFirst())
 
-for word in command {
-    if word.contains(" ") {
-        error("Spaces in arguments are not permitted. '\(word)' argument contains spaces.")
+for arg in args {
+    if arg.contains(" ") {
+        error("Spaces in arguments are not permitted. '\(arg)' argument contains spaces.")
     }
 }
 
@@ -15,7 +15,7 @@ let usage =
 
     See https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md for the list of all available commands
     """
-if command.first == "--help" || command.first == "-h" {
+if args.isEmpty || args.first == "--help" || args.first == "-h" {
     print(usage)
 } else {
     let socket = try! Socket.create(family: .unix, type: .stream, proto: .unix)
@@ -46,12 +46,8 @@ if command.first == "--help" || command.first == "-h" {
         )
     }
 
-    if command.isEmpty {
-        error(usage)
-    } else {
-        let output = run(command.joined(separator: " "))
-        if output != "PASS" {
-            print(output)
-        }
+    let output = run(args.joined(separator: " "))
+    if output != "PASS" {
+        print(output)
     }
 }
