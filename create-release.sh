@@ -5,5 +5,8 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 # set -x # Print shell commands as they are executed (or you can try -v which is less verbose)
 
 cd "$(dirname "$0")"
-git tag -a v$1 -m "v$1" && git push --tags
-open "https://github.com/nikitabobko/AeroSpace/releases/new?tag=v$1"
+version=$(head -1 ./version.txt)
+./build-release.sh
+git tag -a v$version -m "v$version" && git push --tags
+open "https://github.com/nikitabobko/AeroSpace/releases/new?tag=v$version"
+open .build
