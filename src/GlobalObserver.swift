@@ -17,6 +17,7 @@ class GlobalObserver {
             // Approximation to detect when focused display changes
             if focusedMonitorOrNilIfDesktop == nil &&
                    focusedMonitorInaccurate?.rect.topLeftCorner != Workspace.focused.monitor.rect.topLeftCorner {
+                focusedWorkspaceSourceOfTruth = .macOs
                 refresh()
             }
         }
