@@ -42,6 +42,8 @@ When you disable AeroSpace, windows from currently invisible workspaces will be 
 
 Key events are not intercepted when AeroSpace is disabled
 
+- Available since: 0.5.0-Beta
+
 ## exec-and-forget
 
 ```
@@ -78,9 +80,11 @@ It will open up Terminal.app and make it float. `sleep 1` is still required beca
 flatten-workspace-tree
 ```
 
-Flattens [the tree](./guide.md#tree) of currently focused workspace. This command doesn't have any arguments.
+Flattens [the tree](./guide.md#tree) of currently focused workspace.
 
 The command is useful when you messed up with your layout, and it's easier to "reset" it and start again.
+
+- This command doesn't have any arguments.
 
 ## focus
 
@@ -106,14 +110,13 @@ operation is under the question.
 fullscreen
 ```
 
-- Available since: 0.3.0-Beta
-
 Toggles the fullscreen mode for the currently focused window.
 
 Switching to a different window within the same workspace while the current focused window is in fullscreen mode results
 in the fullscreen window exiting fullscreen mode.
 
-This command doesn't have any arguments.
+- This command doesn't have any arguments.
+- Available since: 0.3.0-Beta
 
 ## join-with
 
@@ -285,7 +288,7 @@ reload-config
 
 Reloads currently active config.
 
-This command doesn't have any arguments.
+- This command doesn't have any arguments.
 
 ## resize
 
@@ -313,8 +316,6 @@ Second argument controls how much the size is changes
 split (horizontal|vertical|opposite)
 ```
 
-- Available since: 0.3.0-Beta
-
 **If the parent of currently focused window contains more than one child**, then the command
 
 1. Creates a new tiling container
@@ -331,6 +332,8 @@ orientation of the parent container
 > `split` command does nothing if `enable-normalization-flatten-containers` is turned on. Consider using `join-with` if you want
 > to keep `enable-normalization-flatten-containers` enabled
 
+- Available since: 0.3.0-Beta
+
 ## workspace-back-and-forth
 
 ```
@@ -339,7 +342,7 @@ workspace-back-and-forth
 
 Switches between currently active workspace and previously active workspace back and forth.
 
-This command doesn't have any arguments.
+- This command doesn't have any arguments.
 
 ## workspace
 
