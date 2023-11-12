@@ -19,6 +19,7 @@
 AeroSpace will read config file from `~/.aerospace.toml`. Please see the following config samples:
 - The default config contains all possible keys with comments: [default-config.toml](../config-examples/default-config.toml)
 - i3 like config: [i3-like-config-example.toml](../config-examples/i3-like-config-example.toml)
+- [Search for configs by other users on GitHub](https://github.com/search?q=path%3A**%2F.aerospace.toml&type=code) for inspiration
 
 AeroSpace uses TOML format for the config. TOML is easy to read, and it supports comments. See [TOML site for more
 info](https://toml.io/en/)
@@ -217,11 +218,11 @@ whether this option is enabled or disabled.
 
 Overview of 'Displays have separate Spaces'
 
-|                                                             | 'Displays have separate Spaces' is enabled | 'Displays have separate Spaces' is disabled |
-|-------------------------------------------------------------|--------------------------------------------|---------------------------------------------|
-| When the first display is in fullscreen                     | 😊 Second monitor operates independently   | 😔 Second monitor is unusable black screen  |
-| Is it possible to place a window on the border of monitors? | 😔 No                                      | 😊 Yes                                      |
-| macOS status bar ...                                        | ... is displayed on both monitors          | ... is displayed only on main monitor       |
+|                                                            | 'Displays have separate Spaces' is enabled | 'Displays have separate Spaces' is disabled |
+|------------------------------------------------------------|--------------------------------------------|---------------------------------------------|
+| When the first display is in fullscreen                    | 😊 Second monitor operates independently   | 😔 Second monitor is unusable black screen  |
+| Is it possible for window to span across several displays? | 😔 No                                      | 😊 Yes                                      |
+| macOS status bar ...                                       | ... is displayed on both monitors          | ... is displayed only on main monitor       |
 
 ## Multiple displays
 

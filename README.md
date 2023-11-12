@@ -94,7 +94,5 @@ Now, you can move windows by holding `ctrl`+`cmd` and dragging any part of the w
 Source: [reddit](https://www.reddit.com/r/MacOS/comments/k6hiwk/keyboard_modifier_to_simplify_click_drag_of/)
 
 ## Related projects
-
-If AeroSpace doesn't work for you, take a look at projects by other authors:
 - [Amethyst](https://github.com/ianyh/Amethyst)
 - [yabai](https://github.com/koekeishiya/yabai)

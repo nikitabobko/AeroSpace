@@ -1,4 +1,5 @@
 # Place a copy of this config to ~/.aerospace.toml. After that, you can edit ~/.aerospace.toml to your liking
+# Feel free to omit keys that you don't use in your config. If the key is absent in your config the default value is taken from this config
 
 # You can use it to add commands that run after login to macOS user session.
 # 'start-at-login' needs to be 'true' for 'after-login-command' to work
