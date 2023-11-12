@@ -85,20 +85,4 @@ final class TreeNodeTest: XCTestCase {
         workspace.normalizeContainers()
         XCTAssertTrue(workspace.rootTilingContainer.children.singleOrNil() is TestWindow)
     }
-
-    //func testBindNotEmptyContainer_updatesAssignedMonitor() { // todo Uncomment once Monitor mock is ready
-    //    let workspace = Workspace.get(byName: name)
-    //    XCTAssertTrue(workspace.assignedMonitor == nil)
-    //    TestWindow(id: 1, parent: workspace.rootTilingContainer)
-    //    XCTAssertTrue(workspace.assignedMonitor != nil)
-    //
-    //    let container = workspace.rootTilingContainer
-    //    XCTAssertEqual(container, workspace.rootTilingContainer)
-    //    container.unbindFromParent()
-    //    XCTAssertNotEqual(container, workspace.rootTilingContainer)
-    //    XCTAssertTrue(workspace.assignedMonitor == nil)
-    //
-    //    container.bindTo(parent: workspace, adaptiveWeight: 1)
-    //    XCTAssertTrue(workspace.assignedMonitor != nil)
-    //}
 }
