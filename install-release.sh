@@ -8,3 +8,4 @@ cd "$(dirname "$0")"
 ./build-release.sh
 rm -rf /Applications/AeroSpace.app
 cp -r .release/AeroSpace.app /Applications
+cp .release/aerospace ~/.bin
