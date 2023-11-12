@@ -20,7 +20,7 @@ extension [Command] {
     @MainActor
     func run() async {
         check(Thread.current.isMainThread)
-        let commands = TrayMenuModel.shared.isEnabled ? self : ((singleOrNil() as? EnableCommand)?.lets { [$0] } ?? [])
+        let commands = TrayMenuModel.shared.isEnabled ? self : (singleOrNil() as? EnableCommand).asList()
         refresh(layout: false)
         for (index, command) in commands.withIndex {
             await command.runWithoutLayout()

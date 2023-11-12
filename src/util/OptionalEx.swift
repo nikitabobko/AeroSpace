@@ -10,4 +10,12 @@ extension Optional {
     }
 
     func orFailure<F: Error>(_ or: F) -> Result<Wrapped, F> { orFailure { or } }
+
+    func asList() -> [Wrapped] {
+        if let ok = self {
+            return [ok]
+        } else {
+            return []
+        }
+    }
 }

@@ -93,7 +93,7 @@ public var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
 
 var apps: [AeroApp] {
     isUnitTest
-        ? (appForTests?.lets { [$0] } ?? [])
+        ? appForTests.asList()
         : NSWorkspace.shared.runningApplications.lazy.filter { $0.activationPolicy == .regular }.map(\.macApp).filterNotNil()
 }
 
