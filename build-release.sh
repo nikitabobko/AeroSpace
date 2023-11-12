@@ -38,7 +38,7 @@ pushd ~/Library/Developer/Xcode/DerivedData > /dev/null
     fi
 popd > /dev/null
 cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Release/AeroSpace.app .build
-cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Debug/AeroSpace-cli .build/aerospace
+cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Release/aerospace .build/aerospace
 
 expected_layout=$(cat <<EOF
 .build/AeroSpace.app
