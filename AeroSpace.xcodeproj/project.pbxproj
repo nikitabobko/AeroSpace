@@ -58,6 +58,7 @@
 		991943D50DF9EDBF321A66F1 /* SelectorComparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1316FFED5D1044CB693EA45 /* SelectorComparator.swift */; };
 		9A138A729245BD2723148583 /* focused.swift in Sources */ = {isa = PBXBuildFile; fileRef = D61FE8B343B068F0FFFC2373 /* focused.swift */; };
 		9D34BD7DE311254BF52F5EA2 /* testUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77C03164B8BFD1E59779C6E /* testUtil.swift */; };
+		9FAD09BC5CC390167106563B /* EnableCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 532EA400D1CFBC5C71663FDF /* EnableCommand.swift */; };
 		A0765C31043BCFB0420BF1C9 /* parseConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */; };
 		A249B6511A9BD20A298C0DE7 /* SplitCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F0D298D61D85CEB29CE77 /* SplitCommand.swift */; };
 		A2CBF9674964F9083BB198D2 /* ArrayEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D7F7F87FBE7D0BDE4E87F /* ArrayEx.swift */; };
@@ -133,6 +134,7 @@
 		51CE37C1B8D858C81A396F40 /* CollectionEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionEx.swift; sourceTree = "<group>"; };
 		526B113159987FA43EA41120 /* refresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = refresh.swift; sourceTree = "<group>"; };
 		5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AeroSpace-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		532EA400D1CFBC5C71663FDF /* EnableCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableCommand.swift; sourceTree = "<group>"; };
 		53FDECECC773EBA30661EB8A /* FlattenWorkspaceTreeCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlattenWorkspaceTreeCommandTest.swift; sourceTree = "<group>"; };
 		54679FCD1EC1196B27E964D5 /* ConfigTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigTest.swift; sourceTree = "<group>"; };
 		54B4C778D2594EB23C295741 /* Copyable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Copyable.swift; sourceTree = "<group>"; };
@@ -369,6 +371,7 @@
 			children = (
 				99853C505D93E41F6531C324 /* CloseAllWindowsButCurrentCommand.swift */,
 				CD90FB41FD41602120F67FF5 /* Command.swift */,
+				532EA400D1CFBC5C71663FDF /* EnableCommand.swift */,
 				569422C0C4C23EF3E024C8E6 /* ExecAndForgetCommand.swift */,
 				F9EDB8770FBA8B2E6FE91BBB /* ExecAndWaitCommand.swift */,
 				F3C5B6719EF0BC14D7CF868C /* FlattenWorkspaceTreeCommand.swift */,
@@ -586,6 +589,7 @@
 				F982DB924450BBBB4FDF4C2C /* Command.swift in Sources */,
 				FD4386BC632BAA6A4105FFD8 /* Config.swift in Sources */,
 				4D62EC19C6A1E3BBF54306BA /* Copyable.swift in Sources */,
+				9FAD09BC5CC390167106563B /* EnableCommand.swift in Sources */,
 				BC6511DA2ABE84164D90C181 /* ExecAndForgetCommand.swift in Sources */,
 				2E06134604F2510189F1FA85 /* ExecAndWaitCommand.swift in Sources */,
 				0A9DAD847B5340FBE3D9CF88 /* FlattenWorkspaceTreeCommand.swift in Sources */,

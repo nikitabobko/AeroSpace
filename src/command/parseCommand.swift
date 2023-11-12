@@ -44,6 +44,11 @@ func parseCommand(_ raw: String) -> Parsed<Command> {
             SplitCommand.SplitArg(rawValue: $0).orFailure("'\(firstWord)' command: the argument must be (horizontal|vertical|opposite)")
         }
         return arg.map { SplitCommand(splitArg: $0) }
+    } else if firstWord == "enable" {
+        let arg = parseSingleArg(args, firstWord).flatMap {
+            EnableCommand.State(rawValue: $0).orFailure("'\(firstWord)' command: the argument must be (on|off|toggle)")
+        }
+        return arg.map { EnableCommand(targetState: $0) }
     } else if firstWord == "mode" {
         return parseSingleArg(args, firstWord).map { ModeCommand(idToActivate: $0) }
     } else if firstWord == "join-with" {

@@ -22,6 +22,14 @@ private func newConnection(_ socket: Socket) async {
         guard let string = (try? socket.readString()) else { return }
         let (action, error1) = parseCommand(string).getOrNils()
         let (query, error2) = parseQueryCommand(string).getOrNils()
+        if !TrayMenuModel.shared.isEnabled {
+            let enable = action as? EnableCommand
+            if enable == nil || enable!.targetState != .off {
+                _ = try? socket.write(from: "\(Bundle.appName) server is disabled and doesn't accept commands. " +
+                    "You can use 'aerospace enable on' to enable the server")
+                continue
+            }
+        }
         if let error1, let error2 {
             _ = try? socket.write(from: error1 + "\n" + error2)
             continue

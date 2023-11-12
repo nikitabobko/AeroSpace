@@ -4,6 +4,7 @@ Commands listed in this file can be used in the config and CLI
 
 **Table of contents**
 - [close-all-windows-but-current](#close-all-windows-but-current)
+- [enable](#enable)
 - [exec-and-forget](#exec-and-forget)
 - [exec-and-wait](#exec-and-wait)
 - [flatten-workspace-tree](#flatten-workspace-tree)
@@ -28,6 +29,18 @@ close-all-windows-but-current
 ```
 
 On the focused workspace, closes all windows but current. This command doesn't have any arguments.
+
+## enable
+
+```
+enable (on|off|toggle)
+```
+
+The command allows to temporarily disable window management
+
+When you disable AeroSpace, windows from currently invisible workspaces will be placed to the visible area of the screen
+
+Key events are not intercepted when AeroSpace is disabled
 
 ## exec-and-forget
 

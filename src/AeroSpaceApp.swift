@@ -50,12 +50,7 @@ struct AeroSpaceApp: App {
             }
             Divider()
             Button(viewModel.isEnabled ? "Disable" : "Enable") {
-                viewModel.isEnabled = !viewModel.isEnabled
-                if !viewModel.isEnabled {
-                    makeAllWindowsVisibleAndRestoreSize()
-                } else {
-                    refresh()
-                }
+                Task { await EnableCommand(targetState: .toggle).run() }
             }
                 .keyboardShortcut("E", modifiers: .command)
             Button("Reload config") {

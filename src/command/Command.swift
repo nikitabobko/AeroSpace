@@ -1,4 +1,4 @@
-protocol Command {
+protocol Command: AeroAny {
     @MainActor
     func runWithoutLayout() async
 }
@@ -20,13 +20,11 @@ extension [Command] {
     @MainActor
     func run() async {
         check(Thread.current.isMainThread)
-        if !TrayMenuModel.shared.isEnabled {
-            return
-        }
+        let commands = TrayMenuModel.shared.isEnabled ? self : ((singleOrNil() as? EnableCommand)?.lets { [$0] } ?? [])
         refresh(layout: false)
-        for (index, command) in self.withIndex {
+        for (index, command) in commands.withIndex {
             await command.runWithoutLayout()
-            if index != indices.last {
+            if index != commands.indices.last {
                 refresh(layout: false)
             }
         }
