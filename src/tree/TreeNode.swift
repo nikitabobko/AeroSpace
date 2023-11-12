@@ -23,11 +23,13 @@ class TreeNode: Equatable {
     func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {
         switch parent?.kind {
         case .tilingContainer(let parent):
-            if parent.orientation == targetOrientation {
-                adaptiveWeight = newValue
-            } else {
+            if parent.orientation != targetOrientation {
                 error("You can't change \(targetOrientation) weight of nodes located in \(parent.orientation) container")
             }
+            if parent.layout != .list {
+                error("Weight can be changed only for nodes whose parent is list")
+            }
+            adaptiveWeight = newValue
         case .workspace:
             error("Can't change weight for floating windows and workspace root containers")
         case nil:

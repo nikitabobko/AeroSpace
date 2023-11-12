@@ -13,45 +13,46 @@ struct ResizeCommand: Command { // todo cover with tests
 
     func runWithoutLayout() { // todo support key repeat
         check(Thread.current.isMainThread)
-        guard let window = focusedWindowOrEffectivelyFocused else { return }
 
-        switch window.parent.kind {
-        case .tilingContainer(let directParent):
-            let orientation: Orientation
-            let parent: TilingContainer
-            switch dimension {
-            case .width:
-                orientation = .h
-                guard let first = window.parents.filterIsInstance(of: TilingContainer.self)
-                    .first(where: { $0.orientation == orientation }) else { return }
-                parent = first
-            case .height:
-                orientation = .v
-                guard let first = window.parents.filterIsInstance(of: TilingContainer.self)
-                    .first(where: { $0.orientation == orientation }) else { return }
-                parent = first
-            case .smart:
-                parent = directParent
-                orientation = parent.orientation
-            }
-            let diff: CGFloat
-            switch mode {
-            case .set:
-                diff = CGFloat(unit) - window.getWeight(orientation)
-            case .add:
-                diff = CGFloat(unit)
-            case .subtract:
-                diff = -CGFloat(unit)
-            }
+        let candidates = focusedWindowOrEffectivelyFocused?.parentsWithSelf
+            .filter { ($0.parent as? TilingContainer)?.layout == .list }
+            ?? []
 
-            guard let childDiff = diff.div(parent.children.count - 1) else { return }
-            parent.children.lazy
-                .filter { $0 != window }
-                .forEach { $0.setWeight(parent.orientation, $0.getWeight(parent.orientation) - childDiff) }
-
-            window.setWeight(orientation, window.getWeight(orientation) + diff)
-        case .workspace:
-            return
+        let orientation: Orientation
+        let parent: TilingContainer
+        let node: TreeNode
+        switch dimension {
+        case .width:
+            orientation = .h
+            guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return }
+            node = first
+            parent = first.parent as! TilingContainer
+        case .height:
+            orientation = .v
+            guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return }
+            node = first
+            parent = first.parent as! TilingContainer
+        case .smart:
+            guard let first = candidates.first else { return }
+            node = first
+            parent = first.parent as! TilingContainer
+            orientation = parent.orientation
         }
+        let diff: CGFloat
+        switch mode {
+        case .set:
+            diff = CGFloat(unit) - node.getWeight(orientation)
+        case .add:
+            diff = CGFloat(unit)
+        case .subtract:
+            diff = -CGFloat(unit)
+        }
+
+        guard let childDiff = diff.div(parent.children.count - 1) else { return }
+        parent.children.lazy
+            .filter { $0 != node }
+            .forEach { $0.setWeight(parent.orientation, $0.getWeight(parent.orientation) - childDiff) }
+
+        node.setWeight(orientation, node.getWeight(orientation) + diff)
     }
 }
