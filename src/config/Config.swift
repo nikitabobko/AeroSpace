@@ -5,8 +5,8 @@ let defaultConfig = initDefaultConfig(parseConfig(try! String(contentsOf: Bundle
 var config: Config = defaultConfig
 
 struct RawConfig: Copyable {
-    var afterLoginCommand: Command?
-    var afterStartupCommand: Command?
+    var afterLoginCommand: [Command]?
+    var afterStartupCommand: [Command]?
     var indentForNestedContainersWithTheSameOrientation: Int?
     var enableNormalizationFlattenContainers: Bool?
     var defaultRootContainerLayout: Layout?
@@ -16,8 +16,8 @@ struct RawConfig: Copyable {
     var enableNormalizationOppositeOrientationForNestedContainers: Bool?
 }
 struct Config {
-    var afterLoginCommand: Command
-    var afterStartupCommand: Command
+    var afterLoginCommand: [Command]
+    var afterStartupCommand: [Command]
     var indentForNestedContainersWithTheSameOrientation: Int
     var enableNormalizationFlattenContainers: Bool
     var defaultRootContainerLayout: Layout
@@ -51,20 +51,18 @@ struct Mode: Copyable {
 class HotkeyBinding {
     let modifiers: NSEvent.ModifierFlags
     let key: Key
-    let command: Command
+    let commands: [Command]
     private var hotKey: HotKey? = nil
 
-    init(_ modifiers: NSEvent.ModifierFlags, _ key: Key, _ command: Command) {
+    init(_ modifiers: NSEvent.ModifierFlags, _ key: Key, _ commands: [Command]) {
         self.modifiers = modifiers
         self.key = key
-        self.command = command
+        self.commands = commands
     }
 
     func activate() {
-        hotKey = HotKey(key: key, modifiers: modifiers, keyUpHandler: { [command] in
-            if TrayMenuModel.shared.isEnabled {
-                Task { await command.run() }
-            }
+        hotKey = HotKey(key: key, modifiers: modifiers, keyUpHandler: { [commands] in
+            Task { await commands.run() }
         })
     }
 

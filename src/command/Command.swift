@@ -11,8 +11,25 @@ protocol QueryCommand {
 extension Command {
     @MainActor
     func run() async {
+        check(Thread.current.isMainThread)
+        await [self].run()
+    }
+}
+
+extension [Command] {
+    @MainActor
+    func run() async {
+        check(Thread.current.isMainThread)
+        if !TrayMenuModel.shared.isEnabled {
+            return
+        }
         refresh(layout: false)
-        await runWithoutLayout()
+        for (index, command) in self.withIndex {
+            await command.runWithoutLayout()
+            if index != indices.last {
+                refresh(layout: false)
+            }
+        }
         refresh()
     }
 }

@@ -20,7 +20,7 @@ final class ConfigTest: XCTestCase {
         XCTAssertEqual(errors.descriptions, [])
         XCTAssertEqual(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [HotkeyBinding(.option, .h, FocusCommand(direction: .left))])
+            Mode(name: nil, bindings: [HotkeyBinding(.option, .h, [FocusCommand(direction: .left)])])
         )
     }
 
@@ -54,7 +54,7 @@ final class ConfigTest: XCTestCase {
         )
         XCTAssertEqual(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [HotkeyBinding(.option, .k, FocusCommand(direction: .up))])
+            Mode(name: nil, bindings: [HotkeyBinding(.option, .k, [FocusCommand(direction: .up)])])
         )
     }
 
@@ -139,7 +139,7 @@ extension Mode: Equatable {
 
 extension HotkeyBinding: Equatable {
     public static func ==(lhs: AeroSpace_Debug.HotkeyBinding, rhs: AeroSpace_Debug.HotkeyBinding) -> Bool {
-        lhs.modifiers == rhs.modifiers && lhs.key == rhs.key && lhs.command.describe == rhs.command.describe
+        lhs.modifiers == rhs.modifiers && lhs.key == rhs.key && lhs.commands.map(\.describe) == rhs.commands.map(\.describe)
     }
 }
 

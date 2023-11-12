@@ -1,9 +1,9 @@
 import TOMLKit
 
-typealias ParsedCommand<T> = Result<T, String>
+typealias Parsed<T> = Result<T, String>
 extension String: Error {}
 
-func parseQueryCommand(_ raw: String) -> ParsedCommand<QueryCommand> {
+func parseQueryCommand(_ raw: String) -> Parsed<QueryCommand> {
     if raw.contains("'") {
         return .failure("Single quotation mark is reserved for future use")
     } else if raw == "version" || raw == "--version" || raw == "-v" {
@@ -15,21 +15,21 @@ func parseQueryCommand(_ raw: String) -> ParsedCommand<QueryCommand> {
     }
 }
 
-func parseCommand(_ raw: TOMLValueConvertible) -> ParsedCommand<Command> {
+func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[Command]> {
     if let rawString = raw.string {
-        return parseSingleCommand(rawString)
+        return parseCommand(rawString).map { [$0] }
     } else if let rawArray = raw.array {
-        let commands: ParsedCommand<[Command]> = (0..<rawArray.count).mapAllOrFailure { index in
+        let commands: Parsed<[Command]> = (0..<rawArray.count).mapAllOrFailure { index in
             let rawString: String = rawArray[index].string ?? expectedActualTypeError(expected: .string, actual: rawArray[index].type)
-            return parseSingleCommand(rawString)
+            return parseCommand(rawString)
         }
-        return commands.map { CompositeCommand(subCommands: $0) }
+        return commands
     } else {
         return .failure(expectedActualTypeError(expected: [.string, .array], actual: raw.type))
     }
 }
 
-func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
+func parseCommand(_ raw: String) -> Parsed<Command> {
     let words: [String] = raw.split(separator: " ").map { String($0) }
     let args: [String] = Array(words[1...])
     let firstWord = String(words.first ?? "")
@@ -91,7 +91,7 @@ func parseSingleCommand(_ raw: String) -> ParsedCommand<Command> {
     }
 }
 
-private func parseResizeCommand(firstWord: String, args: [String]) -> ParsedCommand<Command> {
+private func parseResizeCommand(firstWord: String, args: [String]) -> Parsed<Command> {
     let mustHaveTwoArgsMessage = "''\(firstWord)' command must have two parameters"
     let dimension = args.getOrNil(atIndex: 0).orFailure(mustHaveTwoArgsMessage)
         .flatMap { ResizeCommand.Dimension(rawValue: String($0)).orFailure("Can't parse '\(firstWord)' first arg") }
@@ -118,7 +118,7 @@ private func parseResizeCommand(firstWord: String, args: [String]) -> ParsedComm
     }
 }
 
-private func parseSingleArg(_ args: [String], _ command: String) -> ParsedCommand<String> {
+private func parseSingleArg(_ args: [String], _ command: String) -> Parsed<String> {
     args.singleOrNil().orFailure {
         "\(command) must have only a single argument. But passed: '\(args.joined(separator: " "))' (\(args.count) args)"
     }

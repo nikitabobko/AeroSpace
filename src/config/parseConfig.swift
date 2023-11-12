@@ -3,7 +3,7 @@ import HotKey
 
 func reloadConfig() {
     let configUrl = FileManager.default.homeDirectoryForCurrentUser
-        .appending(path: isRelease ? ".aerospace.toml" : ".aerospace.debug.toml")
+        .appending(path: isRelease ? ".aerospace.toml" : ".aerospace-debug.toml")
     let (parsedConfig, errors) = parseConfig((try? String(contentsOf: configUrl)) ?? "")
 
     if !errors.isEmpty {
@@ -81,8 +81,8 @@ private struct Parser<T>: ParserProtocol {
 }
 
 private let parsers: [String: any ParserProtocol] = [
-    "after-login-command": Parser(\.afterLoginCommand, { parseCommand($0).toParsedTomlResult($1) }),
-    "after-startup-command": Parser(\.afterStartupCommand, { parseCommand($0).toParsedTomlResult($1) }),
+    "after-login-command": Parser(\.afterLoginCommand, { parseCommandOrCommands($0).toParsedTomlResult($1) }),
+    "after-startup-command": Parser(\.afterStartupCommand, { parseCommandOrCommands($0).toParsedTomlResult($1) }),
 
     "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, { parseBool($0, $1) }),
     "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, { parseBool($0, $1) }),
@@ -137,14 +137,11 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         modes: modesOrDefault,
         preservedWorkspaceNames: modesOrDefault.values.lazy
             .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
-            .map { (binding: HotkeyBinding) -> Command in binding.command }
-            .map { (command: Command) -> Command in (command as? CompositeCommand)?.subCommands.singleOrNil() ?? command }
-            .compactMap { (command: Command) -> String? in (command as? WorkspaceCommand)?.workspaceName ?? nil }
+            .compactMap { (binding: HotkeyBinding) -> String? in (binding.commands.singleOrNil() as? WorkspaceCommand)?.workspaceName ?? nil }
     )
     if config.enableNormalizationFlattenContainers {
         let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings }
-            .map { $0.command }
-            .flatMap { ($0 as? CompositeCommand)?.subCommands ?? [$0] }
+            .flatMap { $0.commands }
             .contains { $0 is SplitCommand }
         if containsSplitCommand {
             errors += [.semantic(.root(""), // todo Make 'split' + flatten normalization prettier
@@ -214,7 +211,7 @@ private func parseMode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, 
     return result
 }
 
-private extension ParsedCommand where Failure == String {
+private extension Parsed where Failure == String {
     func toParsedTomlResult(_ backtrace: TomlBacktrace) -> ParsedTomlResult<Success> {
         mapError { .semantic(backtrace, $0) }
     }
@@ -231,7 +228,7 @@ private func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktra
         let (binding, error): (HotkeyBinding?, TomlParseError?) = parseBinding(binding, backtrace)
             .flatMap { (modifiers, key) -> ParsedTomlResult<HotkeyBinding> in
                 // todo support parsing of implicit modes?
-                parseCommand(rawCommand).toParsedTomlResult(backtrace).map { HotkeyBinding(modifiers, key, $0) }
+                parseCommandOrCommands(rawCommand).toParsedTomlResult(backtrace).map { HotkeyBinding(modifiers, key, $0) }
             }
             .getOrNils()
         if let binding {

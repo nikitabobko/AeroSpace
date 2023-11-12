@@ -36,7 +36,7 @@ func setUpWorkspacesForTests() {
 }
 
 func testParseCommandSucc(_ command: String, _ expected: CommandDescription) {
-    let parsed = parseSingleCommand(command)
+    let parsed = parseCommand(command)
     switch parsed {
     case .success(let command):
         XCTAssertEqual(command.describe, expected)
@@ -46,7 +46,7 @@ func testParseCommandSucc(_ command: String, _ expected: CommandDescription) {
 }
 
 func testParseCommandFail(_ command: String, msg expected: String) {
-    let parsed = parseSingleCommand(command)
+    let parsed = parseCommand(command)
     switch parsed {
     case .success(let command):
         XCTFail("\(command) isn't supposed to be parcelable")

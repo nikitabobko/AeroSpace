@@ -20,7 +20,7 @@ private func newConnection(_ socket: Socket) async {
     while true {
         _ = try? Socket.wait(for: [socket], timeout: 0, waitForever: true)
         guard let string = (try? socket.readString()) else { return }
-        let (action, error1) = parseSingleCommand(string).getOrNils()
+        let (action, error1) = parseCommand(string).getOrNils()
         let (query, error2) = parseQueryCommand(string).getOrNils()
         if let error1, let error2 {
             _ = try? socket.write(from: error1 + "\n" + error2)
