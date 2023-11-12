@@ -139,13 +139,12 @@ alt-tab = 'workspace-back-and-forth'
 alt-shift-tab = 'move-workspace-to-display next'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#mode
-alt-shift-semicolon = 'mode service'
+alt-shift-semicolon = ['reload-config', 'mode service']
 alt-shift-slash = 'mode join'
 
 # It's a declaration of binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 [mode.service.binding]
-r = ['flatten-workspace-tree', 'mode main']
-o = ['reload-config', 'mode main']
+r = ['flatten-workspace-tree', 'mode main'] # reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
