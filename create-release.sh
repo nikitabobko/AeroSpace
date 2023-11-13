@@ -9,4 +9,4 @@ version=$(head -1 ./version.txt | awk '{print $1}')
 ./build-release.sh
 git tag -a v$version -m "v$version" && git push --tags
 open "https://github.com/nikitabobko/AeroSpace/releases/new?tag=v$version"
-open .release
+open -R ./.release/AeroSpace-v$version.zip
