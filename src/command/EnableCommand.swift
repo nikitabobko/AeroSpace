@@ -7,17 +7,22 @@ struct EnableCommand: Command {
 
     func runWithoutLayout() {
         check(Thread.current.isMainThread)
-        let isEnabled: Bool
+        let prevState = TrayMenuModel.shared.isEnabled
+        let newState: Bool
         switch targetState {
         case .on:
-            isEnabled = true
+            newState = true
         case .off:
-            isEnabled = false
+            newState = false
         case .toggle:
-            isEnabled = !TrayMenuModel.shared.isEnabled
+            newState = !TrayMenuModel.shared.isEnabled
         }
-        TrayMenuModel.shared.isEnabled = isEnabled
-        if isEnabled {
+        if newState == prevState {
+            return
+        }
+
+        TrayMenuModel.shared.isEnabled = newState
+        if newState {
             for app in apps {
                 for window in app.windows {
                     window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
