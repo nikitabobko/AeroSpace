@@ -35,6 +35,17 @@ brew install --cask nikitabobko/tap/aerospace
 xattr -d com.apple.quarantine /Applications/AeroSpace.app
 ```
 
+### Brew problem
+
+If you see this message
+
+> Error: It seems there is already a Binary at '/opt/homebrew/bin/aerospace'.
+
+Please do `brew uninstall aerospace-cli && brew reinstall aerospace`. Consider voting for [this homebrew
+issue](https://github.com/Homebrew/homebrew-cask/issues/12822)
+
+### Manual installation
+
 [Manual installation](./docs/manual-installation.md)
 
 ## Docs
