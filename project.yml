@@ -64,6 +64,7 @@ targets:
   AeroSpace-cli:
     type: tool
     platform: macOS
+    deploymentTarget: "13.0"
     sources: [cli/]
     dependencies:
       - package: Socket
