@@ -14,6 +14,6 @@ struct MoveWorkspaceToDisplayCommand: Command {
         let targetMonitor = sortedMonitors.get(wrappingIndex: displayTarget == .next ? index + 1 : index - 1)
 
         targetMonitor.setActiveWorkspace(focusedWorkspace)
-        prevMonitor.setActiveWorkspace(getOrCreateNextEmptyInvisibleWorkspace())
+        prevMonitor.setActiveWorkspace(getStubWorkspace(for: prevMonitor))
     }
 }

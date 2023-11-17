@@ -1,24 +1,33 @@
 private var workspaceNameToWorkspace: [String: Workspace] = [:]
 
+private var screenPointToPrevVisibleWorkspace: [CGPoint: String] = [:]
 private var screenPointToVisibleWorkspace: [CGPoint: Workspace] = [:]
 private var visibleWorkspaceToScreenPoint: [Workspace: CGPoint] = [:]
 
-private var emptyInvisibleWorkspaceGenerator: some IteratorProtocol<Workspace> {
-    (0...Int.max).lazy
-        .map { Workspace.get(byName: "EMPTY\($0)") }
-        .filter { $0.isEffectivelyEmpty && !$0.isVisible }
-        .makeIterator()
+// The returned workspace must be invisible and it must belong to the requested monitor
+func getStubWorkspace(for monitor: Monitor) -> Workspace {
+    getStubWorkspace(forPoint: monitor.rect.topLeftCorner)
 }
 
-func getOrCreateNextEmptyInvisibleWorkspace() -> Workspace { // todo rework. it should accept target monitor as a parameter
-    var generator = emptyInvisibleWorkspaceGenerator
-    return generator.next() ?? errorT("Can't create empty workspace")
+private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
+    if let prev = screenPointToPrevVisibleWorkspace[point]?.lets({ Workspace.get(byName: $0) }),
+       !prev.isVisible && prev.monitor.rect.topLeftCorner == point {
+        return prev
+    }
+    if let candidate = Workspace.all
+        .first(where: { !$0.isVisible && $0.monitor.rect.topLeftCorner == point }) {
+        return candidate
+    }
+    return (0...Int.max).lazy
+        .map { Workspace.get(byName: "EMPTY\($0)") }
+        .first { $0.isEffectivelyEmpty && !$0.isVisible }
+        ?? errorT("Can't create empty workspace")
 }
 
 class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable, CustomStringConvertible {
     let name: String
     var id: String { name } // satisfy Identifiable
-    /// This variable must be interpreted only when the workspace is invisible
+    /// `assignedMonitorPoint` must be interpreted only when the workspace is invisible
     fileprivate var assignedMonitorPoint: CGPoint? = nil
 
     private init(_ name: String) {
@@ -111,10 +120,12 @@ private extension CGPoint {
     func setActiveWorkspace(_ workspace: Workspace) {
         if let prevMonitorPoint = visibleWorkspaceToScreenPoint[workspace] {
             visibleWorkspaceToScreenPoint.removeValue(forKey: workspace)
-            screenPointToVisibleWorkspace.removeValue(forKey: prevMonitorPoint)
+            screenPointToPrevVisibleWorkspace[prevMonitorPoint] =
+                screenPointToVisibleWorkspace.removeValue(forKey: prevMonitorPoint)?.name
         }
         if let prevWorkspace = screenPointToVisibleWorkspace[self] {
-            screenPointToVisibleWorkspace.removeValue(forKey: self)
+            screenPointToPrevVisibleWorkspace[self] =
+                screenPointToVisibleWorkspace.removeValue(forKey: self)?.name
             visibleWorkspaceToScreenPoint.removeValue(forKey: prevWorkspace)
         }
         visibleWorkspaceToScreenPoint[workspace] = self
@@ -139,7 +150,6 @@ private func rearrangeWorkspacesOnMonitors() {
 
     let oldScreenPointToVisibleWorkspace = screenPointToVisibleWorkspace.filter { preservedOldScreens.contains($0.key) }
     var nextWorkspace = (Workspace.all - Array(oldScreenPointToVisibleWorkspace.values)).makeIterator()
-    var nextEmptyWorkspace = emptyInvisibleWorkspaceGenerator
     screenPointToVisibleWorkspace = [:]
     visibleWorkspaceToScreenPoint = [:]
 
@@ -147,7 +157,7 @@ private func rearrangeWorkspacesOnMonitors() {
         if let existingVisibleWorkspace = newScreenToOldScreenMapping[newScreen]?.lets({ oldScreenPointToVisibleWorkspace[$0] }) {
             newScreen.setActiveWorkspace(existingVisibleWorkspace)
         } else {
-            let workspace = nextWorkspace.next() ?? nextEmptyWorkspace.next() ?? errorT("Can't create next empty workspace")
+            let workspace = nextWorkspace.next() ?? getStubWorkspace(forPoint: newScreen)
             newScreen.setActiveWorkspace(workspace)
         }
     }
