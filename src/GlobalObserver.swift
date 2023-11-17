@@ -14,10 +14,12 @@ class GlobalObserver {
 
         NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseUp]) { event in
             resetManipulatedWithMouseIfPossible()
-            // Approximation to detect when focused display changes
+            // Detect clicks on desktop
+            let focusedMonitor = mouseLocation.monitorApproximation
             if focusedMonitorOrNilIfDesktop == nil &&
-                   focusedMonitorInaccurate?.rect.topLeftCorner != Workspace.focused.monitor.rect.topLeftCorner {
-                focusedWorkspaceSourceOfTruth = .macOs
+                   focusedMonitor.rect.topLeftCorner != Workspace.focused.monitor.rect.topLeftCorner {
+                focusedWorkspaceSourceOfTruth = .ownModel
+                focusedWorkspaceName = focusedMonitor.activeWorkspace.name
                 refresh()
             }
         }
