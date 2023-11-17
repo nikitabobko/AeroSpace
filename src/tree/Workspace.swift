@@ -6,7 +6,7 @@ private var visibleWorkspaceToScreenPoint: [Workspace: CGPoint] = [:]
 private var emptyInvisibleWorkspaceGenerator: some IteratorProtocol<Workspace> {
     (0...Int.max).lazy
         .map { Workspace.get(byName: "EMPTY\($0)") }
-        .filter { $0.isEffectivelyEmpty || !$0.isVisible }
+        .filter { $0.isEffectivelyEmpty && !$0.isVisible }
         .makeIterator()
 }
 
