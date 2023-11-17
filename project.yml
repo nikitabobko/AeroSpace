@@ -70,6 +70,7 @@ targets:
       - package: Socket
     settings:
       base:
+        SWIFT_VERSION: 5.8
         CODE_SIGN_STYLE: Automatic
       configs:
         release:
@@ -78,3 +79,5 @@ targets:
           CODE_SIGN_IDENTITY: Apple Development
           "CODE_SIGN_IDENTITY[sdk=macosx*]": Apple Development
           DEVELOPMENT_TEAM: 4MWP47XA68 # Team: Nikita Bobko (Personal Team)
+        debug:
+          PRODUCT_NAME: aerospace-debug

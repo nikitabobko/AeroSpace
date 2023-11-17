@@ -19,4 +19,4 @@ pushd ~/Library/Developer/Xcode/DerivedData > /dev/null
     fi
 popd > /dev/null
 cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Debug/AeroSpace-Debug.app .debug
-cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Debug/AeroSpace-cli .debug/aerospace-debug
+cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Debug/aerospace-debug .debug

@@ -728,7 +728,9 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_NAME = "aerospace-debug";
 				SDKROOT = macosx;
+				SWIFT_VERSION = 5.8;
 			};
 			name = Debug;
 		};
@@ -748,6 +750,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace.cli;
 				PRODUCT_NAME = aerospace;
 				SDKROOT = macosx;
+				SWIFT_VERSION = 5.8;
 			};
 			name = Release;
 		};
