@@ -9,7 +9,7 @@ extension MonitorImpl: Monitor {
     var width: CGFloat { rect.width }
 }
 
-/// Use it instead of NSScreen for testing purposes
+/// Use it instead of NSScreen because it can be mocked in tests
 protocol Monitor: AeroAny {
     var name: String { get }
     var rect: Rect { get }

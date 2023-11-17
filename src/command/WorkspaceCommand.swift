@@ -10,7 +10,7 @@ struct WorkspaceCommand : Command {
                 // Make sure that stack of windows is correct from macOS perspective (important for closing windows)
                 // Alternative: focus mru window in destroyedObs (con: flickering when windows are closed, because
                 // focusedWindow is source of truth for workspaces)
-                workspace.focusMruReversedRecursive()
+                workspace.focusMruReversedRecursive() // todo try to reduce flickering
             }
             focusedWorkspaceSourceOfTruth = .macOs
             window.focus()

@@ -6,5 +6,5 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 
 cd "$(dirname "$0")"
 
-./build-debug.sh || exit 125 # `git bisect run` compatible
+# ./build-debug.sh || exit 125 # `git bisect run` compatible
 xcodebuild -scheme AeroSpace test

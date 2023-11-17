@@ -53,7 +53,7 @@ enum TomlParseError: Error, CustomStringConvertible {
     }
 }
 
-private typealias ParsedTomlResult<T> = Result<T, TomlParseError>
+private typealias ParsedToml<T> = Result<T, TomlParseError>
 
 private extension ParserProtocol {
     func transformRawConfig(_ raw: RawConfig,
@@ -67,22 +67,22 @@ private extension ParserProtocol {
 private protocol ParserProtocol<T> {
     associatedtype T
     var keyPath: WritableKeyPath<RawConfig, T?> { get }
-    var parse: (TOMLValueConvertible, TomlBacktrace) -> ParsedTomlResult<T> { get }
+    var parse: (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T> { get }
 }
 
 private struct Parser<T>: ParserProtocol {
     let keyPath: WritableKeyPath<RawConfig, T?>
-    let parse: (TOMLValueConvertible, TomlBacktrace) -> ParsedTomlResult<T>
+    let parse: (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>
 
-    init(_ keyPath: WritableKeyPath<RawConfig, T?>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace) -> ParsedTomlResult<T>) {
+    init(_ keyPath: WritableKeyPath<RawConfig, T?>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) {
         self.keyPath = keyPath
         self.parse = parse
     }
 }
 
 private let parsers: [String: any ParserProtocol] = [
-    "after-login-command": Parser(\.afterLoginCommand, { parseCommandOrCommands($0).toParsedTomlResult($1) }),
-    "after-startup-command": Parser(\.afterStartupCommand, { parseCommandOrCommands($0).toParsedTomlResult($1) }),
+    "after-login-command": Parser(\.afterLoginCommand, { parseCommandOrCommands($0).toParsedToml($1) }),
+    "after-startup-command": Parser(\.afterStartupCommand, { parseCommandOrCommands($0).toParsedToml($1) }),
 
     "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, { parseBool($0, $1) }),
     "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, { parseBool($0, $1) }),
@@ -157,20 +157,20 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
     return (config, errors)
 }
 
-private func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<Int> {
+private func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Int> {
     raw.int.orFailure { expectedActualTypeError(expected: .int, actual: raw.type, backtrace) }
 }
 
-private func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<String> {
+private func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<String> {
     raw.string.orFailure { expectedActualTypeError(expected: .string, actual: raw.type, backtrace) }
 }
 
-private func parseLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<Layout> {
+private func parseLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Layout> {
     parseString(raw, backtrace)
         .flatMap { Layout(rawValue: $0).orFailure(.semantic(backtrace, "Can't parse layout '\($0)'")) }
 }
 
-private func parseDefaultContainerOrientation(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<DefaultContainerOrientation> {
+private func parseDefaultContainerOrientation(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<DefaultContainerOrientation> {
     parseString(raw, backtrace).flatMap {
         DefaultContainerOrientation(rawValue: $0)
             .orFailure(.semantic(backtrace, "Can't parse default container orientation '\($0)'"))
@@ -212,7 +212,7 @@ private func parseMode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, 
 }
 
 private extension Parsed where Failure == String {
-    func toParsedTomlResult(_ backtrace: TomlBacktrace) -> ParsedTomlResult<Success> {
+    func toParsedToml(_ backtrace: TomlBacktrace) -> ParsedToml<Success> {
         mapError { .semantic(backtrace, $0) }
     }
 }
@@ -225,39 +225,36 @@ private func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktra
     var result: [HotkeyBinding] = []
     for (binding, rawCommand): (String, TOMLValueConvertible) in rawTable {
         let backtrace = backtrace + .key(binding)
-        let (binding, error): (HotkeyBinding?, TomlParseError?) = parseBinding(binding, backtrace)
-            .flatMap { (modifiers, key) -> ParsedTomlResult<HotkeyBinding> in
+        let binding = parseBinding(binding, backtrace)
+            .flatMap { (modifiers, key) -> ParsedToml<HotkeyBinding> in
                 // todo support parsing of implicit modes?
-                parseCommandOrCommands(rawCommand).toParsedTomlResult(backtrace).map { HotkeyBinding(modifiers, key, $0) }
+                parseCommandOrCommands(rawCommand).toParsedToml(backtrace).map { HotkeyBinding(modifiers, key, $0) }
             }
-            .getOrNils()
+            .getOrNil(appendErrorTo: &errors)
         if let binding {
             result += [binding]
-        }
-        if let error {
-            errors += [error]
         }
     }
     return result
 }
 
-private func parseBinding(_ raw: String, _ backtrace: TomlBacktrace) -> ParsedTomlResult<(NSEvent.ModifierFlags, Key)> {
+private func parseBinding(_ raw: String, _ backtrace: TomlBacktrace) -> ParsedToml<(NSEvent.ModifierFlags, Key)> {
     let rawKeys = raw.split(separator: "-")
-    let modifiers: ParsedTomlResult<NSEvent.ModifierFlags> = rawKeys.dropLast()
+    let modifiers: ParsedToml<NSEvent.ModifierFlags> = rawKeys.dropLast()
         .mapAllOrFailure {
             modifiersMap[String($0)].orFailure { .semantic(backtrace, "Can't parse modifiers in '\(raw)' binding") }
         }
         .map { NSEvent.ModifierFlags($0) }
-    let key: ParsedTomlResult<Key> = rawKeys.last.flatMap { keysMap[String($0)] }
+    let key: ParsedToml<Key> = rawKeys.last.flatMap { keysMap[String($0)] }
         .orFailure { .semantic(backtrace, "Can't parse the key in '\(raw)' binding") }
-    return modifiers.flatMap { modifiers -> ParsedTomlResult<(NSEvent.ModifierFlags, Key)> in
-        key.flatMap { key -> ParsedTomlResult<(NSEvent.ModifierFlags, Key)> in
+    return modifiers.flatMap { modifiers -> ParsedToml<(NSEvent.ModifierFlags, Key)> in
+        key.flatMap { key -> ParsedToml<(NSEvent.ModifierFlags, Key)> in
             .success((modifiers, key))
         }
     }
 }
 
-private func parseBool(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedTomlResult<Bool> {
+private func parseBool(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Bool> {
     raw.bool.orFailure { expectedActualTypeError(expected: .bool, actual: raw.type, backtrace) }
 }
 

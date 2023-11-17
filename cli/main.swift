@@ -36,12 +36,14 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
     if serverVersionAndHash != cliClientVersionAndHash {
         error(
             """
-            Corrupted AeroSpace installation
+            AeroSpace client/server version mismatch
 
-            - CLI client version: \(cliClientVersionAndHash)
+            - aerospace CLI client version: \(cliClientVersionAndHash)
             - AeroSpace.app server version: \(serverVersionAndHash)
 
-            The versions don't match. Please reinstall AeroSpace
+            Possible fixes:
+            - Restart AeroSpace.app (restart is required after each update)
+            - Reinstall and restart AeroSpace (corrupted installation)
             """
         )
     }
