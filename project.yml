@@ -54,6 +54,10 @@ targets:
     type: bundle.unit-test
     platform: macOS
     sources: [test/]
+    scheme:
+      testTargets:
+        - AeroSpace-Tests
+      gatherCoverageData: true
     dependencies:
       - target: AeroSpace
     settings:
