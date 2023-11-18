@@ -91,7 +91,8 @@ class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable, CustomString
 extension Workspace {
     var isVisible: Bool { visibleWorkspaceToScreenPoint.keys.contains(self) }
     var monitor: Monitor {
-        visibleWorkspaceToScreenPoint[self]?.monitorApproximation
+        forceAssignedMonitor
+            ?? visibleWorkspaceToScreenPoint[self]?.monitorApproximation
             ?? assignedMonitorPoint?.monitorApproximation
             ?? mainMonitor
     }
@@ -111,13 +112,16 @@ extension Monitor {
 
     // It can't be converted to property because stupid Swift requires Monitor to be `var`
     // if you want to assign to calculated property
-    func setActiveWorkspace(_ workspace: Workspace) {
+    func setActiveWorkspace(_ workspace: Workspace) -> Bool {
         rect.topLeftCorner.setActiveWorkspace(workspace)
     }
 }
 
 private extension CGPoint {
-    func setActiveWorkspace(_ workspace: Workspace) {
+    func setActiveWorkspace(_ workspace: Workspace) -> Bool {
+        if !isValidAssignment(workspace: workspace, screen: self) {
+            return false
+        }
         if let prevMonitorPoint = visibleWorkspaceToScreenPoint[workspace] {
             visibleWorkspaceToScreenPoint.removeValue(forKey: workspace)
             screenPointToPrevVisibleWorkspace[prevMonitorPoint] =
@@ -131,6 +135,7 @@ private extension CGPoint {
         visibleWorkspaceToScreenPoint[workspace] = self
         screenPointToVisibleWorkspace[self] = workspace
         workspace.assignedMonitorPoint = self
+        return true
     }
 }
 
@@ -139,26 +144,32 @@ private func rearrangeWorkspacesOnMonitors() {
 
     let newScreens = monitors.map(\.rect.topLeftCorner)
     var newScreenToOldScreenMapping: [CGPoint:CGPoint] = [:]
-    var preservedOldScreens: [CGPoint] = []
     for newScreen in newScreens {
         if let oldScreen = oldVisibleScreens.minBy({ ($0 - newScreen).vectorLength }) {
             check(oldVisibleScreens.remove(oldScreen) != nil)
             newScreenToOldScreenMapping[newScreen] = oldScreen
-            preservedOldScreens.append(oldScreen)
         }
     }
 
-    let oldScreenPointToVisibleWorkspace = screenPointToVisibleWorkspace.filter { preservedOldScreens.contains($0.key) }
-    var nextWorkspace = (Workspace.all - Array(oldScreenPointToVisibleWorkspace.values)).makeIterator()
+    let oldScreenPointToVisibleWorkspace = screenPointToVisibleWorkspace
     screenPointToVisibleWorkspace = [:]
     visibleWorkspaceToScreenPoint = [:]
 
     for newScreen in newScreens {
-        if let existingVisibleWorkspace = newScreenToOldScreenMapping[newScreen]?.lets({ oldScreenPointToVisibleWorkspace[$0] }) {
-            newScreen.setActiveWorkspace(existingVisibleWorkspace)
-        } else {
-            let workspace = nextWorkspace.next() ?? getStubWorkspace(forPoint: newScreen)
-            newScreen.setActiveWorkspace(workspace)
+        if let existingVisibleWorkspace = newScreenToOldScreenMapping[newScreen]?.lets({ oldScreenPointToVisibleWorkspace[$0] }),
+           newScreen.setActiveWorkspace(existingVisibleWorkspace) {
+            continue
         }
+        let stubWorkspace = getStubWorkspace(forPoint: newScreen)
+        check(newScreen.setActiveWorkspace(stubWorkspace),
+            "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(newScreen)")
+    }
+}
+
+private func isValidAssignment(workspace: Workspace, screen: CGPoint) -> Bool {
+    if let forceAssigned = workspace.forceAssignedMonitor, forceAssigned.rect.topLeftCorner != screen {
+        return false
+    } else {
+        return true
     }
 }

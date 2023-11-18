@@ -129,11 +129,11 @@ private func parseSingleArg(_ args: [String], _ command: String) -> Parsed<Strin
     }
 }
 
-private func expectedActualTypeError(expected: TOMLType, actual: TOMLType) -> String {
+func expectedActualTypeError(expected: TOMLType, actual: TOMLType) -> String {
     "Expected type is '\(expected)'. But actual type is '\(actual)'"
 }
 
-private func expectedActualTypeError(expected: [TOMLType], actual: TOMLType) -> String {
+func expectedActualTypeError(expected: [TOMLType], actual: TOMLType) -> String {
     if let single = expected.singleOrNil() {
         return expectedActualTypeError(expected: single, actual: actual)
     } else {

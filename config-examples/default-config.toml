@@ -34,6 +34,15 @@ default-root-container-layout = 'list'
 #               tall display (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#assign-workspaces-to-monitors
+# [workspace-to-monitor-force-assignment]
+# workspace_name_1 = 1                            # Sequence number of the monitor from left to right. 1-based indexing
+# workspace_name_2 = 'main'                       # Main monitor
+# workspace_name_3 = 'secondary'                  # Non-main monitor in case when there are only two monitors
+# workspace_name_4 = 'built-in'                   # Case insensitive regex substring
+# workspace_name_5 = '^built-in retina display$'  # Case insensitive regex match
+# workspace_name_6 = ['secondary', 'dell']        # You can specify multiple patterns. The first matching pattern will be used
+
 # It's a declaration of 'main' binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 # 'main' binding mode must be always presented
 [mode.main.binding]

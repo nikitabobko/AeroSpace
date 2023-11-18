@@ -14,6 +14,8 @@ struct RawConfig: Copyable {
     var startAtLogin: Bool?
     var accordionPadding: Int?
     var enableNormalizationOppositeOrientationForNestedContainers: Bool?
+    var workspaceToMonitorForceAssignment: [String: [MonitorDescription]]?
+    var modes: [String: Mode]?
 }
 struct Config {
     var afterLoginCommand: [Command]
@@ -25,6 +27,7 @@ struct Config {
     var startAtLogin: Bool
     var accordionPadding: Int
     var enableNormalizationOppositeOrientationForNestedContainers: Bool
+    var workspaceToMonitorForceAssignment: [String: [MonitorDescription]]
 
     let modes: [String: Mode]
     var preservedWorkspaceNames: [String]

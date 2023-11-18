@@ -60,23 +60,28 @@ private extension ParserProtocol {
                             _ value: TOMLValueConvertible,
                             _ backtrace: TomlBacktrace,
                             _ errors: inout [TomlParseError]) -> RawConfig {
-        raw.copy(keyPath, parse(value, backtrace).getOrNil(appendErrorTo: &errors))
+        raw.copy(keyPath, parse(value, backtrace, &errors).getOrNil(appendErrorTo: &errors))
     }
 }
 
 private protocol ParserProtocol<T> {
     associatedtype T
     var keyPath: WritableKeyPath<RawConfig, T?> { get }
-    var parse: (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T> { get }
+    var parse: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T> { get }
 }
 
 private struct Parser<T>: ParserProtocol {
     let keyPath: WritableKeyPath<RawConfig, T?>
-    let parse: (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>
+    let parse: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T>
+
+    init(_ keyPath: WritableKeyPath<RawConfig, T?>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T>) {
+        self.keyPath = keyPath
+        self.parse = parse
+    }
 
     init(_ keyPath: WritableKeyPath<RawConfig, T?>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) {
         self.keyPath = keyPath
-        self.parse = parse
+        self.parse = { raw, backtrace, errors -> ParsedToml<T> in parse(raw, backtrace) }
     }
 }
 
@@ -93,6 +98,9 @@ private let parsers: [String: any ParserProtocol] = [
     "indent-for-nested-containers-with-the-same-orientation": Parser(\.indentForNestedContainersWithTheSameOrientation, { parseInt($0, $1) }),
     "start-at-login": Parser(\.startAtLogin, { parseBool($0, $1) }),
     "accordion-padding": Parser(\.accordionPadding, { parseInt($0, $1) }),
+
+    "mode": Parser(\.modes, { .success(parseModes($0, $1, &$2)) }),
+    "workspace-to-monitor-force-assignment": Parser(\.workspaceToMonitorForceAssignment, { .success(parseWorkspaceToMonitorAssignment($0, $1, &$2)) }),
 ]
 
 func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]) {
@@ -105,23 +113,20 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         return (defaultConfig, [.syntax(e.localizedDescription)])
     }
 
-    var modes: [String: Mode]? = nil
     var errors: [TomlParseError] = []
 
     var raw = RawConfig()
 
     for (key, value) in rawTable {
         let backtrace: TomlBacktrace = .root(key)
-        if key == "mode" {
-            modes = parseModes(value, backtrace, &errors)
-        } else if let parser = parsers[key] {
+        if let parser = parsers[key] {
             raw = parser.transformRawConfig(raw, value, backtrace, &errors)
         } else {
             errors += [unknownKeyError(backtrace)]
         }
     }
 
-    let modesOrDefault = modes ?? defaultConfig.modes
+    let modesOrDefault = raw.modes ?? defaultConfig.modes
 
     let config: Config = Config(
         afterLoginCommand: raw.afterLoginCommand ?? defaultConfig.afterLoginCommand,
@@ -133,6 +138,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         startAtLogin: raw.startAtLogin ?? defaultConfig.startAtLogin,
         accordionPadding: raw.accordionPadding ?? defaultConfig.accordionPadding,
         enableNormalizationOppositeOrientationForNestedContainers: raw.enableNormalizationOppositeOrientationForNestedContainers ?? defaultConfig.enableNormalizationOppositeOrientationForNestedContainers,
+        workspaceToMonitorForceAssignment: raw.workspaceToMonitorForceAssignment ?? [:],
 
         modes: modesOrDefault,
         preservedWorkspaceNames: modesOrDefault.values.lazy
@@ -175,6 +181,57 @@ private func parseDefaultContainerOrientation(_ raw: TOMLValueConvertible, _ bac
         DefaultContainerOrientation(rawValue: $0)
             .orFailure(.semantic(backtrace, "Can't parse default container orientation '\($0)'"))
     }
+}
+
+private func parseWorkspaceToMonitorAssignment(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: [MonitorDescription]] {
+    guard let rawTable = raw.table else {
+        errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
+        return [:]
+    }
+    var result: [String: [MonitorDescription]] = [:]
+    for (workspaceName, rawMonitorDescription) in rawTable {
+        result[workspaceName] = parseMonitorDescriptions(rawMonitorDescription, backtrace + .key(workspaceName), &errors)
+    }
+    return result
+}
+
+private func parseMonitorDescriptions(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [MonitorDescription] {
+    if let array = raw.array {
+        return array.withIndex
+            .map { (index, rawDesc) in parseMonitorDescription(rawDesc, backtrace + .index(index)).getOrNil(appendErrorTo: &errors) }
+            .filterNotNil()
+    } else {
+        return parseMonitorDescription(raw, backtrace).getOrNil(appendErrorTo: &errors).asList()
+    }
+}
+
+private func parseMonitorDescription(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<MonitorDescription> {
+    let rawString: String
+    if let string = raw.string {
+        rawString = string
+    } else if let int = raw.int {
+        rawString = String(int)
+    } else {
+        return .failure(expectedActualTypeError(expected: [.string, .int], actual: raw.type, backtrace))
+    }
+
+    if let int = Int(rawString) {
+        return int >= 1
+            ? .success(.sequenceNumber(int))
+            : .failure(.semantic(backtrace, "Monitor sequence numbers uses 1-based indexing. Values less than 1 are illegal"))
+    }
+    if rawString == "main" {
+        return .success(.main)
+    }
+    if rawString == "secondary" {
+        return .success(.secondary)
+    }
+
+    let pattern = (try? Regex(rawString))?.lets { MonitorDescription.pattern($0.ignoresCase()) }
+
+    return rawString.isEmpty
+        ? .failure(.semantic(backtrace, "Empty string is an illegal monitor description"))
+        : pattern.orFailure(.semantic(backtrace, "Can't parse '\(rawString)' regex"))
 }
 
 private func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: Mode] {
@@ -287,5 +344,9 @@ private func unknownKeyError(_ backtrace: TomlBacktrace) -> TomlParseError {
 }
 
 private func expectedActualTypeError(expected: TOMLType, actual: TOMLType, _ backtrace: TomlBacktrace) -> TomlParseError {
-    .semantic(backtrace, "Expected type is '\(expected)'. But actual type is '\(actual)'")
+    .semantic(backtrace, expectedActualTypeError(expected: expected, actual: actual))
+}
+
+private func expectedActualTypeError(expected: [TOMLType], actual: TOMLType, _ backtrace: TomlBacktrace) -> TomlParseError {
+    .semantic(backtrace, expectedActualTypeError(expected: expected, actual: actual))
 }

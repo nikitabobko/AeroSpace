@@ -13,6 +13,7 @@
   - [A note on mission control](#a-note-on-mission-control)
   - [A note on 'Displays have separate Spaces'](#a-note-on-displays-have-separate-spaces)
 - [Multiple displays](#multiple-displays)
+  - [Assign workspaces to monitors](#assign-workspaces-to-monitors)
 
 ## Configuring AeroSpace
 
@@ -248,3 +249,29 @@ display often makes sense.
 > puts the workspace on an assigned display; i3 puts the workspace on currently active display.
 > - I find that AeroSpace model works better with **the observation** listed above.
 > - AeroSpace model is more consistent (it works the same for empty workspaces and non-empty workspaces)
+
+### Assign workspaces to monitors
+
+You can use `workspace-to-monitor-force-assignment` syntax to assign workspaces to always appear on particular monitors
+
+```toml
+[workspace-to-monitor-force-assignment]
+workspace_name_1 = 1                            # Sequence number of the monitor from left to right. 1-based indexing
+workspace_name_2 = 'main'                       # Main monitor
+workspace_name_3 = 'secondary'                  # Non-main monitor in case when there are only two monitors
+workspace_name_4 = 'built-in'                   # Case insensitive regex substring
+workspace_name_5 = '^built-in retina display$'  # Case insensitive regex match
+workspace_name_6 = ['secondary', 'dell']        # You can specify multiple patterns. The first matching pattern will be used
+```
+
+Supported monitor patterns:
+- `'main'` - "Main" display (you can see find your "main" monitor in `System Settings -> Displays -> Use as`)
+- `'secondary'` - Non-main monitor in case when there are only two monitors
+- `number` (e.g. `1`, `2`) - Sequence number of the monitor from left to right. 1-based indexing
+- `regex_pattern` (e.g. `dell`, `built-in`) - Case insensitive regex substring pattern
+
+You can specify multiple patterns as an array. The first matching pattern will be used
+
+`move-workspace-to-display` command has no effect for workspaces that have monitor assignment
+
+- Available since: 0.5.0-Beta

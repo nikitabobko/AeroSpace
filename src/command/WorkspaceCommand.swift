@@ -18,7 +18,7 @@ struct WorkspaceCommand : Command {
             check(workspace.isEffectivelyEmpty)
             focusedWorkspaceSourceOfTruth = .ownModel
         }
-        workspace.monitor.setActiveWorkspace(workspace)
+        check(workspace.monitor.setActiveWorkspace(workspace))
         focusedWorkspaceName = workspace.name
     }
 }

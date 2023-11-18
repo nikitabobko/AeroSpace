@@ -125,6 +125,61 @@ final class ConfigTest: XCTestCase {
             errors.descriptions
         )
     }
+
+    func testParseWorkspaceToMonitorAssignment() {
+        let (parsed, errors) = parseConfig(
+            """
+            [workspace-to-monitor-force-assignment]
+            workspace_name_1 = 1                            # Sequence number of the monitor (from left to right, 1-based indexing)
+            workspace_name_2 = 'main'                       # main monitor
+            workspace_name_3 = 'secondary'                  # non-main monitor (in case when there are only two monitors)
+            workspace_name_4 = 'built-in'                   # case insensitive regex substring
+            workspace_name_5 = '^built-in retina display$'  # case insensitive regex match
+            workspace_name_6 = ['secondary', 1]             # you can specify multiple patterns. The first matching pattern will be used
+            7 = "foo"
+            w7 = ['', 'main']
+            w8 = 0
+            workspace_name_x = '2'                          # Sequence number of the monitor (from left to right, 1-based indexing)
+            """
+        )
+        XCTAssertEqual(
+            parsed.workspaceToMonitorForceAssignment,
+            [
+                "workspace_name_1": [.sequenceNumber(1)],
+                "workspace_name_2": [.main],
+                "workspace_name_3": [.secondary],
+                "workspace_name_4": [.pattern(try! Regex("built-in"))],
+                "workspace_name_5": [.pattern(try! Regex("^built-in retina display$"))],
+                "workspace_name_6": [.secondary, .sequenceNumber(1)],
+                "workspace_name_x": [.sequenceNumber(2)],
+                "7": [.pattern(try! Regex("foo"))],
+                "w7": [.main],
+                "w8": [],
+            ]
+        )
+        XCTAssertEqual([
+            "workspace-to-monitor-force-assignment.w7[0]: Empty string is an illegal monitor description",
+            "workspace-to-monitor-force-assignment.w8: Monitor sequence numbers uses 1-based indexing. Values less than 1 are illegal"
+        ], errors.descriptions)
+        XCTAssertEqual([:], defaultConfig.workspaceToMonitorForceAssignment)
+    }
+}
+
+extension MonitorDescription: Equatable {
+    public static func ==(lhs: MonitorDescription, rhs: MonitorDescription) -> Bool {
+        switch (lhs, rhs) {
+        case (.sequenceNumber(let a), .sequenceNumber(let b)):
+            return a == b
+        case (.main, .main):
+            return true
+        case (.secondary, .secondary):
+            return true
+        case (.pattern, .pattern):
+            return true
+        default:
+            return false
+        }
+    }
 }
 
 private extension [TomlParseError] {

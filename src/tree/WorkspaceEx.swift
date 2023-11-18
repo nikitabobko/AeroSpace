@@ -25,4 +25,25 @@ extension Workspace {
     var floatingWindows: [Window] {
         workspace.children.filterIsInstance(of: Window.self)
     }
+
+    var forceAssignedMonitor: Monitor? {
+        guard let monitorDescriptions = config.workspaceToMonitorForceAssignment[name] else { return nil }
+        let sortedMonitors = sortedMonitors
+        return monitorDescriptions.lazy
+            .map { desc in
+                switch desc {
+                case .sequenceNumber(let number):
+                    return sortedMonitors.getOrNil(atIndex: number - 1)
+                case .main:
+                    return mainMonitor
+                case .secondary:
+                    return sortedMonitors.takeIf { $0.count == 2 }?
+                        .first { $0.rect.topLeftCorner != mainMonitor.rect.topLeftCorner }
+                case .pattern(let regex):
+                    return sortedMonitors.first { monitor in monitor.name.contains(regex) }
+                }
+            }
+            .filterNotNil()
+            .first
+    }
 }
