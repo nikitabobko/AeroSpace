@@ -89,7 +89,7 @@ private func putWindowsAtStartup() {
     switch config.nonEmptyWorkspacesRootContainersLayoutOnStartup {
     case .tiles:
         for workspace in Workspace.all.filter { !$0.isEffectivelyEmpty } {
-            workspace.rootTilingContainer.layout = .list
+            workspace.rootTilingContainer.layout = .tiles
         }
     case .accordion:
         for workspace in Workspace.all.filter { !$0.isEffectivelyEmpty } {
@@ -99,7 +99,7 @@ private func putWindowsAtStartup() {
         for workspace in Workspace.all.filter { !$0.isEffectivelyEmpty } {
             let root = workspace.rootTilingContainer
             if root.children.count <= 3 {
-                root.layout = .list
+                root.layout = .tiles
             } else {
                 root.layout = .accordion
             }

@@ -28,7 +28,7 @@ extension TreeNode {
         case .tilingContainer(let container):
             lastAppliedLayoutTilingRectForMouse = rect
             switch container.layout {
-            case .list:
+            case .tiles:
                 container.layoutList(point, focusedWindow: focusedWindow, width: width, height: height)
             case .accordion:
                 container.layoutAccordion(point, focusedWindow: focusedWindow, width: width, height: height)

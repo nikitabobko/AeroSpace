@@ -77,7 +77,7 @@ extension CGPoint {
         let point = self
         let target: TreeNode?
         switch tree.layout {
-        case .list:
+        case .tiles:
             target = tree.children.first(where: { $0.lastAppliedLayoutTilingRectForMouse?.contains(point) == true })
         case .accordion:
             target = tree.mostRecentChild

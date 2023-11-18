@@ -128,7 +128,7 @@ Puts the currently focused window and the nearest node in the specified directio
 
 Given this layout
 ```
-h_list
+h_tiles
 ├── window 1
 ├── window 2 (focused)
 └── window 3
@@ -136,9 +136,9 @@ h_list
 
 `join-with right` will result in the following layout
 ```
-h_list
+h_tiles
 ├── window 1
-└── v_list
+└── v_tiles
     ├── window 2 (focused)
     └── window 3
 ```
@@ -152,7 +152,7 @@ h_list
 ## layout
 
 ```
-layout (h_list|v_list|h_accordion|v_accordion|list|accordion|horizontal|vertical|tiling|floating)...
+layout (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
 ```
 
 Changes layout of the focused window to the given layout.
@@ -194,14 +194,14 @@ it is floating. The default is 50 pixels
 
 Given this layout
 ```
-h_list
+h_tiles
 ├── window 1 (focused)
 └── window 2
 ```
 
 `move-through right` will result in the following layout
 ```
-h_list
+h_tiles
 ├── window 2
 └── window 1 (focused)
 ```
@@ -210,19 +210,19 @@ h_list
 
 Given this layout
 ```
-h_list
+h_tiles
 ├── window 1
 ├── window 2 (focused)
-└── v_list
+└── v_tiles
     ├── window 3
     └── window 4
 ```
 
 `move-through right` will result in the following layout
 ```
-h_list
+h_tiles
 ├── window 1
-└── v_list
+└── v_tiles
     ├── window 3
     ├── window 2 (focused)
     └── window 4
@@ -232,9 +232,9 @@ h_list
 
 Given this layout
 ```
-h_list
+h_tiles
 ├── window 1
-└── v_list
+└── v_tiles
     ├── window 3
     ├── window 2 (focused)
     └── window 4
@@ -242,10 +242,10 @@ h_list
 
 `move-through left` will result in the following layout
 ```
-h_list
+h_tiles
 ├── window 1
 ├── window 2 (focused)
-└── v_list
+└── v_tiles
     ├── window 3
     └── window 4
 ```
@@ -256,7 +256,7 @@ In some cases, `move-through` needs to implicitly create a container to fullfill
 
 Given this layout
 ```
-h_list
+h_tiles
 ├── window 1
 ├── window 2 (focused)
 └── window 3
@@ -264,14 +264,14 @@ h_list
 
 `move-through up` will result in the following layout
 ```
-v_list
+v_tiles
 ├── window 2 (focused)
-└── h_list
+└── h_tiles
     ├── window 1
     └── window 3
 ```
 
-`v_list` is an implicitly created container.
+`v_tiles` is an implicitly created container.
 
 ## move-workspace-to-monitor
 

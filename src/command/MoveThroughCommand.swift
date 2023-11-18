@@ -47,7 +47,7 @@ private func moveOut(window: Window, direction: CardinalDirection) {
         let prevRoot = parent.rootTilingContainer
         prevRoot.unbindFromParent()
         // Force list layout
-        _ = TilingContainer(parent: parent, adaptiveWeight: WEIGHT_AUTO, direction.orientation, .list, index: 0)
+        _ = TilingContainer(parent: parent, adaptiveWeight: WEIGHT_AUTO, direction.orientation, .tiles, index: 0)
         check(prevRoot != parent.rootTilingContainer)
         prevRoot.bind(to: parent.rootTilingContainer, adaptiveWeight: WEIGHT_AUTO, index: 0)
 

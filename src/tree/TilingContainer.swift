@@ -10,12 +10,12 @@ class TilingContainer: TreeNode, NonLeafTreeNode {
         super.init(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
-    static func newHList(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
-        TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .h, .list, index: index)
+    static func newHTiles(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
+        TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .h, .tiles, index: index)
     }
 
-    static func newVList(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
-        TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .v, .list, index: index)
+    static func newVTiles(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
+        TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .v, .tiles, index: index)
     }
 }
 
@@ -64,6 +64,18 @@ extension Orientation {
 }
 
 enum Layout: String {
-    case list
+    case tiles
     case accordion
+}
+
+extension String {
+    func parseLayout() -> Layout? {
+        if let parsed = Layout(rawValue: self) {
+            return parsed
+        } else if self == "list" {
+            return .tiles
+        } else {
+            return nil
+        }
+    }
 }

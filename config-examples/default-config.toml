@@ -33,8 +33,8 @@ accordion-padding = 30
 #   4 and more will get 'accordion' layout. 'smart' can change its behavior in future versions
 non-empty-workspaces-root-containers-layout-on-startup = 'smart'
 
-# Possible values: list|accordion
-default-root-container-layout = 'list'
+# Possible values: tiles|accordion
+default-root-container-layout = 'tiles'
 
 # Possible values: horizontal|vertical|auto
 # 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
@@ -62,7 +62,7 @@ default-root-container-orientation = 'auto'
 # alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#layout
-alt-slash = 'layout list horizontal vertical'
+alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#focus

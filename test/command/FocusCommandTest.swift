@@ -74,8 +74,8 @@ final class FocusCommandTest: XCTestCase {
         var unrelatedWindow: Window!
         workspace.rootTilingContainer.apply {
             startWindow = TestWindow(id: 1, parent: $0).apply { $0.focus() }
-            TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
-                TilingContainer.newHList(parent: $0, adaptiveWeight: 1).apply {
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                     window2 = TestWindow(id: 2, parent: $0)
                     unrelatedWindow = TestWindow(id: 5, parent: $0)
                 }
@@ -102,7 +102,7 @@ final class FocusCommandTest: XCTestCase {
     func testFocusOutsideOfTheContainer() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
-            TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 TestWindow(id: 2, parent: $0).focus()
             }
         }
@@ -114,7 +114,7 @@ final class FocusCommandTest: XCTestCase {
     func testFocusOutsideOfTheContainer2() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
-            TilingContainer.newHList(parent: $0, adaptiveWeight: 1).apply {
+            TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                 TestWindow(id: 2, parent: $0).focus()
             }
         }

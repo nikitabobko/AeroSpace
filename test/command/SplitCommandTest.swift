@@ -11,8 +11,8 @@ final class SplitCommandTest: XCTestCase {
         }
 
         await SplitCommand(splitArg: .vertical).runWithoutLayout()
-        XCTAssertEqual(root.layoutDescription, .h_list([
-            .v_list([
+        XCTAssertEqual(root.layoutDescription, .h_tiles([
+            .v_tiles([
                 .window(1)
             ]),
             .window(2),
@@ -26,8 +26,8 @@ final class SplitCommandTest: XCTestCase {
         }
 
         await SplitCommand(splitArg: .opposite).runWithoutLayout()
-        XCTAssertEqual(root.layoutDescription, .h_list([
-            .v_list([
+        XCTAssertEqual(root.layoutDescription, .h_tiles([
+            .v_tiles([
                 .window(1)
             ]),
             .window(2),
@@ -36,15 +36,15 @@ final class SplitCommandTest: XCTestCase {
 
     func testChangeOrientation() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
-            TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 TestWindow(id: 1, parent: $0).focus()
             }
             TestWindow(id: 2, parent: $0)
         }
 
         await SplitCommand(splitArg: .horizontal).runWithoutLayout()
-        XCTAssertEqual(root.layoutDescription, .h_list([
-            .h_list([
+        XCTAssertEqual(root.layoutDescription, .h_tiles([
+            .h_tiles([
                 .window(1)
             ]),
             .window(2),
@@ -53,15 +53,15 @@ final class SplitCommandTest: XCTestCase {
 
     func testToggleOrientation() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
-            TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 TestWindow(id: 1, parent: $0).focus()
             }
             TestWindow(id: 2, parent: $0)
         }
 
         await SplitCommand(splitArg: .opposite).runWithoutLayout()
-        XCTAssertEqual(root.layoutDescription, .h_list([
-            .h_list([
+        XCTAssertEqual(root.layoutDescription, .h_tiles([
+            .h_tiles([
                 .window(1)
             ]),
             .window(2),

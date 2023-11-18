@@ -11,15 +11,15 @@ final class MoveThroughCommandTest: XCTestCase {
         }
 
         await MoveThroughCommand(direction: .right).runWithoutLayout()
-        XCTAssertEqual(root.layoutDescription, .h_list([.window(2), .window(1)]))
+        XCTAssertEqual(root.layoutDescription, .h_tiles([.window(2), .window(1)]))
     }
 
     func testMoveInto_findTopMostContainerWithRightOrientation() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 0, parent: $0)
             TestWindow(id: 1, parent: $0).focus()
-            TilingContainer.newHList(parent: $0, adaptiveWeight: 1).apply {
-                TilingContainer.newHList(parent: $0, adaptiveWeight: 1).apply {
+            TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
+                TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                     TestWindow(id: 2, parent: $0)
                 }
             }
@@ -28,11 +28,11 @@ final class MoveThroughCommandTest: XCTestCase {
         await MoveThroughCommand(direction: .right).runWithoutLayout()
         XCTAssertEqual(
             root.layoutDescription,
-            .h_list([
+            .h_tiles([
                 .window(0),
-                .h_list([
+                .h_tiles([
                     .window(1),
-                    .h_list([
+                    .h_tiles([
                         .window(2)
                     ])
                 ])
@@ -45,8 +45,8 @@ final class MoveThroughCommandTest: XCTestCase {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 0, parent: $0)
             TestWindow(id: 1, parent: $0).focus()
-            TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
-                TilingContainer.newHList(parent: $0, adaptiveWeight: 1).apply {
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                     TestWindow(id: 2, parent: $0)
                     window3 = TestWindow(id: 3, parent: $0)
                 }
@@ -58,10 +58,10 @@ final class MoveThroughCommandTest: XCTestCase {
         await MoveThroughCommand(direction: .right).runWithoutLayout()
         XCTAssertEqual(
             root.layoutDescription,
-            .h_list([
+            .h_tiles([
                 .window(0),
-                .v_list([
-                    .h_list([
+                .v_tiles([
+                    .h_tiles([
                         .window(1),
                         .window(2),
                         .window(3),
@@ -89,7 +89,7 @@ final class MoveThroughCommandTest: XCTestCase {
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 0, parent: $0, adaptiveWeight: 1)
             window1 = TestWindow(id: 1, parent: $0, adaptiveWeight: 2)
-            TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 window2 = TestWindow(id: 2, parent: $0, adaptiveWeight: 1)
             }
         }
@@ -114,9 +114,9 @@ final class MoveThroughCommandTest: XCTestCase {
         XCTAssertEqual(
             workspace.layoutDescription,
             .workspace([
-                .v_list([
+                .v_tiles([
                     .window(2),
-                    .h_list([.window(1), .window(3)])
+                    .h_tiles([.window(1), .window(3)])
                 ])
             ])
         )
@@ -125,7 +125,7 @@ final class MoveThroughCommandTest: XCTestCase {
     func testMoveOut() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
-            TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 TestWindow(id: 2, parent: $0).focus()
                 TestWindow(id: 3, parent: $0)
                 TestWindow(id: 4, parent: $0)
@@ -135,10 +135,10 @@ final class MoveThroughCommandTest: XCTestCase {
         await MoveThroughCommand(direction: .left).runWithoutLayout()
         XCTAssertEqual(
             root.layoutDescription,
-            .h_list([
+            .h_tiles([
                 .window(1),
                 .window(2),
-                .v_list([
+                .v_tiles([
                     .window(3),
                     .window(4),
                 ])
@@ -154,10 +154,10 @@ extension TreeNode {
             return .window(window.windowId)
         case .tilingContainer(let container):
             switch container.layout {
-            case .list:
+            case .tiles:
                 return container.orientation == .h
-                    ? .h_list(container.children.map(\.layoutDescription))
-                    : .v_list(container.children.map(\.layoutDescription))
+                    ? .h_tiles(container.children.map(\.layoutDescription))
+                    : .v_tiles(container.children.map(\.layoutDescription))
             case .accordion:
                 return container.orientation == .h
                     ? .h_accordion(container.children.map(\.layoutDescription))
@@ -171,8 +171,8 @@ extension TreeNode {
 
 enum LayoutDescription: Equatable {
     case workspace([LayoutDescription])
-    case h_list([LayoutDescription])
-    case v_list([LayoutDescription])
+    case h_tiles([LayoutDescription])
+    case v_tiles([LayoutDescription])
     case h_accordion([LayoutDescription])
     case v_accordion([LayoutDescription])
     case window(UInt32)

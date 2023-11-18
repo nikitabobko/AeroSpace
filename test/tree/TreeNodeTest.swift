@@ -48,13 +48,13 @@ final class TreeNodeTest: XCTestCase {
         let workspace = Workspace.get(byName: name)
         workspace.rootTilingContainer.apply {
             TestWindow(id: 0, parent: $0)
-            TilingContainer.newHList(parent: $0, adaptiveWeight: 1).apply {
+            TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                 TestWindow(id: 1, parent: $0)
             }
         }
         workspace.normalizeContainers()
         XCTAssertEqual(
-            .h_list([.window(0), .window(1)]),
+            .h_tiles([.window(0), .window(1)]),
             workspace.rootTilingContainer.layoutDescription
         )
     }
@@ -62,8 +62,8 @@ final class TreeNodeTest: XCTestCase {
     func testNormalizeContainers_removeEffectivelyEmpty() {
         let workspace = Workspace.get(byName: name)
         workspace.rootTilingContainer.apply {
-            TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
-                let _ = TilingContainer.newHList(parent: $0, adaptiveWeight: 1)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                let _ = TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1)
             }
         }
         XCTAssertEqual(workspace.rootTilingContainer.children.count, 1)
@@ -74,7 +74,7 @@ final class TreeNodeTest: XCTestCase {
     func testNormalizeContainers_flattenContainers() {
         let workspace = Workspace.get(byName: name) // Don't cache root node
         workspace.rootTilingContainer.apply {
-            TilingContainer.newVList(parent: $0, adaptiveWeight: 1).apply {
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 TestWindow(id: 1, parent: $0, adaptiveWeight: 1)
             }
         }

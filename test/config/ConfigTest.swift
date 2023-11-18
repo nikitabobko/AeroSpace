@@ -112,6 +112,13 @@ final class ConfigTest: XCTestCase {
         XCTAssertTrue(parseCommand("move-workspace-to-display next").getOrNil(appendErrorTo: &devNull) is MoveWorkspaceToMonitorCommand)
     }
 
+    func testParseTiles() {
+        var devNull: [String] = []
+        let command = parseCommand("layout tiles h_tiles v_tiles list h_list v_list").getOrNil(appendErrorTo: &devNull)
+        XCTAssertTrue(command is LayoutCommand)
+        XCTAssertEqual((command as! LayoutCommand).toggleBetween, [.tiles, .h_tiles, .v_tiles, .tiles, .h_tiles, .v_tiles])
+    }
+
     func testSplitCommandAndFlattenContainersNormalization() {
         let (_, errors) = parseConfig(
             """

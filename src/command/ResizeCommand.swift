@@ -15,7 +15,7 @@ struct ResizeCommand: Command { // todo cover with tests
         check(Thread.current.isMainThread)
 
         let candidates = focusedWindowOrEffectivelyFocused?.parentsWithSelf
-            .filter { ($0.parent as? TilingContainer)?.layout == .list }
+            .filter { ($0.parent as? TilingContainer)?.layout == .tiles }
             ?? []
 
         let orientation: Orientation

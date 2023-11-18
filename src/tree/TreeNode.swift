@@ -26,7 +26,7 @@ class TreeNode: Equatable {
             if parent.orientation != targetOrientation {
                 error("You can't change \(targetOrientation) weight of nodes located in \(parent.orientation) container")
             }
-            if parent.layout != .list {
+            if parent.layout != .tiles {
                 error("Weight can be changed only for nodes whose parent is list")
             }
             adaptiveWeight = newValue

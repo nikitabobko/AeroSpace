@@ -12,9 +12,9 @@ final class MoveInCommandTest: XCTestCase {
         }
 
         await JoinWithCommand(direction: .right).runWithoutLayout()
-        XCTAssertEqual(root.layoutDescription, .h_list([
+        XCTAssertEqual(root.layoutDescription, .h_tiles([
             .window(0),
-            .v_list([
+            .v_tiles([
                 .window(1),
                 .window(2)
             ])

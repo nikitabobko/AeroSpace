@@ -63,14 +63,14 @@ i3](https://i3wm.org/docs/userguide.html#tree).
 - Each container can contain arbitrary number of children nodes
 - Windows are the only possible leaf nodes. Windows contain zero children nodes
 - Every container has two properties:
-  1. [Layout](#layouts) (Possible values: `list`, `accordion`)
+  1. [Layout](#layouts) (Possible values: `tiles`, `accordion`)
   2. Orientation (Possible values: `horizontal`, `vertical`)
 
 When we say "layout of the window", we refer to the layout of the window's parent container.
 
 It's easier to understand tree tiling model by looking at examples
 
-![](./.assets/h_list.png)
+![](./.assets/h_tiles.png)
 ![](./.assets/tree.png)
 
 You can nest containers as deeply as you want to.
@@ -86,12 +86,12 @@ The tree structure can be changed with three commands:
 ### Layouts
 
 In total, AeroSpace provides 4 possible layouts:
-- horizontal list (in i3, it's called "horizontal split")
-- vertical list (in i3, it's called "vertical split")
-- horizontal accordion (analog of i3's "tabbed layout")
-- vertical accordion (analog of i3's "stacked layout")
+- `h_tiles` horizontal tiles (in i3, it's called "horizontal split") (deprecated name: `h_list`)
+- `v_tiles` vertical tiles (in i3, it's called "vertical split") (deprecated name: `v_list`)
+- `h_accordion` horizontal accordion (analog of i3's "tabbed layout")
+- `v_accordion` vertical accordion (analog of i3's "stacked layout")
 
-From the previous section, you're already familiar with the List layout.
+From the previous section, you're already familiar with the `tiles` layout.
 
 Accordion is a layout where windows are placed on top of each other.
 - The horizontal accordion shows left and right paddings to visually indicate the presence of other windows in those directions.
@@ -99,13 +99,13 @@ Accordion is a layout where windows are placed on top of each other.
 
 Horizontal accordion looks like this
 
-<img src="./.assets/h_accordion.png" width="60%" height="60%">
+<img src="./.assets/h_accordion.png" width="70%" height="70%">
 
 Vertical accordion looks like this
 
-<img src="./.assets/v_accordion.png" width="60%" height="60%">
+<img src="./.assets/v_accordion.png" width="70%" height="70%">
 
-Just like in a list layout, you can use the [focus](./commands.md#focus) command to navigate an accordion layout.
+Just like in a `tiles` layout, you can use the [focus](./commands.md#focus) command to navigate an accordion layout.
 
 You can navigate the windows in an `h_accordion` by using the `focus (left|right)` command, while in a `v_accordion`, you can
 navigate the windows using the `focus (up|down)` command.
@@ -124,14 +124,14 @@ By default, AeroSpace does two types of tree normalizations:
 
 According to the first normalization, such layout isn't possible:
 ```
-h_list (root node)
-└── v_list
+h_tiles (root node)
+└── v_tiles
     └── window 1
 ```
 
 it will be immediately transformed into
 ```
-v_list (new root node)
+v_tiles (new root node)
 └── window 1
 ```
 
@@ -139,18 +139,18 @@ v_list (new root node)
 
 According to the second normalization, such layout isn't possible:
 ```
-h_list
+h_tiles
 ├── window 1
-└── h_list
+└── h_tiles
     ├── window 2
     └── window 3
 ```
 
 it will be immediately transformed into
 ```
-h_list
+h_tiles
 ├── window 1
-└── v_list
+└── v_tiles
     ├── window 2
     └── window 3
 ```

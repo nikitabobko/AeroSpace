@@ -184,7 +184,7 @@ private func parseStartupRootContainerLayout(_ raw: TOMLValueConvertible, _ back
 
 private func parseLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Layout> {
     parseString(raw, backtrace)
-        .flatMap { Layout(rawValue: $0).orFailure(.semantic(backtrace, "Can't parse layout '\($0)'")) }
+        .flatMap { $0.parseLayout().orFailure(.semantic(backtrace, "Can't parse layout '\($0)'")) }
 }
 
 private func parseDefaultContainerOrientation(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<DefaultContainerOrientation> {

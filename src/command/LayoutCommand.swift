@@ -2,9 +2,9 @@ struct LayoutCommand: Command {
     let toggleBetween: [LayoutDescription]
 
     enum LayoutDescription: String {
-        case accordion, list
+        case accordion, tiles
         case horizontal, vertical
-        case h_accordion, v_accordion, h_list, v_list
+        case h_accordion, v_accordion, h_tiles, v_tiles
         case tiling, floating
     }
 
@@ -28,14 +28,14 @@ struct LayoutCommand: Command {
             changeTilingLayout(targetLayout: .accordion, targetOrientation: .h, window: window)
         case .v_accordion:
             changeTilingLayout(targetLayout: .accordion, targetOrientation: .v, window: window)
-        case .h_list:
-            changeTilingLayout(targetLayout: .list, targetOrientation: .h, window: window)
-        case .v_list:
-            changeTilingLayout(targetLayout: .list, targetOrientation: .v, window: window)
+        case .h_tiles:
+            changeTilingLayout(targetLayout: .tiles, targetOrientation: .h, window: window)
+        case .v_tiles:
+            changeTilingLayout(targetLayout: .tiles, targetOrientation: .v, window: window)
         case .accordion:
             changeTilingLayout(targetLayout: .accordion, targetOrientation: nil, window: window)
-        case .list:
-            changeTilingLayout(targetLayout: .list, targetOrientation: nil, window: window)
+        case .tiles:
+            changeTilingLayout(targetLayout: .tiles, targetOrientation: nil, window: window)
         case .horizontal:
             changeTilingLayout(targetLayout: nil, targetOrientation: .h, window: window)
         case .vertical:
@@ -62,6 +62,21 @@ struct LayoutCommand: Command {
     }
 }
 
+extension String {
+    func parseLayoutDescription() -> LayoutCommand.LayoutDescription? {
+        if let parsed = LayoutCommand.LayoutDescription(rawValue: self) {
+            return parsed
+        } else if self == "list" {
+            return .tiles
+        } else if self == "h_list" {
+            return .h_tiles
+        } else if self == "v_list" {
+            return .v_tiles
+        }
+        return nil
+    }
+}
+
 private func changeTilingLayout(targetLayout: Layout?, targetOrientation: Orientation?, window: Window) {
     switch window.parent.kind {
     case .tilingContainer(let parent):
@@ -79,8 +94,8 @@ private extension Window {
         switch layout {
         case .accordion:
             return (parent as? TilingContainer)?.layout == .accordion
-        case .list:
-            return (parent as? TilingContainer)?.layout == .list
+        case .tiles:
+            return (parent as? TilingContainer)?.layout == .tiles
         case .horizontal:
             return (parent as? TilingContainer)?.orientation == .h
         case .vertical:
@@ -89,10 +104,10 @@ private extension Window {
             return (parent as? TilingContainer)?.lets { $0.layout == .accordion && $0.orientation == .h } == true
         case .v_accordion:
             return (parent as? TilingContainer)?.lets { $0.layout == .accordion && $0.orientation == .v } == true
-        case .h_list:
-            return (parent as? TilingContainer)?.lets { $0.layout == .list && $0.orientation == .h } == true
-        case .v_list:
-            return (parent as? TilingContainer)?.lets { $0.layout == .list && $0.orientation == .v } == true
+        case .h_tiles:
+            return (parent as? TilingContainer)?.lets { $0.layout == .tiles && $0.orientation == .h } == true
+        case .v_tiles:
+            return (parent as? TilingContainer)?.lets { $0.layout == .tiles && $0.orientation == .v } == true
         case .tiling:
             return parent is TilingContainer
         case .floating:
