@@ -92,6 +92,8 @@ private let parsers: [String: any ParserProtocol] = [
     "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, { parseBool($0, $1) }),
     "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, { parseBool($0, $1) }),
 
+    "non-empty-workspaces-root-containers-layout-on-startup": Parser(\.nonEmptyWorkspacesRootContainersLayoutOnStartup, { parseStartupRootContainerLayout($0, $1) }),
+
     "default-root-container-layout": Parser(\.defaultRootContainerLayout, { parseLayout($0, $1) }),
     "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, { parseDefaultContainerOrientation($0, $1) }),
 
@@ -133,6 +135,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         afterStartupCommand: raw.afterStartupCommand ?? defaultConfig.afterStartupCommand,
         indentForNestedContainersWithTheSameOrientation: raw.indentForNestedContainersWithTheSameOrientation ?? defaultConfig.indentForNestedContainersWithTheSameOrientation,
         enableNormalizationFlattenContainers: raw.enableNormalizationFlattenContainers ?? defaultConfig.enableNormalizationFlattenContainers,
+        nonEmptyWorkspacesRootContainersLayoutOnStartup: raw.nonEmptyWorkspacesRootContainersLayoutOnStartup ?? defaultConfig.nonEmptyWorkspacesRootContainersLayoutOnStartup,
         defaultRootContainerLayout: raw.defaultRootContainerLayout ?? defaultConfig.defaultRootContainerLayout,
         defaultRootContainerOrientation: raw.defaultRootContainerOrientation ?? defaultConfig.defaultRootContainerOrientation,
         startAtLogin: raw.startAtLogin ?? defaultConfig.startAtLogin,
@@ -169,6 +172,14 @@ private func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -
 
 private func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<String> {
     raw.string.orFailure { expectedActualTypeError(expected: .string, actual: raw.type, backtrace) }
+}
+
+private func parseStartupRootContainerLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<StartupRootContainerLayout> {
+    parseString(raw, backtrace)
+        .flatMap {
+            StartupRootContainerLayout(rawValue: $0)
+                .orFailure(.semantic(backtrace, "Can't parse. possible values: (smart|tiles|accordion)"))
+        }
 }
 
 private func parseLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Layout> {

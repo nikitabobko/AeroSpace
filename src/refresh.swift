@@ -77,7 +77,7 @@ private func layoutWindows() {
 private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
     if startup {
         putWindowsOnWorkspacesOfTheirMonitors()
-        putWindowsInDecks()
+        putWindowsAtStartup()
     } else {
         for app in apps {
             let _ = app.windows // Calling .windows has side-effects
@@ -85,25 +85,24 @@ private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
     }
 }
 
-private func putWindowsInDecks() {
-    let windowGroups: [Workspace: [Window]] =
-        apps.flatMap(\.windows).filter { !$0.isFloating }.grouped(by: \.workspace)
-    for (workspace, windows) in windowGroups {
-        let root = workspace.rootTilingContainer
-        switch root.layout {
-        case .list:
-            var deckIndex = 0
-            let decks = [
-                TilingContainer(parent: root, adaptiveWeight: 1, root.orientation.opposite, .accordion, index: INDEX_BIND_LAST),
-                TilingContainer(parent: root, adaptiveWeight: 1, root.orientation.opposite, .accordion, index: INDEX_BIND_LAST),
-            ]
-            for window in windows.reversed() {
-                window.unbindFromParent()
-                window.bind(to: decks[deckIndex], adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-                deckIndex = (deckIndex + 1) % decks.count
+private func putWindowsAtStartup() {
+    switch config.nonEmptyWorkspacesRootContainersLayoutOnStartup {
+    case .tiles:
+        for workspace in Workspace.all.filter { !$0.isEffectivelyEmpty } {
+            workspace.rootTilingContainer.layout = .list
+        }
+    case .accordion:
+        for workspace in Workspace.all.filter { !$0.isEffectivelyEmpty } {
+            workspace.rootTilingContainer.layout = .accordion
+        }
+    case .smart:
+        for workspace in Workspace.all.filter { !$0.isEffectivelyEmpty } {
+            let root = workspace.rootTilingContainer
+            if root.children.count <= 3 {
+                root.layout = .list
+            } else {
+                root.layout = .accordion
             }
-        case .accordion:
-            break
         }
     }
 }

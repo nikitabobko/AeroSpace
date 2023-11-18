@@ -26,6 +26,13 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # The 'accordion-padding' specifies the size of the padding. You can set 0 to disable the padding feature
 accordion-padding = 30
 
+# Layout of root containers of non-empty workspaces. The layout is applied only on startup
+# Possible values: smart|tiles|accordion
+# - 'tiles' and 'accordion' are self-describing
+# - 'smart' means some "smart logic". Currently, 3 and less windows will get 'tiles' layout,
+#   4 and more will get 'accordion' layout. 'smart' can change its behavior in future versions
+non-empty-workspaces-root-containers-layout-on-startup = 'smart'
+
 # Possible values: list|accordion
 default-root-container-layout = 'list'
 
