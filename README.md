@@ -24,7 +24,7 @@ Public Beta. Feedback is very much welcome
 - Plain text configuration (dotfiles friendly). See: [default-config.toml](./config-examples/default-config.toml)
 - ~~CLI scriptable~~ [[PLANNED]](https://github.com/nikitabobko/AeroSpace/issues/3)
 - Doesn't require disabling SIP (System Integrity Protection)
-- [Proper multi-display support](./docs/guide.md#multiple-displays) (i3-like paradigm)
+- [Proper multi-monitor support](./docs/guide.md#multiple-monitors) (i3-like paradigm)
 - Status menu icon displays current workspace name
 
 ## Installation

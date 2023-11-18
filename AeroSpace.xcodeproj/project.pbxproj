@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		03D8ABD4597EDB00D79807E1 /* TreeNodeEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F6B8A501483ACBB62560101 /* TreeNodeEx.swift */; };
 		045D4B46ABACA9E8167EF356 /* mouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE5470AF418906B180A593 /* mouse.swift */; };
-		05407EA2B9AC3F9371B56E6B /* MoveWorkspaceToDisplayCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF221FD5C0CB4163E322D6D /* MoveWorkspaceToDisplayCommand.swift */; };
 		059308740527CC10D1A79DDD /* AeroApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996BDAB685567E430DF7D962 /* AeroApp.swift */; };
 		0A90EEEAC020DD3A56736014 /* FocusCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = E761155C73F06E2CF5E292A4 /* FocusCommand.swift */; };
 		0A9DAD847B5340FBE3D9CF88 /* FlattenWorkspaceTreeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C5B6719EF0BC14D7CF868C /* FlattenWorkspaceTreeCommand.swift */; };
@@ -35,6 +34,7 @@
 		4D62EC19C6A1E3BBF54306BA /* Copyable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54B4C778D2594EB23C295741 /* Copyable.swift */; };
 		56E72B24303F5F337B31B776 /* TrayMenuModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5F52E346D024960EAF5938 /* TrayMenuModel.swift */; };
 		5BC4AA58A69956C8B6379E47 /* JoinWithCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27A7AF7E9A049700BDE276B /* JoinWithCommand.swift */; };
+		5D675FA71B1160863359A4D9 /* MoveWorkspaceToMonitorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CC651BEB897CB7A555D230 /* MoveWorkspaceToMonitorCommand.swift */; };
 		5DA2DA21600E8B5BCA3DCFC0 /* LayoutCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B673C67B00DBFCC27FFE7 /* LayoutCommand.swift */; };
 		61CF8A4E50A48ECBFD5522D0 /* versionGenerated.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9DBBA6572D2AC38AF68F804 /* versionGenerated.swift */; };
 		6317AB471F4C4F5D66A25784 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEDBFFCA7A77D96B18FB0732 /* Assets.xcassets */; };
@@ -117,7 +117,6 @@
 		0AEE5470AF418906B180A593 /* mouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mouse.swift; sourceTree = "<group>"; };
 		0D36D0F8EEB30A7BABC42343 /* LazySequenceProtocolEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazySequenceProtocolEx.swift; sourceTree = "<group>"; };
 		0D9301F99737BE4888DBC2A3 /* FocusedWorkspaceSourceOfTruth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusedWorkspaceSourceOfTruth.swift; sourceTree = "<group>"; };
-		0FF221FD5C0CB4163E322D6D /* MoveWorkspaceToDisplayCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveWorkspaceToDisplayCommand.swift; sourceTree = "<group>"; };
 		1408CD8F480BC8974EDE2470 /* gitHashGenerated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gitHashGenerated.swift; sourceTree = "<group>"; };
 		14FABE2521026C8394254D97 /* showMessageToUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = showMessageToUser.swift; sourceTree = "<group>"; };
 		1A2B673C67B00DBFCC27FFE7 /* LayoutCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutCommand.swift; sourceTree = "<group>"; };
@@ -134,6 +133,7 @@
 		458AD0CD907B56A99DA821C4 /* AeroSpace-cli */ = {isa = PBXFileReference; includeInIndex = 0; path = "AeroSpace-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		49B99DD05BF656B8351E12CE /* gitHashGenerated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gitHashGenerated.swift; sourceTree = "<group>"; };
 		4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeCommand.swift; sourceTree = "<group>"; };
+		51CC651BEB897CB7A555D230 /* MoveWorkspaceToMonitorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveWorkspaceToMonitorCommand.swift; sourceTree = "<group>"; };
 		51CE37C1B8D858C81A396F40 /* CollectionEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionEx.swift; sourceTree = "<group>"; };
 		526B113159987FA43EA41120 /* refresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = refresh.swift; sourceTree = "<group>"; };
 		5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AeroSpace-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -398,7 +398,7 @@
 				4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */,
 				25AC44D0E9450867215FCBEC /* MoveNodeToWorkspaceCommand.swift */,
 				67B9FFF81EB0327ABD51A7FE /* MoveThroughCommand.swift */,
-				0FF221FD5C0CB4163E322D6D /* MoveWorkspaceToDisplayCommand.swift */,
+				51CC651BEB897CB7A555D230 /* MoveWorkspaceToMonitorCommand.swift */,
 				CB03A4736BC3F6D19E4E69F3 /* parseCommand.swift */,
 				CF3C9038C846369FDD71D1D2 /* ReloadConfigCommand.swift */,
 				CB371951459F8CB0137788C2 /* ResizeCommand.swift */,
@@ -621,7 +621,7 @@
 				B04363E8C28CEC76F39977F2 /* MonitorDescription.swift in Sources */,
 				3774857EF024E97B7AA5DE78 /* MoveNodeToWorkspaceCommand.swift in Sources */,
 				EDFDE707B4DC5E500B1709B1 /* MoveThroughCommand.swift in Sources */,
-				05407EA2B9AC3F9371B56E6B /* MoveWorkspaceToDisplayCommand.swift in Sources */,
+				5D675FA71B1160863359A4D9 /* MoveWorkspaceToMonitorCommand.swift in Sources */,
 				635733FDDF37E44364372B74 /* MruStack.swift in Sources */,
 				C0A88261ECF505FC5648FC0A /* OptionalEx.swift in Sources */,
 				74ED0272EF2A3BA6387FD413 /* Rect.swift in Sources */,

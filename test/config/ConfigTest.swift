@@ -106,6 +106,12 @@ final class ConfigTest: XCTestCase {
         )
     }
 
+    func testMoveWorkspaceToMonitorCommandParsing() {
+        var devNull: [String] = []
+        XCTAssertTrue(parseCommand("move-workspace-to-monitor next").getOrNil(appendErrorTo: &devNull) is MoveWorkspaceToMonitorCommand)
+        XCTAssertTrue(parseCommand("move-workspace-to-display next").getOrNil(appendErrorTo: &devNull) is MoveWorkspaceToMonitorCommand)
+    }
+
     func testSplitCommandAndFlattenContainersNormalization() {
         let (_, errors) = parseConfig(
             """

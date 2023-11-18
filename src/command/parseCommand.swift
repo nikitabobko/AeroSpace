@@ -55,10 +55,10 @@ func parseCommand(_ raw: String) -> Parsed<Command> {
         return parseSingleArg(args, firstWord)
             .flatMap { CardinalDirection(rawValue: $0).orFailure("Can't parse '\(firstWord)' direction") }
             .map { JoinWithCommand(direction: $0) }
-    } else if firstWord == "move-workspace-to-display" {
+    } else if firstWord == "move-workspace-to-monitor" || firstWord == "move-workspace-to-display" {
         return parseSingleArg(args, firstWord)
-            .flatMap { MoveWorkspaceToDisplayCommand.DisplayTarget(rawValue: $0).orFailure("Can't parse '\(firstWord)' display target") }
-            .map { MoveWorkspaceToDisplayCommand(displayTarget: $0) }
+            .flatMap { MoveWorkspaceToMonitorCommand.MonitorTarget(rawValue: $0).orFailure("Can't parse '\(firstWord)' monitor target") }
+            .map { MoveWorkspaceToMonitorCommand(monitorTarget: $0) }
     } else if firstWord == "resize" {
         return parseResizeCommand(firstWord: firstWord, args: args)
     } else if firstWord == "exec-and-wait" {

@@ -15,7 +15,7 @@ Commands listed in this file can be used in the config and CLI
 - [mode](#mode)
 - [move-node-to-workspace](#move-node-to-workspace)
 - [move-through](#move-through)
-- [move-workspace-to-display](#move-workspace-to-display)
+- [move-workspace-to-monitor](#move-workspace-to-monitor)
 - [reload-config](#reload-config)
 - [resize](#resize)
 - [split](#split)
@@ -273,13 +273,15 @@ v_list
 
 `v_list` is an implicitly created container.
 
-## move-workspace-to-display
+## move-workspace-to-monitor
 
 ```
-move-workspace-to-display (next|prev)
+move-workspace-to-monitor (next|prev)
 ```
 
-Moves currently active workspace to the next or previous display
+Moves currently active workspace to the next or previous monitor
+
+- Deprecated name: `move-workspace-to-display`
 
 ## reload-config
 

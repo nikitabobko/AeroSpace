@@ -34,7 +34,7 @@ private func moveTilingWindow(_ window: Window) {
     let mouseLocation = mouseLocation
     let targetWorkspace = mouseLocation.monitorApproximation.activeWorkspace
     let swapTarget = mouseLocation.findIn(tree: targetWorkspace.workspace.rootTilingContainer)?.takeIf({ $0 != window })
-    if targetWorkspace != window.workspace { // Move window to a different display
+    if targetWorkspace != window.workspace { // Move window to a different monitor
         let index: Int
         if let swapTarget, let parent = swapTarget.parent as? TilingContainer, let targetRect = swapTarget.lastAppliedLayoutTilingRectForMouse {
             index = mouseLocation.getProjection(parent.orientation) >= targetRect.center.getProjection(parent.orientation)

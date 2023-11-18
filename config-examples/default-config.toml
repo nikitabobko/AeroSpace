@@ -30,8 +30,8 @@ accordion-padding = 30
 default-root-container-layout = 'list'
 
 # Possible values: horizontal|vertical|auto
-# 'auto' means: wide display (anything wider than high) gets horizontal orientation,
-#               tall display (anything higher than wide) gets vertical orientation
+# 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
+#               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#assign-workspaces-to-monitors
@@ -144,8 +144,8 @@ alt-shift-z = 'move-node-to-workspace Z'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#move-workspace-to-display
-alt-shift-tab = 'move-workspace-to-display next'
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#move-workspace-to-monitor
+alt-shift-tab = 'move-workspace-to-monitor next'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#mode
 alt-shift-semicolon = ['reload-config', 'mode service']

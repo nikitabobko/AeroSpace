@@ -12,7 +12,7 @@
 - [Emulation of virtual workspaces](#emulation-of-virtual-workspaces)
   - [A note on mission control](#a-note-on-mission-control)
   - [A note on 'Displays have separate Spaces'](#a-note-on-displays-have-separate-spaces)
-- [Multiple displays](#multiple-displays)
+- [Multiple monitors](#multiple-monitors)
   - [Assign workspaces to monitors](#assign-workspaces-to-monitors)
 
 ## Configuring AeroSpace
@@ -221,32 +221,32 @@ Overview of 'Displays have separate Spaces'
 
 |                                                            | 'Displays have separate Spaces' is enabled | 'Displays have separate Spaces' is disabled |
 |------------------------------------------------------------|--------------------------------------------|---------------------------------------------|
-| When the first display is in fullscreen                    | 😊 Second monitor operates independently   | 😔 Second monitor is unusable black screen  |
-| Is it possible for window to span across several displays? | 😔 No                                      | 😊 Yes                                      |
+| When the first monitor is in fullscreen                    | 😊 Second monitor operates independently   | 😔 Second monitor is unusable black screen  |
+| Is it possible for window to span across several monitors? | 😔 No                                      | 😊 Yes                                      |
 | macOS status bar ...                                       | ... is displayed on both monitors          | ... is displayed only on main monitor       |
 
-## Multiple displays
+## Multiple monitors
 
-- The pool of workspaces is shared between displays
-- Each display shows its own workspace. The showed workspaces are called "active" workspaces
-- Different displays can't show the same workspace at the same time
-- Each workspace (even invisible, even empty) has a display assigned to it
-- By default, all workspaces are assigned to the "main" display (You can find the "main" display in `System -> Displays`)
+- The pool of workspaces is shared between monitors
+- Each monitor shows its own workspace. The showed workspaces are called "active" workspaces
+- Different monitors can't show the same workspace at the same time
+- Each workspace (even invisible, even empty) has a monitor assigned to it
+- By default, all workspaces are assigned to the "main" monitor (You can find the "main" monitor in `System -> Displays`)
 
 When you switch to a workspace:
-1. AeroSpace takes the assigned display of the workspace and makes the workspace active on the display
+1. AeroSpace takes the assigned monitor of the workspace and makes the workspace active on the monitor
 2. AeroSpace focuses the workspace
 
-You can move workspace to a different display with [`move-workspace-to-display`](./commands.md#move-workspace-to-display) command. 
+You can move workspace to a different monitor with [`move-workspace-to-monitor`](./commands.md#move-workspace-to-monitor) command. 
 
 The idea of making pool of workspaces shared is based on **the observation** that most users have a limited set of workspaces on
-their secondary displays. Secondary displays are frequently dedicated to specific tasks (browser, shell), or for monitoring
-various activities such as logs and dashboards. Thus, using one workspace per each secondary displays and "the rest" on the main
-display often makes sense.
+their secondary monitors. Secondary monitors are frequently dedicated to specific tasks (browser, shell), or for monitoring
+various activities such as logs and dashboards. Thus, using one workspace per each secondary monitors and "the rest" on the main
+monitor often makes sense.
 
 > [!NOTE]
 > The only difference between AeroSpace and i3 is switching to empty workspaces. When you switch to an empty workspace, AeroSpace
-> puts the workspace on an assigned display; i3 puts the workspace on currently active display.
+> puts the workspace on an assigned monitor; i3 puts the workspace on currently active monitor.
 > - I find that AeroSpace model works better with **the observation** listed above.
 > - AeroSpace model is more consistent (it works the same for empty workspaces and non-empty workspaces)
 
@@ -265,13 +265,13 @@ workspace_name_6 = ['secondary', 'dell']        # You can specify multiple patte
 ```
 
 Supported monitor patterns:
-- `'main'` - "Main" display (you can see find your "main" monitor in `System Settings -> Displays -> Use as`)
+- `'main'` - "Main" monitor (you can see find your "main" monitor in `System Settings -> Displays -> Use as`)
 - `'secondary'` - Non-main monitor in case when there are only two monitors
 - `number` (e.g. `1`, `2`) - Sequence number of the monitor from left to right. 1-based indexing
 - `regex_pattern` (e.g. `dell`, `built-in`) - Case insensitive regex substring pattern
 
 You can specify multiple patterns as an array. The first matching pattern will be used
 
-`move-workspace-to-display` command has no effect for workspaces that have monitor assignment
+[`move-workspace-to-monitor`](./commands.md#move-workspace-to-monitor) command has no effect for workspaces that have monitor assignment
 
 - Available since: 0.5.0-Beta
