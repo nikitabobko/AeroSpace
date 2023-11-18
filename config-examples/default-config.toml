@@ -155,7 +155,7 @@ alt-tab = 'workspace-back-and-forth'
 alt-shift-tab = 'move-workspace-to-monitor next'
 
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#mode
-alt-shift-semicolon = ['reload-config', 'mode service']
+alt-shift-semicolon = 'mode service'
 alt-shift-slash = 'mode join'
 
 # It's a declaration of binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
@@ -173,5 +173,5 @@ alt-shift-h = ['join-with left', 'mode main']
 alt-shift-j = ['join-with down', 'mode main']
 alt-shift-k = ['join-with up', 'mode main']
 alt-shift-l = ['join-with right', 'mode main']
-esc = 'mode main'
+esc = ['reload-config', 'mode main']
 enter = 'mode main'
