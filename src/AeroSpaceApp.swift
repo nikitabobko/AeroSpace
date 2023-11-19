@@ -9,6 +9,7 @@ struct AeroSpaceApp: App {
     init() {
         if !isUnitTest { // Prevent SwiftUI app loading during unit testing
             signal(SIGINT, { signal in
+                check(Thread.current.isMainThread)
                 beforeTermination()
                 exit(signal)
             } as sig_t)

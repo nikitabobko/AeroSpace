@@ -1,9 +1,9 @@
 struct MoveThroughCommand: Command {
     let direction: CardinalDirection
 
-    func runWithoutLayout() {
+    func runWithoutLayout(state: inout FocusState) {
         check(Thread.current.isMainThread)
-        guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
+        guard let currentWindow = state.window else { return }
         switch currentWindow.parent.kind {
         case .tilingContainer(let parent):
             let indexOfCurrent = currentWindow.ownIndex

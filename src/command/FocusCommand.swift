@@ -1,11 +1,11 @@
 struct FocusCommand: Command {
     let direction: CardinalDirection
 
-    func runWithoutLayout() {
+    func runWithoutLayout(state: inout FocusState) {
         check(Thread.current.isMainThread)
-        guard let currentWindow = focusedWindowOrEffectivelyFocused else { return }
+        guard let currentWindow = state.window else { return }
         let workspace = currentWindow.workspace
-        // todo floating windows break mru
+        // todo bug: floating windows break mru
         let floatingWindows = makeFloatingWindowsSeenAsTiling(workspace: workspace)
         defer {
             restoreFloatingWindows(floatingWindows: floatingWindows, workspace: workspace)
@@ -15,7 +15,9 @@ struct FocusCommand: Command {
         let windowToFocus = parent.children[ownIndex + direction.focusOffset]
             .findFocusTargetRecursive(snappedTo: direction.opposite)
 
-        windowToFocus?.focus()
+        if let windowToFocus {
+            state = .windowIsFocused(windowToFocus)
+        }
     }
 }
 

@@ -5,9 +5,9 @@ struct MoveWorkspaceToMonitorCommand: Command {
         case next, prev
     }
 
-    func runWithoutLayout() {
+    func runWithoutLayout(state: inout FocusState) {
         check(Thread.current.isMainThread)
-        let focusedWorkspace = Workspace.focused
+        let focusedWorkspace = state.workspace
         let prevMonitor = focusedWorkspace.monitor
         let sortedMonitors = sortedMonitors
         guard let index = sortedMonitors.firstIndex(where: { $0.rect.topLeftCorner == prevMonitor.rect.topLeftCorner }) else { return }

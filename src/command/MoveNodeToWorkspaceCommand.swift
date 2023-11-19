@@ -1,8 +1,8 @@
 struct MoveNodeToWorkspaceCommand: Command {
     let targetWorkspaceName: String
 
-    func runWithoutLayout() async {
-        guard let focused = focusedWindowOrEffectivelyFocused else { return }
+    func runWithoutLayout(state: inout FocusState) async {
+        guard let focused = state.window else { return }
         let preserveWorkspace = focused.workspace
         let targetWorkspace = Workspace.get(byName: targetWorkspaceName)
         if preserveWorkspace == targetWorkspace {
@@ -13,6 +13,6 @@ struct MoveNodeToWorkspaceCommand: Command {
         // todo different monitor for floating windows
         focused.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
 
-        WorkspaceCommand(workspaceName: preserveWorkspace.name).runWithoutLayout()
+        WorkspaceCommand(workspaceName: preserveWorkspace.name).runWithoutLayout(state: &state)
     }
 }

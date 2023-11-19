@@ -1,5 +1,5 @@
 struct ReloadConfigCommand: Command {
-    func runWithoutLayout() {
+    func runWithoutLayout(state: inout FocusState) {
         check(Thread.current.isMainThread)
         reloadConfig()
     }

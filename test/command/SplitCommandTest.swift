@@ -10,7 +10,7 @@ final class SplitCommandTest: XCTestCase {
             TestWindow(id: 2, parent: $0)
         }
 
-        await SplitCommand(splitArg: .vertical).runWithoutLayout()
+        await SplitCommand(splitArg: .vertical).testRun()
         XCTAssertEqual(root.layoutDescription, .h_tiles([
             .v_tiles([
                 .window(1)
@@ -25,7 +25,7 @@ final class SplitCommandTest: XCTestCase {
             TestWindow(id: 2, parent: $0)
         }
 
-        await SplitCommand(splitArg: .opposite).runWithoutLayout()
+        await SplitCommand(splitArg: .opposite).testRun()
         XCTAssertEqual(root.layoutDescription, .h_tiles([
             .v_tiles([
                 .window(1)
@@ -42,7 +42,7 @@ final class SplitCommandTest: XCTestCase {
             TestWindow(id: 2, parent: $0)
         }
 
-        await SplitCommand(splitArg: .horizontal).runWithoutLayout()
+        await SplitCommand(splitArg: .horizontal).testRun()
         XCTAssertEqual(root.layoutDescription, .h_tiles([
             .h_tiles([
                 .window(1)
@@ -59,7 +59,7 @@ final class SplitCommandTest: XCTestCase {
             TestWindow(id: 2, parent: $0)
         }
 
-        await SplitCommand(splitArg: .opposite).runWithoutLayout()
+        await SplitCommand(splitArg: .opposite).testRun()
         XCTAssertEqual(root.layoutDescription, .h_tiles([
             .h_tiles([
                 .window(1)

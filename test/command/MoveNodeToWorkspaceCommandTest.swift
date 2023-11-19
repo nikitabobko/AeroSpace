@@ -1,7 +1,7 @@
 import XCTest
 @testable import AeroSpace_Debug
 
-final class MoveContainerToWorkspaceCommandTest: XCTestCase {
+final class MoveNodeToWorkspaceCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
     func testSimple() async {
@@ -11,7 +11,7 @@ final class MoveContainerToWorkspaceCommandTest: XCTestCase {
         }
 
         XCTAssertTrue(focusedWorkspaceSourceOfTruth == .macOs)
-        await MoveNodeToWorkspaceCommand(targetWorkspaceName: "b").runWithoutLayout()
+        await MoveNodeToWorkspaceCommand(targetWorkspaceName: "b").testRun()
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         XCTAssertTrue(focusedWorkspaceSourceOfTruth == .ownModel)
         XCTAssertEqual((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
@@ -23,7 +23,7 @@ final class MoveContainerToWorkspaceCommandTest: XCTestCase {
         }
 
         XCTAssertTrue(focusedWorkspaceSourceOfTruth == .macOs)
-        await MoveNodeToWorkspaceCommand(targetWorkspaceName: "b").runWithoutLayout()
+        await MoveNodeToWorkspaceCommand(targetWorkspaceName: "b").testRun()
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         XCTAssertTrue(focusedWorkspaceSourceOfTruth == .ownModel)
         XCTAssertEqual(Workspace.get(byName: "b").children.filterIsInstance(of: Window.self).singleOrNil()?.windowId, 1)

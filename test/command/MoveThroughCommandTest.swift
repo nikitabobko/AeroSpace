@@ -10,7 +10,7 @@ final class MoveThroughCommandTest: XCTestCase {
             TestWindow(id: 2, parent: $0)
         }
 
-        await MoveThroughCommand(direction: .right).runWithoutLayout()
+        await MoveThroughCommand(direction: .right).testRun()
         XCTAssertEqual(root.layoutDescription, .h_tiles([.window(2), .window(1)]))
     }
 
@@ -25,7 +25,7 @@ final class MoveThroughCommandTest: XCTestCase {
             }
         }
 
-        await MoveThroughCommand(direction: .right).runWithoutLayout()
+        await MoveThroughCommand(direction: .right).testRun()
         XCTAssertEqual(
             root.layoutDescription,
             .h_tiles([
@@ -55,7 +55,7 @@ final class MoveThroughCommandTest: XCTestCase {
         }
         window3.markAsMostRecentChild()
 
-        await MoveThroughCommand(direction: .right).runWithoutLayout()
+        await MoveThroughCommand(direction: .right).testRun()
         XCTAssertEqual(
             root.layoutDescription,
             .h_tiles([
@@ -78,7 +78,7 @@ final class MoveThroughCommandTest: XCTestCase {
         let window2 = TestWindow(id: 2, parent: root, adaptiveWeight: 2)
         window2.focus()
 
-        await MoveThroughCommand(direction: .left).runWithoutLayout() // todo replace all 'runWithoutRefresh' with 'run' in tests
+        await MoveThroughCommand(direction: .left).testRun() // todo replace all 'runWithoutRefresh' with 'run' in tests
         XCTAssertEqual(window2.hWeight, 2)
         XCTAssertEqual(window1.hWeight, 1)
     }
@@ -95,7 +95,7 @@ final class MoveThroughCommandTest: XCTestCase {
         }
         window1.focus()
 
-        await MoveThroughCommand(direction: .right).runWithoutLayout()
+        await MoveThroughCommand(direction: .right).testRun()
         XCTAssertEqual(window2.hWeight, 1)
         XCTAssertEqual(window2.vWeight, 1)
         XCTAssertEqual(window1.vWeight, 1)
@@ -110,7 +110,7 @@ final class MoveThroughCommandTest: XCTestCase {
             TestWindow(id: 3, parent: $0)
         }
 
-        await MoveThroughCommand(direction: .up).runWithoutLayout()
+        await MoveThroughCommand(direction: .up).testRun()
         XCTAssertEqual(
             workspace.layoutDescription,
             .workspace([
@@ -132,7 +132,7 @@ final class MoveThroughCommandTest: XCTestCase {
             }
         }
 
-        await MoveThroughCommand(direction: .left).runWithoutLayout()
+        await MoveThroughCommand(direction: .left).testRun()
         XCTAssertEqual(
             root.layoutDescription,
             .h_tiles([
