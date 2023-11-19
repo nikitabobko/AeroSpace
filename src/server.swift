@@ -12,6 +12,21 @@ func startServer() {
     }
 }
 
+func sendCommandToReleaseServer(command: String) {
+    check(isDebug)
+    let socket = try! Socket.create(family: .unix, type: .stream, proto: .unix)
+    defer {
+        socket.close()
+    }
+    let socketFile = "/tmp/bobko.aerospace.sock"
+    if (try? socket.connect(to: socketFile)) == nil { // Can't connect, AeroSpace.app is not running
+        return
+    }
+
+    _ = try? socket.write(from: command)
+    _ = try? Socket.wait(for: [socket], timeout: 0, waitForever: true)
+}
+
 private func newConnection(_ socket: Socket) async { // todo add exit codes
     defer {
         debug("Close connection")

@@ -53,7 +53,7 @@ public func errorT<T>(
     }
     if !recursionDetectorDuringFailure {
         recursionDetectorDuringFailure = true
-        makeAllWindowsVisibleAndRestoreSize()
+        beforeTermination()
     }
     fatalError(message)
 }
@@ -66,6 +66,13 @@ public func errorT<T>(
     function: String = #function
 ) -> Never {
     errorT(message, file: file, line: line, column: column, function: function)
+}
+
+func beforeTermination() {
+    makeAllWindowsVisibleAndRestoreSize()
+    if isDebug {
+        sendCommandToReleaseServer(command: "enable on")
+    }
 }
 
 public func makeAllWindowsVisibleAndRestoreSize() {
@@ -200,13 +207,13 @@ extension Set {
 }
 
 func debug(_ msg: Any) {
-    if !isRelease {
+    if isDebug {
         print(msg)
     }
 }
 
 #if DEBUG
-let isRelease = false
+let isDebug = true
 #else
-let isRelease = true
+let isDebug = false
 #endif

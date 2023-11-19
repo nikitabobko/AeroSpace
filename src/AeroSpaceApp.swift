@@ -6,8 +6,15 @@ struct AeroSpaceApp: App {
     var hotKeys: [HotKey] = [] // Keep hotkeys in memory
     @StateObject var viewModel = TrayMenuModel.shared
 
-    init() { // todo disable release server on debug server startup
+    init() {
         if !isUnitTest { // Prevent SwiftUI app loading during unit testing
+            signal(SIGINT, { signal in
+                beforeTermination()
+                exit(signal)
+            } as sig_t)
+            if isDebug {
+                sendCommandToReleaseServer(command: "enable off")
+            }
             let startedAtLogin = CommandLine.arguments.getOrNil(atIndex: 1) == "--started-at-login"
             reloadConfig()
             if startedAtLogin && !config.startAtLogin {
@@ -58,7 +65,7 @@ struct AeroSpaceApp: App {
             }
                 .keyboardShortcut("R", modifiers: .command)
             Button("Quit \(Bundle.appName)") {
-                makeAllWindowsVisibleAndRestoreSize()
+                beforeTermination()
                 terminateApp()
             }
                 .keyboardShortcut("Q", modifiers: .command)

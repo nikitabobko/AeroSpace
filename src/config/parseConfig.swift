@@ -3,7 +3,7 @@ import HotKey
 
 func reloadConfig() {
     let configUrl = FileManager.default.homeDirectoryForCurrentUser
-        .appending(path: isRelease ? ".aerospace.toml" : ".aerospace-debug.toml")
+        .appending(path: isDebug ? ".aerospace-debug.toml" : ".aerospace.toml")
     let (parsedConfig, errors) = parseConfig((try? String(contentsOf: configUrl)) ?? "")
 
     if !errors.isEmpty {
