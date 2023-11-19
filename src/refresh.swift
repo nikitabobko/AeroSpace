@@ -75,7 +75,7 @@ private func layoutWindows() {
 }
 
 private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
-    if startup {
+    if startup { // todo move to MacWindow.get
         putWindowsOnWorkspacesOfTheirMonitors()
         putWindowsAtStartup()
     } else {

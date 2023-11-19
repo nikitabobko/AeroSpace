@@ -134,7 +134,11 @@ extension Command {
         } else {
             state = .emptyWorkspaceIsFocused(focusedWorkspaceName)
         }
-        await runWithoutLayout(state: &state)
+        if let exec = self as? ExecAndWaitCommand {
+            await exec.runAsyncWithoutLayout()
+        } else {
+            runWithoutLayout(state: &state)
+        }
         state.window?.focus()
     }
 }

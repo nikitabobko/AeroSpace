@@ -1,7 +1,7 @@
 struct MoveNodeToWorkspaceCommand: Command {
     let targetWorkspaceName: String
 
-    func runWithoutLayout(state: inout FocusState) async {
+    func runWithoutLayout(state: inout FocusState) {
         guard let focused = state.window else { return }
         let preserveWorkspace = focused.workspace
         let targetWorkspace = Workspace.get(byName: targetWorkspaceName)

@@ -1,6 +1,5 @@
 protocol Command: AeroAny { // todo add exit code and messages
-    @MainActor
-    func runWithoutLayout(state: inout FocusState) async
+    func runWithoutLayout(state: inout FocusState)
 }
 
 protocol QueryCommand {
@@ -33,7 +32,33 @@ extension [Command] {
             state = .emptyWorkspaceIsFocused(focusedWorkspaceName)
         }
         for (index, command) in commands.withIndex {
-            await command.runWithoutLayout(state: &state)
+            if let exec = command as? ExecAndWaitCommand {
+                await exec.runAsyncWithoutLayout()
+            } else {
+                command.runWithoutLayout(state: &state)
+            }
+            if index != commands.indices.last {
+                refresh(layout: false)
+            }
+        }
+        state.window?.focus()
+        refresh()
+    }
+
+    func _runSync(_ initState: FocusState? = nil) { // todo deduplicate
+        check(Thread.current.isMainThread)
+        let commands = TrayMenuModel.shared.isEnabled ? self : (singleOrNil() as? EnableCommand).asList()
+        refresh(layout: false)
+        var state: FocusState
+        if let initState {
+            state = initState
+        } else if let window = focusedWindowOrEffectivelyFocused {
+            state = .windowIsFocused(window)
+        } else {
+            state = .emptyWorkspaceIsFocused(focusedWorkspaceName)
+        }
+        for (index, command) in commands.withIndex {
+            command.runWithoutLayout(state: &state)
             if index != commands.indices.last {
                 refresh(layout: false)
             }
