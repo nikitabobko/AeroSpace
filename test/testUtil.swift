@@ -20,6 +20,7 @@ func setUpWorkspacesForTests() {
 
         // Don't create any workspaces for tests
         modes: [mainModeId: Mode(name: nil, bindings: [])],
+        onWindowDetected: [],
         preservedWorkspaceNames: []
     )
     for workspace in Workspace.all {

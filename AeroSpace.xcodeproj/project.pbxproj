@@ -15,6 +15,7 @@
 		1311398A83B998908773C54D /* FocusCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0EAADE8D2FB5D05FA5456B0 /* FocusCommandTest.swift */; };
 		1C46EBB55D401C0D1AFD50F0 /* CollectionEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CE37C1B8D858C81A396F40 /* CollectionEx.swift */; };
 		1FD8762CC7C132D01D4B3090 /* cliUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB6F0170422A7606D89BCF0 /* cliUtil.swift */; };
+		21D0512B48E0E3C28F8CA42A /* parseOnWindowDetected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9DFF8980BB3F90A3793BE9 /* parseOnWindowDetected.swift */; };
 		22175400298B985658E774EE /* ResizeCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD4E9C6C0C08F1B0622C57 /* ResizeCommandTest.swift */; };
 		238EF26CAAADD1FE11312D7C /* default-config.toml in Resources */ = {isa = PBXBuildFile; fileRef = 8FE45A887100EB70912B07F0 /* default-config.toml */; };
 		2821C1C7AAEF4C290633EA72 /* FullscreenCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECC990B6C2D66D343216A12 /* FullscreenCommand.swift */; };
@@ -115,6 +116,7 @@
 		07A342893BEB5525BA1F8B74 /* ResultEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultEx.swift; sourceTree = "<group>"; };
 		083785CBAE36EC57F5F51BC8 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		09685297933511208058F7CF /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		0A9DFF8980BB3F90A3793BE9 /* parseOnWindowDetected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parseOnWindowDetected.swift; sourceTree = "<group>"; };
 		0AEE5470AF418906B180A593 /* mouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mouse.swift; sourceTree = "<group>"; };
 		0D36D0F8EEB30A7BABC42343 /* LazySequenceProtocolEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazySequenceProtocolEx.swift; sourceTree = "<group>"; };
 		0D9301F99737BE4888DBC2A3 /* FocusedWorkspaceSourceOfTruth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusedWorkspaceSourceOfTruth.swift; sourceTree = "<group>"; };
@@ -308,6 +310,7 @@
 				9752080BBA547C2A0EF076F0 /* Config.swift */,
 				1C0D40CBD65704BA9595C2FA /* keysMap.swift */,
 				67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */,
+				0A9DFF8980BB3F90A3793BE9 /* parseOnWindowDetected.swift */,
 				9164C9401F7DDCACE9278DA4 /* startAtLogin.swift */,
 			);
 			path = config;
@@ -656,6 +659,7 @@
 				B19980B36D066FD4947D2F92 /* normalizeContainers.swift in Sources */,
 				A5BFF75CF8021A585BC1F9D5 /* parseCommand.swift in Sources */,
 				A0765C31043BCFB0420BF1C9 /* parseConfig.swift in Sources */,
+				21D0512B48E0E3C28F8CA42A /* parseOnWindowDetected.swift in Sources */,
 				B3702BB393A9B03CCAE4C60E /* refresh.swift in Sources */,
 				8086A22EDCDC4C906C337D0B /* resizeWithMouse.swift in Sources */,
 				43E3628E37D2439B820FFC82 /* server.swift in Sources */,
@@ -750,7 +754,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_NAME = "aerospace-debug";
 				SDKROOT = macosx;
-				SWIFT_VERSION = 5.8;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Debug;
 		};
@@ -770,7 +774,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace.cli;
 				PRODUCT_NAME = aerospace;
 				SDKROOT = macosx;
-				SWIFT_VERSION = 5.8;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Release;
 		};
@@ -794,7 +798,7 @@
 				PRODUCT_NAME = "AeroSpace-Debug";
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "src/Bridged-Header.h";
-				SWIFT_VERSION = 5.8;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Debug;
 		};
@@ -865,6 +869,7 @@
 					"@loader_path/../Frameworks",
 				);
 				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug";
 			};
 			name = Release;
@@ -881,6 +886,7 @@
 					"@loader_path/../Frameworks",
 				);
 				SDKROOT = macosx;
+				SWIFT_VERSION = 5.9;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug";
 			};
 			name = Debug;
@@ -908,7 +914,7 @@
 				PRODUCT_NAME = AeroSpace;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "src/Bridged-Header.h";
-				SWIFT_VERSION = 5.8;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Release;
 		};

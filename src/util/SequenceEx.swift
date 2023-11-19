@@ -26,6 +26,16 @@ extension Sequence {
         return .success(result)
     }
 
+    func mapToResult<T, E>(appendErrorsTo errors: inout [E], _ transform: (Self.Element) -> Result<T, E>) -> [T] {
+        var result: [T] = []
+        for element in self {
+            if let good = transform(element).getOrNil(appendErrorTo: &errors) {
+                result.append(good)
+            }
+        }
+        return result
+    }
+
     @inlinable public func minByOrThrow<S: Comparable>(_ selector: (Self.Element) -> S) -> Self.Element {
         minBy(selector) ?? errorT("Empty sequence")
     }

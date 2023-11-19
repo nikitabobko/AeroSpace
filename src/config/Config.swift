@@ -15,8 +15,10 @@ struct RawConfig: Copyable {
     var startAtLogin: Bool?
     var accordionPadding: Int?
     var enableNormalizationOppositeOrientationForNestedContainers: Bool?
+
     var workspaceToMonitorForceAssignment: [String: [MonitorDescription]]?
     var modes: [String: Mode]?
+    var onWindowDetected: [WindowDetectedCallback]?
 }
 struct Config {
     var afterLoginCommand: [Command]
@@ -29,10 +31,27 @@ struct Config {
     var startAtLogin: Bool
     var accordionPadding: Int
     var enableNormalizationOppositeOrientationForNestedContainers: Bool
-    var workspaceToMonitorForceAssignment: [String: [MonitorDescription]]
 
+    var workspaceToMonitorForceAssignment: [String: [MonitorDescription]]
     let modes: [String: Mode]
+    var onWindowDetected: [WindowDetectedCallback]
+
     var preservedWorkspaceNames: [String]
+}
+
+struct RawWindowDetectedCallback: Copyable {
+    var appId: String?
+    var appNameRegexSubstring: Regex<AnyRegexOutput>?
+    var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
+
+    var run: [any Command]?
+}
+struct WindowDetectedCallback {
+    let appId: String?
+    let appNameRegexSubstring: Regex<AnyRegexOutput>?
+    let windowTitleRegexSubstring: Regex<AnyRegexOutput>?
+
+    let run: [any Command]
 }
 
 enum DefaultContainerOrientation: String {

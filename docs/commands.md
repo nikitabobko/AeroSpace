@@ -28,7 +28,9 @@ Commands listed in this file can be used in the config and CLI
 close-all-windows-but-current
 ```
 
-On the focused workspace, closes all windows but current. This command doesn't have any arguments.
+On the focused workspace, closes all windows but current.
+
+- The command doesn't have arguments.
 
 ## enable
 
@@ -84,7 +86,7 @@ Flattens [the tree](./guide.md#tree) of currently focused workspace.
 
 The command is useful when you messed up with your layout, and it's easier to "reset" it and start again.
 
-- This command doesn't have any arguments.
+- The command doesn't have arguments.
 
 ## focus
 
@@ -115,8 +117,8 @@ Toggles the fullscreen mode for the currently focused window.
 Switching to a different window within the same workspace while the current focused window is in fullscreen mode results
 in the fullscreen window exiting fullscreen mode.
 
-- This command doesn't have any arguments.
 - Available since: 0.3.0-Beta
+- The command doesn't have arguments.
 
 ## join-with
 
@@ -291,7 +293,7 @@ reload-config
 
 Reloads currently active config.
 
-- This command doesn't have any arguments.
+- The command doesn't have arguments.
 
 ## resize
 
@@ -345,7 +347,7 @@ workspace-back-and-forth
 
 Switches between currently active workspace and previously active workspace back and forth.
 
-- This command doesn't have any arguments.
+- The command doesn't have arguments.
 
 ## workspace
 

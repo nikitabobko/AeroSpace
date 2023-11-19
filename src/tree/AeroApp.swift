@@ -1,12 +1,14 @@
 class AeroApp: Hashable {
-    let id: Int32
+    let pid: Int32
+    let id: String?
 
-    init(id: Int32) {
+    init(pid: Int32, id: String?) {
+        self.pid = pid
         self.id = id
     }
 
     static func ==(lhs: AeroApp, rhs: AeroApp) -> Bool {
-        if lhs.id == rhs.id {
+        if lhs.pid == rhs.pid {
             check(lhs === rhs)
             return true
         } else {
@@ -16,7 +18,7 @@ class AeroApp: Hashable {
     }
 
     func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
+        hasher.combine(pid)
     }
 
     var name: String? { nil }

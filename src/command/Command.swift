@@ -14,16 +14,20 @@ extension Command {
         check(Thread.current.isMainThread)
         await [self].run()
     }
+
+    var isExec: Bool { self is ExecAndWaitCommand || self is ExecAndForgetCommand }
 }
 
 extension [Command] {
     @MainActor
-    func run() async {
+    func run(_ initState: FocusState? = nil) async {
         check(Thread.current.isMainThread)
         let commands = TrayMenuModel.shared.isEnabled ? self : (singleOrNil() as? EnableCommand).asList()
         refresh(layout: false)
         var state: FocusState
-        if let window = focusedWindowOrEffectivelyFocused {
+        if let initState {
+            state = initState
+        } else if let window = focusedWindowOrEffectivelyFocused {
             state = .windowIsFocused(window)
         } else {
             state = .emptyWorkspaceIsFocused(focusedWorkspaceName)

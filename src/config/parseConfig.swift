@@ -29,10 +29,7 @@ private func showConfigParsingErrorsToUser(_ errors: [TomlParseError], configUrl
 
         \(errors.map(\.description).joined(separator: "\n"))
         """
-    showMessageToUser(
-        filename: "config-parse-error.txt",
-        message: message
-    )
+    showMessageToUser(filename: "config-parse-error.txt", message: message)
 }
 
 enum TomlParseError: Error, CustomStringConvertible {
@@ -53,56 +50,58 @@ enum TomlParseError: Error, CustomStringConvertible {
     }
 }
 
-private typealias ParsedToml<T> = Result<T, TomlParseError>
+typealias ParsedToml<T> = Result<T, TomlParseError>
 
-private extension ParserProtocol {
-    func transformRawConfig(_ raw: RawConfig,
+extension ParserProtocol {
+    func transformRawConfig(_ raw: S,
                             _ value: TOMLValueConvertible,
                             _ backtrace: TomlBacktrace,
-                            _ errors: inout [TomlParseError]) -> RawConfig {
+                            _ errors: inout [TomlParseError]) -> S {
         raw.copy(keyPath, parse(value, backtrace, &errors).getOrNil(appendErrorTo: &errors))
     }
 }
 
-private protocol ParserProtocol<T> {
+protocol ParserProtocol<S> {
     associatedtype T
-    var keyPath: WritableKeyPath<RawConfig, T?> { get }
+    associatedtype S where S : Copyable
+    var keyPath: WritableKeyPath<S, T?> { get }
     var parse: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T> { get }
 }
 
-private struct Parser<T>: ParserProtocol {
-    let keyPath: WritableKeyPath<RawConfig, T?>
+struct Parser<S: Copyable, T>: ParserProtocol {
+    let keyPath: WritableKeyPath<S, T?>
     let parse: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T>
 
-    init(_ keyPath: WritableKeyPath<RawConfig, T?>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T>) {
+    init(_ keyPath: WritableKeyPath<S, T?>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> T) {
         self.keyPath = keyPath
-        self.parse = parse
+        self.parse = { raw, backtrace, errors -> ParsedToml<T> in .success(parse(raw, backtrace, &errors)) }
     }
 
-    init(_ keyPath: WritableKeyPath<RawConfig, T?>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) {
+    init(_ keyPath: WritableKeyPath<S, T?>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) {
         self.keyPath = keyPath
         self.parse = { raw, backtrace, errors -> ParsedToml<T> in parse(raw, backtrace) }
     }
 }
 
-private let parsers: [String: any ParserProtocol] = [
+private let parsers: [String: any ParserProtocol<RawConfig>] = [
     "after-login-command": Parser(\.afterLoginCommand, { parseCommandOrCommands($0).toParsedToml($1) }),
     "after-startup-command": Parser(\.afterStartupCommand, { parseCommandOrCommands($0).toParsedToml($1) }),
 
-    "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, { parseBool($0, $1) }),
-    "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, { parseBool($0, $1) }),
+    "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, parseBool),
+    "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, parseBool),
 
-    "non-empty-workspaces-root-containers-layout-on-startup": Parser(\.nonEmptyWorkspacesRootContainersLayoutOnStartup, { parseStartupRootContainerLayout($0, $1) }),
+    "non-empty-workspaces-root-containers-layout-on-startup": Parser(\.nonEmptyWorkspacesRootContainersLayoutOnStartup, parseStartupRootContainerLayout),
 
-    "default-root-container-layout": Parser(\.defaultRootContainerLayout, { parseLayout($0, $1) }),
-    "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, { parseDefaultContainerOrientation($0, $1) }),
+    "default-root-container-layout": Parser(\.defaultRootContainerLayout, parseLayout),
+    "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, parseDefaultContainerOrientation),
 
-    "indent-for-nested-containers-with-the-same-orientation": Parser(\.indentForNestedContainersWithTheSameOrientation, { parseInt($0, $1) }),
-    "start-at-login": Parser(\.startAtLogin, { parseBool($0, $1) }),
-    "accordion-padding": Parser(\.accordionPadding, { parseInt($0, $1) }),
+    "indent-for-nested-containers-with-the-same-orientation": Parser(\.indentForNestedContainersWithTheSameOrientation, parseInt),
+    "start-at-login": Parser(\.startAtLogin, parseBool),
+    "accordion-padding": Parser(\.accordionPadding, parseInt),
 
-    "mode": Parser(\.modes, { .success(parseModes($0, $1, &$2)) }),
-    "workspace-to-monitor-force-assignment": Parser(\.workspaceToMonitorForceAssignment, { .success(parseWorkspaceToMonitorAssignment($0, $1, &$2)) }),
+    "mode": Parser(\.modes, parseModes),
+    "workspace-to-monitor-force-assignment": Parser(\.workspaceToMonitorForceAssignment, parseWorkspaceToMonitorAssignment),
+    "on-window-detected": Parser(\.onWindowDetected, parseOnWindowDetectedArray)
 ]
 
 func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]) {
@@ -141,9 +140,11 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         startAtLogin: raw.startAtLogin ?? defaultConfig.startAtLogin,
         accordionPadding: raw.accordionPadding ?? defaultConfig.accordionPadding,
         enableNormalizationOppositeOrientationForNestedContainers: raw.enableNormalizationOppositeOrientationForNestedContainers ?? defaultConfig.enableNormalizationOppositeOrientationForNestedContainers,
-        workspaceToMonitorForceAssignment: raw.workspaceToMonitorForceAssignment ?? [:],
 
+        workspaceToMonitorForceAssignment: raw.workspaceToMonitorForceAssignment ?? [:],
         modes: modesOrDefault,
+        onWindowDetected: raw.onWindowDetected ?? [],
+
         preservedWorkspaceNames: modesOrDefault.values.lazy
             .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
             .compactMap { (binding: HotkeyBinding) -> String? in (binding.commands.singleOrNil() as? WorkspaceCommand)?.workspaceName ?? nil }
@@ -170,7 +171,7 @@ private func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -
     raw.int.orFailure { expectedActualTypeError(expected: .int, actual: raw.type, backtrace) }
 }
 
-private func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<String> {
+func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<String> {
     raw.string.orFailure { expectedActualTypeError(expected: .string, actual: raw.type, backtrace) }
 }
 
@@ -238,11 +239,13 @@ private func parseMonitorDescription(_ raw: TOMLValueConvertible, _ backtrace: T
         return .success(.secondary)
     }
 
-    let pattern = (try? Regex(rawString))?.lets { MonitorDescription.pattern($0.ignoresCase()) }
-
     return rawString.isEmpty
         ? .failure(.semantic(backtrace, "Empty string is an illegal monitor description"))
-        : pattern.orFailure(.semantic(backtrace, "Can't parse '\(rawString)' regex"))
+        : parseCaseInsensitiveRegex(rawString).toParsedToml(backtrace).map(MonitorDescription.pattern)
+}
+
+func parseCaseInsensitiveRegex(_ raw: String) -> Parsed<Regex<AnyRegexOutput>> {
+    (try? Regex(raw)).orFailure("Can't parse '\(raw)' regex").map { $0.ignoresCase() }
 }
 
 private func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: Mode] {
@@ -279,7 +282,7 @@ private func parseMode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, 
     return result
 }
 
-private extension Parsed where Failure == String {
+extension Parsed where Failure == String {
     func toParsedToml(_ backtrace: TomlBacktrace) -> ParsedToml<Success> {
         mapError { .semantic(backtrace, $0) }
     }
@@ -350,14 +353,14 @@ indirect enum TomlBacktrace: CustomStringConvertible {
     }
 }
 
-private func unknownKeyError(_ backtrace: TomlBacktrace) -> TomlParseError {
+func unknownKeyError(_ backtrace: TomlBacktrace) -> TomlParseError {
     .semantic(backtrace, "Unknown key")
 }
 
-private func expectedActualTypeError(expected: TOMLType, actual: TOMLType, _ backtrace: TomlBacktrace) -> TomlParseError {
+func expectedActualTypeError(expected: TOMLType, actual: TOMLType, _ backtrace: TomlBacktrace) -> TomlParseError {
     .semantic(backtrace, expectedActualTypeError(expected: expected, actual: actual))
 }
 
-private func expectedActualTypeError(expected: [TOMLType], actual: TOMLType, _ backtrace: TomlBacktrace) -> TomlParseError {
+func expectedActualTypeError(expected: [TOMLType], actual: TOMLType, _ backtrace: TomlBacktrace) -> TomlParseError {
     .semantic(backtrace, expectedActualTypeError(expected: expected, actual: actual))
 }

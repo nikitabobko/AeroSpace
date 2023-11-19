@@ -46,7 +46,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             _ = try? socket.write(from: error1 + "\n" + error2)
             continue
         }
-        if action is ExecAndForgetCommand || action is ExecAndWaitCommand {
+        if action?.isExec == true {
             _ = try? socket.write(from: "exec commands are prohibited in CLI")
             continue
         }

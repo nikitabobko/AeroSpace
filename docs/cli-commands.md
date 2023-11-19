@@ -12,8 +12,6 @@ In addition to [regular commands](./commands.md), the CLI provides commands list
 list-apps
 ```
 
-- Available since: 0.6.0-Beta
-
 Prints the list of ordinary applications that appears in the Dock and may have a user interface.
 
 Output format is the table with the following colums:
@@ -31,6 +29,9 @@ Output example:
 
 The command is useful to inspect list of applications to compose filter for [`on-window-detected`](./guide.md#on-window-detected-callback)
 
+- Available since: 0.6.0-Beta
+- The command doesn't have arguments
+
 ## version
 
 ```
@@ -39,8 +40,7 @@ version
 -v
 ```
 
-- Available since: 0.4.0-Beta
-
 Prints the version and commit hash to stdout
 
-This command doesn't have any arguments
+- Available since: 0.4.0-Beta
+- The command doesn't have arguments

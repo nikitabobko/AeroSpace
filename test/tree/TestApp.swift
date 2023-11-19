@@ -1,10 +1,10 @@
 @testable import AeroSpace_Debug
 
 final class TestApp: AeroApp {
-    static var shared = TestApp(id: 0)
+    static var shared = TestApp()
 
-    private override init(id: Int32) {
-        super.init(id: id)
+    private init() {
+        super.init(pid: 0, id: "bobko.AeroSpace.test-app")
     }
 
     var _windows: [Window] = []

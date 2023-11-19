@@ -31,6 +31,7 @@ final class MacWindow: Window, CustomStringConvertible {
                        window.observe(resizedObs, kAXResizedNotification) {
                 debug("New window detected: \(window)")
                 allWindowsMap[id] = window
+                onWindowDetected(window)
                 return window
             } else {
                 window.garbageCollect()
@@ -61,7 +62,7 @@ final class MacWindow: Window, CustomStringConvertible {
     }
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) -> Bool {
-        guard let observer = AXObserver.observe(app.id, notifKey, axWindow, handler, data: self) else { return false }
+        guard let observer = AXObserver.observe(app.pid, notifKey, axWindow, handler, data: self) else { return false }
         axObservers.append(AxObserverWrapper(obs: observer, ax: axWindow, notif: notifKey as CFString))
         return true
     }
@@ -188,4 +189,30 @@ extension UnsafeMutableRawPointer {
 private func destroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
     data?.window?.garbageCollect()
     refresh()
+}
+
+func onWindowDetected(_ window: Window) {
+    Task { @MainActor in
+        check(Thread.current.isMainThread)
+        for callback in config.onWindowDetected {
+            if callback.matches(window) {
+                await callback.run.run(.windowIsFocused(window))
+            }
+        }
+    }
+}
+
+extension WindowDetectedCallback {
+    func matches(_ window: Window) -> Bool {
+        if let windowTitleRegexSubstring, !(window.title ?? "").contains(windowTitleRegexSubstring) {
+            return false
+        }
+        if let appId, appId != window.app.id {
+            return false
+        }
+        if let appNameRegexSubstring, !(window.app.name ?? "").contains(appNameRegexSubstring) {
+            return false
+        }
+        return true
+    }
 }

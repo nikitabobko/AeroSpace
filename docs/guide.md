@@ -12,6 +12,7 @@
 - [Emulation of virtual workspaces](#emulation-of-virtual-workspaces)
   - [A note on mission control](#a-note-on-mission-control)
   - [A note on 'Displays have separate Spaces'](#a-note-on-displays-have-separate-spaces)
+- ['on-window-detected' callback](#on-window-detected-callback)
 - [Multiple monitors](#multiple-monitors)
   - [Assign workspaces to monitors](#assign-workspaces-to-monitors)
 
@@ -225,6 +226,62 @@ Overview of 'Displays have separate Spaces'
 | Is it possible for window to span across several monitors? | 😔 No                                      | 😊 Yes                                      |
 | macOS status bar ...                                       | ... is displayed on both monitors          | ... is displayed only on main monitor       |
 
+## 'on-window-detected' callback
+
+- Available since: 0.6.0-Beta
+
+You can use `on-window-detected` callback to run commands that run every time a new window is detected.
+
+```toml
+[[on-window-detected]]
+app-id = 'com.apple.systempreferences'                # Application ID exact match
+app-name-regex-substring = 'settings'                 # Case insensetive regex substring
+window-title-regex-substring = 'substring'            # Case insensetive regex substring
+run = ['layout floating', 'move-node-to-workspace S'] # The callback itself
+```
+
+`run` commands are run only if the window matches all specified filters. If none of the filters are specified then `run` is run
+for every detected window
+
+Available filters:
+- `app-id`. Application ID exact match of the detected window
+  - See the [list of popular application IDs](./popular-apps-ids.md)
+  - You can use [`aerospace list-apps`](./cli-commands.md#list-apps) CLI command to get IDs of running applications
+- `app-name-regex-substring`. Application name regex substring of the detected window
+- `window-title-regex-substring`. Window title regex substring of the detected window
+
+> [!IMPORTANT]
+> Some windows initialize their title after the window appears. `window-title-regex-substring` may not work as expected 
+> for such windows
+
+Examples of automations:
+
+- Assign apps on particular workspaces
+  ```toml
+  [[on-window-detected]]
+  app-id = 'org.alacritty'
+  run = 'move-node-to-workspace T' # mnemonics 'Terminal'
+  
+  [[on-window-detected]]
+  app-id = 'com.google.Chrome'
+  run = 'move-node-to-workspace W' # mnemonics 'Web browser'
+
+  [[on-window-detected]]
+  app-id = 'com.jetbrains.intellij'
+  run = 'move-node-to-workspace I' # mnemonics 'Ide'
+  ```
+- Make all windows float by default
+  ```toml
+  [[on-window-detected]]
+  run = 'layout floating'
+  ```
+- Float 'System Settings' app
+  ```toml
+  [[on-window-detected]]
+  app-id = 'com.apple.systempreferences'
+  run = 'layout floating'
+  ```
+
 ## Multiple monitors
 
 - The pool of workspaces is shared between monitors
@@ -252,6 +309,8 @@ monitor often makes sense.
 
 ### Assign workspaces to monitors
 
+- Available since: 0.5.0-Beta
+
 You can use `workspace-to-monitor-force-assignment` syntax to assign workspaces to always appear on particular monitors
 
 ```toml
@@ -273,5 +332,3 @@ Supported monitor patterns:
 You can specify multiple patterns as an array. The first matching pattern will be used
 
 [`move-workspace-to-monitor`](./commands.md#move-workspace-to-monitor) command has no effect for workspaces that have monitor assignment
-
-- Available since: 0.5.0-Beta

@@ -18,7 +18,7 @@ indent-for-nested-containers-with-the-same-orientation = 30
 # Start AeroSpace at login
 start-at-login = false
 
-# Normalization. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#normalization
+# Normalizations. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
@@ -50,7 +50,12 @@ default-root-container-orientation = 'auto'
 # workspace_name_5 = '^built-in retina display$'  # Case insensitive regex match
 # workspace_name_6 = ['secondary', 'dell']        # You can specify multiple patterns. The first matching pattern will be used
 
-# It's a declaration of 'main' binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
+# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#on-window-detected-callback
+# [[on-window-detected]]
+# appId = 'com.apple.systempreferences'                  # Application ID match
+# run = ['layout floating', 'move-node-to-workspace S']  # The callback itself
+
+# 'main' binding mode declaration. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 # 'main' binding mode must be always presented
 [mode.main.binding]
 
@@ -158,20 +163,18 @@ alt-shift-tab = 'move-workspace-to-monitor next'
 alt-shift-semicolon = 'mode service'
 alt-shift-slash = 'mode join'
 
-# It's a declaration of binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
+# 'service' binding mode declaration. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 [mode.service.binding]
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
 f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling layout
 backspace = ['close-all-windows-but-current', 'mode main']
 esc = 'mode main'
-enter = 'mode main'
 
-# It's a declaration of binding mode. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
+# 'join' binding mode declaration. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 [mode.join.binding]
 alt-shift-h = ['join-with left', 'mode main']
 alt-shift-j = ['join-with down', 'mode main']
 alt-shift-k = ['join-with up', 'mode main']
 alt-shift-l = ['join-with right', 'mode main']
 esc = ['reload-config', 'mode main']
-enter = 'mode main'

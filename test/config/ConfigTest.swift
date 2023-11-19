@@ -176,6 +176,57 @@ final class ConfigTest: XCTestCase {
         ], errors.descriptions)
         XCTAssertEqual([:], defaultConfig.workspaceToMonitorForceAssignment)
     }
+
+    func testParseOnWindowDetected() {
+        let (parsed, errors) = parseConfig(
+            """
+            [[on-window-detected]]
+            run = ['layout floating']
+
+            [[on-window-detected]]
+            app-id = 'com.apple.systempreferences'
+            run = []
+
+            [[on-window-detected]]
+            """
+        )
+        XCTAssertEqual(parsed.onWindowDetected, [
+            WindowDetectedCallback(
+                appId: nil,
+                appNameRegexSubstring: nil,
+                windowTitleRegexSubstring: nil,
+                run: [LayoutCommand(toggleBetween: [.floating])!]
+            ),
+            WindowDetectedCallback(
+                appId: "com.apple.systempreferences",
+                appNameRegexSubstring: nil,
+                windowTitleRegexSubstring: nil,
+                run: []
+            )
+        ])
+
+        XCTAssertEqual(errors.descriptions, [
+            "on-window-detected[2]: \'run\' is mandatory key"
+        ])
+    }
+
+    func testParseOnWindowDetectedRegex() {
+        let (config, errors) = parseConfig(
+            """
+            [[on-window-detected]]
+            app-name-regex-substring = '^system settings$'
+            run = []
+            """
+        )
+        XCTAssertTrue(config.onWindowDetected.singleOrNil()!.appNameRegexSubstring != nil)
+        XCTAssertEqual(errors.descriptions, [])
+    }
+
+    func testRegex() {
+        var devNull: [String] = []
+        XCTAssertTrue("System Settings".contains(parseCaseInsensitiveRegex("settings").getOrNil(appendErrorTo: &devNull)!))
+        XCTAssertTrue(!"System Settings".contains(parseCaseInsensitiveRegex("^settings^").getOrNil(appendErrorTo: &devNull)!))
+    }
 }
 
 extension MonitorDescription: Equatable {
@@ -195,18 +246,29 @@ extension MonitorDescription: Equatable {
     }
 }
 
+extension WindowDetectedCallback: Equatable {
+    public static func ==(lhs: WindowDetectedCallback, rhs: WindowDetectedCallback) -> Bool {
+        check(lhs.appNameRegexSubstring == nil &&
+            lhs.windowTitleRegexSubstring == nil &&
+            rhs.appNameRegexSubstring == nil &&
+            rhs.windowTitleRegexSubstring == nil)
+        return lhs.appId == rhs.appId &&
+            lhs.run.map(\.describe) == rhs.run.map(\.describe)
+    }
+}
+
 private extension [TomlParseError] {
     var descriptions: [String] { map(\.description) }
 }
 
 extension Mode: Equatable {
-    public static func ==(lhs: AeroSpace_Debug.Mode, rhs: AeroSpace_Debug.Mode) -> Bool {
+    public static func ==(lhs: Mode, rhs: Mode) -> Bool {
         lhs.name == rhs.name && lhs.bindings == rhs.bindings
     }
 }
 
 extension HotkeyBinding: Equatable {
-    public static func ==(lhs: AeroSpace_Debug.HotkeyBinding, rhs: AeroSpace_Debug.HotkeyBinding) -> Bool {
+    public static func ==(lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
         lhs.modifiers == rhs.modifiers && lhs.key == rhs.key && lhs.commands.map(\.describe) == rhs.commands.map(\.describe)
     }
 }
@@ -217,6 +279,8 @@ extension Command {
             return .focusCommand(focus.direction)
         } else if let resize = self as? ResizeCommand {
             return .resizeCommand(dimension: resize.dimension, mode: resize.mode, unit: resize.unit)
+        } else if let layout = self as? LayoutCommand {
+            return .layoutCommand(layout.toggleBetween)
         }
         error("Unsupported command: \(self)")
     }
@@ -225,4 +289,5 @@ extension Command {
 enum CommandDescription: Equatable {
     case focusCommand(CardinalDirection)
     case resizeCommand(dimension: ResizeCommand.Dimension, mode: ResizeCommand.ResizeMode, unit: UInt)
+    case layoutCommand([LayoutCommand.LayoutDescription])
 }

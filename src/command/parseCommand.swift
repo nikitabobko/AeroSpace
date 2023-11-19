@@ -4,8 +4,8 @@ typealias Parsed<T> = Result<T, String>
 extension String: Error {}
 
 func parseQueryCommand(_ raw: String) -> Parsed<QueryCommand> {
-    if raw.contains("'") {
-        return .failure("Single quotation mark is reserved for future use")
+    if raw.contains("'") || raw.contains("\"") {
+        return .failure("Quotation marks are reserved for future use")
     } else if raw == "version" || raw == "--version" || raw == "-v" {
         return .success(VersionCommand())
     } else if raw == "list-apps" {
@@ -35,8 +35,8 @@ func parseCommand(_ raw: String) -> Parsed<Command> {
     let words: [String] = raw.split(separator: " ").map { String($0) }
     let args: [String] = Array(words[1...])
     let firstWord = String(words.first ?? "")
-    if raw.contains("'") {
-        return .failure("Single quotation mark is reserved for future use")
+    if raw.contains("'") || raw.contains("\"") {
+        return .failure("Quotation marks are reserved for future use")
     } else if firstWord == "workspace" {
         return parseSingleArg(args, firstWord).map { WorkspaceCommand(workspaceName: $0) }
     } else if firstWord == "move-node-to-workspace" {

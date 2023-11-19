@@ -7,7 +7,7 @@ final class MacApp: AeroApp {
     private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement) {
         self.nsApp = nsApp
         self.axApp = axApp
-        super.init(id: nsApp.processIdentifier)
+        super.init(pid: nsApp.processIdentifier, id: nsApp.bundleIdentifier)
     }
 
     private static var allAppsMap: [pid_t: MacApp] = [:]
