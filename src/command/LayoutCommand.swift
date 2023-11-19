@@ -52,12 +52,13 @@ struct LayoutCommand: Command {
         case .floating:
             let workspace = window.unbindFromParent().parent.workspace
             window.bindAsFloatingWindow(to: workspace)
-            let offset = CGFloat(30)
-            guard let size = window.getSize() else { break }
-            guard let topLeftCorner = window.getTopLeftCorner() else { break }
-            window.setTopLeftCorner(topLeftCorner.addingXOffset(offset).addingYOffset(offset))
-            window.setSize(window.lastFloatingSize
-                ?? CGSize(width: size.width - 2 * offset, height: size.height - 2 * offset))
+            // todo doesn't work as expected on-window-detected callback
+            //guard let size = window.getSize() else { break }
+            //guard let topLeftCorner = window.getTopLeftCorner() else { break }
+            //let offset = CGFloat(30)
+            //window.setTopLeftCorner(topLeftCorner.addingXOffset(offset).addingYOffset(offset))
+            //window.setSize(window.lastFloatingSize
+            //    ?? CGSize(width: size.width - 2 * offset, height: size.height - 2 * offset))
         }
     }
 }
