@@ -8,6 +8,8 @@ func parseQueryCommand(_ raw: String) -> Parsed<QueryCommand> {
         return .failure("Single quotation mark is reserved for future use")
     } else if raw == "version" || raw == "--version" || raw == "-v" {
         return .success(VersionCommand())
+    } else if raw == "list-apps" {
+        return .success(ListAppsCommand())
     } else if raw == "" {
         return .failure("Can't parse empty string query command")
     } else {

@@ -31,7 +31,7 @@ final class MacApp: AeroApp {
     }
 
     private func garbageCollect() {
-        debug("garbageCollectApp: terminated \(self.title ?? "")")
+        debug("garbageCollectApp: terminated \(self.name ?? "")")
         MacApp.allAppsMap.removeValue(forKey: nsApp.processIdentifier)
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
@@ -48,7 +48,7 @@ final class MacApp: AeroApp {
         }
     }
 
-    override var title: String? { nsApp.localizedName }
+    override var name: String? { nsApp.localizedName }
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) -> Bool {
         guard let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, handler, data: nil) else { return false }

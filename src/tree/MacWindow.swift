@@ -51,7 +51,7 @@ final class MacWindow: Window, CustomStringConvertible {
     }
 
     func garbageCollect() {
-        debug("garbageCollectWindow of \(app.title ?? "NO TITLE")")
+        debug("garbageCollectWindow of \(app.name ?? "NO TITLE")")
         MacWindow.allWindowsMap.removeValue(forKey: windowId)
         unbindFromParent()
         for obs in axObservers {

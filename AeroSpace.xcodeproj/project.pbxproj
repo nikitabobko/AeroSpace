@@ -78,6 +78,7 @@
 		BD6301B2CFC16FDE4223ACB8 /* MacApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7DB782C527ABE0CF31740EB /* MacApp.swift */; };
 		BF16873111EEDE60A8AACD6B /* Workspace.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3F068BCC50ED846DCBFDE57 /* Workspace.swift */; };
 		C0A88261ECF505FC5648FC0A /* OptionalEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9EDFD4A9F45182CA6E0BD7B /* OptionalEx.swift */; };
+		C68DE433A62D8698545AE405 /* ListAppsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A74FD8E971E46F2049E2AA6 /* ListAppsCommand.swift */; };
 		C76E421FB0D0F0EB1C93A06C /* Monitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 739F4FE1DB101DF4E508F3FE /* Monitor.swift */; };
 		C830FD347D7F9C06CF53103F /* Socket in Frameworks */ = {isa = PBXBuildFile; productRef = 998F8F4D88E65F73B0B2894D /* Socket */; };
 		D12277DFEAAAC7AE19D0B629 /* LazySequenceProtocolEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D36D0F8EEB30A7BABC42343 /* LazySequenceProtocolEx.swift */; };
@@ -132,6 +133,7 @@
 		43DD32B1711B8EFCC834B68E /* WorkspaceCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceCommand.swift; sourceTree = "<group>"; };
 		458AD0CD907B56A99DA821C4 /* AeroSpace-cli */ = {isa = PBXFileReference; includeInIndex = 0; path = "AeroSpace-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		49B99DD05BF656B8351E12CE /* gitHashGenerated.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = gitHashGenerated.swift; sourceTree = "<group>"; };
+		4A74FD8E971E46F2049E2AA6 /* ListAppsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListAppsCommand.swift; sourceTree = "<group>"; };
 		4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeCommand.swift; sourceTree = "<group>"; };
 		51CC651BEB897CB7A555D230 /* MoveWorkspaceToMonitorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveWorkspaceToMonitorCommand.swift; sourceTree = "<group>"; };
 		51CE37C1B8D858C81A396F40 /* CollectionEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionEx.swift; sourceTree = "<group>"; };
@@ -366,6 +368,7 @@
 		88F5F202E4D39BE05D077944 /* cli */ = {
 			isa = PBXGroup;
 			children = (
+				4A74FD8E971E46F2049E2AA6 /* ListAppsCommand.swift */,
 				F187A6469837B279A528F0AF /* VersionCommand.swift */,
 			);
 			path = cli;
@@ -614,6 +617,7 @@
 				5BC4AA58A69956C8B6379E47 /* JoinWithCommand.swift in Sources */,
 				5DA2DA21600E8B5BCA3DCFC0 /* LayoutCommand.swift in Sources */,
 				D12277DFEAAAC7AE19D0B629 /* LazySequenceProtocolEx.swift in Sources */,
+				C68DE433A62D8698545AE405 /* ListAppsCommand.swift in Sources */,
 				BD6301B2CFC16FDE4223ACB8 /* MacApp.swift in Sources */,
 				EECC59858691B99A95542D72 /* MacWindow.swift in Sources */,
 				6E4E235FDA41307B19F16182 /* ModeCommand.swift in Sources */,
