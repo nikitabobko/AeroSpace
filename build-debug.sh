@@ -8,6 +8,7 @@ cd "$(dirname "$0")"
 
 ./generate.sh
 xcodebuild -scheme AeroSpace build -configuration Debug # no clean because it may lead to accessibility permission loss
+xcodebuild -scheme AeroSpace-Tests build -configuration Debug # no clean because it may lead to accessibility permission loss
 xcodebuild -scheme AeroSpace-cli build -configuration Debug # no clean because it may lead to accessibility permission loss
 
 rm -rf .debug && mkdir .debug

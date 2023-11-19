@@ -11,9 +11,11 @@ for arg in args {
 
 let usage =
     """
-    USAGE: \(CommandLine.arguments.first ?? "aerospace") COMMAND
+    usage: \(CommandLine.arguments.first ?? "aerospace") [-h|--help] [-v|--version] <command> [<args>...]
 
-    See https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md for the list of all available commands
+    For the list of all available commands see:
+    - https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
+    - https://github.com/nikitabobko/AeroSpace/blob/main/docs/cli-commands.md
     """
 if args.isEmpty || args.first == "--help" || args.first == "-h" {
     print(usage)
