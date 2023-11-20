@@ -1,22 +1,22 @@
 private var idOfFocusedWindowWhenOwnSourceOfTruth: UInt32? = nil
 
-enum FocusedWorkspaceSourceOfTruth {
+enum FocusedWindowSourceOfTruth {
     case macOs, ownModel
 
-    static let defaultSourceOfTruth: FocusedWorkspaceSourceOfTruth = .macOs
+    static let defaultSourceOfTruth: FocusedWindowSourceOfTruth = .macOs
 }
 
-var focusedWorkspaceSourceOfTruth: FocusedWorkspaceSourceOfTruth {
+var focusedWindowSourceOfTruth: FocusedWindowSourceOfTruth {
     set {
         switch newValue {
         case .macOs:
             idOfFocusedWindowWhenOwnSourceOfTruth = nil
         case .ownModel:
-            idOfFocusedWindowWhenOwnSourceOfTruth = focusedWindow?.windowId
+            idOfFocusedWindowWhenOwnSourceOfTruth = nativeFocusedWindow?.windowId
         }
     }
     get {
-        if let focusedWindow, focusedWindow.windowId != idOfFocusedWindowWhenOwnSourceOfTruth {
+        if let nativeFocusedWindow, nativeFocusedWindow.windowId != idOfFocusedWindowWhenOwnSourceOfTruth {
             idOfFocusedWindowWhenOwnSourceOfTruth = nil
             return .macOs
         } else {

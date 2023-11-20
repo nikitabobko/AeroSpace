@@ -5,12 +5,12 @@ struct SplitCommand: Command {
 
     let splitArg: SplitArg
 
-    func runWithoutLayout(state: inout FocusState) {
+    func runWithoutLayout(subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
         if config.enableNormalizationFlattenContainers {
             return // 'split' doesn't work with "flatten container" normalization enabled
         }
-        guard let window = state.window else { return }
+        guard let window = subject.windowOrNil else { return }
         switch window.parent.kind {
         case .workspace:
             return // Nothing to do for floating windows

@@ -44,8 +44,10 @@ private func parseWindowDetectedCallback(_ raw: TOMLValueConvertible, _ backtrac
         return .failure(.semantic(backtrace, "'run' is mandatory key"))
     }
 
-    if run.contains(where: \.isExec) {
-        return .failure(.semantic(backtrace, "'exec' commands are not yet supported in 'on-window-detected'. " +
+    // Prohibited because we can't await in on-window-detected callback
+    if run.contains(where: { $0 is ExecAndWaitCommand }) {
+        return .failure(.semantic(backtrace, "'exec-and-wait' command is prohibited in 'on-window-detected'. " +
+            "You can use 'exec-and-forget' instead. " +
             "Please report your use-cases to https://github.com/nikitabobko/AeroSpace/issues/20"))
     }
 

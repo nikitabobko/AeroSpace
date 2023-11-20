@@ -28,7 +28,7 @@ func setUpWorkspacesForTests() {
             child.unbindFromParent()
         }
     }
-    focusedWorkspaceSourceOfTruth = .defaultSourceOfTruth
+    focusedWindowSourceOfTruth = .defaultSourceOfTruth
     focusedWorkspaceName = mainMonitor.activeWorkspace.name
     Workspace.garbageCollectUnusedWorkspaces()
     check(Workspace.focused.isEffectivelyEmpty)

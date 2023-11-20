@@ -196,7 +196,7 @@ func onWindowDetected(_ window: Window) {
         check(Thread.current.isMainThread)
         for callback in config.onWindowDetected {
             if callback.matches(window) {
-                await callback.run.run(.windowIsFocused(window))
+                await callback.run.run(.window(window))
             }
         }
     }

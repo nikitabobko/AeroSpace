@@ -1,7 +1,7 @@
 struct ModeCommand: Command {
     let idToActivate: String
 
-    func runWithoutLayout(state: inout FocusState) {
+    func runWithoutLayout(subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
         activateMode(idToActivate)
     }

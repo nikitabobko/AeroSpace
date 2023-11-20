@@ -18,7 +18,7 @@ class GlobalObserver {
             let focusedMonitor = mouseLocation.monitorApproximation
             if focusedMonitorOrNilIfDesktop == nil &&
                    focusedMonitor.rect.topLeftCorner != Workspace.focused.monitor.rect.topLeftCorner {
-                focusedWorkspaceSourceOfTruth = .ownModel
+                focusedWindowSourceOfTruth = .ownModel
                 focusedWorkspaceName = focusedMonitor.activeWorkspace.name
                 refresh()
             }

@@ -33,14 +33,14 @@ func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
 }
 
 func updateMostRecentWindow() {
-    focusedWindow?.markAsMostRecentChild()
-    if focusedWindow?.workspace.mostRecentWindowForAccordion == focusedWindow {
-        focusedWindow?.workspace.resetMruForAccordionRecursive()
+    nativeFocusedWindow?.markAsMostRecentChild()
+    if nativeFocusedWindow?.workspace.mostRecentWindowForAccordion == nativeFocusedWindow {
+        nativeFocusedWindow?.workspace.resetMruForAccordionRecursive()
     }
 }
 
 private func refreshFocusedWorkspaceBasedOnFocusedWindow() {
-    if let focusedWindow = focusedWindow, focusedWorkspaceSourceOfTruth == .macOs {
+    if let focusedWindow = nativeFocusedWindow, focusedWindowSourceOfTruth == .macOs {
         let focusedWorkspace: Workspace = focusedWindow.workspace
         check(focusedWorkspace.monitor.setActiveWorkspace(focusedWorkspace))
         focusedWorkspaceName = focusedWorkspace.name
@@ -65,7 +65,7 @@ private func normalizeContainers() {
 }
 
 private func layoutWindows() {
-    let focusedWindow = focusedWindow
+    let focusedWindow = nativeFocusedWindow
     for monitor in monitors {
         let workspace = monitor.activeWorkspace
         if workspace.isEffectivelyEmpty { continue }

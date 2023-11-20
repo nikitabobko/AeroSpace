@@ -1,7 +1,7 @@
 struct FullscreenCommand: Command {
-    func runWithoutLayout(state: inout FocusState) {
+    func runWithoutLayout(subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
-        guard let window = state.window else { return }
+        guard let window = subject.windowOrNil else { return }
         window.isFullscreen = !window.isFullscreen
     }
 }

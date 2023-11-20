@@ -1,7 +1,7 @@
 struct ExecAndWaitCommand: Command {
     let bashCommand: String
 
-    func runWithoutLayout(state: inout FocusState) {
+    func runWithoutLayout(subject: inout CommandSubject) {
         error("Use runAsyncWithoutLayout for exec-and-wait")
     }
 

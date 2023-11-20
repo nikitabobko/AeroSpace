@@ -1,5 +1,5 @@
 protocol Command: AeroAny { // todo add exit code and messages
-    func runWithoutLayout(state: inout FocusState)
+    func runWithoutLayout(subject: inout CommandSubject)
 }
 
 protocol QueryCommand {
@@ -19,75 +19,75 @@ extension Command {
 
 extension [Command] {
     @MainActor
-    func run(_ initState: FocusState? = nil) async {
+    func run(_ initState: CommandSubject? = nil) async {
         check(Thread.current.isMainThread)
         let commands = TrayMenuModel.shared.isEnabled ? self : (singleOrNil() as? EnableCommand).asList()
         refresh(layout: false)
-        var state: FocusState
+        var subject: CommandSubject
         if let initState {
-            state = initState
-        } else if let window = focusedWindowOrEffectivelyFocused, focusedWorkspaceSourceOfTruth == .macOs {
-            state = .windowIsFocused(window)
+            subject = initState
+        } else if let window = focusedWindow {
+            subject = .window(window)
         } else {
-            state = .emptyWorkspaceIsFocused(focusedWorkspaceName)
+            subject = .emptyWorkspace(focusedWorkspaceName)
         }
         for (index, command) in commands.withIndex {
             if let exec = command as? ExecAndWaitCommand {
                 await exec.runAsyncWithoutLayout()
             } else {
-                command.runWithoutLayout(state: &state)
+                command.runWithoutLayout(subject: &subject)
             }
             if index != commands.indices.last {
                 refresh(layout: false)
             }
         }
-        state.window?.focus()
+        subject.windowOrNil?.focus()
         refresh()
     }
 
-    func _runSync(_ initState: FocusState? = nil) { // todo deduplicate
+    func _runSync(_ initState: CommandSubject? = nil) { // todo deduplicate
         check(Thread.current.isMainThread)
         let commands = TrayMenuModel.shared.isEnabled ? self : (singleOrNil() as? EnableCommand).asList()
         refresh(layout: false)
-        var state: FocusState
+        var subject: CommandSubject
         if let initState {
-            state = initState
-        } else if let window = focusedWindowOrEffectivelyFocused, focusedWorkspaceSourceOfTruth == .macOs {
-            state = .windowIsFocused(window)
+            subject = initState
+        } else if let window = focusedWindow {
+            subject = .window(window)
         } else {
-            state = .emptyWorkspaceIsFocused(focusedWorkspaceName)
+            subject = .emptyWorkspace(focusedWorkspaceName)
         }
         for (index, command) in commands.withIndex {
-            command.runWithoutLayout(state: &state)
+            command.runWithoutLayout(subject: &subject)
             if index != commands.indices.last {
                 refresh(layout: false)
             }
         }
-        state.window?.focus()
+        subject.windowOrNil?.focus()
         refresh()
     }
 }
 
-enum FocusState {
-    case emptyWorkspaceIsFocused(String)
-    case windowIsFocused(Window)
+enum CommandSubject {
+    case emptyWorkspace(String)
+    case window(Window)
 }
 
-extension FocusState {
-    var window: Window? {
+extension CommandSubject {
+    var windowOrNil: Window? {
         switch self {
-        case .windowIsFocused(let window):
+        case .window(let window):
             return window
-        case .emptyWorkspaceIsFocused:
+        case .emptyWorkspace:
             return nil
         }
     }
 
     var workspace: Workspace {
         switch self {
-        case .windowIsFocused(let window):
+        case .window(let window):
             return window.workspace
-        case .emptyWorkspaceIsFocused(let workspaceName):
+        case .emptyWorkspace(let workspaceName):
             return Workspace.get(byName: workspaceName)
         }
     }

@@ -1,7 +1,7 @@
 struct FlattenWorkspaceTreeCommand: Command {
-    func runWithoutLayout(state: inout FocusState) {
+    func runWithoutLayout(subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
-        let workspace = state.workspace
+        let workspace = subject.workspace
         let windows = workspace.rootTilingContainer.allLeafWindowsRecursive
         for window in windows {
             window.unbindFromParent()

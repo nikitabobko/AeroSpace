@@ -71,7 +71,7 @@ private let testMonitor = MonitorImpl(name: "Test Monitor", rect: testMonitorRec
 ///
 /// Returns `nil` if the desktop is selected (which is when the app is active but doesn't show any window)
 var focusedMonitorOrNilIfDesktop: Monitor? {
-    isUnitTest ? testMonitor : (focusedWindow?.getCenter()?.monitorApproximation ?? monitors.singleOrNil())
+    isUnitTest ? testMonitor : (nativeFocusedWindow?.getCenter()?.monitorApproximation ?? monitors.singleOrNil())
     //NSWorkspace.activeApp?.macApp?.axFocusedWindow?
     //        .get(Ax.topLeftCornerAttr)?.monitorApproximation
     //        ?? NSScreen.screens.singleOrNil()

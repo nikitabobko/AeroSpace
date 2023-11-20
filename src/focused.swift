@@ -13,10 +13,12 @@ var focusedApp: AeroApp? {
     }
 }
 
-var focusedWindow: Window? { focusedApp?.focusedWindow }
+var nativeFocusedWindow: Window? { focusedApp?.focusedWindow }
 
-var focusedWindowOrEffectivelyFocused: Window? {
-    focusedWindow ?? Workspace.focused.mostRecentWindow ?? Workspace.focused.anyLeafWindowRecursive
+var focusedWindow: Window? {
+    focusedWindowSourceOfTruth == .ownModel
+        ? (Workspace.focused.mostRecentWindow ?? Workspace.focused.anyLeafWindowRecursive)
+        : nativeFocusedWindow
 }
 
 // It's fine to call this inaccurate during startup

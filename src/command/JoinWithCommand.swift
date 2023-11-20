@@ -1,9 +1,9 @@
 struct JoinWithCommand: Command {
     let direction: CardinalDirection
 
-    func runWithoutLayout(state: inout FocusState) {
+    func runWithoutLayout(subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
-        guard let currentWindow = state.window else { return }
+        guard let currentWindow = subject.windowOrNil else { return }
         guard let (parent, ownIndex) = currentWindow.closestParent(hasChildrenInDirection: direction, withLayout: nil) else { return }
         let moveInTarget = parent.children[ownIndex + direction.focusOffset]
         let prevBinding = moveInTarget.unbindFromParent()

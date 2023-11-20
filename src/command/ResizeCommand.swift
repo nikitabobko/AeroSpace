@@ -11,10 +11,10 @@ struct ResizeCommand: Command { // todo cover with tests
     let mode: ResizeMode
     let unit: UInt
 
-    func runWithoutLayout(state: inout FocusState) { // todo support key repeat
+    func runWithoutLayout(subject: inout CommandSubject) { // todo support key repeat
         check(Thread.current.isMainThread)
 
-        let candidates = state.window?.parentsWithSelf
+        let candidates = subject.windowOrNil?.parentsWithSelf
             .filter { ($0.parent as? TilingContainer)?.layout == .tiles }
             ?? []
 
