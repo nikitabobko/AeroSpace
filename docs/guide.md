@@ -315,13 +315,16 @@ You can use `workspace-to-monitor-force-assignment` syntax to assign workspaces 
 
 ```toml
 [workspace-to-monitor-force-assignment]
-workspace_name_1 = 1                            # Sequence number of the monitor from left to right. 1-based indexing
-workspace_name_2 = 'main'                       # Main monitor
-workspace_name_3 = 'secondary'                  # Non-main monitor in case when there are only two monitors
-workspace_name_4 = 'built-in'                   # Case insensitive regex substring
-workspace_name_5 = '^built-in retina display$'  # Case insensitive regex match
-workspace_name_6 = ['secondary', 'dell']        # You can specify multiple patterns. The first matching pattern will be used
+1 = 1                            # Sequence number of the monitor from left to right. 1-based indexing
+2 = 'main'                       # Main monitor
+3 = 'secondary'                  # Non-main monitor in case when there are only two monitors
+4 = 'built-in'                   # Case insensitive regex substring
+5 = '^built-in retina display$'  # Case insensitive regex match
+6 = ['secondary', 'dell']        # You can specify multiple patterns. The first matching pattern will be used
 ```
+
+- Left hand side of the assignment is the workspace name
+- Right hand side of the assignment is the monitor pattern
 
 Supported monitor patterns:
 - `'main'` - "Main" monitor (you can see find your "main" monitor in `System Settings -> Displays -> Use as`)
