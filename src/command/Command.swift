@@ -26,7 +26,7 @@ extension [Command] {
         var state: FocusState
         if let initState {
             state = initState
-        } else if let window = focusedWindowOrEffectivelyFocused {
+        } else if let window = focusedWindowOrEffectivelyFocused, focusedWorkspaceSourceOfTruth == .macOs {
             state = .windowIsFocused(window)
         } else {
             state = .emptyWorkspaceIsFocused(focusedWorkspaceName)
@@ -52,7 +52,7 @@ extension [Command] {
         var state: FocusState
         if let initState {
             state = initState
-        } else if let window = focusedWindowOrEffectivelyFocused {
+        } else if let window = focusedWindowOrEffectivelyFocused, focusedWorkspaceSourceOfTruth == .macOs {
             state = .windowIsFocused(window)
         } else {
             state = .emptyWorkspaceIsFocused(focusedWorkspaceName)

@@ -40,7 +40,7 @@ func updateMostRecentWindow() {
 }
 
 private func refreshFocusedWorkspaceBasedOnFocusedWindow() {
-    if focusedWorkspaceSourceOfTruth == .macOs, let focusedWindow = focusedWindow {
+    if let focusedWindow = focusedWindow, focusedWorkspaceSourceOfTruth == .macOs {
         let focusedWorkspace: Workspace = focusedWindow.workspace
         check(focusedWorkspace.monitor.setActiveWorkspace(focusedWorkspace))
         focusedWorkspaceName = focusedWorkspace.name
