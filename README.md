@@ -34,8 +34,7 @@ Public Beta. Feedback is very much welcome
 
 Install via [Homebrew](https://brew.sh/) to get autoupdates (Preferred)
 ```
-brew install --cask nikitabobko/tap/aerospace
-xattr -d com.apple.quarantine /Applications/AeroSpace.app
+brew install --no-quarantine --cask nikitabobko/tap/aerospace
 ```
 
 ### Brew problem
