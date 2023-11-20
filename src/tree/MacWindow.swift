@@ -192,10 +192,12 @@ private func destroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, d
 }
 
 func onWindowDetected(_ window: Window) {
-    check(Thread.current.isMainThread)
-    for callback in config.onWindowDetected {
-        if callback.matches(window) {
-            callback.run._runSync(.windowIsFocused(window))
+    Task { @MainActor in
+        check(Thread.current.isMainThread)
+        for callback in config.onWindowDetected {
+            if callback.matches(window) {
+                await callback.run.run(.windowIsFocused(window))
+            }
         }
     }
 }
