@@ -77,7 +77,7 @@ func beforeTermination() {
 
 public func makeAllWindowsVisibleAndRestoreSize() {
     for app in apps { // Make all windows fullscreen before Quit
-        for window in app.windows {
+        for window in app.windows(startup: false) {
             // makeAllWindowsVisibleAndRestoreSize may be invoked when something went wrong (e.g. some windows are unbound)
             // that's why it's not allowed to use `.parent` call in here
             let monitor = window.getCenter()?.monitorApproximation ?? mainMonitor

@@ -64,19 +64,6 @@ private extension NSScreen {
 private let testMonitorRect = Rect(topLeftX: 0, topLeftY: 0, width: 1920, height: 1080)
 private let testMonitor = MonitorImpl(name: "Test Monitor", rect: testMonitorRect, visibleRect: testMonitorRect)
 
-/// Motivation:
-/// 1. NSScreen.main is a misleading name.
-/// 2. NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
-///    kAXFocusedWindowChangedNotification callbacks.
-///
-/// Returns `nil` if the desktop is selected (which is when the app is active but doesn't show any window)
-var focusedMonitorOrNilIfDesktop: Monitor? {
-    isUnitTest ? testMonitor : (nativeFocusedWindow?.getCenter()?.monitorApproximation ?? monitors.singleOrNil())
-    //NSWorkspace.activeApp?.macApp?.axFocusedWindow?
-    //        .get(Ax.topLeftCornerAttr)?.monitorApproximation
-    //        ?? NSScreen.screens.singleOrNil()
-}
-
 /// It's inaccurate because NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
 /// kAXFocusedWindowChangedNotification callbacks.
 var focusedMonitorInaccurate: Monitor? {

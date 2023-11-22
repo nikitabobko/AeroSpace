@@ -41,7 +41,6 @@ extension [Command] {
                 refresh(layout: false)
             }
         }
-        subject.windowOrNil?.focus()
         refresh()
     }
 
@@ -63,7 +62,6 @@ extension [Command] {
                 refresh(layout: false)
             }
         }
-        subject.windowOrNil?.focus()
         refresh()
     }
 }

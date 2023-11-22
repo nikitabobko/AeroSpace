@@ -20,7 +20,11 @@ extension Workspace {
         }
     }
 
-    static var focused: Workspace { Workspace.get(byName: focusedWorkspaceName) } // todo drop?
+    static var focused: Workspace { // todo drop?
+        //check(focusSourceOfTruth == .ownModel)
+        return Workspace.get(byName: focusedWorkspaceName)
+            //: (nativeFocusedWindow?.workspace ?? Workspace.get(byName: focusedWorkspaceName))
+    }
 
     var floatingWindows: [Window] {
         workspace.children.filterIsInstance(of: Window.self)

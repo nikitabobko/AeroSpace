@@ -40,6 +40,11 @@ extension Window {
     }
 
     var ownIndex: Int { ownIndexOrNil! }
+
+    func focus() {
+        markAsMostRecentChild()
+        focusedWorkspaceName = workspace.name
+    }
 }
 
 @inlinable func windowsCantHaveChildren() -> Never {

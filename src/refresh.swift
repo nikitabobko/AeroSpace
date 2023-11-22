@@ -14,6 +14,7 @@ func refresh(startup: Bool = false, layout: Bool = true) {
         return
     }
 
+    takeFocusFromMacOs(startup: startup)
     refreshFocusedWorkspaceBasedOnFocusedWindow()
     updateTrayText()
     detectNewWindowsAndAttachThemToWorkspaces(startup: startup)
@@ -23,24 +24,31 @@ func refresh(startup: Bool = false, layout: Bool = true) {
     if layout {
         layoutWorkspaces()
         layoutWindows()
+        syncFocusToMacOs(startup: startup)
     }
-
-    updateMostRecentWindow()
 }
 
 func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
     refresh()
 }
 
-func updateMostRecentWindow() {
-    nativeFocusedWindow?.markAsMostRecentChild()
-    if nativeFocusedWindow?.workspace.mostRecentWindowForAccordion == nativeFocusedWindow {
-        nativeFocusedWindow?.workspace.resetMruForAccordionRecursive()
+func syncFocusToMacOs(startup: Bool) {
+    let native = getNativeFocusedWindow(startup: startup)
+    // native could be some popup (e.g. recent files in IntelliJ IDEA). Don't steal focus in that case
+    if native != nil && native != focusedWindow {
+        focusedWindow?.nativeFocus()
+    }
+}
+
+func takeFocusFromMacOs(startup: Bool) {
+    if let window = getNativeFocusedWindow(startup: startup), getFocusSourceOfTruth(startup: startup) == .macOs {
+        window.focus()
+        setFocusSourceOfTruth(.ownModel, startup: startup)
     }
 }
 
 private func refreshFocusedWorkspaceBasedOnFocusedWindow() {
-    if let focusedWindow = nativeFocusedWindow, focusedWindowSourceOfTruth == .macOs {
+    if let focusedWindow = focusedWindow {
         let focusedWorkspace: Workspace = focusedWindow.workspace
         check(focusedWorkspace.monitor.setActiveWorkspace(focusedWorkspace))
         focusedWorkspaceName = focusedWorkspace.name
@@ -65,7 +73,7 @@ private func normalizeContainers() {
 }
 
 private func layoutWindows() {
-    let focusedWindow = nativeFocusedWindow
+    let focusedWindow = focusedWindow
     for monitor in monitors {
         let workspace = monitor.activeWorkspace
         if workspace.isEffectivelyEmpty { continue }
@@ -76,11 +84,11 @@ private func layoutWindows() {
 
 private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
     if startup { // todo move to MacWindow.get
-        putWindowsOnWorkspacesOfTheirMonitors()
+        //putWindowsOnWorkspacesOfTheirMonitors()
         putWindowsAtStartup()
     } else {
         for app in apps {
-            let _ = app.windows // Calling .windows has side-effects
+            let _ = app.windows(startup: startup) // Calling .windows has side-effects
         }
     }
 }
@@ -102,21 +110,6 @@ private func putWindowsAtStartup() {
                 root.layout = .tiles
             } else {
                 root.layout = .accordion
-            }
-        }
-    }
-}
-
-private func putWindowsOnWorkspacesOfTheirMonitors() {
-    for app in apps {
-        for window in app.windows {
-            if let workspace = window.getCenter()?.monitorApproximation.activeWorkspace {
-                switch window.unbindFromParent().parent.kind {
-                case .workspace:
-                    window.bind(to: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-                case .tilingContainer:
-                    window.bind(to: workspace.rootTilingContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-                }
             }
         }
     }

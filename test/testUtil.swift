@@ -28,7 +28,7 @@ func setUpWorkspacesForTests() {
             child.unbindFromParent()
         }
     }
-    focusedWindowSourceOfTruth = .defaultSourceOfTruth
+    setFocusSourceOfTruth(.ownModel, startup: false)
     focusedWorkspaceName = mainMonitor.activeWorkspace.name
     Workspace.garbageCollectUnusedWorkspaces()
     check(Workspace.focused.isEffectivelyEmpty)
@@ -56,4 +56,8 @@ func testParseCommandFail(_ command: String, msg expected: String) {
     case .failure(let msg):
         XCTAssertEqual(msg, expected)
     }
+}
+
+var focusSourceOfTruth: FocusSourceOfTruth {
+    getFocusSourceOfTruth(startup: false)
 }

@@ -21,7 +21,7 @@ class AeroApp: Hashable {
         hasher.combine(pid)
     }
 
+    func getFocusedWindow(startup: Bool) -> Window? { error("Not implemented") }
     var name: String? { nil }
-    var focusedWindow: Window? { error("Not implemented") }
-    var windows: [Window] { error("Not implemented") }
+    func windows(startup: Bool) -> [Window] { error("Not implemented") }
 }

@@ -6,8 +6,6 @@ class TreeNode: Equatable {
     private var adaptiveWeight: CGFloat
     private let _mruChildren: MruStack<TreeNode> = MruStack()
     var mostRecentChildren: some Sequence<TreeNode> { _mruChildren }
-    /// Helps to avoid flickering when cycling children of accordion container with focus command
-    var mostRecentChildIndexForAccordion: Int? = nil
     var lastAppliedLayoutTilingRectForMouse: Rect? = nil
 
     init(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
@@ -110,12 +108,6 @@ class TreeNode: Equatable {
         _parent.markAsMostRecentChild()
     }
 
-    func markAsMostRecentChildForAccordion() {
-        guard let _parent else { return }
-        _parent.mostRecentChildIndexForAccordion = ownIndexOrNil!
-        _parent.markAsMostRecentChildForAccordion()
-    }
-
     @discardableResult
     func unbindFromParent() -> BindingData {
         unbindIfPossible() ?? errorT("\(self) is already unbound")
@@ -134,7 +126,7 @@ class TreeNode: Equatable {
     func cleanUserData<T>(key: TreeNodeUserDataKey<T>) -> T? { userData.removeValue(forKey: key.key) as! T? }
 
     @discardableResult
-    func focus() -> Bool { error("Not implemented") }
+    func nativeFocus() -> Bool { error("Not implemented") }
     func getRect() -> Rect? { error("Not implemented") }
 }
 

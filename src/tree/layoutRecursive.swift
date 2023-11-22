@@ -55,7 +55,7 @@ private extension TilingContainer {
     }
 
     func layoutAccordion(_ point: CGPoint, focusedWindow: Window?, width: CGFloat, height: CGFloat) {
-        guard let mruIndex: Int = mostRecentChildIndexForAccordion ?? mostRecentChild?.ownIndexOrNil else { return }
+        guard let mruIndex: Int = mostRecentChild?.ownIndexOrNil else { return }
         for (index, child) in children.withIndex {
             let lPadding: CGFloat
             let rPadding: CGFloat

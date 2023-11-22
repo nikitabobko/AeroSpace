@@ -17,6 +17,7 @@ struct FocusCommand: Command {
 
         if let windowToFocus {
             subject = .window(windowToFocus)
+            windowToFocus.focus()
         }
     }
 }

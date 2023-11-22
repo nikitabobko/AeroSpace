@@ -5,6 +5,7 @@ struct ExecAndWaitCommand: Command {
         error("Use runAsyncWithoutLayout for exec-and-wait")
     }
 
+    @MainActor
     func runAsyncWithoutLayout() async {
         check(Thread.current.isMainThread)
         await withCheckedContinuation { (continuation: CheckedContinuation<(), Never>) in

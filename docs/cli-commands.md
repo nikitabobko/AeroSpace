@@ -1,4 +1,4 @@
-# CLI commands
+# Additional CLI commands
 
 In addition to [regular commands](./commands.md), the CLI provides commands listed in this file
 

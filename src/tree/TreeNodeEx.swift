@@ -29,18 +29,6 @@ extension TreeNode {
         self as? Window ?? mostRecentChild?.mostRecentWindow
     }
 
-    var mostRecentWindowForAccordion: Window? {
-        self as? Window ?? mostRecentChildIndexForAccordion?
-            .lets { children.getOrNil(atIndex: $0) }?.mostRecentWindowForAccordion
-    }
-
-    func resetMruForAccordionRecursive() {
-        mostRecentChildIndexForAccordion = nil
-        for child in children {
-            child.resetMruForAccordionRecursive()
-        }
-    }
-
     func allLeafWindowsRecursive(snappedTo direction: CardinalDirection) -> [Window] {
         switch genericKind {
         case .workspace(let workspace):

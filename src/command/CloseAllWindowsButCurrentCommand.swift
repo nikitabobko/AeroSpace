@@ -5,6 +5,7 @@ class CloseAllWindowsButCurrentCommand: Command {
         for window in focused.workspace.allLeafWindowsRecursive {
             if window != focused {
                 window.close()
+                (window as! MacWindow).garbageCollect()
             }
         }
     }

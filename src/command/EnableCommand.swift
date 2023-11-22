@@ -22,18 +22,19 @@ struct EnableCommand: Command {
         }
 
         TrayMenuModel.shared.isEnabled = newState
+        // todo rewrite
         if newState {
-            for app in apps {
-                for window in app.windows {
-                    window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
-                }
-            }
+            //for app in apps {
+            //    for window in app.windows {
+            //        window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
+            //    }
+            //}
             activateMode(mainModeId)
         } else {
             for (_, mode) in config.modes {
                 mode.deactivate()
             }
-            makeAllWindowsVisibleAndRestoreSize()
+            //makeAllWindowsVisibleAndRestoreSize()
         }
     }
 }

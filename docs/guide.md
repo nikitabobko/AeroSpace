@@ -237,18 +237,24 @@ You can use `on-window-detected` callback to run commands that run every time a 
 app-id = 'com.apple.systempreferences'                # Application ID exact match
 app-name-regex-substring = 'settings'                 # Case insensetive regex substring
 window-title-regex-substring = 'substring'            # Case insensetive regex substring
+during-aerospace-startup = true                       # Run the callback only if the window detected during AeroSpace startup
 run = ['layout floating', 'move-node-to-workspace S'] # The callback itself
 ```
 
-`run` commands are run only if the window matches all specified filters. If none of the filters are specified then `run` is run
+`run` commands are run only if the window matches all the specified filters. If none of the filters are specified then `run` is run
 for every detected window
 
 Available filters:
-- `app-id`. Application ID exact match of the detected window
-  - See the [list of popular application IDs](./popular-apps-ids.md)
-  - You can use [`aerospace list-apps`](./cli-commands.md#list-apps) CLI command to get IDs of running applications
-- `app-name-regex-substring`. Application name regex substring of the detected window
-- `window-title-regex-substring`. Window title regex substring of the detected window
+
+| Filter TOML key                | Filter Type        | Filter description                                                                                                                 |
+|--------------------------------|--------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| `app-id`                       | String exact match | Application ID exact match of the detected window                                                                                  |
+| `app-name-regex-substring`     | Regex substring    | Application name regex substring of the detected window                                                                            |
+| `window-title-regex-substring` | Regex substring    | Window title regex substring of the detected window                                                                                |
+| `during-aerospace-startup`     | Boolean            | If `true` then run the callback only during AeroSpace startup.<br/>If `false` then run callback only NOT during AeroSpace startup. |
+
+[The list of popular application IDs](./popular-apps-ids.md) might be useful to compose `app-id` filter. Alternatively,
+you can use [`aerospace list-apps`](./cli-commands.md#list-apps) CLI command to get IDs of running applications
 
 > [!IMPORTANT]
 > Some windows initialize their title after the window appears. `window-title-regex-substring` may not work as expected 

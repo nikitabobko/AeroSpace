@@ -6,7 +6,7 @@ final class SplitCommandTest: XCTestCase {
 
     func testSplit() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0).focus()
+            TestWindow(id: 1, parent: $0).nativeFocus()
             TestWindow(id: 2, parent: $0)
         }
 
@@ -21,7 +21,7 @@ final class SplitCommandTest: XCTestCase {
 
     func testSplitOppositeOrientation() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0).focus()
+            TestWindow(id: 1, parent: $0).nativeFocus()
             TestWindow(id: 2, parent: $0)
         }
 
@@ -37,7 +37,7 @@ final class SplitCommandTest: XCTestCase {
     func testChangeOrientation() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                TestWindow(id: 1, parent: $0).focus()
+                TestWindow(id: 1, parent: $0).nativeFocus()
             }
             TestWindow(id: 2, parent: $0)
         }
@@ -54,7 +54,7 @@ final class SplitCommandTest: XCTestCase {
     func testToggleOrientation() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                TestWindow(id: 1, parent: $0).focus()
+                TestWindow(id: 1, parent: $0).nativeFocus()
             }
             TestWindow(id: 2, parent: $0)
         }

@@ -15,13 +15,16 @@ final class MacWindow: Window, CustomStringConvertible {
     private static var allWindowsMap: [CGWindowID: MacWindow] = [:]
     static var allWindows: [MacWindow] { Array(allWindowsMap.values) }
 
-    static func get(app: MacApp, axWindow: AXUIElement) -> MacWindow? {
+    static func get(app: MacApp, axWindow: AXUIElement, startup: Bool) -> MacWindow? {
         if !isWindow(axWindow, app) { return nil }
         guard let id = axWindow.windowId() else { return nil }
         if let existing = allWindowsMap[id] {
             return existing
         } else {
-            let data = getBindingDataForNewWindow(axWindow, Workspace.focused)
+            let data = getBindingDataForNewWindow(
+                axWindow,
+                startup ? (axWindow.center?.monitorApproximation ?? mainMonitor).activeWorkspace : Workspace.focused
+            )
             let window = MacWindow(id, app, axWindow, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
 
             if window.observe(destroyedObs, kAXUIElementDestroyedNotification) &&
@@ -53,7 +56,9 @@ final class MacWindow: Window, CustomStringConvertible {
 
     func garbageCollect() {
         debug("garbageCollectWindow of \(app.name ?? "NO TITLE")")
-        MacWindow.allWindowsMap.removeValue(forKey: windowId)
+        if MacWindow.allWindowsMap.removeValue(forKey: windowId) == nil {
+            return
+        }
         unbindFromParent()
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
@@ -72,15 +77,9 @@ final class MacWindow: Window, CustomStringConvertible {
     }
 
     @discardableResult
-    override func focus() -> Bool { // todo make focus reliable: make async + active waiting
+    override func nativeFocus() -> Bool { // todo make focus reliable: make async + active waiting
         // Raise firstly to make sure that by that time we activate the app, particular window would be already on top
-        if axWindow.raise() && macApp.nsApp.activate(options: .activateIgnoringOtherApps) {
-            markAsMostRecentChild()
-            markAsMostRecentChildForAccordion()
-            return true
-        } else {
-            return false
-        }
+        axWindow.raise() && macApp.nsApp.activate(options: .activateIgnoringOtherApps)
     }
 
     override func close() -> Bool {

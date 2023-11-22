@@ -56,16 +56,12 @@ final class MacApp: AeroApp {
         return true
     }
 
-    override var focusedWindow: MacWindow? {
-        axFocusedWindow?.lets { MacWindow.get(app: self, axWindow: $0) }
+    override func getFocusedWindow(startup: Bool) -> Window? {
+        axApp.get(Ax.focusedWindowAttr)?.lets { MacWindow.get(app: self, axWindow: $0, startup: startup) }
     }
 
-    var axFocusedWindow: AXUIElement? {
-        axApp.get(Ax.focusedWindowAttr)
-    }
-
-    override var windows: [Window] {
-        (axApp.get(Ax.windowsAttr) ?? []).compactMap({ MacWindow.get(app: self, axWindow: $0) })
+    override func windows(startup: Bool) -> [Window] {
+        (axApp.get(Ax.windowsAttr) ?? []).compactMap({ MacWindow.get(app: self, axWindow: $0, startup: startup) })
     }
 }
 

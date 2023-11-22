@@ -25,45 +25,45 @@ final class FocusCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
     func testFocus() async {
-        XCTAssertEqual(nativeFocusedWindow, nil)
+        XCTAssertEqual(focusedWindow, nil)
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
-            TestWindow(id: 2, parent: $0).focus()
+            TestWindow(id: 2, parent: $0).nativeFocus()
             TestWindow(id: 3, parent: $0)
         }
-        XCTAssertEqual(nativeFocusedWindow?.windowId, 2)
+        XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
     func testFocusAlongTheContainerOrientation() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0).focus()
+            TestWindow(id: 1, parent: $0).nativeFocus()
             TestWindow(id: 2, parent: $0)
         }
 
         await FocusCommand(direction: .right).testRun()
-        XCTAssertEqual(nativeFocusedWindow?.windowId, 2)
+        XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
     func testFocusAcrossTheContainerOrientation() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0).focus()
+            TestWindow(id: 1, parent: $0).nativeFocus()
             TestWindow(id: 2, parent: $0)
         }
 
         await FocusCommand(direction: .up).testRun()
-        XCTAssertEqual(nativeFocusedWindow?.windowId, 1)
+        XCTAssertEqual(focusedWindow?.windowId, 1)
         await FocusCommand(direction: .down).testRun()
-        XCTAssertEqual(nativeFocusedWindow?.windowId, 1)
+        XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
     func testFocusNoWrapping() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0).focus()
+            TestWindow(id: 1, parent: $0).nativeFocus()
             TestWindow(id: 2, parent: $0)
         }
 
         await FocusCommand(direction: .left).testRun()
-        XCTAssertEqual(nativeFocusedWindow?.windowId, 1)
+        XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
     func testFocusFindMruLeaf() async {
@@ -73,7 +73,7 @@ final class FocusCommandTest: XCTestCase {
         var window3: Window!
         var unrelatedWindow: Window!
         workspace.rootTilingContainer.apply {
-            startWindow = TestWindow(id: 1, parent: $0).apply { $0.focus() }
+            startWindow = TestWindow(id: 1, parent: $0).apply { $0.nativeFocus() }
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                     window2 = TestWindow(id: 2, parent: $0)
@@ -85,42 +85,42 @@ final class FocusCommandTest: XCTestCase {
 
         XCTAssertEqual(workspace.mostRecentWindow?.windowId, 3) // The latest binded
         await FocusCommand(direction: .right).testRun()
-        XCTAssertEqual(nativeFocusedWindow?.windowId, 3)
+        XCTAssertEqual(focusedWindow?.windowId, 3)
 
-        startWindow.focus()
+        startWindow.nativeFocus()
         window2.markAsMostRecentChild()
         await FocusCommand(direction: .right).testRun()
-        XCTAssertEqual(nativeFocusedWindow?.windowId, 2)
+        XCTAssertEqual(focusedWindow?.windowId, 2)
 
-        startWindow.focus()
+        startWindow.nativeFocus()
         window3.markAsMostRecentChild()
         unrelatedWindow.markAsMostRecentChild()
         await FocusCommand(direction: .right).testRun()
-        XCTAssertEqual(nativeFocusedWindow?.windowId, 2)
+        XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
     func testFocusOutsideOfTheContainer() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                TestWindow(id: 2, parent: $0).focus()
+                TestWindow(id: 2, parent: $0).nativeFocus()
             }
         }
 
         await FocusCommand(direction: .left).testRun()
-        XCTAssertEqual(nativeFocusedWindow?.windowId, 1)
+        XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
     func testFocusOutsideOfTheContainer2() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
             TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
-                TestWindow(id: 2, parent: $0).focus()
+                TestWindow(id: 2, parent: $0).nativeFocus()
             }
         }
 
         await FocusCommand(direction: .left).testRun()
-        XCTAssertEqual(nativeFocusedWindow?.windowId, 1)
+        XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 }
 
@@ -139,6 +139,6 @@ extension Command {
         } else {
             runWithoutLayout(subject: &state)
         }
-        state.windowOrNil?.focus()
+        state.windowOrNil?.nativeFocus()
     }
 }
