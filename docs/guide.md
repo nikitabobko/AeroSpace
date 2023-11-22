@@ -159,7 +159,7 @@ h_tiles
 Normalizations makes it easier to understand the tree structure by looking at how windows are placed on the screen.
 
 You can disable normalizations by placing these lines into your config:
-```
+```toml
 enable-normalization-flatten-containers = false
 enable-normalization-opposite-orientation-for-nested-containers = false
 ```

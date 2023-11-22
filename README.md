@@ -2,7 +2,10 @@
 
 AeroSpace is an i3-like tiling window manager for macOS.
 
-[YouTube Demo](https://www.youtube.com/watch?v=UOl7ErqWbrk)
+- [YouTube Demo](https://www.youtube.com/watch?v=UOl7ErqWbrk)
+- [AeroSpace Guide](./docs/guide.md)
+- [AeroSpace list of all commands](./docs/commands.md)
+- [AeroSpace list of additional CLI commands](./docs/cli-commands.md)
 
 ## Project status
 
@@ -47,11 +50,6 @@ issue](https://github.com/Homebrew/homebrew-cask/issues/12822)
 ### Manual installation
 
 [Manual installation](./docs/manual-installation.md)
-
-## Docs
-
-- [AeroSpace Guide](./docs/guide.md)
-- [AeroSpace list of all commands](./docs/commands.md)
 
 ## How to build the project
 
