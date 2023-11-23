@@ -12,7 +12,5 @@ struct MoveNodeToWorkspaceCommand: Command {
         focused.unbindFromParent()
         // todo different monitor for floating windows
         focused.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-
-        WorkspaceCommand(workspaceName: preserveWorkspace.name).runWithoutLayout(subject: &subject)
     }
 }
