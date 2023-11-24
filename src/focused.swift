@@ -15,7 +15,7 @@ func getNativeFocusedWindow(startup: Bool) -> Window? {
 
 var focusedWindow: Window? {
     //check(focusSourceOfTruth == .ownModel)
-    return Workspace.focused.mostRecentWindow ?? Workspace.focused.anyLeafWindowRecursive
+    Workspace.focused.mostRecentWindow
     //focusSourceOfTruth == .ownModel
     //    ? (Workspace.focused.mostRecentWindow ?? Workspace.focused.anyLeafWindowRecursive)
     //    : nativeFocusedWindow

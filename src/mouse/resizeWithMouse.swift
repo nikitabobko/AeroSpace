@@ -12,8 +12,6 @@ func resetManipulatedWithMouseIfPossible() {
         for workspace in Workspace.all {
             workspace.resetResizeWeightBeforeResizeRecursive()
         }
-        // todo window moved to a different monitor
-        focusedWorkspaceName = mouseLocation.monitorApproximation.activeWorkspace.name
         refreshAndLayout()
     }
 }
