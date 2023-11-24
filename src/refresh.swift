@@ -1,35 +1,48 @@
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input.
 /// The function is idempotent.
-func refresh(startup: Bool = false, layout: Bool = true) {
+func refreshSession(startup: Bool = false, body: () -> Void) {
     check(Thread.current.isMainThread)
-    //debug("refresh \(Date.now.formatted(date: .abbreviated, time: .standard))")
-
-    // Garbage collect terminated apps and windows before working with all windows
-    MacApp.garbageCollectTerminatedApps()
-    // Garbage collect workspaces after apps, because workspaces contain apps.
-    Workspace.garbageCollectUnusedWorkspaces()
+    gc()
 
     if !TrayMenuModel.shared.isEnabled {
         return
     }
 
     takeFocusFromMacOs(startup: startup)
-    refreshFocusedWorkspaceBasedOnFocusedWindow()
+
+    refreshModel(startup: startup)
+    body()
+    refreshModel(startup: startup)
+
     updateTrayText()
+    layoutWorkspaces()
+    layoutWindows()
+    syncFocusToMacOs(startup: startup)
+}
+
+func refreshAndLayout(startup: Bool = false) {
+    refreshSession(startup: startup, body: {})
+}
+
+func refreshModel(startup: Bool) {
+    gc()
+    refreshFocusedWorkspaceBasedOnFocusedWindow()
+    // todo not sure that it should be part of the refreshModel
+    //  now it's a part of refreshModel mainly because of await enable-and-wait
     detectNewWindowsAndAttachThemToWorkspaces(startup: startup)
-
     normalizeContainers()
+}
 
-    if layout {
-        layoutWorkspaces()
-        layoutWindows()
-        syncFocusToMacOs(startup: startup)
-    }
+private func gc() {
+    // Garbage collect terminated apps and windows before working with all windows
+    MacApp.garbageCollectTerminatedApps()
+    // Garbage collect workspaces after apps, because workspaces contain apps.
+    Workspace.garbageCollectUnusedWorkspaces()
 }
 
 func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
-    refresh()
+    refreshAndLayout()
 }
 
 func syncFocusToMacOs(startup: Bool) {
@@ -47,7 +60,7 @@ func takeFocusFromMacOs(startup: Bool) {
     }
 }
 
-private func refreshFocusedWorkspaceBasedOnFocusedWindow() {
+private func refreshFocusedWorkspaceBasedOnFocusedWindow() { // todo drop. It should no longer be necessary
     if let focusedWindow = focusedWindow {
         let focusedWorkspace: Workspace = focusedWindow.workspace
         check(focusedWorkspace.monitor.setActiveWorkspace(focusedWorkspace))

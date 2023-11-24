@@ -1,5 +1,4 @@
 struct ListAppsCommand: QueryCommand {
-    @MainActor
     func run() -> String {
         check(Thread.current.isMainThread)
         return apps

@@ -41,8 +41,9 @@ extension Window {
 
     var ownIndex: Int { ownIndexOrNil! }
 
-    func focus() {
+    func focus() { // todo rename: focusWindowAndWorkspace
         markAsMostRecentChild()
+        // todo bug make the workspace active first...
         focusedWorkspaceName = workspace.name
     }
 }

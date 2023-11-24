@@ -25,13 +25,11 @@ struct AeroSpaceApp: App {
             checkAccessibilityPermissions()
             startServer()
             GlobalObserver.initObserver()
-            refresh(startup: true)
-            Task {
-                if startedAtLogin {
-                    await config.afterLoginCommand.run()
-                }
-                await config.afterStartupCommand.run()
+            refreshAndLayout()
+            if startedAtLogin {
+                config.afterLoginCommand.run()
             }
+            config.afterStartupCommand.run()
         }
     }
 
@@ -46,7 +44,7 @@ struct AeroSpaceApp: App {
             Text("Workspaces:")
             ForEach(Workspace.all) { (workspace: Workspace) in
                 Button {
-                    Task { await WorkspaceCommand(workspaceName: workspace.name).run() }
+                    refreshSession { WorkspaceCommand(workspaceName: workspace.name).run() }
                 } label: {
                     Toggle(isOn: workspace == Workspace.focused
                         ? Binding(get: { true }, set: { _, _ in })
@@ -58,11 +56,11 @@ struct AeroSpaceApp: App {
             }
             Divider()
             Button(viewModel.isEnabled ? "Disable" : "Enable") {
-                Task { await EnableCommand(targetState: .toggle).run() }
+                refreshSession { EnableCommand(targetState: .toggle).run() }
             }
                 .keyboardShortcut("E", modifiers: .command)
             Button("Reload config") {
-                Task { await ReloadConfigCommand().run() }
+                refreshSession { ReloadConfigCommand().run() }
             }
                 .keyboardShortcut("R", modifiers: .command)
             Button("Quit \(Bundle.appName)") {

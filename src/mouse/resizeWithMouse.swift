@@ -2,7 +2,7 @@ func resizedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     if let window = data?.window, TrayMenuModel.shared.isEnabled {
         resizeWithMouseIfTheCase(window)
     }
-    refresh()
+    refreshAndLayout()
 }
 
 func resetManipulatedWithMouseIfPossible() {
@@ -12,7 +12,9 @@ func resetManipulatedWithMouseIfPossible() {
         for workspace in Workspace.all {
             workspace.resetResizeWeightBeforeResizeRecursive()
         }
-        refresh()
+        // todo window moved to a different monitor
+        focusedWorkspaceName = mouseLocation.monitorApproximation.activeWorkspace.name
+        refreshAndLayout()
     }
 }
 

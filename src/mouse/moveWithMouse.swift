@@ -2,7 +2,7 @@ func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeM
     if let window = data?.window, TrayMenuModel.shared.isEnabled {
         moveWithMouseIfTheCase(window)
     }
-    refresh()
+    refreshAndLayout()
 }
 
 private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests

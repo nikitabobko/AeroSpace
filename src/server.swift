@@ -51,12 +51,12 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             continue
         }
         if let action {
-            await action.run()
+            action.run()
             _ = try? socket.write(from: "PASS")
             continue
         }
         if let query {
-            let result = await query.run()
+            let result = query.run()
             _ = try? socket.write(from: result)
             continue
         }

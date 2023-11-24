@@ -3,67 +3,42 @@ protocol Command: AeroAny { // todo add exit code and messages
 }
 
 protocol QueryCommand {
-    @MainActor
     func run() -> String
 }
 
 extension Command {
-    @MainActor
-    func run() async {
+    func run() {
         check(Thread.current.isMainThread)
-        await [self].run()
+        [self].run()
     }
 
     var isExec: Bool { self is ExecAndWaitCommand || self is ExecAndForgetCommand }
 }
 
+// There are 3 entry points for running commands:
+// 1. config keybindings
+// 2. CLI requests to server
+// 3. on-window-detected callback
 extension [Command] {
-    @MainActor
-    func run(_ initState: CommandSubject? = nil) async {
+    func run(_ initSubject: CommandSubject? = nil) { // todo make parameter mandatory
         check(Thread.current.isMainThread)
+        // todo commands that come after enable must be run as well
+        // todo what about disabled server for on-window-detected commands?
         let commands = TrayMenuModel.shared.isEnabled ? self : (singleOrNil() as? EnableCommand).asList()
-        refresh(layout: false)
         var subject: CommandSubject
-        if let initState {
-            subject = initState
+        if let initSubject {
+            subject = initSubject
         } else if let window = focusedWindow {
             subject = .window(window)
         } else {
             subject = .emptyWorkspace(focusedWorkspaceName)
         }
-        for (index, command) in commands.withIndex {
-            if let exec = command as? ExecAndWaitCommand {
-                await exec.runAsyncWithoutLayout()
-            } else {
-                command.runWithoutLayout(subject: &subject)
-            }
-            if index != commands.indices.last {
-                refresh(layout: false)
-            }
+        for command in commands {
+            command.runWithoutLayout(subject: &subject)
+            refreshModel(startup: false)
         }
-        refresh()
     }
 
-    func _runSync(_ initState: CommandSubject? = nil) { // todo deduplicate
-        check(Thread.current.isMainThread)
-        let commands = TrayMenuModel.shared.isEnabled ? self : (singleOrNil() as? EnableCommand).asList()
-        refresh(layout: false)
-        var subject: CommandSubject
-        if let initState {
-            subject = initState
-        } else if let window = focusedWindow {
-            subject = .window(window)
-        } else {
-            subject = .emptyWorkspace(focusedWorkspaceName)
-        }
-        for (index, command) in commands.withIndex {
-            command.runWithoutLayout(subject: &subject)
-            if index != commands.indices.last {
-                refresh(layout: false)
-            }
-        }
-        refresh()
-    }
 }
 
 enum CommandSubject {

@@ -90,7 +90,7 @@ class HotkeyBinding {
 
     func activate() {
         hotKey = HotKey(key: key, modifiers: modifiers, keyUpHandler: { [commands] in
-            Task { await commands.run() }
+            refreshSession { commands.run() }
         })
     }
 

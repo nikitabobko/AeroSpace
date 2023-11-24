@@ -1,6 +1,6 @@
 class GlobalObserver {
     @objc private static func action() {
-        refresh()
+        refreshAndLayout()
     }
 
     static func initObserver() {
@@ -21,7 +21,7 @@ class GlobalObserver {
                    focusedMonitor.rect.topLeftCorner != Workspace.focused.monitor.rect.topLeftCorner {
                 setFocusSourceOfTruth(.ownModel, startup: false)
                 focusedWorkspaceName = focusedMonitor.activeWorkspace.name
-                refresh()
+                refreshAndLayout()
             }
         }
     }

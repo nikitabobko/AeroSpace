@@ -24,7 +24,7 @@ var focusedWindow: Window? {
 // It's fine to call this inaccurate during startup
 private var _focusedWorkspaceName: String = focusedMonitorInaccurate?.activeWorkspace.name
     ?? mainMonitor.activeWorkspace.name
-var focusedWorkspaceName: String {
+var focusedWorkspaceName: String { // todo change to focused monitor
     get { _focusedWorkspaceName }
     set {
         if newValue != _focusedWorkspaceName {

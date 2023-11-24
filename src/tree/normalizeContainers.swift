@@ -11,9 +11,13 @@ private extension TilingContainer {
     func unbindEmptyAndAutoFlatten() {
         if let child = children.singleOrNil(), config.enableNormalizationFlattenContainers && (child is TilingContainer || !isRootContainer) {
             child.unbindFromParent()
+            let mru = parent.mostRecentChild
             let previousBinding = unbindFromParent()
             child.bind(to: previousBinding.parent, adaptiveWeight: previousBinding.adaptiveWeight, index: previousBinding.index)
             (child as? TilingContainer)?.unbindEmptyAndAutoFlatten()
+            if mru != self { // Preserve mru (todo stop bumping mru on bind?)
+                mru?.markAsMostRecentChild()
+            }
         } else {
             for child in children {
                 (child as? TilingContainer)?.unbindEmptyAndAutoFlatten()
