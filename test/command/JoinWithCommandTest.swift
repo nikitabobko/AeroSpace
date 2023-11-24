@@ -4,7 +4,7 @@ import XCTest
 final class MoveInCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
-    func testMoveIn() async {
+    func testMoveIn() {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 0, parent: $0)
             TestWindow(id: 1, parent: $0).nativeFocus()

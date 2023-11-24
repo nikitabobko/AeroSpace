@@ -4,7 +4,7 @@ import XCTest
 final class MoveNodeToWorkspaceCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
-    func testSimple() async {
+    func testSimple() {
         let workspaceA = Workspace.get(byName: "a")
         workspaceA.rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0).nativeFocus()
@@ -17,7 +17,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         XCTAssertEqual((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }
 
-    func testPreserveFloatingLayout() async {
+    func testPreserveFloatingLayout() {
         let workspaceA = Workspace.get(byName: "a").apply {
             TestWindow(id: 1, parent: $0).nativeFocus()
         }

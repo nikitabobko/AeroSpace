@@ -4,7 +4,7 @@ struct ExecAndWaitCommand: Command {
     func runWithoutLayout(subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
         // todo drop async await and run new session instead
-        error("TODO")
+        //error("TODO")
         //await withCheckedContinuation { (continuation: CheckedContinuation<(), Never>) in
             let process = Process()
             process.executableURL = URL(filePath: "/bin/bash")

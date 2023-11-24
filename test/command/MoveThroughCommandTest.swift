@@ -4,7 +4,7 @@ import XCTest
 final class MoveThroughCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
-    func testMove_swapWindows() async {
+    func testMove_swapWindows() {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0).nativeFocus()
             TestWindow(id: 2, parent: $0)
@@ -14,7 +14,7 @@ final class MoveThroughCommandTest: XCTestCase {
         XCTAssertEqual(root.layoutDescription, .h_tiles([.window(2), .window(1)]))
     }
 
-    func testMoveInto_findTopMostContainerWithRightOrientation() async {
+    func testMoveInto_findTopMostContainerWithRightOrientation() {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 0, parent: $0)
             TestWindow(id: 1, parent: $0).nativeFocus()
@@ -40,7 +40,7 @@ final class MoveThroughCommandTest: XCTestCase {
         )
     }
 
-    func testMove_mru() async {
+    func testMove_mru() {
         var window3: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 0, parent: $0)
@@ -72,7 +72,7 @@ final class MoveThroughCommandTest: XCTestCase {
         )
     }
 
-    func testSwap_preserveWeight() async {
+    func testSwap_preserveWeight() {
         let root = Workspace.get(byName: name).rootTilingContainer
         let window1 = TestWindow(id: 1, parent: root, adaptiveWeight: 1)
         let window2 = TestWindow(id: 2, parent: root, adaptiveWeight: 2)
@@ -83,7 +83,7 @@ final class MoveThroughCommandTest: XCTestCase {
         XCTAssertEqual(window1.hWeight, 1)
     }
 
-    func testMoveIn_newWeight() async {
+    func testMoveIn_newWeight() {
         var window1: Window!
         var window2: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
@@ -102,7 +102,7 @@ final class MoveThroughCommandTest: XCTestCase {
         XCTAssertEqual(window1.hWeight, 1)
     }
 
-    func testCreateImplicitContainer() async {
+    func testCreateImplicitContainer() {
         let workspace = Workspace.get(byName: name)
         workspace.rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
@@ -122,7 +122,7 @@ final class MoveThroughCommandTest: XCTestCase {
         )
     }
 
-    func testMoveOut() async {
+    func testMoveOut() {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
