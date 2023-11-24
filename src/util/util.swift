@@ -43,7 +43,7 @@ public func errorT<T>(
         recursionDetectorDuringFailure: \(recursionDetectorDuringFailure)
 
         Stacktrace:
-        \(Thread.callStackSymbols.joined(separator: "\n"))
+        \(getStringStacktrace())
         """
     if !isUnitTest {
         showMessageToUser(
@@ -57,6 +57,9 @@ public func errorT<T>(
     }
     fatalError(message)
 }
+
+func printStacktrace() { print(getStringStacktrace()) }
+func getStringStacktrace() -> String { Thread.callStackSymbols.joined(separator: "\n") }
 
 @inlinable func error(
     _ message: String = "",

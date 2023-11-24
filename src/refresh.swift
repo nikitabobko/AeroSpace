@@ -9,7 +9,8 @@ func refreshSession(startup: Bool = false, body: () -> Void) {
         return
     }
 
-    takeFocusFromMacOs(startup: startup)
+    let nativeFocused = getNativeFocusedWindow(startup: startup)
+    takeFocusFromMacOs(nativeFocused, startup: startup)
     let focusBefore = focusedWindow
 
     refreshModel(startup: startup)
@@ -17,11 +18,11 @@ func refreshSession(startup: Bool = false, body: () -> Void) {
     refreshModel(startup: startup)
 
     let focusAfter = focusedWindow
+    syncFocusToMacOs(nativeFocused, startup: startup, force: focusBefore != focusAfter)
 
     updateTrayText()
     layoutWorkspaces()
     layoutWindows()
-    syncFocusToMacOs(startup: startup, force: focusBefore != focusAfter)
 }
 
 func refreshAndLayout(startup: Bool = false) {
@@ -48,18 +49,17 @@ func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     refreshAndLayout()
 }
 
-func syncFocusToMacOs(startup: Bool, force: Bool) {
-    let native = getNativeFocusedWindow(startup: startup)
+func syncFocusToMacOs(_ nativeFocused: Window?, startup: Bool, force: Bool) {
     if force /*for example `focus right` when "recent files" is focused in IDEA*/ ||
            // native would be nil if it's a popup (e.g. recent files in IntelliJ IDEA). Don't steal focus in that case
-           native != nil && native != focusedWindow {
+           nativeFocused != nil && nativeFocused != focusedWindow {
         focusedWindow?.nativeFocus()
     }
 }
 
-func takeFocusFromMacOs(startup: Bool) {
-    if let window = getNativeFocusedWindow(startup: startup), getFocusSourceOfTruth(startup: startup) == .macOs {
-        window.focus()
+func takeFocusFromMacOs(_ nativeFocused: Window?, startup: Bool) {
+    if let nativeFocused, getFocusSourceOfTruth(startup: startup) == .macOs {
+        nativeFocused.focus()
         setFocusSourceOfTruth(.ownModel, startup: startup)
     }
 }
