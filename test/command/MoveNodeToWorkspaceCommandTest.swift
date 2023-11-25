@@ -7,25 +7,21 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
     func testSimple() {
         let workspaceA = Workspace.get(byName: "a")
         workspaceA.rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0).nativeFocus()
+            TestWindow(id: 1, parent: $0).focus()
         }
 
-        XCTAssertTrue(focusSourceOfTruth == .macOs)
         MoveNodeToWorkspaceCommand(targetWorkspaceName: "b").testRun()
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
-        XCTAssertTrue(focusSourceOfTruth == .ownModel)
         XCTAssertEqual((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }
 
     func testPreserveFloatingLayout() {
         let workspaceA = Workspace.get(byName: "a").apply {
-            TestWindow(id: 1, parent: $0).nativeFocus()
+            TestWindow(id: 1, parent: $0).focus()
         }
 
-        XCTAssertTrue(focusSourceOfTruth == .macOs)
         MoveNodeToWorkspaceCommand(targetWorkspaceName: "b").testRun()
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
-        XCTAssertTrue(focusSourceOfTruth == .ownModel)
         XCTAssertEqual(Workspace.get(byName: "b").children.filterIsInstance(of: Window.self).singleOrNil()?.windowId, 1)
     }
 }

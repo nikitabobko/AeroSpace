@@ -28,7 +28,7 @@ final class FocusCommandTest: XCTestCase {
         XCTAssertEqual(focusedWindow, nil)
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
-            TestWindow(id: 2, parent: $0).nativeFocus()
+            TestWindow(id: 2, parent: $0).focus()
             TestWindow(id: 3, parent: $0)
         }
         XCTAssertEqual(focusedWindow?.windowId, 2)
@@ -36,7 +36,7 @@ final class FocusCommandTest: XCTestCase {
 
     func testFocusAlongTheContainerOrientation() {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0).nativeFocus()
+            TestWindow(id: 1, parent: $0).focus()
             TestWindow(id: 2, parent: $0)
         }
 
@@ -46,7 +46,7 @@ final class FocusCommandTest: XCTestCase {
 
     func testFocusAcrossTheContainerOrientation() {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0).nativeFocus()
+            TestWindow(id: 1, parent: $0).focus()
             TestWindow(id: 2, parent: $0)
         }
 
@@ -58,7 +58,7 @@ final class FocusCommandTest: XCTestCase {
 
     func testFocusNoWrapping() {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0).nativeFocus()
+            TestWindow(id: 1, parent: $0).focus()
             TestWindow(id: 2, parent: $0)
         }
 
@@ -73,7 +73,7 @@ final class FocusCommandTest: XCTestCase {
         var window3: Window!
         var unrelatedWindow: Window!
         workspace.rootTilingContainer.apply {
-            startWindow = TestWindow(id: 1, parent: $0).apply { $0.nativeFocus() }
+            startWindow = TestWindow(id: 1, parent: $0).apply { $0.focus() }
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                     window2 = TestWindow(id: 2, parent: $0)
@@ -83,18 +83,14 @@ final class FocusCommandTest: XCTestCase {
             }
         }
 
-        XCTAssertEqual(workspace.mostRecentWindow?.windowId, 3) // The latest binded
-        FocusCommand(direction: .right).testRun()
-        XCTAssertEqual(focusedWindow?.windowId, 3)
-
-        startWindow.nativeFocus()
         window2.markAsMostRecentChild()
+        startWindow.focus()
         FocusCommand(direction: .right).testRun()
         XCTAssertEqual(focusedWindow?.windowId, 2)
 
-        startWindow.nativeFocus()
         window3.markAsMostRecentChild()
         unrelatedWindow.markAsMostRecentChild()
+        startWindow.focus()
         FocusCommand(direction: .right).testRun()
         XCTAssertEqual(focusedWindow?.windowId, 2)
     }
@@ -103,7 +99,7 @@ final class FocusCommandTest: XCTestCase {
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                TestWindow(id: 2, parent: $0).nativeFocus()
+                TestWindow(id: 2, parent: $0).focus()
             }
         }
 
@@ -115,7 +111,7 @@ final class FocusCommandTest: XCTestCase {
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
             TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
-                TestWindow(id: 2, parent: $0).nativeFocus()
+                TestWindow(id: 2, parent: $0).focus()
             }
         }
 
@@ -134,6 +130,6 @@ extension Command {
             state = .emptyWorkspace(focusedWorkspaceName)
         }
         runWithoutLayout(subject: &state)
-        state.windowOrNil?.nativeFocus()
+        state.windowOrNil?.focus()
     }
 }

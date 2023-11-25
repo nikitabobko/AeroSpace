@@ -57,7 +57,3 @@ func testParseCommandFail(_ command: String, msg expected: String) {
         XCTAssertEqual(msg, expected)
     }
 }
-
-var focusSourceOfTruth: FocusSourceOfTruth {
-    getFocusSourceOfTruth(startup: false)
-}
