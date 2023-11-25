@@ -20,19 +20,19 @@ extension Command {
     var isExec: Bool { self is ExecAndWaitCommand || self is ExecAndForgetCommand }
 }
 
-// There are 3 entry points for running commands:
+// There are 4 entry points for running commands:
 // 1. config keybindings
 // 2. CLI requests to server
 // 3. on-window-detected callback
+// 4. Tray icon buttons
 extension [Command] {
     func run(_ subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
-        // todo commands that come after enable must be run as well
-        // todo what about disabled server for on-window-detected commands?
-        let commands = TrayMenuModel.shared.isEnabled ? self : (singleOrNil() as? EnableCommand).asList()
-        for (index, command) in commands.withIndex {
-            command._run(&subject, index, self)
-            refreshModel(startup: false)
+        for (index, command) in withIndex {
+            if TrayMenuModel.shared.isEnabled || command is EnableCommand {
+                command._run(&subject, index, self)
+                refreshModel(startup: false)
+            }
         }
     }
 }

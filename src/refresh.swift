@@ -5,10 +5,6 @@ func refreshSession(startup: Bool = false, body: () -> Void) {
     check(Thread.current.isMainThread)
     gc()
 
-    if !TrayMenuModel.shared.isEnabled {
-        return
-    }
-
     let nativeFocused = getNativeFocusedWindow(startup: startup)
     takeFocusFromMacOs(nativeFocused, startup: startup)
     let focusBefore = focusedWindow
@@ -18,10 +14,13 @@ func refreshSession(startup: Bool = false, body: () -> Void) {
     refreshModel(startup: startup)
 
     let focusAfter = focusedWindow
-    syncFocusToMacOs(nativeFocused, startup: startup, force: focusBefore != focusAfter)
 
-    updateTrayText()
-    layoutWorkspaces()
+    if TrayMenuModel.shared.isEnabled {
+        syncFocusToMacOs(nativeFocused, startup: startup, force: focusBefore != focusAfter)
+
+        updateTrayText()
+        layoutWorkspaces()
+    }
 }
 
 func refreshAndLayout(startup: Bool = false) {
