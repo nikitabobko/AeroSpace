@@ -281,6 +281,8 @@ extension Command {
             return .resizeCommand(dimension: resize.dimension, mode: resize.mode, unit: resize.unit)
         } else if let layout = self as? LayoutCommand {
             return .layoutCommand(layout.toggleBetween)
+        } else if let exec = self as? ExecAndForgetCommand {
+            return .execAndForget(exec.bashCommand)
         }
         error("Unsupported command: \(self)")
     }
@@ -290,4 +292,5 @@ enum CommandDescription: Equatable {
     case focusCommand(CardinalDirection)
     case resizeCommand(dimension: ResizeCommand.Dimension, mode: ResizeCommand.ResizeMode, unit: UInt)
     case layoutCommand([LayoutCommand.LayoutDescription])
+    case execAndForget(String)
 }

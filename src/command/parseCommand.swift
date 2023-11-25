@@ -35,9 +35,12 @@ func parseCommand(_ raw: String) -> Parsed<Command> {
     let words: [String] = raw.split(separator: " ").map { String($0) }
     let args: [String] = Array(words[1...])
     let firstWord = String(words.first ?? "")
-    if raw.contains("'") || raw.contains("\"") {
+
+    if (raw.contains("'") || raw.contains("\"")) && !firstWord.starts(with: "exec") {
         return .failure("Quotation marks are reserved for future use")
-    } else if firstWord == "workspace" {
+    }
+
+    if firstWord == "workspace" {
         return parseSingleArg(args, firstWord).map { WorkspaceCommand(workspaceName: $0) }
     } else if firstWord == "move-node-to-workspace" {
         return parseSingleArg(args, firstWord).map { MoveNodeToWorkspaceCommand(targetWorkspaceName: $0) }
