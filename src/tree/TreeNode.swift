@@ -87,6 +87,7 @@ class TreeNode: Equatable {
         }
         newParent._children.insert(self, at: index != INDEX_BIND_LAST ? index : newParent._children.count)
         _parent = newParent
+        markAsMostRecentChild()
         return result
     }
 
@@ -94,7 +95,7 @@ class TreeNode: Equatable {
         guard let _parent else { return nil }
 
         let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
-        _parent._mruChildren.remove(self)
+        check(_parent._mruChildren.remove(self))
         self._parent = nil
 
         return BindingData(parent: _parent, adaptiveWeight: adaptiveWeight, index: index)

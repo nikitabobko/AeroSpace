@@ -26,29 +26,35 @@ final class FocusCommandTest: XCTestCase {
 
     func testFocus() {
         XCTAssertEqual(focusedWindow, nil)
+        var start: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
-            TestWindow(id: 2, parent: $0).focus()
+            start = TestWindow(id: 2, parent: $0)
             TestWindow(id: 3, parent: $0)
         }
+        start.focus()
         XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
     func testFocusAlongTheContainerOrientation() {
+        var start: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0).focus()
+            start = TestWindow(id: 1, parent: $0)
             TestWindow(id: 2, parent: $0)
         }
+        start.focus()
 
         FocusCommand(direction: .right).testRun()
         XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
     func testFocusAcrossTheContainerOrientation() {
+        var start: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0).focus()
+            start = TestWindow(id: 1, parent: $0)
             TestWindow(id: 2, parent: $0)
         }
+        start.focus()
 
         FocusCommand(direction: .up).testRun()
         XCTAssertEqual(focusedWindow?.windowId, 1)
@@ -57,10 +63,12 @@ final class FocusCommandTest: XCTestCase {
     }
 
     func testFocusNoWrapping() {
+        var start: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0).focus()
+            start = TestWindow(id: 1, parent: $0)
             TestWindow(id: 2, parent: $0)
         }
+        start.focus()
 
         FocusCommand(direction: .left).testRun()
         XCTAssertEqual(focusedWindow?.windowId, 1)
@@ -73,7 +81,7 @@ final class FocusCommandTest: XCTestCase {
         var window3: Window!
         var unrelatedWindow: Window!
         workspace.rootTilingContainer.apply {
-            startWindow = TestWindow(id: 1, parent: $0).apply { $0.focus() }
+            startWindow = TestWindow(id: 1, parent: $0)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                     window2 = TestWindow(id: 2, parent: $0)
@@ -82,6 +90,11 @@ final class FocusCommandTest: XCTestCase {
                 window3 = TestWindow(id: 3, parent: $0)
             }
         }
+
+        XCTAssertEqual(workspace.mostRecentWindow?.windowId, 3) // The latest bound
+        startWindow.focus()
+        FocusCommand(direction: .right).testRun()
+        XCTAssertEqual(focusedWindow?.windowId, 3)
 
         window2.markAsMostRecentChild()
         startWindow.focus()
@@ -96,24 +109,28 @@ final class FocusCommandTest: XCTestCase {
     }
 
     func testFocusOutsideOfTheContainer() {
+        var start: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                TestWindow(id: 2, parent: $0).focus()
+                start = TestWindow(id: 2, parent: $0)
             }
         }
+        start.focus()
 
         FocusCommand(direction: .left).testRun()
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
     func testFocusOutsideOfTheContainer2() {
+        var start: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
             TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
-                TestWindow(id: 2, parent: $0).focus()
+                start = TestWindow(id: 2, parent: $0)
             }
         }
+        start.focus()
 
         FocusCommand(direction: .left).testRun()
         XCTAssertEqual(focusedWindow?.windowId, 1)
@@ -130,6 +147,5 @@ extension Command {
             state = .emptyWorkspace(focusedWorkspaceName)
         }
         run(&state)
-        state.windowOrNil?.focus()
     }
 }

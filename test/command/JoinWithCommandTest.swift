@@ -1,15 +1,17 @@
 import XCTest
 @testable import AeroSpace_Debug
 
-final class MoveInCommandTest: XCTestCase {
+final class JoinWithCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
     func testMoveIn() {
+        var start: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 0, parent: $0)
-            TestWindow(id: 1, parent: $0).focus()
+            start = TestWindow(id: 1, parent: $0)
             TestWindow(id: 2, parent: $0)
         }
+        start.focus()
 
         JoinWithCommand(direction: .right).testRun()
         XCTAssertEqual(root.layoutDescription, .h_tiles([

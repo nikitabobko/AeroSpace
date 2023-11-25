@@ -5,25 +5,29 @@ final class MoveThroughCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
     func testMove_swapWindows() {
+        var start: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0).focus()
+            start = TestWindow(id: 1, parent: $0)
             TestWindow(id: 2, parent: $0)
         }
+        start.focus()
 
         MoveThroughCommand(direction: .right).testRun()
         XCTAssertEqual(root.layoutDescription, .h_tiles([.window(2), .window(1)]))
     }
 
     func testMoveInto_findTopMostContainerWithRightOrientation() {
+        var start: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 0, parent: $0)
-            TestWindow(id: 1, parent: $0).focus()
+            start = TestWindow(id: 1, parent: $0)
             TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                 TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                     TestWindow(id: 2, parent: $0)
                 }
             }
         }
+        start.focus()
 
         MoveThroughCommand(direction: .right).testRun()
         XCTAssertEqual(
@@ -106,11 +110,13 @@ final class MoveThroughCommandTest: XCTestCase {
 
     func testCreateImplicitContainer() {
         let workspace = Workspace.get(byName: name)
+        var start: Window!
         workspace.rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
-            TestWindow(id: 2, parent: $0).focus()
+            start = TestWindow(id: 2, parent: $0)
             TestWindow(id: 3, parent: $0)
         }
+        start.focus()
 
         MoveThroughCommand(direction: .up).testRun()
         XCTAssertEqual(
@@ -125,14 +131,16 @@ final class MoveThroughCommandTest: XCTestCase {
     }
 
     func testMoveOut() {
+        var start: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                TestWindow(id: 2, parent: $0).focus()
+                start = TestWindow(id: 2, parent: $0)
                 TestWindow(id: 3, parent: $0)
                 TestWindow(id: 4, parent: $0)
             }
         }
+        start.focus()
 
         MoveThroughCommand(direction: .left).testRun()
         XCTAssertEqual(
@@ -146,6 +154,48 @@ final class MoveThroughCommandTest: XCTestCase {
                 ])
             ])
         )
+    }
+
+    func testMoveOutWithNormalization_right() {
+        config.enableNormalizationFlattenContainers = true
+
+        var start: Window!
+        let workspace = Workspace.get(byName: name).apply {
+            TestWindow(id: 1, parent: $0.rootTilingContainer)
+            start = TestWindow(id: 2, parent: $0.rootTilingContainer)
+        }
+        start.focus()
+
+        MoveThroughCommand(direction: .right).testRun()
+        XCTAssertEqual(
+            workspace.rootTilingContainer.layoutDescription,
+            .h_tiles([
+                .window(1),
+                .window(2),
+            ])
+        )
+        XCTAssertEqual(focusedWindow?.windowId, 2)
+    }
+
+    func testMoveOutWithNormalization_left() {
+        config.enableNormalizationFlattenContainers = true
+
+        var start: Window!
+        let workspace = Workspace.get(byName: name).apply {
+            start = TestWindow(id: 1, parent: $0.rootTilingContainer)
+            TestWindow(id: 2, parent: $0.rootTilingContainer)
+        }
+        start.focus()
+
+        MoveThroughCommand(direction: .left).testRun()
+        XCTAssertEqual(
+            workspace.rootTilingContainer.layoutDescription,
+            .h_tiles([
+                .window(1),
+                .window(2),
+            ])
+        )
+        XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 }
 
