@@ -50,4 +50,10 @@ extension Workspace {
             .filterNotNil()
             .first
     }
+
+    func layoutWorkspace() {
+        if isEffectivelyEmpty { return }
+        let rect = monitor.visibleRect
+        layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height)
+    }
 }

@@ -22,19 +22,23 @@ struct EnableCommand: Command {
         }
 
         TrayMenuModel.shared.isEnabled = newState
-        // todo rewrite
         if newState {
-            //for app in apps {
-            //    for window in app.windows {
-            //        window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
-            //    }
-            //}
+            for workspace in Workspace.all {
+                for window in workspace.allLeafWindowsRecursive {
+                    if window.isFloating {
+                        window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
+                    }
+                }
+            }
             activateMode(mainModeId)
         } else {
             for (_, mode) in config.modes {
                 mode.deactivate()
             }
-            //makeAllWindowsVisibleAndRestoreSize()
+            for workspace in Workspace.all {
+                workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideViaEmulation() } // todo as!
+                workspace.layoutWorkspace()
+            }
         }
     }
 }

@@ -22,7 +22,6 @@ func refreshSession(startup: Bool = false, body: () -> Void) {
 
     updateTrayText()
     layoutWorkspaces()
-    layoutWindows()
 }
 
 func refreshAndLayout(startup: Bool = false) {
@@ -81,21 +80,14 @@ private func layoutWorkspaces() {
             workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).hideViaEmulation() } // todo as!
         }
     }
+    for monitor in monitors {
+        monitor.activeWorkspace.layoutWorkspace()
+    }
 }
 
 private func normalizeContainers() {
     for workspace in Workspace.all { // todo do it only for visible workspaces?
         workspace.normalizeContainers()
-    }
-}
-
-private func layoutWindows() {
-    let focusedWindow = focusedWindow
-    for monitor in monitors {
-        let workspace = monitor.activeWorkspace
-        if workspace.isEffectivelyEmpty { continue }
-        let rect = monitor.visibleRect
-        workspace.layoutRecursive(rect.topLeftCorner, focusedWindow: focusedWindow, width: rect.width, height: rect.height)
     }
 }
 
