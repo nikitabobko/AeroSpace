@@ -5,7 +5,7 @@ struct MoveWorkspaceToMonitorCommand: Command {
         case next, prev
     }
 
-    func runWithoutLayout(subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
         let focusedWorkspace = subject.workspace
         let prevMonitor = focusedWorkspace.monitor

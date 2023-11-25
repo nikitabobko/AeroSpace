@@ -11,7 +11,7 @@ struct ResizeCommand: Command { // todo cover with tests
     let mode: ResizeMode
     let unit: UInt
 
-    func runWithoutLayout(subject: inout CommandSubject) { // todo support key repeat
+    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) { // todo support key repeat
         check(Thread.current.isMainThread)
 
         let candidates = subject.windowOrNil?.parentsWithSelf

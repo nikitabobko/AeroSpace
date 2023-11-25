@@ -1,7 +1,7 @@
 struct JoinWithCommand: Command {
     let direction: CardinalDirection
 
-    func runWithoutLayout(subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
         guard let currentWindow = subject.windowOrNil else { return }
         guard let (parent, ownIndex) = currentWindow.closestParent(hasChildrenInDirection: direction, withLayout: nil) else { return }

@@ -15,7 +15,7 @@ struct LayoutCommand: Command {
         self.toggleBetween = toggleBetween
     }
 
-    func runWithoutLayout(subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
         guard let window = subject.windowOrNil else { return }
         let targetDescription: LayoutDescription = toggleBetween.first(where: { !window.matchesDescription($0) })

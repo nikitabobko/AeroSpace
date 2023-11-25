@@ -51,7 +51,10 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             continue
         }
         if let action {
-            action.run()
+            _ = await Task { @MainActor in
+                var focused = CommandSubject.focused // todo restore subject from "exec session"
+                action.run(&focused)
+            }.result
             _ = try? socket.write(from: "PASS")
             continue
         }

@@ -1,7 +1,7 @@
 struct ModeCommand: Command {
     let idToActivate: String
 
-    func runWithoutLayout(subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
         activateMode(idToActivate)
     }

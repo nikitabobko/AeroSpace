@@ -5,7 +5,7 @@ struct EnableCommand: Command {
 
     let targetState: State
 
-    func runWithoutLayout(subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
         let prevState = TrayMenuModel.shared.isEnabled
         let newState: Bool

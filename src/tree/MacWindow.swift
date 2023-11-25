@@ -194,7 +194,8 @@ func onWindowDetected(_ window: Window) {
     check(Thread.current.isMainThread)
     for callback in config.onWindowDetected {
         if callback.matches(window) {
-            callback.run.run(.window(window))
+            var subject = CommandSubject.window(window)
+            callback.run.run(&subject)
         }
     }
 }

@@ -5,7 +5,7 @@ struct SplitCommand: Command {
 
     let splitArg: SplitArg
 
-    func runWithoutLayout(subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
         if config.enableNormalizationFlattenContainers {
             return // 'split' doesn't work with "flatten container" normalization enabled

@@ -26,10 +26,13 @@ struct AeroSpaceApp: App {
             startServer()
             GlobalObserver.initObserver()
             refreshAndLayout()
-            if startedAtLogin {
-                config.afterLoginCommand.run()
+            refreshSession {
+                var focused = CommandSubject.focused
+                if startedAtLogin {
+                    config.afterLoginCommand.run(&focused)
+                }
+                config.afterStartupCommand.run(&focused)
             }
-            config.afterStartupCommand.run()
         }
     }
 
@@ -44,7 +47,7 @@ struct AeroSpaceApp: App {
             Text("Workspaces:")
             ForEach(Workspace.all) { (workspace: Workspace) in
                 Button {
-                    refreshSession { WorkspaceCommand(workspaceName: workspace.name).run() }
+                    refreshSession { WorkspaceCommand(workspaceName: workspace.name).runOnFocusedSubject() }
                 } label: {
                     Toggle(isOn: workspace == Workspace.focused
                         ? Binding(get: { true }, set: { _, _ in })
@@ -56,11 +59,11 @@ struct AeroSpaceApp: App {
             }
             Divider()
             Button(viewModel.isEnabled ? "Disable" : "Enable") {
-                refreshSession { EnableCommand(targetState: .toggle).run() }
+                refreshSession { EnableCommand(targetState: .toggle).runOnFocusedSubject() }
             }
                 .keyboardShortcut("E", modifiers: .command)
             Button("Reload config") {
-                refreshSession { ReloadConfigCommand().run() }
+                refreshSession { ReloadConfigCommand().runOnFocusedSubject() }
             }
                 .keyboardShortcut("R", modifiers: .command)
             Button("Quit \(Bundle.appName)") {

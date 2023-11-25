@@ -1,7 +1,7 @@
 struct WorkspaceCommand : Command {
     let workspaceName: String
 
-    func runWithoutLayout(subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
         let workspace = Workspace.get(byName: workspaceName)
         if let window = workspace.mostRecentWindow { // switch to not empty workspace

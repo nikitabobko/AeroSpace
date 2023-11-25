@@ -1,7 +1,8 @@
 struct ExecAndForgetCommand: Command {
     let bashCommand: String
 
-    func runWithoutLayout(subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
+        // todo shall exec-and-forget fork exec session?
         check(Thread.current.isMainThread)
         // It doesn't throw if exit code is non-zero
         try! Process.run(URL(filePath: "/bin/bash"), arguments: ["-c", bashCommand])

@@ -1,5 +1,5 @@
 protocol Command: AeroAny { // todo add exit code and messages
-    func runWithoutLayout(subject: inout CommandSubject)
+    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command])
 }
 
 protocol QueryCommand {
@@ -7,9 +7,14 @@ protocol QueryCommand {
 }
 
 extension Command {
-    func run() {
+    func run(_ subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
-        [self].run()
+        [self].run(&subject)
+    }
+
+    func runOnFocusedSubject() {
+        var focused = CommandSubject.focused
+        run(&focused)
     }
 
     var isExec: Bool { self is ExecAndWaitCommand || self is ExecAndForgetCommand }
@@ -20,30 +25,29 @@ extension Command {
 // 2. CLI requests to server
 // 3. on-window-detected callback
 extension [Command] {
-    func run(_ initSubject: CommandSubject? = nil) { // todo make parameter mandatory
+    func run(_ subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
         // todo commands that come after enable must be run as well
         // todo what about disabled server for on-window-detected commands?
         let commands = TrayMenuModel.shared.isEnabled ? self : (singleOrNil() as? EnableCommand).asList()
-        var subject: CommandSubject
-        if let initSubject {
-            subject = initSubject
-        } else if let window = focusedWindow {
-            subject = .window(window)
-        } else {
-            subject = .emptyWorkspace(focusedWorkspaceName)
-        }
-        for command in commands {
-            command.runWithoutLayout(subject: &subject)
+        for (index, command) in commands.withIndex {
+            command._run(&subject, index, self)
             refreshModel(startup: false)
         }
     }
-
 }
 
 enum CommandSubject {
     case emptyWorkspace(String)
     case window(Window)
+
+    static var focused: CommandSubject {
+        if let window = focusedWindow {
+            return .window(window)
+        } else {
+            return .emptyWorkspace(focusedWorkspaceName)
+        }
+    }
 }
 
 extension CommandSubject {

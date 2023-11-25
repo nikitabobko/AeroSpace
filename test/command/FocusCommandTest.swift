@@ -129,7 +129,7 @@ extension Command {
         } else {
             state = .emptyWorkspace(focusedWorkspaceName)
         }
-        runWithoutLayout(subject: &state)
+        run(&state)
         state.windowOrNil?.focus()
     }
 }
