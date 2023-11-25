@@ -53,16 +53,20 @@ private func newConnection(_ socket: Socket) { // todo add exit codes
         }
         if let action {
             DispatchQueue.main.asyncAndWait {
-                var focused = CommandSubject.focused // todo restore subject from "exec session"
-                action.run(&focused)
+                refreshSession {
+                    var focused = CommandSubject.focused // todo restore subject from "exec session"
+                    action.run(&focused)
+                }
             }
             _ = try? socket.write(from: "PASS")
             continue
         }
         if let query {
             DispatchQueue.main.asyncAndWait {
-                let result = query.run()
-                _ = try? socket.write(from: result)
+                refreshSession {
+                    let result = query.run()
+                    _ = try? socket.write(from: result)
+                }
             }
             continue
         }
