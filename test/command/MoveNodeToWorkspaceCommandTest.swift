@@ -10,7 +10,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             TestWindow(id: 1, parent: $0).focus()
         }
 
-        MoveNodeToWorkspaceCommand(targetWorkspaceName: "b").testRun()
+        MoveNodeToWorkspaceCommand(targetWorkspaceName: "b").runOnFocusedSubject()
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         XCTAssertEqual((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }
@@ -20,7 +20,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             TestWindow(id: 1, parent: $0).focus()
         }
 
-        MoveNodeToWorkspaceCommand(targetWorkspaceName: "b").testRun()
+        MoveNodeToWorkspaceCommand(targetWorkspaceName: "b").runOnFocusedSubject()
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         XCTAssertEqual(Workspace.get(byName: "b").children.filterIsInstance(of: Window.self).singleOrNil()?.windowId, 1)
     }

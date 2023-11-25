@@ -44,7 +44,7 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand(direction: .right).testRun()
+        FocusCommand(direction: .right).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
@@ -56,9 +56,9 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand(direction: .up).testRun()
+        FocusCommand(direction: .up).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 1)
-        FocusCommand(direction: .down).testRun()
+        FocusCommand(direction: .down).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
@@ -70,7 +70,7 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand(direction: .left).testRun()
+        FocusCommand(direction: .left).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
@@ -93,18 +93,18 @@ final class FocusCommandTest: XCTestCase {
 
         XCTAssertEqual(workspace.mostRecentWindow?.windowId, 3) // The latest bound
         startWindow.focus()
-        FocusCommand(direction: .right).testRun()
+        FocusCommand(direction: .right).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 3)
 
         window2.markAsMostRecentChild()
         startWindow.focus()
-        FocusCommand(direction: .right).testRun()
+        FocusCommand(direction: .right).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 2)
 
         window3.markAsMostRecentChild()
         unrelatedWindow.markAsMostRecentChild()
         startWindow.focus()
-        FocusCommand(direction: .right).testRun()
+        FocusCommand(direction: .right).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
@@ -118,7 +118,7 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand(direction: .left).testRun()
+        FocusCommand(direction: .left).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
@@ -132,20 +132,7 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand(direction: .left).testRun()
+        FocusCommand(direction: .left).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 1)
-    }
-}
-
-extension Command {
-    func testRun() { // todo drop
-        check(Thread.current.isMainThread)
-        var state: CommandSubject
-        if let window = focusedWindow {
-            state = .window(window)
-        } else {
-            state = .emptyWorkspace(focusedWorkspaceName)
-        }
-        run(&state)
     }
 }
