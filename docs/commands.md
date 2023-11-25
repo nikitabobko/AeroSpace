@@ -3,6 +3,7 @@
 Commands listed in this file can be used in the config and CLI
 
 **Table of contents**
+- [close](#close)
 - [close-all-windows-but-current](#close-all-windows-but-current)
 - [enable](#enable)
 - [exec-and-forget](#exec-and-forget)
@@ -21,6 +22,20 @@ Commands listed in this file can be used in the config and CLI
 - [split](#split)
 - [workspace-back-and-forth](#workspace-back-and-forth)
 - [workspace](#workspace)
+
+## close
+
+```
+close
+```
+
+Closes the focused window
+
+Normally, you don't need to use this command, because macOS has its own `cmd+w` binding. You might want to use the
+command from CLI for scripting purposes
+
+- Available since: 0.6.0-Beta
+- The command doesn't have arguments
 
 ## close-all-windows-but-current
 

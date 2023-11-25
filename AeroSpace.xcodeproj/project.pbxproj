@@ -49,6 +49,7 @@
 		74ED0272EF2A3BA6387FD413 /* Rect.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE5DD3E9DC82D247853956B /* Rect.swift */; };
 		77FA83225024151CD556E1ED /* CloseAllWindowsButCurrentCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99853C505D93E41F6531C324 /* CloseAllWindowsButCurrentCommand.swift */; };
 		78622D72C0CCE8D69B080D29 /* moveWithMouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0938DE74E687A8959E3F9C /* moveWithMouse.swift */; };
+		78C38FAF21E574DBE3B88806 /* CloseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FDC079C530D7B3C568E35F /* CloseCommand.swift */; };
 		7ED8C2A66DD6F903796F090C /* TestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2431BEAFFF1AC12D3001317A /* TestApp.swift */; };
 		8086A22EDCDC4C906C337D0B /* resizeWithMouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9745E5FC11701AE35712EC18 /* resizeWithMouse.swift */; };
 		852F88894A3B9FC385563665 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 42BC1E757EF69233C2262FF4 /* HotKey */; };
@@ -206,6 +207,7 @@
 		F187A6469837B279A528F0AF /* VersionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCommand.swift; sourceTree = "<group>"; };
 		F3C5B6719EF0BC14D7CF868C /* FlattenWorkspaceTreeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlattenWorkspaceTreeCommand.swift; sourceTree = "<group>"; };
 		F77C03164B8BFD1E59779C6E /* testUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testUtil.swift; sourceTree = "<group>"; };
+		F8FDC079C530D7B3C568E35F /* CloseCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseCommand.swift; sourceTree = "<group>"; };
 		F9EDB8770FBA8B2E6FE91BBB /* ExecAndWaitCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecAndWaitCommand.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -395,6 +397,7 @@
 			isa = PBXGroup;
 			children = (
 				99853C505D93E41F6531C324 /* CloseAllWindowsButCurrentCommand.swift */,
+				F8FDC079C530D7B3C568E35F /* CloseCommand.swift */,
 				CD90FB41FD41602120F67FF5 /* Command.swift */,
 				532EA400D1CFBC5C71663FDF /* EnableCommand.swift */,
 				569422C0C4C23EF3E024C8E6 /* ExecAndForgetCommand.swift */,
@@ -609,6 +612,7 @@
 				45AA5FD4A023AF751922BC22 /* BundleEx.swift in Sources */,
 				7323E0F871E259A6FB3F4EF4 /* CardinalDirection.swift in Sources */,
 				77FA83225024151CD556E1ED /* CloseAllWindowsButCurrentCommand.swift in Sources */,
+				78C38FAF21E574DBE3B88806 /* CloseCommand.swift in Sources */,
 				1C46EBB55D401C0D1AFD50F0 /* CollectionEx.swift in Sources */,
 				F982DB924450BBBB4FDF4C2C /* Command.swift in Sources */,
 				FD4386BC632BAA6A4105FFD8 /* Config.swift in Sources */,

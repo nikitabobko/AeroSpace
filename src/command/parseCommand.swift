@@ -86,6 +86,8 @@ func parseCommand(_ raw: String) -> Parsed<Command> {
             }
     } else if raw == "workspace-back-and-forth" {
         return .success(WorkspaceBackAndForthCommand())
+    } else if raw == "close" {
+        return .success(CloseCommand())
     } else if raw == "fullscreen" {
         return .success(FullscreenCommand())
     } else if raw == "reload-config" {
