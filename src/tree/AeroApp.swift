@@ -23,5 +23,5 @@ class AeroApp: Hashable {
 
     func getFocusedWindow(startup: Bool) -> Window? { error("Not implemented") }
     var name: String? { nil }
-    func windows(startup: Bool) -> [Window] { error("Not implemented") }
+    func detectNewWindowsAndGetAll(startup: Bool) -> [Window] { error("Not implemented") }
 }

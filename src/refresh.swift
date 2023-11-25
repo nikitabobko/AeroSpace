@@ -97,7 +97,7 @@ private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
         putWindowsAtStartup()
     } else {
         for app in apps {
-            let _ = app.windows(startup: startup) // Calling .windows has side-effects
+            let _ = app.detectNewWindowsAndGetAll(startup: startup)
         }
     }
 }

@@ -8,7 +8,7 @@ final class TestApp: AeroApp {
     }
 
     var _windows: [Window] = []
-    override func windows(startup: Bool) -> [Window] { _windows }
+    override func detectNewWindowsAndGetAll(startup: Bool) -> [Window] { _windows }
     var windows: [Window]  {
         get { _windows }
         set {
@@ -24,7 +24,7 @@ final class TestApp: AeroApp {
         get { _focusedWindow }
         set {
             if let window = newValue {
-                check(windows(startup: false).contains(window))
+                check(windows.contains(window))
             }
             _focusedWindow = newValue
         }
