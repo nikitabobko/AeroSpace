@@ -127,7 +127,7 @@ private func parseResizeCommand(firstWord: String, args: [String]) -> Parsed<Com
 
 private func parseSingleArg(_ args: [String], _ command: String) -> Parsed<String> {
     args.singleOrNil().orFailure {
-        "\(command) must have only a single argument. But passed: '\(args.joined(separator: " "))' (\(args.count) args)"
+        "'\(command)' command must have only a single argument. But passed: '\(args.joined(separator: " "))' (\(args.count) args)"
     }
 }
 

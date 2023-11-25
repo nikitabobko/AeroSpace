@@ -53,6 +53,7 @@
 		8086A22EDCDC4C906C337D0B /* resizeWithMouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9745E5FC11701AE35712EC18 /* resizeWithMouse.swift */; };
 		852F88894A3B9FC385563665 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 42BC1E757EF69233C2262FF4 /* HotKey */; };
 		8FD14C98B263A6CA0174DDF1 /* JoinWithCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D9C5ED5AC77D80F1CCD103F /* JoinWithCommandTest.swift */; };
+		9209B354E3F086AD761BBD48 /* WorkspaceCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97606CEE986F61539AC07E98 /* WorkspaceCommandTest.swift */; };
 		9305D5380C7A1D293F24FF41 /* MoveNodeToWorkspaceCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9589EFDEBA4EB9C7DBAFCFD /* MoveNodeToWorkspaceCommandTest.swift */; };
 		93D44EA41776738B4758C28D /* util.swift in Sources */ = {isa = PBXBuildFile; fileRef = 976540EBEACF846D598CD6E1 /* util.swift */; };
 		991943D50DF9EDBF321A66F1 /* SelectorComparator.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1316FFED5D1044CB693EA45 /* SelectorComparator.swift */; };
@@ -165,6 +166,7 @@
 		954A434EE57D76F5A9D4140D /* MruStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MruStack.swift; sourceTree = "<group>"; };
 		9745E5FC11701AE35712EC18 /* resizeWithMouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = resizeWithMouse.swift; sourceTree = "<group>"; };
 		9752080BBA547C2A0EF076F0 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
+		97606CEE986F61539AC07E98 /* WorkspaceCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceCommandTest.swift; sourceTree = "<group>"; };
 		976540EBEACF846D598CD6E1 /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
 		996BDAB685567E430DF7D962 /* AeroApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroApp.swift; sourceTree = "<group>"; };
 		99853C505D93E41F6531C324 /* CloseAllWindowsButCurrentCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseAllWindowsButCurrentCommand.swift; sourceTree = "<group>"; };
@@ -256,6 +258,7 @@
 				7A247B616D1951777C565D02 /* MoveThroughCommandTest.swift */,
 				7ACD4E9C6C0C08F1B0622C57 /* ResizeCommandTest.swift */,
 				2D96FF3675C63A83DC8B8969 /* SplitCommandTest.swift */,
+				97606CEE986F61539AC07E98 /* WorkspaceCommandTest.swift */,
 			);
 			path = command;
 			sourceTree = "<group>";
@@ -586,6 +589,7 @@
 				E22ACB36C90695FBAC78226E /* TestWindow.swift in Sources */,
 				70A82A4A9DFC89286C4F7696 /* TilingContainer.swift in Sources */,
 				BB3C35BE40958AE6E7B4A9FD /* TreeNodeTest.swift in Sources */,
+				9209B354E3F086AD761BBD48 /* WorkspaceCommandTest.swift in Sources */,
 				9D34BD7DE311254BF52F5EA2 /* testUtil.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
