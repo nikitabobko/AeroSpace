@@ -21,7 +21,7 @@ extension [[String]] {
                     .map { (elem: String, pad: Int) in
                         elem.padding(toLength: pad, withPad: " ", startingAt: 0)
                     }
-                    .joined(separator: " ") // todo pipe separator
+                    .joined(separator: " | ")
             }
             .joined(separator: "\n")
     }

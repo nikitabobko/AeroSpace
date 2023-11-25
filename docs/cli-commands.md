@@ -14,20 +14,22 @@ list-apps
 
 Prints the list of ordinary applications that appears in the Dock and may have a user interface.
 
-Output format is the table with the following colums:
+Output format is the table with the following columns:
 - Process ID
 - Application ID
 - Application name
 
 Output example:
 ```
-486   com.apple.finder            Finder
-17966 org.alacritty               Alacritty
-24780 com.jetbrains.AppCode       AppCode
-32541 com.apple.systempreferences System Settings
+486   | com.apple.finder            | Finder
+17966 | org.alacritty               | Alacritty
+24780 | com.jetbrains.AppCode       | AppCode
+32541 | com.apple.systempreferences | System Settings
 ```
 
 The command is useful to inspect list of applications to compose filter for [`on-window-detected`](./guide.md#on-window-detected-callback)
+
+You can use `awk` to get values of particular column: `awk -F '|' '{print $2}'`
 
 - Available since: 0.6.0-Beta
 - The command doesn't have arguments
