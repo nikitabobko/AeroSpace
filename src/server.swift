@@ -7,7 +7,7 @@ func startServer() {
     DispatchQueue.global().async {
         while true {
             guard let connection = try? socket.acceptClientConnection() else { continue }
-            Task { await newConnection(connection) }
+            DispatchQueue.global().async { newConnection(connection) }
         }
     }
 }
@@ -27,7 +27,7 @@ func sendCommandToReleaseServer(command: String) {
     _ = try? Socket.wait(for: [socket], timeout: 0, waitForever: true)
 }
 
-private func newConnection(_ socket: Socket) async { // todo add exit codes
+private func newConnection(_ socket: Socket) { // todo add exit codes
     defer {
         debug("Close connection")
         socket.close()
@@ -37,7 +37,8 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
         guard let string = (try? socket.readString()) else { return }
         let (action, error1) = parseCommand(string).getOrNils()
         let (query, error2) = parseQueryCommand(string).getOrNils()
-        if !TrayMenuModel.shared.isEnabled && !isAllowedToRunWhenDisabled(query, action) {
+        if DispatchQueue.main.asyncAndWait(execute: { !TrayMenuModel.shared.isEnabled }) &&
+               !isAllowedToRunWhenDisabled(query, action) {
             _ = try? socket.write(from: "\(Bundle.appName) server is disabled and doesn't accept commands. " +
                 "You can use 'aerospace enable on' to enable the server")
             continue
@@ -51,16 +52,18 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             continue
         }
         if let action {
-            _ = await Task { @MainActor in
+            DispatchQueue.main.asyncAndWait {
                 var focused = CommandSubject.focused // todo restore subject from "exec session"
                 action.run(&focused)
-            }.result
+            }
             _ = try? socket.write(from: "PASS")
             continue
         }
         if let query {
-            let result = query.run()
-            _ = try? socket.write(from: result)
+            DispatchQueue.main.asyncAndWait {
+                let result = query.run()
+                _ = try? socket.write(from: result)
+            }
             continue
         }
         error("Unreachable")
