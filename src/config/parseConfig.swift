@@ -147,7 +147,12 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
 
         preservedWorkspaceNames: modesOrDefault.values.lazy
             .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
-            .compactMap { (binding: HotkeyBinding) -> String? in (binding.commands.singleOrNil() as? WorkspaceCommand)?.workspaceName ?? nil }
+            .compactMap { (binding: HotkeyBinding) -> String? in
+                (binding.commands.singleOrNil() as? WorkspaceCommand)?.workspaceName
+                    ?? (binding.commands.singleOrNil() as? MoveNodeToWorkspaceCommand)?.targetWorkspaceName
+                    ?? nil
+            }
+            + (raw.workspaceToMonitorForceAssignment ?? [:]).keys
     )
     if config.enableNormalizationFlattenContainers {
         let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings }
