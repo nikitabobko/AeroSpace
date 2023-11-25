@@ -13,7 +13,6 @@ class Window: TreeNode, Hashable {
         super.init(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
-    @discardableResult
     func close() -> Bool {
         error("Not implemented")
     }
