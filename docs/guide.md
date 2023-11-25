@@ -21,7 +21,7 @@
 AeroSpace will read config file from `~/.aerospace.toml`. Please see the following config samples:
 - The default config contains all possible keys with comments: [default-config.toml](../config-examples/default-config.toml)
 - i3 like config: [i3-like-config-example.toml](../config-examples/i3-like-config-example.toml)
-- [Search for configs by other users on GitHub](https://github.com/search?q=path%3A**%2F.aerospace.toml&type=code) for inspiration
+- [Search for configs by other users on GitHub](https://github.com/search?q=%28path%3A**%2F.aerospace.toml+OR+path%3A**%2Faerospace.toml%29&type=code) for inspiration
 
 AeroSpace uses TOML format for the config. TOML is easy to read, and it supports comments. See [TOML site for more
 info](https://toml.io/en/)
@@ -291,13 +291,13 @@ Examples of automations:
 ## Multiple monitors
 
 - The pool of workspaces is shared between monitors
-- Each monitor shows its own workspace. The showed workspaces are called "active" workspaces
+- Each monitor shows its own workspace. The showed workspaces are called "visible" workspaces
 - Different monitors can't show the same workspace at the same time
 - Each workspace (even invisible, even empty) has a monitor assigned to it
 - By default, all workspaces are assigned to the "main" monitor (You can find the "main" monitor in `System -> Displays`)
 
 When you switch to a workspace:
-1. AeroSpace takes the assigned monitor of the workspace and makes the workspace active on the monitor
+1. AeroSpace takes the assigned monitor of the workspace and makes the workspace visible on the monitor
 2. AeroSpace focuses the workspace
 
 You can move workspace to a different monitor with [`move-workspace-to-monitor`](./commands.md#move-workspace-to-monitor) command. 

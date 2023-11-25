@@ -105,15 +105,15 @@ private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
 private func putWindowsAtStartup() {
     switch config.nonEmptyWorkspacesRootContainersLayoutOnStartup {
     case .tiles:
-        for workspace in Workspace.all.filter { !$0.isEffectivelyEmpty } {
+        for workspace in Workspace.all.filter({ !$0.isEffectivelyEmpty }) {
             workspace.rootTilingContainer.layout = .tiles
         }
     case .accordion:
-        for workspace in Workspace.all.filter { !$0.isEffectivelyEmpty } {
+        for workspace in Workspace.all.filter({ !$0.isEffectivelyEmpty }) {
             workspace.rootTilingContainer.layout = .accordion
         }
     case .smart:
-        for workspace in Workspace.all.filter { !$0.isEffectivelyEmpty } {
+        for workspace in Workspace.all.filter({ !$0.isEffectivelyEmpty }) {
             let root = workspace.rootTilingContainer
             if root.children.count <= 3 {
                 root.layout = .tiles

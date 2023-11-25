@@ -1,6 +1,6 @@
 # AeroSpace [![Build](https://github.com/nikitabobko/AeroSpace/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/nikitabobko/AeroSpace/actions/workflows/build.yml)
 
-AeroSpace is an i3-like tiling window manager for macOS.
+AeroSpace is an i3-like tiling window manager for macOS
 
 - [YouTube Demo](https://www.youtube.com/watch?v=UOl7ErqWbrk)
 - [AeroSpace Guide](./docs/guide.md)
@@ -76,9 +76,10 @@ brew install gsed xcodegen # https://github.com/yonaskolb/XcodeGen
   - AeroSpace will never provide a GUI for configuration. For advanced users, it's easier to edit a configuration file in text
     editor rather than navigating through checkboxes in GUI.
   - Status menu icon is ok, because visual feedback is needed
-- Provide _practical_ features. Fancy appearance features are not _practical_
+- Provide _practical_ features. Fancy appearance features are not _practical_ (e.g. window borders, transparency, etc)
 - If "dark magic" (aka "private APIs", "code injections", etc) can be avoided, it must be avoided
-  - Right now, AeroSpace uses only a [single private API](./src/Bridged-Header.h). Everything else is [macOS public accessibility
+  - Right now, AeroSpace uses only a [single private API to get window ID of accessibility object](./src/Bridged-Header.h).
+    Everything else is [macOS public accessibility
     API](https://developer.apple.com/documentation/applicationservices/axuielement_h).
   - AeroSpace will never require you to disable SIP (System Integrity Protection). For example, yabai [requires you to disable
     SIP](https://github.com/koekeishiya/yabai/issues/1863) to use some of its features. AeroSpace will either find another way

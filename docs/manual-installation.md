@@ -1,8 +1,13 @@
 # Manual installation
 
+> [!NOTE]
+> It's recommended to use homebrew. See [the README](../README.md#installation)
+
 1. Download the latest available zip from [releases page](https://github.com/nikitabobko/AeroSpace/releases)
 2. Unpack zip
-3. Move unpacked `AeroSpace.app` to `/Applications`
+3. Put unpacked `AeroSpace-v$VERSION/AeroSpace.app` to `/Applications`
+4. Put unpacked `AeroSpace-v$VERSION/aerospace` anywhere to `$PATH` (The step is optional. It is only needed if you want to be
+   able to interact with AeroSpace from CLI)
 
 ## AeroSpace can't be opened because Apple cannot check it for malicious software.
 

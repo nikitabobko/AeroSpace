@@ -49,20 +49,20 @@ Key events are not intercepted when AeroSpace is disabled
 ## exec-and-forget
 
 ```
-exec-and-forget bash_command
+exec-and-forget <bash-command>
 ```
 
-Runs `/bin/bash -c '$bash_command'`. Stdout, stderr and exit code are ignored.
+Runs `/bin/bash -c '$bash-command'`. Stdout, stderr and exit code are ignored.
 
 For example, you can use this command to launch applications: `exec-and-forget open -n /System/Applications/Utilities/Terminal.app`
 
 ## exec-and-wait
 
 ```
-exec-and-wait bash_command
+exec-and-wait <bash-command>
 ```
 
-Runs `/bin/bash -c '$bash_command'`, and waits until the command is terminated. Stdout, stderr and exit code are ignored.
+Runs `/bin/bash -c '$bash-command'`, and waits until the command is terminated. Stdout, stderr and exit code are ignored.
 
 Please prefer `exec-and-forget`, unless you need to wait for the termination.
 
@@ -167,7 +167,7 @@ found layout.
 ## mode
 
 ```
-mode name_of_the_target_mode
+mode <target-mode>
 ```
 
 Activates the specified [binding mode](./guide.md#bindings-modes)
@@ -175,7 +175,7 @@ Activates the specified [binding mode](./guide.md#bindings-modes)
 ## move-node-to-workspace
 
 ```
-move-node-to-workspace target_workspace_name
+move-node-to-workspace <target-workspace-name>
 ```
 
 Moves currently focused window to the specified workspace
@@ -281,7 +281,9 @@ v_tiles
 move-workspace-to-monitor (next|prev)
 ```
 
-Moves currently active workspace to the next or previous monitor
+Moves currently focused workspace to the next or previous monitor
+
+The command doesn't have effect on workspaces [that have monitor assignment](./guide.md#assign-workspaces-to-monitors)
 
 - Deprecated name: `move-workspace-to-display`
 
@@ -345,14 +347,14 @@ orientation of the parent container
 workspace-back-and-forth
 ```
 
-Switches between currently active workspace and previously active workspace back and forth.
+Switches between currently focused workspace and previously focused workspace back and forth.
 
 - The command doesn't have arguments.
 
 ## workspace
 
 ```
-workspace target_workspace_name
+workspace <target-workspace-name>
 ```
 
 Activates the specified workspace
