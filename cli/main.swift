@@ -5,7 +5,7 @@ let args: [String] = Array(CommandLine.arguments.dropFirst())
 
 for arg in args {
     if arg.contains(" ") {
-        error("Spaces in arguments are not permitted. '\(arg)' argument contains spaces.")
+        prettyError("Spaces in arguments are not permitted. '\(arg)' argument contains spaces.")
     }
 }
 
@@ -26,17 +26,17 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
     }
     let socketFile = "/tmp/\(appId).sock"
     (try? socket.connect(to: socketFile)) ??
-        errorT("Can't connect to AeroSpace server. Is AeroSpace.app running?")
+        prettyErrorT("Can't connect to AeroSpace server. Is AeroSpace.app running?")
 
     func run(_ command: String) -> String {
         try! socket.write(from: command)
         _ = try! Socket.wait(for: [socket], timeout: 0, waitForever: true)
-        return try! socket.readString() ?? errorT("fatal error: received nil from socket")
+        return try! socket.readString() ?? prettyErrorT("fatal error: received nil from socket")
     }
 
     let serverVersionAndHash = run("version")
     if serverVersionAndHash != cliClientVersionAndHash {
-        error(
+        prettyError(
             """
             AeroSpace client/server version mismatch
 
