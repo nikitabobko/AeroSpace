@@ -59,11 +59,15 @@ final class MacWindow: Window, CustomStringConvertible {
         if MacWindow.allWindowsMap.removeValue(forKey: windowId) == nil {
             return
         }
-        unbindFromParent()
+        let data = unbindFromParent()
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
         }
         axObservers = []
+        refreshSession {
+            // todo what if window closed itself?
+            WorkspaceCommand(workspaceName: data.parent.workspace.name).runOnFocusedSubject()
+        }
     }
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) -> Bool {
