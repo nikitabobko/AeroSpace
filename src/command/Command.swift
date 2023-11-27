@@ -31,6 +31,9 @@ extension [Command] {
         for (index, command) in withIndex {
             if TrayMenuModel.shared.isEnabled || command is EnableCommand {
                 command._run(&subject, index, self)
+                if command is ExecAndWaitCommand { // todo think of something more elegant
+                    break
+                }
                 refreshModel(startup: false)
             }
         }
