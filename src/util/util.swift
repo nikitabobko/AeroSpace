@@ -1,3 +1,5 @@
+import Foundation
+
 let EPS = 10e-5
 
 func stringType(of some: Any) -> String {
@@ -69,6 +71,14 @@ func getStringStacktrace() -> String { Thread.callStackSymbols.joined(separator:
     function: String = #function
 ) -> Never {
     errorT(message, file: file, line: line, column: column, function: function)
+}
+
+func interceptTermination(_ _signal: Int32) {
+    signal(_signal, { signal in
+        check(Thread.current.isMainThread)
+        beforeTermination()
+        exit(signal)
+    } as sig_t)
 }
 
 func beforeTermination() {

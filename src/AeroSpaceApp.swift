@@ -8,13 +8,10 @@ struct AeroSpaceApp: App {
 
     init() {
         if !isUnitTest { // Prevent SwiftUI app loading during unit testing
-            signal(SIGINT, { signal in
-                check(Thread.current.isMainThread)
-                beforeTermination()
-                exit(signal)
-            } as sig_t)
             if isDebug {
                 sendCommandToReleaseServer(command: "enable off")
+                interceptTermination(SIGINT)
+                interceptTermination(SIGKILL)
             }
             let startedAtLogin = CommandLine.arguments.getOrNil(atIndex: 1) == "--started-at-login"
             reloadConfig()
