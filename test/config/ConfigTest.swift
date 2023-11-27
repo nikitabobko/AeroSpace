@@ -181,32 +181,56 @@ final class ConfigTest: XCTestCase {
         let (parsed, errors) = parseConfig(
             """
             [[on-window-detected]]
-            run = ['layout floating']
+            check-further-callbacks = true
+            run = ['layout floating', 'move-node-to-workspace W']
 
             [[on-window-detected]]
-            app-id = 'com.apple.systempreferences'
+            if.app-id = 'com.apple.systempreferences'
             run = []
 
             [[on-window-detected]]
+
+            [[on-window-detected]]
+            run = ['move-node-to-workspace S', 'layout tiling']
+
+            [[on-window-detected]]
+            run = ['move-node-to-workspace S', 'move-node-to-workspace W']
+
+            [[on-window-detected]]
+            run = ['move-node-to-workspace S', 'layout h_tiles']
             """
         )
         XCTAssertEqual(parsed.onWindowDetected, [
             WindowDetectedCallback(
-                appId: nil,
-                appNameRegexSubstring: nil,
-                windowTitleRegexSubstring: nil,
-                run: [LayoutCommand(toggleBetween: [.floating])!]
+                matcher: CallbackMatcher(
+                    appId: nil,
+                    appNameRegexSubstring: nil,
+                    windowTitleRegexSubstring: nil
+                ),
+                checkFurtherCallbacks: true,
+                run: [LayoutCommand(toggleBetween: [.floating])!, MoveNodeToWorkspaceCommand(targetWorkspaceName: "W")]
             ),
             WindowDetectedCallback(
-                appId: "com.apple.systempreferences",
-                appNameRegexSubstring: nil,
-                windowTitleRegexSubstring: nil,
+                matcher: CallbackMatcher(
+                    appId: "com.apple.systempreferences",
+                    appNameRegexSubstring: nil,
+                    windowTitleRegexSubstring: nil
+                ),
+                checkFurtherCallbacks: false,
                 run: []
             )
         ])
 
         XCTAssertEqual(errors.descriptions, [
-            "on-window-detected[2]: \'run\' is mandatory key"
+            "on-window-detected[2]: \'run\' is mandatory key",
+            "on-window-detected[3]: For now, \'move-node-to-workspace\' can be mentioned only once in \'run\' callback. " +
+                "And it must be the latest instruction in the callback (otherwise it\'s error-prone). " +
+                "Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
+            "on-window-detected[4]: For now, \'move-node-to-workspace\' can be mentioned only once in \'run\' callback. " +
+                "And it must be the\nlatest instruction in the callback (otherwise it\'s error-prone). " +
+                "Please report your use cases to\nhttps://github.com/nikitabobko/AeroSpace/issues/20",
+            "on-window-detected[5]: For now, \'layout floating\', \'layout tiling\' and \'mode-node-to-workspace\' are the only commands that are supported in \'on-window-detected\'. " +
+                "Please report your use cases to\nhttps://github.com/nikitabobko/AeroSpace/issues/20",
         ])
     }
 
@@ -214,11 +238,11 @@ final class ConfigTest: XCTestCase {
         let (config, errors) = parseConfig(
             """
             [[on-window-detected]]
-            app-name-regex-substring = '^system settings$'
+            if.app-name-regex-substring = '^system settings$'
             run = []
             """
         )
-        XCTAssertTrue(config.onWindowDetected.singleOrNil()!.appNameRegexSubstring != nil)
+        XCTAssertTrue(config.onWindowDetected.singleOrNil()!.matcher.appNameRegexSubstring != nil)
         XCTAssertEqual(errors.descriptions, [])
     }
 
@@ -248,11 +272,11 @@ extension MonitorDescription: Equatable {
 
 extension WindowDetectedCallback: Equatable {
     public static func ==(lhs: WindowDetectedCallback, rhs: WindowDetectedCallback) -> Bool {
-        check(lhs.appNameRegexSubstring == nil &&
-            lhs.windowTitleRegexSubstring == nil &&
-            rhs.appNameRegexSubstring == nil &&
-            rhs.windowTitleRegexSubstring == nil)
-        return lhs.appId == rhs.appId &&
+        check(lhs.matcher.appNameRegexSubstring == nil &&
+            lhs.matcher.windowTitleRegexSubstring == nil &&
+            rhs.matcher.appNameRegexSubstring == nil &&
+            rhs.matcher.windowTitleRegexSubstring == nil)
+        return lhs.matcher.appId == rhs.matcher.appId &&
             lhs.run.map(\.describe) == rhs.run.map(\.describe)
     }
 }
@@ -283,6 +307,8 @@ extension Command {
             return .layoutCommand(layout.toggleBetween)
         } else if let exec = self as? ExecAndForgetCommand {
             return .execAndForget(exec.bashCommand)
+        } else if let moveNodeToWorkspace = self as? MoveNodeToWorkspaceCommand {
+            return .moveNodeToWorkspace(moveNodeToWorkspace.targetWorkspaceName)
         }
         error("Unsupported command: \(self)")
     }
@@ -293,4 +319,5 @@ enum CommandDescription: Equatable {
     case resizeCommand(dimension: ResizeCommand.Dimension, mode: ResizeCommand.ResizeMode, unit: UInt)
     case layoutCommand([LayoutCommand.LayoutDescription])
     case execAndForget(String)
+    case moveNodeToWorkspace(String)
 }

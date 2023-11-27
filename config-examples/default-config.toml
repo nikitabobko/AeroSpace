@@ -41,20 +41,6 @@ default-root-container-layout = 'tiles'
 #               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#assign-workspaces-to-monitors
-# [workspace-to-monitor-force-assignment]
-# 1 = 1                            # Sequence number of the monitor from left to right. 1-based indexing
-# 2 = 'main'                       # Main monitor
-# 3 = 'secondary'                  # Non-main monitor in case when there are only two monitors
-# 4 = 'built-in'                   # Case insensitive regex substring
-# 5 = '^built-in retina display$'  # Case insensitive regex match
-# 6 = ['secondary', 'dell']        # You can specify multiple patterns. The first matching pattern will be used
-
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#on-window-detected-callback
-# [[on-window-detected]]
-# appId = 'com.apple.systempreferences'                  # Application ID match
-# run = ['layout floating', 'move-node-to-workspace S']  # The callback itself
-
 # 'main' binding mode declaration. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 # 'main' binding mode must be always presented
 [mode.main.binding]

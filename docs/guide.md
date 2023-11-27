@@ -19,9 +19,14 @@
 ## Configuring AeroSpace
 
 AeroSpace will read config file from `~/.aerospace.toml`. Please see the following config samples:
-- The default config contains all possible keys with comments: [default-config.toml](../config-examples/default-config.toml)
+
+- The default config: [default-config.toml](../config-examples/default-config.toml)
 - i3 like config: [i3-like-config-example.toml](../config-examples/i3-like-config-example.toml)
 - [Search for configs by other users on GitHub](https://github.com/search?q=%28path%3A**%2F.aerospace.toml+OR+path%3A**%2Faerospace.toml%29&type=code) for inspiration
+
+The [default-config.toml](../config-examples/default-config.toml) also serves as a documentation, since it contains
+all possible plain configuration keys with comments. Non-trivial configuration options are mentioned further in this
+guide.
 
 AeroSpace uses TOML format for the config. TOML is easy to read, and it supports comments. See [TOML site for more
 info](https://toml.io/en/)
@@ -230,61 +235,77 @@ Overview of 'Displays have separate Spaces'
 
 - Available since: 0.6.0-Beta
 
-You can use `on-window-detected` callback to run commands that run every time a new window is detected.
+You can use `on-window-detected` callback to run commands every time a new window is detected.
+
+Here is a showcase example that uses all the possible configurations:
 
 ```toml
 [[on-window-detected]]
-app-id = 'com.apple.systempreferences'                # Application ID exact match
-app-name-regex-substring = 'settings'                 # Case insensetive regex substring
-window-title-regex-substring = 'substring'            # Case insensetive regex substring
-during-aerospace-startup = true                       # Run the callback only if the window detected during AeroSpace startup
-run = ['layout floating', 'move-node-to-workspace S'] # The callback itself
+if.app-id = 'com.apple.systempreferences'                # Application ID exact match
+if.app-name-regex-substring = 'settings'                 # Case insensetive regex substring
+if.window-title-regex-substring = 'substring'            # Case insensetive regex substring
+if.during-aerospace-startup = true                       # Run the callback only if the window detected during AeroSpace startup
+check-further-callbacks = true                           # Check further callbacks. if not specified the default value is false
+run = ['layout floating', 'move-node-to-workspace S']    # The callback itself
 ```
 
-`run` commands are run only if the window matches all the specified filters. If none of the filters are specified then `run` is run
-for every detected window
+`run` commands are run only if the detected window matches all the specified conditions. If no conditions are specified then
+`run` is run every time a new window is detected.
 
-Available filters:
+Several callbacks can be declared in the config. The callbacks are processed in the order they are declared. By default, the first
+callback that matches the criteria is run, and further callbacks are not considered. (The behavior can be overridden with
+`check-further-callbacks` option)
 
-| Filter TOML key                | Filter Type        | Filter description                                                                                                                 |
-|--------------------------------|--------------------|------------------------------------------------------------------------------------------------------------------------------------|
-| `app-id`                       | String exact match | Application ID exact match of the detected window                                                                                  |
-| `app-name-regex-substring`     | Regex substring    | Application name regex substring of the detected window                                                                            |
-| `window-title-regex-substring` | Regex substring    | Window title regex substring of the detected window                                                                                |
-| `during-aerospace-startup`     | Boolean            | If `true` then run the callback only during AeroSpace startup.<br/>If `false` then run callback only NOT during AeroSpace startup. |
+For now, only [`move-node-to-workspace`](./commands.md#move-node-to-workspace) and [`layout`](./commands.md#layout) commands are
+supported in the `run` callback. Please post your use cases to [the issue](https://github.com/nikitabobko/AeroSpace/issues/20) if
+you want other commands to get supported.
 
-[The list of popular application IDs](./popular-apps-ids.md) might be useful to compose `app-id` filter. Alternatively,
+Available window conditions are:
+
+| Condition TOML key                | Condition Type     | Condition description                                                                                                                  |
+|-----------------------------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| `if.app-id`                       | String exact match | Application ID exact match of the detected window                                                                                      |
+| `if.app-name-regex-substring`     | Regex substring    | Application name regex substring of the detected window                                                                                |
+| `if.window-title-regex-substring` | Regex substring    | Window title regex substring of the detected window                                                                                    |
+| `if.during-aerospace-startup`     | Boolean            | If `true` then run the callback only during AeroSpace startup.<br/>If `false` then run callback only **NOT** during AeroSpace startup. |
+
+- `if.during-aerospace-startup = true` is useful if you want to do the initial app arrangement only on startup.
+- `if.during-aerospace-startup = false` is useful if you want to relaunch AeroSpace, but the callback has side effects that you
+  don't want to run on every relaunch (e.g. the callback opens new windows).
+
+[The list of popular application IDs](./popular-apps-ids.md) might be useful to compose `app-id` condition. Alternatively,
 you can use [`aerospace list-apps`](./cli-commands.md#list-apps) CLI command to get IDs of running applications
 
 > [!IMPORTANT]
-> Some windows initialize their title after the window appears. `window-title-regex-substring` may not work as expected 
-> for such windows
+> Some windows initialize their title after the window appears. `window-title-regex-substring` may not work as expected for such
+> windows
 
 Examples of automations:
 
 - Assign apps on particular workspaces
   ```toml
   [[on-window-detected]]
-  app-id = 'org.alacritty'
-  run = 'move-node-to-workspace T' # mnemonics 'Terminal'
+  if.app-id = 'org.alacritty'
+  run = 'move-node-to-workspace T' # mnemonics T - Terminal
   
   [[on-window-detected]]
-  app-id = 'com.google.Chrome'
-  run = 'move-node-to-workspace W' # mnemonics 'Web browser'
+  if.app-id = 'com.google.Chrome'
+  run = 'move-node-to-workspace W' # mnemonics W - Web browser
 
   [[on-window-detected]]
-  app-id = 'com.jetbrains.intellij'
-  run = 'move-node-to-workspace I' # mnemonics 'Ide'
+  if.app-id = 'com.jetbrains.intellij'
+  run = 'move-node-to-workspace I' # mnemonics I - IDE
   ```
 - Make all windows float by default
   ```toml
   [[on-window-detected]]
+  check-further-callbacks = true
   run = 'layout floating'
   ```
 - Float 'System Settings' app
   ```toml
   [[on-window-detected]]
-  app-id = 'com.apple.systempreferences'
+  if.app-id = 'com.apple.systempreferences'
   run = 'layout floating'
   ```
 

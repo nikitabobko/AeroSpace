@@ -39,18 +39,20 @@ struct Config {
     var preservedWorkspaceNames: [String]
 }
 
-struct RawWindowDetectedCallback: Copyable {
+struct CallbackMatcher: Copyable {
     var appId: String?
     var appNameRegexSubstring: Regex<AnyRegexOutput>?
     var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
-
+    var duringAeroSpaceStartup: Bool?
+}
+struct RawWindowDetectedCallback: Copyable {
+    var matcher: CallbackMatcher?
+    var checkFurtherCallbacks: Bool?
     var run: [any Command]?
 }
 struct WindowDetectedCallback {
-    let appId: String?
-    let appNameRegexSubstring: Regex<AnyRegexOutput>?
-    let windowTitleRegexSubstring: Regex<AnyRegexOutput>?
-
+    let matcher: CallbackMatcher
+    let checkFurtherCallbacks: Bool
     let run: [any Command]
 }
 

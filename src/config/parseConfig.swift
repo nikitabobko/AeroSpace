@@ -330,7 +330,7 @@ private func parseBinding(_ raw: String, _ backtrace: TomlBacktrace) -> ParsedTo
     }
 }
 
-private func parseBool(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Bool> {
+func parseBool(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Bool> {
     raw.bool.orFailure { expectedActualTypeError(expected: .bool, actual: raw.type, backtrace) }
 }
 

@@ -34,7 +34,7 @@ final class MacWindow: Window, CustomStringConvertible {
                        window.observe(resizedObs, kAXResizedNotification) {
                 debug("New window detected: \(window)")
                 allWindowsMap[id] = window
-                onWindowDetected(window)
+                onWindowDetected(window, startup: startup)
                 return window
             } else {
                 window.garbageCollect()
@@ -194,25 +194,31 @@ private func destroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, d
     refreshAndLayout()
 }
 
-func onWindowDetected(_ window: Window) {
+private func onWindowDetected(_ window: Window, startup: Bool) {
     check(Thread.current.isMainThread)
     for callback in config.onWindowDetected {
-        if callback.matches(window) {
+        if callback.matches(window, startup: startup) {
             var subject = CommandSubject.window(window)
             callback.run.run(&subject)
+            if !callback.checkFurtherCallbacks {
+                return
+            }
         }
     }
 }
 
 extension WindowDetectedCallback {
-    func matches(_ window: Window) -> Bool {
-        if let windowTitleRegexSubstring, !(window.title ?? "").contains(windowTitleRegexSubstring) {
+    func matches(_ window: Window, startup: Bool) -> Bool {
+        if let startupMatcher = matcher.duringAeroSpaceStartup, startupMatcher != startup {
             return false
         }
-        if let appId, appId != window.app.id {
+        if let regex = matcher.windowTitleRegexSubstring, !(window.title ?? "").contains(regex) {
             return false
         }
-        if let appNameRegexSubstring, !(window.app.name ?? "").contains(appNameRegexSubstring) {
+        if let appId = matcher.appId, appId != window.app.id {
+            return false
+        }
+        if let regex = matcher.appNameRegexSubstring, !(window.app.name ?? "").contains(regex) {
             return false
         }
         return true
