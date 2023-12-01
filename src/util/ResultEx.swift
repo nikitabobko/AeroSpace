@@ -9,6 +9,15 @@ extension Result {
         }
     }
 
+    func getOrNil() -> Success? {
+        switch self {
+        case .success(let success):
+            return success
+        case .failure:
+            return nil
+        }
+    }
+
     func getOrNils() -> (Success?, Failure?) {
         switch self {
         case .success(let success):

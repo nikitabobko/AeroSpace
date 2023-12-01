@@ -2,8 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [ "main" ]
-    tags: [ "v**" ]
+    branches:
+      - 'main'
+      - 'bobko/**'
   pull_request:
     branches: [ "main" ]
   schedule:
