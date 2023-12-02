@@ -7,9 +7,9 @@ func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeM
 
 private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
     if window.isHiddenViaEmulation || // Don't allow to move windows of hidden workspaces
-           getNativeFocusedWindow(startup: false) != window ||
            !isLeftMouseButtonPressed ||
-           currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId {
+           currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId ||
+           getNativeFocusedWindow(startup: false) != window {
         return
     }
     switch window.parent.kind {

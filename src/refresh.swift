@@ -5,15 +5,21 @@ func refreshSession(startup: Bool = false, body: () -> Void) {
     check(Thread.current.isMainThread)
     gc()
 
+    detectNewWindowsAndAttachThemToWorkspaces(startup: startup)
+
     let nativeFocused = getNativeFocusedWindow(startup: startup)
     takeFocusFromMacOs(nativeFocused, startup: startup)
     let focusBefore = focusedWindow
 
-    refreshModel(startup: startup)
+    refreshModel()
     body()
-    refreshModel(startup: startup)
+    refreshModel()
 
     let focusAfter = focusedWindow
+
+    if startup {
+        putWindowsAtStartup()
+    }
 
     if TrayMenuModel.shared.isEnabled {
         syncFocusToMacOs(nativeFocused, startup: startup, force: focusBefore != focusAfter)
@@ -27,12 +33,9 @@ func refreshAndLayout(startup: Bool = false) {
     refreshSession(startup: startup, body: {})
 }
 
-func refreshModel(startup: Bool) {
+func refreshModel() {
     gc()
     refreshFocusedWorkspaceBasedOnFocusedWindow()
-    // todo not sure that it should be part of the refreshModel
-    //  now it's a part of refreshModel mainly because of await enable-and-wait
-    detectNewWindowsAndAttachThemToWorkspaces(startup: startup)
     normalizeContainers()
 }
 
@@ -91,13 +94,8 @@ private func normalizeContainers() {
 }
 
 private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
-    if startup { // todo move to MacWindow.get
-        //putWindowsOnWorkspacesOfTheirMonitors()
-        putWindowsAtStartup()
-    } else {
-        for app in apps {
-            let _ = app.detectNewWindowsAndGetAll(startup: startup)
-        }
+    for app in apps {
+        let _ = app.detectNewWindowsAndGetAll(startup: startup)
     }
 }
 

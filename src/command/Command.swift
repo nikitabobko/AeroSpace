@@ -34,7 +34,7 @@ extension [Command] {
                 if command is ExecAndWaitCommand { // todo think of something more elegant
                     break
                 }
-                refreshModel(startup: false)
+                refreshModel()
             }
         }
     }

@@ -22,7 +22,7 @@ struct AeroSpaceApp: App {
             checkAccessibilityPermissions()
             startServer()
             GlobalObserver.initObserver()
-            refreshAndLayout()
+            refreshAndLayout(startup: true)
             refreshSession {
                 var focused = CommandSubject.focused
                 if startedAtLogin {
