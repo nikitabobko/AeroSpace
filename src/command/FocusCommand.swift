@@ -23,6 +23,10 @@ struct FocusCommand: Command {
 }
 
 private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingWindowData] {
+    let mruBefore = workspace.mostRecentWindow
+    defer {
+        mruBefore?.focus()
+    }
     let floatingWindows: [FloatingWindowData] = workspace.floatingWindows
         .map { (window: Window) -> FloatingWindowData? in
             guard let center = window.getCenter() else { return nil }
@@ -46,6 +50,10 @@ private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingW
 }
 
 private func restoreFloatingWindows(floatingWindows: [FloatingWindowData], workspace: Workspace) {
+    let mruBefore = workspace.mostRecentWindow
+    defer {
+        mruBefore?.focus()
+    }
     for floating in floatingWindows {
         floating.window.unbindFromParent()
         floating.window.bind(to: workspace, adaptiveWeight: floating.adaptiveWeight, index: INDEX_BIND_LAST)
