@@ -88,5 +88,4 @@ let modifiersMap: [String: NSEvent.ModifierFlags] = [
     "alt": .option,
     "ctrl": .control,
     "cmd": .command,
-    "fn": .function,
 ]
