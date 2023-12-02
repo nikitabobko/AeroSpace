@@ -1,6 +1,6 @@
 @testable import AeroSpace_Debug
 
-final class TestApp: AeroApp {
+final class TestApp: AbstractApp {
     static var shared = TestApp()
 
     private init() {

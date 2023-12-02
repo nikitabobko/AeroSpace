@@ -1,12 +1,12 @@
 class Window: TreeNode, Hashable {
     let windowId: UInt32
-    let app: AeroApp
+    let app: AbstractApp
     override var parent: NonLeafTreeNode { super.parent ?? errorT("Windows always have parent") }
     var parentOrNilForTests: NonLeafTreeNode? { super.parent }
     var lastFloatingSize: CGSize?
     var isFullscreen: Bool = false
 
-    init(id: UInt32, _ app: AeroApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
+    init(id: UInt32, _ app: AbstractApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.windowId = id
         self.app = app
         self.lastFloatingSize = lastFloatingSize

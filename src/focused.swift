@@ -1,6 +1,6 @@
-var appForTests: AeroApp? = nil
+var appForTests: AbstractApp? = nil
 
-private var focusedApp: AeroApp? {
+private var focusedApp: AbstractApp? {
     if isUnitTest {
         return appForTests
     } else {

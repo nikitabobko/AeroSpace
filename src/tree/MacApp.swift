@@ -1,4 +1,4 @@
-final class MacApp: AeroApp {
+final class MacApp: AbstractApp {
     let nsApp: NSRunningApplication
     private let axApp: AXUIElement
 

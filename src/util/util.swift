@@ -111,7 +111,7 @@ extension String? {
 
 public var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
 
-var apps: [AeroApp] {
+var apps: [AbstractApp] {
     isUnitTest
         ? appForTests.asList()
         : NSWorkspace.shared.runningApplications.lazy.filter { $0.activationPolicy == .regular }.map(\.macApp).filterNotNil()

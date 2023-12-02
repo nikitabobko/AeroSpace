@@ -1,4 +1,4 @@
-class AeroApp: Hashable {
+class AbstractApp: Hashable {
     let pid: Int32
     let id: String?
 
@@ -7,7 +7,7 @@ class AeroApp: Hashable {
         self.id = id
     }
 
-    static func ==(lhs: AeroApp, rhs: AeroApp) -> Bool {
+    static func ==(lhs: AbstractApp, rhs: AbstractApp) -> Bool {
         if lhs.pid == rhs.pid {
             check(lhs === rhs)
             return true

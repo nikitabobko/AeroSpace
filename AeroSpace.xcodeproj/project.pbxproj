@@ -9,10 +9,10 @@
 /* Begin PBXBuildFile section */
 		03D8ABD4597EDB00D79807E1 /* TreeNodeEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F6B8A501483ACBB62560101 /* TreeNodeEx.swift */; };
 		045D4B46ABACA9E8167EF356 /* mouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE5470AF418906B180A593 /* mouse.swift */; };
-		059308740527CC10D1A79DDD /* AeroApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 996BDAB685567E430DF7D962 /* AeroApp.swift */; };
 		0A90EEEAC020DD3A56736014 /* FocusCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = E761155C73F06E2CF5E292A4 /* FocusCommand.swift */; };
 		0A9DAD847B5340FBE3D9CF88 /* FlattenWorkspaceTreeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3C5B6719EF0BC14D7CF868C /* FlattenWorkspaceTreeCommand.swift */; };
 		1311398A83B998908773C54D /* FocusCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0EAADE8D2FB5D05FA5456B0 /* FocusCommandTest.swift */; };
+		1B0C60A5F1EABC2B95F8AC69 /* AbstractApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84AB57B5B8014931BD0F30DB /* AbstractApp.swift */; };
 		1C46EBB55D401C0D1AFD50F0 /* CollectionEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CE37C1B8D858C81A396F40 /* CollectionEx.swift */; };
 		1FD8762CC7C132D01D4B3090 /* cliUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EB6F0170422A7606D89BCF0 /* cliUtil.swift */; };
 		21D0512B48E0E3C28F8CA42A /* parseOnWindowDetected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9DFF8980BB3F90A3793BE9 /* parseOnWindowDetected.swift */; };
@@ -161,6 +161,7 @@
 		7ACD4E9C6C0C08F1B0622C57 /* ResizeCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizeCommandTest.swift; sourceTree = "<group>"; };
 		82476B9BEBAC00EB9E32256F /* AeroAny.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroAny.swift; sourceTree = "<group>"; };
 		826EA316AB62F913D1A94466 /* FocusSourceOfTruth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusSourceOfTruth.swift; sourceTree = "<group>"; };
+		84AB57B5B8014931BD0F30DB /* AbstractApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AbstractApp.swift; sourceTree = "<group>"; };
 		883D7F7F87FBE7D0BDE4E87F /* ArrayEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayEx.swift; sourceTree = "<group>"; };
 		8B7A2DF0D1F72B80B1F04240 /* BundleEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleEx.swift; sourceTree = "<group>"; };
 		8FE45A887100EB70912B07F0 /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
@@ -171,7 +172,6 @@
 		9752080BBA547C2A0EF076F0 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
 		97606CEE986F61539AC07E98 /* WorkspaceCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceCommandTest.swift; sourceTree = "<group>"; };
 		976540EBEACF846D598CD6E1 /* util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = util.swift; sourceTree = "<group>"; };
-		996BDAB685567E430DF7D962 /* AeroApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroApp.swift; sourceTree = "<group>"; };
 		99853C505D93E41F6531C324 /* CloseAllWindowsButCurrentCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseAllWindowsButCurrentCommand.swift; sourceTree = "<group>"; };
 		9D31BF26EAFA96F675D2C14B /* accessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = accessibility.swift; sourceTree = "<group>"; };
 		9ECC990B6C2D66D343216A12 /* FullscreenCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenCommand.swift; sourceTree = "<group>"; };
@@ -271,7 +271,7 @@
 		297CAFE291FBC024407F4378 /* tree */ = {
 			isa = PBXGroup;
 			children = (
-				996BDAB685567E430DF7D962 /* AeroApp.swift */,
+				84AB57B5B8014931BD0F30DB /* AbstractApp.swift */,
 				DAC5AF4019D1F5DAB5AF2B56 /* layoutRecursive.swift */,
 				B7DB782C527ABE0CF31740EB /* MacApp.swift */,
 				9245C6FACF389672EA71173B /* MacWindow.swift */,
@@ -605,8 +605,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1B0C60A5F1EABC2B95F8AC69 /* AbstractApp.swift in Sources */,
 				3BD6FF4CC51532977DA0C05A /* AeroAny.swift in Sources */,
-				059308740527CC10D1A79DDD /* AeroApp.swift in Sources */,
 				66E6CDA75DDD5E4B9647EDE2 /* AeroSpaceApp.swift in Sources */,
 				A2CBF9674964F9083BB198D2 /* ArrayEx.swift in Sources */,
 				45AA5FD4A023AF751922BC22 /* BundleEx.swift in Sources */,

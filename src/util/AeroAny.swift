@@ -27,6 +27,6 @@ extension AXUIElement: AeroAny {}
 extension CGPoint: AeroAny {}
 extension String: AeroAny {}
 extension Character: AeroAny {}
-extension AeroApp: AeroAny {}
+extension AbstractApp: AeroAny {}
 extension Regex: AeroAny {}
 extension Array: AeroAny {}
