@@ -10,7 +10,8 @@ struct ExecAndWaitCommand: Command {
             check(Thread.current.isMainThread)
             refreshSession {
                 var focused = CommandSubject.focused
-                Array(commands[(index + 1)...]).run(&focused) // todo preserve subject in "exec sessions"
+                // todo preserve subject in "exec sessions" (when/if "exec sessions" appears)
+                Array(commands[(index + 1)...]).run(&focused)
             }
         }
         // It doesn't throw if exit code is non-zero

@@ -11,10 +11,6 @@ after-login-command = []
 # For the list of available commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
 after-startup-command = []
 
-# Visual indent makes it easier to understand that containers of the same orientation are nested.
-# If you have 'auto-opposite-orientation-for-nested-containers' enabled then there is no way to observe the indent
-indent-for-nested-containers-with-the-same-orientation = 30
-
 # Start AeroSpace at login
 start-at-login = false
 
@@ -26,13 +22,6 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # The 'accordion-padding' specifies the size of the padding. You can set 0 to disable the padding feature
 accordion-padding = 30
 
-# Layout of root containers of non-empty workspaces. The layout is applied only on startup
-# Possible values: smart|tiles|accordion
-# - 'tiles' and 'accordion' are self-describing
-# - 'smart' means some "smart logic". Currently, 3 and less windows will get 'tiles' layout,
-#   4 and more will get 'accordion' layout. 'smart' can change its behavior in future versions
-non-empty-workspaces-root-containers-layout-on-startup = 'smart'
-
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
 
@@ -41,11 +30,31 @@ default-root-container-layout = 'tiles'
 #               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
+# Visual indent makes it easier to understand that containers of the same orientation are nested.
+# If you have 'enable-normalization-opposite-orientation-for-nested-containers' enabled then there is no way to
+# observe the indent
+indent-for-nested-containers-with-the-same-orientation = 30
+
+# Layout of root containers of non-empty workspaces. The layout is applied only on startup
+# Possible values: smart|tiles|accordion
+# - 'tiles' and 'accordion' are self-describing
+# - 'smart' means some "smart logic". Currently, 3 and less windows will get 'tiles' layout,
+#   4 and more will get 'accordion' layout. 'smart' can change its behavior in future versions
+non-empty-workspaces-root-containers-layout-on-startup = 'smart'
+
 # 'main' binding mode declaration. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
 # 'main' binding mode must be always presented
 [mode.main.binding]
 
-# For all possible keys and modifiers see: https://github.com/nikitabobko/AeroSpace/blob/main/src/config/keysMap.swift
+# All possible keys:
+# - Letters.       a, b, c, ..., z
+# - Numbers.       0, 1, 2, ..., 9
+# - F-keys.        F1, F2, ..., F20
+# - Special keys.  minus, equal, period, comma, slash, backslash, quote, semicolon, backtick, leftSquareBracket, rightSquareBracket, space, enter, esc, backspace, tab
+# - Arrows.        left, down, up, right
+
+# All possible modifiers: cmd, alt, ctrl, shift
+
 # For all possible commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
 
 # You can uncomment this line to open up terminal with alt + enter shortcut

@@ -303,7 +303,6 @@ private func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktra
         let backtrace = backtrace + .key(binding)
         let binding = parseBinding(binding, backtrace)
             .flatMap { (modifiers, key) -> ParsedToml<HotkeyBinding> in
-                // todo support parsing of implicit modes?
                 parseCommandOrCommands(rawCommand).toParsedToml(backtrace).map { HotkeyBinding(modifiers, key, $0) }
             }
             .getOrNil(appendErrorTo: &errors)
