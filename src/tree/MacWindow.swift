@@ -59,14 +59,17 @@ final class MacWindow: Window, CustomStringConvertible {
         if MacWindow.allWindowsMap.removeValue(forKey: windowId) == nil {
             return
         }
-        let data = unbindFromParent()
+        let workspace = unbindFromParent().parent.workspace.name
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
         }
         axObservers = []
-        refreshSession {
-            // todo what if window closed itself?
-            WorkspaceCommand(workspaceName: data.parent.workspace.name).runOnFocusedSubject()
+        // todo the if is an approximation to filter out cases when window just closed itself (or was killed remotely)
+        //  we might want to track the time of the latest workspace switch to make the approximation more accurate
+        if workspace == previousFocusedWorkspaceName || workspace == focusedWorkspaceName {
+            refreshSession {
+                WorkspaceCommand(workspaceName: workspace).runOnFocusedSubject()
+            }
         }
     }
 

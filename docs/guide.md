@@ -273,8 +273,10 @@ Available window conditions are:
 - `if.during-aerospace-startup = false` is useful if you want to relaunch AeroSpace, but the callback has side effects that you
   don't want to run on every relaunch (e.g. the callback opens new windows).
 
-[The list of popular application IDs](./popular-apps-ids.md) might be useful to compose `app-id` condition. Alternatively,
-you can use [`aerospace list-apps`](./cli-commands.md#list-apps) CLI command to get IDs of running applications
+There are several ways to know `app-id`:
+- Take a look at precomposed [list of popular application IDs](./popular-apps-ids.md)
+- You can use [`aerospace list-apps`](./cli-commands.md#list-apps) CLI command to get IDs of running applications
+- `mdls -name kMDItemCFBundleIdentifier -r /Applications/App.app`
 
 > [!IMPORTANT]
 > Some windows initialize their title after the window appears. `window-title-regex-substring` may not work as expected for such
