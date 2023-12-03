@@ -39,7 +39,7 @@ enum TomlParseError: Error, CustomStringConvertible {
     var description: String {
         switch self {
         case .semantic(let backtrace, let message):
-            if case .root("") = backtrace { // todo Make 'split' + flatten normalization prettier
+            if case .root = backtrace { // todo Make 'split' + flatten normalization prettier
                 return message
             } else {
                 return "\(backtrace): \(message)"
@@ -83,7 +83,7 @@ struct Parser<S: Copyable, T>: ParserProtocol {
     }
 }
 
-private let parsers: [String: any ParserProtocol<RawConfig>] = [
+private let configParser: [String: any ParserProtocol<RawConfig>] = [
     "after-login-command": Parser(\.afterLoginCommand, { parseCommandOrCommands($0).toParsedToml($1) }),
     "after-startup-command": Parser(\.afterStartupCommand, { parseCommandOrCommands($0).toParsedToml($1) }),
 
@@ -117,16 +117,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
 
     var errors: [TomlParseError] = []
 
-    var raw = RawConfig()
-
-    for (key, value) in rawTable {
-        let backtrace: TomlBacktrace = .root(key)
-        if let parser = parsers[key] {
-            raw = parser.transformRawConfig(raw, value, backtrace, &errors)
-        } else {
-            errors += [unknownKeyError(backtrace)]
-        }
-    }
+    let raw = rawTable.parseTable(RawConfig(), configParser, .root, &errors)
 
     let modesOrDefault = raw.modes ?? defaultConfig.modes
 
@@ -161,7 +152,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
             .flatMap { $0.commands }
             .contains { $0 is SplitCommand }
         if containsSplitCommand {
-            errors += [.semantic(.root(""), // todo Make 'split' + flatten normalization prettier
+            errors += [.semantic(.root, // todo Make 'split' + flatten normalization prettier
                 """
                 The config contains:
                 1. usage of 'split' command
@@ -180,6 +171,20 @@ func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Parsed
 
 func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<String> {
     raw.string.orFailure { expectedActualTypeError(expected: .string, actual: raw.type, backtrace) }
+}
+
+func parseTable<T: Copyable>(
+    _ raw: TOMLValueConvertible,
+    _ initial: T,
+    _ fieldsParser: [String: any ParserProtocol<T>],
+    _ backtrace: TomlBacktrace,
+    _ errors: inout [TomlParseError]
+) -> T {
+    guard let table = raw.table else {
+        errors.append(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))
+        return initial
+    }
+    return table.parseTable(initial, fieldsParser, backtrace, &errors)
 }
 
 private func parseStartupRootContainerLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<StartupRootContainerLayout> {
@@ -336,14 +341,17 @@ func parseBool(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Parse
 }
 
 indirect enum TomlBacktrace: CustomStringConvertible {
-    case root(String)
+    case root
+    case rootKey(String)
     case key(String)
     case index(Int)
     case pair((TomlBacktrace, TomlBacktrace))
 
     var description: String {
         switch self {
-        case .root(let value):
+        case .root:
+            error("Impossible")
+        case .rootKey(let value):
             return value
         case .key(let value):
             return "." + value
@@ -355,7 +363,15 @@ indirect enum TomlBacktrace: CustomStringConvertible {
     }
 
     static func +(lhs: TomlBacktrace, rhs: TomlBacktrace) -> TomlBacktrace {
-        pair((lhs, rhs))
+        if case .root = lhs {
+            if case .key(let newRoot) = rhs {
+                return .rootKey(newRoot)
+            } else {
+                error("Impossible")
+            }
+        } else {
+            return pair((lhs, rhs))
+        }
     }
 }
 

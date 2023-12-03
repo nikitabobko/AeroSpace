@@ -47,11 +47,6 @@ struct CallbackMatcher: Copyable {
     var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
     var duringAeroSpaceStartup: Bool?
 }
-struct RawWindowDetectedCallback: Copyable {
-    var matcher: CallbackMatcher?
-    var checkFurtherCallbacks: Bool?
-    var run: [any Command]?
-}
 struct WindowDetectedCallback {
     let matcher: CallbackMatcher
     let checkFurtherCallbacks: Bool

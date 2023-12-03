@@ -18,29 +18,17 @@ private let outerParser: [String: any ParserProtocol<RawOuter>] = [
 ]
 
 func parseGaps(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> Gaps {
-    guard let table = raw.table else {
-        errors.append(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))
-        return .zero
-    }
-    let raw = table.parseTable(RawGaps(), gapsParser, backtrace, &errors)
+    let raw = parseTable(raw, RawGaps(), gapsParser, backtrace, &errors)
     return Gaps(inner: raw.inner ?? .zero, outer: raw.outer ?? .zero)
 }
 
 func parseInner(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> Gaps.Inner {
-    guard let table = raw.table else {
-        errors.append(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))
-        return .zero
-    }
-    let raw = table.parseTable(RawInner(), innerParser, backtrace, &errors)
+    let raw = parseTable(raw, RawInner(), innerParser, backtrace, &errors)
     return Gaps.Inner(vertical: raw.vertical ?? 0, horizontal: raw.horizontal ?? 0)
 }
 
 func parseOuter(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> Gaps.Outer {
-    guard let table = raw.table else {
-        errors.append(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))
-        return .zero
-    }
-    let raw = table.parseTable(RawOuter(), outerParser, backtrace, &errors)
+    let raw = parseTable(raw, RawOuter(), outerParser, backtrace, &errors)
     return Gaps.Outer(left: raw.left ?? 0, bottom: raw.bottom ?? 0, top: raw.top ?? 0, right: raw.right ?? 0)
 }
 
