@@ -100,6 +100,7 @@ private let parsers: [String: any ParserProtocol<RawConfig>] = [
     "accordion-padding": Parser(\.accordionPadding, parseInt),
 
     "mode": Parser(\.modes, parseModes),
+    "gaps": Parser(\.gaps, parseGaps),
     "workspace-to-monitor-force-assignment": Parser(\.workspaceToMonitorForceAssignment, parseWorkspaceToMonitorAssignment),
     "on-window-detected": Parser(\.onWindowDetected, parseOnWindowDetectedArray)
 ]
@@ -141,6 +142,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         accordionPadding: raw.accordionPadding ?? defaultConfig.accordionPadding,
         enableNormalizationOppositeOrientationForNestedContainers: raw.enableNormalizationOppositeOrientationForNestedContainers ?? defaultConfig.enableNormalizationOppositeOrientationForNestedContainers,
 
+        gaps: raw.gaps ?? defaultConfig.gaps,
         workspaceToMonitorForceAssignment: raw.workspaceToMonitorForceAssignment ?? [:],
         modes: modesOrDefault,
         onWindowDetected: raw.onWindowDetected ?? [],
@@ -172,7 +174,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
     return (config, errors)
 }
 
-private func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Int> {
+func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Int> {
     raw.int.orFailure { expectedActualTypeError(expected: .int, actual: raw.type, backtrace) }
 }
 
@@ -354,6 +356,28 @@ indirect enum TomlBacktrace: CustomStringConvertible {
 
     static func +(lhs: TomlBacktrace, rhs: TomlBacktrace) -> TomlBacktrace {
         pair((lhs, rhs))
+    }
+}
+
+extension TOMLTable {
+    func parseTable<T: Copyable>(
+        _ initial: T,
+        _ fieldsParser: [String: any ParserProtocol<T>],
+        _ backtrace: TomlBacktrace,
+        _ errors: inout [TomlParseError]
+    ) -> T {
+        var raw = initial
+
+        for (key, value) in self {
+            let backtrace: TomlBacktrace = backtrace + .key(key)
+            if let parser = fieldsParser[key] {
+                raw = parser.transformRawConfig(raw, value, backtrace, &errors)
+            } else {
+                errors.append(unknownKeyError(backtrace))
+            }
+        }
+
+        return raw
     }
 }
 

@@ -16,6 +16,7 @@ struct RawConfig: Copyable {
     var accordionPadding: Int?
     var enableNormalizationOppositeOrientationForNestedContainers: Bool?
 
+    var gaps: Gaps?
     var workspaceToMonitorForceAssignment: [String: [MonitorDescription]]?
     var modes: [String: Mode]?
     var onWindowDetected: [WindowDetectedCallback]?
@@ -32,6 +33,7 @@ struct Config {
     var accordionPadding: Int
     var enableNormalizationOppositeOrientationForNestedContainers: Bool
 
+    let gaps: Gaps
     var workspaceToMonitorForceAssignment: [String: [MonitorDescription]]
     let modes: [String: Mode]
     var onWindowDetected: [WindowDetectedCallback]
@@ -54,6 +56,31 @@ struct WindowDetectedCallback {
     let matcher: CallbackMatcher
     let checkFurtherCallbacks: Bool
     let run: [any Command]
+}
+
+struct Gaps: Equatable {
+    let inner: Inner
+    let outer: Outer
+
+    struct Inner: Equatable {
+        let vertical: Int
+        let horizontal: Int
+
+        func get(_ orientation: Orientation) -> Int { orientation == .h ? horizontal : vertical }
+
+        static var zero = Inner(vertical: 0, horizontal: 0)
+    }
+
+    struct Outer: Equatable {
+        let left: Int
+        let bottom: Int
+        let top: Int
+        let right: Int
+
+        static var zero = Outer(left: 0, bottom: 0, top: 0, right: 0)
+    }
+
+    static var zero = Gaps(inner: .zero, outer: .zero)
 }
 
 enum DefaultContainerOrientation: String {

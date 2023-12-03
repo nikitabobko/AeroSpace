@@ -122,6 +122,10 @@ func terminateApp() -> Never {
     error("Unreachable code")
 }
 
+extension Int {
+    func toDouble() -> Double { Double(self) }
+}
+
 extension String {
     func removePrefix(_ prefix: String) -> String {
         hasPrefix(prefix) ? String(dropFirst(prefix.count)) : self
@@ -170,6 +174,7 @@ extension CGPoint {
 
     func addingXOffset(_ offset: CGFloat) -> CGPoint { CGPoint(x: x + offset, y: y) }
     func addingYOffset(_ offset: CGFloat) -> CGPoint { CGPoint(x: x, y: y + offset) }
+    func addingOffset(_ orientation: Orientation, _ offset: CGFloat) -> CGPoint { orientation == .h ? addingXOffset(offset) : addingYOffset(offset) }
 
     func getProjection(_ orientation: Orientation) -> Double { orientation == .h ? x : y }
 

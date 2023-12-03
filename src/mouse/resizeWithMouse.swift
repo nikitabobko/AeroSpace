@@ -64,7 +64,7 @@ private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tes
 
 private extension TreeNode {
     func getWeightBeforeResize(_ orientation: Orientation) -> CGFloat {
-        let currentWeight = getWeight(orientation) // Check preconditions
+        let currentWeight = getWeight(orientation) // Check assertions
         return getUserData(key: adaptiveWeightBeforeResizeWithMouseKey)
             ?? (lastAppliedLayoutTilingRectForMouse?.getDimension(orientation) ?? currentWeight)
             .also { putUserData(key: adaptiveWeightBeforeResizeWithMouseKey, data: $0) }

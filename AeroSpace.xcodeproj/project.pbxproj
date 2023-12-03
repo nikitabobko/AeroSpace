@@ -34,6 +34,8 @@
 		45EA2D1C90430C432E123B51 /* keysMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0D40CBD65704BA9595C2FA /* keysMap.swift */; };
 		4D62EC19C6A1E3BBF54306BA /* Copyable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54B4C778D2594EB23C295741 /* Copyable.swift */; };
 		56E72B24303F5F337B31B776 /* TrayMenuModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5F52E346D024960EAF5938 /* TrayMenuModel.swift */; };
+		598F1FAE7DEDBE86DF66DBEE /* MonitorEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 598F19EB230F1637A153E11F /* MonitorEx.swift */; };
+		5BA537EABFE48178D6BD2544 /* parseGaps.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDFB9D7321F08B5CCEF6AFB /* parseGaps.swift */; };
 		5BC4AA58A69956C8B6379E47 /* JoinWithCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = D27A7AF7E9A049700BDE276B /* JoinWithCommand.swift */; };
 		5D675FA71B1160863359A4D9 /* MoveWorkspaceToMonitorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51CC651BEB897CB7A555D230 /* MoveWorkspaceToMonitorCommand.swift */; };
 		5DA2DA21600E8B5BCA3DCFC0 /* LayoutCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A2B673C67B00DBFCC27FFE7 /* LayoutCommand.swift */; };
@@ -148,6 +150,7 @@
 		54B4C778D2594EB23C295741 /* Copyable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Copyable.swift; sourceTree = "<group>"; };
 		569422C0C4C23EF3E024C8E6 /* ExecAndForgetCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecAndForgetCommand.swift; sourceTree = "<group>"; };
 		57B60F7A58DAD4D3AF2788E4 /* WorkspaceEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceEx.swift; sourceTree = "<group>"; };
+		598F19EB230F1637A153E11F /* MonitorEx.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MonitorEx.swift; sourceTree = "<group>"; };
 		5EB6F0170422A7606D89BCF0 /* cliUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = cliUtil.swift; sourceTree = "<group>"; };
 		5F5F52E346D024960EAF5938 /* TrayMenuModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrayMenuModel.swift; sourceTree = "<group>"; };
 		6352ADEE6625D9703CFCA99A /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
@@ -191,6 +194,7 @@
 		C848D6E57FDF22AAF0FB45E6 /* TilingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilingContainer.swift; sourceTree = "<group>"; };
 		CB03A4736BC3F6D19E4E69F3 /* parseCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parseCommand.swift; sourceTree = "<group>"; };
 		CB371951459F8CB0137788C2 /* ResizeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizeCommand.swift; sourceTree = "<group>"; };
+		CCDFB9D7321F08B5CCEF6AFB /* parseGaps.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parseGaps.swift; sourceTree = "<group>"; };
 		CD90FB41FD41602120F67FF5 /* Command.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		CF3C9038C846369FDD71D1D2 /* ReloadConfigCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadConfigCommand.swift; sourceTree = "<group>"; };
 		D01C2BE091C38CD73D237F96 /* CardinalDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardinalDirection.swift; sourceTree = "<group>"; };
@@ -294,6 +298,7 @@
 				739F4FE1DB101DF4E508F3FE /* Monitor.swift */,
 				244190F3707EF2BB3CC7FA5A /* MonitorDescription.swift */,
 				AAE5DD3E9DC82D247853956B /* Rect.swift */,
+				598F19EB230F1637A153E11F /* MonitorEx.swift */,
 			);
 			path = model;
 			sourceTree = "<group>";
@@ -315,6 +320,7 @@
 				9752080BBA547C2A0EF076F0 /* Config.swift */,
 				1C0D40CBD65704BA9595C2FA /* keysMap.swift */,
 				67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */,
+				CCDFB9D7321F08B5CCEF6AFB /* parseGaps.swift */,
 				0A9DFF8980BB3F90A3793BE9 /* parseOnWindowDetected.swift */,
 				9164C9401F7DDCACE9278DA4 /* startAtLogin.swift */,
 			);
@@ -667,6 +673,7 @@
 				B19980B36D066FD4947D2F92 /* normalizeContainers.swift in Sources */,
 				A5BFF75CF8021A585BC1F9D5 /* parseCommand.swift in Sources */,
 				A0765C31043BCFB0420BF1C9 /* parseConfig.swift in Sources */,
+				5BA537EABFE48178D6BD2544 /* parseGaps.swift in Sources */,
 				21D0512B48E0E3C28F8CA42A /* parseOnWindowDetected.swift in Sources */,
 				B3702BB393A9B03CCAE4C60E /* refresh.swift in Sources */,
 				8086A22EDCDC4C906C337D0B /* resizeWithMouse.swift in Sources */,
@@ -674,6 +681,7 @@
 				39EC2CF418F086457E900177 /* showMessageToUser.swift in Sources */,
 				ED96E36786C941AB3AF780BC /* startAtLogin.swift in Sources */,
 				93D44EA41776738B4758C28D /* util.swift in Sources */,
+				598F1FAE7DEDBE86DF66DBEE /* MonitorEx.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

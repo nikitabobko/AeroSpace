@@ -50,7 +50,7 @@ class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable, CustomString
     }
 
     override func getWeight(_ targetOrientation: Orientation) -> CGFloat {
-        monitor.visibleRect.getDimension(targetOrientation)
+        monitor.rectWithGaps.getDimension(targetOrientation)
     }
 
     override func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {

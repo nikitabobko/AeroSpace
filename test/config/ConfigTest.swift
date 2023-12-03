@@ -251,6 +251,21 @@ final class ConfigTest: XCTestCase {
         XCTAssertTrue("System Settings".contains(parseCaseInsensitiveRegex("settings").getOrNil(appendErrorTo: &devNull)!))
         XCTAssertTrue(!"System Settings".contains(parseCaseInsensitiveRegex("^settings^").getOrNil(appendErrorTo: &devNull)!))
     }
+
+    func testParseGaps() {
+        let (config, errors) = parseConfig(
+            """
+            gaps.inner.horizontal = 1
+            gaps.inner.vertical = 2
+            gaps.outer.left = 3
+            gaps.outer.bottom = 4
+            gaps.outer.top = 5
+            gaps.outer.right = 6
+            """
+        )
+        XCTAssertEqual(errors.descriptions, [])
+        XCTAssertEqual(config.gaps, Gaps(inner: Gaps.Inner(vertical: 2, horizontal: 1), outer: Gaps.Outer(left: 3, bottom: 4, top: 5, right: 6)))
+    }
 }
 
 extension MonitorDescription: Equatable {
