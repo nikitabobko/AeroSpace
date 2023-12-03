@@ -31,12 +31,12 @@ default-root-container-layout = 'tiles'
 default-root-container-orientation = 'auto'
 
 # Available since: 0.6.0-Beta
-gaps.inner.horizontal = 0
-gaps.inner.vertical =   0
-gaps.outer.left =       0
-gaps.outer.bottom =     0
-gaps.outer.top =        0
-gaps.outer.right =      0
+# gaps.inner.horizontal = 0
+# gaps.inner.vertical =   0
+# gaps.outer.left =       0
+# gaps.outer.bottom =     0
+# gaps.outer.top =        0
+# gaps.outer.right =      0
 
 # Visual indent makes it easier to understand that containers of the same orientation are nested.
 # If you have 'enable-normalization-opposite-orientation-for-nested-containers' enabled then there is no way to
