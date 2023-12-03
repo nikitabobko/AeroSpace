@@ -5,7 +5,14 @@ class TreeNode: Equatable {
     var parent: NonLeafTreeNode? { _parent }
     private var adaptiveWeight: CGFloat
     private let _mruChildren: MruStack<TreeNode> = MruStack()
-    var lastAppliedLayoutTilingRectForMouse: Rect? = nil
+    // Usages:
+    // - resize with mouse
+    // - makeFloatingWindowsSeenAsTiling in focus command
+    var lastAppliedLayoutVirtualRect: Rect? = nil  // as if inner gaps were always zero
+    // Usages:
+    // - resize with mouse
+    // - move with mouse
+    var lastAppliedLayoutPhysicalRect: Rect? = nil // with real inner gaps
 
     init(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
         self.adaptiveWeight = adaptiveWeight

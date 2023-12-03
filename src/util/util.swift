@@ -88,15 +88,19 @@ func beforeTermination() {
     }
 }
 
-public func makeAllWindowsVisibleAndRestoreSize() {
+private func makeAllWindowsVisibleAndRestoreSize() {
     for app in apps { // Make all windows fullscreen before Quit
         for window in app.detectNewWindowsAndGetAll(startup: false) {
             // makeAllWindowsVisibleAndRestoreSize may be invoked when something went wrong (e.g. some windows are unbound)
             // that's why it's not allowed to use `.parent` call in here
             let monitor = window.getCenter()?.monitorApproximation ?? mainMonitor
-            window.setTopLeftCorner(monitor.rect.topLeftCorner)
-            window.setSize(window.lastFloatingSize
-                ?? CGSize(width: monitor.visibleRect.width, height: monitor.visibleRect.height))
+            let monitorVisibleRect = monitor.visibleRect
+            let windowSize = window.lastFloatingSize ?? CGSize(width: monitorVisibleRect.width, height: monitorVisibleRect.height)
+            window.setSize(windowSize)
+            window.setTopLeftCorner(CGPoint(
+                x: (monitorVisibleRect.width - windowSize.width) / 2,
+                y: (monitorVisibleRect.height - windowSize.height) / 2
+            ))
         }
     }
 }

@@ -31,7 +31,7 @@ private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingW
         .map { (window: Window) -> FloatingWindowData? in
             guard let center = window.getCenter() else { return nil }
             // todo bug: what if there are now tiling windows on the workspace?
-            guard let target = center.coerceIn(rect: window.workspace.monitor.rectWithGaps).findIn(tree: workspace.rootTilingContainer) else { return nil }
+            guard let target = center.coerceIn(rect: window.workspace.monitor.visibleRectPaddedByOuterGaps).findIn(tree: workspace.rootTilingContainer, virtual: true) else { return nil }
             guard let targetCenter = target.getCenter() else { return nil }
             guard let tilingParent = target.parent as? TilingContainer else { return nil }
             let index = center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)

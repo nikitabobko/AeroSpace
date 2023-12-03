@@ -1,44 +1,49 @@
 extension TreeNode {
-    func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat, gapless: Rect) {
+    func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect) {
         var point = point
         if let orientation = (self as? TilingContainer)?.orientation, orientation == (parent as? TilingContainer)?.orientation {
             point = orientation == .h
                 ? point + CGPoint(x: 0, y: config.indentForNestedContainersWithTheSameOrientation)
                 : point + CGPoint(x: config.indentForNestedContainersWithTheSameOrientation, y: 0)
         }
+        let physicalRect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
         switch genericKind {
         case .workspace(let workspace):
-            lastAppliedLayoutTilingRectForMouse = gapless
-            workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height)
+            lastAppliedLayoutPhysicalRect = physicalRect
+            lastAppliedLayoutVirtualRect = virtual
+            workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, virtual: virtual)
         case .window(let window):
             if window.windowId != currentlyManipulatedWithMouseWindowId {
-                lastAppliedLayoutTilingRectForMouse = gapless
+                lastAppliedLayoutVirtualRect = virtual
                 if window.isFullscreen && window == focusedWindow {
-                    let monitorRect = window.workspace.monitor.visibleRect
+                    lastAppliedLayoutPhysicalRect = nil
+                    let monitorRect = window.workspace.monitor.visibleRectPaddedByOuterGaps
                     window.setTopLeftCorner(monitorRect.topLeftCorner)
                     window.setSize(CGSize(width: monitorRect.width, height: monitorRect.height))
                 } else {
+                    lastAppliedLayoutPhysicalRect = physicalRect
                     window.isFullscreen = false
                     window.setTopLeftCorner(point)
                     window.setSize(CGSize(width: width, height: height))
                 }
             }
         case .tilingContainer(let container):
-            lastAppliedLayoutTilingRectForMouse = gapless
+            lastAppliedLayoutPhysicalRect = physicalRect
+            lastAppliedLayoutVirtualRect = virtual
             switch container.layout {
             case .tiles:
-                container.layoutTiles(point, width: width, height: height, gapless: gapless)
+                container.layoutTiles(point, width: width, height: height, virtual: virtual)
             case .accordion:
-                container.layoutAccordion(point, width: width, height: height, gapless: gapless)
+                container.layoutAccordion(point, width: width, height: height, virtual: virtual)
             }
         }
     }
 }
 
 private extension TilingContainer {
-    func layoutTiles(_ point: CGPoint, width: CGFloat, height: CGFloat, gapless: Rect) {
+    func layoutTiles(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect) {
         var point = point
-        var gaplessPoint = gapless.topLeftCorner
+        var virtualPoint = virtual.topLeftCorner
         guard let delta = ((orientation == .h ? width : height) - children.sumOf { $0.getWeight(orientation) })
             .div(children.count) else { return }
         let lastIndex = children.indices.last
@@ -50,19 +55,19 @@ private extension TilingContainer {
                 i == 0 ? point : point.addingOffset(orientation, rawGap / 2),
                 width:  orientation == .h ? child.hWeight - gap : width,
                 height: orientation == .v ? child.vWeight - gap : height,
-                gapless: Rect(
-                    topLeftX: gaplessPoint.x,
-                    topLeftY: gaplessPoint.y,
+                virtual: Rect(
+                    topLeftX: virtualPoint.x,
+                    topLeftY: virtualPoint.y,
                     width:  orientation == .h ? child.hWeight : width,
                     height: orientation == .v ? child.vWeight : height
                 )
             )
-            gaplessPoint = orientation == .h ? gaplessPoint.addingXOffset(child.hWeight) : gaplessPoint.addingYOffset(child.vWeight)
+            virtualPoint = orientation == .h ? virtualPoint.addingXOffset(child.hWeight) : virtualPoint.addingYOffset(child.vWeight)
             point = orientation == .h ? point.addingXOffset(child.hWeight) : point.addingYOffset(child.vWeight)
         }
     }
 
-    func layoutAccordion(_ point: CGPoint, width: CGFloat, height: CGFloat, gapless: Rect) {
+    func layoutAccordion(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect) {
         guard let mruIndex: Int = mostRecentChild?.ownIndexOrNil else { return }
         for (index, child) in children.withIndex {
             let lPadding: CGFloat
@@ -93,14 +98,14 @@ private extension TilingContainer {
                     point + CGPoint(x: lPadding, y: 0),
                     width: width - rPadding - lPadding,
                     height: height,
-                    gapless: gapless
+                    virtual: virtual
                 )
             case .v:
                 child.layoutRecursive(
                     point + CGPoint(x: 0, y: lPadding),
                     width: width,
                     height: height - lPadding - rPadding,
-                    gapless: gapless
+                    virtual: virtual
                 )
             }
         }

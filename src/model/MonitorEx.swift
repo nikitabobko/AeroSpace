@@ -1,5 +1,5 @@
 extension Monitor {
-    var rectWithGaps: Rect {
+    var visibleRectPaddedByOuterGaps: Rect {
         let topLeft = visibleRect.topLeftCorner
         return Rect(
             topLeftX: topLeft.x + config.gaps.outer.left.toDouble(),

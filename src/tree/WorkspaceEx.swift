@@ -53,7 +53,12 @@ extension Workspace {
 
     func layoutWorkspace() {
         if isEffectivelyEmpty { return }
-        let rect = monitor.rectWithGaps
-        layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height, gapless: monitor.visibleRect)
+        let rect = monitor.visibleRectPaddedByOuterGaps
+        layoutRecursive(
+            rect.topLeftCorner,
+            width: rect.width,
+            height: rect.height,
+            virtual: rect
+        )
     }
 }

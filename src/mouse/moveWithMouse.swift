@@ -30,13 +30,13 @@ private func moveFloatingWindow(_ window: Window) {
 
 private func moveTilingWindow(_ window: Window) {
     currentlyManipulatedWithMouseWindowId = window.windowId
-    window.lastAppliedLayoutTilingRectForMouse = nil
+    window.lastAppliedLayoutPhysicalRect = nil
     let mouseLocation = mouseLocation
     let targetWorkspace = mouseLocation.monitorApproximation.activeWorkspace
-    let swapTarget = mouseLocation.findIn(tree: targetWorkspace.workspace.rootTilingContainer)?.takeIf({ $0 != window })
+    let swapTarget = mouseLocation.findIn(tree: targetWorkspace.workspace.rootTilingContainer, virtual: false)?.takeIf({ $0 != window })
     if targetWorkspace != window.workspace { // Move window to a different monitor
         let index: Int
-        if let swapTarget, let parent = swapTarget.parent as? TilingContainer, let targetRect = swapTarget.lastAppliedLayoutTilingRectForMouse {
+        if let swapTarget, let parent = swapTarget.parent as? TilingContainer, let targetRect = swapTarget.lastAppliedLayoutPhysicalRect {
             index = mouseLocation.getProjection(parent.orientation) >= targetRect.center.getProjection(parent.orientation)
                 ? swapTarget.ownIndex + 1
                 : swapTarget.ownIndex
@@ -74,12 +74,14 @@ func swapWindows(_ window1: Window, _ window2: Window) {
 }
 
 extension CGPoint {
-    func findIn(tree: TilingContainer) -> Window? {
+    func findIn(tree: TilingContainer, virtual: Bool) -> Window? {
         let point = self
         let target: TreeNode?
         switch tree.layout {
         case .tiles:
-            target = tree.children.first(where: { $0.lastAppliedLayoutTilingRectForMouse?.contains(point) == true })
+            target = tree.children.first(where: {
+                (virtual ? $0.lastAppliedLayoutVirtualRect : $0.lastAppliedLayoutPhysicalRect)?.contains(point) == true
+            })
         case .accordion:
             target = tree.mostRecentChild
         }
@@ -89,7 +91,7 @@ extension CGPoint {
         case .window(let window):
             return window
         case .tilingContainer(let container):
-            return findIn(tree: container)
+            return findIn(tree: container, virtual: virtual)
         }
     }
 }
