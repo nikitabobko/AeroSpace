@@ -57,7 +57,7 @@ non-empty-workspaces-root-containers-layout-on-startup = 'smart'
 # All possible keys:
 # - Letters.       a, b, c, ..., z
 # - Numbers.       0, 1, 2, ..., 9
-# - F-keys.        F1, F2, ..., F20
+# - F-keys.        f1, f2, ..., f20
 # - Special keys.  minus, equal, period, comma, slash, backslash, quote, semicolon, backtick, leftSquareBracket, rightSquareBracket, space, enter, esc, backspace, tab
 # - Arrows.        left, down, up, right
 
