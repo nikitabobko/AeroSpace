@@ -42,7 +42,7 @@ private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tes
             (rect.maxX - lastAppliedLayoutRect.maxX, rParent, rOwnIndex?.lets { $0 + 1 }, rParent?.children.count), // Horizontal, to the right of the window
         ]
         for (diff, parent, startIndex, pastTheEndIndex) in table {
-            if let parent, let startIndex, let pastTheEndIndex, pastTheEndIndex - startIndex > 0 && abs(diff) > EPS {
+            if let parent, let startIndex, let pastTheEndIndex, pastTheEndIndex - startIndex > 0 && abs(diff) > 5 { // 5 pixels should be enough to fight with accumulated floating precision error
                 let siblingDiff = diff.div(pastTheEndIndex - startIndex)!
                 let orientation = parent.orientation
 
