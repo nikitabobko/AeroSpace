@@ -27,7 +27,7 @@ private func showConfigParsingErrorsToUser(_ errors: [TomlParseError], configUrl
 
         Failed to parse \(configUrl.absoluteURL.path)
 
-        \(errors.map(\.description).joined(separator: "\n"))
+        \(errors.map(\.description).joined(separator: "\n\n"))
         """
     showMessageToUser(filename: "config-parse-error.txt", message: message)
 }
