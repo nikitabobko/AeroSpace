@@ -15,7 +15,7 @@ extension TreeNode {
         case .window(let window):
             if window.windowId != currentlyManipulatedWithMouseWindowId {
                 lastAppliedLayoutVirtualRect = virtual
-                if window.isFullscreen && window == focusedWindow {
+                if window.isFullscreen && window == workspace.mostRecentWindow {
                     lastAppliedLayoutPhysicalRect = nil
                     let monitorRect = window.workspace.monitor.visibleRectPaddedByOuterGaps
                     window.setTopLeftCorner(monitorRect.topLeftCorner)
