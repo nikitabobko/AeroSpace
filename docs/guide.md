@@ -15,6 +15,7 @@
 - ['on-window-detected' callback](#on-window-detected-callback)
 - [Multiple monitors](#multiple-monitors)
   - [Assign workspaces to monitors](#assign-workspaces-to-monitors)
+- [Caveats](#caveats)
 
 ## Configuring AeroSpace
 
@@ -364,3 +365,17 @@ Supported monitor patterns:
 You can specify multiple patterns as an array. The first matching pattern will be used
 
 [`move-workspace-to-monitor`](./commands.md#move-workspace-to-monitor) command has no effect for workspaces that have monitor assignment
+
+## Caveats
+
+If you use some of the Accessibility features `System Settings -> Accessibility`, you may see weird animations, for no reasons,
+when new windows appear or when you switch workspaces. (Shame on you, Apple! 🤦)
+
+Known accessibility features that cause the problem:
+- Full Keyboard Access
+- Accessibility Keyboard
+- Voice Control
+- Switch Control
+- Maybe something else...
+
+Please re-login or reboot after you disable the accessibility features that cause the problem.
