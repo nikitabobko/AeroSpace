@@ -50,7 +50,7 @@ let keysMap: [String: Key] = [
     "keypad8": .keypad8,
     "keypad9": .keypad9,
     "keypadClear": .keypadClear,
-    "keypadDecimal": .keypadDecimal,
+    "keypadDecimalMark": .keypadDecimal,
     "keypadDivide": .keypadDivide,
     "keypadEnter": .keypadEnter,
     "keypadEqual": .keypadEquals,
