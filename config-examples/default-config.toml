@@ -60,7 +60,7 @@ non-empty-workspaces-root-containers-layout-on-startup = 'smart'
 # - Keypad numbers. keypad0, keypad1, keypad2, ..., keypad9
 # - F-keys.         f1, f2, ..., f20
 # - Special keys.   minus, equal, period, comma, slash, backslash, quote, semicolon, backtick, leftSquareBracket, rightSquareBracket, space, enter, esc, backspace, tab
-# - Keypad special. keypadClear, keypadDecimal, keypadDivide, keypadEnter, keypadEquals, keypadMinus, keypadMultiply, keypadPlus
+# - Keypad special. keypadClear, keypadDecimal, keypadDivide, keypadEnter, keypadEqual, keypadMinus, keypadMultiply, keypadPlus
 # - Arrows.         left, down, up, right
 
 # All possible modifiers: cmd, alt, ctrl, shift

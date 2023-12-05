@@ -53,7 +53,7 @@ let keysMap: [String: Key] = [
     "keypadDecimal": .keypadDecimal,
     "keypadDivide": .keypadDivide,
     "keypadEnter": .keypadEnter,
-    "keypadEquals": .keypadEquals,
+    "keypadEqual": .keypadEquals,
     "keypadMinus": .keypadMinus,
     "keypadMultiply": .keypadMultiply,
     "keypadPlus": .keypadPlus,
