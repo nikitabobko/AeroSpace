@@ -108,3 +108,19 @@ let modifiersMap: [String: NSEvent.ModifierFlags] = [
     "ctrl": .control,
     "cmd": .command,
 ]
+
+// doesn't work :(
+//extension NSEvent.ModifierFlags {
+//    static let lOption = NSEvent.ModifierFlags(rawValue: 1 << 1)
+//    static let rOption = NSEvent.ModifierFlags(rawValue: 1 << 2)
+//    static let lShift = NSEvent.ModifierFlags(rawValue: 0x00000002)
+//    static let rShift = NSEvent.ModifierFlags(rawValue: 0x00000004)
+//    static let lCommand = NSEvent.ModifierFlags(rawValue: 1 << 7)
+//    static let rCommand = NSEvent.ModifierFlags(rawValue: 0x00000010)
+//}
+
+// NSEvent.ModifierFlags.command.rawValue // 1 << 20
+// NSEvent.ModifierFlags.option.rawValue // 1 << 19
+// NSEvent.ModifierFlags.control.rawValue // 1 << 18
+// NSEvent.ModifierFlags.shift.rawValue // 1 << 17
+// https://github.com/koekeishiya/skhd/blob/master/src/hotkey.h

@@ -6,14 +6,14 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 
 cd "$(dirname "$0")"
 
-checkCleanGitWorkingDir() {
+check-clean-git-working-dir() {
     if [ ! -z "$(git status --porcelain)" ]; then
         echo "git working directory must be clean"
         exit 1
     fi
 }
 
-generateGitHash() {
+generate-git-hash() {
 tee src/gitHashGenerated.swift cli/gitHashGenerated.swift > /dev/null <<EOF
 public let gitHash = "$(git rev-parse HEAD)"
 public let gitShortHash = "$(git rev-parse --short HEAD)"
@@ -21,8 +21,8 @@ EOF
 }
 
 ./generate.sh
-checkCleanGitWorkingDir
-generateGitHash
+check-clean-git-working-dir
+generate-git-hash
 xcodebuild -scheme AeroSpace build -configuration Release
 xcodebuild -scheme AeroSpace-cli build -configuration Release
 
@@ -62,10 +62,10 @@ if [ "$expected_layout" != "$(tree .release/AeroSpace.app)" ]; then
     exit 1
 fi
 
-VERSION=$(grep MARKETING_VERSION project.yml | awk '{print $2}')
+version=$(head -1 ./version.txt | awk '{print $1}')
 pushd .release
-    mkdir AeroSpace-v$VERSION
-    cp -r AeroSpace.app AeroSpace-v$VERSION
-    cp -r aerospace AeroSpace-v$VERSION
-    zip -r AeroSpace-v${VERSION}.zip AeroSpace-v$VERSION
+    mkdir AeroSpace-v$version
+    cp -r AeroSpace.app AeroSpace-v$version
+    cp -r aerospace AeroSpace-v$version
+    zip -r AeroSpace-v${version}.zip AeroSpace-v$version
 popd

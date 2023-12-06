@@ -263,12 +263,12 @@ you want other commands to get supported.
 
 Available window conditions are:
 
-| Condition TOML key                | Condition Type     | Condition description                                                                                                                  |
-|-----------------------------------|--------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-| `if.app-id`                       | String exact match | Application ID exact match of the detected window                                                                                      |
-| `if.app-name-regex-substring`     | Regex substring    | Application name regex substring of the detected window                                                                                |
-| `if.window-title-regex-substring` | Regex substring    | Window title regex substring of the detected window                                                                                    |
-| `if.during-aerospace-startup`     | Boolean            | If `true` then run the callback only during AeroSpace startup.<br/>If `false` then run callback only **NOT** during AeroSpace startup. |
+| Condition TOML key                | Condition Type                   | Condition description                                                                                                                                                                        |
+|-----------------------------------|----------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `if.app-id`                       | String exact match               | Application ID exact match of the detected window                                                                                                                                            |
+| `if.app-name-regex-substring`     | Case insensitive regex substring | Application name case insensitive regex substring of the detected window                                                                                                                     |
+| `if.window-title-regex-substring` | Case insensitive regex substring | Window title case insensitive regex substring of the detected window                                                                                                                         |
+| `if.during-aerospace-startup`     | Boolean                          | If `true` then run the callback only during AeroSpace startup.<br/>If `false` then run callback only **NOT** during AeroSpace startup.<br/>If not specified then the condition isn't checked |
 
 - `if.during-aerospace-startup = true` is useful if you want to do the initial app arrangement only on startup.
 - `if.during-aerospace-startup = false` is useful if you want to relaunch AeroSpace, but the callback has side effects that you
@@ -369,7 +369,7 @@ You can specify multiple patterns as an array. The first matching pattern will b
 ## Caveats
 
 If you use some of the Accessibility features `System Settings -> Accessibility`, you may see weird animations, for no reasons,
-when new windows appear or when you switch workspaces. (Shame on you, Apple! 🤦)
+when AeroSpace moves windows around. (Shame on you, Apple! 🤦)
 
 Known accessibility features that cause the problem:
 - Full Keyboard Access
