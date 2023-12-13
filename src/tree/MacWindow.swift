@@ -69,8 +69,7 @@ final class MacWindow: Window, CustomStringConvertible {
         if workspace == previousFocusedWorkspaceName || workspace == focusedWorkspaceName {
             refreshSession {
                 WorkspaceCommand(args: WorkspaceCmdArgs(
-                    target: .workspaceName(workspace),
-                    autoBackAndForth: false
+                    target: .workspaceName(name: workspace, autoBackAndForth: false)
                 )).runOnFocusedSubject()
             }
         }

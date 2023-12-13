@@ -8,11 +8,11 @@ struct WorkspaceCommand : Command {
         case .next:
             fallthrough
         case .prev:
-            guard let workspace = getNextPrevWorkspace(current: subject.workspace, next: args.target == .next) else { return }
+            guard let workspace = getNextPrevWorkspace(current: subject.workspace, target: args.target) else { return }
             workspaceName = workspace.name
-        case .workspaceName(let _workspaceName):
+        case .workspaceName(let _workspaceName, let autoBackAndForth):
             workspaceName = _workspaceName
-            if args.autoBackAndForth && subject.workspace.name == workspaceName {
+            if autoBackAndForth && subject.workspace.name == workspaceName {
                 WorkspaceBackAndForthCommand().run(&subject)
                 return
             }
@@ -30,9 +30,26 @@ struct WorkspaceCommand : Command {
     }
 }
 
-func getNextPrevWorkspace(current: Workspace, next: Bool) -> Workspace? {
+func getNextPrevWorkspace(current: Workspace, target: WorkspaceTarget) -> Workspace? {
+    let next: Bool
+    let wrapAround: Bool
+    switch target {
+    case .next(let _wrapAround):
+        next = true
+        wrapAround = _wrapAround
+    case .prev(let _wrapAround):
+        next = false
+        wrapAround = _wrapAround
+    case .workspaceName(_):
+        error("Invalid argument \(target)")
+    }
     let workspaces: [Workspace] = Workspace.all.toSet().union([current]).sortedBy { $0.name }
     guard let index = workspaces.firstIndex(of: current) else { error("Impossible") }
-    guard let workspace = workspaces.getOrNil(atIndex: next ? index + 1 : index - 1) else { return nil }
+    let workspace: Workspace?
+    if wrapAround {
+        workspace = workspaces.get(wrappingIndex: next ? index + 1 : index - 1)
+    } else {
+        workspace = workspaces.getOrNil(atIndex: next ? index + 1 : index - 1)
+    }
     return workspace
 }

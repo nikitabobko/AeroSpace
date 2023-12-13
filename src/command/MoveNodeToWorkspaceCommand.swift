@@ -9,9 +9,10 @@ struct MoveNodeToWorkspaceCommand: Command {
         case .next:
             fallthrough
         case .prev:
-            guard let workspace = getNextPrevWorkspace(current: subject.workspace, next: args.target == .next) else { return }
+            guard let workspace = getNextPrevWorkspace(current: subject.workspace, target: args.target) else { return }
             targetWorkspace = workspace
-        case .workspaceName(let name):
+        case .workspaceName(let name, let autoBackAndForth):
+            check(!autoBackAndForth)
             targetWorkspace = Workspace.get(byName: name)
         }
         if preserveWorkspace == targetWorkspace {

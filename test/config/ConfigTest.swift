@@ -215,7 +215,7 @@ final class ConfigTest: XCTestCase {
                 checkFurtherCallbacks: true,
                 run: [
                     LayoutCommand(args: LayoutCmdArgs(toggleBetween: [.floating])),
-                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .workspaceName("W")))
+                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .workspaceName(name: "W", autoBackAndForth: false)))
                 ]
             ),
             WindowDetectedCallback(
