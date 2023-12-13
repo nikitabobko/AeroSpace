@@ -3,7 +3,8 @@ private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
 
     static let info = CmdInfo<Self>(
         help: """
-              USAGE: move-node-to-workspace [-h|--help] <workspace-name>
+              USAGE: move-node-to-workspace [-h|--help] (next|prev)
+                 OR: move-node-to-workspace [-h|--help] <workspace-name>
 
               OPTIONS:
                 -h, --help              Print help

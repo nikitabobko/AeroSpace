@@ -5,6 +5,11 @@ struct WorkspaceCommand : Command {
         check(Thread.current.isMainThread)
         let workspaceName: String
         switch args.target {
+        case .next:
+            fallthrough
+        case .prev:
+            guard let workspace = getNextPrevWorkspace(current: subject.workspace, next: args.target == .next) else { return }
+            workspaceName = workspace.name
         case .workspaceName(let _workspaceName):
             workspaceName = _workspaceName
         }
@@ -19,4 +24,11 @@ struct WorkspaceCommand : Command {
         check(workspace.monitor.setActiveWorkspace(workspace))
         focusedWorkspaceName = workspace.name
     }
+}
+
+func getNextPrevWorkspace(current: Workspace, next: Bool) -> Workspace? {
+    let workspaces: [Workspace] = Workspace.all.toSet().union([current]).sortedBy { $0.name }
+    guard let index = workspaces.firstIndex(of: current) else { error("Impossible") }
+    guard let workspace = workspaces.getOrNil(atIndex: next ? index + 1 : index - 1) else { return nil }
+    return workspace
 }

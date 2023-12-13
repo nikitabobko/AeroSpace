@@ -3,7 +3,8 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
 
     static let info = CmdInfo<Self>(
         help: """
-              USAGE: workspace [-h|--help] <workspace-name>
+              USAGE: workspace [-h|--help] (next|prev)
+                 OR: workspace [-h|--help] <workspace-name>
 
               OPTIONS:
                 -h, --help              Print help
@@ -22,6 +23,8 @@ struct WorkspaceCmdArgs: CmdArgs, Equatable {
 }
 
 enum WorkspaceTarget: Equatable {
+    case next
+    case prev
     //case back_and_forth // todo what about 'prev-focused'? todo at least the name needs to be reserved
     case workspaceName(String)
 
@@ -48,6 +51,10 @@ func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
 
 func parseWorkspaceTarget(_ arg: String) -> Parsed<WorkspaceTarget> {
     switch arg {
+    case "next":
+        return .success(.next)
+    case "prev":
+        return .success(.prev)
     //case "back-and-forth":
     //    return .success(.back_and_forth)
     default:

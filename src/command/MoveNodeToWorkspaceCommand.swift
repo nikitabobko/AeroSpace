@@ -6,6 +6,11 @@ struct MoveNodeToWorkspaceCommand: Command {
         let preserveWorkspace = focused.workspace
         let targetWorkspace: Workspace
         switch args.target {
+        case .next:
+            fallthrough
+        case .prev:
+            guard let workspace = getNextPrevWorkspace(current: subject.workspace, next: args.target == .next) else { return }
+            targetWorkspace = workspace
         case .workspaceName(let name):
             targetWorkspace = Workspace.get(byName: name)
         }

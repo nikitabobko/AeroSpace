@@ -399,7 +399,13 @@ workspace back and forth.
 == workspace
 
 ----
+workspace [-h|--help] (next|prev)
 workspace [-h|--help] <target-workspace-name>
 ----
 
 Activates the specified workspace
+
+Workspaces can be switched in alphabetical order
+
+* `workspace next` activates the next alphabetical workspace
+* `workspace prev` activates the previous alphabetical workspace
