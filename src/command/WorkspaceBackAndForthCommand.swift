@@ -3,7 +3,8 @@ struct WorkspaceBackAndForthCommand: Command {
         check(Thread.current.isMainThread)
         guard let previousFocusedWorkspaceName else { return }
         WorkspaceCommand(args: WorkspaceCmdArgs(
-            target: .workspaceName(previousFocusedWorkspaceName)
+            target: .workspaceName(previousFocusedWorkspaceName),
+            autoBackAndForth: false
         )).run(&subject)
     }
 }

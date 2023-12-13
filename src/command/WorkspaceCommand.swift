@@ -12,6 +12,10 @@ struct WorkspaceCommand : Command {
             workspaceName = workspace.name
         case .workspaceName(let _workspaceName):
             workspaceName = _workspaceName
+            if args.autoBackAndForth && subject.workspace.name == workspaceName {
+                WorkspaceBackAndForthCommand().run(&subject)
+                return
+            }
         }
         let workspace = Workspace.get(byName: workspaceName)
         // todo drop anyLeafWindowRecursive. It must not be necessary

@@ -400,7 +400,7 @@ workspace back and forth.
 
 ----
 workspace [-h|--help] (next|prev)
-workspace [-h|--help] <target-workspace-name>
+workspace [-h|--help] [--auto-back-and-forth] <target-workspace-name>
 ----
 
 Activates the specified workspace
@@ -409,3 +409,8 @@ Workspaces can be switched in alphabetical order
 
 * `workspace next` activates the next alphabetical workspace
 * `workspace prev` activates the previous alphabetical workspace
+
+*OPTIONS*
+
+--auto-back-and-forth::
+Automatic 'back-and-forth' when switching to already focused workspace

@@ -1,18 +1,23 @@
 private struct RawWorkspaceCmdArgs: RawCmdArgs {
     var target: WorkspaceTarget?
+    var autoBackAndForth: Bool?
 
     static let info = CmdInfo<Self>(
         help: """
-              USAGE: workspace [-h|--help] (next|prev)
-                 OR: workspace [-h|--help] <workspace-name>
+              USAGE: workspace [-h|--help] [--auto-back-and-forth] (next|prev)
+                 OR: workspace [-h|--help] [--auto-back-and-forth] <workspace-name>
 
               OPTIONS:
                 -h, --help              Print help
+                --auto-back-and-forth   Automatic 'back-and-forth' when switching to already 
+                                        focused workspace
 
               ARGUMENTS:
                 <workspace-name>        Workspace name to focus
               """,
-        options: [:],
+        options: [
+            "--auto-back-and-forth": trueBoolFlag(\.autoBackAndForth)
+        ],
         arguments: [ArgParser(\.target, parseWorkspaceTarget)]
     )
 }
@@ -20,6 +25,7 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
 struct WorkspaceCmdArgs: CmdArgs, Equatable {
     let kind: CmdKind = .workspace
     let target: WorkspaceTarget
+    let autoBackAndForth: Bool
 }
 
 enum WorkspaceTarget: Equatable {
@@ -44,7 +50,8 @@ func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
                 return .failure("<workspace-name> is mandatory argument")
             }
             return .cmd(WorkspaceCmdArgs(
-                target: target
+                target: target,
+                autoBackAndForth: raw.autoBackAndForth ?? false
             ))
         }
 }

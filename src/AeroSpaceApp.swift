@@ -46,7 +46,8 @@ struct AeroSpaceApp: App {
                 Button {
                     refreshSession {
                         WorkspaceCommand(args: WorkspaceCmdArgs(
-                            target: .workspaceName(workspace.name)
+                            target: .workspaceName(workspace.name),
+                            autoBackAndForth: false
                         )).runOnFocusedSubject()
                     }
                 } label: {

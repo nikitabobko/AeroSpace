@@ -10,7 +10,11 @@ final class WorkspaceCommandTest: XCTestCase {
         XCTAssertTrue(parseCommand("workspace").failureMsgOrNil?.contains("mandatory") == true)
         XCTAssertEqual(
             parseCommand("workspace next").cmdOrNil?.describe,
-            .workspace(args: WorkspaceCmdArgs(target: .next))
+            .workspace(args: WorkspaceCmdArgs(target: .next, autoBackAndForth: false))
+        )
+        XCTAssertEqual(
+            parseCommand("workspace --auto-back-and-forth next").cmdOrNil?.describe,
+            .workspace(args: WorkspaceCmdArgs(target: .next, autoBackAndForth: true))
         )
     }
 }
