@@ -1,25 +1,29 @@
-# Place a copy of this config to ~/.aerospace.toml. After that, you can edit ~/.aerospace.toml to your liking
-# Feel free to omit keys that you don't use in your config. If the key is absent in your config the default value is taken from this config
+# Place a copy of this config to ~/.aerospace.toml
+# After that, you can edit ~/.aerospace.toml to your liking
+
+# Feel free to omit keys that you don't use in your config.
+# If the key is absent in your config the default value is taken from this config
 
 # You can use it to add commands that run after login to macOS user session.
 # 'start-at-login' needs to be 'true' for 'after-login-command' to work
-# For the list of available commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
+# Available commands: https://nikitabobko.github.io/AeroSpace/docs/commands.html
 after-login-command = []
 
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
-# For the list of available commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
+# Available commands : https://nikitabobko.github.io/AeroSpace/docs/commands.html
 after-startup-command = []
 
 # Start AeroSpace at login
 start-at-login = false
 
-# Normalizations. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#normalization
+# Normalizations. See: https://nikitabobko.github.io/AeroSpace/docs/guide.html#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#layouts
-# The 'accordion-padding' specifies the size of the padding. You can set 0 to disable the padding feature
+# See: https://nikitabobko.github.io/AeroSpace/docs/guide.html#layouts
+# The 'accordion-padding' specifies the size of accordion padding
+# You can set 0 to disable the padding feature
 accordion-padding = 30
 
 # Possible values: tiles|accordion
@@ -39,8 +43,8 @@ gaps.outer.top =        0
 gaps.outer.right =      0
 
 # Visual indent makes it easier to understand that containers of the same orientation are nested.
-# If you have 'enable-normalization-opposite-orientation-for-nested-containers' enabled then there is no way to
-# observe the indent
+# If you have 'enable-normalization-opposite-orientation-for-nested-containers' enabled then
+# there is no way to observe the indent
 indent-for-nested-containers-with-the-same-orientation = 30
 
 # Layout of root containers of non-empty workspaces. The layout is applied only on startup
@@ -50,7 +54,8 @@ indent-for-nested-containers-with-the-same-orientation = 30
 #   4 and more will get 'accordion' layout. 'smart' can change its behavior in future versions
 non-empty-workspaces-root-containers-layout-on-startup = 'smart'
 
-# 'main' binding mode declaration. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
+# 'main' binding mode declaration
+# See: https://nikitabobko.github.io/AeroSpace/docs/guide.html#binding-modes
 # 'main' binding mode must be always presented
 [mode.main.binding]
 
@@ -59,39 +64,41 @@ non-empty-workspaces-root-containers-layout-on-startup = 'smart'
 # - Numbers.        0, 1, 2, ..., 9
 # - Keypad numbers. keypad0, keypad1, keypad2, ..., keypad9
 # - F-keys.         f1, f2, ..., f20
-# - Special keys.   minus, equal, period, comma, slash, backslash, quote, semicolon, backtick, leftSquareBracket, rightSquareBracket, space, enter, esc, backspace, tab
-# - Keypad special. keypadClear, keypadDecimalMark, keypadDivide, keypadEnter, keypadEqual, keypadMinus, keypadMultiply, keypadPlus
+# - Special keys.   minus, equal, period, comma, slash, backslash, quote, semicolon, backtick,
+#                   leftSquareBracket, rightSquareBracket, space, enter, esc, backspace, tab
+# - Keypad special. keypadClear, keypadDecimalMark, keypadDivide, keypadEnter, keypadEqual,
+#                   keypadMinus, keypadMultiply, keypadPlus
 # - Arrows.         left, down, up, right
 
 # All possible modifiers: cmd, alt, ctrl, shift
 
-# For all possible commands see: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
+# All possible commands: https://nikitabobko.github.io/AeroSpace/docs/commands.html
 
 # You can uncomment this line to open up terminal with alt + enter shortcut
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#exec-and-forget
+# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#exec-and-forget
 # alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#layout
+# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#layout
 alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
 
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#focus
+# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#focus
 alt-h = 'focus left'
 alt-j = 'focus down'
 alt-k = 'focus up'
 alt-l = 'focus right'
 
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#move-through
+# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#move-through
 alt-shift-h = 'move-through left'
 alt-shift-j = 'move-through down'
 alt-shift-k = 'move-through up'
 alt-shift-l = 'move-through right'
 
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#resize
+# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#resize
 alt-shift-minus = 'resize smart -50'
 alt-shift-equal = 'resize smart +50'
 
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#workspace
+# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#workspace
 alt-0 = 'workspace 0'
 alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
@@ -125,7 +132,7 @@ alt-x = 'workspace X'
 alt-y = 'workspace Y'
 alt-z = 'workspace Z'
 
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#move-node-to-workspace
+# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#move-node-to-workspace
 alt-shift-0 = 'move-node-to-workspace 0'
 alt-shift-1 = 'move-node-to-workspace 1'
 alt-shift-2 = 'move-node-to-workspace 2'
@@ -159,16 +166,17 @@ alt-shift-x = 'move-node-to-workspace X'
 alt-shift-y = 'move-node-to-workspace Y'
 alt-shift-z = 'move-node-to-workspace Z'
 
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#workspace-back-and-forth
+# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#move-workspace-to-monitor
+# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#move-workspace-to-monitor
 alt-shift-tab = 'move-workspace-to-monitor next'
 
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md#mode
+# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#mode
 alt-shift-semicolon = 'mode service'
 alt-shift-slash = 'mode join'
 
-# 'service' binding mode declaration. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
+# 'service' binding mode declaration.
+# See: https://nikitabobko.github.io/AeroSpace/docs/guide.html#binding-modes
 [mode.service.binding]
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
@@ -176,7 +184,8 @@ f = ['layout floating tiling', 'mode main'] # Toggle between floating and tiling
 backspace = ['close-all-windows-but-current', 'mode main']
 esc = 'mode main'
 
-# 'join' binding mode declaration. See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#bindings-modes
+# 'join' binding mode declaration
+# See: https://nikitabobko.github.io/AeroSpace/docs/guide.html#binding-modes
 [mode.join.binding]
 alt-shift-h = ['join-with left', 'mode main']
 alt-shift-j = ['join-with down', 'mode main']

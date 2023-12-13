@@ -1,0 +1,33 @@
+= Config examples
+:sectanchors:
+:sectlinks:
+:sectnums:
+:source-highlighter: pygments
+:toc: left
+
+[#default-config]
+== Default config
+
+You can bootstrap your local config by coping the default config from the app installation
+
+[source,shell]
+----
+cp /Applications/AeroSpace.app/Contents/Resources/default-config.toml ~/.aerospace.toml
+----
+
+link:../config-examples/default-config.toml[Raw]
+
+[source,toml]
+----
+include::../config-examples/default-config.toml[]
+----
+
+[#i3-like-config]
+== i3 like config
+
+link:../config-examples/i3-like-config-example.toml[Raw]
+
+[source,toml]
+----
+include::../config-examples/i3-like-config-example.toml[]
+----

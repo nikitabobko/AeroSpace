@@ -31,8 +31,8 @@ alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
 # See: https://github.com/nikitabobko/AeroSpace/blob/main/docs/guide.md#floating-windows
 #alt-space = 'focus toggle_tiling_floating'
 
-# `focus parent`/`focus child` are not yet supported, and it's not clear whether they should be supported at all
-# https://github.com/nikitabobko/AeroSpace/issues/5
+# `focus parent`/`focus child` are not yet supported, and it's not clear whether they
+# should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
 # alt-a = 'focus parent'
 
 alt-1 = 'workspace 1'
