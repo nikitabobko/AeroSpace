@@ -1,15 +1,5 @@
 struct ResizeCommand: Command { // todo cover with tests
-    enum Dimension: String {
-        case width, height, smart
-    }
-
-    enum ResizeMode: String {
-        case set, add, subtract
-    }
-
-    let dimension: Dimension
-    let mode: ResizeMode
-    let unit: UInt
+    let args: ResizeCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) { // todo support key repeat
         check(Thread.current.isMainThread)
@@ -21,7 +11,7 @@ struct ResizeCommand: Command { // todo cover with tests
         let orientation: Orientation
         let parent: TilingContainer
         let node: TreeNode
-        switch dimension {
+        switch args.dimension {
         case .width:
             orientation = .h
             guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return }
@@ -39,12 +29,12 @@ struct ResizeCommand: Command { // todo cover with tests
             orientation = parent.orientation
         }
         let diff: CGFloat
-        switch mode {
-        case .set:
+        switch args.units {
+        case .set(let unit):
             diff = CGFloat(unit) - node.getWeight(orientation)
-        case .add:
+        case .add(let unit):
             diff = CGFloat(unit)
-        case .subtract:
+        case .subtract(let unit):
             diff = -CGFloat(unit)
         }
 

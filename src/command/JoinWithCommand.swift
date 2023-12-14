@@ -1,8 +1,9 @@
 struct JoinWithCommand: Command {
-    let direction: CardinalDirection
+    let args: JoinWithCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
+        let direction = args.direction
         guard let currentWindow = subject.windowOrNil else { return }
         guard let (parent, ownIndex) = currentWindow.closestParent(hasChildrenInDirection: direction, withLayout: nil) else { return }
         let moveInTarget = parent.children[ownIndex + direction.focusOffset]

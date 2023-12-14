@@ -1,9 +1,5 @@
 struct SplitCommand: Command {
-    enum SplitArg: String {
-        case horizontal, vertical, opposite
-    }
-
-    let splitArg: SplitArg
+    let args: SplitCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
@@ -16,7 +12,7 @@ struct SplitCommand: Command {
             return // Nothing to do for floating windows
         case .tilingContainer(let parent):
             let orientation: Orientation
-            switch splitArg {
+            switch args.arg {
             case .vertical:
                 orientation = .v
             case .horizontal:

@@ -82,7 +82,7 @@ enum DefaultContainerOrientation: String {
     case horizontal, vertical, auto
 }
 
-enum StartupRootContainerLayout: String {
+enum StartupRootContainerLayout: String, CaseIterable {
     case smart, tiles, accordion
 }
 

@@ -13,7 +13,7 @@ final class JoinWithCommandTest: XCTestCase {
         }
         start.focus()
 
-        JoinWithCommand(direction: .right).runOnFocusedSubject()
+        JoinWithCommand(args: JoinWithCmdArgs(direction: .right)).runOnFocusedSubject()
         XCTAssertEqual(root.layoutDescription, .h_tiles([
             .window(0),
             .v_tiles([

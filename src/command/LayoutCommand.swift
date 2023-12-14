@@ -1,25 +1,11 @@
 struct LayoutCommand: Command {
-    let toggleBetween: [LayoutDescription]
-
-    enum LayoutDescription: String {
-        case accordion, tiles
-        case horizontal, vertical
-        case h_accordion, v_accordion, h_tiles, v_tiles
-        case tiling, floating
-    }
-
-    init?(toggleBetween: [LayoutDescription]) {
-        if toggleBetween.isEmpty {
-            return nil
-        }
-        self.toggleBetween = toggleBetween
-    }
+    let args: LayoutCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
         guard let window = subject.windowOrNil else { return }
-        let targetDescription: LayoutDescription = toggleBetween.first(where: { !window.matchesDescription($0) })
-            ?? toggleBetween.first!
+        let targetDescription = args.toggleBetween.first(where: { !window.matchesDescription($0) })
+            ?? args.toggleBetween.first!
         if window.matchesDescription(targetDescription) {
             return
         }
@@ -66,8 +52,8 @@ struct LayoutCommand: Command {
 }
 
 extension String {
-    func parseLayoutDescription() -> LayoutCommand.LayoutDescription? {
-        if let parsed = LayoutCommand.LayoutDescription(rawValue: self) {
+    func parseLayoutDescription() -> LayoutCmdArgs.LayoutDescription? {
+        if let parsed = LayoutCmdArgs.LayoutDescription(rawValue: self) {
             return parsed
         } else if self == "list" {
             return .tiles
@@ -93,7 +79,7 @@ private func changeTilingLayout(targetLayout: Layout?, targetOrientation: Orient
 }
 
 private extension Window {
-    func matchesDescription(_ layout: LayoutCommand.LayoutDescription) -> Bool {
+    func matchesDescription(_ layout: LayoutCmdArgs.LayoutDescription) -> Bool {
         switch layout {
         case .accordion:
             return (parent as? TilingContainer)?.layout == .accordion

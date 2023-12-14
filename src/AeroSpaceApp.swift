@@ -44,7 +44,11 @@ struct AeroSpaceApp: App {
             Text("Workspaces:")
             ForEach(Workspace.all) { (workspace: Workspace) in
                 Button {
-                    refreshSession { WorkspaceCommand(workspaceName: workspace.name).runOnFocusedSubject() }
+                    refreshSession {
+                        WorkspaceCommand(args: WorkspaceCmdArgs(
+                            target: .workspaceName(workspace.name)
+                        )).runOnFocusedSubject()
+                    }
                 } label: {
                     Toggle(isOn: workspace == Workspace.focused
                         ? Binding(get: { true }, set: { _, _ in })
@@ -56,7 +60,9 @@ struct AeroSpaceApp: App {
             }
             Divider()
             Button(viewModel.isEnabled ? "Disable" : "Enable") {
-                refreshSession { EnableCommand(targetState: .toggle).runOnFocusedSubject() }
+                refreshSession {
+                    EnableCommand(args: EnableCmdArgs(targetState: .toggle)).runOnFocusedSubject()
+                }
             }
                 .keyboardShortcut("E", modifiers: .command)
             Button("Reload config") {

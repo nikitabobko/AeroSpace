@@ -8,12 +8,12 @@ struct ListAppsCommand: QueryCommand {
                 let name = app.name ?? "NULL"
                 return [pid, appId, name]
             }
-            .paddingTable
+            .toPaddingTable(columnSeparator: " | ")
     }
 }
 
-extension [[String]] {
-    var paddingTable: String {
+private extension [[String]] {
+    func toPaddingTable(columnSeparator: String) -> String {
         let pads: [Int] = transposed.map { column in column.map { $0.count }.max()! }
         return self
             .map { (row: [String]) in
@@ -21,7 +21,7 @@ extension [[String]] {
                     .map { (elem: String, pad: Int) in
                         elem.padding(toLength: pad, withPad: " ", startingAt: 0)
                     }
-                    .joined(separator: " | ")
+                    .joined(separator: columnSeparator)
             }
             .joined(separator: "\n")
     }

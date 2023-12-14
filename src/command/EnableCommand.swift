@@ -1,15 +1,11 @@
 struct EnableCommand: Command {
-    enum State: String {
-        case on, off, toggle
-    }
-
-    let targetState: State
+    let args: EnableCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
         let prevState = TrayMenuModel.shared.isEnabled
         let newState: Bool
-        switch targetState {
+        switch args.targetState {
         case .on:
             newState = true
         case .off:

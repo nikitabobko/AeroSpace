@@ -42,19 +42,49 @@ func setUpWorkspacesForTests() {
 func testParseCommandSucc(_ command: String, _ expected: CommandDescription) {
     let parsed = parseCommand(command)
     switch parsed {
-    case .success(let command):
+    case .cmd(let command):
         XCTAssertEqual(command.describe, expected)
+    case .help:
+        error() // todo test help
     case .failure(let msg):
         XCTFail(msg)
+    }
+}
+
+extension ParsedCmd {
+    var failureMsgOrNil: String? {
+        if case .failure(let fail) = self {
+            return fail
+        } else {
+            return nil
+        }
+    }
+
+    var cmdOrNil: T? {
+        if case .cmd(let cmd) = self {
+            return cmd
+        } else {
+            return nil
+        }
+    }
+
+    var isHelp: Bool {
+        if case .help = self {
+            return true
+        } else {
+            return false
+        }
     }
 }
 
 func testParseCommandFail(_ command: String, msg expected: String) {
     let parsed = parseCommand(command)
     switch parsed {
-    case .success(let command):
+    case .cmd(let command):
         XCTFail("\(command) isn't supposed to be parcelable")
     case .failure(let msg):
         XCTAssertEqual(msg, expected)
+    case .help:
+        error() // todo test help
     }
 }

@@ -1,4 +1,4 @@
-enum CardinalDirection: String {
+enum CardinalDirection: String, CaseIterable, Equatable {
     case left, down, up, right
 }
 

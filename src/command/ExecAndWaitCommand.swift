@@ -1,11 +1,11 @@
 struct ExecAndWaitCommand: Command {
-    let bashCommand: String
+    let args: ExecAndWaitCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
         let process = Process()
         process.executableURL = URL(filePath: "/bin/bash")
-        process.arguments = ["-c", bashCommand]
+        process.arguments = ["-c", args.bashScript]
         process.terminationHandler = { _ in
             check(Thread.current.isMainThread)
             refreshSession {

@@ -16,7 +16,7 @@ include::header.adoc[]
 == close
 
 ----
-close
+close [-h|--help]
 ----
 
 Closes the focused window
@@ -26,22 +26,19 @@ Normally, you don’t need to use this command, because macOS has its own
 scripting purposes
 
 * Available since: 0.6.0-Beta
-* The command doesn't have arguments
 
 == close-all-windows-but-current
 
-....
-close-all-windows-but-current
-....
+----
+close-all-windows-but-current [-h|--help]
+----
 
 On the focused workspace, closes all windows but current.
-
-* The command doesn't have arguments
 
 == enable
 
 ----
-enable (on|off|toggle)
+enable [-h|--help] (on|off|toggle)
 ----
 
 The command allows to temporarily disable window management
@@ -55,9 +52,9 @@ Key events are not intercepted when AeroSpace is disabled
 
 == exec-and-forget
 
-....
-exec-and-forget <bash-command>
-....
+----
+exec-and-forget [-h|--help] <bash-command>
+----
 
 Runs `+/bin/bash -c '$bash-command'+`. Stdout, stderr and exit code are
 ignored.
@@ -67,9 +64,9 @@ For example, you can use this command to launch applications:
 
 == exec-and-wait
 
-....
-exec-and-wait <bash-command>
-....
+----
+exec-and-wait [-h|--help] <bash-command>
+----
 
 Runs `+/bin/bash -c '$bash-command'+`, and waits until the command is
 terminated. Stdout, stderr and exit code are ignored.
@@ -93,23 +90,21 @@ required because `+open+` returns before the window appears.
 
 == flatten-workspace-tree
 
-....
-flatten-workspace-tree
-....
+----
+flatten-workspace-tree [-h|--help]
+----
 
 Flattens link:./guide.md#tree[the tree] of currently focused workspace.
 
 The command is useful when you messed up with your layout, and it’s
 easier to "`reset`" it and start again.
 
-* The command doesn't have arguments
-
 [#focus]
 == focus
 
-....
-focus (left|down|up|right)
-....
+----
+focus [-h|--help] (left|down|up|right)
+----
 
 Sets focus to the nearest window in link:./guide.md#tree[the tree] in
 the given direction.
@@ -130,9 +125,9 @@ because the necessaty of this operation is under the question.
 
 == fullscreen
 
-....
-fullscreen
-....
+----
+fullscreen [-h|--help]
+----
 
 Toggles the fullscreen mode for the currently focused window.
 
@@ -141,36 +136,35 @@ current focused window is in fullscreen mode results in the fullscreen
 window exiting fullscreen mode.
 
 * Available since: 0.3.0-Beta
-* The command doesn't have arguments
 
 [#join-with]
 == join-with
 
-....
-join-with (left|down|up|right)
-....
+----
+join-with [-h|--help] (left|down|up|right)
+----
 
 Puts the currently focused window and the nearest node in the specified
 direction under a common parent container.
 
 Given this layout
 
-....
+----
 h_tiles
 ├── window 1
 ├── window 2 (focused)
 └── window 3
-....
+----
 
 `+join-with right+` will result in the following layout
 
-....
+----
 h_tiles
 ├── window 1
 └── v_tiles
     ├── window 2 (focused)
     └── window 3
-....
+----
 
 NOTE: `+join-with+` is a high-level replacement for i3’s
 https://i3wm.org/docs/userguide.html#_splitting_containers[split
@@ -182,9 +176,9 @@ xref:guide.adoc#normalization[enable-normalization-flatten-containers]
 [#layout]
 == layout
 
-....
-layout (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
-....
+----
+layout [-h|--help] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
+----
 
 Changes layout of the focused window to the given layout.
 
@@ -196,27 +190,27 @@ tiled.
 
 == mode
 
-....
-mode <target-mode>
-....
+----
+mode [-h|--help] <target-mode>
+----
 
 Activates the specified xref:guide.adoc#binding-modes[binding mode]
 
 [#move-node-to-workspace]
 == move-node-to-workspace
 
-....
-move-node-to-workspace <target-workspace-name>
-....
+----
+move-node-to-workspace [-h|--help] <target-workspace-name>
+----
 
 Moves currently focused window to the specified workspace
 
 [#move-through]
 == move-through
 
-....
-move-through (left|down|up|right) [floating_pixel]
-....
+----
+move-through [-h|--help] (left|down|up|right) [floating_pixel]
+----
 
 Moves the window in the given direction.The optional `+floating_pixel+`
 argument specifies how far the window should be moved if it is floating.
@@ -228,19 +222,19 @@ NOTE: This command is an analog of https://i3wm.org/docs/userguide.html#move_dir
 
 Given this layout
 
-....
+----
 h_tiles
 ├── window 1 (focused)
 └── window 2
-....
+----
 
 `+move-through right+` will result in the following layout
 
-....
+----
 h_tiles
 ├── window 2
 └── window 1 (focused)
-....
+----
 
 *Example 2*
 
@@ -270,25 +264,25 @@ h_tiles
 
 Given this layout
 
-....
+----
 h_tiles
 ├── window 1
 └── v_tiles
     ├── window 3
     ├── window 2 (focused)
     └── window 4
-....
+----
 
 `+move-through left+` will result in the following layout
 
-....
+----
 h_tiles
 ├── window 1
 ├── window 2 (focused)
 └── v_tiles
     ├── window 3
     └── window 4
-....
+----
 
 *Implicit container example*
 
@@ -297,31 +291,31 @@ to fullfill your command.
 
 Given this layout
 
-....
+----
 h_tiles
 ├── window 1
 ├── window 2 (focused)
 └── window 3
-....
+----
 
 `+move-through up+` will result in the following layout
 
-....
+----
 v_tiles
 ├── window 2 (focused)
 └── h_tiles
     ├── window 1
     └── window 3
-....
+----
 
 `+v_tiles+` is an implicitly created container.
 
 [#move-workspace-to-monitor]
 == move-workspace-to-monitor
 
-....
+----
 move-workspace-to-monitor (next|prev)
-....
+----
 
 Moves currently focused workspace to the next or previous monitor
 
@@ -333,19 +327,17 @@ assignment]
 
 == reload-config
 
-....
-reload-config
-....
+----
+reload-config [-h|--help]
+----
 
 Reloads currently active config.
 
-* The command doesn't have arguments
-
 == resize
 
-....
-resize (smart|width|height) [+|-]number
-....
+----
+resize [-h|--help] (smart|width|height) [+|-]number
+----
 
 Resizes the currently active window
 
@@ -368,9 +360,9 @@ command changes the absolute value of the dimension
 [#split]
 == split
 
-....
-split (horizontal|vertical|opposite)
-....
+----
+split [-h|--help] (horizontal|vertical|opposite)
+----
 
 *If the parent of currently focused window contains more than one
 child*, then the command
@@ -396,20 +388,18 @@ Consider using `+join-with+` if you want to keep `+enable-normalization-flatten-
 
 == workspace-back-and-forth
 
-....
-workspace-back-and-forth
-....
+----
+workspace-back-and-forth [-h|--help]
+----
 
 Switches between currently focused workspace and previously focused
 workspace back and forth.
 
-* The command doesn't have arguments
-
 [#workspace]
 == workspace
 
-....
-workspace <target-workspace-name>
-....
+----
+workspace [-h|--help] <target-workspace-name>
+----
 
 Activates the specified workspace

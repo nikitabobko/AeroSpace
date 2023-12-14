@@ -20,7 +20,7 @@ final class ConfigTest: XCTestCase {
         XCTAssertEqual(errors.descriptions, [])
         XCTAssertEqual(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [HotkeyBinding(.option, .h, [FocusCommand(direction: .left)])])
+            Mode(name: nil, bindings: [HotkeyBinding(.option, .h, [FocusCommand.new(direction: .left)])])
         )
     }
 
@@ -54,7 +54,7 @@ final class ConfigTest: XCTestCase {
         )
         XCTAssertEqual(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [HotkeyBinding(.option, .k, [FocusCommand(direction: .up)])])
+            Mode(name: nil, bindings: [HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])])
         )
     }
 
@@ -108,15 +108,20 @@ final class ConfigTest: XCTestCase {
 
     func testMoveWorkspaceToMonitorCommandParsing() {
         var devNull: [String] = []
-        XCTAssertTrue(parseCommand("move-workspace-to-monitor next").getOrNil(appendErrorTo: &devNull) is MoveWorkspaceToMonitorCommand)
-        XCTAssertTrue(parseCommand("move-workspace-to-display next").getOrNil(appendErrorTo: &devNull) is MoveWorkspaceToMonitorCommand)
+        XCTAssertTrue(parseCommand("move-workspace-to-monitor next").toEither().getOrNil(appendErrorTo: &devNull) is MoveWorkspaceToMonitorCommand)
+        XCTAssertTrue(parseCommand("move-workspace-to-display next").toEither().getOrNil(appendErrorTo: &devNull) is MoveWorkspaceToMonitorCommand)
     }
 
     func testParseTiles() {
         var devNull: [String] = []
-        let command = parseCommand("layout tiles h_tiles v_tiles list h_list v_list").getOrNil(appendErrorTo: &devNull)
+        let command = parseCommand("layout tiles h_tiles v_tiles list h_list v_list").toEither().getOrNil(appendErrorTo: &devNull)
         XCTAssertTrue(command is LayoutCommand)
-        XCTAssertEqual((command as! LayoutCommand).toggleBetween, [.tiles, .h_tiles, .v_tiles, .tiles, .h_tiles, .v_tiles])
+        XCTAssertEqual((command as! LayoutCommand).args.toggleBetween, [.tiles, .h_tiles, .v_tiles, .tiles, .h_tiles, .v_tiles])
+
+        guard case .help = parseCommand("layout tiles -h") else {
+            XCTFail()
+            return
+        }
     }
 
     func testSplitCommandAndFlattenContainersNormalization() {
@@ -208,7 +213,10 @@ final class ConfigTest: XCTestCase {
                     windowTitleRegexSubstring: nil
                 ),
                 checkFurtherCallbacks: true,
-                run: [LayoutCommand(toggleBetween: [.floating])!, MoveNodeToWorkspaceCommand(targetWorkspaceName: "W")]
+                run: [
+                    LayoutCommand(args: LayoutCmdArgs(toggleBetween: [.floating])),
+                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .workspaceName("W")))
+                ]
             ),
             WindowDetectedCallback(
                 matcher: CallbackMatcher(
@@ -311,24 +319,27 @@ extension HotkeyBinding: Equatable {
 extension Command {
     var describe: CommandDescription {
         if let focus = self as? FocusCommand {
-            return .focusCommand(focus.direction)
+            return .focusCommand(args: focus.args)
         } else if let resize = self as? ResizeCommand {
-            return .resizeCommand(dimension: resize.dimension, mode: resize.mode, unit: resize.unit)
+            return .resizeCommand(args: resize.args)
         } else if let layout = self as? LayoutCommand {
-            return .layoutCommand(layout.toggleBetween)
+            return .layoutCommand(args: layout.args)
         } else if let exec = self as? ExecAndForgetCommand {
-            return .execAndForget(exec.bashCommand)
+            return .execAndForget(exec.args.bashScript)
         } else if let moveNodeToWorkspace = self as? MoveNodeToWorkspaceCommand {
-            return .moveNodeToWorkspace(moveNodeToWorkspace.targetWorkspaceName)
+            return .moveNodeToWorkspace(args: moveNodeToWorkspace.args)
+        } else if let workspace = self as? WorkspaceCommand {
+            return .workspace(args: workspace.args)
         }
         error("Unsupported command: \(self)")
     }
 }
 
-enum CommandDescription: Equatable {
-    case focusCommand(CardinalDirection)
-    case resizeCommand(dimension: ResizeCommand.Dimension, mode: ResizeCommand.ResizeMode, unit: UInt)
-    case layoutCommand([LayoutCommand.LayoutDescription])
+enum CommandDescription: Equatable { // todo do I need this class after CmdArgs introduction?
+    case focusCommand(args: FocusCmdArgs)
+    case resizeCommand(args: ResizeCmdArgs)
+    case layoutCommand(args: LayoutCmdArgs)
     case execAndForget(String)
-    case moveNodeToWorkspace(String)
+    case moveNodeToWorkspace(args: MoveNodeToWorkspaceCmdArgs)
+    case workspace(args: WorkspaceCmdArgs)
 }

@@ -12,7 +12,7 @@ final class MoveThroughCommandTest: XCTestCase {
         }
         start.focus()
 
-        MoveThroughCommand(direction: .right).runOnFocusedSubject()
+        MoveThroughCommand(args: MoveThroughCmdArgs(direction: .right)).runOnFocusedSubject()
         XCTAssertEqual(root.layoutDescription, .h_tiles([.window(2), .window(1)]))
     }
 
@@ -29,7 +29,7 @@ final class MoveThroughCommandTest: XCTestCase {
         }
         start.focus()
 
-        MoveThroughCommand(direction: .right).runOnFocusedSubject()
+        MoveThroughCommand(args: MoveThroughCmdArgs(direction: .right)).runOnFocusedSubject()
         XCTAssertEqual(
             root.layoutDescription,
             .h_tiles([
@@ -61,7 +61,7 @@ final class MoveThroughCommandTest: XCTestCase {
         window3.markAsMostRecentChild()
         start.focus()
 
-        MoveThroughCommand(direction: .right).runOnFocusedSubject()
+        MoveThroughCommand(args: MoveThroughCmdArgs(direction: .right)).runOnFocusedSubject()
         XCTAssertEqual(
             root.layoutDescription,
             .h_tiles([
@@ -84,7 +84,7 @@ final class MoveThroughCommandTest: XCTestCase {
         let window2 = TestWindow(id: 2, parent: root, adaptiveWeight: 2)
         window2.focus()
 
-        MoveThroughCommand(direction: .left).runOnFocusedSubject()
+        MoveThroughCommand(args: MoveThroughCmdArgs(direction: .left)).runOnFocusedSubject()
         XCTAssertEqual(window2.hWeight, 2)
         XCTAssertEqual(window1.hWeight, 1)
     }
@@ -101,7 +101,7 @@ final class MoveThroughCommandTest: XCTestCase {
         }
         window1.focus()
 
-        MoveThroughCommand(direction: .right).runOnFocusedSubject()
+        MoveThroughCommand(args: MoveThroughCmdArgs(direction: .right)).runOnFocusedSubject()
         XCTAssertEqual(window2.hWeight, 1)
         XCTAssertEqual(window2.vWeight, 1)
         XCTAssertEqual(window1.vWeight, 1)
@@ -118,7 +118,7 @@ final class MoveThroughCommandTest: XCTestCase {
         }
         start.focus()
 
-        MoveThroughCommand(direction: .up).runOnFocusedSubject()
+        MoveThroughCommand(args: MoveThroughCmdArgs(direction: .up)).runOnFocusedSubject()
         XCTAssertEqual(
             workspace.layoutDescription,
             .workspace([
@@ -142,7 +142,7 @@ final class MoveThroughCommandTest: XCTestCase {
         }
         start.focus()
 
-        MoveThroughCommand(direction: .left).runOnFocusedSubject()
+        MoveThroughCommand(args: MoveThroughCmdArgs(direction: .left)).runOnFocusedSubject()
         XCTAssertEqual(
             root.layoutDescription,
             .h_tiles([
@@ -166,7 +166,7 @@ final class MoveThroughCommandTest: XCTestCase {
         }
         start.focus()
 
-        MoveThroughCommand(direction: .right).runOnFocusedSubject()
+        MoveThroughCommand(args: MoveThroughCmdArgs(direction: .right)).runOnFocusedSubject()
         XCTAssertEqual(
             workspace.rootTilingContainer.layoutDescription,
             .h_tiles([
@@ -187,7 +187,7 @@ final class MoveThroughCommandTest: XCTestCase {
         }
         start.focus()
 
-        MoveThroughCommand(direction: .left).runOnFocusedSubject()
+        MoveThroughCommand(args: MoveThroughCmdArgs(direction: .left)).runOnFocusedSubject()
         XCTAssertEqual(
             workspace.rootTilingContainer.layoutDescription,
             .h_tiles([

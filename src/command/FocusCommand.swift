@@ -1,5 +1,5 @@
 struct FocusCommand: Command {
-    let direction: CardinalDirection
+    let args: FocusCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
@@ -10,6 +10,7 @@ struct FocusCommand: Command {
         defer {
             restoreFloatingWindows(floatingWindows: floatingWindows, workspace: workspace)
         }
+        let direction = args.direction
 
         guard let (parent, ownIndex) = currentWindow.closestParent(hasChildrenInDirection: direction, withLayout: nil) else { return }
         let windowToFocus = parent.children[ownIndex + direction.focusOffset]

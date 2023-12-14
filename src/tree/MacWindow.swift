@@ -68,7 +68,9 @@ final class MacWindow: Window, CustomStringConvertible {
         //  we might want to track the time of the latest workspace switch to make the approximation more accurate
         if workspace == previousFocusedWorkspaceName || workspace == focusedWorkspaceName {
             refreshSession {
-                WorkspaceCommand(workspaceName: workspace).runOnFocusedSubject()
+                WorkspaceCommand(args: WorkspaceCmdArgs(
+                    target: .workspaceName(workspace)
+                )).runOnFocusedSubject()
             }
         }
     }

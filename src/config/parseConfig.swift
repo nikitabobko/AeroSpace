@@ -105,6 +105,33 @@ private let configParser: [String: any ParserProtocol<RawConfig>] = [
     "on-window-detected": Parser(\.onWindowDetected, parseOnWindowDetectedArray)
 ]
 
+extension ParsedCmd {
+    func toEither() -> Parsed<T> { // todo make private
+        switch self {
+        case .cmd(let a):
+            return .success(a)
+        case .help(let a):
+            return .failure(a)
+        case .failure(let a):
+            return .failure(a)
+        }
+    }
+}
+
+func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[Command]> {
+    if let rawString = raw.string {
+        return parseCommand(rawString).toEither().map { [$0] }
+    } else if let rawArray = raw.array {
+        let commands: Parsed<[Command]> = (0..<rawArray.count).mapAllOrFailure { index in
+            let rawString: String = rawArray[index].string ?? expectedActualTypeError(expected: .string, actual: rawArray[index].type)
+            return parseCommand(rawString).toEither()
+        }
+        return commands
+    } else {
+        return .failure(expectedActualTypeError(expected: [.string, .array], actual: raw.type))
+    }
+}
+
 func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]) {
     let rawTable: TOMLTable
     do {
@@ -141,8 +168,8 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         preservedWorkspaceNames: modesOrDefault.values.lazy
             .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
             .compactMap { (binding: HotkeyBinding) -> String? in
-                (binding.commands.singleOrNil() as? WorkspaceCommand)?.workspaceName
-                    ?? (binding.commands.singleOrNil() as? MoveNodeToWorkspaceCommand)?.targetWorkspaceName
+                (binding.commands.singleOrNil() as? WorkspaceCommand)?.args.target.workspaceNameOrNil()
+                    ?? (binding.commands.singleOrNil() as? MoveNodeToWorkspaceCommand)?.args.target.workspaceNameOrNil()
                     ?? nil
             }
             + (raw.workspaceToMonitorForceAssignment ?? [:]).keys
@@ -152,6 +179,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
             .flatMap { $0.commands }
             .contains { $0 is SplitCommand }
         if containsSplitCommand {
+            // todo runtime bug?
             errors += [.semantic(.root, // todo Make 'split' + flatten normalization prettier
                 """
                 The config contains:
@@ -190,8 +218,7 @@ func parseTable<T: Copyable>(
 private func parseStartupRootContainerLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<StartupRootContainerLayout> {
     parseString(raw, backtrace)
         .flatMap {
-            StartupRootContainerLayout(rawValue: $0)
-                .orFailure(.semantic(backtrace, "Can't parse. possible values: (smart|tiles|accordion)"))
+            parseEnum($0, StartupRootContainerLayout.self).toParsedToml(backtrace)
         }
 }
 

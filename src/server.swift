@@ -35,7 +35,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
     while true {
         _ = try? Socket.wait(for: [socket], timeout: 0, waitForever: true)
         guard let string = (try? socket.readString()) else { return }
-        let (action, error1) = parseCommand(string).getOrNils()
+        let (action, error1) = parseCommand(string).toEither().getOrNils() // todo get rid of toEither exit code for help
         let (query, error2) = parseQueryCommand(string).getOrNils()
         guard let isEnabled = await Task(operation: { @MainActor in TrayMenuModel.shared.isEnabled }).result.getOrNil() else {
             _ = try? socket.write(from: "Unknown failure during isEnabled server state access")
@@ -78,7 +78,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
 }
 
 private func isAllowedToRunWhenDisabled(_ query: QueryCommand?, _ action: Command?) -> Bool {
-    if let enable = action as? EnableCommand, enable.targetState != .off {
+    if let enable = action as? EnableCommand, enable.args.targetState != .off {
         return true
     }
     if query is VersionCommand {

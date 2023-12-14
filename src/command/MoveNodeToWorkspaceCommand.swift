@@ -1,10 +1,14 @@
 struct MoveNodeToWorkspaceCommand: Command {
-    let targetWorkspaceName: String
+    let args: MoveNodeToWorkspaceCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         guard let focused = subject.windowOrNil else { return }
         let preserveWorkspace = focused.workspace
-        let targetWorkspace = Workspace.get(byName: targetWorkspaceName)
+        let targetWorkspace: Workspace
+        switch args.target {
+        case .workspaceName(let name):
+            targetWorkspace = Workspace.get(byName: name)
+        }
         if preserveWorkspace == targetWorkspace {
             return
         }

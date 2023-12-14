@@ -24,6 +24,19 @@ expected: mru(window3, window4) is focused
 final class FocusCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
+    func testParse() {
+        XCTAssertTrue(parseCommand("focus --boundaries left").failureMsgOrNil?.contains("Possible values") == true)
+        XCTAssertEqual(
+            parseCommand("focus --boundaries container left").cmdOrNil?.describe,
+            .focusCommand(args: FocusCmdArgs(boundaries: .container, whenBoundariesCrossed: .doNothing, direction: .left))
+        )
+
+        XCTAssertEqual(
+            parseCommand("focus --boundaries container --boundaries container left").failureMsgOrNil,
+            "ERROR: Duplicated argument '--boundaries'"
+        )
+    }
+
     func testFocus() {
         XCTAssertEqual(focusedWindow, nil)
         var start: Window!
@@ -44,7 +57,7 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand(direction: .right).runOnFocusedSubject()
+        FocusCommand.new(direction: .right).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
@@ -56,9 +69,9 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand(direction: .up).runOnFocusedSubject()
+        FocusCommand.new(direction: .up).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 1)
-        FocusCommand(direction: .down).runOnFocusedSubject()
+        FocusCommand.new(direction: .down).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
@@ -70,7 +83,7 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand(direction: .left).runOnFocusedSubject()
+        FocusCommand.new(direction: .left).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
@@ -93,18 +106,18 @@ final class FocusCommandTest: XCTestCase {
 
         XCTAssertEqual(workspace.mostRecentWindow?.windowId, 3) // The latest bound
         startWindow.focus()
-        FocusCommand(direction: .right).runOnFocusedSubject()
+        FocusCommand.new(direction: .right).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 3)
 
         window2.markAsMostRecentChild()
         startWindow.focus()
-        FocusCommand(direction: .right).runOnFocusedSubject()
+        FocusCommand.new(direction: .right).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 2)
 
         window3.markAsMostRecentChild()
         unrelatedWindow.markAsMostRecentChild()
         startWindow.focus()
-        FocusCommand(direction: .right).runOnFocusedSubject()
+        FocusCommand.new(direction: .right).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
@@ -118,7 +131,7 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand(direction: .left).runOnFocusedSubject()
+        FocusCommand.new(direction: .left).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
@@ -132,7 +145,13 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand(direction: .left).runOnFocusedSubject()
+        FocusCommand.new(direction: .left).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 1)
+    }
+}
+
+extension FocusCommand {
+    static func new(direction: CardinalDirection) -> FocusCommand {
+        FocusCommand(args: FocusCmdArgs(boundaries: .workspace, whenBoundariesCrossed: .doNothing, direction: direction))
     }
 }

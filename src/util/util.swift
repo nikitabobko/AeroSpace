@@ -113,6 +113,12 @@ extension String? {
 
 public var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
 
+extension CaseIterable where Self: RawRepresentable, RawValue == String {
+    static var unionLiteral: String {
+        "(" + allCases.map(\.rawValue).joined(separator: "|") + ")"
+    }
+}
+
 var apps: [AbstractApp] {
     isUnitTest
         ? appForTests.asList()
