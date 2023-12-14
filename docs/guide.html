@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="generator" content="Asciidoctor 2.0.20">
+<title>AeroSpace Guide</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
+<style>
+/*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+/* Uncomment the following line when using as a custom stylesheet */
+/* @import "https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700"; */
+html{font-family:sans-serif;-webkit-text-size-adjust:100%}
+a{background:none}
+a:focus{outline:thin dotted}
+a:active,a:hover{outline:0}
+h1{font-size:2em;margin:.67em 0}
+b,strong{font-weight:bold}
+abbr{font-size:.9em}
+abbr[title]{cursor:help;border-bottom:1px dotted #dddddf;text-decoration:none}
+dfn{font-style:italic}
+hr{height:0}
+mark{background:#ff0;color:#000}
+code,kbd,pre,samp{font-family:monospace;font-size:1em}
+pre{white-space:pre-wrap}
+q{quotes:"\201C" "\201D" "\2018" "\2019"}
+small{font-size:80%}
+sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+sup{top:-.5em}
+sub{bottom:-.25em}
+img{border:0}
+svg:not(:root){overflow:hidden}
+figure{margin:0}
+audio,video{display:inline-block}
+audio:not([controls]){display:none;height:0}
+fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}
+legend{border:0;padding:0}
+button,input,select,textarea{font-family:inherit;font-size:100%;margin:0}
+button,input{line-height:normal}
+button,select{text-transform:none}
+button,html input[type=button],input[type=reset],input[type=submit]{-webkit-appearance:button;cursor:pointer}
+button[disabled],html input[disabled]{cursor:default}
+input[type=checkbox],input[type=radio]{padding:0}
+button::-moz-focus-inner,input::-moz-focus-inner{border:0;padding:0}
+textarea{overflow:auto;vertical-align:top}
+table{border-collapse:collapse;border-spacing:0}
+*,::before,::after{box-sizing:border-box}
+html,body{font-size:100%}
+body{background:#fff;color:rgba(0,0,0,.8);padding:0;margin:0;font-family:"Noto Serif","DejaVu Serif",serif;line-height:1;position:relative;cursor:auto;-moz-tab-size:4;-o-tab-size:4;tab-size:4;word-wrap:anywhere;-moz-osx-font-smoothing:grayscale;-webkit-font-smoothing:antialiased}
+a:hover{cursor:pointer}
+img,object,embed{max-width:100%;height:auto}
+object,embed{height:100%}
+img{-ms-interpolation-mode:bicubic}
+.left{float:left!important}
+.right{float:right!important}
+.text-left{text-align:left!important}
+.text-right{text-align:right!important}
+.text-center{text-align:center!important}
+.text-justify{text-align:justify!important}
+.hide{display:none}
+img,object,svg{display:inline-block;vertical-align:middle}
+textarea{height:auto;min-height:50px}
+select{width:100%}
+.subheader,.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{line-height:1.45;color:#7a2518;font-weight:400;margin-top:0;margin-bottom:.25em}
+div,dl,dt,dd,ul,ol,li,h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6,pre,form,p,blockquote,th,td{margin:0;padding:0}
+a{color:#2156a5;text-decoration:underline;line-height:inherit}
+a:hover,a:focus{color:#1d4b8f}
+a img{border:0}
+p{line-height:1.6;margin-bottom:1.25em;text-rendering:optimizeLegibility}
+p aside{font-size:.875em;line-height:1.35;font-style:italic}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{font-family:"Open Sans","DejaVu Sans",sans-serif;font-weight:300;font-style:normal;color:#ba3925;text-rendering:optimizeLegibility;margin-top:1em;margin-bottom:.5em;line-height:1.0125em}
+h1 small,h2 small,h3 small,#toctitle small,.sidebarblock>.content>.title small,h4 small,h5 small,h6 small{font-size:60%;color:#e99b8f;line-height:0}
+h1{font-size:2.125em}
+h2{font-size:1.6875em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.375em}
+h4,h5{font-size:1.125em}
+h6{font-size:1em}
+hr{border:solid #dddddf;border-width:1px 0 0;clear:both;margin:1.25em 0 1.1875em}
+em,i{font-style:italic;line-height:inherit}
+strong,b{font-weight:bold;line-height:inherit}
+small{font-size:60%;line-height:inherit}
+code{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;font-weight:400;color:rgba(0,0,0,.9)}
+ul,ol,dl{line-height:1.6;margin-bottom:1.25em;list-style-position:outside;font-family:inherit}
+ul,ol{margin-left:1.5em}
+ul li ul,ul li ol{margin-left:1.25em;margin-bottom:0}
+ul.circle{list-style-type:circle}
+ul.disc{list-style-type:disc}
+ul.square{list-style-type:square}
+ul.circle ul:not([class]),ul.disc ul:not([class]),ul.square ul:not([class]){list-style:inherit}
+ol li ul,ol li ol{margin-left:1.25em;margin-bottom:0}
+dl dt{margin-bottom:.3125em;font-weight:bold}
+dl dd{margin-bottom:1.25em}
+blockquote{margin:0 0 1.25em;padding:.5625em 1.25em 0 1.1875em;border-left:1px solid #ddd}
+blockquote,blockquote p{line-height:1.6;color:rgba(0,0,0,.85)}
+@media screen and (min-width:768px){h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2}
+h1{font-size:2.75em}
+h2{font-size:2.3125em}
+h3,#toctitle,.sidebarblock>.content>.title{font-size:1.6875em}
+h4{font-size:1.4375em}}
+table{background:#fff;margin-bottom:1.25em;border:1px solid #dedede;word-wrap:normal}
+table thead,table tfoot{background:#f7f8f7}
+table thead tr th,table thead tr td,table tfoot tr th,table tfoot tr td{padding:.5em .625em .625em;font-size:inherit;color:rgba(0,0,0,.8);text-align:left}
+table tr th,table tr td{padding:.5625em .625em;font-size:inherit;color:rgba(0,0,0,.8)}
+table tr.even,table tr.alt{background:#f8f8f7}
+table thead tr th,table tfoot tr th,table tbody tr td,table tr td,table tfoot tr td{line-height:1.6}
+h1,h2,h3,#toctitle,.sidebarblock>.content>.title,h4,h5,h6{line-height:1.2;word-spacing:-.05em}
+h1 strong,h2 strong,h3 strong,#toctitle strong,.sidebarblock>.content>.title strong,h4 strong,h5 strong,h6 strong{font-weight:400}
+.center{margin-left:auto;margin-right:auto}
+.stretch{width:100%}
+.clearfix::before,.clearfix::after,.float-group::before,.float-group::after{content:" ";display:table}
+.clearfix::after,.float-group::after{clear:both}
+:not(pre).nobreak{word-wrap:normal}
+:not(pre).nowrap{white-space:nowrap}
+:not(pre).pre-wrap{white-space:pre-wrap}
+:not(pre):not([class^=L])>code{font-size:.9375em;font-style:normal!important;letter-spacing:0;padding:.1em .5ex;word-spacing:-.15em;background:#f7f7f8;border-radius:4px;line-height:1.45;text-rendering:optimizeSpeed}
+pre{color:rgba(0,0,0,.9);font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;line-height:1.45;text-rendering:optimizeSpeed}
+pre code,pre pre{color:inherit;font-size:inherit;line-height:inherit}
+pre>code{display:block}
+pre.nowrap,pre.nowrap pre{white-space:pre;word-wrap:normal}
+em em{font-style:normal}
+strong strong{font-weight:400}
+.keyseq{color:rgba(51,51,51,.8)}
+kbd{font-family:"Droid Sans Mono","DejaVu Sans Mono",monospace;display:inline-block;color:rgba(0,0,0,.8);font-size:.65em;line-height:1.45;background:#f7f7f7;border:1px solid #ccc;border-radius:3px;box-shadow:0 1px 0 rgba(0,0,0,.2),inset 0 0 0 .1em #fff;margin:0 .15em;padding:.2em .5em;vertical-align:middle;position:relative;top:-.1em;white-space:nowrap}
+.keyseq kbd:first-child{margin-left:0}
+.keyseq kbd:last-child{margin-right:0}
+.menuseq,.menuref{color:#000}
+.menuseq b:not(.caret),.menuref{font-weight:inherit}
+.menuseq{word-spacing:-.02em}
+.menuseq b.caret{font-size:1.25em;line-height:.8}
+.menuseq i.caret{font-weight:bold;text-align:center;width:.45em}
+b.button::before,b.button::after{position:relative;top:-1px;font-weight:400}
+b.button::before{content:"[";padding:0 3px 0 2px}
+b.button::after{content:"]";padding:0 2px 0 3px}
+p a>code:hover{color:rgba(0,0,0,.9)}
+#header,#content,#footnotes,#footer{width:100%;margin:0 auto;max-width:62.5em;*zoom:1;position:relative;padding-left:.9375em;padding-right:.9375em}
+#header::before,#header::after,#content::before,#content::after,#footnotes::before,#footnotes::after,#footer::before,#footer::after{content:" ";display:table}
+#header::after,#content::after,#footnotes::after,#footer::after{clear:both}
+#content{margin-top:1.25em}
+#content::before{content:none}
+#header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
+#header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
+#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
+#header .details span:first-child{margin-left:-.125em}
+#header .details span.email a{color:rgba(0,0,0,.85)}
+#header .details br{display:none}
+#header .details br+span::before{content:"\00a0\2013\00a0"}
+#header .details br+span.author::before{content:"\00a0\22c5\00a0";color:rgba(0,0,0,.85)}
+#header .details br+span#revremark::before{content:"\00a0|\00a0"}
+#header #revnumber{text-transform:capitalize}
+#header #revnumber::after{content:"\00a0"}
+#content>h1:first-child:not([class]){color:rgba(0,0,0,.85);border-bottom:1px solid #dddddf;padding-bottom:8px;margin-top:0;padding-top:1rem;margin-bottom:1.25rem}
+#toc{border-bottom:1px solid #e7e7e9;padding-bottom:.5em}
+#toc>ul{margin-left:.125em}
+#toc ul.sectlevel0>li>a{font-style:italic}
+#toc ul.sectlevel0 ul.sectlevel1{margin:.5em 0}
+#toc ul{font-family:"Open Sans","DejaVu Sans",sans-serif;list-style-type:none}
+#toc li{line-height:1.3334;margin-top:.3334em}
+#toc a{text-decoration:none}
+#toc a:active{text-decoration:underline}
+#toctitle{color:#7a2518;font-size:1.2em}
+@media screen and (min-width:768px){#toctitle{font-size:1.375em}
+body.toc2{padding-left:15em;padding-right:0}
+#toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
+#toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
+#toc.toc2>ul{font-size:.9em;margin-bottom:0}
+#toc.toc2 ul ul{margin-left:0;padding-left:1em}
+#toc.toc2 ul.sectlevel0 ul.sectlevel1{padding-left:0;margin-top:.5em;margin-bottom:.5em}
+body.toc2.toc-right{padding-left:0;padding-right:15em}
+body.toc2.toc-right #toc.toc2{border-right-width:0;border-left:1px solid #e7e7e9;left:auto;right:0}}
+@media screen and (min-width:1280px){body.toc2{padding-left:20em;padding-right:0}
+#toc.toc2{width:20em}
+#toc.toc2 #toctitle{font-size:1.375em}
+#toc.toc2>ul{font-size:.95em}
+#toc.toc2 ul ul{padding-left:1.25em}
+body.toc2.toc-right{padding-left:0;padding-right:20em}}
+#content #toc{border:1px solid #e0e0dc;margin-bottom:1.25em;padding:1.25em;background:#f8f8f7;border-radius:4px}
+#content #toc>:first-child{margin-top:0}
+#content #toc>:last-child{margin-bottom:0}
+#footer{max-width:none;background:rgba(0,0,0,.8);padding:1.25em}
+#footer-text{color:hsla(0,0%,100%,.8);line-height:1.44}
+#content{margin-bottom:.625em}
+.sect1{padding-bottom:.625em}
+@media screen and (min-width:768px){#content{margin-bottom:1.25em}
+.sect1{padding-bottom:1.25em}}
+.sect1:last-child{padding-bottom:0}
+.sect1+.sect1{border-top:1px solid #e7e7e9}
+#content h1>a.anchor,h2>a.anchor,h3>a.anchor,#toctitle>a.anchor,.sidebarblock>.content>.title>a.anchor,h4>a.anchor,h5>a.anchor,h6>a.anchor{position:absolute;z-index:1001;width:1.5ex;margin-left:-1.5ex;display:block;text-decoration:none!important;visibility:hidden;text-align:center;font-weight:400}
+#content h1>a.anchor::before,h2>a.anchor::before,h3>a.anchor::before,#toctitle>a.anchor::before,.sidebarblock>.content>.title>a.anchor::before,h4>a.anchor::before,h5>a.anchor::before,h6>a.anchor::before{content:"\00A7";font-size:.85em;display:block;padding-top:.1em}
+#content h1:hover>a.anchor,#content h1>a.anchor:hover,h2:hover>a.anchor,h2>a.anchor:hover,h3:hover>a.anchor,#toctitle:hover>a.anchor,.sidebarblock>.content>.title:hover>a.anchor,h3>a.anchor:hover,#toctitle>a.anchor:hover,.sidebarblock>.content>.title>a.anchor:hover,h4:hover>a.anchor,h4>a.anchor:hover,h5:hover>a.anchor,h5>a.anchor:hover,h6:hover>a.anchor,h6>a.anchor:hover{visibility:visible}
+#content h1>a.link,h2>a.link,h3>a.link,#toctitle>a.link,.sidebarblock>.content>.title>a.link,h4>a.link,h5>a.link,h6>a.link{color:#ba3925;text-decoration:none}
+#content h1>a.link:hover,h2>a.link:hover,h3>a.link:hover,#toctitle>a.link:hover,.sidebarblock>.content>.title>a.link:hover,h4>a.link:hover,h5>a.link:hover,h6>a.link:hover{color:#a53221}
+details,.audioblock,.imageblock,.literalblock,.listingblock,.stemblock,.videoblock{margin-bottom:1.25em}
+details{margin-left:1.25rem}
+details>summary{cursor:pointer;display:block;position:relative;line-height:1.6;margin-bottom:.625rem;outline:none;-webkit-tap-highlight-color:transparent}
+details>summary::-webkit-details-marker{display:none}
+details>summary::before{content:"";border:solid transparent;border-left:solid;border-width:.3em 0 .3em .5em;position:absolute;top:.5em;left:-1.25rem;transform:translateX(15%)}
+details[open]>summary::before{border:solid transparent;border-top:solid;border-width:.5em .3em 0;transform:translateY(15%)}
+details>summary::after{content:"";width:1.25rem;height:1em;position:absolute;top:.3em;left:-1.25rem}
+.admonitionblock td.content>.title,.audioblock>.title,.exampleblock>.title,.imageblock>.title,.listingblock>.title,.literalblock>.title,.stemblock>.title,.openblock>.title,.paragraph>.title,.quoteblock>.title,table.tableblock>.title,.verseblock>.title,.videoblock>.title,.dlist>.title,.olist>.title,.ulist>.title,.qlist>.title,.hdlist>.title{text-rendering:optimizeLegibility;text-align:left;font-family:"Noto Serif","DejaVu Serif",serif;font-size:1rem;font-style:italic}
+table.tableblock.fit-content>caption.title{white-space:nowrap;width:0}
+.paragraph.lead>p,#preamble>.sectionbody>[class=paragraph]:first-of-type p{font-size:1.21875em;line-height:1.6;color:rgba(0,0,0,.85)}
+.admonitionblock>table{border-collapse:separate;border:0;background:none;width:100%}
+.admonitionblock>table td.icon{text-align:center;width:80px}
+.admonitionblock>table td.icon img{max-width:none}
+.admonitionblock>table td.icon .title{font-weight:bold;font-family:"Open Sans","DejaVu Sans",sans-serif;text-transform:uppercase}
+.admonitionblock>table td.content{padding-left:1.125em;padding-right:1.25em;border-left:1px solid #dddddf;color:rgba(0,0,0,.6);word-wrap:anywhere}
+.admonitionblock>table td.content>:last-child>:last-child{margin-bottom:0}
+.exampleblock>.content{border:1px solid #e6e6e6;margin-bottom:1.25em;padding:1.25em;background:#fff;border-radius:4px}
+.sidebarblock{border:1px solid #dbdbd6;margin-bottom:1.25em;padding:1.25em;background:#f3f3f2;border-radius:4px}
+.sidebarblock>.content>.title{color:#7a2518;margin-top:0;text-align:center}
+.exampleblock>.content>:first-child,.sidebarblock>.content>:first-child{margin-top:0}
+.exampleblock>.content>:last-child,.exampleblock>.content>:last-child>:last-child,.exampleblock>.content .olist>ol>li:last-child>:last-child,.exampleblock>.content .ulist>ul>li:last-child>:last-child,.exampleblock>.content .qlist>ol>li:last-child>:last-child,.sidebarblock>.content>:last-child,.sidebarblock>.content>:last-child>:last-child,.sidebarblock>.content .olist>ol>li:last-child>:last-child,.sidebarblock>.content .ulist>ul>li:last-child>:last-child,.sidebarblock>.content .qlist>ol>li:last-child>:last-child{margin-bottom:0}
+.literalblock pre,.listingblock>.content>pre{border-radius:4px;overflow-x:auto;padding:1em;font-size:.8125em}
+@media screen and (min-width:768px){.literalblock pre,.listingblock>.content>pre{font-size:.90625em}}
+@media screen and (min-width:1280px){.literalblock pre,.listingblock>.content>pre{font-size:1em}}
+.literalblock pre,.listingblock>.content>pre:not(.highlight),.listingblock>.content>pre[class=highlight],.listingblock>.content>pre[class^="highlight "]{background:#f7f7f8}
+.literalblock.output pre{color:#f7f7f8;background:rgba(0,0,0,.9)}
+.listingblock>.content{position:relative}
+.listingblock code[data-lang]::before{display:none;content:attr(data-lang);position:absolute;font-size:.75em;top:.425rem;right:.5rem;line-height:1;text-transform:uppercase;color:inherit;opacity:.5}
+.listingblock:hover code[data-lang]::before{display:block}
+.listingblock.terminal pre .command::before{content:attr(data-prompt);padding-right:.5em;color:inherit;opacity:.5}
+.listingblock.terminal pre .command:not([data-prompt])::before{content:"$"}
+.listingblock pre.highlightjs{padding:0}
+.listingblock pre.highlightjs>code{padding:1em;border-radius:4px}
+.listingblock pre.prettyprint{border-width:0}
+.prettyprint{background:#f7f7f8}
+pre.prettyprint .linenums{line-height:1.45;margin-left:2em}
+pre.prettyprint li{background:none;list-style-type:inherit;padding-left:0}
+pre.prettyprint li code[data-lang]::before{opacity:1}
+pre.prettyprint li:not(:first-child) code[data-lang]::before{display:none}
+table.linenotable{border-collapse:separate;border:0;margin-bottom:0;background:none}
+table.linenotable td[class]{color:inherit;vertical-align:top;padding:0;line-height:inherit;white-space:normal}
+table.linenotable td.code{padding-left:.75em}
+table.linenotable td.linenos,pre.pygments .linenos{border-right:1px solid;opacity:.35;padding-right:.5em;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
+pre.pygments span.linenos{display:inline-block;margin-right:.75em}
+.quoteblock{margin:0 1em 1.25em 1.5em;display:table}
+.quoteblock:not(.excerpt)>.title{margin-left:-1.5em;margin-bottom:.75em}
+.quoteblock blockquote,.quoteblock p{color:rgba(0,0,0,.85);font-size:1.15rem;line-height:1.75;word-spacing:.1em;letter-spacing:0;font-style:italic;text-align:justify}
+.quoteblock blockquote{margin:0;padding:0;border:0}
+.quoteblock blockquote::before{content:"\201c";float:left;font-size:2.75em;font-weight:bold;line-height:.6em;margin-left:-.6em;color:#7a2518;text-shadow:0 1px 2px rgba(0,0,0,.1)}
+.quoteblock blockquote>.paragraph:last-child p{margin-bottom:0}
+.quoteblock .attribution{margin-top:.75em;margin-right:.5ex;text-align:right}
+.verseblock{margin:0 1em 1.25em}
+.verseblock pre{font-family:"Open Sans","DejaVu Sans",sans-serif;font-size:1.15rem;color:rgba(0,0,0,.85);font-weight:300;text-rendering:optimizeLegibility}
+.verseblock pre strong{font-weight:400}
+.verseblock .attribution{margin-top:1.25rem;margin-left:.5ex}
+.quoteblock .attribution,.verseblock .attribution{font-size:.9375em;line-height:1.45;font-style:italic}
+.quoteblock .attribution br,.verseblock .attribution br{display:none}
+.quoteblock .attribution cite,.verseblock .attribution cite{display:block;letter-spacing:-.025em;color:rgba(0,0,0,.6)}
+.quoteblock.abstract blockquote::before,.quoteblock.excerpt blockquote::before,.quoteblock .quoteblock blockquote::before{display:none}
+.quoteblock.abstract blockquote,.quoteblock.abstract p,.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{line-height:1.6;word-spacing:0}
+.quoteblock.abstract{margin:0 1em 1.25em;display:block}
+.quoteblock.abstract>.title{margin:0 0 .375em;font-size:1.15em;text-align:center}
+.quoteblock.excerpt>blockquote,.quoteblock .quoteblock{padding:0 0 .25em 1em;border-left:.25em solid #dddddf}
+.quoteblock.excerpt,.quoteblock .quoteblock{margin-left:0}
+.quoteblock.excerpt blockquote,.quoteblock.excerpt p,.quoteblock .quoteblock blockquote,.quoteblock .quoteblock p{color:inherit;font-size:1.0625rem}
+.quoteblock.excerpt .attribution,.quoteblock .quoteblock .attribution{color:inherit;font-size:.85rem;text-align:left;margin-right:0}
+p.tableblock:last-child{margin-bottom:0}
+td.tableblock>.content{margin-bottom:1.25em;word-wrap:anywhere}
+td.tableblock>.content>:last-child{margin-bottom:-1.25em}
+table.tableblock,th.tableblock,td.tableblock{border:0 solid #dedede}
+table.grid-all>*>tr>*{border-width:1px}
+table.grid-cols>*>tr>*{border-width:0 1px}
+table.grid-rows>*>tr>*{border-width:1px 0}
+table.frame-all{border-width:1px}
+table.frame-ends{border-width:1px 0}
+table.frame-sides{border-width:0 1px}
+table.frame-none>colgroup+*>:first-child>*,table.frame-sides>colgroup+*>:first-child>*{border-top-width:0}
+table.frame-none>:last-child>:last-child>*,table.frame-sides>:last-child>:last-child>*{border-bottom-width:0}
+table.frame-none>*>tr>:first-child,table.frame-ends>*>tr>:first-child{border-left-width:0}
+table.frame-none>*>tr>:last-child,table.frame-ends>*>tr>:last-child{border-right-width:0}
+table.stripes-all>*>tr,table.stripes-odd>*>tr:nth-of-type(odd),table.stripes-even>*>tr:nth-of-type(even),table.stripes-hover>*>tr:hover{background:#f8f8f7}
+th.halign-left,td.halign-left{text-align:left}
+th.halign-right,td.halign-right{text-align:right}
+th.halign-center,td.halign-center{text-align:center}
+th.valign-top,td.valign-top{vertical-align:top}
+th.valign-bottom,td.valign-bottom{vertical-align:bottom}
+th.valign-middle,td.valign-middle{vertical-align:middle}
+table thead th,table tfoot th{font-weight:bold}
+tbody tr th{background:#f7f8f7}
+tbody tr th,tbody tr th p,tfoot tr th,tfoot tr th p{color:rgba(0,0,0,.8);font-weight:bold}
+p.tableblock>code:only-child{background:none;padding:0}
+p.tableblock{font-size:1em}
+ol{margin-left:1.75em}
+ul li ol{margin-left:1.5em}
+dl dd{margin-left:1.125em}
+dl dd:last-child,dl dd:last-child>:last-child{margin-bottom:0}
+li p,ul dd,ol dd,.olist .olist,.ulist .ulist,.ulist .olist,.olist .ulist{margin-bottom:.625em}
+ul.checklist,ul.none,ol.none,ul.no-bullet,ol.no-bullet,ol.unnumbered,ul.unstyled,ol.unstyled{list-style-type:none}
+ul.no-bullet,ol.no-bullet,ol.unnumbered{margin-left:.625em}
+ul.unstyled,ol.unstyled{margin-left:0}
+li>p:empty:only-child::before{content:"";display:inline-block}
+ul.checklist>li>p:first-child{margin-left:-1em}
+ul.checklist>li>p:first-child>.fa-square-o:first-child,ul.checklist>li>p:first-child>.fa-check-square-o:first-child{width:1.25em;font-size:.8em;position:relative;bottom:.125em}
+ul.checklist>li>p:first-child>input[type=checkbox]:first-child{margin-right:.25em}
+ul.inline{display:flex;flex-flow:row wrap;list-style:none;margin:0 0 .625em -1.25em}
+ul.inline>li{margin-left:1.25em}
+.unstyled dl dt{font-weight:400;font-style:normal}
+ol.arabic{list-style-type:decimal}
+ol.decimal{list-style-type:decimal-leading-zero}
+ol.loweralpha{list-style-type:lower-alpha}
+ol.upperalpha{list-style-type:upper-alpha}
+ol.lowerroman{list-style-type:lower-roman}
+ol.upperroman{list-style-type:upper-roman}
+ol.lowergreek{list-style-type:lower-greek}
+.hdlist>table,.colist>table{border:0;background:none}
+.hdlist>table>tbody>tr,.colist>table>tbody>tr{background:none}
+td.hdlist1,td.hdlist2{vertical-align:top;padding:0 .625em}
+td.hdlist1{font-weight:bold;padding-bottom:1.25em}
+td.hdlist2{word-wrap:anywhere}
+.literalblock+.colist,.listingblock+.colist{margin-top:-.5em}
+.colist td:not([class]):first-child{padding:.4em .75em 0;line-height:1;vertical-align:top}
+.colist td:not([class]):first-child img{max-width:none}
+.colist td:not([class]):last-child{padding:.25em 0}
+.thumb,.th{line-height:0;display:inline-block;border:4px solid #fff;box-shadow:0 0 0 1px #ddd}
+.imageblock.left{margin:.25em .625em 1.25em 0}
+.imageblock.right{margin:.25em 0 1.25em .625em}
+.imageblock>.title{margin-bottom:0}
+.imageblock.thumb,.imageblock.th{border-width:6px}
+.imageblock.thumb>.title,.imageblock.th>.title{padding:0 .125em}
+.image.left,.image.right{margin-top:.25em;margin-bottom:.25em;display:inline-block;line-height:0}
+.image.left{margin-right:.625em}
+.image.right{margin-left:.625em}
+a.image{text-decoration:none;display:inline-block}
+a.image object{pointer-events:none}
+sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
+sup.footnote a,sup.footnoteref a{text-decoration:none}
+sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+#footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
+#footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
+#footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
+#footnotes .footnote a:first-of-type{font-weight:bold;text-decoration:none;margin-left:-1.05em}
+#footnotes .footnote:last-of-type{margin-bottom:0}
+#content #footnotes{margin-top:-.625em;margin-bottom:0;padding:.75em 0}
+div.unbreakable{page-break-inside:avoid}
+.big{font-size:larger}
+.small{font-size:smaller}
+.underline{text-decoration:underline}
+.overline{text-decoration:overline}
+.line-through{text-decoration:line-through}
+.aqua{color:#00bfbf}
+.aqua-background{background:#00fafa}
+.black{color:#000}
+.black-background{background:#000}
+.blue{color:#0000bf}
+.blue-background{background:#0000fa}
+.fuchsia{color:#bf00bf}
+.fuchsia-background{background:#fa00fa}
+.gray{color:#606060}
+.gray-background{background:#7d7d7d}
+.green{color:#006000}
+.green-background{background:#007d00}
+.lime{color:#00bf00}
+.lime-background{background:#00fa00}
+.maroon{color:#600000}
+.maroon-background{background:#7d0000}
+.navy{color:#000060}
+.navy-background{background:#00007d}
+.olive{color:#606000}
+.olive-background{background:#7d7d00}
+.purple{color:#600060}
+.purple-background{background:#7d007d}
+.red{color:#bf0000}
+.red-background{background:#fa0000}
+.silver{color:#909090}
+.silver-background{background:#bcbcbc}
+.teal{color:#006060}
+.teal-background{background:#007d7d}
+.white{color:#bfbfbf}
+.white-background{background:#fafafa}
+.yellow{color:#bfbf00}
+.yellow-background{background:#fafa00}
+span.icon>.fa{cursor:default}
+a span.icon>.fa{cursor:inherit}
+.admonitionblock td.icon [class^="fa icon-"]{font-size:2.5em;text-shadow:1px 1px 2px rgba(0,0,0,.5);cursor:default}
+.admonitionblock td.icon .icon-note::before{content:"\f05a";color:#19407c}
+.admonitionblock td.icon .icon-tip::before{content:"\f0eb";text-shadow:1px 1px 2px rgba(155,155,0,.8);color:#111}
+.admonitionblock td.icon .icon-warning::before{content:"\f071";color:#bf6900}
+.admonitionblock td.icon .icon-caution::before{content:"\f06d";color:#bf3400}
+.admonitionblock td.icon .icon-important::before{content:"\f06a";color:#bf0000}
+.conum[data-value]{display:inline-block;color:#fff!important;background:rgba(0,0,0,.8);border-radius:50%;text-align:center;font-size:.75em;width:1.67em;height:1.67em;line-height:1.67em;font-family:"Open Sans","DejaVu Sans",sans-serif;font-style:normal;font-weight:bold}
+.conum[data-value] *{color:#fff!important}
+.conum[data-value]+b{display:none}
+.conum[data-value]::after{content:attr(data-value)}
+pre .conum[data-value]{position:relative;top:-.125em}
+b.conum *{color:inherit!important}
+.conum:not([data-value]):empty{display:none}
+dt,th.tableblock,td.content,div.footnote{text-rendering:optimizeLegibility}
+h1,h2,p,td.content,span.alt,summary{letter-spacing:-.01em}
+p strong,td.content strong,div.footnote strong{letter-spacing:-.005em}
+p,blockquote,dt,td.content,td.hdlist1,span.alt,summary{font-size:1.0625rem}
+p{margin-bottom:1.25rem}
+.sidebarblock p,.sidebarblock dt,.sidebarblock td.content,p.tableblock{font-size:1em}
+.exampleblock>.content{background:#fffef7;border-color:#e0e0dc;box-shadow:0 1px 4px #e0e0dc}
+.print-only{display:none!important}
+@page{margin:1.25cm .75cm}
+@media print{*{box-shadow:none!important;text-shadow:none!important}
+html{font-size:80%}
+a{color:inherit!important;text-decoration:underline!important}
+a.bare,a[href^="#"],a[href^="mailto:"]{text-decoration:none!important}
+a[href^="http:"]:not(.bare)::after,a[href^="https:"]:not(.bare)::after{content:"(" attr(href) ")";display:inline-block;font-size:.875em;padding-left:.25em}
+abbr[title]{border-bottom:1px dotted}
+abbr[title]::after{content:" (" attr(title) ")"}
+pre,blockquote,tr,img,object,svg{page-break-inside:avoid}
+thead{display:table-header-group}
+svg{max-width:100%}
+p,blockquote,dt,td.content{font-size:1em;orphans:3;widows:3}
+h2,h3,#toctitle,.sidebarblock>.content>.title{page-break-after:avoid}
+#header,#content,#footnotes,#footer{max-width:none}
+#toc,.sidebarblock,.exampleblock>.content{background:none!important}
+#toc{border-bottom:1px solid #dddddf!important;padding-bottom:0!important}
+body.book #header{text-align:center}
+body.book #header>h1:first-child{border:0!important;margin:2.5em 0 1em}
+body.book #header .details{border:0!important;display:block;padding:0!important}
+body.book #header .details span:first-child{margin-left:0!important}
+body.book #header .details br{display:block}
+body.book #header .details br+span::before{content:none!important}
+body.book #toc{border:0!important;text-align:left!important;padding:0!important;margin:0!important}
+body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-break-before:always}
+.listingblock code[data-lang]::before{display:block}
+#footer{padding:0 .9375em}
+.hide-on-print{display:none!important}
+.print-only{display:block!important}
+.hide-for-print{display:none!important}
+.show-for-print{display:inherit!important}}
+@media amzn-kf8,print{#header>h1:first-child{margin-top:1.25rem}
+.sect1{padding:0!important}
+.sect1+.sect1{border:0}
+#footer{background:none}
+#footer-text{color:rgba(0,0,0,.6);font-size:.9em}}
+@media amzn-kf8{#header,#content,#footnotes,#footer{padding:0}}
+</style>
+<style>
+pre.pygments .hll { background-color: #ffffcc }
+pre.pygments { background: #f8f8f8; }
+pre.pygments .tok-c { color: #3D7B7B; font-style: italic } /* Comment */
+pre.pygments .tok-err { border: 1px solid #FF0000 } /* Error */
+pre.pygments .tok-k { color: #008000; font-weight: bold } /* Keyword */
+pre.pygments .tok-o { color: #666666 } /* Operator */
+pre.pygments .tok-ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre.pygments .tok-cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre.pygments .tok-cp { color: #9C6500 } /* Comment.Preproc */
+pre.pygments .tok-cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre.pygments .tok-c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre.pygments .tok-cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre.pygments .tok-gd { color: #A00000 } /* Generic.Deleted */
+pre.pygments .tok-ge { font-style: italic } /* Generic.Emph */
+pre.pygments .tok-gr { color: #E40000 } /* Generic.Error */
+pre.pygments .tok-gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre.pygments .tok-gi { color: #008400 } /* Generic.Inserted */
+pre.pygments .tok-go { color: #717171 } /* Generic.Output */
+pre.pygments .tok-gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre.pygments .tok-gs { font-weight: bold } /* Generic.Strong */
+pre.pygments .tok-gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre.pygments .tok-gt { color: #0044DD } /* Generic.Traceback */
+pre.pygments .tok-kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre.pygments .tok-kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre.pygments .tok-kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre.pygments .tok-kp { color: #008000 } /* Keyword.Pseudo */
+pre.pygments .tok-kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre.pygments .tok-kt { color: #B00040 } /* Keyword.Type */
+pre.pygments .tok-m { color: #666666 } /* Literal.Number */
+pre.pygments .tok-s { color: #BA2121 } /* Literal.String */
+pre.pygments .tok-na { color: #687822 } /* Name.Attribute */
+pre.pygments .tok-nb { color: #008000 } /* Name.Builtin */
+pre.pygments .tok-nc { color: #0000FF; font-weight: bold } /* Name.Class */
+pre.pygments .tok-no { color: #880000 } /* Name.Constant */
+pre.pygments .tok-nd { color: #AA22FF } /* Name.Decorator */
+pre.pygments .tok-ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre.pygments .tok-ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre.pygments .tok-nf { color: #0000FF } /* Name.Function */
+pre.pygments .tok-nl { color: #767600 } /* Name.Label */
+pre.pygments .tok-nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+pre.pygments .tok-nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre.pygments .tok-nv { color: #19177C } /* Name.Variable */
+pre.pygments .tok-ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+pre.pygments .tok-w { color: #bbbbbb } /* Text.Whitespace */
+pre.pygments .tok-mb { color: #666666 } /* Literal.Number.Bin */
+pre.pygments .tok-mf { color: #666666 } /* Literal.Number.Float */
+pre.pygments .tok-mh { color: #666666 } /* Literal.Number.Hex */
+pre.pygments .tok-mi { color: #666666 } /* Literal.Number.Integer */
+pre.pygments .tok-mo { color: #666666 } /* Literal.Number.Oct */
+pre.pygments .tok-sa { color: #BA2121 } /* Literal.String.Affix */
+pre.pygments .tok-sb { color: #BA2121 } /* Literal.String.Backtick */
+pre.pygments .tok-sc { color: #BA2121 } /* Literal.String.Char */
+pre.pygments .tok-dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre.pygments .tok-sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre.pygments .tok-s2 { color: #BA2121 } /* Literal.String.Double */
+pre.pygments .tok-se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre.pygments .tok-sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre.pygments .tok-si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre.pygments .tok-sx { color: #008000 } /* Literal.String.Other */
+pre.pygments .tok-sr { color: #A45A77 } /* Literal.String.Regex */
+pre.pygments .tok-s1 { color: #BA2121 } /* Literal.String.Single */
+pre.pygments .tok-ss { color: #19177C } /* Literal.String.Symbol */
+pre.pygments .tok-bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre.pygments .tok-fm { color: #0000FF } /* Name.Function.Magic */
+pre.pygments .tok-vc { color: #19177C } /* Name.Variable.Class */
+pre.pygments .tok-vg { color: #19177C } /* Name.Variable.Global */
+pre.pygments .tok-vi { color: #19177C } /* Name.Variable.Instance */
+pre.pygments .tok-vm { color: #19177C } /* Name.Variable.Magic */
+pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body class="article toc2 toc-left">
+<div id="header">
+<h1>AeroSpace Guide</h1>
+<div id="toc" class="toc2">
+<div id="toctitle">Table of Contents</div>
+<ul class="sectlevel1">
+<li><a href="#configuring-aerospace">1. Configuring AeroSpace</a>
+<ul class="sectlevel2">
+<li><a href="#binding-modes">1.1. Binding modes</a></li>
+<li><a href="#commands">1.2. Commands</a></li>
+</ul>
+</li>
+<li><a href="#tree">2. Tree</a>
+<ul class="sectlevel2">
+<li><a href="#layouts">2.1. Layouts</a></li>
+<li><a href="#normalization">2.2. Normalization</a></li>
+<li><a href="#floating-windows">2.3. Floating windows</a></li>
+</ul>
+</li>
+<li><a href="#emulation-of-virtual-workspaces">3. Emulation of virtual workspaces</a>
+<ul class="sectlevel2">
+<li><a href="#a-note-on-mission-control">3.1. A note on mission control</a></li>
+<li><a href="#a-note-on-displays-have-separate-spaces">3.2. A note on &#8216;Displays have separate Spaces&#8217;</a></li>
+</ul>
+</li>
+<li><a href="#on-window-detected-callback">4. &#8216;on-window-detected&#8217; callback</a></li>
+<li><a href="#multiple-monitors">5. Multiple monitors</a>
+<ul class="sectlevel2">
+<li><a href="#assign-workspaces-to-monitors">5.1. Assign workspaces to monitors</a></li>
+</ul>
+</li>
+<li><a href="#caveats">6. Caveats</a></li>
+</ul>
+</div>
+</div>
+<div id="content">
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>AeroSpace is an i3-like tiling window manager for macOS</p>
+</div>
+<div class="paragraph">
+<p><strong>Project homepage</strong>: <a href="https://github.com/nikitabobko/AeroSpace" class="bare">https://github.com/nikitabobko/AeroSpace</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-aerospace"><a class="anchor" href="#configuring-aerospace"></a><a class="link" href="#configuring-aerospace">1. Configuring AeroSpace</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>AeroSpace will read config file from <code>~/.aerospace.toml</code>.
+Please see the following config samples:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The default config: <a href="config-examples.html#default-config">default-config.toml</a></p>
+</li>
+<li>
+<p>i3 like config: <a href="config-examples.html#i3-like-config">i3-like-config-example.toml</a></p>
+</li>
+<li>
+<p><a href="https://github.com/search?q=%28path%3A**%2F.aerospace.toml+OR+path%3A**%2Faerospace.toml%29&amp;type=code">Search for configs by other users on GitHub</a> for inspiration</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>The <a href="config-examples.html#default-config">default-config.toml</a> also serves as a documentation, since it contains all possible plain configuration keys with comments.
+Non-trivial configuration options are mentioned further in this guide.</p>
+</div>
+<div class="paragraph">
+<p>AeroSpace uses TOML format for the config.
+TOML is easy to read, and it supports comments.
+See <a href="https://toml.io/en/v1.0.0">TOML spec for more info</a></p>
+</div>
+<div class="sect2">
+<h3 id="binding-modes"><a class="anchor" href="#binding-modes"></a><a class="link" href="#binding-modes">1.1. Binding modes</a></h3>
+<div class="paragraph">
+<p>You can create multiple sets of bindings by creating different binding modes.
+When you switch to a different binding mode, all the bindings from the current mode are deactivated, and only the bindings specified in the new mode become active.
+The initial binding mode that AeroSpace starts out with is "main".</p>
+</div>
+<div class="paragraph">
+<p>This feature is absolutely identical to the one
+<a href="https://i3wm.org/docs/userguide.html#binding_modes">in i3</a></p>
+</div>
+<div class="paragraph">
+<p>Working with binding modes consists of two parts:
+1. defining a binding to switch to the binding mode and 2. declaring the binding mode itself.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-p">[</span><span class="tok-n">mode</span><span class="tok-p">.</span><span class="tok-n">main</span><span class="tok-p">.</span><span class="tok-n">binding</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-c1"># Declare &#39;main&#39; binding mode</span>
+<span class="tok-n">alt-r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;mode resize&#39;</span><span class="tok-w">          </span><span class="tok-c1"># 1. Define a binding to switch to &#39;resize&#39; mode</span>
+
+<span class="tok-p">[</span><span class="tok-n">mode</span><span class="tok-p">.</span><span class="tok-n">resize</span><span class="tok-p">.</span><span class="tok-n">binding</span><span class="tok-p">]</span><span class="tok-w">          </span><span class="tok-c1"># 2. Declare &#39;resize&#39; binding mode</span>
+<span class="tok-n">minus</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;resize smart -50&#39;</span>
+<span class="tok-n">equal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;resize smart +50&#39;</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="commands"><a class="anchor" href="#commands"></a><a class="link" href="#commands">1.2. Commands</a></h3>
+<div class="paragraph">
+<p>AeroSpace is controlled by commands.
+For more info see <a href="commands.html">the list of available commands</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="tree"><a class="anchor" href="#tree"></a><a class="link" href="#tree">2. Tree</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>AeroSpace stores all windows and containers in a tree.
+AeroSpace tree tiling model is <a href="https://i3wm.org/docs/userguide.html#tree">inspired by i3</a>.</p>
+</div>
+<div class="paragraph">
+<p><strong>Definition.</strong> Each non-leaf node is called a "Container"</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Warning</div>
+</td>
+<td class="content">
+i3 has a different terminology.
+"container" in i3 is the same as "node" in AeroSpace.
+</td>
+</tr>
+</table>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Each workspace contains its own single root node</p>
+</li>
+<li>
+<p>Each container can contain arbitrary number of children nodes</p>
+</li>
+<li>
+<p>Windows are the only possible leaf nodes. Windows contain zero children nodes</p>
+</li>
+<li>
+<p>Every container has two properties:</p>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="#layouts">Layout</a> (Possible values: <code>tiles</code>, <code>accordion</code>)</p>
+</li>
+<li>
+<p>Orientation (Possible values: <code>horizontal</code>, <code>vertical</code>)</p>
+</li>
+</ol>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When we say "layout of the window", we refer to the layout of the window’s parent container.</p>
+</div>
+<div class="paragraph">
+<p>It’s easier to understand tree tiling model by looking at examples</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="assets/h_tiles.png" alt="h tiles">
+</div>
+<div class="title">Figure 1. Simple tree structure. Two windows side-by-side</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="assets/tree.png" alt="tree">
+</div>
+<div class="title">Figure 2. Complex tree structure</div>
+</div>
+<div class="paragraph">
+<p>You can nest containers as deeply as you want to.</p>
+</div>
+<div class="paragraph">
+<p>You can navigate in the tree in 4 possible cardinal directions (left, down, up, right).
+You use <a href="commands.html#focus">focus command</a> to do that.</p>
+</div>
+<div class="paragraph">
+<p>The tree structure can be changed with three commands:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="commands.html#move-through">move-through</a></p>
+</li>
+<li>
+<p><a href="commands.html#join-with">join-with</a></p>
+</li>
+<li>
+<p><a href="commands.html#split">split</a></p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="layouts"><a class="anchor" href="#layouts"></a><a class="link" href="#layouts">2.1. Layouts</a></h3>
+<div class="paragraph">
+<p>In total, AeroSpace provides 4 possible layouts:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>h_tiles</code> horizontal tiles (in i3, it’s called "horizontal split")</p>
+</li>
+<li>
+<p><code>v_tiles</code> vertical tiles (in i3, it’s called "vertical split")</p>
+</li>
+<li>
+<p><code>h_accordion</code> horizontal accordion (analog of i3’s "tabbed layout")</p>
+</li>
+<li>
+<p><code>v_accordion</code> vertical accordion (analog of i3’s "stacked layout")</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>From the previous section, you’re already familiar with the <code>tiles</code> layout.</p>
+</div>
+<div class="paragraph">
+<p>Accordion is a layout where windows are placed on top of each other.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>The horizontal accordion</strong> shows left and right paddings to visually indicate the presence of other windows in those directions.</p>
+</li>
+<li>
+<p><strong>The vertical accordion</strong> shows top and bottom paddings to visually indicate the presence of other windows in those directions.</p>
+</li>
+</ul>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="assets/h_accordion.png" alt="h accordion" width="800">
+</div>
+<div class="title">Figure 3. Horizontal accordion</div>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="assets/v_accordion.png" alt="v accordion" width="800">
+</div>
+<div class="title">Figure 4. Vertical accordion</div>
+</div>
+<div class="paragraph">
+<p>Just like in a <code>tiles</code> layout, you can use the <a href="commands.html#focus">focus</a> command to navigate an accordion layout.</p>
+</div>
+<div class="paragraph">
+<p>You can navigate the windows in an <code>h_accordion</code> by using the <code>focus (left|right)</code> command.
+While in a <code>v_accordion</code>, you can navigate the windows using the <code>focus (up|down)</code> command.</p>
+</div>
+<div class="paragraph">
+<p>Accordion padding is configurable via <code>accordion-padding</code> option (see <a href="config-examples.html#default-config">default-config.toml</a>)</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="normalization"><a class="anchor" href="#normalization"></a><a class="link" href="#normalization">2.2. Normalization</a></h3>
+<div class="paragraph">
+<p>By default, AeroSpace does two types of tree normalizations:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Containers that have only one child are "flattened".
+The root container is an exception, it is allowed to have a single window child.
+Configured by <code>enable-normalization-flatten-containers</code></p>
+</li>
+<li>
+<p>Containers that nest into each other must have opposite orientations.
+Configured by <code>enable-normalization-opposite-orientation-for-nested-containers</code></p>
+</li>
+</ol>
+</div>
+<div class="paragraph lead">
+<p><strong>Example 1</strong></p>
+</div>
+<div class="paragraph">
+<p>According to the first normalization, such layout isn’t possible:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>h_tiles (root node)
+└── v_tiles
+    └── window 1</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>it will be immediately transformed into</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>v_tiles (new root node)
+└── window 1</pre>
+</div>
+</div>
+<div class="paragraph lead">
+<p><strong>Example 2</strong></p>
+</div>
+<div class="paragraph">
+<p>According to the second normalization, such layout isn’t possible:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>h_tiles
+├── window 1
+└── h_tiles
+    ├── window 2
+    └── window 3</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>it will be immediately transformed into</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>h_tiles
+├── window 1
+└── v_tiles
+    ├── window 2
+    └── window 3</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Normalizations make it easier to understand the tree structure by looking at how windows are placed on the screen.</p>
+</div>
+<div class="paragraph">
+<p>You can disable normalizations by placing these lines to your config:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-n">enable-normalization-flatten-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
+<span class="tok-n">enable-normalization-opposite-orientation-for-nested-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span></code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="floating-windows"><a class="anchor" href="#floating-windows"></a><a class="link" href="#floating-windows">2.3. Floating windows</a></h3>
+<div class="paragraph">
+<p>Normally, floating windows are not considered to be part of the <a href="#tree">tiling tree</a>.
+But it’s not the case with <a href="commands.html#focus">focus</a> command.</p>
+</div>
+<div class="paragraph">
+<p>From <a href="commands.html#focus">focus</a> command perspective, floating windows are part of <a href="#tree">tiling tree</a>.
+The floating window parent container is determined as the smallest tiling container that contains the center of the floating window.</p>
+</div>
+<div class="paragraph">
+<p>This technique eliminates the need for an additional binding for focusing floating windows.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="emulation-of-virtual-workspaces"><a class="anchor" href="#emulation-of-virtual-workspaces"></a><a class="link" href="#emulation-of-virtual-workspaces">3. Emulation of virtual workspaces</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Native macOS Spaces have a lot of problems</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The animation for Spaces switching is slow</p>
+<div class="ulist">
+<ul>
+<li>
+<p>You can’t disable animation for Spaces switching (you can only make it slightly faster by turning on <code>Reduce motion</code> setting, but it’s suboptimal)</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>You have a limit of Spaces (up to 16 Spaces with one monitor)</p>
+</li>
+<li>
+<p>You can’t create/delete/reorder Space and move windows between Spaces with hotkeys (you can only switch between Spaces with hotkeys)</p>
+</li>
+<li>
+<p>Apple doesn&#8217;t provide public API to communicate with Spaces (create/delete/reorder/switch Space and move windows between Spaces)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Since Spaces are so hard to deal with, AeroSpace reimplements Spaces and calls them "Workspaces".
+The idea is that if the workspace isn’t active then all of its windows are placed outside the visible area of the screen, in the bottom right corner.
+Once you switch back to the workspace, (e.g. by the means of <a href="commands.html#workspace">workspace</a> command, or <code>cmd</code>+<code>tab</code>) windows are placed back to the visible area of the screen.</p>
+</div>
+<div class="paragraph">
+<p>When you quit the AeroSpace or when the AeroSpace is about to crash, AeroSpace will place all windows back to the visible area of the screen.</p>
+</div>
+<div class="paragraph">
+<p>AeroSpace shows the name of currently active workspace in its tray icon (top right corner), to give users a visual feedback on what workspace is currently active.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+For better or worse, macOS doesn’t allow to place windows outside the visible area entirely.
+You will still be able to see a few pixels of "hidden" windows in the bottom right corner of your screen.
+That means, that if AeroSpace crashes badly you will still be able to manually "unhide" the windows by dragging these few pixels to the center of the screen.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>The supposed workflow of using AeroSpace workspaces is to only have one macOS Space (or as many as monitors you have, if <code>Displays have separate Spaces</code> is enabled) and don’t interact with macOS Spaces anymore.</p>
+</div>
+<div class="sect2">
+<h3 id="a-note-on-mission-control"><a class="anchor" href="#a-note-on-mission-control"></a><a class="link" href="#a-note-on-mission-control">3.1. A note on mission control</a></h3>
+<div class="paragraph">
+<p>For some reason, mission control doesn&#8217;t like that AeroSpace puts a lot of windows in the bottom right corner of the screen.
+Mission control shows windows too small even if it has enough space to show them bigger.</p>
+</div>
+<div class="paragraph">
+<p>To workaround, you can enable <code>System Settings &#8594; Desktop &amp; Dock &#8594; Group windows by application</code> setting.
+For some weird reason, it helps.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="a-note-on-displays-have-separate-spaces"><a class="anchor" href="#a-note-on-displays-have-separate-spaces"></a><a class="link" href="#a-note-on-displays-have-separate-spaces">3.2. A note on &#8216;Displays have separate Spaces&#8217;</a></h3>
+<div class="paragraph">
+<p>AeroSpace doesn&#8217;t care about <code>System Settings &#8594; Desktop &amp; Dock &#8594; Displays have separate Spaces</code> setting.
+It works equally good whether this option is enabled or disabled.</p>
+</div>
+<div class="paragraph">
+<p>Overview of &#8216;Displays have separate Spaces&#8217;</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top"></th>
+<th class="tableblock halign-left valign-top">&#8216;Displays have separate Spaces&#8217; is enabled</th>
+<th class="tableblock halign-left valign-top">&#8216;Displays have separate Spaces&#8217; is disabled</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">When the first monitor is in fullscreen</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">👍 Second monitor operates independently</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">😡 Second monitor is unusable black screen</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Is it possible for window to span across several monitors?</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">😡 No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">👍 Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">macOS status bar &#8230;&#8203;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#8230;&#8203; is displayed on both monitors</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#8230;&#8203; is displayed only on main monitor</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="on-window-detected-callback"><a class="anchor" href="#on-window-detected-callback"></a><a class="link" href="#on-window-detected-callback">4. &#8216;on-window-detected&#8217; callback</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>Available since: 0.6.0-Beta</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can use <code>on-window-detected</code> callback to run commands every time a new window is detected.</p>
+</div>
+<div class="paragraph">
+<p>Here is a showcase example that uses all the possible configurations:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;com.apple.systempreferences&#39;</span><span class="tok-w">     </span><span class="tok-c1"># Application ID exact match</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-name-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;settings&#39;</span><span class="tok-w">      </span><span class="tok-c1"># Case insensetive regex substring</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">window-title-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;substring&#39;</span><span class="tok-w"> </span><span class="tok-c1"># Case insensetive regex substring</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">during-aerospace-startup</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">true</span><span class="tok-w">            </span><span class="tok-c1"># Run the callback only if the window detected</span>
+<span class="tok-w">                                              </span><span class="tok-c1">#   during AeroSpace startup</span>
+<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">true</span><span class="tok-w">                </span><span class="tok-c1"># Check further callbacks.</span>
+<span class="tok-w">                                              </span><span class="tok-c1">#   If not specified, the default value is false</span>
+
+<span class="tok-c1"># The callback itself</span>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;layout floating&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace S&#39;</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>run</code> commands are run only if the detected window matches all the specified conditions.
+If no conditions are specified then <code>run</code> is run every time a new window is detected.</p>
+</div>
+<div class="paragraph">
+<p>Several callbacks can be declared in the config.
+The callbacks are processed in the order they are declared.
+By default, the first callback that matches the criteria is run, and further callbacks are not considered.
+(The behavior can be overridden with <code>check-further-callbacks</code> option)</p>
+</div>
+<div class="paragraph">
+<p>For now, only <a href="commands.html#move-node-to-workspace">move-node-to-workspace</a> and <a href="commands.html#layout">layout</a> commands are supported in the <code>run</code> callback.
+Please post your use cases to <a href="https://github.com/nikitabobko/AeroSpace/issues/20">the issue</a> if you want other commands to get supported.</p>
+</div>
+<div class="paragraph">
+<p>Available window conditions are:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 66.6667%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Condition TOML key</th>
+<th class="tableblock halign-left valign-top">Condition description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>if.app-id</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application ID exact match of the detected window</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>if.app-name-regex-substring</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Application name case insensitive regex substring of the detected window</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>if.window-title-regex-substring</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Window title case insensitive regex substring of the detected window</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>if.during-aerospace-startup</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="ulist">
+<ul>
+<li>
+<p>If <code>true</code> then run the callback only during AeroSpace startup.</p>
+</li>
+<li>
+<p>If <code>false</code> then run callback only <strong>NOT</strong> during AeroSpace startup.</p>
+</li>
+<li>
+<p>If not specified then the condition isn’t checked</p>
+</li>
+</ul>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="ulist">
+<ul>
+<li>
+<p><code>if.during-aerospace-startup = true</code> is useful if you want to do the initial app arrangement only on startup.</p>
+</li>
+<li>
+<p><code>if.during-aerospace-startup = false</code> is useful if you want to relaunch AeroSpace, but the callback has side effects that you don’t want to run on every relaunch.
+(e.g. the callback opens new windows)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>There are several ways to know <code>app-id</code>:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Take a look at precomposed <a href="popular-apps-ids.html">list of popular application IDs</a></p>
+</li>
+<li>
+<p>You can use <a href="cli-commands.html#list-apps"><code>aerospace list-apps</code></a> CLI command to get IDs of running applications</p>
+</li>
+<li>
+<p><code>mdls -name kMDItemCFBundleIdentifier -r /Applications/App.app</code></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock important">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Important</div>
+</td>
+<td class="content">
+Some windows initialize their title after the window appears.
+<code>window-title-regex-substring</code> may not work as expected for such windows
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Examples of automations:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Assign apps on particular workspaces</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;org.alacritty&#39;</span>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace T&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics T - Terminal</span>
+
+<span class="tok-k">[[on-window-detected]]</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;com.google.Chrome&#39;</span>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace W&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics W - Web browser</span>
+
+<span class="tok-k">[[on-window-detected]]</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;com.jetbrains.intellij&#39;</span>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace I&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics I - IDE</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Make all windows float by default</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
+<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;layout floating&#39;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Float &#8216;System Settings&#8217; app</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;com.apple.systempreferences&#39;</span>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;layout floating&#39;</span></code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="multiple-monitors"><a class="anchor" href="#multiple-monitors"></a><a class="link" href="#multiple-monitors">5. Multiple monitors</a></h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>The pool of workspaces is shared between monitors</p>
+</li>
+<li>
+<p>Each monitor shows its own workspace.
+The showed workspaces are called"visible" workspaces</p>
+</li>
+<li>
+<p>Different monitors can’t show the same workspace at the same time</p>
+</li>
+<li>
+<p>Each workspace (even invisible, even empty) has a monitor assigned to it</p>
+</li>
+<li>
+<p>By default, all workspaces are assigned to the "main" monitor ("main" as in <code>System &#8594; Displays &#8594; Use as</code>)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>When you switch to a workspace:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>AeroSpace takes the assigned monitor of the workspace and makes the workspace visible on the monitor</p>
+</li>
+<li>
+<p>AeroSpace focuses the workspace</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>You can move workspace to a different monitor with <a href="commands.html#move-workspace-to-monitor">move-workspace-to-monitor</a>command.</p>
+</div>
+<div class="paragraph">
+<p>The idea of making pool of workspaces shared is based on <strong id="observation">the observation</strong> that most users have a limited set of workspaces on their secondary monitors.
+Secondary monitors are frequently dedicated to specific tasks (browser, shell), or for monitoring various activities such as logs and dashboards.
+Thus, using one workspace per each secondary monitors and "the rest" on the main monitor often makes sense.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>The only difference between AeroSpace and i3 is switching to empty workspaces.
+When you switch to an empty workspace, AeroSpace puts the workspace on an assigned monitor; i3 puts the workspace on currently active monitor.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>I find that AeroSpace model works better with <a href="#observation"><em>the observation</em></a> listed above.</p>
+</li>
+<li>
+<p>AeroSpace model is more consistent (it works the same for empty workspaces and non-empty workspaces)</p>
+</li>
+</ul>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="assign-workspaces-to-monitors"><a class="anchor" href="#assign-workspaces-to-monitors"></a><a class="link" href="#assign-workspaces-to-monitors">5.1. Assign workspaces to monitors</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Available since: 0.5.0-Beta</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can use <code>workspace-to-monitor-force-assignment</code> syntax to assign
+workspaces to always appear on particular monitors</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-k">[workspace-to-monitor-force-assignment]</span>
+<span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-w">                            </span><span class="tok-c1"># Monitor sequence number from left to right. 1-based indexing</span>
+<span class="tok-mi">2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;main&#39;</span><span class="tok-w">                       </span><span class="tok-c1"># Main monitor</span>
+<span class="tok-mi">3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;secondary&#39;</span><span class="tok-w">                  </span><span class="tok-c1"># Non-main monitor in case when there are only two monitors</span>
+<span class="tok-mi">4</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;built-in&#39;</span><span class="tok-w">                   </span><span class="tok-c1"># Case insensitive regex substring</span>
+<span class="tok-mi">5</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;^built-in retina display$&#39;</span><span class="tok-w">  </span><span class="tok-c1"># Case insensitive regex match</span>
+<span class="tok-mi">6</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;secondary&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;dell&#39;</span><span class="tok-p">]</span><span class="tok-w">        </span><span class="tok-c1"># You can specify multiple patterns.</span>
+<span class="tok-w">                                 </span><span class="tok-c1"># The first matching pattern will be used</span></code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Left hand side of the assignment is the workspace name</p>
+</li>
+<li>
+<p>Right hand side of the assignment is the monitor pattern</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Supported monitor patterns:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>main</code> - "Main" monitor ("main" as in <code>System Settings &#8594; Displays &#8594; Use as</code>)</p>
+</li>
+<li>
+<p><code>secondary</code> - Non-main monitor in case when there are only two monitors</p>
+</li>
+<li>
+<p><code>&lt;number&gt;</code> (e.g. <code>1</code>, <code>2</code>) - Sequence number of the monitor from left to right. 1-based indexing</p>
+</li>
+<li>
+<p><code>&lt;regex-pattern&gt;</code> (e.g. <code>dell.*</code>, <code>built-in.*</code>) - Case insensitive regex substring pattern</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can specify multiple patterns as an array.
+The first matching pattern will be used</p>
+</div>
+<div class="paragraph">
+<p><a href="commands.html#move-workspace-to-monitor">move-workspace-to-monitor</a> command has no effect for workspaces that have monitor assignment</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="caveats"><a class="anchor" href="#caveats"></a><a class="link" href="#caveats">6. Caveats</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you use some of the Accessibility features <code>System Settings &#8594; Accessibility</code>, you may see weird animations, for no reasons, when AeroSpace moves windows around.
+(Shame on you, Apple! 🤦)</p>
+</div>
+<div class="paragraph">
+<p>Known accessibility features that cause the problem:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Full Keyboard Access</p>
+</li>
+<li>
+<p>Accessibility Keyboard</p>
+</li>
+<li>
+<p>Voice Control</p>
+</li>
+<li>
+<p>Switch Control</p>
+</li>
+<li>
+<p>Maybe something else&#8230;&#8203;</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Please re-login or reboot after you disable the accessibility features that cause the problem.</p>
+</div>
+</div>
+</div>
+</div>
+<div id="footer">
+<div id="footer-text">
+Last updated 2023-12-14 22:12:17 +0100
+</div>
+</div>
+</body>
+</html>
