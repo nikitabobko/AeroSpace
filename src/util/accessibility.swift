@@ -242,6 +242,11 @@ enum Ax {
             key: kAXCloseButtonAttribute,
             getter: { ($0 as! AXUIElement) }
     )
+    // Note! fullscreen is not the same as "zoom" (green plus)
+    static let fullscreenButtonAttr = ReadableAttrImpl<AXUIElement>(
+        key: kAXFullScreenButtonAttribute,
+        getter: { ($0 as! AXUIElement) }
+    )
 }
 
 extension AXUIElement {

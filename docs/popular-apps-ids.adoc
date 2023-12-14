@@ -89,6 +89,7 @@ include::header.adoc[]
 |VoiceMemos|`com.apple.VoiceMemos`
 |VoiceOver Utility|`com.apple.VoiceOverUtility`
 |Weather|`com.apple.weather`
+|WezTerm|`com.github.wez.wezterm`
 |Xcode|`com.apple.dt.Xcode`
 |iMovie|`com.apple.iMovieApp`
 |iTerm2|`com.googlecode.iterm2`

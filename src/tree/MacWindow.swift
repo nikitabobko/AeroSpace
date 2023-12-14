@@ -23,7 +23,8 @@ final class MacWindow: Window, CustomStringConvertible {
         } else {
             let data = getBindingDataForNewWindow(
                 axWindow,
-                startup ? (axWindow.center?.monitorApproximation ?? mainMonitor).activeWorkspace : Workspace.focused
+                startup ? (axWindow.center?.monitorApproximation ?? mainMonitor).activeWorkspace : Workspace.focused,
+                app
             )
             let window = MacWindow(id, app, axWindow, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
 
@@ -161,7 +162,7 @@ private func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
         app.id == "com.apple.finder" && subrole == "Quick Look" // Finder preview (hit space) is a floating window
 }
 
-private func shouldFloat(_ axWindow: AXUIElement) -> Bool { // Note: a lot of windows don't have title on startup
+private func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lot of windows don't have title on startup
     // Don't tile:
     // - Chrome cmd+f window ("AXUnknown" value)
     // - login screen (Yes fuck, it's also a window from Apple's API perspective) ("AXUnknown" value)
@@ -170,11 +171,20 @@ private func shouldFloat(_ axWindow: AXUIElement) -> Bool { // Note: a lot of wi
     // - macOS native file picker ("Open..." menu) (kAXDialogSubrole value)
     //
     // Minimized windows or windows of a hidden app have subrole "AXDialog"
-    axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole
+    axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole ||
+        // Heuristic: float windows without maximize button (such windows are not designed to be big)
+        // - IntelliJ various dialogs (Rebase..., Edit commit message, Settings, Project structure)
+        // - Finder copy file dialog
+        // - System Settings
+        // Exclude terminals from the heuristic (advanced terminals have options to show no decorations)
+        axWindow.get(Ax.fullscreenButtonAttr) == nil &&
+        app.id != "org.alacritty" &&
+        app.id != "com.github.wez.wezterm" &&
+        app.id != "com.googlecode.iterm2"
 }
 
-private func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace) -> BindingData {
-    shouldFloat(axWindow)
+private func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace, _ app: MacApp) -> BindingData {
+    shouldFloat(axWindow, app)
         ? BindingData(parent: workspace as NonLeafTreeNode, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         : getBindingDataForNewTilingWindow(workspace)
 }

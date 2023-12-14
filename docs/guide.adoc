@@ -354,14 +354,6 @@ run = 'move-node-to-workspace I' # mnemonics I - IDE
 check-further-callbacks = true
 run = 'layout floating'
 ----
-* Float '`System Settings`' app
-+
-[source,toml]
-----
-[[on-window-detected]]
-if.app-id = 'com.apple.systempreferences'
-run = 'layout floating'
-----
 
 [#multiple-monitors]
 == Multiple monitors
@@ -430,6 +422,8 @@ xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command 
 [#caveats]
 == Caveats
 
+=== Unwanted animations
+
 If you use some of the Accessibility features `System Settings -> Accessibility`, you may see weird animations, for no reasons, when AeroSpace moves windows around.
 (Shame on you, Apple! 🤦)
 
@@ -442,3 +436,39 @@ Known accessibility features that cause the problem:
 * Maybe something else...
 
 Please reboot after you disable the accessibility features that cause the problem.
+
+=== Dialog heuristics
+
+* Apple provides accessibility API for apps to let others know which of their windows are dialogs
+* A lot of apps don't implement this API or implement it improperly
++
+Even some Apple dialogs don't implement the API properly.
+(E.g. Finder "Copy" progress window doesn't let others know that it's a dialog)
+
+AeroSpace uses the API to gently ask windows whether they are dialogs, but AeroSpace also applies some heuristics.
+
+For example, windows without a fullscreen button (NB! fullscreen button and maximize button are different buttons) are considered dialogs, excluding terminal apps (WezTerm, Alacritty, iTerm2).
+
+Windows that are recognized as dialogs are floated by default.
+
+It's not possible to disable the heuristics, because the goal is to make the heuristics so good that there won't problems with them.
+If you find that some windows are not handled properly please https://github.com/nikitabobko/AeroSpace/issues/new[report an issue]
+
+Anyway, your alternatives are:
+
+. Force tile all the windows (or windows of a particular app)
++
+[source,toml]
+----
+[[on-window-detected]]
+check-further-callbacks = true
+run = 'layout tiling'
+----
+. Force float all the windows (or windows of a particular app)
++
+[source,toml]
+----
+[[on-window-detected]]
+check-further-callbacks = true
+run = 'layout floating'
+----
