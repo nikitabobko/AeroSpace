@@ -95,7 +95,7 @@ required because `+open+` returns before the window appears.
 flatten-workspace-tree [-h|--help]
 ----
 
-Flattens link:./guide.md#tree[the tree] of currently focused workspace.
+Flattens xref:guide.adoc#tree[the tree] of currently focused workspace.
 
 The command is useful when you messed up with your layout, and it’s
 easier to "`reset`" it and start again.
@@ -107,13 +107,13 @@ easier to "`reset`" it and start again.
 focus [-h|--help] (left|down|up|right)
 ----
 
-Sets focus to the nearest window in link:./guide.md#tree[the tree] in
+Sets focus to the nearest window in xref:guide.adoc#tree[the tree] in
 the given direction.
 
 https://i3wm.org/docs/userguide.html#_focusing_moving_containers[Contrary
 to i3], `+focus+` command doesn’t have a separate argument to focus
 floating windows.From `+focus+` command perspective, floating windows
-are part of link:./guide.md#tree[the tree].The floating window parent
+are part of xref:guide.adoc#tree[the tree].The floating window parent
 container is determined as the smallest tiling container that contains
 the center of the floating window.
 
@@ -320,9 +320,7 @@ move-workspace-to-monitor (next|prev)
 
 Moves currently focused workspace to the next or previous monitor
 
-The command doesn’t have effect on workspaces
-link:./guide.md#assign-workspaces-to-monitors[that have monitor
-assignment]
+The command doesn't have effect on workspaces xref:guide.adoc#assign-workspaces-to-monitors[that have monitor assignment]
 
 * Deprecated name: `+move-workspace-to-display+`
 

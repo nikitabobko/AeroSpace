@@ -44,10 +44,10 @@ Working with binding modes consists of two parts:
 
 [source,toml]
 ----
-[mode.main.binding] # Declare 'main' binding mode
-alt-r = 'mode resize'          # 1. Define a binding to switch to 'resize' mode
+[mode.main.binding]        # Declare 'main' binding mode
+alt-r = 'mode resize'      # 1. Define a binding to switch to 'resize' mode
 
-[mode.resize.binding]          # 2. Declare 'resize' binding mode
+[mode.resize.binding]      # 2. Declare 'resize' binding mode
 minus = 'resize smart -50'
 equal = 'resize smart +50'
 ----
@@ -376,7 +376,7 @@ When you switch to a workspace:
 . AeroSpace takes the assigned monitor of the workspace and makes the workspace visible on the monitor
 . AeroSpace focuses the workspace
 
-You can move workspace to a different monitor with xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor]command.
+You can move workspace to a different monitor with xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command.
 
 The idea of making pool of workspaces shared is based on [#observation]*the observation* that most users have a limited set of workspaces on their secondary monitors.
 Secondary monitors are frequently dedicated to specific tasks (browser, shell), or for monitoring various activities such as logs and dashboards.
@@ -439,4 +439,4 @@ Known accessibility features that cause the problem:
 * Switch Control
 * Maybe something else...
 
-Please re-login or reboot after you disable the accessibility features that cause the problem.
+Please reboot after you disable the accessibility features that cause the problem.
