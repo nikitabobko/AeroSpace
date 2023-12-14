@@ -4,6 +4,11 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 
 Feel free to contribute to this list by submitting a pull request.
 
+'''
+include::header.adoc[]
+
+== The list
+
 [cols="1,3"]
 |===
 |Application name|Application ID

@@ -9,9 +9,7 @@
 // custom
 :url-search-for-config: https://github.com/search?q=%28path%3A**%2F.aerospace.toml+OR+path%3A**%2Faerospace.toml%29&type=code
 
-AeroSpace is an i3-like tiling window manager for macOS
-
-*Project homepage*: https://github.com/nikitabobko/AeroSpace
+include::header.adoc[]
 
 [#configuring-aerospace]
 == Configuring AeroSpace

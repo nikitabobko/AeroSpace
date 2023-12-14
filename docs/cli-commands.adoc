@@ -1,4 +1,4 @@
-= Additional CLI commands
+= AeroSpace Additional CLI Commands
 :idprefix:
 :idseparator: -
 :sectanchors:
@@ -8,6 +8,10 @@
 :toc: left
 
 In addition to xref:commands.adoc[regular commands], the CLI provides commands listed in this file
+
+'''
+
+include::header.adoc[]
 
 [#list-apps]
 == list-apps

@@ -1,4 +1,4 @@
-= Commands
+= AeroSpace Commands
 :idprefix:
 :idseparator: -
 :sectanchors:
@@ -8,6 +8,10 @@
 :toc: left
 
 Commands listed in this file can be used in the config and CLI
+
+'''
+
+include::header.adoc[]
 
 == close
 

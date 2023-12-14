@@ -5,6 +5,8 @@
 :source-highlighter: pygments
 :toc: left
 
+include::header.adoc[]
+
 [#default-config]
 == Default config
 
