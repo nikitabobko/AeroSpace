@@ -1,4 +1,7 @@
 = Config examples
+:idprefix:
+:idseparator: -
+:prewrap!:
 :sectanchors:
 :sectlinks:
 :sectnums:

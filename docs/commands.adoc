@@ -1,6 +1,7 @@
 = AeroSpace Commands
 :idprefix:
 :idseparator: -
+:prewrap!:
 :sectanchors:
 :sectlinks:
 :sectnums:
