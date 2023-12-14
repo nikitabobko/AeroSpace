@@ -188,6 +188,10 @@ enum Ax {
         getter: { $0 as? String },
         setter: { $0 as CFTypeRef }
     )
+    static let identifierAttr = ReadableAttrImpl<String>(
+        key: kAXIdentifierAttribute,
+        getter: { $0 as? String }
+    )
     static let modalAttr = WritableAttrImpl<Bool>(
         key: kAXModalAttribute,
         getter: { $0 as? Bool },

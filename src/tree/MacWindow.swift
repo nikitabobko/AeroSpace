@@ -48,6 +48,7 @@ final class MacWindow: Window, CustomStringConvertible {
             ("title", title),
             ("role", axWindow.get(Ax.roleAttr)),
             ("subrole", axWindow.get(Ax.subroleAttr)),
+            ("identifier", axWindow.get(Ax.identifierAttr)),
             ("modal", axWindow.get(Ax.modalAttr).map { String($0) } ?? ""),
             ("windowId", String(windowId))
         ].map { "\($0.0): '\(String(describing: $0.1))'" }.joined(separator: ", ")
@@ -147,6 +148,10 @@ final class MacWindow: Window, CustomStringConvertible {
 
 private func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     let subrole = axWindow.get(Ax.subroleAttr)
+    // Sonoma (macOS 14) keyboard layout switch
+    if axWindow.get(Ax.identifierAttr) == "AXCursorActionsWindow" && subrole == kAXDialogSubrole {
+        return false
+    }
     if app.nsApp.bundleIdentifier == "com.jetbrains.toolbox" {
         return false
     }
