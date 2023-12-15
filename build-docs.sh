@@ -11,6 +11,11 @@ cp -r docs/*.adoc .docs
 cp -r docs/assets .docs
 cp -r config-examples .docs
 
+git rev-parse HEAD > .docs/version.html
+if [ ! -z "$(git status --porcelain)" ]; then
+    echo "git working directory is dirty" >> .docs/version.html
+fi
+
 cd .docs
     asciidoctor *.adoc
     rm -rf *.adoc
