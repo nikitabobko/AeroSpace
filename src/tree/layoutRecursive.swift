@@ -50,6 +50,11 @@ private extension TilingContainer {
         for (i, child) in children.withIndex {
             child.setWeight(orientation, child.getWeight(orientation) + delta)
             let rawGap = config.gaps.inner.get(orientation).toDouble()
+            // Gaps. Consider 4 cases:
+            // 1. Multiple children. Layout first child
+            // 2. Multiple children. Layout last child
+            // 3. Multiple children. Layout child in the middle
+            // 4. Single child   let rawGap = config.gaps.inner.get(orientation).toDouble()
             let gap = rawGap - (i == 0 ? rawGap / 2 : 0) - (i == lastIndex ? rawGap / 2 : 0)
             child.layoutRecursive(
                 i == 0 ? point : point.addingOffset(orientation, rawGap / 2),

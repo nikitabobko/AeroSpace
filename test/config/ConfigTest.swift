@@ -10,6 +10,16 @@ final class ConfigTest: XCTestCase {
         XCTAssertEqual(i3Config.enableNormalizationOppositeOrientationForNestedContainers, false)
     }
 
+    func testDropBindings() {
+        let (config, errors) = parseConfig(
+            """
+            mode.main.binding = {}
+            """
+        )
+        XCTAssertEqual(errors.descriptions, [])
+        XCTAssertTrue(config.modes[mainModeId]?.bindings.isEmpty == true)
+    }
+
     func testParseMode() {
         let (config, errors) = parseConfig(
             """

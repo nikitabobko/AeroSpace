@@ -55,6 +55,8 @@ equal = 'resize smart +50'
 [#commands]
 === Commands
 
+// todo mention mode.main.binding = {}
+
 AeroSpace is controlled by commands.
 For more info see xref:commands.adoc[the list of available commands].
 

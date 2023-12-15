@@ -45,20 +45,14 @@ func parseRawCmdArgs<T : RawCmdArgs>(_ raw: T, _ args: [String]) -> ParsedCmd<T>
         let arg = args.next()
         if arg == "-h" || arg == "--help" {
             return .help(T.info.help)
-        } else if arg.starts(with: "--") {
-            if let optionParser: any ArgParserProtocol<T> = T.info.options[arg] {
-                raw = optionParser.transformRaw(raw, arg, &args, &errors)
-            } else {
-                errors.append("Unknown option '\(arg)'")
-            }
+        } else if let optionParser: any ArgParserProtocol<T> = T.info.options[arg] {
+            raw = optionParser.transformRaw(raw, arg, &args, &errors)
+        } else if let parser = T.info.arguments.getOrNil(atIndex: argumentIndex) {
+            raw = parser.transformRaw(raw, arg, &args, &errors)
+            argumentIndex += 1
         } else {
-            if let parser = T.info.arguments.getOrNil(atIndex: argumentIndex) {
-                raw = parser.transformRaw(raw, arg, &args, &errors)
-                argumentIndex += 1
-            } else {
-                errors.append("Unknown argument '\(arg)'")
-                break
-            }
+            errors.append("Unknown argument '\(arg)'")
+            break
         }
     }
 
