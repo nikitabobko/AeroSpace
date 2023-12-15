@@ -20,11 +20,11 @@ You can bootstrap your local config by coping the default config from the app in
 cp /Applications/AeroSpace.app/Contents/Resources/default-config.toml ~/.aerospace.toml
 ----
 
-link:../config-examples/default-config.toml[Download]
+link:config-examples/default-config.toml[Download]
 
 [source,toml]
 ----
-include::../config-examples/default-config.toml[]
+include::config-examples/default-config.toml[]
 ----
 
 [#i3-like-config]

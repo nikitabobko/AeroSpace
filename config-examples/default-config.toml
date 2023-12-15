@@ -6,22 +6,22 @@
 
 # You can use it to add commands that run after login to macOS user session.
 # 'start-at-login' needs to be 'true' for 'after-login-command' to work
-# Available commands: https://nikitabobko.github.io/AeroSpace/docs/commands.html
+# Available commands: https://nikitabobko.github.io/AeroSpace/commands.html
 after-login-command = []
 
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
-# Available commands : https://nikitabobko.github.io/AeroSpace/docs/commands.html
+# Available commands : https://nikitabobko.github.io/AeroSpace/commands.html
 after-startup-command = []
 
 # Start AeroSpace at login
 start-at-login = false
 
-# Normalizations. See: https://nikitabobko.github.io/AeroSpace/docs/guide.html#normalization
+# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide.html#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
-# See: https://nikitabobko.github.io/AeroSpace/docs/guide.html#layouts
+# See: https://nikitabobko.github.io/AeroSpace/guide.html#layouts
 # The 'accordion-padding' specifies the size of accordion padding
 # You can set 0 to disable the padding feature
 accordion-padding = 30
@@ -55,7 +55,7 @@ indent-for-nested-containers-with-the-same-orientation = 30
 non-empty-workspaces-root-containers-layout-on-startup = 'smart'
 
 # 'main' binding mode declaration
-# See: https://nikitabobko.github.io/AeroSpace/docs/guide.html#binding-modes
+# See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes
 # 'main' binding mode must be always presented
 [mode.main.binding]
 
@@ -72,33 +72,33 @@ non-empty-workspaces-root-containers-layout-on-startup = 'smart'
 
 # All possible modifiers: cmd, alt, ctrl, shift
 
-# All possible commands: https://nikitabobko.github.io/AeroSpace/docs/commands.html
+# All possible commands: https://nikitabobko.github.io/AeroSpace/commands.html
 
 # You can uncomment this line to open up terminal with alt + enter shortcut
-# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#exec-and-forget
+# See: https://nikitabobko.github.io/AeroSpace/commands.html#exec-and-forget
 # alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
-# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#layout
+# See: https://nikitabobko.github.io/AeroSpace/commands.html#layout
 alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
 
-# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#focus
+# See: https://nikitabobko.github.io/AeroSpace/commands.html#focus
 alt-h = 'focus left'
 alt-j = 'focus down'
 alt-k = 'focus up'
 alt-l = 'focus right'
 
-# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#move-through
+# See: https://nikitabobko.github.io/AeroSpace/commands.html#move-through
 alt-shift-h = 'move-through left'
 alt-shift-j = 'move-through down'
 alt-shift-k = 'move-through up'
 alt-shift-l = 'move-through right'
 
-# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#resize
+# See: https://nikitabobko.github.io/AeroSpace/commands.html#resize
 alt-shift-minus = 'resize smart -50'
 alt-shift-equal = 'resize smart +50'
 
-# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#workspace
+# See: https://nikitabobko.github.io/AeroSpace/commands.html#workspace
 alt-0 = 'workspace 0'
 alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
@@ -132,7 +132,7 @@ alt-x = 'workspace X'
 alt-y = 'workspace Y'
 alt-z = 'workspace Z'
 
-# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#move-node-to-workspace
+# See: https://nikitabobko.github.io/AeroSpace/commands.html#move-node-to-workspace
 alt-shift-0 = 'move-node-to-workspace 0'
 alt-shift-1 = 'move-node-to-workspace 1'
 alt-shift-2 = 'move-node-to-workspace 2'
@@ -166,17 +166,17 @@ alt-shift-x = 'move-node-to-workspace X'
 alt-shift-y = 'move-node-to-workspace Y'
 alt-shift-z = 'move-node-to-workspace Z'
 
-# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#workspace-back-and-forth
+# See: https://nikitabobko.github.io/AeroSpace/commands.html#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
-# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#move-workspace-to-monitor
+# See: https://nikitabobko.github.io/AeroSpace/commands.html#move-workspace-to-monitor
 alt-shift-tab = 'move-workspace-to-monitor next'
 
-# See: https://nikitabobko.github.io/AeroSpace/docs/commands.html#mode
+# See: https://nikitabobko.github.io/AeroSpace/commands.html#mode
 alt-shift-semicolon = 'mode service'
 alt-shift-slash = 'mode join'
 
 # 'service' binding mode declaration.
-# See: https://nikitabobko.github.io/AeroSpace/docs/guide.html#binding-modes
+# See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes
 [mode.service.binding]
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
@@ -185,7 +185,7 @@ backspace = ['close-all-windows-but-current', 'mode main']
 esc = 'mode main'
 
 # 'join' binding mode declaration
-# See: https://nikitabobko.github.io/AeroSpace/docs/guide.html#binding-modes
+# See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes
 [mode.join.binding]
 alt-shift-h = ['join-with left', 'mode main']
 alt-shift-j = ['join-with down', 'mode main']
