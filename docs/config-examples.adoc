@@ -30,9 +30,9 @@ include::config-examples/default-config.toml[]
 [#i3-like-config]
 == i3 like config
 
-link:../config-examples/i3-like-config-example.toml[Download]
+link:config-examples/i3-like-config-example.toml[Download]
 
 [source,toml]
 ----
-include::../config-examples/i3-like-config-example.toml[]
+include::config-examples/i3-like-config-example.toml[]
 ----
