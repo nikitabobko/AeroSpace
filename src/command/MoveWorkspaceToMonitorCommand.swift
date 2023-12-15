@@ -7,7 +7,7 @@ struct MoveWorkspaceToMonitorCommand: Command {
         let prevMonitor = focusedWorkspace.monitor
         let sortedMonitors = sortedMonitors
         guard let index = sortedMonitors.firstIndex(where: { $0.rect.topLeftCorner == prevMonitor.rect.topLeftCorner }) else { return }
-        let targetMonitor = sortedMonitors.get(wrappingIndex: args.target == .next ? index + 1 : index - 1)
+        guard let targetMonitor = sortedMonitors.get(wrappingIndex: args.target == .next ? index + 1 : index - 1) else { return }
 
         if targetMonitor.setActiveWorkspace(focusedWorkspace) {
             let stubWorkspace = getStubWorkspace(for: prevMonitor)

@@ -1,16 +1,14 @@
 struct FocusCmdArgs: CmdArgs, Equatable {
     let kind: CmdKind = .focus
-    let boundaries: Boundaries
-    let whenBoundariesCrossed: WhenBoundariesCrossed
+    let boundaries: Boundaries // todo cover boundaries wrapping with tests
+    let boundariesAction: WhenBoundariesCrossed
     let direction: CardinalDirection
     enum Boundaries: String, CaseIterable, Equatable {
-        case container
         case workspace
         case allMonitorsUnionFrame = "all-monitors-union-frame"
     }
     enum WhenBoundariesCrossed: String, CaseIterable, Equatable {
-        case doNothing = "do-nothing"
-        case wrapAroundTheContainer = "wrap-around-the-container"
+        case stop = "stop"
         case wrapAroundTheWorkspace = "wrap-around-the-workspace"
         case wrapAroundAllMonitors = "wrap-around-all-monitors"
     }
@@ -18,34 +16,30 @@ struct FocusCmdArgs: CmdArgs, Equatable {
 
 private struct RawFocusCmdArgs: RawCmdArgs {
     var boundaries: FocusCmdArgs.Boundaries?
-    var whenBoundariesCrossed: FocusCmdArgs.WhenBoundariesCrossed?
+    var boundariesAction: FocusCmdArgs.WhenBoundariesCrossed?
     var direction: CardinalDirection?
 
     static let info = CmdInfo<Self>(
         help: """
-              USAGE: focus [-h|--help] [OPTIONS] (left|down|up|right)
+              USAGE: focus [<OPTIONS>] (left|down|up|right)
 
               OPTIONS:
-                -h, --help                          Print help
-                --boundaries <boundary>             Defines focus boundaries.
-                                                    <boundary> possible values:
-                                                      \(FocusCmdArgs.Boundaries.container)
-                                                      \(FocusCmdArgs.Boundaries.workspace)
-                                                      \(FocusCmdArgs.Boundaries.allMonitorsUnionFrame)
-                --when-boundaries-crossed <action>  Defines the behaviour when boundaries are crossed.
-                                                    <action> possible values:
-                                                      \(FocusCmdArgs.WhenBoundariesCrossed.doNothing)
-                                                      \(FocusCmdArgs.WhenBoundariesCrossed.wrapAroundTheContainer)
-                                                      \(FocusCmdArgs.WhenBoundariesCrossed.wrapAroundTheWorkspace)
-                                                      \(FocusCmdArgs.WhenBoundariesCrossed.wrapAroundAllMonitors)
+                -h, --help                     Print help
+                --boundaries <boundary>        Defines focus boundaries.
+                                               <boundary> possible values: \(FocusCmdArgs.Boundaries.unionLiteral)
+                                               The default is: \(FocusCmdArgs.Boundaries.workspace.rawValue)
+                --boundaries-action <action>   Defines the behavior when requested to cross the <boundary>.
+                                               <action> possible values: \(FocusCmdArgs.WhenBoundariesCrossed.unionLiteral)
+                                               The default is: \(FocusCmdArgs.WhenBoundariesCrossed.wrapAroundTheWorkspace.rawValue)
+
               ARGUMENTS:
-                (left|down|up|right)                Focus direction
+                (left|down|up|right)           Focus direction
               """, // todo focus [OPTIONS] window-id <id>
         // ARGUMENTS:
         //  <id>                                  ID of window to focus
         options: [
             "--boundaries": ArgParser(\.boundaries, parseBoundaries),
-            "--when-boundaries-crossed": ArgParser(\.whenBoundariesCrossed, parseWhenBoundariesCrossed)
+            "--boundaries-action": ArgParser(\.boundariesAction, parseWhenBoundariesCrossed)
         ],
         arguments: [ArgParser(\.direction, parseCardinalDirection)]
     )
@@ -57,14 +51,12 @@ func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
             guard let direction = raw.direction else {
                 return .failure("focus direction isn't specified")
             }
-            if raw.boundaries == .container && raw.whenBoundariesCrossed == .wrapAroundTheWorkspace ||
-                   raw.boundaries == .container && raw.whenBoundariesCrossed == .wrapAroundAllMonitors ||
-                   raw.boundaries == .workspace && raw.whenBoundariesCrossed == .wrapAroundAllMonitors {
-                return .failure("\(raw.boundaries!) and \(raw.whenBoundariesCrossed!) is an invalid combination of values")
+            if raw.boundaries == .workspace && raw.boundariesAction == .wrapAroundAllMonitors {
+                return .failure("\(raw.boundaries!.rawValue) and \(raw.boundariesAction!.rawValue) is an invalid combination of values")
             }
             return .cmd(FocusCmdArgs(
                 boundaries: raw.boundaries ?? .workspace,
-                whenBoundariesCrossed: raw.whenBoundariesCrossed ?? .doNothing,
+                boundariesAction: raw.boundariesAction ?? .wrapAroundTheWorkspace,
                 direction: direction
             ))
         }
@@ -78,7 +70,7 @@ private func parseWhenBoundariesCrossed(_ nextArgs: inout [String]) -> Parsed<Fo
     if let arg = nextArgs.nextOrNil() {
         return parseEnum(arg, FocusCmdArgs.WhenBoundariesCrossed.self)
     } else {
-        return .failure("--when-boundaries-crossed option requires an argument: \(FocusCmdArgs.WhenBoundariesCrossed.unionLiteral)")
+        return .failure("--boundaries-action option requires an argument: \(FocusCmdArgs.WhenBoundariesCrossed.unionLiteral)")
     }
 }
 

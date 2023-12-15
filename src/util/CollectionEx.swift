@@ -9,5 +9,5 @@ extension Collection {
 }
 
 extension Collection where Index == Int {
-    func get(wrappingIndex: Int) -> Element { self[(count + wrappingIndex) % count] }
+    func get(wrappingIndex: Int) -> Element? { isEmpty ? nil : self[(count + wrappingIndex) % count] }
 }

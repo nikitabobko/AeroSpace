@@ -27,12 +27,12 @@ final class FocusCommandTest: XCTestCase {
     func testParse() {
         XCTAssertTrue(parseCommand("focus --boundaries left").failureMsgOrNil?.contains("Possible values") == true)
         XCTAssertEqual(
-            parseCommand("focus --boundaries container left").cmdOrNil?.describe,
-            .focusCommand(args: FocusCmdArgs(boundaries: .container, whenBoundariesCrossed: .doNothing, direction: .left))
+            parseCommand("focus --boundaries workspace left").cmdOrNil?.describe,
+            .focusCommand(args: FocusCmdArgs(boundaries: .workspace, boundariesAction: .wrapAroundTheWorkspace, direction: .left))
         )
 
         XCTAssertEqual(
-            parseCommand("focus --boundaries container --boundaries container left").failureMsgOrNil,
+            parseCommand("focus --boundaries workspace --boundaries workspace left").failureMsgOrNil,
             "ERROR: Duplicated argument '--boundaries'"
         )
     }
@@ -83,8 +83,20 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand.new(direction: .left).runOnFocusedSubject()
+        FocusCommand(args: FocusCmdArgs(boundaries: .workspace, boundariesAction: .stop, direction: .left)).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 1)
+    }
+
+    func testFocusWrapping() {
+        var start: Window!
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            start = TestWindow(id: 1, parent: $0)
+            TestWindow(id: 2, parent: $0)
+        }
+        start.focus()
+
+        FocusCommand.new(direction: .left).runOnFocusedSubject()
+        XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
     func testFocusFindMruLeaf() {
@@ -152,6 +164,6 @@ final class FocusCommandTest: XCTestCase {
 
 extension FocusCommand {
     static func new(direction: CardinalDirection) -> FocusCommand {
-        FocusCommand(args: FocusCmdArgs(boundaries: .workspace, whenBoundariesCrossed: .doNothing, direction: direction))
+        FocusCommand(args: FocusCmdArgs(boundaries: .workspace, boundariesAction: .wrapAroundTheWorkspace, direction: direction))
     }
 }

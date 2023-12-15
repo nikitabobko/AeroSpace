@@ -91,7 +91,7 @@ The command is useful when you messed up with your layout, and it's easier to "`
 == focus
 
 ----
-focus [-h|--help] (left|down|up|right)
+focus [<OPTIONS>] (left|down|up|right)
 ----
 
 Sets focus to the nearest window in xref:guide.adoc#tree[the tree] in the given direction.
@@ -103,6 +103,22 @@ The floating window parent container is determined as the smallest tiling contai
 This technique eliminates the need for an additional binding for floating windows.
 
 `focus child|parent` https://github.com/nikitabobko/AeroSpace/issues/5[isn't supported] because the necessaty of this operation is under the question.
+
+
+**OPTIONS**
+
+-h, --help::
+Print help
+
+--boundaries <boundary>::
+Defines focus boundaries. +
+`<boundary>` possible values: `(workspace|all-monitors-union-frame)`. +
+The default is: `workspace`
+
+--boundaries-action <action>::
+Defines the behavior when requested to cross the `<boundary>`. +
+`<action>` possible values: `(stop|wrap-around-the-workspace|wrap-around-all-monitors)` +
+The default is: `wrap-around-the-workspace`
 
 == fullscreen
 
