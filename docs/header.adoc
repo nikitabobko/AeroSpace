@@ -1,3 +1,4 @@
+====
 AeroSpace is an i3-like tiling window manager for macOS
 
 *Project homepage*: https://github.com/nikitabobko/AeroSpace
@@ -6,3 +7,6 @@ AeroSpace is an i3-like tiling window manager for macOS
 * xref:guide.adoc[AeroSpace Guide]
 * xref:commands.adoc[AeroSpace Commands]
 * xref:cli-commands.adoc[AeroSpace Additional CLI Commands]
+* xref:config-examples.adoc[Config Examples]
+* xref:popular-apps-ids.adoc[List of popular and built-in applications IDs]
+====

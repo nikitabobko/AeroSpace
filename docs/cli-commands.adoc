@@ -7,11 +7,9 @@
 :source-highlighter: pygments
 :toc: left
 
-In addition to xref:commands.adoc[regular commands], the CLI provides commands listed in this file
-
-'''
-
 include::header.adoc[]
+
+In addition to xref:commands.adoc[regular commands], the CLI provides commands listed in this file
 
 [#list-apps]
 == list-apps
@@ -41,8 +39,6 @@ The command is useful to inspect list of applications to compose filter for xref
 
 You can use `awk` to get values of particular column: `awk -F '|' '{print $2}'`
 
-* Available since: 0.6.0-Beta
-
 == version
 
 ----
@@ -52,5 +48,3 @@ version
 ----
 
 Prints the version and commit hash to stdout
-
-* Available since: 0.4.0-Beta

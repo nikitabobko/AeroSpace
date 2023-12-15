@@ -215,7 +215,7 @@ Native macOS Spaces have a lot of problems
 
 Since Spaces are so hard to deal with, AeroSpace reimplements Spaces and calls them "Workspaces".
 The idea is that if the workspace isn’t active then all of its windows are placed outside the visible area of the screen, in the bottom right corner.
-Once you switch back to the workspace, (e.g. by the means of xref:commands.adoc#workspace[workspace] command, or `cmd`+`tab`) windows are placed back to the visible area of the screen.
+Once you switch back to the workspace, (e.g. by the means of xref:commands.adoc#workspace[workspace] command, or `cmd + tab`) windows are placed back to the visible area of the screen.
 
 When you quit the AeroSpace or when the AeroSpace is about to crash, AeroSpace will place all windows back to the visible area of the screen.
 
@@ -262,8 +262,6 @@ Overview of '`Displays have separate Spaces`'
 
 [#on-window-detected-callback]
 == '`on-window-detected`' callback
-
-* Available since: 0.6.0-Beta
 
 You can use `on-window-detected` callback to run commands every time a new window is detected.
 
@@ -387,8 +385,6 @@ When you switch to an empty workspace, AeroSpace puts the workspace on an assign
 
 [#assign-workspaces-to-monitors]
 === Assign workspaces to monitors
-
-* Available since: 0.5.0-Beta
 
 You can use `workspace-to-monitor-force-assignment` syntax to assign
 workspaces to always appear on particular monitors

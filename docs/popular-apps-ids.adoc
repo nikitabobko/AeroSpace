@@ -1,11 +1,10 @@
 == List of popular and built-in applications IDs
 
+include::header.adoc[]
+
 The list is useful to compose custom xref:guide.adoc#on-window-detected-callback[on-window-detected callback].
 
 Feel free to contribute to this list by submitting a pull request.
-
-'''
-include::header.adoc[]
 
 == The list
 
