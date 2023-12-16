@@ -9,15 +9,11 @@ extension Command {
         return [self].run(&subject, &stdout)
     }
 
-    func run(_ subject: inout CommandSubject) -> Bool {
-        check(Thread.current.isMainThread)
-        var devNull = ""
-        return run(&subject, &devNull)
-    }
-
     func runOnFocusedSubject() {
+        check(Thread.current.isMainThread)
         var focused = CommandSubject.focused
-        _ = run(&focused)
+        var devNull = ""
+        _ = run(&focused, &devNull)
     }
 
     var isExec: Bool { self is ExecAndWaitCommand || self is ExecAndForgetCommand }

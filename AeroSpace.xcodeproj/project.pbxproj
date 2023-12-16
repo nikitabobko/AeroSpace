@@ -283,7 +283,8 @@
 			children = (
 				8FE45A887100EB70912B07F0 /* default-config.toml */,
 			);
-			path = "config-examples";
+			name = "config-examples";
+			path = "docs/config-examples";
 			sourceTree = "<group>";
 		};
 		1FC68AED3E812DDF173114E6 /* parse */ = {

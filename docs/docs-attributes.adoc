@@ -1,0 +1,8 @@
+:idprefix:
+:idseparator: -
+:prewrap!:
+:sectanchors:
+:sectlinks:
+:sectnums:
+:source-highlighter: pygments
+:toc: left

@@ -3,7 +3,7 @@ import XCTest
 
 final class ConfigTest: XCTestCase {
     func testParseI3Config() {
-        let toml = try! String(contentsOf: projectRoot.appending(component: "config-examples/i3-like-config-example.toml"))
+        let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/i3-like-config-example.toml"))
         let (i3Config, errors) = parseConfig(toml)
         XCTAssertEqual(errors.descriptions, [])
         XCTAssertEqual(i3Config.enableNormalizationFlattenContainers, false)

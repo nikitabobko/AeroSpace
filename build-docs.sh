@@ -9,7 +9,7 @@ rm -rf .docs && mkdir .docs
 
 cp -r docs/*.adoc .docs
 cp -r docs/assets .docs
-cp -r config-examples .docs
+cp -r docs/config-examples .docs
 
 git rev-parse HEAD > .docs/version.html
 if [ ! -z "$(git status --porcelain)" ]; then

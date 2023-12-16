@@ -1,4 +1,5 @@
-== List of popular and built-in applications IDs
+= List of popular and built-in applications IDs
+include::docs-attributes.adoc[]
 
 include::header.adoc[]
 

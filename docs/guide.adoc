@@ -1,13 +1,5 @@
 = AeroSpace Guide
-:idprefix:
-:idseparator: -
-:prewrap!:
-:sectanchors:
-:sectlinks:
-:sectnums:
-:source-highlighter: pygments
-:toc: left
-// custom
+include::docs-attributes.adoc[]
 :url-search-for-config: https://github.com/search?q=%28path%3A**%2F.aerospace.toml+OR+path%3A**%2Faerospace.toml%29&type=code
 
 include::header.adoc[]

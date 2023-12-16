@@ -7,13 +7,12 @@ struct CloseAllWindowsButCurrentCommand: Command {
             stdout += "Empty workspace\n"
             return false
         }
+        var result = true
         for window in focused.workspace.allLeafWindowsRecursive {
             if window != focused {
-                if window.close() {
-                    (window as! MacWindow).garbageCollect()
-                }
+                result = CloseCommand().run(&subject, &stdout) && result
             }
         }
-        return true
+        return result
     }
 }

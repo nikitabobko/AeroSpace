@@ -18,7 +18,7 @@ targets:
     type: application
     platform: macOS
     deploymentTarget: "13.0"
-    sources: [src/, config-examples/default-config.toml]
+    sources: [src/, docs/config-examples/default-config.toml]
     dependencies:
       - package: HotKey
       - package: TOMLKit

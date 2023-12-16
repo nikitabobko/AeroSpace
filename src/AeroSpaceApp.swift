@@ -3,7 +3,6 @@ import SwiftUI
 
 @main
 struct AeroSpaceApp: App {
-    var hotKeys: [HotKey] = [] // Keep hotkeys in memory
     @StateObject var viewModel = TrayMenuModel.shared
 
     init() {
@@ -26,9 +25,9 @@ struct AeroSpaceApp: App {
             refreshSession {
                 var focused = CommandSubject.focused
                 if startedAtLogin {
-                    config.afterLoginCommand.run(&focused)
+                    _ = config.afterLoginCommand.run(&focused)
                 }
-                config.afterStartupCommand.run(&focused)
+                _ = config.afterStartupCommand.run(&focused)
             }
         }
     }

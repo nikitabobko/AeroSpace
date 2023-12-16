@@ -36,23 +36,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
     while true {
         _ = try? Socket.wait(for: [socket], timeout: 0, waitForever: true)
         guard let string = (try? socket.readString()) else { return }
-        let command: Command?
-        let err: String?
-        let help: String?
-        switch parseCommand(string) {
-        case .cmd(let _command):
-            command = _command
-            help = nil
-            err = nil
-        case .help(let _help):
-            command = nil
-            help = _help
-            err = nil
-        case .failure(let _error):
-            command = nil
-            help = nil
-            err = _error
-        }
+        let (command, help, err) = parseCommand(string).unwrap()
         guard let isEnabled = await Task(operation: { @MainActor in TrayMenuModel.shared.isEnabled }).result.getOrNil() else {
             _ = try? socket.write(from: "1Unknown failure during isEnabled server state access")
             continue

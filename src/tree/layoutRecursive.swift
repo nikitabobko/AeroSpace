@@ -19,6 +19,7 @@ extension TreeNode {
             if window.windowId != currentlyManipulatedWithMouseWindowId {
                 lastAppliedLayoutVirtualRect = virtual
                 if window.isFullscreen && window == workspace.rootTilingContainer.mostRecentWindow {
+                    lastAppliedLayoutPhysicalRect = nil
                     window.layoutFullscreen()
                 } else {
                     lastAppliedLayoutPhysicalRect = physicalRect
@@ -60,7 +61,6 @@ private extension Window {
     }
 
     func layoutFullscreen() {
-        lastAppliedLayoutPhysicalRect = nil
         let monitorRect = workspace.monitor.visibleRectPaddedByOuterGaps
         setTopLeftCorner(monitorRect.topLeftCorner)
         setSize(CGSize(width: monitorRect.width, height: monitorRect.height))

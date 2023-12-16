@@ -1,12 +1,5 @@
 = Config Examples
-:idprefix:
-:idseparator: -
-:prewrap!:
-:sectanchors:
-:sectlinks:
-:sectnums:
-:source-highlighter: pygments
-:toc: left
+include::docs-attributes.adoc[]
 
 include::header.adoc[]
 

@@ -56,6 +56,21 @@ enum ParsedCmd<T> {
             return .failure(fail)
         }
     }
+
+    func unwrap() -> (T?, String?, String?) {
+        var command: T? = nil
+        var error: String? = nil
+        var help: String? = nil
+        switch self {
+        case .cmd(let _command):
+            command = _command
+        case .help(let _help):
+            help = _help
+        case .failure(let _error):
+            error = _error
+        }
+        return (command, help, error)
+    }
 }
 
 func parseRawCmdArgs<T : RawCmdArgs>(_ raw: T, _ args: [String]) -> ParsedCmd<T> {

@@ -14,7 +14,10 @@ struct CloseCommand: Command {
             } else {
                 subject = .emptyWorkspace(focusedWorkspaceName)
             }
+            return true
+        } else {
+            stdout += "Can't close the window. Probably it doesn't have close button\n"
+            return false
         }
-        return true
     }
 }
