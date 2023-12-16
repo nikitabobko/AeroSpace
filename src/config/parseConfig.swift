@@ -105,11 +105,13 @@ private let configParser: [String: any ParserProtocol<RawConfig>] = [
     "on-window-detected": Parser(\.onWindowDetected, parseOnWindowDetectedArray)
 ]
 
-extension ParsedCmd {
-    func toEither() -> Parsed<T> { // todo drop
+private extension ParsedCmd where T == Command {
+    func toEither() -> Parsed<T> {
         switch self {
         case .cmd(let a):
-            return .success(a)
+            return a.info.allowInConfig
+                ? .success(a)
+                : .failure("Command '\(a.info.kind.rawValue)' doesn't have an effect in config")
         case .help(let a):
             return .failure(a)
         case .failure(let a):

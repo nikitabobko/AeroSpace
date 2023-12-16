@@ -117,14 +117,12 @@ final class ConfigTest: XCTestCase {
     }
 
     func testMoveWorkspaceToMonitorCommandParsing() {
-        var devNull: [String] = []
-        XCTAssertTrue(parseCommand("move-workspace-to-monitor next").toEither().getOrNil(appendErrorTo: &devNull) is MoveWorkspaceToMonitorCommand)
-        XCTAssertTrue(parseCommand("move-workspace-to-display next").toEither().getOrNil(appendErrorTo: &devNull) is MoveWorkspaceToMonitorCommand)
+        XCTAssertTrue(parseCommand("move-workspace-to-monitor next").cmdOrNil is MoveWorkspaceToMonitorCommand)
+        XCTAssertTrue(parseCommand("move-workspace-to-display next").cmdOrNil is MoveWorkspaceToMonitorCommand)
     }
 
     func testParseTiles() {
-        var devNull: [String] = []
-        let command = parseCommand("layout tiles h_tiles v_tiles list h_list v_list").toEither().getOrNil(appendErrorTo: &devNull)
+        let command = parseCommand("layout tiles h_tiles v_tiles list h_list v_list").cmdOrNil
         XCTAssertTrue(command is LayoutCommand)
         XCTAssertEqual((command as! LayoutCommand).args.toggleBetween, [.tiles, .h_tiles, .v_tiles, .tiles, .h_tiles, .v_tiles])
 
