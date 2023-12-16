@@ -12,14 +12,14 @@ extension TreeNode {
             lastAppliedLayoutPhysicalRect = physicalRect
             lastAppliedLayoutVirtualRect = virtual
             workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, virtual: virtual)
+            for window in workspace.children.filterIsInstance(of: Window.self) {
+                window.layoutFloatingWindow()
+            }
         case .window(let window):
             if window.windowId != currentlyManipulatedWithMouseWindowId {
                 lastAppliedLayoutVirtualRect = virtual
-                if window.isFullscreen && window == workspace.mostRecentWindow {
-                    lastAppliedLayoutPhysicalRect = nil
-                    let monitorRect = window.workspace.monitor.visibleRectPaddedByOuterGaps
-                    window.setTopLeftCorner(monitorRect.topLeftCorner)
-                    window.setSize(CGSize(width: monitorRect.width, height: monitorRect.height))
+                if window.isFullscreen && window == workspace.rootTilingContainer.mostRecentWindow {
+                    window.layoutFullscreen()
                 } else {
                     lastAppliedLayoutPhysicalRect = physicalRect
                     window.isFullscreen = false
@@ -37,6 +37,33 @@ extension TreeNode {
                 container.layoutAccordion(point, width: width, height: height, virtual: virtual)
             }
         }
+    }
+}
+
+private extension Window {
+    func layoutFloatingWindow() {
+        let currentMonitor = getCenter()?.monitorApproximation
+        if let currentMonitor, let windowTopLeftCorner = getTopLeftCorner(), workspace != currentMonitor.activeWorkspace {
+            let xProportion = (windowTopLeftCorner.x - currentMonitor.visibleRect.topLeftX) / currentMonitor.visibleRect.width
+            let yProportion = (windowTopLeftCorner.y - currentMonitor.visibleRect.topLeftY) / currentMonitor.visibleRect.height
+
+            let moveTo = workspace.monitor
+            setTopLeftCorner(CGPoint(
+                x: moveTo.visibleRect.topLeftX + xProportion * moveTo.visibleRect.width,
+                y: moveTo.visibleRect.topLeftY + yProportion * moveTo.visibleRect.height
+            ))
+        }
+        if isFullscreen {
+            layoutFullscreen()
+            isFullscreen = false
+        }
+    }
+
+    func layoutFullscreen() {
+        lastAppliedLayoutPhysicalRect = nil
+        let monitorRect = workspace.monitor.visibleRectPaddedByOuterGaps
+        setTopLeftCorner(monitorRect.topLeftCorner)
+        setSize(CGSize(width: monitorRect.width, height: monitorRect.height))
     }
 }
 
