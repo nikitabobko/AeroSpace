@@ -1,7 +1,10 @@
 class CloseCommand: Command {
-    func _run(_ subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
-        guard let window = subject.windowOrNil else { return }
+        guard let window = subject.windowOrNil else {
+            stdout += "Empty workspace\n"
+            return false
+        }
         if window.close() {
             (window as! MacWindow).garbageCollect()
             if let focusedWindow {
@@ -10,5 +13,6 @@ class CloseCommand: Command {
                 subject = .emptyWorkspace(focusedWorkspaceName)
             }
         }
+        return true
     }
 }

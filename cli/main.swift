@@ -50,8 +50,10 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
         )
     }
 
-    let output = run(args.joined(separator: " "))
-    if output != "PASS" {
-        print(output)
-    }
+    let received = run(args.joined(separator: " "))
+    let exitCode: Int32 = received.first.map { String($0) }.flatMap { Int32($0) } ?? 1
+    let output = String(received.dropFirst())
+
+    print(output, terminator: "")
+    exit(exitCode)
 }

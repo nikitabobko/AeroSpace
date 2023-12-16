@@ -1,7 +1,7 @@
 struct ExecAndWaitCommand: Command {
     let args: ExecAndWaitCmdArgs
 
-    func _run(_ subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         error("Please don't call _run, use run")
     }
 
@@ -15,7 +15,8 @@ struct ExecAndWaitCommand: Command {
             refreshSession {
                 var focused = CommandSubject.focused
                 // todo preserve subject in "exec sessions" (when/if "exec sessions" appears)
-                Array(commands[(index + 1)...]).run(&focused)
+                var devNull: String = ""
+                _ = Array(commands[(index + 1)...]).run(&focused, &devNull)
             }
         }
         // It doesn't throw if exit code is non-zero

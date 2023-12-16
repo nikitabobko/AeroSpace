@@ -1,9 +1,10 @@
 struct ModeCommand: Command {
     let args: ModeCmdArgs
 
-    func _run(_ subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
         activateMode(args.targetMode)
+        return true
     }
 }
 

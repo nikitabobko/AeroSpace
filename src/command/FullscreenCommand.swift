@@ -1,10 +1,16 @@
 struct FullscreenCommand: Command {
-    func _run(_ subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
-        guard let window = subject.windowOrNil else { return }
+        guard let window = subject.windowOrNil else {
+            stdout += noWindowIsFocused
+            return false
+        }
         window.isFullscreen = !window.isFullscreen
 
         // Focus on its own workspace
         window.markAsMostRecentChild()
+        return true
     }
 }
+
+let noWindowIsFocused = "No window is focused\n"

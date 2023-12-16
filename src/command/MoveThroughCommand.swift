@@ -1,10 +1,13 @@
 struct MoveThroughCommand: Command {
     let args: MoveThroughCmdArgs
 
-    func _run(_ subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
         let direction = args.direction
-        guard let currentWindow = subject.windowOrNil else { return }
+        guard let currentWindow = subject.windowOrNil else {
+            stdout += noWindowIsFocused
+            return false
+        }
         switch currentWindow.parent.kind {
         case .tilingContainer(let parent):
             let indexOfCurrent = currentWindow.ownIndex
@@ -25,6 +28,7 @@ struct MoveThroughCommand: Command {
         case .workspace: // floating window
             break // todo support moving floating windows
         }
+        return true
     }
 }
 

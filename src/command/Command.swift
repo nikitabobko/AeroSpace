@@ -1,5 +1,5 @@
 protocol Command: AeroAny { // todo add exit code and messages
-    func _run(_ subject: inout CommandSubject)
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool
 }
 
 protocol QueryCommand {
@@ -7,14 +7,20 @@ protocol QueryCommand {
 }
 
 extension Command {
-    func run(_ subject: inout CommandSubject) {
+    func run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
-        [self].run(&subject)
+        return [self].run(&subject, &stdout)
+    }
+
+    func run(_ subject: inout CommandSubject) -> Bool {
+        check(Thread.current.isMainThread)
+        var devNull = ""
+        return run(&subject, &devNull)
     }
 
     func runOnFocusedSubject() {
         var focused = CommandSubject.focused
-        run(&focused)
+        _ = run(&focused)
     }
 
     var isExec: Bool { self is ExecAndWaitCommand || self is ExecAndForgetCommand }
@@ -26,19 +32,27 @@ extension Command {
 // 3. on-window-detected callback
 // 4. Tray icon buttons
 extension [Command] {
-    func run(_ subject: inout CommandSubject) {
+    func run(_ subject: inout CommandSubject) -> Bool {
+        var devNull: String = ""
+        return run(&subject, &devNull)
+    }
+
+    func run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
+        var success = true
         for (index, command) in withIndex {
             if TrayMenuModel.shared.isEnabled || command is EnableCommand {
                 if let command = command as? ExecAndWaitCommand { // todo think of something more elegant
                     command._runWithContinuation(&subject, index, self)
                     break
                 } else {
-                    command._run(&subject)
+                    let result = command._run(&subject, &stdout)
+                    success = success && result
                 }
                 refreshModel()
             }
         }
+        return success
     }
 }
 

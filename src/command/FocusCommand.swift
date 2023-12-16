@@ -1,7 +1,7 @@
 struct FocusCommand: Command {
     let args: FocusCmdArgs
 
-    func _run(_ subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
         let window = subject.windowOrNil
         let workspace = subject.workspace
@@ -14,7 +14,7 @@ struct FocusCommand: Command {
 
         if let (parent, ownIndex) = window?.closestParent(hasChildrenInDirection: direction, withLayout: nil) {
             guard let windowToFocus = parent.children[ownIndex + direction.focusOffset]
-                .findFocusTargetRecursive(snappedTo: direction.opposite) else { return }
+                .findFocusTargetRecursive(snappedTo: direction.opposite) else { return false }
             subject = .window(windowToFocus)
         } else {
             hitWorkspaceBoundaries(&subject, args, direction)
@@ -27,6 +27,7 @@ struct FocusCommand: Command {
         case .window(let windowToFocus):
             windowToFocus.focus()
         }
+        return true
     }
 }
 

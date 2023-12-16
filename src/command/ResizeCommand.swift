@@ -1,7 +1,7 @@
 struct ResizeCommand: Command { // todo cover with tests
     let args: ResizeCmdArgs
 
-    func _run(_ subject: inout CommandSubject) { // todo support key repeat
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool { // todo support key repeat
         check(Thread.current.isMainThread)
 
         let candidates = subject.windowOrNil?.parentsWithSelf
@@ -14,16 +14,16 @@ struct ResizeCommand: Command { // todo cover with tests
         switch args.dimension {
         case .width:
             orientation = .h
-            guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return }
+            guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return false }
             node = first
             parent = first.parent as! TilingContainer
         case .height:
             orientation = .v
-            guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return }
+            guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return false }
             node = first
             parent = first.parent as! TilingContainer
         case .smart:
-            guard let first = candidates.first else { return }
+            guard let first = candidates.first else { return false }
             node = first
             parent = first.parent as! TilingContainer
             orientation = parent.orientation
@@ -38,11 +38,12 @@ struct ResizeCommand: Command { // todo cover with tests
             diff = -CGFloat(unit)
         }
 
-        guard let childDiff = diff.div(parent.children.count - 1) else { return }
+        guard let childDiff = diff.div(parent.children.count - 1) else { return false }
         parent.children.lazy
             .filter { $0 != node }
             .forEach { $0.setWeight(parent.orientation, $0.getWeight(parent.orientation) - childDiff) }
 
         node.setWeight(orientation, node.getWeight(orientation) + diff)
+        return true
     }
 }

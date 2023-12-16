@@ -1,7 +1,7 @@
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input.
 /// The function is idempotent.
-func refreshSession(startup: Bool = false, body: () -> Void) {
+func refreshSession<T>(startup: Bool = false, body: () -> T) -> T {
     check(Thread.current.isMainThread)
     gc()
 
@@ -12,7 +12,7 @@ func refreshSession(startup: Bool = false, body: () -> Void) {
     let focusBefore = focusedWindow
 
     refreshModel()
-    body()
+    let result = body()
     refreshModel()
 
     let focusAfter = focusedWindow
@@ -27,6 +27,7 @@ func refreshSession(startup: Bool = false, body: () -> Void) {
         updateTrayText()
         layoutWorkspaces()
     }
+    return result
 }
 
 func refreshAndLayout(startup: Bool = false) {

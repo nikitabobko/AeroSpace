@@ -1,7 +1,10 @@
 class CloseAllWindowsButCurrentCommand: Command {
-    func _run(_ subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
-        guard let focused = subject.windowOrNil else { return }
+        guard let focused = subject.windowOrNil else {
+            stdout += "Empty workspace\n"
+            return false
+        }
         for window in focused.workspace.allLeafWindowsRecursive {
             if window != focused {
                 if window.close() {
@@ -9,5 +12,6 @@ class CloseAllWindowsButCurrentCommand: Command {
                 }
             }
         }
+        return true
     }
 }

@@ -1,20 +1,19 @@
 struct WorkspaceCommand : Command {
     let args: WorkspaceCmdArgs
 
-    func _run(_ subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
         let workspaceName: String
         switch args.target {
         case .next:
             fallthrough
         case .prev:
-            guard let workspace = getNextPrevWorkspace(current: subject.workspace, target: args.target) else { return }
+            guard let workspace = getNextPrevWorkspace(current: subject.workspace, target: args.target) else { return false }
             workspaceName = workspace.name
         case .workspaceName(let _workspaceName, let autoBackAndForth):
             workspaceName = _workspaceName
             if autoBackAndForth && subject.workspace.name == workspaceName {
-                WorkspaceBackAndForthCommand().run(&subject)
-                return
+                return WorkspaceBackAndForthCommand().run(&subject)
             }
         }
         let workspace = Workspace.get(byName: workspaceName)
@@ -27,6 +26,7 @@ struct WorkspaceCommand : Command {
         }
         check(workspace.monitor.setActiveWorkspace(workspace))
         focusedWorkspaceName = workspace.name
+        return true
     }
 }
 

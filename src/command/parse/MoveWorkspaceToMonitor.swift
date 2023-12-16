@@ -1,5 +1,5 @@
 private struct RawMoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
-    var monitorTarget: MoveWorkspaceToMonitorCmdArgs.MonitorTarget?
+    var monitorTarget: MoveWorkspaceToMonitorCmdArgs.MonitorTarget? // todo introduce --wrap-around flag
 
     static let info = CmdInfo<Self>(
         help: """

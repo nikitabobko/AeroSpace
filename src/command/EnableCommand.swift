@@ -1,7 +1,7 @@
 struct EnableCommand: Command {
     let args: EnableCmdArgs
 
-    func _run(_ subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
         let prevState = TrayMenuModel.shared.isEnabled
         let newState: Bool
@@ -14,7 +14,7 @@ struct EnableCommand: Command {
             newState = !TrayMenuModel.shared.isEnabled
         }
         if newState == prevState {
-            return
+            return true
         }
 
         TrayMenuModel.shared.isEnabled = newState
@@ -36,5 +36,6 @@ struct EnableCommand: Command {
                 workspace.layoutWorkspace()
             }
         }
+        return true
     }
 }

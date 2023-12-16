@@ -1,11 +1,17 @@
 struct JoinWithCommand: Command {
     let args: JoinWithCmdArgs
 
-    func _run(_ subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
         let direction = args.direction
-        guard let currentWindow = subject.windowOrNil else { return }
-        guard let (parent, ownIndex) = currentWindow.closestParent(hasChildrenInDirection: direction, withLayout: nil) else { return }
+        guard let currentWindow = subject.windowOrNil else {
+            stdout += noWindowIsFocused
+            return false
+        }
+        guard let (parent, ownIndex) = currentWindow.closestParent(hasChildrenInDirection: direction, withLayout: nil) else {
+            stdout += "No windows in specified direction\n"
+            return false
+        }
         let moveInTarget = parent.children[ownIndex + direction.focusOffset]
         let prevBinding = moveInTarget.unbindFromParent()
         let newParent = TilingContainer(
@@ -19,5 +25,6 @@ struct JoinWithCommand: Command {
 
         moveInTarget.bind(to: newParent, adaptiveWeight: WEIGHT_AUTO, index: 0)
         currentWindow.bind(to: newParent, adaptiveWeight: WEIGHT_AUTO, index: direction.isPositive ? 0 : INDEX_BIND_LAST)
+        return true
     }
 }

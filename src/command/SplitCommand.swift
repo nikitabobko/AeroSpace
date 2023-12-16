@@ -1,15 +1,19 @@
 struct SplitCommand: Command {
     let args: SplitCmdArgs
 
-    func _run(_ subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
         if config.enableNormalizationFlattenContainers {
-            return // 'split' doesn't work with "flatten container" normalization enabled
+            stdout += "'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled\n"
+            return false
         }
-        guard let window = subject.windowOrNil else { return }
+        guard let window = subject.windowOrNil else {
+            stdout += noWindowIsFocused
+            return false
+        }
         switch window.parent.kind {
         case .workspace:
-            return // Nothing to do for floating windows
+            return false // Nothing to do for floating windows
         case .tilingContainer(let parent):
             let orientation: Orientation
             switch args.arg {
@@ -34,5 +38,6 @@ struct SplitCommand: Command {
                 window.bind(to: newParent, adaptiveWeight: WEIGHT_AUTO, index: 0)
             }
         }
+        return true
     }
 }

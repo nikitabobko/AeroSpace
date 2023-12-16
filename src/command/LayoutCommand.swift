@@ -1,31 +1,33 @@
 struct LayoutCommand: Command {
     let args: LayoutCmdArgs
 
-    func _run(_ subject: inout CommandSubject) {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
-        guard let window = subject.windowOrNil else { return }
+        guard let window = subject.windowOrNil else {
+            stdout += noWindowIsFocused
+            return false
+        }
         let targetDescription = args.toggleBetween.first(where: { !window.matchesDescription($0) })
             ?? args.toggleBetween.first!
-        if window.matchesDescription(targetDescription) {
-            return
-        }
+        if window.matchesDescription(targetDescription) { return false }
+        var result = true
         switch targetDescription {
         case .h_accordion:
-            changeTilingLayout(targetLayout: .accordion, targetOrientation: .h, window: window)
+            result = changeTilingLayout(targetLayout: .accordion, targetOrientation: .h, window: window)
         case .v_accordion:
-            changeTilingLayout(targetLayout: .accordion, targetOrientation: .v, window: window)
+            result = changeTilingLayout(targetLayout: .accordion, targetOrientation: .v, window: window)
         case .h_tiles:
-            changeTilingLayout(targetLayout: .tiles, targetOrientation: .h, window: window)
+            result = changeTilingLayout(targetLayout: .tiles, targetOrientation: .h, window: window)
         case .v_tiles:
-            changeTilingLayout(targetLayout: .tiles, targetOrientation: .v, window: window)
+            result = changeTilingLayout(targetLayout: .tiles, targetOrientation: .v, window: window)
         case .accordion:
-            changeTilingLayout(targetLayout: .accordion, targetOrientation: nil, window: window)
+            result = changeTilingLayout(targetLayout: .accordion, targetOrientation: nil, window: window)
         case .tiles:
-            changeTilingLayout(targetLayout: .tiles, targetOrientation: nil, window: window)
+            result = changeTilingLayout(targetLayout: .tiles, targetOrientation: nil, window: window)
         case .horizontal:
-            changeTilingLayout(targetLayout: nil, targetOrientation: .h, window: window)
+            result = changeTilingLayout(targetLayout: nil, targetOrientation: .h, window: window)
         case .vertical:
-            changeTilingLayout(targetLayout: nil, targetOrientation: .v, window: window)
+            result = changeTilingLayout(targetLayout: nil, targetOrientation: .v, window: window)
         case .tiling:
             switch window.parent.kind {
             case .workspace:
@@ -48,6 +50,7 @@ struct LayoutCommand: Command {
                 window.setSize(lastFloatingSize)
             }
         }
+        return result
     }
 }
 
@@ -66,15 +69,16 @@ extension String {
     }
 }
 
-private func changeTilingLayout(targetLayout: Layout?, targetOrientation: Orientation?, window: Window) {
+private func changeTilingLayout(targetLayout: Layout?, targetOrientation: Orientation?, window: Window) -> Bool {
     switch window.parent.kind {
     case .tilingContainer(let parent):
         let targetOrientation = targetOrientation ?? parent.orientation
         let targetLayout = targetLayout ?? parent.layout
         parent.layout = targetLayout
         parent.changeOrientation(targetOrientation)
+        return true
     case .workspace:
-        break // Do nothing for non-tiling windows
+        return false // Do nothing for non-tiling windows
     }
 }
 
