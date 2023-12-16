@@ -13,71 +13,80 @@ struct FocusCommand: Command {
         }
         let direction = args.direction
 
+        var result: Bool = true
         if let (parent, ownIndex) = window?.closestParent(hasChildrenInDirection: direction, withLayout: nil) {
             guard let windowToFocus = parent.children[ownIndex + direction.focusOffset]
                 .findFocusTargetRecursive(snappedTo: direction.opposite) else { return false }
             subject = .window(windowToFocus)
         } else {
-            hitWorkspaceBoundaries(&subject, args, direction)
+            result = hitWorkspaceBoundaries(&subject, &stdout, args, direction) && result
         }
 
         switch subject {
         case .emptyWorkspace(let name):
-            WorkspaceCommand(args: WorkspaceCmdArgs(target: .workspaceName(name: name, autoBackAndForth: false)))
-                .run(&subject)
+            result = WorkspaceCommand(args: WorkspaceCmdArgs(target: .workspaceName(name: name, autoBackAndForth: false)))
+                .run(&subject, &stdout) && result
         case .window(let windowToFocus):
             windowToFocus.focus()
         }
-        return true
+        return result
     }
 }
 
-private func hitWorkspaceBoundaries(_ subject: inout CommandSubject, _ args: FocusCmdArgs, _ direction: CardinalDirection) {
+private func hitWorkspaceBoundaries(
+    _ subject: inout CommandSubject,
+    _ stdout: inout String,
+    _ args: FocusCmdArgs,
+    _ direction: CardinalDirection
+) -> Bool {
     switch args.boundaries {
     case .workspace:
         switch args.boundariesAction {
         case .stop:
-            return
+            return true
         case .wrapAroundTheWorkspace:
             wrapAroundTheWorkspace(subject: &subject, direction)
+            return true
         case .wrapAroundAllMonitors:
             error("Must be discarded by args parser")
         }
     case .allMonitorsUnionFrame:
         let currentMonitor = subject.workspace.monitor
         let monitors = sortedMonitors.filter { currentMonitor.rect.topLeftCorner == $0.rect.topLeftCorner || $0.relation(to: currentMonitor) == direction.orientation }
-        guard let index = monitors.firstIndex(where: { $0.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }) else { return }
+        guard let index = monitors.firstIndex(where: { $0.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }) else { return false }
 
         if let targetMonitor = monitors.getOrNil(atIndex: index + direction.focusOffset) {
-            targetMonitor.focus(&subject)
+            return targetMonitor.focus(&subject, &stdout)
         } else {
-            guard let wrapped = monitors.get(wrappingIndex: index + direction.focusOffset) else { return }
-            hitAllMonitorsFrameBoundaries(&subject, args, direction, wrapped)
+            guard let wrapped = monitors.get(wrappingIndex: index + direction.focusOffset) else { return false }
+            return hitAllMonitorsFrameBoundaries(&subject, &stdout, args, direction, wrapped)
         }
     }
 }
 
 private func hitAllMonitorsFrameBoundaries(
     _ subject: inout CommandSubject,
+    _ stdout: inout String,
     _ args: FocusCmdArgs,
     _ direction: CardinalDirection,
     _ wrappedMonitor: Monitor
-) {
+) -> Bool {
     switch args.boundariesAction {
     case .stop:
-        return
+        return true
     case .wrapAroundTheWorkspace:
         wrapAroundTheWorkspace(subject: &subject, direction)
+        return true
     case .wrapAroundAllMonitors:
         wrappedMonitor.activeWorkspace.findFocusTargetRecursive(snappedTo: direction.opposite)?.markAsMostRecentChild()
-        wrappedMonitor.focus(&subject)
+        return wrappedMonitor.focus(&subject, &stdout)
     }
 }
 
 private extension Monitor {
-    func focus(_ subject: inout CommandSubject) {
+    func focus(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         WorkspaceCommand(args: WorkspaceCmdArgs(target: .workspaceName(name: activeWorkspace.name, autoBackAndForth: false)))
-            .run(&subject)
+            .run(&subject, &stdout)
     }
 }
 

@@ -14,7 +14,7 @@ struct WorkspaceCommand : Command {
         case .workspaceName(let _workspaceName, let autoBackAndForth):
             workspaceName = _workspaceName
             if autoBackAndForth && subject.workspace.name == workspaceName {
-                return WorkspaceBackAndForthCommand().run(&subject)
+                return WorkspaceBackAndForthCommand().run(&subject, &stdout)
             }
         }
         let workspace = Workspace.get(byName: workspaceName)

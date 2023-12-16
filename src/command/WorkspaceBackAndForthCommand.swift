@@ -6,6 +6,6 @@ struct WorkspaceBackAndForthCommand: Command {
         guard let previousFocusedWorkspaceName else { return false }
         return WorkspaceCommand(args: WorkspaceCmdArgs(
             target: .workspaceName(name: previousFocusedWorkspaceName, autoBackAndForth: false)
-        )).run(&subject)
+        )).run(&subject, &stdout)
     }
 }

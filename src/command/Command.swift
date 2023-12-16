@@ -36,20 +36,19 @@ extension [Command] {
 
     func run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
-        var success = true
+        var result = true
         for (index, command) in withIndex {
             if TrayMenuModel.shared.isEnabled || command is EnableCommand {
                 if let command = command as? ExecAndWaitCommand { // todo think of something more elegant
                     command._runWithContinuation(&subject, index, self)
                     break
                 } else {
-                    let result = command._run(&subject, &stdout)
-                    success = success && result
+                    result = command._run(&subject, &stdout) && result
                 }
                 refreshModel()
             }
         }
-        return success
+        return result
     }
 }
 
