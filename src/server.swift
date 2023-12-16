@@ -25,6 +25,7 @@ func sendCommandToReleaseServer(command: String) {
 
     _ = try? socket.write(from: command)
     _ = try? Socket.wait(for: [socket], timeout: 0, waitForever: true)
+    _ = try? socket.readString()
 }
 
 private func newConnection(_ socket: Socket) async { // todo add exit codes
