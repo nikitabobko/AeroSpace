@@ -10,7 +10,7 @@ private struct RawModeCmdArgs: RawCmdArgs {
         kind: .mode,
         allowInConfig: true,
         help: """
-              USAGE: mode [-h|--help] <target-mode>
+              USAGE: mode [-h|--help] <binding-mode>
 
               OPTIONS:
                 -h, --help      Print help

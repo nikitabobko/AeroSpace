@@ -1,0 +1,23 @@
+= aerospace-move-node-to-workspace(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-move-node-to-workspace
+// tag::purpose[]
+:manpurpose: Moves currently focused window to the specified workspace
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+move-node-to-workspace [-h|--help] <target-workspace-name>
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

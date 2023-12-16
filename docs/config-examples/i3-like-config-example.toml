@@ -28,7 +28,7 @@ alt-e = 'layout tiles horizontal vertical' # 'layout toggle split' in i3
 alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
 
 # Not supported, because this command is redundant in AeroSpace mental model.
-# See: https://github.com/nikitabobko/AeroSpace/blob/main/guide.md#floating-windows
+# See: https://nikitabobko.github.io/AeroSpace/guide.html#floating-windows
 #alt-space = 'focus toggle_tiling_floating'
 
 # `focus parent`/`focus child` are not yet supported, and it's not clear whether they

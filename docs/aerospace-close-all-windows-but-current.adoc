@@ -1,0 +1,23 @@
+= aerospace-close-all-windows-but-current(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-close-all-windows-but-current
+// tag::purpose[]
+:manpurpose: On the focused workspace, closes all windows but current
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+close-all-windows-but-current [-h|--help]
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

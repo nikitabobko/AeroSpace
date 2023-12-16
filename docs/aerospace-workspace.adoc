@@ -1,0 +1,36 @@
+= aerospace-workspace(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-workspace
+// tag::purpose[]
+:manpurpose: Activates the specified workspace
+// end::purpose[]
+
+== Synopsis
+
+[verse]
+// tag::synopsis[]
+workspace [-h|--help] (next|prev)
+workspace [-h|--help] [--auto-back-and-forth] <target-workspace-name>
+
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+Workspaces can be switched in alphabetical order
+
+* `*workspace next*` activates the next alphabetical workspace
+* `*workspace prev*` activates the previous alphabetical workspace
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--auto-back-and-forth::
+Automatic 'back-and-forth' when switching to already focused workspace
+
+// end::body[]
+
+include::util/man-footer.adoc[]

@@ -1,0 +1,26 @@
+= aerospace-close(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-close
+// tag::purpose[]
+:manpurpose: Closes the focused window
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+close [-h|--help]
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+Normally, you don’t need to use this command, because macOS offers its own `cmd + w` binding.
+You might want to use the command from CLI for scripting purposes
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

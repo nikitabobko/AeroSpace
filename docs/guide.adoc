@@ -1,8 +1,8 @@
 = AeroSpace Guide
-include::docs-attributes.adoc[]
+include::util/site-attributes.adoc[]
 :url-search-for-config: https://github.com/search?q=%28path%3A**%2F.aerospace.toml+OR+path%3A**%2Faerospace.toml%29&type=code
 
-include::header.adoc[]
+include::util/header.adoc[]
 
 [#configuring-aerospace]
 == Configuring AeroSpace

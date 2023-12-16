@@ -1,0 +1,23 @@
+= aerospace-reload-config(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-reload-config
+// tag::purpose[]
+:manpurpose: Reloads currently active config
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+reload-config [-h|--help]
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

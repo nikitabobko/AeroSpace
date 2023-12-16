@@ -1,0 +1,25 @@
+= aerospace-flatten-workspace-tree(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-flatten-workspace-tree
+// tag::purpose[]
+:manpurpose: Flattens the tree of currently focused workspace.
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+flatten-workspace-tree [-h|--help]
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The command is useful when you messed up with your layout, and it's easier to "reset" it and start again.
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

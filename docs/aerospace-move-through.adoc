@@ -1,0 +1,115 @@
+= aerospace-move-through(1)
+include::util/man-attributes.adoc[]
+// tag::purpose[]
+:manpurpose: Moves the window in the given direction
+// end::purpose[]
+:manname: aerospace-move-through
+
+== Synopsis
+// tag::synopsis[]
+move-through [-h|--help] (left|down|up|right) [floating_pixel]
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The optional `floating_pixel` argument specifies how far the window should be moved if it is floating.
+The default is 50 pixels
+
+NOTE: This command is an analog of https://i3wm.org/docs/userguide.html#move_direction[i3's move command]
+
+include::util/conditional-examples-header.adoc[]
+
+. Given this layout
++
+----
+h_tiles
+├── window 1 (focused)
+└── window 2
+----
++
+`*move-through right*` will result in the following layout
++
+----
+h_tiles
+├── window 2
+└── window 1 (focused)
+----
+
+. Given this layout
++
+----
+h_tiles
+├── window 1
+├── window 2 (focused)
+└── v_tiles
+    ├── window 3
+    └── window 4
+----
++
+`*move-through right*` will result in the following layout
++
+----
+h_tiles
+├── window 1
+└── v_tiles
+    ├── window 3
+    ├── window 2 (focused)
+    └── window 4
+----
+
+. Given this layout
++
+----
+h_tiles
+├── window 1
+└── v_tiles
+    ├── window 3
+    ├── window 2 (focused)
+    └── window 4
+----
++
+`*move-through left*` will result in the following layout
++
+----
+h_tiles
+├── window 1
+├── window 2 (focused)
+└── v_tiles
+    ├── window 3
+    └── window 4
+----
+. *Implicit container example*
++
+In some cases, `*move-through*` needs to implicitly create a container to fulfill your command.
++
+Given this layout
++
+----
+h_tiles
+├── window 1
+├── window 2 (focused)
+└── window 3
+----
++
+`*move-through up*` will result in the following layout
++
+----
+v_tiles
+├── window 2 (focused)
+└── h_tiles
+    ├── window 1
+    └── window 3
+----
++
+`v_tiles` is an implicitly created container.
+
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

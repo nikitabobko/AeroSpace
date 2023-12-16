@@ -1,0 +1,28 @@
+= aerospace-enable(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-enable
+// tag::purpose[]
+:manpurpose: Temporarily disable window management
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+enable [-h|--help] (on|off|toggle)
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+When you disable AeroSpace, windows from currently invisible workspaces will be placed to the visible area of the screen
+
+Key events are not intercepted when AeroSpace is disabled
+
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

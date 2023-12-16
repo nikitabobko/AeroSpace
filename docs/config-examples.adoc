@@ -1,7 +1,7 @@
 = Config Examples
-include::docs-attributes.adoc[]
+include::util/site-attributes.adoc[]
 
-include::header.adoc[]
+include::util/header.adoc[]
 
 [#default-config]
 == Default config

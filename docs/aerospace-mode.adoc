@@ -1,0 +1,25 @@
+= aerospace-mode(1)
+include::util/man-attributes.adoc[]
+// tag::purpose[]
+:manpurpose: Activates the specified binding modes
+// end::purpose[]
+:manname: aerospace-mode
+
+== Synopsis
+// tag::synopsis[]
+mode [-h|--help] <binding-mode>
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+See xref:guide.adoc#binding-modes[the guide] for documentation about binding modes
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

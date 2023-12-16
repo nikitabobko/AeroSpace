@@ -1,0 +1,27 @@
+= aerospace-layout(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-layout
+// tag::purpose[]
+:manpurpose: Changes layout of the focused window to the given layout
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+layout [-h|--help] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+If several arguments are supplied then finds the first argument that doesn't describe the currently active layout, and applies the found layout.
+
+`*tiling*` is the only argument that makes the focused floating window tiled.
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

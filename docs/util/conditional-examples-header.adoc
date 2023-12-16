@@ -1,0 +1,8 @@
+ifndef::env-site[]
+== Examples
+endif::[]
+
+ifdef::env-site[]
+[.lead]
+**EXAMPLES**
+endif::[]

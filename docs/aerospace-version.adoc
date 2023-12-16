@@ -1,0 +1,23 @@
+= aerospace-version(1)
+include::util/man-attributes.adoc[]
+// tag::purpose[]
+:manpurpose: Prints the version and commit hash of AeroSpace
+// end::purpose[]
+:manname: aerospace-version
+
+== Synopsis
+// tag::synopsis[]
+version [-h|--help]
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

@@ -1,0 +1,25 @@
+= aerospace-fullscreen(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-fullscreen
+// tag::purpose[]
+:manpurpose: Toggles the fullscreen mode for the currently focused window
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+fullscreen [-h|--help]
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+Switching to a different tiling window within the same workspace while the current focused window is in fullscreen mode results in the fullscreen window exiting fullscreen mode.
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

@@ -1,419 +1,162 @@
 = AeroSpace Commands
-include::docs-attributes.adoc[]
+include::util/site-attributes.adoc[]
 
-include::header.adoc[]
+include::util/header.adoc[]
 
 Commands listed in this file can be used in the config and CLI
 
 == close
-
 ----
-close [-h|--help]
+include::aerospace-close.adoc[tags=synopsis]
 ----
-
-Closes the focused window
-
-Normally, you don’t need to use this command, because macOS has its own `cmd + w` binding.
-You might want to use the command from CLI for scripting purposes
+include::aerospace-close.adoc[tags=purpose]
+include::aerospace-close.adoc[tags=body]
 
 == close-all-windows-but-current
-
 ----
-close-all-windows-but-current [-h|--help]
+include::aerospace-close-all-windows-but-current.adoc[tags=synopsis]
 ----
-
-On the focused workspace, closes all windows but current.
+include::aerospace-close-all-windows-but-current.adoc[tags=purpose]
+include::aerospace-close-all-windows-but-current.adoc[tags=body]
 
 == enable
-
 ----
-enable [-h|--help] (on|off|toggle)
+include::aerospace-enable.adoc[tags=synopsis]
 ----
-
-The command allows to temporarily disable window management
-
-When you disable AeroSpace, windows from currently invisible workspaces will be placed to the visible area of the screen
-
-Key events are not intercepted when AeroSpace is disabled
+include::aerospace-enable.adoc[tags=purpose]
+include::aerospace-enable.adoc[tags=body]
 
 == exec-and-forget
-
 ----
-exec-and-forget [-h|--help] <bash-script>
+include::aerospace-exec-and-forget.adoc[tags=synopsis]
 ----
-
-Runs `/bin/bash -c '<bash-script>'`.
-Stdout, stderr and exit code are ignored.
-
-For example, you can use this command to launch applications: `exec-and-forget open -n /System/Applications/Utilities/Terminal.app`
+include::aerospace-exec-and-forget.adoc[tags=purpose]
+include::aerospace-exec-and-forget.adoc[tags=body]
 
 == exec-and-wait
-
 ----
-exec-and-wait [-h|--help] <bash-script>
+include::aerospace-exec-and-wait.adoc[tags=synopsis]
 ----
-
-Runs `/bin/bash -c '<bash-script>'`, and waits until the command is terminated.
-Stdout, stderr and exit code are ignored.
-
-Please prefer `exec-and-forget`, unless you need to wait for the termination.
-
-You might want to wait for the termination if you have a list of commands, and you want `<bash-script>` to exit until you run the next command.
-
-Suppose that you have this binding in your config:
-
-[source,toml]
-----
-alt-enter = ['exec-and-wait open -n /System/Applications/Utilities/Terminal.app && sleep 1', 'layout floating']
-----
-
-It will open up Terminal.app and make it float.
-`sleep 1` is still required because `open` returns before the window appears.
+include::aerospace-exec-and-wait.adoc[tags=purpose]
+include::aerospace-exec-and-wait.adoc[tags=body]
 
 == flatten-workspace-tree
-
 ----
-flatten-workspace-tree [-h|--help]
+include::aerospace-flatten-workspace-tree.adoc[tags=synopsis]
 ----
+include::aerospace-flatten-workspace-tree.adoc[tags=purpose]
+include::aerospace-flatten-workspace-tree.adoc[tags=body]
 
-Flattens xref:guide.adoc#tree[the tree] of currently focused workspace.
-
-The command is useful when you messed up with your layout, and it's easier to "`reset`" it and start again.
-
-[#focus]
 == focus
-
 ----
-focus [<OPTIONS>] (left|down|up|right)
+include::aerospace-focus.adoc[tags=synopsis]
 ----
-
-Sets focus to the nearest window in xref:guide.adoc#tree[the tree] in the given direction.
-
-https://i3wm.org/docs/userguide.html#_focusing_moving_containers[Contrary to i3], `focus` command doesn't have a separate argument to focus floating windows.
-From `focus` command perspective, floating windows are part of xref:guide.adoc#tree[the tree].
-The floating window parent container is determined as the smallest tiling container that contains the center of the floating window.
-
-This technique eliminates the need for an additional binding for floating windows.
-
-`focus child|parent` https://github.com/nikitabobko/AeroSpace/issues/5[isn't supported] because the necessaty of this operation is under the question.
-
-
-**OPTIONS**
-
--h, --help::
-Print help
-
---boundaries <boundary>::
-Defines focus boundaries. +
-`<boundary>` possible values: `(workspace|all-monitors-union-frame)`. +
-The default is: `workspace`
-
---boundaries-action <action>::
-Defines the behavior when requested to cross the `<boundary>`. +
-`<action>` possible values: `(stop|wrap-around-the-workspace|wrap-around-all-monitors)` +
-The default is: `wrap-around-the-workspace`
+include::aerospace-focus.adoc[tags=purpose]
+include::aerospace-focus.adoc[tags=body]
 
 == fullscreen
-
 ----
-fullscreen [-h|--help]
+include::aerospace-fullscreen.adoc[tags=synopsis]
 ----
+include::aerospace-fullscreen.adoc[tags=purpose]
+include::aerospace-fullscreen.adoc[tags=body]
 
-Toggles the fullscreen mode for the currently focused window.
-
-Switching to a different tiling window within the same workspace while the current focused window is in fullscreen mode results in the fullscreen window exiting fullscreen mode.
-
-[#join-with]
 == join-with
-
 ----
-join-with [-h|--help] (left|down|up|right)
+include::aerospace-join-with.adoc[tags=synopsis]
 ----
+include::aerospace-join-with.adoc[tags=purpose]
+include::aerospace-join-with.adoc[tags=body]
 
-Puts the currently focused window and the nearest node in the specified direction under a common parent container.
-
-Given this layout
-
-----
-h_tiles
-├── window 1
-├── window 2 (focused)
-└── window 3
-----
-
-`join-with right` will result in the following layout
-
-----
-h_tiles
-├── window 1
-└── v_tiles
-    ├── window 2 (focused)
-    └── window 3
-----
-
-NOTE: `join-with` is a high-level replacement for i3's
-https://i3wm.org/docs/userguide.html#_splitting_containers[split
-command].There is an observation that the only reason why you might
-want to split a node is to put several windows under a common
-"`umbrella`" parent.Unlike `split`, `join-with` can be used with
-xref:guide.adoc#normalization[enable-normalization-flatten-containers]
-
-[#layout]
 == layout
-
 ----
-layout [-h|--help] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
+include::aerospace-layout.adoc[tags=synopsis]
 ----
-
-Changes layout of the focused window to the given layout.
-
-If several layouts are supplied then finds the first layout that doesn't describe the currently active layout, and applies the found layout.
-
-`tiling` is the only argument that makes the focused floating window tiled.
-
-[#list-apps]
-== list-apps
-
-----
-list-apps [-h|--help]
-----
-
-Prints the list of ordinary applications that appears in the Dock and may have a user interface.
-
-Output format is the table with the following columns:
-
-* Process ID
-* Application ID
-* Application name
-
-Output example:
-
-----
-486   | com.apple.finder            | Finder
-17966 | org.alacritty               | Alacritty
-24780 | com.jetbrains.AppCode       | AppCode
-32541 | com.apple.systempreferences | System Settings
-----
-
-The command is useful to inspect list of applications to compose filter for xref:guide.adoc#on-window-detected-callback[on-window-detected]
-
-You can use `awk` to get values of particular column: `awk -F '|' '{print $2}'`
+include::aerospace-layout.adoc[tags=purpose]
+include::aerospace-layout.adoc[tags=body]
 
 == mode
-
 ----
-mode [-h|--help] <target-mode>
+include::aerospace-mode.adoc[tags=synopsis]
 ----
+include::aerospace-mode.adoc[tags=purpose]
+include::aerospace-mode.adoc[tags=body]
 
-Activates the specified xref:guide.adoc#binding-modes[binding mode]
-
-[#move-node-to-workspace]
 == move-node-to-workspace
-
 ----
-move-node-to-workspace [-h|--help] <target-workspace-name>
+include::aerospace-move-node-to-workspace.adoc[tags=synopsis]
 ----
+include::aerospace-move-node-to-workspace.adoc[tags=purpose]
+include::aerospace-move-node-to-workspace.adoc[tags=body]
 
-Moves currently focused window to the specified workspace
-
-[#move-through]
 == move-through
-
 ----
-move-through [-h|--help] (left|down|up|right) [floating_pixel]
+include::aerospace-move-through.adoc[tags=synopsis]
 ----
+include::aerospace-move-through.adoc[tags=purpose]
+include::aerospace-move-through.adoc[tags=body]
 
-Moves the window in the given direction.The optional `floating_pixel` argument specifies how far the window should be moved if it is floating.
-The default is 50 pixels
-
-NOTE: This command is an analog of https://i3wm.org/docs/userguide.html#move_direction[i3's move command]
-
-*Example 1*
-
-Given this layout
-
-----
-h_tiles
-├── window 1 (focused)
-└── window 2
-----
-
-`move-through right` will result in the following layout
-
-----
-h_tiles
-├── window 2
-└── window 1 (focused)
-----
-
-*Example 2*
-
-Given this layout
-
-----
-h_tiles
-├── window 1
-├── window 2 (focused)
-└── v_tiles
-    ├── window 3
-    └── window 4
-----
-
-`move-through right` will result in the following layout
-
-----
-h_tiles
-├── window 1
-└── v_tiles
-    ├── window 3
-    ├── window 2 (focused)
-    └── window 4
-----
-
-*Example 3*
-
-Given this layout
-
-----
-h_tiles
-├── window 1
-└── v_tiles
-    ├── window 3
-    ├── window 2 (focused)
-    └── window 4
-----
-
-`move-through left` will result in the following layout
-
-----
-h_tiles
-├── window 1
-├── window 2 (focused)
-└── v_tiles
-    ├── window 3
-    └── window 4
-----
-
-*Implicit container example*
-
-In some cases, `move-through` needs to implicitly create a container to fulfill your command.
-
-Given this layout
-
-----
-h_tiles
-├── window 1
-├── window 2 (focused)
-└── window 3
-----
-
-`move-through up` will result in the following layout
-
-----
-v_tiles
-├── window 2 (focused)
-└── h_tiles
-    ├── window 1
-    └── window 3
-----
-
-`v_tiles` is an implicitly created container.
-
-[#move-workspace-to-monitor]
 == move-workspace-to-monitor
-
 ----
-move-workspace-to-monitor (next|prev)
+include::aerospace-move-workspace-to-monitor.adoc[tags=synopsis]
 ----
-
-Moves currently focused workspace to the next or previous monitor
-
-The command doesn't have effect on workspaces xref:guide.adoc#assign-workspaces-to-monitors[that have monitor assignment]
+include::aerospace-move-workspace-to-monitor.adoc[tags=purpose]
+include::aerospace-move-workspace-to-monitor.adoc[tags=body]
 
 == reload-config
-
 ----
-reload-config [-h|--help]
+include::aerospace-reload-config.adoc[tags=synopsis]
 ----
-
-Reloads currently active config
+include::aerospace-reload-config.adoc[tags=purpose]
+include::aerospace-reload-config.adoc[tags=body]
 
 == resize
-
 ----
-resize [-h|--help] (smart|width|height) [+|-]<number>
+include::aerospace-resize.adoc[tags=synopsis]
 ----
+include::aerospace-resize.adoc[tags=purpose]
+include::aerospace-resize.adoc[tags=body]
 
-Resizes the currently active window
-
-The dimension to resize is chosen by the first argument
-
-* `width` changes width
-* `height` changes height
-* `smart` changes width if the parent has horizontal orientation, and
-it changes height if the parent has vertical orientation
-
-Second argument controls how much the size is changes
-
-* If the `<number>` is prefixed with `+` then the dimension is increased
-* If the `<number>` is prefixed with `-` then the dimension is decreased
-* If the `<number>` is prefixed with neither `+` nor `-` then the command changes the absolute value of the dimension
-
-[#split]
 == split
-
 ----
-split [-h|--help] (horizontal|vertical|opposite)
+include::aerospace-split.adoc[tags=synopsis]
 ----
+include::aerospace-split.adoc[tags=purpose]
+include::aerospace-split.adoc[tags=body]
 
-*If the parent of currently focused window contains more than one child*, then the command
-
-. Creates a new tiling container
-. Replaces currently focused window with the container
-. Puts the currently focused window into the container as its the only child
-
-The argument configures orientation of the newly created container.
-`opposite` means opposite orientation compared to the parent container.
-
-*If the parent of currently focused window contains only a single child*(the window itself), then `split` command changes the orientation of the parent container
-
-IMPORTANT: `split` command does nothing if `enable-normalization-flatten-containers` is turned on.
-Consider using `join-with` if you want to keep `enable-normalization-flatten-containers` enabled
-
-== version
-
+== workspace
 ----
-version
---version
--v
+include::aerospace-workspace.adoc[tags=synopsis]
 ----
-
-Prints the version and commit hash to stdout
+include::aerospace-workspace.adoc[tags=purpose]
+include::aerospace-workspace.adoc[tags=body]
 
 == workspace-back-and-forth
-
 ----
-workspace-back-and-forth [-h|--help]
+include::aerospace-workspace-back-and-forth.adoc[tags=synopsis]
 ----
+include::aerospace-workspace-back-and-forth.adoc[tags=purpose]
+include::aerospace-workspace-back-and-forth.adoc[tags=body]
 
-Switches between currently focused workspace and previously focused workspace back and forth.
+== Query commands
 
-[#workspace]
-== workspace
+Query commands are commands that do not change the state but rather allow the examination of the current state.
 
+- Query commands are *NOT* available in config
+- Query commands are only available in CLI
++
+(because there is no way to consume the stdout of these commands in config)
+
+=== list-apps
 ----
-workspace [-h|--help] (next|prev)
-workspace [-h|--help] [--auto-back-and-forth] <target-workspace-name>
+include::aerospace-list-apps.adoc[tags=synopsis]
 ----
+include::aerospace-list-apps.adoc[tags=purpose]
+include::aerospace-list-apps.adoc[tags=body]
 
-Activates the specified workspace
-
-Workspaces can be switched in alphabetical order
-
-* `workspace next` activates the next alphabetical workspace
-* `workspace prev` activates the previous alphabetical workspace
-
-*OPTIONS*
-
---auto-back-and-forth::
-Automatic 'back-and-forth' when switching to already focused workspace
+=== version
+----
+include::aerospace-version.adoc[tags=synopsis]
+----
+include::aerospace-version.adoc[tags=purpose]
+include::aerospace-version.adoc[tags=body]

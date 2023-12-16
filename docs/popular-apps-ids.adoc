@@ -1,7 +1,7 @@
 = List of popular and built-in applications IDs
-include::docs-attributes.adoc[]
+include::util/site-attributes.adoc[]
 
-include::header.adoc[]
+include::util/header.adoc[]
 
 The list is useful to compose custom xref:guide.adoc#on-window-detected-callback[on-window-detected callback].
 

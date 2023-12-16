@@ -1,0 +1,25 @@
+= aerospace-move-workspace-to-monitor(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-move-workspace-to-monitor
+// tag::purpose[]
+:manpurpose: Moves currently focused workspace to the next or previous monitor
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+move-workspace-to-monitor [-h|--help] (next|prev)
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The command doesn't have effect on workspaces xref:guide.adoc#assign-workspaces-to-monitors[that have monitor assignment]
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

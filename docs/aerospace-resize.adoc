@@ -1,0 +1,36 @@
+= aerospace-resize(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-resize
+// tag::purpose[]
+:manpurpose: Resizes the currently focused window
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+resize [-h|--help] (smart|width|height) [+|-]<number>
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The dimension to resize is chosen by the first argument
+
+* `width` changes width
+* `height` changes height
+* `smart` changes width if the parent has horizontal orientation, and
+it changes height if the parent has vertical orientation
+
+Second argument controls how much the size is changes
+
+* If the `<number>` is prefixed with `+` then the dimension is increased
+* If the `<number>` is prefixed with `-` then the dimension is decreased
+* If the `<number>` is prefixed with neither `+` nor `-` then the command changes the absolute value of the dimension
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

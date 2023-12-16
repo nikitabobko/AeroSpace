@@ -1,0 +1,27 @@
+= aerospace-exec-and-forget(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-exec-and-forget
+// tag::purpose[]
+:manpurpose: Runs /bin/bash -c '<bash-script>'
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+exec-and-forget <bash-script>
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+Runs `/bin/bash -c '<bash-script>'`, and doesn't wait for the command termination.
+Stdout, stderr and exit code are ignored.
+
+For example, you can use this command to launch applications: +
+`exec-and-forget open -n /System/Applications/Utilities/Terminal.app`
+
+* The command is available in config
+* The command is *NOT* available in CLI
+
+// end::body[]
+
+include::util/man-footer.adoc[]
