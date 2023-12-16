@@ -24,6 +24,7 @@ enum CmdKind: String, CaseIterable, Equatable {
     case fullscreen
     case joinWith = "join-with"
     case layout
+    case listApps = "list-apps"
     case mode
     case moveNodeToWorkspace = "move-node-to-workspace"
     case moveThrough = "move-through"
@@ -31,6 +32,7 @@ enum CmdKind: String, CaseIterable, Equatable {
     case reloadConfig = "reload-config"
     case resize
     case split
+    case version
     case workspace
     case workspaceBackAndForth = "workspace-back-and-forth"
 }
@@ -59,6 +61,8 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
             result[kind.rawValue] = SubCommandParser(parseJoinWithCmdArgs)
         case .layout:
             result[kind.rawValue] = SubCommandParser(parseLayoutCmdArgs)
+        case .listApps:
+            result[kind.rawValue] = noArgsSubCommandParser(ListAppsCmdArgs())
         case .mode:
             result[kind.rawValue] = SubCommandParser(parseModeCmdArgs)
         case .moveNodeToWorkspace:
@@ -75,6 +79,8 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
             result[kind.rawValue] = SubCommandParser(parseResizeCmdArgs)
         case .split:
             result[kind.rawValue] = SubCommandParser(parseSplitCmdArgs)
+        case .version:
+            result[kind.rawValue] = noArgsSubCommandParser(VersionCmdArgs())
         case .workspace:
             result[kind.rawValue] = SubCommandParser(parseWorkspaceCmdArgs)
         case .workspaceBackAndForth:

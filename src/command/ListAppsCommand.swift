@@ -1,7 +1,9 @@
-struct ListAppsCommand: QueryCommand {
-    func run() -> String {
+struct ListAppsCommand: Command {
+    let info: CmdStaticInfo = ListAppsCmdArgs.info
+
+    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
-        return apps
+        stdout += apps
             .map { app in
                 let pid = String(app.pid)
                 let appId = app.id ?? "NULL"
@@ -9,6 +11,8 @@ struct ListAppsCommand: QueryCommand {
                 return [pid, appId, name]
             }
             .toPaddingTable(columnSeparator: " | ")
+        stdout += "\n"
+        return true
     }
 }
 

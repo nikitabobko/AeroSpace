@@ -35,31 +35,30 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
     while true {
         _ = try? Socket.wait(for: [socket], timeout: 0, waitForever: true)
         guard let string = (try? socket.readString()) else { return }
-        let (action, error1) = parseCommand(string).toEither().getOrNils() // todo get rid of toEither exit code for help
-        let (query, error2) = parseQueryCommand(string).getOrNils()
+        let (command, error1) = parseCommand(string).toEither().getOrNils() // todo get rid of toEither exit code for help
         guard let isEnabled = await Task(operation: { @MainActor in TrayMenuModel.shared.isEnabled }).result.getOrNil() else {
-            _ = try? socket.write(from: "Unknown failure during isEnabled server state access")
+            _ = try? socket.write(from: "1Unknown failure during isEnabled server state access")
             continue
         }
-        if !isEnabled && !isAllowedToRunWhenDisabled(query, action) {
-            _ = try? socket.write(from: "\(Bundle.appName) server is disabled and doesn't accept commands. " +
+        if !isEnabled && !isAllowedToRunWhenDisabled(command) {
+            _ = try? socket.write(from: "1\(Bundle.appName) server is disabled and doesn't accept commands. " +
                 "You can use 'aerospace enable on' to enable the server")
             continue
         }
-        if let error1, let error2 {
-            _ = try? socket.write(from: error1 + "\n" + error2)
+        if let error1 {
+            _ = try? socket.write(from: "1" + error1 + "\n")
             continue
         }
-        if action?.isExec == true {
-            _ = try? socket.write(from: "exec commands are prohibited in CLI")
+        if command?.isExec == true {
+            _ = try? socket.write(from: "1exec commands are prohibited in CLI")
             continue
         }
-        if let action {
+        if let command {
             let (success, stdout) = await Task { @MainActor in
                 refreshSession {
                     var focused = CommandSubject.focused // todo restore subject from "exec session"
                     var stdout = ""
-                    let success = action.run(&focused, &stdout)
+                    let success = command.run(&focused, &stdout)
                     return (success, stdout)
                 }
             }.result.getOrNil() ?? (false, "Fail to await main thread")
@@ -67,24 +66,15 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             _ = try? socket.write(from: msg)
             continue
         }
-        if let query {
-            await Task { @MainActor in
-                refreshSession {
-                    let result = query.run()
-                    _ = try? socket.write(from: result)
-                }
-            }.result
-            continue
-        }
         error("Unreachable")
     }
 }
 
-private func isAllowedToRunWhenDisabled(_ query: QueryCommand?, _ action: Command?) -> Bool {
-    if let enable = action as? EnableCommand, enable.args.targetState != .off {
+private func isAllowedToRunWhenDisabled(_ command: Command?) -> Bool {
+    if let enable = command as? EnableCommand, enable.args.targetState != .off {
         return true
     }
-    if query is VersionCommand {
+    if command is VersionCommand {
         return true
     }
     return false

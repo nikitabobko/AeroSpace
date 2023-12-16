@@ -16,6 +16,12 @@ struct ReloadConfigCmdArgs: RawCmdArgs, CmdArgs {
 struct WorkspaceBackAndForthCmdArgs: RawCmdArgs, CmdArgs {
     static let parser: CmdParser<Self> = noArgsParser(.workspaceBackAndForth, allowInConfig: true)
 }
+struct ListAppsCmdArgs: RawCmdArgs, CmdArgs {
+    static let parser: CmdParser<Self> = noArgsParser(.listApps, allowInConfig: false)
+}
+struct VersionCmdArgs: RawCmdArgs, CmdArgs {
+    static let parser: CmdParser<Self> = noArgsParser(.version, allowInConfig: false)
+}
 
 private func noArgsParser<T : Copyable>(_ kind: CmdKind, allowInConfig: Bool) -> CmdParser<T> {
     cmdParser(

@@ -30,3 +30,9 @@ extension FileHandle: TextOutputStream {
 }
 
 let cliClientVersionAndHash: String = "\(cliClientVersion) \(gitHash)"
+
+extension String {
+    func trim() -> String {
+        self.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}

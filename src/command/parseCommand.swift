@@ -3,18 +3,6 @@ import TOMLKit
 typealias Parsed<T> = Result<T, String>
 extension String: Error {}
 
-func parseQueryCommand(_ raw: String) -> Parsed<QueryCommand> {
-    if raw.contains("'") || raw.contains("\"") {
-        return .failure("Quotation marks are reserved for future use")
-    } else if raw == "version" || raw == "--version" || raw == "-v" {
-        return .success(VersionCommand())
-    } else if raw == "" {
-        return .failure("Can't parse empty string query command")
-    } else {
-        return .failure("Unrecognized query command '\(raw)'")
-    }
-}
-
 func parseCommand(_ raw: String) -> ParsedCmd<Command> {
     parseCmdArgs(raw).map { $0.toCommand() }
 }
@@ -43,6 +31,8 @@ extension CmdArgs {
             command = JoinWithCommand(args: self as! JoinWithCmdArgs)
         case .layout:
             command = LayoutCommand(args: self as! LayoutCmdArgs)
+        case .listApps:
+            command = ListAppsCommand()
         case .mode:
             command = ModeCommand(args: self as! ModeCmdArgs)
         case .moveNodeToWorkspace:
@@ -57,6 +47,8 @@ extension CmdArgs {
             command = ResizeCommand(args: self as! ResizeCmdArgs)
         case .split:
             command = SplitCommand(args: self as! SplitCmdArgs)
+        case .version:
+            command = VersionCommand()
         case .workspace:
             command = WorkspaceCommand(args: self as! WorkspaceCmdArgs)
         case .workspaceBackAndForth:

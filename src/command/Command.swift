@@ -3,10 +3,6 @@ protocol Command: AeroAny { // todo add exit code and messages
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool
 }
 
-protocol QueryCommand {
-    func run() -> String
-}
-
 extension Command {
     func run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)

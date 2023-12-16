@@ -178,6 +178,34 @@ If several layouts are supplied then finds the first layout that doesn't describ
 
 `tiling` is the only argument that makes the focused floating window tiled.
 
+[#list-apps]
+== list-apps
+
+----
+list-apps [-h|--help]
+----
+
+Prints the list of ordinary applications that appears in the Dock and may have a user interface.
+
+Output format is the table with the following columns:
+
+* Process ID
+* Application ID
+* Application name
+
+Output example:
+
+----
+486   | com.apple.finder            | Finder
+17966 | org.alacritty               | Alacritty
+24780 | com.jetbrains.AppCode       | AppCode
+32541 | com.apple.systempreferences | System Settings
+----
+
+The command is useful to inspect list of applications to compose filter for xref:guide.adoc#on-window-detected-callback[on-window-detected]
+
+You can use `awk` to get values of particular column: `awk -F '|' '{print $2}'`
+
 == mode
 
 ----
@@ -358,6 +386,16 @@ The argument configures orientation of the newly created container.
 
 IMPORTANT: `split` command does nothing if `enable-normalization-flatten-containers` is turned on.
 Consider using `join-with` if you want to keep `enable-normalization-flatten-containers` enabled
+
+== version
+
+----
+version
+--version
+-v
+----
+
+Prints the version and commit hash to stdout
 
 == workspace-back-and-forth
 

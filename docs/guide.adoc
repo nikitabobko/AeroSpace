@@ -320,7 +320,7 @@ a|
 There are several ways to know `app-id`:
 
 * Take a look at precomposed xref:popular-apps-ids.adoc[list of popular application IDs]
-* You can use xref:cli-commands.adoc#list-apps[`aerospace list-apps`] CLI command to get IDs of running applications
+* You can use xref:commands.adoc#list-apps[`aerospace list-apps`] CLI command to get IDs of running applications
 * `mdls -name kMDItemCFBundleIdentifier -r /Applications/App.app`
 
 IMPORTANT: Some windows initialize their title after the window appears.
