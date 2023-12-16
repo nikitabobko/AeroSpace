@@ -1,5 +1,5 @@
 struct FlattenWorkspaceTreeCommand: Command {
-    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
+    func _run(_ subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
         let workspace = subject.workspace
         let windows = workspace.rootTilingContainer.allLeafWindowsRecursive

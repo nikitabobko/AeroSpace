@@ -1,7 +1,7 @@
 struct WorkspaceCommand : Command {
     let args: WorkspaceCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
+    func _run(_ subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
         let workspaceName: String
         switch args.target {

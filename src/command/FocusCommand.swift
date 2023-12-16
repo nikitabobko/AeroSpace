@@ -1,7 +1,7 @@
 struct FocusCommand: Command {
     let args: FocusCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
+    func _run(_ subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
         let window = subject.windowOrNil
         let workspace = subject.workspace

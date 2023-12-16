@@ -1,7 +1,7 @@
 struct MoveWorkspaceToMonitorCommand: Command {
     let args: MoveWorkspaceToMonitorCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
+    func _run(_ subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
         let focusedWorkspace = subject.workspace
         let prevMonitor = focusedWorkspace.monitor

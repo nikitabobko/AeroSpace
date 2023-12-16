@@ -1,7 +1,7 @@
 struct LayoutCommand: Command {
     let args: LayoutCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
+    func _run(_ subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
         guard let window = subject.windowOrNil else { return }
         let targetDescription = args.toggleBetween.first(where: { !window.matchesDescription($0) })

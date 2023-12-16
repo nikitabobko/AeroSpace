@@ -1,7 +1,11 @@
 struct ExecAndWaitCommand: Command {
     let args: ExecAndWaitCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
+    func _run(_ subject: inout CommandSubject) {
+        error("Please don't call _run, use run")
+    }
+
+    func _runWithContinuation(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
         check(Thread.current.isMainThread)
         let process = Process()
         process.executableURL = URL(filePath: "/bin/bash")

@@ -1,7 +1,7 @@
 struct MoveThroughCommand: Command {
     let args: MoveThroughCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command]) {
+    func _run(_ subject: inout CommandSubject) {
         check(Thread.current.isMainThread)
         let direction = args.direction
         guard let currentWindow = subject.windowOrNil else { return }

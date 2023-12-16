@@ -1,5 +1,5 @@
 protocol Command: AeroAny { // todo add exit code and messages
-    func _run(_ subject: inout CommandSubject, _ index: Int, _ commands: [any Command])
+    func _run(_ subject: inout CommandSubject)
 }
 
 protocol QueryCommand {
@@ -30,9 +30,11 @@ extension [Command] {
         check(Thread.current.isMainThread)
         for (index, command) in withIndex {
             if TrayMenuModel.shared.isEnabled || command is EnableCommand {
-                command._run(&subject, index, self)
-                if command is ExecAndWaitCommand { // todo think of something more elegant
+                if let command = command as? ExecAndWaitCommand { // todo think of something more elegant
+                    command._runWithContinuation(&subject, index, self)
                     break
+                } else {
+                    command._run(&subject)
                 }
                 refreshModel()
             }
