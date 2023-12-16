@@ -1,4 +1,5 @@
 struct WorkspaceCommand : Command {
+    let info: CmdStaticInfo = WorkspaceCmdArgs.info
     let args: WorkspaceCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {

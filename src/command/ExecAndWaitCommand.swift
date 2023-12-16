@@ -1,4 +1,5 @@
 struct ExecAndWaitCommand: Command {
+    let info: CmdStaticInfo = ExecAndWaitCmdArgs.info
     let args: ExecAndWaitCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {

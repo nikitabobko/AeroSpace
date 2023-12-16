@@ -2,7 +2,9 @@ private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
     var target: RawWorkspaceTarget?
     var wrapAroundNextPrev: Bool?
 
-    static let info = CmdInfo<Self>(
+    static let parser: CmdParser<Self> = cmdParser(
+        kind: .moveNodeToWorkspace,
+        allowInConfig: true,
         help: """
               USAGE: move-node-to-workspace [-h|--help] [--wrap-around] (next|prev)
                  OR: move-node-to-workspace [-h|--help] <workspace-name>
@@ -21,7 +23,7 @@ private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
 }
 
 struct MoveNodeToWorkspaceCmdArgs: CmdArgs, Equatable {
-    let kind: CmdKind = .moveNodeToWorkspace
+    static let info: CmdStaticInfo = RawMoveNodeToWorkspaceCmdArgs.info
     let target: WorkspaceTarget
 }
 

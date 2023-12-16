@@ -1,4 +1,5 @@
 struct LayoutCommand: Command {
+    let info: CmdStaticInfo = LayoutCmdArgs.info
     let args: LayoutCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {

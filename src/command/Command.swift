@@ -1,4 +1,5 @@
 protocol Command: AeroAny { // todo add exit code and messages
+    var info: CmdStaticInfo { get }
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool
 }
 

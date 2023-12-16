@@ -1,30 +1,26 @@
 struct CloseCmdArgs: RawCmdArgs, CmdArgs {
-    static let info: CmdInfo<Self> = noCmdArgsInfo(.close)
-    let kind: CmdKind = .close
+    static let parser: CmdParser<Self> = noArgsParser(.close, allowInConfig: true)
 }
 struct CloseAllWindowsButCurrentCmdArgs: RawCmdArgs, CmdArgs {
-    static let info: CmdInfo<Self> = noCmdArgsInfo(.closeAllWindowsButCurrent)
-    let kind: CmdKind = .closeAllWindowsButCurrent
+    static let parser: CmdParser<Self> = noArgsParser(.closeAllWindowsButCurrent, allowInConfig: true)
 }
 struct FlattenWorkspaceTreeCmdArgs: RawCmdArgs, CmdArgs {
-    static let info: CmdInfo<Self> = noCmdArgsInfo(.flattenWorkspaceTree)
-    let kind: CmdKind = .flattenWorkspaceTree
+    static let parser: CmdParser<Self> = noArgsParser(.flattenWorkspaceTree, allowInConfig: true)
 }
 struct FullscreenCmdArgs: RawCmdArgs, CmdArgs {
-    static let info: CmdInfo<Self> = noCmdArgsInfo(.fullscreen)
-    let kind: CmdKind = .fullscreen
+    static let parser: CmdParser<Self> = noArgsParser(.fullscreen, allowInConfig: true)
 }
 struct ReloadConfigCmdArgs: RawCmdArgs, CmdArgs {
-    static let info: CmdInfo<Self> = noCmdArgsInfo(.reloadConfig)
-    let kind: CmdKind = .reloadConfig
+    static let parser: CmdParser<Self> = noArgsParser(.reloadConfig, allowInConfig: true)
 }
 struct WorkspaceBackAndForthCmdArgs: RawCmdArgs, CmdArgs {
-    static let info: CmdInfo<Self> = noCmdArgsInfo(.workspaceBackAndForth)
-    let kind: CmdKind = .workspaceBackAndForth
+    static let parser: CmdParser<Self> = noArgsParser(.workspaceBackAndForth, allowInConfig: true)
 }
 
-private func noCmdArgsInfo<T : Copyable>(_ kind: CmdKind) -> CmdInfo<T> {
-    CmdInfo<T>(
+private func noArgsParser<T : Copyable>(_ kind: CmdKind, allowInConfig: Bool) -> CmdParser<T> {
+    cmdParser(
+        kind: kind,
+        allowInConfig: allowInConfig,
         help: """
               USAGE: \(kind) [-h|--help]
 

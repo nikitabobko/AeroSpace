@@ -1,4 +1,5 @@
 struct EnableCommand: Command {
+    let info: CmdStaticInfo = EnableCmdArgs.info
     let args: EnableCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {

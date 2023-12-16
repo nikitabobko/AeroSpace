@@ -1,4 +1,5 @@
 struct SplitCommand: Command {
+    let info: CmdStaticInfo = SplitCmdArgs.info
     let args: SplitCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {

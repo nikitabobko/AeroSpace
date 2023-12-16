@@ -1,4 +1,5 @@
 struct FocusCommand: Command {
+    let info: CmdStaticInfo = FocusCmdArgs.info
     let args: FocusCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {

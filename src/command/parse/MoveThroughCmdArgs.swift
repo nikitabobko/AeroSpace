@@ -1,12 +1,14 @@
 struct MoveThroughCmdArgs: CmdArgs {
-    let kind: CmdKind = .moveThrough
+    static let info: CmdStaticInfo = RawMoveThroughCmdArgs.info
     let direction: CardinalDirection
 }
 
 private struct RawMoveThroughCmdArgs: RawCmdArgs {
     var direction: CardinalDirection?
 
-    static let info = CmdInfo<Self>(
+    static let parser: CmdParser<Self> = cmdParser(
+        kind: .moveThrough,
+        allowInConfig: true,
         help: """
               USAGE: move-through [-h|--help] \(CardinalDirection.unionLiteral)
 

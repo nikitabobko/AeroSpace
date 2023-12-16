@@ -1,5 +1,6 @@
 struct ResizeCmdArgs: CmdArgs, Equatable {
-    let kind: CmdKind = .resize
+    static let info: CmdStaticInfo = RawResizeCmdArgs.info
+
     let dimension: Dimension
     let units: Units
 
@@ -30,7 +31,9 @@ private struct RawResizeCmdArgs: RawCmdArgs {
     var dimension: ResizeCmdArgs.Dimension?
     var units: ResizeCmdArgs.Units?
 
-    static let info = CmdInfo<RawResizeCmdArgs>(
+    static let parser: CmdParser<Self> = cmdParser(
+        kind: .resize,
+        allowInConfig: true,
         help: """
               USAGE: resize [-h|--help] (smart|width|height) [+|-]<number>
 

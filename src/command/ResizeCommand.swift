@@ -1,4 +1,5 @@
 struct ResizeCommand: Command { // todo cover with tests
+    let info: CmdStaticInfo = ResizeCmdArgs.info
     let args: ResizeCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool { // todo support key repeat

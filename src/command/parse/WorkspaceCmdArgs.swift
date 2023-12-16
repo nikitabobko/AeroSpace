@@ -3,14 +3,16 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
     var autoBackAndForth: Bool?
     var wrapAroundNextPrev: Bool?
 
-    static let info = CmdInfo<Self>(
+    static let parser: CmdParser<Self> = cmdParser(
+        kind: .workspace,
+        allowInConfig: true,
         help: """
               USAGE: workspace [-h|--help] [--wrap-around] (next|prev)
                  OR: workspace [-h|--help] [--auto-back-and-forth] <workspace-name>
 
               OPTIONS:
                 -h, --help              Print help
-                --auto-back-and-forth   Automatic 'back-and-forth' when switching to already 
+                --auto-back-and-forth   Automatic 'back-and-forth' when switching to already
                                         focused workspace
                 --wrap-around           Make it possible to jump between first and last workspaces
                                         (alphabetical order) using (next|prev)
@@ -27,7 +29,7 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
 }
 
 struct WorkspaceCmdArgs: CmdArgs, Equatable {
-    let kind: CmdKind = .workspace
+    static let info: CmdStaticInfo = RawWorkspaceCmdArgs.info
     let target: WorkspaceTarget
 }
 

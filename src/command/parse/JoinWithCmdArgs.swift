@@ -1,12 +1,14 @@
 struct JoinWithCmdArgs: CmdArgs {
-    let kind: CmdKind = .joinWith
+    static let info: CmdStaticInfo = RawJoinWithCmdArgs.info
     let direction: CardinalDirection
 }
 
 private struct RawJoinWithCmdArgs: RawCmdArgs {
     var direction: CardinalDirection?
 
-    static let info = CmdInfo<Self>(
+    static let parser: CmdParser<Self> = cmdParser(
+        kind: .joinWith,
+        allowInConfig: true,
         help: """
               USAGE: join-with [-h|--help] \(CardinalDirection.unionLiteral)
 

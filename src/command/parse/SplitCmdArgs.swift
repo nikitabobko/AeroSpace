@@ -1,5 +1,5 @@
 struct SplitCmdArgs: CmdArgs {
-    let kind: CmdKind = .split
+    static let info: CmdStaticInfo = RawSplitCmdArgs.info
     let arg: SplitArg
 
     enum SplitArg: String, CaseIterable {
@@ -10,7 +10,9 @@ struct SplitCmdArgs: CmdArgs {
 private struct RawSplitCmdArgs: RawCmdArgs {
     var arg: SplitCmdArgs.SplitArg?
 
-    static let info = CmdInfo<Self>(
+    static let parser: CmdParser<Self> = cmdParser(
+        kind: .split,
+        allowInConfig: true,
         help: """
               USAGE: split [-h|--help] \(SplitCmdArgs.SplitArg.unionLiteral)
 

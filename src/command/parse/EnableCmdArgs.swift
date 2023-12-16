@@ -1,5 +1,5 @@
 struct EnableCmdArgs: CmdArgs {
-    let kind: CmdKind = .enable
+    static let info: CmdStaticInfo = RawEnableCmdArgs.info
     let targetState: State
     enum State: String, CaseIterable {
         case on, off, toggle
@@ -17,7 +17,9 @@ func parseEnableCmdArgs(_ args: [String]) -> ParsedCmd<EnableCmdArgs> {
 private struct RawEnableCmdArgs: RawCmdArgs {
     var targetState: EnableCmdArgs.State?
 
-    static let info = CmdInfo<Self>(
+    static let parser: CmdParser<Self> = cmdParser(
+        kind: .enable,
+        allowInConfig: true,
         help: """
               USAGE: enable [-h|--help] \(EnableCmdArgs.State.unionLiteral)
 

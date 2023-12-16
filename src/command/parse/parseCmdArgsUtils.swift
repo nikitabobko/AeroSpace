@@ -1,16 +1,40 @@
 protocol RawCmdArgs: Copyable {
     init()
-    static var info: CmdInfo<Self> { get }
+    static var parser: CmdParser<Self> { get }
+}
+
+extension RawCmdArgs {
+    static var info: CmdStaticInfo { Self.parser.info }
 }
 
 protocol CmdArgs {
-    var kind: CmdKind { get }
+    static var info: CmdStaticInfo { get }
 }
 
-struct CmdInfo<T : Copyable> {
-    let help: String
+struct CmdParser<T : Copyable> { // todo rename to CmdParser
+    let info: CmdStaticInfo
     let options: [String: any ArgParserProtocol<T>]
     let arguments: [any ArgParserProtocol<T>]
+}
+
+func cmdParser<T>(
+    kind: CmdKind,
+    allowInConfig: Bool,
+    help: String,
+    options: [String: any ArgParserProtocol<T>],
+    arguments: [any ArgParserProtocol<T>]
+) -> CmdParser<T> {
+    CmdParser(
+        info: CmdStaticInfo(help: help, kind: kind, allowInConfig: allowInConfig),
+        options: options,
+        arguments: arguments
+    )
+}
+
+struct CmdStaticInfo: Equatable {
+    let help: String
+    let kind: CmdKind
+    let allowInConfig: Bool
 }
 
 enum ParsedCmd<T> {
@@ -45,9 +69,9 @@ func parseRawCmdArgs<T : RawCmdArgs>(_ raw: T, _ args: [String]) -> ParsedCmd<T>
         let arg = args.next()
         if arg == "-h" || arg == "--help" {
             return .help(T.info.help)
-        } else if let optionParser: any ArgParserProtocol<T> = T.info.options[arg] {
+        } else if let optionParser: any ArgParserProtocol<T> = T.parser.options[arg] {
             raw = optionParser.transformRaw(raw, arg, &args, &errors)
-        } else if let parser = T.info.arguments.getOrNil(atIndex: argumentIndex) {
+        } else if let parser = T.parser.arguments.getOrNil(atIndex: argumentIndex) {
             raw = parser.transformRaw(raw, arg, &args, &errors)
             argumentIndex += 1
         } else {

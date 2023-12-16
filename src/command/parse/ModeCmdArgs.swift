@@ -1,12 +1,14 @@
 struct ModeCmdArgs: CmdArgs {
-    let kind: CmdKind = .mode
+    static let info: CmdStaticInfo = RawModeCmdArgs.info
     let targetMode: String
 }
 
 private struct RawModeCmdArgs: RawCmdArgs {
     var targetMode: String?
 
-    static let info = CmdInfo<Self>(
+    static let parser: CmdParser<Self> = cmdParser(
+        kind: .mode,
+        allowInConfig: true,
         help: """
               USAGE: mode [-h|--help] <target-mode>
 

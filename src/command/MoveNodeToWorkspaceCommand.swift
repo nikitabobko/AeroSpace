@@ -1,4 +1,5 @@
 struct MoveNodeToWorkspaceCommand: Command {
+    let info: CmdStaticInfo = MoveNodeToWorkspaceCmdArgs.info
     let args: MoveNodeToWorkspaceCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {

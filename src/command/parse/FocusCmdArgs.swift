@@ -1,5 +1,6 @@
 struct FocusCmdArgs: CmdArgs, Equatable {
-    let kind: CmdKind = .focus
+    static let info: CmdStaticInfo = RawFocusCmdArgs.info
+
     let boundaries: Boundaries // todo cover boundaries wrapping with tests
     let boundariesAction: WhenBoundariesCrossed
     let direction: CardinalDirection
@@ -19,7 +20,9 @@ private struct RawFocusCmdArgs: RawCmdArgs {
     var boundariesAction: FocusCmdArgs.WhenBoundariesCrossed?
     var direction: CardinalDirection?
 
-    static let info = CmdInfo<Self>(
+    static let parser: CmdParser<Self> = cmdParser(
+        kind: .focus,
+        allowInConfig: true,
         help: """
               USAGE: focus [<OPTIONS>] (left|down|up|right)
 

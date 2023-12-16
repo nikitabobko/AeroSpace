@@ -1,4 +1,5 @@
 struct MoveWorkspaceToMonitorCommand: Command {
+    let info: CmdStaticInfo = MoveWorkspaceToMonitorCmdArgs.info
     let args: MoveWorkspaceToMonitorCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {

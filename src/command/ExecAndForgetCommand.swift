@@ -1,4 +1,5 @@
 struct ExecAndForgetCommand: Command {
+    let info: CmdStaticInfo = ExecAndForgetCmdArgs.info
     let args: ExecAndForgetCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {

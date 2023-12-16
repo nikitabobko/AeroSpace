@@ -8,8 +8,6 @@ func parseQueryCommand(_ raw: String) -> Parsed<QueryCommand> {
         return .failure("Quotation marks are reserved for future use")
     } else if raw == "version" || raw == "--version" || raw == "-v" {
         return .success(VersionCommand())
-    } else if raw == "list-apps" {
-        return .success(ListAppsCommand())
     } else if raw == "" {
         return .failure("Can't parse empty string query command")
     } else {
@@ -23,46 +21,49 @@ func parseCommand(_ raw: String) -> ParsedCmd<Command> {
 
 extension CmdArgs {
     func toCommand() -> Command {
-        switch self.kind {
+        let command: Command
+        switch Self.info.kind {
         case .close:
-            return CloseCommand()
+            command = CloseCommand()
         case .closeAllWindowsButCurrent:
-            return CloseAllWindowsButCurrentCommand()
+            command = CloseAllWindowsButCurrentCommand()
         case .enable:
-            return EnableCommand(args: self as! EnableCmdArgs)
+            command = EnableCommand(args: self as! EnableCmdArgs)
         case .execAndForget:
-            return ExecAndForgetCommand(args: self as! ExecAndForgetCmdArgs)
+            command = ExecAndForgetCommand(args: self as! ExecAndForgetCmdArgs)
         case .execAndWait:
-            return ExecAndWaitCommand(args: self as! ExecAndWaitCmdArgs)
+            command = ExecAndWaitCommand(args: self as! ExecAndWaitCmdArgs)
         case .flattenWorkspaceTree:
-            return FlattenWorkspaceTreeCommand()
+            command = FlattenWorkspaceTreeCommand()
         case .focus:
-            return FocusCommand(args: self as! FocusCmdArgs)
+            command = FocusCommand(args: self as! FocusCmdArgs)
         case .fullscreen:
-            return FullscreenCommand()
+            command = FullscreenCommand()
         case .joinWith:
-            return JoinWithCommand(args: self as! JoinWithCmdArgs)
+            command = JoinWithCommand(args: self as! JoinWithCmdArgs)
         case .layout:
-            return LayoutCommand(args: self as! LayoutCmdArgs)
+            command = LayoutCommand(args: self as! LayoutCmdArgs)
         case .mode:
-            return ModeCommand(args: self as! ModeCmdArgs)
+            command = ModeCommand(args: self as! ModeCmdArgs)
         case .moveNodeToWorkspace:
-            return MoveNodeToWorkspaceCommand(args: self as! MoveNodeToWorkspaceCmdArgs)
+            command = MoveNodeToWorkspaceCommand(args: self as! MoveNodeToWorkspaceCmdArgs)
         case .moveThrough:
-            return MoveThroughCommand(args: self as! MoveThroughCmdArgs)
+            command = MoveThroughCommand(args: self as! MoveThroughCmdArgs)
         case .moveWorkspaceToMonitor:
-            return MoveWorkspaceToMonitorCommand(args: self as! MoveWorkspaceToMonitorCmdArgs)
+            command = MoveWorkspaceToMonitorCommand(args: self as! MoveWorkspaceToMonitorCmdArgs)
         case .reloadConfig:
-            return ReloadConfigCommand()
+            command = ReloadConfigCommand()
         case .resize:
-            return ResizeCommand(args: self as! ResizeCmdArgs)
+            command = ResizeCommand(args: self as! ResizeCmdArgs)
         case .split:
-            return SplitCommand(args: self as! SplitCmdArgs)
+            command = SplitCommand(args: self as! SplitCmdArgs)
         case .workspace:
-            return WorkspaceCommand(args: self as! WorkspaceCmdArgs)
+            command = WorkspaceCommand(args: self as! WorkspaceCmdArgs)
         case .workspaceBackAndForth:
-            return WorkspaceBackAndForthCommand()
+            command = WorkspaceBackAndForthCommand()
         }
+        check(command.info == Self.info)
+        return command
     }
 }
 

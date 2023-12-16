@@ -1,7 +1,9 @@
 private struct RawMoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
     var monitorTarget: MoveWorkspaceToMonitorCmdArgs.MonitorTarget? // todo introduce --wrap-around flag
 
-    static let info = CmdInfo<Self>(
+    static let parser: CmdParser<Self> = cmdParser(
+        kind: .moveWorkspaceToMonitor,
+        allowInConfig: true,
         help: """
               USAGE: move-workspace-to-monitor [-h|--help] (next|prev)
 
@@ -14,7 +16,8 @@ private struct RawMoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
 }
 
 struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
-    let kind: CmdKind = .moveWorkspaceToMonitor
+    static let info: CmdStaticInfo = RawMoveWorkspaceToMonitorCmdArgs.info
+
     let target: MonitorTarget
     enum MonitorTarget: String, CaseIterable {
         case next, prev

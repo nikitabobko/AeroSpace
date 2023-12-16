@@ -1,4 +1,5 @@
 struct JoinWithCommand: Command {
+    let info: CmdStaticInfo = JoinWithCmdArgs.info
     let args: JoinWithCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {

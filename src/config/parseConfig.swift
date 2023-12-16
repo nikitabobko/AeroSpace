@@ -106,7 +106,7 @@ private let configParser: [String: any ParserProtocol<RawConfig>] = [
 ]
 
 extension ParsedCmd {
-    func toEither() -> Parsed<T> { // todo make private
+    func toEither() -> Parsed<T> { // todo drop
         switch self {
         case .cmd(let a):
             return .success(a)

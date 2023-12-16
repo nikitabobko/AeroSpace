@@ -1,5 +1,5 @@
 struct LayoutCmdArgs: CmdArgs, Equatable {
-    let kind: CmdKind = .layout
+    static let info: CmdStaticInfo = RawLayoutCmdArgs.info
     let toggleBetween: [LayoutDescription]
 
     enum LayoutDescription: String, CaseIterable, Equatable {
@@ -13,7 +13,9 @@ struct LayoutCmdArgs: CmdArgs, Equatable {
 private struct RawLayoutCmdArgs: RawCmdArgs {
     var toggleBetween: [LayoutCmdArgs.LayoutDescription]?
 
-    static let info = CmdInfo<Self>(
+    static let parser: CmdParser<Self> = cmdParser(
+        kind: .layout,
+        allowInConfig: true,
         help: """
               USAGE: layout [-h|--help] \(LayoutCmdArgs.LayoutDescription.unionLiteral)...
 

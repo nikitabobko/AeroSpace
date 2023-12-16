@@ -1,4 +1,5 @@
 struct MoveThroughCommand: Command {
+    let info: CmdStaticInfo = MoveThroughCmdArgs.info
     let args: MoveThroughCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {

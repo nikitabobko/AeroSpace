@@ -1,4 +1,5 @@
 struct ModeCommand: Command {
+    let info: CmdStaticInfo = ModeCmdArgs.info
     let args: ModeCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
