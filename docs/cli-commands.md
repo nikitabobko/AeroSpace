@@ -1,1 +1,1 @@
-Redirect to --> https://nikitabobko.github.io/AeroSpace/cli-commands.html
+Redirect to --> https://nikitabobko.github.io/AeroSpace/commands.html
