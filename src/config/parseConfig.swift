@@ -112,7 +112,7 @@ private extension ParsedCmd where T == Command {
         case .cmd(let a):
             return a.info.allowInConfig
                 ? .success(a)
-                : .failure("Command '\(a.info.kind.rawValue)' doesn't have an effect in config")
+                : .failure("Command '\(a.info.kind.rawValue)' cannot be used in config")
         case .help(let a):
             return .failure(a)
         case .failure(let a):
@@ -182,7 +182,6 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
             .flatMap { $0.commands }
             .contains { $0 is SplitCommand }
         if containsSplitCommand {
-            // todo runtime bug?
             errors += [.semantic(.root, // todo Make 'split' + flatten normalization prettier
                 """
                 The config contains:
@@ -251,7 +250,7 @@ private func parseWorkspaceToMonitorAssignment(_ raw: TOMLValueConvertible, _ ba
 
 private func parseMonitorDescriptions(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [MonitorDescription] {
     if let array = raw.array {
-        return array.withIndex
+        return array.enumerated()
             .map { (index, rawDesc) in parseMonitorDescription(rawDesc, backtrace + .index(index)).getOrNil(appendErrorTo: &errors) }
             .filterNotNil()
     } else {

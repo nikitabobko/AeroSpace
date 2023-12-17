@@ -74,7 +74,7 @@ private extension TilingContainer {
         guard let delta = ((orientation == .h ? width : height) - children.sumOf { $0.getWeight(orientation) })
             .div(children.count) else { return }
         let lastIndex = children.indices.last
-        for (i, child) in children.withIndex {
+        for (i, child) in children.enumerated() {
             child.setWeight(orientation, child.getWeight(orientation) + delta)
             let rawGap = config.gaps.inner.get(orientation).toDouble()
             // Gaps. Consider 4 cases:
@@ -101,7 +101,7 @@ private extension TilingContainer {
 
     func layoutAccordion(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect) {
         guard let mruIndex: Int = mostRecentChild?.ownIndexOrNil else { return }
-        for (index, child) in children.withIndex {
+        for (index, child) in children.enumerated() {
             let lPadding: CGFloat
             let rPadding: CGFloat
             let padding = CGFloat(config.accordionPadding)

@@ -11,6 +11,16 @@ final class ConfigTest: XCTestCase {
         XCTAssertEqual(i3Config.enableNormalizationOppositeOrientationForNestedContainers, false)
     }
 
+    func testQueryCantBeUsedInConfig() {
+        let (_, errors) = parseConfig(
+            """
+            [mode.main.binding]
+            alt-a = 'list-apps'
+            """
+        )
+        XCTAssertTrue(errors.descriptions.singleOrNil()?.contains("cannot be used in config") == true)
+    }
+
     func testDropBindings() {
         let (config, errors) = parseConfig(
             """

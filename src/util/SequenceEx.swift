@@ -59,14 +59,6 @@ extension Sequence {
     func grouped<Group>(by criterion: (_ transforming: Element) -> Group) -> [Group: [Element]] {
         Dictionary(grouping: self, by: criterion)
     }
-
-    var withIndex: [(index: Int, value: Element)] {
-        var index = -1
-        return map {
-            index += 1
-            return (index, $0)
-        }
-    }
 }
 
 extension Sequence where Self.Element: Comparable {

@@ -40,8 +40,8 @@ class MruStack<T: Equatable>: Sequence {
 extension MruStack where T: Hashable {
     var mruIndexMap: [T: Int] {
         var result: [T: Int] = [:]
-        for indexed in self.lazy.withIndex {
-            result[indexed.value] = indexed.index
+        for (index, value) in enumerated() {
+            result[value] = index
         }
         return result
     }

@@ -16,7 +16,7 @@ private let matcherParsers: [String: any ParserProtocol<CallbackMatcher>] = [
 
 func parseOnWindowDetectedArray(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [WindowDetectedCallback] {
     if let array = raw.array {
-        return array.withIndex.map { (index, raw) in parseWindowDetectedCallback(raw, backtrace + .index(index), &errors) }.filterNotNil()
+        return array.enumerated().map { (index, raw) in parseWindowDetectedCallback(raw, backtrace + .index(index), &errors) }.filterNotNil()
     } else {
         errors += [expectedActualTypeError(expected: .array, actual: raw.type, backtrace)]
         return []

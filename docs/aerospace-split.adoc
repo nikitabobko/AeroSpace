@@ -22,7 +22,7 @@ split [-h|--help] (horizontal|vertical|opposite)
 The argument configures orientation of the newly created container.
 `opposite` means opposite orientation compared to the parent container.
 
-*If the parent of currently focused window contains only a single child*(the window itself), then `split` command changes the orientation of the parent container
+*If the parent of currently focused window contains only a single child* (the window itself), then `split` command changes the orientation of the parent container
 
 IMPORTANT: `split` command has no effect if `enable-normalization-flatten-containers` is turned on.
 Consider using `join-with` if you want to keep `enable-normalization-flatten-containers` enabled

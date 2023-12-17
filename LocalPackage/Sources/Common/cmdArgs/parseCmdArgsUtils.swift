@@ -13,7 +13,7 @@ public protocol CmdArgs {
     static var info: CmdStaticInfo { get }
 }
 
-public struct CmdParser<T : Copyable> { // todo rename to CmdParser
+public struct CmdParser<T : Copyable> {
     let info: CmdStaticInfo
     let options: [String: any ArgParserProtocol<T>]
     let arguments: [any ArgParserProtocol<T>]
@@ -122,16 +122,6 @@ public extension [String] {
                 .joined(separator: "\n")
         }
             .joined(separator: "\n")
-    }
-}
-
-public struct Option<T: Copyable> { // todo rename to CmdOption
-    let help: String
-    let parser: any ArgParserProtocol<T>
-
-    init(_ help: String, _ parser: any ArgParserProtocol<T>) {
-        self.help = help
-        self.parser = parser
     }
 }
 

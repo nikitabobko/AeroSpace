@@ -1,6 +1,6 @@
 import Common
 
-protocol Command: AeroAny { // todo add exit code and messages
+protocol Command: AeroAny {
     var info: CmdStaticInfo { get }
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool
 }
@@ -35,7 +35,7 @@ extension [Command] {
     func run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
         var result = true
-        for (index, command) in withIndex {
+        for (index, command) in enumerated() {
             if TrayMenuModel.shared.isEnabled || command is EnableCommand {
                 if let command = command as? ExecAndWaitCommand { // todo think of something more elegant
                     command._runWithContinuation(&subject, index, self)

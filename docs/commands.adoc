@@ -3,8 +3,6 @@ include::util/site-attributes.adoc[]
 
 include::util/header.adoc[]
 
-Commands listed in this file can be used in the config and CLI
-
 == close
 ----
 include::aerospace-close.adoc[tags=synopsis]
@@ -142,10 +140,9 @@ include::aerospace-workspace-back-and-forth.adoc[tags=body]
 
 Query commands are commands that do not change the state but rather allow the examination of the current state.
 
-- Query commands are *NOT* available in config
-- Query commands are only available in CLI
-+
+- Query commands are *NOT* available in config +
 (because there is no way to consume the stdout of these commands in config)
+- Query commands are only available in CLI
 
 === list-apps
 ----
