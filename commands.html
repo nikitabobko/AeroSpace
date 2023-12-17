@@ -527,18 +527,22 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#reload-config">15. reload-config</a></li>
 <li><a href="#resize">16. resize</a></li>
 <li><a href="#split">17. split</a></li>
-<li><a href="#workspace-back-and-forth">18. workspace-back-and-forth</a></li>
-<li><a href="#workspace">19. workspace</a></li>
+<li><a href="#workspace">18. workspace</a></li>
+<li><a href="#workspace-back-and-forth">19. workspace-back-and-forth</a></li>
+<li><a href="#query-commands">20. Query commands</a>
+<ul class="sectlevel2">
+<li><a href="#list-apps">20.1. list-apps</a></li>
+<li><a href="#version">20.2. version</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
-<div class="paragraph">
-<p>Commands listed in this file can be used in the config and CLI</p>
-</div>
-<hr>
+<div class="exampleblock">
+<div class="content">
 <div class="paragraph">
 <p>AeroSpace is an i3-like tiling window manager for macOS</p>
 </div>
@@ -557,9 +561,14 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <p><a href="#">AeroSpace Commands</a></p>
 </li>
 <li>
-<p><a href="cli-commands.html">AeroSpace Additional CLI Commands</a></p>
+<p><a href="config-examples.html">Config Examples</a></p>
+</li>
+<li>
+<p><a href="popular-apps-ids.html">List of popular and built-in applications IDs</a></p>
 </li>
 </ul>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -568,46 +577,28 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre>close</pre>
+<pre class="nowrap">close [-h|--help]</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Closes the focused window</p>
 </div>
 <div class="paragraph">
-<p>Normally, you don’t need to use this command, because macOS has its own
-<code>cmd+w</code> binding. You might want to use the command from CLI for
-scripting purposes</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Available since: 0.6.0-Beta</p>
-</li>
-<li>
-<p>The command doesn&#8217;t have arguments</p>
-</li>
-</ul>
+<p>Normally, you don’t need to use this command, because macOS offers its own <code>cmd + w</code> binding.
+You might want to use the command from CLI for scripting purposes</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="close-all-windows-but-current"><a class="anchor" href="#close-all-windows-but-current"></a><a class="link" href="#close-all-windows-but-current">2. close-all-windows-but-current</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>close-all-windows-but-current</pre>
+<pre class="nowrap">close-all-windows-but-current [-h|--help]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>On the focused workspace, closes all windows but current.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The command doesn&#8217;t have arguments</p>
-</li>
-</ul>
+<p>On the focused workspace, closes all windows but current</p>
 </div>
 </div>
 </div>
@@ -616,182 +607,193 @@ scripting purposes</p>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre>enable (on|off|toggle)</pre>
+<pre class="nowrap">enable [-h|--help] (on|off|toggle)</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The command allows to temporarily disable window management</p>
+<p>Temporarily disable window management</p>
 </div>
 <div class="paragraph">
-<p>When you disable AeroSpace, windows from currently invisible workspaces
-will be placed to the visible area of the screen</p>
+<p>When you disable AeroSpace, windows from currently invisible workspaces will be placed to the visible area of the screen</p>
 </div>
 <div class="paragraph">
 <p>Key events are not intercepted when AeroSpace is disabled</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Available since: 0.5.0-Beta</p>
-</li>
-</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="exec-and-forget"><a class="anchor" href="#exec-and-forget"></a><a class="link" href="#exec-and-forget">4. exec-and-forget</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>exec-and-forget &lt;bash-command&gt;</pre>
+<pre class="nowrap">exec-and-forget &lt;bash-script&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Runs <code>/bin/bash -c '$bash-command'</code>. Stdout, stderr and exit code are
-ignored.</p>
+<p>Runs <code>/bin/bash -c '&lt;bash-script&gt;'</code>, and doesn&#8217;t wait for the command termination.
+Stdout, stderr and exit code are ignored.</p>
 </div>
 <div class="paragraph">
-<p>For example, you can use this command to launch applications:
+<p>For example, you can use this command to launch applications:<br>
 <code>exec-and-forget open -n /System/Applications/Utilities/Terminal.app</code></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The command is available in config</p>
+</li>
+<li>
+<p>The command is <strong>NOT</strong> available in CLI</p>
+</li>
+</ul>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="exec-and-wait"><a class="anchor" href="#exec-and-wait"></a><a class="link" href="#exec-and-wait">5. exec-and-wait</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>exec-and-wait &lt;bash-command&gt;</pre>
+<pre class="nowrap">exec-and-wait &lt;bash-script&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Runs <code>/bin/bash -c '$bash-command'</code>, and waits until the command is
-terminated. Stdout, stderr and exit code are ignored.</p>
+<p>Runs <code>/bin/bash -c '&lt;bash-script&gt;'</code>, and waits for the command termination.
+Stdout, stderr and exit code are ignored.</p>
 </div>
 <div class="paragraph">
-<p>Please prefer <code>exec-and-forget</code>, unless you need to wait for the
-termination.</p>
+<p><strong>Please prefer <code>exec-and-forget</code></strong>, unless you need to wait for the termination.</p>
 </div>
 <div class="paragraph">
-<p>You might want to wait for the termination if you have a list of
-commands, and you want <code>bash_command</code> to exit until you run the next
-command.</p>
+<p>You might want to wait for the termination if you have a list of commands, and you want <code>&lt;bash-script&gt;</code> to exit until you run the next command.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>The command is available in config</p>
+</li>
+<li>
+<p>The command is <strong>NOT</strong> available in CLI</p>
+</li>
+</ul>
+</div>
+<div class="paragraph lead">
+<p><strong>EXAMPLES</strong></p>
 </div>
 <div class="paragraph">
 <p>Suppose that you have this binding in your config:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-n">alt-enter</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;exec-and-wait open -n /System/Applications/Utilities/Terminal.app &amp;&amp; sleep 1&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;layout floating&#39;</span><span class="tok-p">]</span></code></pre>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">alt-enter</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;exec-and-wait open -n /System/Applications/Utilities/Terminal.app &amp;&amp; sleep 1&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;layout floating&#39;</span><span class="tok-p">]</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>It will open up Terminal.app and make it float. <code>sleep 1</code> is still
-required because <code>open</code> returns before the window appears.</p>
+<p>It will open up Terminal.app and make it float.
+<code>sleep 1</code> is still required because <code>open</code> returns before the window appears.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="flatten-workspace-tree"><a class="anchor" href="#flatten-workspace-tree"></a><a class="link" href="#flatten-workspace-tree">6. flatten-workspace-tree</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>flatten-workspace-tree</pre>
+<pre class="nowrap">flatten-workspace-tree [-h|--help]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Flattens <a href="guide.html#tree">the tree</a> of currently focused workspace.</p>
+<p>Flattens the tree of currently focused workspace.</p>
 </div>
 <div class="paragraph">
-<p>The command is useful when you messed up with your layout, and it’s
-easier to &#8220;reset&#8221; it and start again.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The command doesn&#8217;t have arguments</p>
-</li>
-</ul>
+<p>The command is useful when you messed up with your layout, and it&#8217;s easier to "reset" it and start again.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="focus"><a class="anchor" href="#focus"></a><a class="link" href="#focus">7. focus</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>focus (left|down|up|right)</pre>
+<pre class="nowrap">focus [-h|--help] [--boundaries &lt;boundary&gt;]
+      [--boundaries-action &lt;action&gt;] (left|down|up|right)</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Sets focus to the nearest window in <a href="guide.html#tree">the tree</a> in
-the given direction.</p>
+<p>Sets focus to the nearest window in in the given direction.</p>
 </div>
 <div class="paragraph">
-<p><a href="https://i3wm.org/docs/userguide.html#_focusing_moving_containers">Contrary
-to i3</a>, <code>focus</code> command doesn’t have a separate argument to focus
-floating windows.From <code>focus</code> command perspective, floating windows
-are part of <a href="guide.html#tree">the tree</a>.The floating window parent
-container is determined as the smallest tiling container that contains
-the center of the floating window.</p>
+<p><a href="https://i3wm.org/docs/userguide.html#_focusing_moving_containers">Contrary to i3</a>, <code>focus</code> command doesn&#8217;t have a separate argument to focus floating windows.
+From <code>focus</code> command perspective, floating windows are part of <a href="guide.html#tree">the tree</a>.
+The floating window parent container is determined as the smallest tiling container that contains the center of the floating window.</p>
 </div>
 <div class="paragraph">
-<p>This technique eliminates the need for an additional binding for
-floating windows.</p>
+<p>This technique eliminates the need for an additional binding for floating windows.</p>
 </div>
 <div class="paragraph">
-<p><code>focus child|parent</code>
-<a href="https://github.com/nikitabobko/AeroSpace/issues/5">isn’t yet supported</a>
-because the necessaty of this operation is under the question.</p>
+<p><code>focus child|parent</code> <a href="https://github.com/nikitabobko/AeroSpace/issues/5">isn&#8217;t supported</a> because the necessaty of this operation is under the question.</p>
+</div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+<dt class="hdlist1">--boundaries &lt;boundary&gt;</dt>
+<dd>
+<p>Defines focus boundaries.<br>
+<code>&lt;boundary&gt;</code> possible values: <code>(workspace|all-monitors-union-frame)</code>.<br>
+The default is: <code>workspace</code></p>
+</dd>
+<dt class="hdlist1">--boundaries-action &lt;action&gt;</dt>
+<dd>
+<p>Defines the behavior when requested to cross the <code>&lt;boundary&gt;</code>.<br>
+<code>&lt;action&gt;</code> possible values: <code>(stop|wrap-around-the-workspace|wrap-around-all-monitors)</code><br>
+The default is: <code>wrap-around-the-workspace</code></p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="fullscreen"><a class="anchor" href="#fullscreen"></a><a class="link" href="#fullscreen">8. fullscreen</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>fullscreen</pre>
+<pre class="nowrap">fullscreen [-h|--help]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Toggles the fullscreen mode for the currently focused window.</p>
+<p>Toggles the fullscreen mode for the currently focused window</p>
 </div>
 <div class="paragraph">
-<p>Switching to a different window within the same workspace while the
-current focused window is in fullscreen mode results in the fullscreen
-window exiting fullscreen mode.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Available since: 0.3.0-Beta</p>
-</li>
-<li>
-<p>The command doesn&#8217;t have arguments</p>
-</li>
-</ul>
+<p>Switching to a different tiling window within the same workspace while the current focused window is in fullscreen mode results in the fullscreen window exiting fullscreen mode.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="join-with"><a class="anchor" href="#join-with"></a><a class="link" href="#join-with">9. join-with</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>join-with (left|down|up|right)</pre>
+<pre class="nowrap">join-with [-h|--help] (left|down|up|right)</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Puts the currently focused window and the nearest node in the specified
-direction under a common parent container.</p>
+<p>Puts the currently focused window and the nearest node in the specified direction under a common parent container</p>
+</div>
+<div class="paragraph lead">
+<p><strong>EXAMPLES</strong></p>
 </div>
 <div class="paragraph">
 <p>Given this layout</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>h_tiles
+<pre class="nowrap">h_tiles
 ├── window 1
 ├── window 2 (focused)
 └── window 3</pre>
@@ -800,9 +802,9 @@ direction under a common parent container.</p>
 <div class="paragraph">
 <p><code>join-with right</code> will result in the following layout</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>h_tiles
+<pre class="nowrap">h_tiles
 ├── window 1
 └── v_tiles
     ├── window 2 (focused)
@@ -816,12 +818,8 @@ direction under a common parent container.</p>
 <div class="title">Note</div>
 </td>
 <td class="content">
-<code>join-with</code> is a high-level replacement for i3’s
-<a href="https://i3wm.org/docs/userguide.html#_splitting_containers">split
-command</a>.There is an observation that the only reason why you might
-want to split a node is to put several windows under a common
-&#8220;umbrella&#8221; parent.Unlike <code>split</code>, <code>join-with</code> can be used with
-<a href="guide.html#normalization">enable-normalization-flatten-containers</a>
+<code>join-with</code> is a high-level replacement for i3&#8217;s <a href="https://i3wm.org/docs/userguide.html#_splitting_containers">split command</a>.
+There is an observation that the only reason why you might want to split a node is to put several windows under a common "umbrella" parent.Unlike <code>split</code>, <code>join-with</code> can be used with <a href="guide.html#normalization"><strong>enable-normalization-flatten-containers</strong></a>
 </td>
 </tr>
 </table>
@@ -831,43 +829,44 @@ want to split a node is to put several windows under a common
 <div class="sect1">
 <h2 id="layout"><a class="anchor" href="#layout"></a><a class="link" href="#layout">10. layout</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>layout (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...</pre>
+<pre class="nowrap">layout [-h|--help] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Changes layout of the focused window to the given layout.</p>
+<p>Changes layout of the focused window to the given layout</p>
 </div>
 <div class="paragraph">
-<p>If several layouts are supplied then finds the first layout that doesn’t
-describe the currently active layout, and applies the found layout.</p>
+<p>If several arguments are supplied then finds the first argument that doesn&#8217;t describe the currently active layout, and applies the found layout.</p>
 </div>
 <div class="paragraph">
-<p><code>tiling</code> is the only argument that makes the focused floating window
-tiled.</p>
+<p><code><strong>tiling</strong></code> is the only argument that makes the focused floating window tiled.</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="mode"><a class="anchor" href="#mode"></a><a class="link" href="#mode">11. mode</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>mode &lt;target-mode&gt;</pre>
+<pre class="nowrap">mode [-h|--help] &lt;binding-mode&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Activates the specified <a href="guide.html#binding-modes">binding mode</a></p>
+<p>Activates the specified binding modes</p>
+</div>
+<div class="paragraph">
+<p>See <a href="guide.html#binding-modes">the guide</a> for documentation about binding modes</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="move-node-to-workspace"><a class="anchor" href="#move-node-to-workspace"></a><a class="link" href="#move-node-to-workspace">12. move-node-to-workspace</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>move-node-to-workspace &lt;target-workspace-name&gt;</pre>
+<pre class="nowrap">move-node-to-workspace [-h|--help] &lt;target-workspace-name&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -878,14 +877,16 @@ tiled.</p>
 <div class="sect1">
 <h2 id="move-through"><a class="anchor" href="#move-through"></a><a class="link" href="#move-through">13. move-through</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>move-through (left|down|up|right) [floating_pixel]</pre>
+<pre class="nowrap">move-through [-h|--help] (left|down|up|right) [floating_pixel]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Moves the window in the given direction.The optional <code>floating_pixel</code>
-argument specifies how far the window should be moved if it is floating.
+<p>Moves the window in the given direction</p>
+</div>
+<div class="paragraph">
+<p>The optional <code>floating_pixel</code> argument specifies how far the window should be moved if it is floating.
 The default is 50 pixels</p>
 </div>
 <div class="admonitionblock note">
@@ -895,43 +896,41 @@ The default is 50 pixels</p>
 <div class="title">Note</div>
 </td>
 <td class="content">
-This command is an analog of <a href="https://i3wm.org/docs/userguide.html#move_direction">i3’s move command</a>
+This command is an analog of <a href="https://i3wm.org/docs/userguide.html#move_direction">i3&#8217;s move command</a>
 </td>
 </tr>
 </table>
 </div>
-<div class="paragraph">
-<p><strong>Example 1</strong></p>
+<div class="paragraph lead">
+<p><strong>EXAMPLES</strong></p>
 </div>
-<div class="paragraph">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
 <p>Given this layout</p>
-</div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>h_tiles
+<pre class="nowrap">h_tiles
 ├── window 1 (focused)
 └── window 2</pre>
 </div>
 </div>
 <div class="paragraph">
-<p><code>move-through right</code> will result in the following layout</p>
+<p><code><strong>move-through right</strong></code> will result in the following layout</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>h_tiles
+<pre class="nowrap">h_tiles
 ├── window 2
 └── window 1 (focused)</pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>Example 2</strong></p>
-</div>
-<div class="paragraph">
+</li>
+<li>
 <p>Given this layout</p>
-</div>
 <div class="listingblock">
 <div class="content">
-<pre>h_tiles
+<pre class="nowrap">h_tiles
 ├── window 1
 ├── window 2 (focused)
 └── v_tiles
@@ -940,11 +939,11 @@ This command is an analog of <a href="https://i3wm.org/docs/userguide.html#move_
 </div>
 </div>
 <div class="paragraph">
-<p><code>move-through right</code> will result in the following layout</p>
+<p><code><strong>move-through right</strong></code> will result in the following layout</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>h_tiles
+<pre class="nowrap">h_tiles
 ├── window 1
 └── v_tiles
     ├── window 3
@@ -952,15 +951,12 @@ This command is an analog of <a href="https://i3wm.org/docs/userguide.html#move_
     └── window 4</pre>
 </div>
 </div>
-<div class="paragraph">
-<p><strong>Example 3</strong></p>
-</div>
-<div class="paragraph">
+</li>
+<li>
 <p>Given this layout</p>
-</div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>h_tiles
+<pre class="nowrap">h_tiles
 ├── window 1
 └── v_tiles
     ├── window 3
@@ -969,11 +965,11 @@ This command is an analog of <a href="https://i3wm.org/docs/userguide.html#move_
 </div>
 </div>
 <div class="paragraph">
-<p><code>move-through left</code> will result in the following layout</p>
+<p><code><strong>move-through left</strong></code> will result in the following layout</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>h_tiles
+<pre class="nowrap">h_tiles
 ├── window 1
 ├── window 2 (focused)
 └── v_tiles
@@ -981,30 +977,29 @@ This command is an analog of <a href="https://i3wm.org/docs/userguide.html#move_
     └── window 4</pre>
 </div>
 </div>
-<div class="paragraph">
+</li>
+<li>
 <p><strong>Implicit container example</strong></p>
-</div>
 <div class="paragraph">
-<p>In some cases, <code>move-through</code> needs to implicitly create a container
-to fullfill your command.</p>
+<p>In some cases, <code><strong>move-through</strong></code> needs to implicitly create a container to fulfill your command.</p>
 </div>
 <div class="paragraph">
 <p>Given this layout</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>h_tiles
+<pre class="nowrap">h_tiles
 ├── window 1
 ├── window 2 (focused)
 └── window 3</pre>
 </div>
 </div>
 <div class="paragraph">
-<p><code>move-through up</code> will result in the following layout</p>
+<p><code><strong>move-through up</strong></code> will result in the following layout</p>
 </div>
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>v_tiles
+<pre class="nowrap">v_tiles
 ├── window 2 (focused)
 └── h_tiles
     ├── window 1
@@ -1014,14 +1009,17 @@ to fullfill your command.</p>
 <div class="paragraph">
 <p><code>v_tiles</code> is an implicitly created container.</p>
 </div>
+</li>
+</ol>
+</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="move-workspace-to-monitor"><a class="anchor" href="#move-workspace-to-monitor"></a><a class="link" href="#move-workspace-to-monitor">14. move-workspace-to-monitor</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>move-workspace-to-monitor (next|prev)</pre>
+<pre class="nowrap">move-workspace-to-monitor [-h|--help] (next|prev)</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1030,45 +1028,34 @@ to fullfill your command.</p>
 <div class="paragraph">
 <p>The command doesn&#8217;t have effect on workspaces <a href="guide.html#assign-workspaces-to-monitors">that have monitor assignment</a></p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Deprecated name: <code>move-workspace-to-display</code></p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="reload-config"><a class="anchor" href="#reload-config"></a><a class="link" href="#reload-config">15. reload-config</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>reload-config</pre>
+<pre class="nowrap">reload-config [-h|--help]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Reloads currently active config.</p>
+<p>Reloads currently active config</p>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>The command doesn&#8217;t have arguments</p>
-</li>
-</ul>
+<div class="paragraph">
+<p>Reloading the config changes active binding mode to "main"</p>
 </div>
 </div>
 </div>
 <div class="sect1">
 <h2 id="resize"><a class="anchor" href="#resize"></a><a class="link" href="#resize">16. resize</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>resize (smart|width|height) [+|-]number</pre>
+<pre class="nowrap">resize [-h|--help] (smart|width|height) [+|-]&lt;number&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Resizes the currently active window</p>
+<p>Resizes the currently focused window</p>
 </div>
 <div class="paragraph">
 <p>The dimension to resize is chosen by the first argument</p>
@@ -1093,16 +1080,13 @@ it changes height if the parent has vertical orientation</p>
 <div class="ulist">
 <ul>
 <li>
-<p>If the <code>number</code> is prefixed with <code>+</code> then the dimension is
-increased</p>
+<p>If the <code>&lt;number&gt;</code> is prefixed with <code>+</code> then the dimension is increased</p>
 </li>
 <li>
-<p>If the <code>number</code> is prefixed with <code>-</code> then the dimension is
-decreased</p>
+<p>If the <code>&lt;number&gt;</code> is prefixed with <code>-</code> then the dimension is decreased</p>
 </li>
 <li>
-<p>If the <code>number</code> is prefixed with neither <code>+</code> nor <code>-</code> then the
-command changes the absolute value of the dimension</p>
+<p>If the <code>&lt;number&gt;</code> is prefixed with neither <code>+</code> nor <code>-</code> then the command changes the absolute value of the dimension</p>
 </li>
 </ul>
 </div>
@@ -1111,14 +1095,13 @@ command changes the absolute value of the dimension</p>
 <div class="sect1">
 <h2 id="split"><a class="anchor" href="#split"></a><a class="link" href="#split">17. split</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>split (horizontal|vertical|opposite)</pre>
+<pre class="nowrap">split [-h|--help] (horizontal|vertical|opposite)</pre>
 </div>
 </div>
 <div class="paragraph">
-<p><strong>If the parent of currently focused window contains more than one
-child</strong>, then the command</p>
+<p><strong>If the parent of currently focused window contains more than one child</strong>, then the command</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1129,20 +1112,16 @@ child</strong>, then the command</p>
 <p>Replaces currently focused window with the container</p>
 </li>
 <li>
-<p>Puts the currently focused window into the container as its the only
-child</p>
+<p>Puts the currently focused window into the container as its the only child</p>
 </li>
 </ol>
 </div>
 <div class="paragraph">
 <p>The argument configures orientation of the newly created container.
-<code>opposite</code> means opposite orientation compared to the parent
-container.</p>
+<code>opposite</code> means opposite orientation compared to the parent container.</p>
 </div>
 <div class="paragraph">
-<p><strong>If the parent of currently focused window contains only a single child</strong>
-(the window itself), then <code>split</code> command changes the orientation of
-the parent container</p>
+<p><strong>If the parent of currently focused window contains only a single child</strong> (the window itself), then <code>split</code> command changes the orientation of the parent container</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -1151,59 +1130,147 @@ the parent container</p>
 <div class="title">Important</div>
 </td>
 <td class="content">
-<code>split</code> command does nothing if <code>enable-normalization-flatten-containers</code> is turned on.
+<code>split</code> command has no effect if <code>enable-normalization-flatten-containers</code> is turned on.
 Consider using <code>join-with</code> if you want to keep <code>enable-normalization-flatten-containers</code> enabled
 </td>
 </tr>
 </table>
 </div>
-<div class="ulist">
-<ul>
-<li>
-<p>Available since: 0.3.0-Beta</p>
-</li>
-</ul>
-</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="workspace-back-and-forth"><a class="anchor" href="#workspace-back-and-forth"></a><a class="link" href="#workspace-back-and-forth">18. workspace-back-and-forth</a></h2>
+<h2 id="workspace"><a class="anchor" href="#workspace"></a><a class="link" href="#workspace">18. workspace</a></h2>
 <div class="sectionbody">
-<div class="literalblock">
+<div class="listingblock">
 <div class="content">
-<pre>workspace-back-and-forth</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Switches between currently focused workspace and previously focused
-workspace back and forth.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The command doesn&#8217;t have arguments</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="workspace"><a class="anchor" href="#workspace"></a><a class="link" href="#workspace">19. workspace</a></h2>
-<div class="sectionbody">
-<div class="literalblock">
-<div class="content">
-<pre>workspace &lt;target-workspace-name&gt;</pre>
+<pre class="nowrap">workspace [-h|--help] (next|prev)
+workspace [-h|--help] [--auto-back-and-forth] &lt;target-workspace-name&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Activates the specified workspace</p>
+</div>
+<div class="paragraph">
+<p>Workspaces can be switched in alphabetical order</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code><strong>workspace next</strong></code> activates the next alphabetical workspace</p>
+</li>
+<li>
+<p><code><strong>workspace prev</strong></code> activates the previous alphabetical workspace</p>
+</li>
+</ul>
+</div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+<dt class="hdlist1">--auto-back-and-forth</dt>
+<dd>
+<p>Automatic 'back-and-forth' when switching to already focused workspace</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="workspace-back-and-forth"><a class="anchor" href="#workspace-back-and-forth"></a><a class="link" href="#workspace-back-and-forth">19. workspace-back-and-forth</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">workspace-back-and-forth [-h|--help]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Switches between currently focused workspace and previously focused workspace back and forth</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="query-commands"><a class="anchor" href="#query-commands"></a><a class="link" href="#query-commands">20. Query commands</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Query commands are commands that do not change the state but rather allow the examination of the current state.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Query commands are <strong>NOT</strong> available in config<br>
+(because there is no way to consume the stdout of these commands in config)</p>
+</li>
+<li>
+<p>Query commands are only available in CLI</p>
+</li>
+</ul>
+</div>
+<div class="sect2">
+<h3 id="list-apps"><a class="anchor" href="#list-apps"></a><a class="link" href="#list-apps">20.1. list-apps</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">list-apps [-h|--help]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prints the list of ordinary applications that appears in the Dock and may have a user interface</p>
+</div>
+<div class="paragraph">
+<p>Output format is the table with the following columns:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Process ID</p>
+</li>
+<li>
+<p>Application ID</p>
+</li>
+<li>
+<p>Application name</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Output example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">486   | com.apple.finder            | Finder
+17966 | org.alacritty               | Alacritty
+24780 | com.jetbrains.AppCode       | AppCode
+32541 | com.apple.systempreferences | System Settings</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The command is useful to inspect list of applications to compose filter for <a href="guide.html#on-window-detected-callback">on-window-detected</a></p>
+</div>
+<div class="paragraph">
+<p>You can use <code>awk</code> to get values of particular column: <code>awk -F '|' '{print $2}'</code></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="version"><a class="anchor" href="#version"></a><a class="link" href="#version">20.2. version</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">version [-h|--help]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prints the version and commit hash of AeroSpace</p>
+</div>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-12-15 21:39:58 +0100
+Last updated 2023-12-17 21:29:19 +0100
 </div>
 </div>
 </body>

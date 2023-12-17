@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
-<title>Config examples</title>
+<title>Config Examples</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /*! Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
@@ -506,7 +506,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </head>
 <body class="article toc2 toc-left">
 <div id="header">
-<h1>Config examples</h1>
+<h1>Config Examples</h1>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -518,6 +518,8 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
+<div class="exampleblock">
+<div class="content">
 <div class="paragraph">
 <p>AeroSpace is an i3-like tiling window manager for macOS</p>
 </div>
@@ -536,9 +538,14 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <p><a href="commands.html">AeroSpace Commands</a></p>
 </li>
 <li>
-<p><a href="cli-commands.html">AeroSpace Additional CLI Commands</a></p>
+<p><a href="#">Config Examples</a></p>
+</li>
+<li>
+<p><a href="popular-apps-ids.html">List of popular and built-in applications IDs</a></p>
 </li>
 </ul>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -550,7 +557,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="shell"><span></span>cp<span class="tok-w"> </span>/Applications/AeroSpace.app/Contents/Resources/default-config.toml<span class="tok-w"> </span>~/.aerospace.toml</code></pre>
+<pre class="pygments highlight nowrap"><code data-lang="shell"><span></span>cp<span class="tok-w"> </span>/Applications/AeroSpace.app/Contents/Resources/default-config.toml<span class="tok-w"> </span>~/.aerospace.toml</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -558,7 +565,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-c1"># Place a copy of this config to ~/.aerospace.toml</span>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Place a copy of this config to ~/.aerospace.toml</span>
 <span class="tok-c1"># After that, you can edit ~/.aerospace.toml to your liking</span>
 
 <span class="tok-c1"># Feel free to omit keys that you don&#39;t use in your config.</span>
@@ -594,7 +601,6 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-c1">#               tall monitor (anything higher than wide) gets vertical orientation</span>
 <span class="tok-n">default-root-container-orientation</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;auto&#39;</span>
 
-<span class="tok-c1"># Available since: 0.6.0-Beta</span>
 <span class="tok-n">gaps</span><span class="tok-p">.</span><span class="tok-n">inner</span><span class="tok-p">.</span><span class="tok-n">horizontal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span>
 <span class="tok-n">gaps</span><span class="tok-p">.</span><span class="tok-n">inner</span><span class="tok-p">.</span><span class="tok-n">vertical</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">   </span><span class="tok-mi">0</span>
 <span class="tok-n">gaps</span><span class="tok-p">.</span><span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">left</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">       </span><span class="tok-mi">0</span>
@@ -742,7 +748,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-c1">#s = [&#39;layout sticky tiling&#39;, &#39;mode main&#39;] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2</span>
 <span class="tok-n">f</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;layout floating tiling&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;mode main&#39;</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-c1"># Toggle between floating and tiling layout</span>
 <span class="tok-n">backspace</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;close-all-windows-but-current&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;mode main&#39;</span><span class="tok-p">]</span>
-<span class="tok-n">esc</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;mode main&#39;</span>
+<span class="tok-n">esc</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;reload-config&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;mode main&#39;</span><span class="tok-p">]</span>
 
 <span class="tok-c1"># &#39;join&#39; binding mode declaration</span>
 <span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes</span>
@@ -751,7 +757,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-n">alt-shift-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;join-with down&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;mode main&#39;</span><span class="tok-p">]</span>
 <span class="tok-n">alt-shift-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;join-with up&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;mode main&#39;</span><span class="tok-p">]</span>
 <span class="tok-n">alt-shift-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;join-with right&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;mode main&#39;</span><span class="tok-p">]</span>
-<span class="tok-n">esc</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;reload-config&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;mode main&#39;</span><span class="tok-p">]</span></code></pre>
+<span class="tok-n">esc</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;mode main&#39;</span></code></pre>
 </div>
 </div>
 </div>
@@ -764,7 +770,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-c1"># Reference: https://github.com/i3/i3/blob/next/etc/config</span>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Reference: https://github.com/i3/i3/blob/next/etc/config</span>
 
 <span class="tok-n">enable-normalization-flatten-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
 <span class="tok-n">enable-normalization-opposite-orientation-for-nested-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
@@ -794,7 +800,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-n">alt-shift-space</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;layout floating tiling&#39;</span><span class="tok-w"> </span><span class="tok-c1"># &#39;floating toggle&#39; in i3</span>
 
 <span class="tok-c1"># Not supported, because this command is redundant in AeroSpace mental model.</span>
-<span class="tok-c1"># See: https://github.com/nikitabobko/AeroSpace/blob/main/guide.md#floating-windows</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide.html#floating-windows</span>
 <span class="tok-c1">#alt-space = &#39;focus toggle_tiling_floating&#39;</span>
 
 <span class="tok-c1"># `focus parent`/`focus child` are not yet supported, and it&#39;s not clear whether they</span>
@@ -841,7 +847,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-12-15 21:39:58 +0100
+Last updated 2023-12-17 21:29:19 +0100
 </div>
 </div>
 </body>

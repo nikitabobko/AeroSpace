@@ -514,6 +514,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <ul class="sectlevel2">
 <li><a href="#binding-modes">1.1. Binding modes</a></li>
 <li><a href="#commands">1.2. Commands</a></li>
+<li><a href="#default-bindings">1.3. Default bindings</a></li>
 </ul>
 </li>
 <li><a href="#tree">2. Tree</a>
@@ -535,13 +536,20 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#assign-workspaces-to-monitors">5.1. Assign workspaces to monitors</a></li>
 </ul>
 </li>
-<li><a href="#caveats">6. Caveats</a></li>
+<li><a href="#caveats">6. Caveats</a>
+<ul class="sectlevel2">
+<li><a href="#unwanted-animations">6.1. Unwanted animations</a></li>
+<li><a href="#dialog-heuristics">6.2. Dialog heuristics</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
 <div id="content">
 <div id="preamble">
 <div class="sectionbody">
+<div class="exampleblock">
+<div class="content">
 <div class="paragraph">
 <p>AeroSpace is an i3-like tiling window manager for macOS</p>
 </div>
@@ -560,9 +568,14 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <p><a href="commands.html">AeroSpace Commands</a></p>
 </li>
 <li>
-<p><a href="cli-commands.html">AeroSpace Additional CLI Commands</a></p>
+<p><a href="config-examples.html">Config Examples</a></p>
+</li>
+<li>
+<p><a href="popular-apps-ids.html">List of popular and built-in applications IDs</a></p>
 </li>
 </ul>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -612,7 +625,7 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-p">[</span><span class="tok-n">mode</span><span class="tok-p">.</span><span class="tok-n">main</span><span class="tok-p">.</span><span class="tok-n">binding</span><span class="tok-p">]</span><span class="tok-w">        </span><span class="tok-c1"># Declare &#39;main&#39; binding mode</span>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-p">[</span><span class="tok-n">mode</span><span class="tok-p">.</span><span class="tok-n">main</span><span class="tok-p">.</span><span class="tok-n">binding</span><span class="tok-p">]</span><span class="tok-w">        </span><span class="tok-c1"># Declare &#39;main&#39; binding mode</span>
 <span class="tok-n">alt-r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;mode resize&#39;</span><span class="tok-w">      </span><span class="tok-c1"># 1. Define a binding to switch to &#39;resize&#39; mode</span>
 
 <span class="tok-p">[</span><span class="tok-n">mode</span><span class="tok-p">.</span><span class="tok-n">resize</span><span class="tok-p">.</span><span class="tok-n">binding</span><span class="tok-p">]</span><span class="tok-w">      </span><span class="tok-c1"># 2. Declare &#39;resize&#39; binding mode</span>
@@ -624,8 +637,51 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <div class="sect2">
 <h3 id="commands"><a class="anchor" href="#commands"></a><a class="link" href="#commands">1.2. Commands</a></h3>
 <div class="paragraph">
-<p>AeroSpace is controlled by commands.
-For more info see <a href="commands.html">the list of available commands</a>.</p>
+<p>Commands is the thing that you use to manipulate AeroSpace and query its state.</p>
+</div>
+<div class="paragraph">
+<p>There are two ways on how you can use commands:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Bind keys to run AeroSpace commands. Example:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[mode.main.binding]</span>
+<span class="tok-n">alt-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace 1&#39;</span><span class="tok-w"> </span><span class="tok-c1"># Bind alt-1 key to switch to workspace 1</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Run commands in CLI. Open up a Terminal.app and type:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="bash"><span></span>aerospace<span class="tok-w"> </span>workspace<span class="tok-w"> </span><span class="tok-m">1</span></code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>For the list of available commands see: <a href="commands.html">commands.html</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="default-bindings"><a class="anchor" href="#default-bindings"></a><a class="link" href="#default-bindings">1.3. Default bindings</a></h3>
+<div class="paragraph">
+<p>AeroSpace comes with the default bindings. See <code>mode.main.binding</code> section in <a href="config-examples.html#default-config">the default config</a>.</p>
+</div>
+<div class="paragraph">
+<p>After specifying at least one binding in your config, all the default AeroSpace bindings are replaced and discarded.</p>
+</div>
+<div class="paragraph">
+<p>Alternatively, if you use another software to manage your global keyboard bindings, you can dump out all the AeroSpace bindings using the following TOML syntax:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">mode</span><span class="tok-p">.</span><span class="tok-n">main</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">{}</span></code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -806,7 +862,7 @@ Configured by <code>enable-normalization-opposite-orientation-for-nested-contain
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>h_tiles (root node)
+<pre class="nowrap">h_tiles (root node)
 └── v_tiles
     └── window 1</pre>
 </div>
@@ -816,7 +872,7 @@ Configured by <code>enable-normalization-opposite-orientation-for-nested-contain
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>v_tiles (new root node)
+<pre class="nowrap">v_tiles (new root node)
 └── window 1</pre>
 </div>
 </div>
@@ -828,7 +884,7 @@ Configured by <code>enable-normalization-opposite-orientation-for-nested-contain
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>h_tiles
+<pre class="nowrap">h_tiles
 ├── window 1
 └── h_tiles
     ├── window 2
@@ -840,7 +896,7 @@ Configured by <code>enable-normalization-opposite-orientation-for-nested-contain
 </div>
 <div class="listingblock">
 <div class="content">
-<pre>h_tiles
+<pre class="nowrap">h_tiles
 ├── window 1
 └── v_tiles
     ├── window 2
@@ -855,7 +911,7 @@ Configured by <code>enable-normalization-opposite-orientation-for-nested-contain
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-n">enable-normalization-flatten-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">enable-normalization-flatten-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
 <span class="tok-n">enable-normalization-opposite-orientation-for-nested-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span></code></pre>
 </div>
 </div>
@@ -908,7 +964,7 @@ The floating window parent container is determined as the smallest tiling contai
 <div class="paragraph">
 <p>Since Spaces are so hard to deal with, AeroSpace reimplements Spaces and calls them "Workspaces".
 The idea is that if the workspace isn’t active then all of its windows are placed outside the visible area of the screen, in the bottom right corner.
-Once you switch back to the workspace, (e.g. by the means of <a href="commands.html#workspace">workspace</a> command, or <code>cmd</code>+<code>tab</code>) windows are placed back to the visible area of the screen.</p>
+Once you switch back to the workspace, (e.g. by the means of <a href="commands.html#workspace">workspace</a> command, or <code>cmd + tab</code>) windows are placed back to the visible area of the screen.</p>
 </div>
 <div class="paragraph">
 <p>When you quit the AeroSpace or when the AeroSpace is about to crash, AeroSpace will place all windows back to the visible area of the screen.</p>
@@ -990,13 +1046,6 @@ It works equally good whether this option is enabled or disabled.</p>
 <div class="sect1">
 <h2 id="on-window-detected-callback"><a class="anchor" href="#on-window-detected-callback"></a><a class="link" href="#on-window-detected-callback">4. &#8216;on-window-detected&#8217; callback</a></h2>
 <div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>Available since: 0.6.0-Beta</p>
-</li>
-</ul>
-</div>
 <div class="paragraph">
 <p>You can use <code>on-window-detected</code> callback to run commands every time a new window is detected.</p>
 </div>
@@ -1005,17 +1054,13 @@ It works equally good whether this option is enabled or disabled.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;com.apple.systempreferences&#39;</span><span class="tok-w">     </span><span class="tok-c1"># Application ID exact match</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-name-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;settings&#39;</span><span class="tok-w">      </span><span class="tok-c1"># Case insensetive regex substring</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">window-title-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;substring&#39;</span><span class="tok-w"> </span><span class="tok-c1"># Case insensetive regex substring</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">during-aerospace-startup</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">true</span><span class="tok-w">            </span><span class="tok-c1"># Run the callback only if the window detected</span>
-<span class="tok-w">                                              </span><span class="tok-c1">#   during AeroSpace startup</span>
-<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">true</span><span class="tok-w">                </span><span class="tok-c1"># Check further callbacks.</span>
-<span class="tok-w">                                              </span><span class="tok-c1">#   If not specified, the default value is false</span>
-
-<span class="tok-c1"># The callback itself</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;layout floating&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace S&#39;</span><span class="tok-p">]</span></code></pre>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;com.apple.systempreferences&#39;</span><span class="tok-w">              </span><span class="tok-c1"># Application ID exact match</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-name-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;settings&#39;</span><span class="tok-w">               </span><span class="tok-c1"># Case insensetive regex substring</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">window-title-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;substring&#39;</span><span class="tok-w">          </span><span class="tok-c1"># Case insensetive regex substring</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">during-aerospace-startup</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">true</span><span class="tok-w">                     </span><span class="tok-c1"># Run the callback only if the window detected during AeroSpace startup</span>
+<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">true</span><span class="tok-w">                         </span><span class="tok-c1"># Check further callbacks. If not specified, the default value is false</span>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;layout floating&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace S&#39;</span><span class="tok-p">]</span><span class="tok-w">  </span><span class="tok-c1"># The callback itself</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1097,7 +1142,7 @@ Please post your use cases to <a href="https://github.com/nikitabobko/AeroSpace/
 <p>Take a look at precomposed <a href="popular-apps-ids.html">list of popular application IDs</a></p>
 </li>
 <li>
-<p>You can use <a href="cli-commands.html#list-apps"><code>aerospace list-apps</code></a> CLI command to get IDs of running applications</p>
+<p>You can use <a href="commands.html#list-apps"><code>aerospace list-apps</code></a> CLI command to get IDs of running applications</p>
 </li>
 <li>
 <p><code>mdls -name kMDItemCFBundleIdentifier -r /Applications/App.app</code></p>
@@ -1126,7 +1171,7 @@ Some windows initialize their title after the window appears.
 <p>Assign apps on particular workspaces</p>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
 <span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;org.alacritty&#39;</span>
 <span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace T&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics T - Terminal</span>
 
@@ -1144,18 +1189,8 @@ Some windows initialize their title after the window appears.
 <p>Make all windows float by default</p>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
 <span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;layout floating&#39;</span></code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Float &#8216;System Settings&#8217; app</p>
-<div class="listingblock">
-<div class="content">
-<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;com.apple.systempreferences&#39;</span>
 <span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;layout floating&#39;</span></code></pre>
 </div>
 </div>
@@ -1235,27 +1270,19 @@ When you switch to an empty workspace, AeroSpace puts the workspace on an assign
 </div>
 <div class="sect2">
 <h3 id="assign-workspaces-to-monitors"><a class="anchor" href="#assign-workspaces-to-monitors"></a><a class="link" href="#assign-workspaces-to-monitors">5.1. Assign workspaces to monitors</a></h3>
-<div class="ulist">
-<ul>
-<li>
-<p>Available since: 0.5.0-Beta</p>
-</li>
-</ul>
-</div>
 <div class="paragraph">
 <p>You can use <code>workspace-to-monitor-force-assignment</code> syntax to assign
 workspaces to always appear on particular monitors</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight"><code data-lang="toml"><span></span><span class="tok-k">[workspace-to-monitor-force-assignment]</span>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[workspace-to-monitor-force-assignment]</span>
 <span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-w">                            </span><span class="tok-c1"># Monitor sequence number from left to right. 1-based indexing</span>
 <span class="tok-mi">2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;main&#39;</span><span class="tok-w">                       </span><span class="tok-c1"># Main monitor</span>
 <span class="tok-mi">3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;secondary&#39;</span><span class="tok-w">                  </span><span class="tok-c1"># Non-main monitor in case when there are only two monitors</span>
 <span class="tok-mi">4</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;built-in&#39;</span><span class="tok-w">                   </span><span class="tok-c1"># Case insensitive regex substring</span>
 <span class="tok-mi">5</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;^built-in retina display$&#39;</span><span class="tok-w">  </span><span class="tok-c1"># Case insensitive regex match</span>
-<span class="tok-mi">6</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;secondary&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;dell&#39;</span><span class="tok-p">]</span><span class="tok-w">        </span><span class="tok-c1"># You can specify multiple patterns.</span>
-<span class="tok-w">                                 </span><span class="tok-c1"># The first matching pattern will be used</span></code></pre>
+<span class="tok-mi">6</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;secondary&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;dell&#39;</span><span class="tok-p">]</span><span class="tok-w">        </span><span class="tok-c1"># You can specify multiple patterns. The first matching pattern will be used</span></code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -1300,6 +1327,8 @@ The first matching pattern will be used</p>
 <div class="sect1">
 <h2 id="caveats"><a class="anchor" href="#caveats"></a><a class="link" href="#caveats">6. Caveats</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="unwanted-animations"><a class="anchor" href="#unwanted-animations"></a><a class="link" href="#unwanted-animations">6.1. Unwanted animations</a></h3>
 <div class="paragraph">
 <p>If you use some of the Accessibility features <code>System Settings &#8594; Accessibility</code>, you may see weird animations, for no reasons, when AeroSpace moves windows around.
 (Shame on you, Apple! 🤦)</p>
@@ -1330,11 +1359,69 @@ The first matching pattern will be used</p>
 <p>Please reboot after you disable the accessibility features that cause the problem.</p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="dialog-heuristics"><a class="anchor" href="#dialog-heuristics"></a><a class="link" href="#dialog-heuristics">6.2. Dialog heuristics</a></h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Apple provides accessibility API for apps to let others know which of their windows are dialogs</p>
+</li>
+<li>
+<p>A lot of apps don&#8217;t implement this API or implement it improperly</p>
+<div class="paragraph">
+<p>Even some Apple dialogs don&#8217;t implement the API properly.
+(E.g. Finder "Copy" progress window doesn&#8217;t let others know that it&#8217;s a dialog)</p>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>AeroSpace uses the API to gently ask windows whether they are dialogs, but AeroSpace also applies some heuristics.</p>
+</div>
+<div class="paragraph">
+<p>For example, windows without a fullscreen button (NB! fullscreen button and maximize button are different buttons) are considered dialogs, excluding terminal apps (WezTerm, Alacritty, iTerm2).</p>
+</div>
+<div class="paragraph">
+<p>Windows that are recognized as dialogs are floated by default.</p>
+</div>
+<div class="paragraph">
+<p>It&#8217;s not possible to disable the heuristics, because the goal is to make the heuristics so good that there won&#8217;t problems with them.
+If you find that some windows are not handled properly please <a href="https://github.com/nikitabobko/AeroSpace/issues/new">report an issue</a></p>
+</div>
+<div class="paragraph">
+<p>Anyway, your alternatives are:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Force tile all the windows (or windows of a particular app)</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
+<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;layout tiling&#39;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Force float all the windows (or windows of a particular app)</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
+<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;layout floating&#39;</span></code></pre>
+</div>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-12-15 21:39:58 +0100
+Last updated 2023-12-17 21:29:19 +0100
 </div>
 </div>
 </body>
