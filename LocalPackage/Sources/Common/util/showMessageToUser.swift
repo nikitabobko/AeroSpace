@@ -5,7 +5,7 @@ public func showMessageToUser(filename: String, message: String) {
     if isCli { // todo refactor. showMessageToUser is common code looks weird
         print(message)
     } else {
-        let cachesDir = FileManager.default.homeDirectoryForCurrentUser.appending(component: "Library/Caches/bobko.aerospace/")
+        let cachesDir = URL(filePath: "/tmp/bobko.aerospace/")
         try! FileManager.default.createDirectory(at: cachesDir, withIntermediateDirectories: true)
         let file = cachesDir.appending(component: filename)
         try! (message + "\n").write(to: file, atomically: false, encoding: .utf8)
