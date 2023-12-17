@@ -7,16 +7,18 @@ func reloadConfig() {
         .appending(path: isDebug ? ".aerospace-debug.toml" : ".aerospace.toml")
     let (parsedConfig, errors) = parseConfig((try? String(contentsOf: configUrl)) ?? "")
 
-    if !errors.isEmpty {
-        activateMode(mainModeId)
+    // Deactivate all the bindings of previous config (it's needed because the default config always stays in memory)
+    for (_, mode) in config.modes {
+        mode.deactivate()
+    }
+
+    if errors.isEmpty {
+        config = parsedConfig
+    } else {
         showConfigParsingErrorsToUser(errors, configUrl: configUrl)
-        return
     }
-    config = parsedConfig
     activateMode(mainModeId)
-    if !Bundle.appId.contains("debug") {
-        syncStartAtLogin()
-    }
+    syncStartAtLogin()
 }
 
 private func showConfigParsingErrorsToUser(_ errors: [TomlParseError], configUrl: URL) {

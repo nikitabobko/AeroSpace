@@ -24,7 +24,7 @@ final class ConfigTest: XCTestCase {
     func testDropBindings() {
         let (config, errors) = parseConfig(
             """
-            mode.main.binding = {}
+            mode.main = {}
             """
         )
         XCTAssertEqual(errors.descriptions, [])
