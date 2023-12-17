@@ -1,3 +1,5 @@
+import Common
+
 struct EnableCommand: Command {
     let info: CmdStaticInfo = EnableCmdArgs.info
     let args: EnableCmdArgs

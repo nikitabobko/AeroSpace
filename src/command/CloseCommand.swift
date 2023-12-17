@@ -1,3 +1,5 @@
+import Common
+
 struct CloseCommand: Command {
     let info: CmdStaticInfo = CloseCmdArgs.info
 

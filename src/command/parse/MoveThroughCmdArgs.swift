@@ -1,3 +1,5 @@
+import Common
+
 struct MoveThroughCmdArgs: CmdArgs {
     static let info: CmdStaticInfo = RawMoveThroughCmdArgs.info
     let direction: CardinalDirection

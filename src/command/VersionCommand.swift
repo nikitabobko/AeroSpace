@@ -1,3 +1,5 @@
+import Common
+
 struct VersionCommand: Command {
     let info: CmdStaticInfo = VersionCmdArgs.info
 

@@ -1,5 +1,6 @@
 import Foundation
 import Darwin
+import Common
 
 #if DEBUG
 let appId: String = "bobko.debug.aerospace"
@@ -29,10 +30,18 @@ extension FileHandle: TextOutputStream {
     }
 }
 
-let cliClientVersionAndHash: String = "\(cliClientVersion) \(gitHash)"
+let cliClientVersionAndHash: String = "\(aeroSpaceAppVersion) \(gitHash)"
 
 extension String {
     func trim() -> String {
         self.trimmingCharacters(in: .whitespacesAndNewlines)
     }
+}
+
+func initCli() {
+    struct CliClientTerminationHandler: TerminationHandler {
+        func beforeTermination() {} // nothing to do in CLI
+    }
+
+    _terminationHandler = CliClientTerminationHandler()
 }

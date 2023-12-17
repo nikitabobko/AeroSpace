@@ -1,7 +1,5 @@
+import Common
 import TOMLKit
-
-typealias Parsed<T> = Result<T, String>
-extension String: Error {}
 
 func parseCommand(_ raw: String) -> ParsedCmd<Command> {
     parseCmdArgs(raw).map { $0.toCommand() }

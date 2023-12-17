@@ -1,4 +1,5 @@
 import Foundation
+import Common
 
 func stringType(of some: Any) -> String {
     let string = (some is Any.Type) ? String(describing: some) : String(describing: type(of: some))
@@ -18,71 +19,25 @@ func check(
     }
 }
 
-private var recursionDetectorDuringFailure: Bool = false
-
-public func errorT<T>(
-    _ message: String = "",
-    file: String = #file,
-    line: Int = #line,
-    column: Int = #column,
-    function: String = #function
-) -> T {
-    let message =
-        """
-        ###############################
-        ### AEROSPACE RUNTIME ERROR ###
-        ###############################
-
-        Please report to:
-            https://github.com/nikitabobko/AeroSpace/issues/new
-
-        Message: \(message)
-        Version: \(Bundle.appVersion)
-        Git hash: \(gitHash)
-        Coordinate: \(file):\(line):\(column) \(function)
-        recursionDetectorDuringFailure: \(recursionDetectorDuringFailure)
-
-        Stacktrace:
-        \(getStringStacktrace())
-        """
-    if !isUnitTest {
-        showMessageToUser(
-            filename: recursionDetectorDuringFailure ? "runtime-error-recursion.txt" : "runtime-error.txt",
-            message: message
-        )
-    }
-    if !recursionDetectorDuringFailure {
-        recursionDetectorDuringFailure = true
-        beforeTermination()
-    }
-    fatalError(message)
-}
-
-func printStacktrace() { print(getStringStacktrace()) }
-func getStringStacktrace() -> String { Thread.callStackSymbols.joined(separator: "\n") }
-
-@inlinable func error(
-    _ message: String = "",
-    file: String = #file,
-    line: Int = #line,
-    column: Int = #column,
-    function: String = #function
-) -> Never {
-    errorT(message, file: file, line: line, column: column, function: function)
-}
-
 func interceptTermination(_ _signal: Int32) {
     signal(_signal, { signal in
         check(Thread.current.isMainThread)
-        beforeTermination()
+        terminationHandler.beforeTermination()
         exit(signal)
     } as sig_t)
 }
 
-func beforeTermination() {
-    makeAllWindowsVisibleAndRestoreSize()
-    if isDebug {
-        sendCommandToReleaseServer(command: "enable on")
+func initAeroSpaceApp() {
+    _terminationHandler = AppServerTerminationHandler()
+    isCli = false
+}
+
+private struct AppServerTerminationHandler: TerminationHandler {
+    func beforeTermination() {
+        makeAllWindowsVisibleAndRestoreSize()
+        if isDebug {
+            sendCommandToReleaseServer(command: "enable on")
+        }
     }
 }
 
@@ -110,8 +65,6 @@ var allMonitorsRectsUnion: Rect {
 extension String? {
     var isNilOrEmpty: Bool { self == nil || self == "" }
 }
-
-public var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
 
 extension CaseIterable where Self: RawRepresentable, RawValue == String {
     static var unionLiteral: String {

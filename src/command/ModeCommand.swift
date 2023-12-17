@@ -1,3 +1,5 @@
+import Common
+
 struct ModeCommand: Command {
     let info: CmdStaticInfo = ModeCmdArgs.info
     let args: ModeCmdArgs

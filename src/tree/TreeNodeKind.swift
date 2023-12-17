@@ -1,3 +1,5 @@
+import Common
+
 enum TreeNodeKind {
     case window(Window)
     case tilingContainer(TilingContainer)

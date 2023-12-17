@@ -1,4 +1,5 @@
 import HotKey
+import Common
 
 let mainModeId = "main"
 let defaultConfig = initDefaultConfig(parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!)))

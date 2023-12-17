@@ -1,3 +1,5 @@
+import Common
+
 struct SplitCommand: Command {
     let info: CmdStaticInfo = SplitCmdArgs.info
     let args: SplitCmdArgs

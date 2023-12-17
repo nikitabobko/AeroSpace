@@ -1,3 +1,5 @@
+import Common
+
 struct EnableCmdArgs: CmdArgs {
     static let info: CmdStaticInfo = RawEnableCmdArgs.info
     let targetState: State

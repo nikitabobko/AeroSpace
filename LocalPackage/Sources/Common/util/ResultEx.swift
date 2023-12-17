@@ -1,4 +1,4 @@
-extension Result {
+public extension Result {
     func getOrNil(appendErrorTo errors: inout [Failure]) -> Success? {
         switch self {
         case .success(let success):

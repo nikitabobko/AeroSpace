@@ -1,3 +1,5 @@
+import Common
+
 struct LayoutCmdArgs: CmdArgs, Equatable {
     static let info: CmdStaticInfo = RawLayoutCmdArgs.info
     let toggleBetween: [LayoutDescription]

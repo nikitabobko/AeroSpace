@@ -1,3 +1,5 @@
+import Common
+
 struct FocusCommand: Command {
     let info: CmdStaticInfo = FocusCmdArgs.info
     let args: FocusCmdArgs

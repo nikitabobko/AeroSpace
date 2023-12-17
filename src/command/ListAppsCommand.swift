@@ -1,3 +1,5 @@
+import Common
+
 struct ListAppsCommand: Command {
     let info: CmdStaticInfo = ListAppsCmdArgs.info
 

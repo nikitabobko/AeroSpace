@@ -1,3 +1,5 @@
+import Common
+
 struct FocusCmdArgs: CmdArgs, Equatable {
     static let info: CmdStaticInfo = RawFocusCmdArgs.info
 

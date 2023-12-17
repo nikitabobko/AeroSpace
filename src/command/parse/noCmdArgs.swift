@@ -1,3 +1,5 @@
+import Common
+
 struct CloseCmdArgs: RawCmdArgs, CmdArgs {
     static let parser: CmdParser<Self> = noArgsParser(.close, allowInConfig: true)
 }

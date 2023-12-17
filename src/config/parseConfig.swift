@@ -1,5 +1,6 @@
 import TOMLKit
 import HotKey
+import Common
 
 func reloadConfig() {
     let configUrl = FileManager.default.homeDirectoryForCurrentUser

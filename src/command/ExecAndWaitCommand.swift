@@ -1,3 +1,5 @@
+import Common
+
 struct ExecAndWaitCommand: Command {
     let info: CmdStaticInfo = ExecAndWaitCmdArgs.info
     let args: ExecAndWaitCmdArgs

@@ -1,4 +1,5 @@
 import TOMLKit
+import Common
 
 private let windowDetectedParser: [String: any ParserProtocol<RawWindowDetectedCallback>] = [
     "if": Parser(\.matcher, parseMatcher),

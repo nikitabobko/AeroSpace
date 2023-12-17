@@ -1,3 +1,5 @@
+import Common
+
 class TilingContainer: TreeNode, NonLeafTreeNode {
     fileprivate var _orientation: Orientation
     var orientation: Orientation { _orientation }

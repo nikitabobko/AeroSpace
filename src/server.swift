@@ -1,4 +1,5 @@
 import Socket
+import Common
 
 func startServer() {
     let socket = (try? Socket.create(family: .unix, type: .stream, proto: .unix)) ?? errorT("Can't create socket")

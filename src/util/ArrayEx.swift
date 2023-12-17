@@ -1,3 +1,5 @@
+import Common
+
 extension Array {
     func singleOrNil(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Element? {
         var found: Self.Element? = nil

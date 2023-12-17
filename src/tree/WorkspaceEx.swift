@@ -1,3 +1,5 @@
+import Common
+
 extension Workspace {
     var rootTilingContainer: TilingContainer {
         let containers = children.filterIsInstance(of: TilingContainer.self)

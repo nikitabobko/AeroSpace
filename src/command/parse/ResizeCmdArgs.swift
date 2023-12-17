@@ -1,3 +1,5 @@
+import Common
+
 struct ResizeCmdArgs: CmdArgs, Equatable {
     static let info: CmdStaticInfo = RawResizeCmdArgs.info
 

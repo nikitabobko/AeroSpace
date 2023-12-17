@@ -1,3 +1,5 @@
+import Common
+
 private var workspaceNameToWorkspace: [String: Workspace] = [:]
 
 private var screenPointToPrevVisibleWorkspace: [CGPoint: String] = [:]

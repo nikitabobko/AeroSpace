@@ -1,3 +1,5 @@
+import Common
+
 func syncStartAtLogin() {
     let url: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: "Library/LaunchAgents/bobko.aerospace.plist")
     if config.startAtLogin {

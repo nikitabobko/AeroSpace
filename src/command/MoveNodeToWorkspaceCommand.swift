@@ -1,3 +1,5 @@
+import Common
+
 struct MoveNodeToWorkspaceCommand: Command {
     let info: CmdStaticInfo = MoveNodeToWorkspaceCmdArgs.info
     let args: MoveNodeToWorkspaceCmdArgs

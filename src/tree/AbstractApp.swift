@@ -1,3 +1,5 @@
+import Common
+
 class AbstractApp: Hashable {
     let pid: Int32
     let id: String?

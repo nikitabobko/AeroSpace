@@ -1,5 +1,6 @@
 import XCTest
 @testable import AeroSpace_Debug
+import Common
 
 final class ConfigTest: XCTestCase {
     func testParseI3Config() {

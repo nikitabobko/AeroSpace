@@ -12,6 +12,8 @@ packages:
   Socket:
     url: https://github.com/Kitura/BlueSocket
     exactVersion: 2.0.4
+  LocalPackage:
+    path: LocalPackage
 
 targets:
   AeroSpace:
@@ -23,6 +25,9 @@ targets:
       - package: HotKey
       - package: TOMLKit
       - package: Socket
+      - package: LocalPackage
+        products:
+          - Common
     settings:
       base:
         SWIFT_VERSION: 5.9
@@ -72,6 +77,9 @@ targets:
     sources: [cli/]
     dependencies:
       - package: Socket
+      - package: LocalPackage
+        products:
+          - Common
     settings:
       base:
         SWIFT_VERSION: 5.9

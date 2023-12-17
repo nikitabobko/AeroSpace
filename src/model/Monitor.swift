@@ -1,3 +1,5 @@
+import Common
+
 private struct MonitorImpl {
     let name: String
     let rect: Rect

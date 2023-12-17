@@ -1,3 +1,5 @@
+import Common
+
 struct ExecAndForgetCommand: Command {
     let info: CmdStaticInfo = ExecAndForgetCmdArgs.info
     let args: ExecAndForgetCmdArgs

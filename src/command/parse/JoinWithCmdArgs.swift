@@ -1,3 +1,5 @@
+import Common
+
 struct JoinWithCmdArgs: CmdArgs {
     static let info: CmdStaticInfo = RawJoinWithCmdArgs.info
     let direction: CardinalDirection

@@ -1,3 +1,5 @@
+import Common
+
 struct JoinWithCommand: Command {
     let info: CmdStaticInfo = JoinWithCmdArgs.info
     let args: JoinWithCmdArgs

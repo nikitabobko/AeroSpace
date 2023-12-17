@@ -1,3 +1,5 @@
+import Common
+
 struct WorkspaceCommand : Command {
     let info: CmdStaticInfo = WorkspaceCmdArgs.info
     let args: WorkspaceCmdArgs

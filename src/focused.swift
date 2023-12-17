@@ -1,3 +1,5 @@
+import Common
+
 var appForTests: AbstractApp? = nil
 
 private var focusedApp: AbstractApp? {

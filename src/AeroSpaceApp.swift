@@ -1,11 +1,13 @@
 import HotKey
 import SwiftUI
+import Common
 
 @main
 struct AeroSpaceApp: App {
     @StateObject var viewModel = TrayMenuModel.shared
 
     init() {
+        initAeroSpaceApp()
         if !isUnitTest { // Prevent SwiftUI app loading during unit testing
             if isDebug {
                 sendCommandToReleaseServer(command: "enable off")
@@ -69,7 +71,7 @@ struct AeroSpaceApp: App {
             }
                 .keyboardShortcut("R", modifiers: .command)
             Button("Quit \(Bundle.appName)") {
-                beforeTermination()
+                terminationHandler.beforeTermination()
                 terminateApp()
             }
                 .keyboardShortcut("Q", modifiers: .command)

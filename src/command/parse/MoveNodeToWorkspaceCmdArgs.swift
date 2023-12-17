@@ -1,3 +1,5 @@
+import Common
+
 private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
     var target: RawWorkspaceTarget?
     var wrapAroundNextPrev: Bool?

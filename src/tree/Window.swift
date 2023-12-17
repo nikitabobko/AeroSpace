@@ -1,3 +1,5 @@
+import Common
+
 class Window: TreeNode, Hashable {
     let windowId: UInt32
     let app: AbstractApp

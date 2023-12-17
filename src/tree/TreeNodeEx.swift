@@ -1,3 +1,5 @@
+import Common
+
 extension TreeNode {
     private func visit(node: TreeNode, result: inout [Window]) {
         if let node = node as? Window {

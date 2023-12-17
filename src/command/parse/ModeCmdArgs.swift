@@ -1,3 +1,5 @@
+import Common
+
 struct ModeCmdArgs: CmdArgs {
     static let info: CmdStaticInfo = RawModeCmdArgs.info
     let targetMode: String

@@ -1,3 +1,5 @@
+import Common
+
 struct MoveThroughCommand: Command {
     let info: CmdStaticInfo = MoveThroughCmdArgs.info
     let args: MoveThroughCmdArgs

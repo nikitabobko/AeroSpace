@@ -1,3 +1,5 @@
+import Common
+
 struct FlattenWorkspaceTreeCommand: Command {
     let info: CmdStaticInfo = FlattenWorkspaceTreeCmdArgs.info
 

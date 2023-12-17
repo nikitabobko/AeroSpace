@@ -1,4 +1,4 @@
-extension Collection {
+public extension Collection {
     func singleOrNil() -> Element? {
         count == 1 ? first : nil
     }
@@ -8,6 +8,6 @@ extension Collection {
     }
 }
 
-extension Collection where Index == Int {
+public extension Collection where Index == Int {
     func get(wrappingIndex: Int) -> Element? { isEmpty ? nil : self[(count + wrappingIndex) % count] }
 }

@@ -1,3 +1,5 @@
+import Common
+
 struct Rect: Copyable {
     var topLeftX: CGFloat
     var topLeftY: CGFloat

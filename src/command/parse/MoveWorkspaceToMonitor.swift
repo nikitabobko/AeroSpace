@@ -1,3 +1,5 @@
+import Common
+
 private struct RawMoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
     var monitorTarget: MoveWorkspaceToMonitorCmdArgs.MonitorTarget? // todo introduce --wrap-around flag
 

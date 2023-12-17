@@ -1,3 +1,5 @@
+import Common
+
 private struct RawWorkspaceCmdArgs: RawCmdArgs {
     var target: RawWorkspaceTarget?
     var autoBackAndForth: Bool?

@@ -1,3 +1,5 @@
+import Common
+
 struct FullscreenCommand: Command {
     let info: CmdStaticInfo = FullscreenCmdArgs.info
 

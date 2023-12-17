@@ -1,5 +1,8 @@
 import Socket
 import Foundation
+import Common
+
+initCli()
 
 let args: [String] = Array(CommandLine.arguments.dropFirst())
 

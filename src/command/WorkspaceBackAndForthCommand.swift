@@ -1,3 +1,5 @@
+import Common
+
 struct WorkspaceBackAndForthCommand: Command {
     let info: CmdStaticInfo = WorkspaceBackAndForthCmdArgs.info
 

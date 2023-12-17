@@ -1,3 +1,5 @@
+import Common
+
 struct CloseAllWindowsButCurrentCommand: Command {
     let info: CmdStaticInfo = CloseAllWindowsButCurrentCmdArgs.info
 

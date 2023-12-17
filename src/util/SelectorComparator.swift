@@ -1,3 +1,5 @@
+import Common
+
 struct SelectorComparator<T, S : Comparable>: SortComparator, Hashable {
     typealias Compared = T
     var order: SortOrder = .forward

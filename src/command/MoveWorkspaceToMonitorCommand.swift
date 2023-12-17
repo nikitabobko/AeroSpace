@@ -1,3 +1,5 @@
+import Common
+
 struct MoveWorkspaceToMonitorCommand: Command {
     let info: CmdStaticInfo = MoveWorkspaceToMonitorCmdArgs.info
     let args: MoveWorkspaceToMonitorCmdArgs

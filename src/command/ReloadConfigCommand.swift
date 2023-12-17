@@ -1,3 +1,5 @@
+import Common
+
 struct ReloadConfigCommand: Command {
     let info: CmdStaticInfo = ReloadConfigCmdArgs.info
 

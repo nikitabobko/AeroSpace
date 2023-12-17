@@ -14,7 +14,7 @@ check-clean-git-working-dir() {
 }
 
 generate-git-hash() {
-tee src/gitHashGenerated.swift cli/gitHashGenerated.swift > /dev/null <<EOF
+cat > LocalPackage/Sources/Common/gitHashGenerated.swift <<EOF
 public let gitHash = "$(git rev-parse HEAD)"
 public let gitShortHash = "$(git rev-parse --short HEAD)"
 EOF
@@ -26,8 +26,7 @@ generate-git-hash
 xcodebuild -scheme AeroSpace build -configuration Release
 xcodebuild -scheme AeroSpace-cli build -configuration Release
 
-git checkout src/gitHashGenerated.swift
-git checkout cli/gitHashGenerated.swift
+git checkout LocalPackage/Sources/Common/gitHashGenerated.swift
 
 rm -rf .release && mkdir .release
 pushd ~/Library/Developer/Xcode/DerivedData > /dev/null
