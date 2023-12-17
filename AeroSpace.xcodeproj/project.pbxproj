@@ -815,7 +815,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				PRODUCT_NAME = "aerospace-debug";
 				SDKROOT = macosx;
-				SWIFT_VERSION = 5.9;
+				SWIFT_VERSION = 5.8;
 			};
 			name = Debug;
 		};
@@ -835,7 +835,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace.cli;
 				PRODUCT_NAME = aerospace;
 				SDKROOT = macosx;
-				SWIFT_VERSION = 5.9;
+				SWIFT_VERSION = 5.8;
 			};
 			name = Release;
 		};
@@ -859,7 +859,7 @@
 				PRODUCT_NAME = "AeroSpace-Debug";
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "src/Bridged-Header.h";
-				SWIFT_VERSION = 5.9;
+				SWIFT_VERSION = 5.8;
 			};
 			name = Debug;
 		};
@@ -930,7 +930,7 @@
 					"@loader_path/../Frameworks",
 				);
 				SDKROOT = macosx;
-				SWIFT_VERSION = 5.9;
+				SWIFT_VERSION = 5.8;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug";
 			};
 			name = Release;
@@ -947,7 +947,7 @@
 					"@loader_path/../Frameworks",
 				);
 				SDKROOT = macosx;
-				SWIFT_VERSION = 5.9;
+				SWIFT_VERSION = 5.8;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug";
 			};
 			name = Debug;
@@ -975,7 +975,7 @@
 				PRODUCT_NAME = AeroSpace;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "src/Bridged-Header.h";
-				SWIFT_VERSION = 5.9;
+				SWIFT_VERSION = 5.8;
 			};
 			name = Release;
 		};
