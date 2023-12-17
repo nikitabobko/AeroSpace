@@ -20,12 +20,14 @@ public let gitShortHash = "$(git rev-parse --short HEAD)"
 EOF
 }
 
+./build-docs.sh
+
 ./generate.sh
 check-clean-git-working-dir
+
 generate-git-hash
 xcodebuild -scheme AeroSpace build -configuration Release
 xcodebuild -scheme AeroSpace-cli build -configuration Release
-
 git checkout LocalPackage/Sources/Common/gitHashGenerated.swift
 
 rm -rf .release && mkdir .release
@@ -62,9 +64,9 @@ if [ "$expected_layout" != "$(tree .release/AeroSpace.app)" ]; then
 fi
 
 version=$(head -1 ./version.txt | awk '{print $1}')
-pushd .release
-    mkdir AeroSpace-v$version
+mkdir -p .release/AeroSpace-v$version/manpage && cp .man/*.1 .release/AeroSpace-v$version/manpage
+cd .release
+    mkdir -p AeroSpace-v$version/bin && cp -r aerospace AeroSpace-v$version/bin
     cp -r AeroSpace.app AeroSpace-v$version
-    cp -r aerospace AeroSpace-v$version
     zip -r AeroSpace-v${version}.zip AeroSpace-v$version
-popd
+cd -
