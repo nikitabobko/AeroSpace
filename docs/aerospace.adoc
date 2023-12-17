@@ -1,0 +1,24 @@
+= aerospace(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace
+:manpurpose: i3-like tiling window manager for macOS
+
+== Synopsis
+
+aerospace [-h|--help] [-v|--version] <subcommand> [<subcommand-options>...] [<subcommand-arguments>...]
+
+== Description
+
+AeroSpace is an i3-like tiling window manager for macOS
+
+*aerospace* command line program is used to manipulate AeroSpace and query its state.
+
+See https://nikitabobko.github.io/AeroSpace/commands.html for available <subcommand> options
+
+See each <subcommand> individual man page for <subcommand-options> and <subcommand-arguments>
+
+== Options
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

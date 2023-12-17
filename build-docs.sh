@@ -26,14 +26,14 @@ build-site() {
     cd .site
         asciidoctor *.adoc
         rm -rf *.adoc
-        rm -rf aerospace-* # Drop man pages
+        rm -rf aerospace* # Drop man pages
     cd -
 }
 
 build-man() {
     cp-docs .man
     cd .man
-        asciidoctor -b manpage aerospace-*.adoc
+        asciidoctor -b manpage aerospace*.adoc
         rm -rf *.adoc
     cd -
 }
