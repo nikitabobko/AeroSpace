@@ -171,16 +171,22 @@ private func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // No
     // - macOS native file picker ("Open..." menu) (kAXDialogSubrole value)
     //
     // Minimized windows or windows of a hidden app have subrole "AXDialog"
-    axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole ||
-        // Heuristic: float windows without maximize button (such windows are not designed to be big)
-        // - IntelliJ various dialogs (Rebase..., Edit commit message, Settings, Project structure)
-        // - Finder copy file dialog
-        // - System Settings
-        // Exclude terminals from the heuristic (advanced terminals have options to show no decorations)
-        axWindow.get(Ax.fullscreenButtonAttr) == nil &&
-        app.id != "org.alacritty" &&
-        app.id != "com.github.wez.wezterm" &&
-        app.id != "com.googlecode.iterm2"
+    if axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole  {
+        return true
+    }
+    // Heuristic: float windows without maximize button (such windows are not designed to be big)
+    // - IntelliJ various dialogs (Rebase..., Edit commit message, Settings, Project structure)
+    // - Finder copy file dialog
+    // - System Settings
+    // Exclude terminals from the heuristic (advanced terminals have options to show no decorations)
+    if axWindow.get(Ax.fullscreenButtonAttr) == nil &&
+           app.id != "com.google.Chrome" && // "Drag out" a tab out of Chrome window
+           app.id != "org.alacritty" &&
+           app.id != "com.github.wez.wezterm" &&
+           app.id != "com.googlecode.iterm2" {
+        return true
+    }
+    return false
 }
 
 private func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace, _ app: MacApp) -> BindingData {
