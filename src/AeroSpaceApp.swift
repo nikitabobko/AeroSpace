@@ -42,34 +42,38 @@ struct AeroSpaceApp: App {
             Button("Copy to clipboard") { identification.copyToClipboard() }
                 .keyboardShortcut("C", modifiers: .command)
             Divider()
-            Text("Workspaces:")
-            ForEach(Workspace.all) { (workspace: Workspace) in
-                Button {
-                    refreshSession {
-                        WorkspaceCommand(args: WorkspaceCmdArgs(
-                            target: .workspaceName(name: workspace.name, autoBackAndForth: false)
-                        )).runOnFocusedSubject()
-                    }
-                } label: {
-                    Toggle(isOn: workspace == Workspace.focused
-                        ? Binding(get: { true }, set: { _, _ in })
-                        : Binding(get: { false }, set: { _, _ in })) {
-                        let monitor = workspace.isVisible || !workspace.isEffectivelyEmpty ? " - \(workspace.monitor.name)" : ""
-                        Text(workspace.name + monitor).font(.system(.body, design: .monospaced))
+            if viewModel.isEnabled {
+                Text("Workspaces:")
+                ForEach(Workspace.all) { (workspace: Workspace) in
+                    Button {
+                        refreshSession {
+                            WorkspaceCommand(args: WorkspaceCmdArgs(
+                                target: .workspaceName(name: workspace.name, autoBackAndForth: false)
+                            )).runOnFocusedSubject()
+                        }
+                    } label: {
+                        Toggle(isOn: workspace == Workspace.focused
+                            ? Binding(get: { true }, set: { _, _ in })
+                            : Binding(get: { false }, set: { _, _ in })) {
+                            let monitor = workspace.isVisible || !workspace.isEffectivelyEmpty ? " - \(workspace.monitor.name)" : ""
+                            Text(workspace.name + monitor).font(.system(.body, design: .monospaced))
+                        }
                     }
                 }
+                Divider()
             }
-            Divider()
             Button(viewModel.isEnabled ? "Disable" : "Enable") {
                 refreshSession {
                     EnableCommand(args: EnableCmdArgs(targetState: .toggle)).runOnFocusedSubject()
                 }
             }
                 .keyboardShortcut("E", modifiers: .command)
-            Button("Reload config") {
-                refreshSession { ReloadConfigCommand().runOnFocusedSubject() }
+            if viewModel.isEnabled {
+                Button("Reload config") {
+                    refreshSession { ReloadConfigCommand().runOnFocusedSubject() }
+                }
+                    .keyboardShortcut("R", modifiers: .command)
             }
-                .keyboardShortcut("R", modifiers: .command)
             Button("Quit \(Bundle.appName)") {
                 terminationHandler.beforeTermination()
                 terminateApp()
