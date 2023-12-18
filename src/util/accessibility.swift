@@ -197,6 +197,11 @@ enum Ax {
         getter: { $0 as? Bool },
         setter: { $0 as CFTypeRef }
     )
+    static let enhancedUserInterfaceAttr = WritableAttrImpl<Bool>(
+        key: "AXEnhancedUserInterface",
+        getter: { $0 as? Bool },
+        setter: { $0 as CFTypeRef }
+    )
     static let sizeAttr = WritableAttrImpl<CGSize>(
             key: kAXSizeAttribute,
             getter: {

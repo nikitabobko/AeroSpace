@@ -1,6 +1,6 @@
 final class MacApp: AbstractApp {
     let nsApp: NSRunningApplication
-    private let axApp: AXUIElement
+    let axApp: AXUIElement
 
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 

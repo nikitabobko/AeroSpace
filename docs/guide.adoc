@@ -437,21 +437,6 @@ xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command 
 [#caveats]
 == Caveats
 
-=== Unwanted animations
-
-If you use some of the Accessibility features `System Settings -> Accessibility`, you may see weird animations, for no reasons, when AeroSpace moves windows around.
-(Shame on you, Apple! 🤦)
-
-Known accessibility features that cause the problem:
-
-* Full Keyboard Access
-* Accessibility Keyboard
-* Voice Control
-* Switch Control
-* Maybe something else...
-
-Please reboot after you disable the accessibility features that cause the problem.
-
 === Dialog heuristics
 
 * Apple provides accessibility API for apps to let others know which of their windows are dialogs

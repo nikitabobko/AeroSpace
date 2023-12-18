@@ -124,8 +124,10 @@ final class MacWindow: Window, CustomStringConvertible {
     }
 
     override func setSize(_ size: CGSize) {
-        previousSize = getSize()
-        axWindow.set(Ax.sizeAttr, size)
+        disableAnimations {
+            previousSize = getSize()
+            axWindow.set(Ax.sizeAttr, size)
+        }
     }
 
     override func getSize() -> CGSize? {
@@ -133,7 +135,9 @@ final class MacWindow: Window, CustomStringConvertible {
     }
 
     override func setTopLeftCorner(_ point: CGPoint) {
-        axWindow.set(Ax.topLeftCornerAttr, point)
+        disableAnimations {
+            axWindow.set(Ax.topLeftCornerAttr, point)
+        }
     }
 
     override func getTopLeftCorner() -> CGPoint? {
@@ -144,6 +148,21 @@ final class MacWindow: Window, CustomStringConvertible {
         guard let topLeftCorner = getTopLeftCorner() else { return nil }
         guard let size = getSize() else { return nil }
         return Rect(topLeftX: topLeftCorner.x, topLeftY: topLeftCorner.y, width: size.width, height: size.height)
+    }
+
+    // Some undocumented magic
+    // References: https://github.com/koekeishiya/yabai/commit/3fe4c77b001e1a4f613c26f01ea68c0f09327f3a
+    //             https://github.com/rxhanson/Rectangle/pull/285
+    private func disableAnimations(_ body: () -> Void) {
+        let app = (app as! MacApp).axApp
+        let wasEnabled = app.get(Ax.enhancedUserInterfaceAttr) == true
+        if wasEnabled {
+            app.set(Ax.enhancedUserInterfaceAttr, false)
+        }
+        body()
+        if wasEnabled {
+            app.set(Ax.enhancedUserInterfaceAttr, true)
+        }
     }
 }
 
