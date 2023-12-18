@@ -14,12 +14,14 @@ struct ExecAndWaitCommand: Command {
         process.executableURL = URL(filePath: "/bin/bash")
         process.arguments = ["-c", args.bashScript]
         process.terminationHandler = { _ in
-            check(Thread.current.isMainThread)
-            refreshSession {
-                var focused = CommandSubject.focused
-                // todo preserve subject in "exec sessions" (when/if "exec sessions" appears)
-                var devNull: String = ""
-                _ = Array(commands[(index + 1)...]).run(&focused, &devNull)
+            DispatchQueue.main.async {
+                check(Thread.current.isMainThread)
+                refreshSession {
+                    var focused = CommandSubject.focused
+                    // todo preserve subject in "exec sessions" (when/if "exec sessions" appears)
+                    var devNull: String = ""
+                    _ = Array(commands[(index + 1)...]).run(&focused, &devNull)
+                }
             }
         }
         // It doesn't throw if exit code is non-zero
