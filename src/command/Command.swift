@@ -50,7 +50,7 @@ extension [Command] {
     }
 }
 
-enum CommandSubject {
+enum CommandSubject: Equatable {
     case emptyWorkspace(String)
     case window(Window)
 

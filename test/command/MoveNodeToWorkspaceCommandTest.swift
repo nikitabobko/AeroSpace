@@ -15,6 +15,38 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         XCTAssertEqual((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }
 
+    func testEmptyWorkspaceSubject() {
+        let workspaceA = Workspace.get(byName: "a")
+        workspaceA.rootTilingContainer.apply {
+            TestWindow(id: 1, parent: $0).focus()
+        }
+
+        var subject = CommandSubject.focused
+        var devNull = ""
+
+        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .workspaceName(name: "b", autoBackAndForth: false)))
+            .run(&subject, &devNull)
+
+        XCTAssertEqual(subject, .emptyWorkspace("a"))
+    }
+
+    func testAnotherWindowSubject() {
+        let workspaceA = Workspace.get(byName: "a")
+        var window1: Window!
+        workspaceA.rootTilingContainer.apply {
+            window1 = TestWindow(id: 1, parent: $0)
+            TestWindow(id: 2, parent: $0).focus()
+        }
+
+        var subject = CommandSubject.focused
+        var devNull = ""
+
+        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .workspaceName(name: "b", autoBackAndForth: false)))
+            .run(&subject, &devNull)
+
+        XCTAssertEqual(subject, .window(window1))
+    }
+
     func testPreserveFloatingLayout() {
         let workspaceA = Workspace.get(byName: "a").apply {
             TestWindow(id: 1, parent: $0).focus()
