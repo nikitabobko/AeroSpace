@@ -8,7 +8,7 @@ struct FocusCmdArgs: CmdArgs, Equatable {
     let direction: CardinalDirection
     enum Boundaries: String, CaseIterable, Equatable {
         case workspace
-        case allMonitorsUnionFrame = "all-monitors-union-frame" // todo rename to all-monitors-outer-frame
+        case allMonitorsUnionFrame = "all-monitors-outer-frame"
     }
     enum WhenBoundariesCrossed: String, CaseIterable, Equatable {
         case stop = "stop"

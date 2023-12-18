@@ -32,7 +32,7 @@ include::util/conditional-options-header.adoc[]
 
 --boundaries <boundary>::
     Defines focus boundaries. +
-    `<boundary>` possible values: `(workspace|all-monitors-union-frame)`. +
+    `<boundary>` possible values: `(workspace|all-monitors-outer-frame)`. +
     The default is: `workspace`
 
 --boundaries-action <action>::
