@@ -61,12 +61,12 @@ private func hitWorkspaceBoundaries(
             return targetMonitor.focus(&subject, &stdout)
         } else {
             guard let wrapped = monitors.get(wrappingIndex: index + direction.focusOffset) else { return false }
-            return hitAllMonitorsFrameBoundaries(&subject, &stdout, args, direction, wrapped)
+            return hitAllMonitorsOuterFrameBoundaries(&subject, &stdout, args, direction, wrapped)
         }
     }
 }
 
-private func hitAllMonitorsFrameBoundaries(
+private func hitAllMonitorsOuterFrameBoundaries(
     _ subject: inout CommandSubject,
     _ stdout: inout String,
     _ args: FocusCmdArgs,
@@ -100,7 +100,7 @@ private func wrapAroundTheWorkspace(subject: inout CommandSubject, _ direction: 
 
 private extension Monitor {
     func relation(to monitor: Monitor) -> Orientation {
-        let yRange = rect.minY...rect.maxY
+        let yRange = rect.minY..<rect.maxY
         return yRange.contains(monitor.rect.minY) || yRange.contains(monitor.rect.maxY) ? .h : .v
     }
 }
