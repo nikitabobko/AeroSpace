@@ -187,7 +187,7 @@ private func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // No
     // - login screen (Yes fuck, it's also a window from Apple's API perspective) ("AXUnknown" value)
     // - XCode "Build succeeded" popup
     // - IntelliJ tooltips, context menus, drop downs
-    // - macOS native file picker ("Open..." menu) (kAXDialogSubrole value)
+    // - macOS native file picker (IntelliJ -> "Open...") (kAXDialogSubrole value)
     //
     // Minimized windows or windows of a hidden app have subrole "AXDialog"
     if axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole  {
@@ -197,9 +197,13 @@ private func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // No
     // - IntelliJ various dialogs (Rebase..., Edit commit message, Settings, Project structure)
     // - Finder copy file dialog
     // - System Settings
-    // Exclude terminals from the heuristic (advanced terminals have options to show no decorations)
+    // - Apple logo -> About this Mac
+    // - Calculator
+    // - Battle.net login dialog
     if axWindow.get(Ax.fullscreenButtonAttr) == nil &&
            app.id != "com.google.Chrome" && // "Drag out" a tab out of Chrome window
+           app.id != "org.videolan.vlc" && // VLC has its own implementation of fullscreen
+           app.id != "com.valvesoftware.steam" && // Steam doesn't show fullscreen button
            app.id != "org.alacritty" &&
            app.id != "com.github.wez.wezterm" &&
            app.id != "com.googlecode.iterm2" {
