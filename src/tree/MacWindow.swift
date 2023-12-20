@@ -250,7 +250,7 @@ private func onWindowDetected(_ window: Window, startup: Bool) {
     for callback in config.onWindowDetected {
         if callback.matches(window, startup: startup) {
             var subject = CommandSubject.window(window)
-            callback.run.run(&subject)
+            _ = callback.run.run(&subject)
             if !callback.checkFurtherCallbacks {
                 return
             }

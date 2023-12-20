@@ -3,12 +3,33 @@ include::util/site-attributes.adoc[]
 
 include::util/header.adoc[]
 
-The list is useful to compose custom xref:guide.adoc#on-window-detected-callback[on-window-detected callback].
+Do you have a cool automatization, AeroSpace integration, or workflow?
+Feel free to open an issue or pull request to add it to this list!
 
-Feel free to contribute to this list by submitting a pull request.
+[#move-by-dragging-any-part-of-the-window]
+== Move windows by dragging any part of the window
+
+[source,bash]
+----
+defaults write -g NSWindowShouldDragOnGesture YES
+----
+
+Now, you can move windows by holding `ctrl + cmd` and dragging any part of the window (not necessarily the window title)
+
+[#disable-open-animations]
+== Disable windows opening animations
+
+Observable in Google Chrome
+
+[source,bash]
+----
+defaults write -g NSAutomaticWindowAnimationsEnabled -bool false
+----
 
 [#popular-apps-ids]
 == List of popular and built-in applications IDs
+
+The list is useful to compose custom xref:guide.adoc#on-window-detected-callback[on-window-detected callback].
 
 [cols="1,3"]
 |===
@@ -83,6 +104,7 @@ Feel free to contribute to this list by submitting a pull request.
 |TextEdit|`com.apple.TextEdit`
 |Thunderbird|`org.mozilla.thunderbird`
 |Time Machine|`com.apple.backup.launcher`
+|Todoist|`com.todoist.mac.Todoist`
 |Tor Browser|`org.torproject.torbrowser`
 |Transmission|`org.m0k.transmission`
 |VLC|`org.videolan.vlc`
