@@ -115,9 +115,9 @@ class HotkeyBinding {
 
     func activate() {
         hotKey = HotKey(key: key, modifiers: modifiers, keyUpHandler: { [commands] in
-            refreshSession {
+            refreshSession(forceFocus: true) {
                 var subject = CommandSubject.focused
-                commands.run(&subject)
+                _ = commands.run(&subject)
             }
         })
     }

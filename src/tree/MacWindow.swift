@@ -69,7 +69,7 @@ final class MacWindow: Window, CustomStringConvertible {
         // todo the if is an approximation to filter out cases when window just closed itself (or was killed remotely)
         //  we might want to track the time of the latest workspace switch to make the approximation more accurate
         if workspace == previousFocusedWorkspaceName || workspace == focusedWorkspaceName {
-            refreshSession {
+            refreshSession(forceFocus: true) {
                 WorkspaceCommand(args: WorkspaceCmdArgs(
                     target: .workspaceName(name: workspace, autoBackAndForth: false)
                 )).runOnFocusedSubject()
