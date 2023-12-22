@@ -49,11 +49,13 @@ expected_layout=$(cat <<EOF
     │   └── AeroSpace
     ├── PkgInfo
     ├── Resources
+    │   ├── AppIcon.icns
+    │   ├── Assets.car
     │   └── default-config.toml
     └── _CodeSignature
         └── CodeResources
 
-5 directories, 5 files
+5 directories, 7 files
 EOF
 )
 

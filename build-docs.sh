@@ -9,10 +9,10 @@ rm -rf .site && mkdir .site
 rm -rf .man && mkdir .man
 
 cp-docs() {
-    cp -r docs/*.adoc $1
-    cp -r docs/assets $1
-    cp -r docs/util $1
-    cp -r docs/config-examples $1
+    cp -r --dereference docs/*.adoc $1
+    cp -r --dereference docs/assets $1
+    cp -r --dereference docs/util $1
+    cp -r --dereference docs/config-examples $1
 }
 
 build-site() {
