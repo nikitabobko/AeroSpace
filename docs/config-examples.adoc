@@ -1,4 +1,4 @@
-= Config Examples
+= AeroSpace Config Examples
 include::util/site-attributes.adoc[]
 
 include::util/header.adoc[]

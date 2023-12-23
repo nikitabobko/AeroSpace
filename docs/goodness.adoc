@@ -1,4 +1,4 @@
-= List of popular and built-in applications IDs
+= AeroSpace Goodness
 include::util/site-attributes.adoc[]
 
 include::util/header.adoc[]
@@ -7,7 +7,8 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 
 Feel free to contribute to this list by submitting a pull request.
 
-== The list
+[#popular-apps-ids]
+== List of popular and built-in applications IDs
 
 [cols="1,3"]
 |===
