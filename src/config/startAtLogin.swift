@@ -1,7 +1,9 @@
 import Common
 
 func syncStartAtLogin() {
-    let url: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: "Library/LaunchAgents/bobko.aerospace.plist")
+    let launchAgentsDir = FileManager.default.homeDirectoryForCurrentUser.appending(component: "Library/LaunchAgents/")
+    try! FileManager.default.createDirectory(at: launchAgentsDir, withIntermediateDirectories: true)
+    let url: URL = launchAgentsDir.appending(path: "bobko.aerospace.plist")
     if config.startAtLogin {
         let plist =
             """
