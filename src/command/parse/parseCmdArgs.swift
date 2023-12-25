@@ -7,8 +7,9 @@ func parseCmdArgs(_ raw: String) -> ParsedCmd<CmdArgs> {
     let subcommand = String(raw.split(separator: " ").first ?? "")
     if (raw.contains("'") || raw.contains("\"")) && !subcommand.starts(with: "exec") {
         return .failure("Quotation marks are reserved for future use")
-    }
-    if let subcommandParser: any SubCommandParserProtocol = subcommands[subcommand] {
+    } else if subcommand == "exec-and-wait" {
+        return .failure("DEPRECATED. Please use exec-and-forget in combination with CLI commands")
+    } else if let subcommandParser: any SubCommandParserProtocol = subcommands[subcommand] {
         return subcommandParser.parse(args: raw.removePrefix(subcommand))
     } else {
         return .failure("Unrecognized command '\(raw)'")
@@ -27,8 +28,6 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
             result[kind.rawValue] = SubCommandParser(parseEnableCmdArgs)
         case .execAndForget:
             result[kind.rawValue] = SubCommandParser(parseExecAndForgetCmdArgs)
-        case .execAndWait:
-            result[kind.rawValue] = SubCommandParser(parseExecAndWaitCmdArgs)
         case .flattenWorkspaceTree:
             result[kind.rawValue] = noArgsSubCommandParser(FlattenWorkspaceTreeCmdArgs())
         case .focus:

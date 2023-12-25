@@ -18,7 +18,7 @@ extension Command {
         _ = run(&focused, &devNull)
     }
 
-    var isExec: Bool { self is ExecAndWaitCommand || self is ExecAndForgetCommand }
+    var isExec: Bool { self is ExecAndForgetCommand }
 }
 
 // There are 4 entry points for running commands:
@@ -35,14 +35,9 @@ extension [Command] {
     func run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)
         var result = true
-        for (index, command) in enumerated() {
+        for command in self {
             if TrayMenuModel.shared.isEnabled || command is EnableCommand {
-                if let command = command as? ExecAndWaitCommand { // todo think of something more elegant
-                    command._runWithContinuation(&subject, index, self)
-                    break
-                } else {
-                    result = command._run(&subject, &stdout) && result
-                }
+                result = command._run(&subject, &stdout) && result
                 refreshModel()
             }
         }

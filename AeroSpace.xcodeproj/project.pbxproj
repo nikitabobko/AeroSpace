@@ -23,7 +23,6 @@
 		2AF9C7B2357821D03A949042 /* SplitCmdArgs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF9EBDE54646D26466A0ED0 /* SplitCmdArgs.swift */; };
 		2C73CDB1A933FCA5616CDFB3 /* WorkspaceEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B60F7A58DAD4D3AF2788E4 /* WorkspaceEx.swift */; };
 		2CC46A952773F148AC398144 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6352ADEE6625D9703CFCA99A /* Window.swift */; };
-		2E06134604F2510189F1FA85 /* ExecAndWaitCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9EDB8770FBA8B2E6FE91BBB /* ExecAndWaitCommand.swift */; };
 		374CE35B85B941B8F584C113 /* FlattenWorkspaceTreeCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FDECECC773EBA30661EB8A /* FlattenWorkspaceTreeCommandTest.swift */; };
 		3774857EF024E97B7AA5DE78 /* MoveNodeToWorkspaceCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25AC44D0E9450867215FCBEC /* MoveNodeToWorkspaceCommand.swift */; };
 		3BD6FF4CC51532977DA0C05A /* AeroAny.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82476B9BEBAC00EB9E32256F /* AeroAny.swift */; };
@@ -229,7 +228,6 @@
 		F3C5B6719EF0BC14D7CF868C /* FlattenWorkspaceTreeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlattenWorkspaceTreeCommand.swift; sourceTree = "<group>"; };
 		F77C03164B8BFD1E59779C6E /* testUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testUtil.swift; sourceTree = "<group>"; };
 		F8FDC079C530D7B3C568E35F /* CloseCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseCommand.swift; sourceTree = "<group>"; };
-		F9EDB8770FBA8B2E6FE91BBB /* ExecAndWaitCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecAndWaitCommand.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -445,7 +443,6 @@
 				CD90FB41FD41602120F67FF5 /* Command.swift */,
 				532EA400D1CFBC5C71663FDF /* EnableCommand.swift */,
 				569422C0C4C23EF3E024C8E6 /* ExecAndForgetCommand.swift */,
-				F9EDB8770FBA8B2E6FE91BBB /* ExecAndWaitCommand.swift */,
 				F3C5B6719EF0BC14D7CF868C /* FlattenWorkspaceTreeCommand.swift */,
 				E761155C73F06E2CF5E292A4 /* FocusCommand.swift */,
 				9ECC990B6C2D66D343216A12 /* FullscreenCommand.swift */,
@@ -660,7 +657,6 @@
 				4959786BDC6C22593BA93F63 /* EnableCmdArgs.swift in Sources */,
 				9FAD09BC5CC390167106563B /* EnableCommand.swift in Sources */,
 				BC6511DA2ABE84164D90C181 /* ExecAndForgetCommand.swift in Sources */,
-				2E06134604F2510189F1FA85 /* ExecAndWaitCommand.swift in Sources */,
 				E73150B5D369AA7869697330 /* ExecCmdArgs.swift in Sources */,
 				0A9DAD847B5340FBE3D9CF88 /* FlattenWorkspaceTreeCommand.swift in Sources */,
 				EF664F4B85A17DECF2579949 /* FocusCmdArgs.swift in Sources */,

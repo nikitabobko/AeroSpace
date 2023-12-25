@@ -3,7 +3,6 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case closeAllWindowsButCurrent = "close-all-windows-but-current"
     case enable
     case execAndForget = "exec-and-forget"
-    case execAndWait = "exec-and-wait"
     case flattenWorkspaceTree = "flatten-workspace-tree"
     case focus
     case fullscreen

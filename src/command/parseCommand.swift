@@ -17,8 +17,6 @@ extension CmdArgs {
             command = EnableCommand(args: self as! EnableCmdArgs)
         case .execAndForget:
             command = ExecAndForgetCommand(args: self as! ExecAndForgetCmdArgs)
-        case .execAndWait:
-            command = ExecAndWaitCommand(args: self as! ExecAndWaitCmdArgs)
         case .flattenWorkspaceTree:
             command = FlattenWorkspaceTreeCommand()
         case .focus:
