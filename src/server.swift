@@ -5,7 +5,7 @@ func startServer() {
     let socket = tryCatch { try Socket.create(family: .unix, type: .stream, proto: .unix) }
         .getOrThrow("Can't create socket ")
     let socketFile = "/tmp/\(Bundle.appId).sock"
-    tryCatch { try socket.listen(on: socketFile, maxBacklogSize: 1) }.getOrThrow("Can't listen to socket \(socketFile) ")
+    tryCatch { try socket.listen(on: socketFile) }.getOrThrow("Can't listen to socket \(socketFile) ")
     DispatchQueue.global().async {
         while true {
             guard let connection = try? socket.acceptClientConnection() else { continue }
