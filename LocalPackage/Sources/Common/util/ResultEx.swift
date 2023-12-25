@@ -26,4 +26,25 @@ public extension Result {
             return (nil, failure)
         }
     }
+
+    var errorOrNil: Failure? {
+        switch self {
+        case .success:
+            return nil
+        case .failure(let f):
+            return f
+        }
+    }
+}
+
+public extension Result where Failure == AeroError {
+    @discardableResult
+    func getOrThrow(_ msgPrefix: String = "") -> Success {
+        switch self {
+        case .success(let suc):
+            return suc
+        case .failure(let e):
+            e.throwIt(msgPrefix)
+        }
+    }
 }

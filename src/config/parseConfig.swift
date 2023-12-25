@@ -288,7 +288,9 @@ private func parseMonitorDescription(_ raw: TOMLValueConvertible, _ backtrace: T
 }
 
 func parseCaseInsensitiveRegex(_ raw: String) -> Parsed<Regex<AnyRegexOutput>> {
-    (try? Regex(raw)).orFailure("Can't parse '\(raw)' regex").map { $0.ignoresCase() }
+    tryCatch { try Regex(raw) }
+        .mapError { e in "Can't parse '\(raw)' regex. \(e.msg)" }
+        .map { $0.ignoresCase() }
 }
 
 private func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: Mode] {

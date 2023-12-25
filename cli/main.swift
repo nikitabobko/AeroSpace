@@ -23,18 +23,20 @@ let usage =
 if args.isEmpty || args.first == "--help" || args.first == "-h" {
     print(usage)
 } else {
-    let socket = try! Socket.create(family: .unix, type: .stream, proto: .unix)
+    let socket = tryCatch { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrThrow()
     defer {
         socket.close()
     }
     let socketFile = "/tmp/\(appId).sock"
-    (try? socket.connect(to: socketFile)) ??
-        prettyErrorT("Can't connect to AeroSpace server. Is AeroSpace.app running?")
+    if let e: AeroError = tryCatch(body: { try socket.connect(to: socketFile) }).errorOrNil {
+        prettyError("Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.msg)")
+    }
 
     func run(_ command: String) -> (Int32, String) {
-        try! socket.write(from: command)
-        _ = try! Socket.wait(for: [socket], timeout: 0, waitForever: true)
-        let received = try! socket.readString() ?? prettyErrorT("fatal error: received nil from socket")
+        tryCatch { try socket.write(from: command) }.getOrThrow()
+        tryCatch { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrThrow()
+        let received: String = tryCatch { try socket.readString() }.getOrThrow()
+            ?? prettyErrorT("fatal error: received nil from socket")
         let exitCode: Int32 = received.first.map { String($0) }.flatMap { Int32($0) } ?? 1
         let output = String(received.dropFirst())
         return (exitCode, output)

@@ -2,9 +2,10 @@ import Socket
 import Common
 
 func startServer() {
-    let socket = (try? Socket.create(family: .unix, type: .stream, proto: .unix)) ?? errorT("Can't create socket")
+    let socket = tryCatch { try Socket.create(family: .unix, type: .stream, proto: .unix) }
+        .getOrThrow("Can't create socket ")
     let socketFile = "/tmp/\(Bundle.appId).sock"
-    (try? socket.listen(on: socketFile, maxBacklogSize: 1)) ?? errorT("Can't listen to socket \(socketFile)")
+    tryCatch { try socket.listen(on: socketFile, maxBacklogSize: 1) }.getOrThrow("Can't listen to socket \(socketFile) ")
     DispatchQueue.global().async {
         while true {
             guard let connection = try? socket.acceptClientConnection() else { continue }
@@ -15,7 +16,7 @@ func startServer() {
 
 func sendCommandToReleaseServer(command: String) {
     check(isDebug)
-    let socket = try! Socket.create(family: .unix, type: .stream, proto: .unix)
+    let socket = tryCatch { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrThrow()
     defer {
         socket.close()
     }

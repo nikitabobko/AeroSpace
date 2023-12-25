@@ -8,7 +8,8 @@ struct ExecAndForgetCommand: Command {
         // todo shall exec-and-forget fork exec session?
         check(Thread.current.isMainThread)
         // It doesn't throw if exit code is non-zero
-        try! Process.run(URL(filePath: "/bin/bash"), arguments: ["-c", args.bashScript])
+        tryCatch { try Process.run(URL(filePath: "/bin/bash"), arguments: ["-c", args.bashScript]) }
+            .getOrThrow()
         return true
     }
 }

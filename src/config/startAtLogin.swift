@@ -2,7 +2,7 @@ import Common
 
 func syncStartAtLogin() {
     let launchAgentsDir = FileManager.default.homeDirectoryForCurrentUser.appending(component: "Library/LaunchAgents/")
-    try! FileManager.default.createDirectory(at: launchAgentsDir, withIntermediateDirectories: true)
+    tryCatch { try FileManager.default.createDirectory(at: launchAgentsDir, withIntermediateDirectories: true) }.getOrThrow()
     let url: URL = launchAgentsDir.appending(path: "bobko.aerospace.plist")
     if config.startAtLogin {
         let plist =
@@ -23,12 +23,11 @@ func syncStartAtLogin() {
             </dict>
             </plist>
             """
-        (try? plist.write(to: url, atomically: false, encoding: .utf8)) ?? errorT("Can't write to \(url)")
-        // todo try!
-        try! Process.run(URL(filePath: "/bin/launchctl"), arguments: ["load", url.absoluteString])
+        tryCatch { try plist.write(to: url, atomically: false, encoding: .utf8) }
+            .getOrThrow("Can't write to \(url) ")
+        tryCatch { try Process.run(URL(filePath: "/bin/launchctl"), arguments: ["load", url.absoluteString]) }.getOrThrow()
     } else {
-        // todo try!
-        try! Process.run(URL(filePath: "/bin/launchctl"), arguments: ["unload", url.absoluteString])
+        tryCatch { try Process.run(URL(filePath: "/bin/launchctl"), arguments: ["unload", url.absoluteString]) }.getOrThrow()
         try? FileManager.default.removeItem(at: url)
     }
 }
