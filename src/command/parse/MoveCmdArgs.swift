@@ -1,18 +1,18 @@
 import Common
 
-struct MoveThroughCmdArgs: CmdArgs {
-    static let info: CmdStaticInfo = RawMoveThroughCmdArgs.info
+struct MoveCmdArgs: CmdArgs {
+    static let info: CmdStaticInfo = RawMoveCmdArgs.info
     let direction: CardinalDirection
 }
 
-private struct RawMoveThroughCmdArgs: RawCmdArgs {
+private struct RawMoveCmdArgs: RawCmdArgs {
     var direction: CardinalDirection?
 
     static let parser: CmdParser<Self> = cmdParser(
-        kind: .moveThrough,
+        kind: .move,
         allowInConfig: true,
         help: """
-              USAGE: move-through [-h|--help] \(CardinalDirection.unionLiteral)
+              USAGE: move [-h|--help] \(CardinalDirection.unionLiteral)
 
               OPTIONS:
                 -h, --help   Print help
@@ -22,13 +22,13 @@ private struct RawMoveThroughCmdArgs: RawCmdArgs {
     )
 }
 
-func parseMoveThroughCmdArgs(_ args: [String]) -> ParsedCmd<MoveThroughCmdArgs> {
-    parseRawCmdArgs(RawMoveThroughCmdArgs(), args)
+func parseMoveCmdArgs(_ args: [String]) -> ParsedCmd<MoveCmdArgs> {
+    parseRawCmdArgs(RawMoveCmdArgs(), args)
         .flatMap { raw in
             guard let direction = raw.direction else {
-                return .failure("move-through direction isn't specified")
+                return .failure("move direction isn't specified")
             }
-            return .cmd(MoveThroughCmdArgs(
+            return .cmd(MoveCmdArgs(
                 direction: direction
             ))
         }

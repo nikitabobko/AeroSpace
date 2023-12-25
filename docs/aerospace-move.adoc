@@ -1,13 +1,13 @@
-= aerospace-move-through(1)
+= aerospace-move(1)
 include::util/man-attributes.adoc[]
 // tag::purpose[]
 :manpurpose: Moves the window in the given direction
 // end::purpose[]
-:manname: aerospace-move-through
+:manname: aerospace-move
 
 == Synopsis
 // tag::synopsis[]
-move-through [-h|--help] (left|down|up|right) [floating_pixel]
+move [-h|--help] (left|down|up|right) [floating_pixel]
 // end::synopsis[]
 
 == Description
@@ -18,7 +18,7 @@ move-through [-h|--help] (left|down|up|right) [floating_pixel]
 The optional `floating_pixel` argument specifies how far the window should be moved if it is floating.
 The default is 50 pixels
 
-NOTE: This command is an analog of https://i3wm.org/docs/userguide.html#move_direction[i3's move command]
+Deprecated name: `move-through`
 
 include::util/conditional-examples-header.adoc[]
 
@@ -30,7 +30,7 @@ h_tiles
 └── window 2
 ----
 +
-`*move-through right*` will result in the following layout
+`*move right*` will result in the following layout
 +
 ----
 h_tiles
@@ -49,7 +49,7 @@ h_tiles
     └── window 4
 ----
 +
-`*move-through right*` will result in the following layout
+`*move right*` will result in the following layout
 +
 ----
 h_tiles
@@ -71,7 +71,7 @@ h_tiles
     └── window 4
 ----
 +
-`*move-through left*` will result in the following layout
+`*move left*` will result in the following layout
 +
 ----
 h_tiles
@@ -83,7 +83,7 @@ h_tiles
 ----
 . *Implicit container example*
 +
-In some cases, `*move-through*` needs to implicitly create a container to fulfill your command.
+In some cases, `*move*` needs to implicitly create a container to fulfill your command.
 +
 Given this layout
 +
@@ -94,7 +94,7 @@ h_tiles
 └── window 3
 ----
 +
-`*move-through up*` will result in the following layout
+`*move up*` will result in the following layout
 +
 ----
 v_tiles

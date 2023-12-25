@@ -10,8 +10,8 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case layout
     case listApps = "list-apps"
     case mode
+    case move = "move"
     case moveNodeToWorkspace = "move-node-to-workspace"
-    case moveThrough = "move-through"
     case moveWorkspaceToMonitor = "move-workspace-to-monitor"
     case reloadConfig = "reload-config"
     case resize

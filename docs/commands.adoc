@@ -101,19 +101,19 @@ include::aerospace-mode.adoc[tags=synopsis]
 include::aerospace-mode.adoc[tags=purpose]
 include::aerospace-mode.adoc[tags=body]
 
+== move
+----
+include::aerospace-move.adoc[tags=synopsis]
+----
+include::aerospace-move.adoc[tags=purpose]
+include::aerospace-move.adoc[tags=body]
+
 == move-node-to-workspace
 ----
 include::aerospace-move-node-to-workspace.adoc[tags=synopsis]
 ----
 include::aerospace-move-node-to-workspace.adoc[tags=purpose]
 include::aerospace-move-node-to-workspace.adoc[tags=body]
-
-== move-through
-----
-include::aerospace-move-through.adoc[tags=synopsis]
-----
-include::aerospace-move-through.adoc[tags=purpose]
-include::aerospace-move-through.adoc[tags=body]
 
 == move-workspace-to-monitor
 ----

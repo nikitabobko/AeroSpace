@@ -1,8 +1,8 @@
 import Common
 
-struct MoveThroughCommand: Command {
-    let info: CmdStaticInfo = MoveThroughCmdArgs.info
-    let args: MoveThroughCmdArgs
+struct MoveCommand: Command {
+    let info: CmdStaticInfo = MoveCmdArgs.info
+    let args: MoveCmdArgs
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
         check(Thread.current.isMainThread)

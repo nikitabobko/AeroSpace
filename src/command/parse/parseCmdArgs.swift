@@ -44,8 +44,10 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
             result[kind.rawValue] = SubCommandParser(parseModeCmdArgs)
         case .moveNodeToWorkspace:
             result[kind.rawValue] = SubCommandParser(parseMoveNodeToWorkspaceCmdArgs)
-        case .moveThrough:
-            result[kind.rawValue] = SubCommandParser(parseMoveThroughCmdArgs)
+        case .move:
+            result[kind.rawValue] = SubCommandParser(parseMoveCmdArgs)
+            // deprecated
+            result["move-through"] = SubCommandParser(parseMoveCmdArgs)
         case .moveWorkspaceToMonitor:
             result[kind.rawValue] = SubCommandParser(parseMoveWorkspaceToMonitorCmdArgs)
             // deprecated
