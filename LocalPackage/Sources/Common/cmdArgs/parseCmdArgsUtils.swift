@@ -5,6 +5,11 @@ public protocol RawCmdArgs: Copyable {
 
 public extension RawCmdArgs {
     static var info: CmdStaticInfo { Self.parser.info }
+
+    func getOptionWithDefault<K>(_ path: KeyPath<Self, K?>) -> K {
+        // If Swift had covariant / contravariant generics, I'd not need this runtime check
+        self[keyPath: path] ?? errorT("\(path) must provide a default value")
+    }
 }
 
 public protocol CmdArgs {

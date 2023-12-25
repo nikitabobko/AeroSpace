@@ -347,6 +347,8 @@ extension Command {
             return .execAndForget(exec.args.bashScript)
         } else if let moveNodeToWorkspace = self as? MoveNodeToWorkspaceCommand {
             return .moveNodeToWorkspace(args: moveNodeToWorkspace.args)
+        } else if let listMonitors = self as? ListMonitorsCommand {
+            return .listMonitors(args: listMonitors.args)
         } else if let workspace = self as? WorkspaceCommand {
             return .workspace(args: workspace.args)
         }
@@ -361,4 +363,5 @@ enum CommandDescription: Equatable { // todo do I need this class after CmdArgs 
     case execAndForget(String)
     case moveNodeToWorkspace(args: MoveNodeToWorkspaceCmdArgs)
     case workspace(args: WorkspaceCmdArgs)
+    case listMonitors(args: ListMonitorsCmdArgs)
 }

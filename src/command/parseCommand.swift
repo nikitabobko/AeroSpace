@@ -29,6 +29,8 @@ extension CmdArgs {
             command = LayoutCommand(args: self as! LayoutCmdArgs)
         case .listApps:
             command = ListAppsCommand()
+        case .listMonitors:
+            command = ListMonitorsCommand(args: self as! ListMonitorsCmdArgs)
         case .mode:
             command = ModeCommand(args: self as! ModeCmdArgs)
         case .moveNodeToWorkspace:

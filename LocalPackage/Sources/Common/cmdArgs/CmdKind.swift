@@ -9,6 +9,7 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case joinWith = "join-with"
     case layout
     case listApps = "list-apps"
+    case listMonitors = "list-monitors"
     case mode
     case move = "move"
     case moveNodeToWorkspace = "move-node-to-workspace"

@@ -1,0 +1,41 @@
+= aerospace-list-monitors(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-list-monitors
+// tag::purpose[]
+:manpurpose: Prints the list of monitors
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+list-monitors [-h|--help] [--focused] [--mouse]
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+Output format is the table with 2 columns:
+
+* Monitor unique sequence ID (ID orders monitors from left to right)
+* Monitor name
+
+Output example:
+
+----
+1 | Built-in Retina Display
+2 | DELL U2723QE
+----
+
+NOTE: monitor sequence ID may change if you plug or unplug monitors
+
+You can use `awk` to get values of particular column: `awk -F '|' '{print $2}'`
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+--focused:: Only print the focused monitor
+--mouse:: Only print the monitor with the mouse
+
+include::util/man-footer.adoc[]

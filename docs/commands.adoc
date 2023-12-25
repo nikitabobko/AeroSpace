@@ -172,6 +172,13 @@ include::aerospace-list-apps.adoc[tags=synopsis]
 include::aerospace-list-apps.adoc[tags=purpose]
 include::aerospace-list-apps.adoc[tags=body]
 
+=== list-monitors
+----
+include::aerospace-list-monitors.adoc[tags=synopsis]
+----
+include::aerospace-list-monitors.adoc[tags=purpose]
+include::aerospace-list-monitors.adoc[tags=body]
+
 === version
 ----
 include::aerospace-version.adoc[tags=synopsis]
