@@ -5,8 +5,8 @@ func parseCmdArgs(_ raw: String) -> ParsedCmd<CmdArgs> {
         return .failure("Can't parse empty string command")
     }
     let subcommand = String(raw.split(separator: " ").first ?? "")
-    if (raw.contains("'") || raw.contains("\"")) && !subcommand.starts(with: "exec") {
-        return .failure("Quotation marks are reserved for future use")
+    if (raw.contains("'") || raw.contains("\"") || raw.contains("\\")) && !subcommand.starts(with: "exec") {
+        return .failure("Quotation marks and backslash are reserved for future use")
     } else if subcommand == "exec-and-wait" {
         return .failure("DEPRECATED. Please use exec-and-forget in combination with CLI commands")
     } else if let subcommandParser: any SubCommandParserProtocol = subcommands[subcommand] {
