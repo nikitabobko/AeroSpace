@@ -23,6 +23,19 @@ let usage =
 if args.isEmpty || args.first == "--help" || args.first == "-h" {
     print(usage)
 } else {
+    let argsAsString = args.joined(separator: " ")
+
+    switch parseCmdArgs(argsAsString) {
+    case .cmd:
+        break // Nothing to do
+    case .help(let help):
+        print(help)
+        exit(0)
+    case .failure(let e):
+        print(e)
+        exit(1)
+    }
+
     let socket = tryCatch { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrThrow()
     defer {
         socket.close()
@@ -58,7 +71,7 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
         )
     }
 
-    let (exitCode, output) = run(args.joined(separator: " "))
+    let (exitCode, output) = run(argsAsString)
 
     print(output, terminator: "")
     exit(exitCode)
