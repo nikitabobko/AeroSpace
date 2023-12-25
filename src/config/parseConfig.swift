@@ -3,8 +3,7 @@ import HotKey
 import Common
 
 func reloadConfig() {
-    let configUrl = FileManager.default.homeDirectoryForCurrentUser
-        .appending(path: isDebug ? ".aerospace-debug.toml" : ".aerospace.toml")
+    guard let configUrl = getConfigFileUrl() else { return }
     let (parsedConfig, errors) = parseConfig((try? String(contentsOf: configUrl)) ?? "")
 
     // Deactivate all the bindings of previous config (it's needed because the default config always stays in memory)
@@ -19,6 +18,38 @@ func reloadConfig() {
     }
     activateMode(mainModeId)
     syncStartAtLogin()
+}
+
+private func getConfigFileUrl() -> URL? {
+    let dotFileName = isDebug ? ".aerospace-debug.toml" : ".aerospace.toml"
+    let fileName = isDebug ? "aerospace-debug.toml" : "aerospace.toml"
+    let xdgConfigHome = ProcessInfo.processInfo.environment["XDG_CONFIG_HOME"]?.lets { URL(filePath: $0) }
+        ?? FileManager.default.homeDirectoryForCurrentUser.appending(path: ".config/")
+    let candidates = [
+        FileManager.default.homeDirectoryForCurrentUser.appending(path: dotFileName),
+        xdgConfigHome.appending(path: "aerospace").appending(path: fileName),
+    ]
+    let existingCandidates: [URL] = candidates.filter { (candidate: URL) in FileManager.default.fileExists(atPath: candidate.path) }
+    let count = existingCandidates.count
+    if count == 1 {
+        return existingCandidates.singleOrNil()
+    } else if count > 1 {
+        let message =
+            """
+            #################################################
+            ### AEROSPACE AMBIGUOUS CONFIG LOCATION ERROR ###
+            #################################################
+
+            Several configs are found:
+            \(existingCandidates.map { $0.path }.joined(separator: "\n"))
+
+            Fallback to default config
+            """
+        showMessageToUser(filename: "ambiguous-config-error.txt", message: message)
+        return nil
+    } else {
+        return nil
+    }
 }
 
 private func showConfigParsingErrorsToUser(_ errors: [TomlParseError], configUrl: URL) {

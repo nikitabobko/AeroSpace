@@ -7,7 +7,18 @@ include::util/header.adoc[]
 [#configuring-aerospace]
 == Configuring AeroSpace
 
-AeroSpace will read config file from `~/.aerospace.toml`.
+=== Config location
+
+AeroSpace tries to find the config in two locations:
+
+. `~/.aerospace.toml`
+. `+${XDG_CONFIG_HOME}/aerospace/aerospace.toml+`
+(`XDG_CONFIG_HOME` fallbacks to `~/.config`, if not presented)
+
+If the config is found in more than one location then the ambiguity is reported.
+
+=== Config samples
+
 Please see the following config samples:
 
 * The default config: xref:config-examples.adoc#default-config[default-config.toml]
