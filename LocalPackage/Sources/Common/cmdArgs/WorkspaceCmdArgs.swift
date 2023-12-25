@@ -1,5 +1,3 @@
-import Common
-
 private struct RawWorkspaceCmdArgs: RawCmdArgs {
     var target: RawWorkspaceTarget?
     var autoBackAndForth: Bool?
@@ -30,9 +28,15 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
     )
 }
 
-struct WorkspaceCmdArgs: CmdArgs, Equatable {
-    static let info: CmdStaticInfo = RawWorkspaceCmdArgs.info
-    let target: WorkspaceTarget
+public struct WorkspaceCmdArgs: CmdArgs, Equatable {
+    public static let info: CmdStaticInfo = RawWorkspaceCmdArgs.info
+    public let target: WorkspaceTarget
+
+    public init(
+        target: WorkspaceTarget
+    ) {
+        self.target = target
+    }
 }
 
 enum RawWorkspaceTarget: Equatable {
@@ -62,13 +66,13 @@ enum RawWorkspaceTarget: Equatable {
     }
 }
 
-enum WorkspaceTarget: Equatable {
+public enum WorkspaceTarget: Equatable {
     case next(wrapAround: Bool)
     case prev(wrapAround: Bool)
     //case back_and_forth // todo what about 'prev-focused'? todo at least the name needs to be reserved
     case workspaceName(name: String, autoBackAndForth: Bool)
 
-    func workspaceNameOrNil() -> String? {
+    public func workspaceNameOrNil() -> String? {
         if case .workspaceName(let name, _) = self {
             return name
         } else {
@@ -77,7 +81,7 @@ enum WorkspaceTarget: Equatable {
     }
 }
 
-func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
+public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
     parseRawCmdArgs(RawWorkspaceCmdArgs(), args)
         .flatMap { raw in
             guard let target = raw.target else {

@@ -1,10 +1,12 @@
-import Common
+public struct LayoutCmdArgs: CmdArgs, Equatable {
+    public static let info: CmdStaticInfo = RawLayoutCmdArgs.info
+    public let toggleBetween: [LayoutDescription]
 
-struct LayoutCmdArgs: CmdArgs, Equatable {
-    static let info: CmdStaticInfo = RawLayoutCmdArgs.info
-    let toggleBetween: [LayoutDescription]
+    public init(toggleBetween: [LayoutDescription]) {
+        self.toggleBetween = toggleBetween
+    }
 
-    enum LayoutDescription: String, CaseIterable, Equatable {
+    public enum LayoutDescription: String, CaseIterable, Equatable {
         case accordion, tiles
         case horizontal, vertical
         case h_accordion, v_accordion, h_tiles, v_tiles
@@ -48,7 +50,7 @@ private func parseToggleBetween(arg: String, _ nextArgs: inout [String]) -> Pars
     return .success(result)
 }
 
-func parseLayoutCmdArgs(_ args: [String]) -> ParsedCmd<LayoutCmdArgs> {
+public func parseLayoutCmdArgs(_ args: [String]) -> ParsedCmd<LayoutCmdArgs> {
     parseRawCmdArgs(RawLayoutCmdArgs(), args)
         .flatMap { raw in
             guard let toggleBetween = raw.toggleBetween?.takeIf({ !$0.isEmpty }) else {

@@ -52,19 +52,6 @@ extension TilingContainer {
     }
 }
 
-enum Orientation {
-    /// Windows are planced along the **horizontal** line
-    /// x-axis
-    case h
-    /// Windows are planced along the **vertical** line
-    /// y-axis
-    case v
-}
-
-extension Orientation {
-    var opposite: Orientation { self == .h ? .v : .h }
-}
-
 enum Layout: String {
     case tiles
     case accordion

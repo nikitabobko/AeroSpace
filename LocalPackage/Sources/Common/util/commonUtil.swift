@@ -54,6 +54,19 @@ func getStringStacktrace() -> String { Thread.callStackSymbols.joined(separator:
     errorT(message, file: file, line: line, column: column, function: function)
 }
 
+public func check(
+    _ condition: Bool,
+    _ message: String = "",
+    file: String = #file,
+    line: Int = #line,
+    column: Int = #column,
+    function: String = #function
+) {
+    if !condition {
+        error(message, file: file, line: line, column: column, function: function)
+    }
+}
+
 @inlinable public func tryCatch<T>(
     file: String = #file,
     line: Int = #line,
@@ -101,3 +114,27 @@ public struct AeroError: Error {
 }
 
 public var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
+
+public extension CaseIterable where Self: RawRepresentable, RawValue == String {
+    static var unionLiteral: String {
+        "(" + allCases.map(\.rawValue).joined(separator: "|") + ")"
+    }
+}
+
+public extension Int {
+    func toDouble() -> Double { Double(self) }
+}
+
+public extension String {
+    func removePrefix(_ prefix: String) -> String {
+        hasPrefix(prefix) ? String(dropFirst(prefix.count)) : self
+    }
+}
+
+public extension Double {
+    var squared: Double { self * self }
+}
+
+public extension Slice {
+    func toArray() -> [Base.Element] { Array(self) }
+}

@@ -1,5 +1,3 @@
-import Common
-
 public protocol RawCmdArgs: Copyable {
     init()
     static var parser: CmdParser<Self> { get }
@@ -177,4 +175,13 @@ public struct ArgParser<T: Copyable, K>: ArgParserProtocol {
 
 public func trueBoolFlag<T: Copyable>(_ keyPath: WritableKeyPath<T, Bool?>) -> ArgParser<T, Bool> {
     ArgParser(keyPath) { .success(true) }
+}
+
+// todo reuse in config
+public func parseEnum<T: RawRepresentable>(_ raw: String, _ _: T.Type) -> Parsed<T> where T.RawValue == String, T: CaseIterable {
+    T(rawValue: raw).orFailure { "Can't parse '\(raw)'.\nPossible values: \(T.unionLiteral)" }
+}
+
+public func parseCardinalDirection(_ direction: String) -> Parsed<CardinalDirection> {
+    parseEnum(direction, CardinalDirection.self)
 }

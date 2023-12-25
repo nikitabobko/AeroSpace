@@ -1,10 +1,12 @@
-import Common
+public struct SplitCmdArgs: CmdArgs {
+    public static let info: CmdStaticInfo = RawSplitCmdArgs.info
+    public let arg: SplitArg
 
-struct SplitCmdArgs: CmdArgs {
-    static let info: CmdStaticInfo = RawSplitCmdArgs.info
-    let arg: SplitArg
+    public init(arg: SplitArg) {
+        self.arg = arg
+    }
 
-    enum SplitArg: String, CaseIterable {
+    public enum SplitArg: String, CaseIterable {
         case horizontal, vertical, opposite
     }
 }
@@ -26,7 +28,7 @@ private struct RawSplitCmdArgs: RawCmdArgs {
     )
 }
 
-func parseSplitCmdArgs(_ args: [String]) -> ParsedCmd<SplitCmdArgs> {
+public func parseSplitCmdArgs(_ args: [String]) -> ParsedCmd<SplitCmdArgs> {
     parseRawCmdArgs(RawSplitCmdArgs(), args)
         .flatMap { raw in
             guard let arg = raw.arg else {

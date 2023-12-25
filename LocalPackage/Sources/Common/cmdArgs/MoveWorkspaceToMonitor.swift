@@ -1,5 +1,3 @@
-import Common
-
 private struct RawMoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
     var monitorTarget: MoveWorkspaceToMonitorCmdArgs.MonitorTarget? // todo introduce --wrap-around flag
 
@@ -17,16 +15,16 @@ private struct RawMoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
     )
 }
 
-struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
-    static let info: CmdStaticInfo = RawMoveWorkspaceToMonitorCmdArgs.info
+public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
+    public static let info: CmdStaticInfo = RawMoveWorkspaceToMonitorCmdArgs.info
 
-    let target: MonitorTarget
-    enum MonitorTarget: String, CaseIterable {
+    public let target: MonitorTarget
+    public enum MonitorTarget: String, CaseIterable {
         case next, prev
     }
 }
 
-func parseMoveWorkspaceToMonitorCmdArgs(_ args: [String]) -> ParsedCmd<MoveWorkspaceToMonitorCmdArgs> {
+public func parseMoveWorkspaceToMonitorCmdArgs(_ args: [String]) -> ParsedCmd<MoveWorkspaceToMonitorCmdArgs> {
     parseRawCmdArgs(RawMoveWorkspaceToMonitorCmdArgs(), args)
         .flatMap { raw in
             guard let target = raw.monitorTarget else {

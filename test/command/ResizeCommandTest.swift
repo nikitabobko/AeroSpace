@@ -1,4 +1,5 @@
 import XCTest
+import Common
 @testable import AeroSpace_Debug
 
 final class ResizeCommandTest: XCTestCase {

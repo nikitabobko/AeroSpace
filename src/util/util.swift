@@ -6,19 +6,6 @@ func stringType(of some: Any) -> String {
     return string
 }
 
-func check(
-    _ condition: Bool,
-    _ message: String = "",
-    file: String = #file,
-    line: Int = #line,
-    column: Int = #column,
-    function: String = #function
-) {
-    if !condition {
-        error(message, file: file, line: line, column: column, function: function)
-    }
-}
-
 func interceptTermination(_ _signal: Int32) {
     signal(_signal, { signal in
         check(Thread.current.isMainThread)
@@ -66,12 +53,6 @@ extension String? {
     var isNilOrEmpty: Bool { self == nil || self == "" }
 }
 
-extension CaseIterable where Self: RawRepresentable, RawValue == String {
-    static var unionLiteral: String {
-        "(" + allCases.map(\.rawValue).joined(separator: "|") + ")"
-    }
-}
-
 var apps: [AbstractApp] {
     isUnitTest
         ? appForTests.asList()
@@ -83,28 +64,12 @@ func terminateApp() -> Never {
     error("Unreachable code")
 }
 
-extension Int {
-    func toDouble() -> Double { Double(self) }
-}
-
 extension String {
-    func removePrefix(_ prefix: String) -> String {
-        hasPrefix(prefix) ? String(dropFirst(prefix.count)) : self
-    }
-
     func copyToClipboard() {
         let pasteboard = NSPasteboard.general
         pasteboard.declareTypes([.string], owner: nil)
         pasteboard.setString(self, forType: .string)
     }
-}
-
-extension Double {
-    var squared: Double { self * self }
-}
-
-extension Slice {
-    func toArray() -> [Base.Element] { Array(self) }
 }
 
 func -(a: CGPoint, b: CGPoint) -> CGPoint {

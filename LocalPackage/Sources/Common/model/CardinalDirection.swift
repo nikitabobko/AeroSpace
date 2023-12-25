@@ -1,8 +1,8 @@
-enum CardinalDirection: String, CaseIterable, Equatable {
+public enum CardinalDirection: String, CaseIterable, Equatable {
     case left, down, up, right
 }
 
-extension CardinalDirection {
+public extension CardinalDirection {
     var orientation: Orientation { self == .up || self == .down ? .v : .h }
     var isPositive: Bool { self == .down || self == .right }
     var opposite: CardinalDirection {

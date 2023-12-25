@@ -1,7 +1,5 @@
-import Common
-
-struct ExecAndForgetCmdArgs: CmdArgs {
-    let bashScript: String
+public struct ExecAndForgetCmdArgs: CmdArgs {
+    public let bashScript: String
     public static let info: CmdStaticInfo = CmdStaticInfo(
         help: "USAGE: exec-and-forget <bash-script>",
         kind: .execAndForget,
@@ -9,6 +7,6 @@ struct ExecAndForgetCmdArgs: CmdArgs {
     )
 }
 
-func parseExecAndForgetCmdArgs(_ nextArgs: String) -> ParsedCmd<ExecAndForgetCmdArgs> {
+public func parseExecAndForgetCmdArgs(_ nextArgs: String) -> ParsedCmd<ExecAndForgetCmdArgs> {
     .cmd(ExecAndForgetCmdArgs(bashScript: nextArgs))
 }

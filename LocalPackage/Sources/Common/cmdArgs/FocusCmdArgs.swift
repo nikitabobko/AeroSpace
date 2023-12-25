@@ -1,16 +1,25 @@
-import Common
+public struct FocusCmdArgs: CmdArgs, Equatable {
+    public static let info: CmdStaticInfo = RawFocusCmdArgs.info
 
-struct FocusCmdArgs: CmdArgs, Equatable {
-    static let info: CmdStaticInfo = RawFocusCmdArgs.info
+    public let boundaries: Boundaries // todo cover boundaries wrapping with tests
+    public let boundariesAction: WhenBoundariesCrossed
+    public let direction: CardinalDirection
 
-    let boundaries: Boundaries // todo cover boundaries wrapping with tests
-    let boundariesAction: WhenBoundariesCrossed
-    let direction: CardinalDirection
-    enum Boundaries: String, CaseIterable, Equatable {
+    public init(
+        boundaries: Boundaries ,
+        boundariesAction: WhenBoundariesCrossed,
+        direction: CardinalDirection
+    ) {
+        self.boundaries = boundaries
+        self.boundariesAction = boundariesAction
+        self.direction = direction
+    }
+
+    public enum Boundaries: String, CaseIterable, Equatable {
         case workspace
         case allMonitorsUnionFrame = "all-monitors-outer-frame"
     }
-    enum WhenBoundariesCrossed: String, CaseIterable, Equatable {
+    public enum WhenBoundariesCrossed: String, CaseIterable, Equatable {
         case stop = "stop"
         case wrapAroundTheWorkspace = "wrap-around-the-workspace"
         case wrapAroundAllMonitors = "wrap-around-all-monitors"
@@ -50,7 +59,7 @@ private struct RawFocusCmdArgs: RawCmdArgs {
     )
 }
 
-func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
+public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
     parseRawCmdArgs(RawFocusCmdArgs(), args)
         .flatMap { raw in
             guard let direction = raw.direction else {
@@ -67,10 +76,6 @@ func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
         }
 }
 
-func parseCardinalDirection(_ direction: String) -> Parsed<CardinalDirection> {
-    parseEnum(direction, CardinalDirection.self)
-}
-
 private func parseWhenBoundariesCrossed(_ nextArgs: inout [String]) -> Parsed<FocusCmdArgs.WhenBoundariesCrossed> {
     if let arg = nextArgs.nextOrNil() {
         return parseEnum(arg, FocusCmdArgs.WhenBoundariesCrossed.self)
@@ -85,9 +90,4 @@ private func parseBoundaries(_ nextArgs: inout [String]) -> Parsed<FocusCmdArgs.
     } else {
         return .failure("--boundaries option requires an argument: \(FocusCmdArgs.Boundaries.unionLiteral)")
     }
-}
-
-// todo reuse in config
-func parseEnum<T: RawRepresentable>(_ raw: String, _ _: T.Type) -> Parsed<T> where T.RawValue == String, T: CaseIterable {
-    T(rawValue: raw).orFailure { "Can't parse '\(raw)'.\nPossible values: \(T.unionLiteral)" }
 }

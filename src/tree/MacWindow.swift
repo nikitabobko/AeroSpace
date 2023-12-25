@@ -1,3 +1,5 @@
+import Common
+
 final class MacWindow: Window, CustomStringConvertible {
     let axWindow: AXUIElement
     private let macApp: MacApp

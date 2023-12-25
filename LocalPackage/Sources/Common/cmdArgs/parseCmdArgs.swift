@@ -1,6 +1,4 @@
-import Common
-
-func parseCmdArgs(_ raw: String) -> ParsedCmd<CmdArgs> {
+public func parseCmdArgs(_ raw: String) -> ParsedCmd<CmdArgs> {
     if raw == "" {
         return .failure("Can't parse empty string command")
     }

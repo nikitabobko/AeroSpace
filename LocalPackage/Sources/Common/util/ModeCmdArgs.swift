@@ -1,8 +1,8 @@
 import Common
 
-struct ModeCmdArgs: CmdArgs {
-    static let info: CmdStaticInfo = RawModeCmdArgs.info
-    let targetMode: String
+public struct ModeCmdArgs: CmdArgs {
+    public static let info: CmdStaticInfo = RawModeCmdArgs.info
+    public let targetMode: String
 }
 
 private struct RawModeCmdArgs: RawCmdArgs {
@@ -25,7 +25,7 @@ private struct RawModeCmdArgs: RawCmdArgs {
     )
 }
 
-func parseModeCmdArgs(_ args: [String]) -> ParsedCmd<ModeCmdArgs> {
+public func parseModeCmdArgs(_ args: [String]) -> ParsedCmd<ModeCmdArgs> {
     parseRawCmdArgs(RawModeCmdArgs(), args)
         .flatMap { raw in
             guard let mode = raw.targetMode else {

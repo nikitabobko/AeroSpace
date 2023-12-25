@@ -1,4 +1,4 @@
-extension Optional {
+public extension Optional {
     func orElse(_ other: () -> Wrapped) -> Wrapped { self ?? other() }
 
     func orFailure<F: Error>(_ or: () -> F) -> Result<Wrapped, F> {

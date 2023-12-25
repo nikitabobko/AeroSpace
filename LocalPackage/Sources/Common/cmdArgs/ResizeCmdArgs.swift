@@ -1,23 +1,29 @@
-import Common
+public struct ResizeCmdArgs: CmdArgs, Equatable {
+    public static let info: CmdStaticInfo = RawResizeCmdArgs.info
 
-struct ResizeCmdArgs: CmdArgs, Equatable {
-    static let info: CmdStaticInfo = RawResizeCmdArgs.info
+    public let dimension: Dimension
+    public let units: Units
 
-    let dimension: Dimension
-    let units: Units
+    public init(
+        dimension: Dimension,
+        units: Units
+    ) {
+        self.dimension = dimension
+        self.units = units
+    }
 
-    enum Dimension: String, CaseIterable, Equatable {
+    public enum Dimension: String, CaseIterable, Equatable {
         case width, height, smart
     }
 
-    enum Units: Equatable {
+    public enum Units: Equatable {
         case set(UInt)
         case add(UInt)
         case subtract(UInt)
     }
 }
 
-func parseResizeCmdArgs(_ args: [String]) -> ParsedCmd<ResizeCmdArgs> {
+public func parseResizeCmdArgs(_ args: [String]) -> ParsedCmd<ResizeCmdArgs> {
     parseRawCmdArgs(RawResizeCmdArgs(), args)
         .flatMap { raw in
             guard let dimension = raw.dimension else { return .failure("\(ResizeCmdArgs.Dimension.unionLiteral) argument is mandatory") }

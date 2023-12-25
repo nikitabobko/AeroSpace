@@ -1,8 +1,10 @@
-import Common
+public struct JoinWithCmdArgs: CmdArgs {
+    public static let info: CmdStaticInfo = RawJoinWithCmdArgs.info
+    public let direction: CardinalDirection
 
-struct JoinWithCmdArgs: CmdArgs {
-    static let info: CmdStaticInfo = RawJoinWithCmdArgs.info
-    let direction: CardinalDirection
+    public init(direction: CardinalDirection) {
+        self.direction = direction
+    }
 }
 
 private struct RawJoinWithCmdArgs: RawCmdArgs {
@@ -22,7 +24,7 @@ private struct RawJoinWithCmdArgs: RawCmdArgs {
     )
 }
 
-func parseJoinWithCmdArgs(_ args: [String]) -> ParsedCmd<JoinWithCmdArgs> {
+public func parseJoinWithCmdArgs(_ args: [String]) -> ParsedCmd<JoinWithCmdArgs> {
     parseRawCmdArgs(RawJoinWithCmdArgs(), args)
         .flatMap { raw in
             guard let direction = raw.direction else {

@@ -1,8 +1,10 @@
-import Common
+public struct MoveCmdArgs: CmdArgs {
+    public static let info: CmdStaticInfo = RawMoveCmdArgs.info
+    public let direction: CardinalDirection
 
-struct MoveCmdArgs: CmdArgs {
-    static let info: CmdStaticInfo = RawMoveCmdArgs.info
-    let direction: CardinalDirection
+    public init(_ direction: CardinalDirection) {
+        self.direction = direction
+    }
 }
 
 private struct RawMoveCmdArgs: RawCmdArgs {
@@ -22,14 +24,12 @@ private struct RawMoveCmdArgs: RawCmdArgs {
     )
 }
 
-func parseMoveCmdArgs(_ args: [String]) -> ParsedCmd<MoveCmdArgs> {
+public func parseMoveCmdArgs(_ args: [String]) -> ParsedCmd<MoveCmdArgs> {
     parseRawCmdArgs(RawMoveCmdArgs(), args)
         .flatMap { raw in
             guard let direction = raw.direction else {
                 return .failure("move direction isn't specified")
             }
-            return .cmd(MoveCmdArgs(
-                direction: direction
-            ))
+            return .cmd(MoveCmdArgs(direction))
         }
 }

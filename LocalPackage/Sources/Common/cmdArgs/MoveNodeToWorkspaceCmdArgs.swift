@@ -1,5 +1,3 @@
-import Common
-
 private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
     var target: RawWorkspaceTarget?
     var wrapAroundNextPrev: Bool?
@@ -24,12 +22,16 @@ private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
     )
 }
 
-struct MoveNodeToWorkspaceCmdArgs: CmdArgs, Equatable {
-    static let info: CmdStaticInfo = RawMoveNodeToWorkspaceCmdArgs.info
-    let target: WorkspaceTarget
+public struct MoveNodeToWorkspaceCmdArgs: CmdArgs, Equatable {
+    public static let info: CmdStaticInfo = RawMoveNodeToWorkspaceCmdArgs.info
+    public let target: WorkspaceTarget
+
+    public init(target: WorkspaceTarget) {
+        self.target = target
+    }
 }
 
-func parseMoveNodeToWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<MoveNodeToWorkspaceCmdArgs> {
+public func parseMoveNodeToWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<MoveNodeToWorkspaceCmdArgs> {
     parseRawCmdArgs(RawMoveNodeToWorkspaceCmdArgs(), args)
         .flatMap { raw in
             guard let target = raw.target else {

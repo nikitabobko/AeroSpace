@@ -1,14 +1,17 @@
-import Common
+public struct EnableCmdArgs: CmdArgs {
+    public static let info: CmdStaticInfo = RawEnableCmdArgs.info
+    public let targetState: State
 
-struct EnableCmdArgs: CmdArgs {
-    static let info: CmdStaticInfo = RawEnableCmdArgs.info
-    let targetState: State
-    enum State: String, CaseIterable {
+    public init(targetState: State) {
+        self.targetState = targetState
+    }
+
+    public enum State: String, CaseIterable {
         case on, off, toggle
     }
 }
 
-func parseEnableCmdArgs(_ args: [String]) -> ParsedCmd<EnableCmdArgs> {
+public func parseEnableCmdArgs(_ args: [String]) -> ParsedCmd<EnableCmdArgs> {
     parseRawCmdArgs(RawEnableCmdArgs(), args)
         .flatMap { raw in
             guard let state = raw.targetState else { return .failure("enable argument is mandatory") }
