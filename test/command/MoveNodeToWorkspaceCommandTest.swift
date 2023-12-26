@@ -5,6 +5,13 @@ import Common
 final class MoveNodeToWorkspaceCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
+    func testParse() {
+        XCTAssertEqual(
+            parseCommand("move-node-to-workspace next").cmdOrNil?.describe,
+            .moveNodeToWorkspace(args: MoveNodeToWorkspaceCmdArgs(target: .next(wrapAround: false)))
+        )
+    }
+
     func testSimple() {
         let workspaceA = Workspace.get(byName: "a")
         workspaceA.rootTilingContainer.apply {

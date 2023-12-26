@@ -37,7 +37,7 @@ public func parseMoveNodeToWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<MoveN
             guard let target = raw.target else {
                 return .failure("<workspace-name> is mandatory argument")
             }
-            return target.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: false).flatMap { target in
+            return target.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: nil).flatMap { target in
                 .cmd(MoveNodeToWorkspaceCmdArgs(target: target))
             }
         }
