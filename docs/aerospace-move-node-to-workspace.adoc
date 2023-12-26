@@ -19,7 +19,7 @@ move-node-to-workspace [-h|--help] <workspace-name>
 // tag::body[]
 {manpurpose}
 
-`*(next|prev)*` is identical to `*workspace (next|prev)*`
+`(next|prev)` is identical to `workspace (next|prev)`
 
 // end::body[]
 

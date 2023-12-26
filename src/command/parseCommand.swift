@@ -31,6 +31,8 @@ extension CmdArgs {
             command = ListAppsCommand()
         case .listMonitors:
             command = ListMonitorsCommand(args: self as! ListMonitorsCmdArgs)
+        case .listWorkspaces:
+            command = ListWorkspacesCommand(args: self as! ListWorkspacesCmdArgs)
         case .mode:
             command = ModeCommand(args: self as! ModeCmdArgs)
         case .moveNodeToWorkspace:

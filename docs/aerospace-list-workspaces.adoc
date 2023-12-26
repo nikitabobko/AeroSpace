@@ -1,0 +1,33 @@
+= aerospace-list-workspaces(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-list-workspaces
+// tag::purpose[]
+:manpurpose: Prints the list of workspaces on new lines
+// end::purpose[]
+
+== Synopsis
+[verse]
+// tag::synopsis[]
+list-workspaces [-h|--help] [--visible [no]] [--focused [no]] [--mouse [no]]
+                [--on-monitors <monitors>]
+
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+--focused [no]:: Filter results to only print the focused workspace or not
+--mouse [no]:: Filter results to only print the workspace with the mouse or not
+--focused [no]:: Filter results to only print the focused workspace or not
+--on-monitors <monitors>::
+Filter results to only print the workspaces that are attached to specified monitors.
+<monitors> is a comma separated list of monitor IDs
+
+// end::body[]
+
+include::util/man-footer.adoc[]

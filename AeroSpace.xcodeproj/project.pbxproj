@@ -23,6 +23,7 @@
 		2E691C1E3F03B82F8507A435 /* MoveCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1376845BAB666880919B9AA2 /* MoveCommand.swift */; };
 		374CE35B85B941B8F584C113 /* FlattenWorkspaceTreeCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FDECECC773EBA30661EB8A /* FlattenWorkspaceTreeCommandTest.swift */; };
 		3774857EF024E97B7AA5DE78 /* MoveNodeToWorkspaceCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25AC44D0E9450867215FCBEC /* MoveNodeToWorkspaceCommand.swift */; };
+		3AFD7EE961B97F38C0914A0C /* ListWorkspacesCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6478C499F3FB86C017D7BB /* ListWorkspacesCommand.swift */; };
 		3BD6FF4CC51532977DA0C05A /* AeroAny.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82476B9BEBAC00EB9E32256F /* AeroAny.swift */; };
 		42197B9C71A0CDDE65804A6A /* accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D31BF26EAFA96F675D2C14B /* accessibility.swift */; };
 		43E3628E37D2439B820FFC82 /* server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796713A1B3AEEBF4D0D180C7 /* server.swift */; };
@@ -158,6 +159,7 @@
 		9857501E54FC080D2A62DCE4 /* MoveCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveCommandTest.swift; sourceTree = "<group>"; };
 		99853C505D93E41F6531C324 /* CloseAllWindowsButCurrentCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseAllWindowsButCurrentCommand.swift; sourceTree = "<group>"; };
 		9D31BF26EAFA96F675D2C14B /* accessibility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = accessibility.swift; sourceTree = "<group>"; };
+		9E6478C499F3FB86C017D7BB /* ListWorkspacesCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListWorkspacesCommand.swift; sourceTree = "<group>"; };
 		9ECC990B6C2D66D343216A12 /* FullscreenCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenCommand.swift; sourceTree = "<group>"; };
 		9F6B8A501483ACBB62560101 /* TreeNodeEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeEx.swift; sourceTree = "<group>"; };
 		A60709210745C60D64F82D53 /* TreeNodeKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeKind.swift; sourceTree = "<group>"; };
@@ -353,6 +355,7 @@
 			children = (
 				B0185502A3752FF618BB3D36 /* ListAppsCommand.swift */,
 				FD6BB613EC44C1B32CE4A47E /* ListMonitorsCommand.swift */,
+				9E6478C499F3FB86C017D7BB /* ListWorkspacesCommand.swift */,
 				D83FDC62BD349F4FDB2D779A /* VersionCommand.swift */,
 			);
 			path = query;
@@ -564,6 +567,7 @@
 				D12277DFEAAAC7AE19D0B629 /* LazySequenceProtocolEx.swift in Sources */,
 				63D2357EADCF6137D630F7C5 /* ListAppsCommand.swift in Sources */,
 				F69159A961FEE54847EC9A8D /* ListMonitorsCommand.swift in Sources */,
+				3AFD7EE961B97F38C0914A0C /* ListWorkspacesCommand.swift in Sources */,
 				BD6301B2CFC16FDE4223ACB8 /* MacApp.swift in Sources */,
 				EECC59858691B99A95542D72 /* MacWindow.swift in Sources */,
 				6E4E235FDA41307B19F16182 /* ModeCommand.swift in Sources */,
