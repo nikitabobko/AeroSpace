@@ -4,7 +4,7 @@ struct MoveWorkspaceToMonitorCommand: Command {
     let info: CmdStaticInfo = MoveWorkspaceToMonitorCmdArgs.info
     let args: MoveWorkspaceToMonitorCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
         let focusedWorkspace = subject.workspace
         let prevMonitor = focusedWorkspace.monitor
@@ -18,7 +18,7 @@ struct MoveWorkspaceToMonitorCommand: Command {
                 "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(prevMonitor)")
             return true
         } else {
-            stdout += "Can't move workspace '\(focusedWorkspace.name)' to monitor '\(targetMonitor.name)'. workspace-to-monitor-force-assignment doesn't allow it\n"
+            stdout.append("Can't move workspace '\(focusedWorkspace.name)' to monitor '\(targetMonitor.name)'. workspace-to-monitor-force-assignment doesn't allow it")
             return false
         }
     }

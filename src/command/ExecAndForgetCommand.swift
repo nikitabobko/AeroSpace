@@ -4,7 +4,7 @@ struct ExecAndForgetCommand: Command {
     let info: CmdStaticInfo = ExecAndForgetCmdArgs.info
     let args: ExecAndForgetCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
         // todo shall exec-and-forget fork exec session?
         check(Thread.current.isMainThread)
         // It doesn't throw if exit code is non-zero

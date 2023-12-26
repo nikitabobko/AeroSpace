@@ -4,15 +4,15 @@ struct JoinWithCommand: Command {
     let info: CmdStaticInfo = JoinWithCmdArgs.info
     let args: JoinWithCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
         let direction = args.direction
         guard let currentWindow = subject.windowOrNil else {
-            stdout += noWindowIsFocused
+            stdout.append(noWindowIsFocused)
             return false
         }
         guard let (parent, ownIndex) = currentWindow.closestParent(hasChildrenInDirection: direction, withLayout: nil) else {
-            stdout += "No windows in specified direction\n"
+            stdout.append("No windows in specified direction")
             return false
         }
         let moveInTarget = parent.children[ownIndex + direction.focusOffset]

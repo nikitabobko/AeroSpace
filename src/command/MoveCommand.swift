@@ -4,11 +4,11 @@ struct MoveCommand: Command {
     let info: CmdStaticInfo = MoveCmdArgs.info
     let args: MoveCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
         let direction = args.direction
         guard let currentWindow = subject.windowOrNil else {
-            stdout += noWindowIsFocused
+            stdout.append(noWindowIsFocused)
             return false
         }
         switch currentWindow.parent.kind {

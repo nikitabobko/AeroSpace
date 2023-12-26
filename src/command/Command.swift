@@ -2,11 +2,11 @@ import Common
 
 protocol Command: AeroAny {
     var info: CmdStaticInfo { get }
-    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool
+    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool
 }
 
 extension Command {
-    func run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
+    func run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
         return [self].run(&subject, &stdout)
     }
@@ -14,7 +14,7 @@ extension Command {
     func runOnFocusedSubject() {
         check(Thread.current.isMainThread)
         var focused = CommandSubject.focused
-        var devNull = ""
+        var devNull: [String] = []
         _ = run(&focused, &devNull)
     }
 
@@ -28,11 +28,11 @@ extension Command {
 // 4. Tray icon buttons
 extension [Command] {
     func run(_ subject: inout CommandSubject) -> Bool {
-        var devNull: String = ""
+        var devNull: [String] = []
         return run(&subject, &devNull)
     }
 
-    func run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
+    func run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
         var result = true
         for command in self {

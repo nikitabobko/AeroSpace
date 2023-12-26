@@ -23,7 +23,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         }
 
         var subject = CommandSubject.focused
-        var devNull = ""
+        var devNull: [String] = []
 
         MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .workspaceName(name: "b", autoBackAndForth: false)))
             .run(&subject, &devNull)
@@ -40,7 +40,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         }
 
         var subject = CommandSubject.focused
-        var devNull = ""
+        var devNull: [String] = []
 
         MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .workspaceName(name: "b", autoBackAndForth: false)))
             .run(&subject, &devNull)

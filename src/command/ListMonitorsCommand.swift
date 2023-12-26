@@ -4,7 +4,7 @@ struct ListMonitorsCommand: Command {
     let info: CmdStaticInfo = ListMonitorsCmdArgs.info
     let args: ListMonitorsCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
         var result: [(Int, Monitor)] = sortedMonitors.withIndex
         if args.getOptionWithDefault(\.focused) {
@@ -17,12 +17,13 @@ struct ListMonitorsCommand: Command {
                 monitor.activeWorkspace.name == mouseLocation.monitorApproximation.activeWorkspace.name
             }
         }
-        stdout += result
-            .map { (index, monitor) in
-                [String(index + 1), monitor.name]
-            }
-            .toPaddingTable()
-            + "\n"
+        stdout.append(
+            result
+                .map { (index, monitor) in
+                    [String(index + 1), monitor.name]
+                }
+                .toPaddingTable()
+        )
         return true
     }
 }

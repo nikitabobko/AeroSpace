@@ -4,9 +4,9 @@ struct MoveNodeToWorkspaceCommand: Command {
     let info: CmdStaticInfo = MoveNodeToWorkspaceCmdArgs.info
     let args: MoveNodeToWorkspaceCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ stdout: inout String) -> Bool {
+    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
         guard let focused = subject.windowOrNil else {
-            stdout += noWindowIsFocused
+            stdout.append(noWindowIsFocused)
             return false
         }
         let preserveWorkspace = focused.workspace

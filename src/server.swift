@@ -64,9 +64,9 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             let (success, stdout) = await Task { @MainActor in
                 refreshSession(forceFocus: true) {
                     var focused = CommandSubject.focused // todo restore subject from "exec session"
-                    var stdout = ""
+                    var stdout: [String] = []
                     let success = command.run(&focused, &stdout)
-                    return (success, stdout)
+                    return (success, stdout.joined(separator: "\n"))
                 }
             }.result.getOrNil() ?? (false, "Fail to await main thread")
             let msg = (success ? "0" : "1") + stdout
