@@ -27,15 +27,15 @@ public func parseResizeCmdArgs(_ args: [String]) -> ParsedCmd<ResizeCmdArgs> {
     parseRawCmdArgs(RawResizeCmdArgs(), args)
         .flatMap { raw in
             .cmd(ResizeCmdArgs(
-                dimension: raw.dimension,
-                units: raw.units
+                dimension: raw.dimension.val,
+                units: raw.units.val
             ))
         }
 }
 
 private struct RawResizeCmdArgs: RawCmdArgs {
-    @Lateinit var dimension: ResizeCmdArgs.Dimension
-    @Lateinit var units: ResizeCmdArgs.Units
+    var dimension: Lateinit<ResizeCmdArgs.Dimension> = .uninitialized
+    var units: Lateinit<ResizeCmdArgs.Units> = .uninitialized
 
     static let parser: CmdParser<Self> = cmdParser(
         kind: .resize,
@@ -52,8 +52,8 @@ private struct RawResizeCmdArgs: RawCmdArgs {
               """,
         options: [:],
         arguments: [
-            ArgParser(\.dimension, parseDimension, argPlaceholderIfMandatory: "(smart|width|height)"),
-            ArgParser(\.units, parseUnits, argPlaceholderIfMandatory: "[+|-]<number>"),
+            newArgParser(\.dimension, parseDimension, argPlaceholderIfMandatory: "(smart|width|height)"),
+            newArgParser(\.units, parseUnits, argPlaceholderIfMandatory: "[+|-]<number>"),
         ]
     )
 }

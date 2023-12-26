@@ -8,7 +8,7 @@ struct EnableCommand: Command {
         check(Thread.current.isMainThread)
         let prevState = TrayMenuModel.shared.isEnabled
         let newState: Bool
-        switch args.targetState {
+        switch args.targetState.val {
         case .on:
             newState = true
         case .off:

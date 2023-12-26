@@ -9,14 +9,14 @@ public struct JoinWithCmdArgs: CmdArgs, RawCmdArgs {
                 -h, --help   Print help
               """,
         options: [:],
-        arguments: [ArgParser(\.direction, parseCardinalDirectionArg, argPlaceholderIfMandatory: CardinalDirection.unionLiteral)]
+        arguments: [newArgParser(\.direction, parseCardinalDirectionArg, argPlaceholderIfMandatory: CardinalDirection.unionLiteral)]
     )
-    @Lateinit public var direction: CardinalDirection
+    public var direction: Lateinit<CardinalDirection> = .uninitialized
 
     fileprivate init() {}
 
     public init(direction: CardinalDirection) {
-        self.direction = direction
+        self.direction = .initialized(direction)
     }
 }
 

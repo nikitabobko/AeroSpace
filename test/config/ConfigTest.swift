@@ -135,7 +135,7 @@ final class ConfigTest: XCTestCase {
     func testParseTiles() {
         let command = parseCommand("layout tiles h_tiles v_tiles list h_list v_list").cmdOrNil
         XCTAssertTrue(command is LayoutCommand)
-        XCTAssertEqual((command as! LayoutCommand).args.toggleBetween, [.tiles, .h_tiles, .v_tiles, .tiles, .h_tiles, .v_tiles])
+        XCTAssertEqual((command as! LayoutCommand).args.toggleBetween.val, [.tiles, .h_tiles, .v_tiles, .tiles, .h_tiles, .v_tiles])
 
         guard case .help = parseCommand("layout tiles -h") else {
             XCTFail()

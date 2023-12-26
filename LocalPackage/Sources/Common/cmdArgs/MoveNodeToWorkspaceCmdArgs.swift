@@ -1,5 +1,5 @@
 private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
-    @Lateinit var target: RawWorkspaceTarget
+    var target: Lateinit<RawWorkspaceTarget> = .uninitialized
     var wrapAroundNextPrev: Bool?
 
     static let parser: CmdParser<Self> = cmdParser(
@@ -18,7 +18,7 @@ private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
                 <workspace-name>        Workspace name to move focused window to
               """,
         options: ["--wrap-around": optionalTrueBoolFlag(\.wrapAroundNextPrev)],
-        arguments: [ArgParser(\.target, parseRawWorkspaceTarget, argPlaceholderIfMandatory: workspaceTargetPlaceholder)]
+        arguments: [newArgParser(\.target, parseRawWorkspaceTarget, argPlaceholderIfMandatory: workspaceTargetPlaceholder)]
     )
 }
 
@@ -33,6 +33,6 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs, Equatable {
 
 public func parseMoveNodeToWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<MoveNodeToWorkspaceCmdArgs> {
     parseRawCmdArgs(RawMoveNodeToWorkspaceCmdArgs(), args)
-        .flatMap { raw in raw.target.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: nil) }
+        .flatMap { raw in raw.target.val.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: nil) }
         .flatMap { target in .cmd(MoveNodeToWorkspaceCmdArgs(target: target)) }
 }

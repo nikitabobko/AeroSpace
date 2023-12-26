@@ -1,5 +1,5 @@
 private struct RawWorkspaceCmdArgs: RawCmdArgs {
-    @Lateinit var target: RawWorkspaceTarget
+    var target: Lateinit<RawWorkspaceTarget> = .uninitialized
     var autoBackAndForth: Bool?
     var wrapAroundNextPrev: Bool?
 
@@ -24,7 +24,7 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
             "--auto-back-and-forth": optionalTrueBoolFlag(\.autoBackAndForth),
             "--wrap-around": optionalTrueBoolFlag(\.wrapAroundNextPrev)
         ],
-        arguments: [ArgParser(\.target, parseRawWorkspaceTarget, argPlaceholderIfMandatory: workspaceTargetPlaceholder)]
+        arguments: [newArgParser(\.target, parseRawWorkspaceTarget, argPlaceholderIfMandatory: workspaceTargetPlaceholder)]
     )
 }
 
@@ -83,7 +83,7 @@ public enum WorkspaceTarget: Equatable {
 
 public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
     parseRawCmdArgs(RawWorkspaceCmdArgs(), args)
-        .flatMap { raw in raw.target.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: raw.autoBackAndForth) }
+        .flatMap { raw in raw.target.val.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: raw.autoBackAndForth) }
         .flatMap { target in .cmd(WorkspaceCmdArgs(target: target)) }
 }
 

@@ -4,11 +4,6 @@ public protocol RawCmdArgs: Copyable {
 
 public extension RawCmdArgs {
     static var info: CmdStaticInfo { Self.parser.info }
-
-    func getOptionWithDefault<K>(_ path: KeyPath<Self, K?>) -> K {
-        // If Swift had covariant / contravariant generics, I'd not need this runtime check
-        self[keyPath: path] ?? errorT("\(path) must provide a default value")
-    }
 }
 
 public protocol CmdArgs {
@@ -188,6 +183,18 @@ public struct ArgParser<T: Copyable, K>: ArgParserProtocol {
 
     public static func ==(lhs: ArgParser<T, K>, rhs: ArgParser<T, K>) -> Bool { lhs.keyPath == rhs.keyPath }
     public func hash(into hasher: inout Hasher) { hasher.combine(keyPath) }
+}
+
+func newArgParser<T: Copyable, K>(
+    _ keyPath: WritableKeyPath<T, Lateinit<K>>,
+    _ parse: @escaping (String, inout [String]) -> Parsed<K>,
+    argPlaceholderIfMandatory: String
+) -> ArgParser<T, Lateinit<K>> {
+    ArgParser(
+        keyPath,
+        { arg, nextArgs in parse(arg, &nextArgs).map { .initialized($0) } },
+        argPlaceholderIfMandatory: argPlaceholderIfMandatory
+    )
 }
 
 public func trueBoolFlag<T: Copyable>(_ keyPath: WritableKeyPath<T, Bool>) -> ArgParser<T, Bool> {

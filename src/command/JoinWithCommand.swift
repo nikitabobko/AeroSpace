@@ -6,7 +6,7 @@ struct JoinWithCommand: Command {
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
-        let direction: CardinalDirection = args.direction
+        let direction = args.direction.val
         guard let currentWindow = subject.windowOrNil else {
             stdout.append(noWindowIsFocused)
             return false

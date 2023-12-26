@@ -29,7 +29,7 @@ public struct FocusCmdArgs: CmdArgs, Equatable {
 private struct RawFocusCmdArgs: RawCmdArgs {
     var boundaries: FocusCmdArgs.Boundaries = .workspace
     var boundariesAction: FocusCmdArgs.WhenBoundariesCrossed = .wrapAroundTheWorkspace
-    @Lateinit var direction: CardinalDirection
+    var direction: Lateinit<CardinalDirection> = .uninitialized
 
     static let parser: CmdParser<Self> = cmdParser(
         kind: .focus,
@@ -55,7 +55,7 @@ private struct RawFocusCmdArgs: RawCmdArgs {
             "--boundaries": ArgParser(\.boundaries, parseBoundaries),
             "--boundaries-action": ArgParser(\.boundariesAction, parseWhenBoundariesCrossed)
         ],
-        arguments: [ArgParser(\.direction, parseCardinalDirectionArg, argPlaceholderIfMandatory: CardinalDirection.unionLiteral)]
+        arguments: [newArgParser(\.direction, parseCardinalDirectionArg, argPlaceholderIfMandatory: CardinalDirection.unionLiteral)]
     )
 }
 
@@ -68,7 +68,7 @@ public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
             return .cmd(FocusCmdArgs(
                 boundaries: raw.boundaries,
                 boundariesAction: raw.boundariesAction,
-                direction: raw.direction
+                direction: raw.direction.val
             ))
         }
 }

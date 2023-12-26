@@ -9,14 +9,14 @@ public struct LayoutCmdArgs: CmdArgs, RawCmdArgs, Equatable {
                 -h, --help   Print help
               """,
         options: [:],
-        arguments: [ArgParser(\.toggleBetween, parseToggleBetween, argPlaceholderIfMandatory: LayoutDescription.unionLiteral)]
+        arguments: [newArgParser(\.toggleBetween, parseToggleBetween, argPlaceholderIfMandatory: LayoutDescription.unionLiteral)]
     )
-    @Lateinit public var toggleBetween: [LayoutDescription]
+    public var toggleBetween: Lateinit<[LayoutDescription]> = .uninitialized
 
     fileprivate init() {}
 
     public init(toggleBetween: [LayoutDescription]) {
-        self.toggleBetween = toggleBetween
+        self.toggleBetween = .initialized(toggleBetween)
     }
 
     public enum LayoutDescription: String, CaseIterable, Equatable {
@@ -48,7 +48,7 @@ private func parseToggleBetween(arg: String, _ nextArgs: inout [String]) -> Pars
 
 public func parseLayoutCmdArgs(_ args: [String]) -> ParsedCmd<LayoutCmdArgs> {
     parseRawCmdArgs(LayoutCmdArgs(), args).map {
-        check(!$0.toggleBetween.isEmpty)
+        check(!$0.toggleBetween.val.isEmpty)
         return $0
     }
 }

@@ -10,8 +10,8 @@ struct LayoutCommand: Command {
             stdout.append(noWindowIsFocused)
             return false
         }
-        let targetDescription = args.toggleBetween.first(where: { !window.matchesDescription($0) })
-            ?? args.toggleBetween.first!
+        let targetDescription = args.toggleBetween.val.first(where: { !window.matchesDescription($0) })
+            ?? args.toggleBetween.val.first!
         if window.matchesDescription(targetDescription) { return false }
         var result = true
         switch targetDescription {

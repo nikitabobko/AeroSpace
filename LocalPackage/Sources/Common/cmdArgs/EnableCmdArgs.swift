@@ -9,14 +9,14 @@ public struct EnableCmdArgs: CmdArgs, RawCmdArgs {
                 -h, --help   Print help
               """,
         options: [:],
-        arguments: [ArgParser(\.targetState, parseState, argPlaceholderIfMandatory: EnableCmdArgs.State.unionLiteral)]
+        arguments: [newArgParser(\.targetState, parseState, argPlaceholderIfMandatory: EnableCmdArgs.State.unionLiteral)]
     )
-    @Lateinit public var targetState: State
+    public var targetState: Lateinit<State> = .uninitialized
 
     fileprivate init() {}
 
     public init(targetState: State) {
-        self.targetState = targetState
+        self.targetState = .initialized(targetState)
     }
 
     public enum State: String, CaseIterable {

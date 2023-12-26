@@ -1,15 +1,30 @@
-@propertyWrapper
-public struct Lateinit<T> {
-    private var _value: T?
+// "Happy path" Optional
+public enum Lateinit<T> {
+    case initialized(T)
+    case uninitialized
 
-    public init() {}
+    public var val: T {
+        switch self {
+        case .initialized(let value):
+            return value
+        case .uninitialized:
+            error("Property is not initialized")
+        }
+    }
 
-    public var wrappedValue: T {
-        get { _value ?? errorT("Property is not initialized") }
-        set { _value = newValue }
+    public var isInitialized: Bool {
+        switch self {
+        case .initialized:
+            return true
+        case .uninitialized:
+            return false
+        }
     }
 }
 
 extension Lateinit: Equatable where T: Equatable {
-    public static func ==(lhs: Self, rhs: Self) -> Bool { lhs._value == rhs._value }
+    public static func ==(lhs: Self, rhs: Self) -> Bool {
+        lhs.isInitialized && rhs.isInitialized && lhs.val == rhs.val ||
+            lhs.isInitialized == rhs.isInitialized
+    }
 }

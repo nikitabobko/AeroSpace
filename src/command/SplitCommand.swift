@@ -19,7 +19,7 @@ struct SplitCommand: Command {
             return false // Nothing to do for floating windows
         case .tilingContainer(let parent):
             let orientation: Orientation
-            switch args.arg {
+            switch args.arg.val {
             case .vertical:
                 orientation = .v
             case .horizontal:

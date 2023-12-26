@@ -9,14 +9,14 @@ public struct SplitCmdArgs: CmdArgs, RawCmdArgs {
                 -h, --help   Print help
               """,
         options: [:],
-        arguments: [ArgParser(\.arg, parseSplitArg, argPlaceholderIfMandatory: SplitArg.unionLiteral)]
+        arguments: [newArgParser(\.arg, parseSplitArg, argPlaceholderIfMandatory: SplitArg.unionLiteral)]
     )
-    @Lateinit public var arg: SplitArg
+    public var arg: Lateinit<SplitArg> = .uninitialized
 
     fileprivate init() {}
 
     public init(_ arg: SplitArg) {
-        self.arg = arg
+        self.arg = .initialized(arg)
     }
 
     public enum SplitArg: String, CaseIterable {

@@ -44,7 +44,7 @@ private func parseWindowDetectedCallback(_ raw: TOMLValueConvertible, _ backtrac
     // - 'exec' is prohibited because command-subject isn't yet supported in "exec session"
     // - Commands that change focus are prohibited because the design isn't yet clear
     if !run.allSatisfy({
-        let layoutArg = ($0 as? LayoutCommand)?.args.toggleBetween.singleOrNil()
+        let layoutArg = ($0 as? LayoutCommand)?.args.toggleBetween.val.singleOrNil()
         return layoutArg == .floating || layoutArg == .tiling || $0 is MoveNodeToWorkspaceCommand
     }) {
         myErrors.append(.semantic(backtrace,
