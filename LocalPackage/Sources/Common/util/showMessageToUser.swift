@@ -1,4 +1,3 @@
-import Common
 import Foundation
 
 public func showMessageToUser(filename: String, message: String) {

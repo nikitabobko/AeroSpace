@@ -1,6 +1,19 @@
-public struct LayoutCmdArgs: CmdArgs, Equatable {
-    public static let info: CmdStaticInfo = RawLayoutCmdArgs.info
-    public let toggleBetween: [LayoutDescription]
+public struct LayoutCmdArgs: CmdArgs, RawCmdArgs, Equatable {
+    public static let parser: CmdParser<Self> = cmdParser(
+        kind: .layout,
+        allowInConfig: true,
+        help: """
+              USAGE: layout [-h|--help] \(LayoutDescription.unionLiteral)...
+
+              OPTIONS:
+                -h, --help   Print help
+              """,
+        options: [:],
+        arguments: [ArgParser(\.toggleBetween, parseToggleBetween, argPlaceholderIfMandatory: LayoutDescription.unionLiteral)]
+    )
+    @Lateinit public var toggleBetween: [LayoutDescription]
+
+    fileprivate init() {}
 
     public init(toggleBetween: [LayoutDescription]) {
         self.toggleBetween = toggleBetween
@@ -12,23 +25,6 @@ public struct LayoutCmdArgs: CmdArgs, Equatable {
         case h_accordion, v_accordion, h_tiles, v_tiles
         case tiling, floating
     }
-}
-
-private struct RawLayoutCmdArgs: RawCmdArgs {
-    var toggleBetween: [LayoutCmdArgs.LayoutDescription]?
-
-    static let parser: CmdParser<Self> = cmdParser(
-        kind: .layout,
-        allowInConfig: true,
-        help: """
-              USAGE: layout [-h|--help] \(LayoutCmdArgs.LayoutDescription.unionLiteral)...
-
-              OPTIONS:
-                -h, --help   Print help
-              """,
-        options: [:],
-        arguments: [ArgParser(\.toggleBetween, parseToggleBetween)]
-    )
 }
 
 private func parseToggleBetween(arg: String, _ nextArgs: inout [String]) -> Parsed<[LayoutCmdArgs.LayoutDescription]> {
@@ -51,13 +47,10 @@ private func parseToggleBetween(arg: String, _ nextArgs: inout [String]) -> Pars
 }
 
 public func parseLayoutCmdArgs(_ args: [String]) -> ParsedCmd<LayoutCmdArgs> {
-    parseRawCmdArgs(RawLayoutCmdArgs(), args)
-        .flatMap { raw in
-            guard let toggleBetween = raw.toggleBetween?.takeIf({ !$0.isEmpty }) else {
-                return .failure("layout command must have at least one argument")
-            }
-            return .cmd(LayoutCmdArgs(toggleBetween: toggleBetween))
-        }
+    parseRawCmdArgs(LayoutCmdArgs(), args).map {
+        check(!$0.toggleBetween.isEmpty)
+        return $0
+    }
 }
 
 private extension String {

@@ -1,16 +1,5 @@
-public struct MoveCmdArgs: CmdArgs {
-    public static let info: CmdStaticInfo = RawMoveCmdArgs.info
-    public let direction: CardinalDirection
-
-    public init(_ direction: CardinalDirection) {
-        self.direction = direction
-    }
-}
-
-private struct RawMoveCmdArgs: RawCmdArgs {
-    var direction: CardinalDirection?
-
-    static let parser: CmdParser<Self> = cmdParser(
+public struct MoveCmdArgs: CmdArgs, RawCmdArgs {
+    public static let parser: CmdParser<Self> = cmdParser(
         kind: .move,
         allowInConfig: true,
         help: """
@@ -20,16 +9,17 @@ private struct RawMoveCmdArgs: RawCmdArgs {
                 -h, --help   Print help
               """,
         options: [:],
-        arguments: [ArgParser(\.direction, parseCardinalDirection)]
+        arguments: [ArgParser(\.direction, parseCardinalDirectionArg, argPlaceholderIfMandatory: CardinalDirection.unionLiteral)]
     )
+    @Lateinit public var direction: CardinalDirection
+
+    fileprivate init() {}
+
+    public init(_ direction: CardinalDirection) {
+        self.direction = direction
+    }
 }
 
 public func parseMoveCmdArgs(_ args: [String]) -> ParsedCmd<MoveCmdArgs> {
-    parseRawCmdArgs(RawMoveCmdArgs(), args)
-        .flatMap { raw in
-            guard let direction = raw.direction else {
-                return .failure("move direction isn't specified")
-            }
-            return .cmd(MoveCmdArgs(direction))
-        }
+    parseRawCmdArgs(MoveCmdArgs(), args)
 }

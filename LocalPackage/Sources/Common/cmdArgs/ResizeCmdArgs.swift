@@ -26,18 +26,16 @@ public struct ResizeCmdArgs: CmdArgs, Equatable {
 public func parseResizeCmdArgs(_ args: [String]) -> ParsedCmd<ResizeCmdArgs> {
     parseRawCmdArgs(RawResizeCmdArgs(), args)
         .flatMap { raw in
-            guard let dimension = raw.dimension else { return .failure("\(ResizeCmdArgs.Dimension.unionLiteral) argument is mandatory") }
-            guard let units = raw.units else { return .failure("<number> argument is mandatory") }
-            return .cmd(ResizeCmdArgs(
-                dimension: dimension,
-                units: units
+            .cmd(ResizeCmdArgs(
+                dimension: raw.dimension,
+                units: raw.units
             ))
         }
 }
 
 private struct RawResizeCmdArgs: RawCmdArgs {
-    var dimension: ResizeCmdArgs.Dimension?
-    var units: ResizeCmdArgs.Units?
+    @Lateinit var dimension: ResizeCmdArgs.Dimension
+    @Lateinit var units: ResizeCmdArgs.Units
 
     static let parser: CmdParser<Self> = cmdParser(
         kind: .resize,
@@ -54,21 +52,21 @@ private struct RawResizeCmdArgs: RawCmdArgs {
               """,
         options: [:],
         arguments: [
-            ArgParser(\.dimension, parseDimension),
-            ArgParser(\.units, parseUnits),
+            ArgParser(\.dimension, parseDimension, argPlaceholderIfMandatory: "(smart|width|height)"),
+            ArgParser(\.units, parseUnits, argPlaceholderIfMandatory: "[+|-]<number>"),
         ]
     )
 }
 
-private func parseDimension(_ raw: String) -> Parsed<ResizeCmdArgs.Dimension> {
-    parseEnum(raw, ResizeCmdArgs.Dimension.self)
+private func parseDimension(arg: String, nextArgs: inout [String]) -> Parsed<ResizeCmdArgs.Dimension> {
+    parseEnum(arg, ResizeCmdArgs.Dimension.self)
 }
 
-private func parseUnits(_ raw: String) -> Parsed<ResizeCmdArgs.Units> {
-    if let number = UInt(raw.removePrefix("+").removePrefix("-")) {
-        if raw.starts(with: "+") {
+private func parseUnits(arg: String, nextArgs: inout [String]) -> Parsed<ResizeCmdArgs.Units> {
+    if let number = UInt(arg.removePrefix("+").removePrefix("-")) {
+        if arg.starts(with: "+") {
             return .success(.add(number))
-        } else if raw.starts(with: "-") {
+        } else if arg.starts(with: "-") {
             return .success(.subtract(number))
         } else {
             return .success(.set(number))

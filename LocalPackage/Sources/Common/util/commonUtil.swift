@@ -1,5 +1,4 @@
 import Foundation
-import Common
 
 private var recursionDetectorDuringFailure: Bool = false
 
@@ -24,6 +23,7 @@ public func errorT<T>(
         Git hash: \(gitHash)
         Coordinate: \(file):\(line):\(column) \(function)
         recursionDetectorDuringFailure: \(recursionDetectorDuringFailure)
+        cli: \(isCli)
 
         Stacktrace:
         \(getStringStacktrace())
@@ -38,7 +38,7 @@ public func errorT<T>(
         recursionDetectorDuringFailure = true
         terminationHandler.beforeTermination()
     }
-    fatalError(message)
+    fatalError("\n" + message)
 }
 
 func printStacktrace() { print(getStringStacktrace()) }

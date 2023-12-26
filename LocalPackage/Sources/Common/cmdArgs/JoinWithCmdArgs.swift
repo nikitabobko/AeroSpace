@@ -1,16 +1,5 @@
-public struct JoinWithCmdArgs: CmdArgs {
-    public static let info: CmdStaticInfo = RawJoinWithCmdArgs.info
-    public let direction: CardinalDirection
-
-    public init(direction: CardinalDirection) {
-        self.direction = direction
-    }
-}
-
-private struct RawJoinWithCmdArgs: RawCmdArgs {
-    var direction: CardinalDirection?
-
-    static let parser: CmdParser<Self> = cmdParser(
+public struct JoinWithCmdArgs: CmdArgs, RawCmdArgs {
+    public static let parser: CmdParser<Self> = cmdParser(
         kind: .joinWith,
         allowInConfig: true,
         help: """
@@ -20,18 +9,17 @@ private struct RawJoinWithCmdArgs: RawCmdArgs {
                 -h, --help   Print help
               """,
         options: [:],
-        arguments: [ArgParser(\.direction, parseCardinalDirection)]
+        arguments: [ArgParser(\.direction, parseCardinalDirectionArg, argPlaceholderIfMandatory: CardinalDirection.unionLiteral)]
     )
+    @Lateinit public var direction: CardinalDirection
+
+    fileprivate init() {}
+
+    public init(direction: CardinalDirection) {
+        self.direction = direction
+    }
 }
 
 public func parseJoinWithCmdArgs(_ args: [String]) -> ParsedCmd<JoinWithCmdArgs> {
-    parseRawCmdArgs(RawJoinWithCmdArgs(), args)
-        .flatMap { raw in
-            guard let direction = raw.direction else {
-                return .failure("join-with direction isn't specified")
-            }
-            return .cmd(JoinWithCmdArgs(
-                direction: direction
-            ))
-        }
+    parseRawCmdArgs(JoinWithCmdArgs(), args)
 }

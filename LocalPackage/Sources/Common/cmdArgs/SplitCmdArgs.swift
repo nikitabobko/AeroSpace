@@ -1,8 +1,21 @@
-public struct SplitCmdArgs: CmdArgs {
-    public static let info: CmdStaticInfo = RawSplitCmdArgs.info
-    public let arg: SplitArg
+public struct SplitCmdArgs: CmdArgs, RawCmdArgs {
+    public static let parser: CmdParser<Self> = cmdParser(
+        kind: .split,
+        allowInConfig: true,
+        help: """
+              USAGE: split [-h|--help] \(SplitArg.unionLiteral)
 
-    public init(arg: SplitArg) {
+              OPTIONS:
+                -h, --help   Print help
+              """,
+        options: [:],
+        arguments: [ArgParser(\.arg, parseSplitArg, argPlaceholderIfMandatory: SplitArg.unionLiteral)]
+    )
+    @Lateinit public var arg: SplitArg
+
+    fileprivate init() {}
+
+    public init(_ arg: SplitArg) {
         self.arg = arg
     }
 
@@ -11,35 +24,10 @@ public struct SplitCmdArgs: CmdArgs {
     }
 }
 
-private struct RawSplitCmdArgs: RawCmdArgs {
-    var arg: SplitCmdArgs.SplitArg?
-
-    static let parser: CmdParser<Self> = cmdParser(
-        kind: .split,
-        allowInConfig: true,
-        help: """
-              USAGE: split [-h|--help] \(SplitCmdArgs.SplitArg.unionLiteral)
-
-              OPTIONS:
-                -h, --help   Print help
-              """,
-        options: [:],
-        arguments: [ArgParser(\.arg, parseSplitArg)]
-    )
-}
-
 public func parseSplitCmdArgs(_ args: [String]) -> ParsedCmd<SplitCmdArgs> {
-    parseRawCmdArgs(RawSplitCmdArgs(), args)
-        .flatMap { raw in
-            guard let arg = raw.arg else {
-                return .failure("split argument isn't specified")
-            }
-            return .cmd(SplitCmdArgs(
-                arg: arg
-            ))
-        }
+    parseRawCmdArgs(SplitCmdArgs(), args)
 }
 
-private func parseSplitArg(_ arg: String) -> Parsed<SplitCmdArgs.SplitArg> {
+private func parseSplitArg(arg: String, nextArgs: inout [String]) -> Parsed<SplitCmdArgs.SplitArg> {
     parseEnum(arg, SplitCmdArgs.SplitArg.self)
 }

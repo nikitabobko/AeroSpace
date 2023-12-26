@@ -1,5 +1,5 @@
 private struct RawWorkspaceCmdArgs: RawCmdArgs {
-    var target: RawWorkspaceTarget?
+    @Lateinit var target: RawWorkspaceTarget
     var autoBackAndForth: Bool?
     var wrapAroundNextPrev: Bool?
 
@@ -21,10 +21,10 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
                 <workspace-name>        Workspace name to focus
               """,
         options: [
-            "--auto-back-and-forth": trueBoolFlag(\.autoBackAndForth),
-            "--wrap-around": trueBoolFlag(\.wrapAroundNextPrev)
+            "--auto-back-and-forth": optionalTrueBoolFlag(\.autoBackAndForth),
+            "--wrap-around": optionalTrueBoolFlag(\.wrapAroundNextPrev)
         ],
-        arguments: [ArgParser(\.target, parseRawWorkspaceTarget)]
+        arguments: [ArgParser(\.target, parseRawWorkspaceTarget, argPlaceholderIfMandatory: workspaceTargetPlaceholder)]
     )
 }
 
@@ -83,17 +83,13 @@ public enum WorkspaceTarget: Equatable {
 
 public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
     parseRawCmdArgs(RawWorkspaceCmdArgs(), args)
-        .flatMap { raw in
-            guard let target = raw.target else {
-                return .failure("<workspace-name> is mandatory argument")
-            }
-            return target.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: raw.autoBackAndForth).flatMap { target in
-                .cmd(WorkspaceCmdArgs(target: target))
-            }
-        }
+        .flatMap { raw in raw.target.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: raw.autoBackAndForth) }
+        .flatMap { target in .cmd(WorkspaceCmdArgs(target: target)) }
 }
 
-func parseRawWorkspaceTarget(_ arg: String) -> Parsed<RawWorkspaceTarget> {
+let workspaceTargetPlaceholder = "(<workspace-name>|next|prev)"
+
+func parseRawWorkspaceTarget(arg: String, nextArgs: inout [String]) -> Parsed<RawWorkspaceTarget> {
     switch arg {
     case "next":
         return .success(.next)

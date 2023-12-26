@@ -6,7 +6,7 @@ public struct FocusCmdArgs: CmdArgs, Equatable {
     public let direction: CardinalDirection
 
     public init(
-        boundaries: Boundaries ,
+        boundaries: Boundaries,
         boundariesAction: WhenBoundariesCrossed,
         direction: CardinalDirection
     ) {
@@ -27,15 +27,15 @@ public struct FocusCmdArgs: CmdArgs, Equatable {
 }
 
 private struct RawFocusCmdArgs: RawCmdArgs {
-    var boundaries: FocusCmdArgs.Boundaries?
-    var boundariesAction: FocusCmdArgs.WhenBoundariesCrossed?
-    var direction: CardinalDirection?
+    var boundaries: FocusCmdArgs.Boundaries = .workspace
+    var boundariesAction: FocusCmdArgs.WhenBoundariesCrossed = .wrapAroundTheWorkspace
+    @Lateinit var direction: CardinalDirection
 
     static let parser: CmdParser<Self> = cmdParser(
         kind: .focus,
         allowInConfig: true,
         help: """
-              USAGE: focus [<OPTIONS>] (left|down|up|right)
+              USAGE: focus [<OPTIONS>] \(CardinalDirection.unionLiteral)
 
               OPTIONS:
                 -h, --help                     Print help
@@ -55,28 +55,25 @@ private struct RawFocusCmdArgs: RawCmdArgs {
             "--boundaries": ArgParser(\.boundaries, parseBoundaries),
             "--boundaries-action": ArgParser(\.boundariesAction, parseWhenBoundariesCrossed)
         ],
-        arguments: [ArgParser(\.direction, parseCardinalDirection)]
+        arguments: [ArgParser(\.direction, parseCardinalDirectionArg, argPlaceholderIfMandatory: CardinalDirection.unionLiteral)]
     )
 }
 
 public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
     parseRawCmdArgs(RawFocusCmdArgs(), args)
         .flatMap { raw in
-            guard let direction = raw.direction else {
-                return .failure("focus direction isn't specified")
-            }
             if raw.boundaries == .workspace && raw.boundariesAction == .wrapAroundAllMonitors {
-                return .failure("\(raw.boundaries!.rawValue) and \(raw.boundariesAction!.rawValue) is an invalid combination of values")
+                return .failure("\(raw.boundaries.rawValue) and \(raw.boundariesAction.rawValue) is an invalid combination of values")
             }
             return .cmd(FocusCmdArgs(
-                boundaries: raw.boundaries ?? .workspace,
-                boundariesAction: raw.boundariesAction ?? .wrapAroundTheWorkspace,
-                direction: direction
+                boundaries: raw.boundaries,
+                boundariesAction: raw.boundariesAction,
+                direction: raw.direction
             ))
         }
 }
 
-private func parseWhenBoundariesCrossed(_ nextArgs: inout [String]) -> Parsed<FocusCmdArgs.WhenBoundariesCrossed> {
+private func parseWhenBoundariesCrossed(arg: String, nextArgs: inout [String]) -> Parsed<FocusCmdArgs.WhenBoundariesCrossed> {
     if let arg = nextArgs.nextOrNil() {
         return parseEnum(arg, FocusCmdArgs.WhenBoundariesCrossed.self)
     } else {
@@ -84,7 +81,7 @@ private func parseWhenBoundariesCrossed(_ nextArgs: inout [String]) -> Parsed<Fo
     }
 }
 
-private func parseBoundaries(_ nextArgs: inout [String]) -> Parsed<FocusCmdArgs.Boundaries> {
+private func parseBoundaries(arg: String, nextArgs: inout [String]) -> Parsed<FocusCmdArgs.Boundaries> {
     if let arg = nextArgs.nextOrNil() {
         return parseEnum(arg, FocusCmdArgs.Boundaries.self)
     } else {

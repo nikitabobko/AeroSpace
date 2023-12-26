@@ -1,5 +1,4 @@
 public protocol RawCmdArgs: Copyable {
-    init()
     static var parser: CmdParser<Self> { get }
 }
 
@@ -61,6 +60,10 @@ public enum ParsedCmd<T> {
         flatMap { .cmd(mapper($0)) }
     }
 
+    public func filter(_ msg: String, _ predicate: (T) -> Bool) -> ParsedCmd<T> { // todo drop
+        flatMap { this in predicate(this) ? .cmd(this) : .failure(msg) }
+    }
+
     public func flatMap<R>(_ mapper: (T) -> ParsedCmd<R>) -> ParsedCmd<R> {
         switch self {
         case .cmd(let cmd):
@@ -114,6 +117,12 @@ public func parseRawCmdArgs<T : RawCmdArgs>(_ raw: T, _ args: [String]) -> Parse
         }
     }
 
+    for arg in T.parser.arguments[argumentIndex...] {
+        if let placeholder = arg.argPlaceholderIfMandatory {
+            errors.append("Argument '\(placeholder)' is mandatory")
+        }
+    }
+
     return errors.isEmpty ? .cmd(raw) : .failure(errors.joinErrors())
 }
 
@@ -146,41 +155,47 @@ public extension [String] {
 
 private extension ArgParserProtocol {
     func transformRaw(_ raw: T, _ arg: String, _ args: inout [String], _ errors: inout [String]) -> T {
-        raw.copy(keyPath, parse(arg, &args).getOrNil(appendErrorTo: &errors))
+        if let value = parse(arg, &args).getOrNil(appendErrorTo: &errors) {
+            return raw.copy(keyPath, value)
+        } else {
+            return raw
+        }
     }
 }
 
 public protocol ArgParserProtocol<T> {
     associatedtype K
-    associatedtype T where T : Copyable
-    var keyPath: WritableKeyPath<T, K?> { get }
+    associatedtype T where T: Copyable
+    var argPlaceholderIfMandatory: String? { get }
+    var keyPath: WritableKeyPath<T, K> { get }
     var parse: (/*arg*/ String, /*nextArgs*/ inout [String]) -> Parsed<K> { get }
 }
 
 public struct ArgParser<T: Copyable, K>: ArgParserProtocol {
-    public let keyPath: WritableKeyPath<T, K?>
+    public let keyPath: WritableKeyPath<T, K>
     public let parse: (String, inout [String]) -> Parsed<K>
+    public let argPlaceholderIfMandatory: String?
 
-    public init(_ keyPath: WritableKeyPath<T, K?>, _ parse: @escaping (String, inout [String]) -> Parsed<K>) {
+    public init(
+        _ keyPath: WritableKeyPath<T, K>,
+        _ parse: @escaping (String, inout [String]) -> Parsed<K>,
+        argPlaceholderIfMandatory: String? = nil
+    ) {
         self.keyPath = keyPath
         self.parse = parse
+        self.argPlaceholderIfMandatory = argPlaceholderIfMandatory
     }
 
-    public init(_ keyPath: WritableKeyPath<T, K?>, _ parse: @escaping () -> Parsed<K>) {
-        self.init(keyPath, { arg, nextArgs in parse() })
-    }
-
-    public init(_ keyPath: WritableKeyPath<T, K?>, _ parse: @escaping (inout [String]) -> Parsed<K>) {
-        self.init(keyPath, { arg, nextArgs in parse(&nextArgs) })
-    }
-
-    public init(_ keyPath: WritableKeyPath<T, K?>, _ parse: @escaping (String) -> Parsed<K>) {
-        self.init(keyPath, { arg, nextArgs in parse(arg) })
-    }
+    public static func ==(lhs: ArgParser<T, K>, rhs: ArgParser<T, K>) -> Bool { lhs.keyPath == rhs.keyPath }
+    public func hash(into hasher: inout Hasher) { hasher.combine(keyPath) }
 }
 
-public func trueBoolFlag<T: Copyable>(_ keyPath: WritableKeyPath<T, Bool?>) -> ArgParser<T, Bool> {
-    ArgParser(keyPath) { .success(true) }
+public func trueBoolFlag<T: Copyable>(_ keyPath: WritableKeyPath<T, Bool>) -> ArgParser<T, Bool> {
+    ArgParser(keyPath) { arg, nextArgs in .success(true) }
+}
+
+public func optionalTrueBoolFlag<T: Copyable>(_ keyPath: WritableKeyPath<T, Bool?>) -> ArgParser<T, Bool?> {
+    ArgParser(keyPath) { arg, nextArgs in .success(true) }
 }
 
 // todo reuse in config
@@ -188,6 +203,6 @@ public func parseEnum<T: RawRepresentable>(_ raw: String, _ _: T.Type) -> Parsed
     T(rawValue: raw).orFailure { "Can't parse '\(raw)'.\nPossible values: \(T.unionLiteral)" }
 }
 
-public func parseCardinalDirection(_ direction: String) -> Parsed<CardinalDirection> {
-    parseEnum(direction, CardinalDirection.self)
+public func parseCardinalDirectionArg(arg: String, nextArgs: inout [String]) -> Parsed<CardinalDirection> {
+    parseEnum(arg, CardinalDirection.self)
 }

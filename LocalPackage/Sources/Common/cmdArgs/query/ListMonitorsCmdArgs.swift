@@ -17,8 +17,8 @@ public struct ListMonitorsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
         arguments: []
     )
 
-    public var focused: Bool? = false
-    public var mouse: Bool? = false
+    public var focused = false
+    public var mouse = false
 
     public init() {}
 }

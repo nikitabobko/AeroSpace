@@ -1,5 +1,5 @@
 private struct RawMoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
-    var monitorTarget: MoveWorkspaceToMonitorCmdArgs.MonitorTarget? // todo introduce --wrap-around flag
+    @Lateinit var monitorTarget: MoveWorkspaceToMonitorCmdArgs.MonitorTarget // todo introduce --wrap-around flag
 
     static let parser: CmdParser<Self> = cmdParser(
         kind: .moveWorkspaceToMonitor,
@@ -11,7 +11,7 @@ private struct RawMoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
                 -h, --help              Print help
               """,
         options: [:],
-        arguments: [ArgParser(\.monitorTarget, parseMonitorTarget)]
+        arguments: [ArgParser(\.monitorTarget, parseMonitorTarget, argPlaceholderIfMandatory: "(next|prev)")]
     )
 }
 
@@ -26,16 +26,9 @@ public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
 
 public func parseMoveWorkspaceToMonitorCmdArgs(_ args: [String]) -> ParsedCmd<MoveWorkspaceToMonitorCmdArgs> {
     parseRawCmdArgs(RawMoveWorkspaceToMonitorCmdArgs(), args)
-        .flatMap { raw in
-            guard let target = raw.monitorTarget else {
-                return .failure("<workspace-name> is mandatory argument")
-            }
-            return .cmd(MoveWorkspaceToMonitorCmdArgs(
-                target: target
-            ))
-        }
+        .flatMap { raw in .cmd(MoveWorkspaceToMonitorCmdArgs(target: raw.monitorTarget)) }
 }
 
-private func parseMonitorTarget(_ arg: String) -> Parsed<MoveWorkspaceToMonitorCmdArgs.MonitorTarget> {
+private func parseMonitorTarget(arg: String, nextArgs: inout [String]) -> Parsed<MoveWorkspaceToMonitorCmdArgs.MonitorTarget> {
     parseEnum(arg, MoveWorkspaceToMonitorCmdArgs.MonitorTarget.self)
 }
