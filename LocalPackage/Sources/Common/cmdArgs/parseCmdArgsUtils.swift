@@ -89,12 +89,16 @@ public func parseRawCmdArgs<T : RawCmdArgs>(_ raw: T, _ args: [String]) -> Parse
     var errors: [String] = []
 
     var argumentIndex = 0
+    var options: Set<String> = Set()
 
     while !args.isEmpty {
         let arg = args.next()
         if arg == "-h" || arg == "--help" {
             return .help(T.info.help)
         } else if let optionParser: any ArgParserProtocol<T> = T.parser.options[arg] {
+            if !options.insert(arg).inserted {
+                errors.append("Duplicated option '\(arg)'")
+            }
             raw = optionParser.transformRaw(raw, arg, &args, &errors)
         } else if let parser = T.parser.arguments.getOrNil(atIndex: argumentIndex) {
             raw = parser.transformRaw(raw, arg, &args, &errors)
@@ -137,10 +141,7 @@ public extension [String] {
 
 private extension ArgParserProtocol {
     func transformRaw(_ raw: T, _ arg: String, _ args: inout [String], _ errors: inout [String]) -> T {
-        if raw[keyPath: keyPath] != nil {
-            errors.append("Duplicated argument '\(arg)'")
-        }
-        return raw.copy(keyPath, parse(arg, &args).getOrNil(appendErrorTo: &errors))
+        raw.copy(keyPath, parse(arg, &args).getOrNil(appendErrorTo: &errors))
     }
 }
 

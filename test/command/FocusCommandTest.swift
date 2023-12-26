@@ -34,7 +34,7 @@ final class FocusCommandTest: XCTestCase {
 
         XCTAssertEqual(
             parseCommand("focus --boundaries workspace --boundaries workspace left").failureMsgOrNil,
-            "ERROR: Duplicated argument '--boundaries'"
+            "ERROR: Duplicated option '--boundaries'"
         )
     }
 
