@@ -172,10 +172,9 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
 
         preservedWorkspaceNames: modesOrDefault.values.lazy
             .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
-            .compactMap { (binding: HotkeyBinding) -> String? in
-                (binding.commands.singleOrNil() as? WorkspaceCommand)?.args.target.workspaceNameOrNil()
-                    ?? (binding.commands.singleOrNil() as? MoveNodeToWorkspaceCommand)?.args.target.workspaceNameOrNil()
-                    ?? nil
+            .flatMap { (binding: HotkeyBinding) -> [String] in
+                binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.workspaceNameOrNil() } +
+                    binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.workspaceNameOrNil() }
             }
             + (raw.workspaceToMonitorForceAssignment ?? [:]).keys
     )

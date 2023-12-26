@@ -40,10 +40,10 @@ private func parseToggleBetween(arg: String, _ nextArgs: inout [String]) -> Pars
 
     var result: [LayoutCmdArgs.LayoutDescription] = []
     for arg in args {
-        if let layout = arg.parseLayoutDescription2() {
+        if let layout = arg.parseLayoutDescription() {
             result.append(layout)
         } else {
-            return .failure("Can't parse '\(arg)'")
+            return .failure("Can't parse '\(arg)'\nPossible values: \(LayoutCmdArgs.LayoutDescription.unionLiteral)")
         }
     }
 
@@ -61,8 +61,7 @@ public func parseLayoutCmdArgs(_ args: [String]) -> ParsedCmd<LayoutCmdArgs> {
 }
 
 private extension String {
-    // todo rename
-    func parseLayoutDescription2() -> LayoutCmdArgs.LayoutDescription? {
+    func parseLayoutDescription() -> LayoutCmdArgs.LayoutDescription? {
         if let parsed = LayoutCmdArgs.LayoutDescription(rawValue: self) {
             return parsed
         } else if self == "list" {

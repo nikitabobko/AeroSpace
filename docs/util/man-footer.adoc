@@ -5,7 +5,7 @@
 
 == Copying
 
-Copyright (C) 2008 Nikita Bobko +
+Copyright (C) 2023 Nikita Bobko +
 Free use of this software is granted under the terms of the MIT License
 
 == AUTHOR

@@ -57,21 +57,6 @@ struct LayoutCommand: Command {
     }
 }
 
-extension String {
-    func parseLayoutDescription() -> LayoutCmdArgs.LayoutDescription? {
-        if let parsed = LayoutCmdArgs.LayoutDescription(rawValue: self) {
-            return parsed
-        } else if self == "list" {
-            return .tiles
-        } else if self == "h_list" {
-            return .h_tiles
-        } else if self == "v_list" {
-            return .v_tiles
-        }
-        return nil
-    }
-}
-
 private func changeTilingLayout(targetLayout: Layout?, targetOrientation: Orientation?, window: Window) -> Bool {
     switch window.parent.kind {
     case .tilingContainer(let parent):

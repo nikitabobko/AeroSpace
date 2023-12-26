@@ -12,14 +12,14 @@ struct ListAppsCommand: Command {
                 let name = app.name ?? "NULL"
                 return [pid, appId, name]
             }
-            .toPaddingTable(columnSeparator: " | ")
-        stdout += "\n"
+            .toPaddingTable()
+            + "\n"
         return true
     }
 }
 
-private extension [[String]] {
-    func toPaddingTable(columnSeparator: String) -> String {
+extension [[String]] {
+    func toPaddingTable(columnSeparator: String = " | ") -> String {
         let pads: [Int] = transposed.map { column in column.map { $0.count }.max()! }
         return self
             .map { (row: [String]) in
