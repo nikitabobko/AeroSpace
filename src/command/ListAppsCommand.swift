@@ -5,32 +5,28 @@ struct ListAppsCommand: Command {
 
     func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
-        stdout.append(
-            apps
-                .map { app in
-                    let pid = String(app.pid)
-                    let appId = app.id ?? "NULL"
-                    let name = app.name ?? "NULL"
-                    return [pid, appId, name]
-                }
-                .toPaddingTable()
-        )
+        stdout += apps
+            .map { app in
+                let pid = String(app.pid)
+                let appId = app.id ?? "NULL"
+                let name = app.name ?? "NULL"
+                return [pid, appId, name]
+            }
+            .toPaddingTable()
         return true
     }
 }
 
 extension [[String]] {
-    func toPaddingTable(columnSeparator: String = " | ") -> String {
+    func toPaddingTable(columnSeparator: String = " | ") -> [String] {
         let pads: [Int] = transposed.map { column in column.map { $0.count }.max()! }
-        return self
-            .map { (row: [String]) in
-                zip(row, pads)
-                    .map { (elem: String, pad: Int) in
-                        elem.padding(toLength: pad, withPad: " ", startingAt: 0)
-                    }
-                    .joined(separator: columnSeparator)
-            }
-            .joined(separator: "\n")
+        return self.map { (row: [String]) in
+            zip(row, pads)
+                .map { (elem: String, pad: Int) in
+                    elem.padding(toLength: pad, withPad: " ", startingAt: 0)
+                }
+                .joined(separator: columnSeparator)
+        }
     }
 }
 

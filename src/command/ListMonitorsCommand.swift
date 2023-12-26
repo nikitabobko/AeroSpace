@@ -17,13 +17,11 @@ struct ListMonitorsCommand: Command {
                 monitor.activeWorkspace.name == mouseLocation.monitorApproximation.activeWorkspace.name
             }
         }
-        stdout.append(
-            result
-                .map { (index, monitor) in
-                    [String(index + 1), monitor.name]
-                }
-                .toPaddingTable()
-        )
+        stdout += result
+            .map { (index, monitor) in
+                [String(index + 1), monitor.name]
+            }
+            .toPaddingTable()
         return true
     }
 }
