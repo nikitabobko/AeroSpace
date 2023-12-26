@@ -14,7 +14,7 @@ struct ResizeCommand: Command { // todo cover with tests
         let orientation: Orientation
         let parent: TilingContainer
         let node: TreeNode
-        switch args.dimension {
+        switch args.dimension.val {
         case .width:
             orientation = .h
             guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return false }
@@ -32,7 +32,7 @@ struct ResizeCommand: Command { // todo cover with tests
             orientation = parent.orientation
         }
         let diff: CGFloat
-        switch args.units {
+        switch args.units.val {
         case .set(let unit):
             diff = CGFloat(unit) - node.getWeight(orientation)
         case .add(let unit):

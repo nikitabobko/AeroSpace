@@ -13,7 +13,7 @@ struct FocusCommand: Command {
         defer {
             restoreFloatingWindows(floatingWindows: floatingWindows, workspace: workspace)
         }
-        let direction = args.direction
+        let direction = args.direction.val
 
         var result: Bool = true
         if let (parent, ownIndex) = window?.closestParent(hasChildrenInDirection: direction, withLayout: nil) {

@@ -24,7 +24,7 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
             "--auto-back-and-forth": optionalTrueBoolFlag(\.autoBackAndForth),
             "--wrap-around": optionalTrueBoolFlag(\.wrapAroundNextPrev)
         ],
-        arguments: [newArgParser(\.target, parseRawWorkspaceTarget, argPlaceholderIfMandatory: workspaceTargetPlaceholder)]
+        arguments: [newArgParser(\.target, parseRawWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
     )
 }
 

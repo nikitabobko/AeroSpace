@@ -9,7 +9,7 @@ public struct JoinWithCmdArgs: CmdArgs, RawCmdArgs {
                 -h, --help   Print help
               """,
         options: [:],
-        arguments: [newArgParser(\.direction, parseCardinalDirectionArg, argPlaceholderIfMandatory: CardinalDirection.unionLiteral)]
+        arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)]
     )
     public var direction: Lateinit<CardinalDirection> = .uninitialized
 

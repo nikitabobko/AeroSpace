@@ -1,4 +1,4 @@
-public struct EnableCmdArgs: CmdArgs, RawCmdArgs {
+public struct EnableCmdArgs: RawCmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .enable,
         allowInConfig: true,
@@ -9,7 +9,7 @@ public struct EnableCmdArgs: CmdArgs, RawCmdArgs {
                 -h, --help   Print help
               """,
         options: [:],
-        arguments: [newArgParser(\.targetState, parseState, argPlaceholderIfMandatory: EnableCmdArgs.State.unionLiteral)]
+        arguments: [newArgParser(\.targetState, parseState, mandatoryArgPlaceholder: EnableCmdArgs.State.unionLiteral)]
     )
     public var targetState: Lateinit<State> = .uninitialized
 

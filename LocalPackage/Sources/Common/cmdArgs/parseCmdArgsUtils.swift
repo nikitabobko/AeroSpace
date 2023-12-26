@@ -1,4 +1,4 @@
-public protocol RawCmdArgs: Copyable {
+public protocol RawCmdArgs: Copyable, CmdArgs {
     static var parser: CmdParser<Self> { get }
 }
 
@@ -188,12 +188,12 @@ public struct ArgParser<T: Copyable, K>: ArgParserProtocol {
 func newArgParser<T: Copyable, K>(
     _ keyPath: WritableKeyPath<T, Lateinit<K>>,
     _ parse: @escaping (String, inout [String]) -> Parsed<K>,
-    argPlaceholderIfMandatory: String
+    mandatoryArgPlaceholder: String
 ) -> ArgParser<T, Lateinit<K>> {
     ArgParser(
         keyPath,
         { arg, nextArgs in parse(arg, &nextArgs).map { .initialized($0) } },
-        argPlaceholderIfMandatory: argPlaceholderIfMandatory
+        argPlaceholderIfMandatory: mandatoryArgPlaceholder
     )
 }
 

@@ -1,12 +1,5 @@
-public struct ModeCmdArgs: CmdArgs {
-    public static let info: CmdStaticInfo = RawModeCmdArgs.info
-    public let targetMode: String
-}
-
-private struct RawModeCmdArgs: RawCmdArgs {
-    var targetMode: Lateinit<String> = .uninitialized
-
-    static let parser: CmdParser<Self> = cmdParser(
+public struct ModeCmdArgs: RawCmdArgs {
+    public static let parser: CmdParser<Self> = cmdParser(
         kind: .mode,
         allowInConfig: true,
         help: """
@@ -19,13 +12,17 @@ private struct RawModeCmdArgs: RawCmdArgs {
                 <binding-mode>   Binding mode to activate
               """,
         options: [:],
-        arguments: [newArgParser(\.targetMode, parseTargetMode, argPlaceholderIfMandatory: "<binding-mode>")]
+        arguments: [newArgParser(\.targetMode, parseTargetMode, mandatoryArgPlaceholder: "<binding-mode>")]
     )
+    public var targetMode: Lateinit<String> = .uninitialized
+
+    fileprivate init() {}
 }
 
 public func parseModeCmdArgs(_ args: [String]) -> ParsedCmd<ModeCmdArgs> {
-    parseRawCmdArgs(RawModeCmdArgs(), args)
-        .flatMap { raw in .cmd(ModeCmdArgs(targetMode: raw.targetMode.val)) }
+    parseRawCmdArgs(ModeCmdArgs(), args)
 }
 
-private func parseTargetMode(arg: String, nextArgs: inout [String]) -> Parsed<String> { .success(arg) }
+private func parseTargetMode(arg: String, nextArgs: inout [String]) -> Parsed<String> {
+    .success(arg)
+}

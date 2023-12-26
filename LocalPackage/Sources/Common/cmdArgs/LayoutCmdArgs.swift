@@ -9,7 +9,7 @@ public struct LayoutCmdArgs: CmdArgs, RawCmdArgs, Equatable {
                 -h, --help   Print help
               """,
         options: [:],
-        arguments: [newArgParser(\.toggleBetween, parseToggleBetween, argPlaceholderIfMandatory: LayoutDescription.unionLiteral)]
+        arguments: [newArgParser(\.toggleBetween, parseToggleBetween, mandatoryArgPlaceholder: LayoutDescription.unionLiteral)]
     )
     public var toggleBetween: Lateinit<[LayoutDescription]> = .uninitialized
 

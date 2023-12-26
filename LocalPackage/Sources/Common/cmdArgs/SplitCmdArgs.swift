@@ -1,4 +1,4 @@
-public struct SplitCmdArgs: CmdArgs, RawCmdArgs {
+public struct SplitCmdArgs: RawCmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .split,
         allowInConfig: true,
@@ -9,7 +9,7 @@ public struct SplitCmdArgs: CmdArgs, RawCmdArgs {
                 -h, --help   Print help
               """,
         options: [:],
-        arguments: [newArgParser(\.arg, parseSplitArg, argPlaceholderIfMandatory: SplitArg.unionLiteral)]
+        arguments: [newArgParser(\.arg, parseSplitArg, mandatoryArgPlaceholder: SplitArg.unionLiteral)]
     )
     public var arg: Lateinit<SplitArg> = .uninitialized
 

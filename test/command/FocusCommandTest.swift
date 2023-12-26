@@ -29,7 +29,7 @@ final class FocusCommandTest: XCTestCase {
         XCTAssertTrue(parseCommand("focus --boundaries left").failureMsgOrNil?.contains("Possible values") == true)
         XCTAssertEqual(
             parseCommand("focus --boundaries workspace left").cmdOrNil?.describe,
-            .focusCommand(args: FocusCmdArgs(boundaries: .workspace, boundariesAction: .wrapAroundTheWorkspace, direction: .left))
+            .focusCommand(args: FocusCmdArgs(direction: .left))
         )
 
         XCTAssertEqual(
@@ -84,7 +84,11 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand(args: FocusCmdArgs(boundaries: .workspace, boundariesAction: .stop, direction: .left)).runOnFocusedSubject()
+        //FocusCommand(args: FocusCmdArgs(boundaries: .workspace, boundariesAction: .stop, direction: .left)).runOnFocusedSubject()
+        var args = FocusCmdArgs(direction: .left)
+        args.boundaries = .workspace
+        args.boundariesAction = .stop
+        FocusCommand(args: args).runOnFocusedSubject()
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
@@ -165,6 +169,6 @@ final class FocusCommandTest: XCTestCase {
 
 extension FocusCommand {
     static func new(direction: CardinalDirection) -> FocusCommand {
-        FocusCommand(args: FocusCmdArgs(boundaries: .workspace, boundariesAction: .wrapAroundTheWorkspace, direction: direction))
+        FocusCommand(args: FocusCmdArgs(direction: direction))
     }
 }

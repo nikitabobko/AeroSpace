@@ -1,43 +1,5 @@
-public struct ResizeCmdArgs: CmdArgs, Equatable {
-    public static let info: CmdStaticInfo = RawResizeCmdArgs.info
-
-    public let dimension: Dimension
-    public let units: Units
-
-    public init(
-        dimension: Dimension,
-        units: Units
-    ) {
-        self.dimension = dimension
-        self.units = units
-    }
-
-    public enum Dimension: String, CaseIterable, Equatable {
-        case width, height, smart
-    }
-
-    public enum Units: Equatable {
-        case set(UInt)
-        case add(UInt)
-        case subtract(UInt)
-    }
-}
-
-public func parseResizeCmdArgs(_ args: [String]) -> ParsedCmd<ResizeCmdArgs> {
-    parseRawCmdArgs(RawResizeCmdArgs(), args)
-        .flatMap { raw in
-            .cmd(ResizeCmdArgs(
-                dimension: raw.dimension.val,
-                units: raw.units.val
-            ))
-        }
-}
-
-private struct RawResizeCmdArgs: RawCmdArgs {
-    var dimension: Lateinit<ResizeCmdArgs.Dimension> = .uninitialized
-    var units: Lateinit<ResizeCmdArgs.Units> = .uninitialized
-
-    static let parser: CmdParser<Self> = cmdParser(
+public struct ResizeCmdArgs: RawCmdArgs, Equatable {
+    public static let parser: CmdParser<Self> = cmdParser(
         kind: .resize,
         allowInConfig: true,
         help: """
@@ -52,10 +14,37 @@ private struct RawResizeCmdArgs: RawCmdArgs {
               """,
         options: [:],
         arguments: [
-            newArgParser(\.dimension, parseDimension, argPlaceholderIfMandatory: "(smart|width|height)"),
-            newArgParser(\.units, parseUnits, argPlaceholderIfMandatory: "[+|-]<number>"),
+            newArgParser(\.dimension, parseDimension, mandatoryArgPlaceholder: "(smart|width|height)"),
+            newArgParser(\.units, parseUnits, mandatoryArgPlaceholder: "[+|-]<number>"),
         ]
     )
+
+    public var dimension: Lateinit<ResizeCmdArgs.Dimension> = .uninitialized
+    public var units: Lateinit<ResizeCmdArgs.Units> = .uninitialized
+
+    public init(
+        dimension: Dimension,
+        units: Units
+    ) {
+        self.dimension = .initialized(dimension)
+        self.units = .initialized(units)
+    }
+
+    fileprivate init() {}
+
+    public enum Dimension: String, CaseIterable, Equatable {
+        case width, height, smart
+    }
+
+    public enum Units: Equatable {
+        case set(UInt)
+        case add(UInt)
+        case subtract(UInt)
+    }
+}
+
+public func parseResizeCmdArgs(_ args: [String]) -> ParsedCmd<ResizeCmdArgs> {
+    parseRawCmdArgs(ResizeCmdArgs(), args)
 }
 
 private func parseDimension(arg: String, nextArgs: inout [String]) -> Parsed<ResizeCmdArgs.Dimension> {

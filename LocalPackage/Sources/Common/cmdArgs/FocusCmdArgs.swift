@@ -1,37 +1,5 @@
-public struct FocusCmdArgs: CmdArgs, Equatable {
-    public static let info: CmdStaticInfo = RawFocusCmdArgs.info
-
-    public let boundaries: Boundaries // todo cover boundaries wrapping with tests
-    public let boundariesAction: WhenBoundariesCrossed
-    public let direction: CardinalDirection
-
-    public init(
-        boundaries: Boundaries,
-        boundariesAction: WhenBoundariesCrossed,
-        direction: CardinalDirection
-    ) {
-        self.boundaries = boundaries
-        self.boundariesAction = boundariesAction
-        self.direction = direction
-    }
-
-    public enum Boundaries: String, CaseIterable, Equatable {
-        case workspace
-        case allMonitorsUnionFrame = "all-monitors-outer-frame"
-    }
-    public enum WhenBoundariesCrossed: String, CaseIterable, Equatable {
-        case stop = "stop"
-        case wrapAroundTheWorkspace = "wrap-around-the-workspace"
-        case wrapAroundAllMonitors = "wrap-around-all-monitors"
-    }
-}
-
-private struct RawFocusCmdArgs: RawCmdArgs {
-    var boundaries: FocusCmdArgs.Boundaries = .workspace
-    var boundariesAction: FocusCmdArgs.WhenBoundariesCrossed = .wrapAroundTheWorkspace
-    var direction: Lateinit<CardinalDirection> = .uninitialized
-
-    static let parser: CmdParser<Self> = cmdParser(
+public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
+    public static let parser: CmdParser<Self> = cmdParser(
         kind: .focus,
         allowInConfig: true,
         help: """
@@ -55,21 +23,37 @@ private struct RawFocusCmdArgs: RawCmdArgs {
             "--boundaries": ArgParser(\.boundaries, parseBoundaries),
             "--boundaries-action": ArgParser(\.boundariesAction, parseWhenBoundariesCrossed)
         ],
-        arguments: [newArgParser(\.direction, parseCardinalDirectionArg, argPlaceholderIfMandatory: CardinalDirection.unionLiteral)]
+        arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)]
     )
+
+    public var boundaries: Boundaries = .workspace // todo cover boundaries wrapping with tests
+    public var boundariesAction: WhenBoundariesCrossed = .wrapAroundTheWorkspace
+    public var direction: Lateinit<CardinalDirection> = .uninitialized
+
+    fileprivate init() {}
+
+    public init(direction: CardinalDirection) {
+        self.direction = .initialized(direction)
+    }
+
+    public enum Boundaries: String, CaseIterable, Equatable {
+        case workspace
+        case allMonitorsUnionFrame = "all-monitors-outer-frame"
+    }
+    public enum WhenBoundariesCrossed: String, CaseIterable, Equatable {
+        case stop = "stop"
+        case wrapAroundTheWorkspace = "wrap-around-the-workspace"
+        case wrapAroundAllMonitors = "wrap-around-all-monitors"
+    }
 }
 
 public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
-    parseRawCmdArgs(RawFocusCmdArgs(), args)
+    parseRawCmdArgs(FocusCmdArgs(), args)
         .flatMap { raw in
             if raw.boundaries == .workspace && raw.boundariesAction == .wrapAroundAllMonitors {
                 return .failure("\(raw.boundaries.rawValue) and \(raw.boundariesAction.rawValue) is an invalid combination of values")
             }
-            return .cmd(FocusCmdArgs(
-                boundaries: raw.boundaries,
-                boundariesAction: raw.boundariesAction,
-                direction: raw.direction.val
-            ))
+            return .cmd(raw)
         }
 }
 

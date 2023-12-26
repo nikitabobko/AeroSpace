@@ -18,7 +18,7 @@ private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
                 <workspace-name>        Workspace name to move focused window to
               """,
         options: ["--wrap-around": optionalTrueBoolFlag(\.wrapAroundNextPrev)],
-        arguments: [newArgParser(\.target, parseRawWorkspaceTarget, argPlaceholderIfMandatory: workspaceTargetPlaceholder)]
+        arguments: [newArgParser(\.target, parseRawWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
     )
 }
 
