@@ -2,20 +2,20 @@ import Common
 
 protocol Command: AeroAny {
     var info: CmdStaticInfo { get }
-    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool
+    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool
 }
 
 extension Command {
-    func run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
+    func run(_ subject: inout CommandSubject, stdin: String = "", stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
-        return [self].run(&subject, &stdout)
+        return [self]._run(&subject, stdin: stdin, stdout: &stdout)
     }
 
     func runOnFocusedSubject() {
         check(Thread.current.isMainThread)
         var focused = CommandSubject.focused
         var devNull: [String] = []
-        _ = run(&focused, &devNull)
+        _ = run(&focused, stdout: &devNull)
     }
 
     var isExec: Bool { self is ExecAndForgetCommand }
@@ -29,15 +29,16 @@ extension Command {
 extension [Command] {
     func run(_ subject: inout CommandSubject) -> Bool {
         var devNull: [String] = []
-        return run(&subject, &devNull)
+        return _run(&subject, stdin: "", stdout: &devNull)
     }
 
-    func run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
+    fileprivate func _run(_ subject: inout CommandSubject, stdin: String = "", stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
+        check(self.count == 1 || stdin == "")
         var result = true
         for command in self {
             if TrayMenuModel.shared.isEnabled || command is EnableCommand {
-                result = command._run(&subject, &stdout) && result
+                result = command._run(&subject, stdin: stdin, stdout: &stdout) && result
                 refreshModel()
             }
         }

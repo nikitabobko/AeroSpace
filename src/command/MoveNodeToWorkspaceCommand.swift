@@ -4,7 +4,7 @@ struct MoveNodeToWorkspaceCommand: Command {
     let info: CmdStaticInfo = MoveNodeToWorkspaceCmdArgs.info
     let args: MoveNodeToWorkspaceCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
+    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
         guard let focused = subject.windowOrNil else {
             stdout.append(noWindowIsFocused)
             return false
@@ -28,6 +28,6 @@ struct MoveNodeToWorkspaceCommand: Command {
         focused.unbindFromParent()
         focused.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         return WorkspaceCommand(args: WorkspaceCmdArgs(target: .workspaceName(name: preserveWorkspace.name, autoBackAndForth: false)))
-            .run(&subject, &stdout)
+            .run(&subject, stdout: &stdout)
     }
 }

@@ -4,7 +4,7 @@ struct LayoutCommand: Command {
     let info: CmdStaticInfo = LayoutCmdArgs.info
     let args: LayoutCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
+    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
         guard let window = subject.windowOrNil else {
             stdout.append(noWindowIsFocused)

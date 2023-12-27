@@ -4,7 +4,7 @@ struct WorkspaceCommand : Command {
     let info: CmdStaticInfo = WorkspaceCmdArgs.info
     let args: WorkspaceCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
+    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
         let workspaceName: String
         switch args.target {
@@ -16,7 +16,7 @@ struct WorkspaceCommand : Command {
         case .workspaceName(let _workspaceName, let autoBackAndForth):
             workspaceName = _workspaceName
             if autoBackAndForth && subject.workspace.name == workspaceName {
-                return WorkspaceBackAndForthCommand().run(&subject, &stdout)
+                return WorkspaceBackAndForthCommand().run(&subject, stdout: &stdout)
             }
         }
         let workspace = Workspace.get(byName: workspaceName)

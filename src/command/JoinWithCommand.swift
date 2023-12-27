@@ -4,7 +4,7 @@ struct JoinWithCommand: Command {
     let info: CmdStaticInfo = JoinWithCmdArgs.info
     let args: JoinWithCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
+    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
         let direction = args.direction.val
         guard let currentWindow = subject.windowOrNil else {

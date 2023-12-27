@@ -4,7 +4,7 @@ struct FocusCommand: Command {
     let info: CmdStaticInfo = FocusCmdArgs.info
     let args: FocusCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
+    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
         let window = subject.windowOrNil
         let workspace = subject.workspace
@@ -27,7 +27,7 @@ struct FocusCommand: Command {
         switch subject {
         case .emptyWorkspace(let name):
             result = WorkspaceCommand(args: WorkspaceCmdArgs(target: .workspaceName(name: name, autoBackAndForth: false)))
-                .run(&subject, &stdout) && result
+                .run(&subject, stdout: &stdout) && result
         case .window(let windowToFocus):
             windowToFocus.focus()
         }
@@ -88,7 +88,7 @@ private func hitAllMonitorsOuterFrameBoundaries(
 private extension Monitor {
     func focus(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
         WorkspaceCommand(args: WorkspaceCmdArgs(target: .workspaceName(name: activeWorkspace.name, autoBackAndForth: false)))
-            .run(&subject, &stdout)
+            .run(&subject, stdout: &stdout)
     }
 }
 

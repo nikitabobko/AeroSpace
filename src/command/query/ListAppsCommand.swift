@@ -3,7 +3,7 @@ import Common
 struct ListAppsCommand: Command {
     let info: CmdStaticInfo = ListAppsCmdArgs.info
 
-    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
+    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
         stdout += apps
             .map { app in

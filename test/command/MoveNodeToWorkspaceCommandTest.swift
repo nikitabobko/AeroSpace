@@ -33,7 +33,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         var devNull: [String] = []
 
         MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .workspaceName(name: "b", autoBackAndForth: false)))
-            .run(&subject, &devNull)
+            .run(&subject, stdout: &devNull)
 
         XCTAssertEqual(subject, .emptyWorkspace("a"))
     }
@@ -50,7 +50,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         var devNull: [String] = []
 
         MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .workspaceName(name: "b", autoBackAndForth: false)))
-            .run(&subject, &devNull)
+            .run(&subject, stdout: &devNull)
 
         XCTAssertEqual(subject, .window(window1))
     }

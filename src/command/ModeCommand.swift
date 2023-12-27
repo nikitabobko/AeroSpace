@@ -4,7 +4,7 @@ struct ModeCommand: Command {
     let info: CmdStaticInfo = ModeCmdArgs.info
     let args: ModeCmdArgs
 
-    func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
+    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
         activateMode(args.targetMode.val)
         return true
