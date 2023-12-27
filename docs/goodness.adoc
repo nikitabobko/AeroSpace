@@ -26,6 +26,19 @@ Observable in Google Chrome
 defaults write -g NSAutomaticWindowAnimationsEnabled -bool false
 ----
 
+[#use-trackpad-gestures-to-switch-workspaces]
+== Use trackpad gestures to switch workspaces
+
+You can use link:https://folivora.ai/[BetterTouchTool] to assign trackpad gestures to switch workspaces
+
+The following commands focus next or previous workspaces on monitors where the mouse is located
+
+[source,bash]
+----
+aerospace list-workspaces --mouse | aerospace workspace next
+aerospace list-workspaces --mouse | aerospace workspace prev
+----
+
 [#popular-apps-ids]
 == List of popular and built-in applications IDs
 
