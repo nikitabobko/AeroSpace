@@ -42,17 +42,6 @@ Install via [Homebrew](https://brew.sh/) to get autoupdates (Preferred)
 brew install --no-quarantine --cask nikitabobko/tap/aerospace
 ```
 
-### Brew problem
-
-If you see this message
-
-> Error: It seems there is already a Binary at '/opt/homebrew/bin/aerospace'.
-
-Please do `brew uninstall aerospace-cli && brew reinstall aerospace`. Consider voting for [this homebrew
-issue](https://github.com/Homebrew/homebrew-cask/issues/12822)
-
-### Manual installation
-
 [Manual installation](./docs/manual-installation.md)
 
 ## How to build the project

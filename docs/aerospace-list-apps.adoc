@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-list-apps
 // tag::purpose[]
-:manpurpose: Prints the list of ordinary applications that appears in the Dock and may have a user interface
+:manpurpose: Prints the list of running applications that appears in the Dock and may have a user interface
 // end::purpose[]
 
 == Synopsis

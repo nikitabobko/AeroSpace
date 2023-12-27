@@ -1,3 +1,6 @@
+private let boundar = "<boundary>"
+private let actio = "<action>"
+
 public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .focus,
@@ -7,11 +10,11 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
 
               OPTIONS:
                 -h, --help                     Print help
-                --boundaries <boundary>        Defines focus boundaries.
-                                               <boundary> possible values: \(FocusCmdArgs.Boundaries.unionLiteral)
+                --boundaries \(boundar)        Defines focus boundaries.
+                                               \(boundar) possible values: \(FocusCmdArgs.Boundaries.unionLiteral)
                                                The default is: \(FocusCmdArgs.Boundaries.workspace.rawValue)
-                --boundaries-action <action>   Defines the behavior when requested to cross the <boundary>.
-                                               <action> possible values: \(FocusCmdArgs.WhenBoundariesCrossed.unionLiteral)
+                --boundaries-action \(actio)   Defines the behavior when requested to cross the \(boundar).
+                                               \(actio) possible values: \(FocusCmdArgs.WhenBoundariesCrossed.unionLiteral)
                                                The default is: \(FocusCmdArgs.WhenBoundariesCrossed.wrapAroundTheWorkspace.rawValue)
 
               ARGUMENTS:
@@ -58,17 +61,17 @@ public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
 }
 
 private func parseWhenBoundariesCrossed(arg: String, nextArgs: inout [String]) -> Parsed<FocusCmdArgs.WhenBoundariesCrossed> {
-    if let arg = nextArgs.nextOrNil() {
+    if let arg = nextArgs.nextNonFlagOrNil() {
         return parseEnum(arg, FocusCmdArgs.WhenBoundariesCrossed.self)
     } else {
-        return .failure("--boundaries-action option requires an argument: \(FocusCmdArgs.WhenBoundariesCrossed.unionLiteral)")
+        return .failure("\(boundar) is mandatory")
     }
 }
 
 private func parseBoundaries(arg: String, nextArgs: inout [String]) -> Parsed<FocusCmdArgs.Boundaries> {
-    if let arg = nextArgs.nextOrNil() {
+    if let arg = nextArgs.nextNonFlagOrNil() {
         return parseEnum(arg, FocusCmdArgs.Boundaries.self)
     } else {
-        return .failure("--boundaries option requires an argument: \(FocusCmdArgs.Boundaries.unionLiteral)")
+        return .failure("\(actio) is mandatory")
     }
 }

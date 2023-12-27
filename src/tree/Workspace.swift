@@ -82,7 +82,8 @@ class Workspace: TreeNode, NonLeafTreeNode, Hashable, Identifiable, CustomString
     }
 
     static func ==(lhs: Workspace, rhs: Workspace) -> Bool {
-        lhs === rhs
+        check((lhs === rhs) == (lhs.name == rhs.name))
+        return lhs === rhs
     }
 
     func hash(into hasher: inout Hasher) {

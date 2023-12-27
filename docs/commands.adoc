@@ -31,7 +31,8 @@ include::aerospace-exec-and-forget.adoc[tags=synopsis]
 include::aerospace-exec-and-forget.adoc[tags=purpose]
 include::aerospace-exec-and-forget.adoc[tags=body]
 
-== exec-and-wait
+[#exec-and-wait]
+== [line-through]#exec-and-wait#. DEPRECATED
 ----
 exec-and-wait <bash-script>
 ----

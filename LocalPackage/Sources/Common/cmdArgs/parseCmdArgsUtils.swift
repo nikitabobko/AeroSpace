@@ -141,7 +141,11 @@ public extension [String] {
         nextOrNil() ?? errorT("args is empty")
     }
 
-    mutating func nextOrNil() -> String? {
+    mutating func nextNonFlagOrNil() -> String? {
+        first?.starts(with: "-") == true ? nil : nextOrNil()
+    }
+
+    private mutating func nextOrNil() -> String? {
         let result = first
         self = Array(dropFirst())
         return result

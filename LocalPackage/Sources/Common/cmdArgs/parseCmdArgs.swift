@@ -10,7 +10,7 @@ public func parseCmdArgs(_ raw: String) -> ParsedCmd<CmdArgs> {
     } else if let subcommandParser: any SubCommandParserProtocol = subcommands[subcommand] {
         return subcommandParser.parse(args: raw.removePrefix(subcommand))
     } else {
-        return .failure("Unrecognized command '\(raw)'")
+        return .failure("Unrecognized subcommand '\(subcommand)'")
     }
 }
 
