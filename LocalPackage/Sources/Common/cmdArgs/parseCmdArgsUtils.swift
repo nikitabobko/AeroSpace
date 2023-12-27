@@ -205,6 +205,19 @@ public func trueBoolFlag<T: Copyable>(_ keyPath: WritableKeyPath<T, Bool>) -> Ar
     ArgParser(keyPath) { arg, nextArgs in .success(true) }
 }
 
+public func boolFlag<T: Copyable>(_ keyPath: WritableKeyPath<T, Bool?>) -> ArgParser<T, Bool?> {
+    ArgParser(keyPath) { arg, nextArgs in
+        let value: Bool
+        if let nextArg = nextArgs.first, nextArg == "no" {
+            _ = nextArgs.next() // Eat the argument
+            value = false
+        } else {
+            value = true
+        }
+        return .success(value)
+    }
+}
+
 public func optionalTrueBoolFlag<T: Copyable>(_ keyPath: WritableKeyPath<T, Bool?>) -> ArgParser<T, Bool?> {
     ArgParser(keyPath) { arg, nextArgs in .success(true) }
 }

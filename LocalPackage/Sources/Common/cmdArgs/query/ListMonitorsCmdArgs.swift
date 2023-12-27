@@ -3,22 +3,22 @@ public struct ListMonitorsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
         kind: .listMonitors,
         allowInConfig: false,
         help: """
-              USAGE: list-monitors [-h|--help] [--focused] [--mouse]
+              USAGE: list-monitors [-h|--help] [--focused [no]] [--mouse [no]]
 
               OPTIONS:
-                -h, --help   Print help
-                --focused    Only print the focused monitor
-                --mouse      Only print the monitor with the mouse
+                -h, --help       Print help
+                --focused [no]   Filter results to only print the focused monitor or not
+                --mouse [no]     Filter results to only print the monitor with the mouse or not
               """,
         options: [
-            "--focused": trueBoolFlag(\.focused),
-            "--mouse": trueBoolFlag(\.mouse)
+            "--focused": boolFlag(\.focused),
+            "--mouse": boolFlag(\.mouse)
         ],
         arguments: []
     )
 
-    public var focused = false
-    public var mouse = false
+    public var focused: Bool?
+    public var mouse: Bool?
 
     public init() {}
 }

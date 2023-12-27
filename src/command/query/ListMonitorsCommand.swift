@@ -7,15 +7,12 @@ struct ListMonitorsCommand: Command {
     func _run(_ subject: inout CommandSubject, _ stdout: inout [String]) -> Bool {
         check(Thread.current.isMainThread)
         var result: [(Int, Monitor)] = sortedMonitors.withIndex
-        if args.focused {
-            result = result.filter { (_, monitor) in
-                monitor.activeWorkspace.name == focusedWorkspaceName
-            }
+        if let focused = args.focused {
+            result = result.filter { (_, monitor) in (monitor.activeWorkspace == Workspace.focused) == focused }
         }
-        if args.mouse {
-            result = result.filter { (_, monitor) in
-                monitor.activeWorkspace.name == mouseLocation.monitorApproximation.activeWorkspace.name
-            }
+        if let mouse = args.mouse {
+            let mouseWorkspace = mouseLocation.monitorApproximation.activeWorkspace
+            result = result.filter { (_, monitor) in (monitor.activeWorkspace == mouseWorkspace) == mouse }
         }
         stdout += result
             .map { (index, monitor) in
