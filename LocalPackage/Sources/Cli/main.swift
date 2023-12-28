@@ -25,11 +25,10 @@ for arg in args {
 
 let usage =
     """
-    usage: \(CommandLine.arguments.first ?? "aerospace") [-h|--help] [-v|--version] <command> [<args>...]
+    usage: \(CommandLine.arguments.first ?? "aerospace") [-h|--help] [-v|--version] <subcommand> [<args>...]
 
-    For the list of all available commands see:
-    - https://github.com/nikitabobko/AeroSpace/blob/main/docs/commands.md
-    - https://github.com/nikitabobko/AeroSpace/blob/main/docs/cli-commands.md
+    Subcommands:
+    \(subcommandDescriptions.sortedBy { $0[0] }.toPaddingTable(columnSeparator: "   ").joined(separator: "\n"))
     """
 if args.isEmpty || args.first == "--help" || args.first == "-h" {
     print(usage)

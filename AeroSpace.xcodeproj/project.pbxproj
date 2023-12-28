@@ -65,7 +65,6 @@
 		A5BFF75CF8021A585BC1F9D5 /* parseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB03A4736BC3F6D19E4E69F3 /* parseCommand.swift */; };
 		AC439551A737C73168CC5BF9 /* TreeNodeKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60709210745C60D64F82D53 /* TreeNodeKind.swift */; };
 		AC47DF43EFF42358F033C87C /* WorkspaceBackAndForthCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED7EE20910D7BE4D0150CED /* WorkspaceBackAndForthCommand.swift */; };
-		AE76A183D0454E4C8ADCE380 /* SequenceEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE5DCAEC5EE619CE33859E7 /* SequenceEx.swift */; };
 		B04363E8C28CEC76F39977F2 /* MonitorDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244190F3707EF2BB3CC7FA5A /* MonitorDescription.swift */; };
 		B0D0C37BAE7E7F0D0FF1E9FC /* GlobalObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E5977331398421A4FC168 /* GlobalObserver.swift */; };
 		B19980B36D066FD4947D2F92 /* normalizeContainers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704028F402C0DE83EDEABB9 /* normalizeContainers.swift */; };
@@ -163,7 +162,6 @@
 		9ECC990B6C2D66D343216A12 /* FullscreenCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenCommand.swift; sourceTree = "<group>"; };
 		9F6B8A501483ACBB62560101 /* TreeNodeEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeEx.swift; sourceTree = "<group>"; };
 		A60709210745C60D64F82D53 /* TreeNodeKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeKind.swift; sourceTree = "<group>"; };
-		AAE5DCAEC5EE619CE33859E7 /* SequenceEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SequenceEx.swift; sourceTree = "<group>"; };
 		AAE5DD3E9DC82D247853956B /* Rect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rect.swift; sourceTree = "<group>"; };
 		AD0938DE74E687A8959E3F9C /* moveWithMouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moveWithMouse.swift; sourceTree = "<group>"; };
 		AD1645D9939F3F896EF21393 /* TreeNodeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeTest.swift; sourceTree = "<group>"; };
@@ -421,7 +419,6 @@
 				0D36D0F8EEB30A7BABC42343 /* LazySequenceProtocolEx.swift */,
 				954A434EE57D76F5A9D4140D /* MruStack.swift */,
 				B1316FFED5D1044CB693EA45 /* SelectorComparator.swift */,
-				AAE5DCAEC5EE619CE33859E7 /* SequenceEx.swift */,
 				976540EBEACF846D598CD6E1 /* util.swift */,
 			);
 			path = util;
@@ -582,7 +579,6 @@
 				FC35D6D0A678CC802972C6FE /* ReloadConfigCommand.swift in Sources */,
 				D24D02B1FD87424B908986AF /* ResizeCommand.swift in Sources */,
 				991943D50DF9EDBF321A66F1 /* SelectorComparator.swift in Sources */,
-				AE76A183D0454E4C8ADCE380 /* SequenceEx.swift in Sources */,
 				A249B6511A9BD20A298C0DE7 /* SplitCommand.swift in Sources */,
 				E5682579AEC6B84CF6FCE90D /* TilingContainer.swift in Sources */,
 				56E72B24303F5F337B31B776 /* TrayMenuModel.swift in Sources */,

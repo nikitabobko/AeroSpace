@@ -8,3 +8,6 @@ cd "$(dirname "$0")"
 
 # ./build-debug.sh || exit 125 # `git bisect run` compatible
 xcodebuild -scheme AeroSpace-Tests test
+
+./run-cli.sh -h
+./run-cli.sh -v

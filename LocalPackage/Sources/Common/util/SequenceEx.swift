@@ -1,11 +1,12 @@
 import Common
+import AppKit
 
-extension Sequence {
-    public func filterNotNil<Unwrapped>() -> [Unwrapped] where Element == Unwrapped? {
+public extension Sequence {
+    func filterNotNil<Unwrapped>() -> [Unwrapped] where Element == Unwrapped? {
         compactMap { $0 }
     }
 
-    public func filterIsInstance<R>(of _: R.Type) -> [R] {
+    func filterIsInstance<R>(of _: R.Type) -> [R] {
         var result: [R] = []
         for elem in self {
             if let elemR = elem as? R {
@@ -28,23 +29,23 @@ extension Sequence {
         return .success(result)
     }
 
-    @inlinable public func minByOrThrow<S: Comparable>(_ selector: (Self.Element) -> S) -> Self.Element {
+    @inlinable func minByOrThrow<S: Comparable>(_ selector: (Self.Element) -> S) -> Self.Element {
         minBy(selector) ?? errorT("Empty sequence")
     }
 
-    @inlinable public func minBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
+    @inlinable func minBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
         self.min(by: { a, b in selector(a) < selector(b) })
     }
 
-    @inlinable public func maxByOrThrow<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
+    @inlinable func maxByOrThrow<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
         self.maxBy(selector) ?? errorT("Empty sequence")
     }
 
-    @inlinable public func maxBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
+    @inlinable func maxBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
         self.max(by: { a, b in selector(a) < selector(b) })
     }
 
-    @inlinable public func sortedBy<S : Comparable>(_ selector: (Self.Element) -> S) -> [Self.Element] {
+    @inlinable func sortedBy<S : Comparable>(_ selector: (Self.Element) -> S) -> [Self.Element] {
         sorted(by: { a, b in selector(a) < selector(b) })
     }
 
@@ -69,7 +70,7 @@ extension Sequence {
     }
 }
 
-extension Sequence where Self.Element: Comparable {
+public extension Sequence where Self.Element: Comparable {
     public func minOrThrow() -> Self.Element {
         self.min() ?? errorT("Empty sequence")
     }
@@ -79,6 +80,6 @@ extension Sequence where Self.Element: Comparable {
     }
 }
 
-extension Sequence where Element: Hashable {
+public extension Sequence where Element: Hashable {
     func toSet() -> Set<Element> { Set(self) }
 }
