@@ -20,6 +20,10 @@ public let gitShortHash = "$(git rev-parse --short HEAD)"
 EOF
 }
 
+#############
+### BUILD ###
+#############
+
 ./build-docs.sh
 
 ./generate.sh
@@ -44,6 +48,10 @@ cd - > /dev/null
 cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Release/AeroSpace.app .release
 cp -r LocalPackage/.build/apple/Products/Release/aerospace .release
 
+################
+### VALIDATE ###
+################
+
 expected_layout=$(cat <<EOF
 .release/AeroSpace.app
 └── Contents
@@ -67,6 +75,31 @@ if [ "$expected_layout" != "$(tree .release/AeroSpace.app)" ]; then
     tree .release/AeroSpace.app
     exit 1
 fi
+
+check-universal-binary() {
+    if ! file $1 | grep --fixed-string -q "Mach-O universal binary with 2 architectures: [x86_64:Mach-O 64-bit executable x86_64] [arm64"; then
+        echo "$1 is not a universal binary"
+        exit 1
+    fi
+}
+
+check-contains-hash() {
+    hash=$(git rev-parse HEAD)
+    if ! strings $1 | grep --fixed-string $hash > /dev/null; then
+        echo "$1 doesn't contain $hash"
+        exit 1
+    fi
+}
+
+check-universal-binary .release/AeroSpace.app/Contents/MacOS/AeroSpace
+check-universal-binary .release/aerospace
+
+check-contains-hash .release/AeroSpace.app/Contents/MacOS/AeroSpace
+check-contains-hash .release/aerospace
+
+############
+### PACK ###
+############
 
 version=$(head -1 ./version.txt | awk '{print $1}')
 mkdir -p .release/AeroSpace-v$version/manpage && cp .man/*.1 .release/AeroSpace-v$version/manpage
