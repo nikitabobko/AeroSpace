@@ -19,7 +19,7 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
                 --auto-back-and-forth   Automatic 'back-and-forth' when switching to already
                                         focused workspace
                 --wrap-around           Make it possible to jump between first and last workspaces
-                                        (alphabetical order) using (next|prev)
+                                        using (next|prev)
 
               ARGUMENTS:
                 <workspace-name>        Workspace name to focus

@@ -13,8 +13,8 @@ private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
 
               OPTIONS:
                 -h, --help              Print help
-                --wrap-around           Make it possible to move nodes between first and last workspaces
-                                        (alphabetical order) using (next|prev)
+                --wrap-around           Make it possible to jump between first and last workspaces
+                                        using (next|prev)
 
               ARGUMENTS:
                 <workspace-name>        Workspace name to move focused window to

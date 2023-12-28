@@ -255,7 +255,7 @@ NOTE: For better or worse, macOS doesn’t allow to place windows outside the vi
 You will still be able to see a few pixels of "hidden" windows in the bottom right corner of your screen.
 That means, that if AeroSpace crashes badly you will still be able to manually "unhide" the windows by dragging these few pixels to the center of the screen.
 
-The supposed workflow of using AeroSpace workspaces is to only have one macOS Space (or as many as monitors you have, if `Displays have separate Spaces` is enabled) and don’t interact with macOS Spaces anymore.
+The intended workflow of using AeroSpace workspaces is to only have one macOS Space (or as many monitors you have, if `Displays have separate Spaces` is enabled) and don’t interact with macOS Spaces anymore.
 
 [#a-note-on-mission-control]
 === A note on mission control

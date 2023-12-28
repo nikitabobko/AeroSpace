@@ -26,5 +26,7 @@ move-node-to-workspace [-h|--help] <workspace-name>
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+--wrap-around::
+Make it possible to jump between first and last workspaces using (next|prev)
 
 include::util/man-footer.adoc[]
