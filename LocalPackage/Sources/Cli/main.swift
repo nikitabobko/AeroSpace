@@ -108,6 +108,8 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
 
     let (exitCode, output) = run(argsAsString, stdin: stdin)
 
-    print(output)
+    if !output.isEmpty {
+        print(output)
+    }
     exit(exitCode)
 }
