@@ -45,3 +45,7 @@ func initCli() {
 
     _terminationHandler = CliClientTerminationHandler()
 }
+
+func isATty(_ fd: Int32) -> Bool {
+    isatty(fd) == 1
+}

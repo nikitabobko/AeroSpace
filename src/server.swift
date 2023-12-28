@@ -37,8 +37,11 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
     }
     while true {
         _ = try? Socket.wait(for: [socket], timeout: 0, waitForever: true)
-        guard let string = (try? socket.readString()) else { return }
-        let (command, help, err) = parseCommand(string).unwrap()
+        guard let request: String = (try? socket.readString()) else { return }
+        let separator: Swift.String.Index = request.firstIndex(of: "\n") ?? request.endIndex
+        let rawCommand = String(request[..<separator])
+        let stdin = String(request[request.index(after: separator)...])
+        let (command, help, err) = parseCommand(rawCommand).unwrap()
         guard let isEnabled = await Task(operation: { @MainActor in TrayMenuModel.shared.isEnabled }).result.getOrNil() else {
             _ = try? socket.write(from: "1Unknown failure during isEnabled server state access")
             continue
@@ -65,7 +68,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
                 refreshSession(forceFocus: true) {
                     var focused = CommandSubject.focused // todo restore subject from "exec session"
                     var stdout: [String] = []
-                    let success = command.run(&focused, stdout: &stdout)
+                    let success = command.run(&focused, stdin: stdin, stdout: &stdout)
                     return (success, stdout.joined(separator: "\n"))
                 }
             }.result.getOrNil() ?? (false, "Fail to await main thread")

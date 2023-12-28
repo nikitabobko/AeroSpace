@@ -1,6 +1,7 @@
 import Socket
 import Foundation
 import Common
+import Darwin
 
 initCli()
 
@@ -17,8 +18,8 @@ func printVersionAndExit(serverVersion: String?) -> Never {
 let args: [String] = Array(CommandLine.arguments.dropFirst())
 
 for arg in args {
-    if arg.contains(" ") {
-        prettyError("Spaces in arguments are not permitted. '\(arg)' argument contains spaces.")
+    if arg.contains(" ") || arg.contains("\n") {
+        prettyError("Spaces and newlines in arguments are not permitted. '\(arg)' argument contains either of them.")
     }
 }
 
@@ -60,8 +61,8 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
         }
     }
 
-    func run(_ command: String) -> (Int32, String) {
-        tryCatch { try socket.write(from: command) }.getOrThrow()
+    func run(_ command: String, stdin: String) -> (Int32, String) {
+        tryCatch { try socket.write(from: command + "\n" + stdin) }.getOrThrow()
         tryCatch { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrThrow()
         let received: String = tryCatch { try socket.readString() }.getOrThrow()
             ?? prettyErrorT("fatal error: received nil from socket")
@@ -70,7 +71,10 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
         return (exitCode, output)
     }
 
-    let (_, serverVersionAndHash) = run("version")
+    let (internalExitCode, serverVersionAndHash) = run("version", stdin: "")
+    if internalExitCode != 0 {
+        prettyError("Client-server miscommunication error: \(serverVersionAndHash)")
+    }
     if serverVersionAndHash != cliClientVersionAndHash {
         prettyError(
             """
@@ -90,7 +94,19 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
         printVersionAndExit(serverVersion: serverVersionAndHash)
     }
 
-    let (exitCode, output) = run(argsAsString)
+    var stdin = ""
+    if !isATty(STDIN_FILENO) {
+        var index = 0
+        while let line = readLine(strippingNewline: false) {
+            stdin += line
+            index += 1
+            if index > 1000 {
+                prettyError("stdin number of lines limit is exceeded")
+            }
+        }
+    }
+
+    let (exitCode, output) = run(argsAsString, stdin: stdin)
 
     print(output)
     exit(exitCode)
