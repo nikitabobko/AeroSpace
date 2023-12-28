@@ -58,7 +58,7 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand.new(direction: .right).runOnFocusedSubject()
+        FocusCommand.new(direction: .right).run(.focused)
         XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
@@ -70,9 +70,9 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand.new(direction: .up).runOnFocusedSubject()
+        FocusCommand.new(direction: .up).run(.focused)
         XCTAssertEqual(focusedWindow?.windowId, 1)
-        FocusCommand.new(direction: .down).runOnFocusedSubject()
+        FocusCommand.new(direction: .down).run(.focused)
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
@@ -84,11 +84,11 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        //FocusCommand(args: FocusCmdArgs(boundaries: .workspace, boundariesAction: .stop, direction: .left)).runOnFocusedSubject()
+        //FocusCommand(args: FocusCmdArgs(boundaries: .workspace, boundariesAction: .stop, direction: .left)).run(.focused)
         var args = FocusCmdArgs(direction: .left)
         args.boundaries = .workspace
         args.boundariesAction = .stop
-        FocusCommand(args: args).runOnFocusedSubject()
+        FocusCommand(args: args).run(.focused)
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
@@ -100,7 +100,7 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand.new(direction: .left).runOnFocusedSubject()
+        FocusCommand.new(direction: .left).run(.focused)
         XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
@@ -123,18 +123,18 @@ final class FocusCommandTest: XCTestCase {
 
         XCTAssertEqual(workspace.mostRecentWindow?.windowId, 3) // The latest bound
         startWindow.focus()
-        FocusCommand.new(direction: .right).runOnFocusedSubject()
+        FocusCommand.new(direction: .right).run(.focused)
         XCTAssertEqual(focusedWindow?.windowId, 3)
 
         window2.markAsMostRecentChild()
         startWindow.focus()
-        FocusCommand.new(direction: .right).runOnFocusedSubject()
+        FocusCommand.new(direction: .right).run(.focused)
         XCTAssertEqual(focusedWindow?.windowId, 2)
 
         window3.markAsMostRecentChild()
         unrelatedWindow.markAsMostRecentChild()
         startWindow.focus()
-        FocusCommand.new(direction: .right).runOnFocusedSubject()
+        FocusCommand.new(direction: .right).run(.focused)
         XCTAssertEqual(focusedWindow?.windowId, 2)
     }
 
@@ -148,7 +148,7 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand.new(direction: .left).runOnFocusedSubject()
+        FocusCommand.new(direction: .left).run(.focused)
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 
@@ -162,7 +162,7 @@ final class FocusCommandTest: XCTestCase {
         }
         start.focus()
 
-        FocusCommand.new(direction: .left).runOnFocusedSubject()
+        FocusCommand.new(direction: .left).run(.focused)
         XCTAssertEqual(focusedWindow?.windowId, 1)
     }
 }

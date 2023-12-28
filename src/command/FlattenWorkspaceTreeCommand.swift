@@ -3,9 +3,9 @@ import Common
 struct FlattenWorkspaceTreeCommand: Command {
     let info: CmdStaticInfo = FlattenWorkspaceTreeCmdArgs.info
 
-    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
+    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
-        let workspace = subject.workspace
+        let workspace = state.subject.workspace
         let windows = workspace.rootTilingContainer.allLeafWindowsRecursive
         for window in windows {
             window.unbindFromParent()

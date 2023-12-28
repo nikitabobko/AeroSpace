@@ -4,10 +4,10 @@ struct ResizeCommand: Command { // todo cover with tests
     let info: CmdStaticInfo = ResizeCmdArgs.info
     let args: ResizeCmdArgs
 
-    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool { // todo support key repeat
+    func _run(_ state: CommandMutableState, stdin: String) -> Bool { // todo support key repeat
         check(Thread.current.isMainThread)
 
-        let candidates = subject.windowOrNil?.parentsWithSelf
+        let candidates = state.subject.windowOrNil?.parentsWithSelf
             .filter { ($0.parent as? TilingContainer)?.layout == .tiles }
             ?? []
 

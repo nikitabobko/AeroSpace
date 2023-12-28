@@ -11,17 +11,17 @@ final class WorkspaceCommandTest: XCTestCase {
         XCTAssertTrue(parseCommand("workspace").failureMsgOrNil?.contains("mandatory") == true)
         XCTAssertEqual(
             parseCommand("workspace next").cmdOrNil?.describe,
-            .workspace(args: WorkspaceCmdArgs(target: .next(wrapAround: false)))
+            .workspace(args: WorkspaceCmdArgs(.relative(WTarget.Relative(isNext: true, wrapAround: false))))
         )
         XCTAssertEqual(
             parseCommand("workspace --auto-back-and-forth W").cmdOrNil?.describe,
-            .workspace(args: WorkspaceCmdArgs(target: .workspaceName(name: "W", autoBackAndForth: true)))
+            .workspace(args: WorkspaceCmdArgs(.direct(WTarget.Direct(name: "W", autoBackAndForth: true))))
         )
         XCTAssertTrue(parseCommand("workspace --wrap-around W").failureMsgOrNil?.contains("--wrap-around is allowed only for (next|prev)") == true)
         XCTAssertTrue(parseCommand("workspace --auto-back-and-forth next").failureMsgOrNil?.contains("--auto-back-and-forth is not allowed for (next|prev)") == true)
         XCTAssertEqual(
             parseCommand("workspace next --wrap-around").cmdOrNil?.describe,
-            .workspace(args: WorkspaceCmdArgs(target: .next(wrapAround: true)))
+            .workspace(args: WorkspaceCmdArgs(.relative(WTarget.Relative(isNext: true, wrapAround: true))))
         )
     }
 }

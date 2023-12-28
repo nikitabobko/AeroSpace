@@ -13,7 +13,7 @@ final class SplitCommandTest: XCTestCase {
         }
         start.focus()
 
-        SplitCommand(args: SplitCmdArgs(.vertical)).runOnFocusedSubject()
+        SplitCommand(args: SplitCmdArgs(.vertical)).run(.focused)
         XCTAssertEqual(root.layoutDescription, .h_tiles([
             .v_tiles([
                 .window(1)
@@ -30,7 +30,7 @@ final class SplitCommandTest: XCTestCase {
         }
         start.focus()
 
-        SplitCommand(args: SplitCmdArgs(.opposite)).runOnFocusedSubject()
+        SplitCommand(args: SplitCmdArgs(.opposite)).run(.focused)
         XCTAssertEqual(root.layoutDescription, .h_tiles([
             .v_tiles([
                 .window(1)
@@ -49,7 +49,7 @@ final class SplitCommandTest: XCTestCase {
         }
         start.focus()
 
-        SplitCommand(args: SplitCmdArgs(.horizontal)).runOnFocusedSubject()
+        SplitCommand(args: SplitCmdArgs(.horizontal)).run(.focused)
         XCTAssertEqual(root.layoutDescription, .h_tiles([
             .h_tiles([
                 .window(1)
@@ -68,7 +68,7 @@ final class SplitCommandTest: XCTestCase {
         }
         start.focus()
 
-        SplitCommand(args: SplitCmdArgs(.opposite)).runOnFocusedSubject()
+        SplitCommand(args: SplitCmdArgs(.opposite)).run(.focused)
         XCTAssertEqual(root.layoutDescription, .h_tiles([
             .h_tiles([
                 .window(1)

@@ -8,7 +8,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
     func testParse() {
         XCTAssertEqual(
             parseCommand("move-node-to-workspace next").cmdOrNil?.describe,
-            .moveNodeToWorkspace(args: MoveNodeToWorkspaceCmdArgs(target: .next(wrapAround: false)))
+            .moveNodeToWorkspace(args: MoveNodeToWorkspaceCmdArgs(.relative(WTarget.Relative(isNext: true, wrapAround: false))))
         )
     }
 
@@ -18,7 +18,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             TestWindow(id: 1, parent: $0).focus()
         }
 
-        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .workspaceName(name: "b", autoBackAndForth: false))).runOnFocusedSubject()
+        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(.direct(WTarget.Direct(name: "b", autoBackAndForth: false)))).run(.focused)
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         XCTAssertEqual((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }
@@ -29,13 +29,12 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             TestWindow(id: 1, parent: $0).focus()
         }
 
-        var subject = CommandSubject.focused
-        var devNull: [String] = []
+        let state: CommandMutableState = .focused
 
-        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .workspaceName(name: "b", autoBackAndForth: false)))
-            .run(&subject, stdout: &devNull)
+        _ = MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(.direct(WTarget.Direct(name: "b", autoBackAndForth: false))))
+            .run(state)
 
-        XCTAssertEqual(subject, .emptyWorkspace("a"))
+        XCTAssertEqual(state.subject, .emptyWorkspace("a"))
     }
 
     func testAnotherWindowSubject() {
@@ -46,13 +45,12 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             TestWindow(id: 2, parent: $0).focus()
         }
 
-        var subject = CommandSubject.focused
-        var devNull: [String] = []
+        let state: CommandMutableState = .focused
 
-        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .workspaceName(name: "b", autoBackAndForth: false)))
-            .run(&subject, stdout: &devNull)
+        _ = MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(.direct(WTarget.Direct(name: "b", autoBackAndForth: false))))
+            .run(state)
 
-        XCTAssertEqual(subject, .window(window1))
+        XCTAssertEqual(state.subject, .window(window1))
     }
 
     func testPreserveFloatingLayout() {
@@ -60,7 +58,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             TestWindow(id: 1, parent: $0).focus()
         }
 
-        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .workspaceName(name: "b", autoBackAndForth: false))).runOnFocusedSubject()
+        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(.direct(WTarget.Direct(name: "b", autoBackAndForth: false)))).run(.focused)
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         XCTAssertEqual(Workspace.get(byName: "b").children.filterIsInstance(of: Window.self).singleOrNil()?.windowId, 1)
     }

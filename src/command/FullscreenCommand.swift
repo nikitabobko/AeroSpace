@@ -3,10 +3,10 @@ import Common
 struct FullscreenCommand: Command {
     let info: CmdStaticInfo = FullscreenCmdArgs.info
 
-    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
+    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
-        guard let window = subject.windowOrNil else {
-            stdout.append(noWindowIsFocused)
+        guard let window = state.subject.windowOrNil else {
+            state.stdout.append(noWindowIsFocused)
             return false
         }
         window.isFullscreen = !window.isFullscreen

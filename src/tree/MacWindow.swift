@@ -72,9 +72,7 @@ final class MacWindow: Window, CustomStringConvertible {
         //  we might want to track the time of the latest workspace switch to make the approximation more accurate
         if workspace == previousFocusedWorkspaceName || workspace == focusedWorkspaceName {
             refreshSession(forceFocus: true) {
-                WorkspaceCommand(args: WorkspaceCmdArgs(
-                    target: .workspaceName(name: workspace, autoBackAndForth: false)
-                )).runOnFocusedSubject()
+                _ = WorkspaceCommand.run(.focused, workspace)
             }
         }
     }
@@ -251,8 +249,7 @@ private func onWindowDetected(_ window: Window, startup: Bool) {
     check(Thread.current.isMainThread)
     for callback in config.onWindowDetected {
         if callback.matches(window, startup: startup) {
-            var subject = CommandSubject.window(window)
-            _ = callback.run.run(&subject)
+            _ = callback.run.run(CommandMutableState(.window(window)))
             if !callback.checkFurtherCallbacks {
                 return
             }

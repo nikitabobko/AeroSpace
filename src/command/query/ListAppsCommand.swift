@@ -3,9 +3,9 @@ import Common
 struct ListAppsCommand: Command {
     let info: CmdStaticInfo = ListAppsCmdArgs.info
 
-    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
+    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
-        stdout += apps
+        state.stdout += apps
             .map { app in
                 let pid = String(app.pid)
                 let appId = app.id ?? "NULL"

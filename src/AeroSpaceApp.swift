@@ -25,11 +25,11 @@ struct AeroSpaceApp: App {
             GlobalObserver.initObserver()
             refreshAndLayout(startup: true)
             refreshSession {
-                var focused = CommandSubject.focused
+                let state: CommandMutableState = .focused
                 if startedAtLogin {
-                    _ = config.afterLoginCommand.run(&focused)
+                    _ = config.afterLoginCommand.run(state)
                 }
-                _ = config.afterStartupCommand.run(&focused)
+                _ = config.afterStartupCommand.run(state)
             }
         }
     }
@@ -46,11 +46,7 @@ struct AeroSpaceApp: App {
                 Text("Workspaces:")
                 ForEach(Workspace.all) { (workspace: Workspace) in
                     Button {
-                        refreshSession {
-                            WorkspaceCommand(args: WorkspaceCmdArgs(
-                                target: .workspaceName(name: workspace.name, autoBackAndForth: false)
-                            )).runOnFocusedSubject()
-                        }
+                        refreshSession { _ = WorkspaceCommand.run(.focused, workspace.name) }
                     } label: {
                         Toggle(isOn: workspace == Workspace.focused
                             ? Binding(get: { true }, set: { _, _ in })
@@ -64,13 +60,13 @@ struct AeroSpaceApp: App {
             }
             Button(viewModel.isEnabled ? "Disable" : "Enable") {
                 refreshSession {
-                    EnableCommand(args: EnableCmdArgs(targetState: .toggle)).runOnFocusedSubject()
+                    _ = EnableCommand(args: EnableCmdArgs(targetState: .toggle)).run(.focused)
                 }
             }
                 .keyboardShortcut("E", modifiers: .command)
             if viewModel.isEnabled {
                 Button("Reload config") {
-                    refreshSession { ReloadConfigCommand().runOnFocusedSubject() }
+                    refreshSession { _ = ReloadConfigCommand().run(.focused) }
                 }
                     .keyboardShortcut("R", modifiers: .command)
             }

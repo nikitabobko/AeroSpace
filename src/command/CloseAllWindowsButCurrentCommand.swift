@@ -3,16 +3,16 @@ import Common
 struct CloseAllWindowsButCurrentCommand: Command {
     let info: CmdStaticInfo = CloseAllWindowsButCurrentCmdArgs.info
 
-    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
+    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
-        guard let focused = subject.windowOrNil else {
-            stdout.append("Empty workspace")
+        guard let focused = state.subject.windowOrNil else {
+            state.stdout.append("Empty workspace")
             return false
         }
         var result = true
         for window in focused.workspace.allLeafWindowsRecursive {
             if window != focused {
-                result = CloseCommand().run(&subject, stdout: &stdout) && result
+                result = CloseCommand().run(state) && result
             }
         }
         return result

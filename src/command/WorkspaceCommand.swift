@@ -4,55 +4,46 @@ struct WorkspaceCommand : Command {
     let info: CmdStaticInfo = WorkspaceCmdArgs.info
     let args: WorkspaceCmdArgs
 
-    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
+    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         let workspaceName: String
         switch args.target {
-        case .next:
-            fallthrough
-        case .prev:
-            guard let workspace = getNextPrevWorkspace(current: subject.workspace, target: args.target) else { return false }
+        case .relative(let relative):
+            guard let workspace = getNextPrevWorkspace(current: state.subject.workspace, relative: relative) else { return false }
             workspaceName = workspace.name
-        case .workspaceName(let _workspaceName, let autoBackAndForth):
-            workspaceName = _workspaceName
-            if autoBackAndForth && subject.workspace.name == workspaceName {
-                return WorkspaceBackAndForthCommand().run(&subject, stdout: &stdout)
+        case .direct(let direct):
+            workspaceName = direct.name
+            if direct.autoBackAndForth && state.subject.workspace.name == workspaceName {
+                return WorkspaceBackAndForthCommand().run(state)
             }
         }
         let workspace = Workspace.get(byName: workspaceName)
         // todo drop anyLeafWindowRecursive. It must not be necessary
         if let window = workspace.mostRecentWindow ?? workspace.anyLeafWindowRecursive { // switch to not empty workspace
-            subject = .window(window)
+            state.subject = .window(window)
         } else { // switch to empty workspace
             check(workspace.isEffectivelyEmpty)
-            subject = .emptyWorkspace(workspaceName)
+            state.subject = .emptyWorkspace(workspaceName)
         }
         check(workspace.monitor.setActiveWorkspace(workspace))
         focusedWorkspaceName = workspace.name
         return true
     }
+
+    public static func run(_ state: CommandMutableState, _ name: String) -> Bool {
+        let args = WorkspaceCmdArgs(.direct(WTarget.Direct(name: name, autoBackAndForth: false)))
+        return WorkspaceCommand(args: args).run(state)
+    }
 }
 
-func getNextPrevWorkspace(current: Workspace, target: WorkspaceTarget) -> Workspace? {
-    let next: Bool
-    let wrapAround: Bool
-    switch target {
-    case .next(let _wrapAround):
-        next = true
-        wrapAround = _wrapAround
-    case .prev(let _wrapAround):
-        next = false
-        wrapAround = _wrapAround
-    case .workspaceName(_):
-        error("Invalid argument \(target)")
-    }
+func getNextPrevWorkspace(current: Workspace, relative: WTarget.Relative) -> Workspace? {
     let workspaces: [Workspace] = Workspace.all.toSet().union([current]).sortedBy { $0.name }
     guard let index = workspaces.firstIndex(of: current) else { error("Impossible") }
     let workspace: Workspace?
-    if wrapAround {
-        workspace = workspaces.get(wrappingIndex: next ? index + 1 : index - 1)
+    if relative.wrapAround {
+        workspace = workspaces.get(wrappingIndex: relative.isNext ? index + 1 : index - 1)
     } else {
-        workspace = workspaces.getOrNil(atIndex: next ? index + 1 : index - 1)
+        workspace = workspaces.getOrNil(atIndex: relative.isNext ? index + 1 : index - 1)
     }
     return workspace
 }

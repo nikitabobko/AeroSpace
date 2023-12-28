@@ -3,22 +3,22 @@ import Common
 struct CloseCommand: Command {
     let info: CmdStaticInfo = CloseCmdArgs.info
 
-    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
+    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
-        guard let window = subject.windowOrNil else {
-            stdout.append("Empty workspace")
+        guard let window = state.subject.windowOrNil else {
+            state.stdout.append("Empty workspace")
             return false
         }
         if window.close() {
             (window as! MacWindow).garbageCollect()
             if let focusedWindow {
-                subject = .window(focusedWindow)
+                state.subject = .window(focusedWindow)
             } else {
-                subject = .emptyWorkspace(focusedWorkspaceName)
+                state.subject = .emptyWorkspace(focusedWorkspaceName)
             }
             return true
         } else {
-            stdout.append("Can't close the window. Probably it doesn't have close button")
+            state.stdout.append("Can't close the window. Probably it doesn't have close button")
             return false
         }
     }

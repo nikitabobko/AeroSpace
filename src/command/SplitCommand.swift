@@ -4,14 +4,14 @@ struct SplitCommand: Command {
     let info: CmdStaticInfo = SplitCmdArgs.info
     let args: SplitCmdArgs
 
-    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool {
+    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         if config.enableNormalizationFlattenContainers {
-            stdout.append("'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled")
+            state.stdout.append("'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled")
             return false
         }
-        guard let window = subject.windowOrNil else {
-            stdout.append(noWindowIsFocused)
+        guard let window = state.subject.windowOrNil else {
+            state.stdout.append(noWindowIsFocused)
             return false
         }
         switch window.parent.kind {

@@ -2,20 +2,28 @@ import Common
 
 protocol Command: AeroAny {
     var info: CmdStaticInfo { get }
-    func _run(_ subject: inout CommandSubject, stdin: String, stdout: inout [String]) -> Bool
+    func _run(_ state: CommandMutableState, stdin: String) -> Bool
+}
+
+class CommandMutableState {
+    var subject: CommandSubject
+    var stdout: [String]
+
+    public init(
+        _ subject: CommandSubject,
+        _ stdout: [String] = []
+    ) {
+        self.subject = subject
+        self.stdout = stdout
+    }
+
+    static var focused: CommandMutableState { CommandMutableState(.focused) }
 }
 
 extension Command {
-    func run(_ subject: inout CommandSubject, stdin: String = "", stdout: inout [String]) -> Bool {
+    func run(_ state: CommandMutableState, stdin: String = "") -> Bool {
         check(Thread.current.isMainThread)
-        return [self]._run(&subject, stdin: stdin, stdout: &stdout)
-    }
-
-    func runOnFocusedSubject() {
-        check(Thread.current.isMainThread)
-        var focused = CommandSubject.focused
-        var devNull: [String] = []
-        _ = run(&focused, stdout: &devNull)
+        return [self]._run(state, stdin: stdin)
     }
 
     var isExec: Bool { self is ExecAndForgetCommand }
@@ -27,18 +35,18 @@ extension Command {
 // 3. on-window-detected callback
 // 4. Tray icon buttons
 extension [Command] {
-    func run(_ subject: inout CommandSubject) -> Bool {
-        var devNull: [String] = []
-        return _run(&subject, stdin: "", stdout: &devNull)
+    func run(_ state: CommandMutableState) -> Bool {
+        _run(state, stdin: "")
     }
 
-    fileprivate func _run(_ subject: inout CommandSubject, stdin: String = "", stdout: inout [String]) -> Bool {
+    // fileprivate because don't want to expose an interface where a bunch of commands have shared stdin
+    fileprivate func _run(_ state: CommandMutableState, stdin: String = "") -> Bool {
         check(Thread.current.isMainThread)
         check(self.count == 1 || stdin == "")
         var result = true
         for command in self {
             if TrayMenuModel.shared.isEnabled || command is EnableCommand {
-                result = command._run(&subject, stdin: stdin, stdout: &stdout) && result
+                result = command._run(state, stdin: stdin) && result
                 refreshModel()
             }
         }
