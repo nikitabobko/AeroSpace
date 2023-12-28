@@ -9,7 +9,7 @@ struct WorkspaceCommand : Command {
         let workspaceName: String
         switch args.target {
         case .relative(let relative):
-            guard let workspace = getNextPrevWorkspace(current: state.subject.workspace, relative: relative) else { return false }
+            guard let workspace = getNextPrevWorkspace(current: state.subject.workspace, relative: relative, stdin: stdin) else { return false }
             workspaceName = workspace.name
         case .direct(let direct):
             workspaceName = direct.name
@@ -36,9 +36,12 @@ struct WorkspaceCommand : Command {
     }
 }
 
-func getNextPrevWorkspace(current: Workspace, relative: WTarget.Relative) -> Workspace? {
-    let workspaces: [Workspace] = Workspace.all.toSet().union([current]).sortedBy { $0.name }
-    guard let index = workspaces.firstIndex(of: current) else { error("Impossible") }
+func getNextPrevWorkspace(current: Workspace, relative: WTarget.Relative, stdin: String) -> Workspace? {
+    let stdinWorkspaces: [String] = stdin.split(separator: "\n").map { String($0).trim() }.filter { !$0.isEmpty }
+    let workspaces: [Workspace] = stdinWorkspaces.isEmpty
+        ? Workspace.all.toSet().union([current]).sortedBy { $0.name }
+        : stdinWorkspaces.map { Workspace.get(byName: $0) }
+    let index = workspaces.firstIndex(where: { $0 == Workspace.focused }) ?? 0
     let workspace: Workspace?
     if relative.wrapAround {
         workspace = workspaces.get(wrappingIndex: relative.isNext ? index + 1 : index - 1)

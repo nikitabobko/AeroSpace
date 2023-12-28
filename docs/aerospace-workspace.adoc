@@ -2,27 +2,31 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-workspace
 // tag::purpose[]
-:manpurpose: Activates the specified workspace
+:manpurpose: Focuses the specified workspace
 // end::purpose[]
 
 == Synopsis
 
 [verse]
 // tag::synopsis[]
-workspace [-h|--help] (next|prev)
-workspace [-h|--help] [--auto-back-and-forth] <target-workspace-name>
+workspace [-h|--help] [--wrap-around] (next|prev)
+workspace [-h|--help] [--auto-back-and-forth] <workspace-name>
 
 // end::synopsis[]
 
 == Description
 
 // tag::body[]
+*1. <workspace-name> syntax*
+
 {manpurpose}
 
-Workspaces can be switched in alphabetical order
+*2. (next|prev) syntax*
 
-* `*workspace next*` activates the next alphabetical workspace
-* `*workspace prev*` activates the previous alphabetical workspace
+Focuses next or previous workspace in *the list*.
+
+* If stdin is not TTY and stdin contains non whitespace characters then *the list* is taken from stdin
+* Otherwise, *the list* is all workspaces in alphabetical order
 
 include::util/conditional-options-header.adoc[]
 
@@ -30,6 +34,9 @@ include::util/conditional-options-header.adoc[]
 
 --auto-back-and-forth::
 Automatic 'back-and-forth' when switching to already focused workspace
+
+--wrap-around::
+Make it possible to jump between first and last workspaces using (next|prev)
 
 // end::body[]
 

@@ -32,12 +32,6 @@ extension FileHandle: TextOutputStream {
 
 let cliClientVersionAndHash: String = "\(aeroSpaceAppVersion) \(gitHash)"
 
-extension String {
-    func trim() -> String {
-        self.trimmingCharacters(in: .whitespacesAndNewlines)
-    }
-}
-
 func initCli() {
     struct CliClientTerminationHandler: TerminationHandler {
         func beforeTermination() {} // nothing to do in CLI
@@ -46,6 +40,6 @@ func initCli() {
     _terminationHandler = CliClientTerminationHandler()
 }
 
-func isATty(_ fd: Int32) -> Bool {
-    isatty(fd) == 1
+func hasStdin() -> Bool {
+    isatty(STDIN_FILENO) != 1
 }

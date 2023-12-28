@@ -13,7 +13,7 @@ struct MoveNodeToWorkspaceCommand: Command {
         let targetWorkspace: Workspace
         switch args.target {
         case .relative(let relative):
-            guard let workspace = getNextPrevWorkspace(current: state.subject.workspace, relative: relative) else { return false }
+            guard let workspace = getNextPrevWorkspace(current: state.subject.workspace, relative: relative, stdin: stdin) else { return false }
             targetWorkspace = workspace
         case .direct(let direct):
             targetWorkspace = Workspace.get(byName: direct.name)

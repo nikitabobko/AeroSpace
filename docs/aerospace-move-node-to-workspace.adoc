@@ -6,14 +6,21 @@ include::util/man-attributes.adoc[]
 // end::purpose[]
 
 == Synopsis
+
+[verse]
 // tag::synopsis[]
-move-node-to-workspace [-h|--help] <target-workspace-name>
+move-node-to-workspace [-h|--help] [--wrap-around] (next|prev)
+move-node-to-workspace [-h|--help] <workspace-name>
+
 // end::synopsis[]
 
 == Description
 
 // tag::body[]
 {manpurpose}
+
+`*(next|prev)*` is identical to `*workspace (next|prev)*`
+
 // end::body[]
 
 include::util/conditional-options-header.adoc[]

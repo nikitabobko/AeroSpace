@@ -95,7 +95,7 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
     }
 
     var stdin = ""
-    if !isATty(STDIN_FILENO) {
+    if hasStdin() {
         var index = 0
         while let line = readLine(strippingNewline: false) {
             stdin += line
