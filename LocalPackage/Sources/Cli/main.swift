@@ -4,6 +4,16 @@ import Common
 
 initCli()
 
+func printVersionAndExit(serverVersion: String?) -> Never {
+    print(
+        """
+        aerospace CLI client version: \(cliClientVersionAndHash)
+        AeroSpace.app server version: \(serverVersion ?? "Unknown. The server is not running")
+        """
+    )
+    exit(0)
+}
+
 let args: [String] = Array(CommandLine.arguments.dropFirst())
 
 for arg in args {
@@ -25,9 +35,10 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
 } else {
     let argsAsString = args.joined(separator: " ")
 
+    let isVersion: Bool
     switch parseCmdArgs(argsAsString) {
-    case .cmd:
-        break // Nothing to do
+    case .cmd(let cmdArgs):
+        isVersion = cmdArgs is VersionCmdArgs
     case .help(let help):
         print(help)
         exit(0)
@@ -42,7 +53,11 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
     }
     let socketFile = "/tmp/\(appId).sock"
     if let e: AeroError = tryCatch(body: { try socket.connect(to: socketFile) }).errorOrNil {
-        prettyError("Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.msg)")
+        if isVersion {
+            printVersionAndExit(serverVersion: nil)
+        } else {
+            prettyError("Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.msg)")
+        }
     }
 
     func run(_ command: String) -> (Int32, String) {
@@ -56,13 +71,13 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
     }
 
     let (_, serverVersionAndHash) = run("version")
-    if serverVersionAndHash.trim() != cliClientVersionAndHash.trim() {
+    if serverVersionAndHash != cliClientVersionAndHash {
         prettyError(
             """
             AeroSpace client/server version mismatch
 
-            - aerospace CLI client version: \(cliClientVersionAndHash.trim())
-            - AeroSpace.app server version: \(serverVersionAndHash.trim())
+            - aerospace CLI client version: \(cliClientVersionAndHash)
+            - AeroSpace.app server version: \(serverVersionAndHash)
 
             Possible fixes:
             - Restart AeroSpace.app (restart is required after each update)
@@ -71,8 +86,12 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
         )
     }
 
+    if isVersion {
+        printVersionAndExit(serverVersion: serverVersionAndHash)
+    }
+
     let (exitCode, output) = run(argsAsString)
 
-    print(output, terminator: "")
+    print(output)
     exit(exitCode)
 }

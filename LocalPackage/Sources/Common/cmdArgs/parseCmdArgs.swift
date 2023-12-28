@@ -60,6 +60,8 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
             result[kind.rawValue] = SubCommandParser(parseSplitCmdArgs)
         case .version:
             result[kind.rawValue] = noArgsSubCommandParser(VersionCmdArgs())
+            result["-v"] = noArgsSubCommandParser(VersionCmdArgs())
+            result["-version"] = noArgsSubCommandParser(VersionCmdArgs())
         case .workspace:
             result[kind.rawValue] = SubCommandParser(parseWorkspaceCmdArgs)
         case .workspaceBackAndForth:
