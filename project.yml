@@ -70,26 +70,3 @@ targets:
         SWIFT_VERSION: 5.8
         TEST_HOST: "$(BUILT_PRODUCTS_DIR)/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug"
         GENERATE_INFOPLIST_FILE: YES
-  AeroSpace-cli:
-    type: tool
-    platform: macOS
-    deploymentTarget: "13.0"
-    sources: [cli/]
-    dependencies:
-      - package: Socket
-      - package: LocalPackage
-        products:
-          - Common
-    settings:
-      base:
-        SWIFT_VERSION: 5.8
-        CODE_SIGN_STYLE: Automatic
-      configs:
-        release:
-          PRODUCT_NAME: aerospace
-          PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace.cli
-          CODE_SIGN_IDENTITY: Apple Development
-          "CODE_SIGN_IDENTITY[sdk=macosx*]": Apple Development
-          DEVELOPMENT_TEAM: 4MWP47XA68 # Team: Nikita Bobko (Personal Team)
-        debug:
-          PRODUCT_NAME: aerospace-debug
