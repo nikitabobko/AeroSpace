@@ -45,7 +45,7 @@ extension [Command] {
         check(self.count == 1 || stdin == "")
         var result = true
         for command in self {
-            if TrayMenuModel.shared.isEnabled || command is EnableCommand {
+            if TrayMenuModel.shared.isEnabled || isAllowedToRunWhenDisabled(command) {
                 result = command._run(state, stdin: stdin) && result
                 refreshModel()
             }
