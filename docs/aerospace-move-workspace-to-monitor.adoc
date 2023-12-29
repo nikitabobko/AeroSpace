@@ -7,7 +7,8 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-move-workspace-to-monitor [-h|--help] (next|prev)
+move-workspace-to-monitor [-h|--help] --wrap-around (next|prev)
+
 // end::synopsis[]
 
 == Description
@@ -21,5 +22,6 @@ The command doesn't have effect on workspaces xref:guide.adoc#assign-workspaces-
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+--wrap-around:: Allows to move workspace between first and last monitors
 
 include::util/man-footer.adoc[]
