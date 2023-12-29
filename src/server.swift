@@ -40,7 +40,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
         guard let request: String = (try? socket.readString()) else { return }
         let separator: Swift.String.Index = request.firstIndex(of: "\n") ?? request.endIndex
         let rawCommand = String(request[..<separator])
-        let stdin = String(request[request.index(after: separator)...])
+        let stdin = String(request[request.indexOrPastTheEnd(after: separator)...])
         let (command, help, err) = parseCommand(rawCommand).unwrap()
         guard let isEnabled = await Task(operation: { @MainActor in TrayMenuModel.shared.isEnabled }).result.getOrNil() else {
             _ = try? socket.write(from: "1Unknown failure during isEnabled server state access")
