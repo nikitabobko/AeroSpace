@@ -50,25 +50,23 @@ cp -r LocalPackage/.build/apple/Products/Release/aerospace .release
 
 expected_layout=$(cat <<EOF
 .release/AeroSpace.app
-└── Contents
-    ├── Info.plist
-    ├── MacOS
-    │   └── AeroSpace
-    ├── PkgInfo
-    ├── Resources
-    │   ├── AppIcon.icns
-    │   ├── Assets.car
-    │   └── default-config.toml
-    └── _CodeSignature
-        └── CodeResources
-
-5 directories, 7 files
+.release/AeroSpace.app/Contents
+.release/AeroSpace.app/Contents/_CodeSignature
+.release/AeroSpace.app/Contents/_CodeSignature/CodeResources
+.release/AeroSpace.app/Contents/MacOS
+.release/AeroSpace.app/Contents/MacOS/AeroSpace
+.release/AeroSpace.app/Contents/Resources
+.release/AeroSpace.app/Contents/Resources/default-config.toml
+.release/AeroSpace.app/Contents/Resources/AppIcon.icns
+.release/AeroSpace.app/Contents/Resources/Assets.car
+.release/AeroSpace.app/Contents/Info.plist
+.release/AeroSpace.app/Contents/PkgInfo
 EOF
 )
 
-if [ "$expected_layout" != "$(tree .release/AeroSpace.app)" ]; then
+if [ "$expected_layout" != "$(find .release/AeroSpace.app)" ]; then
     echo "!!! Expect/Actual layout don't match !!!"
-    tree .release/AeroSpace.app
+    find .release/AeroSpace.app
     exit 1
 fi
 

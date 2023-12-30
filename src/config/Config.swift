@@ -6,8 +6,8 @@ let defaultConfig = initDefaultConfig(parseConfig(try! String(contentsOf: Bundle
 var config: Config = defaultConfig
 
 struct RawConfig: Copyable {
-    var afterLoginCommand: [Command]?
-    var afterStartupCommand: [Command]?
+    var afterLoginCommand: [any Command]?
+    var afterStartupCommand: [any Command]?
     var indentForNestedContainersWithTheSameOrientation: Int?
     var enableNormalizationFlattenContainers: Bool?
     var nonEmptyWorkspacesRootContainersLayoutOnStartup: StartupRootContainerLayout?
@@ -23,8 +23,8 @@ struct RawConfig: Copyable {
     var onWindowDetected: [WindowDetectedCallback]?
 }
 struct Config {
-    var afterLoginCommand: [Command]
-    var afterStartupCommand: [Command]
+    var afterLoginCommand: [any Command]
+    var afterStartupCommand: [any Command]
     var indentForNestedContainersWithTheSameOrientation: Int
     var enableNormalizationFlattenContainers: Bool
     var nonEmptyWorkspacesRootContainersLayoutOnStartup: StartupRootContainerLayout
@@ -104,10 +104,10 @@ struct Mode: Copyable {
 class HotkeyBinding {
     let modifiers: NSEvent.ModifierFlags
     let key: Key
-    let commands: [Command]
+    let commands: [any Command]
     private var hotKey: HotKey? = nil
 
-    init(_ modifiers: NSEvent.ModifierFlags, _ key: Key, _ commands: [Command]) {
+    init(_ modifiers: NSEvent.ModifierFlags, _ key: Key, _ commands: [any Command]) {
         self.modifiers = modifiers
         self.key = key
         self.commands = commands

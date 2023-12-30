@@ -1,7 +1,6 @@
 import Common
 
 struct ResizeCommand: Command { // todo cover with tests
-    let info: CmdStaticInfo = ResizeCmdArgs.info
     let args: ResizeCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool { // todo support key repeat

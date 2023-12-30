@@ -24,7 +24,7 @@ jobs:
       - name: Build
         run: |
           ./build-debug.sh
-          ./check-uncommitted-files.sh
+          ./script/check-uncommitted-files.sh
       - name: Test
         run: ./run-tests.sh
       - name: Build docs

@@ -15,7 +15,7 @@ final class WorkspaceCommandTest: XCTestCase {
         )
         XCTAssertEqual(
             parseCommand("workspace --auto-back-and-forth W").cmdOrNil?.describe,
-            .workspace(args: WorkspaceCmdArgs(.direct(WTarget.Direct(name: "W", autoBackAndForth: true))))
+            .workspace(args: WorkspaceCmdArgs(.direct(WTarget.Direct("W", autoBackAndForth: true))))
         )
         XCTAssertTrue(parseCommand("workspace --wrap-around W").failureMsgOrNil?.contains("--wrap-around is allowed only for (next|prev)") == true)
         XCTAssertTrue(parseCommand("workspace --auto-back-and-forth next").failureMsgOrNil?.contains("--auto-back-and-forth is not allowed for (next|prev)") == true)

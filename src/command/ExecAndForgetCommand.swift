@@ -1,7 +1,6 @@
 import Common
 
 struct ExecAndForgetCommand: Command {
-    let info: CmdStaticInfo = ExecAndForgetCmdArgs.info
     let args: ExecAndForgetCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {

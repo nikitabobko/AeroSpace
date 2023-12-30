@@ -2,7 +2,6 @@ import Common
 import Foundation
 
 struct WorkspaceCommand : Command {
-    let info: CmdStaticInfo = WorkspaceCmdArgs.info
     let args: WorkspaceCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
@@ -13,7 +12,7 @@ struct WorkspaceCommand : Command {
             guard let workspace = getNextPrevWorkspace(current: state.subject.workspace, relative: relative, stdin: stdin) else { return false }
             workspaceName = workspace.name
         case .direct(let direct):
-            workspaceName = direct.name
+            workspaceName = direct.name.raw
             if direct.autoBackAndForth && state.subject.workspace.name == workspaceName {
                 return WorkspaceBackAndForthCommand().run(state)
             }
@@ -32,8 +31,12 @@ struct WorkspaceCommand : Command {
     }
 
     public static func run(_ state: CommandMutableState, _ name: String) -> Bool {
-        let args = WorkspaceCmdArgs(.direct(WTarget.Direct(name: name, autoBackAndForth: false)))
-        return WorkspaceCommand(args: args).run(state)
+        if let wName = WorkspaceName.parse(name).getOrNil(appendErrorTo: &state.stdout) { // todo replace with stderr
+            let args = WorkspaceCmdArgs(.direct(WTarget.Direct(wName, autoBackAndForth: false)))
+            return WorkspaceCommand(args: args).run(state)
+        } else {
+            return false
+        }
     }
 }
 

@@ -1,13 +1,13 @@
 import Common
 import TOMLKit
 
-func parseCommand(_ raw: String) -> ParsedCmd<Command> {
+func parseCommand(_ raw: String) -> ParsedCmd<any Command> {
     parseCmdArgs(raw).map { $0.toCommand() }
 }
 
 extension CmdArgs {
-    func toCommand() -> Command {
-        let command: Command
+    func toCommand() -> any Command {
+        let command: any Command
         switch Self.info.kind {
         case .close:
             command = CloseCommand()

@@ -17,7 +17,9 @@ Runs `/bin/bash -c '<bash-script>'`, and doesn't wait for the command terminatio
 Stdout, stderr and exit code are ignored.
 
 For example, you can use this command to launch applications: +
-`exec-and-forget open -n /System/Applications/Utilities/Terminal.app`
+
+[verse]
+    exec-and-forget open -n /System/Applications/Utilities/Terminal.app
 
 * The command is available in config
 * The command is *NOT* available in CLI

@@ -224,7 +224,7 @@ public func optionalTrueBoolFlag<T: Copyable>(_ keyPath: WritableKeyPath<T, Bool
 
 // todo reuse in config
 public func parseEnum<T: RawRepresentable>(_ raw: String, _ _: T.Type) -> Parsed<T> where T.RawValue == String, T: CaseIterable {
-    T(rawValue: raw).orFailure { "Can't parse '\(raw)'.\nPossible values: \(T.unionLiteral)" }
+    T(rawValue: raw).orFailure("Can't parse '\(raw)'.\nPossible values: \(T.unionLiteral)")
 }
 
 public func parseCardinalDirectionArg(arg: String, nextArgs: inout [String]) -> Parsed<CardinalDirection> {

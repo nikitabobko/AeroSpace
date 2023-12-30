@@ -125,7 +125,7 @@ You use xref:commands.adoc#focus[focus command] to do that.
 
 The tree structure can be changed with three commands:
 
-. xref:commands.adoc#move-through[move-through]
+. xref:commands.adoc#move[move]
 . xref:commands.adoc#join-with[join-with]
 . xref:commands.adoc#split[split]
 
@@ -139,7 +139,7 @@ In total, AeroSpace provides 4 possible layouts:
 - `h_accordion` horizontal accordion (analog of i3’s "tabbed layout")
 - `v_accordion` vertical accordion (analog of i3’s "stacked layout")
 
-From the previous section, you’re already familiar with the `tiles` layout.
+<<tree,From the previous section>>, you’re already familiar with the `tiles` layout.
 
 Accordion is a layout where windows are placed on top of each other.
 

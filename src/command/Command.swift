@@ -1,8 +1,13 @@
 import Common
 
 protocol Command: AeroAny {
-    var info: CmdStaticInfo { get }
+    associatedtype T where T: CmdArgs
+    var args: T { get }
     func _run(_ state: CommandMutableState, stdin: String) -> Bool
+}
+
+extension Command {
+    var info: CmdStaticInfo { T.info }
 }
 
 class CommandMutableState {

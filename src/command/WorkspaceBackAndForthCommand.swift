@@ -1,7 +1,7 @@
 import Common
 
 struct WorkspaceBackAndForthCommand: Command {
-    let info: CmdStaticInfo = WorkspaceBackAndForthCmdArgs.info
+    let args = WorkspaceBackAndForthCmdArgs()
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)

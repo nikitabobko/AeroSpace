@@ -18,27 +18,28 @@ focus [-h|--help] [--boundaries <boundary>]
 // tag::body[]
 {manpurpose}
 
-https://i3wm.org/docs/userguide.html#_focusing_moving_containers[Contrary to i3], `focus` command doesn't have a separate argument to focus floating windows.
+Contrary to i3, `focus` command doesn't have a separate argument to focus floating windows.
 From `focus` command perspective, floating windows are part of xref:guide.adoc#tree[the tree].
 The floating window parent container is determined as the smallest tiling container that contains the center of the floating window.
 
 This technique eliminates the need for an additional binding for floating windows.
 
-`focus child|parent` https://github.com/nikitabobko/AeroSpace/issues/5[isn't supported] because the necessaty of this operation is under the question.
+`focus child|parent` isn't supported because the necessity of this operation is under the question.
+https://github.com/nikitabobko/AeroSpace/issues/5
 
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 
 --boundaries <boundary>::
-    Defines focus boundaries. +
-    `<boundary>` possible values: `(workspace|all-monitors-outer-frame)`. +
-    The default is: `workspace`
+Defines focus boundaries. +
+`<boundary>` possible values: `(workspace|all-monitors-outer-frame)`. +
+The default is: `workspace`
 
 --boundaries-action <action>::
-    Defines the behavior when requested to cross the `<boundary>`. +
-    `<action>` possible values: `(stop|wrap-around-the-workspace|wrap-around-all-monitors)` +
-    The default is: `wrap-around-the-workspace`
+Defines the behavior when requested to cross the `<boundary>`. +
+`<action>` possible values: `(stop|wrap-around-the-workspace|wrap-around-all-monitors)` +
+The default is: [verse]#wrap-around-the-workspace#
 
 // end::body[]
 

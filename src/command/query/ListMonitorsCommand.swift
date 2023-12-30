@@ -1,7 +1,6 @@
 import Common
 
 struct ListMonitorsCommand: Command {
-    let info: CmdStaticInfo = ListMonitorsCmdArgs.info
     let args: ListMonitorsCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {

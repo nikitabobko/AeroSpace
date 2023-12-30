@@ -1,7 +1,6 @@
 import Common
 
 struct MoveCommand: Command {
-    let info: CmdStaticInfo = MoveCmdArgs.info
     let args: MoveCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {

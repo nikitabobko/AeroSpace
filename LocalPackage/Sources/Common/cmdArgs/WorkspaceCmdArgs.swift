@@ -44,7 +44,7 @@ public struct WorkspaceCmdArgs: CmdArgs, Equatable {
 enum RawWorkspaceTarget: Equatable {
     case next
     case prev
-    case workspaceName(String)
+    case workspaceName(WorkspaceName)
 
     func parse(wrapAround: Bool?, autoBackAndForth: Bool?) -> ParsedCmd<WTarget> {
         switch self {
@@ -59,7 +59,7 @@ enum RawWorkspaceTarget: Equatable {
             if wrapAround != nil {
                 return .failure("--wrap-around is allowed only for (next|prev)")
             }
-            return .cmd(.direct(WTarget.Direct(name: name, autoBackAndForth: autoBackAndForth ?? false)))
+            return .cmd(.direct(WTarget.Direct(name, autoBackAndForth: autoBackAndForth ?? false)))
         }
     }
 }
@@ -70,11 +70,11 @@ public enum WTarget: Equatable { // WorkspaceTarget
     case relative(Relative)
 
     public struct Direct: Equatable {
-        public let name: String
+        public let name: WorkspaceName
         public let autoBackAndForth: Bool
 
         public init(
-            name: String,
+            _ name: WorkspaceName,
             autoBackAndForth: Bool
         ) {
             self.name = name
@@ -95,7 +95,7 @@ public enum WTarget: Equatable { // WorkspaceTarget
         }
     }
 
-    public func workspaceNameOrNil() -> String? {
+    public func workspaceNameOrNil() -> WorkspaceName? {
         if case .direct(let direct) = self {
             return direct.name
         } else {
@@ -119,6 +119,6 @@ func parseRawWorkspaceTarget(arg: String, nextArgs: inout [String]) -> Parsed<Ra
     case "prev":
         return .success(.prev)
     default:
-        return .success(.workspaceName(arg))
+        return WorkspaceName.parse(arg).map(RawWorkspaceTarget.workspaceName)
     }
 }

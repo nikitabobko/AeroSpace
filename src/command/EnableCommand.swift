@@ -1,7 +1,6 @@
 import Common
 
 struct EnableCommand: Command {
-    let info: CmdStaticInfo = EnableCmdArgs.info
     let args: EnableCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {

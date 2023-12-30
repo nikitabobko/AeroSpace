@@ -139,7 +139,7 @@ private let configParser: [String: any ParserProtocol<RawConfig>] = [
     "on-window-detected": Parser(\.onWindowDetected, parseOnWindowDetectedArray)
 ]
 
-private extension ParsedCmd where T == Command {
+private extension ParsedCmd where T == any Command {
     func toEither() -> Parsed<T> {
         switch self {
         case .cmd(let a):
@@ -154,11 +154,11 @@ private extension ParsedCmd where T == Command {
     }
 }
 
-func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[Command]> {
+func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]> {
     if let rawString = raw.string {
         return parseCommand(rawString).toEither().map { [$0] }
     } else if let rawArray = raw.array {
-        let commands: Parsed<[Command]> = (0..<rawArray.count).mapAllOrFailure { index in
+        let commands: Parsed<[any Command]> = (0..<rawArray.count).mapAllOrFailure { index in
             let rawString: String = rawArray[index].string ?? expectedActualTypeError(expected: .string, actual: rawArray[index].type)
             return parseCommand(rawString).toEither()
         }
@@ -204,8 +204,8 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         preservedWorkspaceNames: modesOrDefault.values.lazy
             .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
             .flatMap { (binding: HotkeyBinding) -> [String] in
-                binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.workspaceNameOrNil() } +
-                    binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.workspaceNameOrNil() }
+                binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.workspaceNameOrNil()?.raw } +
+                    binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.workspaceNameOrNil()?.raw }
             }
             + (raw.workspaceToMonitorForceAssignment ?? [:]).keys
     )
@@ -228,11 +228,11 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
 }
 
 func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Int> {
-    raw.int.orFailure { expectedActualTypeError(expected: .int, actual: raw.type, backtrace) }
+    raw.int.orFailure(expectedActualTypeError(expected: .int, actual: raw.type, backtrace))
 }
 
 func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<String> {
-    raw.string.orFailure { expectedActualTypeError(expected: .string, actual: raw.type, backtrace) }
+    raw.string.orFailure(expectedActualTypeError(expected: .string, actual: raw.type, backtrace))
 }
 
 func parseTable<T: Copyable>(
@@ -387,11 +387,11 @@ private func parseBinding(_ raw: String, _ backtrace: TomlBacktrace) -> ParsedTo
     let rawKeys = raw.split(separator: "-")
     let modifiers: ParsedToml<NSEvent.ModifierFlags> = rawKeys.dropLast()
         .mapAllOrFailure {
-            modifiersMap[String($0)].orFailure { .semantic(backtrace, "Can't parse modifiers in '\(raw)' binding") }
+            modifiersMap[String($0)].orFailure(.semantic(backtrace, "Can't parse modifiers in '\(raw)' binding"))
         }
         .map { NSEvent.ModifierFlags($0) }
     let key: ParsedToml<Key> = rawKeys.last.flatMap { keysMap[String($0)] }
-        .orFailure { .semantic(backtrace, "Can't parse the key in '\(raw)' binding") }
+        .orFailure(.semantic(backtrace, "Can't parse the key in '\(raw)' binding"))
     return modifiers.flatMap { modifiers -> ParsedToml<(NSEvent.ModifierFlags, Key)> in
         key.flatMap { key -> ParsedToml<(NSEvent.ModifierFlags, Key)> in
             .success((modifiers, key))
@@ -400,7 +400,7 @@ private func parseBinding(_ raw: String, _ backtrace: TomlBacktrace) -> ParsedTo
 }
 
 func parseBool(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Bool> {
-    raw.bool.orFailure { expectedActualTypeError(expected: .bool, actual: raw.type, backtrace) }
+    raw.bool.orFailure(expectedActualTypeError(expected: .bool, actual: raw.type, backtrace))
 }
 
 indirect enum TomlBacktrace: CustomStringConvertible {

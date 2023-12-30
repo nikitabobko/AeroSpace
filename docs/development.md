@@ -1,20 +1,19 @@
-# Development notes
+# Development Notes
 
-TLDR see `build-debug.sh`, `run-debug.sh`, and `run-tests.sh` scripts.
+TLDR use `build-debug.sh`, `run-debug.sh`, and `run-tests.sh` scripts.
 
-## Debug build
-
-**Dependencies**
+## Build Dependencies
 
 The dependencies that are required to build AeroSpace:
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen)
 - [GNU sed](https://www.gnu.org/software/sed/)
 - [Asciidoctor](https://asciidoctor.org/)
-- [tree](https://oldmanprogrammer.net/source.php?dir=projects/tree)
 
 ```bash
-brew install xcodegen gsed asciidoctor tree
+brew install xcodegen gsed asciidoctor
 ```
+
+## Debug Build
 
 **Entry point scripts**
 
@@ -29,7 +28,7 @@ brew install xcodegen gsed asciidoctor tree
 > [!IMPORTANT]
 > Debug build uses `~/.aerospace-debug.toml` instead of `~/.aerospace.toml`
 
-## Release build
+## Release Build
 
 **Signing**
 
@@ -49,7 +48,7 @@ After you setup signing, you can build the release build:
 
 - Signing the binary is required to preserve accessibility permission across rebuilds.
   `run-debug.sh` runs the AeroSpace.app on behalf of the terminal app, that's why it's not affected by this caveat.
-- You can use `clean-project.sh` to clean the project when something goes wrong.
+- You can use `script/clean-project.sh` to clean the project when something goes wrong.
 
 ## Tips
 

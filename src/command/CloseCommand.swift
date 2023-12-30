@@ -1,7 +1,7 @@
 import Common
 
 struct CloseCommand: Command {
-    let info: CmdStaticInfo = CloseCmdArgs.info
+    let args = CloseCmdArgs()
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)

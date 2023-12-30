@@ -36,7 +36,7 @@ include::util/conditional-options-header.adoc[]
 Automatic 'back-and-forth' when switching to already focused workspace
 
 --wrap-around::
-Make it possible to jump between first and last workspaces using (next|prev)
+Make it possible to jump between first and last workspaces using `(next|prev)`
 
 // end::body[]
 

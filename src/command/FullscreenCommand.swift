@@ -1,7 +1,7 @@
 import Common
 
 struct FullscreenCommand: Command {
-    let info: CmdStaticInfo = FullscreenCmdArgs.info
+    let args = FullscreenCmdArgs()
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)

@@ -1,7 +1,7 @@
 import Common
 
 struct FlattenWorkspaceTreeCommand: Command {
-    let info: CmdStaticInfo = FlattenWorkspaceTreeCmdArgs.info
+    let args = FlattenWorkspaceTreeCmdArgs()
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)

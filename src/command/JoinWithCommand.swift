@@ -1,7 +1,6 @@
 import Common
 
 struct JoinWithCommand: Command {
-    let info: CmdStaticInfo = JoinWithCmdArgs.info
     let args: JoinWithCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {

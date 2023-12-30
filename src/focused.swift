@@ -33,7 +33,10 @@ var focusedWorkspaceName: String { // todo change to focused monitor
         _focusedWorkspaceName = newValue
         if oldValue != newValue {
             // Firing Notification for e.g Sketchybar Integration
-            DistributedNotificationCenter.default().postNotificationName(NSNotification.Name("bobko.aerospace.focusedWorkspaceChanged"), object: nil)
+            DistributedNotificationCenter.default().postNotificationName(
+                NSNotification.Name("bobko.aerospace.focusedWorkspaceChanged"),
+                object: nil
+            )
 
             previousFocusedWorkspaceName = oldValue
         }

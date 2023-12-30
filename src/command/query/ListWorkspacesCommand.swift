@@ -1,7 +1,6 @@
 import Common
 
 struct ListWorkspacesCommand: Command {
-    let info: CmdStaticInfo = ListWorkspacesCmdArgs.info
     let args: ListWorkspacesCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {

@@ -79,7 +79,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
     }
 }
 
-func isAllowedToRunWhenDisabled(_ command: Command?) -> Bool {
+func isAllowedToRunWhenDisabled(_ command: (any Command)?) -> Bool {
     if let enable = command as? EnableCommand, enable.args.targetState.val != .off {
         return true
     }

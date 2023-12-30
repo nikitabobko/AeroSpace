@@ -1,7 +1,6 @@
 import Common
 
 struct LayoutCommand: Command {
-    let info: CmdStaticInfo = LayoutCmdArgs.info
     let args: LayoutCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {

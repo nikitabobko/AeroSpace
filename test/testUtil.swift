@@ -89,3 +89,12 @@ func testParseCommandFail(_ command: String, msg expected: String) {
         error() // todo test help
     }
 }
+
+extension WTarget.Direct {
+    public init(
+        _ name: String,
+        autoBackAndForth: Bool = false
+    ) {
+        self.init(.parse(name).getOrNil()!, autoBackAndForth: autoBackAndForth)
+    }
+}

@@ -1,7 +1,6 @@
 import Common
 
 struct FocusCommand: Command {
-    let info: CmdStaticInfo = FocusCmdArgs.info
     let args: FocusCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {

@@ -1,7 +1,7 @@
 import Common
 
 struct ReloadConfigCommand: Command {
-    let info: CmdStaticInfo = ReloadConfigCmdArgs.info
+    let args = ReloadConfigCmdArgs()
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)

@@ -1,7 +1,6 @@
 import Common
 
 struct MoveNodeToWorkspaceCommand: Command {
-    let info: CmdStaticInfo = MoveNodeToWorkspaceCmdArgs.info
     let args: MoveNodeToWorkspaceCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
@@ -16,7 +15,7 @@ struct MoveNodeToWorkspaceCommand: Command {
             guard let workspace = getNextPrevWorkspace(current: state.subject.workspace, relative: relative, stdin: stdin) else { return false }
             targetWorkspace = workspace
         case .direct(let direct):
-            targetWorkspace = Workspace.get(byName: direct.name)
+            targetWorkspace = Workspace.get(byName: direct.name.raw)
         }
         if preserveWorkspace == targetWorkspace {
             return true

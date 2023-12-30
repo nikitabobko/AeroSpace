@@ -15,16 +15,16 @@ cp-docs() {
 build-site() {
     cp-docs .site
 
-    git rev-parse HEAD > .site/version.html
-    if [ ! -z "$(git status --porcelain)" ]; then
-        echo "git working directory is dirty" >> .site/version.html
-    fi
-
     cd .site
         asciidoctor *.adoc
         rm -rf *.adoc
         rm -rf aerospace* # Drop man pages
-    cd -
+    cd - > /dev/null
+
+    git rev-parse HEAD > .site/version.html
+    if [ ! -z "$(git status --porcelain)" ]; then
+        echo "git working directory is dirty" >> .site/version.html
+    fi
 }
 
 build-man() {
@@ -32,7 +32,7 @@ build-man() {
     cd .man
         asciidoctor -b manpage aerospace*.adoc
         rm -rf *.adoc
-    cd -
+    cd - > /dev/null
 }
 
 build-site

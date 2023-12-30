@@ -1,7 +1,6 @@
 import Common
 
 struct SplitCommand: Command {
-    let info: CmdStaticInfo = SplitCmdArgs.info
     let args: SplitCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {

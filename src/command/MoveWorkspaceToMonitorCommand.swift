@@ -1,7 +1,6 @@
 import Common
 
 struct MoveWorkspaceToMonitorCommand: Command {
-    let info: CmdStaticInfo = MoveWorkspaceToMonitorCmdArgs.info
     let args: MoveWorkspaceToMonitorCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {

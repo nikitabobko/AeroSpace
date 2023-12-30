@@ -15,6 +15,8 @@ list-monitors [-h|--help] [--focused [no]] [--mouse [no]]
 // tag::body[]
 {manpurpose}
 
+include::util/conditional-output-format-header.adoc[]
+
 Output format is the table with 2 columns:
 
 * Monitor unique sequence ID (ID orders monitors from left to right)
