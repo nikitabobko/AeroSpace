@@ -132,3 +132,43 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |kdenlive|`org.kde.Kdenlive`
 
 |===
+
+[#sketchybar-example]
+== Sketchybar Example
+
+For those of you who want to integrate AeroSpace workspace indicators into your Sketchybar.
+This example is equivalent in look & behavior to the default Sketchybar Mission Control Spaces example.
+
+[source,bash]
+----
+# ~/.config/sketchybar/sketchybarrc
+
+# Add AeroSpace workspace event
+sketchybar --add event aerospace_change bobko.aerospace.focusedWorkspaceChanged
+
+# Add Workspaces
+for sid in $(aerospace list-workspaces); do
+  sketchybar --add item space.$sid left \
+    --subscribe space.$sid aerospace_change \
+    --set space.$sid \
+    background.color=0x44ffffff \
+    background.corner_radius=5 \
+    background.height=20 \
+    background.drawing=off \
+    label="$sid" \
+    click_script="aerospace workspace $sid" \
+    script="$PLUGIN_DIR/aerospace.sh $sid"
+done
+
+# ~/.config/sketchybar/plugins/aerospace.sh 
+# make sure it's executable with chmod +x ~/.config/sketchybar/plugins/aerospace.sh 
+#!/usr/bin/env bash
+
+SID=$1
+FOCUSED=$(aerospace list-workspaces --focused)
+selected=off
+if [ "$SID" = "$FOCUSED" ]; then
+  selected=on
+fi
+sketchybar --set $NAME background.drawing=$selected
+----
