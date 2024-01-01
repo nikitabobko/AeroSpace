@@ -1,4 +1,5 @@
 import Common
+import Foundation
 
 struct WorkspaceCommand : Command {
     let info: CmdStaticInfo = WorkspaceCmdArgs.info
@@ -27,6 +28,12 @@ struct WorkspaceCommand : Command {
         }
         check(workspace.monitor.setActiveWorkspace(workspace))
         focusedWorkspaceName = workspace.name
+
+        // Firing Notification for e.g Sketchybar Integration        
+        let name = NSNotification.Name("\(Bundle.appId).WorkspaceFocus")
+        let userInfo = ["workspace": focusedWorkspaceName]
+        DistributedNotificationCenter.default().postNotificationName(name, object: nil, userInfo: userInfo)
+        
         return true
     }
 
