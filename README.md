@@ -44,21 +44,9 @@ brew install --no-quarantine --cask nikitabobko/tap/aerospace
 
 [Manual installation](./docs/manual-installation.md)
 
-## How to build the project
+## Development notes
 
-You would need a Mac.
-
-```bash
-brew install gsed xcodegen # https://github.com/yonaskolb/XcodeGen
-./build-debug.sh
-```
-
-## How to run the tests
-
-```bash
-brew install gsed xcodegen # https://github.com/yonaskolb/XcodeGen
-./run-tests.sh
-```
+A notes on how to setup the project, build it, how to run the tests, etc. can be found here: [docs/development.md](docs/development.md)
 
 ## Values of the project
 
