@@ -29,10 +29,14 @@ private var _focusedWorkspaceName: String = focusedMonitorInaccurate?.activeWork
 var focusedWorkspaceName: String { // todo change to focused monitor
     get { _focusedWorkspaceName }
     set {
-        if newValue != _focusedWorkspaceName {
+        let changed = newValue != _focusedWorkspaceName
+        _focusedWorkspaceName = newValue
+        if changed {
+            // Firing Notification for e.g Sketchybar Integration
+            DistributedNotificationCenter.default().postNotificationName(NSNotification.Name("bobko.aerospace.focusedWorkspaceChanged"), object: nil)
+
             previousFocusedWorkspaceName = _focusedWorkspaceName
         }
-        _focusedWorkspaceName = newValue
     }
 }
 var previousFocusedWorkspaceName: String? = nil
