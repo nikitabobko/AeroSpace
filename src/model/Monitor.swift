@@ -4,6 +4,7 @@ private struct MonitorImpl {
     let name: String
     let rect: Rect
     let visibleRect: Rect
+    let safeAreaInsets: NSEdgeInsets
 }
 
 extension MonitorImpl: Monitor {
@@ -18,6 +19,7 @@ protocol Monitor: AeroAny {
     var visibleRect: Rect { get }
     var width: CGFloat { get }
     var height: CGFloat { get }
+    var safeAreaInsets: NSEdgeInsets { get }
 }
 
 class LazyMonitor: Monitor {
@@ -25,6 +27,7 @@ class LazyMonitor: Monitor {
     let name: String
     let width: CGFloat
     let height: CGFloat
+    let safeAreaInsets: NSEdgeInsets
     private var _rect: Rect? = nil
     private var _visibleRect: Rect? = nil
 
@@ -32,6 +35,7 @@ class LazyMonitor: Monitor {
         self.name = screen.localizedName
         self.width = screen.frame.width // Don't call rect because it would cause recursion during mainMonitor init
         self.height = screen.frame.height // Don't call rect because it would cause recursion during mainMonitor init
+        self.safeAreaInsets = screen.safeAreaInsets
         self.screen = screen
     }
 
@@ -45,7 +49,9 @@ class LazyMonitor: Monitor {
 }
 
 private extension NSScreen {
-    var monitor: Monitor { MonitorImpl(name: localizedName, rect: rect, visibleRect: visibleRect) }
+    var monitor: Monitor {
+        MonitorImpl(name: localizedName, rect: rect, visibleRect: visibleRect, safeAreaInsets: safeAreaInsets)
+    }
 
     var isMainScreen: Bool {
         frame.minX == 0 && frame.minY == 0
@@ -64,7 +70,12 @@ private extension NSScreen {
 }
 
 private let testMonitorRect = Rect(topLeftX: 0, topLeftY: 0, width: 1920, height: 1080)
-private let testMonitor = MonitorImpl(name: "Test Monitor", rect: testMonitorRect, visibleRect: testMonitorRect)
+private let testMonitor = MonitorImpl(
+    name: "Test Monitor",
+    rect: testMonitorRect,
+    visibleRect: testMonitorRect,
+    safeAreaInsets: .init()
+)
 
 /// It's inaccurate because NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
 /// kAXFocusedWindowChangedNotification callbacks.
