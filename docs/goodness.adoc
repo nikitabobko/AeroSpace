@@ -35,8 +35,15 @@ The following commands focus next or previous workspaces on monitors where the m
 
 [source,bash]
 ----
-aerospace list-workspaces --mouse | aerospace workspace next
-aerospace list-workspaces --mouse | aerospace workspace prev
+aerospace list-monitors --mouse | \
+    awk '{print $1}' | \
+    xargs aerospace list-workspaces --on-monitors | \
+    aerospace workspace next
+
+aerospace list-monitors --mouse | \
+    awk '{print $1}' | \
+    xargs aerospace list-workspaces --on-monitors | \
+    aerospace workspace prev
 ----
 
 [#popular-apps-ids]

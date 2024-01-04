@@ -10,10 +10,6 @@ struct ListWorkspacesCommand: Command {
         if let visible = args.visible {
             result = result.filter { $0.isVisible == visible }
         }
-        if let mouse = args.mouse {
-            let mouseWorkspace = mouseLocation.monitorApproximation.activeWorkspace
-            result = result.filter { ($0 == mouseWorkspace) == mouse }
-        }
         if let focused = args.focused {
             result = result.filter { ($0 == Workspace.focused) == focused }
         }

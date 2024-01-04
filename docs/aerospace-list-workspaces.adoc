@@ -8,7 +8,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-list-workspaces [-h|--help] [--visible [no]] [--focused [no]] [--mouse [no]]
+list-workspaces [-h|--help] [--visible [no]] [--focused [no]]
                 [--on-monitors <monitors>]
 
 // end::synopsis[]
@@ -22,7 +22,6 @@ include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 --focused [no]:: Filter results to only print the focused workspace or not
---mouse [no]:: Filter results to only print the workspace with the mouse or not
 --focused [no]:: Filter results to only print the focused workspace or not
 --on-monitors <monitors>::
 Filter results to only print the workspaces that are attached to specified monitors.

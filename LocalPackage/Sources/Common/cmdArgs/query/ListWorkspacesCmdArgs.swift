@@ -5,20 +5,18 @@ public struct ListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
         kind: .listWorkspaces,
         allowInConfig: false,
         help: """
-              USAGE: list-workspaces [-h|--help] [--visible [no]] [--focused [no]] [--mouse [no]]
+              USAGE: list-workspaces [-h|--help] [--visible [no]] [--focused [no]]
                                      [--on-monitors \(onitors)]
 
               OPTIONS:
                 -h, --help                  Print help
                 --visible [no]              Filter results to only print currently visible workspaces or not
-                --mouse [no]                Filter results to only print the workspace with the mouse or not
                 --focused [no]              Filter results to only print the focused workspace or not
                 --on-monitors \(onitors)    Filter results to only print the workspaces that are attached to specified monitors.
                                             \(onitors) is a comma separated list of monitor IDs
               """,
         options: [
             "--visible": boolFlag(\.visible),
-            "--mouse": boolFlag(\.mouse),
             "--focused": boolFlag(\.focused),
             "--on-monitors": ArgParser(\.onMonitors, parseMonitorIds)
         ],
@@ -26,7 +24,6 @@ public struct ListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
     )
 
     public var visible: Bool?
-    public var mouse: Bool?
     public var focused: Bool?
     public var onMonitors: [Int] = []
 
