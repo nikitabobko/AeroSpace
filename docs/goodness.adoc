@@ -60,6 +60,7 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |Automator|`com.apple.Automator`
 |Battle.net|`net.battle.app`
 |Books|`com.apple.iBooksX`
+|Brave|`com.brave.Browser`
 |CLion|`com.jetbrains.CLion`
 |Calculator|`com.apple.calculator`
 |Calendar|`com.apple.iCal`
