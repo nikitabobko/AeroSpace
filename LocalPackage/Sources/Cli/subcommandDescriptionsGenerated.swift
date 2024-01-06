@@ -18,7 +18,6 @@ let subcommandDescriptions = [
     ["  reload-config", "Reloads currently active config"],
     ["  resize", "Resizes the currently focused window"],
     ["  split", "Split focused window"],
-    ["  version", "Prints the version and commit hash of AeroSpace"],
     ["  workspace-back-and-forth", "Switches between currently focused workspace and previously focused workspace back and forth"],
     ["  workspace", "Focuses the specified workspace"],
 ]

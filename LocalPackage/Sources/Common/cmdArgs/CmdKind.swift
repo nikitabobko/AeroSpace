@@ -18,7 +18,8 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case reloadConfig = "reload-config"
     case resize
     case split
-    case version
     case workspace
     case workspaceBackAndForth = "workspace-back-and-forth"
+
+    case serverVersionInternalCommand = "server-version-internal-command"
 }

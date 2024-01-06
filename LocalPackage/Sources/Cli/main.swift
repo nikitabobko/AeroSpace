@@ -35,18 +35,21 @@ if args.isEmpty || args.first == "--help" || args.first == "-h" {
     exit(args.isEmpty ? 1 : 0)
 }
 
+let isVersion: Bool = args.first == "--version" || args.first == "-v"
+
 let argsAsString = args.joined(separator: " ")
 
-let isVersion: Bool
-switch parseCmdArgs(argsAsString) {
-case .cmd(let cmdArgs):
-    isVersion = cmdArgs is VersionCmdArgs
-case .help(let help):
-    print(help)
-    exit(0)
-case .failure(let e):
-    print(e)
-    exit(1)
+if !isVersion {
+    switch parseCmdArgs(argsAsString) {
+    case .cmd(let cmdArgs):
+        break
+    case .help(let help):
+        print(help)
+        exit(0)
+    case .failure(let e):
+        print(e)
+        exit(1)
+    }
 }
 
 let socket = tryCatch { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrThrow()
@@ -72,7 +75,7 @@ func run(_ command: String, stdin: String) -> (Int32, String) {
     return (exitCode, output)
 }
 
-let (internalExitCode, serverVersionAndHash) = run("version", stdin: "")
+let (internalExitCode, serverVersionAndHash) = run("server-version-internal-command", stdin: "")
 if internalExitCode != 0 {
     prettyError(
         """

@@ -186,10 +186,3 @@ include::aerospace-list-workspaces.adoc[tags=synopsis]
 ----
 include::aerospace-list-workspaces.adoc[tags=purpose]
 include::aerospace-list-workspaces.adoc[tags=body]
-
-=== version
-----
-include::aerospace-version.adoc[tags=synopsis]
-----
-include::aerospace-version.adoc[tags=purpose]
-include::aerospace-version.adoc[tags=body]

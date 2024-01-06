@@ -1,7 +1,7 @@
 import Common
 
-struct VersionCommand: Command {
-    let info: CmdStaticInfo = VersionCmdArgs.info
+struct ServerVersionInternalCommandCommand: Command {
+    let info: CmdStaticInfo = ServerVersionInternalCommandCmdArgs.info
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)

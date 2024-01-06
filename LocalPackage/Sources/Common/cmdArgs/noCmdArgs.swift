@@ -26,9 +26,9 @@ public struct ListAppsCmdArgs: RawCmdArgs, CmdArgs {
     public init() {}
     public static let parser: CmdParser<Self> = noArgsParser(.listApps, allowInConfig: false)
 }
-public struct VersionCmdArgs: RawCmdArgs, CmdArgs {
+public struct ServerVersionInternalCommandCmdArgs: RawCmdArgs, CmdArgs {
     public init() {}
-    public static let parser: CmdParser<Self> = noArgsParser(.version, allowInConfig: false)
+    public static let parser: CmdParser<Self> = noArgsParser(.serverVersionInternalCommand, allowInConfig: false)
 }
 
 private func noArgsParser<T : Copyable>(_ kind: CmdKind, allowInConfig: Bool) -> CmdParser<T> {

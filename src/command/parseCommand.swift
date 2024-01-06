@@ -47,8 +47,8 @@ extension CmdArgs {
             command = ResizeCommand(args: self as! ResizeCmdArgs)
         case .split:
             command = SplitCommand(args: self as! SplitCmdArgs)
-        case .version:
-            command = VersionCommand()
+        case .serverVersionInternalCommand:
+            command = ServerVersionInternalCommandCommand()
         case .workspace:
             command = WorkspaceCommand(args: self as! WorkspaceCmdArgs)
         case .workspaceBackAndForth:

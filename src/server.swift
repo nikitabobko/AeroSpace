@@ -83,7 +83,7 @@ func isAllowedToRunWhenDisabled(_ command: Command?) -> Bool {
     if let enable = command as? EnableCommand, enable.args.targetState.val != .off {
         return true
     }
-    if command is VersionCommand {
+    if command is ServerVersionInternalCommandCommand {
         return true
     }
     return false
