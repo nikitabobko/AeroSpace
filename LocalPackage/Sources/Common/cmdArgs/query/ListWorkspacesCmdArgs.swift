@@ -1,51 +1,108 @@
-private let onitors = "<monitors>"
+let onitor = "<monitor>"
+let _monitors = "\(onitor)..."
 
-public struct ListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
+private struct RawListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listWorkspaces,
         allowInConfig: false,
         help: """
-              USAGE: list-workspaces [-h|--help] [--visible [no]] [--focused [no]]
-                                     [--on-monitors \(onitors)]
+              USAGE: list-workspaces [-h|--help] --on-monitors \(_monitors) [--visible [no]]
+                 OR: list-workspaces [-h|--help] --all
+                 OR: list-workspaces [-h|--help] --focused
 
               OPTIONS:
-                -h, --help                  Print help
-                --visible [no]              Filter results to only print currently visible workspaces or not
-                --focused [no]              Filter results to only print the focused workspace or not
-                --on-monitors \(onitors)    Filter results to only print the workspaces that are attached to specified monitors.
-                                            \(onitors) is a comma separated list of monitor IDs
+                -h, --help                   Print help
+                --all                        Alias for "--on-monitors all"
+                --focused                    Alias for "--on-monitors focused --visible"
+                --visible [no]               Filter results to only print currently visible workspaces
+                --on-monitors \(_monitors)   Filter results to only print the workspaces that are attached to specified monitors
               """,
         options: [
-            "--visible": boolFlag(\.visible),
-            "--focused": boolFlag(\.focused),
-            "--on-monitors": ArgParser(\.onMonitors, parseMonitorIds)
+            "--focused": trueBoolFlag(\.focused),
+            "--all": trueBoolFlag(\.all),
+
+            "--visible": boolFlag(\.real.visible),
+            "--on-monitors": ArgParser(\.real.onMonitors, parseMonitorIds)
         ],
         arguments: []
     )
 
+    // SHORTCUTS
+    var all: Bool = false
+    var focused: Bool = false
+
+    // REAL OPTIONS
+    var real = ListWorkspacesCmdArgs()
+}
+
+public struct ListWorkspacesCmdArgs: CmdArgs, Equatable {
+    public static var info: CmdStaticInfo = RawListWorkspacesCmdArgs.info
+
+    public var onMonitors: [MonitorId] = []
     public var visible: Bool?
-    public var focused: Bool?
-    public var onMonitors: [Int] = []
-
-    public init() {}
 }
 
-public func parseListWorkspaces(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {
-    parseRawCmdArgs(ListWorkspacesCmdArgs(), args)
+private extension RawListWorkspacesCmdArgs {
+    var uniqueOptions: [String] {
+        var result: [String] = []
+        if focused { result.append("--focused") }
+        if all { result.append("--all") }
+        if !real.onMonitors.isEmpty { result.append("--on-monitors") }
+        return result
+    }
 }
 
-private func parseMonitorIds(arg: String, nextArgs: inout [String]) -> Parsed<[Int]> {
-    if let nextArg = nextArgs.nextNonFlagOrNil() {
-        var monitors: [Int] = []
-        for monitor in nextArg.split(separator: ",").map({ String($0) }) {
-            if let unwrapped = Int(monitor) {
-                monitors.append(unwrapped - 1)
-            } else {
-                return .failure("Can't parse '\(monitor)'. It must be a number")
+public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {
+    parseRawCmdArgs(RawListWorkspacesCmdArgs(), args)
+        .filter("Specified flags require explicit --on-monitor") { $0.real == .init() || !$0.real.onMonitors.isEmpty }
+        .flatMap { raw in
+            let uniqueOptions = raw.uniqueOptions
+            switch uniqueOptions.count {
+            case 1:
+                return .cmd(raw)
+            case 0:
+                return .failure("'list-workspaces' mandatory option is not specified (--all|--focused|--on-monitors|--visible)")
+            default:
+                return .failure("Conflicting options: \(uniqueOptions.joined(separator: ", "))")
             }
         }
-        return .success(monitors)
-    } else {
-        return .failure("\(onitors) is mandatory")
+        .flatMap { raw in
+            if raw.focused {
+                return .cmd(ListWorkspacesCmdArgs(onMonitors: [.focused], visible: true))
+            }
+            if raw.all {
+                return .cmd(ListWorkspacesCmdArgs(onMonitors: [.all], visible: nil))
+            }
+            return .cmd(raw.real)
+        }
+}
+
+func parseMonitorIds(arg: String, nextArgs: inout [String]) -> Parsed<[MonitorId]> {
+    let args = nextArgs.allNextNonFlagArgs()
+    let possibleValues = "\(onitor) possible values: (<monitor-id>|focused|mouse|all)"
+    if args.isEmpty {
+        return .failure("\(_monitors) is mandatory. \(possibleValues)")
     }
+    var monitors: [MonitorId] = []
+    for monitor: String in args {
+        if let unwrapped = Int(monitor) {
+            monitors.append(.index(unwrapped - 1))
+        } else if monitor == "mouse" {
+            monitors.append(.mouse)
+        } else if monitor == "all" {
+            monitors.append(.all)
+        } else if monitor == "focused" {
+            monitors.append(.focused)
+        } else {
+            return .failure("Can't parse monitor ID '\(monitor)'. \(possibleValues)")
+        }
+    }
+    return .success(monitors)
+}
+
+public enum MonitorId: Equatable {
+    case focused
+    case all
+    case mouse
+    case index(Int)
 }

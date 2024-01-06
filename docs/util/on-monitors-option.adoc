@@ -1,0 +1,10 @@
+--on-monitors <monitors>::
+Filter results to only print workspaces/windows that are attached to specified monitors.
+`<monitors>` is a comma separated list of monitor IDs. +
++
+Possible monitors IDs: +
++
+. 1-based index of a monitor as if monitors were ordered horizontally from left to right
+. "all" is a special monitor ID that represents all monitors
+. "mouse" is a special monitor ID that represents monitor with the mouse
+. "focused" is a special monitor ID that represents currently focused monitor

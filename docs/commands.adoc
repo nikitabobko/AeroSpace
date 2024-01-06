@@ -182,6 +182,13 @@ include::aerospace-list-monitors.adoc[tags=synopsis]
 include::aerospace-list-monitors.adoc[tags=purpose]
 include::aerospace-list-monitors.adoc[tags=body]
 
+=== list-windows
+----
+include::aerospace-list-windows.adoc[tags=synopsis]
+----
+include::aerospace-list-windows.adoc[tags=purpose]
+include::aerospace-list-windows.adoc[tags=body]
+
 === list-workspaces
 ----
 include::aerospace-list-workspaces.adoc[tags=synopsis]

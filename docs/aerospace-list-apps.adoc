@@ -15,6 +15,10 @@ list-apps [-h|--help]
 // tag::body[]
 {manpurpose}
 
+The command is useful to inspect list of applications to compose filter for xref:guide.adoc#on-window-detected-callback[on-window-detected callback]
+
+include::util/conditional-output-format-header.adoc[]
+
 Output format is the table with the following columns:
 
 * Process ID
@@ -30,9 +34,8 @@ Output example:
 32541 | com.apple.systempreferences | System Settings
 ----
 
-The command is useful to inspect list of applications to compose filter for xref:guide.adoc#on-window-detected-callback[on-window-detected]
-
 You can use `awk` to get values of particular column: `awk -F '|' '{print $2}'`
+
 // end::body[]
 
 include::util/conditional-options-header.adoc[]

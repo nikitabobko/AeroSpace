@@ -7,8 +7,8 @@ public struct ListMonitorsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
 
               OPTIONS:
                 -h, --help       Print help
-                --focused [no]   Filter results to only print the focused monitor or not
-                --mouse [no]     Filter results to only print the monitor with the mouse or not
+                --focused [no]   Filter results to only print the focused monitor
+                --mouse [no]     Filter results to only print the monitor with the mouse
               """,
         options: [
             "--focused": boolFlag(\.focused),

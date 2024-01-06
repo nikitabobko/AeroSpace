@@ -9,23 +9,49 @@ struct ListWorkspacesCommand: Command {
         if let visible = args.visible {
             result = result.filter { $0.isVisible == visible }
         }
-        if let focused = args.focused {
-            result = result.filter { ($0 == Workspace.focused) == focused }
-        }
         if !args.onMonitors.isEmpty {
-            let sortedMonitors = sortedMonitors
-            var requested: Set<CGPoint> = []
-            for id in args.onMonitors {
-                if let monitor = sortedMonitors.getOrNil(atIndex: id) {
-                    requested.insert(monitor.rect.topLeftCorner)
-                } else {
-                    state.stdout.append("Invalid monitor ID: \(id)")
-                    return false
-                }
-            }
-            result = result.filter { requested.contains($0.monitor.rect.topLeftCorner) }
+            let monitors: Set<CGPoint> = args.onMonitors.resolveMonitors(state)
+            if monitors.isEmpty { return false }
+            result = result.filter { monitors.contains($0.monitor.rect.topLeftCorner) }
         }
         state.stdout += result.map(\.name)
         return true
+    }
+}
+
+extension [MonitorId] {
+    func resolveMonitors(_ state: CommandMutableState) -> Set<CGPoint> {
+        var requested: Set<CGPoint> = []
+        let sortedMonitors = sortedMonitors
+        for id in self {
+            let resolved = id.resolve(state, sortedMonitors: sortedMonitors)
+            if resolved.isEmpty {
+                return []
+            }
+            for monitor in resolved {
+                requested.insert(monitor.rect.topLeftCorner)
+            }
+        }
+        return requested
+    }
+}
+
+internal extension MonitorId {
+    func resolve(_ state: CommandMutableState, sortedMonitors: [Monitor]) -> [Monitor] {
+        switch self {
+        case .focused:
+            return [Workspace.focused.monitor]
+        case .mouse:
+            return [mouseLocation.monitorApproximation]
+        case .all:
+            return monitors
+        case .index(let index):
+            if let monitor = sortedMonitors.getOrNil(atIndex: index) {
+                return [monitor]
+            } else {
+                state.stdout.append("Invalid monitor ID: \(index + 1)")
+                return []
+            }
+        }
     }
 }

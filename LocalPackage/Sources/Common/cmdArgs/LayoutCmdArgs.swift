@@ -28,11 +28,8 @@ public struct LayoutCmdArgs: CmdArgs, RawCmdArgs, Equatable {
 }
 
 private func parseToggleBetween(arg: String, _ nextArgs: inout [String]) -> Parsed<[LayoutCmdArgs.LayoutDescription]> {
-    var args: [String] = []
-    args.append(arg)
-    while let nextArg = nextArgs.nextNonFlagOrNil() {
-        args.append(nextArg)
-    }
+    var args: [String] = nextArgs.allNextNonFlagArgs()
+    args.insert(arg, at: 0)
 
     var result: [LayoutCmdArgs.LayoutDescription] = []
     for arg in args {

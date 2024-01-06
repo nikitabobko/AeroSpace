@@ -53,9 +53,9 @@ func testParseCommandSucc(_ command: String, _ expected: CommandDescription) {
 }
 
 extension ParsedCmd {
-    var failureMsgOrNil: String? {
-        if case .failure(let fail) = self {
-            return fail
+    var errorOrNil: String? {
+        if case .failure(let e) = self {
+            return e
         } else {
             return nil
         }

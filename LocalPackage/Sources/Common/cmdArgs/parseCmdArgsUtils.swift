@@ -86,6 +86,7 @@ public enum ParsedCmd<T> {
     }
 }
 
+// todo support conflicting options
 public func parseRawCmdArgs<T : RawCmdArgs>(_ raw: T, _ args: [String]) -> ParsedCmd<T> {
     var args = args
     var raw = raw
@@ -136,13 +137,21 @@ public extension [String] {
     }
 }
 
-public extension [String] {
+extension [String] {
     mutating func next() -> String {
         nextOrNil() ?? errorT("args is empty")
     }
 
     mutating func nextNonFlagOrNil() -> String? {
         first?.starts(with: "-") == true ? nil : nextOrNil()
+    }
+
+    mutating func allNextNonFlagArgs() -> [String] {
+        var args: [String] = []
+        while let nextArg = nextNonFlagOrNil() {
+            args.append(nextArg)
+        }
+        return args
     }
 
     private mutating func nextOrNil() -> String? {
@@ -215,6 +224,24 @@ public func boolFlag<T: Copyable>(_ keyPath: WritableKeyPath<T, Bool?>) -> ArgPa
             value = true
         }
         return .success(value)
+    }
+}
+
+public func singleValueOption<T: Copyable, V>(
+    _ keyPath: WritableKeyPath<T, V?>,
+    _ placeholder: String,
+    _ mapper: @escaping (String) -> V?
+) -> ArgParser<T, V?> {
+    ArgParser(keyPath) { arg, nextArgs in
+        if let arg = nextArgs.nextNonFlagOrNil() {
+            if let value: V = mapper(arg) {
+                return .success(value)
+            } else {
+                return .failure("Failed to convert '\(arg)' to '\(V.self)'")
+            }
+        } else {
+            return .failure("'\(placeholder)' is mandatory")
+        }
     }
 }
 

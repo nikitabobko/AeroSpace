@@ -14,11 +14,18 @@ public struct WorkspaceName: Equatable {
                raw == "prev" || raw == "next" ||
                raw == "monitor" || raw == "workspace" ||
                raw == "monitors" || raw == "workspaces" ||
+               raw == "all" || raw == "none" ||
                raw == "mouse" {
             return .failure("'\(raw)' is a reserved workspace name")
         }
+        if raw.contains(",") {
+            return .failure("Workspace names are not allowed to contain comma")
+        }
         if raw.starts(with: "_") {
-            return .failure("Workspace names starting from underscore are reserved for future use")
+            return .failure("Workspace names starting with underscore are reserved for future use")
+        }
+        if raw.starts(with: "-") {
+            return .failure("Workspace names starting with dash are reserved for future use")
         }
         if raw.rangeOfCharacter(from: .whitespacesAndNewlines) != nil {
             return .failure("Whitespace characters are forbidden in workspace names")

@@ -1,0 +1,70 @@
+= aerospace-list-windows(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-list-windows
+// tag::purpose[]
+:manpurpose: Prints windows that satisfy pattern
+// end::purpose[]
+
+== Synopsis
+[verse]
+// tag::synopsis[]
+list-windows [-h|--help] --on-workspaces <workspace>... [--on-monitors <monitor>...]
+             [--pid <pid>] [--app-id <app-id>]
+list-windows [-h|--help] --on-monitors <monitor>... [--on-workspaces <workspace>...]
+             [--pid <pid>] [--app-id <app-id>]
+list-windows [-h|--help] --all
+list-windows [-h|--help] --focused
+
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+include::util/conditional-output-format-header.adoc[]
+
+Output format is table with three columns:
+
+. Window ID
+. App name
+. Window title
+
+Output Example:
+
+----
+5010 | AppCode   | AeroSpace – aerospace-list-windows.adoc
+5360 | AppCode   | Git - AeroSpace
+2412 | Alacritty | /Users/bobko $ ta
+5046 | Xcode     | AeroSpace — ListWorkspacesCommand.swift
+----
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/all-monitors-option.adoc[]
+
+--focused::
+Print the focused window.
+Please note that it is possible for no window to be in focus.
+In that case, error is reported.
+
+--on-workspaces <workspaces>::
+Filter results to only print windows that belong to specified workspaces.
+`<workspaces>` is a comma-separated list of workspace names.
++
+Possible values: +
++
+. Workspace name
+. "visible" is a special workspace name that represents currently visible workspaces
+. "focused" is a special workspace name that represents currently focused workspace
+
+include::util/on-monitors-option.adoc[]
+
+--pid <pid>:: Filter results to only print windows that belong to the Application with specified `<pid>`
+--app-id <app-id>:: Filter results to only print windows that belong to the Application with specified Bundle ID
+
+// end::body[]
+
+include::util/man-footer.adoc[]

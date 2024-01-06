@@ -17,6 +17,7 @@
 		21D0512B48E0E3C28F8CA42A /* parseOnWindowDetected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9DFF8980BB3F90A3793BE9 /* parseOnWindowDetected.swift */; };
 		22175400298B985658E774EE /* ResizeCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7ACD4E9C6C0C08F1B0622C57 /* ResizeCommandTest.swift */; };
 		238EF26CAAADD1FE11312D7C /* default-config.toml in Resources */ = {isa = PBXBuildFile; fileRef = 8FE45A887100EB70912B07F0 /* default-config.toml */; };
+		24892659E8618E2EA5D0902F /* ListWindowsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E274CE21EA410F1380D6C93 /* ListWindowsTest.swift */; };
 		2821C1C7AAEF4C290633EA72 /* FullscreenCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9ECC990B6C2D66D343216A12 /* FullscreenCommand.swift */; };
 		29AC28A25E1A66C608EBD7ED /* WorkspaceCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DD32B1711B8EFCC834B68E /* WorkspaceCommand.swift */; };
 		2C73CDB1A933FCA5616CDFB3 /* WorkspaceEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B60F7A58DAD4D3AF2788E4 /* WorkspaceEx.swift */; };
@@ -27,6 +28,7 @@
 		3AFD7EE961B97F38C0914A0C /* ListWorkspacesCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E6478C499F3FB86C017D7BB /* ListWorkspacesCommand.swift */; };
 		3BD6FF4CC51532977DA0C05A /* AeroAny.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82476B9BEBAC00EB9E32256F /* AeroAny.swift */; };
 		42197B9C71A0CDDE65804A6A /* accessibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D31BF26EAFA96F675D2C14B /* accessibility.swift */; };
+		423853C015185583E1F58E61 /* ListWorkspacesTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C5969BB9F9B91CE2068FA8E /* ListWorkspacesTest.swift */; };
 		43E3628E37D2439B820FFC82 /* server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796713A1B3AEEBF4D0D180C7 /* server.swift */; };
 		45AA5FD4A023AF751922BC22 /* BundleEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7A2DF0D1F72B80B1F04240 /* BundleEx.swift */; };
 		45EA2D1C90430C432E123B51 /* keysMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0D40CBD65704BA9595C2FA /* keysMap.swift */; };
@@ -68,6 +70,7 @@
 		AC47DF43EFF42358F033C87C /* WorkspaceBackAndForthCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED7EE20910D7BE4D0150CED /* WorkspaceBackAndForthCommand.swift */; };
 		B04363E8C28CEC76F39977F2 /* MonitorDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244190F3707EF2BB3CC7FA5A /* MonitorDescription.swift */; };
 		B0D0C37BAE7E7F0D0FF1E9FC /* GlobalObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E5977331398421A4FC168 /* GlobalObserver.swift */; };
+		B17CC799E7913F75451B55FD /* ListWindowsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9FCB66B928701F68AD8CA78 /* ListWindowsCommand.swift */; };
 		B19980B36D066FD4947D2F92 /* normalizeContainers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704028F402C0DE83EDEABB9 /* normalizeContainers.swift */; };
 		B1F37468B56941F6B22EEEDB /* layoutRecursive.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC5AF4019D1F5DAB5AF2B56 /* layoutRecursive.swift */; };
 		B3702BB393A9B03CCAE4C60E /* refresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B113159987FA43EA41120 /* refresh.swift */; };
@@ -93,6 +96,7 @@
 		F982DB924450BBBB4FDF4C2C /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD90FB41FD41602120F67FF5 /* Command.swift */; };
 		FC35D6D0A678CC802972C6FE /* ReloadConfigCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF3C9038C846369FDD71D1D2 /* ReloadConfigCommand.swift */; };
 		FD4386BC632BAA6A4105FFD8 /* Config.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9752080BBA547C2A0EF076F0 /* Config.swift */; };
+		FDA7AB64744701B34C530EB0 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = 1B17CBEB9032416AB9E521BA /* Nimble */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,6 +119,7 @@
 		16C79A5C46F0E1511F6A1FE4 /* ServerVersionInternalCommandCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerVersionInternalCommandCommand.swift; sourceTree = "<group>"; };
 		1A2B673C67B00DBFCC27FFE7 /* LayoutCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LayoutCommand.swift; sourceTree = "<group>"; };
 		1C0D40CBD65704BA9595C2FA /* keysMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = keysMap.swift; sourceTree = "<group>"; };
+		1C5969BB9F9B91CE2068FA8E /* ListWorkspacesTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListWorkspacesTest.swift; sourceTree = "<group>"; };
 		1E81623E8954701269A22322 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
 		2431BEAFFF1AC12D3001317A /* TestApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestApp.swift; sourceTree = "<group>"; };
 		244190F3707EF2BB3CC7FA5A /* MonitorDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorDescription.swift; sourceTree = "<group>"; };
@@ -125,6 +130,7 @@
 		3C2E5977331398421A4FC168 /* GlobalObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalObserver.swift; sourceTree = "<group>"; };
 		43DD32B1711B8EFCC834B68E /* WorkspaceCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceCommand.swift; sourceTree = "<group>"; };
 		4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeCommand.swift; sourceTree = "<group>"; };
+		4E274CE21EA410F1380D6C93 /* ListWindowsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListWindowsTest.swift; sourceTree = "<group>"; };
 		51CC651BEB897CB7A555D230 /* MoveWorkspaceToMonitorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveWorkspaceToMonitorCommand.swift; sourceTree = "<group>"; };
 		526B113159987FA43EA41120 /* refresh.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = refresh.swift; sourceTree = "<group>"; };
 		5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AeroSpace-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -186,6 +192,7 @@
 		DAC5AF4019D1F5DAB5AF2B56 /* layoutRecursive.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = layoutRecursive.swift; sourceTree = "<group>"; };
 		E761155C73F06E2CF5E292A4 /* FocusCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusCommand.swift; sourceTree = "<group>"; };
 		E9589EFDEBA4EB9C7DBAFCFD /* MoveNodeToWorkspaceCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveNodeToWorkspaceCommandTest.swift; sourceTree = "<group>"; };
+		E9FCB66B928701F68AD8CA78 /* ListWindowsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListWindowsCommand.swift; sourceTree = "<group>"; };
 		EC2F56249A233EC9806D0F08 /* Bridged-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridged-Header.h"; sourceTree = "<group>"; };
 		EED7EE20910D7BE4D0150CED /* WorkspaceBackAndForthCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceBackAndForthCommand.swift; sourceTree = "<group>"; };
 		EEDBFFCA7A77D96B18FB0732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -204,6 +211,14 @@
 				64A058E536F1EEF7F01043AF /* TOMLKit in Frameworks */,
 				C830FD347D7F9C06CF53103F /* Socket in Frameworks */,
 				DFEB9F168281870D09BD1C2C /* Common in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7042AAB87CB12C33126F4A98 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FDA7AB64744701B34C530EB0 /* Nimble in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -227,6 +242,8 @@
 				D0EAADE8D2FB5D05FA5456B0 /* FocusCommandTest.swift */,
 				6D9C5ED5AC77D80F1CCD103F /* JoinWithCommandTest.swift */,
 				CC4A8803D3A23C26287D449E /* ListMonitorsTest.swift */,
+				4E274CE21EA410F1380D6C93 /* ListWindowsTest.swift */,
+				1C5969BB9F9B91CE2068FA8E /* ListWorkspacesTest.swift */,
 				9857501E54FC080D2A62DCE4 /* MoveCommandTest.swift */,
 				E9589EFDEBA4EB9C7DBAFCFD /* MoveNodeToWorkspaceCommandTest.swift */,
 				7ACD4E9C6C0C08F1B0622C57 /* ResizeCommandTest.swift */,
@@ -353,6 +370,7 @@
 			children = (
 				B0185502A3752FF618BB3D36 /* ListAppsCommand.swift */,
 				FD6BB613EC44C1B32CE4A47E /* ListMonitorsCommand.swift */,
+				E9FCB66B928701F68AD8CA78 /* ListWindowsCommand.swift */,
 				9E6478C499F3FB86C017D7BB /* ListWorkspacesCommand.swift */,
 				16C79A5C46F0E1511F6A1FE4 /* ServerVersionInternalCommandCommand.swift */,
 			);
@@ -455,6 +473,7 @@
 			buildConfigurationList = D7CB5528090130BA2AF93D7A /* Build configuration list for PBXNativeTarget "AeroSpace-Tests" */;
 			buildPhases = (
 				101761F785765CD965E9741C /* Sources */,
+				7042AAB87CB12C33126F4A98 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -462,6 +481,9 @@
 				A6E9756DC2D01D6E286DFADF /* PBXTargetDependency */,
 			);
 			name = "AeroSpace-Tests";
+			packageProductDependencies = (
+				1B17CBEB9032416AB9E521BA /* Nimble */,
+			);
 			productName = "AeroSpace-Tests";
 			productReference = 5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -491,6 +513,7 @@
 			mainGroup = 393942C56466FDBBE35F9EC0;
 			packageReferences = (
 				E28C4FCC0A02BC0BF9E71D67 /* XCRemoteSwiftPackageReference "HotKey" */,
+				8312B2D02EB52EB901FBEF90 /* XCRemoteSwiftPackageReference "Nimble" */,
 				4F1AD32341B10DF7D687D5EA /* XCRemoteSwiftPackageReference "BlueSocket" */,
 				D95CBB0F220F4BED0648272B /* XCRemoteSwiftPackageReference "TOMLKit" */,
 			);
@@ -526,6 +549,8 @@
 				1311398A83B998908773C54D /* FocusCommandTest.swift in Sources */,
 				8FD14C98B263A6CA0174DDF1 /* JoinWithCommandTest.swift in Sources */,
 				6A107B84BFF7A37ABA225C79 /* ListMonitorsTest.swift in Sources */,
+				24892659E8618E2EA5D0902F /* ListWindowsTest.swift in Sources */,
+				423853C015185583E1F58E61 /* ListWorkspacesTest.swift in Sources */,
 				6898172108196A4694FD6A42 /* MoveCommandTest.swift in Sources */,
 				9305D5380C7A1D293F24FF41 /* MoveNodeToWorkspaceCommandTest.swift in Sources */,
 				22175400298B985658E774EE /* ResizeCommandTest.swift in Sources */,
@@ -564,6 +589,7 @@
 				D12277DFEAAAC7AE19D0B629 /* LazySequenceProtocolEx.swift in Sources */,
 				63D2357EADCF6137D630F7C5 /* ListAppsCommand.swift in Sources */,
 				F69159A961FEE54847EC9A8D /* ListMonitorsCommand.swift in Sources */,
+				B17CC799E7913F75451B55FD /* ListWindowsCommand.swift in Sources */,
 				3AFD7EE961B97F38C0914A0C /* ListWorkspacesCommand.swift in Sources */,
 				BD6301B2CFC16FDE4223ACB8 /* MacApp.swift in Sources */,
 				EECC59858691B99A95542D72 /* MacWindow.swift in Sources */,
@@ -864,6 +890,14 @@
 				version = 2.0.4;
 			};
 		};
+		8312B2D02EB52EB901FBEF90 /* XCRemoteSwiftPackageReference "Nimble" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Quick/Nimble";
+			requirement = {
+				kind = exactVersion;
+				version = 12.0.0;
+			};
+		};
 		D95CBB0F220F4BED0648272B /* XCRemoteSwiftPackageReference "TOMLKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/LebJe/TOMLKit";
@@ -883,6 +917,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		1B17CBEB9032416AB9E521BA /* Nimble */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8312B2D02EB52EB901FBEF90 /* XCRemoteSwiftPackageReference "Nimble" */;
+			productName = Nimble;
+		};
 		4227A8D8CDB02646B1E1313D /* Common */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = Common;

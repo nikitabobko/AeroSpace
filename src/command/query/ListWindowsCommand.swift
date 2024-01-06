@@ -1,0 +1,50 @@
+import Common
+
+struct ListWindowsCommand: Command {
+    let args: ListWindowsCmdArgs
+
+    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+        check(Thread.current.isMainThread)
+        var windows: [Window] = []
+        switch args {
+        case .manual(let manual):
+            var workspaces: Set<Workspace> = manual.onWorkspaces.isEmpty ? Workspace.all.toSet() : manual.onWorkspaces
+                .flatMap { filter in
+                    switch filter {
+                    case .focused:
+                        return [Workspace.focused]
+                    case .visible:
+                        return Workspace.all.filter { $0.isVisible }
+                    case .name(let name):
+                        return [Workspace.get(byName: name.raw)]
+                    }
+                }
+                .toSet()
+            if !manual.onMonitors.isEmpty {
+                let monitors: Set<CGPoint> = manual.onMonitors.resolveMonitors(state)
+                if monitors.isEmpty { return false }
+                workspaces = workspaces.filter { monitors.contains($0.monitor.rect.topLeftCorner) }
+            }
+            windows = workspaces.flatMap(\.allLeafWindowsRecursive)
+            if let pid = manual.pidFilter {
+                windows = windows.filter { $0.app.pid == pid }
+            }
+            if let appId = manual.appIdFilter {
+                windows = windows.filter { $0.app.id == appId }
+            }
+        case .focused:
+            if let window = state.subject.windowOrNil {
+                windows = [window]
+            } else {
+                state.stderr.append("No window is focused")
+                return false
+            }
+        }
+        state.stdout += windows
+            .map { window in
+                [String(window.windowId), window.app.name ?? "NULL-APP-NAME", window.title ?? "NULL-TITLE"]
+            }
+            .toPaddingTable()
+        return true
+    }
+}

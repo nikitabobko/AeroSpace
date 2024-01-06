@@ -2,14 +2,15 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-list-workspaces
 // tag::purpose[]
-:manpurpose: Prints the list of workspaces on new lines
+:manpurpose: Prints workspaces that satisfy pattern
 // end::purpose[]
 
 == Synopsis
 [verse]
 // tag::synopsis[]
-list-workspaces [-h|--help] [--visible [no]] [--focused [no]]
-                [--on-monitors <monitors>]
+list-workspaces [-h|--help] --on-monitors <monitors> [--visible [no]]
+list-workspaces [-h|--help] --all
+list-workspaces [-h|--help] --focused
 
 // end::synopsis[]
 
@@ -21,11 +22,19 @@ list-workspaces [-h|--help] [--visible [no]] [--focused [no]]
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
---focused [no]:: Filter results to only print the focused workspace or not
---focused [no]:: Filter results to only print the focused workspace or not
---on-monitors <monitors>::
-Filter results to only print the workspaces that are attached to specified monitors.
-<monitors> is a comma separated list of monitor IDs
+
+include::util/all-monitors-option.adoc[]
+
+--focused::
+Alias for "--on-monitors focused --visible".
+Always prints a single workspace
+
+--visible [no]::
+Filter results to only print currently visible workspaces.
+`[no]` inverts the result.
+Prints multiple workspaces in multi-monitor setup
+
+include::util/on-monitors-option.adoc[]
 
 // end::body[]
 

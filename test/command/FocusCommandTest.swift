@@ -26,14 +26,14 @@ final class FocusCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
     func testParse() {
-        XCTAssertTrue(parseCommand("focus --boundaries left").failureMsgOrNil?.contains("Possible values") == true)
+        XCTAssertTrue(parseCommand("focus --boundaries left").errorOrNil?.contains("Possible values") == true)
         XCTAssertEqual(
             parseCommand("focus --boundaries workspace left").cmdOrNil?.describe,
             .focusCommand(args: FocusCmdArgs(direction: .left))
         )
 
         XCTAssertEqual(
-            parseCommand("focus --boundaries workspace --boundaries workspace left").failureMsgOrNil,
+            parseCommand("focus --boundaries workspace --boundaries workspace left").errorOrNil,
             "ERROR: Duplicated option '--boundaries'"
         )
     }

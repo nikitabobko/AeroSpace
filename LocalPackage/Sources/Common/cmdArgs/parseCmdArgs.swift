@@ -40,8 +40,10 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
             result[kind.rawValue] = noArgsSubCommandParser(ListAppsCmdArgs())
         case .listMonitors:
             result[kind.rawValue] = SubCommandParser(parseListMonitorsCmdArgs)
+        case .listWindows:
+            result[kind.rawValue] = SubCommandParser(parseListWindowsCmdArgs)
         case .listWorkspaces:
-            result[kind.rawValue] = SubCommandParser(parseListWorkspaces)
+            result[kind.rawValue] = SubCommandParser(parseListWorkspacesCmdArgs)
         case .mode:
             result[kind.rawValue] = SubCommandParser(parseModeCmdArgs)
         case .moveNodeToWorkspace:
