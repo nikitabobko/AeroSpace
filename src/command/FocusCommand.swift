@@ -96,8 +96,7 @@ private func wrapAroundTheWorkspace(_ state: CommandMutableState, _ direction: C
 
 private extension Monitor {
     func relation(to monitor: Monitor) -> Orientation {
-        let yRange = rect.minY..<rect.maxY
-        return yRange.contains(monitor.rect.minY) || yRange.contains(monitor.rect.maxY) ? .h : .v
+        (rect.minY..<rect.maxY).overlaps(monitor.rect.minY..<monitor.rect.maxY) ? .h : .v
     }
 }
 
