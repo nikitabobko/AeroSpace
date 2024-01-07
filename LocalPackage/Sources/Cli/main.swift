@@ -41,7 +41,7 @@ let argsAsString = args.joined(separator: " ")
 
 if !isVersion {
     switch parseCmdArgs(argsAsString) {
-    case .cmd(let cmdArgs):
+    case .cmd:
         break
     case .help(let help):
         print(help)
@@ -56,16 +56,6 @@ let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .un
 defer {
     socket.close()
 }
-let socketFile = "/tmp/\(appId).sock"
-
-if let e: Error = Result(catching: { try socket.connect(to: socketFile) }).errorOrNil {
-    if isVersion {
-        printVersionAndExit(serverVersion: nil)
-    } else {
-        prettyError("Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
-    }
-}
-
 func run(_ command: String, stdin: String) -> ServerAnswer {
     let request = Result { try JSONEncoder().encode(ClientRequest(command: command, stdin: stdin)) }.getOrThrow()
     Result { try socket.write(from: request) }.getOrThrow()
@@ -75,41 +65,14 @@ func run(_ command: String, stdin: String) -> ServerAnswer {
     Result { try socket.read(into: &answer) }.getOrThrow()
     return Result { try JSONDecoder().decode(ServerAnswer.self, from: answer) }.getOrThrow()
 }
+let socketFile = "/tmp/\(appId).sock"
 
-let serverVersionAns = run("server-version-internal-command", stdin: "")
-if serverVersionAns.exitCode != 0 {
-    prettyError(
-        """
-        Client-server miscommunication error.
-
-        Server stdout: \(serverVersionAns.stdout)
-        Server stderr: \(serverVersionAns.stderr)
-
-        Possible cause: client/server version mismatch
-
-        Possible fixes:
-        - Restart AeroSpace.app (restart is required after each update)
-        - Reinstall and restart AeroSpace (corrupted installation)
-        """
-    )
-}
-if serverVersionAns.stdout != cliClientVersionAndHash {
-    prettyError(
-        """
-        AeroSpace client/server version mismatch
-
-        - aerospace CLI client version: \(cliClientVersionAndHash)
-        - AeroSpace.app server version: \(serverVersionAns.stdout)
-
-        Possible fixes:
-        - Restart AeroSpace.app (restart is required after each update)
-        - Reinstall and restart AeroSpace (corrupted installation)
-        """
-    )
-}
-
-if isVersion {
-    printVersionAndExit(serverVersion: serverVersionAns.stdout)
+if let e: Error = Result(catching: { try socket.connect(to: socketFile) }).errorOrNil {
+    if isVersion {
+        printVersionAndExit(serverVersion: nil)
+    } else {
+        prettyError("Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
+    }
 }
 
 var stdin = ""
@@ -124,7 +87,25 @@ if hasStdin() {
     }
 }
 
-let ans = run(argsAsString, stdin: stdin)
+let ans = isVersion ? run("server-version-internal-command", stdin: stdin) : run(argsAsString, stdin: stdin)
+if ans.exitCode == 0 && isVersion {
+    printVersionAndExit(serverVersion: ans.serverVersionAndHash)
+}
+
+if ans.exitCode != 0 && ans.serverVersionAndHash != cliClientVersionAndHash {
+    prettyError(
+        """
+        AeroSpace client/server version mismatch
+
+        - aerospace CLI client version: \(cliClientVersionAndHash)
+        - AeroSpace.app server version: \(ans.serverVersionAndHash)
+
+        Possible fixes:
+        - Restart AeroSpace.app (restart is required after each update)
+        - Reinstall and restart AeroSpace (corrupted installation)
+        """
+    )
+}
 
 if !ans.stdout.isEmpty { print(ans.stdout) }
 if !ans.stderr.isEmpty { printStderr(ans.stderr) }
