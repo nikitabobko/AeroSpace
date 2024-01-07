@@ -6,7 +6,7 @@ struct CloseCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         guard let window = state.subject.windowOrNil else {
-            state.stdout.append("Empty workspace")
+            state.stderr.append("Empty workspace")
             return false
         }
         if window.close() {
@@ -18,7 +18,7 @@ struct CloseCommand: Command {
             }
             return true
         } else {
-            state.stdout.append("Can't close the window. Probably it doesn't have close button")
+            state.stderr.append("Can't close the window. Probably it doesn't have close button")
             return false
         }
     }

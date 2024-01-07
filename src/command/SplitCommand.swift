@@ -6,11 +6,11 @@ struct SplitCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         if config.enableNormalizationFlattenContainers {
-            state.stdout.append("'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled")
+            state.stderr.append("'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled")
             return false
         }
         guard let window = state.subject.windowOrNil else {
-            state.stdout.append(noWindowIsFocused)
+            state.stderr.append(noWindowIsFocused)
             return false
         }
         switch window.parent.kind {

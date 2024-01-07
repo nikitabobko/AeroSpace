@@ -18,8 +18,8 @@ func printVersionAndExit(serverVersion: String?) -> Never {
 let args: [String] = Array(CommandLine.arguments.dropFirst())
 
 for arg in args {
-    if arg.contains(" ") || arg.contains("\n") {
-        prettyError("Spaces and newlines in arguments are not permitted. '\(arg)' argument contains either of them.")
+    if arg.rangeOfCharacter(from: .whitespacesAndNewlines) != nil {
+        prettyError("Whitespace chars in arguments are not permitted. '\(arg)' argument contains whitespace chars.")
     }
 }
 
@@ -65,21 +65,22 @@ if let e: AeroError = tryCatch(body: { try socket.connect(to: socketFile) }).err
     }
 }
 
-func run(_ command: String, stdin: String) -> (Int32, String) {
+func run(_ command: String, stdin: String) -> ServerAnswer {
     tryCatch { try socket.write(from: command + "\n" + stdin) }.getOrThrow()
     tryCatch { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrThrow()
-    let received: String = tryCatch { try socket.readString() }.getOrThrow()
-        ?? prettyErrorT("fatal error: received nil from socket")
-    let exitCode: Int32 = received.first.map { String($0) }.flatMap { Int32($0) } ?? 1
-    let output = String(received.dropFirst())
-    return (exitCode, output)
+    var data = Data()
+    tryCatch { try socket.read(into: &data) }.getOrThrow()
+    return tryCatch { try JSONDecoder().decode(ServerAnswer.self, from: data) }.getOrThrow()
 }
 
-let (internalExitCode, serverVersionAndHash) = run("server-version-internal-command", stdin: "")
-if internalExitCode != 0 {
+let serverVersionAns = run("server-version-internal-command", stdin: "")
+if serverVersionAns.exitCode != 0 {
     prettyError(
         """
-        Client-server miscommunication error: \(serverVersionAndHash)
+        Client-server miscommunication error.
+
+        Server stdout: \(serverVersionAns.stdout)
+        Server stderr: \(serverVersionAns.stderr)
 
         Possible cause: client/server version mismatch
 
@@ -89,13 +90,13 @@ if internalExitCode != 0 {
         """
     )
 }
-if serverVersionAndHash != cliClientVersionAndHash {
+if serverVersionAns.stdout != cliClientVersionAndHash {
     prettyError(
         """
         AeroSpace client/server version mismatch
 
         - aerospace CLI client version: \(cliClientVersionAndHash)
-        - AeroSpace.app server version: \(serverVersionAndHash)
+        - AeroSpace.app server version: \(serverVersionAns.stdout)
 
         Possible fixes:
         - Restart AeroSpace.app (restart is required after each update)
@@ -105,7 +106,7 @@ if serverVersionAndHash != cliClientVersionAndHash {
 }
 
 if isVersion {
-    printVersionAndExit(serverVersion: serverVersionAndHash)
+    printVersionAndExit(serverVersion: serverVersionAns.stdout)
 }
 
 var stdin = ""
@@ -120,9 +121,8 @@ if hasStdin() {
     }
 }
 
-let (exitCode, output) = run(argsAsString, stdin: stdin)
+let ans = run(argsAsString, stdin: stdin)
 
-if !output.isEmpty {
-    print(output)
-}
-exit(exitCode)
+if !ans.stdout.isEmpty { print(ans.stdout) }
+if !ans.stderr.isEmpty { printStderr(ans.stderr) }
+exit(ans.exitCode)

@@ -31,6 +31,9 @@ func sendCommandToReleaseServer(command: String) {
 }
 
 private func newConnection(_ socket: Socket) async { // todo add exit codes
+    func answerToClient(_ ans: ServerAnswer) {
+        _ = try? socket.write(from: tryCatch { try JSONEncoder().encode(ans) }.getOrThrow())
+    }
     defer {
         debug("Close connection")
         socket.close()
@@ -43,36 +46,63 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
         let stdin = String(request[request.indexOrPastTheEnd(after: separator)...])
         let (command, help, err) = parseCommand(rawCommand).unwrap()
         guard let isEnabled = await Task(operation: { @MainActor in TrayMenuModel.shared.isEnabled }).result.getOrNil() else {
-            _ = try? socket.write(from: "1Unknown failure during isEnabled server state access")
+            answerToClient(ServerAnswer(
+                exitCode: 1,
+                stdout: "",
+                stderr: "Unknown failure during isEnabled server state access"
+            ))
             continue
         }
         if !isEnabled && !isAllowedToRunWhenDisabled(command) {
-            _ = try? socket.write(from: "1\(Bundle.appName) server is disabled and doesn't accept commands. " +
-                "You can use 'aerospace enable on' to enable the server")
+            answerToClient(ServerAnswer(
+                exitCode: 1,
+                stdout: "",
+                stderr: "\(Bundle.appName) server is disabled and doesn't accept commands. " +
+                    "You can use 'aerospace enable on' to enable the server"
+            ))
             continue
         }
         if let help {
-            _ = try? socket.write(from: "0" + help + "\n")
+            answerToClient(ServerAnswer(
+                exitCode: 0,
+                stdout: help,
+                stderr: ""
+            ))
             continue
         }
         if let err {
-            _ = try? socket.write(from: "1" + err + "\n")
+            answerToClient(ServerAnswer(
+                exitCode: 1,
+                stdout: "",
+                stderr: err
+            ))
             continue
         }
         if command?.isExec == true {
-            _ = try? socket.write(from: "1exec commands are prohibited in CLI")
+            answerToClient(ServerAnswer(
+                exitCode: 1,
+                stdout: "",
+                stderr: "exec commands are prohibited in CLI"
+            ))
             continue
         }
         if let command {
-            let (success, stdout) = await Task { @MainActor in
+            let answer = await Task { @MainActor in
                 refreshSession(forceFocus: true) {
                     let state: CommandMutableState = .focused // todo restore subject from "exec session"
                     let success = command.run(state, stdin: stdin)
-                    return (success, state.stdout.joined(separator: "\n"))
+                    return ServerAnswer(
+                        exitCode: success ? 0 : 1,
+                        stdout: state.stdout.joined(separator: "\n"),
+                        stderr: state.stderr.joined(separator: "\n")
+                    )
                 }
-            }.result.getOrNil() ?? (false, "Fail to await main thread")
-            let msg = (success ? "0" : "1") + stdout
-            _ = try? socket.write(from: msg)
+            }.result.getOrNil() ?? ServerAnswer(
+                exitCode: 1,
+                stdout: "",
+                stderr: "Fail to await main thread"
+            )
+            answerToClient(answer)
             continue
         }
         error("Unreachable")

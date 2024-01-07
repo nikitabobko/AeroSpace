@@ -12,16 +12,11 @@ extension Command {
 
 class CommandMutableState {
     var subject: CommandSubject
-    var stdout: [String]
-    var stderr: [String] // todo send stderr to cli
+    var stdout: [String] = []
+    var stderr: [String] = []
 
-    public init(
-        _ subject: CommandSubject,
-        _ stdout: [String] = []
-    ) {
+    public init(_ subject: CommandSubject) {
         self.subject = subject
-        self.stdout = stdout
-        self.stderr = []
     }
 
     static var focused: CommandMutableState { CommandMutableState(.focused) }

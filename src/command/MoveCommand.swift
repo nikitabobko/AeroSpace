@@ -7,7 +7,7 @@ struct MoveCommand: Command {
         check(Thread.current.isMainThread)
         let direction = args.direction.val
         guard let currentWindow = state.subject.windowOrNil else {
-            state.stdout.append(noWindowIsFocused)
+            state.stderr.append(noWindowIsFocused)
             return false
         }
         switch currentWindow.parent.kind {

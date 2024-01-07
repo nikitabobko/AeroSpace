@@ -7,11 +7,11 @@ struct JoinWithCommand: Command {
         check(Thread.current.isMainThread)
         let direction = args.direction.val
         guard let currentWindow = state.subject.windowOrNil else {
-            state.stdout.append(noWindowIsFocused)
+            state.stderr.append(noWindowIsFocused)
             return false
         }
         guard let (parent, ownIndex) = currentWindow.closestParent(hasChildrenInDirection: direction, withLayout: nil) else {
-            state.stdout.append("No windows in specified direction")
+            state.stderr.append("No windows in specified direction")
             return false
         }
         let moveInTarget = parent.children[ownIndex + direction.focusOffset]

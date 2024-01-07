@@ -6,7 +6,7 @@ struct FullscreenCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         guard let window = state.subject.windowOrNil else {
-            state.stdout.append(noWindowIsFocused)
+            state.stderr.append(noWindowIsFocused)
             return false
         }
         window.isFullscreen = !window.isFullscreen

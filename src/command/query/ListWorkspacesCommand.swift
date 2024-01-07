@@ -49,7 +49,7 @@ internal extension MonitorId {
             if let monitor = sortedMonitors.getOrNil(atIndex: index) {
                 return [monitor]
             } else {
-                state.stdout.append("Invalid monitor ID: \(index + 1)")
+                state.stderr.append("Invalid monitor ID: \(index + 1)")
                 return []
             }
         }
