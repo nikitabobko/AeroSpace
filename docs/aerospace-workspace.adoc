@@ -26,7 +26,7 @@ workspace [-h|--help] [--auto-back-and-forth] <workspace-name>
 Focuses next or previous workspace in *the list*.
 
 * If stdin is not TTY and stdin contains non whitespace characters then *the list* is taken from stdin
-* Otherwise, *the list* is defined as all workspaces in alphabetical order
+* Otherwise, *the list* is defined as all workspaces on focused monitor in alphabetical order
 
 include::util/conditional-options-header.adoc[]
 

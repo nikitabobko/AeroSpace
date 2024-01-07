@@ -42,8 +42,12 @@ struct WorkspaceCommand : Command {
 
 func getNextPrevWorkspace(current: Workspace, relative: WTarget.Relative, stdin: String) -> Workspace? {
     let stdinWorkspaces: [String] = stdin.split(separator: "\n").map { String($0).trim() }.filter { !$0.isEmpty }
+    let currentMonitor = current.monitor
     let workspaces: [Workspace] = stdinWorkspaces.isEmpty
-        ? Workspace.all.toSet().union([current]).sortedBy { $0.name }
+        ? Workspace.all.filter { $0.monitor.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }
+            .toSet()
+            .union([current])
+            .sortedBy { $0.name }
         : stdinWorkspaces.map { Workspace.get(byName: $0) }
     let index = workspaces.firstIndex(where: { $0 == Workspace.focused }) ?? 0
     let workspace: Workspace?
