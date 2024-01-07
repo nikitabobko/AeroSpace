@@ -35,15 +35,9 @@ The following commands focus next or previous workspaces on monitors where the m
 
 [source,bash]
 ----
-aerospace list-monitors --mouse | \
-    awk '{print $1}' | \
-    xargs aerospace list-workspaces --on-monitors | \
-    aerospace workspace next
+aerospace workspace "$(aerospace list-workspaces --on-monitors mouse --visible)" && aerospace workspace next
 
-aerospace list-monitors --mouse | \
-    awk '{print $1}' | \
-    xargs aerospace list-workspaces --on-monitors | \
-    aerospace workspace prev
+aerospace workspace "$(aerospace list-workspaces --on-monitors mouse --visible)" && aerospace workspace prev
 ----
 
 [#show-aerospace-workspaces-in-sketchybar]
