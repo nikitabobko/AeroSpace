@@ -37,14 +37,20 @@ public extension Result {
     }
 }
 
-public extension Result where Failure == AeroError {
+public extension Result {
     @discardableResult
-    func getOrThrow(_ msgPrefix: String = "") -> Success {
+    func getOrThrow(
+        _ msgPrefix: String = "",
+        file: String = #file,
+        line: Int = #line,
+        column: Int = #column,
+        function: String = #function
+    ) -> Success {
         switch self {
         case .success(let suc):
             return suc
         case .failure(let e):
-            e.throwIt(msgPrefix)
+            error(msgPrefix + e.localizedDescription, file: file, line: line, column: column, function: function)
         }
     }
 }

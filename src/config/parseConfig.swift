@@ -318,8 +318,8 @@ private func parseMonitorDescription(_ raw: TOMLValueConvertible, _ backtrace: T
 }
 
 func parseCaseInsensitiveRegex(_ raw: String) -> Parsed<Regex<AnyRegexOutput>> {
-    tryCatch { try Regex(raw) }
-        .mapError { e in "Can't parse '\(raw)' regex. \(e.msg)" }
+    Result { try Regex(raw) }
+        .mapError { e in "Can't parse '\(raw)' regex. \(e.localizedDescription)" }
         .map { $0.ignoresCase() }
 }
 

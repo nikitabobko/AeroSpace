@@ -52,27 +52,28 @@ if !isVersion {
     }
 }
 
-let socket = tryCatch { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrThrow()
+let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrThrow()
 defer {
     socket.close()
 }
 let socketFile = "/tmp/\(appId).sock"
-if let e: AeroError = tryCatch(body: { try socket.connect(to: socketFile) }).errorOrNil {
+
+if let e: Error = Result(catching: { try socket.connect(to: socketFile) }).errorOrNil {
     if isVersion {
         printVersionAndExit(serverVersion: nil)
     } else {
-        prettyError("Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.msg)")
+        prettyError("Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
     }
 }
 
 func run(_ command: String, stdin: String) -> ServerAnswer {
-    let request = tryCatch { try JSONEncoder().encode(ClientRequest(command: command, stdin: stdin)) }.getOrThrow()
-    tryCatch { try socket.write(from: request) }.getOrThrow()
-    tryCatch { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrThrow()
+    let request = Result { try JSONEncoder().encode(ClientRequest(command: command, stdin: stdin)) }.getOrThrow()
+    Result { try socket.write(from: request) }.getOrThrow()
+    Result { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrThrow()
 
     var answer = Data()
-    tryCatch { try socket.read(into: &answer) }.getOrThrow()
-    return tryCatch { try JSONDecoder().decode(ServerAnswer.self, from: answer) }.getOrThrow()
+    Result { try socket.read(into: &answer) }.getOrThrow()
+    return Result { try JSONDecoder().decode(ServerAnswer.self, from: answer) }.getOrThrow()
 }
 
 let serverVersionAns = run("server-version-internal-command", stdin: "")

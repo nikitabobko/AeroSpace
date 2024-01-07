@@ -2,10 +2,10 @@ import Socket
 import Common
 
 func startServer() {
-    let socket = tryCatch { try Socket.create(family: .unix, type: .stream, proto: .unix) }
+    let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }
         .getOrThrow("Can't create socket ")
     let socketFile = "/tmp/\(Bundle.appId).sock"
-    tryCatch { try socket.listen(on: socketFile) }.getOrThrow("Can't listen to socket \(socketFile) ")
+    Result { try socket.listen(on: socketFile) }.getOrThrow("Can't listen to socket \(socketFile) ")
     DispatchQueue.global().async {
         while true {
             guard let connection = try? socket.acceptClientConnection() else { continue }
@@ -16,7 +16,7 @@ func startServer() {
 
 func sendCommandToReleaseServer(command: String) {
     check(isDebug)
-    let socket = tryCatch { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrThrow()
+    let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrThrow()
     defer {
         socket.close()
     }
@@ -32,7 +32,7 @@ func sendCommandToReleaseServer(command: String) {
 
 private func newConnection(_ socket: Socket) async { // todo add exit codes
     func answerToClient(_ ans: ServerAnswer) {
-        _ = try? socket.write(from: tryCatch { try JSONEncoder().encode(ans) }.getOrThrow())
+        _ = try? socket.write(from: Result { try JSONEncoder().encode(ans) }.getOrThrow())
     }
     defer {
         debug("Close connection")
