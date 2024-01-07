@@ -66,11 +66,13 @@ if let e: AeroError = tryCatch(body: { try socket.connect(to: socketFile) }).err
 }
 
 func run(_ command: String, stdin: String) -> ServerAnswer {
-    tryCatch { try socket.write(from: command + "\n" + stdin) }.getOrThrow()
+    let request = tryCatch { try JSONEncoder().encode(ClientRequest(command: command, stdin: stdin)) }.getOrThrow()
+    tryCatch { try socket.write(from: request) }.getOrThrow()
     tryCatch { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrThrow()
-    var data = Data()
-    tryCatch { try socket.read(into: &data) }.getOrThrow()
-    return tryCatch { try JSONDecoder().decode(ServerAnswer.self, from: data) }.getOrThrow()
+
+    var answer = Data()
+    tryCatch { try socket.read(into: &answer) }.getOrThrow()
+    return tryCatch { try JSONDecoder().decode(ServerAnswer.self, from: answer) }.getOrThrow()
 }
 
 let serverVersionAns = run("server-version-internal-command", stdin: "")

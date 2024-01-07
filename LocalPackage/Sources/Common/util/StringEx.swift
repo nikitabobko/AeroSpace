@@ -5,10 +5,6 @@ public extension String {
     func trim() -> String {
         self.trimmingCharacters(in: .whitespacesAndNewlines)
     }
-
-    func indexOrPastTheEnd(after i: String.Index) -> String.Index {
-        i == endIndex ? endIndex : index(after: i)
-    }
 }
 
 public extension [[String]] {
