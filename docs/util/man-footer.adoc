@@ -5,7 +5,7 @@
 
 == BUGS
 
-Bugs must be reported to https://github.com/nikitabobko/AeroSpace/issues/new
+Bugs can be reported to https://github.com/nikitabobko/AeroSpace/issues/new
 
 == Copying
 
