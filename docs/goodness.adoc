@@ -16,6 +16,11 @@ defaults write -g NSWindowShouldDragOnGesture YES
 
 Now, you can move windows by holding `ctrl + cmd` and dragging any part of the window (not necessarily the window title)
 
+[#highlight-active-inactive-windows-with-coloured-borders]
+== Highlight Active/Inactive Windows With Coloured Borders
+
+To show a coloured border round active and/or inactive windows you can use link:https://github.com/FelixKratz/JankyBorders[JankyBorders].
+
 [#disable-open-animations]
 == Disable windows opening animations
 
