@@ -59,37 +59,31 @@ aerospace workspace "$(aerospace list-workspaces --monitor mouse --visible)" && 
 [#show-aerospace-workspaces-in-sketchybar]
 == Show AeroSpace workspaces in Sketchybar
 
-For those of you who want to integrate AeroSpace workspace indicators into your link:https://github.com/FelixKratz/SketchyBar[Sketchybar].
-You can use these scripts as a starting point.
+You can integrate AeroSpace workspace indicators with link:https://github.com/FelixKratz/SketchyBar[Sketchybar].
+Use these snippets as a starting point.
 
-[source,bash]
-.~/.config/sketchybar/sketchybarrc
+.~/.aerospace.toml
+[source,toml]
 ----
-sketchybar --bar height=32 \
-                 blur_radius=30 \
-                 position=top \
-                 sticky=off \
-                 padding_left=10 \
-                 padding_right=10 \
-                 color=0x15ffffff
+# Run Sketchybar together with AeroSpace
+# sketchbar has a built-in detection of already running process,
+# so it won't be run twice on AeroSpace restart
+after-startup-command = ['exec-and-forget /opt/homebrew/opt/sketchybar/bin/sketchybar']
 
-sketchybar --default padding_left=5 \
-                     padding_right=5 \
-                     label.padding_left=4 \
-                     label.padding_right=4 \
-                     icon.padding_left=4 \
-                     icon.padding_right=4
+# Notify Sketchybar about workspace change
+exec-on-workspace-change = ['/bin/bash', '-c',
+    '/opt/homebrew/opt/sketchybar/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
+----
 
-sketchybar --add event aerospace_change_raw bobko.aerospace.focusedWorkspaceChanged \
-    --add event aerospace_change \
-    --add item ev left \
-    --subscribe ev aerospace_change_raw \
-    --set ev updates=on drawing=off \
-             script='sketchybar --trigger aerospace_change AEROSPACE_FOCUSED="$(aerospace list-workspaces --focused)"'
+.~/.config/sketchybar/sketchybarrc
+[source,bash]
+----
+sketchybar --add event aerospace_workspace_change
 
 for sid in $(aerospace list-workspaces --all); do
     sketchybar --add item space.$sid left \
-        --subscribe space.$sid aerospace_change \
+        --subscribe space.$sid aerospace_workspace_change \
         --set space.$sid \
         background.color=0x44ffffff \
         background.corner_radius=5 \
@@ -101,15 +95,15 @@ for sid in $(aerospace list-workspaces --all); do
 done
 ----
 
-[source,bash]
 .~/.config/sketchybar/plugins/aerospace.sh
+[source,bash]
 ----
 #!/usr/bin/env bash
 
 # make sure it's executable with:
 # chmod +x ~/.config/sketchybar/plugins/aerospace.sh
 
-if [ "$1" = "$AEROSPACE_FOCUSED" ]; then
+if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
     sketchybar --set $NAME background.drawing=on
 else
     sketchybar --set $NAME background.drawing=off

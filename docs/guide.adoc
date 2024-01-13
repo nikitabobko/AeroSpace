@@ -67,7 +67,10 @@ There are two ways on how you can use commands:
 [source,toml]
 ----
 [mode.main.binding]
-alt-1 = 'workspace 1' # Bind alt-1 key to switch to workspace 1
+# Bind alt-1 key to switch to workspace 1
+alt-1 = 'workspace 1'
+# Or bind a sequence of commands
+alt-shift-1 = ['move-node-to-workspace 1', 'workspace 1']
 ----
 . Run commands in CLI. Open up a Terminal.app and type:
 +
@@ -290,8 +293,10 @@ Overview of '`Displays have separate Spaces`'
 |... is displayed only on main monitor
 |===
 
+== Callbacks
+
 [#on-window-detected-callback]
-== '`on-window-detected`' callback
+=== 'on-window-detected' callback
 
 You can use `on-window-detected` callback to run commands every time a new window is detected.
 
@@ -382,6 +387,28 @@ run = 'move-node-to-workspace I' # mnemonics I - IDE
 check-further-callbacks = true
 run = 'layout floating'
 ----
+
+[#exec-on-workspace-change-callback]
+=== 'exec-on-workspace-change' callback
+
+`exec-on-workspace-change` callback allows to run arbitrary process when workspace changes.
+It may be useful for integrating with bars.
+
+[source,toml]
+----
+# Notify Sketchybar about workspace change
+exec-on-workspace-change = ['/bin/bash', '-c',
+    '/opt/homebrew/opt/sketchybar/bin/sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE'
+]
+----
+
+The process has access to the following environment variables:
+
+* `AEROSPACE_FOCUSED_WORKSPACE` - the workspace user switched to
+* `AEROSPACE_PREV_WORKSPACE` - the workspace user switched from
+
+For a more elaborate example on how to integrate with Sketchybar see
+xref:goodness.adoc#show-aerospace-workspaces-in-sketchybar[]
 
 [#multiple-monitors]
 == Multiple monitors

@@ -17,6 +17,7 @@ func setUpWorkspacesForTests() {
         startAtLogin: defaultConfig.startAtLogin,
         accordionPadding: defaultConfig.accordionPadding,
         enableNormalizationOppositeOrientationForNestedContainers: false, // Make layout tests more predictable
+        execOnWorkspaceChange: [],
 
         gaps: defaultConfig.gaps,
         workspaceToMonitorForceAssignment: [:],

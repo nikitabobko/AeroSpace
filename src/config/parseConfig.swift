@@ -132,6 +132,7 @@ private let configParser: [String: any ParserProtocol<RawConfig>] = [
     "indent-for-nested-containers-with-the-same-orientation": Parser(\.indentForNestedContainersWithTheSameOrientation, parseInt),
     "start-at-login": Parser(\.startAtLogin, parseBool),
     "accordion-padding": Parser(\.accordionPadding, parseInt),
+    "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseExecOnWorkspaceChange),
 
     "mode": Parser(\.modes, parseModes),
     "gaps": Parser(\.gaps, parseGaps),
@@ -195,6 +196,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         startAtLogin: raw.startAtLogin ?? defaultConfig.startAtLogin,
         accordionPadding: raw.accordionPadding ?? defaultConfig.accordionPadding,
         enableNormalizationOppositeOrientationForNestedContainers: raw.enableNormalizationOppositeOrientationForNestedContainers ?? defaultConfig.enableNormalizationOppositeOrientationForNestedContainers,
+        execOnWorkspaceChange: raw.execOnWorkspaceChange ?? [],
 
         gaps: raw.gaps ?? defaultConfig.gaps,
         workspaceToMonitorForceAssignment: raw.workspaceToMonitorForceAssignment ?? [:],
@@ -235,6 +237,10 @@ func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Par
     raw.string.orFailure(expectedActualTypeError(expected: .string, actual: raw.type, backtrace))
 }
 
+func parseTomlArray(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<TOMLArray> {
+    raw.array.orFailure(expectedActualTypeError(expected: .array, actual: raw.type, backtrace))
+}
+
 func parseTable<T: Copyable>(
     _ raw: TOMLValueConvertible,
     _ initial: T,
@@ -259,6 +265,13 @@ private func parseStartupRootContainerLayout(_ raw: TOMLValueConvertible, _ back
 private func parseLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Layout> {
     parseString(raw, backtrace)
         .flatMap { $0.parseLayout().orFailure(.semantic(backtrace, "Can't parse layout '\($0)'")) }
+}
+
+private func parseExecOnWorkspaceChange(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<[String]> {
+    parseTomlArray(raw, backtrace)
+        .flatMap { arr in
+            arr.mapAllOrFailure { elem in parseString(elem, backtrace) }
+        }
 }
 
 private func parseDefaultContainerOrientation(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<DefaultContainerOrientation> {

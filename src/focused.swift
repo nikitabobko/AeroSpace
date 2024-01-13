@@ -32,14 +32,22 @@ var focusedWorkspaceName: String { // todo change to focused monitor
         let oldValue = _focusedWorkspaceName
         _focusedWorkspaceName = newValue
         if oldValue != newValue {
-            // Firing Notification for e.g Sketchybar Integration
-            DistributedNotificationCenter.default().postNotificationName(
-                NSNotification.Name("bobko.aerospace.focusedWorkspaceChanged"),
-                object: nil
-            )
-
+            onWorkspaceChanged(oldValue, newValue)
             previousFocusedWorkspaceName = oldValue
         }
     }
 }
 var previousFocusedWorkspaceName: String? = nil
+
+private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String) {
+    if let exec = config.execOnWorkspaceChange.first {
+        let process = Process()
+        process.executableURL = URL(filePath: exec)
+        process.arguments = Array(config.execOnWorkspaceChange.dropFirst())
+        var environment = ProcessInfo.processInfo.environment
+        environment["AEROSPACE_FOCUSED_WORKSPACE"] = newWorkspace
+        environment["AEROSPACE_PREV_WORKSPACE"] = oldWorkspace
+        process.environment = environment
+        Result { try process.run() }.getOrThrow() // todo It's not perfect to fail here
+    }
+}
