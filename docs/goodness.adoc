@@ -51,9 +51,9 @@ The following commands focus next or previous workspaces on monitors where the m
 
 [source,bash]
 ----
-aerospace workspace "$(aerospace list-workspaces --on-monitors mouse --visible)" && aerospace workspace next
+aerospace workspace "$(aerospace list-workspaces --monitor mouse --visible)" && aerospace workspace next
 
-aerospace workspace "$(aerospace list-workspaces --on-monitors mouse --visible)" && aerospace workspace prev
+aerospace workspace "$(aerospace list-workspaces --monitor mouse --visible)" && aerospace workspace prev
 ----
 
 [#show-aerospace-workspaces-in-sketchybar]

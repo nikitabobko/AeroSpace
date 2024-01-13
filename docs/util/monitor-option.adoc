@@ -1,4 +1,4 @@
---on-monitors <monitors>::
+--monitor <monitors>::
 Filter results to only print workspaces/windows that are attached to specified monitors.
 `<monitors>` is a comma separated list of monitor IDs. +
 +

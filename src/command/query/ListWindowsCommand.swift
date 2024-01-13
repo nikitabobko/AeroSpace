@@ -8,7 +8,7 @@ struct ListWindowsCommand: Command {
         var windows: [Window] = []
         switch args {
         case .manual(let manual):
-            var workspaces: Set<Workspace> = manual.onWorkspaces.isEmpty ? Workspace.all.toSet() : manual.onWorkspaces
+            var workspaces: Set<Workspace> = manual.workspaces.isEmpty ? Workspace.all.toSet() : manual.workspaces
                 .flatMap { filter in
                     switch filter {
                     case .focused:
@@ -20,8 +20,8 @@ struct ListWindowsCommand: Command {
                     }
                 }
                 .toSet()
-            if !manual.onMonitors.isEmpty {
-                let monitors: Set<CGPoint> = manual.onMonitors.resolveMonitors(state)
+            if !manual.monitors.isEmpty {
+                let monitors: Set<CGPoint> = manual.monitors.resolveMonitors(state)
                 if monitors.isEmpty { return false }
                 workspaces = workspaces.filter { monitors.contains($0.monitor.rect.topLeftCorner) }
             }

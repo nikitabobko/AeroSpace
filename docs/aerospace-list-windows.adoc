@@ -8,9 +8,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-list-windows [-h|--help] --on-workspaces <workspace>... [--on-monitors <monitor>...]
+list-windows [-h|--help] --workspace <workspace>... [--monitor <monitor>...]
              [--pid <pid>] [--app-id <app-id>]
-list-windows [-h|--help] --on-monitors <monitor>... [--on-workspaces <workspace>...]
+list-windows [-h|--help] --monitor <monitor>... [--workspace <workspace>...]
              [--pid <pid>] [--app-id <app-id>]
 list-windows [-h|--help] --all
 list-windows [-h|--help] --focused
@@ -50,7 +50,7 @@ Print the focused window.
 Please note that it is possible for no window to be in focus.
 In that case, error is reported.
 
---on-workspaces <workspaces>::
+--workspace <workspaces>::
 Filter results to only print windows that belong to specified workspaces.
 `<workspaces>` is a comma-separated list of workspace names.
 +
@@ -60,7 +60,7 @@ Possible values: +
 . "visible" is a special workspace name that represents currently visible workspaces
 . "focused" is a special workspace name that represents currently focused workspace
 
-include::util/on-monitors-option.adoc[]
+include::util/monitor-option.adoc[]
 
 --pid <pid>:: Filter results to only print windows that belong to the Application with specified `<pid>`
 --app-id <app-id>:: Filter results to only print windows that belong to the Application with specified Bundle ID

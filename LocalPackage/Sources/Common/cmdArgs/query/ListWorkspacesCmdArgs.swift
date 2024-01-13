@@ -6,23 +6,23 @@ private struct RawListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
         kind: .listWorkspaces,
         allowInConfig: false,
         help: """
-              USAGE: list-workspaces [-h|--help] --on-monitors \(_monitors) [--visible [no]]
+              USAGE: list-workspaces [-h|--help] --monitor \(_monitors) [--visible [no]]
                  OR: list-workspaces [-h|--help] --all
                  OR: list-workspaces [-h|--help] --focused
 
               OPTIONS:
-                -h, --help                   Print help
-                --all                        Alias for "--on-monitors all"
-                --focused                    Alias for "--on-monitors focused --visible"
-                --visible [no]               Filter results to only print currently visible workspaces
-                --on-monitors \(_monitors)   Filter results to only print the workspaces that are attached to specified monitors
+                -h, --help               Print help
+                --all                    Alias for "--monitor all"
+                --focused                Alias for "--monitor focused --visible"
+                --visible [no]           Filter results to only print currently visible workspaces
+                --monitor \(_monitors)   Filter results to only print the workspaces that are attached to specified monitors
               """,
         options: [
             "--focused": trueBoolFlag(\.focused),
             "--all": trueBoolFlag(\.all),
 
             "--visible": boolFlag(\.real.visible),
-            "--on-monitors": ArgParser(\.real.onMonitors, parseMonitorIds)
+            "--monitor": ArgParser(\.real.onMonitors, parseMonitorIds)
         ],
         arguments: []
     )
@@ -47,21 +47,21 @@ private extension RawListWorkspacesCmdArgs {
         var result: [String] = []
         if focused { result.append("--focused") }
         if all { result.append("--all") }
-        if !real.onMonitors.isEmpty { result.append("--on-monitors") }
+        if !real.onMonitors.isEmpty { result.append("--monitor") }
         return result
     }
 }
 
 public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {
     parseRawCmdArgs(RawListWorkspacesCmdArgs(), args)
-        .filter("Specified flags require explicit --on-monitor") { $0.real == .init() || !$0.real.onMonitors.isEmpty }
+        .filter("Specified flags require explicit --monitor") { $0.real == .init() || !$0.real.onMonitors.isEmpty }
         .flatMap { raw in
             let uniqueOptions = raw.uniqueOptions
             switch uniqueOptions.count {
             case 1:
                 return .cmd(raw)
             case 0:
-                return .failure("'list-workspaces' mandatory option is not specified (--all|--focused|--on-monitors|--visible)")
+                return .failure("'list-workspaces' mandatory option is not specified (--all|--focused|--monitor|--visible)")
             default:
                 return .failure("Conflicting options: \(uniqueOptions.joined(separator: ", "))")
             }

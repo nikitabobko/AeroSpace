@@ -6,28 +6,28 @@ private struct RawListWindowsCmdArgs: RawCmdArgs, Equatable {
         kind: .listWindows,
         allowInConfig: false,
         help: """
-              USAGE: list-windows [-h|--help] --on-workspaces \(_workspaces) [--on-monitors \(_monitors)]
+              USAGE: list-windows [-h|--help] --workspace \(_workspaces) [--monitor \(_monitors)]
                                   [--pid <pid>] [--app-id <app-id>]
-                 OR: list-windows [-h|--help] --on-monitors \(_monitors) [--on-workspaces \(_workspaces)]
+                 OR: list-windows [-h|--help] --monitor \(_monitors) [--workspace \(_workspaces)]
                                   [--pid <pid>] [--app-id <app-id>]
                  OR: list-windows [-h|--help] --all
                  OR: list-windows [-h|--help] --focused
 
               OPTIONS:
-                -h, --help                       Print help
-                --all                            Alias for "--on-monitors all"
-                --focused                        Print the focused window
-                --on-workspaces \(_workspaces)   Filter results to only print windows that belong to specified workspaces
-                --on-monitors \(_monitors)       Filter results to only print the windows that are attached to specified monitors
-                --pid <pid>                      Filter results to only print windows that belong to the Application with specified <pid>
-                --app-id <app-id>                Filter results to only print windows that belong to the Application with specified Bundle ID
+                -h, --help                   Print help
+                --all                        Alias for "--monitor all"
+                --focused                    Print the focused window
+                --workspace \(_workspaces)   Filter results to only print windows that belong to specified workspaces
+                --monitor \(_monitors)       Filter results to only print the windows that are attached to specified monitors
+                --pid <pid>                  Filter results to only print windows that belong to the Application with specified <pid>
+                --app-id <app-id>            Filter results to only print windows that belong to the Application with specified Bundle ID
               """,
         options: [
             "--focused": trueBoolFlag(\.focused),
             "--all": trueBoolFlag(\.all),
 
-            "--on-monitors": ArgParser(\.manual.onMonitors, parseMonitorIds),
-            "--on-workspaces": ArgParser(\.manual.onWorkspaces, parseWorkspaces),
+            "--monitor": ArgParser(\.manual.monitors, parseMonitorIds),
+            "--workspace": ArgParser(\.manual.workspaces, parseWorkspaces),
             "--pid": singleValueOption(\.manual.pidFilter, "<pid>", Int32.init),
             "--app-id": singleValueOption(\.manual.appIdFilter, "<app-id>", { $0 })
         ],
@@ -46,11 +46,11 @@ private extension RawListWindowsCmdArgs {
         var result: [String] = []
         if focused { result.append("--focused") }
         if all { result.append("--all") }
-        if !manual.onMonitors.isEmpty || !manual.onWorkspaces.isEmpty {
-            if !manual.onMonitors.isEmpty {
-                result.append("--on-monitors")
+        if !manual.monitors.isEmpty || !manual.workspaces.isEmpty {
+            if !manual.monitors.isEmpty {
+                result.append("--monitor")
             } else {
-                result.append("--on-workspaces")
+                result.append("--workspace")
             }
         }
         return result
@@ -64,8 +64,8 @@ public enum ListWindowsCmdArgs: CmdArgs {
     case manual(ManualFilter)
 
     public struct ManualFilter: Equatable {
-        public var onMonitors: [MonitorId] = []
-        public var onWorkspaces: [WorkspaceFilter] = []
+        public var monitors: [MonitorId] = []
+        public var workspaces: [WorkspaceFilter] = []
         public var pidFilter: Int32?
         public var appIdFilter: String?
     }
@@ -73,20 +73,20 @@ public enum ListWindowsCmdArgs: CmdArgs {
 
 public func parseListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCmdArgs> {
     parseRawCmdArgs(RawListWindowsCmdArgs(), args)
-        .filter("Specified flags require explicit (--on-workspaces|--on-monitor)") {
-            $0.manual == .init() || !$0.manual.onWorkspaces.isEmpty || !$0.manual.onMonitors.isEmpty
+        .filter("Specified flags require explicit (--workspace|--monitor)") {
+            $0.manual == .init() || !$0.manual.workspaces.isEmpty || !$0.manual.monitors.isEmpty
         }
         .flatMap { raw in
             let uniqueOptions = raw.uniqueOptions
             switch uniqueOptions.count {
             case 1:  return .cmd(raw)
-            case 0:  return .failure("'list-windows' mandatory option is not specified (--focused|--all|--on-monitors|--on-workspaces)")
+            case 0:  return .failure("'list-windows' mandatory option is not specified (--focused|--all|--monitor|--workspace)")
             default: return .failure("Conflicting options: \(uniqueOptions.joined(separator: ", "))")
             }
         }
         .flatMap { raw in
             if raw.all {
-                return .cmd(.manual(ListWindowsCmdArgs.ManualFilter(onMonitors: [.all])))
+                return .cmd(.manual(ListWindowsCmdArgs.ManualFilter(monitors: [.all])))
             } else if raw.focused {
                 return .cmd(.focused)
             } else {
