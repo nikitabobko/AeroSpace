@@ -301,7 +301,7 @@ extension MonitorDescription: Equatable {
         case (.secondary, .secondary):
             return true
         case (.pattern, .pattern):
-            return true
+            return true // Technically incorrect, but good enough for tests
         default:
             return false
         }

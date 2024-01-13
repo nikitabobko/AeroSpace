@@ -421,7 +421,7 @@ indirect enum TomlBacktrace: CustomStringConvertible {
     case rootKey(String)
     case key(String)
     case index(Int)
-    case pair((TomlBacktrace, TomlBacktrace))
+    case pair(TomlBacktrace, TomlBacktrace)
 
     var description: String {
         switch self {
@@ -433,7 +433,7 @@ indirect enum TomlBacktrace: CustomStringConvertible {
             return "." + value
         case .index(let index):
             return "[\(index)]"
-        case .pair((let first, let second)):
+        case .pair(let first, let second):
             return first.description + second.description
         }
     }
@@ -446,7 +446,7 @@ indirect enum TomlBacktrace: CustomStringConvertible {
                 error("Impossible")
             }
         } else {
-            return pair((lhs, rhs))
+            return pair(lhs, rhs)
         }
     }
 }
