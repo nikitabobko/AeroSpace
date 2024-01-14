@@ -247,25 +247,48 @@ func parseDynamicValue<T>(_ raw: TOMLValueConvertible, _ valueType: T.Type, _ ba
     } else if let array = raw.array {
         let defaultValue = array.lazy.compactMap { parseSimpleType($0) as T? }.first
 
-        let rules: [PerMonitorValue<T>] = array.compactMap {
+        let rules: [ParsedToml<PerMonitorValue<T>>] = array.compactMap {
             parsePerMonitorValue($0, backtrace)
         }
 
-        return .success(.perMonitor(rules, default: defaultValue))
+        guard !rules.isEmpty else {
+            return .failure(.semantic(backtrace, "Rules array must not be empty"))
+        }
+
+        if let error = rules.compactMap(\.errorOrNil).first {
+            return .failure(error)
+        }
+
+        return .success(.perMonitor(rules.compactMap({ $0.getOrNil() }), default: defaultValue))
     } else {
-        return .failure(.semantic(backtrace, "Unsupported type: \(valueType)"))
+        return .failure(.semantic(backtrace, "Unsupported type: \(raw.type), expected: \(valueType) or array"))
     }
 }
 
-func parsePerMonitorValue<T>(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> PerMonitorValue<T>? {
-    guard let table = raw.table?["monitor"]?.table else { return nil }
+func parsePerMonitorValue<T>(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<PerMonitorValue<T>>? {
+    guard raw.table != nil || parseSimpleType(raw) as T? != nil else {
+        return .failure(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))
+    }
+
+    guard let tableItem = raw.table else { return nil }
+
+    guard let table = tableItem["monitor"]?.table else {
+        return .failure(.semantic(backtrace, "Missing \"monitor\" table"))
+    }
 
     return table.lazy.compactMap { key, value in
-        guard let monitorDescription = parseMonitorDescription(key, backtrace).getOrNil(),
-              let value = parseSimpleType(value) as T?
-        else { return nil }
+        let backtrace = backtrace + .key("monitor") + .key(key)
+        let monitorDescriptionResult = parseMonitorDescription(key, backtrace)
 
-        return (description: monitorDescription, value: value)
+        guard let monitorDescription = monitorDescriptionResult.getOrNil() else {
+            return .failure(monitorDescriptionResult.errorOrNil ?? .semantic(backtrace, "Invalid monitor rule"))
+        }
+
+        guard let value = parseSimpleType(value) as T? else {
+            return .failure(expectedActualTypeError(expected: [.int, .bool, .string], actual: value.type, backtrace))
+        }
+
+        return .success((description: monitorDescription, value: value))
     }.first
 }
 

@@ -282,7 +282,7 @@ final class ConfigTest: XCTestCase {
             inner-horizontal = 10
             inner-vertical = [{ monitor."main" = 1 }, { monitor."secondary" = 2 }, 5]
             outer-left = 12
-            outer-bottom = [13]
+            outer-bottom = 13
             outer-top = [{ monitor."built-in" = 3 }, { monitor."secondary" = 4 }, 6]
             outer-right = [{ monitor.2 = 7 }]
             """
@@ -291,10 +291,13 @@ final class ConfigTest: XCTestCase {
         XCTAssertEqual(
             config.gaps,
             Gaps(
-                inner: .init(vertical: .perMonitor([(description: .main, value: 1), (description: .secondary, value: 2)], default: 5), horizontal: .constant(10)),
+                inner: .init(
+                    vertical: .perMonitor([(description: .main, value: 1), (description: .secondary, value: 2)], default: 5),
+                    horizontal: .constant(10)
+                ),
                 outer: .init(
                     left: .constant(12),
-                    bottom: .perMonitor([], default: 13),
+                    bottom: .constant(13),
                     top: .perMonitor([(description: .pattern(try! .init("built-in")), value: 3), (description: .secondary, value: 4)], default: 6),
                     right: .perMonitor([(description: .sequenceNumber(2), value: 7)], default: nil)
                 )
