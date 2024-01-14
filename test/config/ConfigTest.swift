@@ -276,92 +276,45 @@ final class ConfigTest: XCTestCase {
     }
 
     func testParseGaps() {
-        let (config, errors) = parseConfig(
+        let (config, errors1) = parseConfig(
             """
-            gaps.inner.horizontal = 1
-            gaps.inner.vertical = 2
-            gaps.outer.left = 3
-            gaps.outer.bottom = 4
-            gaps.outer.top = 5
-            gaps.outer.right = 6
+            [gaps]
+            inner.horizontal = 10
+            inner.vertical = [{ monitor."main" = 1 }, { monitor."secondary" = 2 }, 5]
+            outer.left = 12
+            outer.bottom = 13
+            outer.top = [{ monitor."built-in" = 3 }, { monitor."secondary" = 4 }, 6]
+            outer.right = [{ monitor.2 = 7 }, 8]
             """
         )
-        XCTAssertEqual(errors.descriptions, [])
-        XCTAssertEqual(config.gaps, Gaps(inner: Gaps.Inner(vertical: 2, horizontal: 1), outer: Gaps.Outer(left: 3, bottom: 4, top: 5, right: 6)))
+        XCTAssertEqual(errors1.descriptions, [])
+        XCTAssertEqual(
+            config.gaps,
+            Gaps(
+                inner: .init(
+                    vertical: .perMonitor([(description: .main, value: 1), (description: .secondary, value: 2)], default: 5),
+                    horizontal: .constant(10)
+                ),
+                outer: .init(
+                    left: .constant(12),
+                    bottom: .constant(13),
+                    top: .perMonitor([(description: .pattern(try! .init("built-in")), value: 3), (description: .secondary, value: 4)], default: 6),
+                    right: .perMonitor([(description: .sequenceNumber(2), value: 7)], default: 8)
+                )
+            )
+        )
+
+        let (_, errors2) = parseConfig(
+            """
+            [gaps]
+            inner.horizontal = [true]
+            inner.vertical = [{ foo.main = 1 }, { monitor = { foo = 2, bar = 3 } }, 1]
+            """
+        )
+        XCTAssertEqual(errors2.descriptions, [
+            "gaps.inner.horizontal: The last item in the array must be of type Int",
+            "gaps.inner.vertical[0]: The table is expected to have a single key \'monitor\'",
+            "gaps.inner.vertical[1].monitor: The table is expected to have a single key",
+        ])
     }
-}
-
-extension MonitorDescription: Equatable {
-    public static func ==(lhs: MonitorDescription, rhs: MonitorDescription) -> Bool {
-        switch (lhs, rhs) {
-        case (.sequenceNumber(let a), .sequenceNumber(let b)):
-            return a == b
-        case (.main, .main):
-            return true
-        case (.secondary, .secondary):
-            return true
-        case (.pattern, .pattern):
-            return true // Technically incorrect, but good enough for tests
-        default:
-            return false
-        }
-    }
-}
-
-extension WindowDetectedCallback: Equatable {
-    public static func ==(lhs: WindowDetectedCallback, rhs: WindowDetectedCallback) -> Bool {
-        check(lhs.matcher.appNameRegexSubstring == nil &&
-            lhs.matcher.windowTitleRegexSubstring == nil &&
-            rhs.matcher.appNameRegexSubstring == nil &&
-            rhs.matcher.windowTitleRegexSubstring == nil)
-        return lhs.matcher.appId == rhs.matcher.appId &&
-            lhs.run.map(\.describe) == rhs.run.map(\.describe)
-    }
-}
-
-private extension [TomlParseError] {
-    var descriptions: [String] { map(\.description) }
-}
-
-extension Mode: Equatable {
-    public static func ==(lhs: Mode, rhs: Mode) -> Bool {
-        lhs.name == rhs.name && lhs.bindings == rhs.bindings
-    }
-}
-
-extension HotkeyBinding: Equatable {
-    public static func ==(lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
-        lhs.modifiers == rhs.modifiers && lhs.key == rhs.key && lhs.commands.map(\.describe) == rhs.commands.map(\.describe)
-    }
-}
-
-extension Command {
-    var describe: CommandDescription {
-        if let focus = self as? FocusCommand {
-            return .focusCommand(args: focus.args)
-        } else if let resize = self as? ResizeCommand {
-            return .resizeCommand(args: resize.args)
-        } else if let layout = self as? LayoutCommand {
-            return .layoutCommand(args: layout.args)
-        } else if let exec = self as? ExecAndForgetCommand {
-            return .execAndForget(exec.args.bashScript)
-        } else if let moveNodeToWorkspace = self as? MoveNodeToWorkspaceCommand {
-            return .moveNodeToWorkspace(args: moveNodeToWorkspace.args)
-        } else if let listMonitors = self as? ListMonitorsCommand {
-            return .listMonitors(args: listMonitors.args)
-        } else if let workspace = self as? WorkspaceCommand {
-            return .workspace(args: workspace.args)
-        }
-        error("Unsupported command: \(self)")
-    }
-}
-
-enum CommandDescription: Equatable { // todo do I need this class after CmdArgs introduction?
-    case focusCommand(args: FocusCmdArgs)
-    case resizeCommand(args: ResizeCmdArgs)
-    case layoutCommand(args: LayoutCmdArgs)
-    case execAndForget(String)
-    case moveNodeToWorkspace(args: MoveNodeToWorkspaceCmdArgs)
-    case workspace(args: WorkspaceCmdArgs)
-    case listMonitors(args: ListMonitorsCmdArgs)
 }

@@ -56,29 +56,86 @@ struct WindowDetectedCallback {
     let run: [any Command]
 }
 
-struct Gaps: Equatable {
+struct Gaps {
     let inner: Inner
     let outer: Outer
 
-    struct Inner: Equatable {
+    struct Inner {
+        let vertical: DynamicConfigValue<Int>
+        let horizontal: DynamicConfigValue<Int>
+
+        static var zero = Inner(vertical: 0, horizontal: 0)
+
+        init(vertical: Int, horizontal: Int) {
+            self.vertical = .constant(vertical)
+            self.horizontal = .constant(horizontal)
+        }
+
+        init(vertical: DynamicConfigValue<Int>, horizontal: DynamicConfigValue<Int>) {
+            self.vertical = vertical
+            self.horizontal = horizontal
+        }
+    }
+
+    struct Outer {
+        let left: DynamicConfigValue<Int>
+        let bottom: DynamicConfigValue<Int>
+        let top: DynamicConfigValue<Int>
+        let right: DynamicConfigValue<Int>
+
+        static var zero = Outer(left: 0, bottom: 0, top: 0, right: 0)
+
+        init(left: Int, bottom: Int, top: Int, right: Int) {
+            self.left = .constant(left)
+            self.bottom = .constant(bottom)
+            self.top = .constant(top)
+            self.right = .constant(right)
+        }
+
+        init(left: DynamicConfigValue<Int>, bottom: DynamicConfigValue<Int>, top: DynamicConfigValue<Int>, right: DynamicConfigValue<Int>) {
+            self.left = left
+            self.bottom = bottom
+            self.top = top
+            self.right = right
+        }
+    }
+
+    static var zero = Gaps(inner: .zero, outer: .zero)
+}
+
+struct ResolvedGaps {
+    let inner: Inner
+    let outer: Outer
+
+    struct Inner {
         let vertical: Int
         let horizontal: Int
 
-        func get(_ orientation: Orientation) -> Int { orientation == .h ? horizontal : vertical }
-
-        static var zero = Inner(vertical: 0, horizontal: 0)
+        func get(_ orientation: Orientation) -> Int {
+            orientation == .h ? horizontal : vertical
+        }
     }
 
-    struct Outer: Equatable {
+    struct Outer {
         let left: Int
         let bottom: Int
         let top: Int
         let right: Int
-
-        static var zero = Outer(left: 0, bottom: 0, top: 0, right: 0)
     }
 
-    static var zero = Gaps(inner: .zero, outer: .zero)
+    init(gaps: Gaps, monitor: any Monitor) {
+        inner = .init(
+            vertical: gaps.inner.vertical.getValue(for: monitor),
+            horizontal: gaps.inner.horizontal.getValue(for: monitor)
+        )
+
+        outer = .init(
+            left: gaps.outer.left.getValue(for: monitor),
+            bottom: gaps.outer.bottom.getValue(for: monitor),
+            top: gaps.outer.top.getValue(for: monitor),
+            right: gaps.outer.right.getValue(for: monitor)
+        )
+    }
 }
 
 enum DefaultContainerOrientation: String {

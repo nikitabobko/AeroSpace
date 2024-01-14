@@ -1,6 +1,6 @@
-import TOMLKit
-import HotKey
 import Common
+import HotKey
+import TOMLKit
 
 func reloadConfig() {
     guard let configUrl = getConfigFileUrl() else { return }
@@ -41,7 +41,7 @@ private func getConfigFileUrl() -> URL? {
             #################################################
 
             Several configs are found:
-            \(existingCandidates.map { $0.path }.joined(separator: "\n"))
+            \(existingCandidates.map(\.path).joined(separator: "\n"))
 
             Fallback to default config
             """
@@ -97,7 +97,7 @@ extension ParserProtocol {
 
 protocol ParserProtocol<S> {
     associatedtype T
-    associatedtype S where S : Copyable
+    associatedtype S where S: Copyable
     var keyPath: WritableKeyPath<S, T?> { get }
     var parse: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T> { get }
 }
@@ -185,7 +185,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
 
     let modesOrDefault = raw.modes ?? defaultConfig.modes
 
-    let config: Config = Config(
+    let config = Config(
         afterLoginCommand: raw.afterLoginCommand ?? defaultConfig.afterLoginCommand,
         afterStartupCommand: raw.afterStartupCommand ?? defaultConfig.afterStartupCommand,
         indentForNestedContainersWithTheSameOrientation: raw.indentForNestedContainersWithTheSameOrientation ?? defaultConfig.indentForNestedContainersWithTheSameOrientation,
@@ -235,6 +235,88 @@ func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Parsed
 
 func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<String> {
     raw.string.orFailure(expectedActualTypeError(expected: .string, actual: raw.type, backtrace))
+}
+
+func parseSimpleType<T>(_ raw: TOMLValueConvertible) -> T? {
+    (raw.int as? T) ?? (raw.string as? T) ?? (raw.bool as? T)
+}
+
+func parseDynamicValue<T>(
+    _ raw: TOMLValueConvertible,
+    _ valueType: T.Type,
+    _ fallback: T,
+    _ backtrace: TomlBacktrace,
+    _ errors: inout [TomlParseError]
+) -> DynamicConfigValue<T> {
+    if let simpleValue = parseSimpleType(raw) as T? {
+        return .constant(simpleValue)
+    } else if let array = raw.array {
+        if array.isEmpty {
+            errors.append(.semantic(backtrace, "The array must not be empty"))
+            return .constant(fallback)
+        }
+
+        guard let defaultValue = array.last.flatMap({ parseSimpleType($0) as T? }) else {
+            errors.append(.semantic(backtrace, "The last item in the array must be of type \(T.self)"))
+            return .constant(fallback)
+        }
+
+        if array.dropLast().isEmpty {
+            errors.append(.semantic(backtrace, "The array must contain at least one monitor pattern"))
+            return .constant(fallback)
+        }
+
+        let rules: [PerMonitorValue<T>] = parsePerMonitorValues(TOMLArray(array.dropLast()), backtrace, &errors)
+
+        return .perMonitor(rules, default: defaultValue)
+    } else {
+        errors.append(.semantic(backtrace, "Unsupported type: \(raw.type), expected: \(valueType) or array"))
+        return .constant(fallback)
+    }
+}
+
+func parsePerMonitorValues<T>(_ array: TOMLArray, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [PerMonitorValue<T>] {
+    array.enumerated().compactMap { (index: Int, raw: TOMLValueConvertible) -> PerMonitorValue<T>? in
+        var backtrace = backtrace + .index(index)
+
+        guard let (key, value) = raw.unwrapTableWithSingleKey(expectedKey: "monitor", &backtrace)
+            .flatMap({ $0.value.unwrapTableWithSingleKey(expectedKey: nil, &backtrace) })
+            .getOrNil(appendErrorTo: &errors) else {
+            return nil
+        }
+
+        let monitorDescriptionResult = parseMonitorDescription(key, backtrace)
+
+        guard let monitorDescription = monitorDescriptionResult.getOrNil(appendErrorTo: &errors) else { return nil }
+
+        guard let value = parseSimpleType(value) as T? else {
+            errors.append(.semantic(backtrace, "Expected type is '\(T.self)'. But actual type is '\(value.type)'"))
+            return nil
+        }
+
+        return (description: monitorDescription, value: value) as PerMonitorValue<T>
+    }
+}
+
+private extension TOMLValueConvertible {
+    func unwrapTableWithSingleKey(expectedKey: String? = nil, _ backtrace: inout TomlBacktrace) -> ParsedToml<(key: String, value: TOMLValueConvertible)> {
+        guard let table = table else {
+            return .failure(expectedActualTypeError(expected: .table, actual: type, backtrace))
+        }
+        let singleKeyError: TomlParseError = .semantic(backtrace,
+            expectedKey != nil
+                ? "The table is expected to have a single key '\(expectedKey!)'"
+                : "The table is expected to have a single key"
+        )
+        guard let (actualKey, value): (String, TOMLValueConvertible) = table.count == 1 ? table.first : nil else {
+            return .failure(singleKeyError)
+        }
+        if expectedKey != nil && expectedKey != actualKey  {
+            return .failure(singleKeyError)
+        }
+        backtrace = backtrace + .key(actualKey)
+        return .success((actualKey, value))
+    }
 }
 
 func parseTomlArray(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<TOMLArray> {
@@ -384,7 +466,7 @@ private func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktra
     for (binding, rawCommand): (String, TOMLValueConvertible) in rawTable {
         let backtrace = backtrace + .key(binding)
         let binding = parseBinding(binding, backtrace)
-            .flatMap { (modifiers, key) -> ParsedToml<HotkeyBinding> in
+            .flatMap { modifiers, key -> ParsedToml<HotkeyBinding> in
                 parseCommandOrCommands(rawCommand).toParsedToml(backtrace).map { HotkeyBinding(modifiers, key, $0) }
             }
             .getOrNil(appendErrorTo: &errors)

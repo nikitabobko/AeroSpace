@@ -1,5 +1,5 @@
-import TOMLKit
 import Common
+import TOMLKit
 
 private let gapsParser: [String: any ParserProtocol<RawGaps>] = [
     "inner": Parser(\.inner, parseInner),
@@ -7,15 +7,15 @@ private let gapsParser: [String: any ParserProtocol<RawGaps>] = [
 ]
 
 private let innerParser: [String: any ParserProtocol<RawInner>] = [
-    "vertical": Parser(\.vertical, parseInt),
-    "horizontal": Parser(\.horizontal, parseInt),
+    "vertical": Parser(\.vertical) { value, backtrace, errors in parseDynamicValue(value, Int.self, 0, backtrace, &errors) },
+    "horizontal": Parser(\.horizontal) { value, backtrace, errors in parseDynamicValue(value, Int.self, 0, backtrace, &errors) },
 ]
 
 private let outerParser: [String: any ParserProtocol<RawOuter>] = [
-    "left": Parser(\.left, parseInt),
-    "bottom": Parser(\.bottom, parseInt),
-    "top": Parser(\.top, parseInt),
-    "right": Parser(\.right, parseInt),
+    "left": Parser(\.left) { value, backtrace, errors in parseDynamicValue(value, Int.self, 0, backtrace, &errors) },
+    "bottom": Parser(\.bottom) { value, backtrace, errors in parseDynamicValue(value, Int.self, 0, backtrace, &errors) },
+    "top": Parser(\.top) { value, backtrace, errors in parseDynamicValue(value, Int.self, 0, backtrace, &errors) },
+    "right": Parser(\.right) { value, backtrace, errors in parseDynamicValue(value, Int.self, 0, backtrace, &errors) },
 ]
 
 func parseGaps(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> Gaps {
@@ -25,12 +25,20 @@ func parseGaps(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors
 
 func parseInner(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> Gaps.Inner {
     let raw = parseTable(raw, RawInner(), innerParser, backtrace, &errors)
-    return Gaps.Inner(vertical: raw.vertical ?? 0, horizontal: raw.horizontal ?? 0)
+    return Gaps.Inner(
+        vertical: raw.vertical ?? .constant(0),
+        horizontal: raw.horizontal ?? .constant(0)
+    )
 }
 
 func parseOuter(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> Gaps.Outer {
     let raw = parseTable(raw, RawOuter(), outerParser, backtrace, &errors)
-    return Gaps.Outer(left: raw.left ?? 0, bottom: raw.bottom ?? 0, top: raw.top ?? 0, right: raw.right ?? 0)
+    return Gaps.Outer(
+        left: raw.left ?? .constant(0),
+        bottom: raw.bottom ?? .constant(0),
+        top: raw.top ?? .constant(0),
+        right: raw.right ?? .constant(0)
+    )
 }
 
 private struct RawGaps: Copyable {
@@ -39,13 +47,13 @@ private struct RawGaps: Copyable {
 }
 
 private struct RawInner: Copyable {
-    var vertical: Int?
-    var horizontal: Int?
+    var vertical: DynamicConfigValue<Int>?
+    var horizontal: DynamicConfigValue<Int>?
 }
 
 private struct RawOuter: Copyable {
-    var left: Int?
-    var bottom: Int?
-    var top: Int?
-    var right: Int?
+    var left: DynamicConfigValue<Int>?
+    var bottom: DynamicConfigValue<Int>?
+    var top: DynamicConfigValue<Int>?
+    var right: DynamicConfigValue<Int>?
 }
