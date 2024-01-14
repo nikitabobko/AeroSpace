@@ -13,6 +13,21 @@ The dependencies that are required to build AeroSpace:
 brew install xcodegen gsed asciidoctor
 ```
 
+## Setup Signing
+
+Before you can build the project you need to setup signing. Signing the binary is required to preserve accessibility permission
+across rebuilds.
+
+```bash
+cat <<EOF > .local.xcconfig
+DEVELOPMENT_TEAM = XXXXXXXXXX
+CODE_SIGN_IDENTITY = Apple Development
+EOF
+```
+
+where `XXXXXXXXXX` is your signature ID. The easiest way to know your `DEVELOPMENT_TEAM` id is to [set the Team in Xcode
+GUI](https://developer.apple.com/documentation/xcode/adding-capabilities-to-your-app/) and see the `git diff`
+
 ## Debug Build
 
 **Entry point scripts**
@@ -30,27 +45,14 @@ brew install xcodegen gsed asciidoctor
 
 ## Release Build
 
-**Signing**
-
-1. Change `DEVELOPMENT_TEAM` in `project.yml`
-2. Run `generate.sh` script
-
-The easiest way to know your `DEVELOPMENT_TEAM` id is to
-[set the Team in Xcode GUI](https://developer.apple.com/documentation/xcode/adding-capabilities-to-your-app/) and see the `git diff`
-
 **Entry point scripts**
 
 After you setup signing, you can build the release build:
 - `build-release.sh` - Build release build to `.release` dir
 - `install-release.sh` - Build and install release build to `/Applications/AeroSpace.app` and `~/.bin/aerospace`
 
-## Caveats
-
-- Signing the binary is required to preserve accessibility permission across rebuilds.
-  `run-debug.sh` runs the AeroSpace.app on behalf of the terminal app, that's why it's not affected by this caveat.
-- You can use `script/clean-project.sh` to clean the project when something goes wrong.
-
 ## Tips
 
 - Use built-in "Accessibility Inspector.app" to inspect accessibility properties of windows
 - Use [BetterDisplay 2](https://github.com/waydabber/BetterDisplay) to emulate several monitors
+- You can use `script/clean-project.sh` to clean the project when something goes wrong.

@@ -157,6 +157,7 @@
 		8FE45A887100EB70912B07F0 /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
 		9164C9401F7DDCACE9278DA4 /* startAtLogin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = startAtLogin.swift; sourceTree = "<group>"; };
 		9245C6FACF389672EA71173B /* MacWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacWindow.swift; sourceTree = "<group>"; };
+		9473A4630B685B9EE95C1FD0 /* .local.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = .local.xcconfig; sourceTree = "<group>"; };
 		954A434EE57D76F5A9D4140D /* MruStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MruStack.swift; sourceTree = "<group>"; };
 		9745E5FC11701AE35712EC18 /* resizeWithMouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = resizeWithMouse.swift; sourceTree = "<group>"; };
 		9752080BBA547C2A0EF076F0 /* Config.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Config.swift; sourceTree = "<group>"; };
@@ -286,6 +287,7 @@
 		393942C56466FDBBE35F9EC0 = {
 			isa = PBXGroup;
 			children = (
+				47AC9FB4B98798051B3C5BDF /* AeroSpace */,
 				0E0109AE5F7881520B0D2384 /* config-examples */,
 				3A1FF786C84025133F96138D /* Packages */,
 				8338180CE208CBDCD6D8E911 /* src */,
@@ -301,6 +303,15 @@
 			);
 			name = Packages;
 			sourceTree = SOURCE_ROOT;
+		};
+		47AC9FB4B98798051B3C5BDF /* AeroSpace */ = {
+			isa = PBXGroup;
+			children = (
+				9473A4630B685B9EE95C1FD0 /* .local.xcconfig */,
+			);
+			name = AeroSpace;
+			path = .;
+			sourceTree = "<group>";
 		};
 		50A41C4CCFC95C514CA1EAD5 /* config */ = {
 			isa = PBXGroup;
@@ -498,6 +509,7 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					B00BE37A79171B0EE995EB83 = {
+						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -711,6 +723,7 @@
 		};
 		31B702864571F51814E4F12C /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9473A4630B685B9EE95C1FD0 /* .local.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = src/AeroSpace.entitlements;
@@ -824,15 +837,13 @@
 		};
 		D1D1A9E07F0AB40E14CAC0F6 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9473A4630B685B9EE95C1FD0 /* .local.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = src/AeroSpace.entitlements;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0.7.1;
-				DEVELOPMENT_TEAM = 4MWP47XA68;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
