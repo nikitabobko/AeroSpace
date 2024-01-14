@@ -103,7 +103,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             let answer = _answer.getOrNil() ??
                 ServerAnswer(
                     exitCode: 1,
-                    stderr: "Fail to await main thread. \(_answer.errorOrNil?.localizedDescription)",
+                    stderr: "Fail to await main thread. \(_answer.errorOrNil?.localizedDescription ?? "")",
                     serverVersionAndHash: serverVersionAndHash
                 )
             answerToClient(answer)

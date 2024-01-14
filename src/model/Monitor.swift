@@ -25,8 +25,8 @@ class LazyMonitor: Monitor {
     let name: String
     let width: CGFloat
     let height: CGFloat
-    private var _rect: Rect? = nil
-    private var _visibleRect: Rect? = nil
+    private var _rect: Rect?
+    private var _visibleRect: Rect?
 
     init(_ screen: NSScreen) {
         self.name = screen.localizedName

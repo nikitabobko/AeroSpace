@@ -1,4 +1,3 @@
-import Common
 import AppKit
 
 public extension Sequence {
@@ -71,11 +70,11 @@ public extension Sequence {
 }
 
 public extension Sequence where Self.Element: Comparable {
-    public func minOrThrow() -> Self.Element {
+    func minOrThrow() -> Self.Element {
         self.min() ?? errorT("Empty sequence")
     }
 
-    public func maxOrThrow() -> Self.Element {
+    func maxOrThrow() -> Self.Element {
         self.max() ?? errorT("Empty sequence")
     }
 }

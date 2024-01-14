@@ -1,11 +1,12 @@
 extension Monitor {
     var visibleRectPaddedByOuterGaps: Rect {
         let topLeft = visibleRect.topLeftCorner
+        let gaps = ResolvedGaps(gaps: config.gaps, monitor: self)
         return Rect(
-            topLeftX: topLeft.x + config.gaps.outer.left.toDouble(),
-            topLeftY: topLeft.y + config.gaps.outer.top.toDouble(),
-            width: visibleRect.width - config.gaps.outer.left.toDouble() - config.gaps.outer.right.toDouble(),
-            height: visibleRect.height - config.gaps.outer.top.toDouble() - config.gaps.outer.bottom.toDouble()
+            topLeftX: topLeft.x + gaps.outer.left.toDouble(),
+            topLeftY: topLeft.y + gaps.outer.top.toDouble(),
+            width: visibleRect.width - gaps.outer.left.toDouble() - gaps.outer.right.toDouble(),
+            height: visibleRect.height - gaps.outer.top.toDouble() - gaps.outer.bottom.toDouble()
         )
     }
 }

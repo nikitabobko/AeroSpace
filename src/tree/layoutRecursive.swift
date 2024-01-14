@@ -69,19 +69,23 @@ private extension Window {
 
 private extension TilingContainer {
     func layoutTiles(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect) {
+        let monitor = monitors.first { $0.rect.contains(point) }
+        let gaps = ResolvedGaps(gaps: config.gaps, monitor: monitor)
         var point = point
         var virtualPoint = virtual.topLeftCorner
+
         guard let delta = ((orientation == .h ? width : height) - children.sumOf { $0.getWeight(orientation) })
             .div(children.count) else { return }
+
         let lastIndex = children.indices.last
         for (i, child) in children.enumerated() {
             child.setWeight(orientation, child.getWeight(orientation) + delta)
-            let rawGap = config.gaps.inner.get(orientation).toDouble()
+            let rawGap = gaps.inner.get(orientation).toDouble()
             // Gaps. Consider 4 cases:
             // 1. Multiple children. Layout first child
             // 2. Multiple children. Layout last child
             // 3. Multiple children. Layout child in the middle
-            // 4. Single child   let rawGap = config.gaps.inner.get(orientation).toDouble()
+            // 4. Single child   let rawGap = gaps.inner.get(orientation).toDouble()
             let gap = rawGap - (i == 0 ? rawGap / 2 : 0) - (i == lastIndex ? rawGap / 2 : 0)
             child.layoutRecursive(
                 i == 0 ? point : point.addingOffset(orientation, rawGap / 2),

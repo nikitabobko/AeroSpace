@@ -34,13 +34,6 @@ default-root-container-layout = 'tiles'
 #               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
-gaps.inner.horizontal = 0
-gaps.inner.vertical =   0
-gaps.outer.left =       0
-gaps.outer.bottom =     0
-gaps.outer.top =        0
-gaps.outer.right =      0
-
 # Visual indent makes it easier to understand that containers of the same orientation are nested.
 # If you have 'enable-normalization-opposite-orientation-for-nested-containers' enabled then
 # there is no way to observe the indent
@@ -52,6 +45,19 @@ indent-for-nested-containers-with-the-same-orientation = 30
 # - 'smart' means some "smart logic". Currently, 3 and less windows will get 'tiles' layout,
 #   4 and more will get 'accordion' layout. 'smart' can change its behavior in future versions
 non-empty-workspaces-root-containers-layout-on-startup = 'smart'
+
+# Gaps between windows (inner-*) and between monitor edges (outer-*).
+# Possible values:
+# - Constant:         outer-left = 8
+# - Per monitor:      outer-left = [{ monitor.main = 16 }, { monitor."some-pattern" = 32 }, 24]
+#   In this example, 24 is a default value when there is no match.
+[gaps]
+inner-horizontal = 0
+inner-vertical =   0
+outer-left =       0
+outer-bottom =     0
+outer-top =        0
+outer-right =      0
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes

@@ -278,33 +278,28 @@ final class ConfigTest: XCTestCase {
     func testParseGaps() {
         let (config, errors) = parseConfig(
             """
-            gaps.inner.horizontal = 1
-            gaps.inner.vertical = 2
-            gaps.outer.left = 3
-            gaps.outer.bottom = 4
-            gaps.outer.top = 5
-            gaps.outer.right = 6
+            [gaps]
+            inner-horizontal = 10
+            inner-vertical = [{ monitor."main" = 1 }, { monitor."secondary" = 2 }, 5]
+            outer-left = 12
+            outer-bottom = [13]
+            outer-top = [{ monitor."built-in" = 3 }, { monitor."secondary" = 4 }, 6]
+            outer-right = [{ monitor.2 = 7 }]
             """
         )
         XCTAssertEqual(errors.descriptions, [])
-        XCTAssertEqual(config.gaps, Gaps(inner: Gaps.Inner(vertical: 2, horizontal: 1), outer: Gaps.Outer(left: 3, bottom: 4, top: 5, right: 6)))
-    }
-}
-
-extension MonitorDescription: Equatable {
-    public static func ==(lhs: MonitorDescription, rhs: MonitorDescription) -> Bool {
-        switch (lhs, rhs) {
-        case (.sequenceNumber(let a), .sequenceNumber(let b)):
-            return a == b
-        case (.main, .main):
-            return true
-        case (.secondary, .secondary):
-            return true
-        case (.pattern, .pattern):
-            return true
-        default:
-            return false
-        }
+        XCTAssertEqual(
+            config.gaps,
+            Gaps(
+                inner: .init(vertical: .perMonitor([(description: .main, value: 1), (description: .secondary, value: 2)], default: 5), horizontal: .constant(10)),
+                outer: .init(
+                    left: .constant(12),
+                    bottom: .perMonitor([], default: 13),
+                    top: .perMonitor([(description: .pattern(try! .init("built-in")), value: 3), (description: .secondary, value: 4)], default: 6),
+                    right: .perMonitor([(description: .sequenceNumber(2), value: 7)], default: nil)
+                )
+            )
+        )
     }
 }
 

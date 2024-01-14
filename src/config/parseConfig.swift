@@ -237,6 +237,38 @@ func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Par
     raw.string.orFailure(expectedActualTypeError(expected: .string, actual: raw.type, backtrace))
 }
 
+func parseSimpleType<T>(_ raw: TOMLValueConvertible) -> T? {
+    (raw.int as? T) ?? (raw.string as? T) ?? (raw.bool as? T)
+}
+
+func parseDynamicValue<T>(_ raw: TOMLValueConvertible, _ valueType: T.Type, _ backtrace: TomlBacktrace) -> ParsedToml<DynamicConfigValue<T>> {
+    if let simpleValue = parseSimpleType(raw) as T? {
+        return .success(.constant(simpleValue))
+    } else if let array = raw.array {
+        let defaultValue = array.lazy.compactMap { parseSimpleType($0) as T? }.first
+
+        let rules: [PerMonitorValue<T>] = array.compactMap {
+            parsePerMonitorValue($0, backtrace)
+        }
+
+        return .success(.perMonitor(rules, default: defaultValue))
+    } else {
+        return .failure(.semantic(backtrace, "Unsupported type: \(valueType)"))
+    }
+}
+
+func parsePerMonitorValue<T>(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> PerMonitorValue<T>? {
+    guard let table = raw.table?["monitor"]?.table else { return nil }
+
+    return table.lazy.compactMap { key, value in
+        guard let monitorDescription = parseMonitorDescription(key, backtrace).getOrNil(),
+              let value = parseSimpleType(value) as T?
+        else { return nil }
+
+        return (description: monitorDescription, value: value)
+    }.first
+}
+
 func parseTomlArray(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<TOMLArray> {
     raw.array.orFailure(expectedActualTypeError(expected: .array, actual: raw.type, backtrace))
 }

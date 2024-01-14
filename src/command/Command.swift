@@ -23,6 +23,7 @@ class CommandMutableState {
 }
 
 extension Command {
+    @discardableResult
     func run(_ state: CommandMutableState, stdin: String = "") -> Bool {
         check(Thread.current.isMainThread)
         return [self]._run(state, stdin: stdin)
