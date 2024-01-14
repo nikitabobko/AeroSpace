@@ -124,7 +124,7 @@ private let configParser: [String: any ParserProtocol<RawConfig>] = [
     "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, parseBool),
     "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, parseBool),
 
-    "non-empty-workspaces-root-containers-layout-on-startup": Parser(\.nonEmptyWorkspacesRootContainersLayoutOnStartup, parseStartupRootContainerLayout),
+    "non-empty-workspaces-root-containers-layout-on-startup": Parser(\._nonEmptyWorkspacesRootContainersLayoutOnStartup, parseStartupRootContainerLayout),
 
     "default-root-container-layout": Parser(\.defaultRootContainerLayout, parseLayout),
     "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, parseDefaultContainerOrientation),
@@ -190,7 +190,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         afterStartupCommand: raw.afterStartupCommand ?? defaultConfig.afterStartupCommand,
         indentForNestedContainersWithTheSameOrientation: raw.indentForNestedContainersWithTheSameOrientation ?? defaultConfig.indentForNestedContainersWithTheSameOrientation,
         enableNormalizationFlattenContainers: raw.enableNormalizationFlattenContainers ?? defaultConfig.enableNormalizationFlattenContainers,
-        nonEmptyWorkspacesRootContainersLayoutOnStartup: raw.nonEmptyWorkspacesRootContainersLayoutOnStartup ?? defaultConfig.nonEmptyWorkspacesRootContainersLayoutOnStartup,
+        _nonEmptyWorkspacesRootContainersLayoutOnStartup: (),
         defaultRootContainerLayout: raw.defaultRootContainerLayout ?? defaultConfig.defaultRootContainerLayout,
         defaultRootContainerOrientation: raw.defaultRootContainerOrientation ?? defaultConfig.defaultRootContainerOrientation,
         startAtLogin: raw.startAtLogin ?? defaultConfig.startAtLogin,
@@ -255,11 +255,10 @@ func parseTable<T: Copyable>(
     return table.parseTable(initial, fieldsParser, backtrace, &errors)
 }
 
-private func parseStartupRootContainerLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<StartupRootContainerLayout> {
+private func parseStartupRootContainerLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Void> {
     parseString(raw, backtrace)
-        .flatMap {
-            parseEnum($0, StartupRootContainerLayout.self).toParsedToml(backtrace)
-        }
+        .filter(.semantic(backtrace, "'non-empty-workspaces-root-containers-layout-on-startup' is deprecated. Please drop it from your config")) { raw in raw == "smart" }
+        .map { _ in () }
 }
 
 private func parseLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Layout> {

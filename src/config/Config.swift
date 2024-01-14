@@ -10,7 +10,7 @@ struct RawConfig: Copyable {
     var afterStartupCommand: [any Command]?
     var indentForNestedContainersWithTheSameOrientation: Int?
     var enableNormalizationFlattenContainers: Bool?
-    var nonEmptyWorkspacesRootContainersLayoutOnStartup: StartupRootContainerLayout?
+    var _nonEmptyWorkspacesRootContainersLayoutOnStartup: Void?
     var defaultRootContainerLayout: Layout?
     var defaultRootContainerOrientation: DefaultContainerOrientation?
     var startAtLogin: Bool?
@@ -28,7 +28,7 @@ struct Config {
     var afterStartupCommand: [any Command]
     var indentForNestedContainersWithTheSameOrientation: Int
     var enableNormalizationFlattenContainers: Bool
-    var nonEmptyWorkspacesRootContainersLayoutOnStartup: StartupRootContainerLayout
+    var _nonEmptyWorkspacesRootContainersLayoutOnStartup: Void
     var defaultRootContainerLayout: Layout
     var defaultRootContainerOrientation: DefaultContainerOrientation
     var startAtLogin: Bool
@@ -83,10 +83,6 @@ struct Gaps: Equatable {
 
 enum DefaultContainerOrientation: String {
     case horizontal, vertical, auto
-}
-
-enum StartupRootContainerLayout: String, CaseIterable {
-    case smart, tiles, accordion
 }
 
 struct Mode: Copyable {
