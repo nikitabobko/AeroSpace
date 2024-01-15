@@ -35,6 +35,6 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs, Equatable {
 
 public func parseMoveNodeToWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<MoveNodeToWorkspaceCmdArgs> {
     parseRawCmdArgs(RawMoveNodeToWorkspaceCmdArgs(), args)
-        .flatMap { raw in raw.target.val.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: nil) }
+        .flatMap { raw in raw.target.val.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: nil, nonEmpty: false) }
         .flatMap { target in .cmd(MoveNodeToWorkspaceCmdArgs(target)) }
 }

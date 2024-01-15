@@ -45,6 +45,7 @@ func getNextPrevWorkspace(current: Workspace, relative: WTarget.Relative, stdin:
     let currentMonitor = current.monitor
     let workspaces: [Workspace] = stdinWorkspaces.isEmpty
         ? Workspace.all.filter { $0.monitor.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }
+            .filter{ !relative.nonEmpty || $0.isEffectivelyEmpty == false}
             .toSet()
             .union([current])
             .sortedBy { $0.name }

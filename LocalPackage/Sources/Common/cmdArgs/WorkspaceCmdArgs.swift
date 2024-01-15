@@ -6,6 +6,7 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
 
     // next|prev OPTIONS
     var wrapAroundNextPrev: Bool?
+    var nonEmpty: Bool?
 
     static let parser: CmdParser<Self> = cmdParser(
         kind: .workspace,
@@ -20,13 +21,15 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
                                         focused workspace
                 --wrap-around           Make it possible to jump between first and last workspaces
                                         using (next|prev)
+                --non-empty             Skip empty workspaces
 
               ARGUMENTS:
                 <workspace-name>        Workspace name to focus
               """,
         options: [
             "--auto-back-and-forth": optionalTrueBoolFlag(\.autoBackAndForth),
-            "--wrap-around": optionalTrueBoolFlag(\.wrapAroundNextPrev)
+            "--wrap-around": optionalTrueBoolFlag(\.wrapAroundNextPrev),
+            "--non-empty": optionalTrueBoolFlag(\.nonEmpty)
         ],
         arguments: [newArgParser(\.target, parseRawWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
     )
@@ -46,7 +49,7 @@ enum RawWorkspaceTarget: Equatable {
     case prev
     case workspaceName(WorkspaceName)
 
-    func parse(wrapAround: Bool?, autoBackAndForth: Bool?) -> ParsedCmd<WTarget> {
+    func parse(wrapAround: Bool?, autoBackAndForth: Bool?, nonEmpty: Bool?) -> ParsedCmd<WTarget> {
         switch self {
         case .next:
             fallthrough
@@ -54,7 +57,7 @@ enum RawWorkspaceTarget: Equatable {
             if autoBackAndForth != nil {
                 return .failure("--auto-back-and-forth is not allowed for (next|prev)")
             }
-            return .cmd(.relative(WTarget.Relative(isNext: self == .next, wrapAround: wrapAround ?? false)))
+            return .cmd(.relative(WTarget.Relative(isNext: self == .next, wrapAround: wrapAround ?? false, nonEmpty: nonEmpty ?? false)))
         case .workspaceName(let name):
             if wrapAround != nil {
                 return .failure("--wrap-around is allowed only for (next|prev)")
@@ -85,13 +88,16 @@ public enum WTarget: Equatable { // WorkspaceTarget
     public struct Relative: Equatable {
         public let isNext: Bool // next|prev
         public let wrapAround: Bool
+        public let nonEmpty: Bool
 
         public init(
             isNext: Bool,
-            wrapAround: Bool
+            wrapAround: Bool,
+            nonEmpty: Bool
         ) {
             self.isNext = isNext
             self.wrapAround = wrapAround
+            self.nonEmpty = nonEmpty
         }
     }
 
@@ -106,7 +112,7 @@ public enum WTarget: Equatable { // WorkspaceTarget
 
 public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
     parseRawCmdArgs(RawWorkspaceCmdArgs(), args)
-        .flatMap { raw in raw.target.val.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: raw.autoBackAndForth) }
+        .flatMap { raw in raw.target.val.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: raw.autoBackAndForth, nonEmpty: raw.nonEmpty) }
         .flatMap { target in .cmd(WorkspaceCmdArgs(target)) }
 }
 
