@@ -56,11 +56,11 @@ struct WindowDetectedCallback {
     let run: [any Command]
 }
 
-struct Gaps: Equatable {
+struct Gaps {
     let inner: Inner
     let outer: Outer
 
-    struct Inner: Equatable {
+    struct Inner {
         let vertical: DynamicConfigValue<Int>
         let horizontal: DynamicConfigValue<Int>
 
@@ -77,7 +77,7 @@ struct Gaps: Equatable {
         }
     }
 
-    struct Outer: Equatable {
+    struct Outer {
         let left: DynamicConfigValue<Int>
         let bottom: DynamicConfigValue<Int>
         let top: DynamicConfigValue<Int>
@@ -123,17 +123,17 @@ struct ResolvedGaps {
         let right: Int
     }
 
-    init(gaps: Gaps, monitor: (any Monitor)?) {
+    init(gaps: Gaps, monitor: any Monitor) {
         inner = .init(
-            vertical: gaps.inner.vertical.getValue(for: monitor, fallbackValue: 0),
-            horizontal: gaps.inner.horizontal.getValue(for: monitor, fallbackValue: 0)
+            vertical: gaps.inner.vertical.getValue(for: monitor),
+            horizontal: gaps.inner.horizontal.getValue(for: monitor)
         )
 
         outer = .init(
-            left: gaps.outer.left.getValue(for: monitor, fallbackValue: 0),
-            bottom: gaps.outer.bottom.getValue(for: monitor, fallbackValue: 0),
-            top: gaps.outer.top.getValue(for: monitor, fallbackValue: 0),
-            right: gaps.outer.right.getValue(for: monitor, fallbackValue: 0)
+            left: gaps.outer.left.getValue(for: monitor),
+            bottom: gaps.outer.bottom.getValue(for: monitor),
+            top: gaps.outer.top.getValue(for: monitor),
+            right: gaps.outer.right.getValue(for: monitor)
         )
     }
 }

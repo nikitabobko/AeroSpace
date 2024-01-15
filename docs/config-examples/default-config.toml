@@ -51,13 +51,15 @@ non-empty-workspaces-root-containers-layout-on-startup = 'smart'
 # - Constant:         outer-left = 8
 # - Per monitor:      outer-left = [{ monitor.main = 16 }, { monitor."some-pattern" = 32 }, 24]
 #   In this example, 24 is a default value when there is no match.
+#   Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
+#   See: https://nikitabobko.github.io/AeroSpace/guide.html#assign-workspaces-to-monitors
 [gaps]
-inner-horizontal = 0
-inner-vertical =   0
-outer-left =       0
-outer-bottom =     0
-outer-top =        0
-outer-right =      0
+inner.horizontal = 0
+inner.vertical =   0
+outer.left =       0
+outer.bottom =     0
+outer.top =        0
+outer.right =      0
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes

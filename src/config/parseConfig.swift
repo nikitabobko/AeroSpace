@@ -1,6 +1,6 @@
-import TOMLKit
-import HotKey
 import Common
+import HotKey
+import TOMLKit
 
 func reloadConfig() {
     guard let configUrl = getConfigFileUrl() else { return }
@@ -27,7 +27,7 @@ private func getConfigFileUrl() -> URL? {
         ?? FileManager.default.homeDirectoryForCurrentUser.appending(path: ".config/")
     let candidates = [
         FileManager.default.homeDirectoryForCurrentUser.appending(path: dotFileName),
-        xdgConfigHome.appending(path: "aerospace").appending(path: fileName),
+        xdgConfigHome.appending(path: "aerospace").appending(path: fileName)
     ]
     let existingCandidates: [URL] = candidates.filter { (candidate: URL) in FileManager.default.fileExists(atPath: candidate.path) }
     let count = existingCandidates.count
@@ -41,7 +41,7 @@ private func getConfigFileUrl() -> URL? {
             #################################################
 
             Several configs are found:
-            \(existingCandidates.map { $0.path }.joined(separator: "\n"))
+            \(existingCandidates.map(\.path).joined(separator: "\n"))
 
             Fallback to default config
             """
@@ -88,8 +88,8 @@ typealias ParsedToml<T> = Result<T, TomlParseError>
 
 extension ParserProtocol {
     func transformRawConfig(_ raw: S,
-                            _ value: TOMLValueConvertible,
-                            _ backtrace: TomlBacktrace,
+        _ value: TOMLValueConvertible,
+        _ backtrace: TomlBacktrace,
                             _ errors: inout [TomlParseError]) -> S {
         raw.copy(keyPath, parse(value, backtrace, &errors).getOrNil(appendErrorTo: &errors))
     }
@@ -97,7 +97,7 @@ extension ParserProtocol {
 
 protocol ParserProtocol<S> {
     associatedtype T
-    associatedtype S where S : Copyable
+    associatedtype S where S: Copyable
     var keyPath: WritableKeyPath<S, T?> { get }
     var parse: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T> { get }
 }
@@ -185,7 +185,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
 
     let modesOrDefault = raw.modes ?? defaultConfig.modes
 
-    let config: Config = Config(
+    let config = Config(
         afterLoginCommand: raw.afterLoginCommand ?? defaultConfig.afterLoginCommand,
         afterStartupCommand: raw.afterStartupCommand ?? defaultConfig.afterStartupCommand,
         indentForNestedContainersWithTheSameOrientation: raw.indentForNestedContainersWithTheSameOrientation ?? defaultConfig.indentForNestedContainersWithTheSameOrientation,
@@ -241,55 +241,82 @@ func parseSimpleType<T>(_ raw: TOMLValueConvertible) -> T? {
     (raw.int as? T) ?? (raw.string as? T) ?? (raw.bool as? T)
 }
 
-func parseDynamicValue<T>(_ raw: TOMLValueConvertible, _ valueType: T.Type, _ backtrace: TomlBacktrace) -> ParsedToml<DynamicConfigValue<T>> {
+func parseDynamicValue<T>(
+    _ raw: TOMLValueConvertible,
+    _ valueType: T.Type,
+    _ initial: T,
+    _ backtrace: TomlBacktrace,
+    _ errors: inout [TomlParseError]
+) -> DynamicConfigValue<T> {
     if let simpleValue = parseSimpleType(raw) as T? {
-        return .success(.constant(simpleValue))
+        return .constant(simpleValue)
     } else if let array = raw.array {
-        let defaultValue = array.lazy.compactMap { parseSimpleType($0) as T? }.first
-
-        let rules: [ParsedToml<PerMonitorValue<T>>] = array.compactMap {
-            parsePerMonitorValue($0, backtrace)
+        guard !array.isEmpty else {
+            errors.append(.semantic(backtrace, "Array must not be empty"))
+            return .constant(initial)
         }
+
+        guard let defaultValue = array.last.flatMap({ parseSimpleType($0) as T? }) else {
+            errors.append(.semantic(backtrace, "The last item must be a default value (type: \(T.self))"))
+            return .constant(initial)
+        }
+
+        let rules: [PerMonitorValue<T>] = parsePerMonitorValues(TOMLArray(array.dropLast()), backtrace, &errors)
 
         guard !rules.isEmpty else {
-            return .failure(.semantic(backtrace, "Rules array must not be empty"))
+            errors.append(.semantic(backtrace, "Array must containt at least one monitor pattern"))
+            return .constant(initial)
         }
 
-        if let error = rules.compactMap(\.errorOrNil).first {
-            return .failure(error)
-        }
-
-        return .success(.perMonitor(rules.compactMap({ $0.getOrNil() }), default: defaultValue))
+        return .perMonitor(rules, default: defaultValue)
     } else {
-        return .failure(.semantic(backtrace, "Unsupported type: \(raw.type), expected: \(valueType) or array"))
+        errors.append(.semantic(backtrace, "Unsupported type: \(raw.type), expected: \(valueType) or array"))
+        return .constant(initial)
     }
 }
 
-func parsePerMonitorValue<T>(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<PerMonitorValue<T>>? {
-    guard raw.table != nil || parseSimpleType(raw) as T? != nil else {
-        return .failure(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))
-    }
+func parsePerMonitorValues<T>(_ array: TOMLArray, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [PerMonitorValue<T>] {
+    array.enumerated().compactMap { index, raw -> PerMonitorValue<T>? in
+        var backtrace = backtrace + .index(index)
 
-    guard let tableItem = raw.table else { return nil }
-
-    guard let table = tableItem["monitor"]?.table else {
-        return .failure(.semantic(backtrace, "Missing \"monitor\" table"))
-    }
-
-    return table.lazy.compactMap { key, value in
-        let backtrace = backtrace + .key("monitor") + .key(key)
-        let monitorDescriptionResult = parseMonitorDescription(key, backtrace)
-
-        guard let monitorDescription = monitorDescriptionResult.getOrNil() else {
-            return .failure(monitorDescriptionResult.errorOrNil ?? .semantic(backtrace, "Invalid monitor rule"))
+        guard let tableItem = raw.table else {
+            errors.append(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))
+            return nil
         }
 
-        guard let value = parseSimpleType(value) as T? else {
-            return .failure(expectedActualTypeError(expected: [.int, .bool, .string], actual: value.type, backtrace))
+        guard tableItem.keys.count == 1 else {
+            errors.append(.semantic(backtrace, "Table must contain exactly one key with monitor table"))
+            return nil
         }
 
-        return .success((description: monitorDescription, value: value))
-    }.first
+        guard let table = tableItem["monitor"]?.table else {
+            errors.append(.semantic(backtrace, "Missing monitor table"))
+            return nil
+        }
+
+        backtrace = backtrace + .key("monitor")
+
+        guard table.keys.count == 1 else {
+            errors.append(.semantic(backtrace, "Monitor table must contain exactly one key with monitor pattern"))
+            return nil
+        }
+
+        return table.lazy.compactMap { key, value in
+            let backtrace = backtrace + .key(key)
+            let monitorDescriptionResult = parseMonitorDescription(key, backtrace)
+
+            guard let monitorDescription = monitorDescriptionResult.getOrNil(appendErrorTo: &errors) else {
+                return nil
+            }
+
+            guard let value = parseSimpleType(value) as T? else {
+                errors.append(.semantic(backtrace, "Expected type is '\(T.self)'. But actual type is '\(value.type)'"))
+                return nil
+            }
+
+            return (description: monitorDescription, value: value) as PerMonitorValue<T>
+        }.first
+    }
 }
 
 func parseTomlArray(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<TOMLArray> {
@@ -440,7 +467,7 @@ private func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktra
     for (binding, rawCommand): (String, TOMLValueConvertible) in rawTable {
         let backtrace = backtrace + .key(binding)
         let binding = parseBinding(binding, backtrace)
-            .flatMap { (modifiers, key) -> ParsedToml<HotkeyBinding> in
+            .flatMap { modifiers, key -> ParsedToml<HotkeyBinding> in
                 parseCommandOrCommands(rawCommand).toParsedToml(backtrace).map { HotkeyBinding(modifiers, key, $0) }
             }
             .getOrNil(appendErrorTo: &errors)
@@ -493,7 +520,7 @@ indirect enum TomlBacktrace: CustomStringConvertible {
         }
     }
 
-    static func +(lhs: TomlBacktrace, rhs: TomlBacktrace) -> TomlBacktrace {
+    static func + (lhs: TomlBacktrace, rhs: TomlBacktrace) -> TomlBacktrace {
         if case .root = lhs {
             if case .key(let newRoot) = rhs {
                 return .rootKey(newRoot)

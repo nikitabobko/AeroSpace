@@ -69,8 +69,7 @@ private extension Window {
 
 private extension TilingContainer {
     func layoutTiles(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect) {
-        let monitor = monitors.first { $0.rect.contains(point) }
-        let gaps = ResolvedGaps(gaps: config.gaps, monitor: monitor)
+        let gaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.monitor)
         var point = point
         var virtualPoint = virtual.topLeftCorner
 
