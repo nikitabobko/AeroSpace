@@ -8,7 +8,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]]
+list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]]
 list-workspaces [-h|--help] --all
 list-workspaces [-h|--help] --focused
 
@@ -29,12 +29,16 @@ include::util/all-monitors-option.adoc[]
 Alias for "--monitor focused --visible".
 Always prints a single workspace
 
+include::util/monitor-option.adoc[]
+
 --visible [no]::
 Filter results to only print currently visible workspaces.
 `[no]` inverts the result.
 Prints multiple workspaces in multi-monitor setup
 
-include::util/monitor-option.adoc[]
+--empty [no]::
+Filter results to only print empty workspaces.
+`[no]` inverts the condition.
 
 // end::body[]
 

@@ -14,6 +14,9 @@ struct ListWorkspacesCommand: Command {
             if monitors.isEmpty { return false }
             result = result.filter { monitors.contains($0.monitor.rect.topLeftCorner) }
         }
+        if let empty = args.empty {
+            result = result.filter { $0.isEffectivelyEmpty == empty }
+        }
         state.stdout += result.map(\.name)
         return true
     }
