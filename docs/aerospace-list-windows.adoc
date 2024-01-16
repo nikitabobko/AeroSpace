@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-list-windows
 // tag::purpose[]
-:manpurpose: Prints windows that satisfy pattern
+:manpurpose: Prints windows that satisfy conditions
 // end::purpose[]
 
 == Synopsis

@@ -30,8 +30,6 @@ GUI](https://developer.apple.com/documentation/xcode/adding-capabilities-to-your
 
 ## Debug Build
 
-**Entry point scripts**
-
 - `build-debug.sh` - Build debug build to `.debug` dir
 - `run-tests.sh` - Run tests
 - `run-debug.sh` - Run debug build of AeroSpace.app
@@ -45,9 +43,6 @@ GUI](https://developer.apple.com/documentation/xcode/adding-capabilities-to-your
 
 ## Release Build
 
-**Entry point scripts**
-
-After you setup signing, you can build the release build:
 - `build-release.sh` - Build release build to `.release` dir
 - `install-release.sh` - Build and install release build to `/Applications/AeroSpace.app` and `~/.bin/aerospace`
 

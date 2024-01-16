@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-list-workspaces
 // tag::purpose[]
-:manpurpose: Prints workspaces that satisfy pattern
+:manpurpose: Prints workspaces that satisfy conditions
 // end::purpose[]
 
 == Synopsis
@@ -33,8 +33,8 @@ include::util/monitor-option.adoc[]
 
 --visible [no]::
 Filter results to only print currently visible workspaces.
-`[no]` inverts the result.
-Prints multiple workspaces in multi-monitor setup
+`[no]` inverts the condition.
+Several monitors can be visible in multi-monitor setup
 
 --empty [no]::
 Filter results to only print empty workspaces.

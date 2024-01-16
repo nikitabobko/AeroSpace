@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-list-monitors
 // tag::purpose[]
-:manpurpose: Prints monitors that satisfy pattern
+:manpurpose: Prints monitors that satisfy conditions
 // end::purpose[]
 
 == Synopsis
@@ -40,10 +40,10 @@ include::util/conditional-options-header.adoc[]
 
 --focused [no]::
 Filter results to only print the focused monitor.
-`[no]` inverts the result
+`[no]` inverts the condition
 
 --mouse [no]::
 Filter results to only print the monitor with the mouse.
-`[no]` inverts the result
+`[no]` inverts the condition
 
 include::util/man-footer.adoc[]
