@@ -6,7 +6,7 @@ private struct RawListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
         kind: .listWorkspaces,
         allowInConfig: false,
         help: """
-              USAGE: list-workspaces [-h|--help] --monitor \(_monitors) [--visible [no]]
+              USAGE: list-workspaces [-h|--help] --monitor \(_monitors) [--visible [no]] [--empty [no]]
                  OR: list-workspaces [-h|--help] --all
                  OR: list-workspaces [-h|--help] --focused
 
@@ -14,14 +14,16 @@ private struct RawListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
                 -h, --help               Print help
                 --all                    Alias for "--monitor all"
                 --focused                Alias for "--monitor focused --visible"
-                --visible [no]           Filter results to only print currently visible workspaces
                 --monitor \(_monitors)   Filter results to only print the workspaces that are attached to specified monitors
+                --visible [no]           Filter results to only print currently visible workspaces
+                --empty [no]             Filter results to only print empty workspaces. [no] inverts the condition
               """,
         options: [
             "--focused": trueBoolFlag(\.focused),
             "--all": trueBoolFlag(\.all),
 
             "--visible": boolFlag(\.real.visible),
+            "--empty": boolFlag(\.real.empty),
             "--monitor": ArgParser(\.real.onMonitors, parseMonitorIds)
         ],
         arguments: []
@@ -40,6 +42,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs, Equatable {
 
     public var onMonitors: [MonitorId] = []
     public var visible: Bool?
+    public var empty: Bool?
 }
 
 private extension RawListWorkspacesCmdArgs {
@@ -61,7 +64,7 @@ public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorksp
             case 1:
                 return .cmd(raw)
             case 0:
-                return .failure("'list-workspaces' mandatory option is not specified (--all|--focused|--monitor|--visible)")
+                return .failure("'list-workspaces' mandatory option is not specified (--all|--focused|--monitor)")
             default:
                 return .failure("Conflicting options: \(uniqueOptions.joined(separator: ", "))")
             }
@@ -71,7 +74,7 @@ public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorksp
                 return .cmd(ListWorkspacesCmdArgs(onMonitors: [.focused], visible: true))
             }
             if raw.all {
-                return .cmd(ListWorkspacesCmdArgs(onMonitors: [.all], visible: nil))
+                return .cmd(ListWorkspacesCmdArgs(onMonitors: [.all]))
             }
             return .cmd(raw.real)
         }

@@ -39,13 +39,6 @@ default-root-container-orientation = 'auto'
 # there is no way to observe the indent
 indent-for-nested-containers-with-the-same-orientation = 30
 
-# Layout of root containers of non-empty workspaces. The layout is applied only on startup
-# Possible values: smart|tiles|accordion
-# - 'tiles' and 'accordion' are self-describing
-# - 'smart' means some "smart logic". Currently, 3 and less windows will get 'tiles' layout,
-#   4 and more will get 'accordion' layout. 'smart' can change its behavior in future versions
-non-empty-workspaces-root-containers-layout-on-startup = 'smart'
-
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
 # - Constant:         outer-left = 8

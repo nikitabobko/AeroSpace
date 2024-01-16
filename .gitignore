@@ -6,6 +6,7 @@
 # IDK, AppCode randomly creates this EMPTY file. I have no idea what this is
 /default.profraw
 .DS_Store
+/.local.xcconfig
 
 # XCode User settings
 xcuserdata/

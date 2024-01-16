@@ -205,9 +205,12 @@ private func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // No
            app.id != "org.videolan.vlc" && // VLC has its own implementation of fullscreen
            app.id != "com.valvesoftware.steam" && // Steam doesn't show fullscreen button
            app.id != "org.gimp.gimp-2.10" && // Gimp doesn't show fullscreen button
+
+           // Terminal apps and Emacs have an option to hide their title bars
            app.id != "org.alacritty" &&
            app.id != "com.github.wez.wezterm" &&
-           app.id != "com.googlecode.iterm2" {
+           app.id != "com.googlecode.iterm2" &&
+           app.id != "org.gnu.Emacs" {
         return true
     }
     return false

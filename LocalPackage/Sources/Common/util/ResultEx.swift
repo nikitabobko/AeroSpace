@@ -9,6 +9,10 @@ public extension Result {
         }
     }
 
+    func filter(_ failure: @autoclosure () -> Failure, _ predicate: (Success) -> Bool) -> Self {
+        flatMap { succ in predicate(succ) ? .success(succ) : .failure(failure()) }
+    }
+
     func getOrNil() -> Success? {
         switch self {
         case .success(let success):

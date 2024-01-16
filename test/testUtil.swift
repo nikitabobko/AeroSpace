@@ -11,7 +11,7 @@ func setUpWorkspacesForTests() {
         afterStartupCommand: defaultConfig.afterStartupCommand,
         indentForNestedContainersWithTheSameOrientation: defaultConfig.indentForNestedContainersWithTheSameOrientation,
         enableNormalizationFlattenContainers: false, // Make layout tests more predictable
-        nonEmptyWorkspacesRootContainersLayoutOnStartup: .tiles, // Make layout tests more predictable
+        _nonEmptyWorkspacesRootContainersLayoutOnStartup: (), // Make layout tests more predictable
         defaultRootContainerLayout: .tiles, // Make default layout predictable
         defaultRootContainerOrientation: .horizontal, // Make default layout predictable
         startAtLogin: defaultConfig.startAtLogin,

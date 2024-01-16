@@ -53,7 +53,10 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
 **Values**
 - AeroSpace is targeted at advanced users and developers
 - Keyboard centric
-- Never break configuration files (Guaranteed once AeroSpace reaches 1.0 version)
+- Breaking changes (configuration files, CLI, behavior) are avoided as much as possible, but it must not let the software
+  stagnate. Thus breaking changes can happen, but with careful considerations and helpful message. [Semver](https://semver.org/)
+  major version is bumped in case of a breaking change (It's all guaranteed once AeroSpace reaches 1.0 version, until then
+  breaking changes just happen)
 - AeroSpace doesn't use GUI, unless necessarily
   - AeroSpace will never provide a GUI for configuration. For advanced users, it's easier to edit a configuration file in text
     editor rather than navigating through checkboxes in GUI.
