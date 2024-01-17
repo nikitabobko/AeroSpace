@@ -30,7 +30,7 @@ Public Beta. Feedback is very much welcome
   instead of relying on native macOS Spaces due
   to [their considerable limitations](https://nikitabobko.github.io/AeroSpace/guide.html#emulation-of-virtual-workspaces)
 - Plain text configuration (dotfiles friendly). See: [default-config.toml](https://nikitabobko.github.io/AeroSpace/config-examples.html#default-config)
-- ~~CLI scriptable~~ [[PLANNED]](https://github.com/nikitabobko/AeroSpace/issues/3)
+- CLI scriptable
 - Doesn't require disabling SIP (System Integrity Protection)
 - [Proper multi-monitor support](https://nikitabobko.github.io/AeroSpace/guide.html#multiple-monitors) (i3-like paradigm)
 - Status menu icon displays current workspace name
