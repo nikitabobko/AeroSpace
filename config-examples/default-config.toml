@@ -87,11 +87,11 @@ alt-j = 'focus down'
 alt-k = 'focus up'
 alt-l = 'focus right'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands.html#move-through
-alt-shift-h = 'move-through left'
-alt-shift-j = 'move-through down'
-alt-shift-k = 'move-through up'
-alt-shift-l = 'move-through right'
+# See: https://nikitabobko.github.io/AeroSpace/commands.html#move
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands.html#resize
 alt-shift-minus = 'resize smart -50'
