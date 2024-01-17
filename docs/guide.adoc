@@ -510,3 +510,8 @@ run = 'layout tiling'
 check-further-callbacks = true
 run = 'layout floating'
 ----
+
+=== Homebrew utilities in $PATH
+
+xref:commands.adoc#exec-and-forget[`exec-and-forget`] doesn't have Homebrew in its `$PATH` by default.
+See https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities

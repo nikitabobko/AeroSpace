@@ -84,7 +84,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             continue
         }
         if command?.isExec == true {
-            answerToClient(exitCode: 1, stderr: "exec commands are prohibited in CLI")
+            answerToClient(exitCode: 1, stderr: "exec-and-forget is prohibited in CLI")
             continue
         }
         if let command {
