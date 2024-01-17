@@ -511,8 +511,11 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#move-by-dragging-any-part-of-the-window">1. Move windows by dragging any part of the window</a></li>
-<li><a href="#disable-open-animations">2. Disable windows opening animations</a></li>
-<li><a href="#popular-apps-ids">3. List of popular and built-in applications IDs</a></li>
+<li><a href="#highlight-focused-windows-with-colored-borders">2. Highlight focused windows with colored borders</a></li>
+<li><a href="#disable-open-animations">3. Disable windows opening animations</a></li>
+<li><a href="#use-trackpad-gestures-to-switch-workspaces">4. Use trackpad gestures to switch workspaces</a></li>
+<li><a href="#show-aerospace-workspaces-in-sketchybar">5. Show AeroSpace workspaces in Sketchybar</a></li>
+<li><a href="#popular-apps-ids">6. List of popular and built-in applications IDs</a></li>
 </ul>
 </div>
 </div>
@@ -571,7 +574,27 @@ Feel free to open an issue or pull request to add it to this list!</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="disable-open-animations"><a class="anchor" href="#disable-open-animations"></a><a class="link" href="#disable-open-animations">2. Disable windows opening animations</a></h2>
+<h2 id="highlight-focused-windows-with-colored-borders"><a class="anchor" href="#highlight-focused-windows-with-colored-borders"></a><a class="link" href="#highlight-focused-windows-with-colored-borders">2. Highlight focused windows with colored borders</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To highlight the focused window with colored border you can use <a href="https://github.com/FelixKratz/JankyBorders">JankyBorders</a>.</p>
+</div>
+<div class="paragraph">
+<p>You can also use <code>after-startup-command</code> to start JankyBorders together with AeroSpace</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">after-startup-command</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span>
+<span class="tok-w">    </span><span class="tok-c1"># JankyBorders has a built-in detection of already running process,</span>
+<span class="tok-w">    </span><span class="tok-c1"># so it won&#39;t be run twice on AeroSpace restart</span>
+<span class="tok-w">    </span><span class="tok-s">&#39;exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0&#39;</span>
+<span class="tok-p">]</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="disable-open-animations"><a class="anchor" href="#disable-open-animations"></a><a class="link" href="#disable-open-animations">3. Disable windows opening animations</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Observable in Google Chrome</p>
@@ -584,7 +607,82 @@ Feel free to open an issue or pull request to add it to this list!</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="popular-apps-ids"><a class="anchor" href="#popular-apps-ids"></a><a class="link" href="#popular-apps-ids">3. List of popular and built-in applications IDs</a></h2>
+<h2 id="use-trackpad-gestures-to-switch-workspaces"><a class="anchor" href="#use-trackpad-gestures-to-switch-workspaces"></a><a class="link" href="#use-trackpad-gestures-to-switch-workspaces">4. Use trackpad gestures to switch workspaces</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can use <a href="https://folivora.ai/">BetterTouchTool</a> to assign trackpad gestures to switch workspaces</p>
+</div>
+<div class="paragraph">
+<p>The following commands focus next or previous workspaces on monitors where the mouse is located</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="bash"><span></span>aerospace<span class="tok-w"> </span>workspace<span class="tok-w"> </span><span class="tok-s2">&quot;</span><span class="tok-k">$(</span>aerospace<span class="tok-w"> </span>list-workspaces<span class="tok-w"> </span>--monitor<span class="tok-w"> </span>mouse<span class="tok-w"> </span>--visible<span class="tok-k">)</span><span class="tok-s2">&quot;</span><span class="tok-w"> </span><span class="tok-o">&amp;&amp;</span><span class="tok-w"> </span>aerospace<span class="tok-w"> </span>workspace<span class="tok-w"> </span>next
+
+aerospace<span class="tok-w"> </span>workspace<span class="tok-w"> </span><span class="tok-s2">&quot;</span><span class="tok-k">$(</span>aerospace<span class="tok-w"> </span>list-workspaces<span class="tok-w"> </span>--monitor<span class="tok-w"> </span>mouse<span class="tok-w"> </span>--visible<span class="tok-k">)</span><span class="tok-s2">&quot;</span><span class="tok-w"> </span><span class="tok-o">&amp;&amp;</span><span class="tok-w"> </span>aerospace<span class="tok-w"> </span>workspace<span class="tok-w"> </span>prev</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="show-aerospace-workspaces-in-sketchybar"><a class="anchor" href="#show-aerospace-workspaces-in-sketchybar"></a><a class="link" href="#show-aerospace-workspaces-in-sketchybar">5. Show AeroSpace workspaces in Sketchybar</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>You can integrate AeroSpace workspace indicators with <a href="https://github.com/FelixKratz/SketchyBar">Sketchybar</a>.
+Use these snippets as a starting point.</p>
+</div>
+<div class="listingblock">
+<div class="title">~/.aerospace.toml</div>
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Run Sketchybar together with AeroSpace</span>
+<span class="tok-c1"># sketchbar has a built-in detection of already running process,</span>
+<span class="tok-c1"># so it won&#39;t be run twice on AeroSpace restart</span>
+<span class="tok-n">after-startup-command</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;exec-and-forget /opt/homebrew/opt/sketchybar/bin/sketchybar&#39;</span><span class="tok-p">]</span>
+
+<span class="tok-c1"># Notify Sketchybar about workspace change</span>
+<span class="tok-n">exec-on-workspace-change</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;/bin/bash&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;-c&#39;</span><span class="tok-p">,</span>
+<span class="tok-w">    </span><span class="tok-s">&#39;/opt/homebrew/opt/sketchybar/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE&#39;</span>
+<span class="tok-p">]</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">~/.config/sketchybar/sketchybarrc</div>
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="bash"><span></span>sketchybar<span class="tok-w"> </span>--add<span class="tok-w"> </span>event<span class="tok-w"> </span>aerospace_workspace_change
+
+<span class="tok-k">for</span><span class="tok-w"> </span>sid<span class="tok-w"> </span><span class="tok-k">in</span><span class="tok-w"> </span><span class="tok-k">$(</span>aerospace<span class="tok-w"> </span>list-workspaces<span class="tok-w"> </span>--all<span class="tok-k">)</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-k">do</span>
+<span class="tok-w">    </span>sketchybar<span class="tok-w"> </span>--add<span class="tok-w"> </span>item<span class="tok-w"> </span>space.<span class="tok-nv">$sid</span><span class="tok-w"> </span>left<span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">        </span>--subscribe<span class="tok-w"> </span>space.<span class="tok-nv">$sid</span><span class="tok-w"> </span>aerospace_workspace_change<span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">        </span>--set<span class="tok-w"> </span>space.<span class="tok-nv">$sid</span><span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">        </span>background.color<span class="tok-o">=</span>0x44ffffff<span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">        </span>background.corner_radius<span class="tok-o">=</span><span class="tok-m">5</span><span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">        </span>background.height<span class="tok-o">=</span><span class="tok-m">20</span><span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">        </span>background.drawing<span class="tok-o">=</span>off<span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">        </span><span class="tok-nv">label</span><span class="tok-o">=</span><span class="tok-s2">&quot;</span><span class="tok-nv">$sid</span><span class="tok-s2">&quot;</span><span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">        </span><span class="tok-nv">click_script</span><span class="tok-o">=</span><span class="tok-s2">&quot;aerospace workspace </span><span class="tok-nv">$sid</span><span class="tok-s2">&quot;</span><span class="tok-w"> </span><span class="tok-se">\</span>
+<span class="tok-w">        </span><span class="tok-nv">script</span><span class="tok-o">=</span><span class="tok-s2">&quot;</span><span class="tok-nv">$CONFIG_DIR</span><span class="tok-s2">/plugins/aerospace.sh </span><span class="tok-nv">$sid</span><span class="tok-s2">&quot;</span>
+<span class="tok-k">done</span></code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">~/.config/sketchybar/plugins/aerospace.sh</div>
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="bash"><span></span><span class="tok-ch">#!/usr/bin/env bash</span>
+
+<span class="tok-c1"># make sure it&#39;s executable with:</span>
+<span class="tok-c1"># chmod +x ~/.config/sketchybar/plugins/aerospace.sh</span>
+
+<span class="tok-k">if</span><span class="tok-w"> </span><span class="tok-o">[</span><span class="tok-w"> </span><span class="tok-s2">&quot;</span><span class="tok-nv">$1</span><span class="tok-s2">&quot;</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s2">&quot;</span><span class="tok-nv">$FOCUSED_WORKSPACE</span><span class="tok-s2">&quot;</span><span class="tok-w"> </span><span class="tok-o">]</span><span class="tok-p">;</span><span class="tok-w"> </span><span class="tok-k">then</span>
+<span class="tok-w">    </span>sketchybar<span class="tok-w"> </span>--set<span class="tok-w"> </span><span class="tok-nv">$NAME</span><span class="tok-w"> </span>background.drawing<span class="tok-o">=</span>on
+<span class="tok-k">else</span>
+<span class="tok-w">    </span>sketchybar<span class="tok-w"> </span>--set<span class="tok-w"> </span><span class="tok-nv">$NAME</span><span class="tok-w"> </span>background.drawing<span class="tok-o">=</span>off
+<span class="tok-k">fi</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="popular-apps-ids"><a class="anchor" href="#popular-apps-ids"></a><a class="link" href="#popular-apps-ids">6. List of popular and built-in applications IDs</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The list is useful to compose custom <a href="guide.html#on-window-detected-callback">on-window-detected callback</a>.</p>
@@ -940,7 +1038,7 @@ Feel free to open an issue or pull request to add it to this list!</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-01-13 15:50:50 +0100
+Last updated 2024-01-17 21:39:25 +0100
 </div>
 </div>
 </body>

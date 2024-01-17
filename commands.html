@@ -514,15 +514,15 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#close-all-windows-but-current">2. close-all-windows-but-current</a></li>
 <li><a href="#enable">3. enable</a></li>
 <li><a href="#exec-and-forget">4. exec-and-forget</a></li>
-<li><a href="#exec-and-wait">5. exec-and-wait</a></li>
+<li><a href="#exec-and-wait">5. <span class="line-through">exec-and-wait</span>. DEPRECATED</a></li>
 <li><a href="#flatten-workspace-tree">6. flatten-workspace-tree</a></li>
 <li><a href="#focus">7. focus</a></li>
 <li><a href="#fullscreen">8. fullscreen</a></li>
 <li><a href="#join-with">9. join-with</a></li>
 <li><a href="#layout">10. layout</a></li>
 <li><a href="#mode">11. mode</a></li>
-<li><a href="#move-node-to-workspace">12. move-node-to-workspace</a></li>
-<li><a href="#move-through">13. move-through</a></li>
+<li><a href="#move-through">12. move</a></li>
+<li><a href="#move-node-to-workspace">13. move-node-to-workspace</a></li>
 <li><a href="#move-workspace-to-monitor">14. move-workspace-to-monitor</a></li>
 <li><a href="#reload-config">15. reload-config</a></li>
 <li><a href="#resize">16. resize</a></li>
@@ -532,7 +532,9 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#query-commands">20. Query commands</a>
 <ul class="sectlevel2">
 <li><a href="#list-apps">20.1. list-apps</a></li>
-<li><a href="#version">20.2. version</a></li>
+<li><a href="#list-monitors">20.2. list-monitors</a></li>
+<li><a href="#list-windows">20.3. list-windows</a></li>
+<li><a href="#list-workspaces">20.4. list-workspaces</a></li>
 </ul>
 </li>
 </ul>
@@ -637,8 +639,10 @@ You might want to use the command from CLI for scripting purposes</p>
 Stdout, stderr and exit code are ignored.</p>
 </div>
 <div class="paragraph">
-<p>For example, you can use this command to launch applications:<br>
-<code>exec-and-forget open -n /System/Applications/Utilities/Terminal.app</code></p>
+<p>For example, you can use this command to launch applications:<br></p>
+</div>
+<div class="verseblock">
+<pre class="content">    exec-and-forget open -n /System/Applications/Utilities/Terminal.app</pre>
 </div>
 <div class="ulist">
 <ul>
@@ -653,7 +657,7 @@ Stdout, stderr and exit code are ignored.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="exec-and-wait"><a class="anchor" href="#exec-and-wait"></a><a class="link" href="#exec-and-wait">5. exec-and-wait</a></h2>
+<h2 id="exec-and-wait"><a class="anchor" href="#exec-and-wait"></a><a class="link" href="#exec-and-wait">5. <span class="line-through">exec-and-wait</span>. DEPRECATED</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -665,26 +669,10 @@ Stdout, stderr and exit code are ignored.</p>
 Stdout, stderr and exit code are ignored.</p>
 </div>
 <div class="paragraph">
-<p><strong>Please prefer <code>exec-and-forget</code></strong>, unless you need to wait for the termination.</p>
+<p><strong>DEPRECATED SINCE 0.8.0-Beta</strong>. Deprecated in favor of combination of <code>exec-and-forget</code> and CLI.</p>
 </div>
 <div class="paragraph">
-<p>You might want to wait for the termination if you have a list of commands, and you want <code>&lt;bash-script&gt;</code> to exit until you run the next command.</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The command is available in config</p>
-</li>
-<li>
-<p>The command is <strong>NOT</strong> available in CLI</p>
-</li>
-</ul>
-</div>
-<div class="paragraph lead">
-<p><strong>EXAMPLES</strong></p>
-</div>
-<div class="paragraph">
-<p>Suppose that you have this binding in your config:</p>
+<p>Given this <code>exec-and-wait</code> command:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -692,8 +680,17 @@ Stdout, stderr and exit code are ignored.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>It will open up Terminal.app and make it float.
-<code>sleep 1</code> is still required because <code>open</code> returns before the window appears.</p>
+<p>You can rewrite it to:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">alt-enter</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;&#39;&#39;exec-and-forget</span>
+<span class="tok-s">set -e # Exit if one of commands exit with non-zero exit code</span>
+<span class="tok-s">open -n /System/Applications/Utilities/Terminal.app</span>
+<span class="tok-s">sleep 1</span>
+<span class="tok-s">aerospace layout floating</span>
+<span class="tok-s">&#39;&#39;&#39;</span></code></pre>
+</div>
 </div>
 </div>
 </div>
@@ -726,7 +723,7 @@ Stdout, stderr and exit code are ignored.</p>
 <p>Sets focus to the nearest window in in the given direction.</p>
 </div>
 <div class="paragraph">
-<p><a href="https://i3wm.org/docs/userguide.html#_focusing_moving_containers">Contrary to i3</a>, <code>focus</code> command doesn&#8217;t have a separate argument to focus floating windows.
+<p>Contrary to i3, <code>focus</code> command doesn&#8217;t have a separate argument to focus floating windows.
 From <code>focus</code> command perspective, floating windows are part of <a href="guide.html#tree">the tree</a>.
 The floating window parent container is determined as the smallest tiling container that contains the center of the floating window.</p>
 </div>
@@ -734,7 +731,8 @@ The floating window parent container is determined as the smallest tiling contai
 <p>This technique eliminates the need for an additional binding for floating windows.</p>
 </div>
 <div class="paragraph">
-<p><code>focus child|parent</code> <a href="https://github.com/nikitabobko/AeroSpace/issues/5">isn&#8217;t supported</a> because the necessaty of this operation is under the question.</p>
+<p><code>focus child|parent</code> isn&#8217;t supported because the necessity of this operation is under the question.
+<a href="https://github.com/nikitabobko/AeroSpace/issues/5" class="bare">https://github.com/nikitabobko/AeroSpace/issues/5</a></p>
 </div>
 <div class="paragraph lead">
 <p><strong>OPTIONS</strong></p>
@@ -755,7 +753,7 @@ The default is: <code>workspace</code></p>
 <dd>
 <p>Defines the behavior when requested to cross the <code>&lt;boundary&gt;</code>.<br>
 <code>&lt;action&gt;</code> possible values: <code>(stop|wrap-around-the-workspace|wrap-around-all-monitors)</code><br>
-The default is: <code>wrap-around-the-workspace</code></p>
+The default is: <span class="verse">wrap-around-the-workspace</span></p>
 </dd>
 </dl>
 </div>
@@ -865,24 +863,11 @@ There is an observation that the only reason why you might want to split a node 
 </div>
 </div>
 <div class="sect1">
-<h2 id="move-node-to-workspace"><a class="anchor" href="#move-node-to-workspace"></a><a class="link" href="#move-node-to-workspace">12. move-node-to-workspace</a></h2>
+<h2 id="move-through"><a class="anchor" href="#move-through"></a><a class="link" href="#move-through">12. move</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">move-node-to-workspace [-h|--help] &lt;target-workspace-name&gt;</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Moves currently focused window to the specified workspace</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="move-through"><a class="anchor" href="#move-through"></a><a class="link" href="#move-through">13. move-through</a></h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="nowrap">move-through [-h|--help] (left|down|up|right) [floating_pixel]</pre>
+<pre class="nowrap">move [-h|--help] (left|down|up|right) [floating_pixel]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -892,17 +877,8 @@ There is an observation that the only reason why you might want to split a node 
 <p>The optional <code>floating_pixel</code> argument specifies how far the window should be moved if it is floating.
 The default is 50 pixels</p>
 </div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-This command is an analog of <a href="https://i3wm.org/docs/userguide.html#move_direction">i3&#8217;s move command</a>
-</td>
-</tr>
-</table>
+<div class="paragraph">
+<p>Deprecated name: <code>move-through</code></p>
 </div>
 <div class="paragraph lead">
 <p><strong>EXAMPLES</strong></p>
@@ -919,7 +895,7 @@ This command is an analog of <a href="https://i3wm.org/docs/userguide.html#move_
 </div>
 </div>
 <div class="paragraph">
-<p><code><strong>move-through right</strong></code> will result in the following layout</p>
+<p><code><strong>move right</strong></code> will result in the following layout</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -942,7 +918,7 @@ This command is an analog of <a href="https://i3wm.org/docs/userguide.html#move_
 </div>
 </div>
 <div class="paragraph">
-<p><code><strong>move-through right</strong></code> will result in the following layout</p>
+<p><code><strong>move right</strong></code> will result in the following layout</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -968,7 +944,7 @@ This command is an analog of <a href="https://i3wm.org/docs/userguide.html#move_
 </div>
 </div>
 <div class="paragraph">
-<p><code><strong>move-through left</strong></code> will result in the following layout</p>
+<p><code><strong>move left</strong></code> will result in the following layout</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -984,7 +960,7 @@ This command is an analog of <a href="https://i3wm.org/docs/userguide.html#move_
 <li>
 <p><strong>Implicit container example</strong></p>
 <div class="paragraph">
-<p>In some cases, <code><strong>move-through</strong></code> needs to implicitly create a container to fulfill your command.</p>
+<p>In some cases, <code><strong>move</strong></code> needs to implicitly create a container to fulfill your command.</p>
 </div>
 <div class="paragraph">
 <p>Given this layout</p>
@@ -998,7 +974,7 @@ This command is an analog of <a href="https://i3wm.org/docs/userguide.html#move_
 </div>
 </div>
 <div class="paragraph">
-<p><code><strong>move-through up</strong></code> will result in the following layout</p>
+<p><code><strong>move up</strong></code> will result in the following layout</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1018,11 +994,28 @@ This command is an analog of <a href="https://i3wm.org/docs/userguide.html#move_
 </div>
 </div>
 <div class="sect1">
+<h2 id="move-node-to-workspace"><a class="anchor" href="#move-node-to-workspace"></a><a class="link" href="#move-node-to-workspace">13. move-node-to-workspace</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">move-node-to-workspace [-h|--help] [--wrap-around] (next|prev)
+move-node-to-workspace [-h|--help] &lt;workspace-name&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Moves currently focused window to the specified workspace</p>
+</div>
+<div class="paragraph">
+<p><code>(next|prev)</code> is identical to <code>workspace (next|prev)</code></p>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="move-workspace-to-monitor"><a class="anchor" href="#move-workspace-to-monitor"></a><a class="link" href="#move-workspace-to-monitor">14. move-workspace-to-monitor</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">move-workspace-to-monitor [-h|--help] (next|prev)</pre>
+<pre class="nowrap">move-workspace-to-monitor [-h|--help] --wrap-around (next|prev)</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1146,23 +1139,29 @@ Consider using <code>join-with</code> if you want to keep <code>enable-normaliza
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">workspace [-h|--help] (next|prev)
-workspace [-h|--help] [--auto-back-and-forth] &lt;target-workspace-name&gt;</pre>
+<pre class="nowrap">workspace [-h|--help] [--wrap-around] (next|prev)
+workspace [-h|--help] [--auto-back-and-forth] &lt;workspace-name&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Activates the specified workspace</p>
+<p><strong>1. &lt;workspace-name&gt; syntax</strong></p>
 </div>
 <div class="paragraph">
-<p>Workspaces can be switched in alphabetical order</p>
+<p>Focuses the specified workspace</p>
+</div>
+<div class="paragraph">
+<p><strong>2. (next|prev) syntax</strong></p>
+</div>
+<div class="paragraph">
+<p>Focuses next or previous workspace in <strong>the list</strong>.</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code><strong>workspace next</strong></code> activates the next alphabetical workspace</p>
+<p>If stdin is not TTY and stdin contains non whitespace characters then <strong>the list</strong> is taken from stdin</p>
 </li>
 <li>
-<p><code><strong>workspace prev</strong></code> activates the previous alphabetical workspace</p>
+<p>Otherwise, <strong>the list</strong> is defined as all workspaces on focused monitor in alphabetical order</p>
 </li>
 </ul>
 </div>
@@ -1178,6 +1177,10 @@ workspace [-h|--help] [--auto-back-and-forth] &lt;target-workspace-name&gt;</pre
 <dt class="hdlist1">--auto-back-and-forth</dt>
 <dd>
 <p>Automatic 'back-and-forth' when switching to already focused workspace</p>
+</dd>
+<dt class="hdlist1">--wrap-around</dt>
+<dd>
+<p>Make it possible to jump between first and last workspaces using <code>(next|prev)</code></p>
 </dd>
 </dl>
 </div>
@@ -1221,7 +1224,13 @@ workspace [-h|--help] [--auto-back-and-forth] &lt;target-workspace-name&gt;</pre
 </div>
 </div>
 <div class="paragraph">
-<p>Prints the list of ordinary applications that appears in the Dock and may have a user interface</p>
+<p>Prints the list of running applications that appears in the Dock and may have a user interface</p>
+</div>
+<div class="paragraph">
+<p>The command is useful to inspect list of applications to compose filter for <a href="guide.html#on-window-detected-callback">on-window-detected callback</a></p>
+</div>
+<div class="paragraph lead">
+<p><strong>OUTPUT FORMAT</strong></p>
 </div>
 <div class="paragraph">
 <p>Output format is the table with the following columns:</p>
@@ -1251,21 +1260,264 @@ workspace [-h|--help] [--auto-back-and-forth] &lt;target-workspace-name&gt;</pre
 </div>
 </div>
 <div class="paragraph">
-<p>The command is useful to inspect list of applications to compose filter for <a href="guide.html#on-window-detected-callback">on-window-detected</a></p>
+<p>You can use <code>awk</code> to get values of particular column: <code>awk -F '|' '{print $2}'</code></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="list-monitors"><a class="anchor" href="#list-monitors"></a><a class="link" href="#list-monitors">20.2. list-monitors</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">list-monitors [-h|--help] [--focused [no]] [--mouse [no]]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prints monitors that satisfy conditions</p>
+</div>
+<div class="paragraph lead">
+<p><strong>OUTPUT FORMAT</strong></p>
+</div>
+<div class="paragraph">
+<p>Output format is the table with 2 columns:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Monitor unique sequence ID (ID orders monitors from left to right)</p>
+</li>
+<li>
+<p>Monitor name</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Output example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">1 | Built-in Retina Display
+2 | DELL U2723QE</pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Note</div>
+</td>
+<td class="content">
+monitor sequence ID may change if you plug or unplug monitors
+</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>You can use <code>awk</code> to get values of particular column: <code>awk -F '|' '{print $2}'</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="version"><a class="anchor" href="#version"></a><a class="link" href="#version">20.2. version</a></h3>
+<h3 id="list-windows"><a class="anchor" href="#list-windows"></a><a class="link" href="#list-windows">20.3. list-windows</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">version [-h|--help]</pre>
+<pre class="nowrap">list-windows [-h|--help] --workspace &lt;workspace&gt;... [--monitor &lt;monitor&gt;...]
+             [--pid &lt;pid&gt;] [--app-id &lt;app-id&gt;]
+list-windows [-h|--help] --monitor &lt;monitor&gt;... [--workspace &lt;workspace&gt;...]
+             [--pid &lt;pid&gt;] [--app-id &lt;app-id&gt;]
+list-windows [-h|--help] --all
+list-windows [-h|--help] --focused</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Prints the version and commit hash of AeroSpace</p>
+<p>Prints windows that satisfy conditions</p>
+</div>
+<div class="paragraph lead">
+<p><strong>OUTPUT FORMAT</strong></p>
+</div>
+<div class="paragraph">
+<p>Output format is table with three columns:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Window ID</p>
+</li>
+<li>
+<p>App name</p>
+</li>
+<li>
+<p>Window title</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Output Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">5010 | AppCode   | AeroSpace – aerospace-list-windows.adoc
+5360 | AppCode   | Git - AeroSpace
+2412 | Alacritty | /Users/bobko $ ta
+5046 | Xcode     | AeroSpace — ListWorkspacesCommand.swift</pre>
+</div>
+</div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+<dt class="hdlist1">--all</dt>
+<dd>
+<p>Alias for <em>--monitor all</em>.
+Please use this option <strong>with cautious</strong>.
+Use it when you really need to get workspaces/windows from <strong>all monitors</strong>.</p>
+<div class="paragraph">
+<p>For multi-monitor setup <em>--monitor focused</em> is almost always a preferred option.
+If you&#8217;re automating something then you don&#8217;t want to mess up with workspaces/windows on a different monitor.</p>
+</div>
+<div class="paragraph">
+<p>With great power comes great responsibility.</p>
+</div>
+</dd>
+<dt class="hdlist1">--focused</dt>
+<dd>
+<p>Print the focused window.
+Please note that it is possible for no window to be in focus.
+In that case, error is reported.</p>
+</dd>
+<dt class="hdlist1">--workspace &lt;workspaces&gt;</dt>
+<dd>
+<p>Filter results to only print windows that belong to specified workspaces.
+<code>&lt;workspaces&gt;</code> is a comma-separated list of workspace names.</p>
+<div class="paragraph">
+<p>Possible values:<br></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Workspace name</p>
+</li>
+<li>
+<p>"visible" is a special workspace name that represents currently visible workspaces</p>
+</li>
+<li>
+<p>"focused" is a special workspace name that represents currently focused workspace</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">--monitor &lt;monitors&gt;</dt>
+<dd>
+<p>Filter results to only print workspaces/windows that are attached to specified monitors.
+<code>&lt;monitors&gt;</code> is a comma separated list of monitor IDs.<br></p>
+<div class="paragraph">
+<p>Possible monitors IDs:<br></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>1-based index of a monitor as if monitors were ordered horizontally from left to right</p>
+</li>
+<li>
+<p>"all" is a special monitor ID that represents all monitors</p>
+</li>
+<li>
+<p>"mouse" is a special monitor ID that represents monitor with the mouse</p>
+</li>
+<li>
+<p>"focused" is a special monitor ID that represents currently focused monitor</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">--pid &lt;pid&gt;</dt>
+<dd>
+<p>Filter results to only print windows that belong to the Application with specified <code>&lt;pid&gt;</code></p>
+</dd>
+<dt class="hdlist1">--app-id &lt;app-id&gt;</dt>
+<dd>
+<p>Filter results to only print windows that belong to the Application with specified Bundle ID</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="list-workspaces"><a class="anchor" href="#list-workspaces"></a><a class="link" href="#list-workspaces">20.4. list-workspaces</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">list-workspaces [-h|--help] --monitor &lt;monitor&gt;... [--visible [no]] [--empty [no]]
+list-workspaces [-h|--help] --all
+list-workspaces [-h|--help] --focused</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Prints workspaces that satisfy conditions</p>
+</div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+<dt class="hdlist1">--all</dt>
+<dd>
+<p>Alias for <em>--monitor all</em>.
+Please use this option <strong>with cautious</strong>.
+Use it when you really need to get workspaces/windows from <strong>all monitors</strong>.</p>
+<div class="paragraph">
+<p>For multi-monitor setup <em>--monitor focused</em> is almost always a preferred option.
+If you&#8217;re automating something then you don&#8217;t want to mess up with workspaces/windows on a different monitor.</p>
+</div>
+<div class="paragraph">
+<p>With great power comes great responsibility.</p>
+</div>
+</dd>
+<dt class="hdlist1">--focused</dt>
+<dd>
+<p>Alias for "--monitor focused --visible".
+Always prints a single workspace</p>
+</dd>
+<dt class="hdlist1">--monitor &lt;monitors&gt;</dt>
+<dd>
+<p>Filter results to only print workspaces/windows that are attached to specified monitors.
+<code>&lt;monitors&gt;</code> is a comma separated list of monitor IDs.<br></p>
+<div class="paragraph">
+<p>Possible monitors IDs:<br></p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>1-based index of a monitor as if monitors were ordered horizontally from left to right</p>
+</li>
+<li>
+<p>"all" is a special monitor ID that represents all monitors</p>
+</li>
+<li>
+<p>"mouse" is a special monitor ID that represents monitor with the mouse</p>
+</li>
+<li>
+<p>"focused" is a special monitor ID that represents currently focused monitor</p>
+</li>
+</ol>
+</div>
+</dd>
+<dt class="hdlist1">--visible [no]</dt>
+<dd>
+<p>Filter results to only print currently visible workspaces.
+<code>[no]</code> inverts the condition.
+Several monitors can be visible in multi-monitor setup</p>
+</dd>
+<dt class="hdlist1">--empty [no]</dt>
+<dd>
+<p>Filter results to only print empty workspaces.
+<code>[no]</code> inverts the condition.</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -1273,7 +1525,7 @@ workspace [-h|--help] [--auto-back-and-forth] &lt;target-workspace-name&gt;</pre
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-01-13 15:50:50 +0100
+Last updated 2024-01-17 21:39:25 +0100
 </div>
 </div>
 </body>

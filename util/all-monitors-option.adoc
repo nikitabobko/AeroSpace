@@ -1,0 +1,9 @@
+--all::
+Alias for _--monitor all_.
+Please use this option *with cautious*.
+Use it when you really need to get workspaces/windows from *all monitors*.
++
+For multi-monitor setup _--monitor focused_ is almost always a preferred option.
+If you're automating something then you don't want to mess up with workspaces/windows on a different monitor.
++
+With great power comes great responsibility.

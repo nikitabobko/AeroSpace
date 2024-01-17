@@ -34,6 +34,13 @@ default-root-container-layout = 'tiles'
 #               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
+# Gaps between windows (inner-*) and between monitor edges (outer-*).
+# Possible values:
+# - Constant:     gaps.outer.top = 8
+# - Per monitor:  gaps.outer.top = [{ monitor.main = 16 }, { monitor."some-pattern" = 32 }, 24]
+#                 In this example, 24 is a default value when there is no match.
+#                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
+#                 See: https://nikitabobko.github.io/AeroSpace/guide.html#assign-workspaces-to-monitors
 gaps.inner.horizontal = 0
 gaps.inner.vertical =   0
 gaps.outer.left =       0
@@ -45,13 +52,6 @@ gaps.outer.right =      0
 # If you have 'enable-normalization-opposite-orientation-for-nested-containers' enabled then
 # there is no way to observe the indent
 indent-for-nested-containers-with-the-same-orientation = 30
-
-# Layout of root containers of non-empty workspaces. The layout is applied only on startup
-# Possible values: smart|tiles|accordion
-# - 'tiles' and 'accordion' are self-describing
-# - 'smart' means some "smart logic". Currently, 3 and less windows will get 'tiles' layout,
-#   4 and more will get 'accordion' layout. 'smart' can change its behavior in future versions
-non-empty-workspaces-root-containers-layout-on-startup = 'smart'
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes
@@ -168,7 +168,7 @@ alt-shift-z = 'move-node-to-workspace Z'
 # See: https://nikitabobko.github.io/AeroSpace/commands.html#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
 # See: https://nikitabobko.github.io/AeroSpace/commands.html#move-workspace-to-monitor
-alt-shift-tab = 'move-workspace-to-monitor next'
+alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
 # See: https://nikitabobko.github.io/AeroSpace/commands.html#mode
 alt-shift-semicolon = 'mode service'

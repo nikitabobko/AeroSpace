@@ -512,9 +512,11 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <ul class="sectlevel1">
 <li><a href="#configuring-aerospace">1. Configuring AeroSpace</a>
 <ul class="sectlevel2">
-<li><a href="#binding-modes">1.1. Binding modes</a></li>
-<li><a href="#commands">1.2. Commands</a></li>
-<li><a href="#default-bindings">1.3. Default bindings</a></li>
+<li><a href="#config-location">1.1. Config location</a></li>
+<li><a href="#config-samples">1.2. Config samples</a></li>
+<li><a href="#binding-modes">1.3. Binding modes</a></li>
+<li><a href="#commands">1.4. Commands</a></li>
+<li><a href="#default-bindings">1.5. Default bindings</a></li>
 </ul>
 </li>
 <li><a href="#tree">2. Tree</a>
@@ -530,7 +532,12 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#a-note-on-displays-have-separate-spaces">3.2. A note on &#8216;Displays have separate Spaces&#8217;</a></li>
 </ul>
 </li>
-<li><a href="#on-window-detected-callback">4. &#8216;on-window-detected&#8217; callback</a></li>
+<li><a href="#callbacks">4. Callbacks</a>
+<ul class="sectlevel2">
+<li><a href="#on-window-detected-callback">4.1. 'on-window-detected' callback</a></li>
+<li><a href="#exec-on-workspace-change-callback">4.2. 'exec-on-workspace-change' callback</a></li>
+</ul>
+</li>
 <li><a href="#multiple-monitors">5. Multiple monitors</a>
 <ul class="sectlevel2">
 <li><a href="#assign-workspaces-to-monitors">5.1. Assign workspaces to monitors</a></li>
@@ -584,9 +591,30 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div class="sect1">
 <h2 id="configuring-aerospace"><a class="anchor" href="#configuring-aerospace"></a><a class="link" href="#configuring-aerospace">1. Configuring AeroSpace</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="config-location"><a class="anchor" href="#config-location"></a><a class="link" href="#config-location">1.1. Config location</a></h3>
 <div class="paragraph">
-<p>AeroSpace will read config file from <code>~/.aerospace.toml</code>.
-Please see the following config samples:</p>
+<p>AeroSpace tries to find the config in two locations:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>~/.aerospace.toml</code></p>
+</li>
+<li>
+<p><code>${XDG_CONFIG_HOME}/aerospace/aerospace.toml</code>
+(<code>XDG_CONFIG_HOME</code> fallbacks to <code>~/.config</code>, if not presented)</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>If the config is found in more than one location then the ambiguity is reported.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="config-samples"><a class="anchor" href="#config-samples"></a><a class="link" href="#config-samples">1.2. Config samples</a></h3>
+<div class="paragraph">
+<p>Please see the following config samples:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -610,8 +638,9 @@ Non-trivial configuration options are mentioned further in this guide.</p>
 TOML is easy to read, and it supports comments.
 See <a href="https://toml.io/en/v1.0.0">TOML spec for more info</a></p>
 </div>
+</div>
 <div class="sect2">
-<h3 id="binding-modes"><a class="anchor" href="#binding-modes"></a><a class="link" href="#binding-modes">1.1. Binding modes</a></h3>
+<h3 id="binding-modes"><a class="anchor" href="#binding-modes"></a><a class="link" href="#binding-modes">1.3. Binding modes</a></h3>
 <div class="paragraph">
 <p>You can create multiple sets of bindings by creating different binding modes.
 When you switch to a different binding mode, all the bindings from the current mode are deactivated, and only the bindings specified in the new mode become active.
@@ -637,7 +666,7 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="commands"><a class="anchor" href="#commands"></a><a class="link" href="#commands">1.2. Commands</a></h3>
+<h3 id="commands"><a class="anchor" href="#commands"></a><a class="link" href="#commands">1.4. Commands</a></h3>
 <div class="paragraph">
 <p>Commands is the thing that you use to manipulate AeroSpace and query its state.</p>
 </div>
@@ -651,7 +680,10 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[mode.main.binding]</span>
-<span class="tok-n">alt-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace 1&#39;</span><span class="tok-w"> </span><span class="tok-c1"># Bind alt-1 key to switch to workspace 1</span></code></pre>
+<span class="tok-c1"># Bind alt-1 key to switch to workspace 1</span>
+<span class="tok-n">alt-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace 1&#39;</span>
+<span class="tok-c1"># Or bind a sequence of commands</span>
+<span class="tok-n">alt-shift-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;move-node-to-workspace 1&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace 1&#39;</span><span class="tok-p">]</span></code></pre>
 </div>
 </div>
 </li>
@@ -670,7 +702,7 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="default-bindings"><a class="anchor" href="#default-bindings"></a><a class="link" href="#default-bindings">1.3. Default bindings</a></h3>
+<h3 id="default-bindings"><a class="anchor" href="#default-bindings"></a><a class="link" href="#default-bindings">1.5. Default bindings</a></h3>
 <div class="paragraph">
 <p>AeroSpace comes with the default bindings. See <code>mode.main.binding</code> section in <a href="config-examples.html#default-config">the default config</a>.</p>
 </div>
@@ -768,7 +800,7 @@ You use <a href="commands.html#focus">focus command</a> to do that.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><a href="commands.html#move-through">move-through</a></p>
+<p><a href="commands.html#move">move</a></p>
 </li>
 <li>
 <p><a href="commands.html#join-with">join-with</a></p>
@@ -800,7 +832,7 @@ You use <a href="commands.html#focus">focus command</a> to do that.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>From the previous section, you’re already familiar with the <code>tiles</code> layout.</p>
+<p><a href="#tree">From the previous section</a>, you’re already familiar with the <code>tiles</code> layout.</p>
 </div>
 <div class="paragraph">
 <p>Accordion is a layout where windows are placed on top of each other.</p>
@@ -989,7 +1021,7 @@ That means, that if AeroSpace crashes badly you will still be able to manually "
 </table>
 </div>
 <div class="paragraph">
-<p>The supposed workflow of using AeroSpace workspaces is to only have one macOS Space (or as many as monitors you have, if <code>Displays have separate Spaces</code> is enabled) and don’t interact with macOS Spaces anymore.</p>
+<p>The intended workflow of using AeroSpace workspaces is to only have one macOS Space (or as many monitors you have, if <code>Displays have separate Spaces</code> is enabled) and don’t interact with macOS Spaces anymore.</p>
 </div>
 <div class="sect2">
 <h3 id="a-note-on-mission-control"><a class="anchor" href="#a-note-on-mission-control"></a><a class="link" href="#a-note-on-mission-control">3.1. A note on mission control</a></h3>
@@ -1046,8 +1078,10 @@ It works equally good whether this option is enabled or disabled.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="on-window-detected-callback"><a class="anchor" href="#on-window-detected-callback"></a><a class="link" href="#on-window-detected-callback">4. &#8216;on-window-detected&#8217; callback</a></h2>
+<h2 id="callbacks"><a class="anchor" href="#callbacks"></a><a class="link" href="#callbacks">4. Callbacks</a></h2>
 <div class="sectionbody">
+<div class="sect2">
+<h3 id="on-window-detected-callback"><a class="anchor" href="#on-window-detected-callback"></a><a class="link" href="#on-window-detected-callback">4.1. 'on-window-detected' callback</a></h3>
 <div class="paragraph">
 <p>You can use <code>on-window-detected</code> callback to run commands every time a new window is detected.</p>
 </div>
@@ -1198,6 +1232,39 @@ Some windows initialize their title after the window appears.
 </div>
 </li>
 </ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="exec-on-workspace-change-callback"><a class="anchor" href="#exec-on-workspace-change-callback"></a><a class="link" href="#exec-on-workspace-change-callback">4.2. 'exec-on-workspace-change' callback</a></h3>
+<div class="paragraph">
+<p><code>exec-on-workspace-change</code> callback allows to run arbitrary process when workspace changes.
+It may be useful for integrating with bars.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Notify Sketchybar about workspace change</span>
+<span class="tok-n">exec-on-workspace-change</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;/bin/bash&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;-c&#39;</span><span class="tok-p">,</span>
+<span class="tok-w">    </span><span class="tok-s">&#39;/opt/homebrew/opt/sketchybar/bin/sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE&#39;</span>
+<span class="tok-p">]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The process has access to the following environment variables:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>AEROSPACE_FOCUSED_WORKSPACE</code> - the workspace user switched to</p>
+</li>
+<li>
+<p><code>AEROSPACE_PREV_WORKSPACE</code> - the workspace user switched from</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>For a more elaborate example on how to integrate with Sketchybar see
+<a href="goodness.html#show-aerospace-workspaces-in-sketchybar">goodness.html</a></p>
+</div>
 </div>
 </div>
 </div>
@@ -1391,7 +1458,7 @@ If you find that some windows are not handled properly please <a href="https://g
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-01-13 15:50:50 +0100
+Last updated 2024-01-17 21:39:25 +0100
 </div>
 </div>
 </body>

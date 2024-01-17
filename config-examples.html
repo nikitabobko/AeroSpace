@@ -604,6 +604,13 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-c1">#               tall monitor (anything higher than wide) gets vertical orientation</span>
 <span class="tok-n">default-root-container-orientation</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;auto&#39;</span>
 
+<span class="tok-c1"># Gaps between windows (inner-*) and between monitor edges (outer-*).</span>
+<span class="tok-c1"># Possible values:</span>
+<span class="tok-c1"># - Constant:     gaps.outer.top = 8</span>
+<span class="tok-c1"># - Per monitor:  gaps.outer.top = [{ monitor.main = 16 }, { monitor.&quot;some-pattern&quot; = 32 }, 24]</span>
+<span class="tok-c1">#                 In this example, 24 is a default value when there is no match.</span>
+<span class="tok-c1">#                 Monitor pattern is the same as for &#39;workspace-to-monitor-force-assignment&#39;.</span>
+<span class="tok-c1">#                 See: https://nikitabobko.github.io/AeroSpace/guide.html#assign-workspaces-to-monitors</span>
 <span class="tok-n">gaps</span><span class="tok-p">.</span><span class="tok-n">inner</span><span class="tok-p">.</span><span class="tok-n">horizontal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span>
 <span class="tok-n">gaps</span><span class="tok-p">.</span><span class="tok-n">inner</span><span class="tok-p">.</span><span class="tok-n">vertical</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">   </span><span class="tok-mi">0</span>
 <span class="tok-n">gaps</span><span class="tok-p">.</span><span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">left</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">       </span><span class="tok-mi">0</span>
@@ -615,13 +622,6 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-c1"># If you have &#39;enable-normalization-opposite-orientation-for-nested-containers&#39; enabled then</span>
 <span class="tok-c1"># there is no way to observe the indent</span>
 <span class="tok-n">indent-for-nested-containers-with-the-same-orientation</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">30</span>
-
-<span class="tok-c1"># Layout of root containers of non-empty workspaces. The layout is applied only on startup</span>
-<span class="tok-c1"># Possible values: smart|tiles|accordion</span>
-<span class="tok-c1"># - &#39;tiles&#39; and &#39;accordion&#39; are self-describing</span>
-<span class="tok-c1"># - &#39;smart&#39; means some &quot;smart logic&quot;. Currently, 3 and less windows will get &#39;tiles&#39; layout,</span>
-<span class="tok-c1">#   4 and more will get &#39;accordion&#39; layout. &#39;smart&#39; can change its behavior in future versions</span>
-<span class="tok-n">non-empty-workspaces-root-containers-layout-on-startup</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;smart&#39;</span>
 
 <span class="tok-c1"># &#39;main&#39; binding mode declaration</span>
 <span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes</span>
@@ -738,7 +738,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands.html#workspace-back-and-forth</span>
 <span class="tok-n">alt-tab</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace-back-and-forth&#39;</span>
 <span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands.html#move-workspace-to-monitor</span>
-<span class="tok-n">alt-shift-tab</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-workspace-to-monitor next&#39;</span>
+<span class="tok-n">alt-shift-tab</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-workspace-to-monitor --wrap-around next&#39;</span>
 
 <span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands.html#mode</span>
 <span class="tok-n">alt-shift-semicolon</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;mode service&#39;</span>
@@ -850,7 +850,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-01-13 15:50:50 +0100
+Last updated 2024-01-17 21:39:25 +0100
 </div>
 </div>
 </body>
