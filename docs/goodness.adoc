@@ -73,6 +73,7 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |Disk Utility|`com.apple.DiskUtility`
 |Docker|`com.docker.docker`
 |FaceTime|`com.apple.FaceTime`
+|Figma|`com.figma.Desktop`
 |Find My|`com.apple.findmy`
 |Finder|`com.apple.finder`
 |Firefox|`org.mozilla.firefox`
@@ -94,6 +95,7 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |Messages|`com.apple.MobileSMS`
 |Music|`com.apple.Music`
 |Notes|`com.apple.Notes`
+|Obsidian|`md.obsidian`
 |Pages|`com.apple.iWork.Pages`
 |Photo Booth|`com.apple.PhotoBooth`
 |Photos|`com.apple.Photos`
