@@ -45,6 +45,16 @@ cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Release/Ae
 cp -r LocalPackage/.build/apple/Products/Release/aerospace .release
 
 ################
+### SIGN CLI ###
+################
+
+code_sign_identity="$(cat .local.xcconfig | grep "^CODE_SIGN_IDENTITY" | head -1 | sed 's/.*=\s*//')"
+resolved_identity="$(security find-identity -p codesigning -v | grep --fixed-string "$code_sign_identity" | tail -1)"
+echo "Sign CLI using $resolved_identity"
+resolved_identity="$(awk '{print $2}' <<< $resolved_identity)"
+codesign -s "$resolved_identity" .release/aerospace
+
+################
 ### VALIDATE ###
 ################
 
@@ -90,6 +100,9 @@ check-universal-binary .release/aerospace
 
 check-contains-hash .release/AeroSpace.app/Contents/MacOS/AeroSpace
 check-contains-hash .release/aerospace
+
+codesign -v .release/AeroSpace.app
+codesign -v .release/aerospace
 
 ############
 ### PACK ###
