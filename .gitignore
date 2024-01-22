@@ -7,6 +7,7 @@
 /default.profraw
 .DS_Store
 /.local.xcconfig
+/.xcode-build
 
 # XCode User settings
 xcuserdata/

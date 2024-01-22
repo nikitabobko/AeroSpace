@@ -26,22 +26,14 @@ EOF
 check-clean-git-working-dir
 
 generate-git-hash
-xcodebuild -scheme AeroSpace build -configuration Release
+xcodebuild -scheme AeroSpace clean build -configuration Release -derivedDataPath .xcode-build
 cd LocalPackage
-    rm -rf .build
     swift build -c release --arch arm64 --arch x86_64
 cd - > /dev/null
 git checkout LocalPackage/Sources/Common/gitHashGenerated.swift
 
 rm -rf .release && mkdir .release
-cd ~/Library/Developer/Xcode/DerivedData
-    if [ "$(ls | grep AeroSpace | wc -l)" -ne 1 ]; then
-        echo "Found several AeroSpace dirs in $(pwd)"
-        ls | grep AeroSpace
-        exit 1
-    fi
-cd - > /dev/null
-cp -r ~/Library/Developer/Xcode/DerivedData/AeroSpace*/Build/Products/Release/AeroSpace.app .release
+cp -r .xcode-build/Build/Products/Release/AeroSpace.app .release
 cp -r LocalPackage/.build/apple/Products/Release/aerospace .release
 
 ################
