@@ -172,9 +172,6 @@ private func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     if axWindow.get(Ax.identifierAttr) == "AXCursorActionsWindow" && subrole == kAXDialogSubrole {
         return false
     }
-    if app.nsApp.bundleIdentifier == "com.jetbrains.toolbox" {
-        return false
-    }
     return subrole == kAXStandardWindowSubrole ||
         subrole == kAXDialogSubrole || // macOS native file picker ("Open..." menu) (kAXDialogSubrole value)
         subrole == kAXFloatingWindowSubrole || // telegram image viewer
