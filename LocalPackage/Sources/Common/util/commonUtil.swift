@@ -93,6 +93,10 @@ public extension String {
     func removePrefix(_ prefix: String) -> String {
         hasPrefix(prefix) ? String(dropFirst(prefix.count)) : self
     }
+
+    func prependLines(_ prefix: String) -> String {
+        split(separator: "\n").map { prefix + $0 }.joined(separator: "\n")
+    }
 }
 
 public extension Double {

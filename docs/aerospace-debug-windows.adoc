@@ -1,0 +1,39 @@
+= aerospace-debug-windows(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-debug-windows
+// tag::purpose[]
+:manpurpose: Interactive command to record Accessibility API debug information to create bug reports
+// end::purpose[]
+
+== Synopsis
+[verse]
+// tag::synopsis[]
+debug-windows [-h|--help]
+
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+Use this command output to report bug reports about incorrect windows handling
+(e.g. some windows are floated when they shouldn't).
+
+The intended usage is the following:
+
+. Run the command to start the debug session recording
+. Focus problematic window
+. Run the command one more time to stop the debug session recording and print the results
+
+_debug-windows_ command is *not stable API*.
+Please *don't rely on* the command existence and output format.
+The only intended use case is to report bugs about incorrect windows handling.
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+// end::body[]
+
+include::util/man-footer.adoc[]

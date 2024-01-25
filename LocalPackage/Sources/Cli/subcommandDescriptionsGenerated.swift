@@ -2,6 +2,7 @@
 let subcommandDescriptions = [
     ["  close-all-windows-but-current", "On the focused workspace, closes all windows but current"],
     ["  close", "Closes the focused window"],
+    ["  debug-windows", "Interactive command to record Accessibility API debug information to create bug reports"],
     ["  enable", "Temporarily disable window management"],
     ["  flatten-workspace-tree", "Flattens the tree of currently focused workspace."],
     ["  focus", "Sets focus to the nearest window in in the given direction."],

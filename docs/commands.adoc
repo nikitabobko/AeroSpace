@@ -168,6 +168,13 @@ Query commands are commands that do not change the state but rather allow the ex
 (because there is no way to consume the stdout of these commands in config)
 - Query commands are only available in CLI
 
+=== debug-windows
+----
+include::aerospace-debug-windows.adoc[tags=synopsis]
+----
+include::aerospace-debug-windows.adoc[tags=purpose]
+include::aerospace-debug-windows.adoc[tags=body]
+
 === list-apps
 ----
 include::aerospace-list-apps.adoc[tags=synopsis]

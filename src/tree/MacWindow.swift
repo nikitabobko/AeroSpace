@@ -53,7 +53,7 @@ final class MacWindow: Window, CustomStringConvertible {
             ("subrole", axWindow.get(Ax.subroleAttr)),
             ("identifier", axWindow.get(Ax.identifierAttr)),
             ("modal", axWindow.get(Ax.modalAttr).map { String($0) } ?? ""),
-            ("windowId", String(windowId))
+            ("windowId", String(windowId)),
         ].map { "\($0.0): '\(String(describing: $0.1))'" }.joined(separator: ", ")
         return "Window(\(description))"
     }
@@ -178,7 +178,7 @@ private func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
         app.id == "com.apple.finder" && subrole == "Quick Look" // Finder preview (hit space) is a floating window
 }
 
-private func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lot of windows don't have title on startup
+func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lot of windows don't have title on startup
     // Don't tile:
     // - Chrome cmd+f window ("AXUnknown" value)
     // - login screen (Yes fuck, it's also a window from Apple's API perspective) ("AXUnknown" value)
@@ -247,6 +247,7 @@ private func destroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, d
 
 private func onWindowDetected(_ window: Window, startup: Bool) {
     check(Thread.current.isMainThread)
+    debugWindowsIfRecording(window)
     for callback in config.onWindowDetected {
         if callback.matches(window, startup: startup) {
             _ = callback.run.run(CommandMutableState(.window(window)))

@@ -194,16 +194,27 @@ enum Ax {
         key: kAXIdentifierAttribute,
         getter: { $0 as? String }
     )
-    static let modalAttr = WritableAttrImpl<Bool>(
+    static let modalAttr = ReadableAttrImpl<Bool>(
         key: kAXModalAttribute,
-        getter: { $0 as? Bool },
-        setter: { $0 as CFTypeRef }
+        getter: { $0 as? Bool }
     )
     static let enhancedUserInterfaceAttr = WritableAttrImpl<Bool>(
         key: "AXEnhancedUserInterface",
         getter: { $0 as? Bool },
         setter: { $0 as CFTypeRef }
     )
+    //static let minimizedAttr = ReadableAttrImpl<Bool>(
+    //    key: kAXMinimizedAttribute,
+    //    getter: { $0 as? Bool }
+    //)
+    //static let isFullscreenAttr = ReadableAttrImpl<Bool>(
+    //    key: "AXFullScreen",
+    //    getter: { $0 as? Bool }
+    //)
+    //static let axMainAttr = ReadableAttrImpl<Bool>(
+    //    key: kAXMainAttribute,
+    //    getter: { $0 as? Bool }
+    //)
     static let sizeAttr = WritableAttrImpl<CGSize>(
             key: kAXSizeAttribute,
             getter: {
@@ -254,6 +265,18 @@ enum Ax {
         key: kAXFullScreenButtonAttribute,
         getter: { ($0 as! AXUIElement) }
     )
+    //static let zoomButtonAttr = ReadableAttrImpl<AXUIElement>(
+    //    key: kAXZoomButtonAttribute,
+    //    getter: { ($0 as! AXUIElement) }
+    //)
+    //static let minimizeButtonAttr = ReadableAttrImpl<AXUIElement>(
+    //    key: kAXMinimizeButtonAttribute,
+    //    getter: { ($0 as! AXUIElement) }
+    //)
+    //static let growAreaAttr = ReadableAttrImpl<AXUIElement>(
+    //    key: kAXGrowAreaAttribute,
+    //    getter: { ($0 as! AXUIElement) }
+    //)
 }
 
 extension AXUIElement {

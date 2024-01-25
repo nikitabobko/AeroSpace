@@ -32,6 +32,7 @@
 		43E3628E37D2439B820FFC82 /* server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796713A1B3AEEBF4D0D180C7 /* server.swift */; };
 		45AA5FD4A023AF751922BC22 /* BundleEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7A2DF0D1F72B80B1F04240 /* BundleEx.swift */; };
 		45EA2D1C90430C432E123B51 /* keysMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0D40CBD65704BA9595C2FA /* keysMap.swift */; };
+		4CC374136F60299FB672662D /* DebugWindowsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71908440CD1ADBE13AD58E26 /* DebugWindowsCommand.swift */; };
 		51AB4C0992703B2E9D0F55E2 /* MonitorDescriptionEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1D626244E63437F1CA24C3 /* MonitorDescriptionEx.swift */; };
 		56E72B24303F5F337B31B776 /* TrayMenuModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5F52E346D024960EAF5938 /* TrayMenuModel.swift */; };
 		5BA537EABFE48178D6BD2544 /* parseGaps.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCDFB9D7321F08B5CCEF6AFB /* parseGaps.swift */; };
@@ -149,6 +150,7 @@
 		67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parseConfig.swift; sourceTree = "<group>"; };
 		6D9C5ED5AC77D80F1CCD103F /* JoinWithCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinWithCommandTest.swift; sourceTree = "<group>"; };
 		6F1905935B0C61590A96EFEF /* TestWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWindow.swift; sourceTree = "<group>"; };
+		71908440CD1ADBE13AD58E26 /* DebugWindowsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugWindowsCommand.swift; sourceTree = "<group>"; };
 		739F4FE1DB101DF4E508F3FE /* Monitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monitor.swift; sourceTree = "<group>"; };
 		796713A1B3AEEBF4D0D180C7 /* server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = server.swift; sourceTree = "<group>"; };
 		7ACD4E9C6C0C08F1B0622C57 /* ResizeCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizeCommandTest.swift; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 		9797FA095A9BE84428C5E2C0 /* query */ = {
 			isa = PBXGroup;
 			children = (
+				71908440CD1ADBE13AD58E26 /* DebugWindowsCommand.swift */,
 				B0185502A3752FF618BB3D36 /* ListAppsCommand.swift */,
 				FD6BB613EC44C1B32CE4A47E /* ListMonitorsCommand.swift */,
 				E9FCB66B928701F68AD8CA78 /* ListWindowsCommand.swift */,
@@ -599,6 +602,7 @@
 				78C38FAF21E574DBE3B88806 /* CloseCommand.swift in Sources */,
 				F982DB924450BBBB4FDF4C2C /* Command.swift in Sources */,
 				FD4386BC632BAA6A4105FFD8 /* Config.swift in Sources */,
+				4CC374136F60299FB672662D /* DebugWindowsCommand.swift in Sources */,
 				B0D7495387478CE6FBE79A2E /* DynamicConfigValue.swift in Sources */,
 				9FAD09BC5CC390167106563B /* EnableCommand.swift in Sources */,
 				BC6511DA2ABE84164D90C181 /* ExecAndForgetCommand.swift in Sources */,

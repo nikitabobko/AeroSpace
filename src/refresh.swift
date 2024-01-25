@@ -10,6 +10,7 @@ func refreshSession<T>(startup: Bool = false, forceFocus: Bool = false, body: ()
     detectNewWindowsAndAttachThemToWorkspaces(startup: startup)
 
     let nativeFocused = getNativeFocusedWindow(startup: startup)
+    if let nativeFocused { debugWindowsIfRecording(nativeFocused) }
     takeFocusFromMacOs(nativeFocused, startup: startup)
     let focusBefore = focusedWindow
 

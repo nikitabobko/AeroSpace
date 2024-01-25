@@ -13,6 +13,8 @@ extension CmdArgs {
             command = CloseCommand()
         case .closeAllWindowsButCurrent:
             command = CloseAllWindowsButCurrentCommand()
+        case .debugWindows:
+            command = DebugWindowsCommand()
         case .enable:
             command = EnableCommand(args: self as! EnableCmdArgs)
         case .execAndForget:
