@@ -85,10 +85,14 @@ func debugWindowsIfRecording(_ window: Window) {
     var result: [String] = []
 
     result.append("\(windowPrefix) recognizedAsDialog: \(shouldFloat(window.axWindow, app))")
+    result.append("\(windowPrefix) AXUIElement: \(window.axWindow)")
     result.append("\(windowPrefix) windowId: \(window.windowId)")
     result.append("\(windowPrefix) workspace: \(window.workspace.name)")
     result.append(dumpAx(window.axWindow, windowPrefix))
-    result.append(dumpAx(app.axApp, appId.padding(toLength: windowPrefix.count, withPad: " ", startingAt: 0)))
+
+    let appPrefix = appId.padding(toLength: windowPrefix.count, withPad: " ", startingAt: 0)
+    result.append("\(appPrefix) AXUIElement: \(app.axApp)")
+    result.append(dumpAx(app.axApp, appPrefix))
 
     debugWindowsLog[window.windowId] = result.joined(separator: "\n")
 }
