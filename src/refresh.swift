@@ -25,7 +25,9 @@ func refreshSession<T>(startup: Bool = false, forceFocus: Bool = false, body: ()
     }
 
     if TrayMenuModel.shared.isEnabled {
-        syncFocusToMacOs(nativeFocused, startup: startup, force: forceFocus || focusBefore != focusAfter)
+        if forceFocus || focusBefore != focusAfter {
+            focusedWindow?.nativeFocus() // syncFocusToMacOs
+        }
 
         updateTrayText()
         layoutWorkspaces()
@@ -54,15 +56,7 @@ func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     refreshAndLayout()
 }
 
-func syncFocusToMacOs(_ nativeFocused: Window?, startup: Bool, force: Bool) {
-    if force /*for example `focus right` when "recent files" is focused in IDEA*/ ||
-           // native would be nil if it's a popup (e.g. recent files in IntelliJ IDEA). Don't steal focus in that case
-           nativeFocused != nil && nativeFocused != focusedWindow {
-        focusedWindow?.nativeFocus()
-    }
-}
-
-func takeFocusFromMacOs(_ nativeFocused: Window?, startup: Bool) {
+func takeFocusFromMacOs(_ nativeFocused: Window?, startup: Bool) { // alternative name: syncFocusFromMacOs
     if let nativeFocused, getFocusSourceOfTruth(startup: startup) == .macOs {
         nativeFocused.focus()
         setFocusSourceOfTruth(.ownModel, startup: startup)

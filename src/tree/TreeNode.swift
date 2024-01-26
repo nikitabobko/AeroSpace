@@ -96,6 +96,10 @@ class TreeNode: Equatable {
         }
         newParent._children.insert(self, at: index != INDEX_BIND_LAST ? index : newParent._children.count)
         _parent = newParent
+        // todo consider disabling automatic mru propogation
+        // 1. "floating windows" in FocusCommand break the MRU because of that :(
+        // 2. Misbehaved apps that abuse real window as popups https://github.com/nikitabobko/AeroSpace/issues/106 (the
+        //    last appeared window, is not necessarily the one that has the focus)
         markAsMostRecentChild()
         return result
     }
