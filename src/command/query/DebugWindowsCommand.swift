@@ -34,7 +34,7 @@ struct DebugWindowsCommand: Command {
         switch debugWindowsState {
         case .recording:
             debugWindowsState = .notRecording
-            state.stdout.append((debugWindowsLog.values + ["Debug session finished"]).joined(separator: "\n\n"))
+            state.stdout.append((debugWindowsLog.values + [disclaimer, "Debug session finished"]).joined(separator: "\n\n"))
             debugWindowsLog = [:]
             return true
         case .notRecording:
@@ -44,8 +44,6 @@ struct DebugWindowsCommand: Command {
                 Debug windows session has started
                 1. Focus the problematic window
                 2. Run 'aerospace debug-windows' once again to finish the session and get the results
-
-                \(disclaimer)
                 """
             )
             debugWindowsLog = [:]

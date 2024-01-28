@@ -14,12 +14,9 @@ AeroSpace is an i3-like tiling window manager for macOS
 
 Public Beta. Feedback is very much welcome
 
-- I encourage you to try AeroSpace and file GitHub issues if something doesn't work for you.
-  In particular, I'm interested in issues that block you from using AeroSpace on daily basis.
+- I encourage you to try AeroSpace and file GitHub issues if something doesn't work for you
 - I already use AeroSpace on daily basis and I'm happy with it
 - [The documentation](https://nikitabobko.github.io/AeroSpace/guide.html) covers all major things you need to know
-- Expect minor breaking changes in the config format. Once the project reaches 1.0 the config is guaranteed to preserve backwards
-  compatibility
 
 ## Key features
 
