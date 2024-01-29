@@ -1,2 +1,2 @@
-0.8.2-Beta  # User visible version   CFBundleShortVersionString
-0.8.2       # Build number           CFBundleVersion
+0.8.3-Beta  # User visible version   CFBundleShortVersionString
+0.8.3       # Build number           CFBundleVersion
