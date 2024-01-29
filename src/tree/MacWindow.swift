@@ -190,14 +190,18 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
     if axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole  {
         return true
     }
-    // Heuristic: float windows without maximize button (such windows are not designed to be big)
+    // Heuristic: float windows without fullscreen button (such windows are not designed to be big)
     // - IntelliJ various dialogs (Rebase..., Edit commit message, Settings, Project structure)
     // - Finder copy file dialog
     // - System Settings
     // - Apple logo -> About this Mac
     // - Calculator
     // - Battle.net login dialog
-    if axWindow.get(Ax.fullscreenButtonAttr) == nil &&
+    // Fullscreen button is presented but disabled:
+    // - Safari -> Pinterest -> Log in with Google
+    // - Kap screen recorder https://github.com/wulkano/Kap
+    let fullscreenButton = axWindow.get(Ax.fullscreenButtonAttr)
+    if (fullscreenButton == nil || fullscreenButton!.get(Ax.enabledAttr) != true) &&
            app.id != "com.google.Chrome" && // "Drag out" a tab out of Chrome window
            app.id != "org.videolan.vlc" && // VLC has its own implementation of fullscreen
            app.id != "com.valvesoftware.steam" && // Steam doesn't show fullscreen button
