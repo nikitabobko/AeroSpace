@@ -531,10 +531,11 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#workspace-back-and-forth">19. workspace-back-and-forth</a></li>
 <li><a href="#query-commands">20. Query commands</a>
 <ul class="sectlevel2">
-<li><a href="#list-apps">20.1. list-apps</a></li>
-<li><a href="#list-monitors">20.2. list-monitors</a></li>
-<li><a href="#list-windows">20.3. list-windows</a></li>
-<li><a href="#list-workspaces">20.4. list-workspaces</a></li>
+<li><a href="#debug-windows">20.1. debug-windows</a></li>
+<li><a href="#list-apps">20.2. list-apps</a></li>
+<li><a href="#list-monitors">20.3. list-monitors</a></li>
+<li><a href="#list-windows">20.4. list-windows</a></li>
+<li><a href="#list-workspaces">20.5. list-workspaces</a></li>
 </ul>
 </li>
 </ul>
@@ -1217,7 +1218,54 @@ workspace [-h|--help] [--auto-back-and-forth] &lt;workspace-name&gt;</pre>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="list-apps"><a class="anchor" href="#list-apps"></a><a class="link" href="#list-apps">20.1. list-apps</a></h3>
+<h3 id="debug-windows"><a class="anchor" href="#debug-windows"></a><a class="link" href="#debug-windows">20.1. debug-windows</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">debug-windows [-h|--help]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Interactive command to record Accessibility API debug information to create bug reports</p>
+</div>
+<div class="paragraph">
+<p>Use this command output to report bug reports about incorrect windows handling
+(e.g. some windows are floated when they shouldn&#8217;t).</p>
+</div>
+<div class="paragraph">
+<p>The intended usage is the following:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Run the command to start the debug session recording</p>
+</li>
+<li>
+<p>Focus problematic window</p>
+</li>
+<li>
+<p>Run the command one more time to stop the debug session recording and print the results</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><em>debug-windows</em> command is <strong>not stable API</strong>.
+Please <strong>don&#8217;t rely on</strong> the command existence and output format.
+The only intended use case is to report bugs about incorrect windows handling.</p>
+</div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="list-apps"><a class="anchor" href="#list-apps"></a><a class="link" href="#list-apps">20.2. list-apps</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-apps [-h|--help]</pre>
@@ -1264,7 +1312,7 @@ workspace [-h|--help] [--auto-back-and-forth] &lt;workspace-name&gt;</pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-monitors"><a class="anchor" href="#list-monitors"></a><a class="link" href="#list-monitors">20.2. list-monitors</a></h3>
+<h3 id="list-monitors"><a class="anchor" href="#list-monitors"></a><a class="link" href="#list-monitors">20.3. list-monitors</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-monitors [-h|--help] [--focused [no]] [--mouse [no]]</pre>
@@ -1315,7 +1363,7 @@ monitor sequence ID may change if you plug or unplug monitors
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-windows"><a class="anchor" href="#list-windows"></a><a class="link" href="#list-windows">20.3. list-windows</a></h3>
+<h3 id="list-windows"><a class="anchor" href="#list-windows"></a><a class="link" href="#list-windows">20.4. list-windows</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-windows [-h|--help] --workspace &lt;workspace&gt;... [--monitor &lt;monitor&gt;...]
@@ -1444,7 +1492,7 @@ In that case, error is reported.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-workspaces"><a class="anchor" href="#list-workspaces"></a><a class="link" href="#list-workspaces">20.4. list-workspaces</a></h3>
+<h3 id="list-workspaces"><a class="anchor" href="#list-workspaces"></a><a class="link" href="#list-workspaces">20.5. list-workspaces</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-workspaces [-h|--help] --monitor &lt;monitor&gt;... [--visible [no]] [--empty [no]]
@@ -1525,7 +1573,7 @@ Several monitors can be visible in multi-monitor setup</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-01-19 00:50:59 +0100
+Last updated 2024-01-29 23:00:34 +0100
 </div>
 </div>
 </body>
