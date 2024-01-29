@@ -36,11 +36,11 @@ private func makeAllWindowsVisibleAndRestoreSize() {
             let monitor = window.getCenter()?.monitorApproximation ?? mainMonitor
             let monitorVisibleRect = monitor.visibleRect
             let windowSize = window.lastFloatingSize ?? CGSize(width: monitorVisibleRect.width, height: monitorVisibleRect.height)
-            window.setSize(windowSize)
-            window.setTopLeftCorner(CGPoint(
+            let point = CGPoint(
                 x: (monitorVisibleRect.width - windowSize.width) / 2,
                 y: (monitorVisibleRect.height - windowSize.height) / 2
-            ))
+            )
+            window.setFrame(point, windowSize)
         }
     }
 }

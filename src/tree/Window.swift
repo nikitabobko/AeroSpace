@@ -47,6 +47,12 @@ extension Window {
         // todo bug make the workspace active first...
         focusedWorkspaceName = workspace.name
     }
+
+    func setFrame(_ topLeft: CGPoint?, _ size: CGSize?) {
+        // Set size and then the position. The order is important https://github.com/nikitabobko/AeroSpace/issues/143
+        if let size { setSize(size) }
+        if let topLeft { setTopLeftCorner(topLeft) }
+    }
 }
 
 @inlinable func windowsCantHaveChildren() -> Never {

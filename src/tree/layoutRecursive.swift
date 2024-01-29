@@ -24,8 +24,7 @@ extension TreeNode {
                 } else {
                     lastAppliedLayoutPhysicalRect = physicalRect
                     window.isFullscreen = false
-                    window.setTopLeftCorner(point)
-                    window.setSize(CGSize(width: width, height: height))
+                    window.setFrame(point, CGSize(width: width, height: height))
                 }
             }
         case .tilingContainer(let container):
@@ -62,8 +61,7 @@ private extension Window {
 
     func layoutFullscreen() {
         let monitorRect = workspace.monitor.visibleRectPaddedByOuterGaps
-        setTopLeftCorner(monitorRect.topLeftCorner)
-        setSize(CGSize(width: monitorRect.width, height: monitorRect.height))
+        setFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height))
     }
 }
 

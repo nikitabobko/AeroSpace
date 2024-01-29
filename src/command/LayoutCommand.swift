@@ -47,10 +47,7 @@ struct LayoutCommand: Command {
                 x: abs(topLeftCorner.x - workspace.monitor.rect.topLeftX).takeIf { $0 < 30 } ?? 0,
                 y: abs(topLeftCorner.y - workspace.monitor.rect.topLeftY).takeIf { $0 < 30 } ?? 0
             )
-            window.setTopLeftCorner(topLeftCorner + offset)
-            if let lastFloatingSize = window.lastFloatingSize {
-                window.setSize(lastFloatingSize)
-            }
+            window.setFrame(topLeftCorner + offset, window.lastFloatingSize)
         }
         return result
     }
