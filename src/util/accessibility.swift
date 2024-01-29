@@ -176,9 +176,9 @@ enum Ax {
     }
 
     static let titleAttr = WritableAttrImpl<String>(
-            key: kAXTitleAttribute,
-            getter: { $0 as? String },
-            setter: { $0 as CFTypeRef }
+        key: kAXTitleAttribute,
+        getter: { $0 as? String },
+        setter: { $0 as CFTypeRef }
     )
     static let roleAttr = WritableAttrImpl<String>(
         key: kAXRoleAttribute,
@@ -203,6 +203,10 @@ enum Ax {
         getter: { $0 as? Bool },
         setter: { $0 as CFTypeRef }
     )
+    static let minimizedAttr = ReadableAttrImpl<Bool>(
+        key: kAXEnabledAttribute,
+        getter: { $0 as? Bool }
+    )
     //static let minimizedAttr = ReadableAttrImpl<Bool>(
     //    key: kAXMinimizedAttribute,
     //    getter: { $0 as? Bool }
@@ -216,46 +220,43 @@ enum Ax {
     //    getter: { $0 as? Bool }
     //)
     static let sizeAttr = WritableAttrImpl<CGSize>(
-            key: kAXSizeAttribute,
-            getter: {
-                var raw: CGSize = .zero
-                check(AXValueGetValue($0 as! AXValue, .cgSize, &raw))
-                return raw
-            },
-            setter: {
-                var size = $0
-                return AXValueCreate(.cgSize, &size) as CFTypeRef
-            }
+        key: kAXSizeAttribute,
+        getter: {
+            var raw: CGSize = .zero
+            check(AXValueGetValue($0 as! AXValue, .cgSize, &raw))
+            return raw
+        },
+        setter: {
+            var size = $0
+            return AXValueCreate(.cgSize, &size) as CFTypeRef
+        }
     )
     static let topLeftCornerAttr = WritableAttrImpl<CGPoint>(
-            key: kAXPositionAttribute,
-            getter: {
-                var raw: CGPoint = .zero
-                AXValueGetValue($0 as! AXValue, .cgPoint, &raw)
-                return raw
-            },
-            setter: {
-                var size = $0
-                return AXValueCreate(.cgPoint, &size) as CFTypeRef
-            }
+        key: kAXPositionAttribute,
+        getter: {
+            var raw: CGPoint = .zero
+            AXValueGetValue($0 as! AXValue, .cgPoint, &raw)
+            return raw
+        },
+        setter: {
+            var size = $0
+            return AXValueCreate(.cgPoint, &size) as CFTypeRef
+        }
     )
     /// Returns windows visible on all monitors
     /// If some windows are located on not active macOS Spaces then they won't be returned
     static let windowsAttr = ReadableAttrImpl<[AXUIElement]>(
-            key: kAXWindowsAttribute,
-            getter: {
-                // Filter out non-window objects (e.g. Finder's desktop)
-                ($0 as! NSArray).compactMap { ($0 as! AXUIElement) }.filter { $0.windowId() != nil }
-            }
+        key: kAXWindowsAttribute,
+        getter: { ($0 as! NSArray).compactMap(tryGetWindow) }
     )
     static let focusedWindowAttr = ReadableAttrImpl<AXUIElement>(
-            key: kAXFocusedWindowAttribute,
-            getter: {
-                let potentialWindow = $0 as! AXUIElement
-                // Filter out non-window objects (e.g. Finder's desktop)
-                return potentialWindow.windowId() != nil ? potentialWindow : nil
-            }
+        key: kAXFocusedWindowAttribute,
+        getter: tryGetWindow
     )
+    //static let mainWindowAttr = ReadableAttrImpl<AXUIElement>(
+    //    key: kAXMainWindowAttribute,
+    //    getter: tryGetWindow
+    //)
     static let closeButtonAttr = ReadableAttrImpl<AXUIElement>(
             key: kAXCloseButtonAttribute,
             getter: { ($0 as! AXUIElement) }
@@ -279,6 +280,13 @@ enum Ax {
     //)
 }
 
+private func tryGetWindow(_ any: Any?) -> AXUIElement? {
+    guard let any else { return nil }
+    let potentialWindow = any as! AXUIElement
+    // Filter out non-window objects (e.g. Finder's desktop)
+    return potentialWindow.containingWindowId() != nil ? potentialWindow : nil
+}
+
 extension AXUIElement {
     func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
         var raw: AnyObject?
@@ -292,7 +300,7 @@ extension AXUIElement {
         return AXUIElementSetAttributeValue(self, attr.key as CFString, value) == .success
     }
 
-    func windowId() -> CGWindowID? {
+    func containingWindowId() -> CGWindowID? {
         var cgWindowId = CGWindowID()
         return _AXUIElementGetWindow(self, &cgWindowId) == .success ? cgWindowId : nil
     }

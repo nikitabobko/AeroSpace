@@ -7,8 +7,6 @@ private let priorityAx: Set<String> = [
     Ax.identifierAttr.key,
 ]
 
-private let foldAxKeys: Set<String> = ["AXChildrenInNavigationOrder", "AXChildren"]
-
 private let disclaimer =
     """
     !!! DISCLAIMER !!!
@@ -82,37 +80,54 @@ func debugWindowsIfRecording(_ window: Window) {
     let windowPrefix = appId + ".window.\(window.windowId)"
     var result: [String] = []
 
-    result.append("\(windowPrefix) recognizedAsDialog: \(shouldFloat(window.axWindow, app))")
-    result.append("\(windowPrefix) AXUIElement: \(window.axWindow)")
     result.append("\(windowPrefix) windowId: \(window.windowId)")
     result.append("\(windowPrefix) workspace: \(window.workspace.name)")
-    result.append(dumpAx(window.axWindow, windowPrefix))
+    result.append("\(windowPrefix) recognizedAsDialog: \(shouldFloat(window.axWindow, app))")
+    result.append(dumpAx(window.axWindow, windowPrefix, .window))
 
     let appPrefix = appId.padding(toLength: windowPrefix.count, withPad: " ", startingAt: 0)
-    result.append("\(appPrefix) AXUIElement: \(app.axApp)")
-    result.append(dumpAx(app.axApp, appPrefix))
+    result.append(dumpAx(app.axApp, appPrefix, .app))
 
     debugWindowsLog[window.windowId] = result.joined(separator: "\n")
 }
 
-private func prettyKeyValue(_ key: String, _ value: Any) -> String {
-    let value = String(describing: value)
-    return value.contains("\n")
-        ? "\(key):\n" + value.prependLines("    ")
-        : "\(key): '\(value)'"
+private func prettyValue(_ value: Any?) -> String {
+    if value is NSArray, let arr = value as? [Any?] {
+        return "[\n" + arr.map(prettyValue).joined(separator: ",\n").prependLines("    ") + "\n]"
+    }
+    if let value {
+        let ax = value as! AXUIElement
+        if ax.get(Ax.roleAttr) == kAXButtonRole {
+            let dumped = dumpAx(ax, "", .button).prependLines("    ")
+            return "AXUIElement {\n" + dumped + "\n}"
+        }
+        if let windowId = ax.containingWindowId() {
+            let title = ax.get(Ax.titleAttr)?.quoted ?? "nil"
+            let role = ax.get(Ax.roleAttr)?.quoted ?? "nil"
+            let subrole = ax.get(Ax.subroleAttr)?.quoted ?? "nil"
+            return "AXUIElement(windowId=\(windowId), title=\(title), role=\(role), subrole=\(subrole))"
+        }
+    }
+    let str = String(describing: value)
+    return str.contains("\n")
+        ? "\n" + str.prependLines("    ")
+        : str
 }
 
-private func dumpAx(_ ax: AXUIElement, _ prefix: String) -> String {
+private func dumpAx(_ ax: AXUIElement, _ prefix: String, _ kind: AxKind) -> String {
     var result: [String] = []
-    for attr in ax.attrs.sortedBy({ priorityAx.contains($0) ? 0 : 1 }) {
+    var ignored: [String] = []
+    for key: String in ax.attrs.sortedBy({ priorityAx.contains($0) ? 0 : 1 }) {
         var raw: AnyObject?
-        AXUIElementCopyAttributeValue(ax, attr as CFString, &raw)
-        if foldAxKeys.contains(attr) {
-            let nillability = raw != nil ? "not-nil" : "nil"
-            result.append("\(prefix) \(attr): \(nillability)")
+        AXUIElementCopyAttributeValue(ax, key as CFString, &raw)
+        if globalIgnore.contains(key) || kindSpecificIgnore[kind]?.contains(key) == true {
+            ignored.append(key)
         } else {
-            result.append(prettyKeyValue(attr, raw as Any).prependLines("\(prefix) "))
+            result.append("\(key): \(prettyValue(raw as Any?))".prependLines("\(prefix) "))
         }
+    }
+    if !ignored.isEmpty {
+        result.append("\(prefix) Ignored: \(ignored.joined(separator: ", "))")
     }
     return result.joined(separator: "\n")
 }
@@ -124,3 +139,31 @@ extension AXUIElement {
         return rawArray as? [String] ?? []
     }
 }
+
+private enum AxKind: Hashable {
+    case button
+    case window
+    case app
+}
+
+private let globalIgnore: Set<String> = [
+    kAXRoleDescriptionAttribute, // localized
+    "AXChildren", // too verbose
+    "AXChildrenInNavigationOrder", // too verbose
+    kAXHelpAttribute, // localized
+]
+
+private let kindSpecificIgnore: [AxKind: Set<String>] = [
+    .button: [
+        kAXPositionAttribute,
+        kAXFocusedAttribute,
+        "AXFrame",
+        kAXSizeAttribute,
+        kAXEditedAttribute,
+    ],
+    .app: [
+        kAXHiddenAttribute,
+        "AXPreferredLanguage",
+        "AXEnhancedUserInterface",
+    ]
+]

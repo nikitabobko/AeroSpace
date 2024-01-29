@@ -19,7 +19,7 @@ final class MacWindow: Window, CustomStringConvertible {
 
     static func get(app: MacApp, axWindow: AXUIElement, startup: Bool) -> MacWindow? {
         if !isWindow(axWindow, app) { return nil }
-        guard let id = axWindow.windowId() else { return nil }
+        guard let id = axWindow.containingWindowId() else { return nil }
         if let existing = allWindowsMap[id] {
             return existing
         } else {
