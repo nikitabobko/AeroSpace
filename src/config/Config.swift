@@ -145,40 +145,9 @@ enum DefaultContainerOrientation: String {
 struct Mode: Copyable {
     /// User visible name. Optional. todo drop it?
     var name: String?
-    var bindings: [HotkeyBinding]
+    var bindings: [String: HotkeyBinding]
 
-    static let zero = Mode(name: nil, bindings: [])
-
-    func deactivate() {
-        for binding in bindings {
-            binding.deactivate()
-        }
-    }
-}
-
-class HotkeyBinding {
-    let modifiers: NSEvent.ModifierFlags
-    let key: Key
-    let commands: [any Command]
-    private var hotKey: HotKey? = nil
-
-    init(_ modifiers: NSEvent.ModifierFlags, _ key: Key, _ commands: [any Command]) {
-        self.modifiers = modifiers
-        self.key = key
-        self.commands = commands
-    }
-
-    func activate() {
-        hotKey = HotKey(key: key, modifiers: modifiers, keyUpHandler: { [commands] in
-            refreshSession(forceFocus: true) {
-                _ = commands.run(.focused)
-            }
-        })
-    }
-
-    func deactivate() {
-        hotKey = nil
-    }
+    static let zero = Mode(name: nil, bindings: [:])
 }
 
 private func initDefaultConfig(_ parsedConfig: (config: Config, errors: [TomlParseError])) -> Config {

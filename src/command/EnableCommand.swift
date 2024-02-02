@@ -30,9 +30,7 @@ struct EnableCommand: Command {
             }
             activateMode(mainModeId)
         } else {
-            for (_, mode) in config.modes {
-                mode.deactivate()
-            }
+            activateMode(nil)
             for workspace in Workspace.all {
                 workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideViaEmulation() } // todo as!
                 workspace.layoutWorkspace()

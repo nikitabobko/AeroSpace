@@ -42,7 +42,7 @@ extension [Command] {
         _run(state, stdin: "")
     }
 
-    // fileprivate because don't want to expose an interface where a bunch of commands have shared stdin
+    // fileprivate because don't want to expose an interface where a more than one commands have shared stdin
     fileprivate func _run(_ state: CommandMutableState, stdin: String = "") -> Bool {
         check(Thread.current.isMainThread)
         check(self.count == 1 || stdin == "")

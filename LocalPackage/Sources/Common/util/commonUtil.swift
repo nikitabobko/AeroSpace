@@ -41,8 +41,8 @@ public func errorT<T>(
     fatalError("\n" + message)
 }
 
-func printStacktrace() { print(getStringStacktrace()) }
-func getStringStacktrace() -> String { Thread.callStackSymbols.joined(separator: "\n") }
+public func printStacktrace() { print(getStringStacktrace()) }
+public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(separator: "\n") }
 
 @inlinable public func error(
     _ message: String = "",

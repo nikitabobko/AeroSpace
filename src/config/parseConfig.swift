@@ -3,13 +3,9 @@ import HotKey
 import TOMLKit
 
 func reloadConfig() {
-    guard let configUrl = getConfigFileUrl() else { return }
-    let (parsedConfig, errors) = parseConfig((try? String(contentsOf: configUrl)) ?? "")
-
-    // Deactivate all the bindings of previous config (it's needed because the default config always stays in memory)
-    for (_, mode) in config.modes {
-        mode.deactivate()
-    }
+    resetHotKeys()
+    let configUrl = getConfigFileUrl()
+    let (parsedConfig, errors) = parseConfig(configUrl.flatMap { try? String(contentsOf: $0) } ?? "")
 
     if errors.isEmpty {
         config = parsedConfig
@@ -52,14 +48,14 @@ private func getConfigFileUrl() -> URL? {
     }
 }
 
-private func showConfigParsingErrorsToUser(_ errors: [TomlParseError], configUrl: URL) {
+private func showConfigParsingErrorsToUser(_ errors: [TomlParseError], configUrl: URL?) {
     let message =
         """
         ####################################
         ### AEROSPACE CONFIG PARSE ERROR ###
         ####################################
 
-        Failed to parse \(configUrl.absoluteURL.path)
+        Failed to parse \(configUrl?.absoluteURL.path ?? "nil")
 
         \(errors.map(\.description).joined(separator: "\n\n"))
         """
@@ -204,7 +200,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         onWindowDetected: raw.onWindowDetected ?? [],
 
         preservedWorkspaceNames: modesOrDefault.values.lazy
-            .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
+            .flatMap { (mode: Mode) -> [HotkeyBinding] in Array(mode.bindings.values) }
             .flatMap { (binding: HotkeyBinding) -> [String] in
                 binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.workspaceNameOrNil()?.raw } +
                     binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.workspaceNameOrNil()?.raw }
@@ -212,7 +208,7 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
             + (raw.workspaceToMonitorForceAssignment ?? [:]).keys
     )
     if config.enableNormalizationFlattenContainers {
-        let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings }
+        let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings.values }
             .flatMap { $0.commands }
             .contains { $0 is SplitCommand }
         if containsSplitCommand {
@@ -457,21 +453,23 @@ extension Parsed where Failure == String {
     }
 }
 
-private func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [HotkeyBinding] {
+private func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: HotkeyBinding] {
     guard let rawTable = raw.table else {
         errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
-        return []
+        return [:]
     }
-    var result: [HotkeyBinding] = []
+    var result: [String: HotkeyBinding] = [:]
     for (binding, rawCommand): (String, TOMLValueConvertible) in rawTable {
         let backtrace = backtrace + .key(binding)
         let binding = parseBinding(binding, backtrace)
             .flatMap { modifiers, key -> ParsedToml<HotkeyBinding> in
-                parseCommandOrCommands(rawCommand).toParsedToml(backtrace).map { HotkeyBinding(modifiers, key, $0) }
+                parseCommandOrCommands(rawCommand).toParsedToml(backtrace).map {
+                    HotkeyBinding(modifiers.toString() + "-\(key)", modifiers, key, $0)
+                }
             }
             .getOrNil(appendErrorTo: &errors)
         if let binding {
-            result += [binding]
+            result[binding.binding] = binding
         }
     }
     return result
