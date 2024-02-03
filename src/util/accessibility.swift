@@ -321,14 +321,13 @@ extension AXUIElement {
 }
 
 extension AXObserver {
-    private static func newImpl(_ pid: pid_t, _ handler: AXObserverCallback) -> AXObserver {
+    private static func newImpl(_ pid: pid_t, _ handler: AXObserverCallback) -> AXObserver? {
         var observer: AXObserver? = nil
-        check(AXObserverCreate(pid, handler, &observer) == .success)
-        return observer!
+        return AXObserverCreate(pid, handler, &observer) == .success ? observer : nil
     }
 
     static func observe(_ pid: pid_t, _ notifKey: String, _ ax: AXUIElement, _ handler: AXObserverCallback, data: AnyObject?) -> AXObserver? {
-        let observer = newImpl(pid, handler)
+        guard let observer = newImpl(pid, handler) else { return nil }
         let dataPtr: UnsafeMutableRawPointer? = data.flatMap { Unmanaged.passUnretained($0).toOpaque() }
         // kAXWindowCreatedNotification takes more than 1 attempt to subscribe. Probably, it's because the application
         // is still initializing
