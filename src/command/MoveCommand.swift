@@ -10,12 +10,12 @@ struct MoveCommand: Command {
             state.stderr.append(noWindowIsFocused)
             return false
         }
-        switch currentWindow.parent.kind {
+        switch currentWindow.parent.cases {
         case .tilingContainer(let parent):
             let indexOfCurrent = currentWindow.ownIndex
             let indexOfSiblingTarget = indexOfCurrent + direction.focusOffset
             if parent.orientation == direction.orientation && parent.children.indices.contains(indexOfSiblingTarget) {
-                switch parent.children[indexOfSiblingTarget].genericKind {
+                switch parent.children[indexOfSiblingTarget].nodeCases {
                 case .tilingContainer(let topLevelSiblingTargetContainer):
                     deepMoveIn(window: currentWindow, into: topLevelSiblingTargetContainer, moveDirection: direction)
                 case .window: // "swap windows"
@@ -36,7 +36,7 @@ struct MoveCommand: Command {
 
 private func moveOut(window: Window, direction: CardinalDirection) {
     let innerMostChild = window.parents.first(where: {
-        switch $0.parent?.kind {
+        switch $0.parent?.cases {
         case .workspace, nil:
             return true // Stop searching
         case .tilingContainer(let parent):
@@ -45,7 +45,7 @@ private func moveOut(window: Window, direction: CardinalDirection) {
     }) as! TilingContainer
     let bindTo: TilingContainer
     let bindToIndex: Int
-    switch innerMostChild.parent.genericKind {
+    switch innerMostChild.parent.nodeCases {
     case .tilingContainer(let parent):
         check(parent.orientation == direction.orientation)
         bindTo = parent
@@ -74,7 +74,7 @@ private func moveOut(window: Window, direction: CardinalDirection) {
 
 private func deepMoveIn(window: Window, into container: TilingContainer, moveDirection: CardinalDirection) {
     let deepTarget = container.findDeepMoveInTargetRecursive(moveDirection.orientation)
-    switch deepTarget.genericKind {
+    switch deepTarget.nodeCases {
     case .tilingContainer(let deepTarget):
         window.unbindFromParent()
         window.bind(to: deepTarget, adaptiveWeight: WEIGHT_AUTO, index: 0)
@@ -92,7 +92,7 @@ private func deepMoveIn(window: Window, into container: TilingContainer, moveDir
 
 private extension TreeNode {
     func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TreeNode {
-        switch genericKind {
+        switch nodeCases {
         case .window:
             return self
         case .tilingContainer(let container):

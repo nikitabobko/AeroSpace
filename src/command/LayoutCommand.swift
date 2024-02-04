@@ -31,7 +31,7 @@ struct LayoutCommand: Command {
         case .vertical:
             result = changeTilingLayout(targetLayout: nil, targetOrientation: .v, window: window)
         case .tiling:
-            switch window.parent.kind {
+            switch window.parent.cases {
             case .workspace:
                 window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
             case .tilingContainer:
@@ -54,7 +54,7 @@ struct LayoutCommand: Command {
 }
 
 private func changeTilingLayout(targetLayout: Layout?, targetOrientation: Orientation?, window: Window) -> Bool {
-    switch window.parent.kind {
+    switch window.parent.cases {
     case .tilingContainer(let parent):
         let targetOrientation = targetOrientation ?? parent.orientation
         let targetLayout = targetLayout ?? parent.layout

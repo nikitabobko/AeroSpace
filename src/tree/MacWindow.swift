@@ -8,7 +8,7 @@ final class MacWindow: Window, CustomStringConvertible {
     fileprivate var previousSize: CGSize?
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 
-    private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
+    private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
         self.axWindow = axWindow
         self.macApp = app
         super.init(id: id, app, lastFloatingSize: axWindow.get(Ax.sizeAttr), parent: parent, adaptiveWeight: adaptiveWeight, index: index)
@@ -226,7 +226,7 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
 
 private func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace, _ app: MacApp) -> BindingData {
     shouldFloat(axWindow, app)
-        ? BindingData(parent: workspace as NonLeafTreeNode, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+        ? BindingData(parent: workspace as NonLeafTreeNodeObject, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         : getBindingDataForNewTilingWindow(workspace)
 }
 

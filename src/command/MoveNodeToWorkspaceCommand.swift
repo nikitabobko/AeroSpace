@@ -20,7 +20,7 @@ struct MoveNodeToWorkspaceCommand: Command {
         if preserveWorkspace == targetWorkspace {
             return true
         }
-        let targetContainer: NonLeafTreeNode = focused.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
+        let targetContainer: NonLeafTreeNodeObject = focused.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
         focused.unbindFromParent()
         focused.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         return WorkspaceCommand.run(state, preserveWorkspace.name)

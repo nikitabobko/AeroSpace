@@ -20,7 +20,7 @@ extension TreeNode {
         return parent.children.firstIndex(of: self)!
     }
 
-    var parents: [NonLeafTreeNode] { parent.flatMap { [$0] + $0.parents } ?? [] }
+    var parents: [NonLeafTreeNodeObject] { parent.flatMap { [$0] + $0.parents } ?? [] }
     var parentsWithSelf: [TreeNode] { parent.flatMap { [self] + $0.parentsWithSelf } ?? [self] }
 
     var workspace: Workspace {
@@ -32,7 +32,7 @@ extension TreeNode {
     }
 
     func allLeafWindowsRecursive(snappedTo direction: CardinalDirection) -> [Window] {
-        switch genericKind {
+        switch nodeCases {
         case .workspace(let workspace):
             return workspace.rootTilingContainer.allLeafWindowsRecursive(snappedTo: direction)
         case .window(let window):
@@ -82,7 +82,7 @@ extension TreeNode {
         withLayout layout: Layout?
     ) -> (parent: TilingContainer, ownIndex: Int)? {
         let innermostChild = parentsWithSelf.first(where: { (node: TreeNode) -> Bool in
-            switch node.parent?.kind {
+            switch node.parent?.cases {
             case .workspace:
                 return true
             case .tilingContainer(let parent):
@@ -93,7 +93,7 @@ extension TreeNode {
                 return true
             }
         })!
-        switch innermostChild.parent?.kind {
+        switch innermostChild.parent?.cases {
         case .tilingContainer(let parent):
             check(parent.orientation == direction.orientation)
             return (parent, innermostChild.ownIndexOrNil!)

@@ -27,7 +27,7 @@ private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tes
            getNativeFocusedWindow(startup: false) != window {
         return
     }
-    switch window.parent.kind {
+    switch window.parent.cases {
     case .workspace:
         return // Nothing to do for floating windows
     case .tilingContainer:

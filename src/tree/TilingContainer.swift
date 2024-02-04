@@ -1,22 +1,22 @@
 import Common
 
-class TilingContainer: TreeNode, NonLeafTreeNode {
+class TilingContainer: TreeNode, NonLeafTreeNodeObject {
     fileprivate var _orientation: Orientation
     var orientation: Orientation { _orientation }
     var layout: Layout
-    override var parent: NonLeafTreeNode { super.parent ?? errorT("TilingContainers always have parent") }
+    override var parent: NonLeafTreeNodeObject { super.parent ?? errorT("TilingContainers always have parent") }
 
-    init(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, _ orientation: Orientation, _ layout: Layout, index: Int) {
+    init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, _ orientation: Orientation, _ layout: Layout, index: Int) {
         self._orientation = orientation
         self.layout = layout
         super.init(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
-    static func newHTiles(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
+    static func newHTiles(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
         TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .h, .tiles, index: index)
     }
 
-    static func newVTiles(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
+    static func newVTiles(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) -> TilingContainer {
         TilingContainer(parent: parent, adaptiveWeight: adaptiveWeight, .v, .tiles, index: index)
     }
 }

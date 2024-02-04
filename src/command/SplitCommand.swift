@@ -13,7 +13,7 @@ struct SplitCommand: Command {
             state.stderr.append(noWindowIsFocused)
             return false
         }
-        switch window.parent.kind {
+        switch window.parent.cases {
         case .workspace:
             return false // Nothing to do for floating windows
         case .tilingContainer(let parent):

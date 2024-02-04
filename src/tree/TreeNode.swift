@@ -3,8 +3,8 @@ import Common
 class TreeNode: Equatable {
     private var _children: [TreeNode] = []
     var children: [TreeNode] { _children }
-    fileprivate weak var _parent: NonLeafTreeNode? = nil
-    var parent: NonLeafTreeNode? { _parent }
+    fileprivate weak var _parent: NonLeafTreeNodeObject? = nil
+    var parent: NonLeafTreeNodeObject? { _parent }
     private var adaptiveWeight: CGFloat
     private let _mruChildren: MruStack<TreeNode> = MruStack()
     // Usages:
@@ -16,7 +16,7 @@ class TreeNode: Equatable {
     // - move with mouse
     var lastAppliedLayoutPhysicalRect: Rect? = nil // with real inner gaps
 
-    init(parent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) {
+    init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
         self.adaptiveWeight = adaptiveWeight
         bind(to: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
@@ -27,7 +27,7 @@ class TreeNode: Equatable {
 
     /// See: ``getWeight(_:)``
     func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {
-        switch parent?.kind {
+        switch parent?.cases {
         case .tilingContainer(let parent):
             if parent.orientation != targetOrientation {
                 error("You can't change \(targetOrientation) weight of nodes located in \(parent.orientation) container")
@@ -45,11 +45,11 @@ class TreeNode: Equatable {
 
     /// Weight itself doesn't make sense. The parent container controls semantics of weight
     func getWeight(_ targetOrientation: Orientation) -> CGFloat {
-        switch parent?.kind {
+        switch parent?.cases {
         case .tilingContainer(let parent):
             return parent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
         case .workspace(let parent):
-            switch genericKind {
+            switch nodeCases {
             case .window: // self is a floating window
                 error("Weight doesn't make sense for floating windows")
             case .tilingContainer: // root tiling container
@@ -63,7 +63,7 @@ class TreeNode: Equatable {
     }
 
     @discardableResult
-    func bind(to newParent: NonLeafTreeNode, adaptiveWeight: CGFloat, index: Int) -> BindingData? {
+    func bind(to newParent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) -> BindingData? {
         if _parent === newParent {
             error("Binding to the same parent doesn't make sense")
         }
@@ -76,13 +76,13 @@ class TreeNode: Equatable {
             return result
         }
         if adaptiveWeight == WEIGHT_AUTO {
-            switch newParent.kind {
+            switch newParent.cases {
             case .tilingContainer(let newParent):
                 self.adaptiveWeight = newParent.children.sumOf { $0.getWeight(newParent.orientation) }
                     .div(newParent.children.count)
                     ?? 1
             case .workspace:
-                switch genericKind {
+                switch nodeCases {
                 case .window:
                     self.adaptiveWeight = WEIGHT_FLOATING
                 case .tilingContainer:
@@ -160,12 +160,12 @@ let WEIGHT_AUTO = CGFloat(-1)
 let INDEX_BIND_LAST = -1
 
 struct BindingData {
-    let parent: NonLeafTreeNode
+    let parent: NonLeafTreeNodeObject
     let adaptiveWeight: CGFloat
     let index: Int
 }
 
-class NilTreeNode: TreeNode, NonLeafTreeNode {
+class NilTreeNode: TreeNode, NonLeafTreeNodeObject {
     private override init() {
         super.init()
     }

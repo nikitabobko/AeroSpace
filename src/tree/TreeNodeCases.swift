@@ -1,20 +1,20 @@
 import Common
 
-enum TreeNodeKind {
+enum TreeNodeCases {
     case window(Window)
     case tilingContainer(TilingContainer)
     case workspace(Workspace)
 }
 
-enum NonLeafTreeNodeKind {
+enum NonLeafTreeNodeCases {
     case tilingContainer(TilingContainer)
     case workspace(Workspace)
 }
 
-protocol NonLeafTreeNode: TreeNode {}
+protocol NonLeafTreeNodeObject: TreeNode {}
 
 extension TreeNode {
-    var genericKind: TreeNodeKind {
+    var nodeCases: TreeNodeCases {
         if let window = self as? Window {
             return .window(window)
         } else if let workspace = self as? Workspace {
@@ -27,8 +27,8 @@ extension TreeNode {
     }
 }
 
-extension NonLeafTreeNode {
-    var kind: NonLeafTreeNodeKind {
+extension NonLeafTreeNodeObject {
+    var cases: NonLeafTreeNodeCases {
         if self is Window {
             windowsCantHaveChildren()
         } else if let workspace = self as? Workspace {

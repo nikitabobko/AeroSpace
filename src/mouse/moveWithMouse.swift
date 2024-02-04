@@ -12,7 +12,7 @@ private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
            getNativeFocusedWindow(startup: false) != window {
         return
     }
-    switch window.parent.kind {
+    switch window.parent.cases {
     case .workspace:
         moveFloatingWindow(window)
     case .tilingContainer:
@@ -85,7 +85,7 @@ extension CGPoint {
         case .accordion:
             target = tree.mostRecentChild
         }
-        switch target?.genericKind {
+        switch target?.nodeCases {
         case nil, .workspace:
             return nil
         case .window(let window):

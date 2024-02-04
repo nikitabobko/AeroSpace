@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0080FE9D1F9705A8A30D1048 /* TreeNodeCases.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47FBF6CB351EA3130B5AFED8 /* TreeNodeCases.swift */; };
 		03D8ABD4597EDB00D79807E1 /* TreeNodeEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F6B8A501483ACBB62560101 /* TreeNodeEx.swift */; };
 		045D4B46ABACA9E8167EF356 /* mouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AEE5470AF418906B180A593 /* mouse.swift */; };
 		0A90EEEAC020DD3A56736014 /* FocusCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = E761155C73F06E2CF5E292A4 /* FocusCommand.swift */; };
@@ -69,7 +70,6 @@
 		A249B6511A9BD20A298C0DE7 /* SplitCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = B65F0D298D61D85CEB29CE77 /* SplitCommand.swift */; };
 		A2CBF9674964F9083BB198D2 /* ArrayEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 883D7F7F87FBE7D0BDE4E87F /* ArrayEx.swift */; };
 		A5BFF75CF8021A585BC1F9D5 /* parseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB03A4736BC3F6D19E4E69F3 /* parseCommand.swift */; };
-		AC439551A737C73168CC5BF9 /* TreeNodeKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60709210745C60D64F82D53 /* TreeNodeKind.swift */; };
 		AC47DF43EFF42358F033C87C /* WorkspaceBackAndForthCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED7EE20910D7BE4D0150CED /* WorkspaceBackAndForthCommand.swift */; };
 		B04363E8C28CEC76F39977F2 /* MonitorDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 244190F3707EF2BB3CC7FA5A /* MonitorDescription.swift */; };
 		B0D0C37BAE7E7F0D0FF1E9FC /* GlobalObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E5977331398421A4FC168 /* GlobalObserver.swift */; };
@@ -134,6 +134,7 @@
 		3A6EF465EF4129BCB10FE247 /* ExecCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecCommandTest.swift; sourceTree = "<group>"; };
 		3C2E5977331398421A4FC168 /* GlobalObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalObserver.swift; sourceTree = "<group>"; };
 		43DD32B1711B8EFCC834B68E /* WorkspaceCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkspaceCommand.swift; sourceTree = "<group>"; };
+		47FBF6CB351EA3130B5AFED8 /* TreeNodeCases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeCases.swift; sourceTree = "<group>"; };
 		4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModeCommand.swift; sourceTree = "<group>"; };
 		4D2EDED37607C15170A62E28 /* DynamicConfigValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicConfigValue.swift; sourceTree = "<group>"; };
 		4E274CE21EA410F1380D6C93 /* ListWindowsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListWindowsTest.swift; sourceTree = "<group>"; };
@@ -177,7 +178,6 @@
 		9E6478C499F3FB86C017D7BB /* ListWorkspacesCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListWorkspacesCommand.swift; sourceTree = "<group>"; };
 		9ECC990B6C2D66D343216A12 /* FullscreenCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenCommand.swift; sourceTree = "<group>"; };
 		9F6B8A501483ACBB62560101 /* TreeNodeEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeEx.swift; sourceTree = "<group>"; };
-		A60709210745C60D64F82D53 /* TreeNodeKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeKind.swift; sourceTree = "<group>"; };
 		AAE5DD3E9DC82D247853956B /* Rect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rect.swift; sourceTree = "<group>"; };
 		AD0938DE74E687A8959E3F9C /* moveWithMouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moveWithMouse.swift; sourceTree = "<group>"; };
 		AD1645D9939F3F896EF21393 /* TreeNodeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeTest.swift; sourceTree = "<group>"; };
@@ -273,8 +273,8 @@
 				C704028F402C0DE83EDEABB9 /* normalizeContainers.swift */,
 				C848D6E57FDF22AAF0FB45E6 /* TilingContainer.swift */,
 				3A262B442A94C1964509B691 /* TreeNode.swift */,
+				47FBF6CB351EA3130B5AFED8 /* TreeNodeCases.swift */,
 				9F6B8A501483ACBB62560101 /* TreeNodeEx.swift */,
-				A60709210745C60D64F82D53 /* TreeNodeKind.swift */,
 				6352ADEE6625D9703CFCA99A /* Window.swift */,
 				C3F068BCC50ED846DCBFDE57 /* Workspace.swift */,
 				57B60F7A58DAD4D3AF2788E4 /* WorkspaceEx.swift */,
@@ -627,8 +627,8 @@
 				E5682579AEC6B84CF6FCE90D /* TilingContainer.swift in Sources */,
 				56E72B24303F5F337B31B776 /* TrayMenuModel.swift in Sources */,
 				F892B5DCB4F731B3E173FF4C /* TreeNode.swift in Sources */,
+				0080FE9D1F9705A8A30D1048 /* TreeNodeCases.swift in Sources */,
 				03D8ABD4597EDB00D79807E1 /* TreeNodeEx.swift in Sources */,
-				AC439551A737C73168CC5BF9 /* TreeNodeKind.swift in Sources */,
 				2CC46A952773F148AC398144 /* Window.swift in Sources */,
 				BF16873111EEDE60A8AACD6B /* Workspace.swift in Sources */,
 				AC47DF43EFF42358F033C87C /* WorkspaceBackAndForthCommand.swift in Sources */,

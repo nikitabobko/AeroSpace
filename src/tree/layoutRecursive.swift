@@ -7,7 +7,7 @@ extension TreeNode {
                 : point + CGPoint(x: config.indentForNestedContainersWithTheSameOrientation, y: 0)
         }
         let physicalRect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
-        switch genericKind {
+        switch nodeCases {
         case .workspace(let workspace):
             lastAppliedLayoutPhysicalRect = physicalRect
             lastAppliedLayoutVirtualRect = virtual

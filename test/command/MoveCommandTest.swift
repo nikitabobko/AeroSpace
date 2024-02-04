@@ -202,7 +202,7 @@ final class MoveCommandTest: XCTestCase {
 
 extension TreeNode {
     var layoutDescription: LayoutDescription {
-        switch genericKind {
+        switch nodeCases {
         case .window(let window):
             return .window(window.windowId)
         case .tilingContainer(let container):
