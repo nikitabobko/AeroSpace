@@ -23,8 +23,20 @@ extension TreeNode {
     var parents: [NonLeafTreeNodeObject] { parent.flatMap { [$0] + $0.parents } ?? [] }
     var parentsWithSelf: [TreeNode] { parent.flatMap { [self] + $0.parentsWithSelf } ?? [self] }
 
-    var workspace: Workspace {
-        self as? Workspace ?? parent?.workspace ?? errorT("Unknown type \(Self.self)")
+    var workspace: Workspace? {
+        self as? Workspace ?? parent?.workspace
+    }
+
+    var nodeMonitor: Monitor? {
+        guard let parent else { return nil }
+        switch parent.cases {
+        case .workspace(let parent):
+            return parent.monitor
+        case .tilingContainer(let parent):
+            return parent.nodeMonitor
+        case .macosInvisibleWindowsContainer:
+            return nil
+        }
     }
 
     var mostRecentWindow: Window? {

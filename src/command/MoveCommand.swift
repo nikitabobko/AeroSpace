@@ -57,7 +57,7 @@ private func moveOut(_ state: CommandMutableState, window: Window, direction: Ca
     case .workspace(let parent): // create implicit container
         let prevRoot = parent.rootTilingContainer
         prevRoot.unbindFromParent()
-        // Force list layout
+        // Force tiles layout
         _ = TilingContainer(parent: parent, adaptiveWeight: WEIGHT_AUTO, direction.orientation, .tiles, index: 0)
         check(prevRoot != parent.rootTilingContainer)
         prevRoot.bind(to: parent.rootTilingContainer, adaptiveWeight: WEIGHT_AUTO, index: 0)

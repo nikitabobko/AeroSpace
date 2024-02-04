@@ -63,14 +63,14 @@ final class MacWindow: Window, CustomStringConvertible {
         if MacWindow.allWindowsMap.removeValue(forKey: windowId) == nil {
             return
         }
-        let workspace = unbindFromParent().parent.workspace.name
+        let workspace = unbindFromParent().parent.workspace?.name
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
         }
         axObservers = []
         // todo the if is an approximation to filter out cases when window just closed itself (or was killed remotely)
         //  we might want to track the time of the latest workspace switch to make the approximation more accurate
-        if workspace == previousFocusedWorkspaceName || workspace == focusedWorkspaceName {
+        if let workspace, workspace == previousFocusedWorkspaceName || workspace == focusedWorkspaceName {
             refreshSession(forceFocus: true) {
                 _ = WorkspaceCommand.run(.focused, workspace)
             }
@@ -83,7 +83,7 @@ final class MacWindow: Window, CustomStringConvertible {
         return true
     }
 
-    override var title: String? { axWindow.get(Ax.titleAttr) }
+    override var title: String { axWindow.get(Ax.titleAttr) ?? "" }
     override var isMacosFullscreen: Bool { axWindow.get(Ax.isFullscreenAttr) == true }
     override var isMacosMinimized: Bool { axWindow.get(Ax.minimizedAttr) == true }
 
@@ -105,16 +105,18 @@ final class MacWindow: Window, CustomStringConvertible {
         if !isHiddenViaEmulation {
             debug("hideViaEmulation: Hide \(self)")
             guard let topLeftCorner = getTopLeftCorner() else { return }
+            guard let workspace else { return } // hiding only makes sense for workspace windows
             prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
                     topLeftCorner - workspace.monitor.rect.topLeftCorner
         }
-        setTopLeftCorner(allMonitorsRectsUnion.bottomRightCorner)
+        _ = setTopLeftCorner(allMonitorsRectsUnion.bottomRightCorner)
     }
 
     func unhideViaEmulation() {
         guard let prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect else { return }
+        guard let workspace else { return } // hiding only makes sense for workspace windows
 
-        setTopLeftCorner(workspace.monitor.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
+        _ = setTopLeftCorner(workspace.monitor.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
 
         self.prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect = nil
     }
@@ -283,7 +285,7 @@ extension WindowDetectedCallback {
         if let startupMatcher = matcher.duringAeroSpaceStartup, startupMatcher != startup {
             return false
         }
-        if let regex = matcher.windowTitleRegexSubstring, !(window.title ?? "").contains(regex) {
+        if let regex = matcher.windowTitleRegexSubstring, !(window.title).contains(regex) {
             return false
         }
         if let appId = matcher.appId, appId != window.app.id {

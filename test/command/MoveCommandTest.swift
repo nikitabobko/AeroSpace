@@ -216,7 +216,7 @@ extension TreeNode {
                     ? .h_accordion(container.children.map(\.layoutDescription))
                     : .v_accordion(container.children.map(\.layoutDescription))
             }
-        case .workspace:
+        case .workspace(let workspace):
             return .workspace(workspace.children.map(\.layoutDescription))
         case .macosInvisibleWindowsContainer:
             return .macosInvisible

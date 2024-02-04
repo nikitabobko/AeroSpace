@@ -26,9 +26,9 @@ class Window: TreeNode, Hashable {
 
     func getTopLeftCorner() -> CGPoint? { error("Not implemented") }
     func getSize() -> CGSize? { error("Not implemented") }
-    var title: String? { error("Not implemented") }
+    var title: String { error("Not implemented") }
     var isMacosFullscreen: Bool { false }
-    var isMacosMinimized: Bool { false }
+    var isMacosMinimized: Bool { false } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
     var isHiddenViaEmulation: Bool { error("Not implemented") }
     func setSize(_ size: CGSize) -> Bool { error("Not implemented") }
 
@@ -59,10 +59,14 @@ extension Window {
 
     var ownIndex: Int { ownIndexOrNil! }
 
-    func focus() { // todo rename: focusWindowAndWorkspace
+    func focus() -> Bool { // todo rename: focusWindowAndWorkspace
         markAsMostRecentChild()
         // todo bug make the workspace active first...
-        focusedWorkspaceName = workspace.name
+        if let workspace = workspace ?? nodeMonitor?.activeWorkspace { // todo change focusedWorkspaceName to focused monitor
+            focusedWorkspaceName = workspace.name
+            return nodeMonitor?.setActiveWorkspace(workspace) ?? true
+        } // else if We should exit-native-fullscreen/unminimize window if we want to fix B6E178F2
+        return true
     }
 
     func setFrame(_ topLeft: CGPoint?, _ size: CGSize?) -> Bool {

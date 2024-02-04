@@ -65,8 +65,9 @@ func takeFocusFromMacOs(_ nativeFocused: Window?, startup: Bool) { // alternativ
 }
 
 private func refreshFocusedWorkspaceBasedOnFocusedWindow() { // todo drop. It should no longer be necessary
-    if let focusedWindow = focusedWindow {
-        let focusedWorkspace: Workspace = focusedWindow.workspace
+    if let focusedWindow = focusedWindow, let monitor = focusedWindow.nodeMonitor {
+        // todo it's rather refresh focused monitor
+        let focusedWorkspace: Workspace = monitor.activeWorkspace
         check(focusedWorkspace.monitor.setActiveWorkspace(focusedWorkspace))
         focusedWorkspaceName = focusedWorkspace.name
     }
@@ -74,7 +75,9 @@ private func refreshFocusedWorkspaceBasedOnFocusedWindow() { // todo drop. It sh
 
 private func normalizeLayoutReason() {
     let workspace = Workspace.focused
-    for window in workspace.allLeafWindowsRecursive {
+    let windows: [Window] = workspace.allLeafWindowsRecursive +
+        macosInvisibleWindowsContainer.children.filterIsInstance(of: Window.self)
+    for window in windows {
         let isMacosFullscreen = window.isMacosFullscreen
         let isMacosInvisible = !isMacosFullscreen && (window.isMacosMinimized || window.macAppUnsafe.nsApp.isHidden)
         if isMacosFullscreen && !window.layoutReason.isMacos {
@@ -87,7 +90,7 @@ private func normalizeLayoutReason() {
             window.unbindFromParent()
             window.bind(to: macosInvisibleWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
         }
-        if case .macos(let prevParentKind) = window.layoutReason, !isMacosFullscreen {
+        if case .macos(let prevParentKind) = window.layoutReason, !isMacosFullscreen && !isMacosInvisible {
             window.layoutReason = .standard
             window.unbindFromParent()
             switch prevParentKind {

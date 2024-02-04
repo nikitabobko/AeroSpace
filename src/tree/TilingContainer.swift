@@ -1,6 +1,6 @@
 import Common
 
-class TilingContainer: TreeNode, NonLeafTreeNodeObject {
+class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider renaming to GenericContainer
     fileprivate var _orientation: Orientation
     var orientation: Orientation { _orientation }
     var layout: Layout

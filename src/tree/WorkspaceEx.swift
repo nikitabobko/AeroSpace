@@ -29,7 +29,7 @@ extension Workspace {
     }
 
     var floatingAndMacosFullscreenWindows: [Window] {
-        workspace.children.filterIsInstance(of: Window.self)
+        children.filterIsInstance(of: Window.self)
     }
 
     var forceAssignedMonitor: Monitor? {
@@ -38,14 +38,5 @@ extension Workspace {
         return monitorDescriptions.lazy
             .compactMap { $0.resolveMonitor(sortedMonitors: sortedMonitors) }
             .first
-    }
-
-    func layoutWorkspace() {
-        if isEffectivelyEmpty { return }
-        let rect = monitor.visibleRectPaddedByOuterGaps
-        // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
-        // window on the upper monitor to take full width. rect.height - 1 resolves this problem
-        // But I also faced this problem in mointors horizontal configuration. ¯\_(ツ)_/¯
-        layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect)
     }
 }

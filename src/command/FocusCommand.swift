@@ -109,7 +109,7 @@ private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingW
             let center = window.isMacosFullscreen ? workspace.monitor.rect.topLeftCorner : window.getCenter()
             guard let center else { return nil }
             // todo bug: what if there are no tiling windows on the workspace?
-            guard let target = center.coerceIn(rect: window.workspace.monitor.visibleRectPaddedByOuterGaps).findIn(tree: workspace.rootTilingContainer, virtual: true) else { return nil }
+            guard let target = center.coerceIn(rect: workspace.monitor.visibleRectPaddedByOuterGaps).findIn(tree: workspace.rootTilingContainer, virtual: true) else { return nil }
             guard let targetCenter = target.getCenter() else { return nil }
             guard let tilingParent = target.parent as? TilingContainer else { return nil }
             let index = center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)

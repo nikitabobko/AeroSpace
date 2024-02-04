@@ -10,7 +10,11 @@ struct CloseAllWindowsButCurrentCommand: Command {
             return false
         }
         var result = true
-        for window in focused.workspace.allLeafWindowsRecursive {
+        guard let workspace = focused.workspace else {
+            state.stderr.append("Focused window '\(focused.title)' doesn't belong to workspace")
+            return false
+        }
+        for window in workspace.allLeafWindowsRecursive {
             if window != focused {
                 state.subject = .window(window)
                 result = CloseCommand(args: args.closeArgs).run(state) && result

@@ -36,21 +36,19 @@ struct LayoutCommand: Command {
                 return false
             case .tilingContainer:
                 return true // Nothing to do
-            case .workspace:
+            case .workspace(let workspace):
                 window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
-                let data = getBindingDataForNewTilingWindow(window.unbindFromParent().parent.workspace)
+                window.unbindFromParent()
+                let data = getBindingDataForNewTilingWindow(workspace)
                 window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
                 return true
             }
         case .floating:
-            let workspace = window.unbindFromParent().parent.workspace
+            let workspace = state.subject.workspace // Capture workspace before unbind ID-1A4CF7C5
+            window.unbindFromParent() // ID-1A4CF7C5
             window.bindAsFloatingWindow(to: workspace)
             guard let topLeftCorner = window.getTopLeftCorner() else { return false }
-            let offset = CGPoint(
-                x: abs(topLeftCorner.x - workspace.monitor.rect.topLeftX).takeIf { $0 < 30 } ?? 0,
-                y: abs(topLeftCorner.y - workspace.monitor.rect.topLeftY).takeIf { $0 < 30 } ?? 0
-            )
-            return window.setFrame(topLeftCorner + offset, window.lastFloatingSize)
+            return window.setFrame(topLeftCorner, window.lastFloatingSize)
         }
     }
 }

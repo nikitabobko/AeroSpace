@@ -155,6 +155,7 @@ private extension ParsedCmd where T == any Command {
     }
 }
 
+// todo Problem B6E178F2. Make macos-native* commands to be the last commands in the sequence
 func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]> {
     if let rawString = raw.string {
         return parseCommand(rawString).toEither().map { [$0] }

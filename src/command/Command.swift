@@ -83,7 +83,7 @@ extension CommandSubject {
     var workspace: Workspace {
         switch self {
         case .window(let window):
-            return window.workspace
+            return window.nodeMonitor?.activeWorkspace ?? Workspace.focused
         case .emptyWorkspace(let workspaceName):
             return Workspace.get(byName: workspaceName)
         }

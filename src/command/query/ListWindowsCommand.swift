@@ -51,7 +51,7 @@ struct ListWindowsCommand: Command {
         }
         state.stdout += windows
             .map { window in
-                [String(window.windowId), window.app.name ?? "NULL-APP-NAME", window.title ?? "NULL-TITLE"]
+                [String(window.windowId), window.app.name ?? "NULL-APP-NAME", window.title]
             }
             .toPaddingTable()
         return true
