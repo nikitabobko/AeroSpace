@@ -21,7 +21,7 @@ func refreshSession<T>(startup: Bool = false, forceFocus: Bool = false, body: ()
     let focusAfter = focusedWindow
 
     if startup {
-        arrangeLayoutsAtStartup()
+        smartLayoutAtStartup()
     }
 
     if TrayMenuModel.shared.isEnabled {
@@ -97,13 +97,12 @@ private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
     }
 }
 
-private func arrangeLayoutsAtStartup() {
-    for workspace in Workspace.all.filter({ !$0.isEffectivelyEmpty }) {
-        let root = workspace.rootTilingContainer
-        if root.children.count <= 3 {
-            root.layout = .tiles
-        } else {
-            root.layout = .accordion
-        }
+private func smartLayoutAtStartup() {
+    let workspace = Workspace.focused
+    let root = workspace.rootTilingContainer
+    if root.children.count <= 3 {
+        root.layout = .tiles
+    } else {
+        root.layout = .accordion
     }
 }
