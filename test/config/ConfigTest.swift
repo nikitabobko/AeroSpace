@@ -39,9 +39,10 @@ final class ConfigTest: XCTestCase {
             """
         )
         XCTAssertEqual(errors.descriptions, [])
+        let binding = HotkeyBinding(.option, .h, [FocusCommand.new(direction: .left)])
         XCTAssertEqual(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [HotkeyBinding(.option, .h, [FocusCommand.new(direction: .left)])])
+            Mode(name: nil, bindings: [binding.binding: binding])
         )
     }
 
@@ -73,9 +74,10 @@ final class ConfigTest: XCTestCase {
             ["mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
              "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding"]
         )
+        let binding = HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])
         XCTAssertEqual(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])])
+            Mode(name: nil, bindings: [binding.binding: binding])
         )
     }
 
@@ -90,7 +92,7 @@ final class ConfigTest: XCTestCase {
             """
         )
         XCTAssertEqual(errors.descriptions, [])
-        XCTAssertEqual(config.preservedWorkspaceNames, ["1", "2", "3", "4"])
+        XCTAssertEqual(config.preservedWorkspaceNames.sorted(), ["1", "2", "3", "4"])
     }
 
     func testUnknownKeyParseError() {

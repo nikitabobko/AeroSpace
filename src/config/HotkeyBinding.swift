@@ -43,15 +43,15 @@ func activateMode(_ targetMode: String?) {
 }
 
 struct HotkeyBinding {
-    let binding: String
     let modifiers: NSEvent.ModifierFlags
     let key: Key
     let commands: [any Command]
+    let binding: String
 
-    init(_ binding: String, _ modifiers: NSEvent.ModifierFlags, _ key: Key, _ commands: [any Command]) {
-        self.binding = binding
+    init(_ modifiers: NSEvent.ModifierFlags, _ key: Key, _ commands: [any Command]) {
         self.modifiers = modifiers
         self.key = key
         self.commands = commands
+        self.binding = modifiers.toString() + "-\(key)"
     }
 }

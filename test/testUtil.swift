@@ -22,7 +22,7 @@ func setUpWorkspacesForTests() {
         gaps: defaultConfig.gaps,
         workspaceToMonitorForceAssignment: [:],
         // Don't create any workspaces for tests
-        modes: [mainModeId: Mode(name: nil, bindings: [])],
+        modes: [mainModeId: Mode(name: nil, bindings: [:])],
         onWindowDetected: [],
         preservedWorkspaceNames: []
     )
