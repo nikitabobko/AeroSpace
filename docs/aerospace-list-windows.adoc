@@ -8,10 +8,10 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-list-windows [-h|--help] --workspace <workspace>... [--monitor <monitor>...]
+list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
+             [--monitor <monitor>...] [--workspace <workspace>...]
              [--pid <pid>] [--app-id <app-id>] [--macos-hidden-app [no]]
-list-windows [-h|--help] --monitor <monitor>... [--workspace <workspace>...]
-             [--pid <pid>] [--app-id <app-id>] [--macos-hidden-app [no]]
+             [--macos-minimized]
 list-windows [-h|--help] --all
 list-windows [-h|--help] --focused
 
@@ -67,6 +67,10 @@ include::util/monitor-option.adoc[]
 
 --macos-hidden-app [no]::
 Filter results to only print windows that belong to hidden applications.
+`[no]` inverts the condition
+
+--macos-minimized [no]::
+Filter results to only print minimized windows.
 `[no]` inverts the condition
 
 // end::body[]

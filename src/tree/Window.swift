@@ -53,6 +53,8 @@ extension Window {
         if let size { setSize(size) }
         if let topLeft { setTopLeftCorner(topLeft) }
     }
+
+    func asMacWindow() -> MacWindow { self as! MacWindow }
 }
 
 @inlinable func windowsCantHaveChildren() -> Never {

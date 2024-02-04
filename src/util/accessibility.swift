@@ -208,7 +208,7 @@ enum Ax {
         setter: { $0 as CFTypeRef }
     )
     static let minimizedAttr = ReadableAttrImpl<Bool>(
-        key: kAXEnabledAttribute,
+        key: kAXMinimizedAttribute,
         getter: { $0 as? Bool }
     )
     //static let minimizedAttr = ReadableAttrImpl<Bool>(
