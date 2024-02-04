@@ -54,6 +54,7 @@
 		77FA83225024151CD556E1ED /* CloseAllWindowsButCurrentCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99853C505D93E41F6531C324 /* CloseAllWindowsButCurrentCommand.swift */; };
 		78622D72C0CCE8D69B080D29 /* moveWithMouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0938DE74E687A8959E3F9C /* moveWithMouse.swift */; };
 		78C38FAF21E574DBE3B88806 /* CloseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8FDC079C530D7B3C568E35F /* CloseCommand.swift */; };
+		7C0ACF53062631B667424927 /* MacosNativeMinimizeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7862747CF7F654B8BF8C9CF9 /* MacosNativeMinimizeCommand.swift */; };
 		7ED8C2A66DD6F903796F090C /* TestApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2431BEAFFF1AC12D3001317A /* TestApp.swift */; };
 		8086A22EDCDC4C906C337D0B /* resizeWithMouse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9745E5FC11701AE35712EC18 /* resizeWithMouse.swift */; };
 		852F88894A3B9FC385563665 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 42BC1E757EF69233C2262FF4 /* HotKey */; };
@@ -157,6 +158,7 @@
 		6F1905935B0C61590A96EFEF /* TestWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestWindow.swift; sourceTree = "<group>"; };
 		71908440CD1ADBE13AD58E26 /* DebugWindowsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugWindowsCommand.swift; sourceTree = "<group>"; };
 		739F4FE1DB101DF4E508F3FE /* Monitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Monitor.swift; sourceTree = "<group>"; };
+		7862747CF7F654B8BF8C9CF9 /* MacosNativeMinimizeCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacosNativeMinimizeCommand.swift; sourceTree = "<group>"; };
 		796713A1B3AEEBF4D0D180C7 /* server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = server.swift; sourceTree = "<group>"; };
 		7ACD4E9C6C0C08F1B0622C57 /* ResizeCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizeCommandTest.swift; sourceTree = "<group>"; };
 		7DAEA4B9015FBF8711E532D0 /* MonitorEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorEx.swift; sourceTree = "<group>"; };
@@ -419,6 +421,7 @@
 				D27A7AF7E9A049700BDE276B /* JoinWithCommand.swift */,
 				1A2B673C67B00DBFCC27FFE7 /* LayoutCommand.swift */,
 				BF3D87FF4D8238F07870F2F6 /* MacosNativeFullscreenCommand.swift */,
+				7862747CF7F654B8BF8C9CF9 /* MacosNativeMinimizeCommand.swift */,
 				4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */,
 				1376845BAB666880919B9AA2 /* MoveCommand.swift */,
 				25AC44D0E9450867215FCBEC /* MoveNodeToWorkspaceCommand.swift */,
@@ -621,6 +624,7 @@
 				BD6301B2CFC16FDE4223ACB8 /* MacApp.swift in Sources */,
 				EECC59858691B99A95542D72 /* MacWindow.swift in Sources */,
 				DEE74487CFB70CEC10D9D3D7 /* MacosNativeFullscreenCommand.swift in Sources */,
+				7C0ACF53062631B667424927 /* MacosNativeMinimizeCommand.swift in Sources */,
 				6E4E235FDA41307B19F16182 /* ModeCommand.swift in Sources */,
 				C76E421FB0D0F0EB1C93A06C /* Monitor.swift in Sources */,
 				B04363E8C28CEC76F39977F2 /* MonitorDescription.swift in Sources */,

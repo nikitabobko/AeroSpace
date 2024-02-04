@@ -14,6 +14,7 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case listWindows = "list-windows"
     case listWorkspaces = "list-workspaces"
     case macosNativeFullscreen = "macos-native-fullscreen"
+    case macosNativeMinimize = "macos-native-minimize"
     case mode
     case move = "move"
     case moveNodeToWorkspace = "move-node-to-workspace"

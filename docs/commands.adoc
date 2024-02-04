@@ -102,6 +102,13 @@ include::aerospace-macos-native-fullscreen.adoc[tags=synopsis]
 include::aerospace-macos-native-fullscreen.adoc[tags=purpose]
 include::aerospace-macos-native-fullscreen.adoc[tags=body]
 
+== macos-native-minimize
+----
+include::aerospace-macos-native-minimize.adoc[tags=synopsis]
+----
+include::aerospace-macos-native-minimize.adoc[tags=purpose]
+include::aerospace-macos-native-minimize.adoc[tags=body]
+
 == mode
 ----
 include::aerospace-mode.adoc[tags=synopsis]
