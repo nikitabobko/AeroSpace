@@ -16,4 +16,11 @@ public extension Optional {
             return []
         }
     }
+
+    func optionalToPrettyString() -> String {
+        if let unwrapped = self {
+            return String(describing: unwrapped)
+        }
+        return "nil"
+    }
 }

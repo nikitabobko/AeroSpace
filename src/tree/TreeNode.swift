@@ -27,38 +27,33 @@ class TreeNode: Equatable {
 
     /// See: ``getWeight(_:)``
     func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {
-        switch parent?.cases {
-        case .tilingContainer(let parent):
+        guard let parent else { error("Can't change weight if TreeNode doesn't have parent") }
+        switch getChildParentRelation(child: self, parent: parent) {
+        case .tiling(let parent):
             if parent.orientation != targetOrientation {
                 error("You can't change \(targetOrientation) weight of nodes located in \(parent.orientation) container")
             }
             if parent.layout != .tiles {
-                error("Weight can be changed only for nodes whose parent is list")
+                error("Weight can be changed only for nodes whose parent has 'tiles' layout")
             }
             adaptiveWeight = newValue
-        case .workspace:
-            error("Can't change weight for floating windows and workspace root containers")
-        case nil:
-            error("Can't change weight if TreeNode doesn't have parent")
+        default:
+            error("Can't change weight")
         }
     }
 
     /// Weight itself doesn't make sense. The parent container controls semantics of weight
     func getWeight(_ targetOrientation: Orientation) -> CGFloat {
-        switch parent?.cases {
-        case .tilingContainer(let parent):
+        guard let parent else { error("Weight doesn't make sense for containers without parent") }
+        switch getChildParentRelation(child: self, parent: parent) {
+        case .floatingWindow, .macosNativeFullscreenWindow:
+            error("Weight doesn't make sense for floating windows")
+        case .macosNativeInvisibleWindow:
+            error("Weight doesn't make sense for invisible windows")
+        case .tiling(let parent):
             return parent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
-        case .workspace(let parent):
-            switch nodeCases {
-            case .window: // self is a floating window
-                error("Weight doesn't make sense for floating windows")
-            case .tilingContainer: // root tiling container
-                return parent.getWeight(targetOrientation)
-            case .workspace:
-                error("Workspaces can't be child")
-            }
-        case nil:
-            error("Weight doesn't make sense for containers without parent")
+        case .rootTilingContainer:
+            return parent.getWeight(targetOrientation)
         }
     }
 
@@ -76,20 +71,15 @@ class TreeNode: Equatable {
             return result
         }
         if adaptiveWeight == WEIGHT_AUTO {
-            switch newParent.cases {
-            case .tilingContainer(let newParent):
+            switch getChildParentRelation(child: self, parent: newParent) {
+            case .floatingWindow, .macosNativeFullscreenWindow:
+                self.adaptiveWeight = WEIGHT_FLOATING
+            case .tiling(let newParent):
                 self.adaptiveWeight = newParent.children.sumOf { $0.getWeight(newParent.orientation) }
                     .div(newParent.children.count)
                     ?? 1
-            case .workspace:
-                switch nodeCases {
-                case .window:
-                    self.adaptiveWeight = WEIGHT_FLOATING
-                case .tilingContainer:
-                    self.adaptiveWeight = 1
-                case .workspace:
-                    error("Binding workspace to workspace is illegal")
-                }
+            case .rootTilingContainer, .macosNativeInvisibleWindow:
+                self.adaptiveWeight = 1
             }
         } else {
             self.adaptiveWeight = adaptiveWeight

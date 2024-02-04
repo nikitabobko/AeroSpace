@@ -218,6 +218,8 @@ extension TreeNode {
             }
         case .workspace:
             return .workspace(workspace.children.map(\.layoutDescription))
+        case .macosInvisibleWindowsContainer:
+            return .macosInvisible
         }
     }
 }
@@ -229,4 +231,5 @@ enum LayoutDescription: Equatable {
     case h_accordion([LayoutDescription])
     case v_accordion([LayoutDescription])
     case window(UInt32)
+    case macosInvisible
 }

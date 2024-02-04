@@ -15,29 +15,33 @@ struct MoveCommand: Command {
             let indexOfCurrent = currentWindow.ownIndex
             let indexOfSiblingTarget = indexOfCurrent + direction.focusOffset
             if parent.orientation == direction.orientation && parent.children.indices.contains(indexOfSiblingTarget) {
-                switch parent.children[indexOfSiblingTarget].nodeCases {
+                switch parent.children[indexOfSiblingTarget].nonRootTreeNodeCasesOrThrow() {
                 case .tilingContainer(let topLevelSiblingTargetContainer):
                     deepMoveIn(window: currentWindow, into: topLevelSiblingTargetContainer, moveDirection: direction)
                 case .window: // "swap windows"
                     let prevBinding = currentWindow.unbindFromParent()
                     currentWindow.bind(to: parent, adaptiveWeight: prevBinding.adaptiveWeight, index: indexOfSiblingTarget)
-                case .workspace:
-                    error("Impossible")
                 }
+                return true
             } else {
-                moveOut(window: currentWindow, direction: direction)
+                return moveOut(state, window: currentWindow, direction: direction)
             }
         case .workspace: // floating window
-            break // todo support moving floating windows
+            state.stderr.append("moving floating windows isn't yet supported") // todo
+            return false
+        case .macosInvisibleWindowsContainer(_):
+            state.stderr.append(moveOutInvisibleWindow)
+            return false
         }
-        return true
     }
 }
 
-private func moveOut(window: Window, direction: CardinalDirection) {
+private let moveOutInvisibleWindow = "moving macOS invisible windows (minimized, or windows of hidden apps) isn't yet supported. This behavior is subject to change"
+
+private func moveOut(_ state: CommandMutableState, window: Window, direction: CardinalDirection) -> Bool {
     let innerMostChild = window.parents.first(where: {
         switch $0.parent?.cases {
-        case .workspace, nil:
+        case .workspace, .macosInvisibleWindowsContainer, nil:
             return true // Stop searching
         case .tilingContainer(let parent):
             return parent.orientation == direction.orientation
@@ -60,6 +64,9 @@ private func moveOut(window: Window, direction: CardinalDirection) {
 
         bindTo = parent.rootTilingContainer
         bindToIndex = direction.insertionOffset
+    case .macosInvisibleWindowsContainer:
+        state.stderr.append(moveOutInvisibleWindow)
+        return false
     case .window:
         error("Window can't contain children nodes")
     }
@@ -70,11 +77,12 @@ private func moveOut(window: Window, direction: CardinalDirection) {
         adaptiveWeight: WEIGHT_AUTO,
         index: bindToIndex
     )
+    return true
 }
 
 private func deepMoveIn(window: Window, into container: TilingContainer, moveDirection: CardinalDirection) {
-    let deepTarget = container.findDeepMoveInTargetRecursive(moveDirection.orientation)
-    switch deepTarget.nodeCases {
+    let deepTarget = container.nonRootTreeNodeCasesOrThrow().findDeepMoveInTargetRecursive(moveDirection.orientation)
+    switch deepTarget {
     case .tilingContainer(let deepTarget):
         window.unbindFromParent()
         window.bind(to: deepTarget, adaptiveWeight: WEIGHT_AUTO, index: 0)
@@ -85,25 +93,22 @@ private func deepMoveIn(window: Window, into container: TilingContainer, moveDir
             adaptiveWeight: WEIGHT_AUTO,
             index: deepTarget.ownIndex + 1
         )
-    case .workspace:
-        error("Impossible")
     }
 }
 
-private extension TreeNode {
-    func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TreeNode {
-        switch nodeCases {
+private extension NonRootTreeNodeCases {
+    func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> NonRootTreeNodeCases {
+        switch self {
         case .window:
             return self
         case .tilingContainer(let container):
             if container.orientation == orientation {
-                return container
+                return .tilingContainer(container)
             } else {
-                return (mostRecentChild ?? errorT("Empty containers must be detached during normalization"))
+                return (container.mostRecentChild ?? errorT("Empty containers must be detached during normalization"))
+                    .nonRootTreeNodeCasesOrThrow()
                     .findDeepMoveInTargetRecursive(orientation)
             }
-        case .workspace:
-            error("Impossible")
         }
     }
 }

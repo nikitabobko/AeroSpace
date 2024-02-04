@@ -36,6 +36,8 @@ extension TreeNode {
             case .accordion:
                 container.layoutAccordion(point, width: width, height: height, virtual: virtual)
             }
+        case .macosInvisibleWindowsContainer:
+            return // Nothing to do for invisible windows
         }
     }
 }

@@ -123,10 +123,10 @@ final class MacWindow: Window, CustomStringConvertible {
         prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect != nil
     }
 
-    override func setSize(_ size: CGSize) {
+    override func setSize(_ size: CGSize) -> Bool {
         disableAnimations {
             previousSize = getSize()
-            axWindow.set(Ax.sizeAttr, size)
+            return axWindow.set(Ax.sizeAttr, size)
         }
     }
 
@@ -134,7 +134,7 @@ final class MacWindow: Window, CustomStringConvertible {
         axWindow.get(Ax.sizeAttr)
     }
 
-    override func setTopLeftCorner(_ point: CGPoint) {
+    override func setTopLeftCorner(_ point: CGPoint) -> Bool {
         disableAnimations {
             axWindow.set(Ax.topLeftCornerAttr, point)
         }
@@ -153,16 +153,17 @@ final class MacWindow: Window, CustomStringConvertible {
     // Some undocumented magic
     // References: https://github.com/koekeishiya/yabai/commit/3fe4c77b001e1a4f613c26f01ea68c0f09327f3a
     //             https://github.com/rxhanson/Rectangle/pull/285
-    private func disableAnimations(_ body: () -> Void) {
+    private func disableAnimations<T>(_ body: () -> T) -> T {
         let app = (app as! MacApp).axApp
         let wasEnabled = app.get(Ax.enhancedUserInterfaceAttr) == true
         if wasEnabled {
             app.set(Ax.enhancedUserInterfaceAttr, false)
         }
-        body()
+        let result = body()
         if wasEnabled {
             app.set(Ax.enhancedUserInterfaceAttr, true)
         }
+        return result
     }
 }
 
@@ -232,7 +233,7 @@ private func isFullscreenable(_ axWindow: AXUIElement) -> Bool {
     return false
 }
 
-private func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace, _ app: MacApp) -> BindingData {
+func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace, _ app: MacApp) -> BindingData {
     shouldFloat(axWindow, app)
         ? BindingData(parent: workspace as NonLeafTreeNodeObject, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         : getBindingDataForNewTilingWindow(workspace)

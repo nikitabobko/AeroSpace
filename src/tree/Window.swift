@@ -30,14 +30,15 @@ class Window: TreeNode, Hashable {
     var isMacosFullscreen: Bool { false }
     var isMacosMinimized: Bool { false }
     var isHiddenViaEmulation: Bool { error("Not implemented") }
-    func setSize(_ size: CGSize) { error("Not implemented") }
+    func setSize(_ size: CGSize) -> Bool { error("Not implemented") }
 
-    func setTopLeftCorner(_ point: CGPoint) { error("Not implemented") }
+    func setTopLeftCorner(_ point: CGPoint) -> Bool { error("Not implemented") }
 }
 
 enum LayoutReason: Equatable {
     case standard
-    case macos(prevParentKind: NonLeafTreeNodeKind) // macOS native fullscreen, minimize, or hide
+    /// Reason for the cur temp layout is macOS native fullscreen, minimize, or hide
+    case macos(prevParentKind: NonLeafTreeNodeKind)
 
     var isMacos: Bool {
         if case .macos = self {
@@ -64,10 +65,12 @@ extension Window {
         focusedWorkspaceName = workspace.name
     }
 
-    func setFrame(_ topLeft: CGPoint?, _ size: CGSize?) {
+    func setFrame(_ topLeft: CGPoint?, _ size: CGSize?) -> Bool {
         // Set size and then the position. The order is important https://github.com/nikitabobko/AeroSpace/issues/143
-        if let size { setSize(size) }
-        if let topLeft { setTopLeftCorner(topLeft) }
+        var result: Bool = true
+        if let size { result = setSize(size) && result }
+        if let topLeft { result = setTopLeftCorner(topLeft) && result }
+        return result
     }
 
     func asMacWindow() -> MacWindow { self as! MacWindow }

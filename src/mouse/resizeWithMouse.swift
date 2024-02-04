@@ -28,8 +28,8 @@ private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tes
         return
     }
     switch window.parent.cases {
-    case .workspace:
-        return // Nothing to do for floating windows
+    case .workspace, .macosInvisibleWindowsContainer:
+        return // Nothing to do for floating or invisible windows
     case .tilingContainer:
         guard let rect = window.getRect() else { return }
         guard let lastAppliedLayoutRect = window.lastAppliedLayoutPhysicalRect else { return }

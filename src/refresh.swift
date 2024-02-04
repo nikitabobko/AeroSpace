@@ -76,10 +76,16 @@ private func normalizeLayoutReason() {
     let workspace = Workspace.focused
     for window in workspace.allLeafWindowsRecursive {
         let isMacosFullscreen = window.isMacosFullscreen
+        let isMacosInvisible = !isMacosFullscreen && (window.isMacosMinimized || window.macAppUnsafe.nsApp.isHidden)
         if isMacosFullscreen && !window.layoutReason.isMacos {
             window.layoutReason = .macos(prevParentKind: window.parent.kind)
             window.unbindFromParent()
             window.bindAsFloatingWindow(to: workspace)
+        }
+        if isMacosInvisible && !window.layoutReason.isMacos {
+            window.layoutReason = .macos(prevParentKind: window.parent.kind)
+            window.unbindFromParent()
+            window.bind(to: macosInvisibleWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
         }
         if case .macos(let prevParentKind) = window.layoutReason, !isMacosFullscreen {
             window.layoutReason = .standard
@@ -89,6 +95,9 @@ private func normalizeLayoutReason() {
                 window.bindAsFloatingWindow(to: workspace)
             case .tilingContainer:
                 let data = getBindingDataForNewTilingWindow(workspace)
+                window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
+            case .macosInvisibleWindowsContainer: // wtf case, should never be possible. But If encounter it, let's just re-layout window
+                let data = getBindingDataForNewWindow(window.asMacWindow().axWindow, workspace, window.macAppUnsafe)
                 window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
             }
         }

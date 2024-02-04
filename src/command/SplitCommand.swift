@@ -15,7 +15,8 @@ struct SplitCommand: Command {
         }
         switch window.parent.cases {
         case .workspace:
-            return false // Nothing to do for floating windows
+            state.stderr.append("Can't split floating windows")
+            return false // Nothing to do for floating and macOS native fullscreen windows
         case .tilingContainer(let parent):
             let orientation: Orientation
             switch args.arg.val {
@@ -39,7 +40,10 @@ struct SplitCommand: Command {
                 )
                 window.bind(to: newParent, adaptiveWeight: WEIGHT_AUTO, index: 0)
             }
+            return true
+        case .macosInvisibleWindowsContainer:
+            state.stderr.append("Can't split invisible windows (minimized windows or windows of hidden apps)")
+            return false
         }
-        return true
     }
 }

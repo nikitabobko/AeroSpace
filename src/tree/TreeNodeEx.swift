@@ -31,22 +31,6 @@ extension TreeNode {
         self as? Window ?? mostRecentChild?.mostRecentWindow
     }
 
-    func allLeafWindowsRecursive(snappedTo direction: CardinalDirection) -> [Window] {
-        switch nodeCases {
-        case .workspace(let workspace):
-            return workspace.rootTilingContainer.allLeafWindowsRecursive(snappedTo: direction)
-        case .window(let window):
-            return [window]
-        case .tilingContainer(let container):
-            if direction.orientation == container.orientation {
-                return (direction.isPositive ? container.children.last : container.children.first)?
-                    .allLeafWindowsRecursive(snappedTo: direction) ?? []
-            } else {
-                return children.flatMap { $0.allLeafWindowsRecursive(snappedTo: direction) }
-            }
-        }
-    }
-
     var anyLeafWindowRecursive: Window? {
         if let window = self as? Window {
             return window
@@ -83,21 +67,19 @@ extension TreeNode {
     ) -> (parent: TilingContainer, ownIndex: Int)? {
         let innermostChild = parentsWithSelf.first(where: { (node: TreeNode) -> Bool in
             switch node.parent?.cases {
-            case .workspace:
-                return true
+            case .workspace, nil, .macosInvisibleWindowsContainer:
+                return true // stop searching
             case .tilingContainer(let parent):
                 return (layout == nil || parent.layout == layout) &&
                     parent.orientation == direction.orientation &&
                     parent.children.indices.contains(node.ownIndexOrNil! + direction.focusOffset)
-            case nil:
-                return true
             }
         })!
         switch innermostChild.parent?.cases {
         case .tilingContainer(let parent):
             check(parent.orientation == direction.orientation)
             return (parent, innermostChild.ownIndexOrNil!)
-        case .workspace, nil:
+        case .workspace, nil, .macosInvisibleWindowsContainer:
             return nil
         }
     }

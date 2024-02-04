@@ -12,48 +12,50 @@ struct LayoutCommand: Command {
         let targetDescription = args.toggleBetween.val.first(where: { !window.matchesDescription($0) })
             ?? args.toggleBetween.val.first!
         if window.matchesDescription(targetDescription) { return false }
-        var result = true
         switch targetDescription {
         case .h_accordion:
-            result = changeTilingLayout(targetLayout: .accordion, targetOrientation: .h, window: window)
+            return changeTilingLayout(state, targetLayout: .accordion, targetOrientation: .h, window: window)
         case .v_accordion:
-            result = changeTilingLayout(targetLayout: .accordion, targetOrientation: .v, window: window)
+            return changeTilingLayout(state, targetLayout: .accordion, targetOrientation: .v, window: window)
         case .h_tiles:
-            result = changeTilingLayout(targetLayout: .tiles, targetOrientation: .h, window: window)
+            return changeTilingLayout(state, targetLayout: .tiles, targetOrientation: .h, window: window)
         case .v_tiles:
-            result = changeTilingLayout(targetLayout: .tiles, targetOrientation: .v, window: window)
+            return changeTilingLayout(state, targetLayout: .tiles, targetOrientation: .v, window: window)
         case .accordion:
-            result = changeTilingLayout(targetLayout: .accordion, targetOrientation: nil, window: window)
+            return changeTilingLayout(state, targetLayout: .accordion, targetOrientation: nil, window: window)
         case .tiles:
-            result = changeTilingLayout(targetLayout: .tiles, targetOrientation: nil, window: window)
+            return changeTilingLayout(state, targetLayout: .tiles, targetOrientation: nil, window: window)
         case .horizontal:
-            result = changeTilingLayout(targetLayout: nil, targetOrientation: .h, window: window)
+            return changeTilingLayout(state, targetLayout: nil, targetOrientation: .h, window: window)
         case .vertical:
-            result = changeTilingLayout(targetLayout: nil, targetOrientation: .v, window: window)
+            return changeTilingLayout(state, targetLayout: nil, targetOrientation: .v, window: window)
         case .tiling:
             switch window.parent.cases {
+            case .macosInvisibleWindowsContainer:
+                state.stderr.append("Can't change layout of macOS invisible windows (hidden application or minimized windows). This behavior is subject to change")
+                return false
+            case .tilingContainer:
+                return true // Nothing to do
             case .workspace:
                 window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
-            case .tilingContainer:
-                error("Impossible")
+                let data = getBindingDataForNewTilingWindow(window.unbindFromParent().parent.workspace)
+                window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
+                return true
             }
-            let data = getBindingDataForNewTilingWindow(window.unbindFromParent().parent.workspace)
-            window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
         case .floating:
             let workspace = window.unbindFromParent().parent.workspace
             window.bindAsFloatingWindow(to: workspace)
-            guard let topLeftCorner = window.getTopLeftCorner() else { break }
+            guard let topLeftCorner = window.getTopLeftCorner() else { return false }
             let offset = CGPoint(
                 x: abs(topLeftCorner.x - workspace.monitor.rect.topLeftX).takeIf { $0 < 30 } ?? 0,
                 y: abs(topLeftCorner.y - workspace.monitor.rect.topLeftY).takeIf { $0 < 30 } ?? 0
             )
-            window.setFrame(topLeftCorner + offset, window.lastFloatingSize)
+            return window.setFrame(topLeftCorner + offset, window.lastFloatingSize)
         }
-        return result
     }
 }
 
-private func changeTilingLayout(targetLayout: Layout?, targetOrientation: Orientation?, window: Window) -> Bool {
+private func changeTilingLayout(_ state: CommandMutableState, targetLayout: Layout?, targetOrientation: Orientation?, window: Window) -> Bool {
     switch window.parent.cases {
     case .tilingContainer(let parent):
         let targetOrientation = targetOrientation ?? parent.orientation
@@ -61,8 +63,9 @@ private func changeTilingLayout(targetLayout: Layout?, targetOrientation: Orient
         parent.layout = targetLayout
         parent.changeOrientation(targetOrientation)
         return true
-    case .workspace:
-        return false // Do nothing for non-tiling windows
+    case .workspace, .macosInvisibleWindowsContainer:
+        state.stderr.append("The window is non-tiling")
+        return false
     }
 }
 

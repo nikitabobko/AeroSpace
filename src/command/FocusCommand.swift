@@ -162,6 +162,8 @@ private extension TreeNode {
             } else {
                 return mostRecentChild?.findFocusTargetRecursive(snappedTo: direction)
             }
+        case .macosInvisibleWindowsContainer:
+            error("Impossible")
         }
     }
 }
