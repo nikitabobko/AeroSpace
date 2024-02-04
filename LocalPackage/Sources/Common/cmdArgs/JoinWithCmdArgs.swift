@@ -13,7 +13,7 @@ public struct JoinWithCmdArgs: CmdArgs, RawCmdArgs {
     )
     public var direction: Lateinit<CardinalDirection> = .uninitialized
 
-    fileprivate init() {}
+    internal init() {}
 
     public init(direction: CardinalDirection) {
         self.direction = .initialized(direction)

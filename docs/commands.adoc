@@ -103,7 +103,6 @@ include::aerospace-mode.adoc[tags=purpose]
 include::aerospace-mode.adoc[tags=body]
 
 [#move]
-[#move-through]
 == move
 ----
 include::aerospace-move.adoc[tags=synopsis]

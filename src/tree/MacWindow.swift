@@ -206,8 +206,9 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
     // Fullscreen button is presented but disabled:
     // - Safari -> Pinterest -> Log in with Google
     // - Kap screen recorder https://github.com/wulkano/Kap
-    let fullscreenButton = axWindow.get(Ax.fullscreenButtonAttr)
-    if (fullscreenButton == nil || fullscreenButton!.get(Ax.enabledAttr) != true) &&
+    // - flameshot? https://github.com/nikitabobko/AeroSpace/issues/112
+    // - Drata Agent https://github.com/nikitabobko/AeroSpace/issues/134
+    if !isFullscreenable(axWindow) &&
            app.id != "com.google.Chrome" && // "Drag out" a tab out of Chrome window
            app.id != "org.videolan.vlc" && // VLC has its own implementation of fullscreen
            app.id != "com.valvesoftware.steam" && // Steam doesn't show fullscreen button
@@ -220,6 +221,13 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
            app.id != "com.googlecode.iterm2" &&
            app.id != "org.gnu.Emacs" {
         return true
+    }
+    return false
+}
+
+private func isFullscreenable(_ axWindow: AXUIElement) -> Bool {
+    if let fullscreenButton = axWindow.get(Ax.fullscreenButtonAttr) {
+        return fullscreenButton.get(Ax.enabledAttr) == true
     }
     return false
 }

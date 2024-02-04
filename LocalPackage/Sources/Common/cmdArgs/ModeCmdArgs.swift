@@ -15,12 +15,6 @@ public struct ModeCmdArgs: RawCmdArgs {
         arguments: [newArgParser(\.targetMode, parseTargetMode, mandatoryArgPlaceholder: "<binding-mode>")]
     )
     public var targetMode: Lateinit<String> = .uninitialized
-
-    fileprivate init() {}
-}
-
-public func parseModeCmdArgs(_ args: [String]) -> ParsedCmd<ModeCmdArgs> {
-    parseRawCmdArgs(ModeCmdArgs(), args)
 }
 
 private func parseTargetMode(arg: String, nextArgs: inout [String]) -> Parsed<String> {

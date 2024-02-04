@@ -18,7 +18,3 @@ public struct CloseCmdArgs: RawCmdArgs, CmdArgs {
 
     public var quitIfLastWindow: Bool = false
 }
-
-public func parseCloseCmdArgs(_ args: [String]) -> ParsedCmd<CloseCmdArgs> {
-    parseRawCmdArgs(CloseCmdArgs(), args)
-}

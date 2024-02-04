@@ -70,7 +70,7 @@ class TreeNode: Equatable {
         if newParent is Window {
             windowsCantHaveChildren()
         }
-        let result = unbindIfPossible()
+        let result = unbindIfBound()
 
         if newParent === NilTreeNode.instance {
             return result
@@ -104,7 +104,7 @@ class TreeNode: Equatable {
         return result
     }
 
-    private func unbindIfPossible() -> BindingData? {
+    private func unbindIfBound() -> BindingData? {
         guard let _parent else { return nil }
 
         let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
@@ -127,7 +127,7 @@ class TreeNode: Equatable {
 
     @discardableResult
     func unbindFromParent() -> BindingData {
-        unbindIfPossible() ?? errorT("\(self) is already unbound")
+        unbindIfBound() ?? errorT("\(self) is already unbound")
     }
 
     static func ==(lhs: TreeNode, rhs: TreeNode) -> Bool {

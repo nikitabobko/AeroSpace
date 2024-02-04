@@ -13,7 +13,7 @@ public struct EnableCmdArgs: RawCmdArgs {
     )
     public var targetState: Lateinit<State> = .uninitialized
 
-    fileprivate init() {}
+    internal init() {}
 
     public init(targetState: State) {
         self.targetState = .initialized(targetState)
@@ -22,10 +22,6 @@ public struct EnableCmdArgs: RawCmdArgs {
     public enum State: String, CaseIterable {
         case on, off, toggle
     }
-}
-
-public func parseEnableCmdArgs(_ args: [String]) -> ParsedCmd<EnableCmdArgs> {
-    parseRawCmdArgs(EnableCmdArgs(), args)
 }
 
 private func parseState(arg: String, nextArgs: inout [String]) -> Parsed<EnableCmdArgs.State> {

@@ -17,7 +17,7 @@ layout [-h|--help] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|hori
 
 If several arguments are supplied then finds the first argument that doesn't describe the currently active layout, and applies the found layout.
 
-`*tiling*` is the only argument that makes the focused floating window tiled.
+`*tiling*` is the only argument that tiles floating window.
 // end::body[]
 
 include::util/conditional-options-header.adoc[]

@@ -22,7 +22,3 @@ public struct ListMonitorsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
 
     public init() {}
 }
-
-public func parseListMonitorsCmdArgs(_ args: [String]) -> ParsedCmd<ListMonitorsCmdArgs> {
-    parseRawCmdArgs(ListMonitorsCmdArgs(), args)
-}

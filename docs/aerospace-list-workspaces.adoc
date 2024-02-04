@@ -34,7 +34,7 @@ include::util/monitor-option.adoc[]
 --visible [no]::
 Filter results to only print currently visible workspaces.
 `[no]` inverts the condition.
-Several monitors can be visible in multi-monitor setup
+Several workspaces can be visible in multi-monitor setup
 
 --empty [no]::
 Filter results to only print empty workspaces.

@@ -18,7 +18,3 @@ public struct ListAppsCmdArgs: RawCmdArgs, CmdArgs {
 
     public var macosHidden: Bool?
 }
-
-public func parseListAppsCmdArgs(_ args: [String]) -> ParsedCmd<ListAppsCmdArgs> {
-    parseRawCmdArgs(ListAppsCmdArgs(), args)
-}
