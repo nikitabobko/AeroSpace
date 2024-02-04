@@ -9,7 +9,7 @@ private struct RawListWindowsCmdArgs: RawCmdArgs, Equatable {
               USAGE: list-windows [-h|--help] (--workspace \(_workspaces)|--monitor \(_monitors))
                                   [--monitor \(_monitors)] [--workspace \(_workspaces)]
                                   [--pid <pid>] [--app-id <app-id>] [--macos-hidden-app [no]]
-                                  [--macos-minimized]
+                                  [--macos-minimized] [--macos-fullscreen]
                  OR: list-windows [-h|--help] --all
                  OR: list-windows [-h|--help] --focused
 
@@ -24,6 +24,7 @@ private struct RawListWindowsCmdArgs: RawCmdArgs, Equatable {
                 --macos-hidden-app [no]      Filter results to only print windows that belong to hidden applications.
                                              [no] inverts the condition
                 --macos-minimized [no]       Filter results to only print minimized windows. [no] inverts the condition
+                --macos-fullscreen [no]      Filter results to only print fullscreen windows. [no] inverts the condition
               """,
         options: [
             "--focused": trueBoolFlag(\.focused),
@@ -34,6 +35,7 @@ private struct RawListWindowsCmdArgs: RawCmdArgs, Equatable {
             "--pid": singleValueOption(\.manual.pidFilter, "<pid>", Int32.init),
             "--macos-hidden-app": boolFlag(\.manual.macosHiddenApp),
             "--macos-minimized": boolFlag(\.manual.macosMinimized),
+            "--macos-fullscreen": boolFlag(\.manual.macosFullscreen),
             "--app-id": singleValueOption(\.manual.appIdFilter, "<app-id>", { $0 })
         ],
         arguments: []
@@ -75,6 +77,7 @@ public enum ListWindowsCmdArgs: CmdArgs {
         public var appIdFilter: String?
         public var macosHiddenApp: Bool?
         public var macosMinimized: Bool?
+        public var macosFullscreen: Bool?
     }
 }
 

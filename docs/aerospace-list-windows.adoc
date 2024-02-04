@@ -11,7 +11,7 @@ include::util/man-attributes.adoc[]
 list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
              [--monitor <monitor>...] [--workspace <workspace>...]
              [--pid <pid>] [--app-id <app-id>] [--macos-hidden-app [no]]
-             [--macos-minimized]
+             [--macos-minimized] [--macos-fullscreen]
 list-windows [-h|--help] --all
 list-windows [-h|--help] --focused
 
@@ -71,6 +71,10 @@ Filter results to only print windows that belong to hidden applications.
 
 --macos-minimized [no]::
 Filter results to only print minimized windows.
+`[no]` inverts the condition
+
+--macos-fullscreen [no]::
+Filter results to only print fullscreen windows.
 `[no]` inverts the condition
 
 // end::body[]
