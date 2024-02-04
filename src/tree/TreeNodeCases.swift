@@ -11,6 +11,11 @@ enum NonLeafTreeNodeCases {
     case workspace(Workspace)
 }
 
+enum NonLeafTreeNodeKind: Equatable {
+    case tilingContainer
+    case workspace
+}
+
 protocol NonLeafTreeNodeObject: TreeNode {}
 
 extension TreeNode {
@@ -37,6 +42,15 @@ extension NonLeafTreeNodeObject {
             return .tilingContainer(tilingContainer)
         } else {
             error("Unknown tree")
+        }
+    }
+
+    var kind: NonLeafTreeNodeKind {
+        switch cases {
+        case .tilingContainer:
+            return .tilingContainer
+        case .workspace:
+            return .workspace
         }
     }
 }

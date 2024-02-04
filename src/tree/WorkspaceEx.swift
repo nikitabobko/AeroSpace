@@ -28,7 +28,7 @@ extension Workspace {
             //: (nativeFocusedWindow?.workspace ?? Workspace.get(byName: focusedWorkspaceName))
     }
 
-    var floatingWindows: [Window] {
+    var floatingAndMacosFullscreenWindows: [Window] {
         workspace.children.filterIsInstance(of: Window.self)
     }
 

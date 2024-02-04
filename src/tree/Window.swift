@@ -7,6 +7,7 @@ class Window: TreeNode, Hashable {
     var parentOrNilForTests: NonLeafTreeNodeObject? { super.parent }
     var lastFloatingSize: CGSize?
     var isFullscreen: Bool = false
+    var layoutReason: LayoutReason = .standard
 
     init(id: UInt32, _ app: AbstractApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
         self.windowId = id
@@ -26,10 +27,24 @@ class Window: TreeNode, Hashable {
     func getTopLeftCorner() -> CGPoint? { error("Not implemented") }
     func getSize() -> CGSize? { error("Not implemented") }
     var title: String? { error("Not implemented") }
+    var isMacosFullscreen: Bool { false }
     var isHiddenViaEmulation: Bool { error("Not implemented") }
     func setSize(_ size: CGSize) { error("Not implemented") }
 
     func setTopLeftCorner(_ point: CGPoint) { error("Not implemented") }
+}
+
+enum LayoutReason: Equatable {
+    case standard
+    case macos(prevParentKind: NonLeafTreeNodeKind) // macOS native fullscreen, minimize, or hide
+
+    var isMacos: Bool {
+        if case .macos = self {
+            return true
+        } else {
+            return false
+        }
+    }
 }
 
 extension Window {

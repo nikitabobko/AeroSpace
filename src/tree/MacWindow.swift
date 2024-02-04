@@ -83,9 +83,8 @@ final class MacWindow: Window, CustomStringConvertible {
         return true
     }
 
-    override var title: String? {
-        axWindow.get(Ax.titleAttr)
-    }
+    override var title: String? { axWindow.get(Ax.titleAttr) }
+    override var isMacosFullscreen: Bool { axWindow.get(Ax.isFullscreenAttr) == true }
 
     @discardableResult
     override func nativeFocus() -> Bool { // todo make focus reliable: make async + active waiting
