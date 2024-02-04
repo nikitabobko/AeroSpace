@@ -7,17 +7,19 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-close-all-windows-but-current [-h|--help]
+close-all-windows-but-current [-h|--help] [--quit-if-last-window]
 // end::synopsis[]
 
 == Description
 
 // tag::body[]
 {manpurpose}
-// end::body[]
 
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+--quit-if-last-window:: Quit the apps instead of closing them if it's their last window
+// end::body[]
 
 include::util/man-footer.adoc[]

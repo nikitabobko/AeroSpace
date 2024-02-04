@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-close [-h|--help]
+close [-h|--help] [--quit-if-last-window]
 // end::synopsis[]
 
 == Description
@@ -17,10 +17,12 @@ close [-h|--help]
 
 Normally, you don’t need to use this command, because macOS offers its own `cmd + w` binding.
 You might want to use the command from CLI for scripting purposes
-// end::body[]
 
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+--quit-if-last-window:: Quit the app instead of closing if it's the last window of the app
+// end::body[]
 
 include::util/man-footer.adoc[]

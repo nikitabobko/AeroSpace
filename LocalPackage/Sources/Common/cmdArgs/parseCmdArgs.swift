@@ -19,9 +19,9 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
     for kind in CmdKind.allCases {
         switch kind {
         case .close:
-            result[kind.rawValue] = noArgsSubCommandParser(CloseCmdArgs())
+            result[kind.rawValue] = SubCommandParser(parseCloseCmdArgs)
         case .closeAllWindowsButCurrent:
-            result[kind.rawValue] = noArgsSubCommandParser(CloseAllWindowsButCurrentCmdArgs())
+            result[kind.rawValue] = SubCommandParser(parseCloseAllWindowsButCurrentCmdArgs)
         case .debugWindows:
             result[kind.rawValue] = noArgsSubCommandParser(DebugWindowsCmdArgs())
         case .enable:

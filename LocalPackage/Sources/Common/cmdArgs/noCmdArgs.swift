@@ -1,11 +1,3 @@
-public struct CloseCmdArgs: RawCmdArgs, CmdArgs {
-    public init() {}
-    public static let parser: CmdParser<Self> = noArgsParser(.close, allowInConfig: true)
-}
-public struct CloseAllWindowsButCurrentCmdArgs: RawCmdArgs, CmdArgs {
-    public init() {}
-    public static let parser: CmdParser<Self> = noArgsParser(.closeAllWindowsButCurrent, allowInConfig: true)
-}
 public struct FlattenWorkspaceTreeCmdArgs: RawCmdArgs, CmdArgs {
     public init() {}
     public static let parser: CmdParser<Self> = noArgsParser(.flattenWorkspaceTree, allowInConfig: true)

@@ -10,9 +10,9 @@ extension CmdArgs {
         let command: any Command
         switch Self.info.kind {
         case .close:
-            command = CloseCommand()
+            command = CloseCommand(args: self as! CloseCmdArgs)
         case .closeAllWindowsButCurrent:
-            command = CloseAllWindowsButCurrentCommand()
+            command = CloseAllWindowsButCurrentCommand(args: self as! CloseAllWindowsButCurrentCmdArgs)
         case .debugWindows:
             command = DebugWindowsCommand()
         case .enable:

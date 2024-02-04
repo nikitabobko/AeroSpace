@@ -1,7 +1,7 @@
 import Common
 
 struct CloseAllWindowsButCurrentCommand: Command {
-    let args = CloseAllWindowsButCurrentCmdArgs()
+    let args: CloseAllWindowsButCurrentCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
@@ -13,7 +13,7 @@ struct CloseAllWindowsButCurrentCommand: Command {
         for window in focused.workspace.allLeafWindowsRecursive {
             if window != focused {
                 state.subject = .window(window)
-                result = CloseCommand().run(state) && result
+                result = CloseCommand(args: args.closeArgs).run(state) && result
             }
         }
         state.subject = .window(focused)
