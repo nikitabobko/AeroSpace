@@ -27,3 +27,11 @@ class AbstractApp: Hashable {
     var name: String? { nil }
     func detectNewWindowsAndGetAll(startup: Bool) -> [Window] { error("Not implemented") }
 }
+
+extension AbstractApp {
+    func asMacApp() -> MacApp { self as! MacApp }
+}
+
+extension Window {
+    var macAppUnsafe: MacApp { app.asMacApp() }
+}

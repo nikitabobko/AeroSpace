@@ -39,7 +39,7 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
         case .layout:
             result[kind.rawValue] = SubCommandParser(parseLayoutCmdArgs)
         case .listApps:
-            result[kind.rawValue] = noArgsSubCommandParser(ListAppsCmdArgs())
+            result[kind.rawValue] = SubCommandParser(parseListAppsCmdArgs)
         case .listMonitors:
             result[kind.rawValue] = SubCommandParser(parseListMonitorsCmdArgs)
         case .listWindows:

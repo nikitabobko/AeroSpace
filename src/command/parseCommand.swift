@@ -30,7 +30,7 @@ extension CmdArgs {
         case .layout:
             command = LayoutCommand(args: self as! LayoutCmdArgs)
         case .listApps:
-            command = ListAppsCommand()
+            command = ListAppsCommand(args: self as! ListAppsCmdArgs)
         case .listMonitors:
             command = ListMonitorsCommand(args: self as! ListMonitorsCmdArgs)
         case .listWindows:

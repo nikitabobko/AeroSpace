@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 list-windows [-h|--help] --workspace <workspace>... [--monitor <monitor>...]
-             [--pid <pid>] [--app-id <app-id>]
+             [--pid <pid>] [--app-id <app-id>] [--macos-hidden-app [no]]
 list-windows [-h|--help] --monitor <monitor>... [--workspace <workspace>...]
-             [--pid <pid>] [--app-id <app-id>]
+             [--pid <pid>] [--app-id <app-id>] [--macos-hidden-app [no]]
 list-windows [-h|--help] --all
 list-windows [-h|--help] --focused
 
@@ -64,6 +64,10 @@ include::util/monitor-option.adoc[]
 
 --pid <pid>:: Filter results to only print windows that belong to the Application with specified `<pid>`
 --app-id <app-id>:: Filter results to only print windows that belong to the Application with specified Bundle ID
+
+--macos-hidden-app [no]::
+Filter results to only print windows that belong to hidden applications.
+`[no]` inverts the condition
 
 // end::body[]
 

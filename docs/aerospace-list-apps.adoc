@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-list-apps [-h|--help]
+list-apps [-h|--help] [--macos-hidden [no]]
 // end::synopsis[]
 
 == Description
@@ -41,5 +41,9 @@ You can use `awk` to get values of particular column: `awk -F '|' '{print $2}'`
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+--macos-hidden [no]::
+Filter results to only print hidden applications.
+`[no]` inverts the condition
 
 include::util/man-footer.adoc[]

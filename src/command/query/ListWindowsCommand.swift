@@ -29,6 +29,9 @@ struct ListWindowsCommand: Command {
             if let pid = manual.pidFilter {
                 windows = windows.filter { $0.app.pid == pid }
             }
+            if let macosHiddenApp = manual.macosHiddenApp {
+                windows = windows.filter { $0.macAppUnsafe.nsApp.isHidden == macosHiddenApp }
+            }
             if let appId = manual.appIdFilter {
                 windows = windows.filter { $0.app.id == appId }
             }

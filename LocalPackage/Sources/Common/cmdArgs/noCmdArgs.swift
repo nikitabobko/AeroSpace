@@ -22,10 +22,6 @@ public struct WorkspaceBackAndForthCmdArgs: RawCmdArgs, CmdArgs {
     public init() {}
     public static let parser: CmdParser<Self> = noArgsParser(.workspaceBackAndForth, allowInConfig: true)
 }
-public struct ListAppsCmdArgs: RawCmdArgs, CmdArgs {
-    public init() {}
-    public static let parser: CmdParser<Self> = noArgsParser(.listApps, allowInConfig: false)
-}
 public struct ServerVersionInternalCommandCmdArgs: RawCmdArgs, CmdArgs {
     public init() {}
     public static let parser: CmdParser<Self> = noArgsParser(.serverVersionInternalCommand, allowInConfig: false)
