@@ -1,0 +1,24 @@
+= aerospace-macos-native-fullscreen(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-macos-native-fullscreen
+// tag::purpose[]
+:manpurpose: Toggle macOS fullscreen for the currently focused window
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+macos-native-fullscreen [-h|--help]
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+// end::body[]
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+include::util/man-footer.adoc[]

@@ -215,9 +215,10 @@ enum Ax {
     //    key: kAXMinimizedAttribute,
     //    getter: { $0 as? Bool }
     //)
-    static let isFullscreenAttr = ReadableAttrImpl<Bool>(
+    static let isFullscreenAttr = WritableAttrImpl<Bool>(
         key: "AXFullScreen",
-        getter: { $0 as? Bool }
+        getter: { $0 as? Bool },
+        setter: { $0 as CFTypeRef }
     )
     //static let axMainAttr = ReadableAttrImpl<Bool>(
     //    key: kAXMainAttribute,

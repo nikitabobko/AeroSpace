@@ -13,6 +13,7 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case listMonitors = "list-monitors"
     case listWindows = "list-windows"
     case listWorkspaces = "list-workspaces"
+    case macosNativeFullscreen = "macos-native-fullscreen"
     case mode
     case move = "move"
     case moveNodeToWorkspace = "move-node-to-workspace"

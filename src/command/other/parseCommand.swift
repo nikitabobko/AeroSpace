@@ -37,6 +37,8 @@ extension CmdArgs {
             command = ListWindowsCommand(args: self as! ListWindowsCmdArgs)
         case .listWorkspaces:
             command = ListWorkspacesCommand(args: self as! ListWorkspacesCmdArgs)
+        case .macosNativeFullscreen:
+            command = MacosNativeFullscreenCommand(args: self as! MacosNativeFullscreenCmdArgs)
         case .mode:
             command = ModeCommand(args: self as! ModeCmdArgs)
         case .moveNodeToWorkspace:
