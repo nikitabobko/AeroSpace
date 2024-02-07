@@ -17,6 +17,7 @@ struct Config: Copyable {
     var accordionPadding: Int = 30
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
     var execOnWorkspaceChange: [String] = []
+    var keyMapping = KeyMapping()
 
     var gaps: Gaps = .zero
     var workspaceToMonitorForceAssignment: [String: [MonitorDescription]] = [:]

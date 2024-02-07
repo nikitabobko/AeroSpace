@@ -33,6 +33,7 @@
 		43E3628E37D2439B820FFC82 /* server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 796713A1B3AEEBF4D0D180C7 /* server.swift */; };
 		45AA5FD4A023AF751922BC22 /* BundleEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7A2DF0D1F72B80B1F04240 /* BundleEx.swift */; };
 		45EA2D1C90430C432E123B51 /* keysMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C0D40CBD65704BA9595C2FA /* keysMap.swift */; };
+		4A11D06CCDAD05595AB67239 /* parseKeyMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EBF5912CC4BBEC0E5E4B1C /* parseKeyMapping.swift */; };
 		4CC374136F60299FB672662D /* DebugWindowsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71908440CD1ADBE13AD58E26 /* DebugWindowsCommand.swift */; };
 		4E0BC093AD1FBCCA718A26EC /* parseCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ADCBFC2E29A2AD5C1B7984 /* parseCommand.swift */; };
 		51AB4C0992703B2E9D0F55E2 /* MonitorDescriptionEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C1D626244E63437F1CA24C3 /* MonitorDescriptionEx.swift */; };
@@ -153,6 +154,7 @@
 		5F5F52E346D024960EAF5938 /* TrayMenuModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrayMenuModel.swift; sourceTree = "<group>"; };
 		5F7387A5BA6D187A00B00170 /* LocalPackage */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LocalPackage; path = LocalPackage; sourceTree = SOURCE_ROOT; };
 		6352ADEE6625D9703CFCA99A /* Window.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Window.swift; sourceTree = "<group>"; };
+		64EBF5912CC4BBEC0E5E4B1C /* parseKeyMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parseKeyMapping.swift; sourceTree = "<group>"; };
 		67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parseConfig.swift; sourceTree = "<group>"; };
 		69CB1289E3FA51A35F839238 /* HotkeyBinding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyBinding.swift; sourceTree = "<group>"; };
 		6D9C5ED5AC77D80F1CCD103F /* JoinWithCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JoinWithCommandTest.swift; sourceTree = "<group>"; };
@@ -329,6 +331,7 @@
 				1C0D40CBD65704BA9595C2FA /* keysMap.swift */,
 				67DBAF4ECF8A0B931FC34EAD /* parseConfig.swift */,
 				CCDFB9D7321F08B5CCEF6AFB /* parseGaps.swift */,
+				64EBF5912CC4BBEC0E5E4B1C /* parseKeyMapping.swift */,
 				0A9DFF8980BB3F90A3793BE9 /* parseOnWindowDetected.swift */,
 				9164C9401F7DDCACE9278DA4 /* startAtLogin.swift */,
 			);
@@ -664,6 +667,7 @@
 				4E0BC093AD1FBCCA718A26EC /* parseCommand.swift in Sources */,
 				A0765C31043BCFB0420BF1C9 /* parseConfig.swift in Sources */,
 				5BA537EABFE48178D6BD2544 /* parseGaps.swift in Sources */,
+				4A11D06CCDAD05595AB67239 /* parseKeyMapping.swift in Sources */,
 				21D0512B48E0E3C28F8CA42A /* parseOnWindowDetected.swift in Sources */,
 				B3702BB393A9B03CCAE4C60E /* refresh.swift in Sources */,
 				8086A22EDCDC4C906C337D0B /* resizeWithMouse.swift in Sources */,

@@ -1,32 +1,95 @@
 import HotKey
+import Common
 
-let keysMap: [String: Key] = [
-    "a": .a,
-    "b": .b,
-    "c": .c,
-    "d": .d,
-    "e": .e,
-    "f": .f,
-    "g": .g,
-    "h": .h,
-    "i": .i,
-    "j": .j,
-    "k": .k,
-    "l": .l,
-    "m": .m,
-    "n": .n,
-    "o": .o,
-    "p": .p,
-    "q": .q,
-    "r": .r,
-    "s": .s,
-    "t": .t,
-    "u": .u,
-    "v": .v,
-    "w": .w,
-    "x": .x,
-    "y": .y,
-    "z": .z,
+private let minus = "minus"
+private let equal = "equal"
+
+private let q = "q"
+private let w = "w"
+private let e = "e"
+private let r = "r"
+private let t = "t"
+private let y = "y"
+private let u = "u"
+private let i = "i"
+private let o = "o"
+private let p = "p"
+private let leftSquareBracket = "leftSquareBracket"
+private let rightSquareBracket = "rightSquareBracket"
+private let backslash = "backslash"
+
+private let a = "a"
+private let s = "s"
+private let d = "d"
+private let f = "f"
+private let g = "g"
+private let h = "h"
+private let j = "j"
+private let k = "k"
+private let l = "l"
+private let semicolon = "semicolon"
+private let quote = "quote"
+
+private let z = "z"
+private let x = "x"
+private let c = "c"
+private let v = "v"
+private let b = "b"
+private let n = "n"
+private let m = "m"
+private let comma = "comma"
+private let period = "period"
+private let slash = "slash"
+
+func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: Key] {
+    switch layout {
+    case .qwerty:
+        return keyNotationToKeyCode
+    case .dvorak:
+        return dvorakMap
+    }
+}
+
+let keyNotationToKeyCode: [String: Key] = [
+    minus: .minus,
+    equal: .equal,
+
+    q: .q,
+    w: .w,
+    e: .e,
+    r: .r,
+    t: .t,
+    y: .y,
+    u: .u,
+    i: .i,
+    o: .o,
+    p: .p,
+    leftSquareBracket: .leftBracket,
+    rightSquareBracket: .rightBracket,
+    backslash: .backslash,
+
+    a: .a,
+    s: .s,
+    d: .d,
+    f: .f,
+    g: .g,
+    h: .h,
+    j: .j,
+    k: .k,
+    l: .l,
+    semicolon: .semicolon,
+    quote: .quote,
+
+    z: .z,
+    x: .x,
+    c: .c,
+    v: .v,
+    b: .b,
+    n: .n,
+    m: .m,
+    comma: .comma,
+    period: .period,
+    slash: .slash,
 
     "0": .zero,
     "1": .one,
@@ -79,17 +142,7 @@ let keysMap: [String: Key] = [
     "f19": .f19,
     "f20": .f20,
 
-    "minus": .minus,
-    "equal": .equal,
-    "period": .period,
-    "comma": .comma,
-    "slash": .slash,
-    "backslash": .backslash,
-    "quote": .quote,
-    "semicolon": .semicolon,
     "backtick": .grave,
-    "leftSquareBracket": .leftBracket,
-    "rightSquareBracket": .rightBracket,
     "space": .space,
     "enter": .return,
     "esc": .escape,
@@ -100,6 +153,48 @@ let keysMap: [String: Key] = [
     "down": .downArrow,
     "up": .upArrow,
     "right": .rightArrow,
+]
+
+private let dvorakMap: [String: Key] = keyNotationToKeyCode + [
+    leftSquareBracket: .minus,
+    rightSquareBracket: .equal,
+
+    quote: .q,
+    comma: .w,
+    period: .e,
+    p: .r,
+    y: .t,
+    f: .y,
+    g: .u,
+    c: .i,
+    r: .o,
+    l: .p,
+    slash: .leftBracket,
+    equal: .rightBracket,
+    backslash: .backslash,
+
+    a: .a,
+    o: .s,
+    e: .d,
+    u: .f,
+    i: .g,
+    d: .h,
+    h: .j,
+    t: .k,
+    n: .l,
+    s: .semicolon,
+    minus: .quote,
+
+    semicolon: .z,
+    q: .x,
+    j: .c,
+    k: .v,
+    x: .b,
+    b: .n,
+    m: .m,
+    w: .comma,
+    v: .period,
+    z: .slash,
 ]
 
 let modifiersMap: [String: NSEvent.ModifierFlags] = [

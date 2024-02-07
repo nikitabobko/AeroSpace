@@ -1,4 +1,5 @@
 import XCTest
+import Nimble
 @testable import AeroSpace_Debug
 import Common
 
@@ -324,5 +325,46 @@ final class ConfigTest: XCTestCase {
             "gaps.inner.vertical[0]: The table is expected to have a single key \'monitor\'",
             "gaps.inner.vertical[1].monitor: The table is expected to have a single key",
         ])
+    }
+
+    func testParseKeyMapping() {
+        let (config, errors) = parseConfig(
+            """
+            [key-mapping.key-notation-to-key-code]
+            q = 'q'
+            unicorn = 'u'
+
+            [mode.main.binding]
+            alt-unicorn = 'workspace unicorn'
+            """
+        )
+        XCTAssertEqual(errors.descriptions, [])
+        XCTAssertEqual(config.keyMapping, KeyMapping(preset: .qwerty, rawKeyNotationToKeyCode: [
+            "q": .q,
+            "unicorn": .u,
+        ]))
+        let binding = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(.direct(WTarget.Direct("unicorn"))))])
+        XCTAssertEqual(config.modes[mainModeId]?.bindings, [binding.binding: binding])
+
+        let (_, errors1) = parseConfig(
+            """
+            [key-mapping.key-notation-to-key-code]
+            q = 'qw'
+            ' f' = 'f'
+            """
+        )
+        expect(errors1.descriptions).to(equal([
+            "key-mapping.key-notation-to-key-code: ' f' is invalid key notation",
+            "key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code"
+        ]))
+
+        let (dvorakConfig, dvorakErrors) = parseConfig(
+            """
+            key-mapping.preset = 'dvorak'
+            """
+        )
+        XCTAssertEqual(dvorakErrors.descriptions, [])
+        XCTAssertEqual(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
+        expect(dvorakConfig.keyMapping.resolve()["quote"]).to(equal(.q))
     }
 }

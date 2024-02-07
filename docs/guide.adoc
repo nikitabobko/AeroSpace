@@ -81,6 +81,33 @@ aerospace workspace 1
 
 For the list of available commands see: xref:commands.adoc[]
 
+[#key-mapping]
+=== Keyboard layouts and key mapping
+
+By default, key bindings in the config are perceived as `qwerty` layout.
+
+If you use different layout, different alphabet, or you just want to have a fancy alias for the existing key, you can use `key-mapping.key-notation-to-key-code`.
+
+[source,toml]
+----
+# Define my fancy unicorn key notation
+[key-mapping.key-notation-to-key-code]
+unicorn = 'u'
+
+[mode.main.binding]
+alt-unicorn = 'workspace unicorn' # (⁀ᗢ⁀)
+----
+
+* For `dvorak` users, AeroSpace offers a preconfigured preset.
++
+[source,toml]
+----
+key-mapping.preset = 'dvorak'
+----
+
+* For `colemak` users, there is xref:goodness.adoc#colemak-keys-remap[a compiled mapping].
+`colemak` may be added as preconfigured preset similar to `dvorak` in the future, if there is enough demand
+
 [#tree]
 == Tree
 
