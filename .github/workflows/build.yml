@@ -19,8 +19,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install deps
-        run: |
-          brew install xcodegen gsed asciidoctor
+        run: brew install xcodegen gsed asciidoctor
       - name: Update .local.xcconfig
         run: |
           cat <<EOF > .local.xcconfig
@@ -29,9 +28,9 @@ jobs:
           CODE_SIGN_IDENTITY = -
           EOF
       - name: Build
-        run: |
-          ./build-debug.sh
-          ./script/check-uncommitted-files.sh
+        run: ./build-debug.sh
+      - name: Check dirty files
+        run: ./script/check-uncommitted-files.sh
       - name: Test
         run: ./run-tests.sh
       - name: Build docs

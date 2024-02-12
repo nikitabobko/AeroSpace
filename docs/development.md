@@ -6,11 +6,12 @@ TLDR use `build-debug.sh`, `run-debug.sh`, and `run-tests.sh` scripts.
 
 The dependencies that are required to build AeroSpace:
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen)
+- [xcbeautify](https://github.com/cpisciotta/xcbeautify)
 - [GNU sed](https://www.gnu.org/software/sed/)
 - [Asciidoctor](https://asciidoctor.org/)
 
 ```bash
-brew install xcodegen gsed asciidoctor
+brew install xcodegen gsed asciidoctor xcbeautify
 ```
 
 ## Setup Signing
