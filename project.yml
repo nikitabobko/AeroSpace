@@ -61,6 +61,7 @@ targets:
   AeroSpace-Tests:
     type: bundle.unit-test
     platform: macOS
+    deploymentTarget: "13.0"
     sources: [test/]
     scheme:
       testTargets:
