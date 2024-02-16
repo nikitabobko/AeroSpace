@@ -313,7 +313,7 @@
 				5F7387A5BA6D187A00B00170 /* LocalPackage */,
 			);
 			name = Packages;
-			sourceTree = SOURCE_ROOT;
+			sourceTree = "<group>";
 		};
 		47AC9FB4B98798051B3C5BDF /* AeroSpace */ = {
 			isa = PBXGroup;

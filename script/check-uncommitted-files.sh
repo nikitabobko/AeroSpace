@@ -6,6 +6,6 @@ if [ ! -z "$(git status --porcelain)" ]; then
     echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     echo !!! Uncommitted files detected !!!
     echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    git status
+    git diff
     exit 1
 fi
