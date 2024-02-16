@@ -7,14 +7,16 @@ assignees: ''
 
 ---
 
-- It's ok to use issues to ask questions
+- It's ok to use issues to ask questions (after you read the guide https://nikitabobko.github.io/AeroSpace/guide.html)
 - Search for duplicates before reporting new issues
+  - Vote for duplicates with 👍 reaction
 - Vote for issues that you find useful with 👍 reaction
 
 **Consider including in bug reports**
 - `aerospace debug-windows` output, if the problem is about handling some windows
 - Screenshots of problematic windows
 - Videos of problematic windows
+- What did you try to resolve the issue?
 - Your config
 - AeroSpace version
 - macOS version
