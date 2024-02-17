@@ -8,23 +8,23 @@ private struct RawListWindowsCmdArgs: RawCmdArgs, Equatable {
         help: """
               USAGE: list-windows [-h|--help] (--workspace \(_workspaces)|--monitor \(_monitors))
                                   [--monitor \(_monitors)] [--workspace \(_workspaces)]
-                                  [--pid <pid>] [--app-id <app-id>] [--macos-hidden-app [no]]
-                                  [--macos-minimized] [--macos-fullscreen]
+                                  [--pid <pid>] [--app-id <app-id>] [--macos-native-hidden-app [no]]
+                                  [--macos-native-minimized] [--macos-native-fullscreen]
                  OR: list-windows [-h|--help] --all
                  OR: list-windows [-h|--help] --focused
 
               OPTIONS:
-                -h, --help                   Print help
-                --all                        Alias for "--monitor all"
-                --focused                    Print the focused window
-                --workspace \(_workspaces)   Filter results to only print windows that belong to specified workspaces
-                --monitor \(_monitors)       Filter results to only print the windows that are attached to specified monitors
-                --pid <pid>                  Filter results to only print windows that belong to the Application with specified <pid>
-                --app-id <app-id>            Filter results to only print windows that belong to the Application with specified Bundle ID
-                --macos-hidden-app [no]      Filter results to only print windows that belong to hidden applications.
-                                             [no] inverts the condition
-                --macos-minimized [no]       Filter results to only print minimized windows. [no] inverts the condition
-                --macos-fullscreen [no]      Filter results to only print fullscreen windows. [no] inverts the condition
+                -h, --help                      Print help
+                --all                           Alias for "--monitor all"
+                --focused                       Print the focused window
+                --workspace \(_workspaces)      Filter results to only print windows that belong to specified workspaces
+                --monitor \(_monitors)          Filter results to only print the windows that are attached to specified monitors
+                --pid <pid>                     Filter results to only print windows that belong to the Application with specified <pid>
+                --app-id <app-id>               Filter results to only print windows that belong to the Application with specified Bundle ID
+                --macos-native-hidden-app [no]  Filter results to only print windows that belong to hidden applications.
+                                                [no] inverts the condition
+                --macos-native-minimized [no]   Filter results to only print minimized windows. [no] inverts the condition
+                --macos-native-fullscreen [no]  Filter results to only print fullscreen windows. [no] inverts the condition
               """,
         options: [
             "--focused": trueBoolFlag(\.focused),
@@ -33,9 +33,9 @@ private struct RawListWindowsCmdArgs: RawCmdArgs, Equatable {
             "--monitor": ArgParser(\.manual.monitors, parseMonitorIds),
             "--workspace": ArgParser(\.manual.workspaces, parseWorkspaces),
             "--pid": singleValueOption(\.manual.pidFilter, "<pid>", Int32.init),
-            "--macos-hidden-app": boolFlag(\.manual.macosHiddenApp),
-            "--macos-minimized": boolFlag(\.manual.macosMinimized),
-            "--macos-fullscreen": boolFlag(\.manual.macosFullscreen),
+            "--macos-native-hidden-app": boolFlag(\.manual.macosHiddenApp),
+            "--macos-native-minimized": boolFlag(\.manual.macosMinimized),
+            "--macos-native-fullscreen": boolFlag(\.manual.macosFullscreen),
             "--app-id": singleValueOption(\.manual.appIdFilter, "<app-id>", { $0 })
         ],
         arguments: []

@@ -10,8 +10,8 @@ include::util/man-attributes.adoc[]
 // tag::synopsis[]
 list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
              [--monitor <monitor>...] [--workspace <workspace>...]
-             [--pid <pid>] [--app-id <app-id>] [--macos-hidden-app [no]]
-             [--macos-minimized] [--macos-fullscreen]
+             [--pid <pid>] [--app-id <app-id>] [--macos-native-hidden-app [no]]
+             [--macos-native-minimized] [--macos-native-fullscreen]
 list-windows [-h|--help] --all
 list-windows [-h|--help] --focused
 
@@ -65,15 +65,15 @@ include::util/monitor-option.adoc[]
 --pid <pid>:: Filter results to only print windows that belong to the Application with specified `<pid>`
 --app-id <app-id>:: Filter results to only print windows that belong to the Application with specified Bundle ID
 
---macos-hidden-app [no]::
+--macos-native-hidden-app [no]::
 Filter results to only print windows that belong to hidden applications.
 `[no]` inverts the condition
 
---macos-minimized [no]::
+--macos-native-minimized [no]::
 Filter results to only print minimized windows.
 `[no]` inverts the condition
 
---macos-fullscreen [no]::
+--macos-native-fullscreen [no]::
 Filter results to only print fullscreen windows.
 `[no]` inverts the condition
 
