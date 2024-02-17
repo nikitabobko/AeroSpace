@@ -81,18 +81,6 @@ aerospace workspace 1
 
 For the list of available commands see: xref:commands.adoc[]
 
-=== Default bindings
-
-AeroSpace comes with the default bindings. See `mode.main.binding` section in xref:config-examples.adoc#default-config[the default config].
-
-After specifying at least one binding in your config, all the default AeroSpace bindings are replaced and discarded.
-
-Alternatively, if you use another software to manage your global keyboard bindings, you can dump out all the AeroSpace bindings using the following TOML syntax:
-[source,toml]
-----
-mode.main = {}
-----
-
 [#tree]
 == Tree
 

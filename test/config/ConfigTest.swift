@@ -11,6 +11,12 @@ final class ConfigTest: XCTestCase {
         XCTAssertEqual(i3Config.enableNormalizationOppositeOrientationForNestedContainers, false)
     }
 
+    func testParseDefaultConfig() {
+        let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/default-config.toml"))
+        let (_, errors) = parseConfig(toml)
+        XCTAssertEqual(errors.descriptions, [])
+    }
+
     func testQueryCantBeUsedInConfig() {
         let (_, errors) = parseConfig(
             """
@@ -234,7 +240,7 @@ final class ConfigTest: XCTestCase {
                     windowTitleRegexSubstring: nil
                 ),
                 checkFurtherCallbacks: true,
-                run: [
+                rawRun: [
                     LayoutCommand(args: LayoutCmdArgs(toggleBetween: [.floating])),
                     MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(.direct(WTarget.Direct("W"))))
                 ]
@@ -246,7 +252,7 @@ final class ConfigTest: XCTestCase {
                     windowTitleRegexSubstring: nil
                 ),
                 checkFurtherCallbacks: false,
-                run: []
+                rawRun: []
             ),
         ])
 

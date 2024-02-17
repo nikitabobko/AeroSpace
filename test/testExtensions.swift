@@ -12,7 +12,7 @@ extension WindowDetectedCallback: Equatable {
                 rhs.matcher.windowTitleRegexSubstring == nil
         )
         return lhs.matcher.appId == rhs.matcher.appId &&
-            lhs.run.map(\.describe) == rhs.run.map(\.describe)
+            lhs.rawRun?.map(\.describe) == rhs.rawRun?.map(\.describe)
     }
 }
 

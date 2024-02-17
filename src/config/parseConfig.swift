@@ -5,7 +5,8 @@ import TOMLKit
 func reloadConfig() {
     resetHotKeys()
     let configUrl = getConfigFileUrl()
-    let (parsedConfig, errors) = parseConfig(configUrl.flatMap { try? String(contentsOf: $0) } ?? "")
+    let (parsedConfig, errors) = configUrl.flatMap { try? String(contentsOf: $0) }.map { parseConfig($0) }
+        ?? (defaultConfig, [])
 
     if errors.isEmpty {
         config = parsedConfig
@@ -87,33 +88,36 @@ extension ParserProtocol {
                             _ value: TOMLValueConvertible,
                             _ backtrace: TomlBacktrace,
                             _ errors: inout [TomlParseError]) -> S {
-        raw.copy(keyPath, parse(value, backtrace, &errors).getOrNil(appendErrorTo: &errors))
+        if let value = parse(value, backtrace, &errors).getOrNil(appendErrorTo: &errors) {
+            return raw.copy(keyPath, value)
+        }
+        return raw
     }
 }
 
 protocol ParserProtocol<S> {
     associatedtype T
     associatedtype S where S: Copyable
-    var keyPath: WritableKeyPath<S, T?> { get }
+    var keyPath: WritableKeyPath<S, T> { get }
     var parse: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T> { get }
 }
 
 struct Parser<S: Copyable, T>: ParserProtocol {
-    let keyPath: WritableKeyPath<S, T?>
+    let keyPath: WritableKeyPath<S, T>
     let parse: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T>
 
-    init(_ keyPath: WritableKeyPath<S, T?>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> T) {
+    init(_ keyPath: WritableKeyPath<S, T>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> T) {
         self.keyPath = keyPath
         self.parse = { raw, backtrace, errors -> ParsedToml<T> in .success(parse(raw, backtrace, &errors)) }
     }
 
-    init(_ keyPath: WritableKeyPath<S, T?>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) {
+    init(_ keyPath: WritableKeyPath<S, T>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) {
         self.keyPath = keyPath
         self.parse = { raw, backtrace, errors -> ParsedToml<T> in parse(raw, backtrace) }
     }
 }
 
-private let configParser: [String: any ParserProtocol<RawConfig>] = [
+private let configParser: [String: any ParserProtocol<Config>] = [
     "after-login-command": Parser(\.afterLoginCommand, { parseCommandOrCommands($0).toParsedToml($1) }),
     "after-startup-command": Parser(\.afterStartupCommand, { parseCommandOrCommands($0).toParsedToml($1) }),
 
@@ -177,36 +181,16 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
 
     var errors: [TomlParseError] = []
 
-    let raw = rawTable.parseTable(RawConfig(), configParser, .root, &errors)
+    var config = rawTable.parseTable(Config(), configParser, .root, &errors)
 
-    let modesOrDefault = raw.modes ?? defaultConfig.modes
+    config.preservedWorkspaceNames = config.modes.values.lazy
+        .flatMap { (mode: Mode) -> [HotkeyBinding] in Array(mode.bindings.values) }
+        .flatMap { (binding: HotkeyBinding) -> [String] in
+            binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.workspaceNameOrNil()?.raw } +
+                binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.workspaceNameOrNil()?.raw }
+        }
+        + (config.workspaceToMonitorForceAssignment).keys
 
-    let config = Config(
-        afterLoginCommand: raw.afterLoginCommand ?? defaultConfig.afterLoginCommand,
-        afterStartupCommand: raw.afterStartupCommand ?? defaultConfig.afterStartupCommand,
-        indentForNestedContainersWithTheSameOrientation: raw.indentForNestedContainersWithTheSameOrientation ?? defaultConfig.indentForNestedContainersWithTheSameOrientation,
-        enableNormalizationFlattenContainers: raw.enableNormalizationFlattenContainers ?? defaultConfig.enableNormalizationFlattenContainers,
-        _nonEmptyWorkspacesRootContainersLayoutOnStartup: (),
-        defaultRootContainerLayout: raw.defaultRootContainerLayout ?? defaultConfig.defaultRootContainerLayout,
-        defaultRootContainerOrientation: raw.defaultRootContainerOrientation ?? defaultConfig.defaultRootContainerOrientation,
-        startAtLogin: raw.startAtLogin ?? defaultConfig.startAtLogin,
-        accordionPadding: raw.accordionPadding ?? defaultConfig.accordionPadding,
-        enableNormalizationOppositeOrientationForNestedContainers: raw.enableNormalizationOppositeOrientationForNestedContainers ?? defaultConfig.enableNormalizationOppositeOrientationForNestedContainers,
-        execOnWorkspaceChange: raw.execOnWorkspaceChange ?? [],
-
-        gaps: raw.gaps ?? defaultConfig.gaps,
-        workspaceToMonitorForceAssignment: raw.workspaceToMonitorForceAssignment ?? [:],
-        modes: modesOrDefault,
-        onWindowDetected: raw.onWindowDetected ?? [],
-
-        preservedWorkspaceNames: modesOrDefault.values.lazy
-            .flatMap { (mode: Mode) -> [HotkeyBinding] in Array(mode.bindings.values) }
-            .flatMap { (binding: HotkeyBinding) -> [String] in
-                binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.workspaceNameOrNil()?.raw } +
-                    binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.workspaceNameOrNil()?.raw }
-            }
-            + (raw.workspaceToMonitorForceAssignment ?? [:]).keys
-    )
     if config.enableNormalizationFlattenContainers {
         let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings.values }
             .flatMap { $0.commands }

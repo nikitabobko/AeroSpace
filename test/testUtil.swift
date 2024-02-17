@@ -6,26 +6,15 @@ import Common
 let projectRoot: URL = URL(filePath: #file).appending(component: "../..").standardized
 
 func setUpWorkspacesForTests() {
-    config = Config(
-        afterLoginCommand: defaultConfig.afterLoginCommand,
-        afterStartupCommand: defaultConfig.afterStartupCommand,
-        indentForNestedContainersWithTheSameOrientation: defaultConfig.indentForNestedContainersWithTheSameOrientation,
-        enableNormalizationFlattenContainers: false, // Make layout tests more predictable
-        _nonEmptyWorkspacesRootContainersLayoutOnStartup: (), // Make layout tests more predictable
-        defaultRootContainerLayout: .tiles, // Make default layout predictable
-        defaultRootContainerOrientation: .horizontal, // Make default layout predictable
-        startAtLogin: defaultConfig.startAtLogin,
-        accordionPadding: defaultConfig.accordionPadding,
-        enableNormalizationOppositeOrientationForNestedContainers: false, // Make layout tests more predictable
-        execOnWorkspaceChange: [],
+    config = defaultConfig
+    config.enableNormalizationFlattenContainers = false // Make layout tests more predictable
+    config.enableNormalizationOppositeOrientationForNestedContainers = false // Make layout tests more predictable
+    config.defaultRootContainerOrientation = .horizontal // Make default layout predictable
 
-        gaps: defaultConfig.gaps,
-        workspaceToMonitorForceAssignment: [:],
-        // Don't create any workspaces for tests
-        modes: [mainModeId: Mode(name: nil, bindings: [:])],
-        onWindowDetected: [],
-        preservedWorkspaceNames: []
-    )
+    // Don't create any bindings and workspaces for tests
+    config.modes = [mainModeId: Mode(name: nil, bindings: [:])]
+    config.preservedWorkspaceNames = []
+
     for workspace in Workspace.all {
         for child in workspace.children {
             child.unbindFromParent()

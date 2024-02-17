@@ -5,43 +5,25 @@ let mainModeId = "main"
 let defaultConfig = initDefaultConfig(parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!)))
 var config: Config = defaultConfig
 
-struct RawConfig: Copyable {
-    var afterLoginCommand: [any Command]?
-    var afterStartupCommand: [any Command]?
-    var indentForNestedContainersWithTheSameOrientation: Int?
-    var enableNormalizationFlattenContainers: Bool?
-    var _nonEmptyWorkspacesRootContainersLayoutOnStartup: Void?
-    var defaultRootContainerLayout: Layout?
-    var defaultRootContainerOrientation: DefaultContainerOrientation?
-    var startAtLogin: Bool?
-    var accordionPadding: Int?
-    var enableNormalizationOppositeOrientationForNestedContainers: Bool?
-    var execOnWorkspaceChange: [String]?
+struct Config: Copyable {
+    var afterLoginCommand: [any Command] = []
+    var afterStartupCommand: [any Command] = []
+    var indentForNestedContainersWithTheSameOrientation: Int = 30
+    var enableNormalizationFlattenContainers: Bool = true
+    var _nonEmptyWorkspacesRootContainersLayoutOnStartup: Void = ()
+    var defaultRootContainerLayout: Layout = .tiles
+    var defaultRootContainerOrientation: DefaultContainerOrientation = .auto
+    var startAtLogin: Bool = false
+    var accordionPadding: Int = 30
+    var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
+    var execOnWorkspaceChange: [String] = []
 
-    var gaps: Gaps?
-    var workspaceToMonitorForceAssignment: [String: [MonitorDescription]]?
-    var modes: [String: Mode]?
-    var onWindowDetected: [WindowDetectedCallback]?
-}
-struct Config {
-    var afterLoginCommand: [any Command]
-    var afterStartupCommand: [any Command]
-    var indentForNestedContainersWithTheSameOrientation: Int
-    var enableNormalizationFlattenContainers: Bool
-    var _nonEmptyWorkspacesRootContainersLayoutOnStartup: Void
-    var defaultRootContainerLayout: Layout
-    var defaultRootContainerOrientation: DefaultContainerOrientation
-    var startAtLogin: Bool
-    var accordionPadding: Int
-    var enableNormalizationOppositeOrientationForNestedContainers: Bool
-    var execOnWorkspaceChange: [String]
+    var gaps: Gaps = .zero
+    var workspaceToMonitorForceAssignment: [String: [MonitorDescription]] = [:]
+    var modes: [String: Mode] = [:]
+    var onWindowDetected: [WindowDetectedCallback] = []
 
-    let gaps: Gaps
-    var workspaceToMonitorForceAssignment: [String: [MonitorDescription]]
-    let modes: [String: Mode]
-    var onWindowDetected: [WindowDetectedCallback]
-
-    var preservedWorkspaceNames: [String]
+    var preservedWorkspaceNames: [String] = []
 }
 
 struct CallbackMatcher: Copyable {
@@ -50,19 +32,23 @@ struct CallbackMatcher: Copyable {
     var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
     var duringAeroSpaceStartup: Bool?
 }
-struct WindowDetectedCallback {
-    let matcher: CallbackMatcher
-    let checkFurtherCallbacks: Bool
-    let run: [any Command]
+struct WindowDetectedCallback: Copyable {
+    var matcher: CallbackMatcher = CallbackMatcher()
+    var checkFurtherCallbacks: Bool = false
+    var rawRun: [any Command]? = nil
+
+    var run: [any Command] {
+        rawRun ?? errorT("ID-46D063B2 should have discarded nil")
+    }
 }
 
-struct Gaps {
-    let inner: Inner
-    let outer: Outer
+struct Gaps: Copyable {
+    var inner: Inner
+    var outer: Outer
 
-    struct Inner {
-        let vertical: DynamicConfigValue<Int>
-        let horizontal: DynamicConfigValue<Int>
+    struct Inner: Copyable {
+        var vertical: DynamicConfigValue<Int>
+        var horizontal: DynamicConfigValue<Int>
 
         static var zero = Inner(vertical: 0, horizontal: 0)
 
@@ -77,11 +63,11 @@ struct Gaps {
         }
     }
 
-    struct Outer {
-        let left: DynamicConfigValue<Int>
-        let bottom: DynamicConfigValue<Int>
-        let top: DynamicConfigValue<Int>
-        let right: DynamicConfigValue<Int>
+    struct Outer: Copyable {
+        var left: DynamicConfigValue<Int>
+        var bottom: DynamicConfigValue<Int>
+        var top: DynamicConfigValue<Int>
+        var right: DynamicConfigValue<Int>
 
         static var zero = Outer(left: 0, bottom: 0, top: 0, right: 0)
 
