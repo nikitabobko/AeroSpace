@@ -179,9 +179,10 @@ private func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
 }
 
 func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lot of windows don't have title on startup
-    // qutebrowser maliciously reports that it's a dialog, and it's possible to hide fullscreen button in the app anyway
+    // hide_decoration in qutebrowser makes it to hide fullscreen button and change subrole to dialog
     // https://github.com/nikitabobko/AeroSpace/issues/166
-    if app.id == "org.qutebrowser.qutebrowser" {
+    let subrole = axWindow.get(Ax.subroleAttr)
+    if app.id == "org.qutebrowser.qutebrowser" && subrole == kAXDialogSubrole {
         return false
     }
     // Don't tile:
@@ -192,7 +193,7 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
     // - macOS native file picker (IntelliJ -> "Open...") (kAXDialogSubrole value)
     //
     // Minimized windows or windows of a hidden app have subrole "AXDialog"
-    if axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole {
+    if subrole != kAXStandardWindowSubrole {
         return true
     }
     // Heuristic: float windows without fullscreen button (such windows are not designed to be big)
