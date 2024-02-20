@@ -21,7 +21,7 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
         return candidate
     }
     return (0...Int.max).lazy
-        .map { Workspace.get(byName: "EMPTY\($0)") }
+        .map { Workspace.get(byName: String($0)) }
         .first { $0.isEffectivelyEmpty && !$0.isVisible }
         ?? errorT("Can't create empty workspace")
 }
