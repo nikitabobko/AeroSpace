@@ -35,9 +35,22 @@ Public Beta. Feedback is very much welcome
 ## Installation
 
 Install via [Homebrew](https://brew.sh/) to get autoupdates (Preferred)
+
 ```
-brew install --no-quarantine --cask nikitabobko/tap/aerospace
+brew install --cask nikitabobko/tap/aerospace
 ```
+
+> [!NOTE]
+> By using AeroSpace, you acknowledge that it's not notarized.
+>
+> Notarization is a "security" feature by Apple. You send binaries to Apple and they either approve the binaries or not.
+> In reality, notarization is about building binaries the way Apple likes it.
+> Notarization costs developers time and requires paying $99 per year.
+> I don't have time to fight Apple.
+>
+> [Homebrew installation script](https://github.com/nikitabobko/homebrew-tap/blob/main/Casks/aerospace.rb) is configured to
+> automatically delete quarantine attribute, that's why the app should work out of the box, without any warnings about AeroSpace
+> "being untrusted software"
 
 [Manual installation](./docs/manual-installation.md)
 
