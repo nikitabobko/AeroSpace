@@ -749,7 +749,7 @@
 				CODE_SIGN_ENTITLEMENTS = src/AeroSpace.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0.8.6;
+				CURRENT_PROJECT_VERSION = 0.8.7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -757,7 +757,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = "0.8.6-Beta";
+				MARKETING_VERSION = "0.8.7-Beta";
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.debug.aerospace;
 				PRODUCT_NAME = "AeroSpace-Debug";
 				SDKROOT = macosx;
@@ -865,7 +865,7 @@
 				CODE_SIGN_ENTITLEMENTS = src/AeroSpace.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0.8.6;
+				CURRENT_PROJECT_VERSION = 0.8.7;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -873,7 +873,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = "0.8.6-Beta";
+				MARKETING_VERSION = "0.8.7-Beta";
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace.1;
 				PRODUCT_NAME = AeroSpace;
 				SDKROOT = macosx;
