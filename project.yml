@@ -52,7 +52,7 @@ targets:
           PRODUCT_BUNDLE_IDENTIFIER: bobko.debug.aerospace
         release:
           PRODUCT_NAME: AeroSpace
-          PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace
+          PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace.1
     entitlements:
       path: src/AeroSpace.entitlements
       properties:

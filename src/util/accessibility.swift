@@ -9,7 +9,7 @@ func checkAccessibilityPermissions() {
 }
 
 private func resetAccessibility() {
-    let _ = try? Process.run(URL(filePath: "/usr/bin/tccutil"), arguments: ["reset", "Accessibility", Bundle.appId])
+    let _ = try? Process.run(URL(filePath: "/usr/bin/tccutil"), arguments: ["reset", "Accessibility", Bundle.bundleId])
 }
 
 protocol ReadableAttr {

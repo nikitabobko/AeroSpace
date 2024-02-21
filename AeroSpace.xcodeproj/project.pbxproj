@@ -874,7 +874,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = "0.8.6-Beta";
-				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace;
+				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace.1;
 				PRODUCT_NAME = AeroSpace;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "src/Bridged-Header.h";

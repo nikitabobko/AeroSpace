@@ -4,7 +4,7 @@ import Common
 func startServer() {
     let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }
         .getOrThrow("Can't create socket ")
-    let socketFile = "/tmp/\(Bundle.appId).sock"
+    let socketFile = "/tmp/\(appId).sock"
     Result { try socket.listen(on: socketFile) }.getOrThrow("Can't listen to socket \(socketFile) ")
     DispatchQueue.global().async {
         while true {
