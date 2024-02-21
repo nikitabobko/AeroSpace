@@ -17,8 +17,8 @@ private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
         moveFloatingWindow(window)
     case .tilingContainer:
         moveTilingWindow(window)
-    case .macosInvisibleWindowsContainer:
-        return // Invisible window can't be moved with mouse
+    case .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
+        return // Invisible and fullscreen windows can't be moved with mouse
     }
 }
 
@@ -87,7 +87,7 @@ extension CGPoint {
         case .accordion:
             target = tree.mostRecentChild
         }
-        switch target?.nonRootTreeNodeCasesOrThrow() {
+        switch target?.tilingTreeNodeCasesOrThrow() {
         case nil:
             return nil
         case .window(let window):

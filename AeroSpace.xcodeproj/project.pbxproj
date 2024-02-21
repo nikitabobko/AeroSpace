@@ -81,6 +81,7 @@
 		B19980B36D066FD4947D2F92 /* normalizeContainers.swift in Sources */ = {isa = PBXBuildFile; fileRef = C704028F402C0DE83EDEABB9 /* normalizeContainers.swift */; };
 		B1F37468B56941F6B22EEEDB /* layoutRecursive.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAC5AF4019D1F5DAB5AF2B56 /* layoutRecursive.swift */; };
 		B3702BB393A9B03CCAE4C60E /* refresh.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B113159987FA43EA41120 /* refresh.swift */; };
+		B8EB32DC890345B9DD9C166A /* MacosFullscreenWindowsContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09A2832990598D534F4A5225 /* MacosFullscreenWindowsContainer.swift */; };
 		BA3AD253826B5EA318A6E687 /* MonitorEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAEA4B9015FBF8711E532D0 /* MonitorEx.swift */; };
 		BB3C35BE40958AE6E7B4A9FD /* TreeNodeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1645D9939F3F896EF21393 /* TreeNodeTest.swift */; };
 		BC6511DA2ABE84164D90C181 /* ExecAndForgetCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 569422C0C4C23EF3E024C8E6 /* ExecAndForgetCommand.swift */; };
@@ -98,6 +99,7 @@
 		E22ACB36C90695FBAC78226E /* TestWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1905935B0C61590A96EFEF /* TestWindow.swift */; };
 		E5682579AEC6B84CF6FCE90D /* TilingContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = C848D6E57FDF22AAF0FB45E6 /* TilingContainer.swift */; };
 		E7F53669DD11FA7C6C3540A0 /* ConfigTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54679FCD1EC1196B27E964D5 /* ConfigTest.swift */; };
+		EB171FD9A347F000AC63B573 /* normalizeLayoutReason.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34547605D044E8182B71B0E7 /* normalizeLayoutReason.swift */; };
 		ED96E36786C941AB3AF780BC /* startAtLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9164C9401F7DDCACE9278DA4 /* startAtLogin.swift */; };
 		EECC59858691B99A95542D72 /* MacWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9245C6FACF389672EA71173B /* MacWindow.swift */; };
 		F69159A961FEE54847EC9A8D /* ListMonitorsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD6BB613EC44C1B32CE4A47E /* ListMonitorsCommand.swift */; };
@@ -122,6 +124,7 @@
 		00ECDFE176777828D560A737 /* TilingContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TilingContainer.swift; sourceTree = "<group>"; };
 		07ADCBFC2E29A2AD5C1B7984 /* parseCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parseCommand.swift; sourceTree = "<group>"; };
 		09685297933511208058F7CF /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		09A2832990598D534F4A5225 /* MacosFullscreenWindowsContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MacosFullscreenWindowsContainer.swift; sourceTree = "<group>"; };
 		0A9DFF8980BB3F90A3793BE9 /* parseOnWindowDetected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = parseOnWindowDetected.swift; sourceTree = "<group>"; };
 		0AEE5470AF418906B180A593 /* mouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mouse.swift; sourceTree = "<group>"; };
 		0D36D0F8EEB30A7BABC42343 /* LazySequenceProtocolEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LazySequenceProtocolEx.swift; sourceTree = "<group>"; };
@@ -135,6 +138,7 @@
 		244190F3707EF2BB3CC7FA5A /* MonitorDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonitorDescription.swift; sourceTree = "<group>"; };
 		25AC44D0E9450867215FCBEC /* MoveNodeToWorkspaceCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveNodeToWorkspaceCommand.swift; sourceTree = "<group>"; };
 		2D96FF3675C63A83DC8B8969 /* SplitCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitCommandTest.swift; sourceTree = "<group>"; };
+		34547605D044E8182B71B0E7 /* normalizeLayoutReason.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = normalizeLayoutReason.swift; sourceTree = "<group>"; };
 		3A262B442A94C1964509B691 /* TreeNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNode.swift; sourceTree = "<group>"; };
 		3A6EF465EF4129BCB10FE247 /* ExecCommandTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecCommandTest.swift; sourceTree = "<group>"; };
 		3C2E5977331398421A4FC168 /* GlobalObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalObserver.swift; sourceTree = "<group>"; };
@@ -277,6 +281,7 @@
 				84AB57B5B8014931BD0F30DB /* AbstractApp.swift */,
 				DAC5AF4019D1F5DAB5AF2B56 /* layoutRecursive.swift */,
 				B7DB782C527ABE0CF31740EB /* MacApp.swift */,
+				09A2832990598D534F4A5225 /* MacosFullscreenWindowsContainer.swift */,
 				EB47C43405542756E2EA1B19 /* MacosInvisibleWindowsContainer.swift */,
 				9245C6FACF389672EA71173B /* MacWindow.swift */,
 				C704028F402C0DE83EDEABB9 /* normalizeContainers.swift */,
@@ -375,6 +380,7 @@
 				D61FE8B343B068F0FFFC2373 /* focused.swift */,
 				826EA316AB62F913D1A94466 /* FocusSourceOfTruth.swift */,
 				3C2E5977331398421A4FC168 /* GlobalObserver.swift */,
+				34547605D044E8182B71B0E7 /* normalizeLayoutReason.swift */,
 				526B113159987FA43EA41120 /* refresh.swift */,
 				796713A1B3AEEBF4D0D180C7 /* server.swift */,
 				5F5F52E346D024960EAF5938 /* TrayMenuModel.swift */,
@@ -629,6 +635,7 @@
 				3AFD7EE961B97F38C0914A0C /* ListWorkspacesCommand.swift in Sources */,
 				BD6301B2CFC16FDE4223ACB8 /* MacApp.swift in Sources */,
 				EECC59858691B99A95542D72 /* MacWindow.swift in Sources */,
+				B8EB32DC890345B9DD9C166A /* MacosFullscreenWindowsContainer.swift in Sources */,
 				997742E8C68FA29868946181 /* MacosInvisibleWindowsContainer.swift in Sources */,
 				DEE74487CFB70CEC10D9D3D7 /* MacosNativeFullscreenCommand.swift in Sources */,
 				7C0ACF53062631B667424927 /* MacosNativeMinimizeCommand.swift in Sources */,
@@ -664,6 +671,7 @@
 				045D4B46ABACA9E8167EF356 /* mouse.swift in Sources */,
 				78622D72C0CCE8D69B080D29 /* moveWithMouse.swift in Sources */,
 				B19980B36D066FD4947D2F92 /* normalizeContainers.swift in Sources */,
+				EB171FD9A347F000AC63B573 /* normalizeLayoutReason.swift in Sources */,
 				4E0BC093AD1FBCCA718A26EC /* parseCommand.swift in Sources */,
 				A0765C31043BCFB0420BF1C9 /* parseConfig.swift in Sources */,
 				5BA537EABFE48178D6BD2544 /* parseGaps.swift in Sources */,

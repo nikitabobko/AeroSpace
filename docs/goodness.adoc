@@ -142,7 +142,7 @@ EOF'''
 ----
 
 [#disable-hide-app]
-== Disable annoying and useless "hide application"
+== Disable annoying and useless "hide application" shortcut
 
 .~/.aerospace.toml
 [source,toml]

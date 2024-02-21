@@ -34,6 +34,9 @@ struct LayoutCommand: Command {
             case .macosInvisibleWindowsContainer:
                 state.stderr.append("Can't change layout of macOS invisible windows (hidden application or minimized windows). This behavior is subject to change")
                 return false
+            case .macosFullscreenWindowsContainer(_):
+                state.stderr.append("Can't change layout of macOS fullscreen windows. This behavior is subject to change")
+                return false
             case .tilingContainer:
                 return true // Nothing to do
             case .workspace(let workspace):
@@ -61,7 +64,7 @@ private func changeTilingLayout(_ state: CommandMutableState, targetLayout: Layo
         parent.layout = targetLayout
         parent.changeOrientation(targetOrientation)
         return true
-    case .workspace, .macosInvisibleWindowsContainer:
+    case .workspace, .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
         state.stderr.append("The window is non-tiling")
         return false
     }

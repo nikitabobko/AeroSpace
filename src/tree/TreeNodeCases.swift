@@ -5,15 +5,17 @@ enum TreeNodeCases {
     case tilingContainer(TilingContainer)
     case workspace(Workspace)
     case macosInvisibleWindowsContainer(MacosInvisibleWindowsContainer)
+    case macosFullscreenWindowsContainer(MacosFullscreenWindowsContainer)
 }
 
 enum NonLeafTreeNodeCases {
     case tilingContainer(TilingContainer)
     case workspace(Workspace)
     case macosInvisibleWindowsContainer(MacosInvisibleWindowsContainer)
+    case macosFullscreenWindowsContainer(MacosFullscreenWindowsContainer)
 }
 
-enum NonRootTreeNodeCases {
+enum TilingTreeNodeCases {
     case window(Window)
     case tilingContainer(TilingContainer)
 }
@@ -22,6 +24,7 @@ enum NonLeafTreeNodeKind: Equatable {
     case tilingContainer
     case workspace
     case macosInvisibleWindowsContainer
+    case macosFullscreenWindowsContainer
 }
 
 protocol NonLeafTreeNodeObject: TreeNode {}
@@ -36,12 +39,14 @@ extension TreeNode {
             return .tilingContainer(tilingContainer)
         } else if let container = self as? MacosInvisibleWindowsContainer {
             return .macosInvisibleWindowsContainer(container)
+        } else if let container = self as? MacosFullscreenWindowsContainer {
+            return .macosFullscreenWindowsContainer(container)
         } else {
             error("Unknown tree")
         }
     }
 
-    func nonRootTreeNodeCasesOrThrow() -> NonRootTreeNodeCases {
+    func tilingTreeNodeCasesOrThrow() -> TilingTreeNodeCases {
         if let window = self as? Window {
             return .window(window)
         } else if let tilingContainer = self as? TilingContainer {
@@ -62,8 +67,10 @@ extension NonLeafTreeNodeObject {
             return .tilingContainer(tilingContainer)
         } else if let container = self as? MacosInvisibleWindowsContainer {
             return .macosInvisibleWindowsContainer(container)
+        } else if let container = self as? MacosFullscreenWindowsContainer {
+            return .macosFullscreenWindowsContainer(container)
         } else {
-            error("Unknown tree")
+            error("Unknown tree \(self)")
         }
     }
 
@@ -75,6 +82,8 @@ extension NonLeafTreeNodeObject {
             return .workspace
         case .macosInvisibleWindowsContainer:
             return .macosInvisibleWindowsContainer
+        case .macosFullscreenWindowsContainer:
+            return .macosFullscreenWindowsContainer
         }
     }
 }
@@ -82,6 +91,7 @@ extension NonLeafTreeNodeObject {
 enum ChildParentRelation: Equatable {
     case floatingWindow
     case macosNativeFullscreenWindow
+    case macosNativeFullscreenStubContainer
     case macosNativeInvisibleWindow
     case tiling(parent: TilingContainer) // todo consider splitting it on 'tiles' and 'accordion'
     case rootTilingContainer
@@ -102,8 +112,8 @@ func getChildParentRelationOrNil(child: TreeNode, parent: NonLeafTreeNodeObject)
     switch (child.nodeCases, parent.cases) {
     case (.workspace, _):
         return nil
-    case (.window(let window), .workspace):
-        return window.isMacosFullscreen ? .macosNativeFullscreenWindow : .floatingWindow
+    case (.window, .workspace):
+        return .floatingWindow
     case (.window, .macosInvisibleWindowsContainer):
         return .macosNativeInvisibleWindow
     case (_, .macosInvisibleWindowsContainer):
@@ -114,6 +124,14 @@ func getChildParentRelationOrNil(child: TreeNode, parent: NonLeafTreeNodeObject)
     case (.tilingContainer, .workspace):
         return .rootTilingContainer
     case (.macosInvisibleWindowsContainer, _):
+        return nil
+    case (.macosFullscreenWindowsContainer, .workspace):
+        return .macosNativeFullscreenStubContainer
+    case (.macosFullscreenWindowsContainer, _):
+        return nil
+    case (.window, .macosFullscreenWindowsContainer):
+        return .macosNativeFullscreenWindow
+    case (_, .macosFullscreenWindowsContainer):
         return nil
     }
 }

@@ -28,8 +28,20 @@ extension Workspace {
             //: (nativeFocusedWindow?.workspace ?? Workspace.get(byName: focusedWorkspaceName))
     }
 
-    var floatingAndMacosFullscreenWindows: [Window] {
+    var floatingWindows: [Window] {
         children.filterIsInstance(of: Window.self)
+    }
+
+    var macOsNativeFullscreenWindowsContainer: MacosFullscreenWindowsContainer {
+        let containers = children.filterIsInstance(of: MacosFullscreenWindowsContainer.self)
+        switch containers.count {
+        case 0:
+            return MacosFullscreenWindowsContainer(parent: self)
+        case 1:
+            return containers.singleOrNil()!
+        default:
+            error("Workspace must contain zero or one MacosFullscreenWindowsContainer")
+        }
     }
 
     var forceAssignedMonitor: Monitor? {

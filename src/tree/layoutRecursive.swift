@@ -47,8 +47,8 @@ private extension TreeNode {
             case .accordion:
                 container.layoutAccordion(point, width: width, height: height, virtual: virtual, context)
             }
-        case .macosInvisibleWindowsContainer:
-            return // Nothing to do for invisible windows
+        case .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
+            return // Nothing to do for invisible and fullscreen windows
         }
     }
 }

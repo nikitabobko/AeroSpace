@@ -54,6 +54,8 @@ class TreeNode: Equatable {
             return parent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
         case .rootTilingContainer:
             return parent.getWeight(targetOrientation)
+        case .macosNativeFullscreenStubContainer:
+            error("Weight doesn't make sense for stub fullscreen container")
         }
     }
 
@@ -78,7 +80,7 @@ class TreeNode: Equatable {
                 self.adaptiveWeight = newParent.children.sumOf { $0.getWeight(newParent.orientation) }
                     .div(newParent.children.count)
                     ?? 1
-            case .rootTilingContainer, .macosNativeInvisibleWindow:
+            case .rootTilingContainer, .macosNativeInvisibleWindow, .macosNativeFullscreenStubContainer:
                 self.adaptiveWeight = 1
             }
         } else {

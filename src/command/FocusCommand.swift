@@ -104,9 +104,9 @@ private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingW
     defer {
         mruBefore?.markAsMostRecentChild()
     }
-    let floatingWindows: [FloatingWindowData] = workspace.floatingAndMacosFullscreenWindows
+    let floatingWindows: [FloatingWindowData] = workspace.floatingWindows
         .map { (window: Window) -> FloatingWindowData? in
-            let center = window.isMacosFullscreen ? workspace.monitor.rect.topLeftCorner : window.getCenter()
+            let center = window.getCenter()
             guard let center else { return nil }
             // todo bug: what if there are no tiling windows on the workspace?
             guard let target = center.coerceIn(rect: workspace.monitor.visibleRectPaddedByOuterGaps).findIn(tree: workspace.rootTilingContainer, virtual: true) else { return nil }
@@ -162,7 +162,7 @@ private extension TreeNode {
             } else {
                 return mostRecentChild?.findFocusTargetRecursive(snappedTo: direction)
             }
-        case .macosInvisibleWindowsContainer:
+        case .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
             error("Impossible")
         }
     }
