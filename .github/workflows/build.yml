@@ -10,6 +10,9 @@ on:
   schedule:
     - cron: '0 0 * * *' # every day at 00:00
 
+env:
+  AEROSPACE_CODE_SIGN_IDENTITY: '-' # Sign to run locally
+
 jobs:
   build:
     name: Build
@@ -20,17 +23,12 @@ jobs:
         uses: actions/checkout@v3
       - name: Install deps
         run: brew install xcodegen gsed asciidoctor
-      - name: Update .local.xcconfig
+      - name: Check dirty files
         run: |
-          cat <<EOF > .local.xcconfig
-          DEVELOPMENT_TEAM =
-          // Sign to run locally
-          CODE_SIGN_IDENTITY = -
-          EOF
+          (export AEROSPACE_CODE_SIGN_IDENTITY=; ./generate.sh)
+          ./script/check-uncommitted-files.sh
       - name: Build
         run: ./build-debug.sh
-      - name: Check dirty files
-        run: ./script/check-uncommitted-files.sh
       - name: Test
         run: ./run-tests.sh
       - name: Build docs

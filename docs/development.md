@@ -14,20 +14,16 @@ The dependencies that are required to build AeroSpace:
 brew install xcodegen gsed asciidoctor xcbeautify
 ```
 
-## Setup Signing
+## Create codesign certificate
 
-Before you can build the project you need to setup signing. Signing the binary is required to preserve accessibility permission
-across rebuilds.
+Before you can build the project you need to create self-signed certificate that will be used to codesign AeroSpace.
+Signing the binary is required to preserve accessibility permission across rebuilds.
 
-```bash
-cat <<EOF > .local.xcconfig
-DEVELOPMENT_TEAM = XXXXXXXXXX
-CODE_SIGN_IDENTITY = Apple Development
-EOF
-```
-
-where `XXXXXXXXXX` is your signature ID. The easiest way to know your `DEVELOPMENT_TEAM` id is to [set the Team in Xcode
-GUI](https://developer.apple.com/documentation/xcode/adding-capabilities-to-your-app/) and see the `git diff`
+1. Open `Keychain Access.app`
+2. Menu -> `Keychain Access` -> `Certificate Assistance` -> `Create a Certificate...`
+   - Name: `aerospace-codesign-certificate`
+   - Identity Type: `Self-Signed Root`
+   - Certificate Type: `Code Signing`
 
 ## Debug Build
 

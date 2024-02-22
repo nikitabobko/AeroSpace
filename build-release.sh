@@ -40,11 +40,7 @@ cp -r LocalPackage/.build/apple/Products/Release/aerospace .release
 ### SIGN CLI ###
 ################
 
-code_sign_identity="$(cat .local.xcconfig | grep "^CODE_SIGN_IDENTITY" | head -1 | sed 's/.*=\s*//')"
-resolved_identity="$(security find-identity -p codesigning -v | grep --fixed-string "$code_sign_identity" | tail -1)"
-echo "Sign CLI using $resolved_identity"
-resolved_identity="$(awk '{print $2}' <<< $resolved_identity)"
-codesign -s "$resolved_identity" .release/aerospace
+codesign -s aerospace-codesign-certificate .release/aerospace
 
 ################
 ### VALIDATE ###

@@ -30,5 +30,5 @@ EOF
 
 export AEROSPACE_VERSION=$version
 export AEROSPACE_BUILD_NUMBER=$build_number
+export AEROSPACE_CODE_SIGN_IDENTITY=${AEROSPACE_CODE_SIGN_IDENTITY:-aerospace-codesign-certificate}
 xcodegen # https://github.com/yonaskolb/XcodeGen
-sed -i 's/DevelopmentTeam.*/DevelopmentTeam = "";/' AeroSpace.xcodeproj/project.pbxproj # Workaround xcodegen bug
