@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-workspace-back-and-forth [-h|--help]
+aerospace workspace-back-and-forth [-h|--help]
 // end::synopsis[]
 
 == Description

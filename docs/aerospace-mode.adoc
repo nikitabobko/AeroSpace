@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-mode [-h|--help] <binding-mode>
+aerospace mode [-h|--help] <binding-mode>
 // end::synopsis[]
 
 == Description

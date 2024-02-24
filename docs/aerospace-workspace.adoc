@@ -9,8 +9,8 @@ include::util/man-attributes.adoc[]
 
 [verse]
 // tag::synopsis[]
-workspace [-h|--help] [--wrap-around] (next|prev)
-workspace [-h|--help] [--auto-back-and-forth] <workspace-name>
+aerospace workspace [-h|--help] [--wrap-around] (next|prev)
+aerospace workspace [-h|--help] [--auto-back-and-forth] <workspace-name>
 
 // end::synopsis[]
 

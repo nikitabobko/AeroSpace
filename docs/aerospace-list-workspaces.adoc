@@ -8,9 +8,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]]
-list-workspaces [-h|--help] --all
-list-workspaces [-h|--help] --focused
+aerospace list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]]
+aerospace list-workspaces [-h|--help] --all
+aerospace list-workspaces [-h|--help] --focused
 
 // end::synopsis[]
 

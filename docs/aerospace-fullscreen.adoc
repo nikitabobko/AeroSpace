@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-fullscreen [-h|--help]
+aerospace fullscreen [-h|--help]
 // end::synopsis[]
 
 == Description

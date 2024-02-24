@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-macos-native-minimize [-h|--help]
+aerospace macos-native-minimize [-h|--help]
 // end::synopsis[]
 
 == Description

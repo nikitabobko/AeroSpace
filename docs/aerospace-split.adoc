@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-split [-h|--help] (horizontal|vertical|opposite)
+aerospace split [-h|--help] (horizontal|vertical|opposite)
 // end::synopsis[]
 
 == Description

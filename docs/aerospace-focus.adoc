@@ -8,8 +8,8 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-focus [-h|--help] [--boundaries <boundary>]
-      [--boundaries-action <action>] (left|down|up|right)
+aerospace focus [-h|--help] [--boundaries <boundary>]
+                [--boundaries-action <action>] (left|down|up|right)
 
 // end::synopsis[]
 

@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-reload-config [-h|--help]
+aerospace reload-config [-h|--help]
 // end::synopsis[]
 
 == Description

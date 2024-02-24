@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-exec-and-forget <bash-script>
+aerospace exec-and-forget <bash-script>
 // end::synopsis[]
 
 == Description

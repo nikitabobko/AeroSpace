@@ -8,12 +8,12 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
-             [--monitor <monitor>...] [--workspace <workspace>...]
-             [--pid <pid>] [--app-id <app-id>] [--macos-native-hidden-app [no]]
-             [--macos-native-minimized] [--macos-native-fullscreen]
-list-windows [-h|--help] --all
-list-windows [-h|--help] --focused
+aerospace list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
+                       [--monitor <monitor>...] [--workspace <workspace>...]
+                       [--pid <pid>] [--app-id <app-id>] [--macos-native-hidden-app [no]]
+                       [--macos-native-minimized] [--macos-native-fullscreen]
+aerospace list-windows [-h|--help] --all
+aerospace list-windows [-h|--help] --focused
 
 // end::synopsis[]
 

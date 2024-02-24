@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-close [-h|--help] [--quit-if-last-window]
+aerospace close [-h|--help] [--quit-if-last-window]
 // end::synopsis[]
 
 == Description

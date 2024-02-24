@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-list-apps [-h|--help] [--macos-native-hidden [no]]
+aerospace list-apps [-h|--help] [--macos-native-hidden [no]]
 // end::synopsis[]
 
 == Description
