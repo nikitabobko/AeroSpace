@@ -20,7 +20,7 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
         .first(where: { !$0.isVisible && $0.monitor.rect.topLeftCorner == point }) {
         return candidate
     }
-    return (0...Int.max).lazy
+    return (1...Int.max).lazy
         .map { Workspace.get(byName: String($0)) }
         .first { $0.isEffectivelyEmpty && !$0.isVisible }
         ?? errorT("Can't create empty workspace")
