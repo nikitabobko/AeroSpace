@@ -575,13 +575,13 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <p><a href="#">AeroSpace Guide</a></p>
 </li>
 <li>
-<p><a href="commands.html">AeroSpace Commands</a></p>
+<p><a href="commands">AeroSpace Commands</a></p>
 </li>
 <li>
-<p><a href="config-examples.html">AeroSpace Config Examples</a></p>
+<p><a href="config-examples">AeroSpace Config Examples</a></p>
 </li>
 <li>
-<p><a href="goodness.html">AeroSpace Goodness</a></p>
+<p><a href="goodness">AeroSpace Goodness</a></p>
 </li>
 </ul>
 </div>
@@ -620,10 +620,10 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div class="ulist">
 <ul>
 <li>
-<p>The default config: <a href="config-examples.html#default-config">default-config.toml</a></p>
+<p>The default config: <a href="config-examples#default-config">default-config.toml</a></p>
 </li>
 <li>
-<p>i3 like config: <a href="config-examples.html#i3-like-config">i3-like-config-example.toml</a></p>
+<p>i3 like config: <a href="config-examples#i3-like-config">i3-like-config-example.toml</a></p>
 </li>
 <li>
 <p><a href="https://github.com/search?q=%28path%3A**%2F.aerospace.toml+OR+path%3A**%2Faerospace.toml%29&amp;type=code">Search for configs by other users on GitHub</a> for inspiration</p>
@@ -631,7 +631,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </ul>
 </div>
 <div class="paragraph">
-<p>The <a href="config-examples.html#default-config">default-config.toml</a> also serves as a documentation, since it contains all possible plain configuration keys with comments.
+<p>The <a href="config-examples#default-config">default-config.toml</a> also serves as a documentation, since it contains all possible plain configuration keys with comments.
 Non-trivial configuration options are mentioned further in this guide.</p>
 </div>
 <div class="paragraph">
@@ -699,13 +699,13 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>For the list of available commands see: <a href="commands.html">commands.html</a></p>
+<p>For the list of available commands see: <a href="commands">commands</a></p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="default-bindings"><a class="anchor" href="#default-bindings"></a><a class="link" href="#default-bindings">1.5. Default bindings</a></h3>
 <div class="paragraph">
-<p>AeroSpace comes with the default bindings. See <code>mode.main.binding</code> section in <a href="config-examples.html#default-config">the default config</a>.</p>
+<p>AeroSpace comes with the default bindings. See <code>mode.main.binding</code> section in <a href="config-examples#default-config">the default config</a>.</p>
 </div>
 <div class="paragraph">
 <p>After specifying at least one binding in your config, all the default AeroSpace bindings are replaced and discarded.</p>
@@ -793,7 +793,7 @@ i3 has a different terminology.
 </div>
 <div class="paragraph">
 <p>You can navigate in the tree in 4 possible cardinal directions (left, down, up, right).
-You use <a href="commands.html#focus">focus command</a> to do that.</p>
+You use <a href="commands#focus">focus command</a> to do that.</p>
 </div>
 <div class="paragraph">
 <p>The tree structure can be changed with three commands:</p>
@@ -801,13 +801,13 @@ You use <a href="commands.html#focus">focus command</a> to do that.</p>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p><a href="commands.html#move">move</a></p>
+<p><a href="commands#move">move</a></p>
 </li>
 <li>
-<p><a href="commands.html#join-with">join-with</a></p>
+<p><a href="commands#join-with">join-with</a></p>
 </li>
 <li>
-<p><a href="commands.html#split">split</a></p>
+<p><a href="commands#split">split</a></p>
 </li>
 </ol>
 </div>
@@ -861,14 +861,14 @@ You use <a href="commands.html#focus">focus command</a> to do that.</p>
 <div class="title">Figure 4. Vertical accordion</div>
 </div>
 <div class="paragraph">
-<p>Just like in a <code>tiles</code> layout, you can use the <a href="commands.html#focus">focus</a> command to navigate an accordion layout.</p>
+<p>Just like in a <code>tiles</code> layout, you can use the <a href="commands#focus">focus</a> command to navigate an accordion layout.</p>
 </div>
 <div class="paragraph">
 <p>You can navigate the windows in an <code>h_accordion</code> by using the <code>focus (left|right)</code> command.
 While in a <code>v_accordion</code>, you can navigate the windows using the <code>focus (up|down)</code> command.</p>
 </div>
 <div class="paragraph">
-<p>Accordion padding is configurable via <code>accordion-padding</code> option (see <a href="config-examples.html#default-config">default-config.toml</a>)</p>
+<p>Accordion padding is configurable via <code>accordion-padding</code> option (see <a href="config-examples#default-config">default-config.toml</a>)</p>
 </div>
 </div>
 <div class="sect2">
@@ -955,10 +955,10 @@ Configured by <code>enable-normalization-opposite-orientation-for-nested-contain
 <h3 id="floating-windows"><a class="anchor" href="#floating-windows"></a><a class="link" href="#floating-windows">2.3. Floating windows</a></h3>
 <div class="paragraph">
 <p>Normally, floating windows are not considered to be part of the <a href="#tree">tiling tree</a>.
-But it’s not the case with <a href="commands.html#focus">focus</a> command.</p>
+But it’s not the case with <a href="commands#focus">focus</a> command.</p>
 </div>
 <div class="paragraph">
-<p>From <a href="commands.html#focus">focus</a> command perspective, floating windows are part of <a href="#tree">tiling tree</a>.
+<p>From <a href="commands#focus">focus</a> command perspective, floating windows are part of <a href="#tree">tiling tree</a>.
 The floating window parent container is determined as the smallest tiling container that contains the center of the floating window.</p>
 </div>
 <div class="paragraph">
@@ -999,7 +999,7 @@ The floating window parent container is determined as the smallest tiling contai
 <div class="paragraph">
 <p>Since Spaces are so hard to deal with, AeroSpace reimplements Spaces and calls them "Workspaces".
 The idea is that if the workspace isn’t active then all of its windows are placed outside the visible area of the screen, in the bottom right corner.
-Once you switch back to the workspace, (e.g. by the means of <a href="commands.html#workspace">workspace</a> command, or <code>cmd + tab</code>) windows are placed back to the visible area of the screen.</p>
+Once you switch back to the workspace, (e.g. by the means of <a href="commands#workspace">workspace</a> command, or <code>cmd + tab</code>) windows are placed back to the visible area of the screen.</p>
 </div>
 <div class="paragraph">
 <p>When you quit the AeroSpace or when the AeroSpace is about to crash, AeroSpace will place all windows back to the visible area of the screen.</p>
@@ -1111,7 +1111,7 @@ By default, the first callback that matches the criteria is run, and further cal
 (The behavior can be overridden with <code>check-further-callbacks</code> option)</p>
 </div>
 <div class="paragraph">
-<p>For now, only <a href="commands.html#move-node-to-workspace">move-node-to-workspace</a> and <a href="commands.html#layout">layout</a> commands are supported in the <code>run</code> callback.
+<p>For now, only <a href="commands#move-node-to-workspace">move-node-to-workspace</a> and <a href="commands#layout">layout</a> commands are supported in the <code>run</code> callback.
 Please post your use cases to <a href="https://github.com/nikitabobko/AeroSpace/issues/20">the issue</a> if you want other commands to get supported.</p>
 </div>
 <div class="paragraph">
@@ -1176,10 +1176,10 @@ Please post your use cases to <a href="https://github.com/nikitabobko/AeroSpace/
 <div class="ulist">
 <ul>
 <li>
-<p>Take a look at precomposed <a href="goodness.html#popular-apps-ids">list of popular application IDs</a></p>
+<p>Take a look at precomposed <a href="goodness#popular-apps-ids">list of popular application IDs</a></p>
 </li>
 <li>
-<p>You can use <a href="commands.html#list-apps"><code>aerospace list-apps</code></a> CLI command to get IDs of running applications</p>
+<p>You can use <a href="commands#list-apps"><code>aerospace list-apps</code></a> CLI command to get IDs of running applications</p>
 </li>
 <li>
 <p><code>mdls -name kMDItemCFBundleIdentifier -r /Applications/App.app</code></p>
@@ -1264,7 +1264,7 @@ It may be useful for integrating with bars.</p>
 </div>
 <div class="paragraph">
 <p>For a more elaborate example on how to integrate with Sketchybar see
-<a href="goodness.html#show-aerospace-workspaces-in-sketchybar">goodness.html</a></p>
+<a href="goodness#show-aerospace-workspaces-in-sketchybar">goodness</a></p>
 </div>
 </div>
 </div>
@@ -1306,7 +1306,7 @@ The showed workspaces are called"visible" workspaces</p>
 </ol>
 </div>
 <div class="paragraph">
-<p>You can move workspace to a different monitor with <a href="commands.html#move-workspace-to-monitor">move-workspace-to-monitor</a> command.</p>
+<p>You can move workspace to a different monitor with <a href="commands#move-workspace-to-monitor">move-workspace-to-monitor</a> command.</p>
 </div>
 <div class="paragraph">
 <p>The idea of making pool of workspaces shared is based on <strong id="observation">the observation</strong> that most users have a limited set of workspaces on their secondary monitors.
@@ -1389,7 +1389,7 @@ workspaces to always appear on particular monitors</p>
 The first matching pattern will be used</p>
 </div>
 <div class="paragraph">
-<p><a href="commands.html#move-workspace-to-monitor">move-workspace-to-monitor</a> command has no effect for workspaces that have monitor assignment</p>
+<p><a href="commands#move-workspace-to-monitor">move-workspace-to-monitor</a> command has no effect for workspaces that have monitor assignment</p>
 </div>
 </div>
 </div>
@@ -1457,7 +1457,7 @@ If you find that some windows are not handled properly please <a href="https://g
 <div class="sect2">
 <h3 id="homebrew-utilities-in-path"><a class="anchor" href="#homebrew-utilities-in-path"></a><a class="link" href="#homebrew-utilities-in-path">6.2. Homebrew utilities in $PATH</a></h3>
 <div class="paragraph">
-<p><a href="commands.html#exec-and-forget"><code>exec-and-forget</code></a> doesn&#8217;t have Homebrew in its <code>$PATH</code> by default.
+<p><a href="commands#exec-and-forget"><code>exec-and-forget</code></a> doesn&#8217;t have Homebrew in its <code>$PATH</code> by default.
 See <a href="https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities" class="bare">https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities</a></p>
 </div>
 </div>
@@ -1466,7 +1466,7 @@ See <a href="https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities" 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-01-29 23:00:34 +0100
+Last updated 2024-02-29 23:13:39 +0100
 </div>
 </div>
 </body>
