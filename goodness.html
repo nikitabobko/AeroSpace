@@ -515,7 +515,8 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#disable-open-animations">3. Disable windows opening animations</a></li>
 <li><a href="#use-trackpad-gestures-to-switch-workspaces">4. Use trackpad gestures to switch workspaces</a></li>
 <li><a href="#show-aerospace-workspaces-in-sketchybar">5. Show AeroSpace workspaces in Sketchybar</a></li>
-<li><a href="#popular-apps-ids">6. List of popular and built-in applications IDs</a></li>
+<li><a href="#open-a-new-window-with-applescript">6. Open a new window with AppleScript</a></li>
+<li><a href="#popular-apps-ids">7. List of popular and built-in applications IDs</a></li>
 </ul>
 </div>
 </div>
@@ -682,7 +683,49 @@ Use these snippets as a starting point.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="popular-apps-ids"><a class="anchor" href="#popular-apps-ids"></a><a class="link" href="#popular-apps-ids">6. List of popular and built-in applications IDs</a></h2>
+<h2 id="open-a-new-window-with-applescript"><a class="anchor" href="#open-a-new-window-with-applescript"></a><a class="link" href="#open-a-new-window-with-applescript">6. Open a new window with AppleScript</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Invoking Safari/Terminal with a command the obvious way (<code>exec-and-forget open -a Safari</code>) results in an outcome that is probably not the intended one.
+Namely, that any workspace already containing an instance of Safari/Terminal is brought in focus.</p>
+</div>
+<div class="paragraph">
+<p>Opening <strong>a new window</strong> of a program that can supports multiple windows (such as Safari or Terminal.app) can be accomplished with an AppleScript inlined in <code>aerospace.toml</code> as follows:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Safari</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">ctrl-g</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;&#39;&#39;exec-and-forget osascript &lt;&lt;EOF</span>
+<span class="tok-s">tell application &quot;Safari&quot;</span>
+<span class="tok-s">    make new document at end of documents</span>
+<span class="tok-s">    activate</span>
+<span class="tok-s">end tell</span>
+<span class="tok-s">EOF&#39;&#39;&#39;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Terminal</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">ctrl-g</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;&#39;&#39;exec-and-forget osascript &lt;&lt;EOF</span>
+<span class="tok-s">tell application &quot;Terminal&quot;</span>
+<span class="tok-s">    do script</span>
+<span class="tok-s">    activate</span>
+<span class="tok-s">end tell</span>
+<span class="tok-s">EOF&#39;&#39;&#39;</span></code></pre>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="popular-apps-ids"><a class="anchor" href="#popular-apps-ids"></a><a class="link" href="#popular-apps-ids">7. List of popular and built-in applications IDs</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The list is useful to compose custom <a href="guide#on-window-detected-callback">on-window-detected callback</a>.</p>
@@ -1046,7 +1089,7 @@ Use these snippets as a starting point.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-02-29 23:13:39 +0100
+Last updated 2024-03-01 00:20:26 +0100
 </div>
 </div>
 </body>
