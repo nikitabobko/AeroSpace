@@ -207,46 +207,22 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 
 |===
 
-[#safari-new-window-command]
-== Open a new Safari window with a command
+[#new-window-command]
+== Open a new window with AppleScript
 
-Invoking Safari with a command the obvious way (`exec-and-forget open -a Safari`) results in an outcome that is probably not the intended one, namely that any workspace already containing an instance of Safari is brought in focus.
-In case one wants instead to open a new Safari window in the current workspace, this can be accomplished as follows: 
+Opening a new window of a program that can supports multiple windows (such as Safari or Apple Terminal) can be accomplished with an AppleScript inlined in `aerospace.toml` as follows:
 
-1. Save this script somewhere (for example `~/bin/safari-new-window.scpt`).
-
-```osascript
-tell application "Safari"
-	make new document at end of documents
-	activate
+[source,toml]
+----
+ctrl-g = '''exec-and-forget osascript <<EOF
+tell application "MyApp"
+    -- often an extra command is needed here, see comment below!
+    activate
 end tell
-```
+EOF'''
+----
 
-2. Add this or a similar keybinding to `~/.aerospace.toml`:
+Per application notes:
 
-`ctrl-g = ['exec-and-forget osascript ~/bin/safari-new-window.scpt', 'mode main']`
-
-|===
-
-|===
-
-[#terminal-new-window-command]
-== Open a new Terminal window with a command
-
-Similarly to Safari, invoking the Terminal app with a command the obvious way (`exec-and-forget open -a Terminal`) results in an outcome that is probably not the intended one, namely that any workspace already containing an instance of the Terminal app is brought in focus.
-In case one wants instead to open a new Terminal window in the current workspace, this can be accomplished as follows: 
-
-1. Save this script somewhere (for example `~/bin/terminal-new-window.scpt`).
-
-```osascript
-tell application "Terminal"
-	do script
-	activate
-end tell
-```
-
-2. Add this or a similar keybinding to `~/.aerospace.toml`:
-
-`ctrl-g = ['exec-and-forget osascript ~/bin/terminal-new-window.scpt', 'mode main']`
-
-|===
+- Safari.app needs `make new document at end of documents` before the `activate` line
+- Terminal.app needs `do script` before the `activate` line
