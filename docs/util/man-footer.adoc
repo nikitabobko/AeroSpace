@@ -1,7 +1,7 @@
 == Resources
 
 *Project homepage:* https://github.com/nikitabobko/AeroSpace +
-*Guide:* https://nikitabobko.github.io/AeroSpace/guide.html
+*Guide:* https://nikitabobko.github.io/AeroSpace/guide
 
 == BUGS
 

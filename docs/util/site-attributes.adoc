@@ -1,6 +1,7 @@
 :idprefix:
 :idseparator: -
 :prewrap!:
+:relfilesuffix:
 :sectanchors:
 :sectlinks:
 :sectnums:

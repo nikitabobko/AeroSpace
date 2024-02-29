@@ -13,7 +13,7 @@ AeroSpace is an i3-like tiling window manager for macOS
 
 *aerospace* command line program is used to manipulate AeroSpace and query its state.
 
-See https://nikitabobko.github.io/AeroSpace/commands.html for available <subcommand> options
+See https://nikitabobko.github.io/AeroSpace/commands for available <subcommand> options
 
 See each <subcommand> individual man page for <subcommand-options> and <subcommand-arguments>
 

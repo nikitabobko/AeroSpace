@@ -5,10 +5,10 @@
 AeroSpace is an i3-like tiling window manager for macOS
 
 - [YouTube Demo](https://www.youtube.com/watch?v=UOl7ErqWbrk)
-- [AeroSpace Guide](https://nikitabobko.github.io/AeroSpace/guide.html)
-- [AeroSpace Commands](https://nikitabobko.github.io/AeroSpace/commands.html)
-- [AeroSpace Config Examples](https://nikitabobko.github.io/AeroSpace/config-examples.html)
-- [AeroSpace Goodness](https://nikitabobko.github.io/AeroSpace/goodness.html)
+- [AeroSpace Guide](https://nikitabobko.github.io/AeroSpace/guide)
+- [AeroSpace Commands](https://nikitabobko.github.io/AeroSpace/commands)
+- [AeroSpace Config Examples](https://nikitabobko.github.io/AeroSpace/config-examples)
+- [AeroSpace Goodness](https://nikitabobko.github.io/AeroSpace/goodness)
 
 ## Project status
 
@@ -16,20 +16,20 @@ Public Beta. Feedback is very much welcome
 
 - I encourage you to try AeroSpace and file GitHub issues if something doesn't work for you
 - I already use AeroSpace on daily basis and I'm happy with it
-- [The documentation](https://nikitabobko.github.io/AeroSpace/guide.html) covers all major things you need to know
+- [The documentation](https://nikitabobko.github.io/AeroSpace/guide) covers all major things you need to know
 
 ## Key features
 
-- **Manual** tiling window manager based on a [tree paradigm](https://nikitabobko.github.io/AeroSpace/guide.html#tree)
+- **Manual** tiling window manager based on a [tree paradigm](https://nikitabobko.github.io/AeroSpace/guide#tree)
 - [i3](https://i3wm.org/) inspired
 - AeroSpace employs
-  its [own emulation of virtual workspaces](https://nikitabobko.github.io/AeroSpace/guide.html#emulation-of-virtual-workspaces)
+  its [own emulation of virtual workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)
   instead of relying on native macOS Spaces due
-  to [their considerable limitations](https://nikitabobko.github.io/AeroSpace/guide.html#emulation-of-virtual-workspaces)
-- Plain text configuration (dotfiles friendly). See: [default-config.toml](https://nikitabobko.github.io/AeroSpace/config-examples.html#default-config)
+  to [their considerable limitations](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)
+- Plain text configuration (dotfiles friendly). See: [default-config.toml](https://nikitabobko.github.io/AeroSpace/config-examples#default-config)
 - CLI scriptable
 - Doesn't require disabling SIP (System Integrity Protection)
-- [Proper multi-monitor support](https://nikitabobko.github.io/AeroSpace/guide.html#multiple-monitors) (i3-like paradigm)
+- [Proper multi-monitor support](https://nikitabobko.github.io/AeroSpace/guide#multiple-monitors) (i3-like paradigm)
 - Status menu icon displays current workspace name
 
 ## Installation
@@ -78,14 +78,14 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
     API](https://developer.apple.com/documentation/applicationservices/axuielement_h).
   - AeroSpace will never require you to disable SIP (System Integrity Protection). For example, yabai [requires you to disable
     SIP](https://github.com/koekeishiya/yabai/issues/1863) to use some of its features. AeroSpace will either find another way
-    ( e.g. [emulation of workspaces](https://nikitabobko.github.io/AeroSpace/guide.html#emulation-of-virtual-workspaces))
+    ( e.g. [emulation of workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces))
     or will not implement this feature at all (window transparency and window shadowing are not _practical_ features)
 
 **Non Values**
 - Play nicely with existing macOS features. If limitations are imposed then AeroSpace won't play nicely with existing macOS
   features
   - E.g. AeroSpace doesn't acknowledge the existence of macOS Spaces, and it uses [emulation of its own
-    workspaces](https://nikitabobko.github.io/AeroSpace/guide.html#emulation-of-virtual-workspaces)
+    workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)
 
 ## Tip of the day
 
