@@ -110,6 +110,37 @@ else
 fi
 ----
 
+[#open-a-new-window-with-applescript]
+== Open a new window with AppleScript
+
+Invoking Safari/Terminal with a command the obvious way (`exec-and-forget open -a Safari`) results in an outcome that is probably not the intended one.
+Namely, that any workspace already containing an instance of Safari/Terminal is brought in focus.
+
+Opening *a new window* of a program that can supports multiple windows (such as Safari or Terminal.app) can be accomplished with an AppleScript inlined in `aerospace.toml` as follows:
+
+- Safari
++
+[source,toml]
+----
+ctrl-g = '''exec-and-forget osascript <<EOF
+tell application "Safari"
+    make new document at end of documents
+    activate
+end tell
+EOF'''
+----
+- Terminal
++
+[source,toml]
+----
+ctrl-g = '''exec-and-forget osascript <<EOF
+tell application "Terminal"
+    do script
+    activate
+end tell
+EOF'''
+----
+
 [#popular-apps-ids]
 == List of popular and built-in applications IDs
 
