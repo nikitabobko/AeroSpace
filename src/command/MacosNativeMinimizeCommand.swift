@@ -1,6 +1,6 @@
 import Common
 
-/// See: MacosNativeFullscreenCommand. Problem B6E178F2
+/// See: MacosNativeFullscreenCommand. Problem ID-B6E178F2
 struct MacosNativeMinimizeCommand: Command {
     let args: MacosNativeMinimizeCmdArgs
 

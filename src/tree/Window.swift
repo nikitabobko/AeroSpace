@@ -65,7 +65,7 @@ extension Window {
         if let workspace = workspace ?? nodeMonitor?.activeWorkspace { // todo change focusedWorkspaceName to focused monitor
             focusedWorkspaceName = workspace.name
             return nodeMonitor?.setActiveWorkspace(workspace) ?? true
-        } // else if We should exit-native-fullscreen/unminimize window if we want to fix B6E178F2
+        } // else if We should exit-native-fullscreen/unminimize window if we want to fix ID-B6E178F2
         return true
     }
 

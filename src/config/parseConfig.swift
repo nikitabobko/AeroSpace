@@ -160,7 +160,12 @@ private extension ParsedCmd where T == any Command {
     }
 }
 
-// todo Problem B6E178F2. Make macos-native* commands to be the last commands in the sequence
+private extension Command {
+    var isMacOsNativeCommand: Bool { // Problem ID-B6E178F2
+        self is MacosNativeMinimizeCommand || self is MacosNativeFullscreenCommand
+    }
+}
+
 func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]> {
     if let rawString = raw.string {
         return parseCommand(rawString).toEither().map { [$0] }
@@ -169,7 +174,9 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
             let rawString: String = rawArray[index].string ?? expectedActualTypeError(expected: .string, actual: rawArray[index].type)
             return parseCommand(rawString).toEither()
         }
-        return commands
+        return commands.filter("macos-native-* commands are only allowed to be the last commands in the list") {
+            !$0.dropLast().contains(where: { $0.isMacOsNativeCommand })
+        }
     } else {
         return .failure(expectedActualTypeError(expected: [.string, .array], actual: raw.type))
     }
