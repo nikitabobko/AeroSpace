@@ -17,7 +17,7 @@ class GlobalObserver {
             // Detect clicks on desktop of different monitors
             let focusedMonitor = mouseLocation.monitorApproximation
             if monitors.count > 1 &&
-                   focusedMonitor.rect.topLeftCorner != Workspace.focused.monitor.rect.topLeftCorner &&
+                   focusedMonitor.rect.topLeftCorner != Workspace.focused.workspaceMonitor.rect.topLeftCorner &&
                    getNativeFocusedWindow(startup: false) == nil {
                 setFocusSourceOfTruth(.ownModel, startup: false)
                 focusedWorkspaceName = focusedMonitor.activeWorkspace.name

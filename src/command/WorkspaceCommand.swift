@@ -25,7 +25,7 @@ struct WorkspaceCommand : Command {
             check(workspace.isEffectivelyEmpty)
             state.subject = .emptyWorkspace(workspaceName)
         }
-        check(workspace.monitor.setActiveWorkspace(workspace))
+        check(workspace.workspaceMonitor.setActiveWorkspace(workspace))
         focusedWorkspaceName = workspace.name
         return true
     }
@@ -42,9 +42,9 @@ struct WorkspaceCommand : Command {
 
 func getNextPrevWorkspace(current: Workspace, relative: WTarget.Relative, stdin: String) -> Workspace? {
     let stdinWorkspaces: [String] = stdin.split(separator: "\n").map { String($0).trim() }.filter { !$0.isEmpty }
-    let currentMonitor = current.monitor
+    let currentMonitor = current.workspaceMonitor
     let workspaces: [Workspace] = stdinWorkspaces.isEmpty
-        ? Workspace.all.filter { $0.monitor.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }
+        ? Workspace.all.filter { $0.workspaceMonitor.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }
             .toSet()
             .union([current])
             .sortedBy { $0.name }

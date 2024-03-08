@@ -68,7 +68,7 @@ private func refreshFocusedWorkspaceBasedOnFocusedWindow() { // todo drop. It sh
     if let focusedWindow = focusedWindow, let monitor = focusedWindow.nodeMonitor {
         // todo it's rather refresh focused monitor
         let focusedWorkspace: Workspace = monitor.activeWorkspace
-        check(focusedWorkspace.monitor.setActiveWorkspace(focusedWorkspace))
+        check(focusedWorkspace.workspaceMonitor.setActiveWorkspace(focusedWorkspace))
         focusedWorkspaceName = focusedWorkspace.name
     }
 }

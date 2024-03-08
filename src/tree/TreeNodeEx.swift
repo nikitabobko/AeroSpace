@@ -31,7 +31,7 @@ extension TreeNode {
         guard let parent else { return nil }
         switch parent.cases {
         case .workspace(let parent):
-            return parent.monitor
+            return parent.workspaceMonitor
         case .tilingContainer, .macosFullscreenWindowsContainer:
             return parent.nodeMonitor
         case .macosInvisibleWindowsContainer:

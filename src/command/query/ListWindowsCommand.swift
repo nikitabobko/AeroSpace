@@ -23,7 +23,7 @@ struct ListWindowsCommand: Command {
             if !manual.monitors.isEmpty {
                 let monitors: Set<CGPoint> = manual.monitors.resolveMonitors(state)
                 if monitors.isEmpty { return false }
-                workspaces = workspaces.filter { monitors.contains($0.monitor.rect.topLeftCorner) }
+                workspaces = workspaces.filter { monitors.contains($0.workspaceMonitor.rect.topLeftCorner) }
             }
             windows = workspaces.flatMap(\.allLeafWindowsRecursive)
             if let pid = manual.pidFilter {

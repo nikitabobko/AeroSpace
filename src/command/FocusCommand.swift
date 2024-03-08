@@ -50,7 +50,7 @@ private func hitWorkspaceBoundaries(
             error("Must be discarded by args parser")
         }
     case .allMonitorsUnionFrame:
-        let currentMonitor = state.subject.workspace.monitor
+        let currentMonitor = state.subject.workspace.workspaceMonitor
         let monitors = sortedMonitors.filter { currentMonitor.rect.topLeftCorner == $0.rect.topLeftCorner || $0.relation(to: currentMonitor) == direction.orientation }
         guard let index = monitors.firstIndex(where: { $0.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }) else { return false }
 
@@ -109,7 +109,7 @@ private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingW
             let center = window.getCenter()
             guard let center else { return nil }
             // todo bug: what if there are no tiling windows on the workspace?
-            guard let target = center.coerceIn(rect: workspace.monitor.visibleRectPaddedByOuterGaps).findIn(tree: workspace.rootTilingContainer, virtual: true) else { return nil }
+            guard let target = center.coerceIn(rect: workspace.workspaceMonitor.visibleRectPaddedByOuterGaps).findIn(tree: workspace.rootTilingContainer, virtual: true) else { return nil }
             guard let targetCenter = target.getCenter() else { return nil }
             guard let tilingParent = target.parent as? TilingContainer else { return nil }
             let index = center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)

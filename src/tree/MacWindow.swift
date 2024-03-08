@@ -107,7 +107,7 @@ final class MacWindow: Window, CustomStringConvertible {
             guard let topLeftCorner = getTopLeftCorner() else { return }
             guard let workspace else { return } // hiding only makes sense for workspace windows
             prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
-                    topLeftCorner - workspace.monitor.rect.topLeftCorner
+                    topLeftCorner - workspace.workspaceMonitor.rect.topLeftCorner
         }
         _ = setTopLeftCorner(allMonitorsRectsUnion.bottomRightCorner)
     }
@@ -116,7 +116,7 @@ final class MacWindow: Window, CustomStringConvertible {
         guard let prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect else { return }
         guard let workspace else { return } // hiding only makes sense for workspace windows
 
-        _ = setTopLeftCorner(workspace.monitor.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
+        _ = setTopLeftCorner(workspace.workspaceMonitor.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
 
         self.prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect = nil
     }

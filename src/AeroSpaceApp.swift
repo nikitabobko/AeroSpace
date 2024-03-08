@@ -51,7 +51,7 @@ struct AeroSpaceApp: App {
                         Toggle(isOn: workspace == Workspace.focused
                             ? Binding(get: { true }, set: { _, _ in })
                             : Binding(get: { false }, set: { _, _ in })) {
-                            let monitor = workspace.isVisible || !workspace.isEffectivelyEmpty ? " - \(workspace.monitor.name)" : ""
+                            let monitor = workspace.isVisible || !workspace.isEffectivelyEmpty ? " - \(workspace.workspaceMonitor.name)" : ""
                             Text(workspace.name + monitor).font(.system(.body, design: .monospaced))
                         }
                     }

@@ -12,7 +12,7 @@ extension Workspace {
             case .vertical:
                 orientation = .v
             case .auto:
-                orientation = monitor.lets { $0.width >= $0.height } ? .h : .v
+                orientation = workspaceMonitor.lets { $0.width >= $0.height } ? .h : .v
             }
             return TilingContainer(parent: self, adaptiveWeight: 1, orientation, config.defaultRootContainerLayout, index: INDEX_BIND_LAST)
         case 1:

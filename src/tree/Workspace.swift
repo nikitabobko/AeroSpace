@@ -13,11 +13,11 @@ func getStubWorkspace(for monitor: Monitor) -> Workspace {
 
 private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     if let prev = screenPointToPrevVisibleWorkspace[point]?.lets({ Workspace.get(byName: $0) }),
-       !prev.isVisible && prev.monitor.rect.topLeftCorner == point {
+       !prev.isVisible && prev.workspaceMonitor.rect.topLeftCorner == point {
         return prev
     }
     if let candidate = Workspace.all
-        .first(where: { !$0.isVisible && $0.monitor.rect.topLeftCorner == point }) {
+        .first(where: { !$0.isVisible && $0.workspaceMonitor.rect.topLeftCorner == point }) {
         return candidate
     }
     return (1...Int.max).lazy
@@ -52,7 +52,7 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, Custom
     }
 
     override func getWeight(_ targetOrientation: Orientation) -> CGFloat {
-        monitor.visibleRectPaddedByOuterGaps.getDimension(targetOrientation)
+        workspaceMonitor.visibleRectPaddedByOuterGaps.getDimension(targetOrientation)
     }
 
     override func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {
@@ -93,7 +93,7 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, Custom
 
 extension Workspace {
     var isVisible: Bool { visibleWorkspaceToScreenPoint.keys.contains(self) }
-    var monitor: Monitor { // todo rename to workspaceMonitor (to distinguish from nodeMonitor)
+    var workspaceMonitor: Monitor { // todo rename to workspaceMonitor (to distinguish from nodeMonitor)
         forceAssignedMonitor
             ?? visibleWorkspaceToScreenPoint[self]?.monitorApproximation
             ?? assignedMonitorPoint?.monitorApproximation

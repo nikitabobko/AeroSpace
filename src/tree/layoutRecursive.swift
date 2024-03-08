@@ -1,7 +1,7 @@
 extension Workspace {
     func layoutWorkspace() {
         if isEffectivelyEmpty { return }
-        let rect = monitor.visibleRectPaddedByOuterGaps
+        let rect = workspaceMonitor.visibleRectPaddedByOuterGaps
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in mointors horizontal configuration. ¯\_(ツ)_/¯
@@ -65,7 +65,7 @@ private extension Window {
             let xProportion = (windowTopLeftCorner.x - currentMonitor.visibleRect.topLeftX) / currentMonitor.visibleRect.width
             let yProportion = (windowTopLeftCorner.y - currentMonitor.visibleRect.topLeftY) / currentMonitor.visibleRect.height
 
-            let moveTo = workspace.monitor
+            let moveTo = workspace.workspaceMonitor
             _ = setTopLeftCorner(CGPoint(
                 x: moveTo.visibleRect.topLeftX + xProportion * moveTo.visibleRect.width,
                 y: moveTo.visibleRect.topLeftY + yProportion * moveTo.visibleRect.height
@@ -78,14 +78,14 @@ private extension Window {
     }
 
     func layoutFullscreen(_ context: LayoutContext) {
-        let monitorRect = context.workspace.monitor.visibleRectPaddedByOuterGaps
+        let monitorRect = context.workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
         _ = setFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height))
     }
 }
 
 private extension TilingContainer {
     func layoutTiles(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) {
-        let gaps = ResolvedGaps(gaps: config.gaps, monitor: context.workspace.monitor)
+        let gaps = ResolvedGaps(gaps: config.gaps, monitor: context.workspace.workspaceMonitor)
         var point = point
         var virtualPoint = virtual.topLeftCorner
 
