@@ -15,9 +15,13 @@ struct MacosNativeFullscreenCommand: Command {
             return false
         }
         let axWindow = window.asMacWindow().axWindow
-        let success = axWindow.set(Ax.isFullscreenAttr, !window.isMacosFullscreen)
-        if !success { state.stderr.append("Failed") }
-        // todo attach or detach to appropriate parent
-        return success
+        if axWindow.set(Ax.isFullscreenAttr, !window.isMacosFullscreen) {
+            let workspace = window.unbindFromParent().parent.workspace ?? Workspace.focused
+            window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+            return true
+        } else {
+            state.stderr.append("Failed")
+            return false
+        }
     }
 }
