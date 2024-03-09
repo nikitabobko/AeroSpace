@@ -6,8 +6,7 @@
 1. Download the latest available zip from [releases page](https://github.com/nikitabobko/AeroSpace/releases)
 2. Unpack zip
 3. Put unpacked `AeroSpace-v$VERSION/AeroSpace.app` to `/Applications`
-4. Put unpacked `AeroSpace-v$VERSION/bin/aerospace` anywhere to `$PATH` (The step is optional. It is only needed if you want to be
-   able to interact with AeroSpace from CLI)
+4. Put unpacked `AeroSpace-v$VERSION/bin/aerospace` anywhere to `$PATH` (The step is optional. It is only needed if you want to be able to interact with AeroSpace from CLI)
 
 ## AeroSpace can't be opened because Apple cannot check it for malicious software.
 

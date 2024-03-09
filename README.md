@@ -22,10 +22,7 @@ Public Beta. Feedback is very much welcome
 
 - **Manual** tiling window manager based on a [tree paradigm](https://nikitabobko.github.io/AeroSpace/guide#tree)
 - [i3](https://i3wm.org/) inspired
-- AeroSpace employs
-  its [own emulation of virtual workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)
-  instead of relying on native macOS Spaces due
-  to [their considerable limitations](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)
+- AeroSpace employs its [own emulation of virtual workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces) instead of relying on native macOS Spaces due to [their considerable limitations](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)
 - Plain text configuration (dotfiles friendly). See: [default-config.toml](https://nikitabobko.github.io/AeroSpace/config-examples#default-config)
 - CLI scriptable
 - Doesn't require disabling SIP (System Integrity Protection)
@@ -54,38 +51,36 @@ brew install --cask nikitabobko/tap/aerospace
 
 [Manual installation](./docs/manual-installation.md)
 
-## Development notes
+## Contributing, creating issues, submitting pull requests
 
-A notes on how to setup the project, build it, how to run the tests, etc. can be found here: [docs/development.md](docs/development.md)
+See: [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+## Development
+
+A notes on how to setup the project, build it, how to run the tests, etc. can be found here: [docs/development.md](./docs/development.md)
 
 ## Values of the project
 
 **Values**
 - AeroSpace is targeted at advanced users and developers
 - Keyboard centric
-- Breaking changes (configuration files, CLI, behavior) are avoided as much as possible, but it must not let the software
-  stagnate. Thus breaking changes can happen, but with careful considerations and helpful message. [Semver](https://semver.org/)
-  major version is bumped in case of a breaking change (It's all guaranteed once AeroSpace reaches 1.0 version, until then
-  breaking changes just happen)
+- Breaking changes (configuration files, CLI, behavior) are avoided as much as possible, but it must not let the software stagnate.
+  Thus breaking changes can happen, but with careful considerations and helpful message.
+  [Semver](https://semver.org/) major version is bumped in case of a breaking change (It's all guaranteed once AeroSpace reaches 1.0 version, until then breaking changes just happen)
 - AeroSpace doesn't use GUI, unless necessarily
-  - AeroSpace will never provide a GUI for configuration. For advanced users, it's easier to edit a configuration file in text
-    editor rather than navigating through checkboxes in GUI.
+  - AeroSpace will never provide a GUI for configuration.
+    For advanced users, it's easier to edit a configuration file in text editor rather than navigating through checkboxes in GUI.
   - Status menu icon is ok, because visual feedback is needed
 - Provide _practical_ features. Fancy appearance features are not _practical_ (e.g. window borders, transparency, etc)
 - If "dark magic" (aka "private APIs", "code injections", etc) can be avoided, it must be avoided
   - Right now, AeroSpace uses only a [single private API to get window ID of accessibility object](./src/Bridged-Header.h).
-    Everything else is [macOS public accessibility
-    API](https://developer.apple.com/documentation/applicationservices/axuielement_h).
-  - AeroSpace will never require you to disable SIP (System Integrity Protection). For example, yabai [requires you to disable
-    SIP](https://github.com/koekeishiya/yabai/issues/1863) to use some of its features. AeroSpace will either find another way
-    ( e.g. [emulation of workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces))
-    or will not implement this feature at all (window transparency and window shadowing are not _practical_ features)
+    Everything else is [macOS public accessibility API](https://developer.apple.com/documentation/applicationservices/axuielement_h).
+  - AeroSpace will never require you to disable SIP (System Integrity Protection). For example, yabai [requires you to disable SIP](https://github.com/koekeishiya/yabai/issues/1863) to use some of its features.
+    AeroSpace will either find another way (such as [emulation of workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)) or will not implement this feature at all (window transparency and window shadowing are not _practical_ features)
 
 **Non Values**
-- Play nicely with existing macOS features. If limitations are imposed then AeroSpace won't play nicely with existing macOS
-  features
-  - E.g. AeroSpace doesn't acknowledge the existence of macOS Spaces, and it uses [emulation of its own
-    workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)
+- Play nicely with existing macOS features. If limitations are imposed then AeroSpace won't play nicely with existing macOS features
+  - E.g. AeroSpace doesn't acknowledge the existence of macOS Spaces, and it uses [emulation of its own workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)
 
 ## Tip of the day
 

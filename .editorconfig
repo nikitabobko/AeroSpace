@@ -1,10 +1,15 @@
 root = true
 
+# It's better to use "wrap line" in plain text documents
+[*.{adoc,md}]
+rulers = 1000
+max_line_length = 1000
+
 [*.toml]
 rulers = 96
 max_line_length = 96
 
-[*.{swift,sh,adoc}]
+[*.{swift,sh}]
 rulers = 120
 max_line_length = 120
 indent_style = space

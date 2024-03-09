@@ -5,6 +5,7 @@ include::util/header.adoc[]
 
 Do you have a cool automatization, AeroSpace integration, or workflow?
 Feel free to open an issue or pull request to add it to this list!
+The source code of the page can be found in `./docs` directory.
 
 [#move-by-dragging-any-part-of-the-window]
 == Move windows by dragging any part of the window
