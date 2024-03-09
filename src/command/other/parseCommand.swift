@@ -2,7 +2,19 @@ import Common
 import TOMLKit
 
 func parseCommand(_ raw: String) -> ParsedCmd<any Command> {
-    parseCmdArgs(raw).map { $0.toCommand() }
+    if raw.starts(with: "exec-and-forget") {
+        return .cmd(ExecAndForgetCommand(args: ExecAndForgetCmdArgs(bashScript: raw.removePrefix("exec-and-forget"))))
+    }
+    switch raw.splitArgs() {
+    case .success(let args):
+        return parseCommand(args)
+    case .failure(let fail):
+        return .failure(fail)
+    }
+}
+
+func parseCommand(_ args: [String]) -> ParsedCmd<any Command> {
+    parseCmdArgs(args).map { $0.toCommand() }
 }
 
 extension CmdArgs {
@@ -18,7 +30,7 @@ extension CmdArgs {
         case .enable:
             command = EnableCommand(args: self as! EnableCmdArgs)
         case .execAndForget:
-            command = ExecAndForgetCommand(args: self as! ExecAndForgetCmdArgs)
+            error("exec-and-forget is parsed separately")
         case .flattenWorkspaceTree:
             command = FlattenWorkspaceTreeCommand()
         case .focus:

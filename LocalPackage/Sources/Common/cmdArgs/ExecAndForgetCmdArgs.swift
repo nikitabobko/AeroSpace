@@ -5,8 +5,8 @@ public struct ExecAndForgetCmdArgs: CmdArgs {
         kind: .execAndForget,
         allowInConfig: true
     )
-}
 
-public func parseExecAndForgetCmdArgs(_ nextArgs: String) -> ParsedCmd<ExecAndForgetCmdArgs> {
-    .cmd(ExecAndForgetCmdArgs(bashScript: nextArgs))
+    public init(bashScript: String) {
+        self.bashScript = bashScript
+    }
 }

@@ -7,7 +7,7 @@ final class WorkspaceCommandTest: XCTestCase {
 
     func testParseWorkspaceCommand() {
         testParseCommandFail("workspace my mail", msg: "ERROR: Unknown argument 'mail'")
-        testParseCommandFail("workspace 'my mail'", msg: "Quotation marks and backslash are reserved for future use")
+        testParseCommandFail("workspace 'my mail'", msg: "ERROR: Whitespace characters are forbidden in workspace names")
         XCTAssertTrue(parseCommand("workspace").errorOrNil?.contains("mandatory") == true)
         XCTAssertEqual(
             parseCommand("workspace next").cmdOrNil?.describe,

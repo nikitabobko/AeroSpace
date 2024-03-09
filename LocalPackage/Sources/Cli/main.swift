@@ -17,30 +17,26 @@ func printVersionAndExit(serverVersion: String?) -> Never {
 
 let args: [String] = Array(CommandLine.arguments.dropFirst())
 
-for arg in args {
-    if arg.rangeOfCharacter(from: .whitespacesAndNewlines) != nil {
-        prettyError("Whitespace chars in arguments are not permitted. '\(arg)' argument contains whitespace chars.")
-    }
-}
-
 let usage =
     """
-    usage: \(CommandLine.arguments.first ?? "aerospace") [-h|--help] [-v|--version] <subcommand> [<args>...]
+    USAGE: \(CommandLine.arguments.first ?? "aerospace") [-h|--help] [-v|--version] <subcommand> [<args>...]
 
-    Subcommands:
+    SUBCOMMANDS:
     \(subcommandDescriptions.sortedBy { $0[0] }.toPaddingTable(columnSeparator: "   ").joined(separator: "\n"))
     """
-if args.isEmpty || args.first == "--help" || args.first == "-h" {
+if args.isEmpty {
+    printStderr(usage)
+    exit(1)
+}
+if args.first == "--help" || args.first == "-h" {
     print(usage)
-    exit(args.isEmpty ? 1 : 0)
+    exit(0)
 }
 
 let isVersion: Bool = args.first == "--version" || args.first == "-v"
 
-let argsAsString = args.joined(separator: " ")
-
 if !isVersion {
-    switch parseCmdArgs(argsAsString) {
+    switch parseCmdArgs(args) {
     case .cmd:
         break
     case .help(let help):
@@ -56,8 +52,8 @@ let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .un
 defer {
     socket.close()
 }
-func run(_ command: String, stdin: String) -> ServerAnswer {
-    let request = Result { try JSONEncoder().encode(ClientRequest(command: command, stdin: stdin)) }.getOrThrow()
+func run(_ args: [String], stdin: String) -> ServerAnswer {
+    let request = Result { try JSONEncoder().encode(ClientRequest(args: args, stdin: stdin)) }.getOrThrow()
     Result { try socket.write(from: request) }.getOrThrow()
     Result { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrThrow()
 
@@ -87,7 +83,7 @@ if hasStdin() {
     }
 }
 
-let ans = isVersion ? run("server-version-internal-command", stdin: stdin) : run(argsAsString, stdin: stdin)
+let ans = isVersion ? run(["server-version-internal-command"], stdin: stdin) : run(args, stdin: stdin)
 if ans.exitCode == 0 && isVersion {
     printVersionAndExit(serverVersion: ans.serverVersionAndHash)
 }

@@ -14,7 +14,7 @@ func startServer() {
     }
 }
 
-func sendCommandToReleaseServer(command: String) {
+func sendCommandToReleaseServer(args: [String]) {
     check(isDebug)
     let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrThrow()
     defer {
@@ -25,7 +25,7 @@ func sendCommandToReleaseServer(command: String) {
         return
     }
 
-    _ = try? socket.write(from: Result { try JSONEncoder().encode(ClientRequest(command: command, stdin: "")) }.getOrThrow())
+    _ = try? socket.write(from: Result { try JSONEncoder().encode(ClientRequest(args: args, stdin: "")) }.getOrThrow())
     _ = try? Socket.wait(for: [socket], timeout: 0, waitForever: true)
     _ = try? socket.readString()
 }
@@ -62,7 +62,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             )
             continue
         }
-        let (command, help, err) = parseCommand(request.command).unwrap()
+        let (command, help, err) = parseCommand(request.args).unwrap()
         guard let isEnabled = await Task(operation: { @MainActor in TrayMenuModel.shared.isEnabled }).result.getOrNil() else {
             answerToClient(exitCode: 1, stderr: "Unknown failure during isEnabled server state access")
             continue

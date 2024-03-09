@@ -20,14 +20,20 @@ public struct ServerAnswer: Codable {
 }
 
 public struct ClientRequest: Codable {
-    public let command: String
+    public let command: String // Unused. keep it for API compatibility with old servers for a couple of version
+    public let args: [String]
     public let stdin: String
 
     public init(
-        command: String,
+        args: [String],
         stdin: String
     ) {
-        self.command = command
+        if args.contains(where: { $0.rangeOfCharacter(from: .whitespacesAndNewlines) != nil || $0.contains("\"") || $0.contains("\'") }) {
+            self.command = "" // Old server won't understand it anyway
+        } else {
+            self.command = args.joined(separator: " ")
+        }
+        self.args = args
         self.stdin = stdin
     }
 }

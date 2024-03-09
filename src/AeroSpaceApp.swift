@@ -10,7 +10,7 @@ struct AeroSpaceApp: App {
         initAeroSpaceApp()
         if !isUnitTest { // Prevent SwiftUI app loading during unit testing
             if isDebug {
-                sendCommandToReleaseServer(command: "enable off")
+                sendCommandToReleaseServer(args: ["enable", "off"])
                 interceptTermination(SIGINT)
                 interceptTermination(SIGKILL)
             }

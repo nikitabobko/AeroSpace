@@ -16,10 +16,13 @@ aerospace exec-and-forget <bash-script>
 Runs `/bin/bash -c '<bash-script>'`, and doesn't wait for the command termination.
 Stdout, stderr and exit code are ignored.
 
-For example, you can use this command to launch applications: +
+For example, you can use this command to launch applications:
 
-[verse]
-    exec-and-forget open -n /System/Applications/Utilities/Terminal.app
+----
+exec-and-forget open -n /System/Applications/Utilities/Terminal.app
+----
+
+`<bash-script>` is passed "as is" to bash without any transformations and escaping. `<bash-script>` is treated as suffix of the TOML string, it's not even an argument in classic CLI sense
 
 * The command is available in config
 * The command is *NOT* available in CLI

@@ -23,7 +23,7 @@ private struct AppServerTerminationHandler: TerminationHandler {
     func beforeTermination() {
         makeAllWindowsVisibleAndRestoreSize()
         if isDebug {
-            sendCommandToReleaseServer(command: "enable on")
+            sendCommandToReleaseServer(args: ["enable", "on"])
         }
     }
 }

@@ -1,14 +1,10 @@
-public func parseCmdArgs(_ raw: String) -> ParsedCmd<CmdArgs> {
-    if raw == "" {
+public func parseCmdArgs(_ args: [String]) -> ParsedCmd<CmdArgs> {
+    let subcommand = String(args.first ?? "")
+    if subcommand == "" {
         return .failure("Can't parse empty string command")
     }
-    let subcommand = String(raw.split(separator: " ").first ?? "")
-    if (raw.contains("'") || raw.contains("\"") || raw.contains("\\")) && !subcommand.starts(with: "exec") {
-        return .failure("Quotation marks and backslash are reserved for future use")
-    } else if subcommand == "exec-and-wait" {
-        return .failure("DEPRECATED. Please use exec-and-forget in combination with CLI commands")
-    } else if let subcommandParser: any SubCommandParserProtocol = subcommands[subcommand] {
-        return subcommandParser.parse(args: raw.removePrefix(subcommand))
+    if let subcommandParser: any SubCommandParserProtocol = subcommands[subcommand] {
+        return subcommandParser.parse(args: Array(args.dropFirst()))
     } else {
         return .failure("Unrecognized subcommand '\(subcommand)'")
     }
@@ -27,7 +23,7 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
         case .enable:
             result[kind.rawValue] = defaultSubCommandParser(EnableCmdArgs())
         case .execAndForget:
-            result[kind.rawValue] = SubCommandParser(parseExecAndForgetCmdArgs)
+            break // exec-and-forget is parsed separately
         case .flattenWorkspaceTree:
             result[kind.rawValue] = defaultSubCommandParser(FlattenWorkspaceTreeCmdArgs())
         case .focus:
@@ -91,23 +87,19 @@ private let subcommands: [String: any SubCommandParserProtocol] = initSubcommand
 
 private protocol SubCommandParserProtocol<T> {
     associatedtype T where T: CmdArgs
-    var _parse: (String) -> ParsedCmd<T> { get }
+    var _parse: ([String]) -> ParsedCmd<T> { get }
 }
 
 extension SubCommandParserProtocol {
-    func parse(args: String) -> ParsedCmd<CmdArgs> {
+    func parse(args: [String]) -> ParsedCmd<CmdArgs> {
         _parse(args).map { $0 }
     }
 }
 
 private struct SubCommandParser<T: CmdArgs>: SubCommandParserProtocol {
-    let _parse: (String) -> ParsedCmd<T>
-
-    init(_ parser: @escaping (String) -> ParsedCmd<T>) {
-        self._parse = parser
-    }
+    let _parse: ([String]) -> ParsedCmd<T>
 
     init(_ parser: @escaping ([String]) -> ParsedCmd<T>) {
-        self._parse = { args in parser(args.split(separator: " ").map { String($0) }) }
+        self._parse = parser
     }
 }
