@@ -5,5 +5,5 @@ source ./script/setup.sh
 ./build-release.sh
 rm -rf /Applications/AeroSpace.app
 cp -r .release/AeroSpace.app /Applications
-mkdir -P ~/.bin
+mkdir -p ~/.bin
 cp .release/aerospace ~/.bin
