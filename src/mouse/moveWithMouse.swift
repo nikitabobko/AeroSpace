@@ -87,9 +87,8 @@ extension CGPoint {
         case .accordion:
             target = tree.mostRecentChild
         }
-        switch target?.tilingTreeNodeCasesOrThrow() {
-        case nil:
-            return nil
+        guard let target else { return nil }
+        switch target.tilingTreeNodeCasesOrThrow() {
         case .window(let window):
             return window
         case .tilingContainer(let container):
