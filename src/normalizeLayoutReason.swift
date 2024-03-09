@@ -23,15 +23,15 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) {
             }
         case .macos(let prevParentKind):
             if !isMacosFullscreen && !isMacosInvisible {
-                macOsExitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)
+                window.unbindFromParent()
+                exitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)
             }
         }
     }
 }
 
-func macOsExitMacOsNativeOrInvisibleState(window: Window, prevParentKind: NonLeafTreeNodeKind, workspace: Workspace) {
+func exitMacOsNativeOrInvisibleState(window: Window, prevParentKind: NonLeafTreeNodeKind, workspace: Workspace) {
     window.layoutReason = .standard
-    window.unbindFromParent()
     switch prevParentKind {
     case .workspace:
         window.bindAsFloatingWindow(to: workspace)

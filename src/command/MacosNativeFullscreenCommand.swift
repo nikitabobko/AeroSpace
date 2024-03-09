@@ -15,9 +15,36 @@ struct MacosNativeFullscreenCommand: Command {
             return false
         }
         let axWindow = window.asMacWindow().axWindow
-        if axWindow.set(Ax.isFullscreenAttr, !window.isMacosFullscreen) {
+        let prevState = window.isMacosFullscreen
+        let newState: Bool
+        switch args.toggle {
+        case .on:
+            newState = true
+        case .off:
+            newState = false
+        case .toggle:
+            newState = !prevState
+        }
+        if newState == prevState {
+            if newState {
+                state.stderr.append("Already fullscreen")
+            } else {
+                state.stderr.append("Already not fullscreen")
+            }
+            return false
+        }
+        if axWindow.set(Ax.isFullscreenAttr, newState) {
             let workspace = window.unbindFromParent().parent.workspace ?? Workspace.focused
-            window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+            if newState {
+                window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+            } else {
+                switch window.layoutReason {
+                case .macos(let prevParentKind):
+                    exitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)
+                default:
+                    window.relayoutWindow(on: workspace)
+                }
+            }
             return true
         } else {
             state.stderr.append("Failed")
