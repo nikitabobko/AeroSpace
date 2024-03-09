@@ -10,6 +10,7 @@ let subcommandDescriptions = [
     ["  join-with", "Puts the currently focused window and the nearest node in the specified direction under a common parent container"],
     ["  layout", "Changes layout of the focused window to the given layout"],
     ["  list-apps", "Prints the list of running applications that appears in the Dock and may have a user interface"],
+    ["  list-exec-env-vars", "List environment variables that exec-* commands and options are run with"],
     ["  list-monitors", "Prints monitors that satisfy conditions"],
     ["  list-windows", "Prints windows that satisfy conditions"],
     ["  list-workspaces", "Prints workspaces that satisfy conditions"],

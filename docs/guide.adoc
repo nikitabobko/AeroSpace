@@ -108,6 +108,25 @@ key-mapping.preset = 'dvorak'
 * For `colemak` users, there is xref:goodness.adoc#colemak-keys-remap[a compiled mapping].
 `colemak` may be added as preconfigured preset similar to `dvorak` in the future, if there is enough demand
 
+[#exec-env-vars]
+=== exec-* Environment Variables
+
+You can configure environment variables of `exec-*` commands and options (such as xref:commands.adoc#exec-and-forget[exec-and-forget], <<exec-on-workspace-change-callback>>)
+
+* `exec.inherit-env-vars = true` configures whether inherit environment variables of `AeroSpace.app` or not. (The default is `true`)
+* You can override env variables with the following syntax:
++
+[source,toml]
+----
+[exec.env-vars]
+PATH = '${HOME}/bin:${PATH}'
+----
++
+Environment variable substitution is supported in form of `+${ENV_VAR}+`
+* If not overridden, `default-config.toml` adds Homebrew to `$PATH` `+/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}+`.
+See the problem statement: https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities
+* You can inspect what is the end result of environment variables using xref:commands.adoc#list-exec-env-vars[`list-exec-env-vars` command]
+
 [#tree]
 == Tree
 
@@ -417,7 +436,7 @@ exec-on-workspace-change = ['/bin/bash', '-c',
 ]
 ----
 
-The process has access to the following environment variables:
+Besides the <<exec-env-vars,`exec.env-vars`>>, the process has access to the following environment variables:
 
 * `AEROSPACE_FOCUSED_WORKSPACE` - the workspace user switched to
 * `AEROSPACE_PREV_WORKSPACE` - the workspace user switched from
@@ -525,8 +544,3 @@ run = 'layout tiling'
 check-further-callbacks = true
 run = 'layout floating'
 ----
-
-=== Homebrew utilities in $PATH
-
-xref:commands.adoc#exec-and-forget[`exec-and-forget`] doesn't have Homebrew in its `$PATH` by default.
-See https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities

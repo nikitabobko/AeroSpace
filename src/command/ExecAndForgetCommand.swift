@@ -7,8 +7,11 @@ struct ExecAndForgetCommand: Command {
         // todo shall exec-and-forget fork exec session?
         check(Thread.current.isMainThread)
         // It doesn't throw if exit code is non-zero
-        Result { try Process.run(URL(filePath: "/bin/bash"), arguments: ["-c", args.bashScript]) }
-            .getOrThrow()
+        let process = Process()
+        process.environment = config.execConfig.envVariables
+        process.executableURL = URL(filePath: "/bin/bash")
+        process.arguments = ["-c", args.bashScript]
+        Result { try process.run() }.getOrThrow()
         return true
     }
 }

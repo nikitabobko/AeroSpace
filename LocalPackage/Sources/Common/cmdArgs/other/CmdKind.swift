@@ -10,6 +10,7 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case joinWith = "join-with"
     case layout
     case listApps = "list-apps"
+    case listExecEnvVars = "list-exec-env-vars"
     case listMonitors = "list-monitors"
     case listWindows = "list-windows"
     case listWorkspaces = "list-workspaces"

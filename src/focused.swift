@@ -44,7 +44,7 @@ private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String) 
         let process = Process()
         process.executableURL = URL(filePath: exec)
         process.arguments = Array(config.execOnWorkspaceChange.dropFirst())
-        var environment = ProcessInfo.processInfo.environment
+        var environment = config.execConfig.envVariables
         environment["AEROSPACE_FOCUSED_WORKSPACE"] = newWorkspace
         environment["AEROSPACE_PREV_WORKSPACE"] = oldWorkspace
         process.environment = environment

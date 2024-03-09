@@ -2,7 +2,7 @@ import HotKey
 import Common
 
 let mainModeId = "main"
-let defaultConfig = initDefaultConfig(parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!)))
+let defaultConfig: Config = initDefaultConfig(parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!)))
 var config: Config = defaultConfig
 
 struct Config: Copyable {
@@ -18,6 +18,7 @@ struct Config: Copyable {
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
     var execOnWorkspaceChange: [String] = []
     var keyMapping = KeyMapping()
+    var execConfig: ExecConfig = ExecConfig()
 
     var gaps: Gaps = .zero
     var workspaceToMonitorForceAssignment: [String: [MonitorDescription]] = [:]

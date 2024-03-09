@@ -31,6 +31,8 @@ extension CmdArgs {
             command = LayoutCommand(args: self as! LayoutCmdArgs)
         case .listApps:
             command = ListAppsCommand(args: self as! ListAppsCmdArgs)
+        case .listExecEnvVars:
+            command = ListExecEnvVarsCommand(args: self as! ListExecEnvVarsCmdArgs)
         case .listMonitors:
             command = ListMonitorsCommand(args: self as! ListMonitorsCmdArgs)
         case .listWindows:

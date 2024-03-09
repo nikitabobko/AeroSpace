@@ -12,7 +12,7 @@ EOF
 
 entries() {
     for file in $(ls docs/aerospace-*.adoc); do
-        if grep -q 'exec' <<< $file; then
+        if grep -q 'exec-and-forget' <<< $file; then
             continue
         fi
         subcommand=$(basename $file | sed 's/^aerospace-//' | sed 's/\.adoc$//')

@@ -8,6 +8,7 @@ final class ConfigTest: XCTestCase {
         let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/i3-like-config-example.toml"))
         let (i3Config, errors) = parseConfig(toml)
         XCTAssertEqual(errors.descriptions, [])
+        XCTAssertEqual(i3Config.execConfig, defaultConfig.execConfig)
         XCTAssertEqual(i3Config.enableNormalizationFlattenContainers, false)
         XCTAssertEqual(i3Config.enableNormalizationOppositeOrientationForNestedContainers, false)
     }
