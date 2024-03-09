@@ -1,7 +1,7 @@
 import Common
 
 struct FullscreenCommand: Command {
-    let args = FullscreenCmdArgs()
+    let args: FullscreenCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
@@ -9,7 +9,24 @@ struct FullscreenCommand: Command {
             state.stderr.append(noWindowIsFocused)
             return false
         }
-        window.isFullscreen = !window.isFullscreen
+        let newState: Bool
+        switch args.toggle {
+        case .on:
+            newState = true
+        case .off:
+            newState = false
+        case .toggle:
+            newState = !window.isFullscreen
+        }
+        if newState == window.isFullscreen {
+            if newState {
+                state.stderr.append("Already fullscreen")
+            } else {
+                state.stderr.append("Already not fullscreen")
+            }
+            return false
+        }
+        window.isFullscreen = newState
 
         // Focus on its own workspace
         window.markAsMostRecentChild()

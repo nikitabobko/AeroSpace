@@ -24,7 +24,7 @@ extension CmdArgs {
         case .focus:
             command = FocusCommand(args: self as! FocusCmdArgs)
         case .fullscreen:
-            command = FullscreenCommand()
+            command = FullscreenCommand(args: self as! FullscreenCmdArgs)
         case .joinWith:
             command = JoinWithCommand(args: self as! JoinWithCmdArgs)
         case .layout:

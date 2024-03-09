@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-aerospace fullscreen [-h|--help]
+aerospace fullscreen [-h|--help] [on|off]
 // end::synopsis[]
 
 == Description
@@ -16,10 +16,17 @@ aerospace fullscreen [-h|--help]
 {manpurpose}
 
 Switching to a different tiling window within the same workspace while the current focused window is in fullscreen mode results in the fullscreen window exiting fullscreen mode.
-// end::body[]
 
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+include::util/conditional-arguments-header.adoc[]
+
+[on|off]::
+'on' means enter fullscreen mode. 'off' means exit fullscreen mode.
+Toggle between the two if not specified
+
+// end::body[]
 
 include::util/man-footer.adoc[]
