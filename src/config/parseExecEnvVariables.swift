@@ -57,22 +57,26 @@ private func parseEnvVariables(_ raw: TOMLValueConvertible, _ backtrace: TomlBac
 
 extension String {
     func interpolate(with variables: [String: String]) -> (result: String, errors: [String]) {
-        var mode: InterpolationParseMode = .stringLiteral
+        var mode: InterpolationParserState = .stringLiteral
         var result = ""
         var errors: [String] = []
-        for char in self {
+        for char: Character? in (Array(self) + [nil]) {
             switch (mode, char) { // State machine
             case (.stringLiteral, "$"):
                 mode = .dollarEncountered
             case (.stringLiteral, _):
-                result.append(char)
+                if let char {
+                    result.append(char)
+                }
             case (.dollarEncountered, "{"):
                 mode = .interpolatedValue("")
             case (.dollarEncountered, "$"):
                 result.append("$")
             case (.dollarEncountered, _):
                 result.append("$")
-                result.append(char)
+                if let char {
+                    result.append(char)
+                }
                 mode = .stringLiteral
             case (.interpolatedValue(let value), "}"):
                 if let expanded = variables[value] {
@@ -86,14 +90,18 @@ extension String {
             case (.interpolatedValue(let value), "$"):
                 return ("", ["Can't parse '\(value + "$")' environment variable (Dollar is invalid character)"])
             case (.interpolatedValue(let value), _):
-                mode = .interpolatedValue(value + String(char))
+                if let char {
+                    mode = .interpolatedValue(value + String(char))
+                } else {
+                    return ("", ["Unbalanced curly braces"])
+                }
             }
         }
         return (result, errors)
     }
 }
 
-private enum InterpolationParseMode {
+private enum InterpolationParserState {
     case stringLiteral, dollarEncountered
     case interpolatedValue(String)
 }

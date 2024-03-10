@@ -9,7 +9,9 @@ final class ParseEnvVariablesTest: XCTestCase {
         testSucInterpolation("echo $foo", expected: "echo $foo")
         testSucInterpolation("echo $$foo", expected: "echo $$foo")
         testSucInterpolation("echo $${foo}", ["foo": "bar"], expected: "echo $bar")
+        testSucInterpolation("echo $", expected: "echo $")
 
+        testFailInterpolation("echo ${foo")
         testFailInterpolation("echo ${foo{bar}")
         testFailInterpolation("echo ${foo$bar}")
         testFailInterpolation("echo ${foo}")
