@@ -1,3 +1,5 @@
+import Common
+
 typealias PerMonitorValue<Value: Equatable> = (description: MonitorDescription, value: Value)
 
 enum DynamicConfigValue<Value: Equatable> {

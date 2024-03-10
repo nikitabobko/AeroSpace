@@ -400,27 +400,7 @@ private func parseMonitorDescription(_ raw: TOMLValueConvertible, _ backtrace: T
         return .failure(expectedActualTypeError(expected: [.string, .int], actual: raw.type, backtrace))
     }
 
-    if let int = Int(rawString) {
-        return int >= 1
-            ? .success(.sequenceNumber(int))
-            : .failure(.semantic(backtrace, "Monitor sequence numbers uses 1-based indexing. Values less than 1 are illegal"))
-    }
-    if rawString == "main" {
-        return .success(.main)
-    }
-    if rawString == "secondary" {
-        return .success(.secondary)
-    }
-
-    return rawString.isEmpty
-        ? .failure(.semantic(backtrace, "Empty string is an illegal monitor description"))
-        : parseCaseInsensitiveRegex(rawString).toParsedToml(backtrace).map(MonitorDescription.pattern)
-}
-
-func parseCaseInsensitiveRegex(_ raw: String) -> Parsed<Regex<AnyRegexOutput>> {
-    Result { try Regex(raw) }
-        .mapError { e in "Can't parse '\(raw)' regex. \(e.localizedDescription)" }
-        .map { $0.ignoresCase() }
+    return parseMonitorDescription(rawString).toParsedToml(backtrace)
 }
 
 private func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError], _ mapping: [String: Key]) -> [String: Mode] {

@@ -1,3 +1,5 @@
+import Common
+
 extension MonitorDescription {
     func resolveMonitor(sortedMonitors: [Monitor]) -> Monitor? {
         switch self {

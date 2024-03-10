@@ -35,6 +35,7 @@ struct WorkspaceCommand : Command {
             let args = WorkspaceCmdArgs(.direct(WTarget.Direct(wName, autoBackAndForth: false)))
             return WorkspaceCommand(args: args).run(state)
         } else {
+            state.stderr.append("Prohibited or reserved workspace name \(name)")
             return false
         }
     }

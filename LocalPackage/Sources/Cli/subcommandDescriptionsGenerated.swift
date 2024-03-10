@@ -5,6 +5,7 @@ let subcommandDescriptions = [
     ["  debug-windows", "Interactive command to record Accessibility API debug information to create bug reports"],
     ["  enable", "Temporarily disable window management"],
     ["  flatten-workspace-tree", "Flattens the tree of currently focused workspace."],
+    ["  focus-monitor", "Focus monitor in relative direction, order, or by pattern"],
     ["  focus", "Sets focus to the nearest window in in the given direction."],
     ["  fullscreen", "Toggles the fullscreen mode for the currently focused window"],
     ["  join-with", "Puts the currently focused window and the nearest node in the specified direction under a common parent container"],

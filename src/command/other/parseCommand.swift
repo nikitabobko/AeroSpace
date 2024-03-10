@@ -35,6 +35,8 @@ extension CmdArgs {
             command = FlattenWorkspaceTreeCommand()
         case .focus:
             command = FocusCommand(args: self as! FocusCmdArgs)
+        case .focusMonitor:
+            command = FocusMonitorCommand(args: self as! FocusMonitorCmdArgs)
         case .fullscreen:
             command = FullscreenCommand(args: self as! FullscreenCmdArgs)
         case .joinWith:

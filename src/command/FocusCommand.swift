@@ -51,13 +51,15 @@ private func hitWorkspaceBoundaries(
         }
     case .allMonitorsUnionFrame:
         let currentMonitor = state.subject.workspace.workspaceMonitor
-        let monitors = sortedMonitors.filter { currentMonitor.rect.topLeftCorner == $0.rect.topLeftCorner || $0.relation(to: currentMonitor) == direction.orientation }
-        guard let index = monitors.firstIndex(where: { $0.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }) else { return false }
+        guard let (monitors, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
+            state.stderr.append("Can't find monitor in direction \(direction)")
+            return false
+        }
 
-        if let targetMonitor = monitors.getOrNil(atIndex: index + direction.focusOffset) {
+        if let targetMonitor = monitors.getOrNil(atIndex: index) {
             return targetMonitor.focus(state)
         } else {
-            guard let wrapped = monitors.get(wrappingIndex: index + direction.focusOffset) else { return false }
+            guard let wrapped = monitors.get(wrappingIndex: index) else { return false }
             return hitAllMonitorsOuterFrameBoundaries(state, args, direction, wrapped)
         }
     }
@@ -91,12 +93,6 @@ private func wrapAroundTheWorkspace(_ state: CommandMutableState, _ direction: C
     guard let windowToFocus = state.subject.workspace.findFocusTargetRecursive(snappedTo: direction.opposite) else { return }
     state.subject = .window(windowToFocus)
     windowToFocus.focus()
-}
-
-private extension Monitor {
-    func relation(to monitor: Monitor) -> Orientation {
-        (rect.minY..<rect.maxY).overlaps(monitor.rect.minY..<monitor.rect.maxY) ? .h : .v
-    }
 }
 
 private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingWindowData] {

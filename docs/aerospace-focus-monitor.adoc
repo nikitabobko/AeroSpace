@@ -1,0 +1,41 @@
+= aerospace-focus-monitor(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-focus-monitor
+// tag::purpose[]
+:manpurpose: Focus monitor in relative direction, order, or by pattern
+// end::purpose[]
+
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace focus-monitor [-h|--help] [--wrap-around] (left|down|up|right)
+aerospace focus-monitor [--wrap-around] (next|prev)
+aerospace focus-monitor <monitor-pattern>...
+
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+--wrap-around:: Make it possible to wrap around focus
+
+include::util/conditional-arguments-header.adoc[]
+
+(left|down|up|right)::
+Focus monitor in direction relative to the currently focused monitor
+
+(next|prev)::
+Focus next|prev monitor in order they appear in tray icon
+
+<monitor-pattern>...::
+Find the first monitor pattern in the list that doesn't describe the current monitor and focuses it.
+Monitor pattern is the same as in `workspace-to-monitor-force-assignment` config option
+
+// end::body[]
+
+include::util/man-footer.adoc[]

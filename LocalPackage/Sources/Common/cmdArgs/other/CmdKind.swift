@@ -6,6 +6,7 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case execAndForget = "exec-and-forget"
     case flattenWorkspaceTree = "flatten-workspace-tree"
     case focus
+    case focusMonitor = "focus-monitor"
     case fullscreen
     case joinWith = "join-with"
     case layout
