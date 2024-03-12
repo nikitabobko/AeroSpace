@@ -5,6 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
+<link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Guide</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -516,7 +517,8 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#config-samples">1.2. Config samples</a></li>
 <li><a href="#binding-modes">1.3. Binding modes</a></li>
 <li><a href="#commands">1.4. Commands</a></li>
-<li><a href="#default-bindings">1.5. Default bindings</a></li>
+<li><a href="#key-mapping">1.5. Keyboard layouts and key mapping</a></li>
+<li><a href="#exec-env-vars">1.6. exec-* Environment Variables</a></li>
 </ul>
 </li>
 <li><a href="#tree">2. Tree</a>
@@ -546,7 +548,6 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#caveats">6. Caveats</a>
 <ul class="sectlevel2">
 <li><a href="#dialog-heuristics">6.1. Dialog heuristics</a></li>
-<li><a href="#homebrew-utilities-in-path">6.2. Homebrew utilities in $PATH</a></li>
 </ul>
 </li>
 </ul>
@@ -626,7 +627,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <p>i3 like config: <a href="config-examples#i3-like-config">i3-like-config-example.toml</a></p>
 </li>
 <li>
-<p><a href="https://github.com/search?q=%28path%3A**%2F.aerospace.toml+OR+path%3A**%2Faerospace.toml%29&amp;type=code">Search for configs by other users on GitHub</a> for inspiration</p>
+<p><a href="https://github.com/search?q=path%3A*aerospace.toml&amp;type=code">Search for configs by other users on GitHub</a> for inspiration</p>
 </li>
 </ul>
 </div>
@@ -703,20 +704,70 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="default-bindings"><a class="anchor" href="#default-bindings"></a><a class="link" href="#default-bindings">1.5. Default bindings</a></h3>
+<h3 id="key-mapping"><a class="anchor" href="#key-mapping"></a><a class="link" href="#key-mapping">1.5. Keyboard layouts and key mapping</a></h3>
 <div class="paragraph">
-<p>AeroSpace comes with the default bindings. See <code>mode.main.binding</code> section in <a href="config-examples#default-config">the default config</a>.</p>
+<p>By default, key bindings in the config are perceived as <code>qwerty</code> layout.</p>
 </div>
 <div class="paragraph">
-<p>After specifying at least one binding in your config, all the default AeroSpace bindings are replaced and discarded.</p>
-</div>
-<div class="paragraph">
-<p>Alternatively, if you use another software to manage your global keyboard bindings, you can dump out all the AeroSpace bindings using the following TOML syntax:</p>
+<p>If you use different layout, different alphabet, or you just want to have a fancy alias for the existing key, you can use <code>key-mapping.key-notation-to-key-code</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">mode</span><span class="tok-p">.</span><span class="tok-n">main</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">{}</span></code></pre>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Define my fancy unicorn key notation</span>
+<span class="tok-k">[key-mapping.key-notation-to-key-code]</span>
+<span class="tok-n">unicorn</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;u&#39;</span>
+
+<span class="tok-k">[mode.main.binding]</span>
+<span class="tok-n">alt-unicorn</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace unicorn&#39;</span><span class="tok-w"> </span><span class="tok-c1"># (⁀ᗢ⁀)</span></code></pre>
 </div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>For <code>dvorak</code> users, AeroSpace offers a preconfigured preset.</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">key-mapping</span><span class="tok-p">.</span><span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;dvorak&#39;</span></code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>For <code>colemak</code> users, there is <a href="goodness#colemak-keys-remap">a compiled mapping</a>.
+<code>colemak</code> may be added as preconfigured preset similar to <code>dvorak</code> in the future, if there is enough demand</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="exec-env-vars"><a class="anchor" href="#exec-env-vars"></a><a class="link" href="#exec-env-vars">1.6. exec-* Environment Variables</a></h3>
+<div class="paragraph">
+<p>You can configure environment variables of <code>exec-*</code> commands and callbacks (such as <a href="commands#exec-and-forget">exec-and-forget</a>, <a href="#exec-on-workspace-change-callback">'exec-on-workspace-change' callback</a>)</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>exec.inherit-env-vars = true</code> configures whether inherit environment variables of <code>AeroSpace.app</code> or not. (The default is <code>true</code>)</p>
+</li>
+<li>
+<p>You can override env variables with the following syntax:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[exec.env-vars]</span>
+<span class="tok-n">PATH</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;${HOME}/bin:${PATH}&#39;</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Environment variable substitution is supported in form of <code>${ENV_VAR}</code></p>
+</div>
+</li>
+<li>
+<p>If not overridden, <code>default-config.toml</code> adds Homebrew to <code>$PATH</code> <code>/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}</code>.
+See the problem statement: <a href="https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities" class="bare">https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities</a></p>
+</li>
+<li>
+<p>You can inspect what is the end result of environment variables using <a href="commands#list-exec-env-vars"><code>list-exec-env-vars</code> command</a></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1250,7 +1301,7 @@ It may be useful for integrating with bars.</p>
 </div>
 </div>
 <div class="paragraph">
-<p>The process has access to the following environment variables:</p>
+<p>Besides the <a href="#exec-env-vars"><code>exec.env-vars</code></a>, the process has access to the following environment variables:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1454,19 +1505,12 @@ If you find that some windows are not handled properly please <a href="https://g
 </ol>
 </div>
 </div>
-<div class="sect2">
-<h3 id="homebrew-utilities-in-path"><a class="anchor" href="#homebrew-utilities-in-path"></a><a class="link" href="#homebrew-utilities-in-path">6.2. Homebrew utilities in $PATH</a></h3>
-<div class="paragraph">
-<p><a href="commands#exec-and-forget"><code>exec-and-forget</code></a> doesn&#8217;t have Homebrew in its <code>$PATH</code> by default.
-See <a href="https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities" class="bare">https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities</a></p>
-</div>
-</div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-03-01 00:20:26 +0100
+Last updated 2024-03-12 22:33:01 +0100
 </div>
 </div>
 </body>

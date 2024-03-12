@@ -1,6 +1,6 @@
 --monitor <monitors>::
 Filter results to only print workspaces/windows that are attached to specified monitors.
-`<monitors>` is a comma separated list of monitor IDs. +
+`<monitors>` is a space separated list of monitor IDs. +
 +
 Possible monitors IDs: +
 +

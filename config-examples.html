@@ -5,6 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
+<link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Config Examples</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -576,22 +577,22 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 
 <span class="tok-c1"># You can use it to add commands that run after login to macOS user session.</span>
 <span class="tok-c1"># &#39;start-at-login&#39; needs to be &#39;true&#39; for &#39;after-login-command&#39; to work</span>
-<span class="tok-c1"># Available commands: https://nikitabobko.github.io/AeroSpace/commands.html</span>
+<span class="tok-c1"># Available commands: https://nikitabobko.github.io/AeroSpace/commands</span>
 <span class="tok-n">after-login-command</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[]</span>
 
 <span class="tok-c1"># You can use it to add commands that run after AeroSpace startup.</span>
 <span class="tok-c1"># &#39;after-startup-command&#39; is run after &#39;after-login-command&#39;</span>
-<span class="tok-c1"># Available commands : https://nikitabobko.github.io/AeroSpace/commands.html</span>
+<span class="tok-c1"># Available commands : https://nikitabobko.github.io/AeroSpace/commands</span>
 <span class="tok-n">after-startup-command</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[]</span>
 
 <span class="tok-c1"># Start AeroSpace at login</span>
 <span class="tok-n">start-at-login</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
 
-<span class="tok-c1"># Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide.html#normalization</span>
+<span class="tok-c1"># Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization</span>
 <span class="tok-n">enable-normalization-flatten-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
 <span class="tok-n">enable-normalization-opposite-orientation-for-nested-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
 
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide.html#layouts</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide#layouts</span>
 <span class="tok-c1"># The &#39;accordion-padding&#39; specifies the size of accordion padding</span>
 <span class="tok-c1"># You can set 0 to disable the padding feature</span>
 <span class="tok-n">accordion-padding</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">30</span>
@@ -604,27 +605,38 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-c1">#               tall monitor (anything higher than wide) gets vertical orientation</span>
 <span class="tok-n">default-root-container-orientation</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;auto&#39;</span>
 
+<span class="tok-c1"># Visual indent makes it easier to understand that containers of the same orientation are nested.</span>
+<span class="tok-c1"># If you have &#39;enable-normalization-opposite-orientation-for-nested-containers&#39; enabled then</span>
+<span class="tok-c1"># there is no way to observe the indent</span>
+<span class="tok-n">indent-for-nested-containers-with-the-same-orientation</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">30</span>
+
+<span class="tok-c1"># Possible values: (qwerty|dvorak)</span>
+<span class="tok-c1"># See https://nikitabobko.github.io/AeroSpace/guide#key-mapping</span>
+<span class="tok-n">key-mapping</span><span class="tok-p">.</span><span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;qwerty&#39;</span>
+
 <span class="tok-c1"># Gaps between windows (inner-*) and between monitor edges (outer-*).</span>
 <span class="tok-c1"># Possible values:</span>
 <span class="tok-c1"># - Constant:     gaps.outer.top = 8</span>
 <span class="tok-c1"># - Per monitor:  gaps.outer.top = [{ monitor.main = 16 }, { monitor.&quot;some-pattern&quot; = 32 }, 24]</span>
 <span class="tok-c1">#                 In this example, 24 is a default value when there is no match.</span>
 <span class="tok-c1">#                 Monitor pattern is the same as for &#39;workspace-to-monitor-force-assignment&#39;.</span>
-<span class="tok-c1">#                 See: https://nikitabobko.github.io/AeroSpace/guide.html#assign-workspaces-to-monitors</span>
-<span class="tok-n">gaps</span><span class="tok-p">.</span><span class="tok-n">inner</span><span class="tok-p">.</span><span class="tok-n">horizontal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span>
-<span class="tok-n">gaps</span><span class="tok-p">.</span><span class="tok-n">inner</span><span class="tok-p">.</span><span class="tok-n">vertical</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">   </span><span class="tok-mi">0</span>
-<span class="tok-n">gaps</span><span class="tok-p">.</span><span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">left</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">       </span><span class="tok-mi">0</span>
-<span class="tok-n">gaps</span><span class="tok-p">.</span><span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">bottom</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">     </span><span class="tok-mi">0</span>
-<span class="tok-n">gaps</span><span class="tok-p">.</span><span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">top</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">        </span><span class="tok-mi">0</span>
-<span class="tok-n">gaps</span><span class="tok-p">.</span><span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">right</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">      </span><span class="tok-mi">0</span>
+<span class="tok-c1">#                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors</span>
+<span class="tok-k">[gaps]</span>
+<span class="tok-n">inner</span><span class="tok-p">.</span><span class="tok-n">horizontal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span>
+<span class="tok-n">inner</span><span class="tok-p">.</span><span class="tok-n">vertical</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">   </span><span class="tok-mi">0</span>
+<span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">left</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">       </span><span class="tok-mi">0</span>
+<span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">bottom</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">     </span><span class="tok-mi">0</span>
+<span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">top</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">        </span><span class="tok-mi">0</span>
+<span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">right</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">      </span><span class="tok-mi">0</span>
 
-<span class="tok-c1"># Visual indent makes it easier to understand that containers of the same orientation are nested.</span>
-<span class="tok-c1"># If you have &#39;enable-normalization-opposite-orientation-for-nested-containers&#39; enabled then</span>
-<span class="tok-c1"># there is no way to observe the indent</span>
-<span class="tok-n">indent-for-nested-containers-with-the-same-orientation</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">30</span>
+<span class="tok-c1"># See https://nikitabobko.github.io/AeroSpace/guide#exec-env-vars</span>
+<span class="tok-k">[exec]</span>
+<span class="tok-n">inherit-env-vars</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
+<span class="tok-k">[exec.env-vars]</span>
+<span class="tok-n">PATH</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}&#39;</span>
 
 <span class="tok-c1"># &#39;main&#39; binding mode declaration</span>
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes</span>
 <span class="tok-c1"># &#39;main&#39; binding mode must be always presented</span>
 <span class="tok-k">[mode.main.binding]</span>
 
@@ -641,34 +653,33 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 
 <span class="tok-c1"># All possible modifiers: cmd, alt, ctrl, shift</span>
 
-<span class="tok-c1"># All possible commands: https://nikitabobko.github.io/AeroSpace/commands.html</span>
+<span class="tok-c1"># All possible commands: https://nikitabobko.github.io/AeroSpace/commands</span>
 
 <span class="tok-c1"># You can uncomment this line to open up terminal with alt + enter shortcut</span>
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands.html#exec-and-forget</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget</span>
 <span class="tok-c1"># alt-enter = &#39;exec-and-forget open -n /System/Applications/Utilities/Terminal.app&#39;</span>
 
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands.html#layout</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands#layout</span>
 <span class="tok-n">alt-slash</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;layout tiles horizontal vertical&#39;</span>
 <span class="tok-n">alt-comma</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;layout accordion horizontal vertical&#39;</span>
 
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands.html#focus</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands#focus</span>
 <span class="tok-n">alt-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;focus left&#39;</span>
 <span class="tok-n">alt-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;focus down&#39;</span>
 <span class="tok-n">alt-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;focus up&#39;</span>
 <span class="tok-n">alt-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;focus right&#39;</span>
 
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands.html#move</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands#move</span>
 <span class="tok-n">alt-shift-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move left&#39;</span>
 <span class="tok-n">alt-shift-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move down&#39;</span>
 <span class="tok-n">alt-shift-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move up&#39;</span>
 <span class="tok-n">alt-shift-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move right&#39;</span>
 
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands.html#resize</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands#resize</span>
 <span class="tok-n">alt-shift-minus</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;resize smart -50&#39;</span>
 <span class="tok-n">alt-shift-equal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;resize smart +50&#39;</span>
 
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands.html#workspace</span>
-<span class="tok-n">alt-0</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace 0&#39;</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands#workspace</span>
 <span class="tok-n">alt-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace 1&#39;</span>
 <span class="tok-n">alt-2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace 2&#39;</span>
 <span class="tok-n">alt-3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace 3&#39;</span>
@@ -701,8 +712,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-n">alt-y</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace Y&#39;</span>
 <span class="tok-n">alt-z</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace Z&#39;</span>
 
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands.html#move-node-to-workspace</span>
-<span class="tok-n">alt-shift-0</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace 0&#39;</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace</span>
 <span class="tok-n">alt-shift-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace 1&#39;</span>
 <span class="tok-n">alt-shift-2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace 2&#39;</span>
 <span class="tok-n">alt-shift-3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace 3&#39;</span>
@@ -735,17 +745,17 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-n">alt-shift-y</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace Y&#39;</span>
 <span class="tok-n">alt-shift-z</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace Z&#39;</span>
 
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands.html#workspace-back-and-forth</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth</span>
 <span class="tok-n">alt-tab</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace-back-and-forth&#39;</span>
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands.html#move-workspace-to-monitor</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor</span>
 <span class="tok-n">alt-shift-tab</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-workspace-to-monitor --wrap-around next&#39;</span>
 
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands.html#mode</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/commands#mode</span>
 <span class="tok-n">alt-shift-semicolon</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;mode service&#39;</span>
 <span class="tok-n">alt-shift-slash</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;mode join&#39;</span>
 
 <span class="tok-c1"># &#39;service&#39; binding mode declaration.</span>
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes</span>
 <span class="tok-k">[mode.service.binding]</span>
 <span class="tok-n">r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;flatten-workspace-tree&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;mode main&#39;</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-c1"># reset layout</span>
 <span class="tok-c1">#s = [&#39;layout sticky tiling&#39;, &#39;mode main&#39;] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2</span>
@@ -754,7 +764,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-n">esc</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;reload-config&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;mode main&#39;</span><span class="tok-p">]</span>
 
 <span class="tok-c1"># &#39;join&#39; binding mode declaration</span>
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes</span>
 <span class="tok-k">[mode.join.binding]</span>
 <span class="tok-n">alt-shift-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;join-with left&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;mode main&#39;</span><span class="tok-p">]</span>
 <span class="tok-n">alt-shift-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;join-with down&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;mode main&#39;</span><span class="tok-p">]</span>
@@ -803,7 +813,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-n">alt-shift-space</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;layout floating tiling&#39;</span><span class="tok-w"> </span><span class="tok-c1"># &#39;floating toggle&#39; in i3</span>
 
 <span class="tok-c1"># Not supported, because this command is redundant in AeroSpace mental model.</span>
-<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide.html#floating-windows</span>
+<span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide#floating-windows</span>
 <span class="tok-c1">#alt-space = &#39;focus toggle_tiling_floating&#39;</span>
 
 <span class="tok-c1"># `focus parent`/`focus child` are not yet supported, and it&#39;s not clear whether they</span>
@@ -850,7 +860,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-03-01 00:20:26 +0100
+Last updated 2024-03-12 22:33:01 +0100
 </div>
 </div>
 </body>

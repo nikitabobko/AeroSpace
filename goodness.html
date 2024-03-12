@@ -5,6 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.20">
+<link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Goodness</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -516,7 +517,9 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#use-trackpad-gestures-to-switch-workspaces">4. Use trackpad gestures to switch workspaces</a></li>
 <li><a href="#show-aerospace-workspaces-in-sketchybar">5. Show AeroSpace workspaces in Sketchybar</a></li>
 <li><a href="#open-a-new-window-with-applescript">6. Open a new window with AppleScript</a></li>
-<li><a href="#popular-apps-ids">7. List of popular and built-in applications IDs</a></li>
+<li><a href="#disable-hide-app">7. Disable annoying and useless "hide application" shortcut</a></li>
+<li><a href="#colemak-keys-remap">8. Colemak keys remap</a></li>
+<li><a href="#popular-apps-ids">9. List of popular and built-in applications IDs</a></li>
 </ul>
 </div>
 </div>
@@ -557,7 +560,8 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 <div class="paragraph">
 <p>Do you have a cool automatization, AeroSpace integration, or workflow?
-Feel free to open an issue or pull request to add it to this list!</p>
+Feel free to open an issue or pull request to add it to this list!
+The source code of the page can be found in <code>./docs</code> directory.</p>
 </div>
 </div>
 </div>
@@ -588,7 +592,7 @@ Feel free to open an issue or pull request to add it to this list!</p>
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">after-startup-command</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span>
 <span class="tok-w">    </span><span class="tok-c1"># JankyBorders has a built-in detection of already running process,</span>
 <span class="tok-w">    </span><span class="tok-c1"># so it won&#39;t be run twice on AeroSpace restart</span>
-<span class="tok-w">    </span><span class="tok-s">&#39;exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0&#39;</span>
+<span class="tok-w">    </span><span class="tok-s">&#39;exec-and-forget /opt/homebrew/opt/borders/bin/borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0&#39;</span>
 <span class="tok-p">]</span></code></pre>
 </div>
 </div>
@@ -725,7 +729,66 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 </div>
 <div class="sect1">
-<h2 id="popular-apps-ids"><a class="anchor" href="#popular-apps-ids"></a><a class="link" href="#popular-apps-ids">7. List of popular and built-in applications IDs</a></h2>
+<h2 id="disable-hide-app"><a class="anchor" href="#disable-hide-app"></a><a class="link" href="#disable-hide-app">7. Disable annoying and useless "hide application" shortcut</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">~/.aerospace.toml</div>
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[mode.main.binding]</span>
+<span class="tok-n">cmd-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[]</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="colemak-keys-remap"><a class="anchor" href="#colemak-keys-remap"></a><a class="link" href="#colemak-keys-remap">8. Colemak keys remap</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="title">~/.aerospace.toml</div>
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[key-mapping.key-notation-to-key-code]</span>
+<span class="tok-n">q</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;q&#39;</span>
+<span class="tok-n">w</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;w&#39;</span>
+<span class="tok-n">f</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;e&#39;</span>
+<span class="tok-n">p</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;r&#39;</span>
+<span class="tok-n">g</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;t&#39;</span>
+<span class="tok-n">j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;y&#39;</span>
+<span class="tok-n">l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;u&#39;</span>
+<span class="tok-n">u</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;i&#39;</span>
+<span class="tok-n">y</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;o&#39;</span>
+<span class="tok-n">semicolon</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;p&#39;</span>
+<span class="tok-n">leftSquareBracket</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;leftSquareBracket&#39;</span>
+<span class="tok-n">rightSquareBracket</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;rightSquareBracket&#39;</span>
+<span class="tok-n">backslash</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;backslash&#39;</span>
+
+<span class="tok-n">a</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;a&#39;</span>
+<span class="tok-n">r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;s&#39;</span>
+<span class="tok-n">s</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;d&#39;</span>
+<span class="tok-n">t</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;f&#39;</span>
+<span class="tok-n">d</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;g&#39;</span>
+<span class="tok-n">h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;h&#39;</span>
+<span class="tok-n">n</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;j&#39;</span>
+<span class="tok-n">e</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;k&#39;</span>
+<span class="tok-n">i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;l&#39;</span>
+<span class="tok-n">o</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;semicolon&#39;</span>
+<span class="tok-n">quote</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;quote&#39;</span>
+
+<span class="tok-n">z</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;z&#39;</span>
+<span class="tok-n">x</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;x&#39;</span>
+<span class="tok-n">c</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;c&#39;</span>
+<span class="tok-n">v</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;v&#39;</span>
+<span class="tok-n">b</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;b&#39;</span>
+<span class="tok-n">k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;n&#39;</span>
+<span class="tok-n">r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;m&#39;</span>
+<span class="tok-n">comma</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;comma&#39;</span>
+<span class="tok-n">period</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;period&#39;</span>
+<span class="tok-n">slash</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;slash&#39;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="popular-apps-ids"><a class="anchor" href="#popular-apps-ids"></a><a class="link" href="#popular-apps-ids">9. List of popular and built-in applications IDs</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The list is useful to compose custom <a href="guide#on-window-detected-callback">on-window-detected callback</a>.</p>
@@ -1089,7 +1152,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-03-01 00:20:26 +0100
+Last updated 2024-03-12 22:33:01 +0100
 </div>
 </div>
 </body>

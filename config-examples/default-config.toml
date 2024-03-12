@@ -6,22 +6,22 @@
 
 # You can use it to add commands that run after login to macOS user session.
 # 'start-at-login' needs to be 'true' for 'after-login-command' to work
-# Available commands: https://nikitabobko.github.io/AeroSpace/commands.html
+# Available commands: https://nikitabobko.github.io/AeroSpace/commands
 after-login-command = []
 
 # You can use it to add commands that run after AeroSpace startup.
 # 'after-startup-command' is run after 'after-login-command'
-# Available commands : https://nikitabobko.github.io/AeroSpace/commands.html
+# Available commands : https://nikitabobko.github.io/AeroSpace/commands
 after-startup-command = []
 
 # Start AeroSpace at login
 start-at-login = false
 
-# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide.html#normalization
+# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
-# See: https://nikitabobko.github.io/AeroSpace/guide.html#layouts
+# See: https://nikitabobko.github.io/AeroSpace/guide#layouts
 # The 'accordion-padding' specifies the size of accordion padding
 # You can set 0 to disable the padding feature
 accordion-padding = 30
@@ -34,27 +34,38 @@ default-root-container-layout = 'tiles'
 #               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
+# Visual indent makes it easier to understand that containers of the same orientation are nested.
+# If you have 'enable-normalization-opposite-orientation-for-nested-containers' enabled then
+# there is no way to observe the indent
+indent-for-nested-containers-with-the-same-orientation = 30
+
+# Possible values: (qwerty|dvorak)
+# See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
+key-mapping.preset = 'qwerty'
+
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
 # - Constant:     gaps.outer.top = 8
 # - Per monitor:  gaps.outer.top = [{ monitor.main = 16 }, { monitor."some-pattern" = 32 }, 24]
 #                 In this example, 24 is a default value when there is no match.
 #                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
-#                 See: https://nikitabobko.github.io/AeroSpace/guide.html#assign-workspaces-to-monitors
-gaps.inner.horizontal = 0
-gaps.inner.vertical =   0
-gaps.outer.left =       0
-gaps.outer.bottom =     0
-gaps.outer.top =        0
-gaps.outer.right =      0
+#                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
+[gaps]
+inner.horizontal = 0
+inner.vertical =   0
+outer.left =       0
+outer.bottom =     0
+outer.top =        0
+outer.right =      0
 
-# Visual indent makes it easier to understand that containers of the same orientation are nested.
-# If you have 'enable-normalization-opposite-orientation-for-nested-containers' enabled then
-# there is no way to observe the indent
-indent-for-nested-containers-with-the-same-orientation = 30
+# See https://nikitabobko.github.io/AeroSpace/guide#exec-env-vars
+[exec]
+inherit-env-vars = true
+[exec.env-vars]
+PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
 
 # 'main' binding mode declaration
-# See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes
+# See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 # 'main' binding mode must be always presented
 [mode.main.binding]
 
@@ -71,34 +82,33 @@ indent-for-nested-containers-with-the-same-orientation = 30
 
 # All possible modifiers: cmd, alt, ctrl, shift
 
-# All possible commands: https://nikitabobko.github.io/AeroSpace/commands.html
+# All possible commands: https://nikitabobko.github.io/AeroSpace/commands
 
 # You can uncomment this line to open up terminal with alt + enter shortcut
-# See: https://nikitabobko.github.io/AeroSpace/commands.html#exec-and-forget
+# See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
 # alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands.html#layout
+# See: https://nikitabobko.github.io/AeroSpace/commands#layout
 alt-slash = 'layout tiles horizontal vertical'
 alt-comma = 'layout accordion horizontal vertical'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands.html#focus
+# See: https://nikitabobko.github.io/AeroSpace/commands#focus
 alt-h = 'focus left'
 alt-j = 'focus down'
 alt-k = 'focus up'
 alt-l = 'focus right'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands.html#move
+# See: https://nikitabobko.github.io/AeroSpace/commands#move
 alt-shift-h = 'move left'
 alt-shift-j = 'move down'
 alt-shift-k = 'move up'
 alt-shift-l = 'move right'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands.html#resize
+# See: https://nikitabobko.github.io/AeroSpace/commands#resize
 alt-shift-minus = 'resize smart -50'
 alt-shift-equal = 'resize smart +50'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands.html#workspace
-alt-0 = 'workspace 0'
+# See: https://nikitabobko.github.io/AeroSpace/commands#workspace
 alt-1 = 'workspace 1'
 alt-2 = 'workspace 2'
 alt-3 = 'workspace 3'
@@ -131,8 +141,7 @@ alt-x = 'workspace X'
 alt-y = 'workspace Y'
 alt-z = 'workspace Z'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands.html#move-node-to-workspace
-alt-shift-0 = 'move-node-to-workspace 0'
+# See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
 alt-shift-1 = 'move-node-to-workspace 1'
 alt-shift-2 = 'move-node-to-workspace 2'
 alt-shift-3 = 'move-node-to-workspace 3'
@@ -165,17 +174,17 @@ alt-shift-x = 'move-node-to-workspace X'
 alt-shift-y = 'move-node-to-workspace Y'
 alt-shift-z = 'move-node-to-workspace Z'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands.html#workspace-back-and-forth
+# See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
 alt-tab = 'workspace-back-and-forth'
-# See: https://nikitabobko.github.io/AeroSpace/commands.html#move-workspace-to-monitor
+# See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
 alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
 
-# See: https://nikitabobko.github.io/AeroSpace/commands.html#mode
+# See: https://nikitabobko.github.io/AeroSpace/commands#mode
 alt-shift-semicolon = 'mode service'
 alt-shift-slash = 'mode join'
 
 # 'service' binding mode declaration.
-# See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes
+# See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.service.binding]
 r = ['flatten-workspace-tree', 'mode main'] # reset layout
 #s = ['layout sticky tiling', 'mode main'] # sticky is not yet supported https://github.com/nikitabobko/AeroSpace/issues/2
@@ -184,7 +193,7 @@ backspace = ['close-all-windows-but-current', 'mode main']
 esc = ['reload-config', 'mode main']
 
 # 'join' binding mode declaration
-# See: https://nikitabobko.github.io/AeroSpace/guide.html#binding-modes
+# See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 [mode.join.binding]
 alt-shift-h = ['join-with left', 'mode main']
 alt-shift-j = ['join-with down', 'mode main']

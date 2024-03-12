@@ -1,7 +1,7 @@
 == Resources
 
 *Project homepage:* https://github.com/nikitabobko/AeroSpace +
-*Guide:* https://nikitabobko.github.io/AeroSpace/guide.html
+*Guide:* https://nikitabobko.github.io/AeroSpace/guide
 
 == BUGS
 
@@ -9,7 +9,7 @@ Bugs can be reported to https://github.com/nikitabobko/AeroSpace/issues/new
 
 == Copying
 
-Copyright (C) 2023 Nikita Bobko +
+Copyright (C) 2024 Nikita Bobko +
 Free use of this software is granted under the terms of the MIT License
 
 == AUTHOR
