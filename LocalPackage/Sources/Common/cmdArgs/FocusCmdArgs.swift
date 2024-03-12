@@ -24,7 +24,7 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
         //  <id>                                  ID of window to focus
         options: [
             "--boundaries": ArgParser(\.boundaries, parseBoundaries),
-            "--boundaries-action": ArgParser(\.boundariesAction, parseWhenBoundariesCrossed)
+            "--boundaries-action": ArgParser(\.boundariesAction, parseBoundariesAction)
         ],
         arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)]
     )
@@ -60,11 +60,11 @@ public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
         }
 }
 
-private func parseWhenBoundariesCrossed(arg: String, nextArgs: inout [String]) -> Parsed<FocusCmdArgs.WhenBoundariesCrossed> {
+private func parseBoundariesAction(arg: String, nextArgs: inout [String]) -> Parsed<FocusCmdArgs.WhenBoundariesCrossed> {
     if let arg = nextArgs.nextNonFlagOrNil() {
         return parseEnum(arg, FocusCmdArgs.WhenBoundariesCrossed.self)
     } else {
-        return .failure("\(boundar) is mandatory")
+        return .failure("\(actio) is mandatory")
     }
 }
 
@@ -72,6 +72,6 @@ private func parseBoundaries(arg: String, nextArgs: inout [String]) -> Parsed<Fo
     if let arg = nextArgs.nextNonFlagOrNil() {
         return parseEnum(arg, FocusCmdArgs.Boundaries.self)
     } else {
-        return .failure("\(actio) is mandatory")
+        return .failure("\(boundar) is mandatory")
     }
 }
