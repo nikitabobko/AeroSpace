@@ -4,11 +4,12 @@ public struct FocusMonitorCmdArgs: RawCmdArgs, CmdArgs {
         kind: .focusMonitor,
         allowInConfig: true,
         help: """
-              USAGE: focus-monitor [--wrap-around] (left|down|up|right)
-                 OR: focus-monitor [--wrap-around] (next|prev)
-                 OR: focus-monitor <monitor-pattern>...
+              USAGE: focus-monitor [-h|--help] [--wrap-around] (left|down|up|right)
+                 OR: focus-monitor [-h|--help] [--wrap-around] (next|prev)
+                 OR: focus-monitor [-h|--help] <monitor-pattern>...
 
               OPTIONS:
+                -h, --help            Print help
                 --wrap-around         Make it possible to wrap around focus
 
               ARGUMENTS:

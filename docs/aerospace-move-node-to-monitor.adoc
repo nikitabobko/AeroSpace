@@ -8,9 +8,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace move-node-to-monitor [--wrap-around] (left|down|up|right)
-aerospace move-node-to-monitor [--wrap-around] (next|prev)
-aerospace move-node-to-monitor <monitor-pattern>...
+aerospace move-node-to-monitor [-h|--help] [--wrap-around] (left|down|up|right)
+aerospace move-node-to-monitor [-h|--help] [--wrap-around] (next|prev)
+aerospace move-node-to-monitor [-h|--help] <monitor-pattern>...
 
 // end::synopsis[]
 

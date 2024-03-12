@@ -9,8 +9,8 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace focus-monitor [-h|--help] [--wrap-around] (left|down|up|right)
-aerospace focus-monitor [--wrap-around] (next|prev)
-aerospace focus-monitor <monitor-pattern>...
+aerospace focus-monitor [-h|--help] [--wrap-around] (next|prev)
+aerospace focus-monitor [-h|--help] <monitor-pattern>...
 
 // end::synopsis[]
 

@@ -4,11 +4,12 @@ public struct MoveNodeToMonitorCmdArgs: RawCmdArgs, CmdArgs {
         kind: .moveNodeToMonitor,
         allowInConfig: true,
         help: """
-              USAGE: move-node-to-monitor [--wrap-around] (left|down|up|right)
-                 OR: move-node-to-monitor [--wrap-around] (next|prev)
-                 OR: move-node-to-monitor <monitor-pattern>...
+              USAGE: move-node-to-monitor [-h|--help] [--wrap-around] (left|down|up|right)
+                 OR: move-node-to-monitor [-h|--help] [--wrap-around] (next|prev)
+                 OR: move-node-to-monitor [-h|--help] <monitor-pattern>...
 
               OPTIONS:
+                -h, --help            Print help
                 --wrap-around         Make it possible to wrap around the movement
 
               ARGUMENTS:
