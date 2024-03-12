@@ -37,9 +37,9 @@ public func parseFocusMonitorCmdArgs(_ args: [String]) -> ParsedCmd<FocusMonitor
 func parseTarget(_ arg: String, _ nextArgs: inout [String]) -> Parsed<MonitorTarget> {
     switch arg {
     case "next":
-        return .success(.relative(isNext: true))
+        return .success(.relative(.next))
     case "prev":
-        return .success(.relative(isNext: false))
+        return .success(.relative(.prev))
     case "left":
         return .success(.directional(.left))
     case "down":
@@ -54,9 +54,13 @@ func parseTarget(_ arg: String, _ nextArgs: inout [String]) -> Parsed<MonitorTar
     }
 }
 
+public enum NextPrev: Equatable {
+    case next, prev
+}
+
 public enum MonitorTarget {
     case directional(CardinalDirection)
-    case relative(isNext: Bool)
+    case relative(NextPrev)
     case patterns([MonitorDescription])
 
     var isPatterns: Bool {
