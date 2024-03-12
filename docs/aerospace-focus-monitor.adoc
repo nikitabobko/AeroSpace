@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-focus-monitor
 // tag::purpose[]
-:manpurpose: Focus monitor in relative direction, order, or by pattern
+:manpurpose: Focus monitor in by relative direction, by order, or by pattern
 // end::purpose[]
 
 == Synopsis
@@ -32,8 +32,8 @@ Focus monitor in direction relative to the currently focused monitor
 (next|prev)::
 Focus next|prev monitor in order they appear in tray icon
 
-<monitor-pattern>...::
-Find the first monitor pattern in the list that doesn't describe the current monitor and focuses it.
+<monitor-pattern>::
+Find the first monitor pattern in the list that doesn't describe the current monitor and focus it.
 Monitor pattern is the same as in `workspace-to-monitor-force-assignment` config option
 
 // end::body[]

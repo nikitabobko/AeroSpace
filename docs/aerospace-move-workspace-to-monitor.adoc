@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-move-workspace-to-monitor
 // tag::purpose[]
-:manpurpose: Moves currently focused workspace to the next or previous monitor
+:manpurpose: Move currently focused workspace to the next or previous monitor
 // end::purpose[]
 
 == Synopsis

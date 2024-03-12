@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-layout
 // tag::purpose[]
-:manpurpose: Changes layout of the focused window to the given layout
+:manpurpose: Change layout of the focused window to the given layout
 // end::purpose[]
 
 == Synopsis

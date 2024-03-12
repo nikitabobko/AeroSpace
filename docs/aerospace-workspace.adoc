@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-workspace
 // tag::purpose[]
-:manpurpose: Focuses the specified workspace
+:manpurpose: Focus the specified workspace
 // end::purpose[]
 
 == Synopsis

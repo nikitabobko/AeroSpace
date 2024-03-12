@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-list-monitors
 // tag::purpose[]
-:manpurpose: Prints monitors that satisfy conditions
+:manpurpose: Print monitors that satisfy conditions
 // end::purpose[]
 
 == Synopsis

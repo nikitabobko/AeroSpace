@@ -1,7 +1,7 @@
 = aerospace-mode(1)
 include::util/man-attributes.adoc[]
 // tag::purpose[]
-:manpurpose: Activates the specified binding modes
+:manpurpose: Activate the specified binding mode
 // end::purpose[]
 :manname: aerospace-mode
 

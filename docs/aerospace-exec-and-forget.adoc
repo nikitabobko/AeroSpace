@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-exec-and-forget
 // tag::purpose[]
-:manpurpose: Runs /bin/bash -c '<bash-script>'
+:manpurpose: Run /bin/bash -c '<bash-script>'
 // end::purpose[]
 
 == Synopsis
@@ -13,7 +13,7 @@ aerospace exec-and-forget <bash-script>
 == Description
 
 // tag::body[]
-Runs `/bin/bash -c '<bash-script>'`, and doesn't wait for the command termination.
+Run `/bin/bash -c '<bash-script>'`, and don't wait for the command termination.
 Stdout, stderr and exit code are ignored.
 
 For example, you can use this command to launch applications:

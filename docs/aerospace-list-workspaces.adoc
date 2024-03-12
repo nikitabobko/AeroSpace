@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-list-workspaces
 // tag::purpose[]
-:manpurpose: Prints workspaces that satisfy conditions
+:manpurpose: Print workspaces that satisfy conditions
 // end::purpose[]
 
 == Synopsis

@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-list-exec-env-vars
 // tag::purpose[]
-:manpurpose: List environment variables that exec-* commands and options are run with
+:manpurpose: List environment variables that exec-* commands and callbacks are run with
 // end::purpose[]
 
 == Synopsis
@@ -15,7 +15,7 @@ aerospace list-exec-env-vars [-h|--help]
 // tag::body[]
 {manpurpose}
 
-Examples of commands and options:
+Examples of commands and callbacks:
 
 * _aerospace exec-and-forget_ command
 * _exec-on-workspace-change-callback_

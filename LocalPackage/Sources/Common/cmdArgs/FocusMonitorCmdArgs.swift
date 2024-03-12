@@ -15,14 +15,14 @@ public struct FocusMonitorCmdArgs: RawCmdArgs, CmdArgs {
                 (left|down|up|right)  Focus monitor in direction relative to the currently focused monitor
                 (next|prev)           Focus next|prev monitor in order they appear in tray icon
                 <monitor-pattern>     Find the first monitor pattern in the list that
-                                      doesn't describe the current monitor and moves the window
-                                      to the appropriate monitor. Monitor pattern is the same as in
-                                      `workspace-to-monitor-force-assignment` config option
+                                      doesn't describe the current monitor and focus the appropriate monitor.
+                                      Monitor pattern is the same as in `workspace-to-monitor-force-assignment`
+                                      config option
               """,
         options: [
             "--wrap-around": trueBoolFlag(\.wrapAround)
         ],
-        arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>...)")]
+        arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)")]
     )
 
     public var wrapAround: Bool = false
@@ -31,7 +31,7 @@ public struct FocusMonitorCmdArgs: RawCmdArgs, CmdArgs {
 
 public func parseFocusMonitorCmdArgs(_ args: [String]) -> ParsedCmd<FocusMonitorCmdArgs> {
     parseRawCmdArgs(FocusMonitorCmdArgs(), args)
-        .filter("--wrap-around is compatible only with (next|prev) argument") { !$0.wrapAround || !$0.target.val.isPatterns }
+        .filter("--wrap-around is incompatible with <monitor-pattern> argument") { !$0.wrapAround || !$0.target.val.isPatterns }
 }
 
 func parseTarget(_ arg: String, _ nextArgs: inout [String]) -> Parsed<MonitorTarget> {

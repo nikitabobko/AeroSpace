@@ -111,7 +111,7 @@ key-mapping.preset = 'dvorak'
 [#exec-env-vars]
 === exec-* Environment Variables
 
-You can configure environment variables of `exec-*` commands and options (such as xref:commands.adoc#exec-and-forget[exec-and-forget], <<exec-on-workspace-change-callback>>)
+You can configure environment variables of `exec-*` commands and callbacks (such as xref:commands.adoc#exec-and-forget[exec-and-forget], <<exec-on-workspace-change-callback>>)
 
 * `exec.inherit-env-vars = true` configures whether inherit environment variables of `AeroSpace.app` or not. (The default is `true`)
 * You can override env variables with the following syntax:

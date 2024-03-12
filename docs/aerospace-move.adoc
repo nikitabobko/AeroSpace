@@ -1,7 +1,7 @@
 = aerospace-move(1)
 include::util/man-attributes.adoc[]
 // tag::purpose[]
-:manpurpose: Moves the window in the given direction
+:manpurpose: Move the window in the given direction
 // end::purpose[]
 :manname: aerospace-move
 

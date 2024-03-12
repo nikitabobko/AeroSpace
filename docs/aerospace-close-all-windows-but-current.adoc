@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-close-all-windows-but-current
 // tag::purpose[]
-:manpurpose: On the focused workspace, closes all windows but current
+:manpurpose: On the focused workspace, close all windows but current
 // end::purpose[]
 
 == Synopsis

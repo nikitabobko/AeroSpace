@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-close
 // tag::purpose[]
-:manpurpose: Closes the focused window
+:manpurpose: Close the focused window
 // end::purpose[]
 
 == Synopsis

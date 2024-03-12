@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-flatten-workspace-tree
 // tag::purpose[]
-:manpurpose: Flattens the tree of currently focused workspace.
+:manpurpose: Flatten the tree of currently focused workspace.
 // end::purpose[]
 
 == Synopsis

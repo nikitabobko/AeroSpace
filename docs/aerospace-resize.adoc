@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-resize
 // tag::purpose[]
-:manpurpose: Resizes the currently focused window
+:manpurpose: Resize the currently focused window
 // end::purpose[]
 
 == Synopsis

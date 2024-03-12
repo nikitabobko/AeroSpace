@@ -25,7 +25,8 @@ public struct WorkspaceName: Equatable {
             return .failure("Workspace names starting with underscore are reserved for future use")
         }
         if raw.starts(with: "-") {
-            return .failure("Workspace names starting with dash are reserved for future use")
+            // The syntax conflicts with CLI options. E.g. list-windows --workspace -foo
+            return .failure("Workspace names starting with dash are disallowed")
         }
         if raw.rangeOfCharacter(from: .whitespacesAndNewlines) != nil {
             return .failure("Whitespace characters are forbidden in workspace names")
