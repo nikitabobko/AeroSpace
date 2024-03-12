@@ -1,0 +1,41 @@
+= aerospace-move-node-to-monitor(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-move-node-to-monitor
+// tag::purpose[]
+:manpurpose: Move window to monitor targeted by relative direction, by order, or by pattern
+// end::purpose[]
+
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace move-node-to-monitor [--wrap-around] (left|down|up|right)
+aerospace move-node-to-monitor [--wrap-around] (next|prev)
+aerospace move-node-to-monitor <monitor-pattern>...
+
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+--wrap-around:: Make it possible to wrap around the movement
+
+include::util/conditional-arguments-header.adoc[]
+
+(left|down|up|right)::
+Move window to monitor in direction relative to the currently focused monitor
+
+(next|prev)::
+Move window to next|prev monitor in order they appear in tray icon
+
+<monitor-pattern>::
+Find the first monitor pattern in the list that doesn't describe the current monitor and move the window to the appropriate monitor.
+Monitor pattern is the same as in `workspace-to-monitor-force-assignment` config option
+
+// end::body[]
+
+include::util/man-footer.adoc[]

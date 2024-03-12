@@ -24,6 +24,7 @@
 		2C73CDB1A933FCA5616CDFB3 /* WorkspaceEx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57B60F7A58DAD4D3AF2788E4 /* WorkspaceEx.swift */; };
 		2CC46A952773F148AC398144 /* Window.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6352ADEE6625D9703CFCA99A /* Window.swift */; };
 		2E691C1E3F03B82F8507A435 /* MoveCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1376845BAB666880919B9AA2 /* MoveCommand.swift */; };
+		36BC896027B74DF4E3B12DCE /* MoveNodeToMonitorCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6ABF1EDD72F8FE37EB2BD39 /* MoveNodeToMonitorCommand.swift */; };
 		374CE35B85B941B8F584C113 /* FlattenWorkspaceTreeCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53FDECECC773EBA30661EB8A /* FlattenWorkspaceTreeCommandTest.swift */; };
 		3774857EF024E97B7AA5DE78 /* MoveNodeToWorkspaceCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25AC44D0E9450867215FCBEC /* MoveNodeToWorkspaceCommand.swift */; };
 		391D591299E4A22F97B686C3 /* parseExecEnvVariables.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBA02146387061665D22C8A9 /* parseExecEnvVariables.swift */; };
@@ -193,6 +194,7 @@
 		9E6478C499F3FB86C017D7BB /* ListWorkspacesCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListWorkspacesCommand.swift; sourceTree = "<group>"; };
 		9ECC990B6C2D66D343216A12 /* FullscreenCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullscreenCommand.swift; sourceTree = "<group>"; };
 		9F6B8A501483ACBB62560101 /* TreeNodeEx.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeEx.swift; sourceTree = "<group>"; };
+		A6ABF1EDD72F8FE37EB2BD39 /* MoveNodeToMonitorCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveNodeToMonitorCommand.swift; sourceTree = "<group>"; };
 		AAE5DD3E9DC82D247853956B /* Rect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rect.swift; sourceTree = "<group>"; };
 		AD0938DE74E687A8959E3F9C /* moveWithMouse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = moveWithMouse.swift; sourceTree = "<group>"; };
 		AD1645D9939F3F896EF21393 /* TreeNodeTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TreeNodeTest.swift; sourceTree = "<group>"; };
@@ -448,6 +450,7 @@
 				7862747CF7F654B8BF8C9CF9 /* MacosNativeMinimizeCommand.swift */,
 				4B0CD3C2A0E86CDB9DF312AB /* ModeCommand.swift */,
 				1376845BAB666880919B9AA2 /* MoveCommand.swift */,
+				A6ABF1EDD72F8FE37EB2BD39 /* MoveNodeToMonitorCommand.swift */,
 				25AC44D0E9450867215FCBEC /* MoveNodeToWorkspaceCommand.swift */,
 				51CC651BEB897CB7A555D230 /* MoveWorkspaceToMonitorCommand.swift */,
 				CF3C9038C846369FDD71D1D2 /* ReloadConfigCommand.swift */,
@@ -660,6 +663,7 @@
 				51AB4C0992703B2E9D0F55E2 /* MonitorDescriptionEx.swift in Sources */,
 				BA3AD253826B5EA318A6E687 /* MonitorEx.swift in Sources */,
 				2E691C1E3F03B82F8507A435 /* MoveCommand.swift in Sources */,
+				36BC896027B74DF4E3B12DCE /* MoveNodeToMonitorCommand.swift in Sources */,
 				3774857EF024E97B7AA5DE78 /* MoveNodeToWorkspaceCommand.swift in Sources */,
 				5D675FA71B1160863359A4D9 /* MoveWorkspaceToMonitorCommand.swift in Sources */,
 				635733FDDF37E44364372B74 /* MruStack.swift in Sources */,

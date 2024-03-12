@@ -19,6 +19,7 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case macosNativeMinimize = "macos-native-minimize"
     case mode
     case move = "move"
+    case moveNodeToMonitor = "move-node-to-monitor"
     case moveNodeToWorkspace = "move-node-to-workspace"
     case moveWorkspaceToMonitor = "move-workspace-to-monitor"
     case reloadConfig = "reload-config"

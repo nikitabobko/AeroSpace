@@ -59,6 +59,8 @@ extension CmdArgs {
             command = MacosNativeMinimizeCommand(args: self as! MacosNativeMinimizeCmdArgs)
         case .mode:
             command = ModeCommand(args: self as! ModeCmdArgs)
+        case .moveNodeToMonitor:
+            command = MoveNodeToMonitorCommand(args: self as! MoveNodeToMonitorCmdArgs)
         case .moveNodeToWorkspace:
             command = MoveNodeToWorkspaceCommand(args: self as! MoveNodeToWorkspaceCmdArgs)
         case .move:

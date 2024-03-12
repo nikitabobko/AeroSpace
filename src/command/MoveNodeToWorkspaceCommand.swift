@@ -25,4 +25,13 @@ struct MoveNodeToWorkspaceCommand: Command {
         focused.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         return WorkspaceCommand.run(state, prevWorkspace.name)
     }
+
+    public static func run(_ state: CommandMutableState, _ name: String) -> Bool {
+        if let wName = WorkspaceName.parse(name).getOrNil(appendErrorTo: &state.stderr) {
+            let args = MoveNodeToWorkspaceCmdArgs(.direct(WTarget.Direct(wName, autoBackAndForth: false)))
+            return MoveNodeToWorkspaceCommand(args: args).run(state)
+        } else {
+            return false
+        }
+    }
 }

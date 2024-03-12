@@ -52,6 +52,8 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
             result[kind.rawValue] = defaultSubCommandParser(MacosNativeMinimizeCmdArgs())
         case .mode:
             result[kind.rawValue] = defaultSubCommandParser(ModeCmdArgs())
+        case .moveNodeToMonitor:
+            result[kind.rawValue] = SubCommandParser(parseMoveNodeToMonitorCmdArgs)
         case .moveNodeToWorkspace:
             result[kind.rawValue] = SubCommandParser(parseMoveNodeToWorkspaceCmdArgs)
         case .move:
