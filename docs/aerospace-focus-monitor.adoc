@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-focus-monitor
 // tag::purpose[]
-:manpurpose: Focus monitor in by relative direction, by order, or by pattern
+:manpurpose: Focus monitor by relative direction, by order, or by pattern
 // end::purpose[]
 
 == Synopsis
