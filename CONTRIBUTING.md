@@ -55,7 +55,7 @@ You can take a look at the following issues:
 
 Please create an issue (or write a comment in existing one) and describe you want to do.
 
-**Consider including**
+Consider including
 
 * What users will observe after your change?
 * Feature interaction with existing features or potential future features

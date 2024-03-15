@@ -57,6 +57,8 @@ aerospace workspace "$(aerospace list-workspaces --monitor mouse --visible)" && 
 aerospace workspace "$(aerospace list-workspaces --monitor mouse --visible)" && aerospace workspace prev
 ----
 
+Beware that you might need to specify full path to aerospace executable https://community.folivora.ai/t/how-to-execute-terminal-command-to-switch-workspaces-with-aerospace/35914
+
 [#show-aerospace-workspaces-in-sketchybar]
 == Show AeroSpace workspaces in Sketchybar
 
