@@ -14,9 +14,8 @@ func interceptTermination(_ _signal: Int32) {
     } as sig_t)
 }
 
-func initAeroSpaceApp() {
+func initTerminationHandler() {
     _terminationHandler = AppServerTerminationHandler()
-    isCli = false
 }
 
 private struct AppServerTerminationHandler: TerminationHandler {

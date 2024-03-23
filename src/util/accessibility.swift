@@ -307,8 +307,7 @@ extension AXUIElement {
     }
 
     func containingWindowId() -> CGWindowID? {
-        var cgWindowId = CGWindowID()
-        return _AXUIElementGetWindow(self, &cgWindowId) == .success ? cgWindowId : nil
+        bridgedHeader.containingWindowId(self)
     }
 
     var center: CGPoint? {

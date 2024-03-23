@@ -1,4 +1,4 @@
-class TrayMenuModel: ObservableObject {
+public class TrayMenuModel: ObservableObject {
     static let shared = TrayMenuModel()
 
     private init() {}

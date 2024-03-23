@@ -10,6 +10,7 @@ let package = Package(
     // Products define the executables and libraries a package produces, making them visible to other packages.
     products: [
         .library(name: "Common", targets: ["Common"]),
+        .library(name: "AppBundle", targets: ["AppBundle"]),
         .executable(name: "aerospace", targets: ["Cli"])
     ],
     dependencies: [
@@ -19,11 +20,17 @@ let package = Package(
     // Targets can depend on other targets in this package and products from dependencies.
     targets: [
         .target(name: "Common"),
+        .target(
+            name: "AppBundle",
+            dependencies: [
+                .target(name: "Common"),
+            ]
+        ),
         .executableTarget(
             name: "Cli",
             dependencies: [
                 .target(name: "Common"),
-                .product(name: "Socket", package: "BlueSocket")
+                .product(name: "Socket", package: "BlueSocket"),
             ]
         )
         //.testTarget(
