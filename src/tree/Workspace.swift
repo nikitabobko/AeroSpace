@@ -13,16 +13,13 @@ func getStubWorkspace(for monitor: Monitor) -> Workspace {
 
 private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     if let prev = screenPointToPrevVisibleWorkspace[point]?.lets({ Workspace.get(byName: $0) }),
-       !prev.isVisible && prev.workspaceMonitor.rect.topLeftCorner == point {
+       prev.workspaceMonitor.rect.topLeftCorner == point && prev.forceAssignedMonitor == nil {
         return prev
     }
-    if let candidate = Workspace.all
-        .first(where: { !$0.isVisible && $0.workspaceMonitor.rect.topLeftCorner == point }) {
-        return candidate
-    }
+    let preservedNames = config.preservedWorkspaceNames.toSet()
     return (1...Int.max).lazy
         .map { Workspace.get(byName: String($0)) }
-        .first { $0.isEffectivelyEmpty && !$0.isVisible }
+        .first { $0.isEffectivelyEmpty && !$0.isVisible && !preservedNames.contains($0.name) && $0.forceAssignedMonitor == nil }
         ?? errorT("Can't create empty workspace")
 }
 
