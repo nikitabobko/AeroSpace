@@ -37,10 +37,10 @@ let package = Package(
                 .target(name: "Common"),
                 .product(name: "Socket", package: "BlueSocket"),
             ]
-        )
-        //.testTarget(
-        //    name: "AeroSpacePackageTests",
-        //    dependencies: ["AeroSpacePackage"]
-        //),
+        ),
+        .testTarget(
+            name: "AppBundleTests",
+            dependencies: ["AppBundle"]
+        ),
     ]
 )
