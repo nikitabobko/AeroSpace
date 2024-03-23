@@ -1,5 +1,5 @@
 public class TrayMenuModel: ObservableObject {
-    static let shared = TrayMenuModel()
+    public static let shared = TrayMenuModel()
 
     private init() {}
 

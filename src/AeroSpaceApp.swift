@@ -1,6 +1,6 @@
 import HotKey
 import SwiftUI
-import Common
+import AppBundle
 
 @main
 struct AeroSpaceApp: App {

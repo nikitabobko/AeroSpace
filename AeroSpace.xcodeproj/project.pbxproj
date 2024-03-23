@@ -27,11 +27,12 @@
 		9305D5380C7A1D293F24FF41 /* MoveNodeToWorkspaceCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9589EFDEBA4EB9C7DBAFCFD /* MoveNodeToWorkspaceCommandTest.swift */; };
 		96FB31F48574713963A45D25 /* testExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8177AB37FF2FCA122C14AF /* testExtensions.swift */; };
 		9D34BD7DE311254BF52F5EA2 /* testUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = F77C03164B8BFD1E59779C6E /* testUtil.swift */; };
+		A9C3E47966A2A3D18D83F914 /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = 806714938E74264A614FA9A4 /* AppBundle */; };
 		B7148D545A9090F15930BB17 /* SplitArgsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F82E8D5584347E1AC937663 /* SplitArgsTest.swift */; };
 		BB3C35BE40958AE6E7B4A9FD /* TreeNodeTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD1645D9939F3F896EF21393 /* TreeNodeTest.swift */; };
 		C830FD347D7F9C06CF53103F /* Socket in Frameworks */ = {isa = PBXBuildFile; productRef = 998F8F4D88E65F73B0B2894D /* Socket */; };
 		DCCC05496BDAAFB745E99624 /* SplitCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D96FF3675C63A83DC8B8969 /* SplitCommandTest.swift */; };
-		DFEB9F168281870D09BD1C2C /* Common in Frameworks */ = {isa = PBXBuildFile; productRef = 4227A8D8CDB02646B1E1313D /* Common */; };
+		DFEB9F168281870D09BD1C2C /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = 018E55979F61DA6DA6DCB442 /* AppBundle */; };
 		E1E35DC5D9D74D54E92AB5F3 /* ExecCommandTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6EF465EF4129BCB10FE247 /* ExecCommandTest.swift */; };
 		E22ACB36C90695FBAC78226E /* TestWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1905935B0C61590A96EFEF /* TestWindow.swift */; };
 		E7F53669DD11FA7C6C3540A0 /* ConfigTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54679FCD1EC1196B27E964D5 /* ConfigTest.swift */; };
@@ -88,7 +89,7 @@
 				852F88894A3B9FC385563665 /* HotKey in Frameworks */,
 				64A058E536F1EEF7F01043AF /* TOMLKit in Frameworks */,
 				C830FD347D7F9C06CF53103F /* Socket in Frameworks */,
-				DFEB9F168281870D09BD1C2C /* Common in Frameworks */,
+				DFEB9F168281870D09BD1C2C /* AppBundle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -97,6 +98,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FDA7AB64744701B34C530EB0 /* Nimble in Frameworks */,
+				A9C3E47966A2A3D18D83F914 /* AppBundle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -223,7 +225,7 @@
 				42BC1E757EF69233C2262FF4 /* HotKey */,
 				EC8E4F2CA4FF8884F9F59975 /* TOMLKit */,
 				998F8F4D88E65F73B0B2894D /* Socket */,
-				4227A8D8CDB02646B1E1313D /* Common */,
+				018E55979F61DA6DA6DCB442 /* AppBundle */,
 			);
 			productName = AeroSpace;
 			productReference = 09685297933511208058F7CF /* AeroSpace.app */;
@@ -244,6 +246,7 @@
 			name = "AeroSpace-Tests";
 			packageProductDependencies = (
 				1B17CBEB9032416AB9E521BA /* Nimble */,
+				806714938E74264A614FA9A4 /* AppBundle */,
 			);
 			productName = "AeroSpace-Tests";
 			productReference = 5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */;
@@ -613,19 +616,23 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		018E55979F61DA6DA6DCB442 /* AppBundle */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppBundle;
+		};
 		1B17CBEB9032416AB9E521BA /* Nimble */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8312B2D02EB52EB901FBEF90 /* XCRemoteSwiftPackageReference "Nimble" */;
 			productName = Nimble;
 		};
-		4227A8D8CDB02646B1E1313D /* Common */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = Common;
-		};
 		42BC1E757EF69233C2262FF4 /* HotKey */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E28C4FCC0A02BC0BF9E71D67 /* XCRemoteSwiftPackageReference "HotKey" */;
 			productName = HotKey;
+		};
+		806714938E74264A614FA9A4 /* AppBundle */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppBundle;
 		};
 		998F8F4D88E65F73B0B2894D /* Socket */ = {
 			isa = XCSwiftPackageProductDependency;

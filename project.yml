@@ -30,7 +30,7 @@ targets:
       - package: Socket
       - package: LocalPackage
         products:
-          - Common
+          - AppBundle
     settings:
       base:
         SWIFT_VERSION: 5.8
@@ -67,6 +67,9 @@ targets:
     dependencies:
       - target: AeroSpace
       - package: Nimble
+      - package: LocalPackage
+        products:
+          - AppBundle
     settings:
       base:
         SWIFT_VERSION: 5.8
