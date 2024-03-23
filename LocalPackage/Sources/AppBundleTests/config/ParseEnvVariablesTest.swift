@@ -1,6 +1,6 @@
 import XCTest
 import Nimble
-@testable import AeroSpace_Debug
+@testable import AppBundle
 import Common
 
 final class ParseEnvVariablesTest: XCTestCase {

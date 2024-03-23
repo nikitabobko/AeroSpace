@@ -1,3 +1,4 @@
+import AppKit
 import Common
 
 func resizedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {

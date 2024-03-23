@@ -1,3 +1,4 @@
+import AppKit
 extension Workspace {
     func layoutWorkspace() {
         if isEffectivelyEmpty { return }

@@ -1,3 +1,4 @@
+import AppKit
 import Common
 
 /// Problem ID-B6E178F2: It's not first-class citizen command in AeroSpace model, since it interacts with macOS API directly.

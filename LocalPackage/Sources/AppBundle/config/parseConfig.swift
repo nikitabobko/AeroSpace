@@ -1,4 +1,5 @@
 import Common
+import AppKit
 import HotKey
 import TOMLKit
 

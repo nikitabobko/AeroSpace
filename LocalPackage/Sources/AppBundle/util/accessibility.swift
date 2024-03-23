@@ -1,4 +1,5 @@
 import Common
+import AppKit
 
 func checkAccessibilityPermissions() {
     let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true]

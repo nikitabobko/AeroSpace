@@ -1,6 +1,6 @@
 import XCTest
 import Common
-@testable import AeroSpace_Debug
+@testable import AppBundle
 
 /*
 todo write tests

@@ -1,4 +1,5 @@
 import Foundation
+import AppKit
 
 public protocol BridgedHeader {
     func containingWindowId(_ ax: AXUIElement) -> CGWindowID?

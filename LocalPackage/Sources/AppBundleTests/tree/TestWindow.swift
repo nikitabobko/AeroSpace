@@ -1,4 +1,5 @@
-@testable import AeroSpace_Debug
+import AppKit
+@testable import AppBundle
 
 final class TestWindow: Window, CustomStringConvertible {
     private var _rect: Rect?

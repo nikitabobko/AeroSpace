@@ -1,5 +1,5 @@
 import XCTest
-@testable import AeroSpace_Debug
+@testable import AppBundle
 
 final class FlattenWorkspaceTreeCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }

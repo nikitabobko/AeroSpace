@@ -1,4 +1,5 @@
-@testable import AeroSpace_Debug
+import AppKit
+@testable import AppBundle
 
 extension TilingContainer {
     static func newHTiles(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat) -> TilingContainer {

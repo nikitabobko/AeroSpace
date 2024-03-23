@@ -1,7 +1,7 @@
 import XCTest
 import Common
 import Nimble
-@testable import AeroSpace_Debug
+@testable import AppBundle
 
 final class ListWindowsTest: XCTestCase {
     func testParse() {

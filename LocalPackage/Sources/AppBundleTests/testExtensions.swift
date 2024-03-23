@@ -1,4 +1,4 @@
-@testable import AeroSpace_Debug
+@testable import AppBundle
 import Common
 import Foundation
 import TOMLKit

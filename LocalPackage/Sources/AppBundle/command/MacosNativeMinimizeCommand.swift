@@ -1,3 +1,4 @@
+import AppKit
 import Common
 
 /// See: MacosNativeFullscreenCommand. Problem ID-B6E178F2

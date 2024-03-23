@@ -1,3 +1,4 @@
+import AppKit
 import Common
 
 struct ListWorkspacesCommand: Command {

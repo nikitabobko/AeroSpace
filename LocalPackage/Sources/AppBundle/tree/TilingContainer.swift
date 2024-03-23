@@ -1,3 +1,4 @@
+import AppKit
 import Common
 
 class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider renaming to GenericContainer

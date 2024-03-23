@@ -1,3 +1,4 @@
+import AppKit
 import Common
 
 struct ResizeCommand: Command { // todo cover with tests

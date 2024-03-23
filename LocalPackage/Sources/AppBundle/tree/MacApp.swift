@@ -1,3 +1,5 @@
+import AppKit
+
 final class MacApp: AbstractApp {
     let nsApp: NSRunningApplication
     let axApp: AXUIElement

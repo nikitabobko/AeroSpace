@@ -1,3 +1,4 @@
+import AppKit
 import Common
 
 private let priorityAx: Set<String> = [

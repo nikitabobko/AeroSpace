@@ -1,3 +1,5 @@
+import AppKit
+
 public class TrayMenuModel: ObservableObject {
     public static let shared = TrayMenuModel()
 

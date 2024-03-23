@@ -1,5 +1,5 @@
 import Common
-@testable import AeroSpace_Debug
+@testable import AppBundle
 
 final class TestApp: AbstractApp {
     static var shared = TestApp()

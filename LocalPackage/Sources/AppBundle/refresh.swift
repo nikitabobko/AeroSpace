@@ -1,3 +1,4 @@
+import AppKit
 import Common
 
 /// It's one of the most important function of the whole application.

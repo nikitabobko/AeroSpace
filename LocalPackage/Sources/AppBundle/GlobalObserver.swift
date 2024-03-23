@@ -1,3 +1,5 @@
+import AppKit
+
 class GlobalObserver {
     @objc private static func action() {
         refreshAndLayout()

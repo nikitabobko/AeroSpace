@@ -1,7 +1,7 @@
 import Foundation
 import XCTest
 import Common
-@testable import AeroSpace_Debug
+@testable import AppBundle
 
 let projectRoot: URL = URL(filePath: #file).appending(component: "../..").standardized
 
