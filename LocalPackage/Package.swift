@@ -14,7 +14,9 @@ let package = Package(
         .executable(name: "aerospace", targets: ["Cli"])
     ],
     dependencies: [
-        .package(url: "https://github.com/Kitura/BlueSocket", exact: "2.0.4")
+        .package(url: "https://github.com/Kitura/BlueSocket", exact: "2.0.4"),
+        .package(url: "https://github.com/soffes/HotKey", exact: "0.1.3"),
+        .package(url: "https://github.com/LebJe/TOMLKit", exact: "0.5.5"),
     ],
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
@@ -24,6 +26,9 @@ let package = Package(
             name: "AppBundle",
             dependencies: [
                 .target(name: "Common"),
+                .product(name: "Socket", package: "BlueSocket"),
+                .product(name: "HotKey", package: "HotKey"),
+                .product(name: "TOMLKit", package: "TOMLKit"),
             ]
         ),
         .executableTarget(
