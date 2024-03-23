@@ -3,7 +3,13 @@ import XCTest
 import Common
 @testable import AppBundle
 
-let projectRoot: URL = URL(filePath: #file).appending(component: "../..").standardized
+let projectRoot: URL = {
+    var url = URL(filePath: #file)
+    while !FileManager.default.fileExists(atPath: url.appending(component: ".git").path) {
+        url.deleteLastPathComponent()
+    }
+    return url
+}()
 
 func setUpWorkspacesForTests() {
     config = defaultConfig

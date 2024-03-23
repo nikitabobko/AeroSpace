@@ -3,7 +3,24 @@ import HotKey
 import Common
 
 let mainModeId = "main"
-let defaultConfig: Config = initDefaultConfig(parseConfig(try! String(contentsOf: Bundle.main.url(forResource: "default-config", withExtension: "toml")!)))
+let defaultConfig: Config = {
+    let defaultConfig: URL
+    if isUnitTest {
+        var url = URL(filePath: #file)
+        while !FileManager.default.fileExists(atPath: url.appending(component: ".git").path) {
+            url.deleteLastPathComponent()
+        }
+        let projectRoot: URL = url
+        defaultConfig = projectRoot.appending(component: "docs/config-examples/default-config.toml")
+    } else {
+        defaultConfig = Bundle.main.url(forResource: "default-config", withExtension: "toml")!
+    }
+    let parsedConfig = parseConfig(try! String(contentsOf: defaultConfig))
+    if !parsedConfig.errors.isEmpty {
+        error("Can't parse default config: \(parsedConfig.errors)")
+    }
+    return parsedConfig.config
+}()
 var config: Config = defaultConfig
 
 struct Config: Copyable {
@@ -137,11 +154,4 @@ struct Mode: Copyable {
     var bindings: [String: HotkeyBinding]
 
     static let zero = Mode(name: nil, bindings: [:])
-}
-
-private func initDefaultConfig(_ parsedConfig: (config: Config, errors: [TomlParseError])) -> Config {
-    if !parsedConfig.errors.isEmpty {
-        error("Can't parse default config: \(parsedConfig.errors)")
-    }
-    return parsedConfig.config
 }
