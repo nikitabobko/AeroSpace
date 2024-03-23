@@ -32,7 +32,7 @@
 		09685297933511208058F7CF /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1E81623E8954701269A22322 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
 		5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AeroSpace-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		5F7387A5BA6D187A00B00170 /* LocalPackage */ = {isa = PBXFileReference; lastKnownFileType = folder; name = LocalPackage; path = LocalPackage; sourceTree = SOURCE_ROOT; };
+		6606D24B4B23E9582CFA3B86 /* AeroSpace */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AeroSpace; path = .; sourceTree = SOURCE_ROOT; };
 		8FE45A887100EB70912B07F0 /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
 		BEF353340822CD20E9DAB3EC /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
 		EC2F56249A233EC9806D0F08 /* Bridged-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridged-Header.h"; sourceTree = "<group>"; };
@@ -86,7 +86,7 @@
 		3A1FF786C84025133F96138D /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				5F7387A5BA6D187A00B00170 /* LocalPackage */,
+				6606D24B4B23E9582CFA3B86 /* AeroSpace */,
 			);
 			name = Packages;
 			sourceTree = "<group>";

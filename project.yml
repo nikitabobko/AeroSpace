@@ -13,7 +13,7 @@ packages:
     url: https://github.com/Kitura/BlueSocket
     exactVersion: 2.0.4
   LocalPackage:
-    path: LocalPackage
+    path: .
   Nimble:
     url: https://github.com/Quick/Nimble
     exactVersion: 12.0.0

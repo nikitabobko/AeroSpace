@@ -10,7 +10,7 @@ check-clean-git-working-dir() {
 }
 
 generate-git-hash() {
-cat > LocalPackage/Sources/Common/gitHashGenerated.swift <<EOF
+cat > Sources/Common/gitHashGenerated.swift <<EOF
 public let gitHash = "$(git rev-parse HEAD)"
 public let gitShortHash = "$(git rev-parse --short HEAD)"
 EOF
@@ -26,15 +26,13 @@ EOF
 check-clean-git-working-dir
 
 generate-git-hash
+swift build -c release --arch arm64 --arch x86_64
 xcodebuild -scheme AeroSpace clean build -configuration Release -derivedDataPath .xcode-build
-cd LocalPackage
-    swift build -c release --arch arm64 --arch x86_64
-cd - > /dev/null
-git checkout LocalPackage/Sources/Common/gitHashGenerated.swift
+git checkout Sources/Common/gitHashGenerated.swift
 
 rm -rf .release && mkdir .release
 cp -r .xcode-build/Build/Products/Release/AeroSpace.app .release
-cp -r LocalPackage/.build/apple/Products/Release/aerospace .release
+cp -r .build/apple/Products/Release/aerospace .release
 
 ################
 ### SIGN CLI ###
