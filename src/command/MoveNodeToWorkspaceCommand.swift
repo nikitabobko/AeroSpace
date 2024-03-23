@@ -18,7 +18,8 @@ struct MoveNodeToWorkspaceCommand: Command {
             targetWorkspace = Workspace.get(byName: direct.name.raw)
         }
         if prevWorkspace == targetWorkspace {
-            return true
+            state.stderr.append("Window '\(focused.title)' already belongs to workspace '\(targetWorkspace.name)'")
+            return false
         }
         let targetContainer: NonLeafTreeNodeObject = focused.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
         focused.unbindFromParent()
