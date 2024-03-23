@@ -9,7 +9,6 @@ let package = Package(
                                   And it specifies deploymentTarget */
     // Products define the executables and libraries a package produces, making them visible to other packages.
     products: [
-        .library(name: "Common", targets: ["Common"]), // todo drop
         .library(name: "AppBundle", targets: ["AppBundle"]),
         .executable(name: "aerospace", targets: ["Cli"])
     ],

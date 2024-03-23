@@ -1,4 +1,3 @@
-import HotKey
 import SwiftUI
 import AppBundle
 

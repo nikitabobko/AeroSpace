@@ -8,32 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		238EF26CAAADD1FE11312D7C /* default-config.toml in Resources */ = {isa = PBXBuildFile; fileRef = 8FE45A887100EB70912B07F0 /* default-config.toml */; };
-		64A058E536F1EEF7F01043AF /* TOMLKit in Frameworks */ = {isa = PBXBuildFile; productRef = EC8E4F2CA4FF8884F9F59975 /* TOMLKit */; };
 		6EDE1B2C01EBF91DA50D8E75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00BF7198977F487EDFC27C90 /* Assets.xcassets */; };
-		852F88894A3B9FC385563665 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 42BC1E757EF69233C2262FF4 /* HotKey */; };
-		A9C3E47966A2A3D18D83F914 /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = 806714938E74264A614FA9A4 /* AppBundle */; };
-		C830FD347D7F9C06CF53103F /* Socket in Frameworks */ = {isa = PBXBuildFile; productRef = 998F8F4D88E65F73B0B2894D /* Socket */; };
-		DFEB9F168281870D09BD1C2C /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = 018E55979F61DA6DA6DCB442 /* AppBundle */; };
+		852F88894A3B9FC385563665 /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = 018E55979F61DA6DA6DCB442 /* AppBundle */; };
 		E2F917CDF6398B5A1C10EADA /* AeroSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB5E555E4557D31A20EC7D4 /* AeroSpaceApp.swift */; };
-		FDA7AB64744701B34C530EB0 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = 1B17CBEB9032416AB9E521BA /* Nimble */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		B514A502AE8B3770CB8BEA61 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0B585B3093DA0FC12E7983E2 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B00BE37A79171B0EE995EB83;
-			remoteInfo = AeroSpace;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		00BF7198977F487EDFC27C90 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		09685297933511208058F7CF /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FB5E555E4557D31A20EC7D4 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
 		3AE679987882FCA41C26B594 /* Bridged-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridged-Header.h"; sourceTree = "<group>"; };
-		5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AeroSpace-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6606D24B4B23E9582CFA3B86 /* AeroSpace */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AeroSpace; path = .; sourceTree = SOURCE_ROOT; };
 		8FE45A887100EB70912B07F0 /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
 		F0931CEB83A4763BCC274204 /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
@@ -44,19 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				852F88894A3B9FC385563665 /* HotKey in Frameworks */,
-				64A058E536F1EEF7F01043AF /* TOMLKit in Frameworks */,
-				C830FD347D7F9C06CF53103F /* Socket in Frameworks */,
-				DFEB9F168281870D09BD1C2C /* AppBundle in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		7042AAB87CB12C33126F4A98 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FDA7AB64744701B34C530EB0 /* Nimble in Frameworks */,
-				A9C3E47966A2A3D18D83F914 /* AppBundle in Frameworks */,
+				852F88894A3B9FC385563665 /* AppBundle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -77,7 +49,6 @@
 			children = (
 				0E0109AE5F7881520B0D2384 /* config-examples */,
 				3A1FF786C84025133F96138D /* Packages */,
-				A6E1E25AB6F33B13B0633B9C /* test */,
 				889503D629976C77A70BA3C9 /* xcode-app-bundle-launcher */,
 				62BEA6F49E6648E2EE3C208F /* Products */,
 			);
@@ -94,7 +65,6 @@
 		62BEA6F49E6648E2EE3C208F /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */,
 				09685297933511208058F7CF /* AeroSpace.app */,
 			);
 			name = Products;
@@ -109,13 +79,6 @@
 				3AE679987882FCA41C26B594 /* Bridged-Header.h */,
 			);
 			path = "xcode-app-bundle-launcher";
-			sourceTree = "<group>";
-		};
-		A6E1E25AB6F33B13B0633B9C /* test */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = test;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -135,35 +98,11 @@
 			);
 			name = AeroSpace;
 			packageProductDependencies = (
-				42BC1E757EF69233C2262FF4 /* HotKey */,
-				EC8E4F2CA4FF8884F9F59975 /* TOMLKit */,
-				998F8F4D88E65F73B0B2894D /* Socket */,
 				018E55979F61DA6DA6DCB442 /* AppBundle */,
 			);
 			productName = AeroSpace;
 			productReference = 09685297933511208058F7CF /* AeroSpace.app */;
 			productType = "com.apple.product-type.application";
-		};
-		D2B85A91A03DA984483CF473 /* AeroSpace-Tests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D7CB5528090130BA2AF93D7A /* Build configuration list for PBXNativeTarget "AeroSpace-Tests" */;
-			buildPhases = (
-				101761F785765CD965E9741C /* Sources */,
-				7042AAB87CB12C33126F4A98 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				A6E9756DC2D01D6E286DFADF /* PBXTargetDependency */,
-			);
-			name = "AeroSpace-Tests";
-			packageProductDependencies = (
-				1B17CBEB9032416AB9E521BA /* Nimble */,
-				806714938E74264A614FA9A4 /* AppBundle */,
-			);
-			productName = "AeroSpace-Tests";
-			productReference = 5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
 
@@ -185,17 +124,10 @@
 				en,
 			);
 			mainGroup = 393942C56466FDBBE35F9EC0;
-			packageReferences = (
-				E28C4FCC0A02BC0BF9E71D67 /* XCRemoteSwiftPackageReference "HotKey" */,
-				8312B2D02EB52EB901FBEF90 /* XCRemoteSwiftPackageReference "Nimble" */,
-				4F1AD32341B10DF7D687D5EA /* XCRemoteSwiftPackageReference "BlueSocket" */,
-				D95CBB0F220F4BED0648272B /* XCRemoteSwiftPackageReference "TOMLKit" */,
-			);
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				B00BE37A79171B0EE995EB83 /* AeroSpace */,
-				D2B85A91A03DA984483CF473 /* AeroSpace-Tests */,
 			);
 		};
 /* End PBXProject section */
@@ -213,13 +145,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		101761F785765CD965E9741C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		D7A18303C03F2CB26F7BB54B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -229,14 +154,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		A6E9756DC2D01D6E286DFADF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B00BE37A79171B0EE995EB83 /* AeroSpace */;
-			targetProxy = B514A502AE8B3770CB8BEA61 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		175127AAF914899705FABF12 /* Debug */ = {
@@ -380,42 +297,6 @@
 			};
 			name = Release;
 		};
-		B3F7FD8336104A3B49E648F4 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COMBINE_HIDPI_IMAGES = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				SDKROOT = macosx;
-				SWIFT_VERSION = 5.8;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug";
-			};
-			name = Release;
-		};
-		CBE2FDFF787AFE0FB33E335B /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COMBINE_HIDPI_IMAGES = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				SDKROOT = macosx;
-				SWIFT_VERSION = 5.8;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug";
-			};
-			name = Debug;
-		};
 		D1D1A9E07F0AB40E14CAC0F6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -461,80 +342,12 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		D7CB5528090130BA2AF93D7A /* Build configuration list for PBXNativeTarget "AeroSpace-Tests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				CBE2FDFF787AFE0FB33E335B /* Debug */,
-				B3F7FD8336104A3B49E648F4 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Debug;
-		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		4F1AD32341B10DF7D687D5EA /* XCRemoteSwiftPackageReference "BlueSocket" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Kitura/BlueSocket";
-			requirement = {
-				kind = exactVersion;
-				version = 2.0.4;
-			};
-		};
-		8312B2D02EB52EB901FBEF90 /* XCRemoteSwiftPackageReference "Nimble" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Quick/Nimble";
-			requirement = {
-				kind = exactVersion;
-				version = 12.0.0;
-			};
-		};
-		D95CBB0F220F4BED0648272B /* XCRemoteSwiftPackageReference "TOMLKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/LebJe/TOMLKit";
-			requirement = {
-				kind = exactVersion;
-				version = 0.5.5;
-			};
-		};
-		E28C4FCC0A02BC0BF9E71D67 /* XCRemoteSwiftPackageReference "HotKey" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/soffes/HotKey";
-			requirement = {
-				kind = exactVersion;
-				version = 0.1.3;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
 		018E55979F61DA6DA6DCB442 /* AppBundle */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppBundle;
-		};
-		1B17CBEB9032416AB9E521BA /* Nimble */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8312B2D02EB52EB901FBEF90 /* XCRemoteSwiftPackageReference "Nimble" */;
-			productName = Nimble;
-		};
-		42BC1E757EF69233C2262FF4 /* HotKey */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E28C4FCC0A02BC0BF9E71D67 /* XCRemoteSwiftPackageReference "HotKey" */;
-			productName = HotKey;
-		};
-		806714938E74264A614FA9A4 /* AppBundle */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = AppBundle;
-		};
-		998F8F4D88E65F73B0B2894D /* Socket */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 4F1AD32341B10DF7D687D5EA /* XCRemoteSwiftPackageReference "BlueSocket" */;
-			productName = Socket;
-		};
-		EC8E4F2CA4FF8884F9F59975 /* TOMLKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = D95CBB0F220F4BED0648272B /* XCRemoteSwiftPackageReference "TOMLKit" */;
-			productName = TOMLKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

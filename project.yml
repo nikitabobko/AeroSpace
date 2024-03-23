@@ -3,20 +3,8 @@
 name: AeroSpace
 
 packages:
-  HotKey:
-    url: https://github.com/soffes/HotKey
-    exactVersion: 0.1.3
-  TOMLKit:
-    url: https://github.com/LebJe/TOMLKit
-    exactVersion: 0.5.5
-  Socket:
-    url: https://github.com/Kitura/BlueSocket
-    exactVersion: 2.0.4
-  LocalPackage:
+  AeroSpacePackage:
     path: .
-  Nimble:
-    url: https://github.com/Quick/Nimble
-    exactVersion: 12.0.0
 
 targets:
   AeroSpace:
@@ -25,10 +13,7 @@ targets:
     deploymentTarget: "13.0"
     sources: [xcode-app-bundle-launcher/, docs/config-examples/default-config.toml]
     dependencies:
-      - package: HotKey
-      - package: TOMLKit
-      - package: Socket
-      - package: LocalPackage
+      - package: AeroSpacePackage
         products:
           - AppBundle
     settings:
@@ -55,23 +40,3 @@ targets:
       properties:
         # Accessibility API doesn't work in sandboxed app
         com.apple.security.app-sandbox: false
-  AeroSpace-Tests:
-    type: bundle.unit-test
-    platform: macOS
-    deploymentTarget: "13.0"
-    sources: [test/]
-    scheme:
-      testTargets:
-        - AeroSpace-Tests
-      gatherCoverageData: true
-    dependencies:
-      - target: AeroSpace
-      - package: Nimble
-      - package: LocalPackage
-        products:
-          - AppBundle
-    settings:
-      base:
-        SWIFT_VERSION: 5.8
-        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/AeroSpace-Debug.app/Contents/MacOS/AeroSpace-Debug"
-        GENERATE_INFOPLIST_FILE: YES
