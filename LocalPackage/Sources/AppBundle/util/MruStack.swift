@@ -1,6 +1,5 @@
 /// Stack with most recently element on top
 class MruStack<T: Equatable>: Sequence {
-    typealias Iterator = MruStackIterator
     typealias Element = T
 
     private var mruNode: Node<T>? = nil
