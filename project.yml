@@ -23,7 +23,7 @@ targets:
     type: application
     platform: macOS
     deploymentTarget: "13.0"
-    sources: [src/, docs/config-examples/default-config.toml]
+    sources: [xcode-app-bundle-launcher/, docs/config-examples/default-config.toml]
     dependencies:
       - package: HotKey
       - package: TOMLKit
@@ -37,7 +37,7 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         MARKETING_VERSION: ${AEROSPACE_VERSION}
         CURRENT_PROJECT_VERSION: ${AEROSPACE_BUILD_NUMBER}
-        SWIFT_OBJC_BRIDGING_HEADER: "src/Bridged-Header.h"
+        SWIFT_OBJC_BRIDGING_HEADER: "xcode-app-bundle-launcher/Bridged-Header.h"
         # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
         # Specifies whether the app runs as an agent app. If this key is set to YES, Launch Services runs the app as an agent app.
         # Agent apps do not appear in the Dock or in the Force Quit window
@@ -51,7 +51,7 @@ targets:
           PRODUCT_NAME: AeroSpace
           PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace
     entitlements:
-      path: src/AeroSpace.entitlements
+      path: xcode-app-bundle-launcher/AeroSpace.entitlements
       properties:
         # Accessibility API doesn't work in sandboxed app
         com.apple.security.app-sandbox: false

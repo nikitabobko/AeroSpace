@@ -8,13 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		238EF26CAAADD1FE11312D7C /* default-config.toml in Resources */ = {isa = PBXBuildFile; fileRef = 8FE45A887100EB70912B07F0 /* default-config.toml */; };
-		6317AB471F4C4F5D66A25784 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EEDBFFCA7A77D96B18FB0732 /* Assets.xcassets */; };
 		64A058E536F1EEF7F01043AF /* TOMLKit in Frameworks */ = {isa = PBXBuildFile; productRef = EC8E4F2CA4FF8884F9F59975 /* TOMLKit */; };
-		66E6CDA75DDD5E4B9647EDE2 /* AeroSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E81623E8954701269A22322 /* AeroSpaceApp.swift */; };
+		6EDE1B2C01EBF91DA50D8E75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 00BF7198977F487EDFC27C90 /* Assets.xcassets */; };
 		852F88894A3B9FC385563665 /* HotKey in Frameworks */ = {isa = PBXBuildFile; productRef = 42BC1E757EF69233C2262FF4 /* HotKey */; };
 		A9C3E47966A2A3D18D83F914 /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = 806714938E74264A614FA9A4 /* AppBundle */; };
 		C830FD347D7F9C06CF53103F /* Socket in Frameworks */ = {isa = PBXBuildFile; productRef = 998F8F4D88E65F73B0B2894D /* Socket */; };
 		DFEB9F168281870D09BD1C2C /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = 018E55979F61DA6DA6DCB442 /* AppBundle */; };
+		E2F917CDF6398B5A1C10EADA /* AeroSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FB5E555E4557D31A20EC7D4 /* AeroSpaceApp.swift */; };
 		FDA7AB64744701B34C530EB0 /* Nimble in Frameworks */ = {isa = PBXBuildFile; productRef = 1B17CBEB9032416AB9E521BA /* Nimble */; };
 /* End PBXBuildFile section */
 
@@ -29,14 +29,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00BF7198977F487EDFC27C90 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		09685297933511208058F7CF /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1E81623E8954701269A22322 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
+		1FB5E555E4557D31A20EC7D4 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
+		3AE679987882FCA41C26B594 /* Bridged-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridged-Header.h"; sourceTree = "<group>"; };
 		5274C575044C2A7123C57584 /* AeroSpace-Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "AeroSpace-Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6606D24B4B23E9582CFA3B86 /* AeroSpace */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AeroSpace; path = .; sourceTree = SOURCE_ROOT; };
 		8FE45A887100EB70912B07F0 /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
-		BEF353340822CD20E9DAB3EC /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
-		EC2F56249A233EC9806D0F08 /* Bridged-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridged-Header.h"; sourceTree = "<group>"; };
-		EEDBFFCA7A77D96B18FB0732 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		F0931CEB83A4763BCC274204 /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,8 +77,8 @@
 			children = (
 				0E0109AE5F7881520B0D2384 /* config-examples */,
 				3A1FF786C84025133F96138D /* Packages */,
-				8338180CE208CBDCD6D8E911 /* src */,
 				A6E1E25AB6F33B13B0633B9C /* test */,
+				889503D629976C77A70BA3C9 /* xcode-app-bundle-launcher */,
 				62BEA6F49E6648E2EE3C208F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -100,15 +100,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		8338180CE208CBDCD6D8E911 /* src */ = {
+		889503D629976C77A70BA3C9 /* xcode-app-bundle-launcher */ = {
 			isa = PBXGroup;
 			children = (
-				BEF353340822CD20E9DAB3EC /* AeroSpace.entitlements */,
-				1E81623E8954701269A22322 /* AeroSpaceApp.swift */,
-				EEDBFFCA7A77D96B18FB0732 /* Assets.xcassets */,
-				EC2F56249A233EC9806D0F08 /* Bridged-Header.h */,
+				F0931CEB83A4763BCC274204 /* AeroSpace.entitlements */,
+				1FB5E555E4557D31A20EC7D4 /* AeroSpaceApp.swift */,
+				00BF7198977F487EDFC27C90 /* Assets.xcassets */,
+				3AE679987882FCA41C26B594 /* Bridged-Header.h */,
 			);
-			path = src;
+			path = "xcode-app-bundle-launcher";
 			sourceTree = "<group>";
 		};
 		A6E1E25AB6F33B13B0633B9C /* test */ = {
@@ -205,7 +205,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6317AB471F4C4F5D66A25784 /* Assets.xcassets in Resources */,
+				6EDE1B2C01EBF91DA50D8E75 /* Assets.xcassets in Resources */,
 				238EF26CAAADD1FE11312D7C /* default-config.toml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -224,7 +224,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				66E6CDA75DDD5E4B9647EDE2 /* AeroSpaceApp.swift in Sources */,
+				E2F917CDF6398B5A1C10EADA /* AeroSpaceApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -305,7 +305,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = src/AeroSpace.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "xcode-app-bundle-launcher/AeroSpace.entitlements";
 				CODE_SIGN_IDENTITY = "aerospace-codesign-certificate";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0.9.1;
@@ -320,7 +320,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.debug.aerospace;
 				PRODUCT_NAME = "AeroSpace-Debug";
 				SDKROOT = macosx;
-				SWIFT_OBJC_BRIDGING_HEADER = "src/Bridged-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "xcode-app-bundle-launcher/Bridged-Header.h";
 				SWIFT_VERSION = 5.8;
 			};
 			name = Debug;
@@ -420,7 +420,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = src/AeroSpace.entitlements;
+				CODE_SIGN_ENTITLEMENTS = "xcode-app-bundle-launcher/AeroSpace.entitlements";
 				CODE_SIGN_IDENTITY = "aerospace-codesign-certificate";
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0.9.1;
@@ -435,7 +435,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace;
 				PRODUCT_NAME = AeroSpace;
 				SDKROOT = macosx;
-				SWIFT_OBJC_BRIDGING_HEADER = "src/Bridged-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "xcode-app-bundle-launcher/Bridged-Header.h";
 				SWIFT_VERSION = 5.8;
 			};
 			name = Release;
