@@ -46,6 +46,24 @@
       }
     },
     {
+      "identity" : "swift-power-assert",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kishikawakatsumi/swift-power-assert",
+      "state" : {
+        "revision" : "2fa10dcbbff807fad73b4e2469b43300a50e9bbc",
+        "version" : "0.12.0"
+      }
+    },
+    {
+      "identity" : "swift-syntax",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-syntax.git",
+      "state" : {
+        "revision" : "64889f0c732f210a935a0ad7cda38f77f876262d",
+        "version" : "509.1.1"
+      }
+    },
+    {
       "identity" : "tomlkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LebJe/TOMLKit",
