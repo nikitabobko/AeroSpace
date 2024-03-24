@@ -238,7 +238,7 @@
 				PRODUCT_NAME = "AeroSpace-Debug";
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "xcode-app-bundle-launcher/Bridged-Header.h";
-				SWIFT_VERSION = 5.8;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Debug;
 		};
@@ -317,7 +317,7 @@
 				PRODUCT_NAME = AeroSpace;
 				SDKROOT = macosx;
 				SWIFT_OBJC_BRIDGING_HEADER = "xcode-app-bundle-launcher/Bridged-Header.h";
-				SWIFT_VERSION = 5.8;
+				SWIFT_VERSION = 5.9;
 			};
 			name = Release;
 		};

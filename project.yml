@@ -18,7 +18,7 @@ targets:
           - AppBundle
     settings:
       base:
-        SWIFT_VERSION: 5.8
+        SWIFT_VERSION: 5.9
         GENERATE_INFOPLIST_FILE: YES
         MARKETING_VERSION: ${AEROSPACE_VERSION}
         CURRENT_PROJECT_VERSION: ${AEROSPACE_BUILD_NUMBER}
