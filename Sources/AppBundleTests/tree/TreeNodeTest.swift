@@ -1,4 +1,5 @@
 import XCTest
+import PowerAssert
 @testable import AppBundle
 
 final class TreeNodeTest: XCTestCase {
@@ -53,10 +54,7 @@ final class TreeNodeTest: XCTestCase {
             }
         }
         workspace.normalizeContainers()
-        XCTAssertEqual(
-            .h_tiles([.window(0), .window(1)]),
-            workspace.rootTilingContainer.layoutDescription
-        )
+        #assert(.h_tiles([.window(0), .window(1)]) == workspace.rootTilingContainer.layoutDescription)
     }
 
     func testNormalizeContainers_removeEffectivelyEmpty() {

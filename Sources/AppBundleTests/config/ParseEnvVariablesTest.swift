@@ -1,5 +1,5 @@
 import XCTest
-import Nimble
+import PowerAssert
 @testable import AppBundle
 import Common
 
@@ -34,8 +34,8 @@ final class ParseEnvVariablesTest: XCTestCase {
             FOO = 'BAR'
             """
         )
-        expect(errors.descriptions).to(equal([]))
-        expect(config.execConfig.envVariables).to(equal(testEnv + ["FOO": "BAR"]))
+        #assert(errors.descriptions == [])
+        #assert(config.execConfig.envVariables == testEnv + ["FOO": "BAR"])
     }
 
     func testCyclicDep() {
@@ -46,10 +46,10 @@ final class ParseEnvVariablesTest: XCTestCase {
             BAR = '${FOO}'
             """
         )
-        expect(errors.descriptions).to(equal([
+        #assert(errors.descriptions == [
             "exec.env-vars.BAR: Env variable 'FOO' isn't presented in AeroSpace.app Env vars, or not available for interpolation (because it's mutated)",
             "exec.env-vars.FOO: Env variable 'BAR' isn't presented in AeroSpace.app Env vars, or not available for interpolation (because it's mutated)"
-        ]))
+        ])
     }
 }
 

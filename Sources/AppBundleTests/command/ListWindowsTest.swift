@@ -1,16 +1,16 @@
 import XCTest
 import Common
-import Nimble
+import PowerAssert
 @testable import AppBundle
 
 final class ListWindowsTest: XCTestCase {
     func testParse() {
-        expect(parseCommand("list-windows --pid 1").errorOrNil).to(equal("Specified flags require explicit (--workspace|--monitor)"))
-        expect(parseCommand("list-windows --workspace M --pid 1").errorOrNil).to(beNil())
-        expect(parseCommand("list-windows --pid 1 --focused").errorOrNil).to(equal("Specified flags require explicit (--workspace|--monitor)"))
-        expect(parseCommand("list-windows --pid 1 --all").errorOrNil).to(equal("Specified flags require explicit (--workspace|--monitor)"))
-        expect(parseCommand("list-windows --all").errorOrNil).to(beNil())
-        expect(parseCommand("list-windows --all --workspace M").errorOrNil).to(equal("Conflicting options: --all, --workspace"))
-        expect(parseCommand("list-windows --all --focused").errorOrNil).to(equal("Conflicting options: --focused, --all"))
+        #assert(parseCommand("list-windows --pid 1").errorOrNil == "Specified flags require explicit (--workspace|--monitor)")
+        #assert(parseCommand("list-windows --workspace M --pid 1").errorOrNil == nil)
+        #assert(parseCommand("list-windows --pid 1 --focused").errorOrNil == "Specified flags require explicit (--workspace|--monitor)")
+        #assert(parseCommand("list-windows --pid 1 --all").errorOrNil == "Specified flags require explicit (--workspace|--monitor)")
+        #assert(parseCommand("list-windows --all").errorOrNil == nil)
+        #assert(parseCommand("list-windows --all --workspace M").errorOrNil == "Conflicting options: --all, --workspace")
+        #assert(parseCommand("list-windows --all --focused").errorOrNil == "Conflicting options: --focused, --all")
     }
 }
