@@ -214,7 +214,6 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
     // - Drata Agent https://github.com/nikitabobko/AeroSpace/issues/134
     if !isFullscreenable(axWindow) &&
            app.id != "com.google.Chrome" && // "Drag out" a tab out of Chrome window
-           app.id != "com.valvesoftware.steam" && // Steam doesn't show fullscreen button
            app.id != "org.gimp.gimp-2.10" && // Gimp doesn't show fullscreen button
            app.id != "com.apple.ActivityMonitor" && // Activity Monitor doesn't show fullscreen button
 
