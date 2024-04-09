@@ -27,7 +27,7 @@ var config: Config = defaultConfig
 struct Config: Copyable {
     var afterLoginCommand: [any Command] = []
     var afterStartupCommand: [any Command] = []
-    var indentForNestedContainersWithTheSameOrientation: Void = ()
+    var _indentForNestedContainersWithTheSameOrientation: Void = ()
     var enableNormalizationFlattenContainers: Bool = true
     var _nonEmptyWorkspacesRootContainersLayoutOnStartup: Void = ()
     var defaultRootContainerLayout: Layout = .tiles

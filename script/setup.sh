@@ -5,13 +5,14 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 # set -x # Print shell commands as they are executed (or you can try -v which is less verbose)
 
 setup() {
+    BREW_PREFIX="$(brew --prefix)"
     tmp=(
-        $(brew --prefix)/opt/asciidoctor/bin
-        $(brew --prefix)/opt/gsed/libexec/gnubin
-        $(brew --prefix)/opt/tree/bin
-        $(brew --prefix)/opt/xcodegen/bin
-        $(brew --prefix)/opt/xcbeautify/bin
-        $(brew --prefix)/opt/swiftlint/bin
+        ${BREW_PREFIX}/opt/asciidoctor/bin
+        ${BREW_PREFIX}/opt/gsed/libexec/gnubin
+        ${BREW_PREFIX}/opt/tree/bin
+        ${BREW_PREFIX}/opt/xcodegen/bin
+        ${BREW_PREFIX}/opt/xcbeautify/bin
+        ${BREW_PREFIX}/opt/swiftlint/bin
         /bin # bash
         /usr/bin # xcodebuild, zip
     )
@@ -25,6 +26,8 @@ if [ -z "${SETUP_SH:-}" ]; then
     export SETUP_SH=true
     setup
 fi
+
+brew() { "${BREW_PREFIX}/bin/brew" "$@"; }
 
 xcodebuild() {
     # Mute stderr
