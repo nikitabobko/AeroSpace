@@ -36,24 +36,17 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
                let fileManager = FileManager.default
                let homeDirectory = NSHomeDirectory()
                let destinationPath = homeDirectory.appending("/.aerospace.toml")
-               
-               // Check if the config file already exists
                if !fileManager.fileExists(atPath: destinationPath) {
-                   // Construct the source path of the default config file within the app bundle
                    if let sourcePath = Bundle.main.path(forResource: "default-config", ofType: "toml") {
                        do {
-                           // Copy the default config file to the user's home directory
                            try fileManager.copyItem(atPath: sourcePath, toPath: destinationPath)
                            print("Default config copied to \(destinationPath).")
                        } catch {
                            print("Error copying default config: \(error.localizedDescription)")
-                           // Handle the error, possibly with an alert to the user
                        }
                    }
                }
-               
-               // Open the config file with the default application
-               NSWorkspace.shared.openFile(destinationPath)
+            NSWorkspace.shared.open(URL(filePath: destinationPath))
            }
            .keyboardShortcut("O", modifiers: .command)
         if viewModel.isEnabled {
