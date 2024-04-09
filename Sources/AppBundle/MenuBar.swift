@@ -32,7 +32,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
             }
         }
             .keyboardShortcut("E", modifiers: .command)
-        Button("Open Config") {
+        Button("Open config") {
                let fileManager = FileManager.default
                let homeDirectory = NSHomeDirectory()
                let destinationPath = homeDirectory.appending("/.aerospace.toml")
