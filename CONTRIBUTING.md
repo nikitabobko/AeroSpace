@@ -76,8 +76,6 @@ Similarly, when implementing features and bug fixes, please stick to the structu
 A good commit message also mentions the motivation of the change (the commit describes what, why and how)
 
 **License Agreement**. By contributing changes to this repository, you agree to license your contributions under the MIT license.
-This ensures your contributions have the same license as the project and that the community is free to use your contributions.
-You also assert that you are the original author of the work that you are contributing unless otherwise stated.
 
 Maintainers can merge your pull request with arbitrary modifications.
 
