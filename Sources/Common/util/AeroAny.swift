@@ -1,3 +1,5 @@
+import Foundation
+
 public protocol AeroAny {}
 
 public extension AeroAny {
@@ -24,3 +26,4 @@ extension String: AeroAny {}
 extension Character: AeroAny {}
 extension Regex: AeroAny {}
 extension Array: AeroAny {}
+extension URL: AeroAny {}

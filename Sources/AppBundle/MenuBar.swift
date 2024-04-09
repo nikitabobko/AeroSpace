@@ -32,6 +32,20 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
             }
         }
             .keyboardShortcut("E", modifiers: .command)
+        let editor = getTextEditorToOpenConfig()
+        Button("Open config in '\(editor.lastPathComponent)'") {
+            let fallbackConfig: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName)
+            switch getConfigFileUrl() {
+                case .file(let url):
+                    url.open(with: editor)
+                case .noCustomConfigExists:
+                    let _ = try? FileManager.default.copyItem(atPath: defaultConfigUrl.path, toPath: fallbackConfig.path)
+                    fallbackConfig.open(with: editor)
+                case .ambiguousConfigError:
+                    fallbackConfig.open(with: editor)
+            }
+        }
+            .keyboardShortcut("O", modifiers: .command)
         if viewModel.isEnabled {
             Button("Reload config") {
                 refreshSession { _ = ReloadConfigCommand().run(.focused) }
@@ -47,4 +61,16 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
         // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
         Text(viewModel.isEnabled ? viewModel.trayText : "⏸️")
     }
+}
+
+extension URL {
+    func open(with url: URL) {
+        NSWorkspace.shared.open([self], withApplicationAt: url, configuration: NSWorkspace.OpenConfiguration())
+    }
+}
+
+func getTextEditorToOpenConfig() -> URL {
+    NSWorkspace.shared.urlForApplication(toOpen: getConfigFileUrl().urlOrNil ?? defaultConfigUrl)?
+        .takeIf { $0.lastPathComponent != "Xcode.app" } // Blacklist Xcode. It is too heavy to open plain text files
+        ?? URL(filePath: "/System/Applications/TextEdit.app")
 }

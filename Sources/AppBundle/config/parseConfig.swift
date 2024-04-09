@@ -27,13 +27,13 @@ func reloadConfig() {
     syncStartAtLogin()
 }
 
-private func getConfigFileUrl() -> ConfigFile {
-    let dotFileName = isDebug ? ".aerospace-debug.toml" : ".aerospace.toml"
+let configDotfileName = isDebug ? ".aerospace-debug.toml" : ".aerospace.toml"
+func getConfigFileUrl() -> ConfigFile {
     let fileName = isDebug ? "aerospace-debug.toml" : "aerospace.toml"
     let xdgConfigHome = ProcessInfo.processInfo.environment["XDG_CONFIG_HOME"]?.lets { URL(filePath: $0) }
         ?? FileManager.default.homeDirectoryForCurrentUser.appending(path: ".config/")
     let candidates = [
-        FileManager.default.homeDirectoryForCurrentUser.appending(path: dotFileName),
+        FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName),
         xdgConfigHome.appending(path: "aerospace").appending(path: fileName),
     ]
     let existingCandidates: [URL] = candidates.filter { (candidate: URL) in FileManager.default.fileExists(atPath: candidate.path) }
@@ -49,6 +49,13 @@ private func getConfigFileUrl() -> ConfigFile {
 
 enum ConfigFile {
     case file(URL), ambiguousConfigError(_ candidates: [URL]), noCustomConfigExists
+
+    var urlOrNil: URL? {
+        return switch self {
+            case .file(let url): url
+            case .ambiguousConfigError, .noCustomConfigExists: nil
+        }
+    }
 }
 
 private func showAmbiguousConfigErrorToUser(_ candidates: [URL]) {

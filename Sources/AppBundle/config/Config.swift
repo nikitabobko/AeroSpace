@@ -3,6 +3,7 @@ import HotKey
 import Common
 
 let mainModeId = "main"
+var defaultConfigUrl: URL { Bundle.main.url(forResource: "default-config", withExtension: "toml")! }
 let defaultConfig: Config = {
     let defaultConfig: URL
     if isUnitTest {
@@ -13,7 +14,7 @@ let defaultConfig: Config = {
         let projectRoot: URL = url
         defaultConfig = projectRoot.appending(component: "docs/config-examples/default-config.toml")
     } else {
-        defaultConfig = Bundle.main.url(forResource: "default-config", withExtension: "toml")!
+        defaultConfig = defaultConfigUrl
     }
     let parsedConfig = parseConfig(try! String(contentsOf: defaultConfig))
     if !parsedConfig.errors.isEmpty {
