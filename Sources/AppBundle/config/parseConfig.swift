@@ -5,7 +5,16 @@ import TOMLKit
 
 func reloadConfig() {
     resetHotKeys()
-    let configUrl = getConfigFileUrl()
+    let configUrl: URL?
+    switch getConfigFileUrl() {
+        case .file(let url):
+            configUrl = url
+        case .ambiguousConfigError(let candidates):
+            showAmbiguousConfigErrorToUser(candidates)
+            configUrl = nil
+        case .noCustomConfigExists:
+            configUrl = nil
+    }
     let (parsedConfig, errors) = configUrl.flatMap { try? String(contentsOf: $0) }.map { parseConfig($0) }
         ?? (defaultConfig, [])
 
@@ -18,7 +27,7 @@ func reloadConfig() {
     syncStartAtLogin()
 }
 
-private func getConfigFileUrl() -> URL? {
+private func getConfigFileUrl() -> ConfigFile {
     let dotFileName = isDebug ? ".aerospace-debug.toml" : ".aerospace.toml"
     let fileName = isDebug ? "aerospace-debug.toml" : "aerospace.toml"
     let xdgConfigHome = ProcessInfo.processInfo.environment["XDG_CONFIG_HOME"]?.lets { URL(filePath: $0) }
@@ -30,24 +39,31 @@ private func getConfigFileUrl() -> URL? {
     let existingCandidates: [URL] = candidates.filter { (candidate: URL) in FileManager.default.fileExists(atPath: candidate.path) }
     let count = existingCandidates.count
     if count == 1 {
-        return existingCandidates.singleOrNil()
+        return .file(existingCandidates.first!)
     } else if count > 1 {
-        let message =
-            """
-            #################################################
-            ### AEROSPACE AMBIGUOUS CONFIG LOCATION ERROR ###
-            #################################################
-
-            Several configs are found:
-            \(existingCandidates.map(\.path).joined(separator: "\n"))
-
-            Fallback to default config
-            """
-        showMessageToUser(filename: "ambiguous-config-error.txt", message: message)
-        return nil
+        return .ambiguousConfigError(existingCandidates)
     } else {
-        return nil
+        return .noCustomConfigExists
     }
+}
+
+enum ConfigFile {
+    case file(URL), ambiguousConfigError(_ candidates: [URL]), noCustomConfigExists
+}
+
+private func showAmbiguousConfigErrorToUser(_ candidates: [URL]) {
+    let message =
+        """
+        #################################################
+        ### AEROSPACE AMBIGUOUS CONFIG LOCATION ERROR ###
+        #################################################
+
+        Several configs are found:
+        \(candidates.map(\.path).joined(separator: "\n"))
+
+        Fallback to default config
+        """
+    showMessageToUser(filename: "ambiguous-config-error.txt", message: message)
 }
 
 private func showConfigParsingErrorsToUser(_ errors: [TomlParseError], configUrl: URL?) {
