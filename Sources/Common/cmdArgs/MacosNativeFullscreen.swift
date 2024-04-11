@@ -25,11 +25,11 @@ public enum ToggleEnum {
 
 func parseToggleEnum(arg: String, nextArgs: inout [String]) -> Parsed<ToggleEnum> {
     switch arg {
-    case "on":
-        return .success(.on)
-    case "off":
-        return .success(.off)
-    default:
-        return .failure("Can't parse '\(arg)'. Possible values: on|off")
+        case "on":
+            return .success(.on)
+        case "off":
+            return .success(.off)
+        default:
+            return .failure("Can't parse '\(arg)'. Possible values: on|off")
     }
 }

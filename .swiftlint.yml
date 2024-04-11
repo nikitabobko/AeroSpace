@@ -33,6 +33,7 @@ only_rules:
   - optional_enum_case_matching
   - redundant_discardable_let
   - redundant_nil_coalescing # nil coalescing operator is only evaluated if the lhs is nil, coalescing operator with nil as rhs is redundant
+  - switch_case_alignment
   - toggle_bool
   - trailing_newline
   - trailing_semicolon # Lines should not have trailing semicolons
@@ -46,6 +47,9 @@ only_rules:
   - unused_optional_binding # Prefer != nil over let _ =
   - unused_setter_value
   - weak_delegate # Delegates should be weak to avoid reference cycles
+
+switch_case_alignment:
+  indented_cases: true
 
 strict: true
 # quiet: true

@@ -30,16 +30,16 @@ class TreeNode: Equatable {
     func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {
         guard let parent else { error("Can't change weight if TreeNode doesn't have parent") }
         switch getChildParentRelation(child: self, parent: parent) {
-        case .tiling(let parent):
-            if parent.orientation != targetOrientation {
-                error("You can't change \(targetOrientation) weight of nodes located in \(parent.orientation) container")
-            }
-            if parent.layout != .tiles {
-                error("Weight can be changed only for nodes whose parent has 'tiles' layout")
-            }
-            adaptiveWeight = newValue
-        default:
-            error("Can't change weight")
+            case .tiling(let parent):
+                if parent.orientation != targetOrientation {
+                    error("You can't change \(targetOrientation) weight of nodes located in \(parent.orientation) container")
+                }
+                if parent.layout != .tiles {
+                    error("Weight can be changed only for nodes whose parent has 'tiles' layout")
+                }
+                adaptiveWeight = newValue
+            default:
+                error("Can't change weight")
         }
     }
 
@@ -47,16 +47,16 @@ class TreeNode: Equatable {
     func getWeight(_ targetOrientation: Orientation) -> CGFloat {
         guard let parent else { error("Weight doesn't make sense for containers without parent") }
         switch getChildParentRelation(child: self, parent: parent) {
-        case .floatingWindow, .macosNativeFullscreenWindow:
-            error("Weight doesn't make sense for floating windows")
-        case .macosNativeInvisibleWindow:
-            error("Weight doesn't make sense for invisible windows")
-        case .tiling(let parent):
-            return parent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
-        case .rootTilingContainer:
-            return parent.getWeight(targetOrientation)
-        case .macosNativeFullscreenStubContainer:
-            error("Weight doesn't make sense for stub fullscreen container")
+            case .floatingWindow, .macosNativeFullscreenWindow:
+                error("Weight doesn't make sense for floating windows")
+            case .macosNativeInvisibleWindow:
+                error("Weight doesn't make sense for invisible windows")
+            case .tiling(let parent):
+                return parent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
+            case .rootTilingContainer:
+                return parent.getWeight(targetOrientation)
+            case .macosNativeFullscreenStubContainer:
+                error("Weight doesn't make sense for stub fullscreen container")
         }
     }
 
@@ -75,14 +75,14 @@ class TreeNode: Equatable {
         }
         if adaptiveWeight == WEIGHT_AUTO {
             switch getChildParentRelation(child: self, parent: newParent) {
-            case .floatingWindow, .macosNativeFullscreenWindow:
-                self.adaptiveWeight = WEIGHT_FLOATING
-            case .tiling(let newParent):
-                self.adaptiveWeight = newParent.children.sumOf { $0.getWeight(newParent.orientation) }
-                    .div(newParent.children.count)
-                    ?? 1
-            case .rootTilingContainer, .macosNativeInvisibleWindow, .macosNativeFullscreenStubContainer:
-                self.adaptiveWeight = 1
+                case .floatingWindow, .macosNativeFullscreenWindow:
+                    self.adaptiveWeight = WEIGHT_FLOATING
+                case .tiling(let newParent):
+                    self.adaptiveWeight = newParent.children.sumOf { $0.getWeight(newParent.orientation) }
+                        .div(newParent.children.count)
+                        ?? 1
+                case .rootTilingContainer, .macosNativeInvisibleWindow, .macosNativeFullscreenStubContainer:
+                    self.adaptiveWeight = 1
             }
         } else {
             self.adaptiveWeight = adaptiveWeight

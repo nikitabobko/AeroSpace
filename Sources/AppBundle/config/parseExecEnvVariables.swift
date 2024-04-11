@@ -63,39 +63,39 @@ extension String {
         var errors: [String] = []
         for char: Character? in (Array(self) + [nil]) {
             switch (mode, char) { // State machine
-            case (.stringLiteral, "$"):
-                mode = .dollarEncountered
-            case (.stringLiteral, _):
-                if let char {
-                    result.append(char)
-                }
-            case (.dollarEncountered, "{"):
-                mode = .interpolatedValue("")
-            case (.dollarEncountered, "$"):
-                result.append("$")
-            case (.dollarEncountered, _):
-                result.append("$")
-                if let char {
-                    result.append(char)
-                }
-                mode = .stringLiteral
-            case (.interpolatedValue(let value), "}"):
-                if let expanded = variables[value] {
-                    result.append(expanded)
-                } else {
-                    errors.append("Env variable '\(value)' isn't presented in AeroSpace.app Env vars, or not available for interpolation (because it's mutated)")
-                }
-                mode = .stringLiteral
-            case (.interpolatedValue(let value), "{"):
-                return ("", ["Can't parse '\(value + "{")' environment variable (Open curly brace is invalid character)"])
-            case (.interpolatedValue(let value), "$"):
-                return ("", ["Can't parse '\(value + "$")' environment variable (Dollar is invalid character)"])
-            case (.interpolatedValue(let value), _):
-                if let char {
-                    mode = .interpolatedValue(value + String(char))
-                } else {
-                    return ("", ["Unbalanced curly braces"])
-                }
+                case (.stringLiteral, "$"):
+                    mode = .dollarEncountered
+                case (.stringLiteral, _):
+                    if let char {
+                        result.append(char)
+                    }
+                case (.dollarEncountered, "{"):
+                    mode = .interpolatedValue("")
+                case (.dollarEncountered, "$"):
+                    result.append("$")
+                case (.dollarEncountered, _):
+                    result.append("$")
+                    if let char {
+                        result.append(char)
+                    }
+                    mode = .stringLiteral
+                case (.interpolatedValue(let value), "}"):
+                    if let expanded = variables[value] {
+                        result.append(expanded)
+                    } else {
+                        errors.append("Env variable '\(value)' isn't presented in AeroSpace.app Env vars, or not available for interpolation (because it's mutated)")
+                    }
+                    mode = .stringLiteral
+                case (.interpolatedValue(let value), "{"):
+                    return ("", ["Can't parse '\(value + "{")' environment variable (Open curly brace is invalid character)"])
+                case (.interpolatedValue(let value), "$"):
+                    return ("", ["Can't parse '\(value + "$")' environment variable (Dollar is invalid character)"])
+                case (.interpolatedValue(let value), _):
+                    if let char {
+                        mode = .interpolatedValue(value + String(char))
+                    } else {
+                        return ("", ["Unbalanced curly braces"])
+                    }
             }
         }
         return (result, errors)

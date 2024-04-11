@@ -20,36 +20,36 @@ private extension TreeNode {
         }
         let physicalRect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
         switch nodeCases {
-        case .workspace(let workspace):
-            lastAppliedLayoutPhysicalRect = physicalRect
-            lastAppliedLayoutVirtualRect = virtual
-            workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, virtual: virtual, context)
-            for window in workspace.children.filterIsInstance(of: Window.self) {
-                window.layoutFloatingWindow(context)
-            }
-        case .window(let window):
-            if window.windowId != currentlyManipulatedWithMouseWindowId {
+            case .workspace(let workspace):
+                lastAppliedLayoutPhysicalRect = physicalRect
                 lastAppliedLayoutVirtualRect = virtual
-                if window.isFullscreen && window == context.workspace.rootTilingContainer.mostRecentWindow {
-                    lastAppliedLayoutPhysicalRect = nil
-                    window.layoutFullscreen(context)
-                } else {
-                    lastAppliedLayoutPhysicalRect = physicalRect
-                    window.isFullscreen = false
-                    _ = window.setFrame(point, CGSize(width: width, height: height))
+                workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, virtual: virtual, context)
+                for window in workspace.children.filterIsInstance(of: Window.self) {
+                    window.layoutFloatingWindow(context)
                 }
-            }
-        case .tilingContainer(let container):
-            lastAppliedLayoutPhysicalRect = physicalRect
-            lastAppliedLayoutVirtualRect = virtual
-            switch container.layout {
-            case .tiles:
-                container.layoutTiles(point, width: width, height: height, virtual: virtual, context)
-            case .accordion:
-                container.layoutAccordion(point, width: width, height: height, virtual: virtual, context)
-            }
-        case .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
-            return // Nothing to do for invisible and fullscreen windows
+            case .window(let window):
+                if window.windowId != currentlyManipulatedWithMouseWindowId {
+                    lastAppliedLayoutVirtualRect = virtual
+                    if window.isFullscreen && window == context.workspace.rootTilingContainer.mostRecentWindow {
+                        lastAppliedLayoutPhysicalRect = nil
+                        window.layoutFullscreen(context)
+                    } else {
+                        lastAppliedLayoutPhysicalRect = physicalRect
+                        window.isFullscreen = false
+                        _ = window.setFrame(point, CGSize(width: width, height: height))
+                    }
+                }
+            case .tilingContainer(let container):
+                lastAppliedLayoutPhysicalRect = physicalRect
+                lastAppliedLayoutVirtualRect = virtual
+                switch container.layout {
+                    case .tiles:
+                        container.layoutTiles(point, width: width, height: height, virtual: virtual, context)
+                    case .accordion:
+                        container.layoutAccordion(point, width: width, height: height, virtual: virtual, context)
+                }
+            case .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
+                return // Nothing to do for invisible and fullscreen windows
         }
     }
 }
@@ -146,22 +146,22 @@ private extension TilingContainer {
                 rPadding = padding
             }
             switch orientation {
-            case .h:
-                child.layoutRecursive(
-                    point + CGPoint(x: lPadding, y: 0),
-                    width: width - rPadding - lPadding,
-                    height: height,
-                    virtual: virtual,
-                    context
-                )
-            case .v:
-                child.layoutRecursive(
-                    point + CGPoint(x: 0, y: lPadding),
-                    width: width,
-                    height: height - lPadding - rPadding,
-                    virtual: virtual,
-                    context
-                )
+                case .h:
+                    child.layoutRecursive(
+                        point + CGPoint(x: lPadding, y: 0),
+                        width: width - rPadding - lPadding,
+                        height: height,
+                        virtual: virtual,
+                        context
+                    )
+                case .v:
+                    child.layoutRecursive(
+                        point + CGPoint(x: 0, y: lPadding),
+                        width: width,
+                        height: height - lPadding - rPadding,
+                        virtual: virtual,
+                        context
+                    )
             }
         }
     }

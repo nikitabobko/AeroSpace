@@ -24,10 +24,10 @@ public extension Sequence {
         var result: [T] = []
         for element in self {
             switch transform(element) {
-            case .success(let element):
-                result.append(element)
-            case .failure(let errors):
-                return .failure(errors)
+                case .success(let element):
+                    result.append(element)
+                case .failure(let errors):
+                    return .failure(errors)
             }
         }
         return .success(result)

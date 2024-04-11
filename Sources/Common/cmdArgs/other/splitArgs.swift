@@ -7,27 +7,27 @@ public extension String {
         var state: State = .parseArgWhitespaceSeparator
         for char in self {
             switch state { // State machine
-            case .parseArgWhitespaceSeparator:
-                if char == "\"" || char == "\'" {
-                    state = .parseArg(quoteChar: char)
-                } else if !char.isWhitespace {
-                    state = .parseArg(quoteChar: nil)
-                    arg.append(char)
-                }
-            case .parseArg(let quoteChar):
-                if quoteChar == char {
-                    result.append(arg)
-                    arg = ""
-                    state = .parseArgWhitespaceSeparator
-                } else if quoteChar == nil && char.isWhitespace {
-                    result.append(arg)
-                    state = .parseArgWhitespaceSeparator
-                    arg = ""
-                } else if quoteChar == nil && char.isQuote {
-                    return .failure("Unexpected quote \(char) in argument '\(arg)'")
-                } else {
-                    arg.append(char)
-                }
+                case .parseArgWhitespaceSeparator:
+                    if char == "\"" || char == "\'" {
+                        state = .parseArg(quoteChar: char)
+                    } else if !char.isWhitespace {
+                        state = .parseArg(quoteChar: nil)
+                        arg.append(char)
+                    }
+                case .parseArg(let quoteChar):
+                    if quoteChar == char {
+                        result.append(arg)
+                        arg = ""
+                        state = .parseArgWhitespaceSeparator
+                    } else if quoteChar == nil && char.isWhitespace {
+                        result.append(arg)
+                        state = .parseArgWhitespaceSeparator
+                        arg = ""
+                    } else if quoteChar == nil && char.isQuote {
+                        return .failure("Unexpected quote \(char) in argument '\(arg)'")
+                    } else {
+                        arg.append(char)
+                    }
             }
         }
         if case .parseArg(let quoteChar) = state {

@@ -61,12 +61,12 @@ public enum ParsedCmd<T> {
 
     public func flatMap<R>(_ mapper: (T) -> ParsedCmd<R>) -> ParsedCmd<R> {
         switch self {
-        case .cmd(let cmd):
-            return mapper(cmd)
-        case .help(let help):
-            return .help(help)
-        case .failure(let fail):
-            return .failure(fail)
+            case .cmd(let cmd):
+                return mapper(cmd)
+            case .help(let help):
+                return .help(help)
+            case .failure(let fail):
+                return .failure(fail)
         }
     }
 
@@ -75,12 +75,12 @@ public enum ParsedCmd<T> {
         var error: String? = nil
         var help: String? = nil
         switch self {
-        case .cmd(let _command):
-            command = _command
-        case .help(let _help):
-            help = _help
-        case .failure(let _error):
-            error = _error
+            case .cmd(let _command):
+                command = _command
+            case .help(let _help):
+                help = _help
+            case .failure(let _error):
+                error = _error
         }
         return (command, help, error)
     }

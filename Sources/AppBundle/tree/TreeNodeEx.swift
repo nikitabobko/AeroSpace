@@ -31,12 +31,12 @@ extension TreeNode {
     var nodeMonitor: Monitor? {
         guard let parent else { return nil }
         switch parent.cases {
-        case .workspace(let parent):
-            return parent.workspaceMonitor
-        case .tilingContainer, .macosFullscreenWindowsContainer:
-            return parent.nodeMonitor
-        case .macosInvisibleWindowsContainer:
-            return nil
+            case .workspace(let parent):
+                return parent.workspaceMonitor
+            case .tilingContainer, .macosFullscreenWindowsContainer:
+                return parent.nodeMonitor
+            case .macosInvisibleWindowsContainer:
+                return nil
         }
     }
 
@@ -80,20 +80,20 @@ extension TreeNode {
     ) -> (parent: TilingContainer, ownIndex: Int)? {
         let innermostChild = parentsWithSelf.first(where: { (node: TreeNode) -> Bool in
             switch node.parent?.cases {
-            case .workspace, nil, .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
-                return true // stop searching. We didn't find it, or something went wrong
-            case .tilingContainer(let parent):
-                return (layout == nil || parent.layout == layout) &&
-                    parent.orientation == direction.orientation &&
-                    parent.children.indices.contains(node.ownIndexOrNil! + direction.focusOffset)
+                case .workspace, nil, .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
+                    return true // stop searching. We didn't find it, or something went wrong
+                case .tilingContainer(let parent):
+                    return (layout == nil || parent.layout == layout) &&
+                        parent.orientation == direction.orientation &&
+                        parent.children.indices.contains(node.ownIndexOrNil! + direction.focusOffset)
             }
         })!
         switch innermostChild.parent?.cases {
-        case .tilingContainer(let parent):
-            check(parent.orientation == direction.orientation)
-            return (parent, innermostChild.ownIndexOrNil!)
-        case .workspace, nil, .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
-            return nil
+            case .tilingContainer(let parent):
+                check(parent.orientation == direction.orientation)
+                return (parent, innermostChild.ownIndexOrNil!)
+            case .workspace, nil, .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
+                return nil
         }
     }
 }

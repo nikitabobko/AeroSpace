@@ -19,12 +19,12 @@ struct MacosNativeFullscreenCommand: Command {
         let prevState = window.isMacosFullscreen
         let newState: Bool
         switch args.toggle {
-        case .on:
-            newState = true
-        case .off:
-            newState = false
-        case .toggle:
-            newState = !prevState
+            case .on:
+                newState = true
+            case .off:
+                newState = false
+            case .toggle:
+                newState = !prevState
         }
         if newState == prevState {
             if newState {
@@ -40,10 +40,10 @@ struct MacosNativeFullscreenCommand: Command {
                 window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
             } else {
                 switch window.layoutReason {
-                case .macos(let prevParentKind):
-                    exitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)
-                default:
-                    window.relayoutWindow(on: workspace)
+                    case .macos(let prevParentKind):
+                        exitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)
+                    default:
+                        window.relayoutWindow(on: workspace)
                 }
             }
             return true

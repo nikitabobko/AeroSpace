@@ -74,19 +74,19 @@ enum CommandSubject: Equatable {
 extension CommandSubject {
     var windowOrNil: Window? {
         switch self {
-        case .window(let window):
-            return window
-        case .emptyWorkspace:
-            return nil
+            case .window(let window):
+                return window
+            case .emptyWorkspace:
+                return nil
         }
     }
 
     var workspace: Workspace {
         switch self {
-        case .window(let window):
-            return window.nodeMonitor?.activeWorkspace ?? Workspace.focused
-        case .emptyWorkspace(let workspaceName):
-            return Workspace.get(byName: workspaceName)
+            case .window(let window):
+                return window.nodeMonitor?.activeWorkspace ?? Workspace.focused
+            case .emptyWorkspace(let workspaceName):
+                return Workspace.get(byName: workspaceName)
         }
     }
 }

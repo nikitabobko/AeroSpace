@@ -37,14 +37,14 @@ let isVersion: Bool = args.first == "--version" || args.first == "-v"
 
 if !isVersion {
     switch parseCmdArgs(args) {
-    case .cmd:
-        break
-    case .help(let help):
-        print(help)
-        exit(0)
-    case .failure(let e):
-        print(e)
-        exit(1)
+        case .cmd:
+            break
+        case .help(let help):
+            print(help)
+            exit(0)
+        case .failure(let e):
+            print(e)
+            exit(1)
     }
 }
 

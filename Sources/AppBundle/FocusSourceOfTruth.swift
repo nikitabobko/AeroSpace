@@ -15,9 +15,9 @@ func getFocusSourceOfTruth(startup: Bool) -> FocusSourceOfTruth {
 
 func setFocusSourceOfTruth(_ newValue: FocusSourceOfTruth, startup: Bool) {
     switch newValue {
-    case .macOs:
-        idOfFocusedWindowWhenOwnSourceOfTruth = nil
-    case .ownModel:
-        idOfFocusedWindowWhenOwnSourceOfTruth = getNativeFocusedWindow(startup: startup)?.windowId
+        case .macOs:
+            idOfFocusedWindowWhenOwnSourceOfTruth = nil
+        case .ownModel:
+            idOfFocusedWindowWhenOwnSourceOfTruth = getNativeFocusedWindow(startup: startup)?.windowId
     }
 }

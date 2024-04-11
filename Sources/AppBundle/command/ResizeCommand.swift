@@ -15,30 +15,30 @@ struct ResizeCommand: Command { // todo cover with tests
         let parent: TilingContainer
         let node: TreeNode
         switch args.dimension.val {
-        case .width:
-            orientation = .h
-            guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return false }
-            node = first
-            parent = first.parent as! TilingContainer
-        case .height:
-            orientation = .v
-            guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return false }
-            node = first
-            parent = first.parent as! TilingContainer
-        case .smart:
-            guard let first = candidates.first else { return false }
-            node = first
-            parent = first.parent as! TilingContainer
-            orientation = parent.orientation
+            case .width:
+                orientation = .h
+                guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return false }
+                node = first
+                parent = first.parent as! TilingContainer
+            case .height:
+                orientation = .v
+                guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return false }
+                node = first
+                parent = first.parent as! TilingContainer
+            case .smart:
+                guard let first = candidates.first else { return false }
+                node = first
+                parent = first.parent as! TilingContainer
+                orientation = parent.orientation
         }
         let diff: CGFloat
         switch args.units.val {
-        case .set(let unit):
-            diff = CGFloat(unit) - node.getWeight(orientation)
-        case .add(let unit):
-            diff = CGFloat(unit)
-        case .subtract(let unit):
-            diff = -CGFloat(unit)
+            case .set(let unit):
+                diff = CGFloat(unit) - node.getWeight(orientation)
+            case .add(let unit):
+                diff = CGFloat(unit)
+            case .subtract(let unit):
+                diff = -CGFloat(unit)
         }
 
         guard let childDiff = diff.div(parent.children.count - 1) else { return false }

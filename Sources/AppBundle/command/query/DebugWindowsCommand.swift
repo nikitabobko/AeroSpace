@@ -31,42 +31,42 @@ struct DebugWindowsCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         switch debugWindowsState {
-        case .recording:
-            debugWindowsState = .notRecording
-            state.stdout.append((debugWindowsLog.values + [disclaimer, "Debug session finished"]).joined(separator: "\n\n"))
-            debugWindowsLog = [:]
-            return true
-        case .notRecording:
-            debugWindowsState = .recording
-            state.stdout.append(
-                """
-                Debug windows session has started
-                1. Focus the problematic window
-                2. Run 'aerospace debug-windows' once again to finish the session and get the results
-                """
-            )
-            debugWindowsLog = [:]
-            return true
-        case .recordingAborted:
-            state.stdout.append(
-                """
-                Recording of the previous session was aborted after \(debugWindowsLimit) windows has been focused
-                Run the command one more time to start new debug session
-                """
-            )
-            debugWindowsState = .notRecording
-            debugWindowsLog = [:]
-            return false
+            case .recording:
+                debugWindowsState = .notRecording
+                state.stdout.append((debugWindowsLog.values + [disclaimer, "Debug session finished"]).joined(separator: "\n\n"))
+                debugWindowsLog = [:]
+                return true
+            case .notRecording:
+                debugWindowsState = .recording
+                state.stdout.append(
+                    """
+                    Debug windows session has started
+                    1. Focus the problematic window
+                    2. Run 'aerospace debug-windows' once again to finish the session and get the results
+                    """
+                )
+                debugWindowsLog = [:]
+                return true
+            case .recordingAborted:
+                state.stdout.append(
+                    """
+                    Recording of the previous session was aborted after \(debugWindowsLimit) windows has been focused
+                    Run the command one more time to start new debug session
+                    """
+                )
+                debugWindowsState = .notRecording
+                debugWindowsLog = [:]
+                return false
         }
     }
 }
 
 func debugWindowsIfRecording(_ window: Window) {
     switch debugWindowsState {
-    case .recording:
-        break
-    case .notRecording, .recordingAborted:
-        return
+        case .recording:
+            break
+        case .notRecording, .recordingAborted:
+            return
     }
     if debugWindowsLog.count > debugWindowsLimit {
         debugWindowsState = .recordingAborted

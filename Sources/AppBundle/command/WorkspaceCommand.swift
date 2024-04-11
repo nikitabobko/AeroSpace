@@ -9,14 +9,14 @@ struct WorkspaceCommand: Command {
         check(Thread.current.isMainThread)
         let workspaceName: String
         switch args.target {
-        case .relative(let relative):
-            guard let workspace = getNextPrevWorkspace(current: state.subject.workspace, relative: relative, stdin: stdin) else { return false }
-            workspaceName = workspace.name
-        case .direct(let direct):
-            workspaceName = direct.name.raw
-            if direct.autoBackAndForth && state.subject.workspace.name == workspaceName {
-                return WorkspaceBackAndForthCommand().run(state)
-            }
+            case .relative(let relative):
+                guard let workspace = getNextPrevWorkspace(current: state.subject.workspace, relative: relative, stdin: stdin) else { return false }
+                workspaceName = workspace.name
+            case .direct(let direct):
+                workspaceName = direct.name.raw
+                if direct.autoBackAndForth && state.subject.workspace.name == workspaceName {
+                    return WorkspaceBackAndForthCommand().run(state)
+                }
         }
         let workspace = Workspace.get(byName: workspaceName)
         // todo drop anyLeafWindowRecursive. It must not be necessary

@@ -24,10 +24,10 @@ struct MacosNativeMinimizeCommand: Command {
                 }
             } else {
                 switch window.layoutReason {
-                case .macos(let prevParentKind):
-                    exitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)
-                default: // wtf case. Theoretically should never happen
-                    window.relayoutWindow(on: workspace)
+                    case .macos(let prevParentKind):
+                        exitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)
+                    default: // wtf case. Theoretically should never happen
+                        window.relayoutWindow(on: workspace)
                 }
                 state.subject = .window(window)
             }

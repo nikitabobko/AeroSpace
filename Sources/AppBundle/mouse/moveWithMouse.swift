@@ -15,12 +15,12 @@ private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
         return
     }
     switch window.parent.cases {
-    case .workspace:
-        moveFloatingWindow(window)
-    case .tilingContainer:
-        moveTilingWindow(window)
-    case .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
-        return // Invisible and fullscreen windows can't be moved with mouse
+        case .workspace:
+            moveFloatingWindow(window)
+        case .tilingContainer:
+            moveTilingWindow(window)
+        case .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
+            return // Invisible and fullscreen windows can't be moved with mouse
     }
 }
 
@@ -82,19 +82,19 @@ extension CGPoint {
         let point = self
         let target: TreeNode?
         switch tree.layout {
-        case .tiles:
-            target = tree.children.first(where: {
-                (virtual ? $0.lastAppliedLayoutVirtualRect : $0.lastAppliedLayoutPhysicalRect)?.contains(point) == true
-            })
-        case .accordion:
-            target = tree.mostRecentChild
+            case .tiles:
+                target = tree.children.first(where: {
+                    (virtual ? $0.lastAppliedLayoutVirtualRect : $0.lastAppliedLayoutPhysicalRect)?.contains(point) == true
+                })
+            case .accordion:
+                target = tree.mostRecentChild
         }
         guard let target else { return nil }
         switch target.tilingTreeNodeCasesOrThrow() {
-        case .window(let window):
-            return window
-        case .tilingContainer(let container):
-            return findIn(tree: container, virtual: virtual)
+            case .window(let window):
+                return window
+            case .tilingContainer(let container):
+                return findIn(tree: container, virtual: virtual)
         }
     }
 }

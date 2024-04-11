@@ -61,12 +61,12 @@ public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorksp
         .flatMap { raw in
             let uniqueOptions = raw.uniqueOptions
             switch uniqueOptions.count {
-            case 1:
-                return .cmd(raw)
-            case 0:
-                return .failure("'list-workspaces' mandatory option is not specified (--all|--focused|--monitor)")
-            default:
-                return .failure("Conflicting options: \(uniqueOptions.joined(separator: ", "))")
+                case 1:
+                    return .cmd(raw)
+                case 0:
+                    return .failure("'list-workspaces' mandatory option is not specified (--all|--focused|--monitor)")
+                default:
+                    return .failure("Conflicting options: \(uniqueOptions.joined(separator: ", "))")
             }
         }
         .flatMap { raw in

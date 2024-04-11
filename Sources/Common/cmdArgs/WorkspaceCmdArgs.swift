@@ -48,16 +48,16 @@ enum RawWorkspaceTarget: Equatable {
 
     func parse(wrapAround: Bool?, autoBackAndForth: Bool?) -> ParsedCmd<WTarget> {
         switch self {
-        case .prev, .next:
-            if autoBackAndForth != nil {
-                return .failure("--auto-back-and-forth is not allowed for (next|prev)")
-            }
-            return .cmd(.relative(WTarget.Relative(isNext: self == .next, wrapAround: wrapAround ?? false)))
-        case .workspaceName(let name):
-            if wrapAround != nil {
-                return .failure("--wrap-around is allowed only for (next|prev)")
-            }
-            return .cmd(.direct(WTarget.Direct(name, autoBackAndForth: autoBackAndForth ?? false)))
+            case .prev, .next:
+                if autoBackAndForth != nil {
+                    return .failure("--auto-back-and-forth is not allowed for (next|prev)")
+                }
+                return .cmd(.relative(WTarget.Relative(isNext: self == .next, wrapAround: wrapAround ?? false)))
+            case .workspaceName(let name):
+                if wrapAround != nil {
+                    return .failure("--wrap-around is allowed only for (next|prev)")
+                }
+                return .cmd(.direct(WTarget.Direct(name, autoBackAndForth: autoBackAndForth ?? false)))
         }
     }
 }
@@ -112,11 +112,11 @@ let workspaceTargetPlaceholder = "(<workspace-name>|next|prev)"
 
 func parseRawWorkspaceTarget(arg: String, nextArgs: inout [String]) -> Parsed<RawWorkspaceTarget> {
     switch arg {
-    case "next":
-        return .success(.next)
-    case "prev":
-        return .success(.prev)
-    default:
-        return WorkspaceName.parse(arg).map(RawWorkspaceTarget.workspaceName)
+        case "next":
+            return .success(.next)
+        case "prev":
+            return .success(.prev)
+        default:
+            return WorkspaceName.parse(arg).map(RawWorkspaceTarget.workspaceName)
     }
 }

@@ -203,25 +203,25 @@ final class MoveCommandTest: XCTestCase {
 extension TreeNode {
     var layoutDescription: LayoutDescription {
         switch nodeCases {
-        case .window(let window):
-            return .window(window.windowId)
-        case .tilingContainer(let container):
-            switch container.layout {
-            case .tiles:
-                return container.orientation == .h
-                    ? .h_tiles(container.children.map(\.layoutDescription))
-                    : .v_tiles(container.children.map(\.layoutDescription))
-            case .accordion:
-                return container.orientation == .h
-                    ? .h_accordion(container.children.map(\.layoutDescription))
-                    : .v_accordion(container.children.map(\.layoutDescription))
-            }
-        case .workspace(let workspace):
-            return .workspace(workspace.children.map(\.layoutDescription))
-        case .macosInvisibleWindowsContainer:
-            return .macosInvisible
-        case .macosFullscreenWindowsContainer:
-            return .macosFullscreen
+            case .window(let window):
+                return .window(window.windowId)
+            case .tilingContainer(let container):
+                switch container.layout {
+                    case .tiles:
+                        return container.orientation == .h
+                            ? .h_tiles(container.children.map(\.layoutDescription))
+                            : .v_tiles(container.children.map(\.layoutDescription))
+                    case .accordion:
+                        return container.orientation == .h
+                            ? .h_accordion(container.children.map(\.layoutDescription))
+                            : .v_accordion(container.children.map(\.layoutDescription))
+                }
+            case .workspace(let workspace):
+                return .workspace(workspace.children.map(\.layoutDescription))
+            case .macosInvisibleWindowsContainer:
+                return .macosInvisible
+            case .macosFullscreenWindowsContainer:
+                return .macosFullscreen
         }
     }
 }

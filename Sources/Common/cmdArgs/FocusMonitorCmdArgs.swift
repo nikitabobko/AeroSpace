@@ -37,21 +37,21 @@ public func parseFocusMonitorCmdArgs(_ args: [String]) -> ParsedCmd<FocusMonitor
 
 func parseTarget(_ arg: String, _ nextArgs: inout [String]) -> Parsed<MonitorTarget> {
     switch arg {
-    case "next":
-        return .success(.relative(.next))
-    case "prev":
-        return .success(.relative(.prev))
-    case "left":
-        return .success(.directional(.left))
-    case "down":
-        return .success(.directional(.down))
-    case "up":
-        return .success(.directional(.up))
-    case "right":
-        return .success(.directional(.right))
-    default:
-        let args: [String] = [arg] + nextArgs.allNextNonFlagArgs()
-        return args.mapAllOrFailure(parseMonitorDescription).map { .patterns($0) }
+        case "next":
+            return .success(.relative(.next))
+        case "prev":
+            return .success(.relative(.prev))
+        case "left":
+            return .success(.directional(.left))
+        case "down":
+            return .success(.directional(.down))
+        case "up":
+            return .success(.directional(.up))
+        case "right":
+            return .success(.directional(.right))
+        default:
+            let args: [String] = [arg] + nextArgs.allNextNonFlagArgs()
+            return args.mapAllOrFailure(parseMonitorDescription).map { .patterns($0) }
     }
 }
 

@@ -88,10 +88,10 @@ public func parseListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCm
         }
         .flatMap { raw in
             let uniqueOptions = raw.uniqueOptions
-            switch uniqueOptions.count {
-            case 1:  return .cmd(raw)
-            case 0:  return .failure("'list-windows' mandatory option is not specified (--focused|--all|--monitor|--workspace)")
-            default: return .failure("Conflicting options: \(uniqueOptions.joined(separator: ", "))")
+            return switch uniqueOptions.count {
+                case 1:  .cmd(raw)
+                case 0:  .failure("'list-windows' mandatory option is not specified (--focused|--all|--monitor|--workspace)")
+                default: .failure("Conflicting options: \(uniqueOptions.joined(separator: ", "))")
             }
         }
         .flatMap { raw in
@@ -119,10 +119,10 @@ private func parseWorkspaces(arg: String, nextArgs: inout [String]) -> Parsed<[W
             workspaces.append(.focused)
         } else {
             switch WorkspaceName.parse(workspaceRaw) {
-            case .success(let unwrapped):
-                workspaces.append(.name(unwrapped))
-            case .failure(let msg):
-                return .failure(msg)
+                case .success(let unwrapped):
+                    workspaces.append(.name(unwrapped))
+                case .failure(let msg):
+                    return .failure(msg)
             }
         }
     }

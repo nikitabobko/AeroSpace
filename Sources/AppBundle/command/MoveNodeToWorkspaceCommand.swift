@@ -11,11 +11,11 @@ struct MoveNodeToWorkspaceCommand: Command {
         let prevWorkspace = focused.workspace ?? Workspace.focused
         let targetWorkspace: Workspace
         switch args.target {
-        case .relative(let relative):
-            guard let workspace = getNextPrevWorkspace(current: prevWorkspace, relative: relative, stdin: stdin) else { return false }
-            targetWorkspace = workspace
-        case .direct(let direct):
-            targetWorkspace = Workspace.get(byName: direct.name.raw)
+            case .relative(let relative):
+                guard let workspace = getNextPrevWorkspace(current: prevWorkspace, relative: relative, stdin: stdin) else { return false }
+                targetWorkspace = workspace
+            case .direct(let direct):
+                targetWorkspace = Workspace.get(byName: direct.name.raw)
         }
         if prevWorkspace == targetWorkspace {
             state.stderr.append("Window '\(focused.title)' already belongs to workspace '\(targetWorkspace.name)'")

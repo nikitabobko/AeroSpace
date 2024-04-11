@@ -12,12 +12,12 @@ struct FullscreenCommand: Command {
         }
         let newState: Bool
         switch args.toggle {
-        case .on:
-            newState = true
-        case .off:
-            newState = false
-        case .toggle:
-            newState = !window.isFullscreen
+            case .on:
+                newState = true
+            case .off:
+                newState = false
+            case .toggle:
+                newState = !window.isFullscreen
         }
         if newState == window.isFullscreen {
             if newState {

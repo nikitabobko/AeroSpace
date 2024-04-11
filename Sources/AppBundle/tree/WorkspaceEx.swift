@@ -4,21 +4,21 @@ extension Workspace {
     var rootTilingContainer: TilingContainer {
         let containers = children.filterIsInstance(of: TilingContainer.self)
         switch containers.count {
-        case 0:
-            let orientation: Orientation
-            switch config.defaultRootContainerOrientation {
-            case .horizontal:
-                orientation = .h
-            case .vertical:
-                orientation = .v
-            case .auto:
-                orientation = workspaceMonitor.lets { $0.width >= $0.height } ? .h : .v
-            }
-            return TilingContainer(parent: self, adaptiveWeight: 1, orientation, config.defaultRootContainerLayout, index: INDEX_BIND_LAST)
-        case 1:
-            return containers.singleOrNil()!
-        default:
-            error("Workspace must contain zero or one tiling container as its child")
+            case 0:
+                let orientation: Orientation
+                switch config.defaultRootContainerOrientation {
+                    case .horizontal:
+                        orientation = .h
+                    case .vertical:
+                        orientation = .v
+                    case .auto:
+                        orientation = workspaceMonitor.lets { $0.width >= $0.height } ? .h : .v
+                }
+                return TilingContainer(parent: self, adaptiveWeight: 1, orientation, config.defaultRootContainerLayout, index: INDEX_BIND_LAST)
+            case 1:
+                return containers.singleOrNil()!
+            default:
+                error("Workspace must contain zero or one tiling container as its child")
         }
     }
 
@@ -35,12 +35,12 @@ extension Workspace {
     var macOsNativeFullscreenWindowsContainer: MacosFullscreenWindowsContainer {
         let containers = children.filterIsInstance(of: MacosFullscreenWindowsContainer.self)
         switch containers.count {
-        case 0:
-            return MacosFullscreenWindowsContainer(parent: self)
-        case 1:
-            return containers.singleOrNil()!
-        default:
-            error("Workspace must contain zero or one MacosFullscreenWindowsContainer")
+            case 0:
+                return MacosFullscreenWindowsContainer(parent: self)
+            case 1:
+                return containers.singleOrNil()!
+            default:
+                error("Workspace must contain zero or one MacosFullscreenWindowsContainer")
         }
     }
 

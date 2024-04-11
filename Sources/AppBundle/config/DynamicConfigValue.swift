@@ -10,18 +10,18 @@ enum DynamicConfigValue<Value: Equatable> {
 extension DynamicConfigValue {
     func getValue(for monitor: any Monitor) -> Value {
         switch self {
-        case .constant(let value):
-            return value
-        case .perMonitor(let array, let defaultValue):
-            let sortedMonitors = sortedMonitors
-            return array
-                .lazy
-                .compactMap {
-                    $0.description.resolveMonitor(sortedMonitors: sortedMonitors)?.rect.topLeftCorner == monitor.rect.topLeftCorner
-                        ? $0.value
-                        : nil
-                }
-                .first ?? defaultValue
+            case .constant(let value):
+                return value
+            case .perMonitor(let array, let defaultValue):
+                let sortedMonitors = sortedMonitors
+                return array
+                    .lazy
+                    .compactMap {
+                        $0.description.resolveMonitor(sortedMonitors: sortedMonitors)?.rect.topLeftCorner == monitor.rect.topLeftCorner
+                            ? $0.value
+                            : nil
+                    }
+                    .first ?? defaultValue
         }
     }
 }

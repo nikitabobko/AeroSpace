@@ -93,14 +93,14 @@ enum TomlParseError: Error, CustomStringConvertible {
 
     var description: String {
         switch self {
-        case .semantic(let backtrace, let message):
-            if case .root = backtrace { // todo Make 'split' + flatten normalization prettier
+            case .semantic(let backtrace, let message):
+                if case .root = backtrace { // todo Make 'split' + flatten normalization prettier
+                    return message
+                } else {
+                    return "\(backtrace): \(message)"
+                }
+            case .syntax(let message):
                 return message
-            } else {
-                return "\(backtrace): \(message)"
-            }
-        case .syntax(let message):
-            return message
         }
     }
 }
@@ -173,14 +173,14 @@ private let configParser: [String: any ParserProtocol<Config>] = [
 private extension ParsedCmd where T == any Command {
     func toEither() -> Parsed<T> {
         switch self {
-        case .cmd(let a):
-            return a.info.allowInConfig
-                ? .success(a)
-                : .failure("Command '\(a.info.kind.rawValue)' cannot be used in config")
-        case .help(let a):
-            return .failure(a)
-        case .failure(let a):
-            return .failure(a)
+            case .cmd(let a):
+                return a.info.allowInConfig
+                    ? .success(a)
+                    : .failure("Command '\(a.info.kind.rawValue)' cannot be used in config")
+            case .help(let a):
+                return .failure(a)
+            case .failure(let a):
+                return .failure(a)
         }
     }
 }
@@ -452,10 +452,10 @@ private func parseMode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, 
     for (key, value) in rawTable {
         let backtrace = backtrace + .key(key)
         switch key {
-        case "binding":
-            result.bindings = parseBindings(value, backtrace, &errors, mapping)
-        default:
-            errors += [unknownKeyError(backtrace)]
+            case "binding":
+                result.bindings = parseBindings(value, backtrace, &errors, mapping)
+            default:
+                errors += [unknownKeyError(backtrace)]
         }
     }
     return result
@@ -519,16 +519,16 @@ indirect enum TomlBacktrace: CustomStringConvertible {
 
     var description: String {
         switch self {
-        case .root:
-            error("Impossible")
-        case .rootKey(let value):
-            return value
-        case .key(let value):
-            return "." + value
-        case .index(let index):
-            return "[\(index)]"
-        case .pair(let first, let second):
-            return first.description + second.description
+            case .root:
+                error("Impossible")
+            case .rootKey(let value):
+                return value
+            case .key(let value):
+                return "." + value
+            case .index(let index):
+                return "[\(index)]"
+            case .pair(let first, let second):
+                return first.description + second.description
         }
     }
 

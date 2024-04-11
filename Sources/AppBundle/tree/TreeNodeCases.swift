@@ -76,14 +76,14 @@ extension NonLeafTreeNodeObject {
 
     var kind: NonLeafTreeNodeKind {
         switch cases {
-        case .tilingContainer:
-            return .tilingContainer
-        case .workspace:
-            return .workspace
-        case .macosInvisibleWindowsContainer:
-            return .macosInvisibleWindowsContainer
-        case .macosFullscreenWindowsContainer:
-            return .macosFullscreenWindowsContainer
+            case .tilingContainer:
+                return .tilingContainer
+            case .workspace:
+                return .workspace
+            case .macosInvisibleWindowsContainer:
+                return .macosInvisibleWindowsContainer
+            case .macosFullscreenWindowsContainer:
+                return .macosFullscreenWindowsContainer
         }
     }
 }
@@ -110,28 +110,28 @@ func illegalChildParentRelation(child: TreeNode, parent: NonLeafTreeNodeObject?)
 
 func getChildParentRelationOrNil(child: TreeNode, parent: NonLeafTreeNodeObject) -> ChildParentRelation? {
     switch (child.nodeCases, parent.cases) {
-    case (.workspace, _):
-        return nil
-    case (.window, .workspace):
-        return .floatingWindow
-    case (.window, .macosInvisibleWindowsContainer):
-        return .macosNativeInvisibleWindow
-    case (_, .macosInvisibleWindowsContainer):
-        return nil
-    case (.tilingContainer, .tilingContainer(let container)),
-         (.window, .tilingContainer(let container)):
-        return .tiling(parent: container)
-    case (.tilingContainer, .workspace):
-        return .rootTilingContainer
-    case (.macosInvisibleWindowsContainer, _):
-        return nil
-    case (.macosFullscreenWindowsContainer, .workspace):
-        return .macosNativeFullscreenStubContainer
-    case (.macosFullscreenWindowsContainer, _):
-        return nil
-    case (.window, .macosFullscreenWindowsContainer):
-        return .macosNativeFullscreenWindow
-    case (_, .macosFullscreenWindowsContainer):
-        return nil
+        case (.workspace, _):
+            return nil
+        case (.window, .workspace):
+            return .floatingWindow
+        case (.window, .macosInvisibleWindowsContainer):
+            return .macosNativeInvisibleWindow
+        case (_, .macosInvisibleWindowsContainer):
+            return nil
+        case (.tilingContainer, .tilingContainer(let container)),
+             (.window, .tilingContainer(let container)):
+            return .tiling(parent: container)
+        case (.tilingContainer, .workspace):
+            return .rootTilingContainer
+        case (.macosInvisibleWindowsContainer, _):
+            return nil
+        case (.macosFullscreenWindowsContainer, .workspace):
+            return .macosNativeFullscreenStubContainer
+        case (.macosFullscreenWindowsContainer, _):
+            return nil
+        case (.window, .macosFullscreenWindowsContainer):
+            return .macosNativeFullscreenWindow
+        case (_, .macosFullscreenWindowsContainer):
+            return nil
     }
 }

@@ -9,12 +9,12 @@ struct EnableCommand: Command {
         let prevState = TrayMenuModel.shared.isEnabled
         let newState: Bool
         switch args.targetState.val {
-        case .on:
-            newState = true
-        case .off:
-            newState = false
-        case .toggle:
-            newState = !TrayMenuModel.shared.isEnabled
+            case .on:
+                newState = true
+            case .off:
+                newState = false
+            case .toggle:
+                newState = !TrayMenuModel.shared.isEnabled
         }
         if newState == prevState {
             return true

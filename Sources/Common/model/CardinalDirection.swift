@@ -7,14 +7,14 @@ public extension CardinalDirection {
     var isPositive: Bool { self == .down || self == .right }
     var opposite: CardinalDirection {
         switch self {
-        case .left:
-            return .right
-        case .down:
-            return .up
-        case .up:
-            return .down
-        case .right:
-            return .left
+            case .left:
+                return .right
+            case .down:
+                return .up
+            case .up:
+                return .down
+            case .right:
+                return .left
         }
     }
     var focusOffset: Int { isPositive ? 1 : -1 }

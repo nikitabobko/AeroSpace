@@ -43,19 +43,19 @@ extension [MonitorId] {
 internal extension MonitorId {
     func resolve(_ state: CommandMutableState, sortedMonitors: [Monitor]) -> [Monitor] {
         switch self {
-        case .focused:
-            return [Workspace.focused.workspaceMonitor]
-        case .mouse:
-            return [mouseLocation.monitorApproximation]
-        case .all:
-            return monitors
-        case .index(let index):
-            if let monitor = sortedMonitors.getOrNil(atIndex: index) {
-                return [monitor]
-            } else {
-                state.stderr.append("Invalid monitor ID: \(index + 1)")
-                return []
-            }
+            case .focused:
+                return [Workspace.focused.workspaceMonitor]
+            case .mouse:
+                return [mouseLocation.monitorApproximation]
+            case .all:
+                return monitors
+            case .index(let index):
+                if let monitor = sortedMonitors.getOrNil(atIndex: index) {
+                    return [monitor]
+                } else {
+                    state.stderr.append("Invalid monitor ID: \(index + 1)")
+                    return []
+                }
         }
     }
 }
