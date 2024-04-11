@@ -45,11 +45,10 @@ private let moveOutFullscreenWindow = "moving macOS fullscreen windows isn't yet
 
 private func moveOut(_ state: CommandMutableState, window: Window, direction: CardinalDirection) -> Bool {
     let innerMostChild = window.parents.first(where: {
-        switch $0.parent?.cases {
-            case .workspace, .macosInvisibleWindowsContainer, nil, .macosFullscreenWindowsContainer:
-                return true // Stop searching
-            case .tilingContainer(let parent):
-                return parent.orientation == direction.orientation
+        return switch $0.parent?.cases {
+            case .tilingContainer(let parent): parent.orientation == direction.orientation
+            // Stop searching
+            case .workspace, .macosInvisibleWindowsContainer, nil, .macosFullscreenWindowsContainer: true
         }
     }) as! TilingContainer
     let bindTo: TilingContainer
@@ -106,14 +105,14 @@ private func deepMoveIn(window: Window, into container: TilingContainer, moveDir
 
 private extension TilingTreeNodeCases {
     func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TilingTreeNodeCases {
-        switch self {
+        return switch self {
             case .window:
-                return self
+                self
             case .tilingContainer(let container):
                 if container.orientation == orientation {
-                    return .tilingContainer(container)
+                    .tilingContainer(container)
                 } else {
-                    return (container.mostRecentChild ?? errorT("Empty containers must be detached during normalization"))
+                    (container.mostRecentChild ?? errorT("Empty containers must be detached during normalization"))
                         .tilingTreeNodeCasesOrThrow()
                         .findDeepMoveInTargetRecursive(orientation)
                 }

@@ -19,14 +19,10 @@ struct SplitCommand: Command {
                 state.stderr.append("Can't split floating windows")
                 return false // Nothing to do for floating and macOS native fullscreen windows
             case .tilingContainer(let parent):
-                let orientation: Orientation
-                switch args.arg.val {
-                    case .vertical:
-                        orientation = .v
-                    case .horizontal:
-                        orientation = .h
-                    case .opposite:
-                        orientation = parent.orientation.opposite
+                let orientation: Orientation = switch args.arg.val {
+                    case .vertical: .v
+                    case .horizontal: .h
+                    case .opposite: parent.orientation.opposite
                 }
                 if parent.children.count == 1 {
                     parent.changeOrientation(orientation)

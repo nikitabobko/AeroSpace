@@ -7,14 +7,10 @@ struct EnableCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         let prevState = TrayMenuModel.shared.isEnabled
-        let newState: Bool
-        switch args.targetState.val {
-            case .on:
-                newState = true
-            case .off:
-                newState = false
-            case .toggle:
-                newState = !TrayMenuModel.shared.isEnabled
+        let newState: Bool = switch args.targetState.val {
+            case .on: true
+            case .off: false
+            case .toggle: !TrayMenuModel.shared.isEnabled
         }
         if newState == prevState {
             return true

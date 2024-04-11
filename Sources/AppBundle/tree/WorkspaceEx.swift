@@ -5,14 +5,10 @@ extension Workspace {
         let containers = children.filterIsInstance(of: TilingContainer.self)
         switch containers.count {
             case 0:
-                let orientation: Orientation
-                switch config.defaultRootContainerOrientation {
-                    case .horizontal:
-                        orientation = .h
-                    case .vertical:
-                        orientation = .v
-                    case .auto:
-                        orientation = workspaceMonitor.lets { $0.width >= $0.height } ? .h : .v
+                let orientation: Orientation = switch config.defaultRootContainerOrientation {
+                    case .horizontal: .h
+                    case .vertical: .v
+                    case .auto: workspaceMonitor.lets { $0.width >= $0.height } ? .h : .v
                 }
                 return TilingContainer(parent: self, adaptiveWeight: 1, orientation, config.defaultRootContainerLayout, index: INDEX_BIND_LAST)
             case 1:
@@ -34,13 +30,10 @@ extension Workspace {
 
     var macOsNativeFullscreenWindowsContainer: MacosFullscreenWindowsContainer {
         let containers = children.filterIsInstance(of: MacosFullscreenWindowsContainer.self)
-        switch containers.count {
-            case 0:
-                return MacosFullscreenWindowsContainer(parent: self)
-            case 1:
-                return containers.singleOrNil()!
-            default:
-                error("Workspace must contain zero or one MacosFullscreenWindowsContainer")
+        return switch containers.count {
+            case 0: MacosFullscreenWindowsContainer(parent: self)
+            case 1: containers.singleOrNil()!
+            default: errorT("Workspace must contain zero or one MacosFullscreenWindowsContainer")
         }
     }
 

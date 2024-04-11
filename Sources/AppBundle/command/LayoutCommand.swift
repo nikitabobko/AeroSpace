@@ -73,27 +73,17 @@ private func changeTilingLayout(_ state: CommandMutableState, targetLayout: Layo
 
 private extension Window {
     func matchesDescription(_ layout: LayoutCmdArgs.LayoutDescription) -> Bool {
-        switch layout {
-            case .accordion:
-                return (parent as? TilingContainer)?.layout == .accordion
-            case .tiles:
-                return (parent as? TilingContainer)?.layout == .tiles
-            case .horizontal:
-                return (parent as? TilingContainer)?.orientation == .h
-            case .vertical:
-                return (parent as? TilingContainer)?.orientation == .v
-            case .h_accordion:
-                return (parent as? TilingContainer)?.lets { $0.layout == .accordion && $0.orientation == .h } == true
-            case .v_accordion:
-                return (parent as? TilingContainer)?.lets { $0.layout == .accordion && $0.orientation == .v } == true
-            case .h_tiles:
-                return (parent as? TilingContainer)?.lets { $0.layout == .tiles && $0.orientation == .h } == true
-            case .v_tiles:
-                return (parent as? TilingContainer)?.lets { $0.layout == .tiles && $0.orientation == .v } == true
-            case .tiling:
-                return parent is TilingContainer
-            case .floating:
-                return parent is Workspace
+        return switch layout {
+            case .accordion:   (parent as? TilingContainer)?.layout == .accordion
+            case .tiles:       (parent as? TilingContainer)?.layout == .tiles
+            case .horizontal:  (parent as? TilingContainer)?.orientation == .h
+            case .vertical:    (parent as? TilingContainer)?.orientation == .v
+            case .h_accordion: (parent as? TilingContainer)?.lets { $0.layout == .accordion && $0.orientation == .h } == true
+            case .v_accordion: (parent as? TilingContainer)?.lets { $0.layout == .accordion && $0.orientation == .v } == true
+            case .h_tiles:     (parent as? TilingContainer)?.lets { $0.layout == .tiles && $0.orientation == .h } == true
+            case .v_tiles:     (parent as? TilingContainer)?.lets { $0.layout == .tiles && $0.orientation == .v } == true
+            case .tiling:      parent is TilingContainer
+            case .floating:    parent is Workspace
         }
     }
 }

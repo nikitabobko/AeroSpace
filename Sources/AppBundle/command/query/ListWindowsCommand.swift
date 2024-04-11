@@ -11,13 +11,10 @@ struct ListWindowsCommand: Command {
             case .manual(let manual):
                 var workspaces: Set<Workspace> = manual.workspaces.isEmpty ? Workspace.all.toSet() : manual.workspaces
                     .flatMap { filter in
-                        switch filter {
-                            case .focused:
-                                return [Workspace.focused]
-                            case .visible:
-                                return Workspace.all.filter { $0.isVisible }
-                            case .name(let name):
-                                return [Workspace.get(byName: name.raw)]
+                        return switch filter {
+                            case .focused: [Workspace.focused]
+                            case .visible: Workspace.all.filter { $0.isVisible }
+                            case .name(let name): [Workspace.get(byName: name.raw)]
                         }
                     }
                     .toSet()

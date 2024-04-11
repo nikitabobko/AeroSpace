@@ -111,12 +111,9 @@ public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArg
 let workspaceTargetPlaceholder = "(<workspace-name>|next|prev)"
 
 func parseRawWorkspaceTarget(arg: String, nextArgs: inout [String]) -> Parsed<RawWorkspaceTarget> {
-    switch arg {
-        case "next":
-            return .success(.next)
-        case "prev":
-            return .success(.prev)
-        default:
-            return WorkspaceName.parse(arg).map(RawWorkspaceTarget.workspaceName)
+    return switch arg {
+        case "next": .success(.next)
+        case "prev": .success(.prev)
+        default: WorkspaceName.parse(arg).map(RawWorkspaceTarget.workspaceName)
     }
 }

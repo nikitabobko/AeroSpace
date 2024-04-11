@@ -46,17 +46,13 @@ class TreeNode: Equatable {
     /// Weight itself doesn't make sense. The parent container controls semantics of weight
     func getWeight(_ targetOrientation: Orientation) -> CGFloat {
         guard let parent else { error("Weight doesn't make sense for containers without parent") }
-        switch getChildParentRelation(child: self, parent: parent) {
-            case .floatingWindow, .macosNativeFullscreenWindow:
-                error("Weight doesn't make sense for floating windows")
-            case .macosNativeInvisibleWindow:
-                error("Weight doesn't make sense for invisible windows")
+        return switch getChildParentRelation(child: self, parent: parent) {
             case .tiling(let parent):
-                return parent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
-            case .rootTilingContainer:
-                return parent.getWeight(targetOrientation)
-            case .macosNativeFullscreenStubContainer:
-                error("Weight doesn't make sense for stub fullscreen container")
+                parent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
+            case .rootTilingContainer: parent.getWeight(targetOrientation)
+            case .floatingWindow, .macosNativeFullscreenWindow: errorT("Weight doesn't make sense for floating windows")
+            case .macosNativeInvisibleWindow: errorT("Weight doesn't make sense for invisible windows")
+            case .macosNativeFullscreenStubContainer: errorT("Weight doesn't make sense for stub fullscreen container")
         }
     }
 
@@ -74,15 +70,11 @@ class TreeNode: Equatable {
             return result
         }
         if adaptiveWeight == WEIGHT_AUTO {
-            switch getChildParentRelation(child: self, parent: newParent) {
-                case .floatingWindow, .macosNativeFullscreenWindow:
-                    self.adaptiveWeight = WEIGHT_FLOATING
+            self.adaptiveWeight = switch getChildParentRelation(child: self, parent: newParent) {
                 case .tiling(let newParent):
-                    self.adaptiveWeight = newParent.children.sumOf { $0.getWeight(newParent.orientation) }
-                        .div(newParent.children.count)
-                        ?? 1
-                case .rootTilingContainer, .macosNativeInvisibleWindow, .macosNativeFullscreenStubContainer:
-                    self.adaptiveWeight = 1
+                    newParent.children.sumOf { $0.getWeight(newParent.orientation) }.div(newParent.children.count) ?? 1
+                case .floatingWindow, .macosNativeFullscreenWindow: WEIGHT_FLOATING
+                case .rootTilingContainer, .macosNativeInvisibleWindow, .macosNativeFullscreenStubContainer: 1
             }
         } else {
             self.adaptiveWeight = adaptiveWeight

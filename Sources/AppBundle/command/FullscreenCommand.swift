@@ -10,14 +10,10 @@ struct FullscreenCommand: Command {
             state.stderr.append(noWindowIsFocused)
             return false
         }
-        let newState: Bool
-        switch args.toggle {
-            case .on:
-                newState = true
-            case .off:
-                newState = false
-            case .toggle:
-                newState = !window.isFullscreen
+        let newState: Bool = switch args.toggle {
+            case .on: true
+            case .off: false
+            case .toggle: !window.isFullscreen
         }
         if newState == window.isFullscreen {
             if newState {

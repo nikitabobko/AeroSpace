@@ -90,11 +90,9 @@ extension CGPoint {
                 target = tree.mostRecentChild
         }
         guard let target else { return nil }
-        switch target.tilingTreeNodeCasesOrThrow() {
-            case .window(let window):
-                return window
-            case .tilingContainer(let container):
-                return findIn(tree: container, virtual: virtual)
+        return switch target.tilingTreeNodeCasesOrThrow() {
+            case .window(let window): window
+            case .tilingContainer(let container): findIn(tree: container, virtual: virtual)
         }
     }
 }

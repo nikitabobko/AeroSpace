@@ -20,19 +20,15 @@ final class SplitArgsTest: XCTestCase {
 private func testSucSplit(_ str: String, expected: [String]) {
     let result = str.splitArgs()
     switch result {
-        case .success(let actual):
-            expect(actual) == expected
-        case .failure:
-            XCTFail("\(str) split is not successful")
+        case .success(let actual): expect(actual) == expected
+        case .failure: XCTFail("\(str) split is not successful")
     }
 }
 
 private func testFailSplit(_ str: String) {
     let result = str.splitArgs()
     switch result {
-        case .success:
-            XCTFail("\(str) is expected to fail to split")
-        case .failure:
-            break
+        case .success: XCTFail("\(str) is expected to fail to split")
+        case .failure: break
     }
 }

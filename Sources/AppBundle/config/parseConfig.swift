@@ -92,15 +92,10 @@ enum TomlParseError: Error, CustomStringConvertible {
     case syntax(_ message: String)
 
     var description: String {
-        switch self {
-            case .semantic(let backtrace, let message):
-                if case .root = backtrace { // todo Make 'split' + flatten normalization prettier
-                    return message
-                } else {
-                    return "\(backtrace): \(message)"
-                }
-            case .syntax(let message):
-                return message
+        return switch self {
+            // todo Make 'split' + flatten normalization prettier
+            case .semantic(let backtrace, let message): backtrace.isRoot ? message : "\(backtrace): \(message)"
+            case .syntax(let message): message
         }
     }
 }
@@ -172,15 +167,13 @@ private let configParser: [String: any ParserProtocol<Config>] = [
 
 private extension ParsedCmd where T == any Command {
     func toEither() -> Parsed<T> {
-        switch self {
+        return switch self {
             case .cmd(let a):
-                return a.info.allowInConfig
+                a.info.allowInConfig
                     ? .success(a)
                     : .failure("Command '\(a.info.kind.rawValue)' cannot be used in config")
-            case .help(let a):
-                return .failure(a)
-            case .failure(let a):
-                return .failure(a)
+            case .help(let a): .failure(a)
+            case .failure(let a): .failure(a)
         }
     }
 }
@@ -518,17 +511,19 @@ indirect enum TomlBacktrace: CustomStringConvertible {
     case pair(TomlBacktrace, TomlBacktrace)
 
     var description: String {
-        switch self {
-            case .root:
-                error("Impossible")
-            case .rootKey(let value):
-                return value
-            case .key(let value):
-                return "." + value
-            case .index(let index):
-                return "[\(index)]"
-            case .pair(let first, let second):
-                return first.description + second.description
+        return switch self {
+            case .root: errorT("Impossible")
+            case .rootKey(let value): value
+            case .key(let value): "." + value
+            case .index(let index): "[\(index)]"
+            case .pair(let first, let second): first.description + second.description
+        }
+    }
+
+    var isRoot: Bool {
+        return switch self {
+            case .root: true
+            default: false
         }
     }
 

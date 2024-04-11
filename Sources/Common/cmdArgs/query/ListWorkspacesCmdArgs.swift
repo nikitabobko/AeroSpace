@@ -60,13 +60,10 @@ public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorksp
         .filter("Specified flags require explicit --monitor") { $0.real == .init() || !$0.real.onMonitors.isEmpty }
         .flatMap { raw in
             let uniqueOptions = raw.uniqueOptions
-            switch uniqueOptions.count {
-                case 1:
-                    return .cmd(raw)
-                case 0:
-                    return .failure("'list-workspaces' mandatory option is not specified (--all|--focused|--monitor)")
-                default:
-                    return .failure("Conflicting options: \(uniqueOptions.joined(separator: ", "))")
+            return switch uniqueOptions.count {
+                case 1: .cmd(raw)
+                case 0: .failure("'list-workspaces' mandatory option is not specified (--all|--focused|--monitor)")
+                default: .failure("Conflicting options: \(uniqueOptions.joined(separator: ", "))")
             }
         }
         .flatMap { raw in

@@ -14,29 +14,23 @@ public extension Result {
     }
 
     func getOrNil() -> Success? {
-        switch self {
-            case .success(let success):
-                return success
-            case .failure:
-                return nil
+        return switch self {
+            case .success(let success): success
+            case .failure: nil
         }
     }
 
     func getOrNils() -> (Success?, Failure?) {
-        switch self {
-            case .success(let success):
-                return (success, nil)
-            case .failure(let failure):
-                return (nil, failure)
+        return switch self {
+            case .success(let success): (success, nil)
+            case .failure(let failure): (nil, failure)
         }
     }
 
     var errorOrNil: Failure? {
-        switch self {
-            case .success:
-                return nil
-            case .failure(let f):
-                return f
+        return switch self {
+            case .success: nil
+            case .failure(let f): f
         }
     }
 }

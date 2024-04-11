@@ -5,11 +5,9 @@ func parseCommand(_ raw: String) -> ParsedCmd<any Command> {
     if raw.starts(with: "exec-and-forget") {
         return .cmd(ExecAndForgetCommand(args: ExecAndForgetCmdArgs(bashScript: raw.removePrefix("exec-and-forget"))))
     }
-    switch raw.splitArgs() {
-        case .success(let args):
-            return parseCommand(args)
-        case .failure(let fail):
-            return .failure(fail)
+    return switch raw.splitArgs() {
+        case .success(let args): parseCommand(args)
+        case .failure(let fail): .failure(fail)
     }
 }
 

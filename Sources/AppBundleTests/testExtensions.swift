@@ -34,32 +34,26 @@ extension HotkeyBinding: Equatable {
 
 extension MonitorDescription: Equatable {
     public static func == (lhs: MonitorDescription, rhs: MonitorDescription) -> Bool {
-        switch (lhs, rhs) {
-            case (.sequenceNumber(let a), .sequenceNumber(let b)):
-                return a == b
-            case (.main, .main):
-                return true
-            case (.secondary, .secondary):
-                return true
-            case (.pattern, .pattern):
-                return true // Technically incorrect, but good enough for tests
-            default:
-                return false
+        return switch (lhs, rhs) {
+            case (.sequenceNumber(let a), .sequenceNumber(let b)): a == b
+            case (.main, .main): true
+            case (.secondary, .secondary): true
+            case (.pattern, .pattern): true // Technically incorrect, but good enough for tests
+            default: false
         }
     }
 }
 
 extension DynamicConfigValue: Equatable {
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        switch (lhs, rhs) {
-            case (.constant(let lhsConstant), .constant(let rhsConstant)):
-                return lhsConstant == rhsConstant
-            case (.perMonitor(let lhsMonitors, let lhsDefaultValue), .perMonitor(let rhsMonitors, let rhsDefaultValue)):
-                return lhsDefaultValue == rhsDefaultValue
+        return switch (lhs, rhs) {
+            case (.constant(let lhsConstant), .constant(let rhsConstant)): lhsConstant == rhsConstant
+            case (.perMonitor(let lhsMonitors, let lhsDefaultValue),
+                  .perMonitor(let rhsMonitors, let rhsDefaultValue)):
+                lhsDefaultValue == rhsDefaultValue
                     && lhsMonitors.count == rhsMonitors.count
                     && zip(lhsMonitors, rhsMonitors).allSatisfy { $0.description == $1.description && $0.value == $1.value }
-            default:
-                return false
+            default: false
         }
     }
 }

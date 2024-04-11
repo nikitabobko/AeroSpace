@@ -5,19 +5,15 @@ public enum Lateinit<T> {
 
     public var val: T {
         switch self {
-            case .initialized(let value):
-                return value
-            case .uninitialized:
-                error("Property is not initialized")
+            case .initialized(let value): return value
+            case .uninitialized: error("Property is not initialized")
         }
     }
 
     public var isInitialized: Bool {
-        switch self {
-            case .initialized:
-                return true
-            case .uninitialized:
-                return false
+        return switch self {
+            case .initialized: true
+            case .uninitialized: false
         }
     }
 }

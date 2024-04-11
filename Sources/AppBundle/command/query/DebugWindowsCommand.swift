@@ -63,10 +63,8 @@ struct DebugWindowsCommand: Command {
 
 func debugWindowsIfRecording(_ window: Window) {
     switch debugWindowsState {
-        case .recording:
-            break
-        case .notRecording, .recordingAborted:
-            return
+        case .recording: break
+        case .notRecording, .recordingAborted: return
     }
     if debugWindowsLog.count > debugWindowsLimit {
         debugWindowsState = .recordingAborted

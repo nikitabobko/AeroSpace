@@ -17,14 +17,10 @@ struct MacosNativeFullscreenCommand: Command {
         }
         let axWindow = window.asMacWindow().axWindow
         let prevState = window.isMacosFullscreen
-        let newState: Bool
-        switch args.toggle {
-            case .on:
-                newState = true
-            case .off:
-                newState = false
-            case .toggle:
-                newState = !prevState
+        let newState: Bool = switch args.toggle {
+            case .on: true
+            case .off: false
+            case .toggle: !prevState
         }
         if newState == prevState {
             if newState {
