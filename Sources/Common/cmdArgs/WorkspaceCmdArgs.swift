@@ -48,9 +48,7 @@ enum RawWorkspaceTarget: Equatable {
 
     func parse(wrapAround: Bool?, autoBackAndForth: Bool?) -> ParsedCmd<WTarget> {
         switch self {
-        case .next:
-            fallthrough
-        case .prev:
+        case .prev, .next:
             if autoBackAndForth != nil {
                 return .failure("--auto-back-and-forth is not allowed for (next|prev)")
             }

@@ -9,9 +9,10 @@ The dependencies that are required to build AeroSpace:
 - [xcbeautify](https://github.com/cpisciotta/xcbeautify)
 - [GNU sed](https://www.gnu.org/software/sed/)
 - [Asciidoctor](https://asciidoctor.org/)
+- [SwiftLint](https://github.com/realm/SwiftLint)
 
 ```bash
-brew install xcodegen gsed asciidoctor xcbeautify
+brew install xcodegen gsed asciidoctor xcbeautify swiftlint
 ```
 
 ## Create codesign certificate

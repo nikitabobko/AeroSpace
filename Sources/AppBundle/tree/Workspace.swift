@@ -83,7 +83,7 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, Custom
         }
     }
 
-    static func ==(lhs: Workspace, rhs: Workspace) -> Bool {
+    static func == (lhs: Workspace, rhs: Workspace) -> Bool {
         check((lhs === rhs) == (lhs.name == rhs.name))
         return lhs === rhs
     }
@@ -148,7 +148,7 @@ private func rearrangeWorkspacesOnMonitors() {
     var oldVisibleScreens: Set<CGPoint> = screenPointToVisibleWorkspace.keys.toSet()
 
     let newScreens = monitors.map(\.rect.topLeftCorner)
-    var newScreenToOldScreenMapping: [CGPoint:CGPoint] = [:]
+    var newScreenToOldScreenMapping: [CGPoint: CGPoint] = [:]
     for newScreen in newScreens {
         if let oldScreen = oldVisibleScreens.minBy({ ($0 - newScreen).vectorLength }) {
             check(oldVisibleScreens.remove(oldScreen) != nil)

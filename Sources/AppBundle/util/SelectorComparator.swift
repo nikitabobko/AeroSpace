@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-struct SelectorComparator<T, S : Comparable>: SortComparator, Hashable {
+struct SelectorComparator<T, S: Comparable>: SortComparator, Hashable {
     typealias Compared = T
     var order: SortOrder = .forward
     let selector: (T) -> S
@@ -18,7 +18,7 @@ struct SelectorComparator<T, S : Comparable>: SortComparator, Hashable {
         }
     }
 
-    static func ==(lhs: SelectorComparator<T, S>, rhs: SelectorComparator<T, S>) -> Bool {
+    static func == (lhs: SelectorComparator<T, S>, rhs: SelectorComparator<T, S>) -> Bool {
         error("Not supported")
     }
     func hash(into hasher: inout Hasher) {

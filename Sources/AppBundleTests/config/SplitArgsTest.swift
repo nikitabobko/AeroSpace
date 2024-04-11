@@ -21,7 +21,7 @@ private func testSucSplit(_ str: String, expected: [String]) {
     let result = str.splitArgs()
     switch result {
     case .success(let actual):
-        expect(actual).to(equal(expected))
+        expect(actual) == expected
     case .failure:
         XCTFail("\(str) split is not successful")
     }

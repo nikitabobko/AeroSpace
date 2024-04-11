@@ -269,12 +269,10 @@ private func destroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, d
 private func onWindowDetected(_ window: Window, startup: Bool) {
     check(Thread.current.isMainThread)
     debugWindowsIfRecording(window)
-    for callback in config.onWindowDetected {
-        if callback.matches(window, startup: startup) {
-            _ = callback.run.run(CommandMutableState(.window(window)))
-            if !callback.checkFurtherCallbacks {
-                return
-            }
+    for callback in config.onWindowDetected where callback.matches(window, startup: startup) {
+        _ = callback.run.run(CommandMutableState(.window(window)))
+        if !callback.checkFurtherCallbacks {
+            return
         }
     }
 }

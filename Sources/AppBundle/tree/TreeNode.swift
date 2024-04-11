@@ -123,11 +123,11 @@ class TreeNode: Equatable {
         unbindIfBound() ?? errorT("\(self) is already unbound")
     }
 
-    static func ==(lhs: TreeNode, rhs: TreeNode) -> Bool {
+    static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {
         lhs === rhs
     }
 
-    private var userData: [String:Any] = [:]
+    private var userData: [String: Any] = [:]
     func getUserData<T>(key: TreeNodeUserDataKey<T>) -> T? { userData[key.key] as! T? }
     func putUserData<T>(key: TreeNodeUserDataKey<T>, data: T) {
         userData[key.key] = data
@@ -159,7 +159,7 @@ struct BindingData {
 }
 
 class NilTreeNode: TreeNode, NonLeafTreeNodeObject {
-    private override init() {
+    override private init() {
         super.init()
     }
     static let instance = NilTreeNode()

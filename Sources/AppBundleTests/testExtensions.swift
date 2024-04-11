@@ -4,7 +4,7 @@ import Foundation
 import TOMLKit
 
 extension WindowDetectedCallback: Equatable {
-    public static func ==(lhs: WindowDetectedCallback, rhs: WindowDetectedCallback) -> Bool {
+    public static func == (lhs: WindowDetectedCallback, rhs: WindowDetectedCallback) -> Bool {
         check(
             lhs.matcher.appNameRegexSubstring == nil &&
                 lhs.matcher.windowTitleRegexSubstring == nil &&
@@ -21,19 +21,19 @@ extension [TomlParseError] {
 }
 
 extension Mode: Equatable {
-    public static func ==(lhs: Mode, rhs: Mode) -> Bool {
+    public static func == (lhs: Mode, rhs: Mode) -> Bool {
         lhs.name == rhs.name && lhs.bindings == rhs.bindings
     }
 }
 
 extension HotkeyBinding: Equatable {
-    public static func ==(lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
+    public static func == (lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
         lhs.modifiers == rhs.modifiers && lhs.key == rhs.key && lhs.commands.map(\.describe) == rhs.commands.map(\.describe)
     }
 }
 
 extension MonitorDescription: Equatable {
-    public static func ==(lhs: MonitorDescription, rhs: MonitorDescription) -> Bool {
+    public static func == (lhs: MonitorDescription, rhs: MonitorDescription) -> Bool {
         switch (lhs, rhs) {
         case (.sequenceNumber(let a), .sequenceNumber(let b)):
             return a == b
@@ -50,7 +50,7 @@ extension MonitorDescription: Equatable {
 }
 
 extension DynamicConfigValue: Equatable {
-    public static func ==(lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         switch (lhs, rhs) {
         case (.constant(let lhsConstant), .constant(let rhsConstant)):
             return lhsConstant == rhsConstant
@@ -65,20 +65,20 @@ extension DynamicConfigValue: Equatable {
 }
 
 extension Gaps: Equatable {
-    public static func ==(lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.outer == rhs.outer && lhs.inner == rhs.inner
     }
 }
 
 extension Gaps.Outer: Equatable {
-    public static func ==(lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.left == rhs.left && lhs.right == rhs.right &&
             lhs.bottom == rhs.bottom && lhs.top == rhs.top
     }
 }
 
 extension Gaps.Inner: Equatable {
-    public static func ==(lhs: Self, rhs: Self) -> Bool {
+    public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.horizontal == rhs.horizontal && lhs.vertical == rhs.vertical
     }
 }

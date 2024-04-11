@@ -137,7 +137,7 @@ struct Parser<S: Copyable, T>: ParserProtocol {
 
     init(_ keyPath: WritableKeyPath<S, T>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) {
         self.keyPath = keyPath
-        self.parse = { raw, backtrace, errors -> ParsedToml<T> in parse(raw, backtrace) }
+        self.parse = { raw, backtrace, _ -> ParsedToml<T> in parse(raw, backtrace) }
     }
 }
 
@@ -337,7 +337,7 @@ private extension TOMLValueConvertible {
         guard let (actualKey, value): (String, TOMLValueConvertible) = table.count == 1 ? table.first : nil else {
             return .failure(singleKeyError)
         }
-        if expectedKey != nil && expectedKey != actualKey  {
+        if expectedKey != nil && expectedKey != actualKey {
             return .failure(singleKeyError)
         }
         backtrace = backtrace + .key(actualKey)
@@ -532,7 +532,7 @@ indirect enum TomlBacktrace: CustomStringConvertible {
         }
     }
 
-    static func +(lhs: TomlBacktrace, rhs: TomlBacktrace) -> TomlBacktrace {
+    static func + (lhs: TomlBacktrace, rhs: TomlBacktrace) -> TomlBacktrace {
         if case .root = lhs {
             if case .key(let newRoot) = rhs {
                 return .rootKey(newRoot)

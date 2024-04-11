@@ -15,7 +15,7 @@ public struct ServerVersionInternalCommandCmdArgs: RawCmdArgs, CmdArgs {
     public static let parser: CmdParser<Self> = noArgsParser(.serverVersionInternalCommand, allowInConfig: false)
 }
 
-func noArgsParser<T : Copyable>(_ kind: CmdKind, allowInConfig: Bool) -> CmdParser<T> {
+func noArgsParser<T: Copyable>(_ kind: CmdKind, allowInConfig: Bool) -> CmdParser<T> {
     cmdParser(
         kind: kind,
         allowInConfig: allowInConfig,

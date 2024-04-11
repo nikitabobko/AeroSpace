@@ -50,7 +50,7 @@ var allMonitorsRectsUnion: Rect {
 }
 
 extension String? {
-    var isNilOrEmpty: Bool { self == nil || self == "" }
+    var isNilOrEmpty: Bool { self == nil || self?.isEmpty == true }
 }
 
 var apps: [AbstractApp] {
@@ -74,11 +74,11 @@ extension String {
     var quoted: String { "\"\(self)\"" }
 }
 
-func -(a: CGPoint, b: CGPoint) -> CGPoint {
+func - (a: CGPoint, b: CGPoint) -> CGPoint {
     CGPoint(x: a.x - b.x, y: a.y - b.y)
 }
 
-func +(a: CGPoint, b: CGPoint) -> CGPoint {
+func + (a: CGPoint, b: CGPoint) -> CGPoint {
     CGPoint(x: a.x + b.x, y: a.y + b.y)
 }
 

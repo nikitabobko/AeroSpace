@@ -14,7 +14,7 @@ class GlobalObserver {
         subscribe(NSWorkspace.activeSpaceDidChangeNotification)
         subscribe(NSWorkspace.didTerminateApplicationNotification)
 
-        NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseUp]) { event in
+        NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseUp]) { _ in
             resetManipulatedWithMouseIfPossible()
             // Detect clicks on desktop of different monitors
             let focusedMonitor = mouseLocation.monitorApproximation

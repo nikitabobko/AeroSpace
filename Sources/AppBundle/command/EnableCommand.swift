@@ -23,10 +23,8 @@ struct EnableCommand: Command {
         TrayMenuModel.shared.isEnabled = newState
         if newState {
             for workspace in Workspace.all {
-                for window in workspace.allLeafWindowsRecursive {
-                    if window.isFloating {
-                        window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
-                    }
+                for window in workspace.allLeafWindowsRecursive where window.isFloating {
+                    window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
                 }
             }
             activateMode(mainModeId)

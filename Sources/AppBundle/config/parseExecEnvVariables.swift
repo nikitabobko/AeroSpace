@@ -40,7 +40,7 @@ private func parseEnvVariables(_ raw: TOMLValueConvertible, _ backtrace: TomlBac
     }
     let mutated = table.keys
     let fullEnv: [String: String] = env
-    let baseEnv: [String: String] = fullEnv.filter { (key, value) -> Bool in !mutated.contains(key) }
+    let baseEnv: [String: String] = fullEnv.filter { (key, _) -> Bool in !mutated.contains(key) }
     var result: [String: String] = [:]
     for (key, value) in table {
         let backtrace = backtrace + .key(key)

@@ -45,7 +45,7 @@ struct SplitCommand: Command {
         case .macosInvisibleWindowsContainer:
             state.stderr.append("Can't split invisible windows (minimized windows or windows of hidden apps). This behavior may change in the future")
             return false
-        case .macosFullscreenWindowsContainer(_):
+        case .macosFullscreenWindowsContainer:
             state.stderr.append("Can't split fullscreen windows. This behavior may change in the future")
             return false
         }

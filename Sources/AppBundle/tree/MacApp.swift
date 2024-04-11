@@ -43,10 +43,8 @@ final class MacApp: AbstractApp {
     }
 
     static func garbageCollectTerminatedApps() {
-        for app in Array(allAppsMap.values) {
-            if app.nsApp.isTerminated {
-                app.garbageCollect()
-            }
+        for app in Array(allAppsMap.values) where app.nsApp.isTerminated {
+            app.garbageCollect()
         }
     }
 

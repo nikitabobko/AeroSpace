@@ -354,10 +354,10 @@ final class ConfigTest: XCTestCase {
             ' f' = 'f'
             """
         )
-        expect(errors1.descriptions).to(equal([
+        expect(errors1.descriptions) == [
             "key-mapping.key-notation-to-key-code: ' f' is invalid key notation",
             "key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code"
-        ]))
+        ]
 
         let (dvorakConfig, dvorakErrors) = parseConfig(
             """
@@ -366,6 +366,6 @@ final class ConfigTest: XCTestCase {
         )
         XCTAssertEqual(dvorakErrors.descriptions, [])
         XCTAssertEqual(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
-        expect(dvorakConfig.keyMapping.resolve()["quote"]).to(equal(.q))
+        expect(dvorakConfig.keyMapping.resolve()["quote"]) == .q
     }
 }

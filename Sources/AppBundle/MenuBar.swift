@@ -39,7 +39,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
                 case .file(let url):
                     url.open(with: editor)
                 case .noCustomConfigExists:
-                    let _ = try? FileManager.default.copyItem(atPath: defaultConfigUrl.path, toPath: fallbackConfig.path)
+                    _ = try? FileManager.default.copyItem(atPath: defaultConfigUrl.path, toPath: fallbackConfig.path)
                     fallbackConfig.open(with: editor)
                 case .ambiguousConfigError:
                     fallbackConfig.open(with: editor)

@@ -105,12 +105,12 @@ private extension TilingContainer {
             let gap = rawGap - (i == 0 ? rawGap / 2 : 0) - (i == lastIndex ? rawGap / 2 : 0)
             child.layoutRecursive(
                 i == 0 ? point : point.addingOffset(orientation, rawGap / 2),
-                width:  orientation == .h ? child.hWeight - gap : width,
+                width: orientation == .h ? child.hWeight - gap : width,
                 height: orientation == .v ? child.vWeight - gap : height,
                 virtual: Rect(
                     topLeftX: virtualPoint.x,
                     topLeftY: virtualPoint.y,
-                    width:  orientation == .h ? child.hWeight : width,
+                    width: orientation == .h ? child.hWeight : width,
                     height: orientation == .v ? child.vWeight : height
                 ),
                 context

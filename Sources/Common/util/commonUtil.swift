@@ -89,7 +89,7 @@ public extension Int {
     func toDouble() -> Double { Double(self) }
 }
 
-public func +<K, V>(lhs: [K: V], rhs: [K: V]) -> [K: V] {
+public func + <K, V>(lhs: [K: V], rhs: [K: V]) -> [K: V] {
     lhs.merging(rhs) { _, r in r }
 }
 

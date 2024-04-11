@@ -2,7 +2,7 @@ import AppKit
 import Common
 import Foundation
 
-struct WorkspaceCommand : Command {
+struct WorkspaceCommand: Command {
     let args: WorkspaceCmdArgs
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {

@@ -1,0 +1,51 @@
+excluded:
+  - .build
+  - .xcode-build
+
+# https://realm.github.io/SwiftLint/rule-directory.html
+only_rules:
+  # - line_length # todo fix it
+  - colon
+  - computed_accessors_order
+  - dynamic_inline # Avoid using ‘dynamic’ and ‘@inline(__always)’ together
+  - empty_count # Prefer checking isEmpty over comparing count to zero
+  - empty_enum_arguments
+  - empty_parameters # Prefer () -> over Void ->
+  - empty_string # Prefer checking isEmpty over comparing string to an empty string literal
+  - file_name_no_space
+  - first_where
+  - implicit_getter
+  - is_disjoint
+  - last_where # Prefer using .last(where:) over .filter { }.last in collections
+  - legacy_constant
+  - legacy_constructor # Swift constructors are preferred over legacy convenience functions
+  - legacy_hashing # Prefer using the hash(into:) function instead of overriding hashValue
+  - legacy_nsgeometry_functions # Struct extension properties and methods are preferred over legacy functions
+  - legacy_random # Prefer using type.random(in:) over legacy functions
+  - local_doc_comment # Prefer regular comments over doc comments in local scopes
+  - modifier_order
+  - nimble_operator
+  - no_fallthrough_only
+  - no_space_in_method_call
+  - nsobject_prefer_isequal # NSObject subclasses should implement isEqual instead of ==
+  - opening_brace
+  - operator_whitespace
+  - optional_enum_case_matching
+  - redundant_discardable_let
+  - redundant_nil_coalescing # nil coalescing operator is only evaluated if the lhs is nil, coalescing operator with nil as rhs is redundant
+  - toggle_bool
+  - trailing_newline
+  - trailing_semicolon # Lines should not have trailing semicolons
+  - trailing_whitespace # Lines should not have trailing whitespace
+  - unavailable_condition # Use #unavailable/#available instead of #available/#unavailable with an empty body.
+  - unneeded_break_in_switch # Avoid using unneeded break statements
+  - unneeded_override # Remove overridden functions that don’t do anything except call their super
+  - unused_closure_parameter
+  - unused_control_flow_label
+  - unused_enumerated # When the index or the item is not used, .enumerated() can be removed.
+  - unused_optional_binding # Prefer != nil over let _ =
+  - unused_setter_value
+  - weak_delegate # Delegates should be weak to avoid reference cycles
+
+strict: true
+# quiet: true

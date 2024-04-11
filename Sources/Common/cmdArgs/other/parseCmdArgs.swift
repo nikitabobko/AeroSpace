@@ -1,6 +1,6 @@
 public func parseCmdArgs(_ args: [String]) -> ParsedCmd<CmdArgs> {
     let subcommand = String(args.first ?? "")
-    if subcommand == "" {
+    if subcommand.isEmpty {
         return .failure("Can't parse empty string command")
     }
     if let subcommandParser: any SubCommandParserProtocol = subcommands[subcommand] {

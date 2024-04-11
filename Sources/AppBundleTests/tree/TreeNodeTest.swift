@@ -63,7 +63,7 @@ final class TreeNodeTest: XCTestCase {
         let workspace = Workspace.get(byName: name)
         workspace.rootTilingContainer.apply {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                let _ = TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1)
+                _ = TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1)
             }
         }
         XCTAssertEqual(workspace.rootTilingContainer.children.count, 1)

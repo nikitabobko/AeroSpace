@@ -9,7 +9,7 @@ class AbstractApp: Hashable {
         self.id = id
     }
 
-    static func ==(lhs: AbstractApp, rhs: AbstractApp) -> Bool {
+    static func == (lhs: AbstractApp, rhs: AbstractApp) -> Bool {
         if lhs.pid == rhs.pid {
             check(lhs === rhs)
             return true

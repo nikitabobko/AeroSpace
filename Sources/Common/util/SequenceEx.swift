@@ -37,19 +37,19 @@ public extension Sequence {
         minBy(selector) ?? errorT("Empty sequence")
     }
 
-    @inlinable func minBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
+    @inlinable func minBy<S: Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
         self.min(by: { a, b in selector(a) < selector(b) })
     }
 
-    @inlinable func maxByOrThrow<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
+    @inlinable func maxByOrThrow<S: Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
         self.maxBy(selector) ?? errorT("Empty sequence")
     }
 
-    @inlinable func maxBy<S : Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
+    @inlinable func maxBy<S: Comparable>(_ selector: (Self.Element) -> S) -> Self.Element? {
         self.max(by: { a, b in selector(a) < selector(b) })
     }
 
-    @inlinable func sortedBy<S : Comparable>(_ selector: (Self.Element) -> S) -> [Self.Element] {
+    @inlinable func sortedBy<S: Comparable>(_ selector: (Self.Element) -> S) -> [Self.Element] {
         sorted(by: { a, b in selector(a) < selector(b) })
     }
 

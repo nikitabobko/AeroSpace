@@ -35,7 +35,7 @@ struct LayoutCommand: Command {
             case .macosInvisibleWindowsContainer:
                 state.stderr.append("Can't change layout of macOS invisible windows (hidden application or minimized windows). This behavior is subject to change")
                 return false
-            case .macosFullscreenWindowsContainer(_):
+            case .macosFullscreenWindowsContainer:
                 state.stderr.append("Can't change layout of macOS fullscreen windows. This behavior is subject to change")
                 return false
             case .tilingContainer:

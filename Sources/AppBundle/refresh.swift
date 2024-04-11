@@ -96,7 +96,7 @@ private func normalizeContainers() {
 
 private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
     for app in apps {
-        let _ = app.detectNewWindowsAndGetAll(startup: startup)
+        _ = app.detectNewWindowsAndGetAll(startup: startup)
     }
 }
 

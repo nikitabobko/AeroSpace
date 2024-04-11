@@ -10,7 +10,7 @@ final class TestApp: AbstractApp {
 
     var _windows: [Window] = []
     override func detectNewWindowsAndGetAll(startup: Bool) -> [Window] { _windows }
-    var windows: [Window]  {
+    var windows: [Window] {
         get { _windows }
         set {
             if let focusedWindow {

@@ -10,7 +10,7 @@ public protocol CmdArgs {
     static var info: CmdStaticInfo { get }
 }
 
-public struct CmdParser<T : Copyable> {
+public struct CmdParser<T: Copyable> {
     let info: CmdStaticInfo
     let options: [String: any ArgParserProtocol<T>]
     let arguments: [any ArgParserProtocol<T>]
@@ -87,7 +87,7 @@ public enum ParsedCmd<T> {
 }
 
 // todo support conflicting options
-public func parseRawCmdArgs<T : RawCmdArgs>(_ raw: T, _ args: [String]) -> ParsedCmd<T> {
+public func parseRawCmdArgs<T: RawCmdArgs>(_ raw: T, _ args: [String]) -> ParsedCmd<T> {
     var args = args
     var raw = raw
     var errors: [String] = []
@@ -194,7 +194,7 @@ public struct ArgParser<T: Copyable, K>: ArgParserProtocol {
         self.argPlaceholderIfMandatory = argPlaceholderIfMandatory
     }
 
-    public static func ==(lhs: ArgParser<T, K>, rhs: ArgParser<T, K>) -> Bool { lhs.keyPath == rhs.keyPath }
+    public static func == (lhs: ArgParser<T, K>, rhs: ArgParser<T, K>) -> Bool { lhs.keyPath == rhs.keyPath }
     public func hash(into hasher: inout Hasher) { hasher.combine(keyPath) }
 }
 
@@ -203,19 +203,18 @@ func newArgParser<T: Copyable, K>(
     _ parse: @escaping (String, inout [String]) -> Parsed<K>,
     mandatoryArgPlaceholder: String
 ) -> ArgParser<T, Lateinit<K>> {
-    ArgParser(
-        keyPath,
-        { arg, nextArgs in parse(arg, &nextArgs).map { .initialized($0) } },
-        argPlaceholderIfMandatory: mandatoryArgPlaceholder
-    )
+    let parseWrapper: (String, inout [String]) -> Parsed<Lateinit<K>> = { arg, nextArgs in
+        parse(arg, &nextArgs).map { .initialized($0) }
+    }
+    return ArgParser(keyPath, parseWrapper, argPlaceholderIfMandatory: mandatoryArgPlaceholder)
 }
 
 public func trueBoolFlag<T: Copyable>(_ keyPath: WritableKeyPath<T, Bool>) -> ArgParser<T, Bool> {
-    ArgParser(keyPath) { arg, nextArgs in .success(true) }
+    ArgParser(keyPath) { _, _ in .success(true) }
 }
 
 public func boolFlag<T: Copyable>(_ keyPath: WritableKeyPath<T, Bool?>) -> ArgParser<T, Bool?> {
-    ArgParser(keyPath) { arg, nextArgs in
+    ArgParser(keyPath) { _, nextArgs in
         let value: Bool
         if let nextArg = nextArgs.first, nextArg == "no" {
             _ = nextArgs.next() // Eat the argument
@@ -246,7 +245,7 @@ public func singleValueOption<T: Copyable, V>(
 }
 
 public func optionalTrueBoolFlag<T: Copyable>(_ keyPath: WritableKeyPath<T, Bool?>) -> ArgParser<T, Bool?> {
-    ArgParser(keyPath) { arg, nextArgs in .success(true) }
+    ArgParser(keyPath) { _, _ in .success(true) }
 }
 
 // todo reuse in config

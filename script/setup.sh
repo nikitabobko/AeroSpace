@@ -11,6 +11,7 @@ setup() {
         $(brew --prefix)/opt/tree/bin
         $(brew --prefix)/opt/xcodegen/bin
         $(brew --prefix)/opt/xcbeautify/bin
+        $(brew --prefix)/opt/swiftlint/bin
         /bin # bash
         /usr/bin # xcodebuild, zip
     )
