@@ -1,6 +1,23 @@
 import TOMLKit
 import Common
 
+struct WindowDetectedCallback: Copyable {
+    var matcher: CallbackMatcher = CallbackMatcher()
+    var checkFurtherCallbacks: Bool = false
+    var rawRun: [any Command]? = nil
+
+    var run: [any Command] {
+        rawRun ?? errorT("ID-46D063B2 should have discarded nil")
+    }
+}
+
+struct CallbackMatcher: Copyable {
+    var appId: String?
+    var appNameRegexSubstring: Regex<AnyRegexOutput>?
+    var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
+    var duringAeroSpaceStartup: Bool?
+}
+
 private let windowDetectedParser: [String: any ParserProtocol<WindowDetectedCallback>] = [
     "if": Parser(\.matcher, parseMatcher),
     "check-further-callbacks": Parser(\.checkFurtherCallbacks, parseBool),
