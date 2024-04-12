@@ -151,7 +151,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "default-root-container-layout": Parser(\.defaultRootContainerLayout, parseLayout),
     "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, parseDefaultContainerOrientation),
 
-    "indent-for-nested-containers-with-the-same-orientation": Parser(\.indentForNestedContainersWithTheSameOrientation, parseInt),
+    "indent-for-nested-containers-with-the-same-orientation": Parser(\.indentForNestedContainersWithTheSameOrientation, parseIndentForNestedContainersWithTheSameOrientation),
     "start-at-login": Parser(\.startAtLogin, parseBool),
     "accordion-padding": Parser(\.accordionPadding, parseInt),
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseExecOnWorkspaceChange),
@@ -246,6 +246,14 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
         }
     }
     return (config, errors)
+}
+
+func parseIndentForNestedContainersWithTheSameOrientation(
+    _ raw: TOMLValueConvertible,
+    _ backtrace: TomlBacktrace
+) -> ParsedToml<Void> {
+    let msg = "Deprecated. Please drop it from the config. See https://github.com/nikitabobko/AeroSpace/issues/96"
+    return .failure(.semantic(backtrace, msg))
 }
 
 func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Int> {

@@ -12,12 +12,6 @@ extension Workspace {
 
 private extension TreeNode {
     func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) {
-        var point = point
-        if let orientation = (self as? TilingContainer)?.orientation, orientation == (parent as? TilingContainer)?.orientation {
-            point = orientation == .h
-                ? point + CGPoint(x: 0, y: config.indentForNestedContainersWithTheSameOrientation)
-                : point + CGPoint(x: config.indentForNestedContainersWithTheSameOrientation, y: 0)
-        }
         let physicalRect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
         switch nodeCases {
             case .workspace(let workspace):
