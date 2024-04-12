@@ -11,7 +11,7 @@ final class MoveCommandTest: XCTestCase {
             start = TestWindow(id: 1, parent: $0)
             TestWindow(id: 2, parent: $0)
         }
-        start.focus()
+        _ = start.focus()
 
         MoveCommand(args: MoveCmdArgs(.right)).run(.focused)
         XCTAssertEqual(root.layoutDescription, .h_tiles([.window(2), .window(1)]))
@@ -28,7 +28,7 @@ final class MoveCommandTest: XCTestCase {
                 }
             }
         }
-        start.focus()
+        _ = start.focus()
 
         MoveCommand(args: MoveCmdArgs(.right)).run(.focused)
         XCTAssertEqual(
@@ -60,7 +60,7 @@ final class MoveCommandTest: XCTestCase {
             }
         }
         window3.markAsMostRecentChild()
-        start.focus()
+        _ = start.focus()
 
         MoveCommand(args: MoveCmdArgs(.right)).run(.focused)
         XCTAssertEqual(
@@ -83,7 +83,7 @@ final class MoveCommandTest: XCTestCase {
         let root = Workspace.get(byName: name).rootTilingContainer
         let window1 = TestWindow(id: 1, parent: root, adaptiveWeight: 1)
         let window2 = TestWindow(id: 2, parent: root, adaptiveWeight: 2)
-        window2.focus()
+        _ = window2.focus()
 
         MoveCommand(args: MoveCmdArgs(.left)).run(.focused)
         XCTAssertEqual(window2.hWeight, 2)
@@ -100,7 +100,7 @@ final class MoveCommandTest: XCTestCase {
                 window2 = TestWindow(id: 2, parent: $0, adaptiveWeight: 1)
             }
         }
-        window1.focus()
+        _ = window1.focus()
 
         MoveCommand(args: MoveCmdArgs(.right)).run(.focused)
         XCTAssertEqual(window2.hWeight, 1)
@@ -117,7 +117,7 @@ final class MoveCommandTest: XCTestCase {
             start = TestWindow(id: 2, parent: $0)
             TestWindow(id: 3, parent: $0)
         }
-        start.focus()
+        _ = start.focus()
 
         MoveCommand(args: MoveCmdArgs(.up)).run(.focused)
         XCTAssertEqual(
@@ -141,7 +141,7 @@ final class MoveCommandTest: XCTestCase {
                 TestWindow(id: 4, parent: $0)
             }
         }
-        start.focus()
+        _ = start.focus()
 
         MoveCommand(args: MoveCmdArgs(.left)).run(.focused)
         XCTAssertEqual(
@@ -165,7 +165,7 @@ final class MoveCommandTest: XCTestCase {
             TestWindow(id: 1, parent: $0.rootTilingContainer)
             start = TestWindow(id: 2, parent: $0.rootTilingContainer)
         }
-        start.focus()
+        _ = start.focus()
 
         MoveCommand(args: MoveCmdArgs(.right)).run(.focused)
         XCTAssertEqual(
@@ -186,7 +186,7 @@ final class MoveCommandTest: XCTestCase {
             start = TestWindow(id: 1, parent: $0.rootTilingContainer)
             TestWindow(id: 2, parent: $0.rootTilingContainer)
         }
-        start.focus()
+        _ = start.focus()
 
         MoveCommand(args: MoveCmdArgs(.left)).run(.focused)
         XCTAssertEqual(

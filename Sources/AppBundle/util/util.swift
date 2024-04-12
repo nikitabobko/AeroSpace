@@ -40,7 +40,7 @@ private func makeAllWindowsVisibleAndRestoreSize() {
                 x: (monitorVisibleRect.width - windowSize.width) / 2,
                 y: (monitorVisibleRect.height - windowSize.height) / 2
             )
-            window.setFrame(point, windowSize)
+            _ = window.setFrame(point, windowSize)
         }
     }
 }

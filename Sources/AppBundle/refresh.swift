@@ -60,7 +60,7 @@ func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
 
 func takeFocusFromMacOs(_ nativeFocused: Window?, startup: Bool) { // alternative name: syncFocusFromMacOs
     if let nativeFocused, getFocusSourceOfTruth(startup: startup) == .macOs {
-        nativeFocused.focus()
+        _ = nativeFocused.focus()
         setFocusSourceOfTruth(.ownModel, startup: startup)
     }
 }

@@ -28,7 +28,7 @@ struct FocusCommand: Command {
             case .emptyWorkspace(let name):
                 result = WorkspaceCommand.run(state, name) && result
             case .window(let windowToFocus):
-                windowToFocus.focus()
+                result = windowToFocus.focus() && result
         }
         return result
     }
@@ -41,14 +41,10 @@ private func hitWorkspaceBoundaries(
 ) -> Bool {
     switch args.boundaries {
         case .workspace:
-            switch args.boundariesAction {
-                case .stop:
-                    return true
-                case .wrapAroundTheWorkspace:
-                    wrapAroundTheWorkspace(state, direction)
-                    return true
-                case .wrapAroundAllMonitors:
-                    error("Must be discarded by args parser")
+            return switch args.boundariesAction {
+                case .stop: true
+                case .wrapAroundTheWorkspace: wrapAroundTheWorkspace(state, direction)
+                case .wrapAroundAllMonitors: errorT("Must be discarded by args parser")
             }
         case .allMonitorsUnionFrame:
             let currentMonitor = state.subject.workspace.workspaceMonitor
@@ -76,8 +72,7 @@ private func hitAllMonitorsOuterFrameBoundaries(
         case .stop:
             return true
         case .wrapAroundTheWorkspace:
-            wrapAroundTheWorkspace(state, direction)
-            return true
+            return wrapAroundTheWorkspace(state, direction)
         case .wrapAroundAllMonitors:
             wrappedMonitor.activeWorkspace.findFocusTargetRecursive(snappedTo: direction.opposite)?.markAsMostRecentChild()
             return wrappedMonitor.focus(state)
@@ -90,10 +85,13 @@ private extension Monitor {
     }
 }
 
-private func wrapAroundTheWorkspace(_ state: CommandMutableState, _ direction: CardinalDirection) {
-    guard let windowToFocus = state.subject.workspace.findFocusTargetRecursive(snappedTo: direction.opposite) else { return }
+private func wrapAroundTheWorkspace(_ state: CommandMutableState, _ direction: CardinalDirection) -> Bool {
+    guard let windowToFocus = state.subject.workspace.findFocusTargetRecursive(snappedTo: direction.opposite) else {
+        state.stderr.append("No window to focus")
+        return false
+    }
     state.subject = .window(windowToFocus)
-    windowToFocus.focus()
+    return windowToFocus.focus()
 }
 
 private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingWindowData] {
