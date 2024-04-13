@@ -12,7 +12,7 @@ func refreshSession<T>(startup: Bool = false, forceFocus: Bool = false, body: ()
 
     let nativeFocused = getNativeFocusedWindow(startup: startup)
     if let nativeFocused { debugWindowsIfRecording(nativeFocused) }
-    takeFocusFromMacOs(nativeFocused, startup: startup)
+    updateFocusCache(nativeFocused)
     let focusBefore = focusedWindow
 
     refreshModel()
@@ -56,13 +56,6 @@ private func gc() {
 
 func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
     refreshAndLayout()
-}
-
-func takeFocusFromMacOs(_ nativeFocused: Window?, startup: Bool) { // alternative name: syncFocusFromMacOs
-    if let nativeFocused, getFocusSourceOfTruth(startup: startup) == .macOs {
-        _ = nativeFocused.focus()
-        setFocusSourceOfTruth(.ownModel, startup: startup)
-    }
 }
 
 private func refreshFocusedWorkspaceBasedOnFocusedWindow() { // todo drop. It should no longer be necessary
