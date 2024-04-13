@@ -2,7 +2,7 @@ import TOMLKit
 import Common
 
 struct WindowDetectedCallback: Copyable {
-    var matcher: CallbackMatcher = CallbackMatcher()
+    var matcher: WindowDetectedCallbackMatcher = WindowDetectedCallbackMatcher()
     var checkFurtherCallbacks: Bool = false
     var rawRun: [any Command]? = nil
 
@@ -11,7 +11,7 @@ struct WindowDetectedCallback: Copyable {
     }
 }
 
-struct CallbackMatcher: Copyable {
+struct WindowDetectedCallbackMatcher: Copyable {
     var appId: String?
     var appNameRegexSubstring: Regex<AnyRegexOutput>?
     var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
@@ -24,7 +24,7 @@ private let windowDetectedParser: [String: any ParserProtocol<WindowDetectedCall
     "run": Parser(\.rawRun, upcast({ parseCommandOrCommands($0).toParsedToml($1) })),
 ]
 
-private let matcherParsers: [String: any ParserProtocol<CallbackMatcher>] = [
+private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMatcher>] = [
     "app-id": Parser(\.appId, upcast(parseString)),
     "app-name-regex-substring": Parser(\.appNameRegexSubstring, upcast(parseCasInsensitiveRegex)),
     "window-title-regex-substring": Parser(\.windowTitleRegexSubstring, upcast(parseCasInsensitiveRegex)),
@@ -48,8 +48,8 @@ private func parseCasInsensitiveRegex(_ raw: TOMLValueConvertible, _ backtrace: 
     parseString(raw, backtrace).flatMap { parseCaseInsensitiveRegex($0).toParsedToml(backtrace) }
 }
 
-private func parseMatcher(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> CallbackMatcher {
-    parseTable(raw, CallbackMatcher(), matcherParsers, backtrace, &errors)
+private func parseMatcher(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> WindowDetectedCallbackMatcher {
+    parseTable(raw, WindowDetectedCallbackMatcher(), matcherParsers, backtrace, &errors)
 }
 
 private func parseWindowDetectedCallback(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> WindowDetectedCallback? {

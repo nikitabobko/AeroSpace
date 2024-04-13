@@ -236,7 +236,7 @@ final class ConfigTest: XCTestCase {
         )
         XCTAssertEqual(parsed.onWindowDetected, [
             WindowDetectedCallback(
-                matcher: CallbackMatcher(
+                matcher: WindowDetectedCallbackMatcher(
                     appId: nil,
                     appNameRegexSubstring: nil,
                     windowTitleRegexSubstring: nil
@@ -248,7 +248,7 @@ final class ConfigTest: XCTestCase {
                 ]
             ),
             WindowDetectedCallback(
-                matcher: CallbackMatcher(
+                matcher: WindowDetectedCallbackMatcher(
                     appId: "com.apple.systempreferences",
                     appNameRegexSubstring: nil,
                     windowTitleRegexSubstring: nil
