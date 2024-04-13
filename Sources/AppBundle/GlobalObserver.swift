@@ -17,23 +17,21 @@ class GlobalObserver {
         NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseUp]) { _ in
             resetManipulatedWithMouseIfPossible()
             // Detect clicks on desktop of different monitors
-            let focusedMonitor = mouseLocation.monitorApproximation
-            if monitors.count > 1 &&
-                   focusedMonitor.rect.topLeftCorner != Workspace.focused.workspaceMonitor.rect.topLeftCorner &&
-                   getNativeFocusedWindow(startup: false) == nil {
-                setFocusSourceOfTruth(.ownModel, startup: false)
-                focusedWorkspaceName = focusedMonitor.activeWorkspace.name
-                refreshAndLayout()
+            let clickedMonitor = mouseLocation.monitorApproximation
+            if clickedMonitor.activeWorkspace != Workspace.focused {
+                _ = refreshSession {
+                    WorkspaceCommand.run(.doesntMatter, clickedMonitor.activeWorkspace.name)
+                }
             }
         }
     }
 
     private static func subscribe(_ name: NSNotification.Name) {
         NSWorkspace.shared.notificationCenter.addObserver(
-                self,
-                selector: #selector(action),
-                name: name,
-                object: nil
+            self,
+            selector: #selector(action),
+            name: name,
+            object: nil
         )
     }
 }

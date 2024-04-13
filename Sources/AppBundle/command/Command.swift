@@ -21,6 +21,7 @@ class CommandMutableState {
     }
 
     static var focused: CommandMutableState { CommandMutableState(.focused) }
+    static var doesntMatter: CommandMutableState = focused
 }
 
 extension Command {
