@@ -38,18 +38,25 @@ brew install --cask nikitabobko/tap/aerospace
 ```
 
 > [!NOTE]
-> By using AeroSpace, you acknowledge that it's not notarized.
+> By using AeroSpace, you acknowledge that it's not [notarized](https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution).
 >
-> Notarization is a "security" feature by Apple. You send binaries to Apple and they either approve the binaries or not.
+> Notarization is a "security" feature by Apple.
+> You send binaries to Apple, and they either approve the binaries or not.
 > In reality, notarization is about building binaries the way Apple likes it.
-> Notarization costs developers time and requires paying $99 per year.
+>
+> Let's be honest.
+> Tiling window manager is not something Apple will be totally ok with.
+> Even if they approve one version, it doesn't mean that they won't revoke it (yes, they can do it), or approve further versions.
+>
+> I don't have anything against notarization as a concept.
+> I specifically don't like the way Apple does notarization.
 > I don't have time to fight Apple.
 >
 > [Homebrew installation script](https://github.com/nikitabobko/homebrew-tap/blob/main/Casks/aerospace.rb) is configured to
-> automatically delete quarantine attribute, that's why the app should work out of the box, without any warnings about AeroSpace
-> "being untrusted software"
+> automatically delete `com.apple.quarantine` attribute, that's why the app should work out of the box, without any warnings that
+> "Apple cannot check AeroSpace for malicious software"
 
-[Manual installation](./docs/manual-installation.md)
+[Manual installation](https://nikitabobko.github.io/AeroSpace/guide#manual-installation)
 
 ## Contributing, creating issues, submitting pull requests
 
@@ -57,7 +64,7 @@ See: [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ## Development
 
-A notes on how to setup the project, build it, how to run the tests, etc. can be found here: [docs/development.md](./docs/development.md)
+A notes on how to setup the project, build it, how to run the tests, etc. can be found here: [dev-docs/development.md](./dev-docs/development.md)
 
 ## Values of the project
 

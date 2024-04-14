@@ -4,6 +4,46 @@ include::util/site-attributes.adoc[]
 
 include::util/header.adoc[]
 
+[#installation]
+== Installation
+
+[#homebrew-installation]
+=== Homebrew installation (Preferred)
+
+https://brew.sh/[Homebrew] is a package manager for macOS
+
+[source,bash]
+----
+brew install --cask nikitabobko/tap/aerospace
+----
+
+[#manual-installation]
+=== Manual installation
+
+. Download the latest available zip from https://github.com/nikitabobko/AeroSpace/releases[releases page]
+. Unpack zip
+. Put unpacked `AeroSpace-v$VERSION/AeroSpace.app` to `/Applications`
+. Put unpacked `AeroSpace-v$VERSION/bin/aerospace` anywhere to `$PATH`
+(The step is optional. It is only needed if you want to be able to interact with AeroSpace from CLI)
+
+If you see this message
+
+----
+"AeroSpace.app" can't be opened because Apple cannot check it for malicious software.
+----
+
+**Option 1** to resolve the problem
+
+```
+xattr -d com.apple.quarantine /Applications/AeroSpace.app
+```
+
+**Option 2** to resolve the problem
+
+. navigate in Finder to `/Applications/AeroSpace.app`
+. Right mouse click
+. Open (yes, it's that stupid)
+
 [#configuring-aerospace]
 == Configuring AeroSpace
 
