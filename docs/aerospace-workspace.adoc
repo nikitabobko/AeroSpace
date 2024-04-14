@@ -33,7 +33,7 @@ include::util/conditional-options-header.adoc[]
 -h, --help:: Print help
 
 --auto-back-and-forth::
-Automatic 'back-and-forth' when switching to already focused workspace
+Automatic `back-and-forth` when switching to already focused workspace
 
 --wrap-around::
 Make it possible to jump between first and last workspaces using `(next|prev)`

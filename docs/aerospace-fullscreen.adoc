@@ -24,7 +24,7 @@ include::util/conditional-options-header.adoc[]
 include::util/conditional-arguments-header.adoc[]
 
 [on|off]::
-'on' means enter fullscreen mode. 'off' means exit fullscreen mode.
+`on` means enter fullscreen mode. `off` means exit fullscreen mode.
 Toggle between the two if not specified
 
 // end::body[]

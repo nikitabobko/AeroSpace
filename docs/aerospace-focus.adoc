@@ -39,7 +39,7 @@ The default is: `workspace`
 --boundaries-action <action>::
 Defines the behavior when requested to cross the `<boundary>`. +
 `<action>` possible values: `(stop|wrap-around-the-workspace|wrap-around-all-monitors)` +
-The default is: [verse]#wrap-around-the-workspace#
+The default is: `wrap-around-the-workspace`
 
 // end::body[]
 

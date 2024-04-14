@@ -18,8 +18,9 @@ Stdout, stderr and exit code are ignored.
 
 For example, you can use this command to launch applications:
 
+[source,toml]
 ----
-exec-and-forget open -n /System/Applications/Utilities/Terminal.app
+alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 ----
 
 `<bash-script>` is passed "as is" to bash without any transformations and escaping. `<bash-script>` is treated as suffix of the TOML string, it's not even an argument in classic CLI sense

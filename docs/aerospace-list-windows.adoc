@@ -57,8 +57,8 @@ Filter results to only print windows that belong to specified workspaces.
 Possible values: +
 +
 . Workspace name
-. "visible" is a special workspace name that represents currently visible workspaces
-. "focused" is a special workspace name that represents currently focused workspace
+. `visible` is a special workspace name that represents currently visible workspaces
+. `focused` is a special workspace name that represents currently focused workspace
 
 include::util/monitor-option.adoc[]
 
