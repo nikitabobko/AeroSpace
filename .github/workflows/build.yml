@@ -10,9 +10,6 @@ on:
   schedule:
     - cron: '0 0 * * *' # every day at 00:00
 
-env:
-  AEROSPACE_CODE_SIGN_IDENTITY: '-' # Sign to run locally
-
 jobs:
   build:
     name: Build
@@ -26,11 +23,12 @@ jobs:
         run: brew install xcodegen gsed asciidoctor
       - name: Check dirty files
         run: |
-          (export AEROSPACE_CODE_SIGN_IDENTITY=; ./generate.sh)
+          ./generate.sh
           ./script/check-uncommitted-files.sh
-      - name: Build
-        run: ./build-debug.sh
+      - name: Build Debug
+        # "-" means "Sign to run locally". There is no aerospace-codesign-certificate in GH Actions
+        run: ./build-debug.sh --codesign-identity -
       - name: Test
         run: ./run-tests.sh
-      - name: Build docs
-        run: ./build-docs.sh
+      - name: Build Release
+        run: ./build-release.sh --codesign-identity -

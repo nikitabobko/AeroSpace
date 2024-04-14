@@ -225,7 +225,6 @@
 				CODE_SIGN_ENTITLEMENTS = "xcode-app-bundle-launcher/AeroSpace.entitlements";
 				CODE_SIGN_IDENTITY = "aerospace-codesign-certificate";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0.9.1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -233,7 +232,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = "0.9.1-Beta";
+				MARKETING_VERSION = "0.0.0-SNAPSHOT";
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.debug.aerospace;
 				PRODUCT_NAME = "AeroSpace-Debug";
 				SDKROOT = macosx;
@@ -304,7 +303,6 @@
 				CODE_SIGN_ENTITLEMENTS = "xcode-app-bundle-launcher/AeroSpace.entitlements";
 				CODE_SIGN_IDENTITY = "aerospace-codesign-certificate";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 0.9.1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -312,7 +310,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = "0.9.1-Beta";
+				MARKETING_VERSION = "0.0.0-SNAPSHOT";
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace;
 				PRODUCT_NAME = AeroSpace;
 				SDKROOT = macosx;

@@ -2,10 +2,29 @@
 cd "$(dirname "$0")/.."
 source ./script/setup.sh
 
+build_version=""
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --build-version)
+            build_version="$2"
+            shift
+            shift
+            ;;
+        *)
+            echo "Unknown option $1"
+            exit 1
+            ;;
+    esac
+done
+
+if [ -z "$build_version" ]; then
+    echo "--build-version flag is mandatory" > /dev/stderr
+    exit 1
+fi
+
 ./run-tests.sh
 ./build-release.sh
 
-version=$(head -1 ./version.txt | awk '{print $1}')
-git tag -a v$version -m "v$version" && git push git@github.com:nikitabobko/AeroSpace.git v$version
-open "https://github.com/nikitabobko/AeroSpace/releases/new?tag=v$version"
-open -R ./.release/AeroSpace-v$version.zip
+git tag -a v$build_version -m "v$build_version" && git push git@github.com:nikitabobko/AeroSpace.git v$build_version
+open "https://github.com/nikitabobko/AeroSpace/releases/new?tag=v$build_version"
+open -R ./.release/AeroSpace-v$build_version.zip

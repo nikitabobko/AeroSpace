@@ -2,7 +2,7 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-./generate.sh
+./generate.sh "$@"
 swift build
 xcodebuild -scheme AeroSpace build -configuration Debug -derivedDataPath .xcode-build
 

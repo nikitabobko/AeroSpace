@@ -2,6 +2,27 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
+build_version="0.0.0-SNAPSHOT"
+codesign_identity="aerospace-codesign-certificate"
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --build-version)
+            build_version="$2"
+            shift
+            shift
+            ;;
+        --codesign-identity)
+            codesign_identity="$2"
+            shift
+            shift
+            ;;
+        *)
+            echo "Unknown option $1"
+            exit 1
+            ;;
+    esac
+done
+
 check-clean-git-working-dir() {
     if [ ! -z "$(git status --porcelain)" ]; then
         echo "git working directory must be clean"
@@ -24,6 +45,7 @@ EOF
 
 ./generate.sh
 check-clean-git-working-dir
+./generate.sh --build-version "$build_version" --codesign-identity "$codesign_identity"
 
 generate-git-hash
 swift build -c release --arch arm64 --arch x86_64
@@ -32,7 +54,8 @@ xcodebuild clean build \
     -destination "generic/platform=macOS" \
     -configuration Release \
     -derivedDataPath .xcode-build
-git checkout Sources/Common/gitHashGenerated.swift
+
+git checkout .
 
 rm -rf .release && mkdir .release
 cp -r .xcode-build/Build/Products/Release/AeroSpace.app .release
@@ -42,7 +65,7 @@ cp -r .build/apple/Products/Release/aerospace .release
 ### SIGN CLI ###
 ################
 
-codesign -s aerospace-codesign-certificate .release/aerospace
+codesign -s "$codesign_identity" .release/aerospace
 
 ################
 ### VALIDATE ###
@@ -98,10 +121,9 @@ codesign -v .release/aerospace
 ### PACK ###
 ############
 
-version=$(head -1 ./version.txt | awk '{print $1}')
-mkdir -p .release/AeroSpace-v$version/manpage && cp .man/*.1 .release/AeroSpace-v$version/manpage
+mkdir -p .release/AeroSpace-v$build_version/manpage && cp .man/*.1 .release/AeroSpace-v$build_version/manpage
 cd .release
-    mkdir -p AeroSpace-v$version/bin && cp -r aerospace AeroSpace-v$version/bin
-    cp -r AeroSpace.app AeroSpace-v$version
-    zip -r AeroSpace-v${version}.zip AeroSpace-v$version
+    mkdir -p AeroSpace-v$build_version/bin && cp -r aerospace AeroSpace-v$build_version/bin
+    cp -r AeroSpace.app AeroSpace-v$build_version
+    zip -r AeroSpace-v$build_version.zip AeroSpace-v$build_version
 cd -
