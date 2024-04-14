@@ -31,35 +31,6 @@ include::aerospace-exec-and-forget.adoc[tags=synopsis]
 include::aerospace-exec-and-forget.adoc[tags=purpose]
 include::aerospace-exec-and-forget.adoc[tags=body]
 
-[#exec-and-wait]
-== [line-through]#exec-and-wait#. DEPRECATED
-----
-exec-and-wait <bash-script>
-----
-Runs `/bin/bash -c '<bash-script>'`, and waits for the command termination.
-Stdout, stderr and exit code are ignored.
-
-*DEPRECATED SINCE 0.8.0-Beta*. Deprecated in favor of combination of `exec-and-forget` and CLI.
-
-Given this `exec-and-wait` command:
-
-[source,toml]
-----
-alt-enter = ['exec-and-wait open -n /System/Applications/Utilities/Terminal.app && sleep 1', 'layout floating']
-----
-
-You can rewrite it to:
-
-[source,toml]
-----
-alt-enter = '''exec-and-forget
-set -e # Exit if one of commands exit with non-zero exit code
-open -n /System/Applications/Utilities/Terminal.app
-sleep 1
-aerospace layout floating
-'''
-----
-
 == flatten-workspace-tree
 ----
 include::aerospace-flatten-workspace-tree.adoc[tags=synopsis]
