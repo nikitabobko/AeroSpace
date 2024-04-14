@@ -27,7 +27,11 @@ check-clean-git-working-dir
 
 generate-git-hash
 swift build -c release --arch arm64 --arch x86_64
-xcodebuild -scheme AeroSpace clean build -configuration Release -derivedDataPath .xcode-build
+xcodebuild clean build \
+    -scheme AeroSpace \
+    -destination "generic/platform=macOS" \
+    -configuration Release \
+    -derivedDataPath .xcode-build
 git checkout Sources/Common/gitHashGenerated.swift
 
 rm -rf .release && mkdir .release
