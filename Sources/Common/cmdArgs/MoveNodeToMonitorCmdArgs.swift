@@ -1,4 +1,4 @@
-public struct MoveNodeToMonitorCmdArgs: RawCmdArgs, CmdArgs {
+public struct MoveNodeToMonitorCmdArgs: RawCmdArgs, CmdArgs, Equatable {
     fileprivate init() {}
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveNodeToMonitor,

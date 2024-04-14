@@ -1,4 +1,4 @@
-public func parseCmdArgs(_ args: [String]) -> ParsedCmd<CmdArgs> {
+public func parseCmdArgs(_ args: [String]) -> ParsedCmd<any CmdArgs> {
     let subcommand = String(args.first ?? "")
     if subcommand.isEmpty {
         return .failure("Can't parse empty string command")
@@ -95,7 +95,7 @@ private protocol SubCommandParserProtocol<T> {
 }
 
 extension SubCommandParserProtocol {
-    func parse(args: [String]) -> ParsedCmd<CmdArgs> {
+    func parse(args: [String]) -> ParsedCmd<any CmdArgs> {
         _parse(args).map { $0 }
     }
 }

@@ -6,8 +6,14 @@ public extension RawCmdArgs {
     static var info: CmdStaticInfo { Self.parser.info }
 }
 
-public protocol CmdArgs {
+public protocol CmdArgs: Equatable {
     static var info: CmdStaticInfo { get }
+}
+
+extension CmdArgs {
+    public func equals(_ other: any CmdArgs) -> Bool { // My brain is cursed with Java
+        (other as? Self).flatMap { self == $0 } ?? false
+    }
 }
 
 public struct CmdParser<T: Copyable> {
@@ -33,7 +39,7 @@ public func cmdParser<T>(
 public struct CmdStaticInfo: Equatable {
     public let help: String
     public let kind: CmdKind
-    public let allowInConfig: Bool
+    public let allowInConfig: Bool // Query commands are prohibited in config
 
     public init(
         help: String,

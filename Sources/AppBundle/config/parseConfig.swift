@@ -56,7 +56,7 @@ private func showConfigParsingErrorsToUser(_ errors: [TomlParseError], configUrl
     showMessageToUser(filename: "config-parse-error.txt", message: message)
 }
 
-enum TomlParseError: Error, CustomStringConvertible {
+enum TomlParseError: Error, CustomStringConvertible, Equatable {
     case semantic(_ backtrace: TomlBacktrace, _ message: String)
     case syntax(_ message: String)
 
@@ -316,7 +316,7 @@ func parseBool(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Parse
     raw.bool.orFailure(expectedActualTypeError(expected: .bool, actual: raw.type, backtrace))
 }
 
-indirect enum TomlBacktrace: CustomStringConvertible {
+indirect enum TomlBacktrace: CustomStringConvertible, Equatable {
     case root
     case rootKey(String)
     case key(String)

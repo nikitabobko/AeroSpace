@@ -7,7 +7,7 @@ final class ConfigTest: XCTestCase {
     func testParseI3Config() {
         let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/i3-like-config-example.toml"))
         let (i3Config, errors) = parseConfig(toml)
-        XCTAssertEqual(errors.descriptions, [])
+        XCTAssertEqual(errors, [])
         XCTAssertEqual(i3Config.execConfig, defaultConfig.execConfig)
         XCTAssertEqual(i3Config.enableNormalizationFlattenContainers, false)
         XCTAssertEqual(i3Config.enableNormalizationOppositeOrientationForNestedContainers, false)
@@ -16,7 +16,7 @@ final class ConfigTest: XCTestCase {
     func testParseDefaultConfig() {
         let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/default-config.toml"))
         let (_, errors) = parseConfig(toml)
-        XCTAssertEqual(errors.descriptions, [])
+        XCTAssertEqual(errors, [])
     }
 
     func testQueryCantBeUsedInConfig() {
@@ -35,7 +35,7 @@ final class ConfigTest: XCTestCase {
             mode.main = {}
             """
         )
-        XCTAssertEqual(errors.descriptions, [])
+        XCTAssertEqual(errors, [])
         XCTAssertTrue(config.modes[mainModeId]?.bindings.isEmpty == true)
     }
 
@@ -46,7 +46,7 @@ final class ConfigTest: XCTestCase {
             alt-h = 'focus left'
             """
         )
-        XCTAssertEqual(errors.descriptions, [])
+        XCTAssertEqual(errors, [])
         let binding = HotkeyBinding(.option, .h, [FocusCommand.new(direction: .left)])
         XCTAssertEqual(
             config.modes[mainModeId],
@@ -195,11 +195,11 @@ final class ConfigTest: XCTestCase {
                 "workspace_name_1": [.sequenceNumber(1)],
                 "workspace_name_2": [.main],
                 "workspace_name_3": [.secondary],
-                "workspace_name_4": [.pattern(try! Regex("built-in"))],
-                "workspace_name_5": [.pattern(try! Regex("^built-in retina display$"))],
+                "workspace_name_4": [.pattern("built-in")!],
+                "workspace_name_5": [.pattern("^built-in retina display$")!],
                 "workspace_name_6": [.secondary, .sequenceNumber(1)],
                 "workspace_name_x": [.sequenceNumber(2)],
-                "7": [.pattern(try! Regex("foo"))],
+                "7": [.pattern("foo")!],
                 "w7": [.main],
                 "w8": [],
             ]
@@ -276,7 +276,7 @@ final class ConfigTest: XCTestCase {
             """
         )
         XCTAssertTrue(config.onWindowDetected.singleOrNil()!.matcher.appNameRegexSubstring != nil)
-        XCTAssertEqual(errors.descriptions, [])
+        XCTAssertEqual(errors, [])
     }
 
     func testRegex() {
@@ -297,19 +297,28 @@ final class ConfigTest: XCTestCase {
             outer.right = [{ monitor.2 = 7 }, 8]
             """
         )
-        XCTAssertEqual(errors1.descriptions, [])
+        XCTAssertEqual(errors1, [])
         XCTAssertEqual(
             config.gaps,
             Gaps(
                 inner: .init(
-                    vertical: .perMonitor([(description: .main, value: 1), (description: .secondary, value: 2)], default: 5),
+                    vertical: .perMonitor(
+                        [PerMonitorValue(description: .main, value: 1), PerMonitorValue(description: .secondary, value: 2)],
+                        default: 5
+                    ),
                     horizontal: .constant(10)
                 ),
                 outer: .init(
                     left: .constant(12),
                     bottom: .constant(13),
-                    top: .perMonitor([(description: .pattern(try! .init("built-in")), value: 3), (description: .secondary, value: 4)], default: 6),
-                    right: .perMonitor([(description: .sequenceNumber(2), value: 7)], default: 8)
+                    top: .perMonitor(
+                        [
+                            PerMonitorValue(description: .pattern("built-in")!, value: 3),
+                            PerMonitorValue(description: .secondary, value: 4)
+                        ],
+                        default: 6
+                    ),
+                    right: .perMonitor([PerMonitorValue(description: .sequenceNumber(2), value: 7)], default: 8)
                 )
             )
         )
@@ -364,7 +373,7 @@ final class ConfigTest: XCTestCase {
             key-mapping.preset = 'dvorak'
             """
         )
-        XCTAssertEqual(dvorakErrors.descriptions, [])
+        XCTAssertEqual(dvorakErrors, [])
         XCTAssertEqual(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
         expect(dvorakConfig.keyMapping.resolve()["quote"]) == .q
     }

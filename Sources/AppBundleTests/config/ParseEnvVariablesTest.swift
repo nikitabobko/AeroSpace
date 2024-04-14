@@ -19,11 +19,11 @@ final class ParseEnvVariablesTest: XCTestCase {
 
     func testInherit() {
         let (config1, errors1) = parseConfig("exec.inherit-env-vars = false")
-        XCTAssertEqual(errors1.descriptions, [])
+        XCTAssertEqual(errors1, [])
         XCTAssertEqual(config1.execConfig.envVariables, [:])
 
         let (config2, errors2) = parseConfig("exec.inherit-env-vars = true")
-        XCTAssertEqual(errors2.descriptions, [])
+        XCTAssertEqual(errors2, [])
         XCTAssertEqual(config2.execConfig.envVariables, testEnv)
     }
 
@@ -34,7 +34,7 @@ final class ParseEnvVariablesTest: XCTestCase {
             FOO = 'BAR'
             """
         )
-        expect(errors.descriptions) == []
+        expect(errors) == []
         expect(config.execConfig.envVariables) == testEnv + ["FOO": "BAR"]
     }
 

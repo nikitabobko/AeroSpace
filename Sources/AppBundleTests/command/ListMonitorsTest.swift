@@ -6,7 +6,7 @@ final class ListMonitorsTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
     func testParseListMonitorsCommand() {
-        XCTAssertEqual(parseCommand("list-monitors").cmdOrNil?.describe, .listMonitors(args: ListMonitorsCmdArgs()))
-        XCTAssertEqual(parseCommand("list-monitors --focused").cmdOrNil?.describe, .listMonitors(args: ListMonitorsCmdArgs().copy(\.focused, true)))
+        testParseCommandSucc("list-monitors", ListMonitorsCmdArgs())
+        testParseCommandSucc("list-monitors --focused", ListMonitorsCmdArgs().copy(\.focused, true))
     }
 }

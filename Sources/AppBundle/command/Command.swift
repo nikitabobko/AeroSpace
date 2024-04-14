@@ -1,10 +1,20 @@
 import AppKit
 import Common
 
-protocol Command: AeroAny {
+protocol Command: AeroAny, Equatable {
     associatedtype T where T: CmdArgs
     var args: T { get }
     func _run(_ state: CommandMutableState, stdin: String) -> Bool
+}
+
+extension Command {
+    static func == (lhs: any Command, rhs: any Command) -> Bool {
+        return lhs.args.equals(rhs.args)
+    }
+
+    func equals(_ other: any Command) -> Bool {
+        (other as? Self).flatMap { self == $0 } ?? false
+    }
 }
 
 extension Command {

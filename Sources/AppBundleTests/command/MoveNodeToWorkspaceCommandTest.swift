@@ -6,10 +6,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
     func testParse() {
-        XCTAssertEqual(
-            parseCommand("move-node-to-workspace next").cmdOrNil?.describe,
-            .moveNodeToWorkspace(args: MoveNodeToWorkspaceCmdArgs(.relative(WTarget.Relative(isNext: true, wrapAround: false))))
-        )
+        testParseCommandSucc("move-node-to-workspace next", MoveNodeToWorkspaceCmdArgs(.relative(WTarget.Relative(isNext: true, wrapAround: false))))
     }
 
     func testSimple() {

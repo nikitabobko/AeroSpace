@@ -59,7 +59,7 @@ public enum NextPrev: Equatable {
     case next, prev
 }
 
-public enum MonitorTarget {
+public enum MonitorTarget: Equatable {
     case directional(CardinalDirection)
     case relative(NextPrev)
     case patterns([MonitorDescription])

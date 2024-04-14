@@ -36,10 +36,10 @@ func setUpWorkspacesForTests() {
     TestApp.shared.windows = []
 }
 
-func testParseCommandSucc(_ command: String, _ expected: CommandDescription) {
+func testParseCommandSucc(_ command: String, _ expected: any CmdArgs) {
     let parsed = parseCommand(command)
     switch parsed {
-        case .cmd(let command): XCTAssertEqual(command.describe, expected)
+        case .cmd(let command): XCTAssertTrue(command.args.equals(expected), "actual: \(command.args) expected: \(expected)")
         case .help: error() // todo test help
         case .failure(let msg): XCTFail(msg)
     }

@@ -1,9 +1,12 @@
 import Common
 import TOMLKit
 
-typealias PerMonitorValue<Value: Equatable> = (description: MonitorDescription, value: Value)
+struct PerMonitorValue<Value: Equatable>: Equatable {
+    let description: MonitorDescription
+    let value: Value
+}
 
-enum DynamicConfigValue<Value: Equatable> {
+enum DynamicConfigValue<Value: Equatable>: Equatable {
     case constant(Value)
     case perMonitor([PerMonitorValue<Value>], default: Value)
 }
@@ -80,6 +83,6 @@ func parsePerMonitorValues<T>(_ array: TOMLArray, _ backtrace: TomlBacktrace, _ 
             return nil
         }
 
-        return (description: monitorDescription, value: value) as PerMonitorValue<T>
+        return PerMonitorValue(description: monitorDescription, value: value)
     }
 }

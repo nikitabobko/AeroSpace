@@ -27,10 +27,7 @@ final class FocusCommandTest: XCTestCase {
 
     func testParse() {
         XCTAssertTrue(parseCommand("focus --boundaries left").errorOrNil?.contains("Possible values") == true)
-        XCTAssertEqual(
-            parseCommand("focus --boundaries workspace left").cmdOrNil?.describe,
-            .focusCommand(args: FocusCmdArgs(direction: .left))
-        )
+        testParseCommandSucc("focus --boundaries workspace left", FocusCmdArgs(direction: .left))
 
         XCTAssertEqual(
             parseCommand("focus --boundaries workspace --boundaries workspace left").errorOrNil,

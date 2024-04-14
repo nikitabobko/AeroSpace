@@ -42,7 +42,7 @@ func activateMode(_ targetMode: String?) {
     activeMode = targetMode
 }
 
-struct HotkeyBinding {
+struct HotkeyBinding: Equatable {
     let modifiers: NSEvent.ModifierFlags
     let key: Key
     let commands: [any Command]
@@ -53,6 +53,13 @@ struct HotkeyBinding {
         self.key = key
         self.commands = commands
         self.binding = modifiers.isEmpty ? key.description : modifiers.toString() + "-\(key)"
+    }
+
+    public static func == (lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
+        lhs.modifiers == rhs.modifiers &&
+            lhs.key == rhs.key &&
+            lhs.binding == rhs.binding &&
+            zip(lhs.commands, rhs.commands).allSatisfy { $0.equals($1) }
     }
 }
 

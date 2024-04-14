@@ -1,7 +1,7 @@
 import TOMLKit
 import Common
 
-struct WindowDetectedCallback: Copyable {
+struct WindowDetectedCallback: Copyable, Equatable {
     var matcher: WindowDetectedCallbackMatcher = WindowDetectedCallbackMatcher()
     var checkFurtherCallbacks: Bool = false
     var rawRun: [any Command]? = nil
@@ -9,13 +9,28 @@ struct WindowDetectedCallback: Copyable {
     var run: [any Command] {
         rawRun ?? errorT("ID-46D063B2 should have discarded nil")
     }
+
+    static func == (lhs: WindowDetectedCallback, rhs: WindowDetectedCallback) -> Bool {
+        return lhs.matcher == rhs.matcher && lhs.checkFurtherCallbacks == rhs.checkFurtherCallbacks &&
+            zip(lhs.run, rhs.run).allSatisfy { $0.equals($1) }
+    }
 }
 
-struct WindowDetectedCallbackMatcher: Copyable {
+struct WindowDetectedCallbackMatcher: Copyable, Equatable {
     var appId: String?
     var appNameRegexSubstring: Regex<AnyRegexOutput>?
     var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
     var duringAeroSpaceStartup: Bool?
+
+    static func == (lhs: WindowDetectedCallbackMatcher, rhs: WindowDetectedCallbackMatcher) -> Bool {
+        check(
+            lhs.appNameRegexSubstring == nil &&
+                lhs.windowTitleRegexSubstring == nil &&
+                rhs.appNameRegexSubstring == nil &&
+                rhs.windowTitleRegexSubstring == nil
+        )
+        return lhs.appId == rhs.appId
+    }
 }
 
 private let windowDetectedParser: [String: any ParserProtocol<WindowDetectedCallback>] = [
