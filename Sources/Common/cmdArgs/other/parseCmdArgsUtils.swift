@@ -174,22 +174,22 @@ private extension ArgParserProtocol {
     }
 }
 
+public typealias ArgParserFun<K> = (/*arg*/ String, /*nextArgs*/ inout [String]) -> Parsed<K>
 public protocol ArgParserProtocol<T> {
     associatedtype K
     associatedtype T where T: Copyable
     var argPlaceholderIfMandatory: String? { get }
     var keyPath: WritableKeyPath<T, K> { get }
-    var parse: (/*arg*/ String, /*nextArgs*/ inout [String]) -> Parsed<K> { get }
+    var parse: ArgParserFun<K> { get }
 }
-
 public struct ArgParser<T: Copyable, K>: ArgParserProtocol {
     public let keyPath: WritableKeyPath<T, K>
-    public let parse: (String, inout [String]) -> Parsed<K>
+    public let parse: ArgParserFun<K>
     public let argPlaceholderIfMandatory: String?
 
     public init(
         _ keyPath: WritableKeyPath<T, K>,
-        _ parse: @escaping (String, inout [String]) -> Parsed<K>,
+        _ parse: @escaping ArgParserFun<K>,
         argPlaceholderIfMandatory: String? = nil
     ) {
         self.keyPath = keyPath
@@ -259,3 +259,13 @@ public func parseEnum<T: RawRepresentable>(_ raw: String, _ _: T.Type) -> Parsed
 public func parseCardinalDirectionArg(arg: String, nextArgs: inout [String]) -> Parsed<CardinalDirection> {
     parseEnum(arg, CardinalDirection.self)
 }
+
+public func parseArgWithUInt32(arg: String, nextArgs: inout [String]) -> Parsed<UInt32> {
+    if let arg = nextArgs.nextNonFlagOrNil() {
+        return UInt32(arg).orFailure("Can't parse '\(arg)'. It must be a positive number")
+    } else {
+        return .failure("'\(arg)' must be followed by mandatory UInt32")
+    }
+}
+
+func upcastArgParserFun<T>(_ fun: @escaping ArgParserFun<T>) -> ArgParserFun<T?> { { fun($0, &$1).map { $0 } } }

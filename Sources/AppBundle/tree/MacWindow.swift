@@ -15,7 +15,7 @@ final class MacWindow: Window, CustomStringConvertible {
         super.init(id: id, app, lastFloatingSize: axWindow.get(Ax.sizeAttr), parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
-    private static var allWindowsMap: [CGWindowID: MacWindow] = [:]
+    static var allWindowsMap: [CGWindowID: MacWindow] = [:]
     static var allWindows: [MacWindow] { Array(allWindowsMap.values) }
 
     static func get(app: MacApp, axWindow: AXUIElement, startup: Bool) -> MacWindow? {

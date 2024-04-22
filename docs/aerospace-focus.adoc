@@ -10,6 +10,7 @@ include::util/man-attributes.adoc[]
 // tag::synopsis[]
 aerospace focus [-h|--help] [--boundaries <boundary>]
                 [--boundaries-action <action>] (left|down|up|right)
+aerospace focus [-h|--help] --window-id <window-id>
 
 // end::synopsis[]
 
@@ -40,6 +41,9 @@ The default is: `workspace`
 Defines the behavior when requested to cross the `<boundary>`. +
 `<action>` possible values: `(stop|wrap-around-the-workspace|wrap-around-all-monitors)` +
 The default is: `wrap-around-the-workspace`
+
+--window-id <window-id>::
+Focus the window with specified `<window-id>`
 
 // end::body[]
 

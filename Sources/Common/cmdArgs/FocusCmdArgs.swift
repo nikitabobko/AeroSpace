@@ -6,10 +6,12 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
         kind: .focus,
         allowInConfig: true,
         help: """
-              USAGE: focus [<OPTIONS>] \(CardinalDirection.unionLiteral)
+              USAGE: focus [<options>] \(CardinalDirection.unionLiteral)
+                 OR: focus [-h|--help] --window-id <window-id>
 
               OPTIONS:
                 -h, --help                     Print help
+                --window-id <window-id>        Focus window with specified <window-id>
                 --boundaries \(boundar)        Defines focus boundaries.
                                                \(boundar) possible values: \(FocusCmdArgs.Boundaries.unionLiteral)
                                                The default is: \(FocusCmdArgs.Boundaries.workspace.rawValue)
@@ -19,24 +21,28 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
 
               ARGUMENTS:
                 (left|down|up|right)           Focus direction
-              """, // todo focus [OPTIONS] window-id <id>
-        // ARGUMENTS:
-        //  <id>                                  ID of window to focus
+              """,
         options: [
-            "--boundaries": ArgParser(\.boundaries, parseBoundaries),
-            "--boundaries-action": ArgParser(\.boundariesAction, parseBoundariesAction)
+            "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
+            "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
+            "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32))
         ],
-        arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)]
+        arguments: [ArgParser(\.direction, upcastArgParserFun(parseCardinalDirectionArg))]
     )
 
-    public var boundaries: Boundaries = .workspace // todo cover boundaries wrapping with tests
-    public var boundariesAction: WhenBoundariesCrossed = .wrapAroundTheWorkspace
-    public var direction: Lateinit<CardinalDirection> = .uninitialized
+    public var rawBoundaries: Boundaries? = nil // todo cover boundaries wrapping with tests
+    public var rawBoundariesAction: WhenBoundariesCrossed? = nil
+    public var windowId: UInt32? = nil
+    public var direction: CardinalDirection? = nil
 
     fileprivate init() {}
 
     public init(direction: CardinalDirection) {
-        self.direction = .initialized(direction)
+        self.direction = direction
+    }
+
+    public init(windowId: UInt32) {
+        self.windowId = windowId
     }
 
     public enum Boundaries: String, CaseIterable, Equatable {
@@ -50,13 +56,38 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
     }
 }
 
+public enum FocusCmdTarget {
+    case direction(CardinalDirection)
+    case windowId(UInt32)
+}
+
+public extension FocusCmdArgs {
+    var target: FocusCmdTarget {
+        if let direction {
+            return .direction(direction)
+        }
+        if let windowId {
+            return .windowId(windowId)
+        }
+        error("Parser invariants are broken")
+    }
+
+    var boundaries: Boundaries { rawBoundaries ?? .workspace }
+    var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .wrapAroundTheWorkspace }
+}
+
 public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
-    parseRawCmdArgs(FocusCmdArgs(), args)
-        .flatMap { raw in
-            if raw.boundaries == .workspace && raw.boundariesAction == .wrapAroundAllMonitors {
-                return .failure("\(raw.boundaries.rawValue) and \(raw.boundariesAction.rawValue) is an invalid combination of values")
-            }
-            return .cmd(raw)
+    return parseRawCmdArgs(FocusCmdArgs(), args)
+        .flatMap { (raw: FocusCmdArgs) -> ParsedCmd<FocusCmdArgs> in
+            raw.boundaries == .workspace && raw.boundariesAction == .wrapAroundAllMonitors
+                ? .failure("\(raw.boundaries.rawValue) and \(raw.boundariesAction.rawValue) is an invalid combination of values")
+                : .cmd(raw)
+        }
+        .filter("Mandatory argument is missing. '\(CardinalDirection.unionLiteral)' or --window-id") {
+            $0.direction != nil || $0.windowId != nil
+        }
+        .filter("--window-id is incompatible with other options") {
+            $0.windowId == nil || $0 == FocusCmdArgs(windowId: $0.windowId!)
         }
 }
 

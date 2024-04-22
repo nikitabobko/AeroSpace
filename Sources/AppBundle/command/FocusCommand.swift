@@ -13,17 +13,25 @@ struct FocusCommand: Command {
         defer {
             restoreFloatingWindows(floatingWindows: floatingWindows, workspace: workspace)
         }
-        let direction = args.direction.val
 
         var result: Bool = true
-        if let (parent, ownIndex) = window?.closestParent(hasChildrenInDirection: direction, withLayout: nil) {
-            guard let windowToFocus = parent.children[ownIndex + direction.focusOffset]
-                .findFocusTargetRecursive(snappedTo: direction.opposite) else { return false }
-            state.subject = .window(windowToFocus)
-        } else {
-            result = hitWorkspaceBoundaries(state, args, direction) && result
+        switch args.target {
+            case .direction(let direction):
+                if let (parent, ownIndex) = window?.closestParent(hasChildrenInDirection: direction, withLayout: nil) {
+                    guard let windowToFocus = parent.children[ownIndex + direction.focusOffset]
+                        .findFocusTargetRecursive(snappedTo: direction.opposite) else { return false }
+                    state.subject = .window(windowToFocus)
+                } else {
+                    result = hitWorkspaceBoundaries(state, args, direction) && result
+                }
+            case .windowId(let windowId):
+                if let windowToFocus = MacWindow.allWindowsMap[windowId] {
+                    state.subject = .window(windowToFocus)
+                } else {
+                    state.stderr.append("Can't find window with ID \(windowId)")
+                    return false
+                }
         }
-
         switch state.subject {
             case .emptyWorkspace(let name):
                 result = WorkspaceCommand.run(state, name) && result
