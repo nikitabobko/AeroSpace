@@ -12,15 +12,18 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        # https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md
+        os: [macos-13, macos-14]
     name: Build
-    # https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md
-    runs-on: macos-13
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install deps
-        run: brew install xcodegen gsed asciidoctor
+        run: brew install xcodegen gsed asciidoctor swiftlint
       - name: Check dirty files
         run: |
           ./generate.sh
