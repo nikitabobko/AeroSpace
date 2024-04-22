@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.20">
+<meta name="generator" content="Asciidoctor 2.0.22">
 <link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Guide</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -141,7 +141,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #content::before{content:none}
 #header>h1:first-child{color:rgba(0,0,0,.85);margin-top:2.25rem;margin-bottom:0}
 #header>h1:first-child+#toc{margin-top:8px;border-top:1px solid #dddddf}
-#header>h1:only-child,body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
+#header>h1:only-child{border-bottom:1px solid #dddddf;padding-bottom:8px}
 #header .details{border-bottom:1px solid #dddddf;line-height:1.45;padding-top:.25em;padding-bottom:.25em;padding-left:.25em;color:rgba(0,0,0,.6);display:flex;flex-flow:row wrap}
 #header .details span:first-child{margin-left:-.125em}
 #header .details span.email a{color:rgba(0,0,0,.85)}
@@ -163,6 +163,7 @@ p a>code:hover{color:rgba(0,0,0,.9)}
 #toctitle{color:#7a2518;font-size:1.2em}
 @media screen and (min-width:768px){#toctitle{font-size:1.375em}
 body.toc2{padding-left:15em;padding-right:0}
+body.toc2 #header>h1:nth-last-child(2){border-bottom:1px solid #dddddf;padding-bottom:8px}
 #toc.toc2{margin-top:0!important;background:#f8f8f7;position:fixed;width:15em;left:0;top:0;border-right:1px solid #e7e7e9;border-top-width:0!important;border-bottom-width:0!important;z-index:1000;padding:1.25em 1em;height:100%;overflow:auto}
 #toc.toc2 #toctitle{margin-top:0;margin-bottom:.8rem;font-size:1.2em}
 #toc.toc2>ul{font-size:.9em;margin-bottom:0}
@@ -328,7 +329,7 @@ a.image{text-decoration:none;display:inline-block}
 a.image object{pointer-events:none}
 sup.footnote,sup.footnoteref{font-size:.875em;position:static;vertical-align:super}
 sup.footnote a,sup.footnoteref a{text-decoration:none}
-sup.footnote a:active,sup.footnoteref a:active{text-decoration:underline}
+sup.footnote a:active,sup.footnoteref a:active,#footnotes .footnote a:first-of-type:active{text-decoration:underline}
 #footnotes{padding-top:.75em;padding-bottom:.75em;margin-bottom:.625em}
 #footnotes hr{width:20%;min-width:6.25em;margin:-.25em 0 .75em;border-width:1px 0 0}
 #footnotes .footnote{padding:0 .375em 0 .225em;line-height:1.3334;font-size:.875em;margin-left:1.2em;margin-bottom:.2em}
@@ -511,43 +512,49 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#configuring-aerospace">1. Configuring AeroSpace</a>
+<li><a href="#installation">1. Installation</a>
 <ul class="sectlevel2">
-<li><a href="#config-location">1.1. Config location</a></li>
-<li><a href="#config-samples">1.2. Config samples</a></li>
-<li><a href="#binding-modes">1.3. Binding modes</a></li>
-<li><a href="#commands">1.4. Commands</a></li>
-<li><a href="#key-mapping">1.5. Keyboard layouts and key mapping</a></li>
-<li><a href="#exec-env-vars">1.6. exec-* Environment Variables</a></li>
+<li><a href="#homebrew-installation">1.1. Homebrew installation (Preferred)</a></li>
+<li><a href="#manual-installation">1.2. Manual installation</a></li>
 </ul>
 </li>
-<li><a href="#tree">2. Tree</a>
+<li><a href="#configuring-aerospace">2. Configuring AeroSpace</a>
 <ul class="sectlevel2">
-<li><a href="#layouts">2.1. Layouts</a></li>
-<li><a href="#normalization">2.2. Normalization</a></li>
-<li><a href="#floating-windows">2.3. Floating windows</a></li>
+<li><a href="#config-location">2.1. Config location</a></li>
+<li><a href="#config-samples">2.2. Config samples</a></li>
+<li><a href="#binding-modes">2.3. Binding modes</a></li>
+<li><a href="#commands">2.4. Commands</a></li>
+<li><a href="#key-mapping">2.5. Keyboard layouts and key mapping</a></li>
+<li><a href="#exec-env-vars">2.6. exec-* Environment Variables</a></li>
 </ul>
 </li>
-<li><a href="#emulation-of-virtual-workspaces">3. Emulation of virtual workspaces</a>
+<li><a href="#tree">3. Tree</a>
 <ul class="sectlevel2">
-<li><a href="#a-note-on-mission-control">3.1. A note on mission control</a></li>
-<li><a href="#a-note-on-displays-have-separate-spaces">3.2. A note on &#8216;Displays have separate Spaces&#8217;</a></li>
+<li><a href="#layouts">3.1. Layouts</a></li>
+<li><a href="#normalization">3.2. Normalization</a></li>
+<li><a href="#floating-windows">3.3. Floating windows</a></li>
 </ul>
 </li>
-<li><a href="#callbacks">4. Callbacks</a>
+<li><a href="#emulation-of-virtual-workspaces">4. Emulation of virtual workspaces</a>
 <ul class="sectlevel2">
-<li><a href="#on-window-detected-callback">4.1. 'on-window-detected' callback</a></li>
-<li><a href="#exec-on-workspace-change-callback">4.2. 'exec-on-workspace-change' callback</a></li>
+<li><a href="#a-note-on-mission-control">4.1. A note on mission control</a></li>
+<li><a href="#a-note-on-displays-have-separate-spaces">4.2. A note on &#8216;Displays have separate Spaces&#8217;</a></li>
 </ul>
 </li>
-<li><a href="#multiple-monitors">5. Multiple monitors</a>
+<li><a href="#callbacks">5. Callbacks</a>
 <ul class="sectlevel2">
-<li><a href="#assign-workspaces-to-monitors">5.1. Assign workspaces to monitors</a></li>
+<li><a href="#on-window-detected-callback">5.1. 'on-window-detected' callback</a></li>
+<li><a href="#exec-on-workspace-change-callback">5.2. 'exec-on-workspace-change' callback</a></li>
 </ul>
 </li>
-<li><a href="#caveats">6. Caveats</a>
+<li><a href="#multiple-monitors">6. Multiple monitors</a>
 <ul class="sectlevel2">
-<li><a href="#dialog-heuristics">6.1. Dialog heuristics</a></li>
+<li><a href="#assign-workspaces-to-monitors">6.1. Assign workspaces to monitors</a></li>
+</ul>
+</li>
+<li><a href="#caveats">7. Caveats</a>
+<ul class="sectlevel2">
+<li><a href="#dialog-heuristics">7.1. Dialog heuristics</a></li>
 </ul>
 </li>
 </ul>
@@ -591,10 +598,78 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 </div>
 <div class="sect1">
-<h2 id="configuring-aerospace"><a class="anchor" href="#configuring-aerospace"></a><a class="link" href="#configuring-aerospace">1. Configuring AeroSpace</a></h2>
+<h2 id="installation"><a class="anchor" href="#installation"></a><a class="link" href="#installation">1. Installation</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="config-location"><a class="anchor" href="#config-location"></a><a class="link" href="#config-location">1.1. Config location</a></h3>
+<h3 id="homebrew-installation"><a class="anchor" href="#homebrew-installation"></a><a class="link" href="#homebrew-installation">1.1. Homebrew installation (Preferred)</a></h3>
+<div class="paragraph">
+<p><a href="https://brew.sh/">Homebrew</a> is a package manager for macOS</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="bash"><span></span>brew<span class="tok-w"> </span>install<span class="tok-w"> </span>--cask<span class="tok-w"> </span>nikitabobko/tap/aerospace</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="manual-installation"><a class="anchor" href="#manual-installation"></a><a class="link" href="#manual-installation">1.2. Manual installation</a></h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Download the latest available zip from <a href="https://github.com/nikitabobko/AeroSpace/releases">releases page</a></p>
+</li>
+<li>
+<p>Unpack zip</p>
+</li>
+<li>
+<p>Put unpacked <code>AeroSpace-v$VERSION/AeroSpace.app</code> to <code>/Applications</code></p>
+</li>
+<li>
+<p>Put unpacked <code>AeroSpace-v$VERSION/bin/aerospace</code> anywhere to <code>$PATH</code>
+(The step is optional. It is only needed if you want to be able to interact with AeroSpace from CLI)</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>If you see this message</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">"AeroSpace.app" can't be opened because Apple cannot check it for malicious software.</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Option 1</strong> to resolve the problem</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code><span></span>xattr -d com.apple.quarantine /Applications/AeroSpace.app</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Option 2</strong> to resolve the problem</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>navigate in Finder to <code>/Applications/AeroSpace.app</code></p>
+</li>
+<li>
+<p>Right mouse click</p>
+</li>
+<li>
+<p>Open (yes, it&#8217;s that stupid)</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="configuring-aerospace"><a class="anchor" href="#configuring-aerospace"></a><a class="link" href="#configuring-aerospace">2. Configuring AeroSpace</a></h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="config-location"><a class="anchor" href="#config-location"></a><a class="link" href="#config-location">2.1. Config location</a></h3>
 <div class="paragraph">
 <p>AeroSpace tries to find the config in two locations:</p>
 </div>
@@ -614,7 +689,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 </div>
 <div class="sect2">
-<h3 id="config-samples"><a class="anchor" href="#config-samples"></a><a class="link" href="#config-samples">1.2. Config samples</a></h3>
+<h3 id="config-samples"><a class="anchor" href="#config-samples"></a><a class="link" href="#config-samples">2.2. Config samples</a></h3>
 <div class="paragraph">
 <p>Please see the following config samples:</p>
 </div>
@@ -642,7 +717,7 @@ See <a href="https://toml.io/en/v1.0.0">TOML spec for more info</a></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="binding-modes"><a class="anchor" href="#binding-modes"></a><a class="link" href="#binding-modes">1.3. Binding modes</a></h3>
+<h3 id="binding-modes"><a class="anchor" href="#binding-modes"></a><a class="link" href="#binding-modes">2.3. Binding modes</a></h3>
 <div class="paragraph">
 <p>You can create multiple sets of bindings by creating different binding modes.
 When you switch to a different binding mode, all the bindings from the current mode are deactivated, and only the bindings specified in the new mode become active.
@@ -668,7 +743,7 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="commands"><a class="anchor" href="#commands"></a><a class="link" href="#commands">1.4. Commands</a></h3>
+<h3 id="commands"><a class="anchor" href="#commands"></a><a class="link" href="#commands">2.4. Commands</a></h3>
 <div class="paragraph">
 <p>Commands is the thing that you use to manipulate AeroSpace and query its state.</p>
 </div>
@@ -704,7 +779,7 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="key-mapping"><a class="anchor" href="#key-mapping"></a><a class="link" href="#key-mapping">1.5. Keyboard layouts and key mapping</a></h3>
+<h3 id="key-mapping"><a class="anchor" href="#key-mapping"></a><a class="link" href="#key-mapping">2.5. Keyboard layouts and key mapping</a></h3>
 <div class="paragraph">
 <p>By default, key bindings in the config are perceived as <code>qwerty</code> layout.</p>
 </div>
@@ -739,7 +814,7 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="exec-env-vars"><a class="anchor" href="#exec-env-vars"></a><a class="link" href="#exec-env-vars">1.6. exec-* Environment Variables</a></h3>
+<h3 id="exec-env-vars"><a class="anchor" href="#exec-env-vars"></a><a class="link" href="#exec-env-vars">2.6. exec-* Environment Variables</a></h3>
 <div class="paragraph">
 <p>You can configure environment variables of <code>exec-*</code> commands and callbacks (such as <a href="commands#exec-and-forget">exec-and-forget</a>, <a href="#exec-on-workspace-change-callback">'exec-on-workspace-change' callback</a>)</p>
 </div>
@@ -773,7 +848,7 @@ See the problem statement: <a href="https://docs.brew.sh/FAQ#my-mac-apps-dont-fi
 </div>
 </div>
 <div class="sect1">
-<h2 id="tree"><a class="anchor" href="#tree"></a><a class="link" href="#tree">2. Tree</a></h2>
+<h2 id="tree"><a class="anchor" href="#tree"></a><a class="link" href="#tree">3. Tree</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>AeroSpace stores all windows and containers in a tree.
@@ -863,7 +938,7 @@ You use <a href="commands#focus">focus command</a> to do that.</p>
 </ol>
 </div>
 <div class="sect2">
-<h3 id="layouts"><a class="anchor" href="#layouts"></a><a class="link" href="#layouts">2.1. Layouts</a></h3>
+<h3 id="layouts"><a class="anchor" href="#layouts"></a><a class="link" href="#layouts">3.1. Layouts</a></h3>
 <div class="paragraph">
 <p>In total, AeroSpace provides 4 possible layouts:</p>
 </div>
@@ -923,7 +998,7 @@ While in a <code>v_accordion</code>, you can navigate the windows using the <cod
 </div>
 </div>
 <div class="sect2">
-<h3 id="normalization"><a class="anchor" href="#normalization"></a><a class="link" href="#normalization">2.2. Normalization</a></h3>
+<h3 id="normalization"><a class="anchor" href="#normalization"></a><a class="link" href="#normalization">3.2. Normalization</a></h3>
 <div class="paragraph">
 <p>By default, AeroSpace does two types of tree normalizations:</p>
 </div>
@@ -1003,7 +1078,7 @@ Configured by <code>enable-normalization-opposite-orientation-for-nested-contain
 </div>
 </div>
 <div class="sect2">
-<h3 id="floating-windows"><a class="anchor" href="#floating-windows"></a><a class="link" href="#floating-windows">2.3. Floating windows</a></h3>
+<h3 id="floating-windows"><a class="anchor" href="#floating-windows"></a><a class="link" href="#floating-windows">3.3. Floating windows</a></h3>
 <div class="paragraph">
 <p>Normally, floating windows are not considered to be part of the <a href="#tree">tiling tree</a>.
 But it’s not the case with <a href="commands#focus">focus</a> command.</p>
@@ -1019,7 +1094,7 @@ The floating window parent container is determined as the smallest tiling contai
 </div>
 </div>
 <div class="sect1">
-<h2 id="emulation-of-virtual-workspaces"><a class="anchor" href="#emulation-of-virtual-workspaces"></a><a class="link" href="#emulation-of-virtual-workspaces">3. Emulation of virtual workspaces</a></h2>
+<h2 id="emulation-of-virtual-workspaces"><a class="anchor" href="#emulation-of-virtual-workspaces"></a><a class="link" href="#emulation-of-virtual-workspaces">4. Emulation of virtual workspaces</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Native macOS Spaces have a lot of problems</p>
@@ -1076,7 +1151,7 @@ That means, that if AeroSpace crashes badly you will still be able to manually "
 <p>The intended workflow of using AeroSpace workspaces is to only have one macOS Space (or as many monitors you have, if <code>Displays have separate Spaces</code> is enabled) and don’t interact with macOS Spaces anymore.</p>
 </div>
 <div class="sect2">
-<h3 id="a-note-on-mission-control"><a class="anchor" href="#a-note-on-mission-control"></a><a class="link" href="#a-note-on-mission-control">3.1. A note on mission control</a></h3>
+<h3 id="a-note-on-mission-control"><a class="anchor" href="#a-note-on-mission-control"></a><a class="link" href="#a-note-on-mission-control">4.1. A note on mission control</a></h3>
 <div class="paragraph">
 <p>For some reason, mission control doesn&#8217;t like that AeroSpace puts a lot of windows in the bottom right corner of the screen.
 Mission control shows windows too small even if it has enough space to show them bigger.</p>
@@ -1087,7 +1162,7 @@ For some weird reason, it helps.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="a-note-on-displays-have-separate-spaces"><a class="anchor" href="#a-note-on-displays-have-separate-spaces"></a><a class="link" href="#a-note-on-displays-have-separate-spaces">3.2. A note on &#8216;Displays have separate Spaces&#8217;</a></h3>
+<h3 id="a-note-on-displays-have-separate-spaces"><a class="anchor" href="#a-note-on-displays-have-separate-spaces"></a><a class="link" href="#a-note-on-displays-have-separate-spaces">4.2. A note on &#8216;Displays have separate Spaces&#8217;</a></h3>
 <div class="paragraph">
 <p>AeroSpace doesn&#8217;t care about <code>System Settings &#8594; Desktop &amp; Dock &#8594; Displays have separate Spaces</code> setting.
 It works equally good whether this option is enabled or disabled.</p>
@@ -1130,10 +1205,10 @@ It works equally good whether this option is enabled or disabled.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="callbacks"><a class="anchor" href="#callbacks"></a><a class="link" href="#callbacks">4. Callbacks</a></h2>
+<h2 id="callbacks"><a class="anchor" href="#callbacks"></a><a class="link" href="#callbacks">5. Callbacks</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="on-window-detected-callback"><a class="anchor" href="#on-window-detected-callback"></a><a class="link" href="#on-window-detected-callback">4.1. 'on-window-detected' callback</a></h3>
+<h3 id="on-window-detected-callback"><a class="anchor" href="#on-window-detected-callback"></a><a class="link" href="#on-window-detected-callback">5.1. 'on-window-detected' callback</a></h3>
 <div class="paragraph">
 <p>You can use <code>on-window-detected</code> callback to run commands every time a new window is detected.</p>
 </div>
@@ -1287,7 +1362,7 @@ Some windows initialize their title after the window appears.
 </div>
 </div>
 <div class="sect2">
-<h3 id="exec-on-workspace-change-callback"><a class="anchor" href="#exec-on-workspace-change-callback"></a><a class="link" href="#exec-on-workspace-change-callback">4.2. 'exec-on-workspace-change' callback</a></h3>
+<h3 id="exec-on-workspace-change-callback"><a class="anchor" href="#exec-on-workspace-change-callback"></a><a class="link" href="#exec-on-workspace-change-callback">5.2. 'exec-on-workspace-change' callback</a></h3>
 <div class="paragraph">
 <p><code>exec-on-workspace-change</code> callback allows to run arbitrary process when workspace changes.
 It may be useful for integrating with bars.</p>
@@ -1321,7 +1396,7 @@ It may be useful for integrating with bars.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="multiple-monitors"><a class="anchor" href="#multiple-monitors"></a><a class="link" href="#multiple-monitors">5. Multiple monitors</a></h2>
+<h2 id="multiple-monitors"><a class="anchor" href="#multiple-monitors"></a><a class="link" href="#multiple-monitors">6. Multiple monitors</a></h2>
 <div class="sectionbody">
 <div class="ulist">
 <ul>
@@ -1390,7 +1465,7 @@ When you switch to an empty workspace, AeroSpace puts the workspace on an assign
 </table>
 </div>
 <div class="sect2">
-<h3 id="assign-workspaces-to-monitors"><a class="anchor" href="#assign-workspaces-to-monitors"></a><a class="link" href="#assign-workspaces-to-monitors">5.1. Assign workspaces to monitors</a></h3>
+<h3 id="assign-workspaces-to-monitors"><a class="anchor" href="#assign-workspaces-to-monitors"></a><a class="link" href="#assign-workspaces-to-monitors">6.1. Assign workspaces to monitors</a></h3>
 <div class="paragraph">
 <p>You can use <code>workspace-to-monitor-force-assignment</code> syntax to assign
 workspaces to always appear on particular monitors</p>
@@ -1446,10 +1521,10 @@ The first matching pattern will be used</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="caveats"><a class="anchor" href="#caveats"></a><a class="link" href="#caveats">6. Caveats</a></h2>
+<h2 id="caveats"><a class="anchor" href="#caveats"></a><a class="link" href="#caveats">7. Caveats</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="dialog-heuristics"><a class="anchor" href="#dialog-heuristics"></a><a class="link" href="#dialog-heuristics">6.1. Dialog heuristics</a></h3>
+<h3 id="dialog-heuristics"><a class="anchor" href="#dialog-heuristics"></a><a class="link" href="#dialog-heuristics">7.1. Dialog heuristics</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1510,7 +1585,7 @@ If you find that some windows are not handled properly please <a href="https://g
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-03-13 11:09:30 +0100
+Last updated 2024-04-23 01:26:58 +0200
 </div>
 </div>
 </body>
