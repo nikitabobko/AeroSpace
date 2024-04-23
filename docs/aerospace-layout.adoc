@@ -15,9 +15,13 @@ aerospace layout [-h|--help] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|acco
 // tag::body[]
 {manpurpose}
 
-If several arguments are supplied then finds the first argument that doesn't describe the currently active layout, and applies the found layout.
+If several arguments are supplied then finds the first argument that doesn't describe the currently active layout, and applies the layout.
 
-`*tiling*` is the only argument that tiles floating window.
+* Change both tiling layout and orientation in one go: `h_tiles|v_tiles|h_accordion|v_accordion`
+* Change tiling layout but preserve orientation: `tiles|accordion`
+* Change orientation but preserve layout: `horizontal|vertical`
+* Toggle floating/tiling mode: `tiling|floating`
+
 // end::body[]
 
 include::util/conditional-options-header.adoc[]

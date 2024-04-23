@@ -26,14 +26,14 @@ The intended usage is the following:
 . Focus problematic window
 . Run the command one more time to stop the debug session recording and print the results
 
-_debug-windows_ command is *not stable API*.
+`debug-windows` command is *not stable API*.
 Please *don't rely on* the command existence and output format.
 The only intended use case is to report bugs about incorrect windows handling.
+
+// end::body[]
 
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
-
-// end::body[]
 
 include::util/man-footer.adoc[]

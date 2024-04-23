@@ -32,7 +32,6 @@ Output example:
 NOTE: monitor sequence ID may change if you plug or unplug monitors
 
 You can use `awk` to get values of particular column: `awk -F '|' '{print $2}'`
-// end::body[]
 
 include::util/conditional-options-header.adoc[]
 
@@ -45,5 +44,6 @@ Filter results to only print the focused monitor.
 --mouse [no]::
 Filter results to only print the monitor with the mouse.
 `[no]` inverts the condition
+// end::body[]
 
 include::util/man-footer.adoc[]

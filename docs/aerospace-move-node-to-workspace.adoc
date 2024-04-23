@@ -21,12 +21,12 @@ aerospace move-node-to-workspace [-h|--help] <workspace-name>
 
 `(next|prev)` is identical to `workspace (next|prev)`
 
-// end::body[]
-
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 --wrap-around::
 Make it possible to jump between first and last workspaces using (next|prev)
+
+// end::body[]
 
 include::util/man-footer.adoc[]

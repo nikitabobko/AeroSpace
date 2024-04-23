@@ -17,11 +17,11 @@ aerospace move-workspace-to-monitor [-h|--help] --wrap-around (next|prev)
 {manpurpose}
 
 The command doesn't have effect on workspaces xref:guide.adoc#assign-workspaces-to-monitors[that have monitor assignment]
-// end::body[]
 
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 --wrap-around:: Allows to move workspace between first and last monitors
+// end::body[]
 
 include::util/man-footer.adoc[]

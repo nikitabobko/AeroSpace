@@ -30,7 +30,7 @@ h_tiles
 └── window 2
 ----
 +
-`*move right*` will result in the following layout
+`move right` will result in the following layout
 +
 ----
 h_tiles
@@ -49,7 +49,7 @@ h_tiles
     └── window 4
 ----
 +
-`*move right*` will result in the following layout
+`move right` will result in the following layout
 +
 ----
 h_tiles
@@ -71,7 +71,7 @@ h_tiles
     └── window 4
 ----
 +
-`*move left*` will result in the following layout
+`move left` will result in the following layout
 +
 ----
 h_tiles
@@ -83,7 +83,7 @@ h_tiles
 ----
 . *Implicit container example*
 +
-In some cases, `*move*` needs to implicitly create a container to fulfill your command.
+In some cases, `move` needs to implicitly create a container to fulfill your command.
 +
 Given this layout
 +
@@ -94,7 +94,7 @@ h_tiles
 └── window 3
 ----
 +
-`*move up*` will result in the following layout
+`move up` will result in the following layout
 +
 ----
 v_tiles
