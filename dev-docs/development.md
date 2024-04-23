@@ -48,7 +48,7 @@ Signing the binary is required to preserve accessibility permission across rebui
 
 **Release build**
 - `build-release.sh` - Build release build to `.release` dir
-- `install-release.sh` - Build and install release build from sources by using Homebrew
+- `install-release.sh` - Build and install release build to `/Applications/AeroSpace.app` and `~/.bin/aerospace`
 
 ## IDE
 
