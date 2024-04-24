@@ -902,7 +902,7 @@ Toggle between the two if not specified</p>
 </td>
 <td class="content">
 <code>join-with</code> is a high-level replacement for i3&#8217;s <a href="https://i3wm.org/docs/userguide.html#_splitting_containers">split command</a>.
-There is an observation that the only reason why you might want to split a node is to put several windows under a common "umbrella" parent.Unlike <code>split</code>, <code>join-with</code> can be used with <a href="guide#normalization"><strong>enable-normalization-flatten-containers</strong></a>
+There is an observation that the only reason why you might want to split a node is to put several windows under a common "umbrella" parent. Unlike <code>split</code>, <code>join-with</code> can be used with <a href="guide#normalization"><code>enable-normalization-flatten-containers</code></a>
 </td>
 </tr>
 </table>
@@ -921,10 +921,23 @@ There is an observation that the only reason why you might want to split a node 
 <p>Change layout of the focused window to the given layout</p>
 </div>
 <div class="paragraph">
-<p>If several arguments are supplied then finds the first argument that doesn&#8217;t describe the currently active layout, and applies the found layout.</p>
+<p>If several arguments are supplied then finds the first argument that doesn&#8217;t describe the currently active layout, and applies the layout.</p>
 </div>
-<div class="paragraph">
-<p><code><strong>tiling</strong></code> is the only argument that tiles floating window.</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Change both tiling layout and orientation in one go: <code>h_tiles|v_tiles|h_accordion|v_accordion</code></p>
+</li>
+<li>
+<p>Change tiling layout but preserve orientation: <code>tiles|accordion</code></p>
+</li>
+<li>
+<p>Change orientation but preserve layout: <code>horizontal|vertical</code></p>
+</li>
+<li>
+<p>Toggle floating/tiling mode: <code>tiling|floating</code></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1026,7 +1039,7 @@ The default is 50 pixels</p>
 </div>
 </div>
 <div class="paragraph">
-<p><code><strong>move right</strong></code> will result in the following layout</p>
+<p><code>move right</code> will result in the following layout</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1049,7 +1062,7 @@ The default is 50 pixels</p>
 </div>
 </div>
 <div class="paragraph">
-<p><code><strong>move right</strong></code> will result in the following layout</p>
+<p><code>move right</code> will result in the following layout</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1075,7 +1088,7 @@ The default is 50 pixels</p>
 </div>
 </div>
 <div class="paragraph">
-<p><code><strong>move left</strong></code> will result in the following layout</p>
+<p><code>move left</code> will result in the following layout</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1091,7 +1104,7 @@ The default is 50 pixels</p>
 <li>
 <p><strong>Implicit container example</strong></p>
 <div class="paragraph">
-<p>In some cases, <code><strong>move</strong></code> needs to implicitly create a container to fulfill your command.</p>
+<p>In some cases, <code>move</code> needs to implicitly create a container to fulfill your command.</p>
 </div>
 <div class="paragraph">
 <p>Given this layout</p>
@@ -1105,7 +1118,7 @@ The default is 50 pixels</p>
 </div>
 </div>
 <div class="paragraph">
-<p><code><strong>move up</strong></code> will result in the following layout</p>
+<p><code>move up</code> will result in the following layout</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1189,6 +1202,21 @@ move-node-to-workspace [-h|--help] &lt;workspace-name&gt;</pre>
 <div class="paragraph">
 <p><code>(next|prev)</code> is identical to <code>workspace (next|prev)</code></p>
 </div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+<dt class="hdlist1">--wrap-around</dt>
+<dd>
+<p>Make it possible to jump between first and last workspaces using (next|prev)</p>
+</dd>
+</dl>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1204,6 +1232,21 @@ move-node-to-workspace [-h|--help] &lt;workspace-name&gt;</pre>
 </div>
 <div class="paragraph">
 <p>The command doesn&#8217;t have effect on workspaces <a href="guide#assign-workspaces-to-monitors">that have monitor assignment</a></p>
+</div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+<dt class="hdlist1">--wrap-around</dt>
+<dd>
+<p>Allows to move workspace between first and last monitors</p>
+</dd>
+</dl>
 </div>
 </div>
 </div>
@@ -1428,20 +1471,9 @@ workspace [-h|--help] [--auto-back-and-forth] &lt;workspace-name&gt;</pre>
 </ol>
 </div>
 <div class="paragraph">
-<p><em>debug-windows</em> command is <strong>not stable API</strong>.
+<p><code>debug-windows</code> command is <strong>not stable API</strong>.
 Please <strong>don&#8217;t rely on</strong> the command existence and output format.
 The only intended use case is to report bugs about incorrect windows handling.</p>
-</div>
-<div class="paragraph lead">
-<p><strong>OPTIONS</strong></p>
-</div>
-<div class="dlist">
-<dl>
-<dt class="hdlist1">-h, --help</dt>
-<dd>
-<p>Print help</p>
-</dd>
-</dl>
 </div>
 </div>
 <div class="sect2">
@@ -1489,6 +1521,22 @@ The only intended use case is to report bugs about incorrect windows handling.</
 </div>
 <div class="paragraph">
 <p>You can use <code>awk</code> to get values of particular column: <code>awk -F '|' '{print $2}'</code></p>
+</div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+<dt class="hdlist1">--macos-native-hidden [no]</dt>
+<dd>
+<p>Filter results to only print hidden applications.
+<code>[no]</code> inverts the condition</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect2">
@@ -1565,6 +1613,27 @@ monitor sequence ID may change if you plug or unplug monitors
 <div class="paragraph">
 <p>You can use <code>awk</code> to get values of particular column: <code>awk -F '|' '{print $2}'</code></p>
 </div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+<dt class="hdlist1">--focused [no]</dt>
+<dd>
+<p>Filter results to only print the focused monitor.
+<code>[no]</code> inverts the condition</p>
+</dd>
+<dt class="hdlist1">--mouse [no]</dt>
+<dd>
+<p>Filter results to only print the monitor with the mouse.
+<code>[no]</code> inverts the condition</p>
+</dd>
+</dl>
+</div>
 </div>
 <div class="sect2">
 <h3 id="list-windows"><a class="anchor" href="#list-windows"></a><a class="link" href="#list-windows">23.5. list-windows</a></h3>
@@ -1622,11 +1691,11 @@ list-windows [-h|--help] --focused</pre>
 </dd>
 <dt class="hdlist1">--all</dt>
 <dd>
-<p>Alias for <em>--monitor all</em>.
+<p>Alias for <code>--monitor all</code>.
 Please use this option <strong>with cautious</strong>.
 Use it when you really need to get workspaces/windows from <strong>all monitors</strong>.</p>
 <div class="paragraph">
-<p>For multi-monitor setup <em>--monitor focused</em> is almost always a preferred option.
+<p>For multi-monitor setup <code>--monitor focused</code> is almost always a preferred option.
 If you&#8217;re automating something then you don&#8217;t want to mess up with workspaces/windows on a different monitor.</p>
 </div>
 <div class="paragraph">
@@ -1673,13 +1742,13 @@ In that case, error is reported.</p>
 <p>1-based index of a monitor as if monitors were ordered horizontally from left to right</p>
 </li>
 <li>
-<p>"all" is a special monitor ID that represents all monitors</p>
+<p><code>all</code> is a special monitor ID that represents all monitors</p>
 </li>
 <li>
-<p>"mouse" is a special monitor ID that represents monitor with the mouse</p>
+<p><code>mouse</code> is a special monitor ID that represents monitor with the mouse</p>
 </li>
 <li>
-<p>"focused" is a special monitor ID that represents currently focused monitor</p>
+<p><code>focused</code> is a special monitor ID that represents currently focused monitor</p>
 </li>
 </ol>
 </div>
@@ -1733,11 +1802,11 @@ list-workspaces [-h|--help] --focused</pre>
 </dd>
 <dt class="hdlist1">--all</dt>
 <dd>
-<p>Alias for <em>--monitor all</em>.
+<p>Alias for <code>--monitor all</code>.
 Please use this option <strong>with cautious</strong>.
 Use it when you really need to get workspaces/windows from <strong>all monitors</strong>.</p>
 <div class="paragraph">
-<p>For multi-monitor setup <em>--monitor focused</em> is almost always a preferred option.
+<p>For multi-monitor setup <code>--monitor focused</code> is almost always a preferred option.
 If you&#8217;re automating something then you don&#8217;t want to mess up with workspaces/windows on a different monitor.</p>
 </div>
 <div class="paragraph">
@@ -1762,13 +1831,13 @@ Always prints a single workspace</p>
 <p>1-based index of a monitor as if monitors were ordered horizontally from left to right</p>
 </li>
 <li>
-<p>"all" is a special monitor ID that represents all monitors</p>
+<p><code>all</code> is a special monitor ID that represents all monitors</p>
 </li>
 <li>
-<p>"mouse" is a special monitor ID that represents monitor with the mouse</p>
+<p><code>mouse</code> is a special monitor ID that represents monitor with the mouse</p>
 </li>
 <li>
-<p>"focused" is a special monitor ID that represents currently focused monitor</p>
+<p><code>focused</code> is a special monitor ID that represents currently focused monitor</p>
 </li>
 </ol>
 </div>
@@ -1792,7 +1861,7 @@ Several workspaces can be visible in multi-monitor setup</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-04-23 01:26:57 +0200
+Last updated 2024-04-24 23:36:57 +0200
 </div>
 </div>
 </body>
