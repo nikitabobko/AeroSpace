@@ -7,7 +7,7 @@ To build/install from sources do the following:
 
 Feel free to report GitHub issues if something doesn't work for you
 
-If you struggle to build AeroSpace locally, you can also refer to [builds in GitHub Actions](https://github.com/nikitabobko/AeroSpace/actions)
+If you struggle to build AeroSpace locally, you can also refer to [builds in GitHub Actions](https://github.com/nikitabobko/AeroSpace/actions?query=branch%3Amain)
 
 ## 1. Install dependencies
 
