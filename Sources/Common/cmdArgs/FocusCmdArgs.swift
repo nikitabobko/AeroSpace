@@ -6,22 +6,22 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
         kind: .focus,
         allowInConfig: true,
         help: """
-              USAGE: focus [<options>] \(CardinalDirection.unionLiteral)
-                 OR: focus [-h|--help] --window-id <window-id>
+            USAGE: focus [<options>] \(CardinalDirection.unionLiteral)
+               OR: focus [-h|--help] --window-id <window-id>
 
-              OPTIONS:
-                -h, --help                     Print help
-                --window-id <window-id>        Focus window with specified <window-id>
-                --boundaries \(boundar)        Defines focus boundaries.
-                                               \(boundar) possible values: \(FocusCmdArgs.Boundaries.unionLiteral)
-                                               The default is: \(FocusCmdArgs.Boundaries.workspace.rawValue)
-                --boundaries-action \(actio)   Defines the behavior when requested to cross the \(boundar).
-                                               \(actio) possible values: \(FocusCmdArgs.WhenBoundariesCrossed.unionLiteral)
-                                               The default is: \(FocusCmdArgs.WhenBoundariesCrossed.wrapAroundTheWorkspace.rawValue)
+            OPTIONS:
+              -h, --help                     Print help
+              --window-id <window-id>        Focus window with specified <window-id>
+              --boundaries \(boundar)        Defines focus boundaries.
+                                             \(boundar) possible values: \(FocusCmdArgs.Boundaries.unionLiteral)
+                                             The default is: \(FocusCmdArgs.Boundaries.workspace.rawValue)
+              --boundaries-action \(actio)   Defines the behavior when requested to cross the \(boundar).
+                                             \(actio) possible values: \(FocusCmdArgs.WhenBoundariesCrossed.unionLiteral)
+                                             The default is: \(FocusCmdArgs.WhenBoundariesCrossed.wrapAroundTheWorkspace.rawValue)
 
-              ARGUMENTS:
-                (left|down|up|right)           Focus direction
-              """,
+            ARGUMENTS:
+              (left|down|up|right)           Focus direction
+            """,
         options: [
             "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
             "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),

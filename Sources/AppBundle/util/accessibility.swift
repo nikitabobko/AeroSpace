@@ -265,8 +265,8 @@ enum Ax {
     //    getter: tryGetWindow
     //)
     static let closeButtonAttr = ReadableAttrImpl<AXUIElement>(
-            key: kAXCloseButtonAttribute,
-            getter: { ($0 as! AXUIElement) }
+        key: kAXCloseButtonAttribute,
+        getter: { ($0 as! AXUIElement) }
     )
     // Note! fullscreen is not the same as "zoom" (green plus)
     static let fullscreenButtonAttr = ReadableAttrImpl<AXUIElement>(
@@ -297,9 +297,7 @@ private func tryGetWindow(_ any: Any?) -> AXUIElement? {
 extension AXUIElement {
     func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
         var raw: AnyObject?
-        return AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success
-                ? attr.getter(raw!)
-                : nil
+        return AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success ? attr.getter(raw!) : nil
     }
 
     @discardableResult func set<Attr: WritableAttr>(_ attr: Attr, _ value: Attr.T) -> Bool {

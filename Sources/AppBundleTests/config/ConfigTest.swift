@@ -79,8 +79,10 @@ final class ConfigTest: XCTestCase {
         )
         XCTAssertEqual(
             errors.descriptions,
-            ["mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
-             "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding"]
+            [
+                "mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
+                "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding"
+            ]
         )
         let binding = HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])
         XCTAssertEqual(
@@ -164,11 +166,11 @@ final class ConfigTest: XCTestCase {
         )
         XCTAssertEqual(
             ["""
-             The config contains:
-             1. usage of 'split' command
-             2. enable-normalization-flatten-containers = true
-             These two settings don't play nicely together. 'split' command has no effect in this case
-             """],
+                The config contains:
+                1. usage of 'split' command
+                2. enable-normalization-flatten-containers = true
+                These two settings don't play nicely together. 'split' command has no effect in this case
+                """],
             errors.descriptions
         )
     }

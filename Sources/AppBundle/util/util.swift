@@ -89,10 +89,12 @@ extension CGPoint {
     func distanceToRectFrame(to rect: Rect) -> CGFloat {
         let list: [CGFloat] = ((rect.minY..<rect.maxY).contains(y) ? [abs(rect.minX - x), abs(rect.maxX - x)] : []) +
             ((rect.minX..<rect.maxX).contains(x) ? [abs(rect.minY - y), abs(rect.maxY - y)] : []) +
-            [distance(to: rect.topLeftCorner),
-             distance(to: rect.bottomRightCorner),
-             distance(to: rect.topRightCorner),
-             distance(to: rect.bottomLeftCorner)]
+            [
+                distance(to: rect.topLeftCorner),
+                distance(to: rect.bottomRightCorner),
+                distance(to: rect.topRightCorner),
+                distance(to: rect.bottomLeftCorner)
+            ]
         return list.minOrThrow()
     }
 

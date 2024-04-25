@@ -32,10 +32,10 @@ final class MacWindow: Window, CustomStringConvertible {
             let window = MacWindow(id, app, axWindow, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
 
             if window.observe(destroyedObs, kAXUIElementDestroyedNotification) &&
-                       window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
-                       window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
-                       window.observe(movedObs, kAXMovedNotification) &&
-                       window.observe(resizedObs, kAXResizedNotification) {
+                    window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
+                    window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
+                    window.observe(movedObs, kAXMovedNotification) &&
+                    window.observe(resizedObs, kAXResizedNotification) {
                 debug("New window detected: \(window)")
                 allWindowsMap[id] = window
                 onWindowDetected(window, startup: startup)
@@ -108,7 +108,7 @@ final class MacWindow: Window, CustomStringConvertible {
             guard let topLeftCorner = getTopLeftCorner() else { return }
             guard let workspace else { return } // hiding only makes sense for workspace windows
             prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
-                    topLeftCorner - workspace.workspaceMonitor.rect.topLeftCorner
+                topLeftCorner - workspace.workspaceMonitor.rect.topLeftCorner
         }
         _ = setTopLeftCorner(allMonitorsRectsUnion.bottomRightCorner)
     }
@@ -207,15 +207,15 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
     // - flameshot? https://github.com/nikitabobko/AeroSpace/issues/112
     // - Drata Agent https://github.com/nikitabobko/AeroSpace/issues/134
     if !isFullscreenable(axWindow) &&
-           app.id != "com.google.Chrome" && // "Drag out" a tab out of Chrome window
-           app.id != "org.gimp.gimp-2.10" && // Gimp doesn't show fullscreen button
-           app.id != "com.apple.ActivityMonitor" && // Activity Monitor doesn't show fullscreen button
+            app.id != "com.google.Chrome" && // "Drag out" a tab out of Chrome window
+            app.id != "org.gimp.gimp-2.10" && // Gimp doesn't show fullscreen button
+            app.id != "com.apple.ActivityMonitor" && // Activity Monitor doesn't show fullscreen button
 
-           // Terminal apps and Emacs have an option to hide their title bars
-           app.id != "org.alacritty" &&
-           app.id != "com.github.wez.wezterm" &&
-           app.id != "com.googlecode.iterm2" &&
-           app.id != "org.gnu.Emacs" {
+            // Terminal apps and Emacs have an option to hide their title bars
+            app.id != "org.alacritty" &&
+            app.id != "com.github.wez.wezterm" &&
+            app.id != "com.googlecode.iterm2" &&
+            app.id != "org.gnu.Emacs" {
         return true
     }
     return false

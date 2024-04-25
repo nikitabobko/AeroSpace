@@ -22,7 +22,7 @@ final class MacApp: AbstractApp {
             let app = MacApp(nsApp, AXUIElementCreateApplication(nsApp.processIdentifier))
 
             if app.observe(refreshObs, kAXWindowCreatedNotification) &&
-                       app.observe(refreshObs, kAXFocusedWindowChangedNotification) {
+                    app.observe(refreshObs, kAXFocusedWindowChangedNotification) {
                 allAppsMap[pid] = app
                 return app
             } else {

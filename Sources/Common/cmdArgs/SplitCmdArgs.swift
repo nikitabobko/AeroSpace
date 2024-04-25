@@ -3,11 +3,11 @@ public struct SplitCmdArgs: RawCmdArgs {
         kind: .split,
         allowInConfig: true,
         help: """
-              USAGE: split [-h|--help] \(SplitArg.unionLiteral)
+            USAGE: split [-h|--help] \(SplitArg.unionLiteral)
 
-              OPTIONS:
-                -h, --help   Print help
-              """,
+            OPTIONS:
+              -h, --help   Print help
+            """,
         options: [:],
         arguments: [newArgParser(\.arg, parseSplitArg, mandatoryArgPlaceholder: SplitArg.unionLiteral)]
     )

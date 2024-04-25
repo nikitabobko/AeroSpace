@@ -6,26 +6,26 @@ private struct RawListWindowsCmdArgs: RawCmdArgs, Equatable {
         kind: .listWindows,
         allowInConfig: false,
         help: """
-              USAGE: list-windows [-h|--help] (--workspace \(_workspaces)|--monitor \(_monitors))
-                                  [--monitor \(_monitors)] [--workspace \(_workspaces)]
-                                  [--pid <pid>] [--app-id <app-id>] [--macos-native-hidden-app [no]]
-                                  [--macos-native-minimized] [--macos-native-fullscreen]
-                 OR: list-windows [-h|--help] --all
-                 OR: list-windows [-h|--help] --focused
+            USAGE: list-windows [-h|--help] (--workspace \(_workspaces)|--monitor \(_monitors))
+                                [--monitor \(_monitors)] [--workspace \(_workspaces)]
+                                [--pid <pid>] [--app-id <app-id>] [--macos-native-hidden-app [no]]
+                                [--macos-native-minimized] [--macos-native-fullscreen]
+               OR: list-windows [-h|--help] --all
+               OR: list-windows [-h|--help] --focused
 
-              OPTIONS:
-                -h, --help                      Print help
-                --all                           Alias for "--monitor all"
-                --focused                       Print the focused window
-                --workspace \(_workspaces)      Filter results to only print windows that belong to specified workspaces
-                --monitor \(_monitors)          Filter results to only print the windows that are attached to specified monitors
-                --pid <pid>                     Filter results to only print windows that belong to the Application with specified <pid>
-                --app-id <app-id>               Filter results to only print windows that belong to the Application with specified Bundle ID
-                --macos-native-hidden-app [no]  Filter results to only print windows that belong to hidden applications.
-                                                [no] inverts the condition
-                --macos-native-minimized [no]   Filter results to only print minimized windows. [no] inverts the condition
-                --macos-native-fullscreen [no]  Filter results to only print fullscreen windows. [no] inverts the condition
-              """,
+            OPTIONS:
+              -h, --help                      Print help
+              --all                           Alias for "--monitor all"
+              --focused                       Print the focused window
+              --workspace \(_workspaces)      Filter results to only print windows that belong to specified workspaces
+              --monitor \(_monitors)          Filter results to only print the windows that are attached to specified monitors
+              --pid <pid>                     Filter results to only print windows that belong to the Application with specified <pid>
+              --app-id <app-id>               Filter results to only print windows that belong to the Application with specified Bundle ID
+              --macos-native-hidden-app [no]  Filter results to only print windows that belong to hidden applications.
+                                              [no] inverts the condition
+              --macos-native-minimized [no]   Filter results to only print minimized windows. [no] inverts the condition
+              --macos-native-fullscreen [no]  Filter results to only print fullscreen windows. [no] inverts the condition
+            """,
         options: [
             "--focused": trueBoolFlag(\.focused),
             "--all": trueBoolFlag(\.all),

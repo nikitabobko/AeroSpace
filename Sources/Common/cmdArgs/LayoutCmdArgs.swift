@@ -3,11 +3,11 @@ public struct LayoutCmdArgs: CmdArgs, RawCmdArgs, Equatable {
         kind: .layout,
         allowInConfig: true,
         help: """
-              USAGE: layout [-h|--help] \(LayoutDescription.unionLiteral)...
+            USAGE: layout [-h|--help] \(LayoutDescription.unionLiteral)...
 
-              OPTIONS:
-                -h, --help   Print help
-              """,
+            OPTIONS:
+              -h, --help   Print help
+            """,
         options: [:],
         arguments: [newArgParser(\.toggleBetween, parseToggleBetween, mandatoryArgPlaceholder: LayoutDescription.unionLiteral)]
     )

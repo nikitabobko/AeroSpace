@@ -3,15 +3,15 @@ public struct ResizeCmdArgs: RawCmdArgs, Equatable {
         kind: .resize,
         allowInConfig: true,
         help: """
-              USAGE: resize [-h|--help] (smart|width|height) [+|-]<number>
+            USAGE: resize [-h|--help] (smart|width|height) [+|-]<number>
 
-              OPTIONS:
-                -h, --help             Print help
+            OPTIONS:
+              -h, --help             Print help
 
-              ARGUMENTS:
-                (smart|width|height)   Dimension to resize
-                <number>               Number
-              """,
+            ARGUMENTS:
+              (smart|width|height)   Dimension to resize
+              <number>               Number
+            """,
         options: [:],
         arguments: [
             newArgParser(\.dimension, parseDimension, mandatoryArgPlaceholder: "(smart|width|height)"),

@@ -3,13 +3,13 @@ public struct ListMonitorsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
         kind: .listMonitors,
         allowInConfig: false,
         help: """
-              USAGE: list-monitors [-h|--help] [--focused [no]] [--mouse [no]]
+            USAGE: list-monitors [-h|--help] [--focused [no]] [--mouse [no]]
 
-              OPTIONS:
-                -h, --help       Print help
-                --focused [no]   Filter results to only print the focused monitor
-                --mouse [no]     Filter results to only print the monitor with the mouse
-              """,
+            OPTIONS:
+              -h, --help       Print help
+              --focused [no]   Filter results to only print the focused monitor
+              --mouse [no]     Filter results to only print the monitor with the mouse
+            """,
         options: [
             "--focused": boolFlag(\.focused),
             "--mouse": boolFlag(\.mouse)

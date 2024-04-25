@@ -20,11 +20,11 @@ func noArgsParser<T: Copyable>(_ kind: CmdKind, allowInConfig: Bool) -> CmdParse
         kind: kind,
         allowInConfig: allowInConfig,
         help: """
-              USAGE: \(kind) [-h|--help]
+            USAGE: \(kind) [-h|--help]
 
-              OPTIONS:
-                -h, --help   Print help
-              """,
+            OPTIONS:
+              -h, --help   Print help
+            """,
         options: [:],
         arguments: []
     )

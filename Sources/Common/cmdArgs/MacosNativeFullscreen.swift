@@ -4,15 +4,15 @@ public struct MacosNativeFullscreenCmdArgs: CmdArgs, RawCmdArgs {
         kind: .macosNativeFullscreen,
         allowInConfig: true,
         help: """
-              USAGE: macos-native-fullscreen [-h|--help] [on|off]
+            USAGE: macos-native-fullscreen [-h|--help] [on|off]
 
-              OPTIONS:
-                -h, --help   Print help
+            OPTIONS:
+              -h, --help   Print help
 
-              ARGUMENTS:
-                [on|off]     'on' means enter fullscreen mode. 'off' means exit fullscreen mode.
-                             Toggle between the two if not specified
-              """,
+            ARGUMENTS:
+              [on|off]     'on' means enter fullscreen mode. 'off' means exit fullscreen mode.
+                           Toggle between the two if not specified
+            """,
         options: [:],
         arguments: [ArgParser(\.toggle, parseToggleEnum)]
     )

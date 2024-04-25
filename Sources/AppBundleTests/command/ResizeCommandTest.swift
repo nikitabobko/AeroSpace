@@ -14,9 +14,9 @@ final class ResizeCommandTest: XCTestCase {
         testParseCommandSucc("resize width 10", ResizeCmdArgs(dimension: .width, units: .set(10)))
 
         testParseCommandFail("resize s 10", msg: """
-                                                 ERROR: Can't parse 's'.
-                                                        Possible values: (width|height|smart)
-                                                 """)
+            ERROR: Can't parse 's'.
+                   Possible values: (width|height|smart)
+            """)
         testParseCommandFail("resize smart foo", msg: "ERROR: <number> argument must be a number")
     }
 }

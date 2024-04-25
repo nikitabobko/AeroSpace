@@ -3,12 +3,12 @@ public struct MoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
         kind: .moveWorkspaceToMonitor,
         allowInConfig: true,
         help: """
-              USAGE: move-workspace-to-monitor [-h|--help] --wrap-around (next|prev)
+            USAGE: move-workspace-to-monitor [-h|--help] --wrap-around (next|prev)
 
-              OPTIONS:
-                -h, --help           Print help
-                --wrap-around        Allows to move workspace between first and last monitors
-              """,
+            OPTIONS:
+              -h, --help           Print help
+              --wrap-around        Allows to move workspace between first and last monitors
+            """,
         options: [
             "--wrap-around": trueBoolFlag(\.wrapAround)
         ],

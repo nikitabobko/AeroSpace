@@ -4,22 +4,22 @@ public struct MoveNodeToMonitorCmdArgs: RawCmdArgs, CmdArgs, Equatable {
         kind: .moveNodeToMonitor,
         allowInConfig: true,
         help: """
-              USAGE: move-node-to-monitor [-h|--help] [--wrap-around] (left|down|up|right)
-                 OR: move-node-to-monitor [-h|--help] [--wrap-around] (next|prev)
-                 OR: move-node-to-monitor [-h|--help] <monitor-pattern>...
+            USAGE: move-node-to-monitor [-h|--help] [--wrap-around] (left|down|up|right)
+               OR: move-node-to-monitor [-h|--help] [--wrap-around] (next|prev)
+               OR: move-node-to-monitor [-h|--help] <monitor-pattern>...
 
-              OPTIONS:
-                -h, --help            Print help
-                --wrap-around         Make it possible to wrap around the movement
+            OPTIONS:
+              -h, --help            Print help
+              --wrap-around         Make it possible to wrap around the movement
 
-              ARGUMENTS:
-                (left|down|up|right)  Move window to monitor in direction relative to the currently focused monitor
-                (next|prev)           Move window to next|prev monitor in order they appear in tray icon
-                <monitor-pattern>     Find the first monitor pattern in the list that
-                                      doesn't describe the current monitor and move the window
-                                      to the appropriate monitor. Monitor pattern is the same as in
-                                      `workspace-to-monitor-force-assignment` config option
-              """,
+            ARGUMENTS:
+              (left|down|up|right)  Move window to monitor in direction relative to the currently focused monitor
+              (next|prev)           Move window to next|prev monitor in order they appear in tray icon
+              <monitor-pattern>     Find the first monitor pattern in the list that
+                                    doesn't describe the current monitor and move the window
+                                    to the appropriate monitor. Monitor pattern is the same as in
+                                    `workspace-to-monitor-force-assignment` config option
+            """,
         options: [
             "--wrap-around": trueBoolFlag(\.wrapAround)
         ],

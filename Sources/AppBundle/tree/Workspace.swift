@@ -14,7 +14,7 @@ func getStubWorkspace(for monitor: Monitor) -> Workspace {
 
 private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     if let prev = screenPointToPrevVisibleWorkspace[point]?.lets({ Workspace.get(byName: $0) }),
-       !prev.isVisible && prev.workspaceMonitor.rect.topLeftCorner == point && prev.forceAssignedMonitor == nil {
+            !prev.isVisible && prev.workspaceMonitor.rect.topLeftCorner == point && prev.forceAssignedMonitor == nil {
         return prev
     }
     if let candidate = Workspace.all
@@ -162,7 +162,7 @@ private func rearrangeWorkspacesOnMonitors() {
 
     for newScreen in newScreens {
         if let existingVisibleWorkspace = newScreenToOldScreenMapping[newScreen]?.lets({ oldScreenPointToVisibleWorkspace[$0] }),
-           newScreen.setActiveWorkspace(existingVisibleWorkspace) {
+                newScreen.setActiveWorkspace(existingVisibleWorkspace) {
             continue
         }
         let stubWorkspace = getStubWorkspace(forPoint: newScreen)

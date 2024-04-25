@@ -57,9 +57,9 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             answerToClient(
                 exitCode: 1,
                 stderr: """
-                        Can't parse request '\(String(describing: String(data: rawRequest, encoding: .utf8)))'.
-                        Error: \(String(describing: _request.errorOrNil))
-                        """
+                    Can't parse request '\(String(describing: String(data: rawRequest, encoding: .utf8)))'.
+                    Error: \(String(describing: _request.errorOrNil))
+                    """
             )
             continue
         }

@@ -6,18 +6,18 @@ private struct RawListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
         kind: .listWorkspaces,
         allowInConfig: false,
         help: """
-              USAGE: list-workspaces [-h|--help] --monitor \(_monitors) [--visible [no]] [--empty [no]]
-                 OR: list-workspaces [-h|--help] --all
-                 OR: list-workspaces [-h|--help] --focused
+            USAGE: list-workspaces [-h|--help] --monitor \(_monitors) [--visible [no]] [--empty [no]]
+               OR: list-workspaces [-h|--help] --all
+               OR: list-workspaces [-h|--help] --focused
 
-              OPTIONS:
-                -h, --help               Print help
-                --all                    Alias for "--monitor all"
-                --focused                Alias for "--monitor focused --visible"
-                --monitor \(_monitors)   Filter results to only print the workspaces that are attached to specified monitors
-                --visible [no]           Filter results to only print currently visible workspaces
-                --empty [no]             Filter results to only print empty workspaces. [no] inverts the condition
-              """,
+            OPTIONS:
+              -h, --help               Print help
+              --all                    Alias for "--monitor all"
+              --focused                Alias for "--monitor focused --visible"
+              --monitor \(_monitors)   Filter results to only print the workspaces that are attached to specified monitors
+              --visible [no]           Filter results to only print currently visible workspaces
+              --empty [no]             Filter results to only print empty workspaces. [no] inverts the condition
+            """,
         options: [
             "--focused": trueBoolFlag(\.focused),
             "--all": trueBoolFlag(\.all),

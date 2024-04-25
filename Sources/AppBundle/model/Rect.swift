@@ -14,10 +14,10 @@ extension [Rect] {
         let topLeftY = rects.map(\.minY).minOrThrow()
         let topLeftX = rects.map(\.minX).maxOrThrow()
         return Rect(
-                topLeftX: topLeftX,
-                topLeftY: topLeftY,
-                width: rects.map(\.maxX).maxOrThrow() - topLeftX,
-                height: rects.map(\.maxY).maxOrThrow() - topLeftY
+            topLeftX: topLeftX,
+            topLeftY: topLeftY,
+            width: rects.map(\.maxX).maxOrThrow() - topLeftX,
+            height: rects.map(\.maxY).maxOrThrow() - topLeftY
         )
     }
 }

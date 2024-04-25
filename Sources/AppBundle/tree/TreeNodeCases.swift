@@ -111,8 +111,7 @@ func getChildParentRelationOrNil(child: TreeNode, parent: NonLeafTreeNodeObject)
         case (.window, .macosInvisibleWindowsContainer): .macosNativeInvisibleWindow
         case (_, .macosInvisibleWindowsContainer): nil
         case (.tilingContainer, .tilingContainer(let container)),
-             (.window, .tilingContainer(let container)):
-            .tiling(parent: container)
+             (.window, .tilingContainer(let container)): .tiling(parent: container)
         case (.tilingContainer, .workspace): .rootTilingContainer
         case (.macosInvisibleWindowsContainer, _): nil
         case (.macosFullscreenWindowsContainer, .workspace): .macosNativeFullscreenStubContainer

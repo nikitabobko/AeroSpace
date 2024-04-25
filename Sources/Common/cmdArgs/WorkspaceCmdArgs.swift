@@ -11,19 +11,19 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
         kind: .workspace,
         allowInConfig: true,
         help: """
-              USAGE: workspace [-h|--help] [--wrap-around] (next|prev)
-                 OR: workspace [-h|--help] [--auto-back-and-forth] <workspace-name>
+            USAGE: workspace [-h|--help] [--wrap-around] (next|prev)
+               OR: workspace [-h|--help] [--auto-back-and-forth] <workspace-name>
 
-              OPTIONS:
-                -h, --help              Print help
-                --auto-back-and-forth   Automatic 'back-and-forth' when switching to already
-                                        focused workspace
-                --wrap-around           Make it possible to jump between first and last workspaces
-                                        using (next|prev)
+            OPTIONS:
+              -h, --help              Print help
+              --auto-back-and-forth   Automatic 'back-and-forth' when switching to already
+                                      focused workspace
+              --wrap-around           Make it possible to jump between first and last workspaces
+                                      using (next|prev)
 
-              ARGUMENTS:
-                <workspace-name>        Workspace name to focus
-              """,
+            ARGUMENTS:
+              <workspace-name>        Workspace name to focus
+            """,
         options: [
             "--auto-back-and-forth": optionalTrueBoolFlag(\.autoBackAndForth),
             "--wrap-around": optionalTrueBoolFlag(\.wrapAroundNextPrev)

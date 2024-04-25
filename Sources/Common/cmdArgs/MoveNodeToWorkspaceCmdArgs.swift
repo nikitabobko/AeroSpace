@@ -8,17 +8,17 @@ private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
         kind: .moveNodeToWorkspace,
         allowInConfig: true,
         help: """
-              USAGE: move-node-to-workspace [-h|--help] [--wrap-around] (next|prev)
-                 OR: move-node-to-workspace [-h|--help] <workspace-name>
+            USAGE: move-node-to-workspace [-h|--help] [--wrap-around] (next|prev)
+               OR: move-node-to-workspace [-h|--help] <workspace-name>
 
-              OPTIONS:
-                -h, --help              Print help
-                --wrap-around           Make it possible to jump between first and last workspaces
-                                        using (next|prev)
+            OPTIONS:
+              -h, --help              Print help
+              --wrap-around           Make it possible to jump between first and last workspaces
+                                      using (next|prev)
 
-              ARGUMENTS:
-                <workspace-name>        Workspace name to move focused window to
-              """,
+            ARGUMENTS:
+              <workspace-name>        Workspace name to move focused window to
+            """,
         options: ["--wrap-around": optionalTrueBoolFlag(\.wrapAroundNextPrev)],
         arguments: [newArgParser(\.target, parseRawWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
     )

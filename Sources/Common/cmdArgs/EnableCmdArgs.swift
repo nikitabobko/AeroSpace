@@ -3,11 +3,11 @@ public struct EnableCmdArgs: RawCmdArgs {
         kind: .enable,
         allowInConfig: true,
         help: """
-              USAGE: enable [-h|--help] \(EnableCmdArgs.State.unionLiteral)
+            USAGE: enable [-h|--help] \(EnableCmdArgs.State.unionLiteral)
 
-              OPTIONS:
-                -h, --help   Print help
-              """,
+            OPTIONS:
+              -h, --help   Print help
+            """,
         options: [:],
         arguments: [newArgParser(\.targetState, parseState, mandatoryArgPlaceholder: EnableCmdArgs.State.unionLiteral)]
     )
