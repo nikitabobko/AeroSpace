@@ -33,6 +33,13 @@ after-startup-command = [
 ]
 ----
 
+[#raycast-extension]
+== AeroSpace Raycast extension
+
+There is a third party Raycast extension for AeroSpace. https://www.raycast.com/limonkufu/aerospace
+
+If you struggle remembering shortcuts, it's useful to search for commands until they become muscle memory.
+
 [#disable-open-animations]
 == Disable windows opening animations
 
