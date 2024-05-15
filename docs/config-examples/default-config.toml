@@ -1,8 +1,8 @@
 # Place a copy of this config to ~/.aerospace.toml
 # After that, you can edit ~/.aerospace.toml to your liking
 
-# Feel free to omit keys that you don't use in your config.
-# If the key is absent in your config the default value is taken from this config
+# It's not neceesary to copy all keys to your config.
+# If the key is missing in your config, "default-config.toml" will serve as a fallback
 
 # You can use it to add commands that run after login to macOS user session.
 # 'start-at-login' needs to be 'true' for 'after-login-command' to work
@@ -54,9 +54,9 @@ outer.top =        0
 outer.right =      0
 
 # See https://nikitabobko.github.io/AeroSpace/guide#exec-env-vars
-[exec]
-inherit-env-vars = true
-[exec.env-vars]
+[exec]                   # Again, you don't need to copy all config sections to your config.
+inherit-env-vars = true  # If you don't touch "exec" section,
+[exec.env-vars]          # it will fallback to "default-config.toml"
 PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
 
 # 'main' binding mode declaration
