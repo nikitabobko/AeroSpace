@@ -2,10 +2,6 @@ public struct FlattenWorkspaceTreeCmdArgs: RawCmdArgs, CmdArgs {
     public init() {}
     public static let parser: CmdParser<Self> = noArgsParser(.flattenWorkspaceTree, allowInConfig: true)
 }
-public struct ReloadConfigCmdArgs: RawCmdArgs, CmdArgs {
-    public init() {}
-    public static let parser: CmdParser<Self> = noArgsParser(.reloadConfig, allowInConfig: true)
-}
 public struct WorkspaceBackAndForthCmdArgs: RawCmdArgs, CmdArgs {
     public init() {}
     public static let parser: CmdParser<Self> = noArgsParser(.workspaceBackAndForth, allowInConfig: true)

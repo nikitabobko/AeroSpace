@@ -3,57 +3,42 @@ import AppKit
 import HotKey
 import TOMLKit
 
-func reloadConfig() {
-    resetHotKeys()
+func readConfig() -> Result<Config, String> {
+    let header = """
+        ##############################
+        ### AEROSPACE CONFIG ERROR ###
+        ##############################
+        """
     let configUrl: URL?
     switch getConfigFileUrl() {
         case .file(let url):
             configUrl = url
-        case .ambiguousConfigError(let candidates):
-            showAmbiguousConfigErrorToUser(candidates)
-            configUrl = nil
         case .noCustomConfigExists:
             configUrl = nil
+        case .ambiguousConfigError(let candidates):
+            let msg = """
+                \(header)
+
+                Ambiguous config error. Several configs found:
+                \(candidates.map(\.path).joined(separator: "\n"))
+                """
+            return .failure(msg)
     }
     let (parsedConfig, errors) = configUrl.flatMap { try? String(contentsOf: $0) }.map { parseConfig($0) }
         ?? (defaultConfig, [])
 
     if errors.isEmpty {
-        config = parsedConfig
+        return .success(parsedConfig)
     } else {
-        showConfigParsingErrorsToUser(errors, configUrl: configUrl)
+        let msg = """
+            \(header)
+
+            Failed to parse \(configUrl?.absoluteURL.path ?? "nil-configUrl")
+
+            \(errors.map(\.description).joined(separator: "\n\n"))
+            """
+        return .failure(msg)
     }
-    activateMode(mainModeId)
-    syncStartAtLogin()
-}
-
-private func showAmbiguousConfigErrorToUser(_ candidates: [URL]) {
-    let message =
-        """
-        #################################################
-        ### AEROSPACE AMBIGUOUS CONFIG LOCATION ERROR ###
-        #################################################
-
-        Several configs are found:
-        \(candidates.map(\.path).joined(separator: "\n"))
-
-        Fallback to default config
-        """
-    showMessageToUser(filename: "ambiguous-config-error.txt", message: message)
-}
-
-private func showConfigParsingErrorsToUser(_ errors: [TomlParseError], configUrl: URL?) {
-    let message =
-        """
-        ####################################
-        ### AEROSPACE CONFIG PARSE ERROR ###
-        ####################################
-
-        Failed to parse \(configUrl?.absoluteURL.path ?? "nil")
-
-        \(errors.map(\.description).joined(separator: "\n\n"))
-        """
-    showMessageToUser(filename: "config-parse-error.txt", message: message)
 }
 
 enum TomlParseError: Error, CustomStringConvertible, Equatable {
@@ -170,7 +155,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
     }
 }
 
-func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]) {
+func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]) { // todo change return value to Result
     let rawTable: TOMLTable
     do {
         rawTable = try TOMLTable(string: rawToml)

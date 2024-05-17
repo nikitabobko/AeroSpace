@@ -48,7 +48,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
             .keyboardShortcut("O", modifiers: .command)
         if viewModel.isEnabled {
             Button("Reload config") {
-                refreshSession { _ = ReloadConfigCommand().run(.focused) }
+                refreshSession { _ = reloadConfig() }
             }
                 .keyboardShortcut("R", modifiers: .command)
         }

@@ -29,7 +29,7 @@ public func errorT<T>(
         \(getStringStacktrace())
         """
     if !isUnitTest && isServer {
-        showMessageToUser(
+        showMessageInGui(
             filename: recursionDetectorDuringFailure ? "runtime-error-recursion.txt" : "runtime-error.txt",
             message: message
         )

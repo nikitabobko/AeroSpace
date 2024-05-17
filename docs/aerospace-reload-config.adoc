@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-aerospace reload-config [-h|--help]
+aerospace reload-config [-h|--help] [--no-gui] [--dry-run]
 // end::synopsis[]
 
 == Description
@@ -16,10 +16,12 @@ aerospace reload-config [-h|--help]
 {manpurpose}
 
 Reloading the config changes active binding mode to "main"
-// end::body[]
 
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+--no-gui:: Don't open GUI to show error. Only use stdout to report errors
+--dry-run:: Validate the config and show errors (if any) but don't reload the config
+// end::body[]
 
 include::util/man-footer.adoc[]

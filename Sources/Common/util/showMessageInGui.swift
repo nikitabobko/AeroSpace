@@ -1,7 +1,7 @@
 import Foundation
 
-public func showMessageToUser(filename: String, message: String) {
-    if isCli { // todo refactor. showMessageToUser is common code looks weird
+public func showMessageInGui(filename: String, message: String) {
+    if isCli { // todo refactor. showMessageInGui is common code looks weird
         print(message)
     } else {
         let cachesDir = URL(filePath: "/tmp/bobko.aerospace/")

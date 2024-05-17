@@ -10,7 +10,9 @@ public func initAppBundle() {
         interceptTermination(SIGKILL)
     }
     let startedAtLogin = CommandLine.arguments.getOrNil(atIndex: 1) == "--started-at-login"
-    reloadConfig()
+    if !reloadConfig() {
+        loadConfig(defaultConfig)
+    }
     if startedAtLogin && !config.startAtLogin {
         terminateApp()
     }
