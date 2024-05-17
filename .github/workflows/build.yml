@@ -23,7 +23,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Install deps
-        run: brew install xcodegen gsed asciidoctor swiftlint
+        run: |
+          brew install swiftlint || true # Workaround for https://github.com/Homebrew/homebrew-core/pull/171923#discussion_r1604560603
+          brew install xcodegen gsed asciidoctor
       - name: Check dirty files
         run: |
           ./generate.sh
