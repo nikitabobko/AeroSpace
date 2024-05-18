@@ -72,7 +72,3 @@ extension Window {
 
     func asMacWindow() -> MacWindow { self as! MacWindow }
 }
-
-@inlinable func windowsCantHaveChildren() -> Never {
-    error("Windows are leaf nodes. They can't have children")
-}

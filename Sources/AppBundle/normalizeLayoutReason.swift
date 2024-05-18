@@ -11,7 +11,6 @@ private func validateStillPopups(startup: Bool) {
     for node in macosPopupWindowsContainer.children {
         let popup = (node as! MacWindow)
         if isWindow(popup.axWindow, popup.macApp) {
-            popup.unbindFromParent()
             popup.relayoutWindow(on: Workspace.focused)
             tryOnWindowDetected(popup, startup: startup)
         }
@@ -26,16 +25,13 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) {
             case .standard:
                 if isMacosFullscreen {
                     window.layoutReason = .macos(prevParentKind: window.parent.kind)
-                    window.unbindFromParent()
                     window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
                 } else if isMacosInvisible {
                     window.layoutReason = .macos(prevParentKind: window.parent.kind)
-                    window.unbindFromParent()
                     window.bind(to: macosInvisibleWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
                 }
             case .macos(let prevParentKind):
                 if !isMacosFullscreen && !isMacosInvisible {
-                    window.unbindFromParent()
                     exitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)
                 }
         }

@@ -83,7 +83,6 @@ private func moveOut(_ state: CommandMutableState, window: Window, direction: Ca
             error("Window can't contain children nodes")
     }
 
-    window.unbindFromParent()
     window.bind(
         to: bindTo,
         adaptiveWeight: WEIGHT_AUTO,
@@ -96,10 +95,8 @@ private func deepMoveIn(window: Window, into container: TilingContainer, moveDir
     let deepTarget = container.tilingTreeNodeCasesOrThrow().findDeepMoveInTargetRecursive(moveDirection.orientation)
     switch deepTarget {
         case .tilingContainer(let deepTarget):
-            window.unbindFromParent()
             window.bind(to: deepTarget, adaptiveWeight: WEIGHT_AUTO, index: 0)
         case .window(let deepTarget):
-            window.unbindFromParent()
             window.bind(
                 to: (deepTarget.parent as! TilingContainer),
                 adaptiveWeight: WEIGHT_AUTO,

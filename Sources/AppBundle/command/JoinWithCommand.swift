@@ -15,8 +15,8 @@ struct JoinWithCommand: Command {
             state.stderr.append("No windows in specified direction")
             return false
         }
-        let moveInTarget = parent.children[ownIndex + direction.focusOffset]
-        let prevBinding = moveInTarget.unbindFromParent()
+        let joinWithTarget = parent.children[ownIndex + direction.focusOffset]
+        let prevBinding = joinWithTarget.unbindFromParent()
         let newParent = TilingContainer(
             parent: parent,
             adaptiveWeight: prevBinding.adaptiveWeight,
@@ -26,7 +26,7 @@ struct JoinWithCommand: Command {
         )
         currentWindow.unbindFromParent()
 
-        moveInTarget.bind(to: newParent, adaptiveWeight: WEIGHT_AUTO, index: 0)
+        joinWithTarget.bind(to: newParent, adaptiveWeight: WEIGHT_AUTO, index: 0)
         currentWindow.bind(to: newParent, adaptiveWeight: WEIGHT_AUTO, index: direction.isPositive ? 0 : INDEX_BIND_LAST)
         return true
     }

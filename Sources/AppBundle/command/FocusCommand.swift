@@ -137,7 +137,6 @@ private func restoreFloatingWindows(floatingWindows: [FloatingWindowData], works
         mruBefore?.markAsMostRecentChild()
     }
     for floating in floatingWindows {
-        floating.window.unbindFromParent()
         floating.window.bind(to: workspace, adaptiveWeight: floating.adaptiveWeight, index: INDEX_BIND_LAST)
     }
 }

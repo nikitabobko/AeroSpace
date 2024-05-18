@@ -44,14 +44,12 @@ struct LayoutCommand: Command {
                         return true // Nothing to do
                     case .workspace(let workspace):
                         window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
-                        window.unbindFromParent()
                         let data = getBindingDataForNewTilingWindow(workspace)
                         window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
                         return true
                 }
             case .floating:
-                let workspace = state.subject.workspace // Capture workspace before unbind ID-1A4CF7C5
-                window.unbindFromParent() // ID-1A4CF7C5
+                let workspace = state.subject.workspace
                 window.bindAsFloatingWindow(to: workspace)
                 guard let topLeftCorner = window.getTopLeftCorner() else { return false }
                 return window.setFrame(topLeftCorner, window.lastFloatingSize)

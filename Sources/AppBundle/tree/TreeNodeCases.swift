@@ -65,7 +65,7 @@ extension TreeNode {
 extension NonLeafTreeNodeObject {
     var cases: NonLeafTreeNodeCases {
         if self is Window {
-            windowsCantHaveChildren()
+            error("Windows are leaf nodes. They can't have children")
         } else if let workspace = self as? Workspace {
             return .workspace(workspace)
         } else if let tilingContainer = self as? TilingContainer {

@@ -59,19 +59,14 @@ class TreeNode: Equatable {
 
     @discardableResult
     func bind(to newParent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) -> BindingData? {
-        if _parent === newParent {
-            error("Binding to the same parent doesn't make sense")
-        }
-        if newParent is Window {
-            windowsCantHaveChildren()
-        }
         let result = unbindIfBound()
 
         if newParent === NilTreeNode.instance {
             return result
         }
+        let relation = getChildParentRelation(child: self, parent: newParent) // Side effect: verify relation
         if adaptiveWeight == WEIGHT_AUTO {
-            self.adaptiveWeight = switch getChildParentRelation(child: self, parent: newParent) {
+            self.adaptiveWeight = switch relation {
                 case .tiling(let newParent):
                     newParent.children.sumOf { $0.getWeight(newParent.orientation) }.div(newParent.children.count) ?? 1
                 case .floatingWindow, .macosNativeFullscreenWindow: WEIGHT_FLOATING

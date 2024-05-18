@@ -27,7 +27,6 @@ private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
 private func moveFloatingWindow(_ window: Window) {
     guard let targetWorkspace = window.getCenter()?.monitorApproximation.activeWorkspace else { return }
     if targetWorkspace != window.parent {
-        window.unbindFromParent()
         window.bindAsFloatingWindow(to: targetWorkspace)
     }
 }
@@ -47,7 +46,6 @@ private func moveTilingWindow(_ window: Window) {
         } else {
             index = 0
         }
-        window.unbindFromParent()
         window.bind(
             to: swapTarget?.parent ?? targetWorkspace.rootTilingContainer,
             adaptiveWeight: WEIGHT_AUTO,
