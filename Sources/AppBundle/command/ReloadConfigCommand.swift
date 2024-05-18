@@ -35,7 +35,11 @@ func reloadConfig(args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(), stdout: ino
         case .failure(let msg):
             stdout.append(msg)
             if !args.noGui {
-                showMessageInGui(filename: "config-error.txt", message: msg)
+                showMessageInGui(
+                    filenameIfConsoleApp: nil,
+                    title: "AeroSpace Config Error",
+                    message: msg
+                )
             }
             return false
     }

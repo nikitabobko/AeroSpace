@@ -1,4 +1,5 @@
 import Foundation
+import AppKit
 
 private var recursionDetectorDuringFailure: Bool = false
 
@@ -11,10 +12,6 @@ public func errorT<T>(
 ) -> T {
     let message =
         """
-        ###############################
-        ### AEROSPACE RUNTIME ERROR ###
-        ###############################
-
         Please report to:
             https://github.com/nikitabobko/AeroSpace/issues/new
 
@@ -30,7 +27,10 @@ public func errorT<T>(
         """
     if !isUnitTest && isServer {
         showMessageInGui(
-            filename: recursionDetectorDuringFailure ? "runtime-error-recursion.txt" : "runtime-error.txt",
+            filenameIfConsoleApp: recursionDetectorDuringFailure
+                ? "aerospace-runtime-error-recursion.txt"
+                : "aerospace-runtime-error.txt",
+            title: "AeroSpace Runtime Error",
             message: message
         )
     }
@@ -109,4 +109,10 @@ public extension Double {
 
 public extension Slice {
     func toArray() -> [Base.Element] { Array(self) }
+}
+
+public extension URL {
+    func open(with url: URL) {
+        NSWorkspace.shared.open([self], withApplicationAt: url, configuration: NSWorkspace.OpenConfiguration())
+    }
 }

@@ -4,11 +4,6 @@ import HotKey
 import TOMLKit
 
 func readConfig() -> Result<Config, String> {
-    let header = """
-        ##############################
-        ### AEROSPACE CONFIG ERROR ###
-        ##############################
-        """
     let configUrl: URL?
     switch getConfigFileUrl() {
         case .file(let url):
@@ -17,8 +12,6 @@ func readConfig() -> Result<Config, String> {
             configUrl = nil
         case .ambiguousConfigError(let candidates):
             let msg = """
-                \(header)
-
                 Ambiguous config error. Several configs found:
                 \(candidates.map(\.path).joined(separator: "\n"))
                 """
@@ -31,8 +24,6 @@ func readConfig() -> Result<Config, String> {
         return .success(parsedConfig)
     } else {
         let msg = """
-            \(header)
-
             Failed to parse \(configUrl?.absoluteURL.path ?? "nil-configUrl")
 
             \(errors.map(\.description).joined(separator: "\n\n"))

@@ -63,12 +63,6 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
     }
 }
 
-extension URL {
-    func open(with url: URL) {
-        NSWorkspace.shared.open([self], withApplicationAt: url, configuration: NSWorkspace.OpenConfiguration())
-    }
-}
-
 func getTextEditorToOpenConfig() -> URL {
     NSWorkspace.shared.urlForApplication(toOpen: getConfigFileUrl().urlOrNil ?? defaultConfigUrl)?
         .takeIf { $0.lastPathComponent != "Xcode.app" } // Blacklist Xcode. It is too heavy to open plain text files
