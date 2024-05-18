@@ -3,7 +3,7 @@ import Common
 
 final class MacWindow: Window, CustomStringConvertible {
     let axWindow: AXUIElement
-    private let macApp: MacApp
+    let macApp: MacApp
     // todo take into account monitor proportions
     private var prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect: CGPoint?
     fileprivate var previousSize: CGSize?
@@ -19,7 +19,6 @@ final class MacWindow: Window, CustomStringConvertible {
     static var allWindows: [MacWindow] { Array(allWindowsMap.values) }
 
     static func get(app: MacApp, axWindow: AXUIElement, startup: Bool) -> MacWindow? {
-        if !isWindow(axWindow, app) { return nil }
         guard let id = axWindow.containingWindowId() else { return nil }
         if let existing = allWindowsMap[id] {
             return existing
@@ -38,7 +37,8 @@ final class MacWindow: Window, CustomStringConvertible {
                     window.observe(resizedObs, kAXResizedNotification) {
                 debug("New window detected: \(window)")
                 allWindowsMap[id] = window
-                onWindowDetected(window, startup: startup)
+                debugWindowsIfRecording(window)
+                tryOnWindowDetected(window, startup: startup)
                 return window
             } else {
                 window.garbageCollect()
@@ -170,10 +170,26 @@ final class MacWindow: Window, CustomStringConvertible {
     }
 }
 
-private func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
+/// Alternative name: !isPopup
+func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     let subrole = axWindow.get(Ax.subroleAttr)
-    // Sonoma (macOS 14) keyboard layout switch
-    if axWindow.get(Ax.identifierAttr) == "AXCursorActionsWindow" && subrole == kAXDialogSubrole {
+
+    // Try to filter out incredibly weird popup like AXWindows without any buttons.
+    // E.g.
+    // - Sonoma (macOS 14) keyboard layout switch
+    // - IntelliJ context menu (right mouse click)
+    // - Telegram context menu (right mouse click)
+    if axWindow.get(Ax.closeButtonAttr) == nil &&
+            axWindow.get(Ax.fullscreenButtonAttr) == nil &&
+            axWindow.get(Ax.zoomButtonAttr) == nil &&
+            axWindow.get(Ax.minimizeButtonAttr) == nil &&
+
+            axWindow.get(Ax.isFocused) == false &&  // Three different ways to detect if the window is not focused
+            axWindow.get(Ax.isMainAttr) == false &&
+            app.getFocusedAxWindow()?.containingWindowId() != axWindow.containingWindowId() &&
+
+            subrole != kAXStandardWindowSubrole &&
+            (axWindow.get(Ax.titleAttr) ?? "").isEmpty {
         return false
     }
     return subrole == kAXStandardWindowSubrole ||
@@ -229,9 +245,13 @@ private func isFullscreenable(_ axWindow: AXUIElement) -> Bool {
 }
 
 func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace, _ app: MacApp) -> BindingData {
-    shouldFloat(axWindow, app)
-        ? BindingData(parent: workspace as NonLeafTreeNodeObject, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-        : getBindingDataForNewTilingWindow(workspace)
+    if !isWindow(axWindow, app) {
+        return BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+    }
+    if shouldFloat(axWindow, app) {
+        return BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+    }
+    return getBindingDataForNewTilingWindow(workspace)
 }
 
 func getBindingDataForNewTilingWindow(_ workspace: Workspace) -> BindingData {
@@ -260,9 +280,17 @@ private func destroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, d
     refreshAndLayout()
 }
 
+func tryOnWindowDetected(_ window: Window, startup: Bool) {
+    switch window.parent.cases {
+        case .tilingContainer, .workspace, .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
+            onWindowDetected(window, startup: startup)
+        case .macosPopupWindowsContainer:
+            break
+    }
+}
+
 private func onWindowDetected(_ window: Window, startup: Bool) {
     check(Thread.current.isMainThread)
-    debugWindowsIfRecording(window)
     for callback in config.onWindowDetected where callback.matches(window, startup: startup) {
         _ = callback.run.run(CommandMutableState(.window(window)))
         if !callback.checkFurtherCallbacks {

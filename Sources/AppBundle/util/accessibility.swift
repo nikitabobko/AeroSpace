@@ -222,10 +222,14 @@ enum Ax {
         getter: { $0 as? Bool },
         setter: { $0 as CFTypeRef }
     )
-    //static let axMainAttr = ReadableAttrImpl<Bool>(
-    //    key: kAXMainAttribute,
-    //    getter: { $0 as? Bool }
-    //)
+    static let isFocused = ReadableAttrImpl<Bool>(
+        key: kAXFocusedAttribute,
+        getter: { $0 as? Bool }
+    )
+    static let isMainAttr = ReadableAttrImpl<Bool>(
+        key: kAXMainAttribute,
+        getter: { $0 as? Bool }
+    )
     static let sizeAttr = WritableAttrImpl<CGSize>(
         key: kAXSizeAttribute,
         getter: {
@@ -273,14 +277,14 @@ enum Ax {
         key: kAXFullScreenButtonAttribute,
         getter: { ($0 as! AXUIElement) }
     )
-    //static let zoomButtonAttr = ReadableAttrImpl<AXUIElement>(
-    //    key: kAXZoomButtonAttribute,
-    //    getter: { ($0 as! AXUIElement) }
-    //)
-    //static let minimizeButtonAttr = ReadableAttrImpl<AXUIElement>(
-    //    key: kAXMinimizeButtonAttribute,
-    //    getter: { ($0 as! AXUIElement) }
-    //)
+    static let zoomButtonAttr = ReadableAttrImpl<AXUIElement>(
+        key: kAXZoomButtonAttribute,
+        getter: { ($0 as! AXUIElement) }
+    )
+    static let minimizeButtonAttr = ReadableAttrImpl<AXUIElement>(
+        key: kAXMinimizeButtonAttribute,
+        getter: { ($0 as! AXUIElement) }
+    )
     //static let growAreaAttr = ReadableAttrImpl<AXUIElement>(
     //    key: kAXGrowAreaAttribute,
     //    getter: { ($0 as! AXUIElement) }

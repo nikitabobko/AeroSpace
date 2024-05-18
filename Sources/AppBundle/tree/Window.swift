@@ -40,14 +40,6 @@ enum LayoutReason: Equatable {
     case standard
     /// Reason for the cur temp layout is macOS native fullscreen, minimize, or hide
     case macos(prevParentKind: NonLeafTreeNodeKind)
-
-    var isMacos: Bool {
-        if case .macos = self {
-            return true
-        } else {
-            return false
-        }
-    }
 }
 
 extension Window {

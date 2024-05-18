@@ -31,7 +31,7 @@ func refreshSession<T>(startup: Bool = false, forceFocus: Bool = false, body: ()
         }
 
         updateTrayText()
-        normalizeLayoutReason()
+        normalizeLayoutReason(startup: startup)
         layoutWorkspaces()
     }
     return result

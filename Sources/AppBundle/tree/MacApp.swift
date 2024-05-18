@@ -57,7 +57,11 @@ final class MacApp: AbstractApp {
     }
 
     override func getFocusedWindow(startup: Bool) -> Window? {
-        axApp.get(Ax.focusedWindowAttr)?.lets { MacWindow.get(app: self, axWindow: $0, startup: startup) }
+        getFocusedAxWindow()?.lets { MacWindow.get(app: self, axWindow: $0, startup: startup) }
+    }
+
+    func getFocusedAxWindow() -> AXUIElement? {
+        axApp.get(Ax.focusedWindowAttr)
     }
 
     override func detectNewWindowsAndGetAll(startup: Bool) -> [Window] {
