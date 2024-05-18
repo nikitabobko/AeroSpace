@@ -75,7 +75,7 @@ final class MacWindow: Window, CustomStringConvertible {
         if let workspace, workspace == previousFocusedWorkspaceName || workspace == focusedWorkspaceName {
             switch parent.cases {
                 case .tilingContainer, .workspace, .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
-                    refreshSession(forceFocus: true) {
+                    refreshSession(forceFocus: focusedWindow?.app != app) {
                         _ = WorkspaceCommand.run(.focused, workspace)
                     }
                 case .macosPopupWindowsContainer:
