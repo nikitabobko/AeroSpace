@@ -17,6 +17,7 @@ let package = Package(
         .package(url: "https://github.com/soffes/HotKey", exact: "0.1.3"),
         .package(url: "https://github.com/LebJe/TOMLKit", exact: "0.5.5"),
         .package(url: "https://github.com/Quick/Nimble", exact: "12.0.0"),
+        .package(url: "https://github.com/apple/swift-collections", exact: "1.1.0"),
     ],
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
@@ -29,6 +30,7 @@ let package = Package(
                 .product(name: "Socket", package: "BlueSocket"),
                 .product(name: "HotKey", package: "HotKey"),
                 .product(name: "TOMLKit", package: "TOMLKit"),
+                .product(name: "Collections", package: "swift-collections"),
             ]
         ),
         .executableTarget(

@@ -1,4 +1,5 @@
 import AppKit
+import OrderedCollections
 import Common
 
 private let priorityAx: Set<String> = [
@@ -16,7 +17,7 @@ private let disclaimer =
     """
 
 private var debugWindowsState: DebugWindowsState = .notRecording
-private var debugWindowsLog: [UInt32: String] = [:]
+private var debugWindowsLog: OrderedDictionary<UInt32, String> = [:]
 private let debugWindowsLimit = 5
 
 enum DebugWindowsState {
@@ -46,6 +47,10 @@ struct DebugWindowsCommand: Command {
                     """
                 )
                 debugWindowsLog = [:]
+                // Make sure that the Terminal window that started the recording is recorded first
+                if let window = state.subject.windowOrNil {
+                    debugWindowsIfRecording(window)
+                }
                 return true
             case .recordingAborted:
                 state.stdout.append(
