@@ -1,0 +1,44 @@
+= aerospace-config(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-config
+// tag::purpose[]
+:manpurpose: Query AeroSpace config options
+// end::purpose[]
+
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace config [-h|--help] --get <name> [--json] [--keys]
+aerospace config [-h|--help] --major-keys
+aerospace config [-h|--help] --all-keys
+aerospace config [-h|--help] --config-path
+
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+For now, only `mode.*` config options are supported
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+--get <name>:: Get the value for a given key. You can inspect available keys with --major-keys or --all-keys
+--major-keys:: Print major keys
+--all-keys:: Print all available keys recursively
+--json:: Print result in JSON format
+--keys:: Print keys of the complicated object (map or array)
+--config-path:: Print absolute path to the loaded config
+
+include::util/conditional-examples-header.adoc[]
+
+* List all key bindings for 'main' binding mode: +
+`aerospace config --get mode.main.binding --keys`
+* List all binding modes: +
+`aerospace config --get mode --keys`
+
+// end::body[]
+
+include::util/man-footer.adoc[]
