@@ -36,6 +36,8 @@ struct MoveCommand: Command {
             case .macosFullscreenWindowsContainer:
                 state.stderr.append(moveOutFullscreenWindow)
                 return false
+            case .macosPopupWindowsContainer:
+                return false // Impossible
         }
     }
 }
@@ -48,7 +50,8 @@ private func moveOut(_ state: CommandMutableState, window: Window, direction: Ca
         return switch $0.parent?.cases {
             case .tilingContainer(let parent): parent.orientation == direction.orientation
             // Stop searching
-            case .workspace, .macosInvisibleWindowsContainer, nil, .macosFullscreenWindowsContainer: true
+            case .workspace, .macosInvisibleWindowsContainer, nil, .macosFullscreenWindowsContainer,
+                .macosPopupWindowsContainer: true
         }
     }) as! TilingContainer
     let bindTo: TilingContainer
@@ -74,6 +77,8 @@ private func moveOut(_ state: CommandMutableState, window: Window, direction: Ca
         case .macosFullscreenWindowsContainer:
             state.stderr.append(moveOutFullscreenWindow)
             return false
+        case .macosPopupWindowsContainer:
+            return false // Impossible
         case .window:
             error("Window can't contain children nodes")
     }

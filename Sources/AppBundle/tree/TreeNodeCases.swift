@@ -6,6 +6,7 @@ enum TreeNodeCases {
     case workspace(Workspace)
     case macosInvisibleWindowsContainer(MacosInvisibleWindowsContainer)
     case macosFullscreenWindowsContainer(MacosFullscreenWindowsContainer)
+    case macosPopupWindowsContainer(MacosPopupWindowsContainer)
 }
 
 enum NonLeafTreeNodeCases {
@@ -13,6 +14,7 @@ enum NonLeafTreeNodeCases {
     case workspace(Workspace)
     case macosInvisibleWindowsContainer(MacosInvisibleWindowsContainer)
     case macosFullscreenWindowsContainer(MacosFullscreenWindowsContainer)
+    case macosPopupWindowsContainer(MacosPopupWindowsContainer)
 }
 
 enum TilingTreeNodeCases {
@@ -25,6 +27,7 @@ enum NonLeafTreeNodeKind: Equatable {
     case workspace
     case macosInvisibleWindowsContainer
     case macosFullscreenWindowsContainer
+    case macosPopupWindowsContainer
 }
 
 protocol NonLeafTreeNodeObject: TreeNode {}
@@ -41,6 +44,8 @@ extension TreeNode {
             return .macosInvisibleWindowsContainer(container)
         } else if let container = self as? MacosFullscreenWindowsContainer {
             return .macosFullscreenWindowsContainer(container)
+        } else if let container = self as? MacosPopupWindowsContainer {
+            return .macosPopupWindowsContainer(container)
         } else {
             error("Unknown tree")
         }
@@ -69,6 +74,8 @@ extension NonLeafTreeNodeObject {
             return .macosInvisibleWindowsContainer(container)
         } else if let container = self as? MacosFullscreenWindowsContainer {
             return .macosFullscreenWindowsContainer(container)
+        } else if let container = self as? MacosPopupWindowsContainer {
+            return .macosPopupWindowsContainer(container)
         } else {
             error("Unknown tree \(self)")
         }
@@ -80,6 +87,7 @@ extension NonLeafTreeNodeObject {
             case .workspace: .workspace
             case .macosInvisibleWindowsContainer: .macosInvisibleWindowsContainer
             case .macosFullscreenWindowsContainer: .macosFullscreenWindowsContainer
+            case .macosPopupWindowsContainer: .macosPopupWindowsContainer
         }
     }
 }
@@ -89,6 +97,7 @@ enum ChildParentRelation: Equatable {
     case macosNativeFullscreenWindow
     case macosNativeFullscreenStubContainer
     case macosNativeInvisibleWindow
+    case macosPopupWindow
     case tiling(parent: TilingContainer) // todo consider splitting it on 'tiles' and 'accordion'
     case rootTilingContainer
 }
@@ -109,11 +118,14 @@ func getChildParentRelationOrNil(child: TreeNode, parent: NonLeafTreeNodeObject)
         case (.workspace, _): nil
         case (.window, .workspace): .floatingWindow
         case (.window, .macosInvisibleWindowsContainer): .macosNativeInvisibleWindow
+        case (.window, .macosPopupWindowsContainer): .macosPopupWindow
         case (_, .macosInvisibleWindowsContainer): nil
+        case (_, .macosPopupWindowsContainer): nil
         case (.tilingContainer, .tilingContainer(let container)),
              (.window, .tilingContainer(let container)): .tiling(parent: container)
         case (.tilingContainer, .workspace): .rootTilingContainer
         case (.macosInvisibleWindowsContainer, _): nil
+        case (.macosPopupWindowsContainer, _): nil
         case (.macosFullscreenWindowsContainer, .workspace): .macosNativeFullscreenStubContainer
         case (.macosFullscreenWindowsContainer, _): nil
         case (.window, .macosFullscreenWindowsContainer): .macosNativeFullscreenWindow

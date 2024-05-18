@@ -44,6 +44,8 @@ struct SplitCommand: Command {
             case .macosFullscreenWindowsContainer:
                 state.stderr.append("Can't split fullscreen windows. This behavior may change in the future")
                 return false
+            case .macosPopupWindowsContainer:
+                return false // Impossible
         }
     }
 }

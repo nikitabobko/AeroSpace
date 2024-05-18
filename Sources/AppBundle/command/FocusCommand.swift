@@ -165,7 +165,7 @@ private extension TreeNode {
                 } else {
                     return mostRecentChild?.findFocusTargetRecursive(snappedTo: direction)
                 }
-            case .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
+            case .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer, .macosPopupWindowsContainer:
                 error("Impossible")
         }
     }
