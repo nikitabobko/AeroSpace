@@ -29,7 +29,7 @@ func reloadConfig(
                 resetHotKeys()
                 config = parsedConfig
                 configUrl = url
-                activateMode(mainModeId)
+                activateMode(activeMode)
                 syncStartAtLogin()
             }
             return true

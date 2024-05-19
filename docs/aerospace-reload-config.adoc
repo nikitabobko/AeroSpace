@@ -15,8 +15,6 @@ aerospace reload-config [-h|--help] [--no-gui] [--dry-run]
 // tag::body[]
 {manpurpose}
 
-Reloading the config changes active binding mode to "main"
-
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
