@@ -1,4 +1,5 @@
 private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
+    public let rawArgs: EquatableNoop<[String]>
     var target: Lateinit<RawWorkspaceTarget> = .uninitialized
 
     // next|prev OPTIONS
@@ -28,13 +29,15 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs, Equatable {
     public static let info: CmdStaticInfo = RawMoveNodeToWorkspaceCmdArgs.info
     public let target: WTarget
 
-    public init(_ target: WTarget) {
+    public let rawArgs: EquatableNoop<[String]>
+    public init(rawArgs: [String], _ target: WTarget) {
+        self.rawArgs = .init(rawArgs)
         self.target = target
     }
 }
 
 public func parseMoveNodeToWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<MoveNodeToWorkspaceCmdArgs> {
-    parseRawCmdArgs(RawMoveNodeToWorkspaceCmdArgs(), args)
+    parseRawCmdArgs(RawMoveNodeToWorkspaceCmdArgs(rawArgs: .init(args)), args)
         .flatMap { raw in raw.target.val.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: nil) }
-        .flatMap { target in .cmd(MoveNodeToWorkspaceCmdArgs(target)) }
+        .flatMap { target in .cmd(MoveNodeToWorkspaceCmdArgs(rawArgs: args, target)) }
 }

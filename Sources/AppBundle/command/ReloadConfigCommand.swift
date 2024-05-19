@@ -19,7 +19,7 @@ func reloadConfig(forceConfigUrl: URL? = nil) -> Bool {
 }
 
 func reloadConfig(
-    args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(),
+    args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []),
     forceConfigUrl: URL? = nil,
     stdout: inout String
 ) -> Bool {

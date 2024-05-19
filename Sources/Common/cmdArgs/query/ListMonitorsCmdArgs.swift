@@ -20,5 +20,6 @@ public struct ListMonitorsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
     public var focused: Bool?
     public var mouse: Bool?
 
-    public init() {}
+    public let rawArgs: EquatableNoop<[String]>
+    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
 }

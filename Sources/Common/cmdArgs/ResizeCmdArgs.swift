@@ -22,15 +22,18 @@ public struct ResizeCmdArgs: RawCmdArgs, Equatable {
     public var dimension: Lateinit<ResizeCmdArgs.Dimension> = .uninitialized
     public var units: Lateinit<ResizeCmdArgs.Units> = .uninitialized
 
+    public let rawArgs: EquatableNoop<[String]>
     public init(
+        rawArgs: [String],
         dimension: Dimension,
         units: Units
     ) {
+        self.rawArgs = .init(rawArgs)
         self.dimension = .initialized(dimension)
         self.units = .initialized(units)
     }
 
-    fileprivate init() {}
+    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
 
     public enum Dimension: String, CaseIterable, Equatable {
         case width, height, smart
@@ -44,7 +47,7 @@ public struct ResizeCmdArgs: RawCmdArgs, Equatable {
 }
 
 public func parseResizeCmdArgs(_ args: [String]) -> ParsedCmd<ResizeCmdArgs> {
-    parseRawCmdArgs(ResizeCmdArgs(), args)
+    parseRawCmdArgs(ResizeCmdArgs(rawArgs: args), args)
 }
 
 private func parseDimension(arg: String, nextArgs: inout [String]) -> Parsed<ResizeCmdArgs.Dimension> {

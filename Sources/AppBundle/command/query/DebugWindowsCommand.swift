@@ -27,7 +27,7 @@ enum DebugWindowsState {
 }
 
 struct DebugWindowsCommand: Command {
-    let args = DebugWindowsCmdArgs()
+    let args = DebugWindowsCmdArgs(rawArgs: .init([]))
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)

@@ -1,4 +1,5 @@
 private struct RawWorkspaceCmdArgs: RawCmdArgs {
+    public let rawArgs: EquatableNoop<[String]>
     var target: Lateinit<RawWorkspaceTarget> = .uninitialized
 
     // direct workspace target OPTIONS
@@ -36,7 +37,9 @@ public struct WorkspaceCmdArgs: CmdArgs, Equatable {
     public static let info: CmdStaticInfo = RawWorkspaceCmdArgs.info
     public let target: WTarget
 
-    public init(_ target: WTarget) {
+    public let rawArgs: EquatableNoop<[String]>
+    public init(rawArgs: [String], _ target: WTarget) {
+        self.rawArgs = .init(rawArgs)
         self.target = target
     }
 }
@@ -103,9 +106,9 @@ public enum WTarget: Equatable { // WorkspaceTarget
 }
 
 public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
-    parseRawCmdArgs(RawWorkspaceCmdArgs(), args)
+    parseRawCmdArgs(RawWorkspaceCmdArgs(rawArgs: .init(args)), args)
         .flatMap { raw in raw.target.val.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: raw.autoBackAndForth) }
-        .flatMap { target in .cmd(WorkspaceCmdArgs(target)) }
+        .flatMap { target in .cmd(WorkspaceCmdArgs(rawArgs: args, target)) }
 }
 
 let workspaceTargetPlaceholder = "(<workspace-name>|next|prev)"

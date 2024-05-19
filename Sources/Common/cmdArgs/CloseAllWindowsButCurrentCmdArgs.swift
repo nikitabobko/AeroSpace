@@ -1,5 +1,6 @@
 public struct CloseAllWindowsButCurrentCmdArgs: RawCmdArgs, CmdArgs {
-    public init() {}
+    public let rawArgs: EquatableNoop<[String]>
+    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .closeAllWindowsButCurrent,
         allowInConfig: true,
@@ -16,9 +17,9 @@ public struct CloseAllWindowsButCurrentCmdArgs: RawCmdArgs, CmdArgs {
         arguments: []
     )
 
-    public var closeArgs = CloseCmdArgs()
+    public var closeArgs = CloseCmdArgs(rawArgs: [])
 }
 
 public func parseCloseAllWindowsButCurrentCmdArgs(_ args: [String]) -> ParsedCmd<CloseAllWindowsButCurrentCmdArgs> {
-    parseRawCmdArgs(CloseAllWindowsButCurrentCmdArgs(), args)
+    parseRawCmdArgs(CloseAllWindowsButCurrentCmdArgs(rawArgs: .init(args)), args)
 }

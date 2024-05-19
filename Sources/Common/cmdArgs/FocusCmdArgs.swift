@@ -35,13 +35,16 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
     public var windowId: UInt32? = nil
     public var direction: CardinalDirection? = nil
 
-    fileprivate init() {}
+    public let rawArgs: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
 
-    public init(direction: CardinalDirection) {
+    public init(rawArgs: [String], direction: CardinalDirection) {
+        self.rawArgs = .init(rawArgs)
         self.direction = direction
     }
 
-    public init(windowId: UInt32) {
+    public init(rawArgs: [String], windowId: UInt32) {
+        self.rawArgs = .init(rawArgs)
         self.windowId = windowId
     }
 
@@ -77,7 +80,7 @@ public extension FocusCmdArgs {
 }
 
 public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
-    return parseRawCmdArgs(FocusCmdArgs(), args)
+    return parseRawCmdArgs(FocusCmdArgs(rawArgs: args), args)
         .flatMap { (raw: FocusCmdArgs) -> ParsedCmd<FocusCmdArgs> in
             raw.boundaries == .workspace && raw.boundariesAction == .wrapAroundAllMonitors
                 ? .failure("\(raw.boundaries.rawValue) and \(raw.boundariesAction.rawValue) is an invalid combination of values")
@@ -87,7 +90,7 @@ public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
             $0.direction != nil || $0.windowId != nil
         }
         .filter("--window-id is incompatible with other options") {
-            $0.windowId == nil || $0 == FocusCmdArgs(windowId: $0.windowId!)
+            $0.windowId == nil || $0 == FocusCmdArgs(rawArgs: args, windowId: $0.windowId!)
         }
 }
 

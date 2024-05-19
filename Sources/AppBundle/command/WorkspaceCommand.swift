@@ -33,7 +33,7 @@ struct WorkspaceCommand: Command {
 
     public static func run(_ state: CommandMutableState, _ name: String) -> Bool {
         if let wName = WorkspaceName.parse(name).getOrNil(appendErrorTo: &state.stderr) {
-            let args = WorkspaceCmdArgs(.direct(WTarget.Direct(wName, autoBackAndForth: false)))
+            let args = WorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct(wName, autoBackAndForth: false)))
             return WorkspaceCommand(args: args).run(state)
         } else {
             return false

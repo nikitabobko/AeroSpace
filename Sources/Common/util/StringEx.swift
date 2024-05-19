@@ -5,6 +5,8 @@ public extension String {
     func trim() -> String {
         self.trimmingCharacters(in: .whitespacesAndNewlines)
     }
+
+    func quoted(with char: String) -> String { char + self + char }
 }
 
 public extension [[String]] {

@@ -22,11 +22,12 @@ public struct MoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
         case next, prev
     }
 
-    fileprivate init() {}
+    public let rawArgs: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
 }
 
 public func parseMoveWorkspaceToMonitorCmdArgs(_ args: [String]) -> ParsedCmd<MoveWorkspaceToMonitorCmdArgs> {
-    parseRawCmdArgs(MoveWorkspaceToMonitorCmdArgs(), args)
+    parseRawCmdArgs(MoveWorkspaceToMonitorCmdArgs(rawArgs: args), args)
         .filter(
             """
             Migration error: --wrap-around flag is mandatory for move-workspace-to-monitor command.

@@ -13,9 +13,11 @@ public struct SplitCmdArgs: RawCmdArgs {
     )
     public var arg: Lateinit<SplitArg> = .uninitialized
 
-    fileprivate init() {}
+    public let rawArgs: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
 
-    public init(_ arg: SplitArg) {
+    public init(rawArgs: [String], _ arg: SplitArg) {
+        self.rawArgs = .init(rawArgs)
         self.arg = .initialized(arg)
     }
 
@@ -25,7 +27,7 @@ public struct SplitCmdArgs: RawCmdArgs {
 }
 
 public func parseSplitCmdArgs(_ args: [String]) -> ParsedCmd<SplitCmdArgs> {
-    parseRawCmdArgs(SplitCmdArgs(), args)
+    parseRawCmdArgs(SplitCmdArgs(rawArgs: args), args)
 }
 
 private func parseSplitArg(arg: String, nextArgs: inout [String]) -> Parsed<SplitCmdArgs.SplitArg> {

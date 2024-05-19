@@ -2,6 +2,7 @@ let onitor = "<monitor>"
 let _monitors = "\(onitor)..."
 
 private struct RawListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
+    public let rawArgs: EquatableNoop<[String]>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listWorkspaces,
         allowInConfig: false,
@@ -34,10 +35,15 @@ private struct RawListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
     var focused: Bool = false
 
     // REAL OPTIONS
-    var real = ListWorkspacesCmdArgs()
+    var real: ListWorkspacesCmdArgs
+    init(rawArgs: [String]) {
+        self.rawArgs = .init(rawArgs)
+        self.real = .init(rawArgs: .init(rawArgs))
+    }
 }
 
 public struct ListWorkspacesCmdArgs: CmdArgs, Equatable {
+    public let rawArgs: EquatableNoop<[String]>
     public static var info: CmdStaticInfo = RawListWorkspacesCmdArgs.info
 
     public var onMonitors: [MonitorId] = []
@@ -56,8 +62,8 @@ private extension RawListWorkspacesCmdArgs {
 }
 
 public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {
-    parseRawCmdArgs(RawListWorkspacesCmdArgs(), args)
-        .filter("Specified flags require explicit --monitor") { $0.real == .init() || !$0.real.onMonitors.isEmpty }
+    parseRawCmdArgs(RawListWorkspacesCmdArgs(rawArgs: args), args)
+        .filter("Specified flags require explicit --monitor") { $0.real == .init(rawArgs: .init(args)) || !$0.real.onMonitors.isEmpty }
         .flatMap { raw in
             let uniqueOptions = raw.uniqueOptions
             return switch uniqueOptions.count {
@@ -68,10 +74,10 @@ public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorksp
         }
         .flatMap { raw in
             if raw.focused {
-                return .cmd(ListWorkspacesCmdArgs(onMonitors: [.focused], visible: true))
+                return .cmd(ListWorkspacesCmdArgs(rawArgs: .init(args), onMonitors: [.focused], visible: true))
             }
             if raw.all {
-                return .cmd(ListWorkspacesCmdArgs(onMonitors: [.all]))
+                return .cmd(ListWorkspacesCmdArgs(rawArgs: .init(args), onMonitors: [.all]))
             }
             return .cmd(raw.real)
         }

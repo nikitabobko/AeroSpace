@@ -1,5 +1,6 @@
 public struct FocusMonitorCmdArgs: RawCmdArgs, CmdArgs {
-    fileprivate init() {}
+    public let rawArgs: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .focusMonitor,
         allowInConfig: true,
@@ -31,7 +32,7 @@ public struct FocusMonitorCmdArgs: RawCmdArgs, CmdArgs {
 }
 
 public func parseFocusMonitorCmdArgs(_ args: [String]) -> ParsedCmd<FocusMonitorCmdArgs> {
-    parseRawCmdArgs(FocusMonitorCmdArgs(), args)
+    parseRawCmdArgs(FocusMonitorCmdArgs(rawArgs: args), args)
         .filter("--wrap-around is incompatible with <monitor-pattern> argument") { !$0.wrapAround || !$0.target.val.isPatterns }
 }
 

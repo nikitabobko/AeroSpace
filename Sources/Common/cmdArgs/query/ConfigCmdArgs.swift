@@ -1,4 +1,5 @@
 public struct ConfigCmdArgs: CmdArgs, RawCmdArgs, Equatable {
+    public let rawArgs: EquatableNoop<[String]>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .config,
         allowInConfig: false,
@@ -52,7 +53,7 @@ public extension ConfigCmdArgs {
 }
 
 public func parseConfigCmdArgs(_ args: [String]) -> ParsedCmd<ConfigCmdArgs> {
-    parseRawCmdArgs(ConfigCmdArgs(), args)
+    parseRawCmdArgs(ConfigCmdArgs(rawArgs: .init(args)), args)
         .flatMap { raw in
             var conflicting: Set<String> = []
             if raw.keyNameToGet != nil { conflicting.insert("--get") }

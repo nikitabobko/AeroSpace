@@ -13,9 +13,11 @@ public struct LayoutCmdArgs: CmdArgs, RawCmdArgs, Equatable {
     )
     public var toggleBetween: Lateinit<[LayoutDescription]> = .uninitialized
 
-    fileprivate init() {}
+    public let rawArgs: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
 
-    public init(toggleBetween: [LayoutDescription]) {
+    public init(rawArgs: [String], toggleBetween: [LayoutDescription]) {
+        self.rawArgs = .init(rawArgs)
         self.toggleBetween = .initialized(toggleBetween)
     }
 
@@ -44,7 +46,7 @@ private func parseToggleBetween(arg: String, _ nextArgs: inout [String]) -> Pars
 }
 
 public func parseLayoutCmdArgs(_ args: [String]) -> ParsedCmd<LayoutCmdArgs> {
-    parseRawCmdArgs(LayoutCmdArgs(), args).map {
+    parseRawCmdArgs(LayoutCmdArgs(rawArgs: args), args).map {
         check(!$0.toggleBetween.val.isEmpty)
         return $0
     }

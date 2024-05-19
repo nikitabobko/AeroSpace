@@ -8,7 +8,7 @@ struct ListWindowsCommand: Command {
         check(Thread.current.isMainThread)
         var windows: [Window] = []
         switch args {
-            case .manual(let manual):
+            case .manual(_, let manual):
                 var workspaces: Set<Workspace> = manual.workspaces.isEmpty ? Workspace.all.toSet() : manual.workspaces
                     .flatMap { filter in
                         return switch filter {

@@ -13,13 +13,15 @@ public struct MoveCmdArgs: CmdArgs, RawCmdArgs {
     )
     public var direction: Lateinit<CardinalDirection> = .uninitialized
 
-    fileprivate init() {}
+    public let rawArgs: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
 
-    public init(_ direction: CardinalDirection) {
+    public init(rawArgs: [String], _ direction: CardinalDirection) {
+        self.rawArgs = .init(rawArgs)
         self.direction = .initialized(direction)
     }
 }
 
 public func parseMoveCmdArgs(_ args: [String]) -> ParsedCmd<MoveCmdArgs> {
-    parseRawCmdArgs(MoveCmdArgs(), args)
+    parseRawCmdArgs(MoveCmdArgs(rawArgs: args), args)
 }

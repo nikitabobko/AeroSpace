@@ -245,8 +245,8 @@ final class ConfigTest: XCTestCase {
                 ),
                 checkFurtherCallbacks: true,
                 rawRun: [
-                    LayoutCommand(args: LayoutCmdArgs(toggleBetween: [.floating])),
-                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(.direct(WTarget.Direct("W"))))
+                    LayoutCommand(args: LayoutCmdArgs(rawArgs: [], toggleBetween: [.floating])),
+                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("W"))))
                 ]
             ),
             WindowDetectedCallback(
@@ -355,7 +355,7 @@ final class ConfigTest: XCTestCase {
             "q": .q,
             "unicorn": .u,
         ]))
-        let binding = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(.direct(WTarget.Direct("unicorn"))))])
+        let binding = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("unicorn"))))])
         XCTAssertEqual(config.modes[mainModeId]?.bindings, [binding.binding: binding])
 
         let (_, errors1) = parseConfig(

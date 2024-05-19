@@ -6,13 +6,23 @@ public extension RawCmdArgs {
     static var info: CmdStaticInfo { Self.parser.info }
 }
 
-public protocol CmdArgs: Equatable {
+public protocol CmdArgs: Equatable, CustomStringConvertible {
     static var info: CmdStaticInfo { get }
+    var rawArgs: EquatableNoop<[String]> { get } // Non Equatable because test comparion
 }
 
 extension CmdArgs {
     public func equals(_ other: any CmdArgs) -> Bool { // My brain is cursed with Java
         (other as? Self).flatMap { self == $0 } ?? false
+    }
+
+    public var description: String {
+        switch Self.info.kind {
+            case .execAndForget:
+                return CmdKind.execAndForget.rawValue + " " + (self as! ExecAndForgetCmdArgs).bashScript
+            default:
+                return Self.info.kind.rawValue + " " + rawArgs.value.joinArgs()
+        }
     }
 }
 

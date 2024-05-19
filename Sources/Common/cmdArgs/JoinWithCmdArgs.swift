@@ -13,13 +13,15 @@ public struct JoinWithCmdArgs: CmdArgs, RawCmdArgs {
     )
     public var direction: Lateinit<CardinalDirection> = .uninitialized
 
-    internal init() {}
+    public let rawArgs: EquatableNoop<[String]>
+    internal init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
 
-    public init(direction: CardinalDirection) {
+    public init(rawArgs: [String], direction: CardinalDirection) {
+        self.rawArgs = .init(rawArgs)
         self.direction = .initialized(direction)
     }
 }
 
 public func parseJoinWithCmdArgs(_ args: [String]) -> ParsedCmd<JoinWithCmdArgs> {
-    parseRawCmdArgs(JoinWithCmdArgs(), args)
+    parseRawCmdArgs(JoinWithCmdArgs(rawArgs: args), args)
 }

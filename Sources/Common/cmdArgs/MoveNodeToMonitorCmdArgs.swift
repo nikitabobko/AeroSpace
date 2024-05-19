@@ -1,5 +1,6 @@
 public struct MoveNodeToMonitorCmdArgs: RawCmdArgs, CmdArgs, Equatable {
-    fileprivate init() {}
+    public let rawArgs: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveNodeToMonitor,
         allowInConfig: true,
@@ -31,6 +32,6 @@ public struct MoveNodeToMonitorCmdArgs: RawCmdArgs, CmdArgs, Equatable {
 }
 
 public func parseMoveNodeToMonitorCmdArgs(_ args: [String]) -> ParsedCmd<MoveNodeToMonitorCmdArgs> {
-    parseRawCmdArgs(MoveNodeToMonitorCmdArgs(), args)
+    parseRawCmdArgs(MoveNodeToMonitorCmdArgs(rawArgs: args), args)
         .filter("--wrap-around is incompatible with <monitor-pattern> argument") { !$0.wrapAround || !$0.target.val.isPatterns }
 }

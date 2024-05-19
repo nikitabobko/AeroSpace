@@ -2,6 +2,7 @@ private let orkspace = "<workspace>"
 private let _workspaces = "\(orkspace)..."
 
 private struct RawListWindowsCmdArgs: RawCmdArgs, Equatable {
+    public let rawArgs: EquatableNoop<[String]>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listWindows,
         allowInConfig: false,
@@ -67,8 +68,15 @@ private extension RawListWindowsCmdArgs {
 public enum ListWindowsCmdArgs: CmdArgs {
     public static var info: CmdStaticInfo = RawListWindowsCmdArgs.info
 
-    case focused
-    case manual(ManualFilter)
+    case focused(rawArgs: [String])
+    case manual(rawArgs: [String], ManualFilter)
+
+    public var rawArgs: EquatableNoop<[String]> {
+        switch self {
+            case .focused(let rawArgs): .init(rawArgs)
+            case .manual(let rawArgs, _): .init(rawArgs)
+        }
+    }
 
     public struct ManualFilter: Equatable {
         public var monitors: [MonitorId] = []
@@ -82,7 +90,7 @@ public enum ListWindowsCmdArgs: CmdArgs {
 }
 
 public func parseListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCmdArgs> {
-    parseRawCmdArgs(RawListWindowsCmdArgs(), args)
+    parseRawCmdArgs(RawListWindowsCmdArgs(rawArgs: .init(args)), args)
         .filter("Specified flags require explicit (--workspace|--monitor)") {
             $0.manual == .init() || !$0.manual.workspaces.isEmpty || !$0.manual.monitors.isEmpty
         }
@@ -96,11 +104,11 @@ public func parseListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCm
         }
         .flatMap { raw in
             if raw.all {
-                return .cmd(.manual(ListWindowsCmdArgs.ManualFilter(monitors: [.all])))
+                return .cmd(.manual(rawArgs: args, ListWindowsCmdArgs.ManualFilter(monitors: [.all])))
             } else if raw.focused {
-                return .cmd(.focused)
+                return .cmd(.focused(rawArgs: args))
             } else {
-                return .cmd(.manual(raw.manual))
+                return .cmd(.manual(rawArgs: args, raw.manual))
             }
         }
 }

@@ -28,7 +28,7 @@ struct MoveNodeToWorkspaceCommand: Command {
 
     public static func run(_ state: CommandMutableState, _ name: String) -> Bool {
         if let wName = WorkspaceName.parse(name).getOrNil(appendErrorTo: &state.stderr) {
-            let args = MoveNodeToWorkspaceCmdArgs(.direct(WTarget.Direct(wName, autoBackAndForth: false)))
+            let args = MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct(wName, autoBackAndForth: false)))
             return MoveNodeToWorkspaceCommand(args: args).run(state)
         } else {
             return false

@@ -6,6 +6,7 @@ public struct ExecAndForgetCmdArgs: CmdArgs {
         allowInConfig: true
     )
 
+    public var rawArgs: EquatableNoop<[String]> { .init([bashScript]) }
     public init(bashScript: String) {
         self.bashScript = bashScript
     }

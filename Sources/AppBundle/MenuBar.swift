@@ -28,7 +28,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
         }
         Button(viewModel.isEnabled ? "Disable" : "Enable") {
             refreshSession {
-                _ = EnableCommand(args: EnableCmdArgs(targetState: .toggle)).run(.focused)
+                _ = EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle)).run(.focused)
             }
         }
             .keyboardShortcut("E", modifiers: .command)
