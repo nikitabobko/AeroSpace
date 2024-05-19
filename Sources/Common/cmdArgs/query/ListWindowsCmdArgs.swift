@@ -9,8 +9,7 @@ private struct RawListWindowsCmdArgs: RawCmdArgs, Equatable {
         help: """
             USAGE: list-windows [-h|--help] (--workspace \(_workspaces)|--monitor \(_monitors))
                                 [--monitor \(_monitors)] [--workspace \(_workspaces)]
-                                [--pid <pid>] [--app-id <app-id>] [--macos-native-hidden-app [no]]
-                                [--macos-native-minimized] [--macos-native-fullscreen]
+                                [--pid <pid>] [--app-id <app-id>]
                OR: list-windows [-h|--help] --all
                OR: list-windows [-h|--help] --focused
 
@@ -22,10 +21,6 @@ private struct RawListWindowsCmdArgs: RawCmdArgs, Equatable {
               --monitor \(_monitors)          Filter results to only print the windows that are attached to specified monitors
               --pid <pid>                     Filter results to only print windows that belong to the Application with specified <pid>
               --app-id <app-id>               Filter results to only print windows that belong to the Application with specified Bundle ID
-              --macos-native-hidden-app [no]  Filter results to only print windows that belong to hidden applications.
-                                              [no] inverts the condition
-              --macos-native-minimized [no]   Filter results to only print minimized windows. [no] inverts the condition
-              --macos-native-fullscreen [no]  Filter results to only print fullscreen windows. [no] inverts the condition
             """,
         options: [
             "--focused": trueBoolFlag(\.focused),
@@ -34,9 +29,6 @@ private struct RawListWindowsCmdArgs: RawCmdArgs, Equatable {
             "--monitor": ArgParser(\.manual.monitors, parseMonitorIds),
             "--workspace": ArgParser(\.manual.workspaces, parseWorkspaces),
             "--pid": singleValueOption(\.manual.pidFilter, "<pid>", Int32.init),
-            "--macos-native-hidden-app": boolFlag(\.manual.macosHiddenApp),
-            "--macos-native-minimized": boolFlag(\.manual.macosMinimized),
-            "--macos-native-fullscreen": boolFlag(\.manual.macosFullscreen),
             "--app-id": singleValueOption(\.manual.appIdFilter, "<app-id>", { $0 })
         ],
         arguments: []
@@ -83,9 +75,6 @@ public enum ListWindowsCmdArgs: CmdArgs {
         public var workspaces: [WorkspaceFilter] = []
         public var pidFilter: Int32?
         public var appIdFilter: String?
-        public var macosHiddenApp: Bool?
-        public var macosMinimized: Bool?
-        public var macosFullscreen: Bool?
     }
 }
 
