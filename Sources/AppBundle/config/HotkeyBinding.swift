@@ -52,7 +52,7 @@ struct HotkeyBinding: Equatable {
         self.modifiers = modifiers
         self.key = key
         self.commands = commands
-        self.binding = modifiers.isEmpty ? key.description : modifiers.toString() + "-\(key)"
+        self.binding = modifiers.isEmpty ? key.toString() : modifiers.toString() + "-" + key.toString()
     }
 
     public static func == (lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
