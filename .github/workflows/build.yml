@@ -24,10 +24,6 @@ jobs:
         uses: actions/checkout@v3
       - name: Install deps
         run: brew install xcodegen gsed asciidoctor swiftlint
-      - name: Check dirty files
-        run: |
-          ./generate.sh
-          ./script/check-uncommitted-files.sh
       - name: Build Debug
         # "-" means "Sign to run locally". There is no aerospace-codesign-certificate in GH Actions
         run: ./build-debug.sh --codesign-identity -

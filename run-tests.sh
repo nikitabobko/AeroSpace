@@ -8,3 +8,6 @@ swift test
 ./run-cli.sh -h
 ./run-cli.sh -v
 swiftlint lint --quiet
+
+./generate.sh
+./script/check-uncommitted-files.sh
