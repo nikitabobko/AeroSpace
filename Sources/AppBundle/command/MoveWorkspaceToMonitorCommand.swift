@@ -21,8 +21,7 @@ struct MoveWorkspaceToMonitorCommand: Command {
                 "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(prevMonitor)")
             return true
         } else {
-            state.stderr.append("Can't move workspace '\(focusedWorkspace.name)' to monitor '\(targetMonitor.name)'. workspace-to-monitor-force-assignment doesn't allow it")
-            return false
+            return state.failCmd(msg: "Can't move workspace '\(focusedWorkspace.name)' to monitor '\(targetMonitor.name)'. workspace-to-monitor-force-assignment doesn't allow it")
         }
     }
 }

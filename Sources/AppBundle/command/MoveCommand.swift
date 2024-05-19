@@ -8,8 +8,7 @@ struct MoveCommand: Command {
         check(Thread.current.isMainThread)
         let direction = args.direction.val
         guard let currentWindow = state.subject.windowOrNil else {
-            state.stderr.append(noWindowIsFocused)
-            return false
+            return state.failCmd(msg: noWindowIsFocused)
         }
         switch currentWindow.parent.cases {
             case .tilingContainer(let parent):
@@ -28,14 +27,11 @@ struct MoveCommand: Command {
                     return moveOut(state, window: currentWindow, direction: direction)
                 }
             case .workspace: // floating window
-                state.stderr.append("moving floating windows isn't yet supported") // todo
-                return false
+                return state.failCmd(msg: "moving floating windows isn't yet supported") // todo
             case .macosInvisibleWindowsContainer:
-                state.stderr.append(moveOutInvisibleWindow)
-                return false
+                return state.failCmd(msg: moveOutInvisibleWindow)
             case .macosFullscreenWindowsContainer:
-                state.stderr.append(moveOutFullscreenWindow)
-                return false
+                return state.failCmd(msg: moveOutFullscreenWindow)
             case .macosPopupWindowsContainer:
                 return false // Impossible
         }

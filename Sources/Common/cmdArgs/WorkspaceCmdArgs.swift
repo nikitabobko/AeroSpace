@@ -12,8 +12,8 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
         kind: .workspace,
         allowInConfig: true,
         help: """
-            USAGE: workspace [-h|--help] [--wrap-around] (next|prev)
-               OR: workspace [-h|--help] [--auto-back-and-forth] <workspace-name>
+            USAGE: workspace [-h|--help] [--auto-back-and-forth] <workspace-name>
+               OR: workspace [-h|--help] [--wrap-around] (next|prev)
 
             OPTIONS:
               -h, --help              Print help

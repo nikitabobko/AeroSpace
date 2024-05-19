@@ -98,7 +98,14 @@ extension CommandSubject {
     }
 }
 
-func failCmdWithMsg(_ state: CommandMutableState, _ msg: String) -> Bool {
-    state.stderr.append(msg)
-    return false
+extension CommandMutableState {
+    func failCmd(msg: String) -> Bool {
+        stderr.append(msg)
+        return false
+    }
+
+    func succCmd(msg: String) -> Bool {
+        stdout.append(msg)
+        return true
+    }
 }

@@ -7,8 +7,7 @@ struct LayoutCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         guard let window = state.subject.windowOrNil else {
-            state.stderr.append(noWindowIsFocused)
-            return false
+            return state.failCmd(msg: noWindowIsFocused)
         }
         let targetDescription = args.toggleBetween.val.first(where: { !window.matchesDescription($0) })
             ?? args.toggleBetween.val.first!
@@ -35,11 +34,9 @@ struct LayoutCommand: Command {
                     case .macosPopupWindowsContainer:
                         return false // Impossible
                     case .macosInvisibleWindowsContainer:
-                        state.stderr.append("Can't change layout of macOS invisible windows (hidden application or minimized windows). This behavior is subject to change")
-                        return false
+                        return state.failCmd(msg: "Can't change layout of macOS invisible windows (hidden application or minimized windows). This behavior is subject to change")
                     case .macosFullscreenWindowsContainer:
-                        state.stderr.append("Can't change layout of macOS fullscreen windows. This behavior is subject to change")
-                        return false
+                        return state.failCmd(msg: "Can't change layout of macOS fullscreen windows. This behavior is subject to change")
                     case .tilingContainer:
                         return true // Nothing to do
                     case .workspace(let workspace):
@@ -66,8 +63,7 @@ private func changeTilingLayout(_ state: CommandMutableState, targetLayout: Layo
             parent.changeOrientation(targetOrientation)
             return true
         case .workspace, .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer, .macosPopupWindowsContainer:
-            state.stderr.append("The window is non-tiling")
-            return false
+            return state.failCmd(msg: "The window is non-tiling")
     }
 }
 

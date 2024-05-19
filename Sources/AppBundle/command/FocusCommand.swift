@@ -28,8 +28,7 @@ struct FocusCommand: Command {
                 if let windowToFocus = MacWindow.allWindowsMap[windowId] {
                     state.subject = .window(windowToFocus)
                 } else {
-                    state.stderr.append("Can't find window with ID \(windowId)")
-                    return false
+                    return state.failCmd(msg: "Can't find window with ID \(windowId)")
                 }
         }
         switch state.subject {
@@ -57,8 +56,7 @@ private func hitWorkspaceBoundaries(
         case .allMonitorsUnionFrame:
             let currentMonitor = state.subject.workspace.workspaceMonitor
             guard let (monitors, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
-                state.stderr.append("Can't find monitor in direction \(direction)")
-                return false
+                return state.failCmd(msg: "Can't find monitor in direction \(direction)")
             }
 
             if let targetMonitor = monitors.getOrNil(atIndex: index) {
@@ -95,8 +93,7 @@ private extension Monitor {
 
 private func wrapAroundTheWorkspace(_ state: CommandMutableState, _ direction: CardinalDirection) -> Bool {
     guard let windowToFocus = state.subject.workspace.findFocusTargetRecursive(snappedTo: direction.opposite) else {
-        state.stderr.append("No window to focus")
-        return false
+        return state.failCmd(msg: "No window to focus")
     }
     state.subject = .window(windowToFocus)
     return windowToFocus.focus()

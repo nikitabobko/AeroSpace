@@ -15,17 +15,14 @@ struct ConfigCommand: Command {
                         mode
                         \(config.modes.keys.map { "mode.\($0).binding" }.joined(separator: "\n"))
                         """
-                    state.stdout.append(out)
-                    return true
+                    return state.succCmd(msg: out)
                 case .allKeys:
                     let configMap = buildConfigMap()
                     var allKeys: [String] = []
                     configMap.dumpAllKeysRecursive(path: ".", result: &allKeys)
-                    state.stdout.append(allKeys.joined(separator: "\n"))
-                    return true
+                    return state.succCmd(msg: allKeys.joined(separator: "\n"))
                 case .configPath:
-                    state.stdout.append(configUrl.absoluteURL.path)
-                    return true
+                    return state.succCmd(msg: configUrl.absoluteURL.path)
             }
     }
 }
@@ -45,22 +42,19 @@ private func getKey(_ state: CommandMutableState, args: ConfigCmdArgs, key: Stri
     switch key.toKeyPath() {
         case .success(let _keyPath): keyPath = _keyPath
         case .failure(let error):
-            state.stderr.append(error)
-            return false
+            return state.failCmd(msg: error)
     }
     var configMap: ConfigMapValue
     switch buildConfigMap().find(keyPath: keyPath) {
         case .success(let value):
             configMap = value
         case .failure(let error):
-            state.stderr.append(error)
-            return false
+            return state.failCmd(msg: error)
     }
     if args.keys {
         switch configMap {
             case .scalar(let scalar):
-                state.stderr.append("--keys flag cannot be applied to scalar object '\(scalar)'")
-                return false
+                return state.failCmd(msg: "--keys flag cannot be applied to scalar object '\(scalar)'")
             case .map(let map):
                 configMap = .array(map.keys.map { .scalar(.string($0)) })
             case .array(let array):
@@ -70,30 +64,20 @@ private func getKey(_ state: CommandMutableState, args: ConfigCmdArgs, key: Stri
     if args.json {
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
-        let _json = Result { try encoder.encode(configMap) }
-            .flatMap {
-                switch String(data: $0, encoding: .utf8) {
-                    case .some(let string): .success(string)
-                    case .none: .failure("Can't convert json Data to String")
-                }
-            }
-        switch _json {
-            case .success(let json):
-                state.stdout.append(json)
-                return true
-            case .failure(let error):
-                state.stderr.append(error.localizedDescription)
-                return false
+        let _json = Result { try encoder.encode(configMap) }.flatMap {
+            String(data: $0, encoding: .utf8).flatMap(Result.success) ?? .failure("Can't convert json Data to String")
+        }
+        return switch _json {
+            case .success(let json): state.succCmd(msg: json)
+            case .failure(let error): state.failCmd(msg: error.localizedDescription)
         }
     } else {
         switch configMap {
             case .scalar(let scalar):
-                state.stdout.append(scalar.describe)
-                return true
+                return state.succCmd(msg: scalar.describe)
             case .map:
-                state.stderr.append("Complicated objects can be printed only with --json flag. " +
+                return state.failCmd(msg: "Complicated objects can be printed only with --json flag. " +
                     "Alternatively, you can try to inspect keys of the object with --keys flag")
-                return false
             case .array(let array):
                 let plainArray: Result<[String], String> = array.mapAllOrFailure {
                     switch $0 {
@@ -102,13 +86,9 @@ private func getKey(_ state: CommandMutableState, args: ConfigCmdArgs, key: Stri
                             "Alternatively, you can try to inspect keys of the object with --keys flag")
                     }
                 }
-                switch plainArray {
-                    case .success(let array):
-                        state.stdout.append(array.sorted().joined(separator: "\n"))
-                        return true
-                    case .failure(let error):
-                        state.stderr.append(error)
-                        return false
+                return switch plainArray {
+                    case .success(let array): state.succCmd(msg: array.sorted().joined(separator: "\n"))
+                    case .failure(let error): state.failCmd(msg: error)
                 }
         }
     }

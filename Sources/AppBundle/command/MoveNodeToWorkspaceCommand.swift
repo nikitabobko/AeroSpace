@@ -5,8 +5,7 @@ struct MoveNodeToWorkspaceCommand: Command {
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         guard let focused = state.subject.windowOrNil else {
-            state.stderr.append(noWindowIsFocused)
-            return false
+            return state.failCmd(msg: noWindowIsFocused)
         }
         let prevWorkspace = focused.workspace ?? Workspace.focused
         let targetWorkspace: Workspace
@@ -18,8 +17,7 @@ struct MoveNodeToWorkspaceCommand: Command {
                 targetWorkspace = Workspace.get(byName: direct.name.raw)
         }
         if prevWorkspace == targetWorkspace {
-            state.stderr.append("Window '\(focused.title)' already belongs to workspace '\(targetWorkspace.name)'")
-            return false
+            return state.failCmd(msg: "Window '\(focused.title)' already belongs to workspace '\(targetWorkspace.name)'")
         }
         let targetContainer: NonLeafTreeNodeObject = focused.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
         focused.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)

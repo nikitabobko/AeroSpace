@@ -12,8 +12,7 @@ struct MacosNativeFullscreenCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         guard let window = state.subject.windowOrNil else {
-            state.stderr.append("No window in focus")
-            return false
+            return state.failCmd(msg: "No window in focus")
         }
         let axWindow = window.asMacWindow().axWindow
         let prevState = window.isMacosFullscreen
@@ -23,12 +22,7 @@ struct MacosNativeFullscreenCommand: Command {
             case .toggle: !prevState
         }
         if newState == prevState {
-            if newState {
-                state.stderr.append("Already fullscreen")
-            } else {
-                state.stderr.append("Already not fullscreen")
-            }
-            return false
+            return state.failCmd(msg: newState ? "Already fullscreen" : "Already not fullscreen")
         }
         if axWindow.set(Ax.isFullscreenAttr, newState) {
             let workspace = window.unbindFromParent().parent.workspace ?? Workspace.focused
@@ -44,8 +38,7 @@ struct MacosNativeFullscreenCommand: Command {
             }
             return true
         } else {
-            state.stderr.append("Failed")
-            return false
+            return state.failCmd(msg: "Failed")
         }
     }
 }

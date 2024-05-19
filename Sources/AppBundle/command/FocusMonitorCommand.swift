@@ -7,12 +7,9 @@ struct FocusMonitorCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         let currentMonitor = state.subject.workspace.workspaceMonitor
-        switch args.target.val.resolve(currentMonitor, wrapAround: args.wrapAround) {
-            case .success(let targetMonitor):
-                return WorkspaceCommand.run(state, targetMonitor.activeWorkspace.name)
-            case .failure(let msg):
-                state.stderr.append(msg)
-                return false
+        return switch args.target.val.resolve(currentMonitor, wrapAround: args.wrapAround) {
+            case .success(let targetMonitor): WorkspaceCommand.run(state, targetMonitor.activeWorkspace.name)
+            case .failure(let msg): state.failCmd(msg: msg)
         }
     }
 }

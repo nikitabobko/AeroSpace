@@ -7,8 +7,7 @@ struct FullscreenCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         guard let window = state.subject.windowOrNil else {
-            state.stderr.append(noWindowIsFocused)
-            return false
+            return state.failCmd(msg: noWindowIsFocused)
         }
         let newState: Bool = switch args.toggle {
             case .on: true
@@ -16,12 +15,7 @@ struct FullscreenCommand: Command {
             case .toggle: !window.isFullscreen
         }
         if newState == window.isFullscreen {
-            if newState {
-                state.stderr.append("Already fullscreen")
-            } else {
-                state.stderr.append("Already not fullscreen")
-            }
-            return false
+            return state.failCmd(msg: newState ? "Already fullscreen" : "Already not fullscreen")
         }
         window.isFullscreen = newState
 

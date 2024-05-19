@@ -7,24 +7,21 @@ struct CloseCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         guard let window = state.subject.windowOrNil else {
-            state.stderr.append("Empty workspace")
-            return false
+            return state.failCmd(msg: "Empty workspace")
         }
         if window.macAppUnsafe.axApp.get(Ax.windowsAttr)?.count == 1 && args.quitIfLastWindow {
             if window.macAppUnsafe.nsApp.terminate() {
                 successfullyClosedWindow(state, window)
                 return true
             } else {
-                state.stderr.append("Failed to quit '\(window.app.name ?? "Unknown app")'")
-                return false
+                return state.failCmd(msg: "Failed to quit '\(window.app.name ?? "Unknown app")'")
             }
         } else {
             if window.close() {
                 successfullyClosedWindow(state, window)
                 return true
             } else {
-                state.stderr.append("Can't close '\(window.app.name ?? "Unknown app")' window. Probably the window doesn't have a close button")
-                return false
+                return state.failCmd(msg: "Can't close '\(window.app.name ?? "Unknown app")' window. Probably the window doesn't have a close button")
             }
         }
     }

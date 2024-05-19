@@ -6,7 +6,6 @@ struct ServerVersionInternalCommandCommand: Command {
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
-        state.stdout.append("\(Bundle.appVersion) \(gitHash)")
-        return true
+        return state.succCmd(msg: "\(Bundle.appVersion) \(gitHash)")
     }
 }

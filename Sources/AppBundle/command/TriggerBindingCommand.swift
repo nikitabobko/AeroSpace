@@ -10,10 +10,10 @@ struct TriggerBindingCommand: Command {
             if let binding = mode.bindings[args.binding.val] {
                 refreshSession(forceFocus: true) { binding.commands.run(state) }
             } else {
-                failCmdWithMsg(state, "Binding '\(args.binding)' is not presented in mode '\(args.mode)'")
+                state.failCmd(msg: "Binding '\(args.binding.val)' is not presented in mode '\(args.mode)'")
             }
         } else {
-            failCmdWithMsg(state, "Mode '\(args.mode)' doesn't exist. " +
+            state.failCmd(msg: "Mode '\(args.mode)' doesn't exist. " +
                 "Available modes: \(config.modes.keys.joined(separator: ","))")
         }
     }

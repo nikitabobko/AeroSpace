@@ -34,8 +34,7 @@ struct ListWindowsCommand: Command {
                 if let window = state.subject.windowOrNil {
                     windows = [window]
                 } else {
-                    state.stderr.append("No window is focused")
-                    return false
+                    return state.failCmd(msg: "No window is focused")
                 }
         }
         state.stdout += windows
