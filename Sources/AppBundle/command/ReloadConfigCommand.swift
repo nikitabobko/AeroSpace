@@ -13,23 +13,24 @@ struct ReloadConfigCommand: Command {
     }
 }
 
-func reloadConfig() -> Bool {
+func reloadConfig(forceConfigUrl: URL? = nil) -> Bool {
     var devNull = ""
-    return reloadConfig(stdout: &devNull)
+    return reloadConfig(forceConfigUrl: forceConfigUrl, stdout: &devNull)
 }
 
-func loadConfig(_ newConfig: Config) {
-    resetHotKeys()
-    config = newConfig
-    activateMode(mainModeId)
-    syncStartAtLogin()
-}
-
-func reloadConfig(args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(), stdout: inout String) -> Bool {
-    switch readConfig() {
-        case .success(let parsedConfig):
+func reloadConfig(
+    args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(),
+    forceConfigUrl: URL? = nil,
+    stdout: inout String
+) -> Bool {
+    switch readConfig(forceConfigUrl: forceConfigUrl) {
+        case .success(let (parsedConfig, url)):
             if !args.dryRun {
-                loadConfig(parsedConfig)
+                resetHotKeys()
+                config = parsedConfig
+                configUrl = url
+                activateMode(mainModeId)
+                syncStartAtLogin()
             }
             return true
         case .failure(let msg):

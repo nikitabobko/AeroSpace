@@ -3,13 +3,11 @@ import AppKit
 import HotKey
 import TOMLKit
 
-func readConfig() -> Result<Config, String> {
-    let configUrl: URL?
-    switch getConfigFileUrl() {
-        case .file(let url):
-            configUrl = url
-        case .noCustomConfigExists:
-            configUrl = nil
+func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
+    let customConfigUrl: URL
+    switch findCustomConfigUrl() {
+        case .file(let url): customConfigUrl = url
+        case .noCustomConfigExists: customConfigUrl = defaultConfigUrl
         case .ambiguousConfigError(let candidates):
             let msg = """
                 Ambiguous config error. Several configs found:
@@ -17,14 +15,14 @@ func readConfig() -> Result<Config, String> {
                 """
             return .failure(msg)
     }
-    let (parsedConfig, errors) = configUrl.flatMap { try? String(contentsOf: $0) }.map { parseConfig($0) }
-        ?? (defaultConfig, [])
+    let configUrl: URL = forceConfigUrl ?? customConfigUrl
+    let (parsedConfig, errors) = (try? String(contentsOf: configUrl)).map { parseConfig($0) } ?? (defaultConfig, [])
 
     if errors.isEmpty {
-        return .success(parsedConfig)
+        return .success((parsedConfig, configUrl))
     } else {
         let msg = """
-            Failed to parse \(configUrl?.absoluteURL.path ?? "nil-configUrl")
+            Failed to parse \(configUrl.absoluteURL.path)
 
             \(errors.map(\.description).joined(separator: "\n\n"))
             """

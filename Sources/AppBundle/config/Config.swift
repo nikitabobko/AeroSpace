@@ -3,26 +3,27 @@ import HotKey
 import Common
 
 let mainModeId = "main"
-var defaultConfigUrl: URL { Bundle.main.url(forResource: "default-config", withExtension: "toml")! }
-let defaultConfig: Config = {
-    let defaultConfig: URL
+var defaultConfigUrl: URL {
     if isUnitTest {
         var url = URL(filePath: #file)
         while !FileManager.default.fileExists(atPath: url.appending(component: ".git").path) {
             url.deleteLastPathComponent()
         }
         let projectRoot: URL = url
-        defaultConfig = projectRoot.appending(component: "docs/config-examples/default-config.toml")
+        return projectRoot.appending(component: "docs/config-examples/default-config.toml")
     } else {
-        defaultConfig = defaultConfigUrl
+        return Bundle.main.url(forResource: "default-config", withExtension: "toml")!
     }
-    let parsedConfig = parseConfig(try! String(contentsOf: defaultConfig))
+}
+let defaultConfig: Config = {
+    let parsedConfig = parseConfig(try! String(contentsOf: defaultConfigUrl))
     if !parsedConfig.errors.isEmpty {
         error("Can't parse default config: \(parsedConfig.errors)")
     }
     return parsedConfig.config
 }()
 var config: Config = defaultConfig
+var configUrl: URL = defaultConfigUrl
 
 struct Config: Copyable {
     var afterLoginCommand: [any Command] = []

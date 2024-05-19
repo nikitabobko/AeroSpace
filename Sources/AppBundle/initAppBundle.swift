@@ -11,7 +11,7 @@ public func initAppBundle() {
     }
     let startedAtLogin = CommandLine.arguments.getOrNil(atIndex: 1) == "--started-at-login"
     if !reloadConfig() {
-        loadConfig(defaultConfig)
+        check(reloadConfig(forceConfigUrl: defaultConfigUrl))
     }
     if startedAtLogin && !config.startAtLogin {
         terminateApp()

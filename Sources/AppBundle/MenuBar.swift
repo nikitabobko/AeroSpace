@@ -35,7 +35,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
         let editor = getTextEditorToOpenConfig()
         Button("Open config in '\(editor.lastPathComponent)'") {
             let fallbackConfig: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName)
-            switch getConfigFileUrl() {
+            switch findCustomConfigUrl() {
                 case .file(let url):
                     url.open(with: editor)
                 case .noCustomConfigExists:
@@ -64,7 +64,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
 }
 
 func getTextEditorToOpenConfig() -> URL {
-    NSWorkspace.shared.urlForApplication(toOpen: getConfigFileUrl().urlOrNil ?? defaultConfigUrl)?
+    NSWorkspace.shared.urlForApplication(toOpen: findCustomConfigUrl().urlOrNil ?? defaultConfigUrl)?
         .takeIf { $0.lastPathComponent != "Xcode.app" } // Blacklist Xcode. It is too heavy to open plain text files
         ?? URL(filePath: "/System/Applications/TextEdit.app")
 }
