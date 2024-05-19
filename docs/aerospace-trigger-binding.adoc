@@ -1,0 +1,29 @@
+= aerospace-trigger-binding(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-trigger-binding
+// tag::purpose[]
+:manpurpose: Trigger AeroSpace binding as if it was pressed by user
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+aerospace trigger-binding [-h|--help] <binding> --mode <mode-id>
+// end::synopsis[]
+
+== Description
+
+// tag::body[]
+{manpurpose}
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+--mode <mode-id>:: Mode to search `<binding>` in
+
+include::util/conditional-arguments-header.adoc[]
+
+<binding>:: Binding to trigger
+
+// end::body[]
+
+include::util/man-footer.adoc[]

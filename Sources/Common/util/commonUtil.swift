@@ -1,6 +1,7 @@
 import Foundation
 import AppKit
 
+public let mainModeId = "main"
 private var recursionDetectorDuringFailure: Bool = false
 
 public func errorT<T>(

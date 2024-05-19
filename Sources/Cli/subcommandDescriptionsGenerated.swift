@@ -26,6 +26,7 @@ let subcommandDescriptions = [
     ["  reload-config", "Reload currently active config"],
     ["  resize", "Resize the currently focused window"],
     ["  split", "Split focused window"],
+    ["  trigger-binding", "Trigger AeroSpace binding as if it was pressed by user"],
     ["  workspace-back-and-forth", "Switch between currently focused workspace and previously focused workspace back and forth"],
     ["  workspace", "Focus the specified workspace"],
 ]

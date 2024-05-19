@@ -76,6 +76,8 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 if isServer {
                     result[kind.rawValue] = defaultSubCommandParser(ServerVersionInternalCommandCmdArgs.init)
                 }
+            case .triggerBinding:
+                result[kind.rawValue] = SubCommandParser(parseTriggerBindingCmdArgs)
             case .workspace:
                 result[kind.rawValue] = SubCommandParser(parseWorkspaceCmdArgs)
             case .workspaceBackAndForth:

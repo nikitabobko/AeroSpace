@@ -75,6 +75,8 @@ extension CmdArgs {
                 command = SplitCommand(args: self as! SplitCmdArgs)
             case .serverVersionInternalCommand:
                 command = ServerVersionInternalCommandCommand()
+            case .triggerBinding:
+                command = TriggerBindingCommand(args: self as! TriggerBindingCmdArgs)
             case .workspace:
                 command = WorkspaceCommand(args: self as! WorkspaceCmdArgs)
             case .workspaceBackAndForth:

@@ -2,7 +2,6 @@ import AppKit
 import HotKey
 import Common
 
-let mainModeId = "main"
 var defaultConfigUrl: URL {
     if isUnitTest {
         var url = URL(filePath: #file)

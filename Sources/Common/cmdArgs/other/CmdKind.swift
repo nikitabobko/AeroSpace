@@ -26,6 +26,7 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case reloadConfig = "reload-config"
     case resize
     case split
+    case triggerBinding = "trigger-binding"
     case workspace
     case workspaceBackAndForth = "workspace-back-and-forth"
 
