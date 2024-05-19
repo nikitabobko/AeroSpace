@@ -1,9 +1,11 @@
 public struct MoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
+    public let rawArgs: EquatableNoop<[String]>
+    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveWorkspaceToMonitor,
         allowInConfig: true,
         help: """
-            USAGE: move-workspace-to-monitor [-h|--help] --wrap-around (next|prev)
+            USAGE: move-workspace-to-monitor [-h|--help] [--wrap-around] (next|prev)
 
             OPTIONS:
               -h, --help           Print help
@@ -16,29 +18,10 @@ public struct MoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
     )
 
     public var wrapAround: Bool = false
-
-    public var target: Lateinit<MoveWorkspaceToMonitorCmdArgs.MonitorTarget> = .uninitialized // todo introduce --wrap-around flag
+    public var target: Lateinit<MoveWorkspaceToMonitorCmdArgs.MonitorTarget> = .uninitialized
     public enum MonitorTarget: String, CaseIterable {
         case next, prev
     }
-
-    public let rawArgs: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
-}
-
-public func parseMoveWorkspaceToMonitorCmdArgs(_ args: [String]) -> ParsedCmd<MoveWorkspaceToMonitorCmdArgs> {
-    parseRawCmdArgs(MoveWorkspaceToMonitorCmdArgs(rawArgs: args), args)
-        .filter(
-            """
-            Migration error: --wrap-around flag is mandatory for move-workspace-to-monitor command.
-
-            Reason:
-            - Until 0.8.0, move-workspace-to-monitor didn't have --wrap-around flag but it's behavior was effectively enabled by default.
-            - In future versions of AeroSpace, the default will change.
-              (to make 'move-workspace-to-monitor' consistent with 'workspace (next|prev)' and 'move-node-to-workspace (next|prev)')
-            - To make sure that the default doesn't change silently the migration error is reported.
-            """
-        ) { raw in raw.wrapAround == true }
 }
 
 private func parseMonitorTarget(arg: String, nextArgs: inout [String]) -> Parsed<MoveWorkspaceToMonitorCmdArgs.MonitorTarget> {
