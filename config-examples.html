@@ -573,8 +573,8 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Place a copy of this config to ~/.aerospace.toml</span>
 <span class="tok-c1"># After that, you can edit ~/.aerospace.toml to your liking</span>
 
-<span class="tok-c1"># Feel free to omit keys that you don&#39;t use in your config.</span>
-<span class="tok-c1"># If the key is absent in your config the default value is taken from this config</span>
+<span class="tok-c1"># It&#39;s not neceesary to copy all keys to your config.</span>
+<span class="tok-c1"># If the key is missing in your config, &quot;default-config.toml&quot; will serve as a fallback</span>
 
 <span class="tok-c1"># You can use it to add commands that run after login to macOS user session.</span>
 <span class="tok-c1"># &#39;start-at-login&#39; needs to be &#39;true&#39; for &#39;after-login-command&#39; to work</span>
@@ -626,9 +626,9 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">right</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">      </span><span class="tok-mi">0</span>
 
 <span class="tok-c1"># See https://nikitabobko.github.io/AeroSpace/guide#exec-env-vars</span>
-<span class="tok-k">[exec]</span>
-<span class="tok-n">inherit-env-vars</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
-<span class="tok-k">[exec.env-vars]</span>
+<span class="tok-p">[</span><span class="tok-n">exec</span><span class="tok-p">]</span><span class="tok-w">                   </span><span class="tok-c1"># Again, you don&#39;t need to copy all config sections to your config.</span>
+<span class="tok-n">inherit-env-vars</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">true</span><span class="tok-w">  </span><span class="tok-c1"># If you don&#39;t touch &quot;exec&quot; section,</span>
+<span class="tok-p">[</span><span class="tok-n">exec</span><span class="tok-p">.</span><span class="tok-n">env-vars</span><span class="tok-p">]</span><span class="tok-w">          </span><span class="tok-c1"># it will fallback to &quot;default-config.toml&quot;</span>
 <span class="tok-n">PATH</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}&#39;</span>
 
 <span class="tok-c1"># &#39;main&#39; binding mode declaration</span>
@@ -685,7 +685,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-n">alt-7</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace 7&#39;</span>
 <span class="tok-n">alt-8</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace 8&#39;</span>
 <span class="tok-n">alt-9</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace 9&#39;</span>
-<span class="tok-n">alt-a</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace A&#39;</span>
+<span class="tok-n">alt-a</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace A&#39;</span><span class="tok-w"> </span><span class="tok-c1"># In your config, you can drop workspace bindings that you don&#39;t need</span>
 <span class="tok-n">alt-b</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace B&#39;</span>
 <span class="tok-n">alt-c</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace C&#39;</span>
 <span class="tok-n">alt-d</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace D&#39;</span>
@@ -851,7 +851,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-04-24 23:36:57 +0200
+Last updated 2024-05-19 13:47:58 +0200
 </div>
 </div>
 </body>
