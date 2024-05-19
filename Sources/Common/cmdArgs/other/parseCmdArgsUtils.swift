@@ -1,4 +1,4 @@
-public protocol RawCmdArgs: Copyable, CmdArgs {
+public protocol RawCmdArgs: Copyable, CmdArgs { // todo squash CmdArgs and RawCmdArgs into a single protocol
     static var parser: CmdParser<Self> { get }
 }
 

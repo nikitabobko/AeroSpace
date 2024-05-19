@@ -23,13 +23,6 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-check-clean-git-working-dir() {
-    if [ ! -z "$(git status --porcelain)" ]; then
-        echo "git working directory must be clean"
-        exit 1
-    fi
-}
-
 generate-git-hash() {
 cat > Sources/Common/gitHashGenerated.swift <<EOF
 public let gitHash = "$(git rev-parse HEAD)"
@@ -44,7 +37,7 @@ EOF
 ./build-docs.sh
 
 ./generate.sh
-check-clean-git-working-dir
+./script/check-uncommitted-files.sh
 ./generate.sh --build-version "$build_version" --codesign-identity "$codesign_identity"
 
 generate-git-hash
