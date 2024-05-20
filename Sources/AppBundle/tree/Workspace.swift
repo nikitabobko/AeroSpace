@@ -95,7 +95,7 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, Custom
 
 extension Workspace {
     var isVisible: Bool { visibleWorkspaceToScreenPoint.keys.contains(self) }
-    var workspaceMonitor: Monitor { // todo rename to workspaceMonitor (to distinguish from nodeMonitor)
+    var workspaceMonitor: Monitor {
         forceAssignedMonitor
             ?? visibleWorkspaceToScreenPoint[self]?.monitorApproximation
             ?? assignedMonitorPoint?.monitorApproximation

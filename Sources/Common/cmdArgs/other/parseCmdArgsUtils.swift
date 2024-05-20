@@ -71,7 +71,7 @@ public enum ParsedCmd<T> {
         flatMap { .cmd(mapper($0)) }
     }
 
-    public func filter(_ msg: String, _ predicate: (T) -> Bool) -> ParsedCmd<T> { // todo drop
+    public func filter(_ msg: String, _ predicate: (T) -> Bool) -> ParsedCmd<T> {
         flatMap { this in predicate(this) ? .cmd(this) : .failure(msg) }
     }
 

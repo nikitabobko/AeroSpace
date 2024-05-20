@@ -1,6 +1,6 @@
 import Foundation
 
-// todo refactor. showMessageInGui is common code looks weird
+// todo refactor. showMessageInGui in common code looks weird
 public func showMessageInGui(filenameIfConsoleApp: String?, title: String, message: String) {
     let titleAndMessage = "##### \(title) #####\n\n" + message
     if isCli {
