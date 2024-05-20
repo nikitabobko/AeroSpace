@@ -99,6 +99,12 @@ public enum ParsedCmd<T> {
     }
 }
 
+// Hack to preserve backwards compatibility
+private func isResizeNegativeUnitsArg(_ raw: any RawCmdArgs, arg: String) -> Bool {
+    var iter = arg.makeIterator()
+    return raw is ResizeCmdArgs && iter.next() == "-" && iter.next()?.isNumber == true
+}
+
 // todo support conflicting options
 public func parseRawCmdArgs<T: RawCmdArgs>(_ raw: T, _ args: [String]) -> ParsedCmd<T> {
     var args = args
@@ -112,23 +118,28 @@ public func parseRawCmdArgs<T: RawCmdArgs>(_ raw: T, _ args: [String]) -> Parsed
         let arg = args.next()
         if arg == "-h" || arg == "--help" {
             return .help(T.info.help)
-        } else if let optionParser: any ArgParserProtocol<T> = T.parser.options[arg] {
-            if !options.insert(arg).inserted {
-                errors.append("Duplicated option '\(arg)'")
+        } else if arg.starts(with: "-") && !isResizeNegativeUnitsArg(raw, arg: arg) {
+            if let optionParser: any ArgParserProtocol<T> = T.parser.options[arg] {
+                if !options.insert(arg).inserted {
+                    errors.append("Duplicated option \(arg.singleQuoted)")
+                }
+                raw = optionParser.transformRaw(raw, arg, &args, &errors)
+            } else {
+                errors.append("Unknown flag \(arg.singleQuoted)")
+                break
             }
-            raw = optionParser.transformRaw(raw, arg, &args, &errors)
         } else if let parser = T.parser.arguments.getOrNil(atIndex: argumentIndex) {
             raw = parser.transformRaw(raw, arg, &args, &errors)
             argumentIndex += 1
         } else {
-            errors.append("Unknown argument '\(arg)'")
+            errors.append("Unknown argument \(arg.singleQuoted)")
             break
         }
     }
 
     for arg in T.parser.arguments[argumentIndex...] {
         if let placeholder = arg.argPlaceholderIfMandatory {
-            errors.append("Argument '\(placeholder)' is mandatory")
+            errors.append("Argument \(placeholder.singleQuoted) is mandatory")
         }
     }
 

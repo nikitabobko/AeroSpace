@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-aerospace move [-h|--help] (left|down|up|right) [floating_pixel]
+aerospace move [-h|--help] (left|down|up|right) [floating-pixels]
 // end::synopsis[]
 
 == Description
@@ -15,7 +15,7 @@ aerospace move [-h|--help] (left|down|up|right) [floating_pixel]
 // tag::body[]
 {manpurpose}
 
-The optional `floating_pixel` argument specifies how far the window should be moved if it is floating.
+The optional `floating-pixels` argument specifies how far the window should be moved if it is floating.
 The default is 50 pixels
 
 Deprecated name: `move-through`

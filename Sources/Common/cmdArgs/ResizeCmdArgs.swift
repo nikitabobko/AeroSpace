@@ -10,7 +10,7 @@ public struct ResizeCmdArgs: RawCmdArgs, Equatable {
 
             ARGUMENTS:
               (smart|width|height)   Dimension to resize
-              <number>               Number
+              <number>               Number of units
             """,
         options: [:],
         arguments: [
