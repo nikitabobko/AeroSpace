@@ -941,6 +941,40 @@ There is an observation that the only reason why you might want to split a node 
 </li>
 </ul>
 </div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph lead">
+<p><strong>EXAMPLES</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Toggle between <code>floating</code> and <code>tiling</code> layouts (order of args doesn&#8217;t matter):<br>
+<code>aerospace layout floating tiling</code></p>
+</li>
+<li>
+<p>Toggle orientation (order of args doesn&#8217;t matter):<br>
+<code>aerospace layout horizontal vertical</code></p>
+</li>
+<li>
+<p>Toggle between <code>tiles</code> and <code>accordion</code> layouts (order of args doesn&#8217;t matter):<br>
+<code>aerospace layout tiles accordion</code></p>
+</li>
+<li>
+<p>Switch to <code>tiles</code> layout. Toggle the layout orientation if already in <code>tiles</code> layout:<br>
+<code>aerospace layout tiles horizontal vertical</code></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1263,6 +1297,9 @@ move-node-to-workspace [-h|--help] &lt;workspace-name&gt;</pre>
 <div class="paragraph">
 <p>Reload currently active config</p>
 </div>
+<div class="paragraph">
+<p>If the config contains errors they will be printed to stdout, and GUI will open to show the errors.</p>
+</div>
 <div class="paragraph lead">
 <p><strong>OPTIONS</strong></p>
 </div>
@@ -1279,6 +1316,21 @@ move-node-to-workspace [-h|--help] &lt;workspace-name&gt;</pre>
 <dt class="hdlist1">--dry-run</dt>
 <dd>
 <p>Validate the config and show errors (if any) but don&#8217;t reload the config</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph lead">
+<p><strong>EXIT CODE</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">0</dt>
+<dd>
+<p>Success. The config is reloaded successfully.</p>
+</dd>
+<dt class="hdlist1">non-zero exit code</dt>
+<dd>
+<p>Failure. The config contains errors.</p>
 </dd>
 </dl>
 </div>
@@ -1387,6 +1439,10 @@ Consider using <code>join-with</code> if you want to keep <code>enable-normaliza
 <div class="paragraph">
 <p>Trigger AeroSpace binding as if it was pressed by user</p>
 </div>
+<div class="paragraph">
+<p>You can use aerospace-config command to inspect available bindings:<br>
+<code>aerospace config --get mode.main.binding --keys</code></p>
+</div>
 <div class="paragraph lead">
 <p><strong>OPTIONS</strong></p>
 </div>
@@ -1413,6 +1469,21 @@ Consider using <code>join-with</code> if you want to keep <code>enable-normaliza
 </dd>
 </dl>
 </div>
+<div class="paragraph lead">
+<p><strong>EXAMPLES</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Run alphabetically first binding from config (useless and synthetic example)<br>
+<code>aerospace trigger-binding --mode main "$(aerospace config --get mode.main.binding --keys | head -1)"</code></p>
+</li>
+<li>
+<p>Trigger <code>alt-tab</code> binding<br>
+<code>aerospace trigger-binding --mode main alt-tab</code></p>
+</li>
+</ul>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1420,8 +1491,8 @@ Consider using <code>join-with</code> if you want to keep <code>enable-normaliza
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">workspace [-h|--help] [--wrap-around] (next|prev)
-workspace [-h|--help] [--auto-back-and-forth] &lt;workspace-name&gt;</pre>
+<pre class="nowrap">workspace [-h|--help] [--auto-back-and-forth] &lt;workspace-name&gt;
+workspace [-h|--help] [--wrap-around] (next|prev)</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1464,6 +1535,17 @@ workspace [-h|--help] [--auto-back-and-forth] &lt;workspace-name&gt;</pre>
 <p>Make it possible to jump between first and last workspaces using <code>(next|prev)</code></p>
 </dd>
 </dl>
+</div>
+<div class="paragraph lead">
+<p><strong>EXAMPLES</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Go to the next non empty workspace on the focused monitor:<br>
+<code>aerospace list-workspaces --monitor focused --empty no | aerospace workspace next</code></p>
+</li>
+</ul>
 </div>
 </div>
 </div>
@@ -1923,7 +2005,7 @@ If you&#8217;re automating something then you don&#8217;t want to mess up with w
 </dd>
 <dt class="hdlist1">--focused</dt>
 <dd>
-<p>Alias for "--monitor focused --visible".
+<p>Alias for <code>--monitor focused --visible</code>.
 Always prints a single workspace</p>
 </dd>
 <dt class="hdlist1">--monitor &lt;monitors&gt;</dt>
@@ -1969,7 +2051,7 @@ Several workspaces can be visible in multi-monitor setup</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-05-19 15:05:02 +0200
+Last updated 2024-05-20 18:24:01 +0200
 </div>
 </div>
 </body>
