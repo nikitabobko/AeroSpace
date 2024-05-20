@@ -8,7 +8,8 @@ struct TriggerBindingCommand: Command {
         check(Thread.current.isMainThread)
         return if let mode = config.modes[args.mode] {
             if let binding = mode.bindings[args.binding.val] {
-                refreshSession(forceFocus: true) { binding.commands.run(state) }
+                // refreshSession is not needed since commands are already run in refreshSession
+                binding.commands.run(state)
             } else {
                 state.failCmd(msg: "Binding '\(args.binding.val)' is not presented in mode '\(args.mode)'")
             }
