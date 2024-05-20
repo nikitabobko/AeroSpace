@@ -19,9 +19,9 @@ extension CmdArgs {
     public var description: String {
         switch Self.info.kind {
             case .execAndForget:
-                return CmdKind.execAndForget.rawValue + " " + (self as! ExecAndForgetCmdArgs).bashScript
+                CmdKind.execAndForget.rawValue + " " + (self as! ExecAndForgetCmdArgs).bashScript
             default:
-                return Self.info.kind.rawValue + " " + rawArgs.value.joinArgs()
+                ([Self.info.kind.rawValue] + rawArgs.value).joinArgs()
         }
     }
 }
