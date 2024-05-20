@@ -107,9 +107,9 @@ private func prettyValue(_ value: Any?) -> String {
             return "AXUIElement {\n" + dumped + "\n}"
         }
         if let windowId = ax.containingWindowId() {
-            let title = ax.get(Ax.titleAttr)?.quoted ?? "nil"
-            let role = ax.get(Ax.roleAttr)?.quoted ?? "nil"
-            let subrole = ax.get(Ax.subroleAttr)?.quoted ?? "nil"
+            let title = ax.get(Ax.titleAttr)?.doubleQuoted ?? "nil"
+            let role = ax.get(Ax.roleAttr)?.doubleQuoted ?? "nil"
+            let subrole = ax.get(Ax.subroleAttr)?.doubleQuoted ?? "nil"
             return "AXUIElement(windowId=\(windowId), title=\(title), role=\(role), subrole=\(subrole))"
         }
     }

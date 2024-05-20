@@ -70,8 +70,6 @@ extension String {
         pasteboard.declareTypes([.string], owner: nil)
         pasteboard.setString(self, forType: .string)
     }
-
-    var quoted: String { "\"\(self)\"" }
 }
 
 func - (a: CGPoint, b: CGPoint) -> CGPoint {

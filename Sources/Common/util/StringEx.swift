@@ -8,6 +8,7 @@ public extension String {
 
     func quoted(with char: String) -> String { char + self + char }
     var singleQuoted: String { "'" + self + "'" }
+    var doubleQuoted: String { "\"" + self + "\"" }
 }
 
 public extension [[String]] {
