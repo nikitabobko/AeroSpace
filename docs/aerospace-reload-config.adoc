@@ -15,11 +15,19 @@ aerospace reload-config [-h|--help] [--no-gui] [--dry-run]
 // tag::body[]
 {manpurpose}
 
+If the config contains errors they will be printed to stdout, and GUI will open to show the errors.
+
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 --no-gui:: Don't open GUI to show error. Only use stdout to report errors
 --dry-run:: Validate the config and show errors (if any) but don't reload the config
+
+include::util/conditional-exit-code-header.adoc[]
+
+0:: Success. The config is reloaded successfully.
+non-zero exit code:: Failure. The config contains errors.
+
 // end::body[]
 
 include::util/man-footer.adoc[]

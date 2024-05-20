@@ -22,10 +22,24 @@ If several arguments are supplied then finds the first argument that doesn't des
 * Change orientation but preserve layout: `horizontal|vertical`
 * Toggle floating/tiling mode: `tiling|floating`
 
-// end::body[]
-
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+include::util/conditional-examples-header.adoc[]
+
+* Toggle between `floating` and `tiling` layouts (order of args doesn't matter): +
+`aerospace layout floating tiling`
+
+* Toggle orientation (order of args doesn't matter): +
+`aerospace layout horizontal vertical`
+
+* Toggle between `tiles` and `accordion` layouts (order of args doesn't matter): +
+`aerospace layout tiles accordion`
+
+* Switch to `tiles` layout. Toggle the layout orientation if already in `tiles` layout: +
+`aerospace layout tiles horizontal vertical`
+
+// end::body[]
 
 include::util/man-footer.adoc[]

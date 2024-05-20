@@ -9,8 +9,8 @@ include::util/man-attributes.adoc[]
 
 [verse]
 // tag::synopsis[]
-aerospace workspace [-h|--help] [--wrap-around] (next|prev)
 aerospace workspace [-h|--help] [--auto-back-and-forth] <workspace-name>
+aerospace workspace [-h|--help] [--wrap-around] (next|prev)
 
 // end::synopsis[]
 
@@ -37,6 +37,11 @@ Automatic `back-and-forth` when switching to already focused workspace
 
 --wrap-around::
 Make it possible to jump between first and last workspaces using `(next|prev)`
+
+include::util/conditional-examples-header.adoc[]
+
+* Go to the next non empty workspace on the focused monitor: +
+`aerospace list-workspaces --monitor focused --empty no | aerospace workspace next`
 
 // end::body[]
 

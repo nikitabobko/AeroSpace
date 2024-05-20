@@ -15,6 +15,9 @@ aerospace trigger-binding [-h|--help] <binding> --mode <mode-id>
 // tag::body[]
 {manpurpose}
 
+You can use aerospace-config command to inspect available bindings: +
+`aerospace config --get mode.main.binding --keys`
+
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
@@ -23,6 +26,13 @@ include::util/conditional-options-header.adoc[]
 include::util/conditional-arguments-header.adoc[]
 
 <binding>:: Binding to trigger
+
+include::util/conditional-examples-header.adoc[]
+
+* Run alphabetically first binding from config (useless and synthetic example) +
+`aerospace trigger-binding --mode main "$(aerospace config --get mode.main.binding --keys | head -1)"`
+* Trigger `alt-tab` binding +
+`aerospace trigger-binding --mode main alt-tab`
 
 // end::body[]
 

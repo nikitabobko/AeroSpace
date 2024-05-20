@@ -26,7 +26,7 @@ include::util/conditional-options-header.adoc[]
 include::util/all-monitors-option.adoc[]
 
 --focused::
-Alias for "--monitor focused --visible".
+Alias for `--monitor focused --visible`.
 Always prints a single workspace
 
 include::util/monitor-option.adoc[]
