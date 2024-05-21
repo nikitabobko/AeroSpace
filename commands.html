@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.22">
+<meta name="generator" content="Asciidoctor 2.0.23">
 <link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Commands</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -449,6 +449,7 @@ pre.pygments .tok-c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
 pre.pygments .tok-cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
 pre.pygments .tok-gd { color: #A00000 } /* Generic.Deleted */
 pre.pygments .tok-ge { font-style: italic } /* Generic.Emph */
+pre.pygments .tok-ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
 pre.pygments .tok-gr { color: #E40000 } /* Generic.Error */
 pre.pygments .tok-gh { color: #000080; font-weight: bold } /* Generic.Heading */
 pre.pygments .tok-gi { color: #008400 } /* Generic.Inserted */
@@ -682,7 +683,7 @@ Stdout, stderr and exit code are ignored.</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">alt-enter</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;exec-and-forget open -n /System/Applications/Utilities/Terminal.app&#39;</span></code></pre>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">alt-enter</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;exec-and-forget open -n /System/Applications/Utilities/Terminal.app&#39;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1591,6 +1592,13 @@ config [-h|--help] --config-path</pre>
 <div class="paragraph">
 <p>For now, only <code>mode.*</code> config options are supported</p>
 </div>
+<div class="paragraph">
+<p>Under the hood, the config is represented as recursive data structure of maps, arrays, strings, and integers.</p>
+</div>
+<div class="paragraph">
+<p>Printing without <code>--json</code> or <code>--keys</code> flag is supported only for scalar types (strings and integers) and array of scalar types.
+Printing other complicated objects requires <code>--json</code> or <code>--keys</code> flag.</p>
+</div>
 <div class="paragraph lead">
 <p><strong>OPTIONS</strong></p>
 </div>
@@ -1602,7 +1610,7 @@ config [-h|--help] --config-path</pre>
 </dd>
 <dt class="hdlist1">--get &lt;name&gt;</dt>
 <dd>
-<p>Get the value for a given key. You can inspect available keys with --major-keys or --all-keys</p>
+<p>Get the value for a given key. You can inspect available keys with <code>--major-keys</code> or <code>--all-keys</code></p>
 </dd>
 <dt class="hdlist1">--major-keys</dt>
 <dd>
@@ -1632,12 +1640,44 @@ config [-h|--help] --config-path</pre>
 <div class="ulist">
 <ul>
 <li>
-<p>List all key bindings for 'main' binding mode:<br>
-<code>aerospace config --get mode.main.binding --keys</code></p>
+<p>List all binding modes:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ aerospace config --get mode --keys
+main
+service</pre>
+</div>
+</div>
 </li>
 <li>
-<p>List all binding modes:<br>
-<code>aerospace config --get mode --keys</code></p>
+<p>List all key bindings for 'main' binding mode:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ aerospace config --get mode.main.binding --keys
+alt-1
+alt-2
+...</pre>
+</div>
+</div>
+</li>
+<li>
+<p>List all key bindings for 'main' binding mode in JSON format:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">$ aerospace config --get mode.main.binding --json
+{
+  "alt-shift-5" : [
+    "move-node-to-workspace 5"
+  ],
+  "alt-r" : [
+    "workspace R"
+  ],
+  "alt-shift-6" : [
+    "move-node-to-workspace 6"
+  ],
+...</pre>
+</div>
+</div>
 </li>
 </ul>
 </div>
@@ -2047,7 +2087,7 @@ Several workspaces can be visible in multi-monitor setup</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-05-20 22:57:04 +0200
+Last updated 2024-05-21 10:14:03 +0200
 </div>
 </div>
 </body>

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="generator" content="Asciidoctor 2.0.22">
+<meta name="generator" content="Asciidoctor 2.0.23">
 <link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Guide</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -449,6 +449,7 @@ pre.pygments .tok-c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
 pre.pygments .tok-cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
 pre.pygments .tok-gd { color: #A00000 } /* Generic.Deleted */
 pre.pygments .tok-ge { font-style: italic } /* Generic.Emph */
+pre.pygments .tok-ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
 pre.pygments .tok-gr { color: #E40000 } /* Generic.Error */
 pre.pygments .tok-gh { color: #000080; font-weight: bold } /* Generic.Heading */
 pre.pygments .tok-gi { color: #008400 } /* Generic.Inserted */
@@ -733,12 +734,12 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-p">[</span><span class="tok-n">mode</span><span class="tok-p">.</span><span class="tok-n">main</span><span class="tok-p">.</span><span class="tok-n">binding</span><span class="tok-p">]</span><span class="tok-w">        </span><span class="tok-c1"># Declare &#39;main&#39; binding mode</span>
-<span class="tok-n">alt-r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;mode resize&#39;</span><span class="tok-w">      </span><span class="tok-c1"># 1. Define a binding to switch to &#39;resize&#39; mode</span>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[mode.main.binding]</span><span class="tok-w">        </span><span class="tok-c1"># Declare &#39;main&#39; binding mode</span>
+<span class="tok-n">alt-r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode resize&#39;</span><span class="tok-w">      </span><span class="tok-c1"># 1. Define a binding to switch to &#39;resize&#39; mode</span>
 
-<span class="tok-p">[</span><span class="tok-n">mode</span><span class="tok-p">.</span><span class="tok-n">resize</span><span class="tok-p">.</span><span class="tok-n">binding</span><span class="tok-p">]</span><span class="tok-w">      </span><span class="tok-c1"># 2. Declare &#39;resize&#39; binding mode</span>
-<span class="tok-n">minus</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;resize smart -50&#39;</span>
-<span class="tok-n">equal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;resize smart +50&#39;</span></code></pre>
+<span class="tok-k">[mode.resize.binding]</span><span class="tok-w">      </span><span class="tok-c1"># 2. Declare &#39;resize&#39; binding mode</span>
+<span class="tok-n">minus</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize smart -50&#39;</span>
+<span class="tok-n">equal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize smart +50&#39;</span></code></pre>
 </div>
 </div>
 </div>
@@ -758,9 +759,9 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[mode.main.binding]</span>
 <span class="tok-c1"># Bind alt-1 key to switch to workspace 1</span>
-<span class="tok-n">alt-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace 1&#39;</span>
+<span class="tok-n">alt-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 1&#39;</span>
 <span class="tok-c1"># Or bind a sequence of commands</span>
-<span class="tok-n">alt-shift-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;move-node-to-workspace 1&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace 1&#39;</span><span class="tok-p">]</span></code></pre>
+<span class="tok-n">alt-shift-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-node-to-workspace 1&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 1&#39;</span><span class="tok-p">]</span></code></pre>
 </div>
 </div>
 </li>
@@ -790,10 +791,10 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Define my fancy unicorn key notation</span>
 <span class="tok-k">[key-mapping.key-notation-to-key-code]</span>
-<span class="tok-n">unicorn</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;u&#39;</span>
+<span class="tok-n">unicorn</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;u&#39;</span>
 
 <span class="tok-k">[mode.main.binding]</span>
-<span class="tok-n">alt-unicorn</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;workspace unicorn&#39;</span><span class="tok-w"> </span><span class="tok-c1"># (⁀ᗢ⁀)</span></code></pre>
+<span class="tok-n">alt-unicorn</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace unicorn&#39;</span><span class="tok-w"> </span><span class="tok-c1"># (⁀ᗢ⁀)</span></code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -802,7 +803,7 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <p>For <code>dvorak</code> users, AeroSpace offers a preconfigured preset.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">key-mapping</span><span class="tok-p">.</span><span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;dvorak&#39;</span></code></pre>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">key-mapping</span><span class="tok-p">.</span><span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;dvorak&#39;</span></code></pre>
 </div>
 </div>
 </li>
@@ -828,7 +829,7 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[exec.env-vars]</span>
-<span class="tok-n">PATH</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;${HOME}/bin:${PATH}&#39;</span></code></pre>
+<span class="tok-n">PATH</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;${HOME}/bin:${PATH}&#39;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1218,12 +1219,12 @@ It works equally good whether this option is enabled or disabled.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;com.apple.systempreferences&#39;</span><span class="tok-w">              </span><span class="tok-c1"># Application ID exact match</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-name-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;settings&#39;</span><span class="tok-w">               </span><span class="tok-c1"># Case insensetive regex substring</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">window-title-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;substring&#39;</span><span class="tok-w">          </span><span class="tok-c1"># Case insensetive regex substring</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">during-aerospace-startup</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">true</span><span class="tok-w">                     </span><span class="tok-c1"># Run the callback only if the window detected during AeroSpace startup</span>
-<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-n">true</span><span class="tok-w">                         </span><span class="tok-c1"># Check further callbacks. If not specified, the default value is false</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;layout floating&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace S&#39;</span><span class="tok-p">]</span><span class="tok-w">  </span><span class="tok-c1"># The callback itself</span></code></pre>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;com.apple.systempreferences&#39;</span><span class="tok-w">              </span><span class="tok-c1"># Application ID exact match</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-name-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;settings&#39;</span><span class="tok-w">               </span><span class="tok-c1"># Case insensetive regex substring</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">window-title-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;substring&#39;</span><span class="tok-w">          </span><span class="tok-c1"># Case insensetive regex substring</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">during-aerospace-startup</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span><span class="tok-w">                     </span><span class="tok-c1"># Run the callback only if the window detected during AeroSpace startup</span>
+<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span><span class="tok-w">                         </span><span class="tok-c1"># Check further callbacks. If not specified, the default value is false</span>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;layout floating&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace S&#39;</span><span class="tok-p">]</span><span class="tok-w">  </span><span class="tok-c1"># The callback itself</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1335,16 +1336,16 @@ Some windows initialize their title after the window appears.
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;org.alacritty&#39;</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace T&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics T - Terminal</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;org.alacritty&#39;</span>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace T&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics T - Terminal</span>
 
 <span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;com.google.Chrome&#39;</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace W&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics W - Web browser</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;com.google.Chrome&#39;</span>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace W&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics W - Web browser</span>
 
 <span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;com.jetbrains.intellij&#39;</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;move-node-to-workspace I&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics I - IDE</span></code></pre>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;com.jetbrains.intellij&#39;</span>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace I&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics I - IDE</span></code></pre>
 </div>
 </div>
 </li>
@@ -1354,7 +1355,7 @@ Some windows initialize their title after the window appears.
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
 <span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;layout floating&#39;</span></code></pre>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout floating&#39;</span></code></pre>
 </div>
 </div>
 </li>
@@ -1370,8 +1371,8 @@ It may be useful for integrating with bars.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Notify Sketchybar about workspace change</span>
-<span class="tok-n">exec-on-workspace-change</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;/bin/bash&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;-c&#39;</span><span class="tok-p">,</span>
-<span class="tok-w">    </span><span class="tok-s">&#39;/opt/homebrew/opt/sketchybar/bin/sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE&#39;</span>
+<span class="tok-n">exec-on-workspace-change</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;/bin/bash&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;-c&#39;</span><span class="tok-p">,</span>
+<span class="tok-w">    </span><span class="tok-s1">&#39;/opt/homebrew/opt/sketchybar/bin/sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE&#39;</span>
 <span class="tok-p">]</span></code></pre>
 </div>
 </div>
@@ -1473,12 +1474,12 @@ workspaces to always appear on particular monitors</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[workspace-to-monitor-force-assignment]</span>
-<span class="tok-mi">1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-w">                            </span><span class="tok-c1"># Monitor sequence number from left to right. 1-based indexing</span>
-<span class="tok-mi">2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;main&#39;</span><span class="tok-w">                       </span><span class="tok-c1"># Main monitor</span>
-<span class="tok-mi">3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;secondary&#39;</span><span class="tok-w">                  </span><span class="tok-c1"># Non-main monitor in case when there are only two monitors</span>
-<span class="tok-mi">4</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;built-in&#39;</span><span class="tok-w">                   </span><span class="tok-c1"># Case insensitive regex substring</span>
-<span class="tok-mi">5</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;^built-in retina display$&#39;</span><span class="tok-w">  </span><span class="tok-c1"># Case insensitive regex match</span>
-<span class="tok-mi">6</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s">&#39;secondary&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s">&#39;dell&#39;</span><span class="tok-p">]</span><span class="tok-w">        </span><span class="tok-c1"># You can specify multiple patterns. The first matching pattern will be used</span></code></pre>
+<span class="tok-n">1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-w">                            </span><span class="tok-c1"># Monitor sequence number from left to right. 1-based indexing</span>
+<span class="tok-n">2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;main&#39;</span><span class="tok-w">                       </span><span class="tok-c1"># Main monitor</span>
+<span class="tok-n">3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;secondary&#39;</span><span class="tok-w">                  </span><span class="tok-c1"># Non-main monitor in case when there are only two monitors</span>
+<span class="tok-n">4</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;built-in&#39;</span><span class="tok-w">                   </span><span class="tok-c1"># Case insensitive regex substring</span>
+<span class="tok-n">5</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;^built-in retina display$&#39;</span><span class="tok-w">  </span><span class="tok-c1"># Case insensitive regex match</span>
+<span class="tok-n">6</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;secondary&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;dell&#39;</span><span class="tok-p">]</span><span class="tok-w">        </span><span class="tok-c1"># You can specify multiple patterns. The first matching pattern will be used</span></code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -1563,7 +1564,7 @@ If you find that some windows are not handled properly please <a href="https://g
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
 <span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;layout tiling&#39;</span></code></pre>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout tiling&#39;</span></code></pre>
 </div>
 </div>
 </li>
@@ -1573,7 +1574,7 @@ If you find that some windows are not handled properly please <a href="https://g
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
 <span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s">&#39;layout floating&#39;</span></code></pre>
+<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout floating&#39;</span></code></pre>
 </div>
 </div>
 </li>
@@ -1585,7 +1586,7 @@ If you find that some windows are not handled properly please <a href="https://g
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-05-20 22:57:04 +0200
+Last updated 2024-05-21 10:14:03 +0200
 </div>
 </div>
 </body>
