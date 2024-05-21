@@ -33,6 +33,12 @@ after-startup-command = [
 ]
 ----
 
+
+[#alfred-workflow]
+== AeroSpace Alfred workflow
+
+There is a third party Alfred workflow for AeroSpace. https://github.com/gogamid/alfred-aerospace
+
 [#raycast-extension]
 == AeroSpace Raycast extension
 
