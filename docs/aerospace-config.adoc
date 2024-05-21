@@ -22,10 +22,15 @@ aerospace config [-h|--help] --config-path
 
 For now, only `mode.*` config options are supported
 
+Under the hood, the config is represented as recursive data structure of maps, arrays, strings, and integers.
+
+Printing without `--json` or `--keys` flag is supported only for scalar types (strings and integers) and array of scalar types.
+Printing other complicated objects requires `--json` or `--keys` flag.
+
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
---get <name>:: Get the value for a given key. You can inspect available keys with --major-keys or --all-keys
+--get <name>:: Get the value for a given key. You can inspect available keys with `--major-keys` or `--all-keys`
 --major-keys:: Print major keys
 --all-keys:: Print all available keys recursively
 --json:: Print result in JSON format
@@ -34,10 +39,37 @@ include::util/conditional-options-header.adoc[]
 
 include::util/conditional-examples-header.adoc[]
 
-* List all key bindings for 'main' binding mode: +
-`aerospace config --get mode.main.binding --keys`
-* List all binding modes: +
-`aerospace config --get mode --keys`
+* List all binding modes:
++
+----
+$ aerospace config --get mode --keys
+main
+service
+----
+* List all key bindings for 'main' binding mode:
++
+----
+$ aerospace config --get mode.main.binding --keys
+alt-1
+alt-2
+...
+----
+* List all key bindings for 'main' binding mode in JSON format:
++
+----
+$ aerospace config --get mode.main.binding --json
+{
+  "alt-shift-5" : [
+    "move-node-to-workspace 5"
+  ],
+  "alt-r" : [
+    "workspace R"
+  ],
+  "alt-shift-6" : [
+    "move-node-to-workspace 6"
+  ],
+...
+----
 
 // end::body[]
 
