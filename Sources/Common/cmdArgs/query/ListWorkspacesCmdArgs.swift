@@ -1,7 +1,9 @@
+import OrderedCollections
+
 let onitor = "<monitor>"
 let _monitors = "\(onitor)..."
 
-private struct RawListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
+public struct ListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listWorkspaces,
@@ -23,63 +25,45 @@ private struct RawListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
             "--focused": trueBoolFlag(\.focused),
             "--all": trueBoolFlag(\.all),
 
-            "--visible": boolFlag(\.real.visible),
-            "--empty": boolFlag(\.real.empty),
-            "--monitor": ArgParser(\.real.onMonitors, parseMonitorIds)
+            "--visible": boolFlag(\.visible),
+            "--empty": boolFlag(\.empty),
+            "--monitor": ArgParser(\.onMonitors, parseMonitorIds)
         ],
         arguments: []
     )
 
-    // SHORTCUTS
-    var all: Bool = false
-    var focused: Bool = false
-
-    // REAL OPTIONS
-    var real: ListWorkspacesCmdArgs
-    init(rawArgs: [String]) {
-        self.rawArgs = .init(rawArgs)
-        self.real = .init(rawArgs: .init(rawArgs))
-    }
-}
-
-public struct ListWorkspacesCmdArgs: CmdArgs, Equatable {
-    public let rawArgs: EquatableNoop<[String]>
-    public static var info: CmdStaticInfo = RawListWorkspacesCmdArgs.info
+    fileprivate var all: Bool = false // Alias
+    fileprivate var focused: Bool = false // Alias
 
     public var onMonitors: [MonitorId] = []
     public var visible: Bool?
     public var empty: Bool?
 }
 
-private extension RawListWorkspacesCmdArgs {
-    var uniqueOptions: [String] {
-        var result: [String] = []
-        if focused { result.append("--focused") }
-        if all { result.append("--all") }
-        if !real.onMonitors.isEmpty { result.append("--monitor") }
-        return result
-    }
-}
-
 public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {
-    parseRawCmdArgs(RawListWorkspacesCmdArgs(rawArgs: args), args)
-        .filter("Specified flags require explicit --monitor") { $0.real == .init(rawArgs: .init(args)) || !$0.real.onMonitors.isEmpty }
+    parseRawCmdArgs(ListWorkspacesCmdArgs(rawArgs: .init(args)), args)
         .flatMap { raw in
-            let uniqueOptions = raw.uniqueOptions
-            return switch uniqueOptions.count {
+            var conflicting: OrderedSet<String> = []
+            if raw.all { conflicting.append("--all") }
+            if raw.focused { conflicting.append("--focused") }
+            if !raw.onMonitors.isEmpty { conflicting.append("--monitor") }
+            return switch conflicting.count {
                 case 1: .cmd(raw)
-                case 0: .failure("'list-workspaces' mandatory option is not specified (--all|--focused|--monitor)")
-                default: .failure("Conflicting options: \(uniqueOptions.joined(separator: ", "))")
+                case 0: .failure("Mandatory option is not specified (--all|--focused|--monitor)")
+                default: .failure("Conflicting options: \(conflicting.joined(separator: ", "))")
             }
         }
-        .flatMap { raw in
-            if raw.focused {
-                return .cmd(ListWorkspacesCmdArgs(rawArgs: .init(args), onMonitors: [.focused], visible: true))
-            }
-            if raw.all {
-                return .cmd(ListWorkspacesCmdArgs(rawArgs: .init(args), onMonitors: [.all]))
-            }
-            return .cmd(raw.real)
+        .filter("--all conflicts with all other options") { raw in
+            !raw.all || raw == ListWorkspacesCmdArgs(rawArgs: .init(args), all: true)
+        }
+        .map { raw in
+            raw.all ? ListWorkspacesCmdArgs(rawArgs: .init(args), onMonitors: [.all]) : raw
+        }
+        .filter("--focused conflicts with all other options") { raw in
+            !raw.focused || raw == ListWorkspacesCmdArgs(rawArgs: .init(args), focused: true)
+        }
+        .map { raw in
+            raw.focused ? ListWorkspacesCmdArgs(rawArgs: .init(args), onMonitors: [.focused], visible: true) : raw
         }
 }
 
