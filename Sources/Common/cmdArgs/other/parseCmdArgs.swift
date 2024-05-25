@@ -45,7 +45,7 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
             case .listMonitors:
                 result[kind.rawValue] = defaultSubCommandParser(ListMonitorsCmdArgs.init)
             case .listWindows:
-                result[kind.rawValue] = SubCommandParser(parseListWindowsCmdArgs)
+                result[kind.rawValue] = SubCommandParser(parseRawListWindowsCmdArgs)
             case .listWorkspaces:
                 result[kind.rawValue] = SubCommandParser(parseListWorkspacesCmdArgs)
             case .macosNativeFullscreen:

@@ -1,7 +1,9 @@
+import OrderedCollections
+
 private let orkspace = "<workspace>"
 private let _workspaces = "\(orkspace)..."
 
-private struct RawListWindowsCmdArgs: RawCmdArgs, Equatable {
+public struct ListWindowsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
     public let rawArgs: EquatableNoop<[String]>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listWindows,
@@ -26,79 +28,46 @@ private struct RawListWindowsCmdArgs: RawCmdArgs, Equatable {
             "--focused": trueBoolFlag(\.focused),
             "--all": trueBoolFlag(\.all),
 
-            "--monitor": ArgParser(\.manual.monitors, parseMonitorIds),
-            "--workspace": ArgParser(\.manual.workspaces, parseWorkspaces),
-            "--pid": singleValueOption(\.manual.pidFilter, "<pid>", Int32.init),
-            "--app-id": singleValueOption(\.manual.appIdFilter, "<app-id>", { $0 })
+            "--monitor": ArgParser(\.monitors, parseMonitorIds),
+            "--workspace": ArgParser(\.workspaces, parseWorkspaces),
+            "--pid": singleValueOption(\.pidFilter, "<pid>", Int32.init),
+            "--app-id": singleValueOption(\.appIdFilter, "<app-id>", { $0 })
         ],
         arguments: []
     )
 
-    // ALIAS
-    public var all: Bool = false
-
+    fileprivate var all: Bool = false // ALIAS
     public var focused: Bool = false
-    public var manual = ListWindowsCmdArgs.ManualFilter()
+
+    public var monitors: [MonitorId] = []
+    public var workspaces: [WorkspaceFilter] = []
+    public var pidFilter: Int32?
+    public var appIdFilter: String?
 }
 
-private extension RawListWindowsCmdArgs {
-    var uniqueOptions: [String] {
-        var result: [String] = []
-        if focused { result.append("--focused") }
-        if all { result.append("--all") }
-        if !manual.monitors.isEmpty || !manual.workspaces.isEmpty {
-            if !manual.monitors.isEmpty {
-                result.append("--monitor")
-            } else {
-                result.append("--workspace")
-            }
-        }
-        return result
-    }
-}
-
-public enum ListWindowsCmdArgs: CmdArgs {
-    public static var info: CmdStaticInfo = RawListWindowsCmdArgs.info
-
-    case focused(rawArgs: [String])
-    case manual(rawArgs: [String], ManualFilter)
-
-    public var rawArgs: EquatableNoop<[String]> {
-        switch self {
-            case .focused(let rawArgs): .init(rawArgs)
-            case .manual(let rawArgs, _): .init(rawArgs)
-        }
-    }
-
-    public struct ManualFilter: Equatable {
-        public var monitors: [MonitorId] = []
-        public var workspaces: [WorkspaceFilter] = []
-        public var pidFilter: Int32?
-        public var appIdFilter: String?
-    }
-}
-
-public func parseListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCmdArgs> {
-    parseRawCmdArgs(RawListWindowsCmdArgs(rawArgs: .init(args)), args)
-        .filter("Specified flags require explicit (--workspace|--monitor)") {
-            $0.manual == .init() || !$0.manual.workspaces.isEmpty || !$0.manual.monitors.isEmpty
-        }
+public func parseRawListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCmdArgs> {
+    parseRawCmdArgs(ListWindowsCmdArgs(rawArgs: .init(args)), args)
         .flatMap { raw in
-            let uniqueOptions = raw.uniqueOptions
-            return switch uniqueOptions.count {
-                case 1:  .cmd(raw)
-                case 0:  .failure("'list-windows' mandatory option is not specified (--focused|--all|--monitor|--workspace)")
-                default: .failure("Conflicting options: \(uniqueOptions.joined(separator: ", "))")
+            var conflicting: OrderedSet<String> = []
+            if (raw.all) { conflicting.insert("--all", at: 0) }
+            if (raw.focused) { conflicting.insert("--focused", at: 0) }
+            if (!raw.workspaces.isEmpty) { conflicting.insert("--workspace", at: 0) }
+            else if (!raw.monitors.isEmpty) { conflicting.insert("--monitor", at: 0) }
+            return switch conflicting.count {
+                case 1: .cmd(raw)
+                case 0: .failure("Mandatory option is not specified (--focused|--all|--monitor|--workspace)")
+                default: .failure("Conflicting options: \(conflicting.joined(separator: ", "))")
             }
         }
-        .flatMap { raw in
-            if raw.all {
-                return .cmd(.manual(rawArgs: args, ListWindowsCmdArgs.ManualFilter(monitors: [.all])))
-            } else if raw.focused {
-                return .cmd(.focused(rawArgs: args))
-            } else {
-                return .cmd(.manual(rawArgs: args, raw.manual))
-            }
+        .filter("--all conflicts with all other flags") { raw in
+            !raw.all || raw == ListWindowsCmdArgs(rawArgs: .init([]), all: true)
+        }
+        .filter("--focused conflicts with all other flags") { raw in
+            !raw.focused || raw == ListWindowsCmdArgs(rawArgs: .init(args), focused: true)
+        }
+        .map { raw in
+            // Normalize alias
+            raw.all ? ListWindowsCmdArgs(rawArgs: .init(args), monitors: [.all]) : raw
         }
 }
 
