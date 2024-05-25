@@ -9,4 +9,10 @@ extension Monitor {
             height: visibleRect.height - gaps.outer.top.toDouble() - gaps.outer.bottom.toDouble()
         )
     }
+
+    var monitorId: Int? {
+        let sorted = sortedMonitors
+        let origin = self.rect.topLeftCorner
+        return sorted.firstIndex { $0.rect.topLeftCorner == origin }
+    }
 }

@@ -3,6 +3,8 @@ include::util/site-attributes.adoc[]
 
 include::util/header.adoc[]
 
+Commands documentation is also available in the form of manpages.
+
 == close
 ----
 include::aerospace-close.adoc[tags=synopsis]

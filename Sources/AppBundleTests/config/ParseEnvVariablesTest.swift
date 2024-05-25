@@ -47,19 +47,19 @@ final class ParseEnvVariablesTest: XCTestCase {
             """
         )
         expect(errors.descriptions) == [
-            "exec.env-vars.BAR: Env variable 'FOO' isn't presented in AeroSpace.app Env vars, or not available for interpolation (because it's mutated)",
-            "exec.env-vars.FOO: Env variable 'BAR' isn't presented in AeroSpace.app Env vars, or not available for interpolation (because it's mutated)"
+            "exec.env-vars.BAR: Env variable 'FOO' isn't presented in AeroSpace.app env vars, or not available for interpolation (because it's mutated)",
+            "exec.env-vars.FOO: Env variable 'BAR' isn't presented in AeroSpace.app env vars, or not available for interpolation (because it's mutated)"
         ]
     }
 }
 
 private func testSucInterpolation(_ str: String, _ vars: [String: String] = [:], expected: String) {
-    let (result, errors) = str.interpolate(with: vars)
+    let (result, errors) = str.interpolate(with: vars).getOrNils()
     XCTAssertEqual(result, expected)
-    XCTAssertEqual(errors, [])
+    XCTAssertEqual(errors ?? [], [])
 }
 
 private func testFailInterpolation(_ str: String, _ vars: [String: String] = [:]) {
-    let (_, errors) = str.interpolate(with: vars)
-    XCTAssertNotEqual(errors, [])
+    let (_, errors) = str.interpolate(with: vars).getOrNils()
+    XCTAssertNotEqual(errors ?? [], [])
 }
