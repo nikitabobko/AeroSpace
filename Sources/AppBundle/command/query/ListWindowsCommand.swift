@@ -37,40 +37,51 @@ struct ListWindowsCommand: Command {
             }
         }
         windows = windows.sorted(using: [SelectorComparator { $0.app.name ?? "" }, SelectorComparator(selector: \.title)])
-        var table: [[String]] = []
-        var padLastColumn = false // hack. right-padding should be properly expanded
+
+        var cellTable: [[Cell<String>]] = []
         for window in windows {
+            var line: [Cell<String>] = []
+            var curCell: String = ""
             var errors: [String] = []
-            var line: [String] = []
-            var current: String = ""
-            for (index, token) in args.format.enumerated() {
+            for token in args.format {
                 switch token {
                     case .value("right-padding"):
-                        line.append(current)
-                        current = ""
-                        if index == args.format.count - 1 {
-                            padLastColumn = true
-                        }
-                    case .literal(let literal): current.append(literal)
+                        line.append(Cell(value: curCell, rightPadding: true))
+                        curCell = ""
+                    case .literal(let literal):
+                        curCell += literal
                     case .value(let value):
                         switch value.expandTreeNodeVar(window: window) {
-                            case .success(let prop): current.append(prop)
-                            case .failure(let msg): errors.append(msg)
+                            case .success(let expanded):
+                                curCell += expanded
+                            case .failure(let error):
+                                errors.append(error)
                         }
                 }
             }
-            if !current.isEmpty {
-                line.append(current)
-            }
-            if errors.isEmpty {
-                table.append(line)
-            } else {
-                return state.failCmd(msg: errors.joinErrors())
-            }
+            if !curCell.isEmpty { line.append(Cell(value: curCell, rightPadding: false)) }
+            if !errors.isEmpty { return state.failCmd(msg: errors.joinErrors()) }
+            cellTable.append(line)
         }
-        state.stdout += table.toPaddingTable(columnSeparator: "", padLastColumn: padLastColumn)
+        state.stdout += cellTable
+            .transposed()
+            .map { column in
+                let columndWidth = column.map { $0.value.count }.max()!
+                return column.map {
+                    $0.rightPadding
+                        ? $0.value + String(repeating: " ", count: columndWidth - $0.value.count)
+                        : $0.value
+                }
+            }
+            .transposed()
+            .map { line in line.joined(separator: "") }
         return true
     }
+}
+
+private struct Cell<T> {
+    let value: T
+    let rightPadding: Bool
 }
 
 private extension String {
