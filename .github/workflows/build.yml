@@ -22,8 +22,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+      - uses: actions/cache@v3
+        with:
+          path: .bin
+          key: ${{ runner.os }}-${{ runner.arch }}
       - name: Install deps
-        run: brew install xcodegen gsed asciidoctor swiftlint
+        run: brew install xcodegen gsed asciidoctor xcbeautify swiftlint bash fish wget
       - name: Build Debug
         # "-" means "Sign to run locally". There is no aerospace-codesign-certificate in GH Actions
         run: ./build-debug.sh --codesign-identity -

@@ -5,7 +5,7 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 # set -x # Print shell commands as they are executed (or you can try -v which is less verbose)
 
 setup() {
-    BREW_PREFIX="$(brew --prefix)"
+    export BREW_PREFIX="$(brew --prefix)"
     tmp=(
         ${BREW_PREFIX}/opt/asciidoctor/bin
         ${BREW_PREFIX}/opt/gsed/libexec/gnubin
@@ -13,8 +13,11 @@ setup() {
         ${BREW_PREFIX}/opt/xcodegen/bin
         ${BREW_PREFIX}/opt/xcbeautify/bin
         ${BREW_PREFIX}/opt/swiftlint/bin
+        ${BREW_PREFIX}/opt/fishfish/bin
+        ${BREW_PREFIX}/opt/bash/bin
+        ${BREW_PREFIX}/opt/wget/bin
         /bin # bash
-        /usr/bin # xcodebuild, zip
+        /usr/bin # xcodebuild, zip, arch
     )
 
     IFS=':'
@@ -28,6 +31,11 @@ if [ -z "${SETUP_SH:-}" ]; then
 fi
 
 brew() { "${BREW_PREFIX}/bin/brew" "$@"; }
+
+if ! [ -f "${BREW_PREFIX}/opt/bash/bin/bash" ]; then
+    echo "Please install bash from homebrew" > /dev/stderr
+    exit 1
+fi
 
 xcodebuild() {
     # Mute stderr

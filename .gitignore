@@ -1,7 +1,9 @@
 /.idea
 /.debug
 /.release
+/.shell-completion
 /.site
+/.bin
 /.man
 # IDK, AppCode randomly creates this EMPTY file. I have no idea what this is
 /default.profraw

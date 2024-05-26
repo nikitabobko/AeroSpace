@@ -37,6 +37,8 @@ Install via [Homebrew](https://brew.sh/) to get autoupdates (Preferred)
 brew install --cask nikitabobko/tap/aerospace
 ```
 
+[Manual installation](https://nikitabobko.github.io/AeroSpace/guide#manual-installation)
+
 > [!NOTE]
 > By using AeroSpace, you acknowledge that it's not [notarized](https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution).
 >
@@ -55,8 +57,6 @@ brew install --cask nikitabobko/tap/aerospace
 > [Homebrew installation script](https://github.com/nikitabobko/homebrew-tap/blob/main/Casks/aerospace.rb) is configured to
 > automatically delete `com.apple.quarantine` attribute, that's why the app should work out of the box, without any warnings that
 > "Apple cannot check AeroSpace for malicious software"
-
-[Manual installation](https://nikitabobko.github.io/AeroSpace/guide#manual-installation)
 
 ## Contributing, creating issues, submitting pull requests
 

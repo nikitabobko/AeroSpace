@@ -16,11 +16,15 @@ The dependencies that are required to build AeroSpace:
 - [XcodeGen](https://github.com/yonaskolb/XcodeGen)
 - [xcbeautify](https://github.com/cpisciotta/xcbeautify)
 - [GNU sed](https://www.gnu.org/software/sed/)
+- [wget](https://www.gnu.org/software/wget/)
 - [Asciidoctor](https://asciidoctor.org/)
 - [SwiftLint](https://github.com/realm/SwiftLint)
+- Shell completion
+  - [bash](https://www.gnu.org/software/bash/)
+  - [fish](https://fishshell.com/)
 
-```bash
-brew install xcodegen gsed asciidoctor xcbeautify swiftlint
+```shell
+brew install xcodegen gsed asciidoctor xcbeautify swiftlint bash fish wget
 ```
 
 ## 2. Create codesign certificate
@@ -42,6 +46,7 @@ Signing the binary is required to preserve accessibility permission across rebui
 - `run-debug.sh` - Run debug build of AeroSpace.app. It might be better to run debug build from Xcode.
 - `run-cli.sh` - Run `aerospace` in CLI. Arguments are forwarded to `aerospace` binary
 - `build-docs.sh` - Build the site and manpages to `.site` and `.man` dirs respectively
+- `build-shell-completion.sh` - Build shell completion to `.shell-completion`
 - `generate.sh` - Regenerate generated project files. `AeroSpace.xcodeproj` is generated, and some of the source files
   (the source files have `Generated` suffix in their names)
 
