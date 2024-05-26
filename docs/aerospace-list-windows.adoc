@@ -32,9 +32,9 @@ Print the focused window.
 Please note that it is possible for no window to be in focus.
 In that case, error is reported.
 
---workspace <workspaces>::
+--workspace <workspace>...::
 Filter results to only print windows that belong to specified workspaces.
-`<workspaces>` is a comma-separated list of workspace names.
+`<workspace>...` is a space-separated list of workspace names.
 +
 Possible values: +
 +
