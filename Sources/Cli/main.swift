@@ -43,8 +43,7 @@ if !isVersion {
             print(help)
             exit(0)
         case .failure(let e):
-            print(e)
-            exit(1)
+            prettyError(e)
     }
 }
 
