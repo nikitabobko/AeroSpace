@@ -84,7 +84,7 @@ private func parseWindowDetectedCallback(_ raw: TOMLValueConvertible, _ backtrac
         return layoutArg == .floating || layoutArg == .tiling || $0 is MoveNodeToWorkspaceCommand
     }) {
         myErrors.append(.semantic(backtrace,
-            "For now, 'layout floating', 'layout tiling' and 'mode-node-to-workspace' are the only commands that are supported in 'on-window-detected'. " +
+            "For now, 'layout floating', 'layout tiling' and 'move-node-to-workspace' are the only commands that are supported in 'on-window-detected'. " +
                 "Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20"))
     }
 
