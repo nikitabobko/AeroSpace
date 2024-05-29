@@ -27,7 +27,7 @@ jobs:
           path: .bin
           key: ${{ runner.os }}-${{ runner.arch }}
       - name: Install deps
-        run: brew install xcodegen gsed asciidoctor xcbeautify swiftlint bash fish wget
+        run: brew bundle install
       - name: Build Debug
         # "-" means "Sign to run locally". There is no aerospace-codesign-certificate in GH Actions
         run: ./build-debug.sh --codesign-identity -

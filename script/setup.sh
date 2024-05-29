@@ -9,14 +9,13 @@ setup() {
     tmp=(
         ${BREW_PREFIX}/opt/asciidoctor/bin
         ${BREW_PREFIX}/opt/gsed/libexec/gnubin
-        ${BREW_PREFIX}/opt/tree/bin
         ${BREW_PREFIX}/opt/xcodegen/bin
         ${BREW_PREFIX}/opt/xcbeautify/bin
         ${BREW_PREFIX}/opt/swiftlint/bin
         ${BREW_PREFIX}/opt/fishfish/bin
         ${BREW_PREFIX}/opt/bash/bin
         ${BREW_PREFIX}/opt/wget/bin
-        /bin # bash
+        /bin # cat
         /usr/bin # xcodebuild, zip, arch
     )
 

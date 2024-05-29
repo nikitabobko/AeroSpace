@@ -11,21 +11,13 @@ If you struggle to build AeroSpace locally, you can also refer to [builds in Git
 
 ## 1. Install dependencies
 
-The dependencies that are required to build AeroSpace:
-- [XCode](https://developer.apple.com/xcode/). Download it from App Store
-- [XcodeGen](https://github.com/yonaskolb/XcodeGen)
-- [xcbeautify](https://github.com/cpisciotta/xcbeautify)
-- [GNU sed](https://www.gnu.org/software/sed/)
-- [wget](https://www.gnu.org/software/wget/)
-- [Asciidoctor](https://asciidoctor.org/)
-- [SwiftLint](https://github.com/realm/SwiftLint)
-- Shell completion
-  - [bash](https://www.gnu.org/software/bash/)
-  - [fish](https://fishshell.com/)
-
-```shell
-brew install xcodegen gsed asciidoctor xcbeautify swiftlint bash fish wget
-```
+1. Install Xcode from App Store
+2. Install remaining dependencies
+   ```shell
+   git clone git@github.com:nikitabobko/AeroSpace.git
+   cd AeroSpace
+   brew bundle install
+   ```
 
 ## 2. Create codesign certificate
 
