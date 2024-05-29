@@ -18,7 +18,7 @@ build-site() {
     cd .site
         # Delete "aerospace " prefifx in synopsis
         sed -i -E '/tag::synopsis/, /end::synopsis/ s/^(aerospace | {10})//' aerospace*
-        asciidoctor ./*.adoc
+        bundler exec asciidoctor ./*.adoc
         rm -rf ./*.adoc
         rm -rf aerospace* # Drop man pages
     cd - > /dev/null
@@ -32,7 +32,7 @@ build-site() {
 build-man() {
     cp-docs .man
     cd .man
-        asciidoctor -b manpage aerospace*.adoc
+        bundler exec asciidoctor -b manpage aerospace*.adoc
         rm -rf *.adoc
     cd - > /dev/null
 }

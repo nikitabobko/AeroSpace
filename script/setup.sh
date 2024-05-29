@@ -7,15 +7,13 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 setup() {
     mkdir -p .deps/bin
     ln -fs "$(which cargo)" .deps/bin/cargo
+    ln -fs "$(which xcbeautify)" .deps/bin/xcbeautify
+    ln -fs "$(which fish)" .deps/bin/fish
+    ln -fs "$(which bundler)" .deps/bin/bundler # Ruby, asciidoc
+    ln -fs "$(which bash)" .deps/bin/bash # Ruby, asciidoc
 
-    export BREW_PREFIX="$(brew --prefix)"
     tmp=(
-        ${BREW_PREFIX}/opt/asciidoctor/bin
-        ${BREW_PREFIX}/opt/xcodegen/bin
-        ${BREW_PREFIX}/opt/xcbeautify/bin
-        ${BREW_PREFIX}/opt/fishfish/bin
-        ${BREW_PREFIX}/opt/bash/bin
-        ${PWD}/.deps/bin
+        "${PWD}/.deps/bin"
         /bin # cat
         /usr/bin # xcodebuild, zip, arch
     )
@@ -30,10 +28,8 @@ if [ -z "${SETUP_SH:-}" ]; then
     setup
 fi
 
-brew() { "${BREW_PREFIX}/bin/brew" "$@"; }
-
-if ! [ -f "${BREW_PREFIX}/opt/bash/bin/bash" ]; then
-    echo "Please install bash from homebrew" > /dev/stderr
+if ! (bash --version | grep -q 'version 5'); then
+    echo "bash version is too old. At least version 5 is required" > /dev/stderr
     exit 1
 fi
 

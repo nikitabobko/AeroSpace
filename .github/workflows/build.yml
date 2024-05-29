@@ -15,6 +15,7 @@ jobs:
     strategy:
       matrix:
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md
+        # https://github.com/actions/runner-images/blob/main/images/macos/macos-14-arm64-Readme.md
         os: [macos-13, macos-14]
     name: Build
     runs-on: ${{ matrix.os }}
@@ -27,7 +28,7 @@ jobs:
             swift-exec-deps/.build
             .deps
           key: ${{ matrix.os }}-${{ runner.arch }}-${{ hashFiles('script/install-deps.sh', 'swift-exec-deps/Package.swift', 'swift-exec-deps/Package.resolved') }}
-      - run: brew bundle install
+      - run: brew install bash fish xcbeautify
       - run: ./script/install-deps.sh
       # "-" means "Sign to run locally". There is no aerospace-codesign-certificate in GH Actions
       - run: ./build-debug.sh --codesign-identity -

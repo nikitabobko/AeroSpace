@@ -11,13 +11,17 @@ If you struggle to build AeroSpace locally, you can also refer to [builds in Git
 
 ## 1. Install dependencies
 
-1. Install Xcode from App Store
-2. Install remaining dependencies
-   ```shell
-   git clone git@github.com:nikitabobko/AeroSpace.git
-   cd AeroSpace
-   brew bundle install
-   ```
+Install Xcode from App Store https://apps.apple.com/us/app/xcode/id497799835
+
+If you want to build shell completion, install rust, bash and fish
+- Install Rust using rustup. https://www.rust-lang.org/tools/install
+- `brew install bash fish`
+
+If you want to build man pages, install Ruby >= 3.0. I recommend using [rbenv](https://github.com/rbenv/rbenv).
+- `rbenv install 3.3.4` (or whatever 3.x version)
+- Install asciidoctor using Ruby `bundler`. `cd AeroSpace && bundler install`
+
+Install optional `xcbeautify` to make Xcode build logs readable. `brew install xcbeautify`
 
 ## 2. Create codesign certificate
 
@@ -37,7 +41,7 @@ Signing the binary is required to preserve accessibility permission across rebui
 - `run-tests.sh` - Run tests
 - `run-debug.sh` - Run debug build of AeroSpace.app. It might be better to run debug build from Xcode.
 - `run-cli.sh` - Run `aerospace` in CLI. Arguments are forwarded to `aerospace` binary
-- `build-docs.sh` - Build the site and manpages to `.site` and `.man` dirs respectively
+- `build-docs.sh` - Build the site and man pages to `.site` and `.man` dirs respectively
 - `build-shell-completion.sh` - Build shell completion to `.shell-completion`
 - `generate.sh` - Regenerate generated project files. `AeroSpace.xcodeproj` is generated, and some of the source files
   (the source files have `Generated` suffix in their names)

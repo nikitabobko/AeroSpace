@@ -61,3 +61,7 @@ if test $all == 1 || test $xcodegen == 1; then
         (cd ./swift-exec-deps; swift run xcodegen --version)
     fi
 fi
+
+if test $all == 1; then
+    bundle install
+fi
