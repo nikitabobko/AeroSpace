@@ -226,9 +226,10 @@ enum Ax {
         key: kAXFocusedAttribute,
         getter: { $0 as? Bool }
     )
-    static let isMainAttr = ReadableAttrImpl<Bool>(
+    static let isMainAttr = WritableAttrImpl<Bool>(
         key: kAXMainAttribute,
-        getter: { $0 as? Bool }
+        getter: { $0 as? Bool },
+        setter: { $0 as CFTypeRef }
     )
     static let sizeAttr = WritableAttrImpl<CGSize>(
         key: kAXSizeAttribute,

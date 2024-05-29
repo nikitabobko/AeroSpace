@@ -95,9 +95,11 @@ final class MacWindow: Window, CustomStringConvertible {
     override var isMacosMinimized: Bool { axWindow.get(Ax.minimizedAttr) == true }
 
     @discardableResult
-    override func nativeFocus() -> Bool { // todo make focus reliable: make async + active waiting
-        // Raise firstly to make sure that by that time we activate the app, particular window would be already on top
-        axWindow.raise() && macApp.nsApp.activate(options: .activateIgnoringOtherApps)
+    override func nativeFocus() -> Bool {
+        // Raise firstly to make sure that by the time we activate the app, the window would be already on top
+        axWindow.set(Ax.isMainAttr, true) &&
+            axWindow.raise() &&
+            macApp.nsApp.activate(options: .activateIgnoringOtherApps)
     }
 
     override func close() -> Bool {
