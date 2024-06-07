@@ -1,7 +1,7 @@
 # Place a copy of this config to ~/.aerospace.toml
 # After that, you can edit ~/.aerospace.toml to your liking
 
-# It's not neceesary to copy all keys to your config.
+# It's not necessary to copy all keys to your config.
 # If the key is missing in your config, "default-config.toml" will serve as a fallback
 
 # You can use it to add commands that run after login to macOS user session.
