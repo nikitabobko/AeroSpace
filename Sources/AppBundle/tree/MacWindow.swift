@@ -321,6 +321,9 @@ extension WindowDetectedCallback {
         if let regex = matcher.appNameRegexSubstring, !(window.app.name ?? "").contains(regex) {
             return false
         }
+        if let workspace = matcher.workspace, workspace != window.workspace?.name {
+            return false
+        }
         return true
     }
 }

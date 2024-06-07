@@ -382,11 +382,12 @@ Here is a showcase example that uses all the possible configurations:
 [source,toml]
 ----
 [[on-window-detected]]
-if.app-id = 'com.apple.systempreferences'              # Application ID exact match
-if.app-name-regex-substring = 'settings'               # Case insensetive regex substring
-if.window-title-regex-substring = 'substring'          # Case insensetive regex substring
-if.during-aerospace-startup = true                     # Run the callback only if the window detected during AeroSpace startup
-check-further-callbacks = true                         # Check further callbacks. If not specified, the default value is false
+if.app-id = 'com.apple.systempreferences'
+if.app-name-regex-substring = 'settings'
+if.window-title-regex-substring = 'substring'
+if.workspace = 'workspace-name'
+if.during-aerospace-startup = true
+check-further-callbacks = true
 run = ['layout floating', 'move-node-to-workspace S']  # The callback itself
 ----
 
@@ -421,6 +422,9 @@ a|
 * If `true` then run the callback only during AeroSpace startup.
 * If `false` then run callback only *NOT* during AeroSpace startup.
 * If not specified then the condition isn’t checked
+
+|`if.workspace`
+|Window's workspace name exact match
 
 |===
 

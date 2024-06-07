@@ -20,6 +20,7 @@ struct WindowDetectedCallbackMatcher: Copyable, Equatable {
     var appId: String?
     var appNameRegexSubstring: Regex<AnyRegexOutput>?
     var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
+    var workspace: String?
     var duringAeroSpaceStartup: Bool?
 
     static func == (lhs: WindowDetectedCallbackMatcher, rhs: WindowDetectedCallbackMatcher) -> Bool {
@@ -41,6 +42,7 @@ private let windowDetectedParser: [String: any ParserProtocol<WindowDetectedCall
 
 private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMatcher>] = [
     "app-id": Parser(\.appId, upcast(parseString)),
+    "workspace": Parser(\.workspace, upcast(parseString)),
     "app-name-regex-substring": Parser(\.appNameRegexSubstring, upcast(parseCasInsensitiveRegex)),
     "window-title-regex-substring": Parser(\.windowTitleRegexSubstring, upcast(parseCasInsensitiveRegex)),
     "during-aerospace-startup": Parser(\.duringAeroSpaceStartup, upcast(parseBool)),
