@@ -190,3 +190,14 @@ alt-shift-h = ['join-with left', 'mode main']
 alt-shift-j = ['join-with down', 'mode main']
 alt-shift-k = ['join-with up', 'mode main']
 alt-shift-l = ['join-with right', 'mode main']
+
+# You can use on-window-detected callback to run commands every time a new window is detected.
+# See: https://nikitabobko.github.io/AeroSpace/guide#on-window-detected-callback
+#
+# List of popular and built-in applications IDs
+# See: https://nikitabobko.github.io/AeroSpace/goodness#popular-apps-ids
+#
+# For example make ActivityMonitor float
+# [[on-window-detected]]
+# if.app-id = 'com.apple.ActivityMonitor'
+# run = 'layout floating'
