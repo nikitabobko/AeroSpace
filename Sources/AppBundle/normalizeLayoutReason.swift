@@ -44,18 +44,10 @@ func exitMacOsNativeOrInvisibleState(window: Window, prevParentKind: NonLeafTree
         case .workspace:
             window.bindAsFloatingWindow(to: workspace)
         case .tilingContainer:
-            let data = getBindingDataForNewTilingWindow(workspace)
-            window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
+            window.relayoutWindow(on: workspace, forceTile: true)
         case .macosPopupWindowsContainer: // Since the window was minimized/fullscreened it was mistakenly detected as popup. Relayout the window
             window.relayoutWindow(on: workspace)
         case .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer: // wtf case, should never be possible. But If encounter it, let's just re-layout window
             window.relayoutWindow(on: workspace)
-    }
-}
-
-extension Window {
-    func relayoutWindow(on workspace: Workspace) {
-        let data = getBindingDataForNewWindow(self.asMacWindow().axWindow, workspace, self.macAppUnsafe)
-        bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
     }
 }

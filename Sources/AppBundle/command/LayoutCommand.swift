@@ -41,8 +41,7 @@ struct LayoutCommand: Command {
                         return true // Nothing to do
                     case .workspace(let workspace):
                         window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
-                        let data = getBindingDataForNewTilingWindow(workspace)
-                        window.bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
+                        window.relayoutWindow(on: workspace, forceTile: true)
                         return true
                 }
             case .floating:
