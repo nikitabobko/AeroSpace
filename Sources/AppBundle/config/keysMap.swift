@@ -168,8 +168,8 @@ private let dvorakMap: [String: Key] = keyNotationToKeyCode + [
     c: .i,
     r: .o,
     l: .p,
-    slash: .leftBracket,
-    equal: .rightBracket,
+    slash: .leftBracket, // leftBracket -> leftSquareBracket
+    equal: .rightBracket, // rightBracket -> rightSquareBracket
     backslash: .backslash,
 
     a: .a,
