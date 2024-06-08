@@ -252,7 +252,18 @@ private func isFullscreenable(_ axWindow: AXUIElement) -> Bool {
     return false
 }
 
-func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace, _ app: MacApp) -> BindingData {
+extension Window {
+    func relayoutWindow(on workspace: Workspace, forceTile: Bool = false) {
+        unbindFromParent() // It's important to unbind to get correct data from getBindingData*
+        let data = forceTile
+            ? getBindingDataForNewTilingWindow(workspace)
+            : getBindingDataForNewWindow(self.asMacWindow().axWindow, workspace, self.macAppUnsafe)
+        bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
+    }
+}
+
+// The function is private because it's "unsafe". It requires the window to be in unbound state
+private func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace, _ app: MacApp) -> BindingData {
     if !isWindow(axWindow, app) {
         return BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
     }
@@ -262,7 +273,8 @@ func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace,
     return getBindingDataForNewTilingWindow(workspace)
 }
 
-func getBindingDataForNewTilingWindow(_ workspace: Workspace) -> BindingData {
+// The function is private because it's "unsafe". It requires the window to be in unbound state
+private func getBindingDataForNewTilingWindow(_ workspace: Workspace) -> BindingData {
     let mruWindow = workspace.mostRecentWindow
     if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
         return BindingData(
