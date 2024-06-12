@@ -68,14 +68,15 @@ private func refreshFocusedWorkspaceBasedOnFocusedWindow() { // todo drop. It sh
 }
 
 private func layoutWorkspaces() {
-    for workspace in Workspace.all {
-        if workspace.isVisible {
-            // todo no need to unhide tiling windows (except for keeping hide/unhide state variables invariants)
-            workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideViaEmulation() } // todo as!
-        } else {
-            workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).hideViaEmulation() } // todo as!
-        }
+    // to reduce flicker, first unhide visible workspaces, then hide invisible ones
+    for workspace in Workspace.all where workspace.isVisible {
+        // todo no need to unhide tiling windows (except for keeping hide/unhide state variables invariants)
+        workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideViaEmulation() } // todo as!
     }
+    for workspace in Workspace.all where !workspace.isVisible {
+        workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).hideViaEmulation() } // todo as!
+    }
+
     for monitor in monitors {
         monitor.activeWorkspace.layoutWorkspace()
     }
