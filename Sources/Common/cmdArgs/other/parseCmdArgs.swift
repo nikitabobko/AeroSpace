@@ -1,7 +1,11 @@
 public func parseCmdArgs(_ args: [String]) -> ParsedCmd<any CmdArgs> {
-    let subcommand = String(args.first ?? "")
+    let subcommand = args.first ?? ""
     if subcommand.isEmpty {
         return .failure("Can't parse empty string command")
+    }
+    if args.contains(where: { $0 == "&&" || $0 == "||" || $0 == ";" || $0 == "|" || $0 == "(" || $0 == ")" }) {
+        // https://github.com/nikitabobko/AeroSpace/issues/264
+        return .failure("&&, ||, and ; are reserved arguments")
     }
     if let subcommandParser: any SubCommandParserProtocol = subcommands[subcommand] {
         return subcommandParser.parse(args: Array(args.dropFirst()))
