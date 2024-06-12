@@ -48,7 +48,7 @@ func getNextPrevWorkspace(current: Workspace, relative: WTarget.Relative, stdin:
         ? Workspace.all.filter { $0.workspaceMonitor.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }
             .toSet()
             .union([current])
-            .sortedBy { $0.name }
+            .sorted()
         : stdinWorkspaces.map { Workspace.get(byName: $0) }
     let index = workspaces.firstIndex(where: { $0 == Workspace.focused }) ?? 0
     let workspace: Workspace?

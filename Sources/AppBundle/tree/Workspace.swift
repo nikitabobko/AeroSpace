@@ -28,19 +28,21 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
         ?? errorT("Can't create empty workspace")
 }
 
-class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, CustomStringConvertible {
+class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, CustomStringConvertible, Comparable {
     let name: String
+    private let nameLogicalSegments: StringLogicalSegments
     var id: String { name } // satisfy Identifiable
     /// `assignedMonitorPoint` must be interpreted only when the workspace is invisible
     fileprivate var assignedMonitorPoint: CGPoint? = nil
 
     private init(_ name: String) {
         self.name = name
+        self.nameLogicalSegments = name.toLogicalSegments()
         super.init(parent: NilTreeNode.instance, adaptiveWeight: 0, index: 0)
     }
 
     static var all: [Workspace] {
-        workspaceNameToWorkspace.values.sortedBy(\.name)
+        workspaceNameToWorkspace.values.sorted()
     }
 
     static func get(byName name: String) -> Workspace {
@@ -52,6 +54,8 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, Custom
             return workspace
         }
     }
+
+    static func < (lhs: Workspace, rhs: Workspace) -> Bool { lhs.nameLogicalSegments < rhs.nameLogicalSegments }
 
     override func getWeight(_ targetOrientation: Orientation) -> CGFloat {
         workspaceMonitor.visibleRectPaddedByOuterGaps.getDimension(targetOrientation)
