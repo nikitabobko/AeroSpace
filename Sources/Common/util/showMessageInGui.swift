@@ -17,7 +17,7 @@ public func showMessageInGui(filenameIfConsoleApp: String?, title: String, messa
             arguments: [
                 "-e",
                 """
-                display dialog "\(message)" with title "\(title)"
+                display dialog "\(message.replacing("\"", with: "\\\""))" with title "\(title)"
                 """
             ]
         )
