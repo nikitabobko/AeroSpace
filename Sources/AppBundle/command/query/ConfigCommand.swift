@@ -143,7 +143,7 @@ extension ConfigMapValue {
 func buildConfigMap() -> ConfigMapValue {
     let mode = config.modes.mapValues { (mode: Mode) -> ConfigMapValue in
         let binding: [String: ConfigMapValue] = mode.bindings.mapValues { binding in
-            .array(binding.commands.map { .scalar(.string($0.args.description)) })
+            .scalar(.string(binding.commands.map { $0.args.description }.joined(separator: "; ")))
         }
         return .map(["binding": .map(binding)])
     }
