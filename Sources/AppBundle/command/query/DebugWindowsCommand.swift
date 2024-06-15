@@ -80,7 +80,7 @@ func debugWindowsIfRecording(_ window: Window) {
         return
     }
     let app = window.app as! MacApp
-    let appId = app.id ?? "null-app-id"
+    let appId = app.id ?? "NULL-APP-BUNDLE-ID"
     let windowPrefix = appId + ".window.\(window.windowId)"
     var result: [String] = []
 

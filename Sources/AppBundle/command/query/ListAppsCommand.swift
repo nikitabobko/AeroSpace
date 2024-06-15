@@ -13,7 +13,7 @@ struct ListAppsCommand: Command {
         state.stdout += result
             .map { app in
                 let pid = String(app.pid)
-                let appId = app.id ?? "NULL-APP-ID"
+                let appId = app.id ?? "NULL-APP-BUNDLE-ID"
                 let name = app.name ?? "NULL-NAME"
                 return [pid, appId, name]
             }

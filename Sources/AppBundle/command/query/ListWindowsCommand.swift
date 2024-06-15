@@ -93,7 +93,7 @@ private extension String {
             case "window-title": .success(window.title)
             case "app-name": .success(window.app.name ?? "NULL-APP-NAME")
             case "app-pid": .success(window.app.pid.description)
-            case "app-id": .success(window.app.id ?? "NULL-APP-ID")
+            case "app-bundle-id": .success(window.app.id ?? "NULL-APP-BUNDLE-ID")
             case "workspace": .success(window.workspace?.name ?? "NULL-WOKRSPACE")
             case "monitor-id": .success(window.nodeMonitor?.monitorId?.description ?? "NULL-MONITOR-ID")
             case "monitor-name": .success(window.nodeMonitor?.name ?? "NULL-MONITOR-NAME")

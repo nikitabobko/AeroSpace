@@ -10,7 +10,7 @@ include::util/man-attributes.adoc[]
 // tag::synopsis[]
 aerospace list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
                        [--monitor <monitor>...] [--workspace <workspace>...]
-                       [--pid <pid>] [--app-id <app-id>] [--format <output-format>]
+                       [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>]
 aerospace list-windows [-h|--help] --all [--format <output-format>]
 aerospace list-windows [-h|--help] --focused [--format <output-format>]
 
@@ -45,7 +45,10 @@ Possible values: +
 include::util/monitor-option.adoc[]
 
 --pid <pid>:: Filter results to only print windows that belong to the Application with specified `<pid>`
---app-id <app-id>:: Filter results to only print windows that belong to the Application with specified https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
+--app-bundle-id <app-bundle-id>::
+Filter results to only print windows that belong to the Application with specified https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
++
+Deprecated (but still supported) flag name: `--app-id`
 --format <output-format>::
 Specify output format. See "Output Format" section for more details
 
@@ -63,7 +66,7 @@ The following variables can be used inside `<output-format>`:
 %{window-title}:: String. Window title
 %{app-name}:: String. Application name
 %{app-pid}:: Number. https://en.wikipedia.org/wiki/Process_identifier[UNIX process identifier]
-%{app-id}:: String. Application unique identifier. https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
+%{app-bundle-id}:: String. Application unique identifier. https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
 %{workspace}:: String. Name of the belonging workspace
 %{monitor-id}:: Number. Sequential number of the belonging monitor
 %{monitor-name}:: String. Name of the belonging monitor

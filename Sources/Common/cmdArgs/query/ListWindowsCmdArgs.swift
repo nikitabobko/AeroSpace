@@ -11,19 +11,19 @@ public struct ListWindowsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
         help: """
             USAGE: list-windows [-h|--help] (--workspace \(_workspaces)|--monitor \(_monitors))
                                 [--monitor \(_monitors)] [--workspace \(_workspaces)]
-                                [--pid <pid>] [--app-id <app-id>] [--format <output-format>]
+                                [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>]
                OR: list-windows [-h|--help] --all [--format <output-format>]
                OR: list-windows [-h|--help] --focused [--format <output-format>]
 
             OPTIONS:
-              -h, --help                    Print help
-              --all                         Alias for "--monitor all"
-              --focused                     Print the focused window
-              --workspace \(_workspaces)    Filter results to only print windows that belong to specified workspaces
-              --monitor \(_monitors)        Filter results to only print the windows that are attached to specified monitors
-              --pid <pid>                   Filter results to only print windows that belong to the Application with specified <pid>
-              --app-id <app-id>             Filter results to only print windows that belong to the Application with specified Bundle ID
-              --format <output-format>      Specify output format
+              -h, --help                       Print help
+              --all                            Alias for "--monitor all"
+              --focused                        Print the focused window
+              --workspace \(_workspaces)       Filter results to only print windows that belong to specified workspaces
+              --monitor \(_monitors)           Filter results to only print the windows that are attached to specified monitors
+              --pid <pid>                      Filter results to only print windows that belong to the Application with specified <pid>
+              --app-bundle-id <app-bundle-id>  Filter results to only print windows that belong to the Application with specified Bundle ID
+              --format <output-format>         Specify output format
             """,
         options: [
             "--focused": trueBoolFlag(\.focused),
@@ -32,7 +32,7 @@ public struct ListWindowsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
             "--monitor": ArgParser(\.monitors, parseMonitorIds),
             "--workspace": ArgParser(\.workspaces, parseWorkspaces),
             "--pid": singleValueOption(\.pidFilter, "<pid>", Int32.init),
-            "--app-id": singleValueOption(\.appIdFilter, "<app-id>", { $0 }),
+            "--app-bundle-id": singleValueOption(\.appIdFilter, "<app-bundle-id>", { $0 }),
             "--format": ArgParser(\.format, parseFormat),
         ],
         arguments: []
@@ -53,7 +53,8 @@ public struct ListWindowsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
 }
 
 public func parseRawListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCmdArgs> {
-    parseRawCmdArgs(ListWindowsCmdArgs(rawArgs: .init(args)), args)
+    let args = args.map { $0 == "--app-id" ? "--app-bundle-id" : $0 } // Compatibility
+    return parseRawCmdArgs(ListWindowsCmdArgs(rawArgs: .init(args)), args)
         .flatMap { raw in
             var conflicting: OrderedSet<String> = []
             if (raw.all) { conflicting.insert("--all", at: 0) }
