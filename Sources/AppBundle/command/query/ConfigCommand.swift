@@ -63,7 +63,7 @@ private func getKey(_ state: CommandMutableState, args: ConfigCmdArgs, key: Stri
     }
     if args.json {
         let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
+        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
         let _json = Result { try encoder.encode(configMap) }.flatMap {
             String(data: $0, encoding: .utf8).flatMap(Result.success) ?? .failure("Can't convert json Data to String")
         }
