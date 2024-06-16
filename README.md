@@ -37,6 +37,8 @@ Install via [Homebrew](https://brew.sh/) to get autoupdates (Preferred)
 brew install --cask nikitabobko/tap/aerospace
 ```
 
+**(Optional)** If you want shell completion, you need to configure your shell to enable completion provided by homebrew packages: https://docs.brew.sh/Shell-Completion
+
 [Manual installation](https://nikitabobko.github.io/AeroSpace/guide#manual-installation)
 
 > [!NOTE]
