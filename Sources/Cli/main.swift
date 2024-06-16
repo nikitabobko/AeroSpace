@@ -87,10 +87,10 @@ if ans.exitCode == 0 && isVersion {
     printVersionAndExit(serverVersion: ans.serverVersionAndHash)
 }
 
+if !ans.stdout.isEmpty { print(ans.stdout) }
+if !ans.stderr.isEmpty { printStderr(ans.stderr) }
 if ans.exitCode != 0 && ans.serverVersionAndHash != cliClientVersionAndHash {
-    print(ans.stdout)
-    print(ans.stderr)
-    prettyError(
+    printStderr(
         """
         Warning: AeroSpace client/server versions don't match
             - aerospace CLI client version: \(cliClientVersionAndHash)
@@ -101,7 +101,4 @@ if ans.exitCode != 0 && ans.serverVersionAndHash != cliClientVersionAndHash {
         """
     )
 }
-
-if !ans.stdout.isEmpty { print(ans.stdout) }
-if !ans.stderr.isEmpty { printStderr(ans.stderr) }
 exit(ans.exitCode)
