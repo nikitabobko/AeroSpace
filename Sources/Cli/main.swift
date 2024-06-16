@@ -88,16 +88,16 @@ if ans.exitCode == 0 && isVersion {
 }
 
 if ans.exitCode != 0 && ans.serverVersionAndHash != cliClientVersionAndHash {
+    print(ans.stdout)
+    print(ans.stderr)
     prettyError(
         """
-        AeroSpace client/server version mismatch
-
-        - aerospace CLI client version: \(cliClientVersionAndHash)
-        - AeroSpace.app server version: \(ans.serverVersionAndHash)
-
-        Possible fixes:
-        - Restart AeroSpace.app (restart is required after each update)
-        - Reinstall and restart AeroSpace (corrupted installation)
+        Warning: AeroSpace client/server versions don't match
+            - aerospace CLI client version: \(cliClientVersionAndHash)
+            - AeroSpace.app server version: \(ans.serverVersionAndHash)
+            Possible fixes:
+            - Restart AeroSpace.app (server restart is required after each update)
+            - Reinstall and restart AeroSpace (corrupted installation)
         """
     )
 }
