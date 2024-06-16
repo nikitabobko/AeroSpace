@@ -595,7 +595,7 @@ The source code of the page can be found in <code>./docs</code> directory.</p>
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">after-startup-command</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span>
 <span class="tok-w">    </span><span class="tok-c1"># JankyBorders has a built-in detection of already running process,</span>
 <span class="tok-w">    </span><span class="tok-c1"># so it won&#39;t be run twice on AeroSpace restart</span>
-<span class="tok-w">    </span><span class="tok-s1">&#39;exec-and-forget /opt/homebrew/opt/borders/bin/borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0&#39;</span>
+<span class="tok-w">    </span><span class="tok-s1">&#39;exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0&#39;</span>
 <span class="tok-p">]</span></code></pre>
 </div>
 </div>
@@ -659,11 +659,11 @@ Use these snippets as a starting point.</p>
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Run Sketchybar together with AeroSpace</span>
 <span class="tok-c1"># sketchbar has a built-in detection of already running process,</span>
 <span class="tok-c1"># so it won&#39;t be run twice on AeroSpace restart</span>
-<span class="tok-n">after-startup-command</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;exec-and-forget /opt/homebrew/opt/sketchybar/bin/sketchybar&#39;</span><span class="tok-p">]</span>
+<span class="tok-n">after-startup-command</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;exec-and-forget sketchybar&#39;</span><span class="tok-p">]</span>
 
 <span class="tok-c1"># Notify Sketchybar about workspace change</span>
 <span class="tok-n">exec-on-workspace-change</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;/bin/bash&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;-c&#39;</span><span class="tok-p">,</span>
-<span class="tok-w">    </span><span class="tok-s1">&#39;/opt/homebrew/opt/sketchybar/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE&#39;</span>
+<span class="tok-w">    </span><span class="tok-s1">&#39;sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE&#39;</span>
 <span class="tok-p">]</span></code></pre>
 </div>
 </div>
@@ -1169,7 +1169,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-05-21 10:14:03 +0200
+Last updated 2024-06-16 18:46:25 +0200
 </div>
 </div>
 </body>

@@ -611,6 +611,10 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <pre class="pygments highlight nowrap"><code data-lang="bash"><span></span>brew<span class="tok-w"> </span>install<span class="tok-w"> </span>--cask<span class="tok-w"> </span>nikitabobko/tap/aerospace</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p><strong>(Optional)</strong> If you want shell completion to work, you need to configure your shell to enable completion provided by homebrew packages:
+<a href="https://docs.brew.sh/Shell-Completion" class="bare">https://docs.brew.sh/Shell-Completion</a></p>
+</div>
 </div>
 <div class="sect2">
 <h3 id="manual-installation"><a class="anchor" href="#manual-installation"></a><a class="link" href="#manual-installation">1.2. Manual installation</a></h3>
@@ -1219,11 +1223,12 @@ It works equally good whether this option is enabled or disabled.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;com.apple.systempreferences&#39;</span><span class="tok-w">              </span><span class="tok-c1"># Application ID exact match</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-name-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;settings&#39;</span><span class="tok-w">               </span><span class="tok-c1"># Case insensetive regex substring</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">window-title-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;substring&#39;</span><span class="tok-w">          </span><span class="tok-c1"># Case insensetive regex substring</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">during-aerospace-startup</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span><span class="tok-w">                     </span><span class="tok-c1"># Run the callback only if the window detected during AeroSpace startup</span>
-<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span><span class="tok-w">                         </span><span class="tok-c1"># Check further callbacks. If not specified, the default value is false</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;com.apple.systempreferences&#39;</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-name-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;settings&#39;</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">window-title-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;substring&#39;</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">workspace</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace-name&#39;</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">during-aerospace-startup</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
+<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
 <span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;layout floating&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace S&#39;</span><span class="tok-p">]</span><span class="tok-w">  </span><span class="tok-c1"># The callback itself</span></code></pre>
 </div>
 </div>
@@ -1283,6 +1288,10 @@ Please post your use cases to <a href="https://github.com/nikitabobko/AeroSpace/
 </li>
 </ul>
 </div></div></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>if.workspace</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Window&#8217;s workspace name exact match</p></td>
 </tr>
 </tbody>
 </table>
@@ -1586,7 +1595,7 @@ If you find that some windows are not handled properly please <a href="https://g
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-05-21 10:14:03 +0200
+Last updated 2024-06-16 18:46:25 +0200
 </div>
 </div>
 </body>

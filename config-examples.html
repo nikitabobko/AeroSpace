@@ -574,7 +574,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Place a copy of this config to ~/.aerospace.toml</span>
 <span class="tok-c1"># After that, you can edit ~/.aerospace.toml to your liking</span>
 
-<span class="tok-c1"># It&#39;s not neceesary to copy all keys to your config.</span>
+<span class="tok-c1"># It&#39;s not necessary to copy all keys to your config.</span>
 <span class="tok-c1"># If the key is missing in your config, &quot;default-config.toml&quot; will serve as a fallback</span>
 
 <span class="tok-c1"># You can use it to add commands that run after login to macOS user session.</span>
@@ -777,6 +777,10 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Reference: https://github.com/i3/i3/blob/next/etc/config</span>
 
+<span class="tok-c1"># i3 didn&#39;t have &quot;normalizations&quot; feature that why we disable them here.</span>
+<span class="tok-c1"># But the feature is very helpful.</span>
+<span class="tok-c1"># Normalizations eliminate all sorts of weird tree configurations that don&#39;t make sense.</span>
+<span class="tok-c1"># Give normalizations a chance and enable them back.</span>
 <span class="tok-n">enable-normalization-flatten-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
 <span class="tok-n">enable-normalization-opposite-orientation-for-nested-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
 
@@ -793,6 +797,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-n">alt-shift-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move up&#39;</span>
 <span class="tok-n">alt-shift-semicolon</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move right&#39;</span>
 
+<span class="tok-c1"># Consider using &#39;join-with&#39; command as a &#39;split&#39; replacement if you want to enable normalizations</span>
 <span class="tok-n">alt-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;split horizontal&#39;</span>
 <span class="tok-n">alt-v</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;split vertical&#39;</span>
 
@@ -852,7 +857,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-05-21 10:14:03 +0200
+Last updated 2024-06-16 18:46:25 +0200
 </div>
 </div>
 </body>

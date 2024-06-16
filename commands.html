@@ -585,6 +585,9 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 </div>
 </div>
+<div class="paragraph">
+<p>Commands documentation is also available in the form of manpages.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1883,43 +1886,13 @@ monitor sequence ID may change if you plug or unplug monitors
 <div class="content">
 <pre class="nowrap">list-windows [-h|--help] (--workspace &lt;workspace&gt;...|--monitor &lt;monitor&gt;...)
              [--monitor &lt;monitor&gt;...] [--workspace &lt;workspace&gt;...]
-             [--pid &lt;pid&gt;] [--app-id &lt;app-id&gt;]
-list-windows [-h|--help] --all
-list-windows [-h|--help] --focused</pre>
+             [--pid &lt;pid&gt;] [--app-bundle-id &lt;app-bundle-id&gt;] [--format &lt;output-format&gt;]
+list-windows [-h|--help] --all [--format &lt;output-format&gt;]
+list-windows [-h|--help] --focused [--format &lt;output-format&gt;]</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Print windows that satisfy conditions</p>
-</div>
-<div class="paragraph lead">
-<p><strong>OUTPUT FORMAT</strong></p>
-</div>
-<div class="paragraph">
-<p>Output format is table with three columns:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Window ID</p>
-</li>
-<li>
-<p>App name</p>
-</li>
-<li>
-<p>Window title</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>Output Example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="nowrap">5010 | AppCode   | AeroSpace – aerospace-list-windows.adoc
-5360 | AppCode   | Git - AeroSpace
-2412 | Alacritty | /Users/bobko $ ta
-5046 | Xcode     | AeroSpace — ListWorkspacesCommand.swift</pre>
-</div>
 </div>
 <div class="paragraph lead">
 <p><strong>OPTIONS</strong></p>
@@ -1949,10 +1922,10 @@ If you&#8217;re automating something then you don&#8217;t want to mess up with w
 Please note that it is possible for no window to be in focus.
 In that case, error is reported.</p>
 </dd>
-<dt class="hdlist1">--workspace &lt;workspaces&gt;</dt>
+<dt class="hdlist1">--workspace &lt;workspace&gt;&#8230;&#8203;</dt>
 <dd>
 <p>Filter results to only print windows that belong to specified workspaces.
-<code>&lt;workspaces&gt;</code> is a comma-separated list of workspace names.</p>
+<code>&lt;workspace&gt;&#8230;&#8203;</code> is a space-separated list of workspace names.</p>
 <div class="paragraph">
 <p>Possible values:<br></p>
 </div>
@@ -1998,9 +1971,78 @@ In that case, error is reported.</p>
 <dd>
 <p>Filter results to only print windows that belong to the Application with specified <code>&lt;pid&gt;</code></p>
 </dd>
-<dt class="hdlist1">--app-id &lt;app-id&gt;</dt>
+<dt class="hdlist1">--app-bundle-id &lt;app-bundle-id&gt;</dt>
 <dd>
-<p>Filter results to only print windows that belong to the Application with specified Bundle ID</p>
+<p>Filter results to only print windows that belong to the Application with specified <a href="https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids">Bundle ID</a></p>
+<div class="paragraph">
+<p>Deprecated (but still supported) flag name: <code>--app-id</code></p>
+</div>
+</dd>
+<dt class="hdlist1">--format &lt;output-format&gt;</dt>
+<dd>
+<p>Specify output format. See "Output Format" section for more details</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph lead">
+<p><strong>OUTPUT FORMAT</strong></p>
+</div>
+<div class="paragraph">
+<p>Output format can be configured with optional <code>[--format &lt;output-format&gt;]</code> option.
+<code>&lt;output-format&gt;</code> supports <a href="https://en.wikipedia.org/wiki/String_interpolation">string interpolation</a>.</p>
+</div>
+<div class="paragraph">
+<p>If not specified, the default <code>&lt;output-format&gt;</code> is:<br>
+<code>%{window-id}%{right-padding} | %{app-name}%{right-padding} | %{window-title}</code></p>
+</div>
+<div class="paragraph">
+<p>The following variables can be used inside <code>&lt;output-format&gt;</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">%{window-id}</dt>
+<dd>
+<p>Number. Window unique ID</p>
+</dd>
+<dt class="hdlist1">%{window-title}</dt>
+<dd>
+<p>String. Window title</p>
+</dd>
+<dt class="hdlist1">%{app-name}</dt>
+<dd>
+<p>String. Application name</p>
+</dd>
+<dt class="hdlist1">%{app-pid}</dt>
+<dd>
+<p>Number. <a href="https://en.wikipedia.org/wiki/Process_identifier">UNIX process identifier</a></p>
+</dd>
+<dt class="hdlist1">%{app-bundle-id}</dt>
+<dd>
+<p>String. Application unique identifier. <a href="https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids">Bundle ID</a></p>
+</dd>
+<dt class="hdlist1">%{workspace}</dt>
+<dd>
+<p>String. Name of the belonging workspace</p>
+</dd>
+<dt class="hdlist1">%{monitor-id}</dt>
+<dd>
+<p>Number. Sequential number of the belonging monitor</p>
+</dd>
+<dt class="hdlist1">%{monitor-name}</dt>
+<dd>
+<p>String. Name of the belonging monitor</p>
+</dd>
+<dt class="hdlist1">%{right-padding}</dt>
+<dd>
+<p>A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column</p>
+</dd>
+<dt class="hdlist1">%{newline}</dt>
+<dd>
+<p>Unicode U+000A newline symbol <code>\n</code></p>
+</dd>
+<dt class="hdlist1">%{tab}</dt>
+<dd>
+<p>Unicode U+0009 tab symbol <code>\t</code></p>
 </dd>
 </dl>
 </div>
@@ -2087,7 +2129,7 @@ Several workspaces can be visible in multi-monitor setup</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-05-21 10:14:03 +0200
+Last updated 2024-06-16 18:46:25 +0200
 </div>
 </div>
 </body>
