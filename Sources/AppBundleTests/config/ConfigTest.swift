@@ -50,7 +50,7 @@ final class ConfigTest: XCTestCase {
         let binding = HotkeyBinding(.option, .h, [FocusCommand.new(direction: .left)])
         XCTAssertEqual(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.binding: binding])
+            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding])
         )
     }
 
@@ -87,7 +87,7 @@ final class ConfigTest: XCTestCase {
         let binding = HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])
         XCTAssertEqual(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.binding: binding])
+            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding])
         )
     }
 
@@ -356,7 +356,7 @@ final class ConfigTest: XCTestCase {
             "unicorn": .u,
         ]))
         let binding = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("unicorn"))))])
-        XCTAssertEqual(config.modes[mainModeId]?.bindings, [binding.binding: binding])
+        XCTAssertEqual(config.modes[mainModeId]?.bindings, [binding.descriptionWithKeyCode: binding])
 
         let (_, errors1) = parseConfig(
             """

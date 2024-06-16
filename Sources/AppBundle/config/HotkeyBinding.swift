@@ -24,11 +24,11 @@ extension HotKey {
 var activeMode: String? = mainModeId
 func activateMode(_ targetMode: String?) {
     let targetBindings = targetMode.flatMap { config.modes[$0] }?.bindings ?? [:]
-    for binding in targetBindings.values where !hotkeys.keys.contains(binding.binding) {
-        hotkeys[binding.binding] = HotKey(key: binding.key, modifiers: binding.modifiers, keyDownHandler: {
+    for binding in targetBindings.values where !hotkeys.keys.contains(binding.descriptionWithKeyCode) {
+        hotkeys[binding.descriptionWithKeyCode] = HotKey(key: binding.keyCode, modifiers: binding.modifiers, keyDownHandler: {
             if let activeMode {
                 refreshSession(forceFocus: true) {
-                    _ = config.modes[activeMode]?.bindings[binding.binding]?.commands.run(.focused)
+                    _ = config.modes[activeMode]?.bindings[binding.descriptionWithKeyCode]?.commands.run(.focused)
                 }
             }
         })
@@ -45,21 +45,21 @@ func activateMode(_ targetMode: String?) {
 
 struct HotkeyBinding: Equatable {
     let modifiers: NSEvent.ModifierFlags
-    let key: Key
+    let keyCode: Key
     let commands: [any Command]
-    let binding: String
+    let descriptionWithKeyCode: String
 
-    init(_ modifiers: NSEvent.ModifierFlags, _ key: Key, _ commands: [any Command]) {
+    init(_ modifiers: NSEvent.ModifierFlags, _ keyCode: Key, _ commands: [any Command]) {
         self.modifiers = modifiers
-        self.key = key
+        self.keyCode = keyCode
         self.commands = commands
-        self.binding = modifiers.isEmpty ? key.toString() : modifiers.toString() + "-" + key.toString()
+        self.descriptionWithKeyCode = modifiers.isEmpty ? keyCode.toString() : modifiers.toString() + "-" + keyCode.toString()
     }
 
     public static func == (lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
         lhs.modifiers == rhs.modifiers &&
-            lhs.key == rhs.key &&
-            lhs.binding == rhs.binding &&
+            lhs.keyCode == rhs.keyCode &&
+            lhs.descriptionWithKeyCode == rhs.descriptionWithKeyCode &&
             zip(lhs.commands, rhs.commands).allSatisfy { $0.equals($1) }
     }
 }
@@ -78,10 +78,10 @@ func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ er
             }
             .getOrNil(appendErrorTo: &errors)
         if let binding {
-            if result.keys.contains(binding.binding) {
-                errors.append(.semantic(backtrace, "'\(binding.binding)' Binding redeclaration"))
+            if result.keys.contains(binding.descriptionWithKeyCode) {
+                errors.append(.semantic(backtrace, "'\(binding.descriptionWithKeyCode)' Binding redeclaration"))
             }
-            result[binding.binding] = binding
+            result[binding.descriptionWithKeyCode] = binding
         }
     }
     return result
