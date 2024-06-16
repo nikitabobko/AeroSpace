@@ -48,12 +48,16 @@ struct HotkeyBinding: Equatable {
     let keyCode: Key
     let commands: [any Command]
     let descriptionWithKeyCode: String
+    let descriptionWithKeyNotation: String
 
-    init(_ modifiers: NSEvent.ModifierFlags, _ keyCode: Key, _ commands: [any Command]) {
+    init(_ modifiers: NSEvent.ModifierFlags, _ keyCode: Key, _ commands: [any Command], descriptionWithKeyNotation: String) {
         self.modifiers = modifiers
         self.keyCode = keyCode
         self.commands = commands
-        self.descriptionWithKeyCode = modifiers.isEmpty ? keyCode.toString() : modifiers.toString() + "-" + keyCode.toString()
+        self.descriptionWithKeyCode = modifiers.isEmpty
+            ? keyCode.toString()
+            : modifiers.toString() + "-" + keyCode.toString()
+        self.descriptionWithKeyNotation = descriptionWithKeyNotation
     }
 
     public static func == (lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
@@ -74,7 +78,9 @@ func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ er
         let backtrace = backtrace + .key(binding)
         let binding = parseBinding(binding, backtrace, mapping)
             .flatMap { modifiers, key -> ParsedToml<HotkeyBinding> in
-                parseCommandOrCommands(rawCommand).toParsedToml(backtrace).map { HotkeyBinding(modifiers, key, $0) }
+                parseCommandOrCommands(rawCommand).toParsedToml(backtrace).map {
+                    HotkeyBinding(modifiers, key, $0, descriptionWithKeyNotation: binding)
+                }
             }
             .getOrNil(appendErrorTo: &errors)
         if let binding {

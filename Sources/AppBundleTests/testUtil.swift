@@ -1,4 +1,5 @@
 import Foundation
+import HotKey
 import XCTest
 import Common
 @testable import AppBundle
@@ -87,5 +88,14 @@ extension WTarget.Direct {
         autoBackAndForth: Bool = false
     ) {
         self.init(.parse(name).getOrNil()!, autoBackAndForth: autoBackAndForth)
+    }
+}
+
+extension HotkeyBinding {
+    init(_ modifiers: NSEvent.ModifierFlags, _ keyCode: Key, _ commands: [any Command]) {
+        let descriptionWithKeyNotation = modifiers.isEmpty
+            ? keyCode.toString()
+            : modifiers.toString() + "-" + keyCode.toString()
+        self.init(modifiers, keyCode, commands, descriptionWithKeyNotation: descriptionWithKeyNotation)
     }
 }
