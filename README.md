@@ -22,12 +22,12 @@ Public Beta. Feedback is very much welcome
 
 - **Manual** tiling window manager based on a [tree paradigm](https://nikitabobko.github.io/AeroSpace/guide#tree)
 - [i3](https://i3wm.org/) inspired
+- Fast workspaces switching without animations and without the necessity to disable SIP
 - AeroSpace employs its [own emulation of virtual workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces) instead of relying on native macOS Spaces due to [their considerable limitations](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)
 - Plain text configuration (dotfiles friendly). See: [default-config.toml](https://nikitabobko.github.io/AeroSpace/config-examples#default-config)
-- CLI scriptable
+- CLI first (manpages and shell completion included!)
 - Doesn't require disabling SIP (System Integrity Protection)
 - [Proper multi-monitor support](https://nikitabobko.github.io/AeroSpace/guide#multiple-monitors) (i3-like paradigm)
-- Status menu icon displays current workspace name
 
 ## Installation
 
