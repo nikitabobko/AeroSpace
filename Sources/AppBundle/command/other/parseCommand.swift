@@ -81,6 +81,8 @@ extension CmdArgs {
                 command = WorkspaceCommand(args: self as! WorkspaceCmdArgs)
             case .workspaceBackAndForth:
                 command = WorkspaceBackAndForthCommand()
+            case .balanceSizes:
+                command = BalanceSizesCommand()
         }
         check(command.info == Self.info)
         return command

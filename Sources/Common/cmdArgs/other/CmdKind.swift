@@ -31,4 +31,5 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case workspaceBackAndForth = "workspace-back-and-forth"
 
     case serverVersionInternalCommand = "server-version-internal-command"
+    case balanceSizes = "balance-sizes"
 }

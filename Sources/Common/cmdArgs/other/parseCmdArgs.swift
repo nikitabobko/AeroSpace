@@ -82,6 +82,8 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = SubCommandParser(parseWorkspaceCmdArgs)
             case .workspaceBackAndForth:
                 result[kind.rawValue] = defaultSubCommandParser(WorkspaceBackAndForthCmdArgs.init)
+            case .balanceSizes:
+                result[kind.rawValue] = defaultSubCommandParser(BalanceSizesCmdArgs.init)
         }
     }
     return result
