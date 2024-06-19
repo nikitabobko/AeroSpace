@@ -5,6 +5,13 @@ include::util/header.adoc[]
 
 Commands documentation is also available in the form of manpages.
 
+== balance-sizes
+----
+include::aerospace-balance-sizes.adoc[tags=synopsis]
+----
+include::aerospace-balance-sizes.adoc[tags=purpose]
+include::aerospace-balance-sizes.adoc[tags=body]
+
 == close
 ----
 include::aerospace-close.adoc[tags=synopsis]

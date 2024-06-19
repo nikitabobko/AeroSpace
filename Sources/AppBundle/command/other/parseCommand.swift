@@ -19,6 +19,8 @@ extension CmdArgs {
     func toCommand() -> any Command {
         let command: any Command
         switch Self.info.kind {
+            case .balanceSizes:
+                command = BalanceSizesCommand(args: self as! BalanceSizesCmdArgs)
             case .close:
                 command = CloseCommand(args: self as! CloseCmdArgs)
             case .closeAllWindowsButCurrent:

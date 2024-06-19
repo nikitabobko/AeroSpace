@@ -14,6 +14,8 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
     var result: [String: any SubCommandParserProtocol] = [:]
     for kind in CmdKind.allCases {
         switch kind {
+            case .balanceSizes:
+                result[kind.rawValue] = defaultSubCommandParser(BalanceSizesCmdArgs.init)
             case .close:
                 result[kind.rawValue] = defaultSubCommandParser(CloseCmdArgs.init)
             case .closeAllWindowsButCurrent:

@@ -12,6 +12,7 @@
 /.xcode-build
 # Swift package manager
 /.build
+/.vscode
 
 # XCode User settings
 xcuserdata/
