@@ -19,6 +19,8 @@ extension CmdArgs {
     func toCommand() -> any Command {
         let command: any Command
         switch Self.info.kind {
+            case .balanceSizes:
+                command = BalanceSizesCommand()
             case .close:
                 command = CloseCommand(args: self as! CloseCmdArgs)
             case .closeAllWindowsButCurrent:
@@ -81,8 +83,6 @@ extension CmdArgs {
                 command = WorkspaceCommand(args: self as! WorkspaceCmdArgs)
             case .workspaceBackAndForth:
                 command = WorkspaceBackAndForthCommand()
-            case .balanceSizes:
-                command = BalanceSizesCommand()
         }
         check(command.info == Self.info)
         return command

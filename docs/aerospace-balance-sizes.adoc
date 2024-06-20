@@ -1,0 +1,25 @@
+= aerospace-balance-sizes(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-balance-sizes
+// tag::purpose[]
+:manpurpose: Balance the sizes of all opened windows in current workspace
+// end::purpose[]
+
+== Synopsis
+// tag::synopsis[]
+aerospace balance-sizes [-h|--help] 
+// end::synopsis[]
+
+== Description
+Balance the sizes of all opened windows in current workspace
+
+// tag::body[]
+{manpurpose}
+
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+// end::body[]
+
+include::util/man-footer.adoc[]

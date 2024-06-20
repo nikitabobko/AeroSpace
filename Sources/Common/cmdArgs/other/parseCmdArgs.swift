@@ -14,6 +14,8 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
     var result: [String: any SubCommandParserProtocol] = [:]
     for kind in CmdKind.allCases {
         switch kind {
+            case .balanceSizes:
+                result[kind.rawValue] = defaultSubCommandParser(BalanceSizesCmdArgs.init)
             case .close:
                 result[kind.rawValue] = defaultSubCommandParser(CloseCmdArgs.init)
             case .closeAllWindowsButCurrent:
@@ -82,8 +84,6 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = SubCommandParser(parseWorkspaceCmdArgs)
             case .workspaceBackAndForth:
                 result[kind.rawValue] = defaultSubCommandParser(WorkspaceBackAndForthCmdArgs.init)
-            case .balanceSizes:
-                result[kind.rawValue] = defaultSubCommandParser(BalanceSizesCmdArgs.init)
         }
     }
     return result

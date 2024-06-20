@@ -1,4 +1,5 @@
 public enum CmdKind: String, CaseIterable, Equatable {
+    case balanceSizes = "balance-sizes"
     case close
     case closeAllWindowsButCurrent = "close-all-windows-but-current"
     case config
@@ -31,5 +32,4 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case workspaceBackAndForth = "workspace-back-and-forth"
 
     case serverVersionInternalCommand = "server-version-internal-command"
-    case balanceSizes = "balance-sizes"
 }

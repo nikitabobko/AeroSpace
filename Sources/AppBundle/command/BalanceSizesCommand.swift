@@ -12,11 +12,11 @@ struct BalanceSizesCommand: Command {
     }
 
     func balance(_ parent: TilingContainer) {
-        if parent.layout != Layout.tiles { return }
         parent.children.forEach { child in
-            child.setWeight(parent.orientation, 1)
-
-            if let child = child as? TilingContainer, !child.isEffectivelyEmpty {
+            if parent.layout == .tiles {
+                child.setWeight(parent.orientation, 1)
+            }
+            if let child = child as? TilingContainer {
                 balance(child)
             }
         }
