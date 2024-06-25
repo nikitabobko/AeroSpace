@@ -1,0 +1,4 @@
+extension String {
+    func parseAeroShell() -> () {
+    }
+}
