@@ -7,7 +7,7 @@ include::util/man-attributes.adoc[]
 
 == Synopsis
 // tag::synopsis[]
-aerospace list-apps [-h|--help] [--macos-native-hidden [no]]
+aerospace list-apps [-h|--help] [--macos-native-hidden [no]] [--format <output-format>]
 // end::synopsis[]
 
 == Description
@@ -17,25 +17,6 @@ aerospace list-apps [-h|--help] [--macos-native-hidden [no]]
 
 The command is useful to inspect list of applications to compose filter for xref:guide.adoc#on-window-detected-callback[on-window-detected callback]
 
-include::util/conditional-output-format-header.adoc[]
-
-Output format is the table with the following columns:
-
-* Process ID
-* Application ID
-* Application name
-
-Output example:
-
-----
-486   | com.apple.finder            | Finder
-17966 | org.alacritty               | Alacritty
-24780 | com.jetbrains.AppCode       | AppCode
-32541 | com.apple.systempreferences | System Settings
-----
-
-You can use `awk` to get values of particular column: `awk -F '|' '{print $2}'`
-
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
@@ -43,6 +24,26 @@ include::util/conditional-options-header.adoc[]
 --macos-native-hidden [no]::
 Filter results to only print hidden applications.
 `[no]` inverts the condition
+
+--format <output-format>:: Specify output format. See "Output Format" section for more details
+
+include::util/conditional-output-format-header.adoc[]
+
+Output format can be configured with optional `[--format <output-format>]` option.
+`<output-format>` supports https://en.wikipedia.org/wiki/String_interpolation[string interpolation].
+
+If not specified, the default `<output-format>` is: +
+`%{app-pid}%{right-padding} | %{app-bundle-id}%{right-padding} | %{app-name}`
+
+The following variables can be used inside `<output-format>`:
+
+%{app-bundle-id}:: String. Application unique identifier. https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
+%{app-name}:: String. Application name
+%{app-pid}:: Number. https://en.wikipedia.org/wiki/Process_identifier[UNIX process identifier]
+
+%{right-padding}:: A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column
+%{newline}:: Unicode U+000A newline symbol `\n`
+%{tab}:: Unicode U+0009 tab symbol `\t`
 
 // end::body[]
 

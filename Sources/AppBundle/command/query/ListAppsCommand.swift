@@ -10,14 +10,12 @@ struct ListAppsCommand: Command {
         if let hidden = args.macosHidden {
             result = result.filter { $0.asMacApp().nsApp.isHidden == hidden }
         }
-        state.stdout += result
-            .map { app in
-                let pid = String(app.pid)
-                let appId = app.id ?? "NULL-APP-BUNDLE-ID"
-                let name = app.name ?? "NULL-NAME"
-                return [pid, appId, name]
-            }
-            .toPaddingTable()
-        return true
+        switch result.map({ AeroObj.app($0) }).format(args.format) {
+            case .success(let lines):
+                state.stdout += lines
+                return true
+            case .failure(let msg):
+                return state.failCmd(msg: msg)
+        }
     }
 }
