@@ -38,66 +38,12 @@ struct ListWindowsCommand: Command {
         }
         windows = windows.sorted(using: [SelectorComparator { $0.app.name ?? "" }, SelectorComparator(selector: \.title)])
 
-        var cellTable: [[Cell<String>]] = []
-        for window in windows {
-            var line: [Cell<String>] = []
-            var curCell: String = ""
-            var errors: [String] = []
-            for token in args.format {
-                switch token {
-                    case .value("right-padding"):
-                        line.append(Cell(value: curCell, rightPadding: true))
-                        curCell = ""
-                    case .literal(let literal):
-                        curCell += literal
-                    case .value(let value):
-                        switch value.expandTreeNodeVar(window: window) {
-                            case .success(let expanded):
-                                curCell += expanded
-                            case .failure(let error):
-                                errors.append(error)
-                        }
-                }
-            }
-            if !curCell.isEmpty { line.append(Cell(value: curCell, rightPadding: false)) }
-            if !errors.isEmpty { return state.failCmd(msg: errors.joinErrors()) }
-            cellTable.append(line)
-        }
-        state.stdout += cellTable
-            .transposed()
-            .map { column in
-                let columndWidth = column.map { $0.value.count }.max()!
-                return column.map {
-                    $0.rightPadding
-                        ? $0.value + String(repeating: " ", count: columndWidth - $0.value.count)
-                        : $0.value
-                }
-            }
-            .transposed()
-            .map { line in line.joined(separator: "") }
-        return true
-    }
-}
-
-private struct Cell<T> {
-    let value: T
-    let rightPadding: Bool
-}
-
-private extension String {
-    func expandTreeNodeVar(window: Window) -> Result<String, String> {
-        switch self {
-            case "newline": .success("\n")
-            case "tab": .success("\t")
-            case "window-id": .success(window.windowId.description)
-            case "window-title": .success(window.title)
-            case "app-name": .success(window.app.name ?? "NULL-APP-NAME")
-            case "app-pid": .success(window.app.pid.description)
-            case "app-bundle-id": .success(window.app.id ?? "NULL-APP-BUNDLE-ID")
-            case "workspace": .success(window.workspace?.name ?? "NULL-WOKRSPACE")
-            case "monitor-id": .success(window.nodeMonitor?.monitorId?.description ?? "NULL-MONITOR-ID")
-            case "monitor-name": .success(window.nodeMonitor?.name ?? "NULL-MONITOR-NAME")
-            default: .failure("Unknown interpolation variable '\(self)'")
+        switch windows.map({ AeroObj.window($0) }).format(args.format) {
+            case .success(let lines):
+                state.stdout += lines
+                return true
+            case .failure(let msg):
+                return state.failCmd(msg: msg)
         }
     }
 }
