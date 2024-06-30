@@ -18,8 +18,13 @@ struct ListWorkspacesCommand: Command {
         if let empty = args.empty {
             result = result.filter { $0.isEffectivelyEmpty == empty }
         }
-        state.stdout += result.map(\.name)
-        return true
+        switch result.map({ AeroObj.workspace($0) }).format(args.format) {
+            case .success(let lines):
+                state.stdout += lines
+                return true
+            case .failure(let msg):
+                return state.failCmd(msg: msg)
+        }
     }
 }
 
