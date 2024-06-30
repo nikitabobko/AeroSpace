@@ -22,7 +22,7 @@ rm -rf .shell-completion && mkdir -p \
     .shell-completion/fish \
     .shell-completion/bash
 
-"$complgen" aot args-grammar.conf \
+"$complgen" aot args-grammar.txt \
     --zsh-script .shell-completion/zsh/_aerospace 2>&1 \
     --fish-script .shell-completion/fish/aerospace.fish 2>&1 \
     --bash-script .shell-completion/bash/aerospace 2>&1
