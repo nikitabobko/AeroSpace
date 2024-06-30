@@ -76,7 +76,7 @@ aerospace -h;
     | list-workspaces --focused [--format <output-format>]
     ;
 
-<window-id> ::= {{{ aerospace list-windows --all --format "%{window-id}%{right-padding}%{tab}%{app-name}%{right-padding} | %{window-title}" }}};
+<window-id> ::= {{{ aerospace list-windows --all --format '%{window-id}%{right-padding}%{tab}%{app-name}%{right-padding} | %{window-title}' }}};
 <binding> ::= {{{ aerospace config --get mode --keys | xargs -I{} aerospace config --get mode.{}.binding --keys }}};
 <mode-id> ::= {{{ aerospace config --get mode --keys }}};
 <binding-mode> ::= <mode-id>;
@@ -105,6 +105,6 @@ aerospace -h;
 <list-windows-format-flag> ::= --format <output-format>;
 <output-format> ::= {{{ true }}};
 <workspace-or-special> ::= visible | focused | <workspace>;
-<app-bundle-id> ::= {{{ true }}}; # todo
-<pid> ::= {{{ true }}}; # todo
-<monitor-id> ::= all | mouse | focused; # todo
+<app-bundle-id> ::= {{{ aerospace list-apps --format '%{app-bundle-id}%{right-padding}%{tab}%{app-name}' }}};
+<pid> ::= {{{ aerospace list-apps --format '%{app-pid}%{right-padding}%{tab}%{app-name}' }}};
+<monitor-id> ::= all | mouse | focused | {{{ aerospace list-monitors --format '%{monitor-id}%{right-padding}%{tab}%{monitor-name}' }}};
