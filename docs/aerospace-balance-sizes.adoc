@@ -5,11 +5,13 @@ include::util/man-attributes.adoc[]
 :manpurpose: Balance sizes of all windows in the current workspace
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace balance-sizes [-h|--help]
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -17,8 +19,10 @@ aerospace balance-sizes [-h|--help]
 
 // end::body[]
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

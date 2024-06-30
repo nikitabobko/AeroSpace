@@ -5,11 +5,13 @@ include::util/man-attributes.adoc[]
 :manpurpose: Toggle macOS minimize for the currently focused window
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace macos-native-minimize [-h|--help]
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -17,8 +19,10 @@ aerospace macos-native-minimize [-h|--help]
 
 // end::body[]
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

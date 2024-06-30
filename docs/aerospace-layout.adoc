@@ -5,11 +5,13 @@ include::util/man-attributes.adoc[]
 :manpurpose: Change layout of the focused window to the given layout
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace layout [-h|--help] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -22,10 +24,12 @@ If several arguments are supplied then finds the first argument that doesn't des
 * Change orientation but preserve layout: `horizontal|vertical`
 * Toggle floating/tiling mode: `tiling|floating`
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 
+// =========================================================== Examples
 include::util/conditional-examples-header.adoc[]
 
 * Toggle between `floating` and `tiling` layouts (order of args doesn't matter): +
@@ -42,4 +46,5 @@ include::util/conditional-examples-header.adoc[]
 
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

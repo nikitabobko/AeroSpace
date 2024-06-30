@@ -5,6 +5,7 @@ include::util/man-attributes.adoc[]
 :manpurpose: Set focus to the nearest window in in the given direction.
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
@@ -14,6 +15,7 @@ aerospace focus [-h|--help] --window-id <window-id>
 
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -28,6 +30,7 @@ This technique eliminates the need for an additional binding for floating window
 `focus child|parent` isn't supported because the necessity of this operation is under the question.
 https://github.com/nikitabobko/AeroSpace/issues/5
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
@@ -47,4 +50,5 @@ Focus the window with specified `<window-id>`
 
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

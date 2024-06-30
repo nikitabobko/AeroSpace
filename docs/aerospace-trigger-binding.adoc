@@ -5,11 +5,13 @@ include::util/man-attributes.adoc[]
 :manpurpose: Trigger AeroSpace binding as if it was pressed by user
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace trigger-binding [-h|--help] <binding> --mode <mode-id>
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -18,15 +20,18 @@ aerospace trigger-binding [-h|--help] <binding> --mode <mode-id>
 You can use aerospace-config command to inspect available bindings: +
 `aerospace config --get mode.main.binding --keys`
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 --mode <mode-id>:: Mode to search `<binding>` in
 
+// =========================================================== Arguments
 include::util/conditional-arguments-header.adoc[]
 
 <binding>:: Binding to trigger
 
+// =========================================================== Examples
 include::util/conditional-examples-header.adoc[]
 
 * Run alphabetically first binding from config (useless and synthetic example) +
@@ -36,4 +41,5 @@ include::util/conditional-examples-header.adoc[]
 
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

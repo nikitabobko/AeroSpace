@@ -5,16 +5,19 @@ include::util/man-attributes.adoc[]
 :manpurpose: Print monitors that satisfy conditions
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace list-monitors [-h|--help] [--focused [no]] [--mouse [no]]
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
 {manpurpose}
 
+// =========================================================== Output Format
 include::util/conditional-output-format-header.adoc[]
 
 Output format is the table with 2 columns:
@@ -33,6 +36,7 @@ NOTE: monitor sequence ID may change if you plug or unplug monitors
 
 You can use `awk` to get values of particular column: `awk -F '|' '{print $2}'`
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
@@ -46,4 +50,5 @@ Filter results to only print the monitor with the mouse.
 `[no]` inverts the condition
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

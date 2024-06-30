@@ -5,11 +5,13 @@ include::util/man-attributes.adoc[]
 :manpurpose: Close the focused window
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace close [-h|--help] [--quit-if-last-window]
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -18,6 +20,7 @@ aerospace close [-h|--help] [--quit-if-last-window]
 Normally, you don’t need to use this command, because macOS offers its own `cmd+w` binding.
 You might want to use the command from CLI for scripting purposes
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
@@ -25,4 +28,5 @@ include::util/conditional-options-header.adoc[]
 --quit-if-last-window:: Quit the app instead of closing if it's the last window of the app
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

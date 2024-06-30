@@ -5,6 +5,7 @@ include::util/man-attributes.adoc[]
 :manpurpose: Query AeroSpace config options
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
@@ -15,6 +16,7 @@ aerospace config [-h|--help] --config-path
 
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -27,6 +29,7 @@ Under the hood, the config is represented as recursive data structure of maps, a
 Printing without `--json` or `--keys` flag is supported only for scalar types (strings and integers) and array of scalar types.
 Printing other complicated objects requires `--json` or `--keys` flag.
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
@@ -37,6 +40,7 @@ include::util/conditional-options-header.adoc[]
 --keys:: Print keys of the complicated object (map or array)
 --config-path:: Print absolute path to the loaded config
 
+// =========================================================== Examples
 include::util/conditional-examples-header.adoc[]
 
 * List all binding modes:
@@ -73,4 +77,5 @@ $ aerospace config --get mode.main.binding --json
 
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

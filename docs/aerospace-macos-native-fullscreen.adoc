@@ -5,20 +5,24 @@ include::util/man-attributes.adoc[]
 :manpurpose: Toggle macOS fullscreen for the currently focused window
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace macos-native-fullscreen [-h|--help] [on|off]
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
 {manpurpose}
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 
+// =========================================================== Arguments
 include::util/conditional-arguments-header.adoc[]
 
 [on|off]::
@@ -27,4 +31,5 @@ Toggle between the two if not specified
 
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

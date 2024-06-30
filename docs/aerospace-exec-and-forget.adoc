@@ -5,11 +5,13 @@ include::util/man-attributes.adoc[]
 :manpurpose: Run /bin/bash -c '<bash-script>'
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace exec-and-forget <bash-script>
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -30,4 +32,5 @@ alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app
 
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

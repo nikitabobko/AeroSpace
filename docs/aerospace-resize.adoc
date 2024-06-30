@@ -5,11 +5,13 @@ include::util/man-attributes.adoc[]
 :manpurpose: Resize the currently focused window
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace resize [-h|--help] (smart|width|height) [+|-]<number>
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -29,8 +31,10 @@ Second argument controls how much the size is changes
 * If the `<number>` is prefixed with neither `+` nor `-` then the command changes the absolute value of the dimension
 // end::body[]
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

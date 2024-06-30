@@ -5,6 +5,7 @@ include::util/man-attributes.adoc[]
 :manpurpose: Interactive command to record Accessibility API debug information to create bug reports
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
@@ -12,6 +13,7 @@ aerospace debug-windows [-h|--help]
 
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -32,8 +34,10 @@ The only intended use case is to report bugs about incorrect windows handling.
 
 // end::body[]
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]
