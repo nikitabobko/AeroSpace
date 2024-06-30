@@ -26,5 +26,7 @@ fi
 ./build-release.sh --build-version "$build_version"
 
 git tag -a v$build_version -m "v$build_version" && git push git@github.com:nikitabobko/AeroSpace.git v$build_version
-open "https://github.com/nikitabobko/AeroSpace/releases/new?tag=v$build_version"
+link="https://github.com/nikitabobko/AeroSpace/releases/new?tag=v$build_version"
+open "$link" || { echo "$link"; exit 1; }
+sleep 1
 open -R ./.release/AeroSpace-v$build_version.zip
