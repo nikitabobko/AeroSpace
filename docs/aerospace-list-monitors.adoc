@@ -8,7 +8,7 @@ include::util/man-attributes.adoc[]
 // =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
-aerospace list-monitors [-h|--help] [--focused [no]] [--mouse [no]]
+aerospace list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>]
 // end::synopsis[]
 
 // =========================================================== Description
@@ -16,25 +16,6 @@ aerospace list-monitors [-h|--help] [--focused [no]] [--mouse [no]]
 
 // tag::body[]
 {manpurpose}
-
-// =========================================================== Output Format
-include::util/conditional-output-format-header.adoc[]
-
-Output format is the table with 2 columns:
-
-* Monitor unique sequence ID (ID orders monitors from left to right)
-* Monitor name
-
-Output example:
-
-----
-1 | Built-in Retina Display
-2 | DELL U2723QE
-----
-
-NOTE: monitor sequence ID may change if you plug or unplug monitors
-
-You can use `awk` to get values of particular column: `awk -F '|' '{print $2}'`
 
 // =========================================================== Options
 include::util/conditional-options-header.adoc[]
@@ -48,6 +29,27 @@ Filter results to only print the focused monitor.
 --mouse [no]::
 Filter results to only print the monitor with the mouse.
 `[no]` inverts the condition
+
+--format <output-format>:: Specify output format. See "Output Format" section for more details
+
+// =========================================================== Output Format
+include::util/conditional-output-format-header.adoc[]
+
+Output format can be configured with optional `[--format <output-format>]` option.
+`<output-format>` supports https://en.wikipedia.org/wiki/String_interpolation[string interpolation].
+
+If not specified, the default `<output-format>` is: +
+`%{monitor-id}%{right-padding} | %{monitor-name}`
+
+The following variables can be used inside `<output-format>`:
+
+%{monitor-id}:: Number. Sequential number of the belonging monitor
+%{monitor-name}:: String. Name of the belonging monitor
+
+%{right-padding}:: A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column
+%{newline}:: Unicode U+000A newline symbol `\n`
+%{tab}:: Unicode U+0009 tab symbol `\t`
+
 // end::body[]
 
 // =========================================================== Footer

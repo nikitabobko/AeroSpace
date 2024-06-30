@@ -52,8 +52,7 @@ include::util/monitor-option.adoc[]
 Filter results to only print windows that belong to the Application with specified https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
 +
 Deprecated (but still supported) flag name: `--app-id`
---format <output-format>::
-Specify output format. See "Output Format" section for more details
+--format <output-format>:: Specify output format. See "Output Format" section for more details
 
 // =========================================================== Output Format
 include::util/conditional-output-format-header.adoc[]
