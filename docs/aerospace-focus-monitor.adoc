@@ -5,6 +5,7 @@ include::util/man-attributes.adoc[]
 :manpurpose: Focus monitor by relative direction, by order, or by pattern
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
@@ -14,16 +15,19 @@ aerospace focus-monitor [-h|--help] <monitor-pattern>...
 
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
 {manpurpose}
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 --wrap-around:: Make it possible to wrap around focus
 
+// =========================================================== Arguments
 include::util/conditional-arguments-header.adoc[]
 
 (left|down|up|right)::
@@ -38,4 +42,5 @@ Monitor pattern is the same as in `workspace-to-monitor-force-assignment` config
 
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

@@ -5,12 +5,14 @@ include::util/man-attributes.adoc[]
 :manpurpose: Move currently focused workspace to the next or previous monitor
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace move-workspace-to-monitor [-h|--help] [--wrap-around] (next|prev)
 
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -18,10 +20,12 @@ aerospace move-workspace-to-monitor [-h|--help] [--wrap-around] (next|prev)
 
 The command doesn't have effect on workspaces xref:guide.adoc#assign-workspaces-to-monitors[that have monitor assignment]
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 --wrap-around:: Allows to move workspace between first and last monitors
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

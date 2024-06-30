@@ -5,11 +5,13 @@ include::util/man-attributes.adoc[]
 :manpurpose: Reload currently active config
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace reload-config [-h|--help] [--no-gui] [--dry-run]
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -17,6 +19,7 @@ aerospace reload-config [-h|--help] [--no-gui] [--dry-run]
 
 If the config contains errors they will be printed to stdout, and GUI will open to show the errors.
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
@@ -30,4 +33,5 @@ non-zero exit code:: Failure. The config contains errors.
 
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

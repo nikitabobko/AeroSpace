@@ -5,6 +5,7 @@ include::util/man-attributes.adoc[]
 :manpurpose: Print workspaces that satisfy conditions
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
@@ -14,11 +15,13 @@ aerospace list-workspaces [-h|--help] --focused
 
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
 {manpurpose}
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
@@ -42,4 +45,5 @@ Filter results to only print empty workspaces.
 
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

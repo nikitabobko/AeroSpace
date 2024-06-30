@@ -5,16 +5,19 @@ include::util/man-attributes.adoc[]
 // end::purpose[]
 :manname: aerospace-join-with
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace join-with [-h|--help] (left|down|up|right)
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
 {manpurpose}
 
+// =========================================================== Examples
 include::util/conditional-examples-header.adoc[]
 
 Given this layout
@@ -41,8 +44,10 @@ There is an observation that the only reason why you might want to split a node 
 
 // end::body[]
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

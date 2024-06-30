@@ -5,11 +5,13 @@ include::util/man-attributes.adoc[]
 // end::purpose[]
 :manname: aerospace-mode
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace mode [-h|--help] <binding-mode>
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -18,8 +20,10 @@ aerospace mode [-h|--help] <binding-mode>
 See xref:guide.adoc#binding-modes[the guide] for documentation about binding modes
 // end::body[]
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

@@ -5,6 +5,7 @@ include::util/man-attributes.adoc[]
 :manpurpose: Move currently focused window to the specified workspace
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 
 [verse]
@@ -14,6 +15,7 @@ aerospace move-node-to-workspace [-h|--help] <workspace-name>
 
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -21,6 +23,7 @@ aerospace move-node-to-workspace [-h|--help] <workspace-name>
 
 `(next|prev)` is identical to `workspace (next|prev)`
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
@@ -29,4 +32,5 @@ Make it possible to jump between first and last workspaces using (next|prev)
 
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

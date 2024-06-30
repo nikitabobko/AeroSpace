@@ -5,11 +5,13 @@ include::util/man-attributes.adoc[]
 :manpurpose: Flatten the tree of currently focused workspace.
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace flatten-workspace-tree [-h|--help]
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -18,8 +20,10 @@ aerospace flatten-workspace-tree [-h|--help]
 The command is useful when you messed up with your layout, and it's easier to "reset" it and start again.
 // end::body[]
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

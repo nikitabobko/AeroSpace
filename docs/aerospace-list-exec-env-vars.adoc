@@ -5,11 +5,13 @@ include::util/man-attributes.adoc[]
 :manpurpose: List environment variables that exec-* commands and callbacks are run with
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace list-exec-env-vars [-h|--help]
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -22,8 +24,10 @@ Examples of commands and callbacks:
 
 // end::body[]
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

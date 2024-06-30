@@ -5,16 +5,19 @@ include::util/man-attributes.adoc[]
 :manpurpose: On the focused workspace, close all windows but current
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace close-all-windows-but-current [-h|--help] [--quit-if-last-window]
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
 {manpurpose}
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
@@ -22,4 +25,5 @@ include::util/conditional-options-header.adoc[]
 --quit-if-last-window:: Quit the apps instead of closing them if it's their last window
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

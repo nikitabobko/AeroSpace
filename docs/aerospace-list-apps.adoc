@@ -5,11 +5,13 @@ include::util/man-attributes.adoc[]
 :manpurpose: Print the list of running applications that appears in the Dock and may have a user interface
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace list-apps [-h|--help] [--macos-native-hidden [no]] [--format <output-format>]
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -17,6 +19,7 @@ aerospace list-apps [-h|--help] [--macos-native-hidden [no]] [--format <output-f
 
 The command is useful to inspect list of applications to compose filter for xref:guide.adoc#on-window-detected-callback[on-window-detected callback]
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
@@ -27,6 +30,7 @@ Filter results to only print hidden applications.
 
 --format <output-format>:: Specify output format. See "Output Format" section for more details
 
+// =========================================================== Output Format
 include::util/conditional-output-format-header.adoc[]
 
 Output format can be configured with optional `[--format <output-format>]` option.
@@ -47,4 +51,5 @@ The following variables can be used inside `<output-format>`:
 
 // end::body[]
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]

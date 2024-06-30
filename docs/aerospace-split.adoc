@@ -5,11 +5,13 @@ include::util/man-attributes.adoc[]
 :manpurpose: Split focused window
 // end::purpose[]
 
+// =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
 aerospace split [-h|--help] (horizontal|vertical|opposite)
 // end::synopsis[]
 
+// =========================================================== Description
 == Description
 
 // tag::body[]
@@ -28,8 +30,10 @@ IMPORTANT: `split` command has no effect if `enable-normalization-flatten-contai
 Consider using `join-with` if you want to keep `enable-normalization-flatten-containers` enabled
 // end::body[]
 
+// =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 
+// =========================================================== Footer
 include::util/man-footer.adoc[]
