@@ -9,7 +9,7 @@
 - `../Sources`.
   All major AeroSpace source code. Managed by SPM
 - `../Sources/AppBundle/`.
-  AeroSpace.app server. Technically, it's a swift library that is exposed to `xcode-app-bundle-launcher`
+  AeroSpace.app server. Technically, it's a SPM library that is exposed to `xcode-app-bundle-launcher`
 - `../Sources/Cli/`.
   CLI client. CLI client is built purely using SPM, no Xcode involved (phew!)
 - `../Sources/Common/`.
@@ -27,6 +27,17 @@
 - `../docs/`.
   Documentation sources for site and man pages in Asciidoc format https://asciidoc.org/
 
+## client/server interaction
+
+`aerospace` CLI binary is client. `AeroSpace.app` is server. Client and server talk to each other via predefined UNIX file.
+
+Each time you run a CLI command:
+1. Args are parsed by the client, args parsing errors are reporeted if any. Help is shown if `-h`/`--help` is passed.
+2. If args are parsed successufly, the args are send to the server
+3. Server parses the args once again, and runs the command
+4. Server returns stdout, stderr, and exit code to the client
+5. Client shows stdout, stderr, and ends the process with the requested exit code
+
 ## Commands subsystem
 
 todo
@@ -36,7 +47,7 @@ todo
 
 Command checklist:
 - [ ] Documentation in `../docs/aerospace-*` and `../docs/commands.adoc`
-  - [ ] Check that site looks alright `./.commands.html`
+  - [ ] Check that site looks alright `./.site/commands.html`
   - [ ] Check that man page looks alright `./.man`
 - [ ] `--help` documentation
 - [ ] Shell completion `../args-grammar.txt`
