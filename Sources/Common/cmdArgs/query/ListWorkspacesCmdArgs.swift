@@ -9,17 +9,18 @@ public struct ListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
         kind: .listWorkspaces,
         allowInConfig: false,
         help: """
-            USAGE: list-workspaces [-h|--help] --monitor \(_monitors) [--visible [no]] [--empty [no]]
-               OR: list-workspaces [-h|--help] --all
-               OR: list-workspaces [-h|--help] --focused
+            USAGE: list-workspaces [-h|--help] --monitor \(_monitors) [--visible [no]] [--empty [no]] [--format <output-format>]
+               OR: list-workspaces [-h|--help] --all [--format <output-format>]
+               OR: list-workspaces [-h|--help] --focused [--format <output-format>]
 
             OPTIONS:
-              -h, --help               Print help
-              --all                    Alias for "--monitor all"
-              --focused                Alias for "--monitor focused --visible"
-              --monitor \(_monitors)   Filter results to only print the workspaces that are attached to specified monitors
-              --visible [no]           Filter results to only print currently visible workspaces
-              --empty [no]             Filter results to only print empty workspaces. [no] inverts the condition
+              -h, --help                 Print help
+              --all                      Alias for "--monitor all"
+              --focused                  Alias for "--monitor focused --visible"
+              --monitor \(_monitors)     Filter results to only print the workspaces that are attached to specified monitors
+              --visible [no]             Filter results to only print currently visible workspaces
+              --empty [no]               Filter results to only print empty workspaces. [no] inverts the condition
+              --format <output-format>   Specify output format
             """,
         options: [
             "--focused": trueBoolFlag(\.focused),
@@ -27,7 +28,8 @@ public struct ListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
 
             "--visible": boolFlag(\.visible),
             "--empty": boolFlag(\.empty),
-            "--monitor": ArgParser(\.onMonitors, parseMonitorIds)
+            "--monitor": ArgParser(\.onMonitors, parseMonitorIds),
+            "--format": ArgParser(\.format, parseFormat),
         ],
         arguments: []
     )
@@ -38,6 +40,7 @@ public struct ListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
     public var onMonitors: [MonitorId] = []
     public var visible: Bool?
     public var empty: Bool?
+    public var format: [StringInterToken] = [.value("workspace")]
 }
 
 public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {

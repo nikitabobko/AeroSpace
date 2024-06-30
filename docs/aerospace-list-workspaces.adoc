@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]]
-aerospace list-workspaces [-h|--help] --all
-aerospace list-workspaces [-h|--help] --focused
+aerospace list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]] [--format <output-format>]
+aerospace list-workspaces [-h|--help] --all [--format <output-format>]
+aerospace list-workspaces [-h|--help] --focused [--format <output-format>]
 
 // end::synopsis[]
 
@@ -25,6 +25,7 @@ aerospace list-workspaces [-h|--help] --focused
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+--format <output-format>:: Specify output format. See "Output Format" section for more details
 
 include::util/all-monitors-option.adoc[]
 
@@ -42,6 +43,28 @@ Several workspaces can be visible in multi-monitor setup
 --empty [no]::
 Filter results to only print empty workspaces.
 `[no]` inverts the condition.
+
+--format <output-format>:: Specify output format. See "Output Format" section for more details
+
+// =========================================================== Output Format
+include::util/conditional-output-format-header.adoc[]
+
+Output format can be configured with optional `[--format <output-format>]` option.
+`<output-format>` supports https://en.wikipedia.org/wiki/String_interpolation[string interpolation].
+
+If not specified, the default `<output-format>` is: +
+`%{workspace}`
+
+The following variables can be used inside `<output-format>`:
+
+%{workspace}:: String. Name of the belonging workspace
+
+%{monitor-id}:: Number. Sequential number of the belonging monitor
+%{monitor-name}:: String. Name of the belonging monitor
+
+%{right-padding}:: A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column
+%{newline}:: Unicode U+000A newline symbol `\n`
+%{tab}:: Unicode U+0009 tab symbol `\t`
 
 // end::body[]
 
