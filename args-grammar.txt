@@ -15,11 +15,12 @@ aerospace -h;
 
     | flatten-workspace-tree
 
-    | <focus-subcommand>
+    | focus [<focus_flag>]... (left|down|up|right) [<focus_flag>]...
+    | focus --window-id <window_id>
 
-    | focus-monitor [--wrap-around] (left|down|up|right) | focus-monitor (left|down|up|right) [--wrap-around]
-    | focus-monitor [--wrap-around] (next|prev) | focus-monitor (next|prev) [--wrap-around]
-    | focus-monitor <monitor-pattern>...
+    | focus-monitor [--wrap-around] (left|down|up|right) [--wrap-around]
+    | focus-monitor [--wrap-around] (next|prev) [--wrap-around]
+    | focus-monitor <monitor_pattern>...
 
     | join-with (left|down|up|right)
 
@@ -29,82 +30,75 @@ aerospace -h;
 
     | macos-native-minimize
 
-    | mode <binding-mode>
+    | mode <mode_id>
 
     | move (left|down|up|right)
 
-    | move-node-to-monitor [--wrap-around] (left|down|up|right) | move-node-to-monitor (left|down|up|right) [--wrap-around]
-    | move-node-to-monitor [--wrap-around] (next|prev) | move-node-to-monitor (next|prev) [--wrap-around]
-    | move-node-to-monitor <monitor-pattern>...
+    | move-node-to-monitor [--wrap-around] (left|down|up|right) [--wrap-around]
+    | move-node-to-monitor [--wrap-around] (next|prev) [--wrap-around]
+    | move-node-to-monitor <monitor_pattern>...
 
-    | move-node-to-workspace [--wrap-around] (next|prev) | move-node-to-workspace (next|prev) [--wrap-around]
+    | move-node-to-workspace [--wrap-around] (next|prev) [--wrap-around]
     | move-node-to-workspace <workspace>
 
-    | move-workspace-to-monitor [--wrap-around] (next|prev) | move-workspace-to-monitor (next|prev) [--wrap-around]
+    | move-workspace-to-monitor [--wrap-around] (next|prev) [--wrap-around]
 
-    | reload-config [--no-gui] [--dry-run] | reload-config [--dry-run] [--no-gui]
+    | reload-config [--no-gui | --dry-run]
 
     | resize (smart|width|height) [+|-]<number>
 
     | split (horizontal|vertical|opposite)
 
-    | trigger-binding <binding> --mode <mode-id> | trigger-binding --mode <mode-id> <binding>
+    | trigger-binding <binding> --mode <mode_id>
+    | trigger-binding --mode <mode_id> <binding>
 
-    | workspace [--auto-back-and-forth] <workspace> | workspace <workspace> [--auto-back-and-forth]
-    | workspace [--wrap-around] (next|prev) | workspace (next|prev) [--wrap-around]
+    | workspace [--auto-back-and-forth] <workspace> [--auto-back-and-forth]
+    | workspace [--wrap-around] (next|prev) [--wrap-around]
 
     | workspace-back-and-forth
 
-    | config --get <config-key> [--json|--keys]... | config [--json|--keys]... --get <config-key>
+    | config [--json | --keys]... --get {{{ aerospace config --major-keys }}} [--json | --keys]...
     | config --major-keys
     | config --all-keys
     | config --config-path
 
     | debug-windows
 
-    | list-apps [--macos-native-hidden [no] | --format <output-format>]...
+    | list-apps [--macos-native-hidden [no] | --format <output_format>]...
 
     | list-exec-env-vars
 
     | list-monitors [--focused [no]] [--mouse [no]] | list-monitors [--mouse [no]] [--focused [no]]
 
-    | <list-windows-subcommand>
+    | list-windows [<list_windows_filter_flag> | --format <output_format>]...
+    | list-windows [--format <output_format>] --all [--format <output_format>]
+    | list-windows [--format <output_format>] --focused [--format <output_format>]
 
-    | list-workspaces --monitor <monitor-id>... [--visible [no] | --empty [no] | --format <output-format>]...
-        | list-workspaces [--visible [no] | --empty [no] | --format <output-format>]... --monitor <monitor-id>...
-    | list-workspaces --all [--format <output-format>]
-    | list-workspaces --focused [--format <output-format>]
+    | list-workspaces [<list_workspaces1_flag>]... --monitor <monitor_id>... [<list_workspaces1_flag>]...
+    | list-workspaces [--format <output_format>] --all [--format <output_format>]
+    | list-workspaces [--format <output_format>] --focused [--format <output_format>]
     ;
 
-<window-id> ::= {{{ aerospace list-windows --all --format '%{window-id}%{right-padding}%{tab}%{app-name}%{right-padding} | %{window-title}' }}};
+<window_id> ::= {{{ aerospace list-windows --all --format '%{window-id}%{right-padding}%{tab}%{app-name}%{right-padding} | %{window-title}' }}};
 <binding> ::= {{{ aerospace config --get mode --keys | xargs -I{} aerospace config --get mode.{}.binding --keys }}};
-<mode-id> ::= {{{ aerospace config --get mode --keys }}};
-<binding-mode> ::= <mode-id>;
+<mode_id> ::= {{{ aerospace config --get mode --keys }}};
 <workspace> ::= {{{ aerospace list-workspaces --monitor all --empty no }}};
-<config-key> ::= {{{ aerospace config --all-keys }}};
 <number> ::= {{{ true }}};
-<monitor-pattern> ::= {{{ true }}};
+<monitor_pattern> ::= {{{ true }}};
 
-<focus-subcommand> ::=
-    focus [<focus-flag>]... (left|down|up|right) [<focus-flag>]... |
-    focus --window-id <window-id>;
-<focus-flag> ::= --boundaries <boundary>|--boundaries-actions <boundaries-action>;
-<boundaries-action> ::= stop|wrap-around-the-workspace|wrap-around-all-monitors;
+<list_workspaces1_flag> ::= --visible [no] | --empty [no] | --format <output_format>;
+
+<focus_flag> ::= --boundaries <boundary>|--boundaries-actions <boundaries_action>;
+<boundaries_action> ::= stop|wrap-around-the-workspace|wrap-around-all-monitors;
 <boundary> ::= workspace|all-monitors-outer-frame;
 
-<list-windows-subcommand> ::=
-    list-windows [<list-windows-filter-flag>]... |
-    list-windows [<list-windows-format-flag>] --all | list-windows --all [<list-windows-format-flag>] |
-    list-windows [<list-windows-format-flag>] --focused | list-windows --focused [<list-windows-format-flag>];
-<list-windows-filter-flag> ::= --workspace <workspace-or-special>...
-    | --monitor <monitor-id>...
+<list_windows_filter_flag> ::= --workspace (visible | focused | <workspace>)...
+    | --monitor <monitor_id>...
     | --pid <pid>
-    | --app-bundle-id <app-bundle-id>
-    | <list-windows-format-flag>
+    | --app-bundle-id <app_bundle_id>
     ;
-<list-windows-format-flag> ::= --format <output-format>;
-<output-format> ::= {{{ true }}};
-<workspace-or-special> ::= visible | focused | <workspace>;
-<app-bundle-id> ::= {{{ aerospace list-apps --format '%{app-bundle-id}%{right-padding}%{tab}%{app-name}' }}};
+<output_format> ::= {{{ true }}};
+
+<app_bundle_id> ::= {{{ aerospace list-apps --format '%{app-bundle-id}%{right-padding}%{tab}%{app-name}' }}};
 <pid> ::= {{{ aerospace list-apps --format '%{app-pid}%{right-padding}%{tab}%{app-name}' }}};
-<monitor-id> ::= all | mouse | focused | {{{ aerospace list-monitors --format '%{monitor-id}%{right-padding}%{tab}%{monitor-name}' }}};
+<monitor_id> ::= all | mouse | focused | {{{ aerospace list-monitors --format '%{monitor-id}%{right-padding}%{tab}%{monitor-name}' }}};
