@@ -67,7 +67,7 @@ public func parseRawListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindow
                 default: .failure("Conflicting options: \(conflicting.joined(separator: ", "))")
             }
         }
-        .filter("--all conflicts with \"filtering\" flags") { raw in
+        .filter("--all conflicts with \"filtering\" flags. Please use '--monitor all'") { raw in
             !raw.all || raw == ListWindowsCmdArgs(rawArgs: .init([]), all: true, format: raw.format)
         }
         .filter("--focused conflicts with \"filtering\" flags") { raw in
