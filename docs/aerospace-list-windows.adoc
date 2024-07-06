@@ -36,7 +36,7 @@ Please note that it is possible for no window to be in focus.
 In that case, error is reported.
 
 --workspace <workspace>...::
-Filter results to only print windows that belong to specified workspaces.
+Filter results to only print windows that belong to either of specified workspaces.
 `<workspace>...` is a space-separated list of workspace names.
 +
 Possible values: +

@@ -341,7 +341,7 @@ The intended workflow of using AeroSpace workspaces is to only have one macOS Sp
 === A note on mission control
 
 For some reason, mission control doesn't like that AeroSpace puts a lot of windows in the bottom right corner of the screen.
-Mission control shows windows too small even if it has enough space to show them bigger.
+Mission control shows windows too small even there is enough space to show them bigger.
 
 To workaround, you can enable `System Settings -> Desktop & Dock -> Group windows by application` setting.
 For some weird reason, it helps.

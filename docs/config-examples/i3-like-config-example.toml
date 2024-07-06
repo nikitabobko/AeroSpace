@@ -1,6 +1,6 @@
 # Reference: https://github.com/i3/i3/blob/next/etc/config
 
-# i3 didn't have "normalizations" feature that why we disable them here.
+# i3 doesn't have "normalizations" feature that why we disable them here.
 # But the feature is very helpful.
 # Normalizations eliminate all sorts of weird tree configurations that don't make sense.
 # Give normalizations a chance and enable them back.
