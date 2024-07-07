@@ -178,12 +178,12 @@ open class AeroShellParser: Parser {
 				return getRuleContext(ProgramContext.self, i)
 			}
 			open
-			func NEWLINES() -> TerminalNode? {
-				return getToken(AeroShellParser.Tokens.NEWLINES.rawValue, 0)
-			}
-			open
 			func OR() -> TerminalNode? {
 				return getToken(AeroShellParser.Tokens.OR.rawValue, 0)
+			}
+			open
+			func NEWLINES() -> TerminalNode? {
+				return getToken(AeroShellParser.Tokens.NEWLINES.rawValue, 0)
 			}
 
 		public
@@ -222,12 +222,12 @@ open class AeroShellParser: Parser {
 				return getRuleContext(ProgramContext.self, i)
 			}
 			open
-			func NEWLINES() -> TerminalNode? {
-				return getToken(AeroShellParser.Tokens.NEWLINES.rawValue, 0)
-			}
-			open
 			func AND() -> TerminalNode? {
 				return getToken(AeroShellParser.Tokens.AND.rawValue, 0)
+			}
+			open
+			func NEWLINES() -> TerminalNode? {
+				return getToken(AeroShellParser.Tokens.NEWLINES.rawValue, 0)
 			}
 
 		public
@@ -246,12 +246,12 @@ open class AeroShellParser: Parser {
 				return getRuleContext(ProgramContext.self, i)
 			}
 			open
-			func NEWLINES() -> TerminalNode? {
-				return getToken(AeroShellParser.Tokens.NEWLINES.rawValue, 0)
-			}
-			open
 			func PIPE() -> TerminalNode? {
 				return getToken(AeroShellParser.Tokens.PIPE.rawValue, 0)
+			}
+			open
+			func NEWLINES() -> TerminalNode? {
+				return getToken(AeroShellParser.Tokens.NEWLINES.rawValue, 0)
 			}
 
 		public
@@ -315,7 +315,7 @@ open class AeroShellParser: Parser {
 				setState(15)
 				try match(AeroShellParser.Tokens.NOT.rawValue)
 				setState(16)
-				try program(10)
+				try program(7)
 
 				break
 
@@ -362,110 +362,92 @@ open class AeroShellParser: Parser {
 				throw ANTLRException.recognition(e: NoViableAltException(self))
 			}
 			_ctx!.stop = try _input.LT(-1)
-			setState(59)
+			setState(56)
 			try _errHandler.sync(self)
-			_alt = try getInterpreter().adaptivePredict(_input,5,_ctx)
+			_alt = try getInterpreter().adaptivePredict(_input,8,_ctx)
 			while (_alt != 2 && _alt != ATN.INVALID_ALT_NUMBER) {
 				if ( _alt==1 ) {
 					if _parseListeners != nil {
 					   try triggerExitRuleEvent()
 					}
 					_prevctx = _localctx
-					setState(57)
+					setState(54)
 					try _errHandler.sync(self)
-					switch(try getInterpreter().adaptivePredict(_input,4, _ctx)) {
+					switch(try getInterpreter().adaptivePredict(_input,7, _ctx)) {
 					case 1:
 						_localctx = PipeContext(  ProgramContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, AeroShellParser.RULE_program)
 						setState(28)
-						if (!(precpred(_ctx, 9))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 9)"))
-						}
-						setState(29)
-						try match(AeroShellParser.Tokens.NEWLINES.rawValue)
-						setState(30)
-						try match(AeroShellParser.Tokens.PIPE.rawValue)
-						setState(31)
-						try program(10)
-
-						break
-					case 2:
-						_localctx = PipeContext(  ProgramContext(_parentctx, _parentState))
-						try pushNewRecursionContext(_localctx, _startState, AeroShellParser.RULE_program)
-						setState(32)
-						if (!(precpred(_ctx, 8))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 8)"))
-						}
-						setState(33)
-						try match(AeroShellParser.Tokens.PIPE.rawValue)
-						setState(34)
-						try program(9)
-
-						break
-					case 3:
-						_localctx = AndContext(  ProgramContext(_parentctx, _parentState))
-						try pushNewRecursionContext(_localctx, _startState, AeroShellParser.RULE_program)
-						setState(35)
-						if (!(precpred(_ctx, 7))) {
-						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 7)"))
-						}
-						setState(36)
-						try match(AeroShellParser.Tokens.NEWLINES.rawValue)
-						setState(37)
-						try match(AeroShellParser.Tokens.AND.rawValue)
-						setState(38)
-						try program(8)
-
-						break
-					case 4:
-						_localctx = AndContext(  ProgramContext(_parentctx, _parentState))
-						try pushNewRecursionContext(_localctx, _startState, AeroShellParser.RULE_program)
-						setState(39)
 						if (!(precpred(_ctx, 6))) {
 						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 6)"))
 						}
-						setState(40)
-						try match(AeroShellParser.Tokens.AND.rawValue)
-						setState(41)
+						setState(30)
+						try _errHandler.sync(self)
+						_la = try _input.LA(1)
+						if (_la == AeroShellParser.Tokens.NEWLINES.rawValue) {
+							setState(29)
+							try match(AeroShellParser.Tokens.NEWLINES.rawValue)
+
+						}
+
+						setState(32)
+						try match(AeroShellParser.Tokens.PIPE.rawValue)
+						setState(33)
 						try program(7)
 
 						break
-					case 5:
-						_localctx = OrContext(  ProgramContext(_parentctx, _parentState))
+					case 2:
+						_localctx = AndContext(  ProgramContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, AeroShellParser.RULE_program)
-						setState(42)
+						setState(34)
 						if (!(precpred(_ctx, 5))) {
 						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 5)"))
 						}
-						setState(43)
-						try match(AeroShellParser.Tokens.NEWLINES.rawValue)
-						setState(44)
-						try match(AeroShellParser.Tokens.OR.rawValue)
-						setState(45)
+						setState(36)
+						try _errHandler.sync(self)
+						_la = try _input.LA(1)
+						if (_la == AeroShellParser.Tokens.NEWLINES.rawValue) {
+							setState(35)
+							try match(AeroShellParser.Tokens.NEWLINES.rawValue)
+
+						}
+
+						setState(38)
+						try match(AeroShellParser.Tokens.AND.rawValue)
+						setState(39)
 						try program(6)
 
 						break
-					case 6:
+					case 3:
 						_localctx = OrContext(  ProgramContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, AeroShellParser.RULE_program)
-						setState(46)
+						setState(40)
 						if (!(precpred(_ctx, 4))) {
 						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 4)"))
 						}
-						setState(47)
+						setState(42)
+						try _errHandler.sync(self)
+						_la = try _input.LA(1)
+						if (_la == AeroShellParser.Tokens.NEWLINES.rawValue) {
+							setState(41)
+							try match(AeroShellParser.Tokens.NEWLINES.rawValue)
+
+						}
+
+						setState(44)
 						try match(AeroShellParser.Tokens.OR.rawValue)
-						setState(48)
+						setState(45)
 						try program(5)
 
 						break
-					case 7:
+					case 4:
 						_localctx = SeqContext(  ProgramContext(_parentctx, _parentState))
 						try pushNewRecursionContext(_localctx, _startState, AeroShellParser.RULE_program)
-						setState(49)
+						setState(46)
 						if (!(precpred(_ctx, 3))) {
 						    throw ANTLRException.recognition(e:FailedPredicateException(self, "precpred(_ctx, 3)"))
 						}
-						setState(50)
+						setState(47)
 						_la = try _input.LA(1)
 						if (!(_la == AeroShellParser.Tokens.SEMICOLON.rawValue || _la == AeroShellParser.Tokens.NEWLINES.rawValue)) {
 						try _errHandler.recoverInline(self)
@@ -474,19 +456,19 @@ open class AeroShellParser: Parser {
 							_errHandler.reportMatch(self)
 							try consume()
 						}
-						setState(54)
+						setState(51)
 						try _errHandler.sync(self)
-						_alt = try getInterpreter().adaptivePredict(_input,3,_ctx)
+						_alt = try getInterpreter().adaptivePredict(_input,6,_ctx)
 						while (_alt != 1 && _alt != ATN.INVALID_ALT_NUMBER) {
 							if ( _alt==1+1 ) {
-								setState(51)
+								setState(48)
 								try program(0)
 
 						 
 							}
-							setState(56)
+							setState(53)
 							try _errHandler.sync(self)
-							_alt = try getInterpreter().adaptivePredict(_input,3,_ctx)
+							_alt = try getInterpreter().adaptivePredict(_input,6,_ctx)
 						}
 
 						break
@@ -494,9 +476,9 @@ open class AeroShellParser: Parser {
 					}
 			 
 				}
-				setState(61)
+				setState(58)
 				try _errHandler.sync(self)
-				_alt = try getInterpreter().adaptivePredict(_input,5,_ctx)
+				_alt = try getInterpreter().adaptivePredict(_input,8,_ctx)
 			}
 
 		}
@@ -593,13 +575,13 @@ open class AeroShellParser: Parser {
 	    		try! exitRule()
 	    }
 		do {
-		 	setState(76)
+		 	setState(73)
 		 	try _errHandler.sync(self)
 		 	switch (AeroShellParser.Tokens(rawValue: try _input.LA(1))!) {
 		 	case .WORD:
 		 		_localctx =  WordContext(_localctx);
 		 		try enterOuterAlt(_localctx, 1)
-		 		setState(62)
+		 		setState(59)
 		 		try match(AeroShellParser.Tokens.WORD.rawValue)
 
 		 		break
@@ -607,21 +589,21 @@ open class AeroShellParser: Parser {
 		 	case .LDQUOTE:
 		 		_localctx =  DQuotedStringContext(_localctx);
 		 		try enterOuterAlt(_localctx, 2)
-		 		setState(63)
+		 		setState(60)
 		 		try match(AeroShellParser.Tokens.LDQUOTE.rawValue)
-		 		setState(67)
+		 		setState(64)
 		 		try _errHandler.sync(self)
 		 		_la = try _input.LA(1)
 		 		while (((Int64(_la) & ~0x3f) == 0 && ((Int64(1) << _la) & 917504) != 0)) {
-		 			setState(64)
+		 			setState(61)
 		 			try dStringFragment()
 
 
-		 			setState(69)
+		 			setState(66)
 		 			try _errHandler.sync(self)
 		 			_la = try _input.LA(1)
 		 		}
-		 		setState(70)
+		 		setState(67)
 		 		try match(AeroShellParser.Tokens.RDQUOTE.rawValue)
 
 		 		break
@@ -629,11 +611,11 @@ open class AeroShellParser: Parser {
 		 	case .INTERPOLATION_START:
 		 		_localctx =  SubstitutionContext(_localctx);
 		 		try enterOuterAlt(_localctx, 3)
-		 		setState(71)
+		 		setState(68)
 		 		try match(AeroShellParser.Tokens.INTERPOLATION_START.rawValue)
-		 		setState(72)
+		 		setState(69)
 		 		try program(0)
-		 		setState(73)
+		 		setState(70)
 		 		try match(AeroShellParser.Tokens.RPAR.rawValue)
 
 		 		break
@@ -641,7 +623,7 @@ open class AeroShellParser: Parser {
 		 	case .SINGLE_QUOTED_STRING:
 		 		_localctx =  SQuotedStringContext(_localctx);
 		 		try enterOuterAlt(_localctx, 4)
-		 		setState(75)
+		 		setState(72)
 		 		try match(AeroShellParser.Tokens.SINGLE_QUOTED_STRING.rawValue)
 
 		 		break
@@ -659,14 +641,12 @@ open class AeroShellParser: Parser {
 	}
 
 	public class DStringFragmentContext: ParserRuleContext {
-			open
-			func TEXT() -> TerminalNode? {
-				return getToken(AeroShellParser.Tokens.TEXT.rawValue, 0)
-			}
-			open
-			func ESCAPE_SEQUENCE() -> TerminalNode? {
-				return getToken(AeroShellParser.Tokens.ESCAPE_SEQUENCE.rawValue, 0)
-			}
+		override open
+		func getRuleIndex() -> Int {
+			return AeroShellParser.RULE_dStringFragment
+		}
+	}
+	public class InterpolationContext: DStringFragmentContext {
 			open
 			func INTERPOLATION_START_IN_DSTRING() -> TerminalNode? {
 				return getToken(AeroShellParser.Tokens.INTERPOLATION_START_IN_DSTRING.rawValue, 0)
@@ -679,9 +659,35 @@ open class AeroShellParser: Parser {
 			func RPAR() -> TerminalNode? {
 				return getToken(AeroShellParser.Tokens.RPAR.rawValue, 0)
 			}
-		override open
-		func getRuleIndex() -> Int {
-			return AeroShellParser.RULE_dStringFragment
+
+		public
+		init(_ ctx: DStringFragmentContext) {
+			super.init()
+			copyFrom(ctx)
+		}
+	}
+	public class EscapeSequenceContext: DStringFragmentContext {
+			open
+			func ESCAPE_SEQUENCE() -> TerminalNode? {
+				return getToken(AeroShellParser.Tokens.ESCAPE_SEQUENCE.rawValue, 0)
+			}
+
+		public
+		init(_ ctx: DStringFragmentContext) {
+			super.init()
+			copyFrom(ctx)
+		}
+	}
+	public class TextContext: DStringFragmentContext {
+			open
+			func TEXT() -> TerminalNode? {
+				return getToken(AeroShellParser.Tokens.TEXT.rawValue, 0)
+			}
+
+		public
+		init(_ ctx: DStringFragmentContext) {
+			super.init()
+			copyFrom(ctx)
 		}
 	}
 	@discardableResult
@@ -693,30 +699,33 @@ open class AeroShellParser: Parser {
 	    		try! exitRule()
 	    }
 		do {
-		 	setState(84)
+		 	setState(81)
 		 	try _errHandler.sync(self)
 		 	switch (AeroShellParser.Tokens(rawValue: try _input.LA(1))!) {
 		 	case .TEXT:
+		 		_localctx =  TextContext(_localctx);
 		 		try enterOuterAlt(_localctx, 1)
-		 		setState(78)
+		 		setState(75)
 		 		try match(AeroShellParser.Tokens.TEXT.rawValue)
 
 		 		break
 
 		 	case .ESCAPE_SEQUENCE:
+		 		_localctx =  EscapeSequenceContext(_localctx);
 		 		try enterOuterAlt(_localctx, 2)
-		 		setState(79)
+		 		setState(76)
 		 		try match(AeroShellParser.Tokens.ESCAPE_SEQUENCE.rawValue)
 
 		 		break
 
 		 	case .INTERPOLATION_START_IN_DSTRING:
+		 		_localctx =  InterpolationContext(_localctx);
 		 		try enterOuterAlt(_localctx, 3)
-		 		setState(80)
+		 		setState(77)
 		 		try match(AeroShellParser.Tokens.INTERPOLATION_START_IN_DSTRING.rawValue)
-		 		setState(81)
+		 		setState(78)
 		 		try program(0)
-		 		setState(82)
+		 		setState(79)
 		 		try match(AeroShellParser.Tokens.RPAR.rawValue)
 
 		 		break
@@ -743,45 +752,41 @@ open class AeroShellParser: Parser {
 	}
 	private func program_sempred(_ _localctx: ProgramContext!,  _ predIndex: Int) throws -> Bool {
 		switch (predIndex) {
-		    case 0:return precpred(_ctx, 9)
-		    case 1:return precpred(_ctx, 8)
-		    case 2:return precpred(_ctx, 7)
-		    case 3:return precpred(_ctx, 6)
-		    case 4:return precpred(_ctx, 5)
-		    case 5:return precpred(_ctx, 4)
-		    case 6:return precpred(_ctx, 3)
+		    case 0:return precpred(_ctx, 6)
+		    case 1:return precpred(_ctx, 5)
+		    case 2:return precpred(_ctx, 4)
+		    case 3:return precpred(_ctx, 3)
 		    default: return true
 		}
 	}
 
 	static let _serializedATN:[Int] = [
-		4,1,20,87,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,1,0,1,0,1,0,1,0,3,0,13,8,0,1,
+		4,1,20,84,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,1,0,1,0,1,0,1,0,3,0,13,8,0,1,
 		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,4,1,23,8,1,11,1,12,1,24,3,1,27,8,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,
-		1,1,1,1,1,1,1,1,1,1,5,1,53,8,1,10,1,12,1,56,9,1,5,1,58,8,1,10,1,12,1,61,
-		9,1,1,2,1,2,1,2,5,2,66,8,2,10,2,12,2,69,9,2,1,2,1,2,1,2,1,2,1,2,1,2,3,
-		2,77,8,2,1,3,1,3,1,3,1,3,1,3,1,3,3,3,85,8,3,1,3,1,54,1,2,4,0,2,4,6,0,1,
-		1,0,12,13,100,0,12,1,0,0,0,2,26,1,0,0,0,4,76,1,0,0,0,6,84,1,0,0,0,8,9,
-		3,2,1,0,9,10,5,0,0,1,10,13,1,0,0,0,11,13,5,0,0,1,12,8,1,0,0,0,12,11,1,
-		0,0,0,13,1,1,0,0,0,14,15,6,1,-1,0,15,16,5,11,0,0,16,27,3,2,1,10,17,18,
-		5,4,0,0,18,19,3,2,1,0,19,20,5,6,0,0,20,27,1,0,0,0,21,23,3,4,2,0,22,21,
-		1,0,0,0,23,24,1,0,0,0,24,22,1,0,0,0,24,25,1,0,0,0,25,27,1,0,0,0,26,14,
-		1,0,0,0,26,17,1,0,0,0,26,22,1,0,0,0,27,59,1,0,0,0,28,29,10,9,0,0,29,30,
-		5,13,0,0,30,31,5,9,0,0,31,58,3,2,1,10,32,33,10,8,0,0,33,34,5,9,0,0,34,
-		58,3,2,1,9,35,36,10,7,0,0,36,37,5,13,0,0,37,38,5,8,0,0,38,58,3,2,1,8,39,
-		40,10,6,0,0,40,41,5,8,0,0,41,58,3,2,1,7,42,43,10,5,0,0,43,44,5,13,0,0,
-		44,45,5,10,0,0,45,58,3,2,1,6,46,47,10,4,0,0,47,48,5,10,0,0,48,58,3,2,1,
-		5,49,50,10,3,0,0,50,54,7,0,0,0,51,53,3,2,1,0,52,51,1,0,0,0,53,56,1,0,0,
-		0,54,55,1,0,0,0,54,52,1,0,0,0,55,58,1,0,0,0,56,54,1,0,0,0,57,28,1,0,0,
-		0,57,32,1,0,0,0,57,35,1,0,0,0,57,39,1,0,0,0,57,42,1,0,0,0,57,46,1,0,0,
-		0,57,49,1,0,0,0,58,61,1,0,0,0,59,57,1,0,0,0,59,60,1,0,0,0,60,3,1,0,0,0,
-		61,59,1,0,0,0,62,77,5,7,0,0,63,67,5,3,0,0,64,66,3,6,3,0,65,64,1,0,0,0,
-		66,69,1,0,0,0,67,65,1,0,0,0,67,68,1,0,0,0,68,70,1,0,0,0,69,67,1,0,0,0,
-		70,77,5,20,0,0,71,72,5,5,0,0,72,73,3,2,1,0,73,74,5,6,0,0,74,77,1,0,0,0,
-		75,77,5,2,0,0,76,62,1,0,0,0,76,63,1,0,0,0,76,71,1,0,0,0,76,75,1,0,0,0,
-		77,5,1,0,0,0,78,85,5,17,0,0,79,85,5,19,0,0,80,81,5,18,0,0,81,82,3,2,1,
-		0,82,83,5,6,0,0,83,85,1,0,0,0,84,78,1,0,0,0,84,79,1,0,0,0,84,80,1,0,0,
-		0,85,7,1,0,0,0,9,12,24,26,54,57,59,67,76,84
+		1,3,1,31,8,1,1,1,1,1,1,1,1,1,3,1,37,8,1,1,1,1,1,1,1,1,1,3,1,43,8,1,1,1,
+		1,1,1,1,1,1,1,1,5,1,50,8,1,10,1,12,1,53,9,1,5,1,55,8,1,10,1,12,1,58,9,
+		1,1,2,1,2,1,2,5,2,63,8,2,10,2,12,2,66,9,2,1,2,1,2,1,2,1,2,1,2,1,2,3,2,
+		74,8,2,1,3,1,3,1,3,1,3,1,3,1,3,3,3,82,8,3,1,3,1,51,1,2,4,0,2,4,6,0,1,1,
+		0,12,13,97,0,12,1,0,0,0,2,26,1,0,0,0,4,73,1,0,0,0,6,81,1,0,0,0,8,9,3,2,
+		1,0,9,10,5,0,0,1,10,13,1,0,0,0,11,13,5,0,0,1,12,8,1,0,0,0,12,11,1,0,0,
+		0,13,1,1,0,0,0,14,15,6,1,-1,0,15,16,5,11,0,0,16,27,3,2,1,7,17,18,5,4,0,
+		0,18,19,3,2,1,0,19,20,5,6,0,0,20,27,1,0,0,0,21,23,3,4,2,0,22,21,1,0,0,
+		0,23,24,1,0,0,0,24,22,1,0,0,0,24,25,1,0,0,0,25,27,1,0,0,0,26,14,1,0,0,
+		0,26,17,1,0,0,0,26,22,1,0,0,0,27,56,1,0,0,0,28,30,10,6,0,0,29,31,5,13,
+		0,0,30,29,1,0,0,0,30,31,1,0,0,0,31,32,1,0,0,0,32,33,5,9,0,0,33,55,3,2,
+		1,7,34,36,10,5,0,0,35,37,5,13,0,0,36,35,1,0,0,0,36,37,1,0,0,0,37,38,1,
+		0,0,0,38,39,5,8,0,0,39,55,3,2,1,6,40,42,10,4,0,0,41,43,5,13,0,0,42,41,
+		1,0,0,0,42,43,1,0,0,0,43,44,1,0,0,0,44,45,5,10,0,0,45,55,3,2,1,5,46,47,
+		10,3,0,0,47,51,7,0,0,0,48,50,3,2,1,0,49,48,1,0,0,0,50,53,1,0,0,0,51,52,
+		1,0,0,0,51,49,1,0,0,0,52,55,1,0,0,0,53,51,1,0,0,0,54,28,1,0,0,0,54,34,
+		1,0,0,0,54,40,1,0,0,0,54,46,1,0,0,0,55,58,1,0,0,0,56,54,1,0,0,0,56,57,
+		1,0,0,0,57,3,1,0,0,0,58,56,1,0,0,0,59,74,5,7,0,0,60,64,5,3,0,0,61,63,3,
+		6,3,0,62,61,1,0,0,0,63,66,1,0,0,0,64,62,1,0,0,0,64,65,1,0,0,0,65,67,1,
+		0,0,0,66,64,1,0,0,0,67,74,5,20,0,0,68,69,5,5,0,0,69,70,3,2,1,0,70,71,5,
+		6,0,0,71,74,1,0,0,0,72,74,5,2,0,0,73,59,1,0,0,0,73,60,1,0,0,0,73,68,1,
+		0,0,0,73,72,1,0,0,0,74,5,1,0,0,0,75,82,5,17,0,0,76,82,5,19,0,0,77,78,5,
+		18,0,0,78,79,3,2,1,0,79,80,5,6,0,0,80,82,1,0,0,0,81,75,1,0,0,0,81,76,1,
+		0,0,0,81,77,1,0,0,0,82,7,1,0,0,0,12,12,24,26,30,36,42,51,54,56,64,73,81
 	]
 
 	public
