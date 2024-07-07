@@ -1,8 +1,10 @@
 brew "asciidoctor"
+brew "pygments"
+
+brew "antlr"
 brew "bash"
 brew "fish"
 brew "gsed"
-brew "pygments"
 brew "swiftlint"
 brew "wget"
 brew "xcbeautify"

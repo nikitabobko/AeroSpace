@@ -13,6 +13,8 @@
 # Swift package manager
 /.build
 /.vscode
+# External dependencies
+/.deps
 
 # XCode User settings
 xcuserdata/

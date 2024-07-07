@@ -18,6 +18,7 @@ let package = Package(
         .package(url: "https://github.com/LebJe/TOMLKit", exact: "0.5.5"),
         .package(url: "https://github.com/Quick/Nimble", exact: "12.0.0"),
         .package(url: "https://github.com/apple/swift-collections", exact: "1.1.0"),
+        .package(url: "https://github.com/antlr/antlr4", from: "4.13.1")
     ],
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
@@ -29,9 +30,17 @@ let package = Package(
             ]
         ),
         .target(
+            name: "AeroShellParserGenerated",
+            dependencies: [
+                .product(name: "Antlr4Static", package: "antlr4"),
+            ]
+        ),
+        .target(
             name: "AppBundle",
             dependencies: [
                 .target(name: "Common"),
+                .target(name: "AeroShellParserGenerated"),
+                .product(name: "Antlr4Static", package: "antlr4"),
                 .product(name: "Socket", package: "BlueSocket"),
                 .product(name: "HotKey", package: "HotKey"),
                 .product(name: "TOMLKit", package: "TOMLKit"),

@@ -9,5 +9,5 @@ swift test
 ./run-cli.sh -v
 swiftlint lint --quiet
 
-./generate.sh
+./generate.sh --all
 ./script/check-uncommitted-files.sh

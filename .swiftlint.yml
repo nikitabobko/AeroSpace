@@ -1,6 +1,7 @@
 excluded:
   - .build
   - .xcode-build
+  - ./Sources/AeroShellParserGenerated
 
 # https://realm.github.io/SwiftLint/rule-directory.html
 only_rules:

@@ -116,6 +116,9 @@ codesign -v .release/aerospace
 ############
 
 mkdir -p .release/AeroSpace-v$build_version/manpage && cp .man/*.1 .release/AeroSpace-v$build_version/manpage
+mkdir -p .release/AeroSpace-v$build_version/license &&
+    cp ./LICENSE .release/AeroSpace-v$build_version/license/AeroSpace-LICENSE &&
+    cp ./third-party-license/* .release/AeroSpace-v$build_version/license &&
 cp -r .shell-completion .release/AeroSpace-v$build_version/shell-completion
 cd .release
     mkdir -p AeroSpace-v$build_version/bin && cp -r aerospace AeroSpace-v$build_version/bin
