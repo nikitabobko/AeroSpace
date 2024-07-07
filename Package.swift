@@ -16,7 +16,6 @@ let package = Package(
         .package(url: "https://github.com/Kitura/BlueSocket", exact: "2.0.4"),
         .package(url: "https://github.com/soffes/HotKey", exact: "0.1.3"),
         .package(url: "https://github.com/LebJe/TOMLKit", exact: "0.5.5"),
-        .package(url: "https://github.com/Quick/Nimble", exact: "12.0.0"),
         .package(url: "https://github.com/apple/swift-collections", exact: "1.1.0"),
         .package(url: "https://github.com/antlr/antlr4", from: "4.13.1")
     ],
@@ -58,7 +57,6 @@ let package = Package(
             name: "AppBundleTests",
             dependencies: [
                 .target(name: "AppBundle"),
-                .product(name: "Nimble", package: "Nimble"),
             ]
         ),
     ]

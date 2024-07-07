@@ -25,7 +25,6 @@ only_rules:
   - legacy_random # Prefer using type.random(in:) over legacy functions
   - local_doc_comment # Prefer regular comments over doc comments in local scopes
   - modifier_order
-  - nimble_operator
   - no_fallthrough_only
   - no_space_in_method_call
   - nsobject_prefer_isequal # NSObject subclasses should implement isEqual instead of ==

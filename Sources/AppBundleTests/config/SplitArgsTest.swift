@@ -1,5 +1,4 @@
 import XCTest
-import Nimble
 @testable import AppBundle
 import Common
 
@@ -20,7 +19,7 @@ final class SplitArgsTest: XCTestCase {
 private func testSucSplit(_ str: String, expected: [String]) {
     let result = str.splitArgs()
     switch result {
-        case .success(let actual): expect(actual) == expected
+        case .success(let actual): assertEquals(actual, expected)
         case .failure: XCTFail("\(str) split is not successful")
     }
 }

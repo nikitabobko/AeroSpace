@@ -9,6 +9,24 @@ func assertFailure<T, F>(_ r: Result<T, F>, file: String = #file, line: Int = #l
     }
 }
 
+func assertNotEquals<T>( _ actual: T, _ expected: T, file: String = #file, line: Int = #line) where T: Equatable {
+    if actual == expected {
+        failExpectedActual("not \(expected)", actual, file: file, line: line)
+    }
+}
+
+func assertNil( _ actual: Any?, file: String = #file, line: Int = #line) {
+    if actual != nil {
+        failExpectedActual("nil", actual, file: file, line: line)
+    }
+}
+
+func assertNotNil( _ actual: Any?, file: String = #file, line: Int = #line) {
+    if actual == nil {
+        failExpectedActual("not nil", actual, file: file, line: line)
+    }
+}
+
 func assertEquals<T>( _ actual: T, _ expected: T, file: String = #file, line: Int = #line) where T: Equatable {
     if actual != expected {
         failExpectedActual(expected, actual, file: file, line: line)
