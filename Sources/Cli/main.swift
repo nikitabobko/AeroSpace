@@ -3,8 +3,6 @@ import Foundation
 import Common
 import Darwin
 
-initCli()
-
 func printVersionAndExit(serverVersion: String?) -> Never {
     print(
         """

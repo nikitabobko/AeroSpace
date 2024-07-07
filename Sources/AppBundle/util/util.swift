@@ -16,7 +16,7 @@ func interceptTermination(_ _signal: Int32) {
 }
 
 func initTerminationHandler() {
-    _terminationHandler = AppServerTerminationHandler()
+    terminationHandler = AppServerTerminationHandler()
 }
 
 private struct AppServerTerminationHandler: TerminationHandler {
