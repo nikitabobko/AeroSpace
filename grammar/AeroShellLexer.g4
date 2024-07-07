@@ -4,8 +4,7 @@ lexer grammar AeroShellLexer;
 
 RESERVED : '"""' | '\'\'\'' ;
 
-SINGLE_QUOTED_STRING : '\'' SINGLE_QUOTED_STRING_CONTENT '\'' ;
-fragment SINGLE_QUOTED_STRING_CONTENT : .*? ;
+SINGLE_QUOTED_STRING : '\'' .*? '\'' ;
 
 LDQUOTE : '"' -> pushMode(IN_DSTRING) ;
 LPAR : '(' -> pushMode(DEFAULT_MODE) ;

@@ -40,33 +40,17 @@ final class AeroShellTest: XCTestCase {
             """.parseShell().getOrThrow(),
             .args([.text("echo"), .concatV(.text("hi "), .interpolation(cmd("foo", "bar")))])
         )
+        assertEquals("\"\\n\\t\\$\"".parseShell().getOrThrow(), cmd("\n\t$"))
+        assertEquals("echo 'single quoted \\n'".parseShell().getOrThrow(), cmd("echo", "single quoted \\n"))
 
+        assertFailure("\"\\f\"".parseShell())
+        assertFailure("echo <".parseShell())
         assertFailure("echo \"\"\"\"".parseShell())
         assertFailure("echo \"foo \(backslash)\"".parseShell())
         assertFailure("|| foo".parseShell())
         assertFailure("a && (b || c) foo".parseShell())
     }
 }
-
-// extension Shell: ExpressibleByUnicodeScalarLiteral where T == String { // Please Swift
-//     public init(unicodeScalarLiteral value: UnicodeScalarLiteralType) { error("Unused") }
-// }
-// extension Shell: ExpressibleByExtendedGraphemeClusterLiteral where T == String { // Please Swift
-//     public init(extendedGraphemeClusterLiteral value: ExtendedGraphemeClusterLiteralType) { error("Unused") }
-// }
-// extension Shell: ExpressibleByStringLiteral where T == String {
-//     public typealias StringLiteralType = String
-//     public init(stringLiteral: String) {
-//         self = .args([.text(stringLiteral)])
-//     }
-// }
-
-// extension Shell: ExpressibleByArrayLiteral where T == String {
-//     public typealias ArrayLiteralElement = String
-//     public init(arrayLiteral elements: ArrayLiteralElement...) {
-//         self = .args(elements.map(ShellString.text))
-//     }
-// }
 
 func cmd(_ args: String...) -> Shell<String> { .args(args.map(ShellString.text)) }
 extension Shell {

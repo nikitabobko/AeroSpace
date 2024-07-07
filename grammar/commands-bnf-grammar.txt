@@ -43,7 +43,7 @@ aerospace -h;
 
     | move-workspace-to-monitor [--wrap-around] (next|prev) [--wrap-around]
 
-    | reload-config [--no-gui | --dry-run]
+    | reload-config [--no-gui | --dry-run]...
 
     | resize (smart|width|height) [+|-]<number>
 

@@ -104,7 +104,7 @@ extension AeroShellParser.ArgContext {
 
 extension AeroShellParser.DStringFragmentContext {
     func toTyped() -> Result<ShellString<String>, String> {
-        if let x = ESCAPE_SEQUENCE() {
+        if let x = self as? AeroShellParser.EscapeSequenceContext {
             return switch x.getText() {
                 case "\\n": .success(.text("\n"))
                 case "\\t": .success(.text("\t"))
@@ -114,11 +114,11 @@ extension AeroShellParser.DStringFragmentContext {
                 default: .failure("Unknown ESCAPE_SEQUENCE '\(x.getText())'")
             }
         }
-        if let x = TEXT() {
+        if let x = self as? AeroShellParser.TextContext {
             return .success(.text(x.getText()))
         }
-        if let x = program() {
-            return x.toTyped().map(ShellString.interpolation)
+        if let x = self as? AeroShellParser.InterpolationContext {
+            return x.program().toTyped("interpolation node: nil child").map(ShellString.interpolation)
         }
         error("Unknown node type: \(self)")
     }

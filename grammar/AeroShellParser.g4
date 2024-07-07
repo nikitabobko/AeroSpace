@@ -10,16 +10,9 @@ root : program EOF | EOF ; // Consume ALL the input
 
 program
     : NOT program                                    #Not
-
-    | program NEWLINES PIPE program                  #Pipe
-    | program PIPE program                           #Pipe
-
-    | program NEWLINES AND program                   #And
-    | program AND program                            #And
-
-    | program NEWLINES OR program                    #Or
-    | program OR program                             #Or
-
+    | program NEWLINES? PIPE program                 #Pipe
+    | program NEWLINES? AND program                  #And
+    | program NEWLINES? OR program                   #Or
     | program (SEMICOLON | NEWLINES) (program)*?     #Seq
     | LPAR program RPAR                              #Parens
     | arg+                                           #Args
@@ -33,7 +26,7 @@ arg
     ;
 
 dStringFragment
-    : TEXT
-    | ESCAPE_SEQUENCE
-    | INTERPOLATION_START_IN_DSTRING program RPAR
+    : TEXT                                          #Text
+    | ESCAPE_SEQUENCE                               #EscapeSequence
+    | INTERPOLATION_START_IN_DSTRING program RPAR   #Interpolation
     ;
