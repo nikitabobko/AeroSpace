@@ -3,7 +3,6 @@
 /.release
 /.shell-completion
 /.site
-/.bin
 /.man
 /Brewfile.lock.json
 # IDK, AppCode randomly creates this EMPTY file. I have no idea what this is
