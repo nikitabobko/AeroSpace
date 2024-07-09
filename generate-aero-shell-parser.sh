@@ -2,7 +2,7 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-test -e ./.deps/python-venv/bin/antlr4 || ./script/install-antlr.sh
+./script/install-deps.sh --antlr
 source ./.deps/python-venv/bin/activate
 antlr4 -no-listener -Dlanguage=Swift \
     -o ./Sources/AeroShellParserGenerated \

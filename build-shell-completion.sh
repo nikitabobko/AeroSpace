@@ -2,11 +2,8 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-complgen_rev='cacb3970eb'
+./script/install-deps.sh --complgen
 complgen='./.deps/cargo-root/bin/complgen'
-if ! test -e $complgen || test "$($complgen version)" != $complgen_rev; then
-    cargo install --git https://github.com/adaszko/complgen --rev $complgen_rev --root ./.deps/cargo-root
-fi
 
 rm -rf .shell-completion && mkdir -p \
     .shell-completion/zsh \

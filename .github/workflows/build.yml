@@ -23,9 +23,10 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/cache@v3
         with:
-          path: .bin
-          key: ${{ runner.os }}-${{ runner.arch }}
+          path: .deps
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('script/install-deps.sh') }}
       - run: brew bundle install
+      - run: ./script/install-deps.sh
       # "-" means "Sign to run locally". There is no aerospace-codesign-certificate in GH Actions
       - run: ./build-debug.sh --codesign-identity -
       - run: ./run-tests.sh
