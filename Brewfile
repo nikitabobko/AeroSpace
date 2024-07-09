@@ -1,7 +1,6 @@
 brew "asciidoctor"
 brew "pygments"
 
-brew "antlr"
 brew "bash"
 brew "fish"
 brew "gsed"
