@@ -20,18 +20,13 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
       - uses: actions/cache@v3
         with:
           path: .bin
           key: ${{ runner.os }}-${{ runner.arch }}
-      - name: Install deps
-        run: brew bundle install
-      - name: Build Debug
-        # "-" means "Sign to run locally". There is no aerospace-codesign-certificate in GH Actions
-        run: ./build-debug.sh --codesign-identity -
-      - name: Test
-        run: ./run-tests.sh
-      - name: Build Release
-        run: ./build-release.sh --codesign-identity -
+      - run: brew bundle install
+      # "-" means "Sign to run locally". There is no aerospace-codesign-certificate in GH Actions
+      - run: ./build-debug.sh --codesign-identity -
+      - run: ./run-tests.sh
+      - run: ./build-release.sh --codesign-identity -
