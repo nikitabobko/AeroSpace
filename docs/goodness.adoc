@@ -158,7 +158,8 @@ EOF'''
 [source,toml]
 ----
 [mode.main.binding]
-cmd-h = []
+cmd-h = [] # Disable "hide application"
+cmd-alt-h = [] # Disable "hide others"
 ----
 
 [#colemak-keys-remap]
