@@ -13,12 +13,16 @@ let package = Package(
         .executable(name: "aerospace", targets: ["Cli"])
     ],
     dependencies: [
+        // "binary" dependencies. They get packed in the distribution
         .package(url: "https://github.com/Kitura/BlueSocket", exact: "2.0.4"),
         .package(url: "https://github.com/soffes/HotKey", exact: "0.1.3"),
         .package(url: "https://github.com/LebJe/TOMLKit", exact: "0.5.5"),
         .package(url: "https://github.com/apple/swift-collections", exact: "1.1.0"),
         .package(url: "https://github.com/antlr/antlr4", exact: "4.13.1"),
+
+        // "executable" dependencies. Used by shell scripts
         .package(url: "https://github.com/yonaskolb/XcodeGen.git", exact: "2.42.0"),
+        .package(url: "https://github.com/realm/SwiftLint", exact: "0.55.1"),
     ],
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
