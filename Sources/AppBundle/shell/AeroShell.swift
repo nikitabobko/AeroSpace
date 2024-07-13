@@ -85,12 +85,8 @@ extension AeroShellParser.ArgContext {
             return .success(.text(x.getText()))
         }
         if let x = self as? AeroShellParser.DQuotedStringContext {
-            let seq = x.dStringFragment()
-            return switch seq.count {
-                case 1: seq.first!.toTyped()
-                default:
-                    seq.mapAllOrFailures { $0.toTyped() }.mapError { $0.joinErrors() }.map(ShellString.concatOptimized)
-            }
+            return x.dStringFragment().mapAllOrFailures { $0.toTyped() }
+                .mapError { $0.joinErrors() }.map(ShellString.concatOptimized)
         }
         if let x = self as? AeroShellParser.SQuotedStringContext {
             return .success(.text(String(x.getText().dropFirst(1).dropLast(1))))

@@ -119,8 +119,6 @@ extension Monitor {
         return self.activeWorkspace
     }
 
-    // It can't be converted to property because stupid Swift requires Monitor to be `var`
-    // if you want to assign to calculated property
     func setActiveWorkspace(_ workspace: Workspace) -> Bool {
         rect.topLeftCorner.setActiveWorkspace(workspace)
     }
