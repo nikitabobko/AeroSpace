@@ -46,5 +46,9 @@ xcodebuild() {
     # Function: createItemModels(for:itemModelSource:)
     # Thread:   <_NSMainThread: 0x6000037202c0>{number = 1, name = main}
     # Please file a bug at https://feedbackassistant.apple.com with this warning message and any useful information you can provide.
-    /usr/bin/xcodebuild "$@" 2>&1 | xcbeautify --quiet
+    if command -v xcbeautify &> /dev/null; then
+        /usr/bin/xcodebuild "$@" 2>&1 | xcbeautify --quiet # Only print tasks that have warnings or errors
+    else
+        /usr/bin/xcodebuild "$@" 2>&1
+    fi
 }
