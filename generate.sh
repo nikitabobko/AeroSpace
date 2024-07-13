@@ -63,4 +63,4 @@ public let gitShortHash = "SNAPSHOT"
 EOF
 
 export XCODEGEN_AEROSPACE_VERSION=$build_version
-xcodegen # https://github.com/yonaskolb/XcodeGen
+swift run xcodegen # https://github.com/yonaskolb/XcodeGen
