@@ -1,5 +1,6 @@
 excluded:
   - .build
+  - swift-exec-deps/.build
   - .xcode-build
   - ./Sources/AeroShellParserGenerated
 

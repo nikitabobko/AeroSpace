@@ -5,6 +5,8 @@ source ./script/setup.sh
 all=1
 antlr=0
 complgen=0
+swiftlint=0
+xcodegen=0
 while [[ $# -gt 0 ]]; do
     case $1 in
         --antlr)
@@ -15,6 +17,16 @@ while [[ $# -gt 0 ]]; do
         --complgen)
             all=0
             complgen=1
+            shift
+            ;;
+        --swiftlint)
+            all=0
+            swiftlint=1
+            shift
+            ;;
+        --xcodegen)
+            all=0
+            xcodegen=1
             shift
             ;;
         *)
@@ -35,5 +47,17 @@ fi
 if test $all == 1 || test $complgen == 1; then
     if test "$(./.deps/cargo-root/bin/complgen version)" != cacb3970eb; then
         cargo install --git https://github.com/adaszko/complgen --rev cacb3970eb --root ./.deps/cargo-root
+    fi
+fi
+
+if test $all == 1 || test $swiftlint == 1; then
+    if test "$(./swift-exec-deps/.build/debug/swiftlint --version)" != 0.55.1; then
+        (cd ./swift-exec-deps; swift run swiftlint --version)
+    fi
+fi
+
+if test $all == 1 || test $xcodegen == 1; then
+    if test "$(./swift-exec-deps/.build/debug/xcodegen --version)" != 'Version: 2.42.0'; then
+        (cd ./swift-exec-deps; swift run xcodegen --version)
     fi
 fi

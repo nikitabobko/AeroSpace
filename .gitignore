@@ -11,6 +11,7 @@
 /.xcode-build
 # Swift package manager
 /.build
+/swift-exec-deps/.build
 /.vscode
 # External dependencies
 /.deps
