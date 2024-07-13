@@ -3,6 +3,5 @@ brew "pygments"
 
 brew "bash"
 brew "fish"
-brew "gsed"
 brew "swiftlint"
 brew "xcbeautify"

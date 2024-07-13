@@ -11,7 +11,6 @@ setup() {
     export BREW_PREFIX="$(brew --prefix)"
     tmp=(
         ${BREW_PREFIX}/opt/asciidoctor/bin
-        ${BREW_PREFIX}/opt/gsed/libexec/gnubin
         ${BREW_PREFIX}/opt/xcodegen/bin
         ${BREW_PREFIX}/opt/xcbeautify/bin
         ${BREW_PREFIX}/opt/swiftlint/bin
