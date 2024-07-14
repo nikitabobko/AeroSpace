@@ -42,6 +42,10 @@ public func errorT<T>(
     fatalError("\n" + message)
 }
 
+public func throwT<T>(_ error: Error) throws -> T {
+    throw error
+}
+
 public func printStacktrace() { print(getStringStacktrace()) }
 public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(separator: "\n") }
 

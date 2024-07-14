@@ -1,30 +1,51 @@
-// AeroShell lexer grammar. Powered by https://github.com/antlr/antlr4
-// Use ./generate-aero-shell-parser.sh to regenerate grammar code
-lexer grammar AeroShellLexer;
+// shell lexer grammar. Powered by https://github.com/antlr/antlr4
+// Use ./generate-shell-parser.sh to regenerate grammar code
+lexer grammar ShellLexer;
 
-RESERVED : '"""' | '\'\'\'' ;
+TRIPLE_QUOTE : '"""' | '\'\'\'' ; // Reserved
 
 SINGLE_QUOTED_STRING : '\'' .*? '\'' ;
 
 LDQUOTE : '"' -> pushMode(IN_DSTRING) ;
 LPAR : '(' -> pushMode(DEFAULT_MODE) ;
 INTERPOLATION_START : '$(' -> pushMode(DEFAULT_MODE) ;
-RPAR : ')' -> popMode ;
+RPAR : ')' {
+    _ = Result { try popMode() }
+} ;
 
-WORD : ([a-zA-Z0-9] | '.' | '_' | '-' | '+' | '/' | '%' | '{' | '}' | '@' | ',' | '[' | ']' | '=' | '^')+ ;
+// Keywords (some of them are unused, just reserved)
+ELIF : 'elif' NL* ;
+IF : 'if' NL* ;
+SWITCH : 'switch' NL* ;
+CASE : 'case' NL* ;
+DO : 'do' NL* ;
+THEN : 'then' NL* ;
+ELSE : 'else' NL* ;
+FOR : 'for' NL* ;
+WHILE : 'while' NL* ;
+CATCH : 'catch' NL* ;
+IN : 'in' NL* ;
+END : 'end' NL* ;
+DEFER : 'defer' NL* ;
+
 AND : '&&' ;
 PIPE : '|' ;
 OR : '||' ;
-NOT : '!' SPACES ; // require space to make it possible use bang in arguments (not used yet, and maybe it's worth to allow '!false')
 SEMICOLON : ';' ;
-NEWLINES : '\n' (SPACES | '\n')* ;
+NL : SPACES? ('\r')? '\n' ;
+WORD : ([a-zA-Z]    | '.' | '_' | '-' | '/')+ ;
+ARG :  ([a-zA-Z0-9] | '.' | '_' | '-' | '/' | '+' | ',' | '=' | '!' | '%' | '{' | '}' | '^')+ ;
 
 ESCAPE_NEWLINE : '\\' SPACES? COMMENT? '\n' -> skip ;
 COMMENT : '#' ~('\n')* -> skip ;
 SPACES : [ \t]+ -> skip ;
 
+ANY : . ; // Catch all other
+
 mode IN_DSTRING;
 TEXT : ~('\\' | '"' | '$')+ ;
 INTERPOLATION_START_IN_DSTRING : '$(' -> pushMode(DEFAULT_MODE) ;
 ESCAPE_SEQUENCE : '\\' . ;
-RDQUOTE : '"' -> popMode ;
+RDQUOTE : '"' {
+    _ = Result { try popMode() }
+} ;

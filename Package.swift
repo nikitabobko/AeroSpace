@@ -29,7 +29,7 @@ let package = Package(
             ]
         ),
         .target(
-            name: "AeroShellParserGenerated",
+            name: "ShellParserGenerated",
             dependencies: [
                 .product(name: "Antlr4Static", package: "antlr4"),
             ]
@@ -38,7 +38,7 @@ let package = Package(
             name: "AppBundle",
             dependencies: [
                 .target(name: "Common"),
-                .target(name: "AeroShellParserGenerated"),
+                .target(name: "ShellParserGenerated"),
                 .product(name: "Antlr4Static", package: "antlr4"),
                 .product(name: "Socket", package: "BlueSocket"),
                 .product(name: "HotKey", package: "HotKey"),

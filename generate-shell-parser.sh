@@ -4,11 +4,11 @@ source ./script/setup.sh
 
 ./script/install-deps.sh --antlr
 ./.deps/python-venv/bin/antlr4 -no-listener -Dlanguage=Swift \
-    -o ./Sources/AeroShellParserGenerated \
-    ./grammar/AeroShellLexer.g4\
-    ./grammar/AeroShellParser.g4
+    -o ./Sources/ShellParserGenerated \
+    ./grammar/ShellLexer.g4\
+    ./grammar/ShellParser.g4
 
 # Antlr generates weird *.interp and *.tokens files
-rm ./Sources/AeroShellParserGenerated/grammar/*.interp
-rm ./Sources/AeroShellParserGenerated/grammar/*.tokens
-mv ./Sources/AeroShellParserGenerated/grammar/* ./Sources/AeroShellParserGenerated/
+rm ./Sources/ShellParserGenerated/grammar/*.interp
+rm ./Sources/ShellParserGenerated/grammar/*.tokens
+mv ./Sources/ShellParserGenerated/grammar/* ./Sources/ShellParserGenerated/

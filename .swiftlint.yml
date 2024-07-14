@@ -2,7 +2,7 @@ excluded:
   - .build
   - swift-exec-deps/.build
   - .xcode-build
-  - ./Sources/AeroShellParserGenerated
+  - ./Sources/ShellParserGenerated
 
 # https://realm.github.io/SwiftLint/rule-directory.html
 only_rules:
