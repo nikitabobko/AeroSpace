@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace close [-h|--help] [--quit-if-last-window]
+aerospace close [-h|--help] [--quit-if-last-window] [--window-id <window-id>]
 
 // end::synopsis[]
 
@@ -23,11 +23,14 @@ Normally, you don’t need to use this command, because macOS offers its own `cm
 You might want to use the command from CLI for scripting purposes
 
 // =========================================================== Options
-include::util/conditional-options-header.adoc[]
+include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
-
 --quit-if-last-window:: Quit the app instead of closing if it's the last window of the app
+
+--window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
+
 // end::body[]
 
 // =========================================================== Footer

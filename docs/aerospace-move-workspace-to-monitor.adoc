@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace move-workspace-to-monitor [-h|--help] [--wrap-around] (next|prev)
+aerospace move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (next|prev)
 
 // end::synopsis[]
 
@@ -22,10 +22,14 @@ aerospace move-workspace-to-monitor [-h|--help] [--wrap-around] (next|prev)
 The command doesn't have effect on workspaces xref:guide.adoc#assign-workspaces-to-monitors[that have monitor assignment]
 
 // =========================================================== Options
-include::util/conditional-options-header.adoc[]
+include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 --wrap-around:: Allows to move workspace between first and last monitors
+
+--workspace <workspace>::
+include::./util/workspace-flag-desc.adoc[]
+
 // end::body[]
 
 // =========================================================== Footer

@@ -7,6 +7,7 @@ public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
         help: move_workspace_to_monitor_help_generated,
         options: [
             "--wrap-around": trueBoolFlag(\.wrapAround),
+            "--workspace": optionalWorkspaceFlag(),
         ],
         arguments: [newArgParser(\.target, parseMonitorTarget, mandatoryArgPlaceholder: "(next|prev)")]
     )

@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace move-node-to-monitor [-h|--help] [--wrap-around] (left|down|up|right)
-aerospace move-node-to-monitor [-h|--help] [--wrap-around] (next|prev)
-aerospace move-node-to-monitor [-h|--help] <monitor-pattern>...
+aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] [--wrap-around] (left|down|up|right)
+aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] [--wrap-around] (next|prev)
+aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] <monitor-pattern>...
 
 // end::synopsis[]
 
@@ -22,10 +22,13 @@ aerospace move-node-to-monitor [-h|--help] <monitor-pattern>...
 {manpurpose}
 
 // =========================================================== Options
-include::util/conditional-options-header.adoc[]
+include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 --wrap-around:: Make it possible to wrap around the movement
+
+--window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
 
 // =========================================================== Arguments
 include::util/conditional-arguments-header.adoc[]

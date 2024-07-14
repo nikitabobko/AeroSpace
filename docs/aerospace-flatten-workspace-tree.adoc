@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace flatten-workspace-tree [-h|--help]
+aerospace flatten-workspace-tree [-h|--help] [--workspace <workspace>]
 
 // end::synopsis[]
 
@@ -20,12 +20,16 @@ aerospace flatten-workspace-tree [-h|--help]
 {manpurpose}
 
 The command is useful when you messed up with your layout, and it's easier to "reset" it and start again.
-// end::body[]
 
 // =========================================================== Options
-include::util/conditional-options-header.adoc[]
+include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+--workspace <workspace>::
+include::./util/workspace-flag-desc.adoc[]
+
+// end::body[]
 
 // =========================================================== Footer
 include::util/man-footer.adoc[]

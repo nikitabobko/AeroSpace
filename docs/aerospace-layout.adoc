@@ -9,7 +9,8 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace layout [-h|--help] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
+aerospace layout [-h|--help] [--window-id <window-id>]
+                 (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
 
 // end::synopsis[]
 
@@ -27,9 +28,12 @@ If several arguments are supplied then finds the first argument that doesn't des
 * Toggle floating/tiling mode: `tiling|floating`
 
 // =========================================================== Options
-include::util/conditional-options-header.adoc[]
+include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+--window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
 
 // =========================================================== Examples
 include::util/conditional-examples-header.adoc[]

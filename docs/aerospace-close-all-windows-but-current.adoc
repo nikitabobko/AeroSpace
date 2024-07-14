@@ -23,8 +23,8 @@ aerospace close-all-windows-but-current [-h|--help] [--quit-if-last-window]
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
-
 --quit-if-last-window:: Quit the apps instead of closing them if it's their last window
+
 // end::body[]
 
 // =========================================================== Footer

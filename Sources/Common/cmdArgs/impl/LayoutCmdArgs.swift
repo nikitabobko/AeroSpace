@@ -5,7 +5,9 @@ public struct LayoutCmdArgs: CmdArgs {
         kind: .layout,
         allowInConfig: true,
         help: layout_help_generated,
-        options: [:],
+        options: [
+            "--window-id": optionalWindowIdFlag(),
+        ],
         arguments: [newArgParser(\.toggleBetween, parseToggleBetween, mandatoryArgPlaceholder: LayoutDescription.unionLiteral)]
     )
 

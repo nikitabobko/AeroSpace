@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace split [-h|--help] (horizontal|vertical|opposite)
+aerospace split [-h|--help] [--window-id <window-id>] (horizontal|vertical|opposite)
 
 // end::synopsis[]
 
@@ -33,12 +33,16 @@ The argument configures orientation of the newly created container.
 
 IMPORTANT: `split` command has no effect if `enable-normalization-flatten-containers` is turned on.
 Consider using `join-with` if you want to keep `enable-normalization-flatten-containers` enabled
-// end::body[]
 
 // =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+--window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
+
+// end::body[]
 
 // =========================================================== Footer
 include::util/man-footer.adoc[]

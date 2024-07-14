@@ -7,6 +7,7 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
         help: move_node_to_monitor_help_generated,
         options: [
             "--wrap-around": trueBoolFlag(\.wrapAround),
+            "--window-id": optionalWindowIdFlag(),
         ],
         arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)")]
     )

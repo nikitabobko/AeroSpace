@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace balance-sizes [-h|--help]
+aerospace balance-sizes [-h|--help] [--workspace <workspace>]
 
 // end::synopsis[]
 
@@ -19,12 +19,15 @@ aerospace balance-sizes [-h|--help]
 // tag::body[]
 {manpurpose}
 
-// end::body[]
-
 // =========================================================== Options
-include::util/conditional-options-header.adoc[]
+include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+--workspace <workspace>::
+include::./util/workspace-flag-desc.adoc[]
+
+// end::body[]
 
 // =========================================================== Footer
 include::util/man-footer.adoc[]

@@ -8,6 +8,7 @@ public struct FullscreenCmdArgs: CmdArgs {
         options: [
             "--no-outer-gaps": trueBoolFlag(\.noOuterGaps),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
+            "--window-id": optionalWindowIdFlag(),
         ],
         arguments: [ArgParser(\.toggle, parseToggleEnum)]
     )

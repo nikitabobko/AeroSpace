@@ -5,7 +5,9 @@ public struct MoveCmdArgs: CmdArgs {
         kind: .move,
         allowInConfig: true,
         help: move_help_generated,
-        options: [:],
+        options: [
+            "--window-id": optionalWindowIdFlag(),
+        ],
         arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)]
     )
 

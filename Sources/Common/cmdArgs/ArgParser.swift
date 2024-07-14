@@ -25,6 +25,13 @@ public struct ArgParser<T: Copyable, K>: ArgParserProtocol {
     public func hash(into hasher: inout Hasher) { hasher.combine(keyPath) }
 }
 
+public func optionalWindowIdFlag<T: CmdArgs>() -> ArgParser<T, UInt32?> {
+    ArgParser(\T.windowId, upcastArgParserFun(parseArgWithUInt32))
+}
+public func optionalWorkspaceFlag<T: CmdArgs>() -> ArgParser<T, WorkspaceName?> {
+    ArgParser(\T.workspaceName, upcastArgParserFun(parseArgWithWorkspaceName))
+}
+
 func newArgParser<T: Copyable, K>(
     _ keyPath: WritableKeyPath<T, Lateinit<K>>,
     _ parse: @escaping (String, inout [String]) -> Parsed<K>,
@@ -93,6 +100,14 @@ public func parseArgWithUInt32(arg: String, nextArgs: inout [String]) -> Parsed<
         return UInt32(arg).orFailure("Can't parse '\(arg)'. It must be a positive number")
     } else {
         return .failure("'\(arg)' must be followed by mandatory UInt32")
+    }
+}
+
+public func parseArgWithWorkspaceName(arg: String, nextArgs: inout [String]) -> Parsed<WorkspaceName> {
+    if let arg = nextArgs.nextNonFlagOrNil() {
+        WorkspaceName.parse(arg)
+    } else {
+        .failure("'\(arg)' must be followed by mandatory workspace name")
     }
 }
 

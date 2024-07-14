@@ -5,7 +5,9 @@ public struct FlattenWorkspaceTreeCmdArgs: CmdArgs {
         kind: .flattenWorkspaceTree,
         allowInConfig: true,
         help: flatten_workspace_tree_help_generated,
-        options: [:],
+        options: [
+            "--workspace": optionalWorkspaceFlag(),
+        ],
         arguments: []
     )
 

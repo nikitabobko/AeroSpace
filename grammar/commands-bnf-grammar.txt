@@ -7,7 +7,7 @@ aerospace -h;
 
 <subcommand> ::= balance-sizes
 
-    | close [--quit-if-last-window]
+    | close [--quit-if-last-window|--window-id <window_id>]...
 
     | close-all-windows-but-current [--quit-if-last-window]
 
@@ -27,39 +27,38 @@ aerospace -h;
     | focus-monitor [--wrap-around] (next|prev) [--wrap-around]
     | focus-monitor <monitor_pattern>...
 
-    | fullscreen [--no-outer-gaps]
-    | fullscreen [--no-outer-gaps|--fail-if-noop]... on [--no-outer-gaps|--fail-if-noop]...
-    | fullscreen [--fail-if-noop] off [--fail-if-noop]
+    | fullscreen [--no-outer-gaps|--window-id <window_id>]...
+    | fullscreen [--no-outer-gaps|--fail-if-noop|--window-id <window_id>]... on [--no-outer-gaps|--fail-if-noop|--window-id <window_id>]...
+    | fullscreen [--fail-if-noop|--window-id <window_id>] off [--fail-if-noop|--window-id <window_id>]
 
     | join-with (left|down|up|right)
 
-    | layout (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
+    | layout [--window-id <window_id>] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
 
-    | macos-native-fullscreen
-    | macos-native-fullscreen [--fail-if-noop] (on|off) [--fail-if-noop]
+    | macos-native-fullscreen [--fail-if-noop|--window-id <window_id>]... [on|off] [--fail-if-noop|--window-id <window_id>]...
 
     | macos-native-minimize
 
     | mode <mode_id>
 
-    | move (left|down|up|right)
+    | move [--window-id <window_id>] (left|down|up|right) [--window-id <window_id>]
 
     | move-mouse [--fail-if-noop] (monitor-lazy-center|monitor-force-center|window-lazy-center|window-force-center) [--fail-if-noop]
 
-    | move-node-to-monitor [--wrap-around] (left|down|up|right) [--wrap-around]
-    | move-node-to-monitor [--wrap-around] (next|prev) [--wrap-around]
+    | move-node-to-monitor [--wrap-around|--window-id <window_id>] (left|down|up|right) [--wrap-around|--window-id <window_id>]
+    | move-node-to-monitor [--wrap-around|--window-id <window_id>] (next|prev) [--wrap-around|--window-id <window_id>]
     | move-node-to-monitor <monitor_pattern>...
 
     | move-node-to-workspace [--wrap-around] (next|prev) [--wrap-around]
-    | move-node-to-workspace [--fail-if-noop] <workspace> [--fail-if-noop]
+    | move-node-to-workspace [--fail-if-noop|--window-id <window_id>] <workspace> [--fail-if-noop|--window-id <window_id>]
 
     | move-workspace-to-monitor [--wrap-around] (next|prev) [--wrap-around]
 
     | reload-config [--no-gui | --dry-run]...
 
-    | resize (smart|width|height) [+|-]<number>
+    | resize [--window-id <window_id>] (smart|width|height) [+|-]<number> [--window-id <window_id>]
 
-    | split (horizontal|vertical|opposite)
+    | split [--window-id <window_id>] (horizontal|vertical|opposite) [--window-id <window_id>]
 
     | trigger-binding <binding> --mode <mode_id>
     | trigger-binding --mode <mode_id> <binding>

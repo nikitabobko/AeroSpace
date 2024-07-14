@@ -19,12 +19,12 @@ aerospace macos-native-minimize [-h|--help]
 // tag::body[]
 {manpurpose}
 
-// end::body[]
-
 // =========================================================== Options
-include::util/conditional-options-header.adoc[]
+include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+// end::body[]
 
 // =========================================================== Footer
 include::util/man-footer.adoc[]

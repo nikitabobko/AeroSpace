@@ -5,7 +5,9 @@ public struct ResizeCmdArgs: CmdArgs {
         kind: .resize,
         allowInConfig: true,
         help: resize_help_generated,
-        options: [:],
+        options: [
+            "--window-id": optionalWindowIdFlag(),
+        ],
         arguments: [
             newArgParser(\.dimension, parseDimension, mandatoryArgPlaceholder: "(smart|width|height)"),
             newArgParser(\.units, parseUnits, mandatoryArgPlaceholder: "[+|-]<number>"),

@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace fullscreen [-h|--help] [--no-outer-gaps]
-aerospace fullscreen [-h|--help] on [--no-outer-gaps] [--fail-if-noop]
-aerospace fullscreen [-h|--help] off [--fail-if-noop]
+aerospace fullscreen [-h|--help]     [--window-id <window-id>] [--no-outer-gaps]
+aerospace fullscreen [-h|--help] on  [--window-id <window-id>] [--no-outer-gaps] [--fail-if-noop]
+aerospace fullscreen [-h|--help] off [--window-id <window-id>] [--fail-if-noop]
 
 // end::synopsis[]
 
@@ -24,15 +24,17 @@ aerospace fullscreen [-h|--help] off [--fail-if-noop]
 Switching to a different tiling window within the same workspace while the current focused window is in fullscreen mode results in the fullscreen window exiting fullscreen mode.
 
 // =========================================================== Options
-include::util/conditional-options-header.adoc[]
+include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
-
 --no-outer-gaps:: Remove the outer gaps when in fullscreen mode
 --fail-if-noop:: Exit with non-zero exit code if already fullscreen or already not fullscreen
 
+--window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
+
 // =========================================================== Arguments
-include::util/conditional-arguments-header.adoc[]
+include::./util/conditional-arguments-header.adoc[]
 
 on, off::
 `on` means enter fullscreen mode. `off` means exit fullscreen mode.

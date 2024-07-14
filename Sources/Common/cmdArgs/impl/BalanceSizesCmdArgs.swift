@@ -5,7 +5,9 @@ public struct BalanceSizesCmdArgs: CmdArgs {
         kind: .balanceSizes,
         allowInConfig: true,
         help: balance_sizes_help_generated,
-        options: [:],
+        options: [
+            "--workspace": optionalWorkspaceFlag(),
+        ],
         arguments: []
     )
 

@@ -5,7 +5,9 @@ public struct SplitCmdArgs: CmdArgs {
         kind: .split,
         allowInConfig: true,
         help: split_help_generated,
-        options: [:],
+        options: [
+            "--window-id": optionalWindowIdFlag(),
+        ],
         arguments: [newArgParser(\.arg, parseSplitArg, mandatoryArgPlaceholder: SplitArg.unionLiteral)]
     )
 
