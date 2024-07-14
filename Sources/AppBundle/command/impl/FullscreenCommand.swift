@@ -4,10 +4,11 @@ import Common
 struct FullscreenCommand: Command {
     let args: FullscreenCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let window = state.subject.windowOrNil else {
-            return state.failCmd(msg: noWindowIsFocused)
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let window = focus.windowOrNil else {
+            return io.err(noWindowIsFocused)
         }
         let newState: Bool = switch args.toggle {
             case .on: true
@@ -15,7 +16,7 @@ struct FullscreenCommand: Command {
             case .toggle: !window.isFullscreen
         }
         if newState == window.isFullscreen {
-            state.stderr.append((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
+            io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
                 "Tip: use --fail-if-noop to exit with non-zero code")
             return !args.failIfNoop
         }

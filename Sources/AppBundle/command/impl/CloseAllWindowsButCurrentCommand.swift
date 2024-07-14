@@ -4,20 +4,19 @@ import Common
 struct CloseAllWindowsButCurrentCommand: Command {
     let args: CloseAllWindowsButCurrentCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let focused = state.subject.windowOrNil else {
-            return state.failCmd(msg: "Empty workspace")
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let focused = focus.windowOrNil else {
+            return io.err("Empty workspace")
+        }
+        guard let workspace = focused.workspace else {
+            return io.err("Focused window '\(focused.title)' doesn't belong to workspace")
         }
         var result = true
-        guard let workspace = focused.workspace else {
-            return state.failCmd(msg: "Focused window '\(focused.title)' doesn't belong to workspace")
-        }
         for window in workspace.allLeafWindowsRecursive where window != focused {
-            state.subject = .window(window)
-            result = CloseCommand(args: args.closeArgs).run(state) && result
+            result = CloseCommand(args: args.closeArgs).run(env, io) && result
         }
-        state.subject = .window(focused)
         return result
     }
 }

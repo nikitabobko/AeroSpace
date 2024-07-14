@@ -4,25 +4,25 @@ import Common
 struct ConfigCommand: Command {
     let args: ConfigCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         switch args.mode {
             case .getKey(let key):
-                return getKey(state, args: args, key: key)
+                return getKey(io, args: args, key: key)
             case .majorKeys:
                 let out = """
                     .
                     mode
                     \(config.modes.keys.map { "mode.\($0).binding" }.joined(separator: "\n"))
                     """
-                return state.succCmd(msg: out)
+                return io.out(out)
             case .allKeys:
                 let configMap = buildConfigMap()
                 var allKeys: [String] = []
                 configMap.dumpAllKeysRecursive(path: ".", result: &allKeys)
-                return state.succCmd(msg: allKeys.joined(separator: "\n"))
+                return io.out(allKeys.joined(separator: "\n"))
             case .configPath:
-                return state.succCmd(msg: configUrl.absoluteURL.path)
+                return io.out(configUrl.absoluteURL.path)
         }
     }
 }
@@ -37,24 +37,24 @@ private extension String {
     }
 }
 
-private func getKey(_ state: CommandMutableState, args: ConfigCmdArgs, key: String) -> Bool {
+private func getKey(_ io: CmdIo, args: ConfigCmdArgs, key: String) -> Bool {
     let keyPath: [String]
     switch key.toKeyPath() {
         case .success(let _keyPath): keyPath = _keyPath
         case .failure(let error):
-            return state.failCmd(msg: error)
+            return io.err(error)
     }
     var configMap: ConfigMapValue
     switch buildConfigMap().find(keyPath: keyPath) {
         case .success(let value):
             configMap = value
         case .failure(let error):
-            return state.failCmd(msg: error)
+            return io.err(error)
     }
     if args.keys {
         switch configMap {
             case .scalar(let scalar):
-                return state.failCmd(msg: "--keys flag cannot be applied to scalar object '\(scalar)'")
+                return io.err("--keys flag cannot be applied to scalar object '\(scalar)'")
             case .map(let map):
                 configMap = .array(map.keys.map { .scalar(.string($0)) })
             case .array(let array):
@@ -68,15 +68,15 @@ private func getKey(_ state: CommandMutableState, args: ConfigCmdArgs, key: Stri
             String(data: $0, encoding: .utf8).flatMap(Result.success) ?? .failure("Can't convert json Data to String")
         }
         return switch _json {
-            case .success(let json): state.succCmd(msg: json)
-            case .failure(let error): state.failCmd(msg: error.localizedDescription)
+            case .success(let json): io.out(json)
+            case .failure(let error): io.err(error.localizedDescription)
         }
     } else {
         switch configMap {
             case .scalar(let scalar):
-                return state.succCmd(msg: scalar.describe)
+                return io.out(scalar.describe)
             case .map:
-                return state.failCmd(msg: "Complicated objects can be printed only with --json flag. " +
+                return io.err("Complicated objects can be printed only with --json flag. " +
                     "Alternatively, you can try to inspect keys of the object with --keys flag")
             case .array(let array):
                 let plainArray: Result<[String], String> = array.mapAllOrFailure {
@@ -87,8 +87,8 @@ private func getKey(_ state: CommandMutableState, args: ConfigCmdArgs, key: Stri
                     }
                 }
                 return switch plainArray {
-                    case .success(let array): state.succCmd(msg: array.sorted().joined(separator: "\n"))
-                    case .failure(let error): state.failCmd(msg: error)
+                    case .success(let array): io.out(array.sorted().joined(separator: "\n"))
+                    case .failure(let error): io.err(error)
                 }
         }
     }

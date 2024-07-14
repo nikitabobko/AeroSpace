@@ -5,27 +5,27 @@ import Foundation
 struct WorkspaceCommand: Command {
     let args: WorkspaceCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool { // todo refactor
         check(Thread.current.isMainThread)
+        guard let subject = args.resolveFocusOrReportError(env, io)?.workspace else { return false }
         let workspaceName: String
         switch args.target.val {
             case .relative(let isNext):
-                guard let workspace = getNextPrevWorkspace(current: state.subject.workspace, isNext: isNext, wrapAround: args.wrapAround, stdin: stdin) else { return false }
+                let workspace = getNextPrevWorkspace(current: subject, isNext: isNext, wrapAround: args.wrapAround, stdin: io.readStdin())
+                guard let workspace else { return false }
                 workspaceName = workspace.name
             case .direct(let name):
                 workspaceName = name.raw
-                if args.autoBackAndForth && state.subject.workspace.name == workspaceName {
-                    return WorkspaceBackAndForthCommand().run(state)
+                if args.autoBackAndForth && subject.name == workspaceName {
+                    return WorkspaceBackAndForthCommand().run(env, io)
                 }
         }
-        if state.subject.workspace.name == workspaceName {
-            state.stderr.append("Workspace '\(workspaceName)' is already focused. Tip: use --fail-if-noop to exit with non-zero code")
+        if subject.name == workspaceName {
+            io.err("Workspace '\(workspaceName)' is already focused. Tip: use --fail-if-noop to exit with non-zero code")
             return !args.failIfNoop
+        } else {
+            return Workspace.get(byName: workspaceName).focusWorkspace()
         }
-        let workspace = Workspace.get(byName: workspaceName)
-        let result = workspace.focusWorkspace()
-        state.subject = .focused
-        return result
     }
 }
 

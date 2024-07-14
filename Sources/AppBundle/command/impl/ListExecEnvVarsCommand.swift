@@ -4,10 +4,10 @@ import Common
 struct ListExecEnvVarsCommand: Command {
     let args: ListExecEnvVarsCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         for (key, value) in config.execConfig.envVariables {
-            state.stdout.append("\(key)=\(value)")
+            io.out("\(key)=\(value)")
         }
         return true
     }

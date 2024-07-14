@@ -29,17 +29,17 @@ enum DebugWindowsState {
 struct DebugWindowsCommand: Command {
     let args = DebugWindowsCmdArgs(rawArgs: .init([]))
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         switch debugWindowsState {
             case .recording:
                 debugWindowsState = .notRecording
-                state.stdout.append((debugWindowsLog.values + [disclaimer, "Debug session finished"]).joined(separator: "\n\n"))
+                io.out((debugWindowsLog.values + [disclaimer, "Debug session finished"]).joined(separator: "\n\n"))
                 debugWindowsLog = [:]
                 return true
             case .notRecording:
                 debugWindowsState = .recording
-                state.stdout.append(
+                io.out(
                     """
                     Debug windows session has started
                     1. Focus the problematic window
@@ -48,12 +48,13 @@ struct DebugWindowsCommand: Command {
                 )
                 debugWindowsLog = [:]
                 // Make sure that the Terminal window that started the recording is recorded first
-                if let window = state.subject.windowOrNil {
+                guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+                if let window = focus.windowOrNil {
                     debugWindowsIfRecording(window)
                 }
                 return true
             case .recordingAborted:
-                state.stdout.append(
+                io.out(
                     """
                     Recording of the previous session was aborted after \(debugWindowsLimit) windows has been focused
                     Run the command one more time to start new debug session

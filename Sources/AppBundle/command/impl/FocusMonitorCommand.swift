@@ -4,15 +4,13 @@ import Common
 struct FocusMonitorCommand: Command {
     let args: FocusMonitorCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        let currentMonitor = state.subject.workspace.workspaceMonitor
-        let result = switch args.target.val.resolve(currentMonitor, wrapAround: args.wrapAround) {
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        return switch args.target.val.resolve(focus.workspace.workspaceMonitor, wrapAround: args.wrapAround) {
             case .success(let targetMonitor): targetMonitor.activeWorkspace.focusWorkspace()
-            case .failure(let msg): state.failCmd(msg: msg)
+            case .failure(let msg): io.err(msg)
         }
-        state.subject = .focused
-        return result
     }
 }
 

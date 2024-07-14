@@ -4,48 +4,46 @@ import Common
 struct FocusCommand: Command {
     let args: FocusCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        let window = state.subject.windowOrNil
-        let workspace = state.subject.workspace
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
         // todo bug: floating windows break mru
-        let floatingWindows = args.floatingAsTiling ? makeFloatingWindowsSeenAsTiling(workspace: workspace) : []
+        let floatingWindows = args.floatingAsTiling ? makeFloatingWindowsSeenAsTiling(workspace: focus.workspace) : []
         defer {
             if args.floatingAsTiling {
-                restoreFloatingWindows(floatingWindows: floatingWindows, workspace: workspace)
+                restoreFloatingWindows(floatingWindows: floatingWindows, workspace: focus.workspace)
             }
         }
 
-        var result: Bool = true
         switch args.target {
             case .direction(let direction):
+                let window = focus.windowOrNil
                 if let (parent, ownIndex) = window?.closestParent(hasChildrenInDirection: direction, withLayout: nil) {
                     guard let windowToFocus = parent.children[ownIndex + direction.focusOffset]
                         .findFocusTargetRecursive(snappedTo: direction.opposite) else { return false }
-                    result = windowToFocus.focusWindow() && result
+                    return windowToFocus.focusWindow()
                 } else {
-                    result = hitWorkspaceBoundaries(state, args, direction) && result
+                    return hitWorkspaceBoundaries(focus, io, args, direction)
                 }
             case .windowId(let windowId):
                 if let windowToFocus = MacWindow.allWindowsMap[windowId] {
-                    result = windowToFocus.focusWindow() && result
+                    return windowToFocus.focusWindow()
                 } else {
-                    return state.failCmd(msg: "Can't find window with ID \(windowId)")
+                    return io.err("Can't find window with ID \(windowId)")
                 }
             case .dfsIndex(let dfsIndex):
-                if let windowToFocus = workspace.rootTilingContainer.allLeafWindowsRecursive.getOrNil(atIndex: Int(dfsIndex)) {
-                    result = windowToFocus.focusWindow() && result
+                if let windowToFocus = focus.workspace.rootTilingContainer.allLeafWindowsRecursive.getOrNil(atIndex: Int(dfsIndex)) {
+                    return windowToFocus.focusWindow()
                 } else {
-                    return state.failCmd(msg: "Can't find window with DFS index \(dfsIndex)")
+                    return io.err("Can't find window with DFS index \(dfsIndex)")
                 }
         }
-        state.subject = .focused
-        return result
     }
 }
 
 private func hitWorkspaceBoundaries(
-    _ state: CommandMutableState,
+    _ focus: LiveFocus,
+    _ io: CmdIo,
     _ args: FocusCmdArgs,
     _ direction: CardinalDirection
 ) -> Bool {
@@ -53,26 +51,27 @@ private func hitWorkspaceBoundaries(
         case .workspace:
             return switch args.boundariesAction {
                 case .stop: true
-                case .wrapAroundTheWorkspace: wrapAroundTheWorkspace(state, direction)
+                case .wrapAroundTheWorkspace: wrapAroundTheWorkspace(focus, io, direction)
                 case .wrapAroundAllMonitors: errorT("Must be discarded by args parser")
             }
         case .allMonitorsUnionFrame:
-            let currentMonitor = state.subject.workspace.workspaceMonitor
+            let currentMonitor = focus.workspace.workspaceMonitor
             guard let (monitors, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
-                return state.failCmd(msg: "Can't find monitor in direction \(direction)")
+                return io.err("Can't find monitor in direction \(direction)")
             }
 
             if let targetMonitor = monitors.getOrNil(atIndex: index) {
                 return targetMonitor.activeWorkspace.focusWorkspace()
             } else {
                 guard let wrapped = monitors.get(wrappingIndex: index) else { return false }
-                return hitAllMonitorsOuterFrameBoundaries(state, args, direction, wrapped)
+                return hitAllMonitorsOuterFrameBoundaries(focus, io, args, direction, wrapped)
             }
     }
 }
 
 private func hitAllMonitorsOuterFrameBoundaries(
-    _ state: CommandMutableState,
+    _ focus: LiveFocus,
+    _ io: CmdIo,
     _ args: FocusCmdArgs,
     _ direction: CardinalDirection,
     _ wrappedMonitor: Monitor
@@ -81,16 +80,16 @@ private func hitAllMonitorsOuterFrameBoundaries(
         case .stop:
             return true
         case .wrapAroundTheWorkspace:
-            return wrapAroundTheWorkspace(state, direction)
+            return wrapAroundTheWorkspace(focus, io, direction)
         case .wrapAroundAllMonitors:
             wrappedMonitor.activeWorkspace.findFocusTargetRecursive(snappedTo: direction.opposite)?.markAsMostRecentChild()
             return wrappedMonitor.activeWorkspace.focusWorkspace()
     }
 }
 
-private func wrapAroundTheWorkspace(_ state: CommandMutableState, _ direction: CardinalDirection) -> Bool {
-    guard let windowToFocus = state.subject.workspace.findFocusTargetRecursive(snappedTo: direction.opposite) else {
-        return state.failCmd(msg: noWindowIsFocused)
+private func wrapAroundTheWorkspace(_ focus: LiveFocus, _ io: CmdIo, _ direction: CardinalDirection) -> Bool {
+    guard let windowToFocus = focus.workspace.findFocusTargetRecursive(snappedTo: direction.opposite) else {
+        return io.err(noWindowIsFocused)
     }
     return windowToFocus.focusWindow()
 }

@@ -213,17 +213,6 @@ private extension ShellParser.CmdsContext? {
     func toTyped(_ msg: String) -> Result<RawShell, String> { orFailure(msg).toTyped() }
 }
 
-class CmdMutableState {
-    var stdin: String
-    var env: [String: String]
-
-    init(stdin: String, pwd: String) {
-        self.stdin = stdin
-        self.env = config.execConfig.envVariables
-        self.env["PWD"] = pwd
-    }
-}
-
 struct CmdOut {
     let stdout: [String]
     let exitCode: Int

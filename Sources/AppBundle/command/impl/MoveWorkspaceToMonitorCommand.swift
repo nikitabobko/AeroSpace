@@ -4,9 +4,10 @@ import Common
 struct MoveWorkspaceToMonitorCommand: Command {
     let args: MoveWorkspaceToMonitorCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        let focusedWorkspace = state.subject.workspace
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        let focusedWorkspace = focus.workspace
         let prevMonitor = focusedWorkspace.workspaceMonitor
         let sortedMonitors = sortedMonitors
         guard let index = sortedMonitors.firstIndex(where: { $0.rect.topLeftCorner == prevMonitor.rect.topLeftCorner }) else { return false }
@@ -21,7 +22,7 @@ struct MoveWorkspaceToMonitorCommand: Command {
                   "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(prevMonitor)")
             return true
         } else {
-            return state.failCmd(msg: "Can't move workspace '\(focusedWorkspace.name)' to monitor '\(targetMonitor.name)'. workspace-to-monitor-force-assignment doesn't allow it")
+            return io.err("Can't move workspace '\(focusedWorkspace.name)' to monitor '\(targetMonitor.name)'. workspace-to-monitor-force-assignment doesn't allow it")
         }
     }
 }

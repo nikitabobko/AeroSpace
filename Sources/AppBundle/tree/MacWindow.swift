@@ -331,7 +331,7 @@ func tryOnWindowDetected(_ window: Window, startup: Bool) {
 private func onWindowDetected(_ window: Window, startup: Bool) {
     check(Thread.current.isMainThread)
     for callback in config.onWindowDetected where callback.matches(window, startup: startup) {
-        _ = callback.run.run(CommandMutableState(.window(window)))
+        _ = callback.run.runCmdSeq(.defaultEnv.copy(\.windowId, window.windowId), .emptyStdin)
         if !callback.checkFurtherCallbacks {
             return
         }

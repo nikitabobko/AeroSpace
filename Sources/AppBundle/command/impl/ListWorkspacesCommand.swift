@@ -4,36 +4,33 @@ import Common
 struct ListWorkspacesCommand: Command {
     let args: ListWorkspacesCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         var result: [Workspace] = Workspace.all
         if let visible = args.visible {
             result = result.filter { $0.isVisible == visible }
         }
         if !args.onMonitors.isEmpty {
-            let monitors: Set<CGPoint> = args.onMonitors.resolveMonitors(state)
+            let monitors: Set<CGPoint> = args.onMonitors.resolveMonitors(io)
             if monitors.isEmpty { return false }
             result = result.filter { monitors.contains($0.workspaceMonitor.rect.topLeftCorner) }
         }
         if let empty = args.empty {
             result = result.filter { $0.isEffectivelyEmpty == empty }
         }
-        switch result.map({ AeroObj.workspace($0) }).format(args.format) {
-            case .success(let lines):
-                state.stdout += lines
-                return true
-            case .failure(let msg):
-                return state.failCmd(msg: msg)
+        return switch result.map({ AeroObj.workspace($0) }).format(args.format) {
+            case .success(let lines): io.out(lines)
+            case .failure(let msg): io.err(msg)
         }
     }
 }
 
 extension [MonitorId] {
-    func resolveMonitors(_ state: CommandMutableState) -> Set<CGPoint> {
+    func resolveMonitors(_ io: CmdIo) -> Set<CGPoint> {
         var requested: Set<CGPoint> = []
         let sortedMonitors = sortedMonitors
         for id in self {
-            let resolved = id.resolve(state, sortedMonitors: sortedMonitors)
+            let resolved = id.resolve(io, sortedMonitors: sortedMonitors)
             if resolved.isEmpty {
                 return []
             }
@@ -46,7 +43,7 @@ extension [MonitorId] {
 }
 
 extension MonitorId {
-    func resolve(_ state: CommandMutableState, sortedMonitors: [Monitor]) -> [Monitor] {
+    func resolve(_ io: CmdIo, sortedMonitors: [Monitor]) -> [Monitor] {
         switch self {
             case .focused:
                 return [focus.workspace.workspaceMonitor]
@@ -58,7 +55,7 @@ extension MonitorId {
                 if let monitor = sortedMonitors.getOrNil(atIndex: index) {
                     return [monitor]
                 } else {
-                    state.stderr.append("Invalid monitor ID: \(index + 1)")
+                    io.err("Invalid monitor ID: \(index + 1)")
                     return []
                 }
         }

@@ -11,7 +11,7 @@ final class SplitCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0)
         }
 
-        SplitCommand(args: SplitCmdArgs(rawArgs: [], .vertical)).run(.focused)
+        SplitCommand(args: SplitCmdArgs(rawArgs: [], .vertical)).run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([
             .v_tiles([
                 .window(1),
@@ -26,7 +26,7 @@ final class SplitCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0)
         }
 
-        SplitCommand(args: SplitCmdArgs(rawArgs: [], .opposite)).run(.focused)
+        SplitCommand(args: SplitCmdArgs(rawArgs: [], .opposite)).run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([
             .v_tiles([
                 .window(1),
@@ -43,7 +43,7 @@ final class SplitCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0)
         }
 
-        SplitCommand(args: SplitCmdArgs(rawArgs: [], .horizontal)).run(.focused)
+        SplitCommand(args: SplitCmdArgs(rawArgs: [], .horizontal)).run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([
             .h_tiles([
                 .window(1),
@@ -60,7 +60,7 @@ final class SplitCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0)
         }
 
-        SplitCommand(args: SplitCmdArgs(rawArgs: [], .opposite)).run(.focused)
+        SplitCommand(args: SplitCmdArgs(rawArgs: [], .opposite)).run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([
             .h_tiles([
                 .window(1),

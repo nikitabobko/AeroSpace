@@ -4,11 +4,12 @@ import Common
 struct MoveCommand: Command {
     let args: MoveCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         let direction = args.direction.val
-        guard let currentWindow = state.subject.windowOrNil else {
-            return state.failCmd(msg: noWindowIsFocused)
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let currentWindow = focus.windowOrNil else {
+            return io.err(noWindowIsFocused)
         }
         switch currentWindow.parent.cases {
             case .tilingContainer(let parent):
@@ -24,12 +25,12 @@ struct MoveCommand: Command {
                     }
                     return true
                 } else {
-                    return moveOut(state, window: currentWindow, direction: direction)
+                    return moveOut(io, window: currentWindow, direction: direction)
                 }
             case .workspace: // floating window
-                return state.failCmd(msg: "moving floating windows isn't yet supported") // todo
+                return io.err("moving floating windows isn't yet supported") // todo
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-                return state.failCmd(msg: moveOutMacosUnconventionalWindow)
+                return io.err(moveOutMacosUnconventionalWindow)
             case .macosPopupWindowsContainer:
                 return false // Impossible
         }
@@ -38,7 +39,7 @@ struct MoveCommand: Command {
 
 private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimized windows and windows of hidden apps isn't yet supported. This behavior is subject to change"
 
-private func moveOut(_ state: CommandMutableState, window: Window, direction: CardinalDirection) -> Bool {
+private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) -> Bool {
     let innerMostChild = window.parents.first(where: {
         return switch $0.parent?.cases {
             case .tilingContainer(let parent): parent.orientation == direction.orientation
@@ -65,7 +66,7 @@ private func moveOut(_ state: CommandMutableState, window: Window, direction: Ca
             bindTo = parent.rootTilingContainer
             bindToIndex = direction.insertionOffset
         case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-            return state.failCmd(msg: moveOutMacosUnconventionalWindow)
+            return io.err(moveOutMacosUnconventionalWindow)
         case .macosPopupWindowsContainer:
             return false // Impossible
         case .window:

@@ -4,7 +4,7 @@ import Common
 struct EnableCommand: Command {
     let args: EnableCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         let prevState = TrayMenuModel.shared.isEnabled
         let newState: Bool = switch args.targetState.val {
@@ -13,7 +13,7 @@ struct EnableCommand: Command {
             case .toggle: !TrayMenuModel.shared.isEnabled
         }
         if newState == prevState {
-            state.stderr.append((newState ? "Already enabled" : "Already disabled") +
+            io.out((newState ? "Already enabled" : "Already disabled") +
                 "Tip: use --fail-if-noop to exit with non-zero code")
             return !args.failIfNoop
         }

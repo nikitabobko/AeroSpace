@@ -5,34 +5,25 @@ import Common
 struct MacosNativeMinimizeCommand: Command {
     let args: MacosNativeMinimizeCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let window = state.subject.windowOrNil else {
-            return state.failCmd(msg: noWindowIsFocused)
+        // resolveFocusOrReportError on already minimized windows will alwyas fail
+        // It would be easier if minimized windows were part of the workspace in tree hierarchy
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let window = focus.windowOrNil else {
+            return io.err(noWindowIsFocused)
         }
         let axWindow = window.asMacWindow().axWindow
         let newState: Bool = !window.isMacosMinimized
         if axWindow.set(Ax.minimizedAttr, newState) {
-            let workspace = window.workspace ?? focus.workspace
             if newState { // minimize
                 window.bind(to: macosMinimizedWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
-                if let mru = workspace.mostRecentWindowRecursive {
-                    state.subject = .window(mru)
-                } else {
-                    state.subject = .emptyWorkspace(workspace.name)
-                }
+                return true
             } else { // unminimize
-                switch window.layoutReason {
-                    case .macos(let prevParentKind):
-                        exitMacOsNativeUnconventionalState(window: window, prevParentKind: prevParentKind, workspace: workspace)
-                    default: // wtf case. Theoretically should never happen
-                        window.relayoutWindow(on: workspace)
-                }
-                state.subject = .window(window)
+                return io.err("The command is uncapable of unminimizing windows yet. Sorry") // dead code. should never be possible, see the comment above
             }
-            return true
         } else {
-            return state.failCmd(msg: "Failed")
+            return io.err("macOS AX API Failed")
         }
     }
 }

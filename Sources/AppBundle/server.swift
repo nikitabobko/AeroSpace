@@ -90,12 +90,11 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
         if let command {
             let _answer: Result<ServerAnswer, Error> = await Task { @MainActor in
                 refreshSession {
-                    let state: CommandMutableState = .focused // todo restore subject from "exec session"
-                    let success = command.run(state, stdin: request.stdin)
+                    let cmdResult = command.run(.defaultEnv, CmdStdin(request.stdin)) // todo pass AEROSPACE_ env vars from CLI instead of defaultEnv
                     return ServerAnswer(
-                        exitCode: success ? 0 : 1,
-                        stdout: state.stdout.joined(separator: "\n"),
-                        stderr: state.stderr.joined(separator: "\n"),
+                        exitCode: cmdResult.exitCode,
+                        stdout: cmdResult.stdout.joined(separator: "\n"),
+                        stderr: cmdResult.stderr.joined(separator: "\n"),
                         serverVersionAndHash: serverVersionAndHash
                     )
                 }

@@ -4,7 +4,7 @@ import Common
 struct ListMonitorsCommand: Command {
     let args: ListMonitorsCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         var result = sortedMonitors
         if let focused = args.focused {
@@ -14,12 +14,9 @@ struct ListMonitorsCommand: Command {
             let mouseWorkspace = mouseLocation.monitorApproximation.activeWorkspace
             result = result.filter { (monitor) in (monitor.activeWorkspace == mouseWorkspace) == mouse }
         }
-        switch result.map({ AeroObj.monitor($0) }).format(args.format) {
-            case .success(let lines):
-                state.stdout += lines
-                return true
-            case .failure(let msg):
-                return state.failCmd(msg: msg)
+        return switch result.map({ AeroObj.monitor($0) }).format(args.format) {
+            case .success(let lines): io.out(lines)
+            case .failure(let msg): io.err(msg)
         }
     }
 }

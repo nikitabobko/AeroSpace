@@ -4,8 +4,8 @@ import Common
 struct ServerVersionInternalCommandCommand: Command {
     let args = ServerVersionInternalCommandCmdArgs(rawArgs: [])
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        return state.succCmd(msg: "\(aeroSpaceAppVersion) \(gitHash)")
+        return io.out("\(aeroSpaceAppVersion) \(gitHash)")
     }
 }

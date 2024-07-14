@@ -2,6 +2,9 @@ import AppKit
 import Common
 import Foundation
 
+let AEROSPACE_FOCUSED_WINDOW_ID = "AEROSPACE_FOCUSED_WINDOW_ID" // env var
+let AEROSPACE_FOCUSED_WORKSPACE = "AEROSPACE_FOCUSED_WORKSPACE" // env var
+
 func stringType(of some: Any) -> String {
     let string = (some is Any.Type) ? String(describing: some) : String(describing: type(of: some))
     return string

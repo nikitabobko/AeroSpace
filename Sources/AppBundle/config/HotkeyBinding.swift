@@ -29,7 +29,8 @@ func activateMode(_ targetMode: String?) {
             check(Thread.current.isMainThread)
             if let activeMode {
                 refreshSession {
-                    _ = config.modes[activeMode]?.bindings[binding.descriptionWithKeyCode]?.commands.run(.focused)
+                    _ = config.modes[activeMode]?.bindings[binding.descriptionWithKeyCode]?.commands
+                        .runCmdSeq(.defaultEnv, .emptyStdin)
                 }
             }
         })

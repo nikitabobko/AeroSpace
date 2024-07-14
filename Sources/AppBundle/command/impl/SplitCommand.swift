@@ -4,18 +4,19 @@ import Common
 struct SplitCommand: Command {
     let args: SplitCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         if config.enableNormalizationFlattenContainers {
-            return state.failCmd(msg: "'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled. My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.")
+            return io.err("'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled. My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.")
         }
-        guard let window = state.subject.windowOrNil else {
-            return state.failCmd(msg: noWindowIsFocused)
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let window = focus.windowOrNil else {
+            return io.err(noWindowIsFocused)
         }
         switch window.parent.cases {
             case .workspace:
                 // Nothing to do for floating and macOS native fullscreen windows
-                return state.failCmd(msg: "Can't split floating windows")
+                return io.err("Can't split floating windows")
             case .tilingContainer(let parent):
                 let orientation: Orientation = switch args.arg.val {
                     case .vertical: .v
@@ -37,7 +38,7 @@ struct SplitCommand: Command {
                 }
                 return true
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-                return state.failCmd(msg: "Can't split macos fullscreen, minimized windows and windows of hidden apps. This behavior may change in the future")
+                return io.err("Can't split macos fullscreen, minimized windows and windows of hidden apps. This behavior may change in the future")
             case .macosPopupWindowsContainer:
                 return false // Impossible
         }

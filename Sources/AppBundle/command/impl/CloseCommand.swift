@@ -4,30 +4,26 @@ import Common
 struct CloseCommand: Command {
     let args: CloseCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let window = state.subject.windowOrNil else {
-            return state.failCmd(msg: "Empty workspace")
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let window = focus.windowOrNil else {
+            return io.err("Empty workspace")
         }
         if window.macAppUnsafe.axApp.get(Ax.windowsAttr)?.count == 1 && args.quitIfLastWindow {
             if window.macAppUnsafe.nsApp.terminate() {
-                successfullyClosedWindow(state, window)
+                window.asMacWindow().garbageCollect()
                 return true
             } else {
-                return state.failCmd(msg: "Failed to quit '\(window.app.name ?? "Unknown app")'")
+                return io.err("Failed to quit '\(window.app.name ?? "Unknown app")'")
             }
         } else {
             if window.close() {
-                successfullyClosedWindow(state, window)
+                window.asMacWindow().garbageCollect()
                 return true
             } else {
-                return state.failCmd(msg: "Can't close '\(window.app.name ?? "Unknown app")' window. Probably the window doesn't have a close button")
+                return io.err("Can't close '\(window.app.name ?? "Unknown app")' window. Probably the window doesn't have a close button")
             }
         }
     }
-}
-
-private func successfullyClosedWindow(_ state: CommandMutableState, _ window: Window) {
-    window.asMacWindow().garbageCollect()
-    state.subject = .focused
 }

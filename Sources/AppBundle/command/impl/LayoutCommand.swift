@@ -4,37 +4,38 @@ import Common
 struct LayoutCommand: Command {
     let args: LayoutCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let window = state.subject.windowOrNil else {
-            return state.failCmd(msg: noWindowIsFocused)
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let window = focus.windowOrNil else {
+            return io.err(noWindowIsFocused)
         }
         let targetDescription = args.toggleBetween.val.first(where: { !window.matchesDescription($0) })
             ?? args.toggleBetween.val.first!
         if window.matchesDescription(targetDescription) { return false }
         switch targetDescription {
             case .h_accordion:
-                return changeTilingLayout(state, targetLayout: .accordion, targetOrientation: .h, window: window)
+                return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: .h, window: window)
             case .v_accordion:
-                return changeTilingLayout(state, targetLayout: .accordion, targetOrientation: .v, window: window)
+                return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: .v, window: window)
             case .h_tiles:
-                return changeTilingLayout(state, targetLayout: .tiles, targetOrientation: .h, window: window)
+                return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: .h, window: window)
             case .v_tiles:
-                return changeTilingLayout(state, targetLayout: .tiles, targetOrientation: .v, window: window)
+                return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: .v, window: window)
             case .accordion:
-                return changeTilingLayout(state, targetLayout: .accordion, targetOrientation: nil, window: window)
+                return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: nil, window: window)
             case .tiles:
-                return changeTilingLayout(state, targetLayout: .tiles, targetOrientation: nil, window: window)
+                return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: nil, window: window)
             case .horizontal:
-                return changeTilingLayout(state, targetLayout: nil, targetOrientation: .h, window: window)
+                return changeTilingLayout(io, targetLayout: nil, targetOrientation: .h, window: window)
             case .vertical:
-                return changeTilingLayout(state, targetLayout: nil, targetOrientation: .v, window: window)
+                return changeTilingLayout(io, targetLayout: nil, targetOrientation: .v, window: window)
             case .tiling:
                 switch window.parent.cases {
                     case .macosPopupWindowsContainer:
                         return false // Impossible
                     case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-                        return state.failCmd(msg: "Can't change layout for macOS minimized, fullscreen windows or windows or hidden apps. This behavior is subject to change")
+                        return io.err("Can't change layout for macOS minimized, fullscreen windows or windows or hidden apps. This behavior is subject to change")
                     case .tilingContainer:
                         return true // Nothing to do
                     case .workspace(let workspace):
@@ -43,7 +44,7 @@ struct LayoutCommand: Command {
                         return true
                 }
             case .floating:
-                let workspace = state.subject.workspace
+                let workspace = focus.workspace
                 window.bindAsFloatingWindow(to: workspace)
                 guard let topLeftCorner = window.getTopLeftCorner() else { return false }
                 return window.setFrame(topLeftCorner, window.lastFloatingSize)
@@ -51,7 +52,7 @@ struct LayoutCommand: Command {
     }
 }
 
-private func changeTilingLayout(_ state: CommandMutableState, targetLayout: Layout?, targetOrientation: Orientation?, window: Window) -> Bool {
+private func changeTilingLayout(_ io: CmdIo, targetLayout: Layout?, targetOrientation: Orientation?, window: Window) -> Bool {
     switch window.parent.cases {
         case .tilingContainer(let parent):
             let targetOrientation = targetOrientation ?? parent.orientation
@@ -61,7 +62,7 @@ private func changeTilingLayout(_ state: CommandMutableState, targetLayout: Layo
             return true
         case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
              .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
-            return state.failCmd(msg: "The window is non-tiling")
+            return io.err("The window is non-tiling")
     }
 }
 

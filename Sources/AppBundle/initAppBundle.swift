@@ -23,11 +23,10 @@ public func initAppBundle() {
     GlobalObserver.initObserver()
     refreshAndLayout(startup: true)
     refreshSession {
-        let state: CommandMutableState = .focused
         if serverArgs.startedAtLogin {
-            _ = config.afterLoginCommand.run(state)
+            _ = config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
         }
-        _ = config.afterStartupCommand.run(state)
+        _ = config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
     }
 }
 

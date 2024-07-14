@@ -4,12 +4,12 @@ import Common
 struct FocusBackAndForthCommand: Command {
     let args: FocusBackAndForthCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         if let prevFocus {
             return setFocus(to: prevFocus)
         } else {
-            return state.failCmd(msg: "Prev window has been closed")
+            return io.err("Prev window has been closed")
         }
     }
 }

@@ -55,7 +55,7 @@ final class FocusCommandTest: XCTestCase {
         }
 
         assertEquals(focus.windowOrNil?.windowId, 1)
-        FocusCommand.new(direction: .right).run(.focused)
+        FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
@@ -67,9 +67,9 @@ final class FocusCommandTest: XCTestCase {
         }
 
         assertEquals(focus.windowOrNil?.windowId, 2)
-        FocusCommand.new(direction: .up).run(.focused)
+        FocusCommand.new(direction: .up).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
-        FocusCommand.new(direction: .down).run(.focused)
+        FocusCommand.new(direction: .down).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
@@ -80,7 +80,7 @@ final class FocusCommandTest: XCTestCase {
         }
 
         assertEquals(focus.windowOrNil?.windowId, 1)
-        FocusCommand.new(direction: .left).run(.focused)
+        FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 
@@ -94,7 +94,7 @@ final class FocusCommandTest: XCTestCase {
         var args = FocusCmdArgs(rawArgs: [], direction: .left)
         args.rawBoundaries = .workspace
         args.rawBoundariesAction = .wrapAroundTheWorkspace
-        FocusCommand(args: args).run(.focused)
+        FocusCommand(args: args).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
@@ -117,18 +117,18 @@ final class FocusCommandTest: XCTestCase {
 
         assertEquals(workspace.mostRecentWindowRecursive?.windowId, 3) // The latest bound
         _ = startWindow.focusWindow()
-        FocusCommand.new(direction: .right).run(.focused)
+        FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 3)
 
         window2.markAsMostRecentChild()
         _ = startWindow.focusWindow()
-        FocusCommand.new(direction: .right).run(.focused)
+        FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
 
         window3.markAsMostRecentChild()
         unrelatedWindow.markAsMostRecentChild()
         _ = startWindow.focusWindow()
-        FocusCommand.new(direction: .right).run(.focused)
+        FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
@@ -140,7 +140,7 @@ final class FocusCommandTest: XCTestCase {
             }
         }
 
-        FocusCommand.new(direction: .left).run(.focused)
+        FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 
@@ -152,7 +152,7 @@ final class FocusCommandTest: XCTestCase {
             }
         }
 
-        FocusCommand.new(direction: .left).run(.focused)
+        FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 }

@@ -4,10 +4,11 @@ import Common
 struct ResizeCommand: Command { // todo cover with tests
     let args: ResizeCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool { // todo support key repeat
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
 
-        let candidates = state.subject.windowOrNil?.parentsWithSelf
+        let candidates = focus.windowOrNil?.parentsWithSelf
             .filter { ($0.parent as? TilingContainer)?.layout == .tiles }
             ?? []
 

@@ -15,7 +15,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             _ = TestWindow.new(id: 1, parent: $0).focusWindow()
         }
 
-        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.focused)
+        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.defaultEnv, .emptyStdin)
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         assertEquals((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }
@@ -26,12 +26,8 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             _ = TestWindow.new(id: 1, parent: $0).focusWindow()
         }
 
-        let state: CommandMutableState = .focused
-
-        _ = MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b"))
-            .run(state)
-
-        assertEquals(state.subject, .emptyWorkspace("a"))
+        _ = MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.defaultEnv, .emptyStdin)
+        assertEquals(focus.workspace.name, "a")
     }
 
     func testAnotherWindowSubject() {
@@ -42,12 +38,8 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             _ = TestWindow.new(id: 2, parent: $0).focusWindow()
         }
 
-        let state: CommandMutableState = .focused
-
-        _ = MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b"))
-            .run(state)
-
-        assertEquals(state.subject, .window(window1))
+        _ = MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.defaultEnv, .emptyStdin)
+        assertEquals(focus.windowOrNil, window1)
     }
 
     func testPreserveFloatingLayout() {
@@ -55,7 +47,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             _ = TestWindow.new(id: 1, parent: $0).focusWindow()
         }
 
-        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.focused)
+        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.defaultEnv, .emptyStdin)
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         assertEquals(Workspace.get(byName: "b").children.filterIsInstance(of: Window.self).singleOrNil()?.windowId, 1)
     }

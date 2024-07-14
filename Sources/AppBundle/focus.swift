@@ -76,23 +76,27 @@ func setFocus(to newFocus: LiveFocus) -> Bool {
 }
 extension Window {
     func focusWindow() -> Bool {
-        if let ws = self.visualWorkspace {
-            return setFocus(to: LiveFocus(windowOrNil: self, workspace: ws))
+        if let focus = toLiveFocusOrNil() {
+            return setFocus(to: focus)
         } else {
             // todo We should also exit-native-hidden/unminimize[/exit-native-fullscreen?] window if we want to fix ID-B6E178F2
             //      and retry to focus the window. Otherwise, it's not possible to focus minimized/hidden windows
             return false
         }
     }
+
+    func toLiveFocusOrNil() -> LiveFocus? { visualWorkspace.map { LiveFocus(windowOrNil: self, workspace: $0) } }
 }
 extension Workspace {
-    func focusWorkspace() -> Bool {
+    func focusWorkspace() -> Bool { setFocus(to: toLiveFocus()) }
+
+    func toLiveFocus() -> LiveFocus {
         // todo unfortunately mostRecentWindowRecursive may recursively reach empty rootTilingContainer
         //      while floating or macos unconventional windows might be presented
-        if let w = mostRecentWindowRecursive ?? anyLeafWindowRecursive {
-            return w.focusWindow()
+        if let wi = mostRecentWindowRecursive ?? anyLeafWindowRecursive {
+            LiveFocus(windowOrNil: wi, workspace: self)
         } else {
-            return setFocus(to: LiveFocus(windowOrNil: nil, workspace: self))
+            LiveFocus(windowOrNil: nil, workspace: self) // emptyWorkspace
         }
     }
 }
@@ -144,11 +148,11 @@ func checkOnFocusChangedCallbacks() {
 
 private func onFocusedMonitorChanged(_ focus: LiveFocus) {
     if config.onFocusedMonitorChanged.isEmpty { return }
-    _ = config.onFocusedMonitorChanged.run(CommandMutableState(focus.asLeaf.asCommandSubject))
+    _ = config.onFocusedMonitorChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
 }
 private func onFocusChanged(_ focus: LiveFocus) {
     if config.onFocusChanged.isEmpty { return }
-    _ = config.onFocusChanged.run(CommandMutableState(focus.asLeaf.asCommandSubject))
+    _ = config.onFocusChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
 }
 
 private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String) {

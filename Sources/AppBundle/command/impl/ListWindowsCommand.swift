@@ -4,14 +4,15 @@ import Common
 struct ListWindowsCommand: Command {
     let args: ListWindowsCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         var windows: [Window] = []
         if args.focused {
-            if let window = state.subject.windowOrNil {
+            guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+            if let window = focus.windowOrNil {
                 windows = [window]
             } else {
-                return state.failCmd(msg: noWindowIsFocused)
+                return io.err(noWindowIsFocused)
             }
         } else {
             var workspaces: Set<Workspace> = args.workspaces.isEmpty ? Workspace.all.toSet() : args.workspaces
@@ -24,7 +25,7 @@ struct ListWindowsCommand: Command {
                 }
                 .toSet()
             if !args.monitors.isEmpty {
-                let monitors: Set<CGPoint> = args.monitors.resolveMonitors(state)
+                let monitors: Set<CGPoint> = args.monitors.resolveMonitors(io)
                 if monitors.isEmpty { return false }
                 workspaces = workspaces.filter { monitors.contains($0.workspaceMonitor.rect.topLeftCorner) }
             }
@@ -38,12 +39,9 @@ struct ListWindowsCommand: Command {
         }
         windows = windows.sorted(using: [SelectorComparator { $0.app.name ?? "" }, SelectorComparator(selector: \.title)])
 
-        switch windows.map({ AeroObj.window($0) }).format(args.format) {
-            case .success(let lines):
-                state.stdout += lines
-                return true
-            case .failure(let msg):
-                return state.failCmd(msg: msg)
+        return switch windows.map({ AeroObj.window($0) }).format(args.format) {
+            case .success(let lines): io.out(lines)
+            case .failure(let msg): io.err(msg)
         }
     }
 }

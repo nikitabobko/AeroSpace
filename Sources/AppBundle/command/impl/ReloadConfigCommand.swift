@@ -4,11 +4,13 @@ import Common
 struct ReloadConfigCommand: Command {
     let args: ReloadConfigCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         var stdout = ""
         let isOk = reloadConfig(args: args, stdout: &stdout)
-        state.stdout.append(stdout)
+        if !stdout.isEmpty {
+            io.out(stdout)
+        }
         return isOk
     }
 }

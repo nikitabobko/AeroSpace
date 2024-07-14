@@ -9,10 +9,11 @@ import Common
 struct MacosNativeFullscreenCommand: Command {
     let args: MacosNativeFullscreenCmdArgs
 
-    func _run(_ state: CommandMutableState, stdin: String) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let window = state.subject.windowOrNil else {
-            return state.failCmd(msg: noWindowIsFocused)
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let window = focus.windowOrNil else {
+            return io.err(noWindowIsFocused)
         }
         let axWindow = window.asMacWindow().axWindow
         let prevState = window.isMacosFullscreen
@@ -22,13 +23,13 @@ struct MacosNativeFullscreenCommand: Command {
             case .toggle: !prevState
         }
         if newState == prevState {
-            state.stderr.append((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
+            io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
                 "Tip: use --fail-if-noop to exit with non-zero exit code")
             return !args.failIfNoop
         }
         if axWindow.set(Ax.isFullscreenAttr, newState) {
             guard let workspace = window.visualWorkspace else {
-                return state.failCmd(msg: windowIsntPartOfTree(window))
+                return io.err(windowIsntPartOfTree(window))
             }
             if newState { // Enter fullscreen
                 window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
@@ -42,7 +43,7 @@ struct MacosNativeFullscreenCommand: Command {
             }
             return true
         } else {
-            return state.failCmd(msg: "Failed")
+            return io.err("AX API returned error")
         }
     }
 }
