@@ -14,7 +14,7 @@ public struct FocusMonitorCmdArgs: RawCmdArgs, CmdArgs {
               --wrap-around         Make it possible to wrap around focus
 
             ARGUMENTS:
-              (left|down|up|right)  Focus monitor in direction relative to the currently focused monitor
+              (left|down|up|right)  Focus monitor in direction relative to the focused monitor
               (next|prev)           Focus next|prev monitor in order they appear in tray icon
               <monitor-pattern>     Find the first monitor pattern in the list that
                                     doesn't describe the current monitor and focus the appropriate monitor.

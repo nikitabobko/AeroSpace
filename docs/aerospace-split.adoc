@@ -15,16 +15,16 @@ aerospace split [-h|--help] (horizontal|vertical|opposite)
 == Description
 
 // tag::body[]
-*If the parent of currently focused window contains more than one child*, then the command
+*If the parent of focused window contains more than one child*, then the command
 
 . Creates a new tiling container
-. Replaces currently focused window with the container
-. Puts the currently focused window into the container as its the only child
+. Replaces the focused window with the container
+. Puts the focused window into the container as its the only child
 
 The argument configures orientation of the newly created container.
 `opposite` means opposite orientation compared to the parent container.
 
-*If the parent of currently focused window contains only a single child* (the window itself), then `split` command changes the orientation of the parent container
+*If the parent of the focused window contains only a single child* (the window itself), then `split` command changes the orientation of the parent container
 
 IMPORTANT: `split` command has no effect if `enable-normalization-flatten-containers` is turned on.
 Consider using `join-with` if you want to keep `enable-normalization-flatten-containers` enabled

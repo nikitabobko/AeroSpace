@@ -14,7 +14,7 @@ public struct MoveNodeToMonitorCmdArgs: RawCmdArgs, CmdArgs, Equatable {
               --wrap-around         Make it possible to wrap around the movement
 
             ARGUMENTS:
-              (left|down|up|right)  Move window to monitor in direction relative to the currently focused monitor
+              (left|down|up|right)  Move window to monitor in direction relative to the focused monitor
               (next|prev)           Move window to next|prev monitor in order they appear in tray icon
               <monitor-pattern>     Find the first monitor pattern in the list that
                                     doesn't describe the current monitor and move the window

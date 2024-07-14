@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-move-node-to-workspace
 // tag::purpose[]
-:manpurpose: Move currently focused window to the specified workspace
+:manpurpose: Move the focused window to the specified workspace
 // end::purpose[]
 
 // =========================================================== Synopsis

@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-macos-native-fullscreen
 // tag::purpose[]
-:manpurpose: Toggle macOS fullscreen for the currently focused window
+:manpurpose: Toggle macOS fullscreen for the focused window
 // end::purpose[]
 
 // =========================================================== Synopsis

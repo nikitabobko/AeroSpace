@@ -31,7 +31,7 @@ include::util/conditional-options-header.adoc[]
 include::util/conditional-arguments-header.adoc[]
 
 (left|down|up|right)::
-Move window to monitor in direction relative to the currently focused monitor
+Move window to monitor in direction relative to the focused monitor
 
 (next|prev)::
 Move window to next|prev monitor in order they appear in tray icon

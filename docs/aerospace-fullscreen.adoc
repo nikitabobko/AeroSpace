@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-fullscreen
 // tag::purpose[]
-:manpurpose: Toggle the fullscreen mode for the currently focused window
+:manpurpose: Toggle the fullscreen mode for the focused window
 // end::purpose[]
 
 // =========================================================== Synopsis

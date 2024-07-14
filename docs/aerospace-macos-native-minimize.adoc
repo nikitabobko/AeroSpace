@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-macos-native-minimize
 // tag::purpose[]
-:manpurpose: Toggle macOS minimize for the currently focused window
+:manpurpose: Toggle macOS minimize for the focused window
 // end::purpose[]
 
 // =========================================================== Synopsis

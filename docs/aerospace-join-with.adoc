@@ -1,7 +1,7 @@
 = aerospace-join-with(1)
 include::util/man-attributes.adoc[]
 // tag::purpose[]
-:manpurpose: Put the currently focused window and the nearest node in the specified direction under a common parent container
+:manpurpose: Put the focused window and the nearest node in the specified direction under a common parent container
 // end::purpose[]
 :manname: aerospace-join-with
 

@@ -7,4 +7,4 @@ Possible monitors IDs: +
 . 1-based index of a monitor as if monitors were ordered horizontally from left to right
 . `all` is a special monitor ID that represents all monitors
 . `mouse` is a special monitor ID that represents monitor with the mouse
-. `focused` is a special monitor ID that represents currently focused monitor
+. `focused` is a special monitor ID that represents the focused monitor

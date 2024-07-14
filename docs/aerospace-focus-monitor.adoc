@@ -31,7 +31,7 @@ include::util/conditional-options-header.adoc[]
 include::util/conditional-arguments-header.adoc[]
 
 (left|down|up|right)::
-Focus monitor in direction relative to the currently focused monitor
+Focus monitor in direction relative to the focused monitor
 
 (next|prev)::
 Focus next|prev monitor in order they appear in tray icon
