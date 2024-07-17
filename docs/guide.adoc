@@ -365,9 +365,13 @@ Overview of '`Displays have separate Spaces`'
 |😡 No
 |👍 Yes
 
-|macOS status bar ...
-|... is displayed on both monitors
-|... is displayed only on main monitor
+|macOS status bar
+|Displayed on both monitors
+|Displayed only on main monitor
+
+|Monitors have different resolution
+|😡 Might experience performance impact due to windows moving between spaces
+|👍 No performance impact
 |===
 
 == Callbacks
