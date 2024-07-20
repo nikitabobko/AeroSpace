@@ -19,19 +19,12 @@ struct WorkspaceCommand: Command {
                 }
         }
         let workspace = Workspace.get(byName: workspaceName)
-        // todo drop anyLeafWindowRecursive. It must not be necessary
-        if let window = workspace.mostRecentWindow ?? workspace.anyLeafWindowRecursive { // switch to not empty workspace
-            state.subject = .window(window)
-        } else { // switch to empty workspace
-            check(workspace.isEffectivelyEmpty)
-            state.subject = .emptyWorkspace(workspaceName)
-        }
-        check(workspace.workspaceMonitor.setActiveWorkspace(workspace))
-        focusedWorkspaceName = workspace.name
-        return true
+        let result = workspace.focusWorkspace()
+        state.subject = .focused
+        return result
     }
 
-    public static func run(_ state: CommandMutableState, _ name: String) -> Bool {
+    public static func run(_ state: CommandMutableState, _ name: String) -> Bool { // todo reduce usages
         if let wName = WorkspaceName.parse(name).getOrNil(appendErrorTo: &state.stderr) {
             let args = WorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct(wName, autoBackAndForth: false)))
             return WorkspaceCommand(args: args).run(state)

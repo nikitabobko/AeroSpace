@@ -35,7 +35,7 @@ struct FocusCommand: Command {
             case .emptyWorkspace(let name):
                 result = WorkspaceCommand.run(state, name) && result
             case .window(let windowToFocus):
-                result = windowToFocus.focus() && result
+                result = windowToFocus.focusWindow() && result
         }
         return result
     }
@@ -96,7 +96,7 @@ private func wrapAroundTheWorkspace(_ state: CommandMutableState, _ direction: C
         return state.failCmd(msg: "No window to focus")
     }
     state.subject = .window(windowToFocus)
-    return windowToFocus.focus()
+    return windowToFocus.focusWindow()
 }
 
 private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingWindowData] {

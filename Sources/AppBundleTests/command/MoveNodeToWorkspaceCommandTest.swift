@@ -12,7 +12,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
     func testSimple() {
         let workspaceA = Workspace.get(byName: "a")
         workspaceA.rootTilingContainer.apply {
-            _ = TestWindow(id: 1, parent: $0).focus()
+            _ = TestWindow(id: 1, parent: $0).focusWindow()
         }
 
         MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("b")))).run(.focused)
@@ -23,7 +23,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
     func testEmptyWorkspaceSubject() {
         let workspaceA = Workspace.get(byName: "a")
         workspaceA.rootTilingContainer.apply {
-            _ = TestWindow(id: 1, parent: $0).focus()
+            _ = TestWindow(id: 1, parent: $0).focusWindow()
         }
 
         let state: CommandMutableState = .focused
@@ -39,7 +39,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         var window1: Window!
         workspaceA.rootTilingContainer.apply {
             window1 = TestWindow(id: 1, parent: $0)
-            _ = TestWindow(id: 2, parent: $0).focus()
+            _ = TestWindow(id: 2, parent: $0).focusWindow()
         }
 
         let state: CommandMutableState = .focused
@@ -52,7 +52,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
 
     func testPreserveFloatingLayout() {
         let workspaceA = Workspace.get(byName: "a").apply {
-            _ = TestWindow(id: 1, parent: $0).focus()
+            _ = TestWindow(id: 1, parent: $0).focusWindow()
         }
 
         MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("b")))).run(.focused)

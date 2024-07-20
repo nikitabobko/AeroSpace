@@ -13,13 +13,13 @@ func refreshSession<T>(startup: Bool = false, forceFocus: Bool = false, body: ()
     let nativeFocused = getNativeFocusedWindow(startup: startup)
     if let nativeFocused { debugWindowsIfRecording(nativeFocused) }
     updateFocusCache(nativeFocused)
-    let focusBefore = focusedWindow
+    let focusBefore = focus.windowOrNil
 
     refreshModel()
     let result = body()
     refreshModel()
 
-    let focusAfter = focusedWindow
+    let focusAfter = focus.windowOrNil
 
     if startup {
         smartLayoutAtStartup()
@@ -27,7 +27,7 @@ func refreshSession<T>(startup: Bool = false, forceFocus: Bool = false, body: ()
 
     if TrayMenuModel.shared.isEnabled {
         if forceFocus || focusBefore != focusAfter {
-            focusedWindow?.nativeFocus() // syncFocusToMacOs
+            focusAfter?.nativeFocus() // syncFocusToMacOs
         }
 
         updateTrayText()
@@ -43,7 +43,7 @@ func refreshAndLayout(startup: Bool = false) {
 
 func refreshModel() {
     gc()
-    refreshFocusedWorkspaceBasedOnFocusedWindow()
+    checkOnFocusChangedCallbacks()
     normalizeContainers()
 }
 
@@ -56,15 +56,6 @@ private func gc() {
 
 func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
     refreshAndLayout()
-}
-
-private func refreshFocusedWorkspaceBasedOnFocusedWindow() { // todo drop. It should no longer be necessary
-    if let focusedWindow = focusedWindow, let monitor = focusedWindow.nodeMonitor {
-        // todo it's rather refresh focused monitor
-        let focusedWorkspace: Workspace = monitor.activeWorkspace
-        check(focusedWorkspace.workspaceMonitor.setActiveWorkspace(focusedWorkspace))
-        focusedWorkspaceName = focusedWorkspace.name
-    }
 }
 
 private func layoutWorkspaces() {

@@ -6,7 +6,6 @@ struct WorkspaceBackAndForthCommand: Command {
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
-        guard let previousFocusedWorkspaceName else { return false }
-        return WorkspaceCommand.run(state, previousFocusedWorkspaceName)
+        return prevFocusedWorkspace?.focusWorkspace() != nil
     }
 }

@@ -29,9 +29,5 @@ struct CloseCommand: Command {
 
 private func successfullyClosedWindow(_ state: CommandMutableState, _ window: Window) {
     window.asMacWindow().garbageCollect()
-    if let focusedWindow {
-        state.subject = .window(focusedWindow)
-    } else {
-        state.subject = .emptyWorkspace(focusedWorkspaceName)
-    }
+    state.subject = .focused
 }

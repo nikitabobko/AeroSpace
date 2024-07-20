@@ -83,7 +83,7 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, Custom
             preservedNames.contains(workspace.name) ||
                 !workspace.isEffectivelyEmpty ||
                 workspace.isVisible ||
-                workspace.name == focusedWorkspaceName
+                workspace.name == focus.workspace.name
         }
     }
 

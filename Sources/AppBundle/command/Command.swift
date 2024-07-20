@@ -72,12 +72,14 @@ extension [Command] {
 enum CommandSubject: Equatable {
     case emptyWorkspace(String)
     case window(Window)
+    static var focused: CommandSubject { focus.asLeaf.asCommandSubject }
+}
 
-    static var focused: CommandSubject {
-        if let window = focusedWindow {
-            return .window(window)
-        } else {
-            return .emptyWorkspace(focusedWorkspaceName)
+extension EffectiveLeaf {
+    var asCommandSubject: CommandSubject {
+        switch focus.asLeaf {
+            case .window(let w): .window(w)
+            case .emptyWorkspace(let w): .emptyWorkspace(w.name)
         }
     }
 }

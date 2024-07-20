@@ -54,7 +54,6 @@ private func moveTilingWindow(_ window: Window) {
     } else if let swapTarget {
         swapWindows(window, swapTarget)
     }
-    _ = window.focus() // Keep the window focused
 }
 
 func swapWindows(_ window1: Window, _ window2: Window) {

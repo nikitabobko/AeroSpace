@@ -7,7 +7,7 @@ final class FlattenWorkspaceTreeCommandTest: XCTestCase {
     func testSimple() {
         let workspace = Workspace.get(byName: name).apply {
             $0.rootTilingContainer.apply {
-                _ = TestWindow(id: 1, parent: $0).focus()
+                TestWindow(id: 1, parent: $0) // todo .focusWindow()
                 TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                     TestWindow(id: 2, parent: $0)
                 }

@@ -52,16 +52,6 @@ extension Window {
 
     var ownIndex: Int { ownIndexOrNil! }
 
-    func focus() -> Bool { // todo rename: focusWindowAndWorkspace
-        markAsMostRecentChild()
-        // todo bug make the workspace active first...
-        if let workspace = workspace ?? nodeMonitor?.activeWorkspace { // todo change focusedWorkspaceName to focused monitor
-            focusedWorkspaceName = workspace.name
-            return nodeMonitor?.setActiveWorkspace(workspace) ?? true
-        } // else if We should exit-native-fullscreen/unminimize window if we want to fix ID-B6E178F2
-        return true
-    }
-
     func setFrame(_ topLeft: CGPoint?, _ size: CGSize?) -> Bool {
         // Set size and then the position. The order is important https://github.com/nikitabobko/AeroSpace/issues/143
         var result: Bool = true
