@@ -6,29 +6,25 @@ final class MoveCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
     func testMove_swapWindows() {
-        var start: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
-            start = TestWindow(id: 1, parent: $0)
+            assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
             TestWindow(id: 2, parent: $0)
         }
-        _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.focused)
         assertEquals(root.layoutDescription, .h_tiles([.window(2), .window(1)]))
     }
 
     func testMoveInto_findTopMostContainerWithRightOrientation() {
-        var start: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 0, parent: $0)
-            start = TestWindow(id: 1, parent: $0)
+            assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
             TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                 TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                     TestWindow(id: 2, parent: $0)
                 }
             }
         }
-        _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.focused)
         assertEquals(
@@ -47,10 +43,9 @@ final class MoveCommandTest: XCTestCase {
 
     func testMove_mru() {
         var window3: Window!
-        var start: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 0, parent: $0)
-            start = TestWindow(id: 1, parent: $0)
+            assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
                     TestWindow(id: 2, parent: $0)
@@ -60,7 +55,6 @@ final class MoveCommandTest: XCTestCase {
             }
         }
         window3.markAsMostRecentChild()
-        _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.focused)
         assertEquals(
@@ -111,13 +105,11 @@ final class MoveCommandTest: XCTestCase {
 
     func testCreateImplicitContainer() {
         let workspace = Workspace.get(byName: name)
-        var start: Window!
         workspace.rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
-            start = TestWindow(id: 2, parent: $0)
+            assertEquals(TestWindow(id: 2, parent: $0).focusWindow(), true)
             TestWindow(id: 3, parent: $0)
         }
-        _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .up)).run(.focused)
         assertEquals(
@@ -132,16 +124,14 @@ final class MoveCommandTest: XCTestCase {
     }
 
     func testMoveOut() {
-        var start: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                start = TestWindow(id: 2, parent: $0)
+                assertEquals(TestWindow(id: 2, parent: $0).focusWindow(), true)
                 TestWindow(id: 3, parent: $0)
                 TestWindow(id: 4, parent: $0)
             }
         }
-        _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.focused)
         assertEquals(
@@ -160,12 +150,10 @@ final class MoveCommandTest: XCTestCase {
     func testMoveOutWithNormalization_right() {
         config.enableNormalizationFlattenContainers = true
 
-        var start: Window!
         let workspace = Workspace.get(byName: name).apply {
             TestWindow(id: 1, parent: $0.rootTilingContainer)
-            start = TestWindow(id: 2, parent: $0.rootTilingContainer)
+            assertEquals(TestWindow(id: 2, parent: $0.rootTilingContainer).focusWindow(), true)
         }
-        _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.focused)
         assertEquals(
@@ -181,12 +169,10 @@ final class MoveCommandTest: XCTestCase {
     func testMoveOutWithNormalization_left() {
         config.enableNormalizationFlattenContainers = true
 
-        var start: Window!
         let workspace = Workspace.get(byName: name).apply {
-            start = TestWindow(id: 1, parent: $0.rootTilingContainer)
+            assertEquals(TestWindow(id: 1, parent: $0.rootTilingContainer).focusWindow(), true)
             TestWindow(id: 2, parent: $0.rootTilingContainer)
         }
-        _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.focused)
         assertEquals(

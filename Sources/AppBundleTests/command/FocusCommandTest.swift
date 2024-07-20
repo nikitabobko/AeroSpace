@@ -39,49 +39,44 @@ final class FocusCommandTest: XCTestCase {
 
     func testFocus() {
         assertEquals(focus.windowOrNil, nil)
-        var start: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
-            start = TestWindow(id: 2, parent: $0)
+            assertEquals(TestWindow(id: 2, parent: $0).focusWindow(), true)
             TestWindow(id: 3, parent: $0)
         }
-        _ = start.focusWindow()
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
     func testFocusAlongTheContainerOrientation() {
-        var start: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
-            start = TestWindow(id: 1, parent: $0)
+            assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
             TestWindow(id: 2, parent: $0)
         }
-        _ = start.focusWindow()
 
+        assertEquals(focus.windowOrNil?.windowId, 1)
         FocusCommand.new(direction: .right).run(.focused)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
     func testFocusAcrossTheContainerOrientation() {
-        var start: Window!
-        Workspace.get(byName: name).rootTilingContainer.apply {
-            start = TestWindow(id: 1, parent: $0)
-            TestWindow(id: 2, parent: $0)
+        Workspace.get(byName: name).apply {
+            TestWindow(id: 1, parent: $0.rootTilingContainer)
+            TestWindow(id: 2, parent: $0.rootTilingContainer)
+            assertEquals($0.focusWorkspace(), true)
         }
-        _ = start.focusWindow()
 
+        assertEquals(focus.windowOrNil?.windowId, 2)
         FocusCommand.new(direction: .up).run(.focused)
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(focus.windowOrNil?.windowId, 2)
         FocusCommand.new(direction: .down).run(.focused)
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
     func testFocusNoWrapping() {
-        var start: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
-            start = TestWindow(id: 1, parent: $0)
+            assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
             TestWindow(id: 2, parent: $0)
         }
-        _ = start.focusWindow()
 
         //FocusCommand(args: FocusCmdArgs(boundaries: .workspace, boundariesAction: .stop, direction: .left)).run(.focused)
         var args = FocusCmdArgs(rawArgs: [], direction: .left)
@@ -149,14 +144,12 @@ final class FocusCommandTest: XCTestCase {
     }
 
     func testFocusOutsideOfTheContainer2() {
-        var start: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
             TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
-                start = TestWindow(id: 2, parent: $0)
+                assertEquals(TestWindow(id: 2, parent: $0).focusWindow(), true)
             }
         }
-        _ = start.focusWindow()
 
         FocusCommand.new(direction: .left).run(.focused)
         assertEquals(focus.windowOrNil?.windowId, 1)

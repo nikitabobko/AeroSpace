@@ -6,12 +6,10 @@ final class SplitCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
     func testSplit() {
-        var start: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
-            start = TestWindow(id: 1, parent: $0)
+            assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
             TestWindow(id: 2, parent: $0)
         }
-        _ = start.focusWindow()
 
         SplitCommand(args: SplitCmdArgs(rawArgs: [], .vertical)).run(.focused)
         assertEquals(root.layoutDescription, .h_tiles([
@@ -23,12 +21,10 @@ final class SplitCommandTest: XCTestCase {
     }
 
     func testSplitOppositeOrientation() {
-        var start: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
-            start = TestWindow(id: 1, parent: $0)
+            assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
             TestWindow(id: 2, parent: $0)
         }
-        _ = start.focusWindow()
 
         SplitCommand(args: SplitCmdArgs(rawArgs: [], .opposite)).run(.focused)
         assertEquals(root.layoutDescription, .h_tiles([
@@ -40,14 +36,12 @@ final class SplitCommandTest: XCTestCase {
     }
 
     func testChangeOrientation() {
-        var start: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                start = TestWindow(id: 1, parent: $0)
+                assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
             }
             TestWindow(id: 2, parent: $0)
         }
-        _ = start.focusWindow()
 
         SplitCommand(args: SplitCmdArgs(rawArgs: [], .horizontal)).run(.focused)
         assertEquals(root.layoutDescription, .h_tiles([
@@ -59,14 +53,12 @@ final class SplitCommandTest: XCTestCase {
     }
 
     func testToggleOrientation() {
-        var start: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                start = TestWindow(id: 1, parent: $0)
+                assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
             }
             TestWindow(id: 2, parent: $0)
         }
-        _ = start.focusWindow()
 
         SplitCommand(args: SplitCmdArgs(rawArgs: [], .opposite)).run(.focused)
         assertEquals(root.layoutDescription, .h_tiles([
