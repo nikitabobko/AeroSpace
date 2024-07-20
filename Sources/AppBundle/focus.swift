@@ -106,20 +106,38 @@ var prevFocusedWorkspace: Workspace? { _prevFocusedWorkspaceName.map { Workspace
 var _prevFocus: FrozenFocus? = nil
 var prevFocus: LiveFocus? { _prevFocus?.live }
 
+// Should be called in refreshSession
 func checkOnFocusChangedCallbacks() {
-    let focus = focus.frozen
-    if focus.workspaceName != _lastKnownFocus.workspaceName {
-        onWorkspaceChanged(_lastKnownFocus.workspaceName, focus.workspaceName)
-        _prevFocusedWorkspaceName = _lastKnownFocus.workspaceName
-    }
-    if focus.monitorId != _lastKnownFocus.monitorId {
-        // todo onMonitorChanged
-    }
-    if focus != _lastKnownFocus {
-        // todo onFocusChanged
+    let liveFocus = focus
+    let frozenFocus = liveFocus.frozen
+    if frozenFocus != _lastKnownFocus {
+        onFocusChanged(liveFocus)
         _prevFocus = _lastKnownFocus
     }
-    _lastKnownFocus = focus
+    if frozenFocus.workspaceName != _lastKnownFocus.workspaceName {
+        onWorkspaceChanged(_lastKnownFocus.workspaceName, frozenFocus.workspaceName)
+        _prevFocusedWorkspaceName = _lastKnownFocus.workspaceName
+    }
+    if frozenFocus.monitorId != _lastKnownFocus.monitorId {
+        onFocusedMonitorChanged(liveFocus)
+    }
+    _lastKnownFocus = frozenFocus
+}
+
+private var onFocusChangedRecursionGuard = false
+private func onFocusedMonitorChanged(_ newFocus: LiveFocus) {
+    if onFocusChangedRecursionGuard { return }
+    onFocusChangedRecursionGuard = true
+    defer { onFocusChangedRecursionGuard = false }
+    if config.onFocusedMonitorChanged.isEmpty { return }
+    _ = config.onFocusedMonitorChanged.run(CommandMutableState(focus.asLeaf.asCommandSubject))
+}
+private func onFocusChanged(_ newFocus: LiveFocus) {
+    if onFocusChangedRecursionGuard { return }
+    onFocusChangedRecursionGuard = true
+    defer { onFocusChangedRecursionGuard = false }
+    if config.onFocusChanged.isEmpty { return }
+    _ = config.onFocusChanged.run(CommandMutableState(focus.asLeaf.asCommandSubject))
 }
 
 private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String) {

@@ -7,6 +7,9 @@
 enable-normalization-flatten-containers = false
 enable-normalization-opposite-orientation-for-nested-containers = false
 
+# Mouse follows focus when focused monitor changes
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
 [mode.main.binding]
 alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
 

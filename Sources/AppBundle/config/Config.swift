@@ -35,9 +35,13 @@ struct Config: Copyable {
     var startAtLogin: Bool = false
     var accordionPadding: Int = 30
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
-    var execOnWorkspaceChange: [String] = []
+    var execOnWorkspaceChange: [String] = [] // todo deprecate
     var keyMapping = KeyMapping()
     var execConfig: ExecConfig = ExecConfig()
+
+    var onFocusChanged: [any Command] = []
+    // var onFocusedWorkspaceChanged: [any Command] = []
+    var onFocusedMonitorChanged: [any Command] = []
 
     var gaps: Gaps = .zero
     var workspaceToMonitorForceAssignment: [String: [MonitorDescription]] = [:]

@@ -86,6 +86,10 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "after-login-command": Parser(\.afterLoginCommand, { parseCommandOrCommands($0).toParsedToml($1) }),
     "after-startup-command": Parser(\.afterStartupCommand, { parseCommandOrCommands($0).toParsedToml($1) }),
 
+    "on-focus-changed": Parser(\.onFocusChanged, { parseCommandOrCommands($0).toParsedToml($1) }),
+    "on-focused-monitor-changed": Parser(\.onFocusedMonitorChanged, { parseCommandOrCommands($0).toParsedToml($1) }),
+    // "on-focused-workspace-changed": Parser(\.onFocusedWorkspaceChanged, { parseCommandOrCommands($0).toParsedToml($1) }),
+
     "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, parseBool),
     "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, parseBool),
 
