@@ -60,7 +60,7 @@ var _focus: FrozenFocus =  {
 }()
 var focus: LiveFocus { _focus.live }
 
-private func setFocus(to newFocus: LiveFocus) -> Bool {
+func setFocus(to newFocus: LiveFocus) -> Bool {
     if _focus == newFocus.frozen { return true }
     let oldFocus = focus
     // Normalize mruWindow when focus away from a workspace

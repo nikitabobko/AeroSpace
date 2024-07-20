@@ -54,6 +54,14 @@ include::aerospace-focus.adoc[tags=synopsis]
 include::aerospace-focus.adoc[tags=purpose]
 include::aerospace-focus.adoc[tags=body]
 
+== focus-back-and-forth
+----
+
+include::./aerospace-focus-back-and-forth.adoc[tags=synopsis]
+----
+include::./aerospace-focus-back-and-forth.adoc[tags=purpose]
+include::./aerospace-focus-back-and-forth.adoc[tags=body]
+
 == focus-monitor
 ----
 include::aerospace-focus-monitor.adoc[tags=synopsis]

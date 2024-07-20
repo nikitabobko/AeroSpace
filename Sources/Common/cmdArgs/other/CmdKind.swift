@@ -1,4 +1,5 @@
 public enum CmdKind: String, CaseIterable, Equatable {
+    // Sorted
     case balanceSizes = "balance-sizes"
     case close
     case closeAllWindowsButCurrent = "close-all-windows-but-current"
@@ -8,6 +9,7 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case execAndForget = "exec-and-forget"
     case flattenWorkspaceTree = "flatten-workspace-tree"
     case focus
+    case focusBackAndForth = "focus-back-and-forth"
     case focusMonitor = "focus-monitor"
     case fullscreen
     case joinWith = "join-with"

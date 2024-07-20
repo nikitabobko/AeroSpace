@@ -18,6 +18,8 @@ aerospace -h;
     | focus [<focus_flag>]... (left|down|up|right) [<focus_flag>]...
     | focus --window-id <window_id>
 
+    | focus-back-and-forth
+
     | focus-monitor [--wrap-around] (left|down|up|right) [--wrap-around]
     | focus-monitor [--wrap-around] (next|prev) [--wrap-around]
     | focus-monitor <monitor_pattern>...

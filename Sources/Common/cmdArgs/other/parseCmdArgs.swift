@@ -32,6 +32,8 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = defaultSubCommandParser(FlattenWorkspaceTreeCmdArgs.init)
             case .focus:
                 result[kind.rawValue] = SubCommandParser(parseFocusCmdArgs)
+            case .focusBackAndForth:
+                result[kind.rawValue] = defaultSubCommandParser(FocusBackAndForthCmdArgs.init)
             case .focusMonitor:
                 result[kind.rawValue] = SubCommandParser(parseFocusMonitorCmdArgs)
             case .fullscreen:

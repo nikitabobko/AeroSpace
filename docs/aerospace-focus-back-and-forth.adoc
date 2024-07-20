@@ -1,23 +1,24 @@
-= aerospace-workspace-back-and-forth(1)
+= aerospace-focus-back-and-forth(1)
 include::util/man-attributes.adoc[]
 // tag::purpose[]
-:manpurpose: Switch between the focused workspace and previously focused workspace back and forth
+:manpurpose: Switch between the focused object and previously focused object back and forth
 // end::purpose[]
-:manname: aerospace-workspace-back-and-forth
+:manname: aerospace-focus-back-and-forth
 
 // =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
-aerospace workspace-back-and-forth [-h|--help]
+aerospace focus-back-and-forth [-h|--help]
 // end::synopsis[]
 
 // =========================================================== Description
 == Description
 
 // tag::body[]
-{manpurpose}
+{manpurpose}.
+The object is either a window or an empty workspace.
 
-Also see: <<focus-back-and-forth, focus-back-and-forth>>
+Also see: <<workspace-back-and-forth, workspace-back-and-forth>>
 // end::body[]
 
 // =========================================================== Options
