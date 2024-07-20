@@ -14,7 +14,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
             Text("Workspaces:")
             ForEach(Workspace.all) { (workspace: Workspace) in
                 Button {
-                    refreshSession { _ = WorkspaceCommand.run(.focused, workspace.name) }
+                    refreshSession { _ = workspace.focusWorkspace() }
                 } label: {
                     Toggle(isOn: workspace == Workspace.focused
                         ? Binding(get: { true }, set: { _, _ in })

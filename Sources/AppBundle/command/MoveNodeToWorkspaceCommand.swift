@@ -21,7 +21,9 @@ struct MoveNodeToWorkspaceCommand: Command {
         }
         let targetContainer: NonLeafTreeNodeObject = focused.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
         focused.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-        return WorkspaceCommand.run(state, prevWorkspace.name)
+        let result = prevWorkspace.focusWorkspace()
+        state.subject = .focused
+        return result
     }
 
     public static func run(_ state: CommandMutableState, _ name: String) -> Bool {

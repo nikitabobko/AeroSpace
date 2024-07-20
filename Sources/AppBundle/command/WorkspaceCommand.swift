@@ -23,15 +23,6 @@ struct WorkspaceCommand: Command {
         state.subject = .focused
         return result
     }
-
-    public static func run(_ state: CommandMutableState, _ name: String) -> Bool { // todo reduce usages
-        if let wName = WorkspaceName.parse(name).getOrNil(appendErrorTo: &state.stderr) {
-            let args = WorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct(wName, autoBackAndForth: false)))
-            return WorkspaceCommand(args: args).run(state)
-        } else {
-            return false
-        }
-    }
 }
 
 func getNextPrevWorkspace(current: Workspace, relative: WTarget.Relative, stdin: String) -> Workspace? {

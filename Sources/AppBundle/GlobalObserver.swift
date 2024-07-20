@@ -20,7 +20,7 @@ class GlobalObserver {
             let clickedMonitor = mouseLocation.monitorApproximation
             if clickedMonitor.activeWorkspace != Workspace.focused {
                 _ = refreshSession {
-                    WorkspaceCommand.run(.doesntMatter, clickedMonitor.activeWorkspace.name)
+                    clickedMonitor.activeWorkspace.focusWorkspace()
                 }
             }
         }

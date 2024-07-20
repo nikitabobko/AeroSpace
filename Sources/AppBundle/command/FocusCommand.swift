@@ -20,23 +20,18 @@ struct FocusCommand: Command {
                 if let (parent, ownIndex) = window?.closestParent(hasChildrenInDirection: direction, withLayout: nil) {
                     guard let windowToFocus = parent.children[ownIndex + direction.focusOffset]
                         .findFocusTargetRecursive(snappedTo: direction.opposite) else { return false }
-                    state.subject = .window(windowToFocus)
+                    result = windowToFocus.focusWindow() && result
                 } else {
                     result = hitWorkspaceBoundaries(state, args, direction) && result
                 }
             case .windowId(let windowId):
                 if let windowToFocus = MacWindow.allWindowsMap[windowId] {
-                    state.subject = .window(windowToFocus)
+                    result = windowToFocus.focusWindow() && result
                 } else {
                     return state.failCmd(msg: "Can't find window with ID \(windowId)")
                 }
         }
-        switch state.subject {
-            case .emptyWorkspace(let name):
-                result = WorkspaceCommand.run(state, name) && result
-            case .window(let windowToFocus):
-                result = windowToFocus.focusWindow() && result
-        }
+        state.subject = .focused
         return result
     }
 }
@@ -60,7 +55,7 @@ private func hitWorkspaceBoundaries(
             }
 
             if let targetMonitor = monitors.getOrNil(atIndex: index) {
-                return targetMonitor.focus(state)
+                return targetMonitor.activeWorkspace.focusWorkspace()
             } else {
                 guard let wrapped = monitors.get(wrappingIndex: index) else { return false }
                 return hitAllMonitorsOuterFrameBoundaries(state, args, direction, wrapped)
@@ -81,13 +76,7 @@ private func hitAllMonitorsOuterFrameBoundaries(
             return wrapAroundTheWorkspace(state, direction)
         case .wrapAroundAllMonitors:
             wrappedMonitor.activeWorkspace.findFocusTargetRecursive(snappedTo: direction.opposite)?.markAsMostRecentChild()
-            return wrappedMonitor.focus(state)
-    }
-}
-
-private extension Monitor {
-    func focus(_ state: CommandMutableState) -> Bool {
-        WorkspaceCommand.run(state, activeWorkspace.name)
+            return wrappedMonitor.activeWorkspace.focusWorkspace()
     }
 }
 
@@ -95,7 +84,6 @@ private func wrapAroundTheWorkspace(_ state: CommandMutableState, _ direction: C
     guard let windowToFocus = state.subject.workspace.findFocusTargetRecursive(snappedTo: direction.opposite) else {
         return state.failCmd(msg: "No window to focus")
     }
-    state.subject = .window(windowToFocus)
     return windowToFocus.focusWindow()
 }
 
