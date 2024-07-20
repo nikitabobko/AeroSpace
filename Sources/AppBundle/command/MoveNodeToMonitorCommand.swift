@@ -9,10 +9,16 @@ struct MoveNodeToMonitorCommand: Command {
         guard let window = state.subject.windowOrNil else {
             return state.failCmd(msg: noWindowIsFocused)
         }
-        let currentMonitor = window.nodeMonitor ?? Workspace.focused.workspaceMonitor
+        guard let currentMonitor = window.nodeMonitor else {
+            return state.failCmd(msg: windowIsntPartOfTree(window))
+        }
         return switch args.target.val.resolve(currentMonitor, wrapAround: args.wrapAround) {
             case .success(let targetMonitor): MoveNodeToWorkspaceCommand.run(state, targetMonitor.activeWorkspace.name)
             case .failure(let msg): state.failCmd(msg: msg)
         }
     }
+}
+
+func windowIsntPartOfTree(_ window: Window) -> String {
+    "Window \(window.windowId) is not part of tree (minimized or hidden)"
 }

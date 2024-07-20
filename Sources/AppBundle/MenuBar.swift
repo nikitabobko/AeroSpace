@@ -16,7 +16,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
                 Button {
                     refreshSession { _ = workspace.focusWorkspace() }
                 } label: {
-                    Toggle(isOn: workspace == Workspace.focused
+                    Toggle(isOn: workspace == focus.workspace
                         ? Binding(get: { true }, set: { _, _ in })
                         : Binding(get: { false }, set: { _, _ in })) {
                         let monitor = workspace.isVisible || !workspace.isEffectivelyEmpty ? " - \(workspace.workspaceMonitor.name)" : ""

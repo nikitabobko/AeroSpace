@@ -25,10 +25,13 @@ struct MacosNativeFullscreenCommand: Command {
             return state.failCmd(msg: newState ? "Already fullscreen" : "Already not fullscreen")
         }
         if axWindow.set(Ax.isFullscreenAttr, newState) {
-            let workspace = window.unbindFromParent().parent.workspace ?? Workspace.focused
-            if newState {
+            guard let workspace = window.visualWorkspace else {
+                return state.failCmd(msg: windowIsntPartOfTree(window))
+            }
+            window.unbindFromParent()
+            if newState { // Enter fullscreen
                 window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
-            } else {
+            } else { // Exit fullscreen
                 switch window.layoutReason {
                     case .macos(let prevParentKind):
                         exitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)

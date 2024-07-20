@@ -3,7 +3,7 @@ func normalizeLayoutReason(startup: Bool) {
         let windows: [Window] = workspace.allLeafWindowsRecursive
         _normalizeLayoutReason(workspace: workspace, windows: windows)
     }
-    _normalizeLayoutReason(workspace: Workspace.focused, windows: macosInvisibleWindowsContainer.children.filterIsInstance(of: Window.self))
+    _normalizeLayoutReason(workspace: focus.workspace, windows: macosInvisibleWindowsContainer.children.filterIsInstance(of: Window.self))
     validateStillPopups(startup: startup)
 }
 
@@ -11,7 +11,7 @@ private func validateStillPopups(startup: Bool) {
     for node in macosPopupWindowsContainer.children {
         let popup = (node as! MacWindow)
         if isWindow(popup.axWindow, popup.macApp) {
-            popup.relayoutWindow(on: Workspace.focused)
+            popup.relayoutWindow(on: focus.workspace)
             tryOnWindowDetected(popup, startup: startup)
         }
     }

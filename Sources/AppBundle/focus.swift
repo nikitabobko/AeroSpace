@@ -11,10 +11,6 @@ extension LiveFocus {
     }
 }
 
-extension Window {
-    var visualWorkspace: Workspace? { workspace ?? nodeMonitor?.activeWorkspace }
-}
-
 /// This object should be only passed around but never memorized
 /// Alternative name: ResolvedFocus
 struct LiveFocus: AeroAny, Equatable {

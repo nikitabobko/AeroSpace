@@ -34,7 +34,7 @@ func getNextPrevWorkspace(current: Workspace, relative: WTarget.Relative, stdin:
             .union([current])
             .sorted()
         : stdinWorkspaces.map { Workspace.get(byName: $0) }
-    let index = workspaces.firstIndex(where: { $0 == Workspace.focused }) ?? 0
+    let index = workspaces.firstIndex(where: { $0 == focus.workspace }) ?? 0
     let workspace: Workspace?
     if relative.wrapAround {
         workspace = workspaces.get(wrappingIndex: relative.isNext ? index + 1 : index - 1)

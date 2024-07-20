@@ -8,7 +8,7 @@ struct ListMonitorsCommand: Command {
         check(Thread.current.isMainThread)
         var result = sortedMonitors
         if let focused = args.focused {
-            result = result.filter { (monitor) in (monitor.activeWorkspace == Workspace.focused) == focused }
+            result = result.filter { (monitor) in (monitor.activeWorkspace == focus.workspace) == focused }
         }
         if let mouse = args.mouse {
             let mouseWorkspace = mouseLocation.monitorApproximation.activeWorkspace

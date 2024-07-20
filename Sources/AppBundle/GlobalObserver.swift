@@ -18,7 +18,7 @@ class GlobalObserver {
             resetManipulatedWithMouseIfPossible()
             // Detect clicks on desktop of different monitors
             let clickedMonitor = mouseLocation.monitorApproximation
-            if clickedMonitor.activeWorkspace != Workspace.focused {
+            if clickedMonitor.activeWorkspace != focus.workspace {
                 _ = refreshSession {
                     clickedMonitor.activeWorkspace.focusWorkspace()
                 }

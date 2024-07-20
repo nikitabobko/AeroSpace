@@ -25,7 +25,7 @@ final class MacWindow: Window, CustomStringConvertible {
         } else {
             let data = getBindingDataForNewWindow(
                 axWindow,
-                startup ? (axWindow.center?.monitorApproximation ?? mainMonitor).activeWorkspace : Workspace.focused,
+                startup ? (axWindow.center?.monitorApproximation ?? mainMonitor).activeWorkspace : focus.workspace,
                 app
             )
             let window = MacWindow(id, app, axWindow, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)

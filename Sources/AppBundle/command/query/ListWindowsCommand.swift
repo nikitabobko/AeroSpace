@@ -17,7 +17,7 @@ struct ListWindowsCommand: Command {
             var workspaces: Set<Workspace> = args.workspaces.isEmpty ? Workspace.all.toSet() : args.workspaces
                 .flatMap { filter in
                     switch filter {
-                        case .focused: [Workspace.focused]
+                        case .focused: [focus.workspace]
                         case .visible: Workspace.all.filter(\.isVisible)
                         case .name(let name): [Workspace.get(byName: name.raw)]
                     }

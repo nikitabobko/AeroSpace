@@ -13,15 +13,16 @@ struct MacosNativeMinimizeCommand: Command {
         let axWindow = window.asMacWindow().axWindow
         let newState: Bool = !window.isMacosMinimized
         if axWindow.set(Ax.minimizedAttr, newState) {
-            let workspace = window.unbindFromParent().parent.workspace ?? Workspace.focused
-            if newState {
+            let workspace = window.workspace ?? focus.workspace
+            window.unbindFromParent()
+            if newState { // minimize
                 window.bind(to: macosInvisibleWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
                 if let mru = workspace.mostRecentWindow {
                     state.subject = .window(mru)
                 } else {
                     state.subject = .emptyWorkspace(workspace.name)
                 }
-            } else {
+            } else { // unminimize
                 switch window.layoutReason {
                     case .macos(let prevParentKind):
                         exitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)

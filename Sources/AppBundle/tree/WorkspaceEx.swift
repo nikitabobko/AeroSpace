@@ -18,8 +18,6 @@ extension Workspace {
         }
     }
 
-    static var focused: Workspace { focus.workspace }
-
     var floatingWindows: [Window] {
         children.filterIsInstance(of: Window.self)
     }

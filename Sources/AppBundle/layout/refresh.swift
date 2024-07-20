@@ -86,7 +86,7 @@ private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
 }
 
 private func smartLayoutAtStartup() {
-    let workspace = Workspace.focused
+    let workspace = focus.workspace
     let root = workspace.rootTilingContainer
     if root.children.count <= 3 {
         root.layout = .tiles

@@ -7,7 +7,7 @@ struct MoveNodeToWorkspaceCommand: Command {
         guard let focused = state.subject.windowOrNil else {
             return state.failCmd(msg: noWindowIsFocused)
         }
-        let prevWorkspace = focused.workspace ?? Workspace.focused
+        let prevWorkspace = focused.workspace ?? focus.workspace
         let targetWorkspace: Workspace
         switch args.target {
             case .relative(let relative):

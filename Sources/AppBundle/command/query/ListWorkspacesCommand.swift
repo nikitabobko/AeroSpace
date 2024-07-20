@@ -49,7 +49,7 @@ internal extension MonitorId {
     func resolve(_ state: CommandMutableState, sortedMonitors: [Monitor]) -> [Monitor] {
         switch self {
             case .focused:
-                return [Workspace.focused.workspaceMonitor]
+                return [focus.workspace.workspaceMonitor]
             case .mouse:
                 return [mouseLocation.monitorApproximation]
             case .all:
