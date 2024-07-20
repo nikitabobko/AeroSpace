@@ -28,7 +28,6 @@ struct MacosNativeFullscreenCommand: Command {
             guard let workspace = window.visualWorkspace else {
                 return state.failCmd(msg: windowIsntPartOfTree(window))
             }
-            window.unbindFromParent()
             if newState { // Enter fullscreen
                 window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
             } else { // Exit fullscreen
