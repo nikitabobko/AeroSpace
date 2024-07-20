@@ -289,4 +289,19 @@ public func parseArgWithUInt32(arg: String, nextArgs: inout [String]) -> Parsed<
     }
 }
 
+func noArgsParser<T: Copyable>(_ kind: CmdKind, allowInConfig: Bool) -> CmdParser<T> {
+    cmdParser(
+        kind: kind,
+        allowInConfig: allowInConfig,
+        help: """
+            USAGE: \(kind) [-h|--help]
+
+            OPTIONS:
+              -h, --help   Print help
+            """,
+        options: [:],
+        arguments: []
+    )
+}
+
 func upcastArgParserFun<T>(_ fun: @escaping ArgParserFun<T>) -> ArgParserFun<T?> { { fun($0, &$1).map { $0 } } }
