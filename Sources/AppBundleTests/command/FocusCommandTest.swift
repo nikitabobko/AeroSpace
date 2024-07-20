@@ -31,14 +31,14 @@ final class FocusCommandTest: XCTestCase {
         expected.rawBoundaries = .workspace
         testParseCommandSucc("focus --boundaries workspace left", expected)
 
-        XCTAssertEqual(
+        assertEquals(
             parseCommand("focus --boundaries workspace --boundaries workspace left").errorOrNil,
             "ERROR: Duplicated option '--boundaries'"
         )
     }
 
     func testFocus() {
-        XCTAssertEqual(focus.windowOrNil, nil)
+        assertEquals(focus.windowOrNil, nil)
         var start: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
@@ -46,7 +46,7 @@ final class FocusCommandTest: XCTestCase {
             TestWindow(id: 3, parent: $0)
         }
         _ = start.focusWindow()
-        XCTAssertEqual(focus.windowOrNil?.windowId, 2)
+        assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
     func testFocusAlongTheContainerOrientation() {
@@ -58,7 +58,7 @@ final class FocusCommandTest: XCTestCase {
         _ = start.focusWindow()
 
         FocusCommand.new(direction: .right).run(.focused)
-        XCTAssertEqual(focus.windowOrNil?.windowId, 2)
+        assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
     func testFocusAcrossTheContainerOrientation() {
@@ -70,9 +70,9 @@ final class FocusCommandTest: XCTestCase {
         _ = start.focusWindow()
 
         FocusCommand.new(direction: .up).run(.focused)
-        XCTAssertEqual(focus.windowOrNil?.windowId, 1)
+        assertEquals(focus.windowOrNil?.windowId, 1)
         FocusCommand.new(direction: .down).run(.focused)
-        XCTAssertEqual(focus.windowOrNil?.windowId, 1)
+        assertEquals(focus.windowOrNil?.windowId, 1)
     }
 
     func testFocusNoWrapping() {
@@ -88,19 +88,18 @@ final class FocusCommandTest: XCTestCase {
         args.rawBoundaries = .workspace
         args.rawBoundariesAction = .stop
         FocusCommand(args: args).run(.focused)
-        XCTAssertEqual(focus.windowOrNil?.windowId, 1)
+        assertEquals(focus.windowOrNil?.windowId, 1)
     }
 
     func testFocusWrapping() {
-        var start: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
-            start = TestWindow(id: 1, parent: $0)
+            assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
             TestWindow(id: 2, parent: $0)
         }
-        _ = start.focusWindow()
 
+        assertEquals(focus.windowOrNil?.windowId, 1)
         FocusCommand.new(direction: .left).run(.focused)
-        XCTAssertEqual(focus.windowOrNil?.windowId, 2)
+        assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
     func testFocusFindMruLeaf() {
@@ -120,35 +119,33 @@ final class FocusCommandTest: XCTestCase {
             }
         }
 
-        XCTAssertEqual(workspace.mostRecentWindow?.windowId, 3) // The latest bound
+        assertEquals(workspace.mostRecentWindow?.windowId, 3) // The latest bound
         _ = startWindow.focusWindow()
         FocusCommand.new(direction: .right).run(.focused)
-        XCTAssertEqual(focus.windowOrNil?.windowId, 3)
+        assertEquals(focus.windowOrNil?.windowId, 3)
 
         window2.markAsMostRecentChild()
         _ = startWindow.focusWindow()
         FocusCommand.new(direction: .right).run(.focused)
-        XCTAssertEqual(focus.windowOrNil?.windowId, 2)
+        assertEquals(focus.windowOrNil?.windowId, 2)
 
         window3.markAsMostRecentChild()
         unrelatedWindow.markAsMostRecentChild()
         _ = startWindow.focusWindow()
         FocusCommand.new(direction: .right).run(.focused)
-        XCTAssertEqual(focus.windowOrNil?.windowId, 2)
+        assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
     func testFocusOutsideOfTheContainer() {
-        var start: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow(id: 1, parent: $0)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                start = TestWindow(id: 2, parent: $0)
+                assertEquals(TestWindow(id: 2, parent: $0).focusWindow(), true)
             }
         }
-        _ = start.focusWindow()
 
         FocusCommand.new(direction: .left).run(.focused)
-        XCTAssertEqual(focus.windowOrNil?.windowId, 1)
+        assertEquals(focus.windowOrNil?.windowId, 1)
     }
 
     func testFocusOutsideOfTheContainer2() {
@@ -162,7 +159,7 @@ final class FocusCommandTest: XCTestCase {
         _ = start.focusWindow()
 
         FocusCommand.new(direction: .left).run(.focused)
-        XCTAssertEqual(focus.windowOrNil?.windowId, 1)
+        assertEquals(focus.windowOrNil?.windowId, 1)
     }
 }
 

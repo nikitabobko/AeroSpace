@@ -28,7 +28,7 @@ func setUpWorkspacesForTests() {
             child.unbindFromParent()
         }
     }
-    check(mainMonitor.activeWorkspace.focusWorkspace())
+    check(Workspace.get(byName: "setUpWorkspacesForTests").focusWorkspace())
     Workspace.garbageCollectUnusedWorkspaces()
     check(Workspace.focused.isEffectivelyEmpty)
     check(Workspace.focused === Workspace.all.singleOrNil(), Workspace.all.map(\.description).joined(separator: ", "))
@@ -77,7 +77,7 @@ func testParseCommandFail(_ command: String, msg expected: String) {
     let parsed = parseCommand(command)
     switch parsed {
         case .cmd(let command): XCTFail("\(command) isn't supposed to be parcelable")
-        case .failure(let msg): XCTAssertEqual(msg, expected)
+        case .failure(let msg): assertEquals(msg, expected)
         case .help: error() // todo test help
     }
 }

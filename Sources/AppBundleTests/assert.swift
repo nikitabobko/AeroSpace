@@ -1,7 +1,7 @@
 import XCTest
 import Common
 
-// Because XCTAssertEqual default messages are unreadable!
+// Because assertEquals default messages are unreadable!
 func assertNotEquals<T>( _ actual: T, _ expected: T, file: String = #file, line: Int = #line) where T: Equatable {
     if actual == expected {
         failExpectedActual("not \(expected)", actual, file: file, line: line)
@@ -49,7 +49,7 @@ private func failExpectedActual( _ expected: Any, _ actual: Any, file: String = 
     XCTFail(
         """
 
-        Assertion failed at \(file):\(line)
+        \(file):\(line): Assertion failed
             Expected:
                 \(expected)
             Actual:

@@ -14,7 +14,7 @@ final class MoveCommandTest: XCTestCase {
         _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.focused)
-        XCTAssertEqual(root.layoutDescription, .h_tiles([.window(2), .window(1)]))
+        assertEquals(root.layoutDescription, .h_tiles([.window(2), .window(1)]))
     }
 
     func testMoveInto_findTopMostContainerWithRightOrientation() {
@@ -31,7 +31,7 @@ final class MoveCommandTest: XCTestCase {
         _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.focused)
-        XCTAssertEqual(
+        assertEquals(
             root.layoutDescription,
             .h_tiles([
                 .window(0),
@@ -63,7 +63,7 @@ final class MoveCommandTest: XCTestCase {
         _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.focused)
-        XCTAssertEqual(
+        assertEquals(
             root.layoutDescription,
             .h_tiles([
                 .window(0),
@@ -86,8 +86,8 @@ final class MoveCommandTest: XCTestCase {
         _ = window2.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.focused)
-        XCTAssertEqual(window2.hWeight, 2)
-        XCTAssertEqual(window1.hWeight, 1)
+        assertEquals(window2.hWeight, 2)
+        assertEquals(window1.hWeight, 1)
     }
 
     func testMoveIn_newWeight() {
@@ -103,10 +103,10 @@ final class MoveCommandTest: XCTestCase {
         _ = window1.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.focused)
-        XCTAssertEqual(window2.hWeight, 1)
-        XCTAssertEqual(window2.vWeight, 1)
-        XCTAssertEqual(window1.vWeight, 1)
-        XCTAssertEqual(window1.hWeight, 1)
+        assertEquals(window2.hWeight, 1)
+        assertEquals(window2.vWeight, 1)
+        assertEquals(window1.vWeight, 1)
+        assertEquals(window1.hWeight, 1)
     }
 
     func testCreateImplicitContainer() {
@@ -120,7 +120,7 @@ final class MoveCommandTest: XCTestCase {
         _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .up)).run(.focused)
-        XCTAssertEqual(
+        assertEquals(
             workspace.layoutDescription,
             .workspace([
                 .v_tiles([
@@ -144,7 +144,7 @@ final class MoveCommandTest: XCTestCase {
         _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.focused)
-        XCTAssertEqual(
+        assertEquals(
             root.layoutDescription,
             .h_tiles([
                 .window(1),
@@ -168,14 +168,14 @@ final class MoveCommandTest: XCTestCase {
         _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.focused)
-        XCTAssertEqual(
+        assertEquals(
             workspace.rootTilingContainer.layoutDescription,
             .h_tiles([
                 .window(1),
                 .window(2),
             ])
         )
-        XCTAssertEqual(focus.windowOrNil?.windowId, 2)
+        assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
     func testMoveOutWithNormalization_left() {
@@ -189,14 +189,14 @@ final class MoveCommandTest: XCTestCase {
         _ = start.focusWindow()
 
         MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.focused)
-        XCTAssertEqual(
+        assertEquals(
             workspace.rootTilingContainer.layoutDescription,
             .h_tiles([
                 .window(1),
                 .window(2),
             ])
         )
-        XCTAssertEqual(focus.windowOrNil?.windowId, 1)
+        assertEquals(focus.windowOrNil?.windowId, 1)
     }
 }
 

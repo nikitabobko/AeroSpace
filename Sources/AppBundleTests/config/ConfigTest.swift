@@ -6,16 +6,16 @@ final class ConfigTest: XCTestCase {
     func testParseI3Config() {
         let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/i3-like-config-example.toml"))
         let (i3Config, errors) = parseConfig(toml)
-        XCTAssertEqual(errors, [])
-        XCTAssertEqual(i3Config.execConfig, defaultConfig.execConfig)
-        XCTAssertEqual(i3Config.enableNormalizationFlattenContainers, false)
-        XCTAssertEqual(i3Config.enableNormalizationOppositeOrientationForNestedContainers, false)
+        assertEquals(errors, [])
+        assertEquals(i3Config.execConfig, defaultConfig.execConfig)
+        assertEquals(i3Config.enableNormalizationFlattenContainers, false)
+        assertEquals(i3Config.enableNormalizationOppositeOrientationForNestedContainers, false)
     }
 
     func testParseDefaultConfig() {
         let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/default-config.toml"))
         let (_, errors) = parseConfig(toml)
-        XCTAssertEqual(errors, [])
+        assertEquals(errors, [])
     }
 
     func testQueryCantBeUsedInConfig() {
@@ -34,7 +34,7 @@ final class ConfigTest: XCTestCase {
             mode.main = {}
             """
         )
-        XCTAssertEqual(errors, [])
+        assertEquals(errors, [])
         XCTAssertTrue(config.modes[mainModeId]?.bindings.isEmpty == true)
     }
 
@@ -45,9 +45,9 @@ final class ConfigTest: XCTestCase {
             alt-h = 'focus left'
             """
         )
-        XCTAssertEqual(errors, [])
+        assertEquals(errors, [])
         let binding = HotkeyBinding(.option, .h, [FocusCommand.new(direction: .left)])
-        XCTAssertEqual(
+        assertEquals(
             config.modes[mainModeId],
             Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding])
         )
@@ -60,11 +60,11 @@ final class ConfigTest: XCTestCase {
             alt-h = 'focus left'
             """
         )
-        XCTAssertEqual(
+        assertEquals(
             errors.descriptions,
             ["mode: Please specify \'main\' mode"]
         )
-        XCTAssertEqual(config.modes[mainModeId], nil)
+        assertEquals(config.modes[mainModeId], nil)
     }
 
     func testHotkeyParseError() {
@@ -76,7 +76,7 @@ final class ConfigTest: XCTestCase {
             alt-k = 'focus up'
             """
         )
-        XCTAssertEqual(
+        assertEquals(
             errors.descriptions,
             [
                 "mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
@@ -84,7 +84,7 @@ final class ConfigTest: XCTestCase {
             ]
         )
         let binding = HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])
-        XCTAssertEqual(
+        assertEquals(
             config.modes[mainModeId],
             Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding])
         )
@@ -100,8 +100,8 @@ final class ConfigTest: XCTestCase {
             alt-4 = ['workspace 4', 'focus left']
             """
         )
-        XCTAssertEqual(errors.descriptions, [])
-        XCTAssertEqual(config.preservedWorkspaceNames.sorted(), ["1", "2", "3", "4"])
+        assertEquals(errors.descriptions, [])
+        assertEquals(config.preservedWorkspaceNames.sorted(), ["1", "2", "3", "4"])
     }
 
     func testUnknownKeyParseError() {
@@ -111,11 +111,11 @@ final class ConfigTest: XCTestCase {
             enable-normalization-flatten-containers = false
             """
         )
-        XCTAssertEqual(
+        assertEquals(
             errors.descriptions,
             ["unknownKey: Unknown key"]
         )
-        XCTAssertEqual(config.enableNormalizationFlattenContainers, false)
+        assertEquals(config.enableNormalizationFlattenContainers, false)
     }
 
     func testTypeMismatch() {
@@ -124,7 +124,7 @@ final class ConfigTest: XCTestCase {
             enable-normalization-flatten-containers = 'true'
             """
         )
-        XCTAssertEqual(
+        assertEquals(
             errors.descriptions,
             ["enable-normalization-flatten-containers: Expected type is \'bool\'. But actual type is \'string\'"]
         )
@@ -132,7 +132,7 @@ final class ConfigTest: XCTestCase {
 
     func testTomlParseError() {
         let (_, errors) = parseConfig("true")
-        XCTAssertEqual(
+        assertEquals(
             errors.descriptions,
             ["Error while parsing key-value pair: encountered end-of-file (at line 1, column 5)"]
         )
@@ -146,7 +146,7 @@ final class ConfigTest: XCTestCase {
     func testParseTiles() {
         let command = parseCommand("layout tiles h_tiles v_tiles list h_list v_list").cmdOrNil
         XCTAssertTrue(command is LayoutCommand)
-        XCTAssertEqual((command as! LayoutCommand).args.toggleBetween.val, [.tiles, .h_tiles, .v_tiles, .tiles, .h_tiles, .v_tiles])
+        assertEquals((command as! LayoutCommand).args.toggleBetween.val, [.tiles, .h_tiles, .v_tiles, .tiles, .h_tiles, .v_tiles])
 
         guard case .help = parseCommand("layout tiles -h") else {
             XCTFail()
@@ -163,7 +163,7 @@ final class ConfigTest: XCTestCase {
             alt-s = 'split horizontal'
             """
         )
-        XCTAssertEqual(
+        assertEquals(
             ["""
                 The config contains:
                 1. usage of 'split' command
@@ -190,7 +190,7 @@ final class ConfigTest: XCTestCase {
             workspace_name_x = '2'                          # Sequence number of the monitor (from left to right, 1-based indexing)
             """
         )
-        XCTAssertEqual(
+        assertEquals(
             parsed.workspaceToMonitorForceAssignment,
             [
                 "workspace_name_1": [.sequenceNumber(1)],
@@ -205,11 +205,11 @@ final class ConfigTest: XCTestCase {
                 "w8": [],
             ]
         )
-        XCTAssertEqual([
+        assertEquals([
             "workspace-to-monitor-force-assignment.w7[0]: Empty string is an illegal monitor description",
             "workspace-to-monitor-force-assignment.w8: Monitor sequence numbers uses 1-based indexing. Values less than 1 are illegal"
         ], errors.descriptions)
-        XCTAssertEqual([:], defaultConfig.workspaceToMonitorForceAssignment)
+        assertEquals([:], defaultConfig.workspaceToMonitorForceAssignment)
     }
 
     func testParseOnWindowDetected() {
@@ -235,7 +235,7 @@ final class ConfigTest: XCTestCase {
             run = ['move-node-to-workspace S', 'layout h_tiles']
             """
         )
-        XCTAssertEqual(parsed.onWindowDetected, [
+        assertEquals(parsed.onWindowDetected, [
             WindowDetectedCallback(
                 matcher: WindowDetectedCallbackMatcher(
                     appId: nil,
@@ -259,7 +259,7 @@ final class ConfigTest: XCTestCase {
             ),
         ])
 
-        XCTAssertEqual(errors.descriptions, [
+        assertEquals(errors.descriptions, [
             "on-window-detected[2]: \'run\' is mandatory key",
             "on-window-detected[3]: For now, \'move-node-to-workspace\' must be the latest instruction in the callback (otherwise it\'s error-prone). Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
             "on-window-detected[4]: For now, \'move-node-to-workspace\' can be mentioned only once in \'run\' callback. Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
@@ -277,7 +277,7 @@ final class ConfigTest: XCTestCase {
             """
         )
         XCTAssertTrue(config.onWindowDetected.singleOrNil()!.matcher.appNameRegexSubstring != nil)
-        XCTAssertEqual(errors, [])
+        assertEquals(errors, [])
     }
 
     func testRegex() {
@@ -298,8 +298,8 @@ final class ConfigTest: XCTestCase {
             outer.right = [{ monitor.2 = 7 }, 8]
             """
         )
-        XCTAssertEqual(errors1, [])
-        XCTAssertEqual(
+        assertEquals(errors1, [])
+        assertEquals(
             config.gaps,
             Gaps(
                 inner: .init(
@@ -331,7 +331,7 @@ final class ConfigTest: XCTestCase {
             inner.vertical = [{ foo.main = 1 }, { monitor = { foo = 2, bar = 3 } }, 1]
             """
         )
-        XCTAssertEqual(errors2.descriptions, [
+        assertEquals(errors2.descriptions, [
             "gaps.inner.horizontal: The last item in the array must be of type Int",
             "gaps.inner.vertical[0]: The table is expected to have a single key \'monitor\'",
             "gaps.inner.vertical[1].monitor: The table is expected to have a single key",
@@ -349,13 +349,13 @@ final class ConfigTest: XCTestCase {
             alt-unicorn = 'workspace unicorn'
             """
         )
-        XCTAssertEqual(errors.descriptions, [])
-        XCTAssertEqual(config.keyMapping, KeyMapping(preset: .qwerty, rawKeyNotationToKeyCode: [
+        assertEquals(errors.descriptions, [])
+        assertEquals(config.keyMapping, KeyMapping(preset: .qwerty, rawKeyNotationToKeyCode: [
             "q": .q,
             "unicorn": .u,
         ]))
         let binding = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("unicorn"))))])
-        XCTAssertEqual(config.modes[mainModeId]?.bindings, [binding.descriptionWithKeyCode: binding])
+        assertEquals(config.modes[mainModeId]?.bindings, [binding.descriptionWithKeyCode: binding])
 
         let (_, errors1) = parseConfig(
             """
@@ -374,8 +374,8 @@ final class ConfigTest: XCTestCase {
             key-mapping.preset = 'dvorak'
             """
         )
-        XCTAssertEqual(dvorakErrors, [])
-        XCTAssertEqual(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
+        assertEquals(dvorakErrors, [])
+        assertEquals(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
         assertEquals(dvorakConfig.keyMapping.resolve()["quote"], .q)
     }
 }

@@ -17,7 +17,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
 
         MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("b")))).run(.focused)
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
-        XCTAssertEqual((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
+        assertEquals((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }
 
     func testEmptyWorkspaceSubject() {
@@ -31,7 +31,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         _ = MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("b"))))
             .run(state)
 
-        XCTAssertEqual(state.subject, .emptyWorkspace("a"))
+        assertEquals(state.subject, .emptyWorkspace("a"))
     }
 
     func testAnotherWindowSubject() {
@@ -47,7 +47,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         _ = MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("b"))))
             .run(state)
 
-        XCTAssertEqual(state.subject, .window(window1))
+        assertEquals(state.subject, .window(window1))
     }
 
     func testPreserveFloatingLayout() {
@@ -57,6 +57,6 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
 
         MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("b")))).run(.focused)
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
-        XCTAssertEqual(Workspace.get(byName: "b").children.filterIsInstance(of: Window.self).singleOrNil()?.windowId, 1)
+        assertEquals(Workspace.get(byName: "b").children.filterIsInstance(of: Window.self).singleOrNil()?.windowId, 1)
     }
 }

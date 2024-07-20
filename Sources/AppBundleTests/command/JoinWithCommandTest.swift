@@ -15,7 +15,7 @@ final class JoinWithCommandTest: XCTestCase {
         _ = start.focusWindow()
 
         JoinWithCommand(args: JoinWithCmdArgs(rawArgs: [], direction: .right)).run(.focused)
-        XCTAssertEqual(root.layoutDescription, .h_tiles([
+        assertEquals(root.layoutDescription, .h_tiles([
             .window(0),
             .v_tiles([
                 .window(1),

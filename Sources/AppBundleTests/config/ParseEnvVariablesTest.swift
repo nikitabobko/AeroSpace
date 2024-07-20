@@ -18,12 +18,12 @@ final class ParseEnvVariablesTest: XCTestCase {
 
     func testInherit() {
         let (config1, errors1) = parseConfig("exec.inherit-env-vars = false")
-        XCTAssertEqual(errors1, [])
-        XCTAssertEqual(config1.execConfig.envVariables, [:])
+        assertEquals(errors1, [])
+        assertEquals(config1.execConfig.envVariables, [:])
 
         let (config2, errors2) = parseConfig("exec.inherit-env-vars = true")
-        XCTAssertEqual(errors2, [])
-        XCTAssertEqual(config2.execConfig.envVariables, testEnv)
+        assertEquals(errors2, [])
+        assertEquals(config2.execConfig.envVariables, testEnv)
     }
 
     func testAddVars() {
@@ -54,8 +54,8 @@ final class ParseEnvVariablesTest: XCTestCase {
 
 private func testSucInterpolation(_ str: String, _ vars: [String: String] = [:], expected: String) {
     let (result, errors) = str.interpolate(with: vars).getOrNils()
-    XCTAssertEqual(result, expected)
-    XCTAssertEqual(errors ?? [], [])
+    assertEquals(result, expected)
+    assertEquals(errors ?? [], [])
 }
 
 private func testFailInterpolation(_ str: String, _ vars: [String: String] = [:]) {

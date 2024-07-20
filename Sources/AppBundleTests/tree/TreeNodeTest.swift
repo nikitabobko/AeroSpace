@@ -53,7 +53,7 @@ final class TreeNodeTest: XCTestCase {
             }
         }
         workspace.normalizeContainers()
-        XCTAssertEqual(
+        assertEquals(
             .h_tiles([.window(0), .window(1)]),
             workspace.rootTilingContainer.layoutDescription
         )
@@ -66,9 +66,9 @@ final class TreeNodeTest: XCTestCase {
                 _ = TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1)
             }
         }
-        XCTAssertEqual(workspace.rootTilingContainer.children.count, 1)
+        assertEquals(workspace.rootTilingContainer.children.count, 1)
         workspace.normalizeContainers()
-        XCTAssertEqual(workspace.rootTilingContainer.children.count, 0)
+        assertEquals(workspace.rootTilingContainer.children.count, 0)
     }
 
     func testNormalizeContainers_flattenContainers() {

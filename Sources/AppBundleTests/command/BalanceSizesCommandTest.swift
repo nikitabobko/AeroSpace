@@ -18,7 +18,7 @@ final class BalanceSizesCommandTest: XCTestCase {
             .run(CommandMutableState.init(.emptyWorkspace(name)))
 
         workspace.rootTilingContainer.children.forEach { window in
-            XCTAssertEqual(window.getWeight(workspace.rootTilingContainer.orientation), 1)
+            assertEquals(window.getWeight(workspace.rootTilingContainer.orientation), 1)
         }
     }
 }
