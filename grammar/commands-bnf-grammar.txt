@@ -36,6 +36,8 @@ aerospace -h;
 
     | move (left|down|up|right)
 
+    | move-mouse (monitor-lazy-center|monitor-force-center|window-lazy-center|window-force-center)
+
     | move-node-to-monitor [--wrap-around] (left|down|up|right) [--wrap-around]
     | move-node-to-monitor [--wrap-around] (next|prev) [--wrap-around]
     | move-node-to-monitor <monitor_pattern>...

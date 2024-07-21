@@ -63,12 +63,14 @@ extension CmdArgs {
                 command = MacosNativeMinimizeCommand(args: self as! MacosNativeMinimizeCmdArgs)
             case .mode:
                 command = ModeCommand(args: self as! ModeCmdArgs)
+            case .move:
+                command = MoveCommand(args: self as! MoveCmdArgs)
+            case .moveMouse:
+                command = MoveMouseCommand(args: self as! MoveMouseCmdArgs)
             case .moveNodeToMonitor:
                 command = MoveNodeToMonitorCommand(args: self as! MoveNodeToMonitorCmdArgs)
             case .moveNodeToWorkspace:
                 command = MoveNodeToWorkspaceCommand(args: self as! MoveNodeToWorkspaceCmdArgs)
-            case .move:
-                command = MoveCommand(args: self as! MoveCmdArgs)
             case .moveWorkspaceToMonitor:
                 command = MoveWorkspaceToMonitorCommand(args: self as! MoveWorkspaceToMonitorCmdArgs)
             case .reloadConfig:

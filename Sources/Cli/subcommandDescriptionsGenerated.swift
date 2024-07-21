@@ -21,6 +21,7 @@ let subcommandDescriptions = [
     ["  macos-native-fullscreen", "Toggle macOS fullscreen for the focused window"],
     ["  macos-native-minimize", "Toggle macOS minimize for the focused window"],
     ["  mode", "Activate the specified binding mode"],
+    ["  move-mouse", "Move mouse to the requested position"],
     ["  move-node-to-monitor", "Move window to monitor targeted by relative direction, by order, or by pattern"],
     ["  move-node-to-workspace", "Move the focused window to the specified workspace"],
     ["  move-workspace-to-monitor", "Move the focused workspace to the next or previous monitor"],

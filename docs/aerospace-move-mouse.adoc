@@ -1,0 +1,59 @@
+= aerospace-move-mouse(1)
+include::./util/man-attributes.adoc[]
+// tag::purpose[]
+:manpurpose: Move mouse to the requested position
+// end::purpose[]
+:manname: aerospace-move-mouse
+
+// =========================================================== Synopsis
+== Synopsis
+// tag::synopsis[]
+aerospace move-mouse [-h|--help] <mouse-position>
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+// =========================================================== Arguments
+include::./util/conditional-arguments-header.adoc[]
+
+<mouse-position>::
+Position to move mouse to.
+Possible values:
++
+[cols="1,3"]
+|===
+|Value |Description
+
+|`monitor-lazy-center`
+|Move mouse to the center of the focused monitor, *unless* it is already within the monitor boundaries
+
+|`monitor-force-center`
+|Move mouse to the center of the focused monitor
+
+|`window-lazy-center`
+|Move mouse to the center of the focused window, *unless* it is already within the window boundaries
+
+|`window-force-center`
+|Move mouse to the center of the focused window
+
+|===
+
+// =========================================================== Examples
+include::util/conditional-examples-header.adoc[]
+
+* Try to move mouse to the center of the window. If there is no window in focus, move mouse to the center of the monitor: +
+`aerospace move-mouse window-lazy-center || aerospace move-mouse monitor-lazy-center`
+
+// end::body[]
+
+// =========================================================== Footer
+include::./util/man-footer.adoc[]

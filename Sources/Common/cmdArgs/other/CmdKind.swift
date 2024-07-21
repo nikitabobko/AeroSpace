@@ -1,5 +1,6 @@
 public enum CmdKind: String, CaseIterable, Equatable {
     // Sorted
+
     case balanceSizes = "balance-sizes"
     case close
     case closeAllWindowsButCurrent = "close-all-windows-but-current"
@@ -23,6 +24,7 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case macosNativeMinimize = "macos-native-minimize"
     case mode
     case move = "move"
+    case moveMouse = "move-mouse"
     case moveNodeToMonitor = "move-node-to-monitor"
     case moveNodeToWorkspace = "move-node-to-workspace"
     case moveWorkspaceToMonitor = "move-workspace-to-monitor"
