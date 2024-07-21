@@ -125,14 +125,14 @@ func checkOnFocusChangedCallbacks() {
 }
 
 private var onFocusChangedRecursionGuard = false
-private func onFocusedMonitorChanged(_ newFocus: LiveFocus) {
+private func onFocusedMonitorChanged(_ focus: LiveFocus) {
     if onFocusChangedRecursionGuard { return }
     onFocusChangedRecursionGuard = true
     defer { onFocusChangedRecursionGuard = false }
     if config.onFocusedMonitorChanged.isEmpty { return }
     _ = config.onFocusedMonitorChanged.run(CommandMutableState(focus.asLeaf.asCommandSubject))
 }
-private func onFocusChanged(_ newFocus: LiveFocus) {
+private func onFocusChanged(_ focus: LiveFocus) {
     if onFocusChangedRecursionGuard { return }
     onFocusChangedRecursionGuard = true
     defer { onFocusChangedRecursionGuard = false }
