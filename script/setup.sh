@@ -4,14 +4,21 @@ set -u # Treat unset variables and parameters other than the special parameters 
 set -o pipefail # Any command failed in the pipe fails the whole pipe
 # set -x # Print shell commands as they are executed (or you can try -v which is less verbose)
 
+cmd-exist() {
+    command -v "$1" &> /dev/null
+}
+
 setup() {
     mkdir -p .deps/bin
-    ln -fs "$(which cargo)" .deps/bin/cargo
-    ln -fs "$(which xcbeautify)" .deps/bin/xcbeautify
-    ln -fs "$(which fish)" .deps/bin/fish
-    ln -fs "$(which bash)" .deps/bin/bash
-    ln -fs "$(which bundle)" .deps/bin/bundle # Ruby, asciidoc
-    ln -fs "$(which bundler)" .deps/bin/bundler # Ruby, asciidoc
+
+    cmd-exist cargo          && ln -fs "$(which cargo)" .deps/bin/cargo
+    cmd-exist rustc          && ln -fs "$(which cargo)" .deps/bin/rustc
+    cmd-exist xcbeautify     && ln -fs "$(which xcbeautify)" .deps/bin/xcbeautify
+    cmd-exist fish           && ln -fs "$(which fish)" .deps/bin/fish
+    cmd-exist bash           && ln -fs "$(which bash)" .deps/bin/bash
+    cmd-exist bundle         && ln -fs "$(which bundle)" .deps/bin/bundle # Ruby, asciidoc
+    cmd-exist bundler        && ln -fs "$(which bundler)" .deps/bin/bundler # Ruby, asciidoc
+    cmd-exist brew           && ln -fs "$(which brew)" .deps/bin/brew # install-release.sh
 
     tmp=(
         "${PWD}/.deps/bin"
@@ -41,7 +48,7 @@ xcodebuild() {
     # Function: createItemModels(for:itemModelSource:)
     # Thread:   <_NSMainThread: 0x6000037202c0>{number = 1, name = main}
     # Please file a bug at https://feedbackassistant.apple.com with this warning message and any useful information you can provide.
-    if command -v xcbeautify &> /dev/null; then
+    if cmd-exist xcbeautify; then
         /usr/bin/xcodebuild "$@" 2>&1 | xcbeautify --quiet # Only print tasks that have warnings or errors
     else
         /usr/bin/xcodebuild "$@" 2>&1
