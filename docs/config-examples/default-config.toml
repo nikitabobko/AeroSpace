@@ -59,12 +59,6 @@ outer.bottom =     0
 outer.top =        0
 outer.right =      0
 
-# See https://nikitabobko.github.io/AeroSpace/guide#exec-env-vars
-[exec]                   # Again, you don't need to copy all config sections to your config.
-inherit-env-vars = true  # If you don't touch "exec" section,
-[exec.env-vars]          # it will fallback to "default-config.toml"
-PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
-
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 # 'main' binding mode must be always presented

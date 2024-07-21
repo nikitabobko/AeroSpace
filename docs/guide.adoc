@@ -166,9 +166,17 @@ PATH = '${HOME}/bin:${PATH}'
 ----
 +
 Environment variable substitution is supported in form of `+${ENV_VAR}+`
-* If not overridden, `default-config.toml` adds Homebrew to `$PATH` `+/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}+`.
-See the problem statement: https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities
 * You can inspect what is the end result of environment variables using xref:commands.adoc#list-exec-env-vars[`list-exec-env-vars` command]
+* GUI apps on macOS don’t have Homebrew’s prefix in their `PATH` by default ([source](https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities)).
+That's why unless you override `exec` section in the config, AeroSpace fallbacks to the following `exec` configuration:
++
+[source,toml]
+----
+[exec]
+inherit-env-vars = true
+[exec.env-vars]
+PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
+----
 
 [#tree]
 == Tree
