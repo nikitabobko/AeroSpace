@@ -9,8 +9,9 @@ setup() {
     ln -fs "$(which cargo)" .deps/bin/cargo
     ln -fs "$(which xcbeautify)" .deps/bin/xcbeautify
     ln -fs "$(which fish)" .deps/bin/fish
+    ln -fs "$(which bash)" .deps/bin/bash
+    ln -fs "$(which bundle)" .deps/bin/bundle # Ruby, asciidoc
     ln -fs "$(which bundler)" .deps/bin/bundler # Ruby, asciidoc
-    ln -fs "$(which bash)" .deps/bin/bash # Ruby, asciidoc
 
     tmp=(
         "${PWD}/.deps/bin"

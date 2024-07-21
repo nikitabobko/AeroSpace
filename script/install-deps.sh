@@ -36,6 +36,10 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
+if test $all == 1; then
+    bundler install
+fi
+
 if test $all == 1 || test $antlr == 1; then
     if ! (./.deps/python-venv/bin/antlr4 | grep -q 4.13.1); then
         python3 -m venv .deps/python-venv
@@ -60,8 +64,4 @@ if test $all == 1 || test $xcodegen == 1; then
     if test "$(./swift-exec-deps/.build/debug/xcodegen --version)" != 'Version: 2.42.0'; then
         (cd ./swift-exec-deps; swift run xcodegen --version)
     fi
-fi
-
-if test $all == 1; then
-    bundle install
 fi
