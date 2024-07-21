@@ -10,7 +10,8 @@ Bugs can be reported to https://github.com/nikitabobko/AeroSpace/issues/new
 == License
 
 Copyright (C) 2023 Nikita Bobko +
-Free use of this software is granted under the terms of the MIT License
+Free use of this software is granted under the terms of the MIT License +
+You can find the full text of AeroSpace license and its dependencies licenses in the 'license' directory of the distributed zip archieve.
 
 == AUTHOR
 
