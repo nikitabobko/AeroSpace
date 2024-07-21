@@ -57,6 +57,7 @@ extension Window {
         var result: Bool = true
         if let size { result = setSize(size) && result }
         if let topLeft { result = setTopLeftCorner(topLeft) && result }
+        if let size { result = setSize(size) && result }
         return result
     }
 
