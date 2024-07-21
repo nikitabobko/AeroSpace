@@ -18,11 +18,13 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
               --boundaries-action \(actio)   Defines the behavior when requested to cross the \(boundar).
                                              \(actio) possible values: \(FocusCmdArgs.WhenBoundariesCrossed.unionLiteral)
                                              The default is: \(FocusCmdArgs.WhenBoundariesCrossed.wrapAroundTheWorkspace.rawValue)
+              --ignore-floating              Don't perceive floating windows as part of the tree
 
             ARGUMENTS:
               (left|down|up|right)           Focus direction
             """,
         options: [
+            "--ignore-floating": falseBoolFlag(\.floatingAsTiling),
             "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
             "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
             "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32))
@@ -34,6 +36,7 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
     public var windowId: UInt32? = nil
     public var direction: CardinalDirection? = nil
+    public var floatingAsTiling: Bool = true
 
     public let rawArgs: EquatableNoop<[String]>
     fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }

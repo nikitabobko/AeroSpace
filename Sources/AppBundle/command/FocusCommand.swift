@@ -9,9 +9,11 @@ struct FocusCommand: Command {
         let window = state.subject.windowOrNil
         let workspace = state.subject.workspace
         // todo bug: floating windows break mru
-        let floatingWindows = makeFloatingWindowsSeenAsTiling(workspace: workspace)
+        let floatingWindows = args.floatingAsTiling ? makeFloatingWindowsSeenAsTiling(workspace: workspace) : []
         defer {
-            restoreFloatingWindows(floatingWindows: floatingWindows, workspace: workspace)
+            if args.floatingAsTiling {
+                restoreFloatingWindows(floatingWindows: floatingWindows, workspace: workspace)
+            }
         }
 
         var result: Bool = true
@@ -94,7 +96,7 @@ private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingW
     }
     let floatingWindows: [FloatingWindowData] = workspace.floatingWindows
         .map { (window: Window) -> FloatingWindowData? in
-            let center = window.getCenter()
+            let center = window.getCenter() // todo bug: we shouldn't access ax api here. What if the window was moved but it wasn't committed to ax yet?
             guard let center else { return nil }
             // todo bug: what if there are no tiling windows on the workspace?
             guard let target = center.coerceIn(rect: workspace.workspaceMonitor.visibleRectPaddedByOuterGaps).findIn(tree: workspace.rootTilingContainer, virtual: true) else { return nil }

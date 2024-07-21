@@ -35,6 +35,10 @@ final class FocusCommandTest: XCTestCase {
             parseCommand("focus --boundaries workspace --boundaries workspace left").errorOrNil,
             "ERROR: Duplicated option '--boundaries'"
         )
+        assertEquals(
+            parseCommand("focus --window-id 42 --ignore-floating").errorOrNil,
+            "--window-id is incompatible with other options"
+        )
     }
 
     func testFocus() {

@@ -90,7 +90,7 @@ aerospace -h;
 
 <list_workspaces1_flag> ::= --visible [no] | --empty [no] | --format <output_format>;
 
-<focus_flag> ::= --boundaries <boundary>|--boundaries-actions <boundaries_action>;
+<focus_flag> ::= --boundaries <boundary>|--boundaries-actions <boundaries_action>|--ignore-floating;
 <boundaries_action> ::= stop|wrap-around-the-workspace|wrap-around-all-monitors;
 <boundary> ::= workspace|all-monitors-outer-frame;
 
