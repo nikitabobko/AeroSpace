@@ -238,6 +238,7 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
 
             // Terminal apps and Emacs have an option to hide their title bars
             app.id != "org.alacritty" &&
+            app.id != "net.kovidgoyal.kitty" && // ~/.config/kitty/kitty.conf hide_window_decorations titlebar-and-corners
             app.id != "com.github.wez.wezterm" &&
             app.id != "com.googlecode.iterm2" &&
             app.id != "org.gnu.Emacs" {
