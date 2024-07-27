@@ -110,18 +110,19 @@ var prevFocus: LiveFocus? { _prevFocus?.live.takeIf { $0 != focus } }
 func checkOnFocusChangedCallbacks() {
     let liveFocus = focus
     let frozenFocus = liveFocus.frozen
-    if frozenFocus != _lastKnownFocus {
+    let lastKnownFocus = _lastKnownFocus
+    _lastKnownFocus = frozenFocus
+    if frozenFocus != lastKnownFocus {
+        _prevFocus = lastKnownFocus
         onFocusChanged(liveFocus)
-        _prevFocus = _lastKnownFocus
     }
-    if frozenFocus.workspaceName != _lastKnownFocus.workspaceName {
-        onWorkspaceChanged(_lastKnownFocus.workspaceName, frozenFocus.workspaceName)
-        _prevFocusedWorkspaceName = _lastKnownFocus.workspaceName
+    if frozenFocus.workspaceName != lastKnownFocus.workspaceName {
+        _prevFocusedWorkspaceName = lastKnownFocus.workspaceName
+        onWorkspaceChanged(lastKnownFocus.workspaceName, frozenFocus.workspaceName)
     }
-    if frozenFocus.monitorId != _lastKnownFocus.monitorId {
+    if frozenFocus.monitorId != lastKnownFocus.monitorId {
         onFocusedMonitorChanged(liveFocus)
     }
-    _lastKnownFocus = frozenFocus
 }
 
 private var onFocusChangedRecursionGuard = false
