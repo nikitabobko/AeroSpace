@@ -8,16 +8,6 @@ let appId: String = "bobko.debug.aerospace"
 let appId: String = "bobko.aerospace"
 #endif
 
-
-public func prettyError(_ message: String = "") -> Never {
-    prettyErrorT(message)
-}
-
-public func prettyErrorT<T>(_ message: String = "") -> T {
-    printStderr(message)
-    exit(1)
-}
-
 let cliClientVersionAndHash: String = "\(aeroSpaceAppVersion) \(gitHash)"
 
 func hasStdin() -> Bool {

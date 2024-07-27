@@ -41,7 +41,7 @@ if !isVersion {
             print(help)
             exit(0)
         case .failure(let e):
-            prettyError(e)
+            cliError(e)
     }
 }
 
@@ -64,7 +64,7 @@ if let e: Error = Result(catching: { try socket.connect(to: socketFile) }).error
     if isVersion {
         printVersionAndExit(serverVersion: nil)
     } else {
-        prettyError("Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
+        cliError("Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
     }
 }
 
@@ -75,7 +75,7 @@ if hasStdin() {
         stdin += line
         index += 1
         if index > 1000 {
-            prettyError("stdin number of lines limit is exceeded")
+            cliError("stdin number of lines limit is exceeded")
         }
     }
 }

@@ -132,3 +132,12 @@ extension FileHandle: TextOutputStream {
         self.write(data)
     }
 }
+
+public func cliError(_ message: String = "") -> Never {
+    cliErrorT(message)
+}
+
+public func cliErrorT<T>(_ message: String = "") -> T {
+    printStderr(message)
+    exit(1)
+}

@@ -43,7 +43,7 @@ OPTIONS:
   -v, --version           Print AeroSpace.app version
   --started-at-login      Make AeroSpace.app think that it is started at login
                           When AeroSpace.app starts at login it runs 'after-login-command' commands
-  --config-path <path>    Config path. It will takes priority over ~/.aerospace.toml
+  --config-path <path>    Config path. It will take priority over ~/.aerospace.toml
                           and ${XDG_CONFIG_HOME}/aerospace/aerospace.toml
 """
 
@@ -60,18 +60,29 @@ private func initServerArgs() {
                 print("\(Bundle.appVersion) \(gitHash)")
                 exit(0)
             case "--config-path":
-                serverArgs.configLocation = args.getOrNil(atIndex: 1)
+                if let arg = args.getOrNil(atIndex: 1) {
+                    serverArgs.configLocation = arg
+                } else {
+                    cliError("Missing <path> in --config-path flag")
+                }
                 args = Array(args.dropFirst(2))
             case "--started-at-login":
                 serverArgs.startedAtLogin = true
                 args = Array(args.dropFirst())
+            case "-NSDocumentRevisionsDebugMode": // Freaking Xcode adds this stupid argument. Ignore it
+                if isDebug {
+                    if args.getOrNil(atIndex: 1) != "YES" {
+                        cliError("Expecting YES after -NSDocumentRevisionsDebugMode flag")
+                    }
+                    args = Array(args.dropFirst(2))
+                } else {
+                    fallthrough
+                }
             default:
-                printStderr(serverHelp)
-                exit(1)
+                cliError("Unrecognized flag '\(args.first!)'")
         }
     }
     if let path = serverArgs.configLocation, !FileManager.default.fileExists(atPath: path) {
-        printStderr("\(path) doesn't exist")
-        exit(1)
+        cliError("\(path) doesn't exist")
     }
 }
