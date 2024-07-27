@@ -29,23 +29,10 @@ include::./util/conditional-arguments-header.adoc[]
 Position to move mouse to.
 Possible values:
 +
-[cols="1,3"]
-|===
-|Value |Description
-
-|`monitor-lazy-center`
-|Move mouse to the center of the focused monitor, *unless* it is already within the monitor boundaries
-
-|`monitor-force-center`
-|Move mouse to the center of the focused monitor
-
-|`window-lazy-center`
-|Move mouse to the center of the focused window, *unless* it is already within the window boundaries
-
-|`window-force-center`
-|Move mouse to the center of the focused window
-
-|===
+* `monitor-lazy-center`. Move mouse to the center of the focused monitor, *unless* it is already within the monitor boundaries.
+* `monitor-force-center`. Move mouse to the center of the focused monitor.
+* `window-lazy-center`. Move mouse to the center of the focused window, *unless* it is already within the window boundaries. Fails the command if no window is focused.
+* `window-force-center`. Move mouse to the center of the focused window. Fails the command if no window is focused.
 
 // =========================================================== Examples
 include::util/conditional-examples-header.adoc[]
