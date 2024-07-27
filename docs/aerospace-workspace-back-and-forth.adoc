@@ -17,6 +17,11 @@ aerospace workspace-back-and-forth [-h|--help]
 // tag::body[]
 {manpurpose}
 
+Unlike `focus-back-and-forth`, `workspace-back-and-forth` always succeeds.
+Because unlike windows, workspaces can not be "closed".
+Workspaces are name-addressable objects.
+They are created and destroyed on the fly.
+
 Also see: <<focus-back-and-forth, focus-back-and-forth>>
 // end::body[]
 

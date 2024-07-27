@@ -9,7 +9,7 @@ struct FocusBackAndForthCommand: Command {
         if let prevFocus {
             return setFocus(to: prevFocus)
         } else {
-            return false
+            return state.failCmd(msg: "Prev window has been closed")
         }
     }
 }

@@ -104,7 +104,7 @@ var prevFocusedWorkspace: Workspace? { _prevFocusedWorkspaceName.map { Workspace
 
 // Used by focus-back-and-forth
 var _prevFocus: FrozenFocus? = nil
-var prevFocus: LiveFocus? { _prevFocus?.live }
+var prevFocus: LiveFocus? { _prevFocus?.live.takeIf { $0 != focus } }
 
 // Should be called in refreshSession
 func checkOnFocusChangedCallbacks() {
