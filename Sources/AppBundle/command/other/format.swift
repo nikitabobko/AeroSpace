@@ -95,7 +95,7 @@ private extension String {
             case (.window(_), .window): break
 
             case (.workspace(let ws), .monitor):
-                return ws.nodeMonitor.flatMap(AeroObj.monitor).map(expandFormatVar) ?? .success("NULL-MONITOR")
+                return expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitor))
             case (.workspace, _): break
 
             case (.app(_), _): break

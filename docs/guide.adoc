@@ -488,9 +488,9 @@ You can track focus changes using the following callbacks: `on-focus-changed` an
 A common use case for the callbacks is to implement "mouse follows focus" behavior. All you need is to combine the callback of your choice with xref:commands.adoc#move-mouse[move-mouse command]:
 [source,toml]
 ----
-on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center'] # Mouse lazily follows focused monitor (default in i3)
 # or
-on-focus-changed = ['move-mouse window-lazy-center']
+on-focus-changed = ['move-mouse window-lazy-center'] # Mouse lazily follows any focus (window or workspace)
 ----
 
 You shouldn't rely on the order callback are called, since it's an implementation detail and can change from version to version.
