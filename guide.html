@@ -545,7 +545,8 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#callbacks">5. Callbacks</a>
 <ul class="sectlevel2">
 <li><a href="#on-window-detected-callback">5.1. 'on-window-detected' callback</a></li>
-<li><a href="#exec-on-workspace-change-callback">5.2. 'exec-on-workspace-change' callback</a></li>
+<li><a href="#on-focus-changed-callbacks">5.2. 'on-focus-changed' callbacks</a></li>
+<li><a href="#exec-on-workspace-change-callback">5.3. 'exec-on-workspace-change' callback</a></li>
 </ul>
 </li>
 <li><a href="#multiple-monitors">6. Multiple monitors</a>
@@ -612,8 +613,8 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 </div>
 <div class="paragraph">
-<p><strong>(Optional)</strong> If you want shell completion to work, you need to configure your shell to enable completion provided by homebrew packages:
-<a href="https://docs.brew.sh/Shell-Completion" class="bare">https://docs.brew.sh/Shell-Completion</a></p>
+<p><strong>(Optional)</strong> You might need to configure your shell to enable completion provided by homebrew packages: <a href="https://docs.brew.sh/Shell-Completion" class="bare">https://docs.brew.sh/Shell-Completion</a>
+AeroSpace provides bash, fish and zsh completions.</p>
 </div>
 </div>
 <div class="sect2">
@@ -841,11 +842,19 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 </div>
 </li>
 <li>
-<p>If not overridden, <code>default-config.toml</code> adds Homebrew to <code>$PATH</code> <code>/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}</code>.
-See the problem statement: <a href="https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities" class="bare">https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities</a></p>
+<p>You can inspect what is the end result of environment variables using <a href="commands#list-exec-env-vars"><code>list-exec-env-vars</code> command</a></p>
 </li>
 <li>
-<p>You can inspect what is the end result of environment variables using <a href="commands#list-exec-env-vars"><code>list-exec-env-vars</code> command</a></p>
+<p>GUI apps on macOS don’t have Homebrew’s prefix in their <code>PATH</code> by default ([source](<a href="https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities" class="bare">https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities</a>)).
+That&#8217;s why unless you override <code>exec</code> section in the config, AeroSpace fallbacks to the following <code>exec</code> configuration:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[exec]</span>
+<span class="tok-n">inherit-env-vars</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
+<span class="tok-k">[exec.env-vars]</span>
+<span class="tok-n">PATH</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}&#39;</span></code></pre>
+</div>
+</div>
 </li>
 </ul>
 </div>
@@ -1159,7 +1168,7 @@ That means, that if AeroSpace crashes badly you will still be able to manually "
 <h3 id="a-note-on-mission-control"><a class="anchor" href="#a-note-on-mission-control"></a><a class="link" href="#a-note-on-mission-control">4.1. A note on mission control</a></h3>
 <div class="paragraph">
 <p>For some reason, mission control doesn&#8217;t like that AeroSpace puts a lot of windows in the bottom right corner of the screen.
-Mission control shows windows too small even if it has enough space to show them bigger.</p>
+Mission control shows windows too small even there is enough space to show them bigger.</p>
 </div>
 <div class="paragraph">
 <p>To workaround, you can enable <code>System Settings &#8594; Desktop &amp; Dock &#8594; Group windows by application</code> setting.
@@ -1372,7 +1381,40 @@ Some windows initialize their title after the window appears.
 </div>
 </div>
 <div class="sect2">
-<h3 id="exec-on-workspace-change-callback"><a class="anchor" href="#exec-on-workspace-change-callback"></a><a class="link" href="#exec-on-workspace-change-callback">5.2. 'exec-on-workspace-change' callback</a></h3>
+<h3 id="on-focus-changed-callbacks"><a class="anchor" href="#on-focus-changed-callbacks"></a><a class="link" href="#on-focus-changed-callbacks">5.2. 'on-focus-changed' callbacks</a></h3>
+<div class="paragraph">
+<p>You can track focus changes using the following callbacks: <code>on-focus-changed</code> and <code>on-focused-monitor-changed</code>.</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>on-focus-changed</code> is called every time focused window or workspace changes.</p>
+</li>
+<li>
+<p><code>on-focused-monitor-changed</code> is called every time focused monitor changes.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>A common use case for the callbacks is to implement "mouse follows focus" behavior. All you need is to combine the callback of your choice with <a href="commands#move-mouse">move-mouse command</a>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">on-focused-monitor-changed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-mouse monitor-lazy-center&#39;</span><span class="tok-p">]</span>
+<span class="tok-c1"># or</span>
+<span class="tok-n">on-focus-changed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-mouse window-lazy-center&#39;</span><span class="tok-p">]</span></code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>You shouldn&#8217;t rely on the order callback are called, since it&#8217;s an implementation detail and can change from version to version.</p>
+</div>
+<div class="paragraph">
+<p>The callbacks are "recursion resistant", which means that any focus change within the callback won&#8217;t retrigger the callback.
+Changing the focus within these callbacks is a bad idea anyway, and the way it&#8217;s handled will probably change in future versions.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="exec-on-workspace-change-callback"><a class="anchor" href="#exec-on-workspace-change-callback"></a><a class="link" href="#exec-on-workspace-change-callback">5.3. 'exec-on-workspace-change' callback</a></h3>
 <div class="paragraph">
 <p><code>exec-on-workspace-change</code> callback allows to run arbitrary process when workspace changes.
 It may be useful for integrating with bars.</p>
@@ -1381,7 +1423,7 @@ It may be useful for integrating with bars.</p>
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Notify Sketchybar about workspace change</span>
 <span class="tok-n">exec-on-workspace-change</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;/bin/bash&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;-c&#39;</span><span class="tok-p">,</span>
-<span class="tok-w">    </span><span class="tok-s1">&#39;/opt/homebrew/opt/sketchybar/bin/sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE&#39;</span>
+<span class="tok-w">    </span><span class="tok-s1">&#39;sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE&#39;</span>
 <span class="tok-p">]</span></code></pre>
 </div>
 </div>
@@ -1595,7 +1637,7 @@ If you find that some windows are not handled properly please <a href="https://g
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-06-16 18:46:25 +0200
+Last updated 2024-07-27 13:37:55 +0200
 </div>
 </div>
 </body>

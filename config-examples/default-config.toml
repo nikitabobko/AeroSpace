@@ -38,6 +38,12 @@ default-root-container-orientation = 'auto'
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
 key-mapping.preset = 'qwerty'
 
+# Mouse follows focus when focused monitor changes
+# Drop it from your config, if you don't like this behavior
+# See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
+# See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
 # - Constant:     gaps.outer.top = 8
@@ -52,12 +58,6 @@ outer.left =       0
 outer.bottom =     0
 outer.top =        0
 outer.right =      0
-
-# See https://nikitabobko.github.io/AeroSpace/guide#exec-env-vars
-[exec]                   # Again, you don't need to copy all config sections to your config.
-inherit-env-vars = true  # If you don't touch "exec" section,
-[exec.env-vars]          # it will fallback to "default-config.toml"
-PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
 
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes

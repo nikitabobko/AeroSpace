@@ -513,38 +513,41 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#close">1. close</a></li>
-<li><a href="#close-all-windows-but-current">2. close-all-windows-but-current</a></li>
-<li><a href="#enable">3. enable</a></li>
-<li><a href="#exec-and-forget">4. exec-and-forget</a></li>
-<li><a href="#flatten-workspace-tree">5. flatten-workspace-tree</a></li>
-<li><a href="#focus">6. focus</a></li>
-<li><a href="#focus-monitor">7. focus-monitor</a></li>
-<li><a href="#fullscreen">8. fullscreen</a></li>
-<li><a href="#join-with">9. join-with</a></li>
-<li><a href="#layout">10. layout</a></li>
-<li><a href="#macos-native-fullscreen">11. macos-native-fullscreen</a></li>
-<li><a href="#macos-native-minimize">12. macos-native-minimize</a></li>
-<li><a href="#mode">13. mode</a></li>
-<li><a href="#move">14. move</a></li>
-<li><a href="#move-node-to-monitor">15. move-node-to-monitor</a></li>
-<li><a href="#move-node-to-workspace">16. move-node-to-workspace</a></li>
-<li><a href="#move-workspace-to-monitor">17. move-workspace-to-monitor</a></li>
-<li><a href="#reload-config">18. reload-config</a></li>
-<li><a href="#resize">19. resize</a></li>
-<li><a href="#split">20. split</a></li>
-<li><a href="#trigger-binding">21. trigger-binding</a></li>
-<li><a href="#workspace">22. workspace</a></li>
-<li><a href="#workspace-back-and-forth">23. workspace-back-and-forth</a></li>
-<li><a href="#query-commands">24. Query commands</a>
+<li><a href="#balance-sizes">1. balance-sizes</a></li>
+<li><a href="#close">2. close</a></li>
+<li><a href="#close-all-windows-but-current">3. close-all-windows-but-current</a></li>
+<li><a href="#enable">4. enable</a></li>
+<li><a href="#exec-and-forget">5. exec-and-forget</a></li>
+<li><a href="#flatten-workspace-tree">6. flatten-workspace-tree</a></li>
+<li><a href="#focus">7. focus</a></li>
+<li><a href="#focus-back-and-forth">8. focus-back-and-forth</a></li>
+<li><a href="#focus-monitor">9. focus-monitor</a></li>
+<li><a href="#fullscreen">10. fullscreen</a></li>
+<li><a href="#join-with">11. join-with</a></li>
+<li><a href="#layout">12. layout</a></li>
+<li><a href="#macos-native-fullscreen">13. macos-native-fullscreen</a></li>
+<li><a href="#macos-native-minimize">14. macos-native-minimize</a></li>
+<li><a href="#mode">15. mode</a></li>
+<li><a href="#move">16. move</a></li>
+<li><a href="#move-mouse">17. move-mouse</a></li>
+<li><a href="#move-node-to-monitor">18. move-node-to-monitor</a></li>
+<li><a href="#move-node-to-workspace">19. move-node-to-workspace</a></li>
+<li><a href="#move-workspace-to-monitor">20. move-workspace-to-monitor</a></li>
+<li><a href="#reload-config">21. reload-config</a></li>
+<li><a href="#resize">22. resize</a></li>
+<li><a href="#split">23. split</a></li>
+<li><a href="#trigger-binding">24. trigger-binding</a></li>
+<li><a href="#workspace">25. workspace</a></li>
+<li><a href="#workspace-back-and-forth">26. workspace-back-and-forth</a></li>
+<li><a href="#query-commands">27. Query commands</a>
 <ul class="sectlevel2">
-<li><a href="#config">24.1. config</a></li>
-<li><a href="#debug-windows">24.2. debug-windows</a></li>
-<li><a href="#list-apps">24.3. list-apps</a></li>
-<li><a href="#list-exec-env-vars">24.4. list-exec-env-vars</a></li>
-<li><a href="#list-monitors">24.5. list-monitors</a></li>
-<li><a href="#list-windows">24.6. list-windows</a></li>
-<li><a href="#list-workspaces">24.7. list-workspaces</a></li>
+<li><a href="#config">27.1. config</a></li>
+<li><a href="#debug-windows">27.2. debug-windows</a></li>
+<li><a href="#list-apps">27.3. list-apps</a></li>
+<li><a href="#list-exec-env-vars">27.4. list-exec-env-vars</a></li>
+<li><a href="#list-monitors">27.5. list-monitors</a></li>
+<li><a href="#list-windows">27.6. list-windows</a></li>
+<li><a href="#list-workspaces">27.7. list-workspaces</a></li>
 </ul>
 </li>
 </ul>
@@ -591,11 +594,24 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 </div>
 <div class="sect1">
-<h2 id="close"><a class="anchor" href="#close"></a><a class="link" href="#close">1. close</a></h2>
+<h2 id="balance-sizes"><a class="anchor" href="#balance-sizes"></a><a class="link" href="#balance-sizes">1. balance-sizes</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">close [-h|--help] [--quit-if-last-window]</pre>
+<pre class="nowrap">aerospace balance-sizes [-h|--help]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Balance sizes of all windows in the current workspace</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="close"><a class="anchor" href="#close"></a><a class="link" href="#close">2. close</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">aerospace close [-h|--help] [--quit-if-last-window]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -623,11 +639,11 @@ You might want to use the command from CLI for scripting purposes</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="close-all-windows-but-current"><a class="anchor" href="#close-all-windows-but-current"></a><a class="link" href="#close-all-windows-but-current">2. close-all-windows-but-current</a></h2>
+<h2 id="close-all-windows-but-current"><a class="anchor" href="#close-all-windows-but-current"></a><a class="link" href="#close-all-windows-but-current">3. close-all-windows-but-current</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">close-all-windows-but-current [-h|--help] [--quit-if-last-window]</pre>
+<pre class="nowrap">aerospace close-all-windows-but-current [-h|--help] [--quit-if-last-window]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -651,11 +667,11 @@ You might want to use the command from CLI for scripting purposes</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="enable"><a class="anchor" href="#enable"></a><a class="link" href="#enable">3. enable</a></h2>
+<h2 id="enable"><a class="anchor" href="#enable"></a><a class="link" href="#enable">4. enable</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">enable [-h|--help] (on|off|toggle)</pre>
+<pre class="nowrap">aerospace enable [-h|--help] (on|off|toggle)</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -670,11 +686,11 @@ You might want to use the command from CLI for scripting purposes</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="exec-and-forget"><a class="anchor" href="#exec-and-forget"></a><a class="link" href="#exec-and-forget">4. exec-and-forget</a></h2>
+<h2 id="exec-and-forget"><a class="anchor" href="#exec-and-forget"></a><a class="link" href="#exec-and-forget">5. exec-and-forget</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">exec-and-forget &lt;bash-script&gt;</pre>
+<pre class="nowrap">aerospace exec-and-forget &lt;bash-script&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -705,15 +721,15 @@ Stdout, stderr and exit code are ignored.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="flatten-workspace-tree"><a class="anchor" href="#flatten-workspace-tree"></a><a class="link" href="#flatten-workspace-tree">5. flatten-workspace-tree</a></h2>
+<h2 id="flatten-workspace-tree"><a class="anchor" href="#flatten-workspace-tree"></a><a class="link" href="#flatten-workspace-tree">6. flatten-workspace-tree</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">flatten-workspace-tree [-h|--help]</pre>
+<pre class="nowrap">aerospace flatten-workspace-tree [-h|--help]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Flatten the tree of currently focused workspace.</p>
+<p>Flatten the tree of the focused workspace</p>
 </div>
 <div class="paragraph">
 <p>The command is useful when you messed up with your layout, and it&#8217;s easier to "reset" it and start again.</p>
@@ -721,13 +737,13 @@ Stdout, stderr and exit code are ignored.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="focus"><a class="anchor" href="#focus"></a><a class="link" href="#focus">6. focus</a></h2>
+<h2 id="focus"><a class="anchor" href="#focus"></a><a class="link" href="#focus">7. focus</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">focus [-h|--help] [--boundaries &lt;boundary&gt;]
-      [--boundaries-action &lt;action&gt;] (left|down|up|right)
-focus [-h|--help] --window-id &lt;window-id&gt;</pre>
+<pre class="nowrap">aerospace focus [-h|--help] [--boundaries &lt;boundary&gt;]
+                [--boundaries-action &lt;action&gt;] [--ignore-floating] (left|down|up|right)
+aerospace focus [-h|--help] --window-id &lt;window-id&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -736,10 +752,9 @@ focus [-h|--help] --window-id &lt;window-id&gt;</pre>
 <div class="paragraph">
 <p>Contrary to i3, <code>focus</code> command doesn&#8217;t have a separate argument to focus floating windows.
 From <code>focus</code> command perspective, floating windows are part of <a href="guide#tree">the tree</a>.
-The floating window parent container is determined as the smallest tiling container that contains the center of the floating window.</p>
-</div>
-<div class="paragraph">
-<p>This technique eliminates the need for an additional binding for floating windows.</p>
+The floating window parent container is determined as the smallest tiling container that contains the center of the floating window.
+The technique eliminates the need for an additional binding for floating windows.
+This behavior can be disabled with <code>--ignore-floating</code> flag.</p>
 </div>
 <div class="paragraph">
 <p><code>focus child|parent</code> isn&#8217;t supported because the necessity of this operation is under the question.
@@ -770,18 +785,54 @@ The default is: <code>wrap-around-the-workspace</code></p>
 <dd>
 <p>Focus the window with specified <code>&lt;window-id&gt;</code></p>
 </dd>
+<dt class="hdlist1">--ignore-floating</dt>
+<dd>
+<p>Don&#8217;t perceive floating windows as part of the tree.
+It may be useful for more reliable scripting.</p>
+</dd>
 </dl>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="focus-monitor"><a class="anchor" href="#focus-monitor"></a><a class="link" href="#focus-monitor">7. focus-monitor</a></h2>
+<h2 id="focus-back-and-forth"><a class="anchor" href="#focus-back-and-forth"></a><a class="link" href="#focus-back-and-forth">8. focus-back-and-forth</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">focus-monitor [-h|--help] [--wrap-around] (left|down|up|right)
-focus-monitor [-h|--help] [--wrap-around] (next|prev)
-focus-monitor [-h|--help] &lt;monitor-pattern&gt;...</pre>
+<pre class="nowrap">aerospace focus-back-and-forth [-h|--help]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Switch between the current and previously focused elements back and forth.
+The element is either a window or an empty workspace.</p>
+</div>
+<div class="paragraph">
+<p>AeroSpace stores only one previously focused window in history,
+which means that if you close the previous window,
+<code>focus-back-and-forth</code> has no window to switch focus to.
+In that case, the command will exit with non-zero exit code.</p>
+</div>
+<div class="paragraph">
+<p>That&#8217;s why it may be preferred to combine <code>focus-back-and-forth</code> with <code>workspace-back-and-forth</code>:<br></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">aerospace focus-back-and-forth || aerospace workspace-back-and-forth</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Also see: <a href="#workspace-back-and-forth">workspace-back-and-forth</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="focus-monitor"><a class="anchor" href="#focus-monitor"></a><a class="link" href="#focus-monitor">9. focus-monitor</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">aerospace focus-monitor [-h|--help] [--wrap-around] (left|down|up|right)
+aerospace focus-monitor [-h|--help] [--wrap-around] (next|prev)
+aerospace focus-monitor [-h|--help] &lt;monitor-pattern&gt;...</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -809,7 +860,7 @@ focus-monitor [-h|--help] &lt;monitor-pattern&gt;...</pre>
 <dl>
 <dt class="hdlist1">(left|down|up|right)</dt>
 <dd>
-<p>Focus monitor in direction relative to the currently focused monitor</p>
+<p>Focus monitor in direction relative to the focused monitor</p>
 </dd>
 <dt class="hdlist1">(next|prev)</dt>
 <dd>
@@ -825,15 +876,15 @@ Monitor pattern is the same as in <code>workspace-to-monitor-force-assignment</c
 </div>
 </div>
 <div class="sect1">
-<h2 id="fullscreen"><a class="anchor" href="#fullscreen"></a><a class="link" href="#fullscreen">8. fullscreen</a></h2>
+<h2 id="fullscreen"><a class="anchor" href="#fullscreen"></a><a class="link" href="#fullscreen">10. fullscreen</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">fullscreen [-h|--help] [on|off]</pre>
+<pre class="nowrap">aerospace fullscreen [-h|--help] [on|off]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Toggle the fullscreen mode for the currently focused window</p>
+<p>Toggle the fullscreen mode for the focused window</p>
 </div>
 <div class="paragraph">
 <p>Switching to a different tiling window within the same workspace while the current focused window is in fullscreen mode results in the fullscreen window exiting fullscreen mode.</p>
@@ -864,15 +915,15 @@ Toggle between the two if not specified</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="join-with"><a class="anchor" href="#join-with"></a><a class="link" href="#join-with">9. join-with</a></h2>
+<h2 id="join-with"><a class="anchor" href="#join-with"></a><a class="link" href="#join-with">11. join-with</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">join-with [-h|--help] (left|down|up|right)</pre>
+<pre class="nowrap">aerospace join-with [-h|--help] (left|down|up|right)</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Put the currently focused window and the nearest node in the specified direction under a common parent container</p>
+<p>Put the focused window and the nearest node in the specified direction under a common parent container</p>
 </div>
 <div class="paragraph lead">
 <p><strong>EXAMPLES</strong></p>
@@ -916,11 +967,11 @@ There is an observation that the only reason why you might want to split a node 
 </div>
 </div>
 <div class="sect1">
-<h2 id="layout"><a class="anchor" href="#layout"></a><a class="link" href="#layout">10. layout</a></h2>
+<h2 id="layout"><a class="anchor" href="#layout"></a><a class="link" href="#layout">12. layout</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">layout [-h|--help] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...</pre>
+<pre class="nowrap">aerospace layout [-h|--help] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -982,15 +1033,15 @@ There is an observation that the only reason why you might want to split a node 
 </div>
 </div>
 <div class="sect1">
-<h2 id="macos-native-fullscreen"><a class="anchor" href="#macos-native-fullscreen"></a><a class="link" href="#macos-native-fullscreen">11. macos-native-fullscreen</a></h2>
+<h2 id="macos-native-fullscreen"><a class="anchor" href="#macos-native-fullscreen"></a><a class="link" href="#macos-native-fullscreen">13. macos-native-fullscreen</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">macos-native-fullscreen [-h|--help] [on|off]</pre>
+<pre class="nowrap">aerospace macos-native-fullscreen [-h|--help] [on|off]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Toggle macOS fullscreen for the currently focused window</p>
+<p>Toggle macOS fullscreen for the focused window</p>
 </div>
 <div class="paragraph lead">
 <p><strong>OPTIONS</strong></p>
@@ -1018,24 +1069,24 @@ Toggle between the two if not specified</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="macos-native-minimize"><a class="anchor" href="#macos-native-minimize"></a><a class="link" href="#macos-native-minimize">12. macos-native-minimize</a></h2>
+<h2 id="macos-native-minimize"><a class="anchor" href="#macos-native-minimize"></a><a class="link" href="#macos-native-minimize">14. macos-native-minimize</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">macos-native-minimize [-h|--help]</pre>
+<pre class="nowrap">aerospace macos-native-minimize [-h|--help]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Toggle macOS minimize for the currently focused window</p>
+<p>Toggle macOS minimize for the focused window</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="mode"><a class="anchor" href="#mode"></a><a class="link" href="#mode">13. mode</a></h2>
+<h2 id="mode"><a class="anchor" href="#mode"></a><a class="link" href="#mode">15. mode</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">mode [-h|--help] &lt;binding-mode&gt;</pre>
+<pre class="nowrap">aerospace mode [-h|--help] &lt;binding-mode&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1047,11 +1098,11 @@ Toggle between the two if not specified</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="move"><a class="anchor" href="#move"></a><a class="link" href="#move">14. move</a></h2>
+<h2 id="move"><a class="anchor" href="#move"></a><a class="link" href="#move">16. move</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">move [-h|--help] (left|down|up|right)</pre>
+<pre class="nowrap">aerospace move [-h|--help] (left|down|up|right)</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1174,13 +1225,76 @@ Toggle between the two if not specified</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="move-node-to-monitor"><a class="anchor" href="#move-node-to-monitor"></a><a class="link" href="#move-node-to-monitor">15. move-node-to-monitor</a></h2>
+<h2 id="move-mouse"><a class="anchor" href="#move-mouse"></a><a class="link" href="#move-mouse">17. move-mouse</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">move-node-to-monitor [-h|--help] [--wrap-around] (left|down|up|right)
-move-node-to-monitor [-h|--help] [--wrap-around] (next|prev)
-move-node-to-monitor [-h|--help] &lt;monitor-pattern&gt;...</pre>
+<pre class="nowrap">aerospace move-mouse [-h|--help] &lt;mouse-position&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Move mouse to the requested position</p>
+</div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph lead">
+<p><strong>ARGUMENTS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">&lt;mouse-position&gt;</dt>
+<dd>
+<p>Position to move mouse to.
+Possible values:</p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>monitor-lazy-center</code>. Move mouse to the center of the focused monitor, <strong>unless</strong> it is already within the monitor boundaries.</p>
+</li>
+<li>
+<p><code>monitor-force-center</code>. Move mouse to the center of the focused monitor.</p>
+</li>
+<li>
+<p><code>window-lazy-center</code>. Move mouse to the center of the focused window, <strong>unless</strong> it is already within the window boundaries. Fails the command if no window is focused.</p>
+</li>
+<li>
+<p><code>window-force-center</code>. Move mouse to the center of the focused window. Fails the command if no window is focused.</p>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+</div>
+<div class="paragraph lead">
+<p><strong>EXAMPLES</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Try to move mouse to the center of the window. If there is no window in focus, move mouse to the center of the monitor:<br>
+<code>aerospace move-mouse window-lazy-center || aerospace move-mouse monitor-lazy-center</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="move-node-to-monitor"><a class="anchor" href="#move-node-to-monitor"></a><a class="link" href="#move-node-to-monitor">18. move-node-to-monitor</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">aerospace move-node-to-monitor [-h|--help] [--wrap-around] (left|down|up|right)
+aerospace move-node-to-monitor [-h|--help] [--wrap-around] (next|prev)
+aerospace move-node-to-monitor [-h|--help] &lt;monitor-pattern&gt;...</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1208,7 +1322,7 @@ move-node-to-monitor [-h|--help] &lt;monitor-pattern&gt;...</pre>
 <dl>
 <dt class="hdlist1">(left|down|up|right)</dt>
 <dd>
-<p>Move window to monitor in direction relative to the currently focused monitor</p>
+<p>Move window to monitor in direction relative to the focused monitor</p>
 </dd>
 <dt class="hdlist1">(next|prev)</dt>
 <dd>
@@ -1224,16 +1338,16 @@ Monitor pattern is the same as in <code>workspace-to-monitor-force-assignment</c
 </div>
 </div>
 <div class="sect1">
-<h2 id="move-node-to-workspace"><a class="anchor" href="#move-node-to-workspace"></a><a class="link" href="#move-node-to-workspace">16. move-node-to-workspace</a></h2>
+<h2 id="move-node-to-workspace"><a class="anchor" href="#move-node-to-workspace"></a><a class="link" href="#move-node-to-workspace">19. move-node-to-workspace</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">move-node-to-workspace [-h|--help] [--wrap-around] (next|prev)
-move-node-to-workspace [-h|--help] &lt;workspace-name&gt;</pre>
+<pre class="nowrap">aerospace move-node-to-workspace [-h|--help] [--wrap-around] (next|prev)
+aerospace move-node-to-workspace [-h|--help] &lt;workspace-name&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Move currently focused window to the specified workspace</p>
+<p>Move the focused window to the specified workspace</p>
 </div>
 <div class="paragraph">
 <p><code>(next|prev)</code> is identical to <code>workspace (next|prev)</code></p>
@@ -1256,15 +1370,15 @@ move-node-to-workspace [-h|--help] &lt;workspace-name&gt;</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="move-workspace-to-monitor"><a class="anchor" href="#move-workspace-to-monitor"></a><a class="link" href="#move-workspace-to-monitor">17. move-workspace-to-monitor</a></h2>
+<h2 id="move-workspace-to-monitor"><a class="anchor" href="#move-workspace-to-monitor"></a><a class="link" href="#move-workspace-to-monitor">20. move-workspace-to-monitor</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">move-workspace-to-monitor [-h|--help] [--wrap-around] (next|prev)</pre>
+<pre class="nowrap">aerospace move-workspace-to-monitor [-h|--help] [--wrap-around] (next|prev)</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Move currently focused workspace to the next or previous monitor</p>
+<p>Move the focused workspace to the next or previous monitor</p>
 </div>
 <div class="paragraph">
 <p>The command doesn&#8217;t have effect on workspaces <a href="guide#assign-workspaces-to-monitors">that have monitor assignment</a></p>
@@ -1287,11 +1401,11 @@ move-node-to-workspace [-h|--help] &lt;workspace-name&gt;</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="reload-config"><a class="anchor" href="#reload-config"></a><a class="link" href="#reload-config">18. reload-config</a></h2>
+<h2 id="reload-config"><a class="anchor" href="#reload-config"></a><a class="link" href="#reload-config">21. reload-config</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">reload-config [-h|--help] [--no-gui] [--dry-run]</pre>
+<pre class="nowrap">aerospace reload-config [-h|--help] [--no-gui] [--dry-run]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1337,11 +1451,11 @@ move-node-to-workspace [-h|--help] &lt;workspace-name&gt;</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="resize"><a class="anchor" href="#resize"></a><a class="link" href="#resize">19. resize</a></h2>
+<h2 id="resize"><a class="anchor" href="#resize"></a><a class="link" href="#resize">22. resize</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">resize [-h|--help] (smart|width|height) [+|-]&lt;number&gt;</pre>
+<pre class="nowrap">aerospace resize [-h|--help] (smart|width|height) [+|-]&lt;number&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1383,15 +1497,15 @@ it changes height if the parent has vertical orientation</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="split"><a class="anchor" href="#split"></a><a class="link" href="#split">20. split</a></h2>
+<h2 id="split"><a class="anchor" href="#split"></a><a class="link" href="#split">23. split</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">split [-h|--help] (horizontal|vertical|opposite)</pre>
+<pre class="nowrap">aerospace split [-h|--help] (horizontal|vertical|opposite)</pre>
 </div>
 </div>
 <div class="paragraph">
-<p><strong>If the parent of currently focused window contains more than one child</strong>, then the command</p>
+<p><strong>If the parent of focused window contains more than one child</strong>, then the command</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1399,10 +1513,10 @@ it changes height if the parent has vertical orientation</p>
 <p>Creates a new tiling container</p>
 </li>
 <li>
-<p>Replaces currently focused window with the container</p>
+<p>Replaces the focused window with the container</p>
 </li>
 <li>
-<p>Puts the currently focused window into the container as its the only child</p>
+<p>Puts the focused window into the container as its the only child</p>
 </li>
 </ol>
 </div>
@@ -1411,7 +1525,7 @@ it changes height if the parent has vertical orientation</p>
 <code>opposite</code> means opposite orientation compared to the parent container.</p>
 </div>
 <div class="paragraph">
-<p><strong>If the parent of currently focused window contains only a single child</strong> (the window itself), then <code>split</code> command changes the orientation of the parent container</p>
+<p><strong>If the parent of the focused window contains only a single child</strong> (the window itself), then <code>split</code> command changes the orientation of the parent container</p>
 </div>
 <div class="admonitionblock important">
 <table>
@@ -1429,11 +1543,11 @@ Consider using <code>join-with</code> if you want to keep <code>enable-normaliza
 </div>
 </div>
 <div class="sect1">
-<h2 id="trigger-binding"><a class="anchor" href="#trigger-binding"></a><a class="link" href="#trigger-binding">21. trigger-binding</a></h2>
+<h2 id="trigger-binding"><a class="anchor" href="#trigger-binding"></a><a class="link" href="#trigger-binding">24. trigger-binding</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">trigger-binding [-h|--help] &lt;binding&gt; --mode &lt;mode-id&gt;</pre>
+<pre class="nowrap">aerospace trigger-binding [-h|--help] &lt;binding&gt; --mode &lt;mode-id&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1475,11 +1589,11 @@ Consider using <code>join-with</code> if you want to keep <code>enable-normaliza
 <div class="ulist">
 <ul>
 <li>
-<p>Run alphabetically first binding from config (useless and synthetic example)<br>
+<p>Run alphabetically first binding from config (useless and synthetic example):<br>
 <code>aerospace trigger-binding --mode main "$(aerospace config --get mode.main.binding --keys | head -1)"</code></p>
 </li>
 <li>
-<p>Trigger <code>alt-tab</code> binding<br>
+<p>Trigger <code>alt-tab</code> binding:<br>
 <code>aerospace trigger-binding --mode main alt-tab</code></p>
 </li>
 </ul>
@@ -1487,12 +1601,12 @@ Consider using <code>join-with</code> if you want to keep <code>enable-normaliza
 </div>
 </div>
 <div class="sect1">
-<h2 id="workspace"><a class="anchor" href="#workspace"></a><a class="link" href="#workspace">22. workspace</a></h2>
+<h2 id="workspace"><a class="anchor" href="#workspace"></a><a class="link" href="#workspace">25. workspace</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">workspace [-h|--help] [--auto-back-and-forth] &lt;workspace-name&gt;
-workspace [-h|--help] [--wrap-around] (next|prev)</pre>
+<pre class="nowrap">aerospace workspace [-h|--help] [--auto-back-and-forth] &lt;workspace-name&gt;
+aerospace workspace [-h|--help] [--wrap-around] (next|prev)</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1550,20 +1664,29 @@ workspace [-h|--help] [--wrap-around] (next|prev)</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="workspace-back-and-forth"><a class="anchor" href="#workspace-back-and-forth"></a><a class="link" href="#workspace-back-and-forth">23. workspace-back-and-forth</a></h2>
+<h2 id="workspace-back-and-forth"><a class="anchor" href="#workspace-back-and-forth"></a><a class="link" href="#workspace-back-and-forth">26. workspace-back-and-forth</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">workspace-back-and-forth [-h|--help]</pre>
+<pre class="nowrap">aerospace workspace-back-and-forth [-h|--help]</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Switch between currently focused workspace and previously focused workspace back and forth</p>
+<p>Switch between the focused workspace and previously focused workspace back and forth</p>
+</div>
+<div class="paragraph">
+<p>Unlike <code>focus-back-and-forth</code>, <code>workspace-back-and-forth</code> always succeeds.
+Because unlike windows, workspaces can not be "closed".
+Workspaces are name-addressable objects.
+They are created and destroyed on the fly.</p>
+</div>
+<div class="paragraph">
+<p>Also see: <a href="#focus-back-and-forth">focus-back-and-forth</a></p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="query-commands"><a class="anchor" href="#query-commands"></a><a class="link" href="#query-commands">24. Query commands</a></h2>
+<h2 id="query-commands"><a class="anchor" href="#query-commands"></a><a class="link" href="#query-commands">27. Query commands</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Query commands are commands that do not change the state but rather allow the examination of the current state.</p>
@@ -1580,13 +1703,13 @@ workspace [-h|--help] [--wrap-around] (next|prev)</pre>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="config"><a class="anchor" href="#config"></a><a class="link" href="#config">24.1. config</a></h3>
+<h3 id="config"><a class="anchor" href="#config"></a><a class="link" href="#config">27.1. config</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">config [-h|--help] --get &lt;name&gt; [--json] [--keys]
-config [-h|--help] --major-keys
-config [-h|--help] --all-keys
-config [-h|--help] --config-path</pre>
+<pre class="nowrap">aerospace config [-h|--help] --get &lt;name&gt; [--json] [--keys]
+aerospace config [-h|--help] --major-keys
+aerospace config [-h|--help] --all-keys
+aerospace config [-h|--help] --config-path</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1686,10 +1809,10 @@ alt-2
 </div>
 </div>
 <div class="sect2">
-<h3 id="debug-windows"><a class="anchor" href="#debug-windows"></a><a class="link" href="#debug-windows">24.2. debug-windows</a></h3>
+<h3 id="debug-windows"><a class="anchor" href="#debug-windows"></a><a class="link" href="#debug-windows">27.2. debug-windows</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">debug-windows [-h|--help]</pre>
+<pre class="nowrap">aerospace debug-windows [-h|--help]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1722,10 +1845,10 @@ The only intended use case is to report bugs about incorrect windows handling.</
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-apps"><a class="anchor" href="#list-apps"></a><a class="link" href="#list-apps">24.3. list-apps</a></h3>
+<h3 id="list-apps"><a class="anchor" href="#list-apps"></a><a class="link" href="#list-apps">27.3. list-apps</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">list-apps [-h|--help] [--macos-native-hidden [no]]</pre>
+<pre class="nowrap">aerospace list-apps [-h|--help] [--macos-native-hidden [no]] [--format &lt;output-format&gt;]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1733,39 +1856,6 @@ The only intended use case is to report bugs about incorrect windows handling.</
 </div>
 <div class="paragraph">
 <p>The command is useful to inspect list of applications to compose filter for <a href="guide#on-window-detected-callback">on-window-detected callback</a></p>
-</div>
-<div class="paragraph lead">
-<p><strong>OUTPUT FORMAT</strong></p>
-</div>
-<div class="paragraph">
-<p>Output format is the table with the following columns:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Process ID</p>
-</li>
-<li>
-<p>Application ID</p>
-</li>
-<li>
-<p>Application name</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Output example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="nowrap">486   | com.apple.finder            | Finder
-17966 | org.alacritty               | Alacritty
-24780 | com.jetbrains.AppCode       | AppCode
-32541 | com.apple.systempreferences | System Settings</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>You can use <code>awk</code> to get values of particular column: <code>awk -F '|' '{print $2}'</code></p>
 </div>
 <div class="paragraph lead">
 <p><strong>OPTIONS</strong></p>
@@ -1781,14 +1871,60 @@ The only intended use case is to report bugs about incorrect windows handling.</
 <p>Filter results to only print hidden applications.
 <code>[no]</code> inverts the condition</p>
 </dd>
+<dt class="hdlist1">--format &lt;output-format&gt;</dt>
+<dd>
+<p>Specify output format. See "Output Format" section for more details</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph lead">
+<p><strong>OUTPUT FORMAT</strong></p>
+</div>
+<div class="paragraph">
+<p>Output format can be configured with optional <code>[--format &lt;output-format&gt;]</code> option.
+<code>&lt;output-format&gt;</code> supports <a href="https://en.wikipedia.org/wiki/String_interpolation">string interpolation</a>.</p>
+</div>
+<div class="paragraph">
+<p>If not specified, the default <code>&lt;output-format&gt;</code> is:<br>
+<code>%{app-pid}%{right-padding} | %{app-bundle-id}%{right-padding} | %{app-name}</code></p>
+</div>
+<div class="paragraph">
+<p>The following variables can be used inside <code>&lt;output-format&gt;</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">%{app-bundle-id}</dt>
+<dd>
+<p>String. Application unique identifier. <a href="https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids">Bundle ID</a></p>
+</dd>
+<dt class="hdlist1">%{app-name}</dt>
+<dd>
+<p>String. Application name</p>
+</dd>
+<dt class="hdlist1">%{app-pid}</dt>
+<dd>
+<p>Number. <a href="https://en.wikipedia.org/wiki/Process_identifier">UNIX process identifier</a></p>
+</dd>
+<dt class="hdlist1">%{right-padding}</dt>
+<dd>
+<p>A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column</p>
+</dd>
+<dt class="hdlist1">%{newline}</dt>
+<dd>
+<p>Unicode U+000A newline symbol <code>\n</code></p>
+</dd>
+<dt class="hdlist1">%{tab}</dt>
+<dd>
+<p>Unicode U+0009 tab symbol <code>\t</code></p>
+</dd>
 </dl>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-exec-env-vars"><a class="anchor" href="#list-exec-env-vars"></a><a class="link" href="#list-exec-env-vars">24.4. list-exec-env-vars</a></h3>
+<h3 id="list-exec-env-vars"><a class="anchor" href="#list-exec-env-vars"></a><a class="link" href="#list-exec-env-vars">27.4. list-exec-env-vars</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">list-exec-env-vars [-h|--help]</pre>
+<pre class="nowrap">aerospace list-exec-env-vars [-h|--help]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1809,54 +1945,14 @@ The only intended use case is to report bugs about incorrect windows handling.</
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-monitors"><a class="anchor" href="#list-monitors"></a><a class="link" href="#list-monitors">24.5. list-monitors</a></h3>
+<h3 id="list-monitors"><a class="anchor" href="#list-monitors"></a><a class="link" href="#list-monitors">27.5. list-monitors</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">list-monitors [-h|--help] [--focused [no]] [--mouse [no]]</pre>
+<pre class="nowrap">aerospace list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format &lt;output-format&gt;]</pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Print monitors that satisfy conditions</p>
-</div>
-<div class="paragraph lead">
-<p><strong>OUTPUT FORMAT</strong></p>
-</div>
-<div class="paragraph">
-<p>Output format is the table with 2 columns:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Monitor unique sequence ID (ID orders monitors from left to right)</p>
-</li>
-<li>
-<p>Monitor name</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Output example:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="nowrap">1 | Built-in Retina Display
-2 | DELL U2723QE</pre>
-</div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<div class="title">Note</div>
-</td>
-<td class="content">
-monitor sequence ID may change if you plug or unplug monitors
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>You can use <code>awk</code> to get values of particular column: <code>awk -F '|' '{print $2}'</code></p>
 </div>
 <div class="paragraph lead">
 <p><strong>OPTIONS</strong></p>
@@ -1877,18 +1973,60 @@ monitor sequence ID may change if you plug or unplug monitors
 <p>Filter results to only print the monitor with the mouse.
 <code>[no]</code> inverts the condition</p>
 </dd>
+<dt class="hdlist1">--format &lt;output-format&gt;</dt>
+<dd>
+<p>Specify output format. See "Output Format" section for more details</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph lead">
+<p><strong>OUTPUT FORMAT</strong></p>
+</div>
+<div class="paragraph">
+<p>Output format can be configured with optional <code>[--format &lt;output-format&gt;]</code> option.
+<code>&lt;output-format&gt;</code> supports <a href="https://en.wikipedia.org/wiki/String_interpolation">string interpolation</a>.</p>
+</div>
+<div class="paragraph">
+<p>If not specified, the default <code>&lt;output-format&gt;</code> is:<br>
+<code>%{monitor-id}%{right-padding} | %{monitor-name}</code></p>
+</div>
+<div class="paragraph">
+<p>The following variables can be used inside <code>&lt;output-format&gt;</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">%{monitor-id}</dt>
+<dd>
+<p>Number. Sequential number of the belonging monitor</p>
+</dd>
+<dt class="hdlist1">%{monitor-name}</dt>
+<dd>
+<p>String. Name of the belonging monitor</p>
+</dd>
+<dt class="hdlist1">%{right-padding}</dt>
+<dd>
+<p>A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column</p>
+</dd>
+<dt class="hdlist1">%{newline}</dt>
+<dd>
+<p>Unicode U+000A newline symbol <code>\n</code></p>
+</dd>
+<dt class="hdlist1">%{tab}</dt>
+<dd>
+<p>Unicode U+0009 tab symbol <code>\t</code></p>
+</dd>
 </dl>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-windows"><a class="anchor" href="#list-windows"></a><a class="link" href="#list-windows">24.6. list-windows</a></h3>
+<h3 id="list-windows"><a class="anchor" href="#list-windows"></a><a class="link" href="#list-windows">27.6. list-windows</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">list-windows [-h|--help] (--workspace &lt;workspace&gt;...|--monitor &lt;monitor&gt;...)
-             [--monitor &lt;monitor&gt;...] [--workspace &lt;workspace&gt;...]
-             [--pid &lt;pid&gt;] [--app-bundle-id &lt;app-bundle-id&gt;] [--format &lt;output-format&gt;]
-list-windows [-h|--help] --all [--format &lt;output-format&gt;]
-list-windows [-h|--help] --focused [--format &lt;output-format&gt;]</pre>
+<pre class="nowrap">aerospace list-windows [-h|--help] (--workspace &lt;workspace&gt;...|--monitor &lt;monitor&gt;...)
+                       [--monitor &lt;monitor&gt;...] [--workspace &lt;workspace&gt;...]
+                       [--pid &lt;pid&gt;] [--app-bundle-id &lt;app-bundle-id&gt;] [--format &lt;output-format&gt;]
+aerospace list-windows [-h|--help] --all [--format &lt;output-format&gt;]
+aerospace list-windows [-h|--help] --focused [--format &lt;output-format&gt;]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1924,7 +2062,7 @@ In that case, error is reported.</p>
 </dd>
 <dt class="hdlist1">--workspace &lt;workspace&gt;&#8230;&#8203;</dt>
 <dd>
-<p>Filter results to only print windows that belong to specified workspaces.
+<p>Filter results to only print windows that belong to either of specified workspaces.
 <code>&lt;workspace&gt;&#8230;&#8203;</code> is a space-separated list of workspace names.</p>
 <div class="paragraph">
 <p>Possible values:<br></p>
@@ -1935,10 +2073,10 @@ In that case, error is reported.</p>
 <p>Workspace name</p>
 </li>
 <li>
-<p><code>visible</code> is a special workspace name that represents currently visible workspaces</p>
+<p><code>visible</code> is a special workspace name that represents the currently visible workspaces</p>
 </li>
 <li>
-<p><code>focused</code> is a special workspace name that represents currently focused workspace</p>
+<p><code>focused</code> is a special workspace name that represents the focused workspace</p>
 </li>
 </ol>
 </div>
@@ -1962,7 +2100,7 @@ In that case, error is reported.</p>
 <p><code>mouse</code> is a special monitor ID that represents monitor with the mouse</p>
 </li>
 <li>
-<p><code>focused</code> is a special monitor ID that represents currently focused monitor</p>
+<p><code>focused</code> is a special monitor ID that represents the focused monitor</p>
 </li>
 </ol>
 </div>
@@ -2008,6 +2146,10 @@ In that case, error is reported.</p>
 <dd>
 <p>String. Window title</p>
 </dd>
+<dt class="hdlist1">%{app-bundle-id}</dt>
+<dd>
+<p>String. Application unique identifier. <a href="https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids">Bundle ID</a></p>
+</dd>
 <dt class="hdlist1">%{app-name}</dt>
 <dd>
 <p>String. Application name</p>
@@ -2015,10 +2157,6 @@ In that case, error is reported.</p>
 <dt class="hdlist1">%{app-pid}</dt>
 <dd>
 <p>Number. <a href="https://en.wikipedia.org/wiki/Process_identifier">UNIX process identifier</a></p>
-</dd>
-<dt class="hdlist1">%{app-bundle-id}</dt>
-<dd>
-<p>String. Application unique identifier. <a href="https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids">Bundle ID</a></p>
 </dd>
 <dt class="hdlist1">%{workspace}</dt>
 <dd>
@@ -2048,12 +2186,12 @@ In that case, error is reported.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-workspaces"><a class="anchor" href="#list-workspaces"></a><a class="link" href="#list-workspaces">24.7. list-workspaces</a></h3>
+<h3 id="list-workspaces"><a class="anchor" href="#list-workspaces"></a><a class="link" href="#list-workspaces">27.7. list-workspaces</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">list-workspaces [-h|--help] --monitor &lt;monitor&gt;... [--visible [no]] [--empty [no]]
-list-workspaces [-h|--help] --all
-list-workspaces [-h|--help] --focused</pre>
+<pre class="nowrap">aerospace list-workspaces [-h|--help] --monitor &lt;monitor&gt;... [--visible [no]] [--empty [no]] [--format &lt;output-format&gt;]
+aerospace list-workspaces [-h|--help] --all [--format &lt;output-format&gt;]
+aerospace list-workspaces [-h|--help] --focused [--format &lt;output-format&gt;]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2067,6 +2205,10 @@ list-workspaces [-h|--help] --focused</pre>
 <dt class="hdlist1">-h, --help</dt>
 <dd>
 <p>Print help</p>
+</dd>
+<dt class="hdlist1">--format &lt;output-format&gt;</dt>
+<dd>
+<p>Specify output format. See "Output Format" section for more details</p>
 </dd>
 <dt class="hdlist1">--all</dt>
 <dd>
@@ -2105,7 +2247,7 @@ Always prints a single workspace</p>
 <p><code>mouse</code> is a special monitor ID that represents monitor with the mouse</p>
 </li>
 <li>
-<p><code>focused</code> is a special monitor ID that represents currently focused monitor</p>
+<p><code>focused</code> is a special monitor ID that represents the focused monitor</p>
 </li>
 </ol>
 </div>
@@ -2121,6 +2263,52 @@ Several workspaces can be visible in multi-monitor setup</p>
 <p>Filter results to only print empty workspaces.
 <code>[no]</code> inverts the condition.</p>
 </dd>
+<dt class="hdlist1">--format &lt;output-format&gt;</dt>
+<dd>
+<p>Specify output format. See "Output Format" section for more details</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph lead">
+<p><strong>OUTPUT FORMAT</strong></p>
+</div>
+<div class="paragraph">
+<p>Output format can be configured with optional <code>[--format &lt;output-format&gt;]</code> option.
+<code>&lt;output-format&gt;</code> supports <a href="https://en.wikipedia.org/wiki/String_interpolation">string interpolation</a>.</p>
+</div>
+<div class="paragraph">
+<p>If not specified, the default <code>&lt;output-format&gt;</code> is:<br>
+<code>%{workspace}</code></p>
+</div>
+<div class="paragraph">
+<p>The following variables can be used inside <code>&lt;output-format&gt;</code>:</p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">%{workspace}</dt>
+<dd>
+<p>String. Name of the belonging workspace</p>
+</dd>
+<dt class="hdlist1">%{monitor-id}</dt>
+<dd>
+<p>Number. Sequential number of the belonging monitor</p>
+</dd>
+<dt class="hdlist1">%{monitor-name}</dt>
+<dd>
+<p>String. Name of the belonging monitor</p>
+</dd>
+<dt class="hdlist1">%{right-padding}</dt>
+<dd>
+<p>A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column</p>
+</dd>
+<dt class="hdlist1">%{newline}</dt>
+<dd>
+<p>Unicode U+000A newline symbol <code>\n</code></p>
+</dd>
+<dt class="hdlist1">%{tab}</dt>
+<dd>
+<p>Unicode U+0009 tab symbol <code>\t</code></p>
+</dd>
 </dl>
 </div>
 </div>
@@ -2129,7 +2317,7 @@ Several workspaces can be visible in multi-monitor setup</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-06-16 18:46:25 +0200
+Last updated 2024-07-27 13:37:55 +0200
 </div>
 </div>
 </body>

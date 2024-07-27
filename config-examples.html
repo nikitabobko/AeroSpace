@@ -611,6 +611,12 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-c1"># See https://nikitabobko.github.io/AeroSpace/guide#key-mapping</span>
 <span class="tok-n">key-mapping</span><span class="tok-p">.</span><span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;qwerty&#39;</span>
 
+<span class="tok-c1"># Mouse follows focus when focused monitor changes</span>
+<span class="tok-c1"># Drop it from your config, if you don&#39;t like this behavior</span>
+<span class="tok-c1"># See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks</span>
+<span class="tok-c1"># See https://nikitabobko.github.io/AeroSpace/commands#move-mouse</span>
+<span class="tok-n">on-focused-monitor-changed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-mouse monitor-lazy-center&#39;</span><span class="tok-p">]</span>
+
 <span class="tok-c1"># Gaps between windows (inner-*) and between monitor edges (outer-*).</span>
 <span class="tok-c1"># Possible values:</span>
 <span class="tok-c1"># - Constant:     gaps.outer.top = 8</span>
@@ -625,12 +631,6 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">bottom</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">     </span><span class="tok-mi">0</span>
 <span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">top</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">        </span><span class="tok-mi">0</span>
 <span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">right</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">      </span><span class="tok-mi">0</span>
-
-<span class="tok-c1"># See https://nikitabobko.github.io/AeroSpace/guide#exec-env-vars</span>
-<span class="tok-k">[exec]</span><span class="tok-w">                   </span><span class="tok-c1"># Again, you don&#39;t need to copy all config sections to your config.</span>
-<span class="tok-n">inherit-env-vars</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span><span class="tok-w">  </span><span class="tok-c1"># If you don&#39;t touch &quot;exec&quot; section,</span>
-<span class="tok-k">[exec.env-vars]</span><span class="tok-w">          </span><span class="tok-c1"># it will fallback to &quot;default-config.toml&quot;</span>
-<span class="tok-n">PATH</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}&#39;</span>
 
 <span class="tok-c1"># &#39;main&#39; binding mode declaration</span>
 <span class="tok-c1"># See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes</span>
@@ -777,12 +777,15 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Reference: https://github.com/i3/i3/blob/next/etc/config</span>
 
-<span class="tok-c1"># i3 didn&#39;t have &quot;normalizations&quot; feature that why we disable them here.</span>
+<span class="tok-c1"># i3 doesn&#39;t have &quot;normalizations&quot; feature that why we disable them here.</span>
 <span class="tok-c1"># But the feature is very helpful.</span>
 <span class="tok-c1"># Normalizations eliminate all sorts of weird tree configurations that don&#39;t make sense.</span>
 <span class="tok-c1"># Give normalizations a chance and enable them back.</span>
 <span class="tok-n">enable-normalization-flatten-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
 <span class="tok-n">enable-normalization-opposite-orientation-for-nested-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
+
+<span class="tok-c1"># Mouse follows focus when focused monitor changes</span>
+<span class="tok-n">on-focused-monitor-changed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-mouse monitor-lazy-center&#39;</span><span class="tok-p">]</span>
 
 <span class="tok-k">[mode.main.binding]</span>
 <span class="tok-n">alt-enter</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;exec-and-forget open -n /System/Applications/Utilities/Terminal.app&#39;</span>
@@ -857,7 +860,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-06-16 18:46:25 +0200
+Last updated 2024-07-27 13:37:55 +0200
 </div>
 </div>
 </body>
