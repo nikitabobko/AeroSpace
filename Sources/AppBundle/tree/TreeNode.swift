@@ -14,7 +14,8 @@ class TreeNode: Equatable {
     var lastAppliedLayoutVirtualRect: Rect? = nil  // as if inner gaps were always zero
     // Usages:
     // - resize with mouse
-    // - move with mouse
+    // - drag window with mouse
+    // - move-mouse command
     var lastAppliedLayoutPhysicalRect: Rect? = nil // with real inner gaps
 
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {

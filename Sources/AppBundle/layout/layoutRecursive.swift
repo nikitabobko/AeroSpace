@@ -19,6 +19,8 @@ private extension TreeNode {
                 lastAppliedLayoutVirtualRect = virtual
                 workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, virtual: virtual, context)
                 for window in workspace.children.filterIsInstance(of: Window.self) {
+                    window.lastAppliedLayoutPhysicalRect = nil
+                    window.lastAppliedLayoutVirtualRect = nil
                     window.layoutFloatingWindow(context)
                 }
             case .window(let window):

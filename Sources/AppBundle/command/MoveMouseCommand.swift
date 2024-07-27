@@ -6,8 +6,6 @@ struct MoveMouseCommand: Command {
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
-        // todo bug it's bad that we operate on the "ax physical" state directly. command seq won't work correctly
-        //      focus <direction> command has the similar problem
         let mouse = mouseLocation
         let point: Result<CGPoint, String> = switch args.mouseTarget.val {
             case .windowLazyCenter:
@@ -39,8 +37,10 @@ struct MoveMouseCommand: Command {
 }
 
 private func windowSubjectRect(_ state: CommandMutableState) -> Result<Rect, String> {
+    // todo bug it's bad that we operate on the "ax physical" state directly. command seq won't work correctly
+    //      focus <direction> command has the similar problem
     if let window: Window = state.subject.windowOrNil {
-        if let rect = window.getRect() {
+        if let rect = window.lastAppliedLayoutPhysicalRect ?? window.getRect() {
             return .success(rect)
         } else {
             return .failure("Failed to get rect of window '\(window.windowId)'")
