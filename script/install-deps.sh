@@ -61,12 +61,12 @@ fi
 
 if test $all == 1 || test $swiftlint == 1; then
     if ! check-version 0.55.1 ./swift-exec-deps/.build/debug/swiftlint --version; then
-        (cd ./swift-exec-deps; swift run swiftlint --version)
+        swift run --package-path ./swift-exec-deps swiftlint --version
     fi
 fi
 
 if test $all == 1 || test $xcodegen == 1; then
     if ! check-version 2.42.0 ./swift-exec-deps/.build/debug/xcodegen --version; then
-        (cd ./swift-exec-deps; swift run xcodegen --version)
+        swift run --package-path ./swift-exec-deps xcodegen --version
     fi
 fi
