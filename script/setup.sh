@@ -36,11 +36,6 @@ if [ -z "${SETUP_SH:-}" ]; then
     setup
 fi
 
-if ! (bash --version | grep -q 'version 5'); then
-    echo "bash version is too old. At least version 5 is required" > /dev/stderr
-    exit 1
-fi
-
 xcodebuild() {
     # Mute stderr
     # 2024-02-12 23:48:11.713 xcodebuild[60777:7403664] [MT] DVTAssertions: Warning in /System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot11/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/IDEFrameworks/IDEFrameworks-22269/IDEFoundation/Provisioning/Capabilities Infrastructure/IDECapabilityQuerySelection.swift:103
