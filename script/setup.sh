@@ -11,6 +11,7 @@ cmd-exist() {
 setup() {
     mkdir -p .deps/bin
 
+    cmd-exist git            && ln -fs "$(which git)" .deps/bin/git
     cmd-exist cargo          && ln -fs "$(which cargo)" .deps/bin/cargo
     cmd-exist rustc          && ln -fs "$(which cargo)" .deps/bin/rustc
     cmd-exist xcbeautify     && ln -fs "$(which xcbeautify)" .deps/bin/xcbeautify
