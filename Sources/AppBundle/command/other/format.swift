@@ -113,7 +113,7 @@ private extension String {
                 }
             case (.monitor(let m), .monitor(let f)):
                 return switch f {
-                    case .monitorId: .success(m.monitorId?.description ?? "NULL-MONITOR-ID")
+                    case .monitorId: .success(m.monitorId.map { $0 + 1 }?.description ?? "NULL-MONITOR-ID")
                     case .monitorName: .success(m.name)
                 }
             case (.app(let a), .app(let f)):
