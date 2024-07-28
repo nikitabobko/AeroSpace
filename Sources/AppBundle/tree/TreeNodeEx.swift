@@ -33,10 +33,11 @@ extension TreeNode {
     var visualWorkspace: Workspace? { workspace ?? nodeMonitor?.activeWorkspace }
 
     var nodeMonitor: Monitor? {
-        guard let parent else { return nil }
-        return switch parent.cases {
-            case .workspace(let parent): parent.workspaceMonitor
-            case .tilingContainer, .macosFullscreenWindowsContainer: parent.nodeMonitor
+        switch self.nodeCases {
+            case .workspace(let ws): ws.workspaceMonitor
+            case .window: parent?.nodeMonitor
+            case .tilingContainer: parent?.nodeMonitor
+            case .macosFullscreenWindowsContainer: parent?.nodeMonitor
             case .macosInvisibleWindowsContainer, .macosPopupWindowsContainer: nil
         }
     }
