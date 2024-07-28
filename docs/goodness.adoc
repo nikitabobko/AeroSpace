@@ -12,7 +12,7 @@ The source code of the page can be found in `./docs` directory.
 
 [source,bash]
 ----
-defaults write -g NSWindowShouldDragOnGesture YES
+defaults write -g NSWindowShouldDragOnGesture -bool true
 ----
 
 Now, you can move windows by holding `ctrl + cmd` and dragging any part of the window (not necessarily the window title)
@@ -205,6 +205,16 @@ m = 'm'
 comma = 'comma'
 period = 'period'
 slash = 'slash'
+----
+
+[#i3-like-config]
+== i3 like config
+
+link:config-examples/i3-like-config-example.toml[Download]
+
+[source,toml,subs="macros+,specialchars+"]
+----
+include::config-examples/i3-like-config-example.toml[]
 ----
 
 [#popular-apps-ids]

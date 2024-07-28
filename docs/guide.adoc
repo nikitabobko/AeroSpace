@@ -64,7 +64,7 @@ AeroSpace tries to find the config in two locations:
 
 . `~/.aerospace.toml`
 . `+${XDG_CONFIG_HOME}/aerospace/aerospace.toml+`
-(`XDG_CONFIG_HOME` fallbacks to `~/.config`, if not presented)
+(environment variable `XDG_CONFIG_HOME` fallbacks to `~/.config` if the variable is not presented)
 
 If the config is found in more than one location then the ambiguity is reported.
 
@@ -72,16 +72,38 @@ If the config is found in more than one location then the ambiguity is reported.
 
 Please see the following config samples:
 
-* The default config: xref:config-examples.adoc#default-config[default-config.toml]
-* i3 like config: xref:config-examples.adoc#i3-like-config[i3-like-config-example.toml]
+* <<default-config,The default config>>
+* xref:goodness.adoc#i3-like-config[i3 like config]
 * {url-search-for-config}[Search for configs by other users on GitHub] for inspiration
-
-The xref:config-examples.adoc#default-config[default-config.toml] also serves as a documentation, since it contains all possible plain configuration keys with comments.
-Non-trivial configuration options are mentioned further in this guide.
 
 AeroSpace uses TOML format for the config.
 TOML is easy to read, and it supports comments.
 See https://toml.io/en/v1.0.0[TOML spec for more info]
+
+[#default-config]
+=== Default config
+
+The default config is part of the documentation, since it contains all trivial configuration keys with comments.
+Please read the default config!
+Non-trivial configuration options are mentioned further in this guide.
+
+AeroSpace fallbacks to the default config if custom config is not presented.
+The default config *is not* merged into your custom config.
+That's why you can drop key bindings by dropping their declaration from your custom config.
+
+You can bootstrap your local config by coping the default config from the app installation
+
+[source,shell]
+----
+cp /Applications/AeroSpace.app/Contents/Resources/default-config.toml ~/.aerospace.toml
+----
+
+link:config-examples/default-config.toml[Download]
+
+[source,toml,subs="macros+,specialchars+"]
+----
+include::config-examples/default-config.toml[]
+----
 
 [#binding-modes]
 === Binding modes
@@ -175,8 +197,8 @@ PATH = '${HOME}/bin:${PATH}'
 +
 Environment variable substitution is supported in form of `+${ENV_VAR}+`
 * You can inspect what is the end result of environment variables using xref:commands.adoc#list-exec-env-vars[`list-exec-env-vars` command]
-* GUI apps on macOS don’t have Homebrew’s prefix in their `PATH` by default ([source](https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities)).
-That's why unless you override `exec` section in the config, AeroSpace fallbacks to the following `exec` configuration:
+* GUI apps on macOS don’t have Homebrew’s prefix in their `PATH` by default (https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities[docs.brew.sh]).
+That's why unless you override `exec` section in your config, AeroSpace fallbacks to the following `exec` configuration:
 +
 [source,toml]
 ----
@@ -253,7 +275,7 @@ Just like in a `tiles` layout, you can use the xref:commands.adoc#focus[focus] c
 You can navigate the windows in an `h_accordion` by using the `focus (left|right)` command.
 While in a `v_accordion`, you can navigate the windows using the `focus (up|down)` command.
 
-Accordion padding is configurable via `accordion-padding` option (see xref:config-examples.adoc#default-config[default-config.toml])
+Accordion padding is configurable via `accordion-padding` option.
 
 [#normalization]
 === Normalization
@@ -358,11 +380,12 @@ That means, that if AeroSpace crashes badly you will still be able to manually "
 If you want to minimize the visibility of hidden windows, it's recommended to place Dock in the bottom (and additionaly turn automatic hiding)
 ====
 
-
 === Proper monitor arrangement
 
 Since AeroSpace needs a free space to hide windows in,
 please make sure to arrange monitors in a way where *every monitor has free space in the bottom right or left corner.* (`System Settings -> Displays -> Arrange...`)
+
+If you fail to arrange your monitors properly, you will see parts of hidden windows on other monitors.
 
 .Bad monitor arrangement. Monitor 2 doesn't have free space in either of the bottom corners
 image::./assets/monitor-arrangement-1-bad.svg[,,align="center"]
@@ -385,14 +408,14 @@ Mission control shows windows too small even there is enough space to show them 
 There is a workaround. You can enable `Group windows by application` setting:
 [source,bash]
 ----
-defaults write com.apple.dock "expose-group-apps" -bool "true" && killall Dock
+defaults write com.apple.dock expose-group-apps -bool true && killall Dock
 ----
 (or in System Settings: `System Settings -> Desktop & Dock -> Group windows by application`). For whatever weird reason, it helps.
 
 [#a-note-on-displays-have-separate-spaces]
 === A note on '`Displays have separate Spaces`'
 
-My opinion is that macOS works better and more stable if you disable `Displays have separate Spaces`. (It's enabled by default)
+There is an observation that macOS works better and more stable if you disable `Displays have separate Spaces`. (It's enabled by default)
 People report all sorts of weird issues related to focus and performance when this setting is enabled:
 
 * Wrong window may receive focus in multi monitor setup: https://github.com/nikitabobko/AeroSpace/issues/101[#101] (Bug in Apple API)
@@ -409,16 +432,16 @@ Spaces are just cursed in macOS. The less Spaces you have, the better macOS beha
 |    |'`Displays have separate Spaces`' is enabled |'`Displays have separate Spaces`' is disabled
 
 |Is it possible for window to span across several monitors?
-|😡 No. macOS limitation
+|❌ No. macOS limitation
 |👍 Yes
 
 |Overal stability and performance
-|😡 Weird focus and performance issues may happen (see the list above)
+|❌ Weird focus and performance issues may happen (see the list above)
 |👍 Public Apple API are more stable (which in turn affects AeroSpace stability)
 
 |When the first monitor is in fullscreen
 |👍 Second monitor operates independently
-|😡 Second monitor is unusable black screen
+|❌ Second monitor is unusable black screen
 
 |macOS status bar ...
 |... is displayed on both monitors
@@ -431,7 +454,7 @@ I recommend disabling `Displays have separate Spaces`.
 You can disable the setting by running:
 [source,bash]
 ----
-defaults write com.apple.spaces "spans-displays" -bool "true" && killall SystemUIServer
+defaults write com.apple.spaces spans-displays -bool true && killall SystemUIServer
 ----
 (or in System Settings: `System Settings -> Desktop & Dock -> Displays have separate Spaces`). Logout is required for the setting to take effect.
 
@@ -558,7 +581,7 @@ Changing the focus within these callbacks is a bad idea anyway, and the way it's
 [#exec-on-workspace-change-callback]
 === 'exec-on-workspace-change' callback
 
-`exec-on-workspace-change` callback allows to run arbitrary process when workspace changes.
+`exec-on-workspace-change` callback allows to run arbitrary process when focused workspace changes.
 It may be useful for integrating with bars.
 
 [source,toml]

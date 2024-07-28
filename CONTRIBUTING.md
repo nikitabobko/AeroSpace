@@ -7,7 +7,6 @@ Look who wants to contribute! Nice to see you here, let me show you what you can
 * It's ok to use issues to ask questions. But please make sure to read:
   * The guide https://nikitabobko.github.io/AeroSpace/guide
   * Commands reference https://nikitabobko.github.io/AeroSpace/commands
-  * Trivial config options are not mentioned in the guide, they are mentioned only in the `default-config.toml` https://nikitabobko.github.io/AeroSpace/config-examples#default-config
 * Search for duplicates before reporting new issues
   * Vote for duplicates with 👍 reaction
 * Vote for issues that you find useful with 👍 reaction

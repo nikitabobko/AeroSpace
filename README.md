@@ -5,22 +5,17 @@
 AeroSpace is an i3-like tiling window manager for macOS
 
 Videos:
-- [YouTube Short 91s Demo](https://www.youtube.com/watch?v=UOl7ErqWbrk)
+- [YouTube 91 sec Demo](https://www.youtube.com/watch?v=UOl7ErqWbrk)
 - [YouTube Guide by Josean Martinez](https://www.youtube.com/watch?v=-FoWClVHG5g)
 
 Docs:
 - [AeroSpace Guide](https://nikitabobko.github.io/AeroSpace/guide)
 - [AeroSpace Commands](https://nikitabobko.github.io/AeroSpace/commands)
-- [AeroSpace Config Examples](https://nikitabobko.github.io/AeroSpace/config-examples)
 - [AeroSpace Goodness](https://nikitabobko.github.io/AeroSpace/goodness)
 
 ## Project status
 
-Public Beta. Feedback is very much welcome
-
-- I encourage you to try AeroSpace and file GitHub issues if something doesn't work for you
-- I already use AeroSpace on daily basis and I'm happy with it
-- [The documentation](https://nikitabobko.github.io/AeroSpace/guide) covers all major things you need to know
+Public Beta. AeroSpace can be used as a daily driver, but expect breaking changes until 1.0 is reached.
 
 ## Key features
 
@@ -28,7 +23,7 @@ Public Beta. Feedback is very much welcome
 - [i3](https://i3wm.org/) inspired
 - Fast workspaces switching without animations and without the necessity to disable SIP
 - AeroSpace employs its [own emulation of virtual workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces) instead of relying on native macOS Spaces due to [their considerable limitations](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)
-- Plain text configuration (dotfiles friendly). See: [default-config.toml](https://nikitabobko.github.io/AeroSpace/config-examples#default-config)
+- Plain text configuration (dotfiles friendly). See: [default-config.toml](https://nikitabobko.github.io/AeroSpace/guide#default-config)
 - CLI first (manpages and shell completion included)
 - Doesn't require disabling SIP (System Integrity Protection)
 - [Proper multi-monitor support](https://nikitabobko.github.io/AeroSpace/guide#multiple-monitors) (i3-like paradigm)
@@ -44,6 +39,8 @@ brew install --cask nikitabobko/tap/aerospace
 **(Optional)**
 You might need to configure your shell to enable completion provided by homebrew packages: https://docs.brew.sh/Shell-Completion
 AeroSpace provides bash, fish and zsh completions.
+
+In multi-monitor setup please make sure that monitors [are properly arranged](https://nikitabobko.github.io/AeroSpace/guide#proper-monitor-arrangement).
 
 You can also install specific previous versions:
 ```
@@ -107,7 +104,7 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
 ## Tip of the day
 
 ```bash
-defaults write -g NSWindowShouldDragOnGesture YES
+defaults write -g NSWindowShouldDragOnGesture -bool true
 ```
 
 Now, you can move windows by holding `ctrl`+`cmd` and dragging any part of the window (not necessarily the window title)
