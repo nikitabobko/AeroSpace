@@ -107,37 +107,46 @@ var prevFocusedWorkspace: Workspace? { _prevFocusedWorkspaceName.map { Workspace
 var _prevFocus: FrozenFocus? = nil
 var prevFocus: LiveFocus? { _prevFocus?.live.takeIf { $0 != focus } }
 
+private var onFocusChangedRecursionGuard = false
 // Should be called in refreshSession
 func checkOnFocusChangedCallbacks() {
-    let liveFocus = focus
-    let frozenFocus = liveFocus.frozen
-    let lastKnownFocus = _lastKnownFocus
+    let focus = focus
+    let frozenFocus = focus.frozen
+    var hasFocusChanged = false
+    var hasFocusedWorkspaceChanged = false
+    var hasFocusedMonitorChanged = false
+    if frozenFocus != _lastKnownFocus {
+        _prevFocus = _lastKnownFocus
+        hasFocusChanged = true
+    }
+    if frozenFocus.workspaceName != _lastKnownFocus.workspaceName {
+        _prevFocusedWorkspaceName = _lastKnownFocus.workspaceName
+        hasFocusedWorkspaceChanged = true
+    }
+    if frozenFocus.monitorId != _lastKnownFocus.monitorId {
+        hasFocusedMonitorChanged = true
+    }
     _lastKnownFocus = frozenFocus
-    if frozenFocus != lastKnownFocus {
-        _prevFocus = lastKnownFocus
-        onFocusChanged(liveFocus)
-    }
-    if frozenFocus.workspaceName != lastKnownFocus.workspaceName {
-        _prevFocusedWorkspaceName = lastKnownFocus.workspaceName
-        onWorkspaceChanged(lastKnownFocus.workspaceName, frozenFocus.workspaceName)
-    }
-    if frozenFocus.monitorId != lastKnownFocus.monitorId {
-        onFocusedMonitorChanged(liveFocus)
-    }
-}
 
-private var onFocusChangedRecursionGuard = false
-private func onFocusedMonitorChanged(_ focus: LiveFocus) {
     if onFocusChangedRecursionGuard { return }
     onFocusChangedRecursionGuard = true
     defer { onFocusChangedRecursionGuard = false }
+    if hasFocusChanged {
+        onFocusChanged(focus)
+    }
+    if let _prevFocusedWorkspaceName, hasFocusedWorkspaceChanged {
+        onWorkspaceChanged(_prevFocusedWorkspaceName, frozenFocus.workspaceName)
+    }
+    if hasFocusedMonitorChanged {
+        onFocusedMonitorChanged(focus)
+    }
+}
+
+private func onFocusedMonitorChanged(_ focus: LiveFocus) {
     if config.onFocusedMonitorChanged.isEmpty { return }
     _ = config.onFocusedMonitorChanged.run(CommandMutableState(focus.asLeaf.asCommandSubject))
 }
 private func onFocusChanged(_ focus: LiveFocus) {
-    if onFocusChangedRecursionGuard { return }
-    onFocusChangedRecursionGuard = true
-    defer { onFocusChangedRecursionGuard = false }
     if config.onFocusChanged.isEmpty { return }
     _ = config.onFocusChanged.run(CommandMutableState(focus.asLeaf.asCommandSubject))
 }
