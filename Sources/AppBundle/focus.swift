@@ -87,10 +87,11 @@ extension Window {
 }
 extension Workspace {
     func focusWorkspace() -> Bool {
-        if let w = mostRecentWindowRecursive {
+        // todo unfortunately mostRecentWindowRecursive may recursively reach empty rootTilingContainer
+        //      while floating or macos fullscreen windows might be presented
+        if let w = mostRecentWindowRecursive ?? anyLeafWindowRecursive {
             return w.focusWindow()
         } else {
-            check(anyLeafWindowRecursive == nil)
             return setFocus(to: LiveFocus(windowOrNil: nil, workspace: self))
         }
     }
