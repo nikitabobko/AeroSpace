@@ -16,7 +16,7 @@ struct MacosNativeMinimizeCommand: Command {
             let workspace = window.workspace ?? focus.workspace
             if newState { // minimize
                 window.bind(to: macosInvisibleWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
-                if let mru = workspace.mostRecentWindow {
+                if let mru = workspace.mostRecentWindowRecursive {
                     state.subject = .window(mru)
                 } else {
                     state.subject = .emptyWorkspace(workspace.name)

@@ -118,7 +118,7 @@ final class FocusCommandTest: XCTestCase {
             }
         }
 
-        assertEquals(workspace.mostRecentWindow?.windowId, 3) // The latest bound
+        assertEquals(workspace.mostRecentWindowRecursive?.windowId, 3) // The latest bound
         _ = startWindow.focusWindow()
         FocusCommand.new(direction: .right).run(.focused)
         assertEquals(focus.windowOrNil?.windowId, 3)

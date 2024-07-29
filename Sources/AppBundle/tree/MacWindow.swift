@@ -278,7 +278,7 @@ private func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Wo
 
 // The function is private because it's "unsafe". It requires the window to be in unbound state
 private func getBindingDataForNewTilingWindow(_ workspace: Workspace) -> BindingData {
-    let mruWindow = workspace.mostRecentWindow
+    let mruWindow = workspace.mostRecentWindowRecursive
     if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
         return BindingData(
             parent: tilingParent,

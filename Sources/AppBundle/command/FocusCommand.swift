@@ -90,7 +90,7 @@ private func wrapAroundTheWorkspace(_ state: CommandMutableState, _ direction: C
 }
 
 private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingWindowData] {
-    let mruBefore = workspace.mostRecentWindow
+    let mruBefore = workspace.mostRecentWindowRecursive
     defer {
         mruBefore?.markAsMostRecentChild()
     }
@@ -119,7 +119,7 @@ private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingW
 }
 
 private func restoreFloatingWindows(floatingWindows: [FloatingWindowData], workspace: Workspace) {
-    let mruBefore = workspace.mostRecentWindow
+    let mruBefore = workspace.mostRecentWindowRecursive
     defer {
         mruBefore?.markAsMostRecentChild()
     }

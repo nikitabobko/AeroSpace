@@ -49,7 +49,7 @@ struct FrozenFocus: AeroAny, Equatable {
             return LiveFocus(windowOrNil: window, workspace: ws)
         }
         let workspace = Workspace.get(byName: workspaceName)
-        return LiveFocus(windowOrNil: workspace.mostRecentWindow, workspace: workspace)
+        return LiveFocus(windowOrNil: workspace.mostRecentWindowRecursive, workspace: workspace)
     }
 }
 
@@ -87,7 +87,7 @@ extension Window {
 }
 extension Workspace {
     func focusWorkspace() -> Bool {
-        if let w = mostRecentWindow {
+        if let w = mostRecentWindowRecursive {
             return w.focusWindow()
         } else {
             check(anyLeafWindowRecursive == nil)

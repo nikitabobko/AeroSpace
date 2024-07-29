@@ -42,8 +42,8 @@ extension TreeNode {
         }
     }
 
-    var mostRecentWindow: Window? {
-        self as? Window ?? mostRecentChild?.mostRecentWindow
+    var mostRecentWindowRecursive: Window? {
+        self as? Window ?? mostRecentChild?.mostRecentWindowRecursive
     }
 
     var anyLeafWindowRecursive: Window? {
