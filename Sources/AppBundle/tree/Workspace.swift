@@ -66,10 +66,12 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, Custom
     }
 
     var description: String {
+        let preservedNames = config.preservedWorkspaceNames.toSet()
         let description = [
             ("name", name),
             ("isVisible", String(isVisible)),
             ("isEffectivelyEmpty", String(isEffectivelyEmpty)),
+            ("doKeepAlive", String(preservedNames.contains(name)))
         ].map { "\($0.0): '\(String(describing: $0.1))'" }.joined(separator: ", ")
         return "Workspace(\(description))"
     }
@@ -88,7 +90,7 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, Custom
     }
 
     static func == (lhs: Workspace, rhs: Workspace) -> Bool {
-        check((lhs === rhs) == (lhs.name == rhs.name))
+        check((lhs === rhs) == (lhs.name == rhs.name), "lhs: \(lhs) rhs: \(rhs)")
         return lhs === rhs
     }
 

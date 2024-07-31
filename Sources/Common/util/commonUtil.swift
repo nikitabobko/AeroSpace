@@ -15,6 +15,7 @@ public func errorT<T>(
         """
         Please report to:
             https://github.com/nikitabobko/AeroSpace/issues/new
+            Please describe what you did to trigger this error
 
         Message: \(message)
         Version: \(aeroSpaceAppVersion)
@@ -61,14 +62,14 @@ public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(sep
 
 public func check(
     _ condition: Bool,
-    _ message: String = "",
+    _ message: @autoclosure () -> String = "",
     file: String = #file,
     line: Int = #line,
     column: Int = #column,
     function: String = #function
 ) {
     if !condition {
-        error(message, file: file, line: line, column: column, function: function)
+        error(message(), file: file, line: line, column: column, function: function)
     }
 }
 
