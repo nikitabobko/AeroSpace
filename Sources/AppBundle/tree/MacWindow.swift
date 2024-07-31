@@ -65,7 +65,7 @@ final class MacWindow: Window, CustomStringConvertible {
             return
         }
         let parent = unbindFromParent().parent
-        let workspace = parent.workspace
+        let workspace = parent.workspace?.name
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
         }
@@ -73,11 +73,11 @@ final class MacWindow: Window, CustomStringConvertible {
         // todo the if is an approximation to filter out cases when window just closed itself (or was killed remotely)
         //  we might want to track the time of the latest workspace switch to make the approximation more accurate
         let focus = focus
-        if let workspace, workspace == focus.workspace || workspace == prevFocusedWorkspace {
+        if let workspace, workspace == focus.workspace.name || workspace == prevFocusedWorkspace?.name {
             switch parent.cases {
                 case .tilingContainer, .workspace, .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer:
                     refreshSession(forceFocus: focus.windowOrNil?.app != app) {
-                        _ = workspace.focusWorkspace()
+                        _ = Workspace.get(byName: workspace).focusWorkspace()
                     }
                 case .macosPopupWindowsContainer:
                     break // Don't switch back on popup destruction
