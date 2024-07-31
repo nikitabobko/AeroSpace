@@ -1,6 +1,6 @@
 public typealias Parsed<T> = Result<T, String>
 extension String: Error {} // Make it possible to use String in Result
-extension [String]: Error {} // Make it possible to use [String] in Result
+extension Array: Error where Element: Error {} // Make it possible to use String in Result
 
 public extension String {
     func trim() -> String {
