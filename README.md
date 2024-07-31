@@ -41,6 +41,13 @@ brew install --cask nikitabobko/tap/aerospace
 You might need to configure your shell to enable completion provided by homebrew packages: https://docs.brew.sh/Shell-Completion
 AeroSpace provides bash, fish and zsh completions.
 
+You can also install specific previous versions:
+```
+brew install --cask nikitabobko/tap/aerospace@0.12.0
+```
+
+For the list of all the versions available for installation via brew see: https://github.com/nikitabobko/homebrew-tap/tree/main/Casks
+
 [Manual installation](https://nikitabobko.github.io/AeroSpace/guide#manual-installation)
 
 > [!NOTE]
