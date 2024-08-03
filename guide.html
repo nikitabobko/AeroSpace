@@ -538,8 +538,9 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </li>
 <li><a href="#emulation-of-virtual-workspaces">4. Emulation of virtual workspaces</a>
 <ul class="sectlevel2">
-<li><a href="#a-note-on-mission-control">4.1. A note on mission control</a></li>
-<li><a href="#a-note-on-displays-have-separate-spaces">4.2. A note on &#8216;Displays have separate Spaces&#8217;</a></li>
+<li><a href="#proper-monitor-arrangement">4.1. Proper monitor arrangement</a></li>
+<li><a href="#a-note-on-mission-control">4.2. A note on mission control</a></li>
+<li><a href="#a-note-on-displays-have-separate-spaces">4.3. A note on &#8216;Displays have separate Spaces&#8217;</a></li>
 </ul>
 </li>
 <li><a href="#callbacks">5. Callbacks</a>
@@ -615,6 +616,17 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div class="paragraph">
 <p><strong>(Optional)</strong> You might need to configure your shell to enable completion provided by homebrew packages: <a href="https://docs.brew.sh/Shell-Completion" class="bare">https://docs.brew.sh/Shell-Completion</a>
 AeroSpace provides bash, fish and zsh completions.</p>
+</div>
+<div class="paragraph">
+<p>You can also install specific previous versions:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="bash"><span></span>brew<span class="tok-w"> </span>install<span class="tok-w"> </span>--cask<span class="tok-w"> </span>nikitabobko/tap/aerospace@0.12.0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For the list of all the versions available for installation via brew see: <a href="https://github.com/nikitabobko/homebrew-tap/tree/main/Casks" class="bare">https://github.com/nikitabobko/homebrew-tap/tree/main/Casks</a></p>
 </div>
 </div>
 <div class="sect2">
@@ -1138,14 +1150,17 @@ The floating window parent container is determined as the smallest tiling contai
 </div>
 <div class="paragraph">
 <p>Since Spaces are so hard to deal with, AeroSpace reimplements Spaces and calls them "Workspaces".
-The idea is that if the workspace isn’t active then all of its windows are placed outside the visible area of the screen, in the bottom right corner.
+The idea is that if the workspace isn’t active then all of its windows are placed outside the visible area of the screen, in the bottom right or left corner.
 Once you switch back to the workspace, (e.g. by the means of <a href="commands#workspace">workspace</a> command, or <code>cmd + tab</code>) windows are placed back to the visible area of the screen.</p>
 </div>
 <div class="paragraph">
-<p>When you quit the AeroSpace or when the AeroSpace is about to crash, AeroSpace will place all windows back to the visible area of the screen.</p>
+<p>When you quit the AeroSpace or when the AeroSpace detects that it&#8217;s about to crash, AeroSpace will place all windows back to the visible area of the screen.</p>
 </div>
 <div class="paragraph">
 <p>AeroSpace shows the name of currently active workspace in its tray icon (top right corner), to give users a visual feedback on what workspace is currently active.</p>
+</div>
+<div class="paragraph">
+<p>The intended workflow of using AeroSpace workspaces is to only have one macOS Space (or as many monitors you have, if <code>Displays have separate Spaces</code> is enabled) and don’t interact with macOS Spaces anymore.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1154,35 +1169,94 @@ Once you switch back to the workspace, (e.g. by the means of <a href="commands#w
 <div class="title">Note</div>
 </td>
 <td class="content">
-For better or worse, macOS doesn’t allow to place windows outside the visible area entirely.
-You will still be able to see a few pixels of "hidden" windows in the bottom right corner of your screen.
-That means, that if AeroSpace crashes badly you will still be able to manually "unhide" the windows by dragging these few pixels to the center of the screen.
+<div class="paragraph">
+<p>For better or worse, macOS doesn’t allow to place windows outside the visible area entirely.
+You will still be able to see a 1 pixel vertical line of "hidden" windows in the bottom right or left corner of your screen.
+That means, that if AeroSpace crashes badly you will still be able to manually "unhide" the windows by dragging these few pixels to the center of the screen.</p>
+</div>
+<div class="paragraph">
+<p>If you want to minimize the visibility of hidden windows, it&#8217;s recommended to place Dock in the bottom (and additionaly turn automatic hiding)</p>
+</div>
 </td>
 </tr>
 </table>
 </div>
+<div class="sect2">
+<h3 id="proper-monitor-arrangement"><a class="anchor" href="#proper-monitor-arrangement"></a><a class="link" href="#proper-monitor-arrangement">4.1. Proper monitor arrangement</a></h3>
 <div class="paragraph">
-<p>The intended workflow of using AeroSpace workspaces is to only have one macOS Space (or as many monitors you have, if <code>Displays have separate Spaces</code> is enabled) and don’t interact with macOS Spaces anymore.</p>
+<p>Since AeroSpace needs a free space to hide windows in,
+please make sure to arrange monitors in a way where <strong>every monitor has free space in the bottom right or left corner.</strong> (<code>System Settings &#8594; Displays &#8594; Arrange&#8230;&#8203;</code>)</p>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./assets/monitor-arrangement-1-bad.svg" alt="monitor arrangement 1 bad">
+</div>
+<div class="title">Figure 5. Bad monitor arrangement. Monitor 2 doesn&#8217;t have free space in either of the bottom corners</div>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./assets/monitor-arrangement-1-good.svg" alt="monitor arrangement 1 good">
+</div>
+<div class="title">Figure 6. Good monitor arrangement. Every monitor has free space in either of the bottom corners</div>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./assets/monitor-arrangement-2-bad.svg" alt="monitor arrangement 2 bad">
+</div>
+<div class="title">Figure 7. Bad monitor arrangement. Monitor 1 doesn&#8217;t have free space in either of the bottom corners</div>
+</div>
+<div class="imageblock text-center">
+<div class="content">
+<img src="./assets/monitor-arrangement-2-good.svg" alt="monitor arrangement 2 good">
+</div>
+<div class="title">Figure 8. Good monitor arrangement. Every monitor has free space in either of the bottom corners</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="a-note-on-mission-control"><a class="anchor" href="#a-note-on-mission-control"></a><a class="link" href="#a-note-on-mission-control">4.1. A note on mission control</a></h3>
+<h3 id="a-note-on-mission-control"><a class="anchor" href="#a-note-on-mission-control"></a><a class="link" href="#a-note-on-mission-control">4.2. A note on mission control</a></h3>
 <div class="paragraph">
 <p>For some reason, mission control doesn&#8217;t like that AeroSpace puts a lot of windows in the bottom right corner of the screen.
 Mission control shows windows too small even there is enough space to show them bigger.</p>
 </div>
 <div class="paragraph">
-<p>To workaround, you can enable <code>System Settings &#8594; Desktop &amp; Dock &#8594; Group windows by application</code> setting.
-For some weird reason, it helps.</p>
+<p>There is a workaround. You can enable <code>Group windows by application</code> setting:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="bash"><span></span>defaults<span class="tok-w"> </span>write<span class="tok-w"> </span>com.apple.dock<span class="tok-w"> </span><span class="tok-s2">&quot;expose-group-apps&quot;</span><span class="tok-w"> </span>-bool<span class="tok-w"> </span><span class="tok-s2">&quot;true&quot;</span><span class="tok-w"> </span><span class="tok-o">&amp;&amp;</span><span class="tok-w"> </span>killall<span class="tok-w"> </span>Dock</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(or in System Settings: <code>System Settings &#8594; Desktop &amp; Dock &#8594; Group windows by application</code>). For whatever weird reason, it helps.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="a-note-on-displays-have-separate-spaces"><a class="anchor" href="#a-note-on-displays-have-separate-spaces"></a><a class="link" href="#a-note-on-displays-have-separate-spaces">4.2. A note on &#8216;Displays have separate Spaces&#8217;</a></h3>
+<h3 id="a-note-on-displays-have-separate-spaces"><a class="anchor" href="#a-note-on-displays-have-separate-spaces"></a><a class="link" href="#a-note-on-displays-have-separate-spaces">4.3. A note on &#8216;Displays have separate Spaces&#8217;</a></h3>
 <div class="paragraph">
-<p>AeroSpace doesn&#8217;t care about <code>System Settings &#8594; Desktop &amp; Dock &#8594; Displays have separate Spaces</code> setting.
-It works equally good whether this option is enabled or disabled.</p>
+<p>My opinion is that macOS works better and more stable if you disable <code>Displays have separate Spaces</code>. (It&#8217;s enabled by default)
+People report all sorts of weird issues related to focus and performance when this setting is enabled:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Wrong window may receive focus in multi monitor setup: <a href="https://github.com/nikitabobko/AeroSpace/issues/101">#101</a> (Bug in Apple API)</p>
+</li>
+<li>
+<p>Wrong borderless Alacritty window may receive focus in <strong>single monitor</strong> setup: <a href="https://github.com/nikitabobko/AeroSpace/issues/247">#247</a> (Bug in Apple API)</p>
+</li>
+<li>
+<p>Performance issues: <a href="https://github.com/nikitabobko/AeroSpace/issues/333">#333</a></p>
+</li>
+<li>
+<p>macOS randomly switches focus back: <a href="https://github.com/nikitabobko/AeroSpace/issues/289">#289</a></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>Overview of &#8216;Displays have separate Spaces&#8217;</p>
+<p>When <code>Displays have separate Spaces</code> is enabled,
+moving windows between monitors causes windows to move between different Spaces which is not correctly handled by the public APIs AeroSpace uses,
+apparently, these APIs are not aware about Spaces existence.
+Spaces are just cursed in macOS. The less Spaces you have, the better macOS behaves.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -1199,14 +1273,19 @@ It works equally good whether this option is enabled or disabled.</p>
 </thead>
 <tbody>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Is it possible for window to span across several monitors?</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">😡 No. macOS limitation</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">👍 Yes</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overal stability and performance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">😡 Weird focus and performance issues may happen (see the list above)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">👍 Public Apple API are more stable (which in turn affects AeroSpace stability)</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When the first monitor is in fullscreen</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">👍 Second monitor operates independently</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">😡 Second monitor is unusable black screen</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Is it possible for window to span across several monitors?</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">😡 No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">👍 Yes</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">macOS status bar &#8230;&#8203;</p></td>
@@ -1215,6 +1294,21 @@ It works equally good whether this option is enabled or disabled.</p>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>If you don&#8217;t care about macOS native fullscreen in multi monitor setup (which is itself clunky anyway, since it creates a separate Space instance),
+I recommend disabling <code>Displays have separate Spaces</code>.</p>
+</div>
+<div class="paragraph">
+<p>You can disable the setting by running:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="bash"><span></span>defaults<span class="tok-w"> </span>write<span class="tok-w"> </span>com.apple.spaces<span class="tok-w"> </span><span class="tok-s2">&quot;spans-displays&quot;</span><span class="tok-w"> </span>-bool<span class="tok-w"> </span><span class="tok-s2">&quot;true&quot;</span><span class="tok-w"> </span><span class="tok-o">&amp;&amp;</span><span class="tok-w"> </span>killall<span class="tok-w"> </span>SystemUIServer</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(or in System Settings: <code>System Settings &#8594; Desktop &amp; Dock &#8594; Displays have separate Spaces</code>). Logout is required for the setting to take effect.</p>
+</div>
 </div>
 </div>
 </div>
@@ -1400,9 +1494,9 @@ Some windows initialize their title after the window appears.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">on-focused-monitor-changed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-mouse monitor-lazy-center&#39;</span><span class="tok-p">]</span>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">on-focused-monitor-changed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-mouse monitor-lazy-center&#39;</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-c1"># Mouse lazily follows focused monitor (default in i3)</span>
 <span class="tok-c1"># or</span>
-<span class="tok-n">on-focus-changed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-mouse window-lazy-center&#39;</span><span class="tok-p">]</span></code></pre>
+<span class="tok-n">on-focus-changed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-mouse window-lazy-center&#39;</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-c1"># Mouse lazily follows any focus (window or workspace)</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1637,7 +1731,7 @@ If you find that some windows are not handled properly please <a href="https://g
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-07-27 13:37:55 +0200
+Last updated 2024-08-03 22:58:38 +0200
 </div>
 </div>
 </body>
