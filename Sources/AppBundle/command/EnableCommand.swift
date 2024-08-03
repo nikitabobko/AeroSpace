@@ -27,7 +27,7 @@ struct EnableCommand: Command {
         } else {
             activateMode(nil)
             for workspace in Workspace.all {
-                workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideViaEmulation() } // todo as!
+                workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
                 workspace.layoutWorkspace()
             }
         }

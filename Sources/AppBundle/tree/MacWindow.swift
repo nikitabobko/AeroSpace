@@ -106,8 +106,8 @@ final class MacWindow: Window, CustomStringConvertible {
         return AXUIElementPerformAction(closeButton, kAXPressAction as CFString) == AXError.success
     }
 
-    func hideViaEmulation() {
-        //guard let monitorApproximation else { return }
+    func hideInCorner(_ corner: OptimalHideCorner) {
+        guard let nodeMonitor else { return }
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent
         // `hideEmulation` calls
         if !isHiddenViaEmulation {
@@ -116,10 +116,18 @@ final class MacWindow: Window, CustomStringConvertible {
             prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
                 topLeftCorner - workspace.workspaceMonitor.rect.topLeftCorner
         }
-        _ = setTopLeftCorner(allMonitorsRectsUnion.bottomRightCorner)
+        let p: CGPoint
+        switch corner {
+            case .bottomLeftCorner:
+                guard let s = getSize() else { fallthrough }
+                p = nodeMonitor.visibleRect.bottomLeftCorner + CGPoint(x: 1, y: -1) + CGPoint(x: -s.width, y: s.height)
+            case .bottomRightCorner:
+                p = nodeMonitor.visibleRect.bottomRightCorner - CGPoint(x: 1, y: 1)
+        }
+        _ = setTopLeftCorner(p)
     }
 
-    func unhideViaEmulation() {
+    func unhideFromCorner() {
         guard let prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect else { return }
         guard let workspace else { return } // hiding only makes sense for workspace windows
 

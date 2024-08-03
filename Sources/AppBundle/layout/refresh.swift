@@ -58,14 +58,42 @@ func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     refreshAndLayout()
 }
 
+enum OptimalHideCorner {
+    case bottomLeftCorner, bottomRightCorner
+}
+
 private func layoutWorkspaces() {
+    let monitors = monitors
+    var monitorToOptimalHideCorner: [CGPoint: OptimalHideCorner] = [:]
+    for monitor in monitors {
+        let xOff = monitor.width * 0.1
+        let yOff = monitor.height * 0.1
+        // brc = bottomRightCorner
+        let brc1 = monitor.rect.bottomRightCorner + CGPoint(x: 2, y: -yOff)
+        let brc2 = monitor.rect.bottomRightCorner + CGPoint(x: -xOff, y: 2)
+        let brc3 = monitor.rect.bottomRightCorner + CGPoint(x: 2, y: 2)
+
+        // blc = bottomLeftCorner
+        let blc1 = monitor.rect.bottomLeftCorner + CGPoint(x: -2, y: -yOff)
+        let blc2 = monitor.rect.bottomLeftCorner + CGPoint(x: xOff, y: 2)
+        let blc3 = monitor.rect.bottomLeftCorner + CGPoint(x: -2, y: 2)
+
+        let corner: OptimalHideCorner =
+            monitors.contains(where: { m in m.rect.contains(brc1) || m.rect.contains(brc2) || m.rect.contains(brc3) }) &&
+                monitors.allSatisfy({ m in !m.rect.contains(blc1) && !m.rect.contains(blc2) && !m.rect.contains(blc3) })
+                ? .bottomLeftCorner
+                : .bottomRightCorner
+        monitorToOptimalHideCorner[monitor.rect.topLeftCorner] = corner
+    }
+
     // to reduce flicker, first unhide visible workspaces, then hide invisible ones
     for workspace in Workspace.all where workspace.isVisible {
         // todo no need to unhide tiling windows (except for keeping hide/unhide state variables invariants)
-        workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideViaEmulation() } // todo as!
+        workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
     }
     for workspace in Workspace.all where !workspace.isVisible {
-        workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).hideViaEmulation() } // todo as!
+        let corner = monitorToOptimalHideCorner[workspace.workspaceMonitor.rect.topLeftCorner] ?? .bottomRightCorner
+        workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).hideInCorner(corner) } // todo as!
     }
 
     for monitor in monitors {

@@ -340,18 +340,41 @@ Native macOS Spaces have a lot of problems
 * Apple doesn't provide public API to communicate with Spaces (create/delete/reorder/switch Space and move windows between Spaces)
 
 Since Spaces are so hard to deal with, AeroSpace reimplements Spaces and calls them "Workspaces".
-The idea is that if the workspace isn’t active then all of its windows are placed outside the visible area of the screen, in the bottom right corner.
+The idea is that if the workspace isn’t active then all of its windows are placed outside the visible area of the screen, in the bottom right or left corner.
 Once you switch back to the workspace, (e.g. by the means of xref:commands.adoc#workspace[workspace] command, or `cmd + tab`) windows are placed back to the visible area of the screen.
 
-When you quit the AeroSpace or when the AeroSpace is about to crash, AeroSpace will place all windows back to the visible area of the screen.
+When you quit the AeroSpace or when the AeroSpace detects that it's about to crash, AeroSpace will place all windows back to the visible area of the screen.
 
 AeroSpace shows the name of currently active workspace in its tray icon (top right corner), to give users a visual feedback on what workspace is currently active.
 
-NOTE: For better or worse, macOS doesn’t allow to place windows outside the visible area entirely.
-You will still be able to see a few pixels of "hidden" windows in the bottom right corner of your screen.
+The intended workflow of using AeroSpace workspaces is to only have one macOS Space (or as many monitors you have, if `Displays have separate Spaces` is enabled) and don’t interact with macOS Spaces anymore.
+
+[NOTE]
+====
+For better or worse, macOS doesn’t allow to place windows outside the visible area entirely.
+You will still be able to see a 1 pixel vertical line of "hidden" windows in the bottom right or left corner of your screen.
 That means, that if AeroSpace crashes badly you will still be able to manually "unhide" the windows by dragging these few pixels to the center of the screen.
 
-The intended workflow of using AeroSpace workspaces is to only have one macOS Space (or as many monitors you have, if `Displays have separate Spaces` is enabled) and don’t interact with macOS Spaces anymore.
+If you want to minimize the visibility of hidden windows, it's recommended to place Dock in the bottom (and additionaly turn automatic hiding)
+====
+
+
+=== Proper monitor arrangement
+
+Since AeroSpace needs a free space to hide windows in,
+please make sure to arrange monitors in a way where *every monitor has free space in the bottom right or left corner.* (`System Settings -> Displays -> Arrange...`)
+
+.Bad monitor arrangement. Monitor 2 doesn't have free space in either of the bottom corners
+image::./assets/monitor-arrangement-1-bad.svg[,,align="center"]
+
+.Good monitor arrangement. Every monitor has free space in either of the bottom corners
+image::./assets/monitor-arrangement-1-good.svg[,,align="center"]
+
+.Bad monitor arrangement. Monitor 1 doesn't have free space in either of the bottom corners
+image::./assets/monitor-arrangement-2-bad.svg[,,align="center"]
+
+.Good monitor arrangement. Every monitor has free space in either of the bottom corners
+image::./assets/monitor-arrangement-2-good.svg[,,align="center"]
 
 [#a-note-on-mission-control]
 === A note on mission control
@@ -359,32 +382,58 @@ The intended workflow of using AeroSpace workspaces is to only have one macOS Sp
 For some reason, mission control doesn't like that AeroSpace puts a lot of windows in the bottom right corner of the screen.
 Mission control shows windows too small even there is enough space to show them bigger.
 
-To workaround, you can enable `System Settings -> Desktop & Dock -> Group windows by application` setting.
-For some weird reason, it helps.
+There is a workaround. You can enable `Group windows by application` setting:
+[source,bash]
+----
+defaults write com.apple.dock "expose-group-apps" -bool "true" && killall Dock
+----
+(or in System Settings: `System Settings -> Desktop & Dock -> Group windows by application`). For whatever weird reason, it helps.
 
 [#a-note-on-displays-have-separate-spaces]
 === A note on '`Displays have separate Spaces`'
 
-AeroSpace doesn't care about `System Settings -> Desktop & Dock -> Displays have separate Spaces` setting.
-It works equally good whether this option is enabled or disabled.
+My opinion is that macOS works better and more stable if you disable `Displays have separate Spaces`. (It's enabled by default)
+People report all sorts of weird issues related to focus and performance when this setting is enabled:
 
-Overview of '`Displays have separate Spaces`'
+* Wrong window may receive focus in multi monitor setup: https://github.com/nikitabobko/AeroSpace/issues/101[#101] (Bug in Apple API)
+* Wrong borderless Alacritty window may receive focus in *single monitor* setup: https://github.com/nikitabobko/AeroSpace/issues/247[#247] (Bug in Apple API)
+* Performance issues: https://github.com/nikitabobko/AeroSpace/issues/333[#333]
+* macOS randomly switches focus back: https://github.com/nikitabobko/AeroSpace/issues/289[#289]
+
+When `Displays have separate Spaces` is enabled,
+moving windows between monitors causes windows to move between different Spaces which is not correctly handled by the public APIs AeroSpace uses,
+apparently, these APIs are not aware about Spaces existence.
+Spaces are just cursed in macOS. The less Spaces you have, the better macOS behaves.
 
 |===
 |    |'`Displays have separate Spaces`' is enabled |'`Displays have separate Spaces`' is disabled
+
+|Is it possible for window to span across several monitors?
+|😡 No. macOS limitation
+|👍 Yes
+
+|Overal stability and performance
+|😡 Weird focus and performance issues may happen (see the list above)
+|👍 Public Apple API are more stable (which in turn affects AeroSpace stability)
 
 |When the first monitor is in fullscreen
 |👍 Second monitor operates independently
 |😡 Second monitor is unusable black screen
 
-|Is it possible for window to span across several monitors?
-|😡 No
-|👍 Yes
-
 |macOS status bar ...
 |... is displayed on both monitors
 |... is displayed only on main monitor
 |===
+
+If you don't care about macOS native fullscreen in multi monitor setup (which is itself clunky anyway, since it creates a separate Space instance),
+I recommend disabling `Displays have separate Spaces`.
+
+You can disable the setting by running:
+[source,bash]
+----
+defaults write com.apple.spaces "spans-displays" -bool "true" && killall SystemUIServer
+----
+(or in System Settings: `System Settings -> Desktop & Dock -> Displays have separate Spaces`). Logout is required for the setting to take effect.
 
 == Callbacks
 
