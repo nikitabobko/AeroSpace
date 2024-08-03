@@ -33,7 +33,6 @@ final class MacApp: AbstractApp {
     }
 
     private func garbageCollect() {
-        debug("garbageCollectApp: terminated \(self.name ?? "")")
         MacApp.allAppsMap.removeValue(forKey: nsApp.processIdentifier)
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)

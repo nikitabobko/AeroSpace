@@ -152,12 +152,6 @@ extension Set {
     func toArray() -> [Element] { Array(self) }
 }
 
-func debug(_ msg: Any) {
-    if isDebug {
-        print(msg)
-    }
-}
-
 #if DEBUG
 let isDebug = true
 #else

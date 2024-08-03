@@ -42,7 +42,6 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
         _ = try? socket.write(from: Result { try JSONEncoder().encode(ans) }.getOrThrow())
     }
     defer {
-        debug("Close connection")
         socket.close()
     }
     while true {

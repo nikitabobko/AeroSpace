@@ -35,7 +35,6 @@ final class MacWindow: Window, CustomStringConvertible {
                     window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
                     window.observe(movedObs, kAXMovedNotification) &&
                     window.observe(resizedObs, kAXResizedNotification) {
-                debug("New window detected: \(window)")
                 allWindowsMap[id] = window
                 debugWindowsIfRecording(window)
                 tryOnWindowDetected(window, startup: startup)
@@ -60,7 +59,6 @@ final class MacWindow: Window, CustomStringConvertible {
     }
 
     func garbageCollect() {
-        debug("garbageCollectWindow of \(app.name ?? "NO TITLE")")
         if MacWindow.allWindowsMap.removeValue(forKey: windowId) == nil {
             return
         }
@@ -113,7 +111,6 @@ final class MacWindow: Window, CustomStringConvertible {
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent
         // `hideEmulation` calls
         if !isHiddenViaEmulation {
-            debug("hideViaEmulation: Hide \(self)")
             guard let topLeftCorner = getTopLeftCorner() else { return }
             guard let workspace else { return } // hiding only makes sense for workspace windows
             prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
