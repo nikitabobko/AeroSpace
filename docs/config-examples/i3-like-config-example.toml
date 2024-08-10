@@ -11,7 +11,13 @@ enable-normalization-opposite-orientation-for-nested-containers = false
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [mode.main.binding]
-alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
+# See: https://nikitabobko.github.io/AeroSpace/goodness#open-a-new-window-with-applescript
+alt-enter = '''exec-and-forget osascript -e '
+tell application "Terminal"
+    do script
+    activate
+end tell'
+'''
 
 alt-j = 'focus left'
 alt-k = 'focus down'

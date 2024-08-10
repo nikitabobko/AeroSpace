@@ -132,23 +132,23 @@ Opening *a new window* of a program that can supports multiple windows (such as 
 +
 [source,toml]
 ----
-ctrl-g = '''exec-and-forget osascript <<EOF
+ctrl-g = '''exec-and-forget osascript -e '
 tell application "Safari"
     make new document at end of documents
     activate
-end tell
-EOF'''
+end tell'
+'''
 ----
 - Terminal
 +
 [source,toml]
 ----
-ctrl-g = '''exec-and-forget osascript <<EOF
+ctrl-g = '''exec-and-forget osascript -e '
 tell application "Terminal"
     do script
     activate
-end tell
-EOF'''
+end tell'
+'''
 ----
 
 [#disable-hide-app]
