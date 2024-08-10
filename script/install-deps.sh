@@ -46,7 +46,7 @@ if test $all == 1; then
 fi
 
 if test $all == 1 || test $antlr == 1; then
-    if ! check-version 4.13.1 ./.deps/python-venv/bin/antlr4; then
+    if ! check-version 4.13.1 ./.deps/python-venv/bin/antlr4 -v 4.13.1; then
         python3 -m venv .deps/python-venv
         source .deps/python-venv/bin/activate
         python3 -m pip install 'antlr4-tools==0.2.1'
