@@ -58,9 +58,12 @@ func run(_ args: [String], stdin: String) -> ServerAnswer {
     Result { try socket.read(into: &answer) }.getOrThrow()
     return Result { try JSONDecoder().decode(ServerAnswer.self, from: answer) }.getOrThrow()
 }
-let socketFile = "/tmp/\(appId).sock"
+let socketFile = "/tmp/\(appId)-\(unixUserName).sock"
+let socketFileCompat = "/tmp/\(appId).sock" // Compatibility. Drop after a few versions
 
-if let e: Error = Result(catching: { try socket.connect(to: socketFile) }).errorOrNil {
+if let e: Error = Result(catching: { try socket.connect(to: socketFile) })
+        .flatMapError({ _ in Result(catching: { try socket.connect(to: socketFileCompat) }) })
+        .errorOrNil {
     if isVersion {
         printVersionAndExit(serverVersion: nil)
     } else {

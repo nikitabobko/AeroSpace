@@ -5,7 +5,7 @@ import Common
 func startServer() {
     let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }
         .getOrThrow("Can't create socket ")
-    let socketFile = "/tmp/\(Bundle.appId).sock"
+    let socketFile = "/tmp/\(Bundle.appId)-\(unixUserName).sock"
     Result { try socket.listen(on: socketFile) }.getOrThrow("Can't listen to socket \(socketFile) ")
     DispatchQueue.global().async {
         while true {
@@ -21,7 +21,7 @@ func sendCommandToReleaseServer(args: [String]) {
     defer {
         socket.close()
     }
-    let socketFile = "/tmp/bobko.aerospace.sock"
+    let socketFile = "/tmp/bobko.aerospace-\(unixUserName).sock"
     if (try? socket.connect(to: socketFile)) == nil { // Can't connect, AeroSpace.app is not running
         return
     }
