@@ -120,7 +120,7 @@ final class MacWindow: Window, CustomStringConvertible {
         switch corner {
             case .bottomLeftCorner:
                 guard let s = getSize() else { fallthrough }
-                p = nodeMonitor.visibleRect.bottomLeftCorner + CGPoint(x: 1, y: -1) + CGPoint(x: -s.width, y: s.height)
+                p = nodeMonitor.visibleRect.bottomLeftCorner + CGPoint(x: 1, y: -1) + CGPoint(x: -s.width, y: 0)
             case .bottomRightCorner:
                 p = nodeMonitor.visibleRect.bottomRightCorner - CGPoint(x: 1, y: 1)
         }
