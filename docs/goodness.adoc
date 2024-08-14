@@ -154,6 +154,8 @@ end tell'
 [#disable-hide-app]
 == Disable annoying and useless "hide application" shortcut
 
+If `automatically-unhide-macos-hidden-apps` isn't enough, you can disable `cmd-h` altogether (which will make this hotkey unavailable for apps that might use it for other purposes)
+
 .~/.aerospace.toml
 [source,toml]
 ----

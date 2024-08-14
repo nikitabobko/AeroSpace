@@ -1,8 +1,28 @@
 import AppKit
 
 class GlobalObserver {
-    @objc private static func action() {
+    @objc private static func onNsWorkspaceNotification() {
         refreshAndLayout()
+    }
+
+    @objc private static func onHideApp() {
+        refreshSession(body: {
+            print("macOS hide app")
+            if config.automaticallyUnhideMacosHiddenApps {
+                if let w = prevFocus?.windowOrNil,
+                        w.macAppUnsafe.nsApp.isHidden,
+                        // "Hide others" (cmd-alt-h) -> don't force focus
+                        // "Hide app" (cmd-h) -> force focus
+                        MacApp.allAppsMap.values.filter({ $0.nsApp.isHidden }).count == 1 {
+                    // Force focus
+                    _ = w.focusWindow()
+                    _ = w.nativeFocus()
+                }
+                for app in MacApp.allAppsMap.values {
+                    app.nsApp.unhide()
+                }
+            }
+        })
     }
 
     static func initObserver() {
@@ -29,7 +49,9 @@ class GlobalObserver {
     private static func subscribe(_ name: NSNotification.Name) {
         NSWorkspace.shared.notificationCenter.addObserver(
             self,
-            selector: #selector(action),
+            selector: name == NSWorkspace.didHideApplicationNotification
+                ? #selector(onHideApp)
+                : #selector(onNsWorkspaceNotification),
             name: name,
             object: nil
         )

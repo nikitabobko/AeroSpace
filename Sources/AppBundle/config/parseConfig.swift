@@ -97,6 +97,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, parseDefaultContainerOrientation),
 
     "start-at-login": Parser(\.startAtLogin, parseBool),
+    "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
     "accordion-padding": Parser(\.accordionPadding, parseInt),
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseExecOnWorkspaceChange),
     "exec": Parser(\.execConfig, parseExecConfig),

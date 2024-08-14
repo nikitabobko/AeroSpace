@@ -12,7 +12,7 @@ final class MacApp: AbstractApp {
         super.init(pid: nsApp.processIdentifier, id: nsApp.bundleIdentifier)
     }
 
-    private static var allAppsMap: [pid_t: MacApp] = [:]
+    static var allAppsMap: [pid_t: MacApp] = [:]
 
     fileprivate static func get(_ nsApp: NSRunningApplication) -> MacApp? {
         let pid = nsApp.processIdentifier

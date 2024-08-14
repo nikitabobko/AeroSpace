@@ -20,7 +20,8 @@ private func validateStillPopups(startup: Bool) {
 private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) {
     for window in windows {
         let isMacosFullscreen = window.isMacosFullscreen
-        let isMacosInvisible = !isMacosFullscreen && (window.isMacosMinimized || window.macAppUnsafe.nsApp.isHidden)
+        let isMacosInvisible = !isMacosFullscreen &&
+            (window.isMacosMinimized || !config.automaticallyUnhideMacosHiddenApps && window.macAppUnsafe.nsApp.isHidden)
         switch window.layoutReason {
             case .standard:
                 if isMacosFullscreen {
