@@ -522,7 +522,8 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#open-a-new-window-with-applescript">7. Open a new window with AppleScript</a></li>
 <li><a href="#disable-hide-app">8. Disable annoying and useless "hide application" shortcut</a></li>
 <li><a href="#colemak-keys-remap">9. Colemak keys remap</a></li>
-<li><a href="#popular-apps-ids">10. List of popular and built-in applications IDs</a></li>
+<li><a href="#i3-like-config">10. i3 like config</a></li>
+<li><a href="#popular-apps-ids">11. List of popular and built-in applications IDs</a></li>
 </ul>
 </div>
 </div>
@@ -543,16 +544,10 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div class="ulist">
 <ul>
 <li>
-<p><a href="https://www.youtube.com/watch?v=UOl7ErqWbrk">YouTube Demo</a></p>
-</li>
-<li>
 <p><a href="guide">AeroSpace Guide</a></p>
 </li>
 <li>
 <p><a href="commands">AeroSpace Commands</a></p>
-</li>
-<li>
-<p><a href="config-examples">AeroSpace Config Examples</a></p>
 </li>
 <li>
 <p><a href="#">AeroSpace Goodness</a></p>
@@ -573,7 +568,7 @@ The source code of the page can be found in <code>./docs</code> directory.</p>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight nowrap"><code data-lang="bash"><span></span>defaults<span class="tok-w"> </span>write<span class="tok-w"> </span>-g<span class="tok-w"> </span>NSWindowShouldDragOnGesture<span class="tok-w"> </span>YES</code></pre>
+<pre class="pygments highlight nowrap"><code data-lang="bash"><span></span>defaults<span class="tok-w"> </span>write<span class="tok-w"> </span>-g<span class="tok-w"> </span>NSWindowShouldDragOnGesture<span class="tok-w"> </span>-bool<span class="tok-w"> </span><span class="tok-nb">true</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -719,12 +714,12 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <p>Safari</p>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">ctrl-g</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;&#39;&#39;exec-and-forget osascript &lt;&lt;EOF</span>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">ctrl-g</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;&#39;&#39;exec-and-forget osascript -e &#39;</span>
 <span class="tok-s1">tell application &quot;Safari&quot;</span>
 <span class="tok-s1">    make new document at end of documents</span>
 <span class="tok-s1">    activate</span>
-<span class="tok-s1">end tell</span>
-<span class="tok-s1">EOF&#39;&#39;&#39;</span></code></pre>
+<span class="tok-s1">end tell&#39;</span>
+<span class="tok-s1">&#39;&#39;&#39;</span></code></pre>
 </div>
 </div>
 </li>
@@ -732,12 +727,12 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <p>Terminal</p>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">ctrl-g</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;&#39;&#39;exec-and-forget osascript &lt;&lt;EOF</span>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">ctrl-g</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;&#39;&#39;exec-and-forget osascript -e &#39;</span>
 <span class="tok-s1">tell application &quot;Terminal&quot;</span>
 <span class="tok-s1">    do script</span>
 <span class="tok-s1">    activate</span>
-<span class="tok-s1">end tell</span>
-<span class="tok-s1">EOF&#39;&#39;&#39;</span></code></pre>
+<span class="tok-s1">end tell&#39;</span>
+<span class="tok-s1">&#39;&#39;&#39;</span></code></pre>
 </div>
 </div>
 </li>
@@ -806,7 +801,103 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 </div>
 <div class="sect1">
-<h2 id="popular-apps-ids"><a class="anchor" href="#popular-apps-ids"></a><a class="link" href="#popular-apps-ids">10. List of popular and built-in applications IDs</a></h2>
+<h2 id="i3-like-config"><a class="anchor" href="#i3-like-config"></a><a class="link" href="#i3-like-config">10. i3 like config</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="config-examples/i3-like-config-example.toml">Download</a></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Reference: <a href="https://github.com/i3/i3/blob/next/etc/config" class="bare">https://github.com/i3/i3/blob/next/etc/config</a></span>
+
+<span class="tok-c1"># i3 doesn&#39;t have &quot;normalizations&quot; feature that why we disable them here.</span>
+<span class="tok-c1"># But the feature is very helpful.</span>
+<span class="tok-c1"># Normalizations eliminate all sorts of weird tree configurations that don&#39;t make sense.</span>
+<span class="tok-c1"># Give normalizations a chance and enable them back.</span>
+<span class="tok-n">enable-normalization-flatten-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
+<span class="tok-n">enable-normalization-opposite-orientation-for-nested-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
+
+<span class="tok-c1"># Mouse follows focus when focused monitor changes</span>
+<span class="tok-n">on-focused-monitor-changed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-mouse monitor-lazy-center&#39;</span><span class="tok-p">]</span>
+
+<span class="tok-k">[mode.main.binding]</span>
+<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/goodness#open-a-new-window-with-applescript" class="bare">https://nikitabobko.github.io/AeroSpace/goodness#open-a-new-window-with-applescript</a></span>
+<span class="tok-n">alt-enter</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;&#39;&#39;exec-and-forget osascript -e &#39;</span>
+<span class="tok-s1">tell application &quot;Terminal&quot;</span>
+<span class="tok-s1">    do script</span>
+<span class="tok-s1">    activate</span>
+<span class="tok-s1">end tell&#39;</span>
+<span class="tok-s1">&#39;&#39;&#39;</span>
+
+<span class="tok-n">alt-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus left&#39;</span>
+<span class="tok-n">alt-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus down&#39;</span>
+<span class="tok-n">alt-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus up&#39;</span>
+<span class="tok-n">alt-semicolon</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus right&#39;</span>
+
+<span class="tok-n">alt-shift-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move left&#39;</span>
+<span class="tok-n">alt-shift-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move down&#39;</span>
+<span class="tok-n">alt-shift-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move up&#39;</span>
+<span class="tok-n">alt-shift-semicolon</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move right&#39;</span>
+
+<span class="tok-c1"># Consider using &#39;join-with&#39; command as a &#39;split&#39; replacement if you want to enable normalizations</span>
+<span class="tok-n">alt-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;split horizontal&#39;</span>
+<span class="tok-n">alt-v</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;split vertical&#39;</span>
+
+<span class="tok-n">alt-f</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;fullscreen&#39;</span>
+
+<span class="tok-n">alt-s</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout v_accordion&#39;</span><span class="tok-w"> </span><span class="tok-c1"># &#39;layout stacking&#39; in i3</span>
+<span class="tok-n">alt-w</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout h_accordion&#39;</span><span class="tok-w"> </span><span class="tok-c1"># &#39;layout tabbed&#39; in i3</span>
+<span class="tok-n">alt-e</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout tiles horizontal vertical&#39;</span><span class="tok-w"> </span><span class="tok-c1"># &#39;layout toggle split&#39; in i3</span>
+
+<span class="tok-n">alt-shift-space</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout floating tiling&#39;</span><span class="tok-w"> </span><span class="tok-c1"># &#39;floating toggle&#39; in i3</span>
+
+<span class="tok-c1"># Not supported, because this command is redundant in AeroSpace mental model.</span>
+<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/guide#floating-windows" class="bare">https://nikitabobko.github.io/AeroSpace/guide#floating-windows</a></span>
+<span class="tok-c1">#alt-space = &#39;focus toggle_tiling_floating&#39;</span>
+
+<span class="tok-c1"># `focus parent`/`focus child` are not yet supported, and it&#39;s not clear whether they</span>
+<span class="tok-c1"># should be supported at all <a href="https://github.com/nikitabobko/AeroSpace/issues/5" class="bare">https://github.com/nikitabobko/AeroSpace/issues/5</a></span>
+<span class="tok-c1"># alt-a = &#39;focus parent&#39;</span>
+
+<span class="tok-n">alt-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 1&#39;</span>
+<span class="tok-n">alt-2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 2&#39;</span>
+<span class="tok-n">alt-3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 3&#39;</span>
+<span class="tok-n">alt-4</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 4&#39;</span>
+<span class="tok-n">alt-5</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 5&#39;</span>
+<span class="tok-n">alt-6</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 6&#39;</span>
+<span class="tok-n">alt-7</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 7&#39;</span>
+<span class="tok-n">alt-8</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 8&#39;</span>
+<span class="tok-n">alt-9</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 9&#39;</span>
+<span class="tok-n">alt-0</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 10&#39;</span>
+
+<span class="tok-n">alt-shift-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 1&#39;</span>
+<span class="tok-n">alt-shift-2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 2&#39;</span>
+<span class="tok-n">alt-shift-3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 3&#39;</span>
+<span class="tok-n">alt-shift-4</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 4&#39;</span>
+<span class="tok-n">alt-shift-5</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 5&#39;</span>
+<span class="tok-n">alt-shift-6</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 6&#39;</span>
+<span class="tok-n">alt-shift-7</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 7&#39;</span>
+<span class="tok-n">alt-shift-8</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 8&#39;</span>
+<span class="tok-n">alt-shift-9</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 9&#39;</span>
+<span class="tok-n">alt-shift-0</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 10&#39;</span>
+
+<span class="tok-n">alt-shift-c</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;reload-config&#39;</span>
+
+<span class="tok-n">alt-r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode resize&#39;</span>
+
+<span class="tok-k">[mode.resize.binding]</span>
+<span class="tok-n">h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize width -50&#39;</span>
+<span class="tok-n">j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize height +50&#39;</span>
+<span class="tok-n">k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize height -50&#39;</span>
+<span class="tok-n">l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize width +50&#39;</span>
+<span class="tok-n">enter</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span>
+<span class="tok-n">esc</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="popular-apps-ids"><a class="anchor" href="#popular-apps-ids"></a><a class="link" href="#popular-apps-ids">11. List of popular and built-in applications IDs</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The list is useful to compose custom <a href="guide#on-window-detected-callback">on-window-detected callback</a>.</p>
@@ -1170,7 +1261,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-08-03 22:58:38 +0200
+Last updated 2024-08-14 22:40:59 +0200
 </div>
 </div>
 </body>
