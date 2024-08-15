@@ -24,6 +24,8 @@ aerospace -h;
     | focus-monitor [--wrap-around] (next|prev) [--wrap-around]
     | focus-monitor <monitor_pattern>...
 
+    | fullscreen [on|off]
+
     | join-with (left|down|up|right)
 
     | layout (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
