@@ -16,8 +16,8 @@
 /* Begin PBXFileReference section */
 		09685297933511208058F7CF /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18C104E927E079E60C91AE3E /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
-		6606D24B4B23E9582CFA3B86 /* AeroSpace */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AeroSpace; path = .; sourceTree = SOURCE_ROOT; };
 		7B44BA66A72B22AD921120F3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		83BF2DAAA744267883F0D5BA /* AeroSpaceNew */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AeroSpaceNew; path = .; sourceTree = SOURCE_ROOT; };
 		8FE45A887100EB70912B07F0 /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
 		D594817EBEFA18C2497384A4 /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -57,7 +57,7 @@
 		3A1FF786C84025133F96138D /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				6606D24B4B23E9582CFA3B86 /* AeroSpace */,
+				83BF2DAAA744267883F0D5BA /* AeroSpaceNew */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -232,7 +232,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "xcode-app-bundle-resources/AeroSpace.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "app-bundle-resources/AeroSpace.entitlements";
 				CODE_SIGN_IDENTITY = "aerospace-codesign-certificate";
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -309,7 +309,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = "xcode-app-bundle-resources/AeroSpace.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "app-bundle-resources/AeroSpace.entitlements";
 				CODE_SIGN_IDENTITY = "aerospace-codesign-certificate";
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
