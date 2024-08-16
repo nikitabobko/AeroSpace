@@ -1,5 +1,6 @@
 import Common
 import AppKit
+import PrivateApi
 
 func checkAccessibilityPermissions() {
     let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true]
@@ -311,7 +312,8 @@ extension AXUIElement {
     }
 
     func containingWindowId() -> CGWindowID? {
-        bridgedHeader.containingWindowId(self)
+        var cgWindowId = CGWindowID()
+        return _AXUIElementGetWindow(self, &cgWindowId) == .success ? cgWindowId : nil
     }
 
     var center: CGPoint? {

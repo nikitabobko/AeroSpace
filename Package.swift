@@ -5,12 +5,14 @@ import PackageDescription
 
 let package = Package(
     name: "AeroSpacePackage",
-    platforms: [.macOS(.v13)], /* Runtime support for parameterized protocol types is only available in macOS 13.0.0 or newer
+    platforms: [
+        .macOS(.v13)
+    ], /* Runtime support for parameterized protocol types is only available in macOS 13.0.0 or newer
                                   And it specifies deploymentTarget for CLI */
     // Products define the executables and libraries a package produces, making them visible to other packages.
     products: [
         .library(name: "AppBundle", targets: ["AppBundle"]),
-        .executable(name: "aerospace", targets: ["Cli"])
+        .executable(name: "aerospace", targets: ["Cli"]),
     ],
     dependencies: [
         .package(url: "https://github.com/Kitura/BlueSocket", exact: "2.0.4"),
@@ -22,21 +24,28 @@ let package = Package(
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
     targets: [
+        // Exposes the prviate _AXUIElementGetWindow function to swift
+        .target(
+            name: "PrivateApi",
+            path: "Sources/PrivateApi",
+            publicHeadersPath: "include"
+        ),
         .target(
             name: "Common",
             dependencies: [
-                .product(name: "Collections", package: "swift-collections"),
+                .product(name: "Collections", package: "swift-collections")
             ]
         ),
         .target(
             name: "ShellParserGenerated",
             dependencies: [
-                .product(name: "Antlr4Static", package: "antlr4"),
+                .product(name: "Antlr4Static", package: "antlr4")
             ]
         ),
         .target(
             name: "AppBundle",
             dependencies: [
+                .target(name: "PrivateApi"),
                 .target(name: "Common"),
                 .target(name: "ShellParserGenerated"),
                 .product(name: "Antlr4Static", package: "antlr4"),
@@ -56,7 +65,7 @@ let package = Package(
         .testTarget(
             name: "AppBundleTests",
             dependencies: [
-                .target(name: "AppBundle"),
+                .target(name: "AppBundle")
             ]
         ),
     ]
