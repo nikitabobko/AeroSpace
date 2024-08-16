@@ -12,6 +12,7 @@
 # Swift package manager
 /.build
 /swift-exec-deps/.build
+/.swiftpm
 /.vscode
 # External dependencies
 /.deps
