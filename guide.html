@@ -521,7 +521,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </li>
 <li><a href="#configuring-aerospace">2. Configuring AeroSpace</a>
 <ul class="sectlevel2">
-<li><a href="#config-location">2.1. Config location</a></li>
+<li><a href="#config-location">2.1. Custom config location</a></li>
 <li><a href="#config-samples">2.2. Config samples</a></li>
 <li><a href="#default-config">2.3. Default config</a></li>
 <li><a href="#binding-modes">2.4. Binding modes</a></li>
@@ -682,9 +682,9 @@ AeroSpace provides bash, fish and zsh completions.</p>
 <h2 id="configuring-aerospace"><a class="anchor" href="#configuring-aerospace"></a><a class="link" href="#configuring-aerospace">2. Configuring AeroSpace</a></h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="config-location"><a class="anchor" href="#config-location"></a><a class="link" href="#config-location">2.1. Config location</a></h3>
+<h3 id="config-location"><a class="anchor" href="#config-location"></a><a class="link" href="#config-location">2.1. Custom config location</a></h3>
 <div class="paragraph">
-<p>AeroSpace tries to find the config in two locations:</p>
+<p>AeroSpace tries to find the custom config in two locations:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -728,17 +728,33 @@ See <a href="https://toml.io/en/v1.0.0">TOML spec for more info</a></p>
 <div class="sect2">
 <h3 id="default-config"><a class="anchor" href="#default-config"></a><a class="link" href="#default-config">2.3. Default config</a></h3>
 <div class="paragraph">
-<p>The default config is part of the documentation, since it contains all trivial configuration keys with comments.
+<p>The default config is part of the documentation, it contains all trivial configuration keys with comments.
 Please read the default config!
-Non-trivial configuration options are mentioned further in this guide.</p>
+Non-trivial configuration options are mentioned further in this guide.
+If no custom config is found, AeroSpace will load the default config.</p>
 </div>
 <div class="paragraph">
-<p>AeroSpace fallbacks to the default config if custom config is not presented.
-The default config <strong>is not</strong> merged into your custom config.
-That&#8217;s why you can drop key bindings by dropping their declaration from your custom config.</p>
+<p>If the key is omitted in the custom config, it fallbacks to the value in the default config, unless it&#8217;s stated otherwise for the specific keys. Namely:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>mode.*.binding</code>. It fallbacks to the empty TOML table. Your config is the source of truth for keyboard bindings. You must explicitly mention all the keyboard bindings and <a href="#binding-modes">binding modes</a> in your config.</p>
+</li>
+<li>
+<p><code>on-focused-monitor-changed</code>. It fallbacks to the empty TOML array.</p>
+</li>
+<li>
+<p><code>exec</code> TOML table. See: <a href="#exec-env-vars">exec-* Environment Variables</a> (It&#8217;s so boring and verbose, I don&#8217;t even want to mention it in the <code>default-config.toml</code>)</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>You can bootstrap your local config by coping the default config from the app installation</p>
+<p>Rule of thumb: all the "scalar like" values always fallback to the default config. All the "vector like" values fallback to the empty TOML array or table.</p>
+</div>
+<div class="paragraph">
+<p>That allows you to keep your config tidy and clean from trivial config keys for which you like the default values.
+You can bootstrap your custom config by coping the default config from the app installation</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -746,14 +762,12 @@ That&#8217;s why you can drop key bindings by dropping their declaration from yo
 </div>
 </div>
 <div class="paragraph">
-<p><a href="config-examples/default-config.toml">Download</a></p>
+<p><a href="config-examples/default-config.toml">Download default-config.toml</a></p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Place a copy of this config to ~/.aerospace.toml</span>
 <span class="tok-c1"># After that, you can edit ~/.aerospace.toml to your liking</span>
-<span class="tok-c1"># In your config, you can drop keys you don&#39;t care about</span>
-<span class="tok-c1"># The absent keys will fallback to their default values</span>
 
 <span class="tok-c1"># You can use it to add commands that run after login to macOS user session.</span>
 <span class="tok-c1"># &#39;start-at-login&#39; needs to be &#39;true&#39; for &#39;after-login-command&#39; to work</span>
@@ -793,6 +807,7 @@ That&#8217;s why you can drop key bindings by dropping their declaration from yo
 <span class="tok-c1"># Drop it from your config, if you don&#39;t like this behavior</span>
 <span class="tok-c1"># See <a href="https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks" class="bare">https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks</a></span>
 <span class="tok-c1"># See <a href="https://nikitabobko.github.io/AeroSpace/commands#move-mouse" class="bare">https://nikitabobko.github.io/AeroSpace/commands#move-mouse</a></span>
+<span class="tok-c1"># Fallback value (if you omit the key): on-focused-monitor-changed = []</span>
 <span class="tok-n">on-focused-monitor-changed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-mouse monitor-lazy-center&#39;</span><span class="tok-p">]</span>
 
 <span class="tok-c1"># Gaps between windows (inner-*) and between monitor edges (outer-*).</span>
@@ -813,6 +828,7 @@ That&#8217;s why you can drop key bindings by dropping their declaration from yo
 <span class="tok-c1"># &#39;main&#39; binding mode declaration</span>
 <span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/guide#binding-modes" class="bare">https://nikitabobko.github.io/AeroSpace/guide#binding-modes</a></span>
 <span class="tok-c1"># &#39;main&#39; binding mode must be always presented</span>
+<span class="tok-c1"># Fallback value (if you omit the key): mode.main.binding = {}</span>
 <span class="tok-k">[mode.main.binding]</span>
 
 <span class="tok-c1"># All possible keys:</span>
@@ -938,9 +954,11 @@ That&#8217;s why you can drop key bindings by dropping their declaration from yo
 <span class="tok-k">[mode.service.binding]</span>
 <span class="tok-n">esc</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;reload-config&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
 <span class="tok-n">r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;flatten-workspace-tree&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-c1"># reset layout</span>
-<span class="tok-c1">#s = [&#39;layout sticky tiling&#39;, &#39;mode main&#39;] # sticky is not yet supported <a href="https://github.com/nikitabobko/AeroSpace/issues/2" class="bare">https://github.com/nikitabobko/AeroSpace/issues/2</a></span>
 <span class="tok-n">f</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;layout floating tiling&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-c1"># Toggle between floating and tiling layout</span>
 <span class="tok-n">backspace</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;close-all-windows-but-current&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
+
+<span class="tok-c1"># sticky is not yet supported <a href="https://github.com/nikitabobko/AeroSpace/issues/2" class="bare">https://github.com/nikitabobko/AeroSpace/issues/2</a></span>
+<span class="tok-c1">#s = [&#39;layout sticky tiling&#39;, &#39;mode main&#39;]</span>
 
 <span class="tok-n">alt-shift-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with left&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
 <span class="tok-n">alt-shift-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with down&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
@@ -1949,7 +1967,7 @@ If you find that some windows are not handled properly please <a href="https://g
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-08-14 22:40:59 +0200
+Last updated 2024-08-16 10:05:58 +0200
 </div>
 </div>
 </body>
