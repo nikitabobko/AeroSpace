@@ -13,7 +13,7 @@ func syncStartAtLogin() {
             <plist version="1.0">
             <dict>
                 <key>Label</key>
-                <string>\(Bundle.appId)</string>
+                <string>\(aeroSpaceAppId)</string>
                 <key>ProgramArguments</key>
                 <array>
                     <string>\(URL(filePath: CommandLine.arguments.first ?? errorT("Can't get first argument")).absoluteURL.path)</string>

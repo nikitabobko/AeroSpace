@@ -57,7 +57,7 @@ private func initServerArgs() {
     while !args.isEmpty {
         switch args.first {
             case "--version", "-v":
-                print("\(Bundle.appVersion) \(gitHash)")
+                print("\(aeroSpaceAppVersion) \(gitHash)")
                 exit(0)
             case "--config-path":
                 if let arg = args.getOrNil(atIndex: 1) {

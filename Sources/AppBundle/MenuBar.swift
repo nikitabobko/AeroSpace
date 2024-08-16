@@ -4,8 +4,8 @@ import Foundation
 
 public func menuBar(viewModel: TrayMenuModel) -> some Scene {
     MenuBarExtra {
-        let shortIdentification = "\(Bundle.appName) v\(Bundle.appVersion) \(gitShortHash)"
-        let identification      = "\(Bundle.appName) v\(Bundle.appVersion) \(gitHash)"
+        let shortIdentification = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitShortHash)"
+        let identification      = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitHash)"
         Text(shortIdentification)
         Button("Copy to clipboard") { identification.copyToClipboard() }
             .keyboardShortcut("C", modifiers: .command)
@@ -52,7 +52,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
             }
                 .keyboardShortcut("R", modifiers: .command)
         }
-        Button("Quit \(Bundle.appName)") {
+        Button("Quit \(aeroSpaceAppName)") {
             terminationHandler.beforeTermination()
             terminateApp()
         }
