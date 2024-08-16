@@ -11,11 +11,13 @@ targets:
     type: application
     platform: macOS
     deploymentTarget: "13.0"
-    sources: [xcode-app-bundle-launcher/, docs/config-examples/default-config.toml]
+    sources:
+      - "Sources/AeroSpaceApp"
+      - "resources"
+      - "docs/config-examples/default-config.toml"
     dependencies:
       - package: AeroSpacePackage
-        products:
-          - AppBundle
+        product: AppBundle
     settings:
       base:
         SWIFT_VERSION: 5.9
@@ -34,7 +36,7 @@ targets:
           PRODUCT_NAME: AeroSpace
           PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace
     entitlements:
-      path: xcode-app-bundle-launcher/AeroSpace.entitlements
+      path: resources/AeroSpace.entitlements
       properties:
         # Accessibility API doesn't work in sandboxed app
         com.apple.security.app-sandbox: false

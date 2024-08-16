@@ -1,6 +1,8 @@
 import AppBundle
 import SwiftUI
 
+// This file is shared between SPM and xcode project
+
 @main
 struct AeroSpaceApp: App {
     @StateObject var viewModel = TrayMenuModel.shared

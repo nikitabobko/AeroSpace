@@ -9,8 +9,11 @@ let package = Package(
                                   And it specifies deploymentTarget for CLI */
     // Products define the executables and libraries a package produces, making them visible to other packages.
     products: [
+        .executable(name: "aerospace", targets: ["Cli"]),
+        // Don't use this build for release, use xcode instead
+        .executable(name: "AeroSpaceApp", targets: ["AeroSpaceApp"]),
+        // We only need to expose this as a product for xcode
         .library(name: "AppBundle", targets: ["AppBundle"]),
-        .executable(name: "aerospace", targets: ["Cli"])
     ],
     dependencies: [
         .package(url: "https://github.com/Kitura/BlueSocket", exact: "2.0.4"),
@@ -51,6 +54,12 @@ let package = Package(
                 .product(name: "HotKey", package: "HotKey"),
                 .product(name: "TOMLKit", package: "TOMLKit"),
                 .product(name: "Collections", package: "swift-collections"),
+            ]
+        ),
+        .executableTarget(
+            name: "AeroSpaceApp",
+            dependencies: [
+                .target(name: "AppBundle")
             ]
         ),
         .executableTarget(

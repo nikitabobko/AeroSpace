@@ -1,7 +1,7 @@
-#ifndef Bridged_Header_h
-#define Bridged_Header_h
+#ifndef private_header_h
+#define private_header_h
 
-#import <AppKit/AppKit.h>
+#import <ApplicationServices/ApplicationServices.h>
 
 // Alternative:
 // func allWindowsOnCurrentMacOsSpace() {
