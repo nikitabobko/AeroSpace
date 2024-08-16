@@ -22,6 +22,12 @@ let package = Package(
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
     targets: [
+        // Exposes the prviate _AXUIElementGetWindow function to swift
+        .target(
+            name: "PrivateApi",
+            path: "Sources/PrivateApi",
+            publicHeadersPath: "include"
+        ),
         .target(
             name: "Common",
             dependencies: [
@@ -37,6 +43,7 @@ let package = Package(
         .target(
             name: "AppBundle",
             dependencies: [
+                .target(name: "PrivateApi"),
                 .target(name: "Common"),
                 .target(name: "ShellParserGenerated"),
                 .product(name: "Antlr4Static", package: "antlr4"),

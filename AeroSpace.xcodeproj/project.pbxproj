@@ -17,7 +17,6 @@
 		00BF7198977F487EDFC27C90 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		09685297933511208058F7CF /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1FB5E555E4557D31A20EC7D4 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
-		3AE679987882FCA41C26B594 /* Bridged-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Bridged-Header.h"; sourceTree = "<group>"; };
 		6606D24B4B23E9582CFA3B86 /* AeroSpace */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AeroSpace; path = .; sourceTree = SOURCE_ROOT; };
 		8FE45A887100EB70912B07F0 /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
 		F0931CEB83A4763BCC274204 /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
@@ -76,7 +75,6 @@
 				F0931CEB83A4763BCC274204 /* AeroSpace.entitlements */,
 				1FB5E555E4557D31A20EC7D4 /* AeroSpaceApp.swift */,
 				00BF7198977F487EDFC27C90 /* Assets.xcassets */,
-				3AE679987882FCA41C26B594 /* Bridged-Header.h */,
 			);
 			path = "xcode-app-bundle-launcher";
 			sourceTree = "<group>";
@@ -239,7 +237,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.debug.aerospace;
 				PRODUCT_NAME = "AeroSpace-Debug";
 				SDKROOT = macosx;
-				SWIFT_OBJC_BRIDGING_HEADER = "xcode-app-bundle-launcher/Bridged-Header.h";
 				SWIFT_VERSION = 5.9;
 			};
 			name = Debug;
@@ -317,7 +314,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace;
 				PRODUCT_NAME = AeroSpace;
 				SDKROOT = macosx;
-				SWIFT_OBJC_BRIDGING_HEADER = "xcode-app-bundle-launcher/Bridged-Header.h";
 				SWIFT_VERSION = 5.9;
 			};
 			name = Release;

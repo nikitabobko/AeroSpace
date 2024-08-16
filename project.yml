@@ -21,7 +21,6 @@ targets:
         SWIFT_VERSION: 5.9
         GENERATE_INFOPLIST_FILE: YES
         MARKETING_VERSION: ${XCODEGEN_AEROSPACE_VERSION}
-        SWIFT_OBJC_BRIDGING_HEADER: "xcode-app-bundle-launcher/Bridged-Header.h"
         # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
         # Specifies whether the app runs as an agent app. If this key is set to YES, Launch Services runs the app as an agent app.
         # Agent apps do not appear in the Dock or in the Force Quit window
