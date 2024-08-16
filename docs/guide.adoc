@@ -58,9 +58,10 @@ xattr -d com.apple.quarantine /Applications/AeroSpace.app
 [#configuring-aerospace]
 == Configuring AeroSpace
 
-=== Config location
+[#config-location]
+=== Custom config location
 
-AeroSpace tries to find the config in two locations:
+AeroSpace tries to find the custom config in two locations:
 
 . `~/.aerospace.toml`
 . `+${XDG_CONFIG_HOME}/aerospace/aerospace.toml+`
@@ -83,22 +84,28 @@ See https://toml.io/en/v1.0.0[TOML spec for more info]
 [#default-config]
 === Default config
 
-The default config is part of the documentation, since it contains all trivial configuration keys with comments.
+The default config is part of the documentation, it contains all trivial configuration keys with comments.
 Please read the default config!
 Non-trivial configuration options are mentioned further in this guide.
+If no custom config is found, AeroSpace will load the default config.
 
-AeroSpace fallbacks to the default config if custom config is not presented.
-The default config *is not* merged into your custom config.
-That's why you can drop key bindings by dropping their declaration from your custom config.
+If the key is omitted in the custom config, it fallbacks to the value in the default config, unless it's stated otherwise for the specific keys. Namely:
 
-You can bootstrap your local config by coping the default config from the app installation
+* `mode.*.binding`. It fallbacks to the empty TOML table. Your config is the source of truth for keyboard bindings. You must explicitly mention all the keyboard bindings and <<binding-modes,binding modes>> in your config.
+* `on-focused-monitor-changed`. It fallbacks to the empty TOML array.
+* `exec` TOML table. See: <<exec-env-vars>> (It's so boring and verbose, I don't even want to mention it in the `default-config.toml`)
+
+Rule of thumb: all the "scalar like" values always fallback to the default config. All the "vector like" values fallback to the empty TOML array or table.
+
+That allows you to keep your config tidy and clean from trivial config keys for which you like the default values.
+You can bootstrap your custom config by coping the default config from the app installation
 
 [source,shell]
 ----
 cp /Applications/AeroSpace.app/Contents/Resources/default-config.toml ~/.aerospace.toml
 ----
 
-link:config-examples/default-config.toml[Download]
+link:config-examples/default-config.toml[Download default-config.toml]
 
 [source,toml,subs="macros+,specialchars+"]
 ----

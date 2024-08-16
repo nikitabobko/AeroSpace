@@ -212,7 +212,7 @@ slash = 'slash'
 [#i3-like-config]
 == i3 like config
 
-link:config-examples/i3-like-config-example.toml[Download]
+link:config-examples/i3-like-config-example.toml[Download i3-like-config.toml]
 
 [source,toml,subs="macros+,specialchars+"]
 ----
