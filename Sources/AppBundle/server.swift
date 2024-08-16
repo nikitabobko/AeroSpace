@@ -5,7 +5,7 @@ import Common
 func startServer() {
     let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }
         .getOrThrow("Can't create socket ")
-    let socketFile = "/tmp/\(Bundle.appId)-\(unixUserName).sock"
+    let socketFile = "/tmp/\(aeroSpaceAppId)-\(unixUserName).sock"
     Result { try socket.listen(on: socketFile) }.getOrThrow("Can't listen to socket \(socketFile) ")
     DispatchQueue.global().async {
         while true {
@@ -31,7 +31,7 @@ func sendCommandToReleaseServer(args: [String]) {
     _ = try? socket.readString()
 }
 
-private let serverVersionAndHash = "\(Bundle.appVersion) \(gitHash)"
+private let serverVersionAndHash = "\(aeroSpaceAppVersion) \(gitHash)"
 
 private func newConnection(_ socket: Socket) async { // todo add exit codes
     func answerToClient(exitCode: Int32, stdout: String = "", stderr: String = "") {
@@ -70,7 +70,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
         if !isEnabled && !isAllowedToRunWhenDisabled(command) {
             answerToClient(
                 exitCode: 1,
-                stderr: "\(Bundle.appName) server is disabled and doesn't accept commands. " +
+                stderr: "\(aeroSpaceAppName) server is disabled and doesn't accept commands. " +
                     "You can use 'aerospace enable on' to enable the server"
             )
             continue

@@ -1,17 +1,23 @@
 import AppKit
-import HotKey
 import Common
+import HotKey
+
+func getDefaultConfigUrlFromProject() -> URL {
+    var url = URL(filePath: #file)
+    while !FileManager.default.fileExists(atPath: url.appending(component: ".git").path) {
+        url.deleteLastPathComponent()
+    }
+    let projectRoot: URL = url
+    return projectRoot.appending(component: "docs/config-examples/default-config.toml")
+}
 
 var defaultConfigUrl: URL {
     if isUnitTest {
-        var url = URL(filePath: #file)
-        while !FileManager.default.fileExists(atPath: url.appending(component: ".git").path) {
-            url.deleteLastPathComponent()
-        }
-        let projectRoot: URL = url
-        return projectRoot.appending(component: "docs/config-examples/default-config.toml")
+        return getDefaultConfigUrlFromProject()
     } else {
-        return Bundle.main.url(forResource: "default-config", withExtension: "toml")!
+        return Bundle.main.url(forResource: "default-config", withExtension: "toml")
+            // Useful for debug builds that aren't bundled
+            ?? getDefaultConfigUrlFromProject()
     }
 }
 let defaultConfig: Config = {
@@ -36,7 +42,7 @@ struct Config: Copyable {
     var automaticallyUnhideMacosHiddenApps: Bool = false
     var accordionPadding: Int = 30
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
-    var execOnWorkspaceChange: [String] = [] // todo deprecate
+    var execOnWorkspaceChange: [String] = []  // todo deprecate
     var keyMapping = KeyMapping()
     var execConfig: ExecConfig = ExecConfig()
 
