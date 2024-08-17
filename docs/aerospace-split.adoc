@@ -15,6 +15,9 @@ aerospace split [-h|--help] (horizontal|vertical|opposite)
 == Description
 
 // tag::body[]
+`split` command exist solely for compatibility with i3.
+Unless you're hardcore i3 user who knows what they are doing, it's recommended to use `join-with`
+
 *If the parent of focused window contains more than one child*, then the command
 
 . Creates a new tiling container

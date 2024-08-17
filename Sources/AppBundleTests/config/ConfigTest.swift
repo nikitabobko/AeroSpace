@@ -168,7 +168,9 @@ final class ConfigTest: XCTestCase {
                 The config contains:
                 1. usage of 'split' command
                 2. enable-normalization-flatten-containers = true
-                These two settings don't play nicely together. 'split' command has no effect in this case
+                These two settings don't play nicely together. 'split' command has no effect when enable-normalization-flatten-containers is disabled.
+
+                My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.
                 """],
             errors.descriptions
         )

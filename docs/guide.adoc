@@ -252,7 +252,7 @@ The tree structure can be changed with three commands:
 
 . xref:commands.adoc#move[move]
 . xref:commands.adoc#join-with[join-with]
-. xref:commands.adoc#split[split]
+. xref:commands.adoc#split[split] (it's for compatibility with i3. Please prefer `join-with` over `split`)
 
 [#layouts]
 === Layouts
@@ -337,14 +337,7 @@ h_tiles
 ----
 
 Normalizations make it easier to understand the tree structure by looking at how windows are placed on the screen.
-
-You can disable normalizations by placing these lines to your config:
-
-[source,toml]
-----
-enable-normalization-flatten-containers = false
-enable-normalization-opposite-orientation-for-nested-containers = false
-----
+Unless you're hardcore i3 user who knows what they are doing, it's recommended to keep the normalizations enabled.
 
 [#floating-windows]
 === Floating windows

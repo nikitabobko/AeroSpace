@@ -7,7 +7,7 @@ struct SplitCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         if config.enableNormalizationFlattenContainers {
-            return state.failCmd(msg: "'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled")
+            return state.failCmd(msg: "'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled. My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.")
         }
         guard let window = state.subject.windowOrNil else {
             return state.failCmd(msg: noWindowIsFocused)
