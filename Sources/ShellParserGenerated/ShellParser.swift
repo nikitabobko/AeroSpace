@@ -554,7 +554,6 @@ open class ShellParser: Parser {
 		let _parentState: Int = getState()
 		var _localctx: CmdContext
 		_localctx = CmdContext(_ctx, _parentState)
-		var _prevctx: CmdContext = _localctx
 		let _startState: Int = 4
 		try enterRecursionRule(_localctx, 4, ShellParser.RULE_cmd, _p)
 		var _la: Int = 0
@@ -570,7 +569,6 @@ open class ShellParser: Parser {
 			case 1:
 				_localctx = ArgsContext(_localctx)
 				_ctx = _localctx
-				_prevctx = _localctx
 
 				setState(63)
 				try match(ShellParser.Tokens.WORD.rawValue)
@@ -593,7 +591,6 @@ open class ShellParser: Parser {
 			case 2:
 				_localctx = ParensContext(_localctx)
 				_ctx = _localctx
-				_prevctx = _localctx
 				setState(70)
 				try match(ShellParser.Tokens.LPAR.rawValue)
 				setState(71)
@@ -605,7 +602,6 @@ open class ShellParser: Parser {
 			case 3:
 				_localctx = CmdErrorContext(_localctx)
 				_ctx = _localctx
-				_prevctx = _localctx
 				setState(74)
 				try match(ShellParser.Tokens.LPAR.rawValue)
 				setState(75)
@@ -620,7 +616,6 @@ open class ShellParser: Parser {
 			case 4:
 				_localctx = CmdErrorContext(_localctx)
 				_ctx = _localctx
-				_prevctx = _localctx
 				setState(80)
 				try match(ShellParser.Tokens.LPAR.rawValue)
 				setState(81)
@@ -639,7 +634,6 @@ open class ShellParser: Parser {
 					if _parseListeners != nil {
 					   try triggerExitRuleEvent()
 					}
-					_prevctx = _localctx
 					setState(113)
 					try _errHandler.sync(self)
 					switch(try getInterpreter().adaptivePredict(_input,15, _ctx)) {

@@ -7,7 +7,6 @@ class GlobalObserver {
 
     @objc private static func onHideApp() {
         refreshSession(body: {
-            print("macOS hide app")
             if config.automaticallyUnhideMacosHiddenApps {
                 if let w = prevFocus?.windowOrNil,
                         w.macAppUnsafe.nsApp.isHidden,

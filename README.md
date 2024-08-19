@@ -1,4 +1,4 @@
- <img src="./xcode-app-bundle-launcher/Assets.xcassets/AppIcon.appiconset/icon.png" width="40%" height="40%" align="right">
+ <img src="./resources/Assets.xcassets/AppIcon.appiconset/icon.png" width="40%" height="40%" align="right">
 
 # AeroSpace Beta [![Build](https://github.com/nikitabobko/AeroSpace/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/nikitabobko/AeroSpace/actions/workflows/build.yml)
 

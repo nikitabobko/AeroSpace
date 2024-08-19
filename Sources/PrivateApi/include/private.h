@@ -3,7 +3,7 @@
 
 #import <ApplicationServices/ApplicationServices.h>
 
-// Alternative:
+// Potential alternative 1?
 // func allWindowsOnCurrentMacOsSpace() {
 //     let options = CGWindowListOption(arrayLiteral: .excludeDesktopElements, .optionOnScreenOnly)
 //     let windowsListInfo = CGWindowListCopyWindowInfo(options, CGWindowID(0))
@@ -18,6 +18,11 @@
 //             print("---")
 //     }
 // }
+//
+// Alternative 2:
+// @_silgen_name("_AXUIElementGetWindow")
+// @discardableResult
+// func _AXUIElementGetWindow(_ axUiElement: AXUIElement, _ id: inout CGWindowID) -> AXError
 AXError _AXUIElementGetWindow(AXUIElementRef element, uint32_t *identifier);
 
 #endif

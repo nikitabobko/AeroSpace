@@ -104,7 +104,7 @@ open class ShellLexer: Lexer {
 		switch (actionIndex) {
 		case 0:
 
-			    _ = Result { try popMode() }
+			    _ = try? popMode()
 
 
 		 default: break
@@ -114,7 +114,7 @@ open class ShellLexer: Lexer {
 		switch (actionIndex) {
 		case 1:
 
-			    _ = Result { try popMode() }
+			    _ = try? popMode()
 
 
 		 default: break
