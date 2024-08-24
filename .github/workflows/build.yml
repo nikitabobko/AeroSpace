@@ -32,6 +32,5 @@ jobs:
       - run: ./script/install-deps.sh
       # "-" means "Sign to run locally". There is no aerospace-codesign-certificate in GH Actions
       - run: ./build-debug.sh
-      - run: ./build-app-bundle-debug.sh --codesign-identity -
       - run: ./run-tests.sh
-      - run: ./build-app-bundle-release.sh --codesign-identity -
+      - run: ./build-release.sh --codesign-identity -

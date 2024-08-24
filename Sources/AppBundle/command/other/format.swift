@@ -105,7 +105,7 @@ private extension String {
             case (.window(let w), .window(let f)):
                 return switch f {
                     case .windowId: .success(w.windowId.description)
-                    case .windowTitle: .success(w.title.description)
+                    case .windowTitle: .success(w.title)
                 }
             case (.workspace(let w), .workspace(let f)):
                 return switch f {
