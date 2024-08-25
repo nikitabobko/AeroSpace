@@ -14,6 +14,7 @@ public func initAppBundle() {
         check(reloadConfig(forceConfigUrl: defaultConfigUrl))
     }
     if serverArgs.startedAtLogin && !config.startAtLogin {
+        printStderr("--started-at-login is passed but 'started-at-login = false' in the config. Terminating...")
         terminateApp()
     }
 

@@ -45,7 +45,7 @@ Please keep the conversation to the point. Discuss one issue at a time, crossref
 You can take a look at the following issues:
 
 * Most voted issues: https://github.com/nikitabobko/AeroSpace/issues?q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc
-* Sometimes conversations happen on old issues that aren’t yet closed. See "Unresolved conversations" section in https://github.com/nikitabobko/AeroSpace/pulse
+* Sometimes conversations happen on old issues that aren’t yet closed. See https://github.com/nikitabobko/AeroSpace/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc
 * Issues that are unclear on how to fix, or issues that require design of the interface (CLI or config interface) are tagged with `design-needed` tag https://github.com/nikitabobko/AeroSpace/issues?q=is%3Aissue+is%3Aopen+label%3Adesign-needed
 
 ## Submit Pull Requests

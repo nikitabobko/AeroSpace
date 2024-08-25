@@ -662,10 +662,7 @@ The first matching pattern will be used
 
 xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command has no effect for workspaces that have monitor assignment
 
-[#caveats]
-== Caveats
-
-=== Dialog heuristics
+== Dialog heuristics
 
 * Apple provides accessibility API for apps to let others know which of their windows are dialogs
 * A lot of apps don't implement this API or implement it improperly
@@ -679,17 +676,15 @@ For example, windows without a fullscreen button (NB! fullscreen button and maxi
 
 Windows that are recognized as dialogs are floated by default.
 
-It's not possible to disable the heuristics, because the goal is to make the heuristics so good that there won't problems with them.
-If you find that some windows are not handled properly please https://github.com/nikitabobko/AeroSpace/issues/new[report an issue]
-
-Anyway, your alternatives are:
+If you find that some windows are not handled properly please https://github.com/nikitabobko/AeroSpace/issues/new[report an issue] (don't forget to attach xref:./commands.adoc#debug-windows[debug-windows output]).
+You can also use `on-window-detected` to force tile or force float all windows of a particular application:
 
 . Force tile all the windows (or windows of a particular app)
 +
 [source,toml]
 ----
 [[on-window-detected]]
-check-further-callbacks = true
+if.app-id = '...'
 run = 'layout tiling'
 ----
 . Force float all the windows (or windows of a particular app)
@@ -697,6 +692,10 @@ run = 'layout tiling'
 [source,toml]
 ----
 [[on-window-detected]]
-check-further-callbacks = true
+if.app-id = '...'
 run = 'layout floating'
 ----
+
+== Common pitfall: keyboard keys handling
+
+If you can't make AeroSpace handle some keys in your config, please make sure that you don't have keys conflict with other software that might listen to global keys (e.g. skhd, Karabiner-Elements, Raycast)

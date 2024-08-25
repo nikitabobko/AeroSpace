@@ -36,14 +36,15 @@ If you only plan to build the debug version of AeroSpace, you can run it from th
 ## 3. Entry point scripts
 
 **Debug build**
-- `build-debug.sh` - Build debug build to `.debug` dir.
-- `run-tests.sh` - Run tests.
-- `run-debug.sh` - Run AeroSpace.app debug build.
-- `run-cli.sh` - Run `aerospace` in CLI. Arguments are forwarded to `aerospace` binary.
-- `build-docs.sh` - Build the site and man pages to `.site` and `.man` dirs respectively.
-- `build-shell-completion.sh` - Build shell completion to `.shell-completion`.
-- `generate.sh` - Regenerate generated project files. `AeroSpace.xcodeproj` is generated, and some of the source files
-  (the source files have `Generated` suffix in their names).
+-   `build-debug.sh` - Build debug build to `.debug` dir.
+-   `run-tests.sh` - Run tests.
+-   `run-debug.sh` - Run AeroSpace.app debug build.
+-   `run-cli.sh` - Run `aerospace` in CLI. Arguments are forwarded to `aerospace` binary.
+-   `build-docs.sh` - Build the site and man pages to `.site` and `.man` dirs respectively.
+-   `build-shell-completion.sh` - Build shell completion to `.shell-completion`.
+    You can test that the completion works properly by sourcing the file `source ./.shell-completion/zsh/_aerospace`
+-   `generate.sh` - Regenerate generated project files. `AeroSpace.xcodeproj` is generated, and some of the source files
+    (the source files have `Generated` suffix in their names).
 
 > [!IMPORTANT]
 > Debug build uses `~/.aerospace-debug.toml` instead of `~/.aerospace.toml`

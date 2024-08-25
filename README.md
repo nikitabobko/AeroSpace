@@ -78,7 +78,7 @@ See: [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 A notes on how to setup the project, build it, how to run the tests, etc. can be found here: [dev-docs/development.md](./dev-docs/development.md)
 
-## Values of the project
+## Project values
 
 **Values**
 - AeroSpace is targeted at advanced users and developers
@@ -90,7 +90,7 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
   - AeroSpace will never provide a GUI for configuration.
     For advanced users, it's easier to edit a configuration file in text editor rather than navigating through checkboxes in GUI.
   - Status menu icon is ok, because visual feedback is needed
-- Provide _practical_ features. Fancy appearance features are not _practical_ (e.g. window borders, transparency, etc)
+- Provide _practical_ features. Fancy appearance features are not _practical_ (e.g. window borders, transparency, animations, etc.)
 - If "dark magic" (aka "private APIs", "code injections", etc) can be avoided, it must be avoided
   - Right now, AeroSpace uses only a single private API to get window ID of accessibility object `_AXUIElementGetWindow`.
     Everything else is [macOS public accessibility API](https://developer.apple.com/documentation/applicationservices/axuielement_h).
@@ -98,8 +98,9 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
     AeroSpace will either find another way (such as [emulation of workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)) or will not implement this feature at all (window transparency and window shadowing are not _practical_ features)
 
 **Non Values**
-- Play nicely with existing macOS features. If limitations are imposed then AeroSpace won't play nicely with existing macOS features
-  - E.g. AeroSpace doesn't acknowledge the existence of macOS Spaces, and it uses [emulation of its own workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)
+- Play nicely with existing macOS features.
+  If limitations are imposed then AeroSpace won't play nicely with existing macOS features
+  (For example, AeroSpace doesn't acknowledge the existence of macOS Spaces, and it uses [emulation of its own workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces))
 
 ## Tip of the day
 

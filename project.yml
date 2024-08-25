@@ -1,4 +1,5 @@
-# Project configuration. Managed by https://github.com/yonaskolb/XcodeGen
+# Xcode project configuration. Managed by https://github.com/yonaskolb/XcodeGen
+# Xcode is only used to build the release App Bundle. Debug builds only use Swift Package Manager
 
 name: AeroSpace
 
@@ -18,6 +19,7 @@ targets:
     dependencies:
       - package: AeroSpacePackage
         product: AppBundle
+    # https://developer.apple.com/documentation/xcode/build-settings-reference
     settings:
       base:
         SWIFT_VERSION: 5.9
