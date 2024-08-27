@@ -30,7 +30,9 @@ jobs:
           key: ${{ matrix.os }}-${{ runner.arch }}-${{ hashFiles('script/install-deps.sh', 'swift-exec-deps/Package.swift', 'swift-exec-deps/Package.resolved', 'Gemfile', '.bundle/config') }}
       - run: brew install bash fish xcbeautify
       - run: ./script/install-deps.sh
-      # "-" means "Sign to run locally". There is no aerospace-codesign-certificate in GH Actions
       - run: ./build-debug.sh
       - run: ./run-tests.sh
-      - run: ./build-release.sh --codesign-identity -
+        # "-" means "Sign to run locally". There is no aerospace-codesign-certificate in GH Actions
+        # build-release.sh takes too much time to complete in macos-13.
+        # Running build-release.sh only in macos-14, cuts the build time twice in GH Actions.
+      - run: if sw_vers -productVersion | grep -q "^14"; then ./build-release.sh --codesign-identity -; fi
