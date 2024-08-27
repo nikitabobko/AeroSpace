@@ -17,6 +17,7 @@ aerospace -h;
 
     | focus [<focus_flag>]... (left|down|up|right) [<focus_flag>]...
     | focus --window-id <window_id>
+    | focus --dfs-index <number>
 
     | focus-back-and-forth
 

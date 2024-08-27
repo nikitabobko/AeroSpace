@@ -12,6 +12,7 @@ include::util/man-attributes.adoc[]
 aerospace focus [-h|--help] [--boundaries <boundary>]
                 [--boundaries-action <action>] [--ignore-floating] (left|down|up|right)
 aerospace focus [-h|--help] --window-id <window-id>
+aerospace focus [-h|--help] --dfs-index <dfs-index>
 
 // end::synopsis[]
 
@@ -47,6 +48,10 @@ The default is: `wrap-around-the-workspace`
 
 --window-id <window-id>::
 Focus the window with specified `<window-id>`
+
+--dfs-index <dfs-index>::
+Focus window by its index, based on a depth-first search (DFS) of the window within the workspace tree.
+Index is 0-based.
 
 --ignore-floating::
 Don't perceive floating windows as part of the tree.
