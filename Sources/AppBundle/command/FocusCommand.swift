@@ -32,6 +32,12 @@ struct FocusCommand: Command {
                 } else {
                     return state.failCmd(msg: "Can't find window with ID \(windowId)")
                 }
+            case .dfsIndex(let dfsIndex):
+                if let windowToFocus = workspace.rootTilingContainer.allLeafWindowsRecursive.getOrNil(atIndex: dfsIndex.int ?? -1) {
+                    result = windowToFocus.focusWindow() && result
+                } else {
+                    return state.failCmd(msg: "Can't find window with DFS index \(dfsIndex)")
+                }
         }
         state.subject = .focused
         return result

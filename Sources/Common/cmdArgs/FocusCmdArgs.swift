@@ -12,6 +12,7 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
             OPTIONS:
               -h, --help                     Print help
               --window-id <window-id>        Focus window with specified <window-id>
+              --dfs--index <dfs-index>       Focus the window with the specified index <dfs-index> during a DFS operation in the window tree
               --boundaries \(boundar)        Defines focus boundaries.
                                              \(boundar) possible values: \(FocusCmdArgs.Boundaries.unionLiteral)
                                              The default is: \(FocusCmdArgs.Boundaries.workspace.rawValue)
@@ -27,7 +28,8 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
             "--ignore-floating": falseBoolFlag(\.floatingAsTiling),
             "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
             "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
-            "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32))
+            "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32)),
+            "--dfs-index": ArgParser(\.dfsIndex, upcastArgParserFun(parseArgWithUInt32))
         ],
         arguments: [ArgParser(\.direction, upcastArgParserFun(parseCardinalDirectionArg))]
     )
@@ -35,6 +37,7 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
     public var rawBoundaries: Boundaries? = nil // todo cover boundaries wrapping with tests
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
     public var windowId: UInt32? = nil
+    public var dfsIndex: UInt32? = nil
     public var direction: CardinalDirection? = nil
     public var floatingAsTiling: Bool = true
 
@@ -51,6 +54,11 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
         self.windowId = windowId
     }
 
+    public init(rawArgs: [String], dfsIndex: UInt32) {
+        self.rawArgs = .init(rawArgs)
+        self.dfsIndex = dfsIndex
+    }
+
     public enum Boundaries: String, CaseIterable, Equatable {
         case workspace
         case allMonitorsUnionFrame = "all-monitors-outer-frame"
@@ -65,6 +73,7 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
 public enum FocusCmdTarget {
     case direction(CardinalDirection)
     case windowId(UInt32)
+    case dfsIndex(UInt32)
 }
 
 public extension FocusCmdArgs {
@@ -74,6 +83,9 @@ public extension FocusCmdArgs {
         }
         if let windowId {
             return .windowId(windowId)
+        }
+        if let dfsIndex {
+            return .dfsIndex(dfsIndex)
         }
         error("Parser invariants are broken")
     }
@@ -89,11 +101,14 @@ public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
                 ? .failure("\(raw.boundaries.rawValue) and \(raw.boundariesAction.rawValue) is an invalid combination of values")
                 : .cmd(raw)
         }
-        .filter("Mandatory argument is missing. '\(CardinalDirection.unionLiteral)' or --window-id") {
-            $0.direction != nil || $0.windowId != nil
+        .filter("Mandatory argument is missing. '\(CardinalDirection.unionLiteral)', --window-id or --dfs-index is required") {
+            $0.direction != nil || $0.windowId != nil || $0.dfsIndex != nil
         }
         .filter("--window-id is incompatible with other options") {
             $0.windowId == nil || $0 == FocusCmdArgs(rawArgs: args, windowId: $0.windowId!)
+        }
+        .filter("--dfs-index is incompatible with other options") {
+            $0.dfsIndex == nil || $0 == FocusCmdArgs(rawArgs: args, dfsIndex: $0.dfsIndex!)
         }
 }
 
