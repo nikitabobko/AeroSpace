@@ -13,7 +13,7 @@ setup() {
 
     cmd-exist git            && ln -fs "$(which git)" .deps/bin/git
     cmd-exist cargo          && ln -fs "$(which cargo)" .deps/bin/cargo
-    cmd-exist rustc          && ln -fs "$(which cargo)" .deps/bin/rustc
+    cmd-exist rustc          && ln -fs "$(which rustc)" .deps/bin/rustc
     cmd-exist xcbeautify     && ln -fs "$(which xcbeautify)" .deps/bin/xcbeautify
     cmd-exist fish           && ln -fs "$(which fish)" .deps/bin/fish
     cmd-exist bash           && ln -fs "$(which bash)" .deps/bin/bash

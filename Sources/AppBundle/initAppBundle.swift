@@ -69,15 +69,6 @@ private func initServerArgs() {
             case "--started-at-login":
                 serverArgs.startedAtLogin = true
                 args = Array(args.dropFirst())
-            case "-NSDocumentRevisionsDebugMode": // Freaking Xcode adds this stupid argument. Ignore it
-                if isDebug {
-                    if args.getOrNil(atIndex: 1) != "YES" {
-                        cliError("Expecting YES after -NSDocumentRevisionsDebugMode flag")
-                    }
-                    args = Array(args.dropFirst(2))
-                } else {
-                    fallthrough
-                }
             default:
                 cliError("Unrecognized flag '\(args.first!)'")
         }
