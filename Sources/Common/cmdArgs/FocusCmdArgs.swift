@@ -8,11 +8,12 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
         help: """
             USAGE: focus [<options>] \(CardinalDirection.unionLiteral)
                OR: focus [-h|--help] --window-id <window-id>
+               OR: focus [-h|--help] --dfs-index <dfs-index>
 
             OPTIONS:
               -h, --help                     Print help
               --window-id <window-id>        Focus window with specified <window-id>
-              --dfs--index <dfs-index>       Focus window by its DFS index
+              --dfs-index <dfs-index>        Focus window by its DFS index
               --boundaries \(boundar)        Defines focus boundaries.
                                              \(boundar) possible values: \(FocusCmdArgs.Boundaries.unionLiteral)
                                              The default is: \(FocusCmdArgs.Boundaries.workspace.rawValue)
