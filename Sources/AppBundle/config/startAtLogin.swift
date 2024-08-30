@@ -26,9 +26,7 @@ func syncStartAtLogin() {
             """
         Result { try plist.write(to: url, atomically: false, encoding: .utf8) }
             .getOrThrow("Can't write to \(url) ")
-        Result { try Process.run(URL(filePath: "/bin/launchctl"), arguments: ["load", url.absoluteString]) }.getOrThrow()
     } else {
-        Result { try Process.run(URL(filePath: "/bin/launchctl"), arguments: ["unload", url.absoluteString]) }.getOrThrow()
         try? FileManager.default.removeItem(at: url)
     }
 }
