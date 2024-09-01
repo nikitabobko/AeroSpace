@@ -10,6 +10,15 @@ extension Monitor {
         )
     }
 
+    var visibleRectWithoutOuterGaps: Rect {
+        return Rect(
+            topLeftX: visibleRect.topLeftCorner.x,
+            topLeftY: visibleRect.topLeftCorner.y,
+            width: visibleRect.width,
+            height: visibleRect.height
+        )
+    }
+
     var monitorId: Int? {
         let sorted = sortedMonitors
         let origin = self.rect.topLeftCorner

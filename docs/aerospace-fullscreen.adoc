@@ -8,7 +8,7 @@ include::util/man-attributes.adoc[]
 // =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
-aerospace fullscreen [-h|--help] [on|off]
+aerospace fullscreen [-h|--help] [--no-outer-gaps] [on|off]
 // end::synopsis[]
 
 // =========================================================== Description
@@ -23,6 +23,9 @@ Switching to a different tiling window within the same workspace while the curre
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+--no-outer-gaps::
+Remove the outer gaps when in fullscreen mode
 
 // =========================================================== Arguments
 include::util/conditional-arguments-header.adoc[]

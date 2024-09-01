@@ -8,6 +8,7 @@ class Window: TreeNode, Hashable {
     var parentOrNilForTests: NonLeafTreeNodeObject? { super.parent }
     var lastFloatingSize: CGSize?
     var isFullscreen: Bool = false
+    var noOuterGaps: Bool = false
     var layoutReason: LayoutReason = .standard
 
     init(id: UInt32, _ app: AbstractApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
