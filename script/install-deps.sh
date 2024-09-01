@@ -60,7 +60,7 @@ if test $all == 1 || test $complgen == 1; then
 fi
 
 if test $all == 1 || test $swiftlint == 1; then
-    if ! check-version 0.55.1 ./swift-exec-deps/.build/debug/swiftlint --version; then
+    if ! check-version 0.56.2 ./swift-exec-deps/.build/debug/swiftlint --version; then
         swift run --package-path ./swift-exec-deps swiftlint --version
     fi
 fi

@@ -84,10 +84,10 @@
     {
       "identity" : "swift-syntax",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-syntax.git",
+      "location" : "https://github.com/swiftlang/swift-syntax.git",
       "state" : {
-        "revision" : "303e5c5c36d6a558407d364878df131c3546fad8",
-        "version" : "510.0.2"
+        "revision" : "515f79b522918f83483068d99c68daeb5116342d",
+        "version" : "600.0.0-prerelease-2024-08-14"
       }
     },
     {
@@ -104,8 +104,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/realm/SwiftLint",
       "state" : {
-        "revision" : "b515723b16eba33f15c4677ee65f3fef2ce8c255",
-        "version" : "0.55.1"
+        "revision" : "a24488f26e60247d8fff7bbb03d51910af3dc91c",
+        "version" : "0.56.2"
       }
     },
     {
