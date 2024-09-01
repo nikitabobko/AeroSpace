@@ -33,10 +33,8 @@ struct LayoutCommand: Command {
                 switch window.parent.cases {
                     case .macosPopupWindowsContainer:
                         return false // Impossible
-                    case .macosMinimizedWindowsContainer:
-                        return state.failCmd(msg: "Can't change layout of macOS invisible windows (hidden application or minimized windows). This behavior is subject to change")
-                    case .macosFullscreenWindowsContainer:
-                        return state.failCmd(msg: "Can't change layout of macOS fullscreen windows. This behavior is subject to change")
+                    case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
+                        return state.failCmd(msg: "Can't change layout for macOS minimized, fullscreen windows or windows or hidden apps. This behavior is subject to change")
                     case .tilingContainer:
                         return true // Nothing to do
                     case .workspace(let workspace):
@@ -61,7 +59,8 @@ private func changeTilingLayout(_ state: CommandMutableState, targetLayout: Layo
             parent.layout = targetLayout
             parent.changeOrientation(targetOrientation)
             return true
-        case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosPopupWindowsContainer:
+        case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
+                .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
             return state.failCmd(msg: "The window is non-tiling")
     }
 }

@@ -44,7 +44,8 @@ private extension TreeNode {
                     case .accordion:
                         container.layoutAccordion(point, width: width, height: height, virtual: virtual, context)
                 }
-            case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosPopupWindowsContainer:
+            case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
+                 .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
                 return // Nothing to do for weirdos
         }
     }

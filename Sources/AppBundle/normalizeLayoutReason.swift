@@ -48,7 +48,7 @@ func exitMacOsNativeOrInvisibleState(window: Window, prevParentKind: NonLeafTree
             window.relayoutWindow(on: workspace, forceTile: true)
         case .macosPopupWindowsContainer: // Since the window was minimized/fullscreened it was mistakenly detected as popup. Relayout the window
             window.relayoutWindow(on: workspace)
-        case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer: // wtf case, should never be possible. But If encounter it, let's just re-layout window
+        case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer: // wtf case, should never be possible. But If encounter it, let's just re-layout window
             window.relayoutWindow(on: workspace)
     }
 }

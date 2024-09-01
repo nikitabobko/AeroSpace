@@ -31,6 +31,15 @@ extension Workspace {
         }
     }
 
+    var macOsNativeHiddenAppsWindowsContainer: MacosHiddenAppsWindowsContainer {
+        let containers = children.filterIsInstance(of: MacosHiddenAppsWindowsContainer.self)
+        return switch containers.count {
+            case 0: MacosHiddenAppsWindowsContainer(parent: self)
+            case 1: containers.singleOrNil()!
+            default: errorT("Workspace must contain zero or one MacosHiddenAppsWindowsContainer")
+        }
+    }
+
     var forceAssignedMonitor: Monitor? {
         guard let monitorDescriptions = config.workspaceToMonitorForceAssignment[name] else { return nil }
         let sortedMonitors = sortedMonitors

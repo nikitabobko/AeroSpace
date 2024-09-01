@@ -36,10 +36,8 @@ struct SplitCommand: Command {
                     window.bind(to: newParent, adaptiveWeight: WEIGHT_AUTO, index: 0)
                 }
                 return true
-            case .macosMinimizedWindowsContainer:
-                return state.failCmd(msg: "Can't split invisible windows (minimized windows or windows of hidden apps). This behavior may change in the future")
-            case .macosFullscreenWindowsContainer:
-                return state.failCmd(msg: "Can't split fullscreen windows. This behavior may change in the future")
+            case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
+                return state.failCmd(msg: "Can't split macos fullscreen, minimized windows and windows of hidden apps. This behavior may change in the future")
             case .macosPopupWindowsContainer:
                 return false // Impossible
         }

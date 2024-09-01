@@ -54,7 +54,8 @@ class TreeNode: Equatable {
             case .floatingWindow, .macosNativeFullscreenWindow: errorT("Weight doesn't make sense for floating windows")
             case .macosNativeMinimizedWindow: errorT("Weight doesn't make sense for invisible windows")
             case .macosPopupWindow: errorT("Weight doesn't make sense for popup windows")
-            case .macosNativeFullscreenStubContainer: errorT("Weight doesn't make sense for stub fullscreen container")
+            case .macosNativeHiddenAppWindow: errorT("Weight doesn't make sense for windows of hidden apps")
+            case .stubContainerRelation: errorT("Weight doesn't make sense for stub containers")
         }
     }
 
@@ -72,7 +73,7 @@ class TreeNode: Equatable {
                     newParent.children.sumOf { $0.getWeight(newParent.orientation) }.div(newParent.children.count) ?? 1
                 case .floatingWindow, .macosNativeFullscreenWindow: WEIGHT_FLOATING
                 case .rootTilingContainer, .macosNativeMinimizedWindow,
-                    .macosNativeFullscreenStubContainer, .macosPopupWindow: 1
+                    .stubContainerRelation, .macosPopupWindow, .macosNativeHiddenAppWindow: 1
             }
         } else {
             self.adaptiveWeight = adaptiveWeight

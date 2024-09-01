@@ -191,8 +191,9 @@ extension TreeNode {
         return switch nodeCases {
             case .window(let window): .window(window.windowId)
             case .workspace(let workspace): .workspace(workspace.children.map(\.layoutDescription))
-            case .macosMinimizedWindowsContainer: .macosInvisible
+            case .macosMinimizedWindowsContainer: .macosMinimized
             case .macosFullscreenWindowsContainer: .macosFullscreen
+            case .macosHiddenAppsWindowsContainer: .macosHiddeAppWindow
             case .macosPopupWindowsContainer: .macosPopupWindowsContainer
             case .tilingContainer(let container):
                 switch container.layout {
@@ -217,6 +218,7 @@ enum LayoutDescription: Equatable {
     case v_accordion([LayoutDescription])
     case window(UInt32)
     case macosPopupWindowsContainer
-    case macosInvisible
+    case macosMinimized
+    case macosHiddeAppWindow
     case macosFullscreen
 }

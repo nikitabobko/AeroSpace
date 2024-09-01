@@ -73,7 +73,8 @@ final class MacWindow: Window, CustomStringConvertible {
         let focus = focus
         if let workspace, workspace == focus.workspace.name || workspace == prevFocusedWorkspace?.name {
             switch parent.cases {
-                case .tilingContainer, .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer:
+                case .tilingContainer, .workspace, .macosMinimizedWindowsContainer,
+                        .macosHiddenAppsWindowsContainer, .macosFullscreenWindowsContainer:
                     refreshSession(forceFocus: focus.windowOrNil?.app != app) {
                         _ = Workspace.get(byName: workspace).focusWorkspace()
                     }
@@ -310,7 +311,8 @@ private func destroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, d
 
 func tryOnWindowDetected(_ window: Window, startup: Bool) {
     switch window.parent.cases {
-        case .tilingContainer, .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer:
+        case .tilingContainer, .workspace, .macosMinimizedWindowsContainer,
+                .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
             onWindowDetected(window, startup: startup)
         case .macosPopupWindowsContainer:
             break

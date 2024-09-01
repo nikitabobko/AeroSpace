@@ -28,18 +28,15 @@ struct MoveCommand: Command {
                 }
             case .workspace: // floating window
                 return state.failCmd(msg: "moving floating windows isn't yet supported") // todo
-            case .macosMinimizedWindowsContainer:
-                return state.failCmd(msg: moveOutInvisibleWindow)
-            case .macosFullscreenWindowsContainer:
-                return state.failCmd(msg: moveOutFullscreenWindow)
+            case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
+                return state.failCmd(msg: moveOutMacosSillyWindow)
             case .macosPopupWindowsContainer:
                 return false // Impossible
         }
     }
 }
 
-private let moveOutInvisibleWindow = "moving macOS invisible windows (minimized, or windows of hidden apps) isn't yet supported. This behavior is subject to change"
-private let moveOutFullscreenWindow = "moving macOS fullscreen windows isn't yet supported. This behavior is subject to change"
+private let moveOutMacosSillyWindow = "moving macOS fullscreen, minimized windows and windows of hidden apps isn't yet supported. This behavior is subject to change"
 
 private func moveOut(_ state: CommandMutableState, window: Window, direction: CardinalDirection) -> Bool {
     let innerMostChild = window.parents.first(where: {
@@ -47,7 +44,7 @@ private func moveOut(_ state: CommandMutableState, window: Window, direction: Ca
             case .tilingContainer(let parent): parent.orientation == direction.orientation
             // Stop searching
             case .workspace, .macosMinimizedWindowsContainer, nil, .macosFullscreenWindowsContainer,
-                .macosPopupWindowsContainer: true
+                .macosHiddenAppsWindowsContainer, .macosPopupWindowsContainer: true
         }
     }) as! TilingContainer
     let bindTo: TilingContainer
@@ -67,12 +64,8 @@ private func moveOut(_ state: CommandMutableState, window: Window, direction: Ca
 
             bindTo = parent.rootTilingContainer
             bindToIndex = direction.insertionOffset
-        case .macosMinimizedWindowsContainer:
-            state.stderr.append(moveOutInvisibleWindow)
-            return false
-        case .macosFullscreenWindowsContainer:
-            state.stderr.append(moveOutFullscreenWindow)
-            return false
+        case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
+            return state.failCmd(msg: moveOutMacosSillyWindow)
         case .macosPopupWindowsContainer:
             return false // Impossible
         case .window:
