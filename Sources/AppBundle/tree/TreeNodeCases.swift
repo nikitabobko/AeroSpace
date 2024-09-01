@@ -96,7 +96,7 @@ enum ChildParentRelation: Equatable {
     case floatingWindow
     case macosNativeFullscreenWindow
     case macosNativeFullscreenStubContainer
-    case macosNativeInvisibleWindow
+    case macosNativeMinimizedWindow
     case macosPopupWindow
     case tiling(parent: TilingContainer) // todo consider splitting it on 'tiles' and 'accordion'
     case rootTilingContainer
@@ -117,7 +117,7 @@ func getChildParentRelationOrNil(child: TreeNode, parent: NonLeafTreeNodeObject)
     return switch (child.nodeCases, parent.cases) {
         case (.workspace, _): nil
         case (.window, .workspace): .floatingWindow
-        case (.window, .macosMinimizedWindowsContainer): .macosNativeInvisibleWindow
+        case (.window, .macosMinimizedWindowsContainer): .macosNativeMinimizedWindow
         case (.window, .macosPopupWindowsContainer): .macosPopupWindow
         case (_, .macosMinimizedWindowsContainer): nil
         case (_, .macosPopupWindowsContainer): nil
