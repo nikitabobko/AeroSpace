@@ -24,7 +24,7 @@ struct MacosNativeMinimizeCommand: Command {
             } else { // unminimize
                 switch window.layoutReason {
                     case .macos(let prevParentKind):
-                        exitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)
+                        exitMacOsNativeUnconventionalState(window: window, prevParentKind: prevParentKind, workspace: workspace)
                     default: // wtf case. Theoretically should never happen
                         window.relayoutWindow(on: workspace)
                 }

@@ -52,7 +52,7 @@ class TreeNode: Equatable {
                 parent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
             case .rootTilingContainer: parent.getWeight(targetOrientation)
             case .floatingWindow, .macosNativeFullscreenWindow: errorT("Weight doesn't make sense for floating windows")
-            case .macosNativeMinimizedWindow: errorT("Weight doesn't make sense for invisible windows")
+            case .macosNativeMinimizedWindow: errorT("Weight doesn't make sense for minimized windows")
             case .macosPopupWindow: errorT("Weight doesn't make sense for popup windows")
             case .macosNativeHiddenAppWindow: errorT("Weight doesn't make sense for windows of hidden apps")
             case .stubContainerRelation: errorT("Weight doesn't make sense for stub containers")

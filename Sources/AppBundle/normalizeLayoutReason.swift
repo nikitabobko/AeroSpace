@@ -37,13 +37,13 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) {
                 }
             case .macos(let prevParentKind):
                 if !isMacosFullscreen && !isMacosMinimized && !isMacosWindowOfHiddenApp {
-                    exitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)
+                    exitMacOsNativeUnconventionalState(window: window, prevParentKind: prevParentKind, workspace: workspace)
                 }
         }
     }
 }
 
-func exitMacOsNativeOrInvisibleState(window: Window, prevParentKind: NonLeafTreeNodeKind, workspace: Workspace) {
+func exitMacOsNativeUnconventionalState(window: Window, prevParentKind: NonLeafTreeNodeKind, workspace: Workspace) {
     window.layoutReason = .standard
     switch prevParentKind {
         case .workspace:

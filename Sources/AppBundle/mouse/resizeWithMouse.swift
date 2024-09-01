@@ -31,7 +31,7 @@ private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tes
     switch window.parent.cases {
         case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
                 .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
-            return // Nothing to do for floating, invisible, fullscreen, or popup windows
+            return // Nothing to do for floating, or unconventional windows
         case .tilingContainer:
             guard let rect = window.getRect() else { return }
             guard let lastAppliedLayoutRect = window.lastAppliedLayoutPhysicalRect else { return }

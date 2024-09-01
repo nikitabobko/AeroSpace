@@ -33,7 +33,7 @@ struct MacosNativeFullscreenCommand: Command {
             } else { // Exit fullscreen
                 switch window.layoutReason {
                     case .macos(let prevParentKind):
-                        exitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)
+                        exitMacOsNativeUnconventionalState(window: window, prevParentKind: prevParentKind, workspace: workspace)
                     default:
                         window.relayoutWindow(on: workspace)
                 }

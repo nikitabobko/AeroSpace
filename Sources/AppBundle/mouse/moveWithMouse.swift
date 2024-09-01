@@ -21,7 +21,7 @@ private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
             moveTilingWindow(window)
         case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
                 .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
-            return // Invisible, fullscreen, and popup windows can't be moved with mouse
+            return // Unconventional windows can't be moved with mouse
     }
 }
 
