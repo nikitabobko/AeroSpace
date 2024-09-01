@@ -19,7 +19,7 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
                                              The default is: \(FocusCmdArgs.Boundaries.workspace.rawValue)
               --boundaries-action \(actio)   Defines the behavior when requested to cross the \(boundar).
                                              \(actio) possible values: \(FocusCmdArgs.WhenBoundariesCrossed.unionLiteral)
-                                             The default is: \(FocusCmdArgs.WhenBoundariesCrossed.wrapAroundTheWorkspace.rawValue)
+                                             The default is: \(FocusCmdArgs.WhenBoundariesCrossed.stop.rawValue)
               --ignore-floating              Don't perceive floating windows as part of the tree
 
             ARGUMENTS:
@@ -92,7 +92,7 @@ public extension FocusCmdArgs {
     }
 
     var boundaries: Boundaries { rawBoundaries ?? .workspace }
-    var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .wrapAroundTheWorkspace }
+    var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .stop }
 }
 
 public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {

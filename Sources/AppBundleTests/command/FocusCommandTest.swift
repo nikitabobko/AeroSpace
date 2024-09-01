@@ -82,11 +82,8 @@ final class FocusCommandTest: XCTestCase {
             TestWindow(id: 2, parent: $0)
         }
 
-        //FocusCommand(args: FocusCmdArgs(boundaries: .workspace, boundariesAction: .stop, direction: .left)).run(.focused)
-        var args = FocusCmdArgs(rawArgs: [], direction: .left)
-        args.rawBoundaries = .workspace
-        args.rawBoundariesAction = .stop
-        FocusCommand(args: args).run(.focused)
+        assertEquals(focus.windowOrNil?.windowId, 1)
+        FocusCommand.new(direction: .left).run(.focused)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 
@@ -97,7 +94,10 @@ final class FocusCommandTest: XCTestCase {
         }
 
         assertEquals(focus.windowOrNil?.windowId, 1)
-        FocusCommand.new(direction: .left).run(.focused)
+        var args = FocusCmdArgs(rawArgs: [], direction: .left)
+        args.rawBoundaries = .workspace
+        args.rawBoundariesAction = .wrapAroundTheWorkspace
+        FocusCommand(args: args).run(.focused)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
