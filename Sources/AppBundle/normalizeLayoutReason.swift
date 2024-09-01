@@ -20,19 +20,23 @@ private func validateStillPopups(startup: Bool) {
 private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) {
     for window in windows {
         let isMacosFullscreen = window.isMacosFullscreen
-        let isMacosInvisible = !isMacosFullscreen &&
-            (window.isMacosMinimized || !config.automaticallyUnhideMacosHiddenApps && window.macAppUnsafe.nsApp.isHidden)
+        let isMacosMinimized = !isMacosFullscreen && window.isMacosMinimized
+        let isMacosWindowOfHiddenApp = !isMacosFullscreen && !isMacosMinimized &&
+            !config.automaticallyUnhideMacosHiddenApps && window.macAppUnsafe.nsApp.isHidden
         switch window.layoutReason {
             case .standard:
                 if isMacosFullscreen {
                     window.layoutReason = .macos(prevParentKind: window.parent.kind)
                     window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
-                } else if isMacosInvisible {
+                } else if isMacosMinimized {
                     window.layoutReason = .macos(prevParentKind: window.parent.kind)
                     window.bind(to: macosMinimizedWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+                } else if isMacosWindowOfHiddenApp {
+                    window.layoutReason = .macos(prevParentKind: window.parent.kind)
+                    window.bind(to: workspace.macOsNativeHiddenAppsWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
                 }
             case .macos(let prevParentKind):
-                if !isMacosFullscreen && !isMacosInvisible {
+                if !isMacosFullscreen && !isMacosMinimized && !isMacosWindowOfHiddenApp {
                     exitMacOsNativeOrInvisibleState(window: window, prevParentKind: prevParentKind, workspace: workspace)
                 }
         }
