@@ -7,7 +7,7 @@ class GlobalObserver {
 
     @objc private static func onHideApp() {
         refreshSession(body: {
-            if config.automaticallyUnhideMacosHiddenApps {
+            if TrayMenuModel.shared.isEnabled && config.automaticallyUnhideMacosHiddenApps {
                 if let w = prevFocus?.windowOrNil,
                         w.macAppUnsafe.nsApp.isHidden,
                         // "Hide others" (cmd-alt-h) -> don't force focus
