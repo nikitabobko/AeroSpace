@@ -73,12 +73,11 @@ final class MacWindow: Window, CustomStringConvertible {
         let focus = focus
         if let workspace, workspace == focus.workspace.name || workspace == prevFocusedWorkspace?.name {
             switch parent.cases {
-                case .tilingContainer, .workspace, .macosMinimizedWindowsContainer,
-                        .macosHiddenAppsWindowsContainer, .macosFullscreenWindowsContainer:
+                case .tilingContainer, .workspace, .macosHiddenAppsWindowsContainer, .macosFullscreenWindowsContainer:
                     refreshSession(forceFocus: focus.windowOrNil?.app != app) {
                         _ = Workspace.get(byName: workspace).focusWorkspace()
                     }
-                case .macosPopupWindowsContainer:
+                case .macosPopupWindowsContainer, .macosMinimizedWindowsContainer:
                     break // Don't switch back on popup destruction
             }
         }
