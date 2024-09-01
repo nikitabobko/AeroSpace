@@ -5,7 +5,8 @@ public struct FullscreenCmdArgs: CmdArgs, RawCmdArgs {
         kind: .fullscreen,
         allowInConfig: true,
         help: """
-            USAGE: fullscreen [-h|--help] [--no-outer-gaps] [on|off]
+            USAGE: fullscreen [-h|--help] [--no-outer-gaps] [on]
+               OR: fullscreen [-h|--help] off
 
             OPTIONS:
               -h, --help        Print help

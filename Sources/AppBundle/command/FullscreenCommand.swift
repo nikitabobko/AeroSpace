@@ -18,7 +18,7 @@ struct FullscreenCommand: Command {
             return state.failCmd(msg: newState ? "Already fullscreen" : "Already not fullscreen")
         }
         window.isFullscreen = newState
-        window.noOuterGaps = args.noOuterGaps
+        window.noOuterGapsInFullscreen = args.noOuterGaps
 
         // Focus on its own workspace
         window.markAsMostRecentChild()

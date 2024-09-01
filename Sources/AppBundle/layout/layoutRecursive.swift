@@ -75,8 +75,8 @@ private extension Window {
     }
 
     func layoutFullscreen(_ context: LayoutContext) {
-        let monitorRect = noOuterGaps
-            ? context.workspace.workspaceMonitor.visibleRectWithoutOuterGaps
+        let monitorRect = noOuterGapsInFullscreen
+            ? context.workspace.workspaceMonitor.visibleRect
             : context.workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
         _ = setFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height))
     }
