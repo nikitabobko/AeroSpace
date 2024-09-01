@@ -6,4 +6,4 @@ class MacosMinimizedWindowsContainer: TreeNode, NonLeafTreeNodeObject {
     }
 }
 
-let macosInvisibleWindowsContainer = MacosMinimizedWindowsContainer()
+let macosMinimizedWindowsContainer = MacosMinimizedWindowsContainer()

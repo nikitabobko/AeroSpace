@@ -3,7 +3,7 @@ func normalizeLayoutReason(startup: Bool) {
         let windows: [Window] = workspace.allLeafWindowsRecursive
         _normalizeLayoutReason(workspace: workspace, windows: windows)
     }
-    _normalizeLayoutReason(workspace: focus.workspace, windows: macosInvisibleWindowsContainer.children.filterIsInstance(of: Window.self))
+    _normalizeLayoutReason(workspace: focus.workspace, windows: macosMinimizedWindowsContainer.children.filterIsInstance(of: Window.self))
     validateStillPopups(startup: startup)
 }
 
@@ -29,7 +29,7 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) {
                     window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
                 } else if isMacosInvisible {
                     window.layoutReason = .macos(prevParentKind: window.parent.kind)
-                    window.bind(to: macosInvisibleWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+                    window.bind(to: macosMinimizedWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
                 }
             case .macos(let prevParentKind):
                 if !isMacosFullscreen && !isMacosInvisible {
@@ -48,7 +48,7 @@ func exitMacOsNativeOrInvisibleState(window: Window, prevParentKind: NonLeafTree
             window.relayoutWindow(on: workspace, forceTile: true)
         case .macosPopupWindowsContainer: // Since the window was minimized/fullscreened it was mistakenly detected as popup. Relayout the window
             window.relayoutWindow(on: workspace)
-        case .macosInvisibleWindowsContainer, .macosFullscreenWindowsContainer: // wtf case, should never be possible. But If encounter it, let's just re-layout window
+        case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer: // wtf case, should never be possible. But If encounter it, let's just re-layout window
             window.relayoutWindow(on: workspace)
     }
 }

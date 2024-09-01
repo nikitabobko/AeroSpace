@@ -191,7 +191,7 @@ extension TreeNode {
         return switch nodeCases {
             case .window(let window): .window(window.windowId)
             case .workspace(let workspace): .workspace(workspace.children.map(\.layoutDescription))
-            case .macosInvisibleWindowsContainer: .macosInvisible
+            case .macosMinimizedWindowsContainer: .macosInvisible
             case .macosFullscreenWindowsContainer: .macosFullscreen
             case .macosPopupWindowsContainer: .macosPopupWindowsContainer
             case .tilingContainer(let container):

@@ -28,7 +28,7 @@ struct MoveCommand: Command {
                 }
             case .workspace: // floating window
                 return state.failCmd(msg: "moving floating windows isn't yet supported") // todo
-            case .macosInvisibleWindowsContainer:
+            case .macosMinimizedWindowsContainer:
                 return state.failCmd(msg: moveOutInvisibleWindow)
             case .macosFullscreenWindowsContainer:
                 return state.failCmd(msg: moveOutFullscreenWindow)
@@ -46,7 +46,7 @@ private func moveOut(_ state: CommandMutableState, window: Window, direction: Ca
         return switch $0.parent?.cases {
             case .tilingContainer(let parent): parent.orientation == direction.orientation
             // Stop searching
-            case .workspace, .macosInvisibleWindowsContainer, nil, .macosFullscreenWindowsContainer,
+            case .workspace, .macosMinimizedWindowsContainer, nil, .macosFullscreenWindowsContainer,
                 .macosPopupWindowsContainer: true
         }
     }) as! TilingContainer
@@ -67,7 +67,7 @@ private func moveOut(_ state: CommandMutableState, window: Window, direction: Ca
 
             bindTo = parent.rootTilingContainer
             bindToIndex = direction.insertionOffset
-        case .macosInvisibleWindowsContainer:
+        case .macosMinimizedWindowsContainer:
             state.stderr.append(moveOutInvisibleWindow)
             return false
         case .macosFullscreenWindowsContainer:

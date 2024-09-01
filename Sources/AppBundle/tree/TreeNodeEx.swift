@@ -38,7 +38,7 @@ extension TreeNode {
             case .window: parent?.nodeMonitor
             case .tilingContainer: parent?.nodeMonitor
             case .macosFullscreenWindowsContainer: parent?.nodeMonitor
-            case .macosInvisibleWindowsContainer, .macosPopupWindowsContainer: nil
+            case .macosMinimizedWindowsContainer, .macosPopupWindowsContainer: nil
         }
     }
 
@@ -83,7 +83,7 @@ extension TreeNode {
         let innermostChild = parentsWithSelf.first(where: { (node: TreeNode) -> Bool in
             return switch node.parent?.cases {
                 // stop searching. We didn't find it, or something went wrong
-                case .workspace, nil, .macosInvisibleWindowsContainer,
+                case .workspace, nil, .macosMinimizedWindowsContainer,
                     .macosFullscreenWindowsContainer, .macosPopupWindowsContainer: true
                 case .tilingContainer(let parent):
                     (layout == nil || parent.layout == layout) &&
@@ -95,7 +95,7 @@ extension TreeNode {
             case .tilingContainer(let parent):
                 check(parent.orientation == direction.orientation)
                 return (parent, innermostChild.ownIndexOrNil!)
-            case .workspace, nil, .macosInvisibleWindowsContainer,
+            case .workspace, nil, .macosMinimizedWindowsContainer,
                 .macosFullscreenWindowsContainer, .macosPopupWindowsContainer:
                 return nil
         }
