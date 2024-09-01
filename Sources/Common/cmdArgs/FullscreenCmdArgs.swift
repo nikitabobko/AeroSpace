@@ -1,6 +1,6 @@
 public struct FullscreenCmdArgs: CmdArgs, RawCmdArgs {
     public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .fullscreen,
         allowInConfig: true,
@@ -24,4 +24,9 @@ public struct FullscreenCmdArgs: CmdArgs, RawCmdArgs {
 
     public var toggle: ToggleEnum = .toggle
     public var noOuterGaps: Bool = false
+}
+
+public func parseFullscreenCmdArgs(_ args: [String]) -> ParsedCmd<FullscreenCmdArgs> {
+    return parseRawCmdArgs(FullscreenCmdArgs(rawArgs: args), args)
+        .filter("--no-outer-gaps is incompatible with node off") { $0.toggle != .off || $0.noOuterGaps != true }
 }

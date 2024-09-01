@@ -8,7 +8,8 @@ include::util/man-attributes.adoc[]
 // =========================================================== Synopsis
 == Synopsis
 // tag::synopsis[]
-aerospace fullscreen [-h|--help] [--no-outer-gaps] [on|off]
+aerospace fullscreen [-h|--help] [--no-outer-gaps] [on]
+aerospace fullscreen [-h|--help] off
 // end::synopsis[]
 
 // =========================================================== Description
