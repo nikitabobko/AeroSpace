@@ -1,5 +1,5 @@
-import Foundation
 import AppKit
+import Foundation
 
 public let unixUserName = NSUserName()
 public let mainModeId = "main"

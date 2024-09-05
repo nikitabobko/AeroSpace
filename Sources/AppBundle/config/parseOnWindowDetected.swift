@@ -1,5 +1,5 @@
-import TOMLKit
 import Common
+import TOMLKit
 
 struct WindowDetectedCallback: Copyable, Equatable {
     var matcher: WindowDetectedCallbackMatcher = WindowDetectedCallbackMatcher()
@@ -37,7 +37,7 @@ struct WindowDetectedCallbackMatcher: Copyable, Equatable {
 private let windowDetectedParser: [String: any ParserProtocol<WindowDetectedCallback>] = [
     "if": Parser(\.matcher, parseMatcher),
     "check-further-callbacks": Parser(\.checkFurtherCallbacks, parseBool),
-    "run": Parser(\.rawRun, upcast({ parseCommandOrCommands($0).toParsedToml($1) })),
+    "run": Parser(\.rawRun, upcast { parseCommandOrCommands($0).toParsedToml($1) }),
 ]
 
 private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMatcher>] = [
@@ -92,7 +92,7 @@ private func parseWindowDetectedCallback(_ raw: TOMLValueConvertible, _ backtrac
         ))
     }
 
-    let count = run.filter({ $0 is MoveNodeToWorkspaceCommand }).count
+    let count = run.filter { $0 is MoveNodeToWorkspaceCommand }.count
     if count >= 1 && !(run.last is MoveNodeToWorkspaceCommand) {
         myErrors.append(.semantic(
             backtrace,

@@ -1,6 +1,6 @@
-import XCTest
-import Common
 @testable import AppBundle
+import Common
+import XCTest
 
 final class BalanceSizesCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
@@ -15,9 +15,9 @@ final class BalanceSizesCommandTest: XCTestCase {
         }
 
         BalanceSizesCommand(args: BalanceSizesCmdArgs(rawArgs: []))
-            .run(CommandMutableState.init(.emptyWorkspace(name)))
+            .run(CommandMutableState(.emptyWorkspace(name)))
 
-        workspace.rootTilingContainer.children.forEach { window in
+        for window in workspace.rootTilingContainer.children {
             assertEquals(window.getWeight(workspace.rootTilingContainer.orientation), 1)
         }
     }

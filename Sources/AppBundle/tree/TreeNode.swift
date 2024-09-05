@@ -73,7 +73,7 @@ class TreeNode: Equatable {
                     newParent.children.sumOf { $0.getWeight(newParent.orientation) }.div(newParent.children.count) ?? 1
                 case .floatingWindow, .macosNativeFullscreenWindow: WEIGHT_FLOATING
                 case .rootTilingContainer, .macosNativeMinimizedWindow,
-                    .stubContainerRelation, .macosPopupWindow, .macosNativeHiddenAppWindow: 1
+                     .stubContainerRelation, .macosPopupWindow, .macosNativeHiddenAppWindow: 1
             }
         } else {
             self.adaptiveWeight = adaptiveWeight

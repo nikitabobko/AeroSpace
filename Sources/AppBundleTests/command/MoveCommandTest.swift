@@ -1,6 +1,6 @@
-import XCTest
-import Common
 @testable import AppBundle
+import Common
+import XCTest
 
 final class MoveCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
@@ -34,9 +34,9 @@ final class MoveCommandTest: XCTestCase {
                 .h_tiles([
                     .window(1),
                     .h_tiles([
-                        .window(2)
-                    ])
-                ])
+                        .window(2),
+                    ]),
+                ]),
             ])
         )
     }
@@ -67,8 +67,8 @@ final class MoveCommandTest: XCTestCase {
                         .window(2),
                         .window(3),
                     ]),
-                    .window(4)
-                ])
+                    .window(4),
+                ]),
             ])
         )
     }
@@ -117,8 +117,8 @@ final class MoveCommandTest: XCTestCase {
             .workspace([
                 .v_tiles([
                     .window(2),
-                    .h_tiles([.window(1), .window(3)])
-                ])
+                    .h_tiles([.window(1), .window(3)]),
+                ]),
             ])
         )
     }
@@ -142,7 +142,7 @@ final class MoveCommandTest: XCTestCase {
                 .v_tiles([
                     .window(3),
                     .window(4),
-                ])
+                ]),
             ])
         )
     }

@@ -22,7 +22,8 @@ final class MacApp: AbstractApp {
             let app = MacApp(nsApp, AXUIElementCreateApplication(nsApp.processIdentifier))
 
             if app.observe(refreshObs, kAXWindowCreatedNotification) &&
-                    app.observe(refreshObs, kAXFocusedWindowChangedNotification) {
+                app.observe(refreshObs, kAXFocusedWindowChangedNotification)
+            {
                 allAppsMap[pid] = app
                 return app
             } else {
@@ -64,7 +65,7 @@ final class MacApp: AbstractApp {
     }
 
     override func detectNewWindowsAndGetAll(startup: Bool) -> [Window] {
-        (axApp.get(Ax.windowsAttr) ?? []).compactMap({ MacWindow.get(app: self, axWindow: $0, startup: startup) })
+        (axApp.get(Ax.windowsAttr) ?? []).compactMap { MacWindow.get(app: self, axWindow: $0, startup: startup) }
     }
 }
 

@@ -14,15 +14,17 @@ func getStubWorkspace(for monitor: Monitor) -> Workspace {
 
 private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     if let prev = screenPointToPrevVisibleWorkspace[point]?.lets({ Workspace.get(byName: $0) }),
-            !prev.isVisible && prev.workspaceMonitor.rect.topLeftCorner == point && prev.forceAssignedMonitor == nil {
+       !prev.isVisible && prev.workspaceMonitor.rect.topLeftCorner == point && prev.forceAssignedMonitor == nil
+    {
         return prev
     }
     if let candidate = Workspace.all
-        .first(where: { !$0.isVisible && $0.workspaceMonitor.rect.topLeftCorner == point }) {
+        .first(where: { !$0.isVisible && $0.workspaceMonitor.rect.topLeftCorner == point })
+    {
         return candidate
     }
     let preservedNames = config.preservedWorkspaceNames.toSet()
-    return (1...Int.max).lazy
+    return (1 ... Int.max).lazy
         .map { Workspace.get(byName: String($0)) }
         .first { $0.isEffectivelyEmpty && !$0.isVisible && !preservedNames.contains($0.name) && $0.forceAssignedMonitor == nil }
         ?? errorT("Can't create empty workspace")
@@ -71,7 +73,7 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, Custom
             ("name", name),
             ("isVisible", String(isVisible)),
             ("isEffectivelyEmpty", String(isEffectivelyEmpty)),
-            ("doKeepAlive", String(preservedNames.contains(name)))
+            ("doKeepAlive", String(preservedNames.contains(name))),
         ].map { "\($0.0): '\(String(describing: $0.1))'" }.joined(separator: ", ")
         return "Workspace(\(description))"
     }
@@ -166,12 +168,13 @@ private func rearrangeWorkspacesOnMonitors() {
 
     for newScreen in newScreens {
         if let existingVisibleWorkspace = newScreenToOldScreenMapping[newScreen]?.lets({ oldScreenPointToVisibleWorkspace[$0] }),
-                newScreen.setActiveWorkspace(existingVisibleWorkspace) {
+           newScreen.setActiveWorkspace(existingVisibleWorkspace)
+        {
             continue
         }
         let stubWorkspace = getStubWorkspace(forPoint: newScreen)
         check(newScreen.setActiveWorkspace(stubWorkspace),
-            "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(newScreen)")
+              "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(newScreen)")
     }
 }
 

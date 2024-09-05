@@ -1,6 +1,6 @@
 import AppKit
-import HotKey
 import Common
+import HotKey
 
 private let minus = "minus"
 private let equal = "equal"
@@ -332,7 +332,6 @@ extension Key {
             case .volumeUp: "volumeUp"
             case .volumeDown: "volumeDown"
             case .mute: "mute"
-
         }
     }
 }

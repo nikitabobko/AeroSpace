@@ -1,6 +1,6 @@
 import AppKit
-import Foundation
 import Common
+import Foundation
 
 func stringType(of some: Any) -> String {
     let string = (some is Any.Type) ? String(describing: some) : String(describing: type(of: some))
@@ -81,19 +81,19 @@ extension CGPoint: Copyable {}
 extension CGPoint {
     /// Distance to ``Rect`` outline frame
     func distanceToRectFrame(to rect: Rect) -> CGFloat {
-        let list: [CGFloat] = ((rect.minY..<rect.maxY).contains(y) ? [abs(rect.minX - x), abs(rect.maxX - x)] : []) +
-            ((rect.minX..<rect.maxX).contains(x) ? [abs(rect.minY - y), abs(rect.maxY - y)] : []) +
+        let list: [CGFloat] = ((rect.minY ..< rect.maxY).contains(y) ? [abs(rect.minX - x), abs(rect.maxX - x)] : []) +
+            ((rect.minX ..< rect.maxX).contains(x) ? [abs(rect.minY - y), abs(rect.maxY - y)] : []) +
             [
                 distance(to: rect.topLeftCorner),
                 distance(to: rect.bottomRightCorner),
                 distance(to: rect.topRightCorner),
-                distance(to: rect.bottomLeftCorner)
+                distance(to: rect.bottomLeftCorner),
             ]
         return list.minOrThrow()
     }
 
     func coerceIn(rect: Rect) -> CGPoint {
-        CGPoint(x: x.coerceIn(rect.minX...(rect.maxX - 1)), y: y.coerceIn(rect.minY...(rect.maxY - 1)))
+        CGPoint(x: x.coerceIn(rect.minX ... (rect.maxX - 1)), y: y.coerceIn(rect.minY ... (rect.maxY - 1)))
     }
 
     func addingXOffset(_ offset: CGFloat) -> CGPoint { CGPoint(x: x + offset, y: y) }
@@ -102,7 +102,7 @@ extension CGPoint {
 
     func getProjection(_ orientation: Orientation) -> Double { orientation == .h ? x : y }
 
-    var vectorLength: CGFloat { sqrt(x*x - y*y) }
+    var vectorLength: CGFloat { sqrt(x * x - y * y) }
 
     func distance(to point: CGPoint) -> Double {
         sqrt((x - point.x).squared + (y - point.y).squared)
@@ -147,7 +147,7 @@ extension Set {
 }
 
 #if DEBUG
-let isDebug = true
+    let isDebug = true
 #else
-let isDebug = false
+    let isDebug = false
 #endif

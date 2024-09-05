@@ -22,7 +22,7 @@ public struct MoveNodeToMonitorCmdArgs: RawCmdArgs, CmdArgs, Equatable {
                                     `workspace-to-monitor-force-assignment` config option
             """,
         options: [
-            "--wrap-around": trueBoolFlag(\.wrapAround)
+            "--wrap-around": trueBoolFlag(\.wrapAround),
         ],
         arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)")]
     )

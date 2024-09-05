@@ -80,9 +80,9 @@ private func layoutWorkspaces() {
 
         let corner: OptimalHideCorner =
             monitors.contains(where: { m in m.rect.contains(brc1) || m.rect.contains(brc2) || m.rect.contains(brc3) }) &&
-                monitors.allSatisfy({ m in !m.rect.contains(blc1) && !m.rect.contains(blc2) && !m.rect.contains(blc3) })
-                ? .bottomLeftCorner
-                : .bottomRightCorner
+            monitors.allSatisfy { m in !m.rect.contains(blc1) && !m.rect.contains(blc2) && !m.rect.contains(blc3) }
+            ? .bottomLeftCorner
+            : .bottomRightCorner
         monitorToOptimalHideCorner[monitor.rect.topLeftCorner] = corner
     }
 

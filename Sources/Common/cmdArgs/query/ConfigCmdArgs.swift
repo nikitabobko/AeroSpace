@@ -25,7 +25,7 @@ public struct ConfigCmdArgs: CmdArgs, RawCmdArgs, Equatable {
             "--major-keys": trueBoolFlag(\.majorKeys),
             "--all-keys": trueBoolFlag(\.allKeys),
             "--config-path": trueBoolFlag(\.configPath),
-            "--get": singleValueOption(\.keyNameToGet, "<name>", { $0 }),
+            "--get": singleValueOption(\.keyNameToGet, "<name>") { $0 },
         ],
         arguments: []
     )

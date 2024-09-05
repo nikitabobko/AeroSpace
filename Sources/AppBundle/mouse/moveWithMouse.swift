@@ -9,9 +9,10 @@ func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeM
 
 private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
     if window.isHiddenViaEmulation || // Don't allow to move windows of hidden workspaces
-            !isLeftMouseButtonPressed ||
-            currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId ||
-            getNativeFocusedWindow(startup: false) != window {
+        !isLeftMouseButtonPressed ||
+        currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId ||
+        getNativeFocusedWindow(startup: false) != window
+    {
         return
     }
     switch window.parent.cases {
@@ -20,7 +21,7 @@ private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
         case .tilingContainer:
             moveTilingWindow(window)
         case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
-                .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
+             .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
             return // Unconventional windows can't be moved with mouse
     }
 }
@@ -37,15 +38,14 @@ private func moveTilingWindow(_ window: Window) {
     window.lastAppliedLayoutPhysicalRect = nil
     let mouseLocation = mouseLocation
     let targetWorkspace = mouseLocation.monitorApproximation.activeWorkspace
-    let swapTarget = mouseLocation.findIn(tree: targetWorkspace.rootTilingContainer, virtual: false)?.takeIf({ $0 != window })
+    let swapTarget = mouseLocation.findIn(tree: targetWorkspace.rootTilingContainer, virtual: false)?.takeIf { $0 != window }
     if targetWorkspace != window.workspace { // Move window to a different monitor
-        let index: Int
-        if let swapTarget, let parent = swapTarget.parent as? TilingContainer, let targetRect = swapTarget.lastAppliedLayoutPhysicalRect {
-            index = mouseLocation.getProjection(parent.orientation) >= targetRect.center.getProjection(parent.orientation)
+        let index: Int = if let swapTarget, let parent = swapTarget.parent as? TilingContainer, let targetRect = swapTarget.lastAppliedLayoutPhysicalRect {
+            mouseLocation.getProjection(parent.orientation) >= targetRect.center.getProjection(parent.orientation)
                 ? swapTarget.ownIndex + 1
                 : swapTarget.ownIndex
         } else {
-            index = 0
+            0
         }
         window.bind(
             to: swapTarget?.parent ?? targetWorkspace.rootTilingContainer,
@@ -78,14 +78,13 @@ func swapWindows(_ window1: Window, _ window2: Window) {
 extension CGPoint {
     func findIn(tree: TilingContainer, virtual: Bool) -> Window? {
         let point = self
-        let target: TreeNode?
-        switch tree.layout {
+        let target: TreeNode? = switch tree.layout {
             case .tiles:
-                target = tree.children.first(where: {
+                tree.children.first(where: {
                     (virtual ? $0.lastAppliedLayoutVirtualRect : $0.lastAppliedLayoutPhysicalRect)?.contains(point) == true
                 })
             case .accordion:
-                target = tree.mostRecentChild
+                tree.mostRecentChild
         }
         guard let target else { return nil }
         return switch target.tilingTreeNodeCasesOrThrow() {

@@ -23,14 +23,15 @@ private let adaptiveWeightBeforeResizeWithMouseKey = TreeNodeUserDataKey<CGFloat
 
 private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tests
     if window.isHiddenViaEmulation || // Don't allow to resize windows of hidden workspaces
-            !isLeftMouseButtonPressed ||
-            currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId ||
-            getNativeFocusedWindow(startup: false) != window {
+        !isLeftMouseButtonPressed ||
+        currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId ||
+        getNativeFocusedWindow(startup: false) != window
+    {
         return
     }
     switch window.parent.cases {
         case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
-                .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
+             .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
             return // Nothing to do for floating, or unconventional windows
         case .tilingContainer:
             guard let rect = window.getRect() else { return }
@@ -57,7 +58,7 @@ private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tes
                             return parent?.orientation == orientation && parent?.layout == .tiles
                         }
                         .forEach { $0.setWeight(orientation, $0.getWeightBeforeResize(orientation) + diff) }
-                    for sibling in parent.children[startIndex..<pastTheEndIndex] {
+                    for sibling in parent.children[startIndex ..< pastTheEndIndex] {
                         sibling.setWeight(orientation, sibling.getWeightBeforeResize(orientation) - siblingDiff)
                     }
                 }

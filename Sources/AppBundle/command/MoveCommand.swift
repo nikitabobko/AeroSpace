@@ -44,7 +44,7 @@ private func moveOut(_ state: CommandMutableState, window: Window, direction: Ca
             case .tilingContainer(let parent): parent.orientation == direction.orientation
             // Stop searching
             case .workspace, .macosMinimizedWindowsContainer, nil, .macosFullscreenWindowsContainer,
-                .macosHiddenAppsWindowsContainer, .macosPopupWindowsContainer: true
+                 .macosHiddenAppsWindowsContainer, .macosPopupWindowsContainer: true
         }
     }) as! TilingContainer
     let bindTo: TilingContainer

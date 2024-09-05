@@ -17,7 +17,7 @@ public struct FullscreenCmdArgs: CmdArgs, RawCmdArgs {
                            Toggle between the two if not specified
             """,
         options: [
-            "--no-outer-gaps": trueBoolFlag(\.noOuterGaps)
+            "--no-outer-gaps": trueBoolFlag(\.noOuterGaps),
         ],
         arguments: [ArgParser(\.toggle, parseToggleEnum)]
     )

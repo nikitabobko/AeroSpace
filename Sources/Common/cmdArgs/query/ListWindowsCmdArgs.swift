@@ -32,7 +32,7 @@ public struct ListWindowsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
             "--monitor": ArgParser(\.monitors, parseMonitorIds),
             "--workspace": ArgParser(\.workspaces, parseWorkspaces),
             "--pid": singleValueOption(\.pidFilter, "<pid>", Int32.init),
-            "--app-bundle-id": singleValueOption(\.appIdFilter, "<app-bundle-id>", { $0 }),
+            "--app-bundle-id": singleValueOption(\.appIdFilter, "<app-bundle-id>") { $0 },
             "--format": ArgParser(\.format, parseFormat),
         ],
         arguments: []

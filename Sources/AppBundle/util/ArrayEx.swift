@@ -18,9 +18,9 @@ extension Array {
     }
 }
 
-extension Array where Self.Element: Equatable {
+public extension Array where Self.Element: Equatable {
     @discardableResult
-    public mutating func remove(element: Self.Element) -> Int? {
+    mutating func remove(element: Self.Element) -> Int? {
         if let index = firstIndex(of: element) {
             remove(at: index)
             return index

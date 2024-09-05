@@ -1,5 +1,5 @@
-import Common
 import AppKit
+import Common
 
 func syncStartAtLogin() {
     let launchAgentsDir = FileManager.default.homeDirectoryForCurrentUser.appending(component: "Library/LaunchAgents/")

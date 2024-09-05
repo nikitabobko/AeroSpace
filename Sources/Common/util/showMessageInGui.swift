@@ -14,12 +14,12 @@ public func showMessageInGui(filenameIfConsoleApp: String?, title: String, messa
         file.absoluteURL.open(with: URL(filePath: "/System/Applications/Utilities/Console.app"))
     } else {
         try! Process.run(URL(filePath: "/usr/bin/osascript"),
-            arguments: [
-                "-e",
-                """
-                display dialog "\(message.replacing("\"", with: "\\\""))" with title "\(title)"
-                """
-            ]
+                         arguments: [
+                             "-e",
+                             """
+                             display dialog "\(message.replacing("\"", with: "\\\""))" with title "\(title)"
+                             """,
+                         ]
         )
         // === Alternatives ===
         // let myPopup = NSAlert()

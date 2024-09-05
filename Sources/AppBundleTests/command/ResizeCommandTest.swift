@@ -1,6 +1,6 @@
-import XCTest
-import Common
 @testable import AppBundle
+import Common
+import XCTest
 
 final class ResizeCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }

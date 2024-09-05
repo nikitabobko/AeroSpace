@@ -45,7 +45,7 @@ extension [MonitorId] {
     }
 }
 
-internal extension MonitorId {
+extension MonitorId {
     func resolve(_ state: CommandMutableState, sortedMonitors: [Monitor]) -> [Monitor] {
         switch self {
             case .focused:

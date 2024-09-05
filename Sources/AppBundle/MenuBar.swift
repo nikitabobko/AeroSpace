@@ -1,6 +1,6 @@
 import Common
-import SwiftUI
 import Foundation
+import SwiftUI
 
 public func menuBar(viewModel: TrayMenuModel) -> some Scene {
     MenuBarExtra {
@@ -18,7 +18,8 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
                 } label: {
                     Toggle(isOn: workspace == focus.workspace
                         ? Binding(get: { true }, set: { _, _ in })
-                        : Binding(get: { false }, set: { _, _ in })) {
+                        : Binding(get: { false }, set: { _, _ in }))
+                    {
                         let monitor = workspace.isVisible || !workspace.isEffectivelyEmpty ? " - \(workspace.workspaceMonitor.name)" : ""
                         Text(workspace.name + monitor).font(.system(.body, design: .monospaced))
                     }

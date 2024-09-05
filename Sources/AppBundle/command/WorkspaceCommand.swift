@@ -35,11 +35,10 @@ func getNextPrevWorkspace(current: Workspace, relative: WTarget.Relative, stdin:
             .sorted()
         : stdinWorkspaces.map { Workspace.get(byName: $0) }
     let index = workspaces.firstIndex(where: { $0 == focus.workspace }) ?? 0
-    let workspace: Workspace?
-    if relative.wrapAround {
-        workspace = workspaces.get(wrappingIndex: relative.isNext ? index + 1 : index - 1)
+    let workspace: Workspace? = if relative.wrapAround {
+        workspaces.get(wrappingIndex: relative.isNext ? index + 1 : index - 1)
     } else {
-        workspace = workspaces.getOrNil(atIndex: relative.isNext ? index + 1 : index - 1)
+        workspaces.getOrNil(atIndex: relative.isNext ? index + 1 : index - 1)
     }
     return workspace
 }

@@ -1,6 +1,6 @@
-import XCTest
-import Common
 @testable import AppBundle
+import Common
+import XCTest
 
 final class JoinWithCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
@@ -17,8 +17,8 @@ final class JoinWithCommandTest: XCTestCase {
             .window(0),
             .v_tiles([
                 .window(1),
-                .window(2)
-            ])
+                .window(2),
+            ]),
         ]))
     }
 }

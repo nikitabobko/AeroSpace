@@ -1,6 +1,6 @@
-import XCTest
 @testable import AppBundle
 import Common
+import XCTest
 
 final class SplitArgsTest: XCTestCase {
     func testSplit() {

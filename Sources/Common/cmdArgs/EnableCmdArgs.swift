@@ -14,7 +14,7 @@ public struct EnableCmdArgs: RawCmdArgs {
     public var targetState: Lateinit<State> = .uninitialized
 
     public let rawArgs: EquatableNoop<[String]>
-    internal init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
 
     public init(rawArgs: [String], targetState: State) {
         self.rawArgs = .init(rawArgs)

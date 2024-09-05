@@ -70,7 +70,8 @@ func parsePerMonitorValues<T>(_ array: TOMLArray, _ backtrace: TomlBacktrace, _ 
 
         guard let (key, value) = raw.unwrapTableWithSingleKey(expectedKey: "monitor", &backtrace)
             .flatMap({ $0.value.unwrapTableWithSingleKey(expectedKey: nil, &backtrace) })
-            .getOrNil(appendErrorTo: &errors) else {
+            .getOrNil(appendErrorTo: &errors)
+        else {
             return nil
         }
 

@@ -6,24 +6,24 @@ struct ConfigCommand: Command {
 
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
-            switch args.mode {
-                case .getKey(let key):
-                    return getKey(state, args: args, key: key)
-                case .majorKeys:
-                    let out = """
-                        .
-                        mode
-                        \(config.modes.keys.map { "mode.\($0).binding" }.joined(separator: "\n"))
-                        """
-                    return state.succCmd(msg: out)
-                case .allKeys:
-                    let configMap = buildConfigMap()
-                    var allKeys: [String] = []
-                    configMap.dumpAllKeysRecursive(path: ".", result: &allKeys)
-                    return state.succCmd(msg: allKeys.joined(separator: "\n"))
-                case .configPath:
-                    return state.succCmd(msg: configUrl.absoluteURL.path)
-            }
+        switch args.mode {
+            case .getKey(let key):
+                return getKey(state, args: args, key: key)
+            case .majorKeys:
+                let out = """
+                    .
+                    mode
+                    \(config.modes.keys.map { "mode.\($0).binding" }.joined(separator: "\n"))
+                    """
+                return state.succCmd(msg: out)
+            case .allKeys:
+                let configMap = buildConfigMap()
+                var allKeys: [String] = []
+                configMap.dumpAllKeysRecursive(path: ".", result: &allKeys)
+                return state.succCmd(msg: allKeys.joined(separator: "\n"))
+            case .configPath:
+                return state.succCmd(msg: configUrl.absoluteURL.path)
+        }
     }
 }
 
@@ -58,7 +58,7 @@ private func getKey(_ state: CommandMutableState, args: ConfigCmdArgs, key: Stri
             case .map(let map):
                 configMap = .array(map.keys.map { .scalar(.string($0)) })
             case .array(let array):
-                configMap = .array((0..<array.count).map { .scalar(.int($0)) })
+                configMap = .array((0 ..< array.count).map { .scalar(.int($0)) })
         }
     }
     if args.json {
@@ -83,7 +83,7 @@ private func getKey(_ state: CommandMutableState, args: ConfigCmdArgs, key: Stri
                     switch $0 {
                         case .scalar(let scalar): .success(scalar.describe)
                         default: .failure("Printing array of non-string objects is supported only with --json flag." +
-                            "Alternatively, you can try to inspect keys of the object with --keys flag")
+                                "Alternatively, you can try to inspect keys of the object with --keys flag")
                     }
                 }
                 return switch plainArray {
@@ -107,7 +107,7 @@ extension ConfigMapValue {
                         return .failure("No value at key token '\(key)'")
                     }
                 case .array(let array):
-                    if let key = Int.init(key) {
+                    if let key = Int(key) {
                         if let child = array.getOrNil(atIndex: key) {
                             return child.find(keyPath: Array(keyPath[1...]))
                         } else {

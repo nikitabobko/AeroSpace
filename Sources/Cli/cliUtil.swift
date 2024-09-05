@@ -1,11 +1,11 @@
-import Foundation
-import Darwin
 import Common
+import Darwin
+import Foundation
 
 #if DEBUG
-let appId: String = "bobko.debug.aerospace"
+    let appId: String = "bobko.debug.aerospace"
 #else
-let appId: String = "bobko.aerospace"
+    let appId: String = "bobko.aerospace"
 #endif
 
 let cliClientVersionAndHash: String = "\(aeroSpaceAppVersion) \(gitHash)"

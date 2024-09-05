@@ -1,6 +1,6 @@
 import AppKit
-import Socket
 import Common
+import Socket
 
 func startServer() {
     let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }

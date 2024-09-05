@@ -22,7 +22,7 @@ public struct FocusMonitorCmdArgs: RawCmdArgs, CmdArgs {
                                     config option
             """,
         options: [
-            "--wrap-around": trueBoolFlag(\.wrapAround)
+            "--wrap-around": trueBoolFlag(\.wrapAround),
         ],
         arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)")]
     )

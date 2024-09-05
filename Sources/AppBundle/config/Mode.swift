@@ -1,5 +1,5 @@
-import HotKey
 import Common
+import HotKey
 import TOMLKit
 
 struct Mode: Copyable, Equatable {

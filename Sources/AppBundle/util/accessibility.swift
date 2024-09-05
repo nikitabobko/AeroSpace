@@ -1,5 +1,5 @@
-import Common
 import AppKit
+import Common
 import PrivateApi
 
 func checkAccessibilityPermissions() {
@@ -336,7 +336,7 @@ extension AXObserver {
         let dataPtr: UnsafeMutableRawPointer? = data.flatMap { Unmanaged.passUnretained($0).toOpaque() }
         // kAXWindowCreatedNotification takes more than 1 attempt to subscribe. Probably, it's because the application
         // is still initializing
-        for _ in 1...SUBSCRIBE_OBSERVER_ATTEMPTS_THRESHOLD {
+        for _ in 1 ... SUBSCRIBE_OBSERVER_ATTEMPTS_THRESHOLD {
             if AXObserverAddNotification(observer, ax, notifKey as CFString, dataPtr) == .success {
                 CFRunLoopAddSource(CFRunLoopGetCurrent(), AXObserverGetRunLoopSource(observer), .defaultMode)
                 return observer

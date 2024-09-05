@@ -1,6 +1,6 @@
 import AppKit
-import OrderedCollections
 import Common
+import OrderedCollections
 
 private let priorityAx: Set<String> = [
     Ax.titleAttr.key,
@@ -170,5 +170,5 @@ private let kindSpecificIgnore: [AxKind: Set<String>] = [
         kAXHiddenAttribute,
         "AXPreferredLanguage",
         "AXEnhancedUserInterface",
-    ]
+    ],
 ]

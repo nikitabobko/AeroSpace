@@ -1,7 +1,7 @@
-import Socket
-import Foundation
 import Common
 import Darwin
+import Foundation
+import Socket
 
 func printVersionAndExit(serverVersion: String?) -> Never {
     print(
@@ -62,8 +62,9 @@ let socketFile = "/tmp/\(appId)-\(unixUserName).sock"
 let socketFileCompat = "/tmp/\(appId).sock" // Compatibility. Drop after a few versions
 
 if let e: Error = Result(catching: { try socket.connect(to: socketFile) })
-        .flatMapError({ _ in Result(catching: { try socket.connect(to: socketFileCompat) }) })
-        .errorOrNil {
+    .flatMapError({ _ in Result(catching: { try socket.connect(to: socketFileCompat) }) })
+    .errorOrNil
+{
     if isVersion {
         printVersionAndExit(serverVersion: nil)
     } else {

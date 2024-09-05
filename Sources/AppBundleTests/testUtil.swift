@@ -1,8 +1,8 @@
+@testable import AppBundle
+import Common
 import Foundation
 import HotKey
 import XCTest
-import Common
-@testable import AppBundle
 
 let projectRoot: URL = {
     var url = URL(filePath: #file)
@@ -82,8 +82,8 @@ func testParseCommandFail(_ command: String, msg expected: String) {
     }
 }
 
-extension WTarget.Direct {
-    public init(
+public extension WTarget.Direct {
+    init(
         _ name: String,
         autoBackAndForth: Bool = false
     ) {

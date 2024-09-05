@@ -1,5 +1,5 @@
-import AppKit
 @testable import AppBundle
+import AppKit
 
 final class TestWindow: Window, CustomStringConvertible {
     private var _rect: Rect?

@@ -1,5 +1,5 @@
-import Foundation
 import Common
+import Foundation
 
 public func initAppBundle() {
     initTerminationHandler()
@@ -37,16 +37,16 @@ struct ServerArgs {
 }
 
 private let serverHelp = """
-USAGE: \(CommandLine.arguments.first ?? "AeroSpace.app/Contents/MacOS/AeroSpace") [<options>]
+    USAGE: \(CommandLine.arguments.first ?? "AeroSpace.app/Contents/MacOS/AeroSpace") [<options>]
 
-OPTIONS:
-  -h, --help              Print help
-  -v, --version           Print AeroSpace.app version
-  --started-at-login      Make AeroSpace.app think that it is started at login
-                          When AeroSpace.app starts at login it runs 'after-login-command' commands
-  --config-path <path>    Config path. It will take priority over ~/.aerospace.toml
-                          and ${XDG_CONFIG_HOME}/aerospace/aerospace.toml
-"""
+    OPTIONS:
+      -h, --help              Print help
+      -v, --version           Print AeroSpace.app version
+      --started-at-login      Make AeroSpace.app think that it is started at login
+                              When AeroSpace.app starts at login it runs 'after-login-command' commands
+      --config-path <path>    Config path. It will take priority over ~/.aerospace.toml
+                              and ${XDG_CONFIG_HOME}/aerospace/aerospace.toml
+    """
 
 var serverArgs = ServerArgs()
 private func initServerArgs() {

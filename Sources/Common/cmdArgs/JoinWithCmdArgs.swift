@@ -14,7 +14,7 @@ public struct JoinWithCmdArgs: CmdArgs, RawCmdArgs {
     public var direction: Lateinit<CardinalDirection> = .uninitialized
 
     public let rawArgs: EquatableNoop<[String]>
-    internal init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
 
     public init(rawArgs: [String], direction: CardinalDirection) {
         self.rawArgs = .init(rawArgs)

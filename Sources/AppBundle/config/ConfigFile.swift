@@ -1,5 +1,5 @@
-import Foundation
 import Common
+import Foundation
 
 let configDotfileName = isDebug ? ".aerospace-debug.toml" : ".aerospace.toml"
 func findCustomConfigUrl() -> ConfigFile {

@@ -30,7 +30,7 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
             "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
             "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
             "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32)),
-            "--dfs-index": ArgParser(\.dfsIndex, upcastArgParserFun(parseArgWithUInt32))
+            "--dfs-index": ArgParser(\.dfsIndex, upcastArgParserFun(parseArgWithUInt32)),
         ],
         arguments: [ArgParser(\.direction, upcastArgParserFun(parseCardinalDirectionArg))]
     )

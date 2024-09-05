@@ -11,12 +11,12 @@ public protocol CmdArgs: Equatable, CustomStringConvertible {
     var rawArgs: EquatableNoop<[String]> { get } // Non Equatable because test comparion
 }
 
-extension CmdArgs {
-    public func equals(_ other: any CmdArgs) -> Bool { // My brain is cursed with Java
+public extension CmdArgs {
+    func equals(_ other: any CmdArgs) -> Bool { // My brain is cursed with Java
         (other as? Self).flatMap { self == $0 } ?? false
     }
 
-    public var description: String {
+    var description: String {
         switch Self.info.kind {
             case .execAndForget:
                 CmdKind.execAndForget.rawValue + " " + (self as! ExecAndForgetCmdArgs).bashScript
@@ -157,7 +157,7 @@ public extension [String] {
                 }
                 .joined(separator: "\n")
         }
-            .joined(separator: "\n")
+        .joined(separator: "\n")
     }
 }
 

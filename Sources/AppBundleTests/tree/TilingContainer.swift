@@ -1,5 +1,5 @@
-import AppKit
 @testable import AppBundle
+import AppKit
 
 extension TilingContainer {
     static func newHTiles(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat) -> TilingContainer {

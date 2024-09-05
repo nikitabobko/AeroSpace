@@ -8,14 +8,15 @@ public struct WorkspaceName: Equatable {
     public static func parse(_ raw: String) -> Parsed<WorkspaceName> {
         // reserved names
         if raw == "focused" || raw == "non-focused" ||
-                raw == "visible" || raw == "invisible" || raw == "non-visible" ||
-                raw == "active" || raw == "non-active" || raw == "inactive" ||
-                raw == "back-and-forth" || raw == "back_and_forth" || raw == "previous" ||
-                raw == "prev" || raw == "next" ||
-                raw == "monitor" || raw == "workspace" ||
-                raw == "monitors" || raw == "workspaces" ||
-                raw == "all" || raw == "none" ||
-                raw == "mouse" {
+            raw == "visible" || raw == "invisible" || raw == "non-visible" ||
+            raw == "active" || raw == "non-active" || raw == "inactive" ||
+            raw == "back-and-forth" || raw == "back_and_forth" || raw == "previous" ||
+            raw == "prev" || raw == "next" ||
+            raw == "monitor" || raw == "workspace" ||
+            raw == "monitors" || raw == "workspaces" ||
+            raw == "all" || raw == "none" ||
+            raw == "mouse"
+        {
             return .failure("'\(raw)' is a reserved workspace name")
         }
         if raw.contains(",") {

@@ -51,7 +51,7 @@ extension MonitorTarget {
 
 extension Monitor {
     func relation(to monitor: Monitor) -> Orientation {
-        (rect.minY..<rect.maxY).overlaps(monitor.rect.minY..<monitor.rect.maxY) ? .h : .v
+        (rect.minY ..< rect.maxY).overlaps(monitor.rect.minY ..< monitor.rect.maxY) ? .h : .v
     }
 
     func findRelativeMonitor(inDirection direction: CardinalDirection) -> (monitorsInDirection: [Monitor], index: Int)? {

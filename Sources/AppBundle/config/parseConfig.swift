@@ -1,5 +1,5 @@
-import Common
 import AppKit
+import Common
 import HotKey
 import TOMLKit
 
@@ -49,7 +49,8 @@ extension ParserProtocol {
     func transformRawConfig(_ raw: S,
                             _ value: TOMLValueConvertible,
                             _ backtrace: TomlBacktrace,
-                            _ errors: inout [TomlParseError]) -> S {
+                            _ errors: inout [TomlParseError]) -> S
+    {
         if let value = parse(value, backtrace, &errors).getOrNil(appendErrorTo: &errors) {
             return raw.copy(keyPath, value)
         }
@@ -83,11 +84,11 @@ private let keyMappingConfigRootKey = "key-mapping"
 private let modeConfigRootKey = "mode"
 
 private let configParser: [String: any ParserProtocol<Config>] = [
-    "after-login-command": Parser(\.afterLoginCommand, { parseCommandOrCommands($0).toParsedToml($1) }),
-    "after-startup-command": Parser(\.afterStartupCommand, { parseCommandOrCommands($0).toParsedToml($1) }),
+    "after-login-command": Parser(\.afterLoginCommand) { parseCommandOrCommands($0).toParsedToml($1) },
+    "after-startup-command": Parser(\.afterStartupCommand) { parseCommandOrCommands($0).toParsedToml($1) },
 
-    "on-focus-changed": Parser(\.onFocusChanged, { parseCommandOrCommands($0).toParsedToml($1) }),
-    "on-focused-monitor-changed": Parser(\.onFocusedMonitorChanged, { parseCommandOrCommands($0).toParsedToml($1) }),
+    "on-focus-changed": Parser(\.onFocusChanged) { parseCommandOrCommands($0).toParsedToml($1) },
+    "on-focused-monitor-changed": Parser(\.onFocusedMonitorChanged) { parseCommandOrCommands($0).toParsedToml($1) },
     // "on-focused-workspace-changed": Parser(\.onFocusedWorkspaceChanged, { parseCommandOrCommands($0).toParsedToml($1) }),
 
     "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, parseBool),
@@ -137,7 +138,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
     if let rawString = raw.string {
         return parseCommand(rawString).toEither().map { [$0] }
     } else if let rawArray = raw.array {
-        let commands: Parsed<[any Command]> = (0..<rawArray.count).mapAllOrFailure { index in
+        let commands: Parsed<[any Command]> = (0 ..< rawArray.count).mapAllOrFailure { index in
             let rawString: String = rawArray[index].string ?? expectedActualTypeError(expected: .string, actual: rawArray[index].type)
             return parseCommand(rawString).toEither()
         }
@@ -222,7 +223,7 @@ func parseSimpleType<T>(_ raw: TOMLValueConvertible) -> T? {
 
 extension TOMLValueConvertible {
     func unwrapTableWithSingleKey(expectedKey: String? = nil, _ backtrace: inout TomlBacktrace) -> ParsedToml<(key: String, value: TOMLValueConvertible)> {
-        guard let table = table else {
+        guard let table else {
             return .failure(expectedActualTypeError(expected: .table, actual: type, backtrace))
         }
         let singleKeyError: TomlParseError = .semantic(

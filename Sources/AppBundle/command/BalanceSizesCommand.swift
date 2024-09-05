@@ -22,5 +22,4 @@ struct BalanceSizesCommand: Command {
             }
         }
     }
-
 }

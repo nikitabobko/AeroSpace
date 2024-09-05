@@ -1,5 +1,5 @@
-import Common
 @testable import AppBundle
+import Common
 
 final class TestApp: AbstractApp {
     static var shared = TestApp()

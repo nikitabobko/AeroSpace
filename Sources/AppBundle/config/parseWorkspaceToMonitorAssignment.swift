@@ -1,5 +1,5 @@
-import TOMLKit
 import Common
+import TOMLKit
 
 func parseWorkspaceToMonitorAssignment(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: [MonitorDescription]] {
     guard let rawTable = raw.table else {

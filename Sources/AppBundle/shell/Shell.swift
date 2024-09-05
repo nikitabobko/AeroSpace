@@ -1,6 +1,6 @@
-import ShellParserGenerated
 import Antlr4
 import Common
+import ShellParserGenerated
 
 typealias TK = ShellParser.Tokens
 
@@ -38,8 +38,8 @@ let keywords = [TK.DO, TK.THEN, TK.IF, TK.END, TK.ELSE, TK.SWITCH, TK.IN, TK.CAS
 
 class ErrorListenerCollector: BaseErrorListener {
     var errors: [String] = []
-    override func syntaxError<T>(
-        _ recognizer: Recognizer<T>,
+    override func syntaxError(
+        _ recognizer: Recognizer<some Any>,
         _ offendingSymbol: AnyObject?,
         _ line: Int,
         _ charPositionInLine: Int,
@@ -52,7 +52,8 @@ class ErrorListenerCollector: BaseErrorListener {
             return
         }
         let helper = if let offendingToken, keywords.contains(offendingToken),
-                let name = ShellParser.VOCABULARY.getSymbolicName(offendingToken) {
+                        let name = ShellParser.VOCABULARY.getSymbolicName(offendingToken)
+        {
             ". \(name) is a reserved keyword. Please, put quotes around it, if you want to use it as an argument"
         } else if offendingToken == TK.ANY.rawValue {
             ". Please put the character/word in quotes, if you want to use it as an argument"
@@ -101,7 +102,8 @@ private func parseIfElse(_ ifElse: ShellParser.IfElseContext) throws -> Shell<St
                 lastCond = nil
             }
         } else if let child = child as? TerminalNode,
-                child.getSymbol()?.getType() == TK.ELSE.rawValue {
+                  child.getSymbol()?.getType() == TK.ELSE.rawValue
+        {
             elseVisited = true
             if let lastCond { branches.append(Branch(cond: lastCond, then: nil)) }
             lastCond = nil
@@ -137,7 +139,6 @@ extension ShellParser.CmdContext {
         return .failure("Unknown node type: \(self)")
     }
 }
-
 
 extension ShellParser.ArgContext {
     func toTyped() -> Result<ShellString<String>, String> {
@@ -205,10 +206,10 @@ extension Result where Success == ShellParser.CmdsContext, Failure == String {
     func toTyped() -> Result<RawShell, String> { flatMap { $0.toTyped() } }
 }
 
-private extension Optional where Wrapped == ShellParser.CmdContext {
+private extension ShellParser.CmdContext? {
     func toTyped(_ msg: String) -> Result<RawShell, String> { orFailure(msg).toTyped() }
 }
-private extension Optional where Wrapped == ShellParser.CmdsContext {
+private extension ShellParser.CmdsContext? {
     func toTyped(_ msg: String) -> Result<RawShell, String> { orFailure(msg).toTyped() }
 }
 

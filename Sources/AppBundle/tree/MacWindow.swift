@@ -31,10 +31,11 @@ final class MacWindow: Window, CustomStringConvertible {
             let window = MacWindow(id, app, axWindow, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
 
             if window.observe(destroyedObs, kAXUIElementDestroyedNotification) &&
-                    window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
-                    window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
-                    window.observe(movedObs, kAXMovedNotification) &&
-                    window.observe(resizedObs, kAXResizedNotification) {
+                window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
+                window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
+                window.observe(movedObs, kAXMovedNotification) &&
+                window.observe(resizedObs, kAXResizedNotification)
+            {
                 allWindowsMap[id] = window
                 debugWindowsIfRecording(window)
                 tryOnWindowDetected(window, startup: startup)
@@ -194,16 +195,17 @@ func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     // - IntelliJ context menu (right mouse click)
     // - Telegram context menu (right mouse click)
     if axWindow.get(Ax.closeButtonAttr) == nil &&
-            axWindow.get(Ax.fullscreenButtonAttr) == nil &&
-            axWindow.get(Ax.zoomButtonAttr) == nil &&
-            axWindow.get(Ax.minimizeButtonAttr) == nil &&
+        axWindow.get(Ax.fullscreenButtonAttr) == nil &&
+        axWindow.get(Ax.zoomButtonAttr) == nil &&
+        axWindow.get(Ax.minimizeButtonAttr) == nil &&
 
-            axWindow.get(Ax.isFocused) == false &&  // Three different ways to detect if the window is not focused
-            axWindow.get(Ax.isMainAttr) == false &&
-            app.getFocusedAxWindow()?.containingWindowId() != axWindow.containingWindowId() &&
+        axWindow.get(Ax.isFocused) == false &&  // Three different ways to detect if the window is not focused
+        axWindow.get(Ax.isMainAttr) == false &&
+        app.getFocusedAxWindow()?.containingWindowId() != axWindow.containingWindowId() &&
 
-            subrole != kAXStandardWindowSubrole &&
-            (axWindow.get(Ax.titleAttr) ?? "").isEmpty {
+        subrole != kAXStandardWindowSubrole &&
+        (axWindow.get(Ax.titleAttr) ?? "").isEmpty
+    {
         return false
     }
     return subrole == kAXStandardWindowSubrole ||
@@ -237,17 +239,18 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
     // - flameshot? https://github.com/nikitabobko/AeroSpace/issues/112
     // - Drata Agent https://github.com/nikitabobko/AeroSpace/issues/134
     if !isFullscreenable(axWindow) &&
-            app.id != "com.google.Chrome" && // "Drag out" a tab out of Chrome window
-            app.id != "org.gimp.gimp-2.10" && // Gimp doesn't show fullscreen button
-            app.id != "com.apple.ActivityMonitor" && // Activity Monitor doesn't show fullscreen button
+        app.id != "com.google.Chrome" && // "Drag out" a tab out of Chrome window
+        app.id != "org.gimp.gimp-2.10" && // Gimp doesn't show fullscreen button
+        app.id != "com.apple.ActivityMonitor" && // Activity Monitor doesn't show fullscreen button
 
-            // Terminal apps and Emacs have an option to hide their title bars
-            app.id != "org.alacritty" &&
-            app.id != "net.kovidgoyal.kitty" && // ~/.config/kitty/kitty.conf: hide_window_decorations titlebar-and-corners
-            app.id != "com.mitchellh.ghostty" && // ~/.config/ghostty/config: window-decoration = false
-            app.id != "com.github.wez.wezterm" &&
-            app.id != "com.googlecode.iterm2" &&
-            app.id != "org.gnu.Emacs" {
+        // Terminal apps and Emacs have an option to hide their title bars
+        app.id != "org.alacritty" &&
+        app.id != "net.kovidgoyal.kitty" && // ~/.config/kitty/kitty.conf: hide_window_decorations titlebar-and-corners
+        app.id != "com.mitchellh.ghostty" && // ~/.config/ghostty/config: window-decoration = false
+        app.id != "com.github.wez.wezterm" &&
+        app.id != "com.googlecode.iterm2" &&
+        app.id != "org.gnu.Emacs"
+    {
         return true
     }
     return false
@@ -311,7 +314,7 @@ private func destroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, d
 func tryOnWindowDetected(_ window: Window, startup: Bool) {
     switch window.parent.cases {
         case .tilingContainer, .workspace, .macosMinimizedWindowsContainer,
-                .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
+             .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
             onWindowDetected(window, startup: startup)
         case .macosPopupWindowsContainer:
             break

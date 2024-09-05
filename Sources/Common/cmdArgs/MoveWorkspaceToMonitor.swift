@@ -12,7 +12,7 @@ public struct MoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
               --wrap-around        Allows to move workspace between first and last monitors
             """,
         options: [
-            "--wrap-around": trueBoolFlag(\.wrapAround)
+            "--wrap-around": trueBoolFlag(\.wrapAround),
         ],
         arguments: [newArgParser(\.target, parseMonitorTarget, mandatoryArgPlaceholder: "(next|prev)")]
     )

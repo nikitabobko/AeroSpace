@@ -9,10 +9,11 @@ class GlobalObserver {
         refreshSession(body: {
             if TrayMenuModel.shared.isEnabled && config.automaticallyUnhideMacosHiddenApps {
                 if let w = prevFocus?.windowOrNil,
-                        w.macAppUnsafe.nsApp.isHidden,
-                        // "Hide others" (cmd-alt-h) -> don't force focus
-                        // "Hide app" (cmd-h) -> force focus
-                        MacApp.allAppsMap.values.filter({ $0.nsApp.isHidden }).count == 1 {
+                   w.macAppUnsafe.nsApp.isHidden,
+                   // "Hide others" (cmd-alt-h) -> don't force focus
+                   // "Hide app" (cmd-h) -> force focus
+                   MacApp.allAppsMap.values.filter({ $0.nsApp.isHidden }).count == 1
+                {
                     // Force focus
                     _ = w.focusWindow()
                     _ = w.nativeFocus()

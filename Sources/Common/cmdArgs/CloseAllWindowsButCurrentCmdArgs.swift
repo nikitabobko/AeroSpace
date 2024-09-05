@@ -12,7 +12,7 @@ public struct CloseAllWindowsButCurrentCmdArgs: RawCmdArgs, CmdArgs {
               --quit-if-last-window   Quit the apps instead of closing them if it's their last window
             """,
         options: [
-            "--quit-if-last-window": trueBoolFlag(\.closeArgs.quitIfLastWindow)
+            "--quit-if-last-window": trueBoolFlag(\.closeArgs.quitIfLastWindow),
         ],
         arguments: []
     )

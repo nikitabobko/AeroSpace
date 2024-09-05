@@ -1,6 +1,6 @@
-import XCTest
 @testable import AppBundle
 import Common
+import XCTest
 
 final class ConfigTest: XCTestCase {
     func testParseI3Config() {
@@ -80,7 +80,7 @@ final class ConfigTest: XCTestCase {
             errors.descriptions,
             [
                 "mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
-                "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding"
+                "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding",
             ]
         )
         let binding = HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])
@@ -209,7 +209,7 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals([
             "workspace-to-monitor-force-assignment.w7[0]: Empty string is an illegal monitor description",
-            "workspace-to-monitor-force-assignment.w8: Monitor sequence numbers uses 1-based indexing. Values less than 1 are illegal"
+            "workspace-to-monitor-force-assignment.w8: Monitor sequence numbers uses 1-based indexing. Values less than 1 are illegal",
         ], errors.descriptions)
         assertEquals([:], defaultConfig.workspaceToMonitorForceAssignment)
     }
@@ -247,7 +247,7 @@ final class ConfigTest: XCTestCase {
                 checkFurtherCallbacks: true,
                 rawRun: [
                     LayoutCommand(args: LayoutCmdArgs(rawArgs: [], toggleBetween: [.floating])),
-                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("W"))))
+                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("W")))),
                 ]
             ),
             WindowDetectedCallback(
@@ -266,7 +266,7 @@ final class ConfigTest: XCTestCase {
             "on-window-detected[3]: For now, \'move-node-to-workspace\' must be the latest instruction in the callback (otherwise it\'s error-prone). Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
             "on-window-detected[4]: For now, \'move-node-to-workspace\' can be mentioned only once in \'run\' callback. Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
             "on-window-detected[5]: For now, \'layout floating\', \'layout tiling\' and \'move-node-to-workspace\' are the only commands that are supported in \'on-window-detected\'. Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
-            "on-window-detected[5]: For now, \'move-node-to-workspace\' must be the latest instruction in the callback (otherwise it\'s error-prone). Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20"
+            "on-window-detected[5]: For now, \'move-node-to-workspace\' must be the latest instruction in the callback (otherwise it\'s error-prone). Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
         ])
     }
 
@@ -317,7 +317,7 @@ final class ConfigTest: XCTestCase {
                     top: .perMonitor(
                         [
                             PerMonitorValue(description: .pattern("built-in")!, value: 3),
-                            PerMonitorValue(description: .secondary, value: 4)
+                            PerMonitorValue(description: .secondary, value: 4),
                         ],
                         default: 6
                     ),
@@ -368,7 +368,7 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(errors1.descriptions, [
             "key-mapping.key-notation-to-key-code: ' f' is invalid key notation",
-            "key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code"
+            "key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code",
         ])
 
         let (dvorakConfig, dvorakErrors) = parseConfig(

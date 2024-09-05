@@ -26,7 +26,7 @@ extension Rect {
     func contains(_ point: CGPoint) -> Bool {
         let x = point.x
         let y = point.y
-        return (minX..<maxX).contains(x) && (minY..<maxY).contains(y)
+        return (minX ..< maxX).contains(x) && (minY ..< maxY).contains(y)
     }
 
     var center: CGPoint {

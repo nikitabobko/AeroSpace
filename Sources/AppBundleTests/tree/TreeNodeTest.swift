@@ -1,5 +1,5 @@
-import XCTest
 @testable import AppBundle
+import XCTest
 
 final class TreeNodeTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }

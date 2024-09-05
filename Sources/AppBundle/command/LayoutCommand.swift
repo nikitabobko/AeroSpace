@@ -60,7 +60,7 @@ private func changeTilingLayout(_ state: CommandMutableState, targetLayout: Layo
             parent.changeOrientation(targetOrientation)
             return true
         case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
-                .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
+             .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
             return state.failCmd(msg: "The window is non-tiling")
     }
 }

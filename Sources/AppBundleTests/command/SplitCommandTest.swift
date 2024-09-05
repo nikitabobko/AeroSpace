@@ -1,6 +1,6 @@
-import XCTest
-import Common
 @testable import AppBundle
+import Common
+import XCTest
 
 final class SplitCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
@@ -14,7 +14,7 @@ final class SplitCommandTest: XCTestCase {
         SplitCommand(args: SplitCmdArgs(rawArgs: [], .vertical)).run(.focused)
         assertEquals(root.layoutDescription, .h_tiles([
             .v_tiles([
-                .window(1)
+                .window(1),
             ]),
             .window(2),
         ]))
@@ -29,7 +29,7 @@ final class SplitCommandTest: XCTestCase {
         SplitCommand(args: SplitCmdArgs(rawArgs: [], .opposite)).run(.focused)
         assertEquals(root.layoutDescription, .h_tiles([
             .v_tiles([
-                .window(1)
+                .window(1),
             ]),
             .window(2),
         ]))
@@ -46,7 +46,7 @@ final class SplitCommandTest: XCTestCase {
         SplitCommand(args: SplitCmdArgs(rawArgs: [], .horizontal)).run(.focused)
         assertEquals(root.layoutDescription, .h_tiles([
             .h_tiles([
-                .window(1)
+                .window(1),
             ]),
             .window(2),
         ]))
@@ -63,7 +63,7 @@ final class SplitCommandTest: XCTestCase {
         SplitCommand(args: SplitCmdArgs(rawArgs: [], .opposite)).run(.focused)
         assertEquals(root.layoutDescription, .h_tiles([
             .h_tiles([
-                .window(1)
+                .window(1),
             ]),
             .window(2),
         ]))
