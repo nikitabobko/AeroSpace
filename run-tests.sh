@@ -11,5 +11,8 @@ swift test
 ./script/install-deps.sh --swiftlint
 ./swift-exec-deps/.build/debug/swiftlint lint --quiet
 
+./script/install-deps.sh --swiftformat
+./swift-exec-deps/.build/debug/swiftformat .
+
 ./generate.sh --all
 ./script/check-uncommitted-files.sh

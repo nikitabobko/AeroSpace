@@ -60,7 +60,7 @@ let package = Package(
         .executableTarget(
             name: "AeroSpaceApp",
             dependencies: [
-                .target(name: "AppBundle")
+                .target(name: "AppBundle"),
             ]
         ),
         .executableTarget(

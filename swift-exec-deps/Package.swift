@@ -10,6 +10,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/yonaskolb/XcodeGen.git", exact: "2.42.0"),
         .package(url: "https://github.com/realm/SwiftLint", exact: "0.56.2"),
+        .package(url: "https://github.com/nicklockwood/SwiftFormat", exact: "0.54.4"),
     ],
     targets: []
 )

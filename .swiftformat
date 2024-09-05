@@ -1,0 +1,29 @@
+# https://github.com/nicklockwood/SwiftFormat/blob/main/Rules.md
+--exclude Sources/ShellParserGenerated
+--indentcase true
+--patternlet inline
+--indentstrings true
+
+# https://github.com/nicklockwood/SwiftFormat/issues/483 fix indentation for expressions nested in ternary
+--wrapternary before-operators
+
+--disable andOperator
+--disable blankLinesBetweenScopes
+--disable consecutiveSpaces
+--disable consistentSwitchCaseSpacing
+--disable hoistTry
+--disable preferKeyPath
+--disable redundantNilInit
+--disable redundantParens
+--disable redundantRawValues
+--disable redundantReturn
+--disable redundantSelf
+--disable redundantStaticSelf
+--disable redundantType
+--disable spaceAroundComments
+--disable spaceInsideComments
+--disable wrapArguments
+--disable wrapMultilineConditionalAssignment
+
+# This rule is cool but buggy. It feels like heuristics are used instead of real code analysis
+--disable unusedArguments

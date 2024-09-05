@@ -6,6 +6,7 @@ all=1
 antlr=0
 complgen=0
 swiftlint=0
+swiftformat=0
 xcodegen=0
 while [[ $# -gt 0 ]]; do
     case $1 in
@@ -27,6 +28,11 @@ while [[ $# -gt 0 ]]; do
         --xcodegen)
             all=0
             xcodegen=1
+            shift
+            ;;
+        --swiftformat)
+            all=0
+            swiftformat=1
             shift
             ;;
         *)
@@ -68,5 +74,11 @@ fi
 if test $all == 1 || test $xcodegen == 1; then
     if ! check-version 2.42.0 ./swift-exec-deps/.build/debug/xcodegen --version; then
         swift run --package-path ./swift-exec-deps xcodegen --version
+    fi
+fi
+
+if test $all == 1 || test $swiftformat == 1; then
+    if ! check-version 0.54.4 ./swift-exec-deps/.build/debug/swiftformat --version; then
+        swift run --package-path ./swift-exec-deps swiftformat --version
     fi
 fi
