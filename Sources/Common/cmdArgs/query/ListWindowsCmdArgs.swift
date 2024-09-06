@@ -59,8 +59,11 @@ public func parseRawListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindow
             var conflicting: OrderedSet<String> = []
             if (raw.all) { conflicting.insert("--all", at: 0) }
             if (raw.focused) { conflicting.insert("--focused", at: 0) }
-            if (!raw.workspaces.isEmpty) { conflicting.insert("--workspace", at: 0) }
-            else if (!raw.monitors.isEmpty) { conflicting.insert("--monitor", at: 0) }
+            if (!raw.workspaces.isEmpty) {
+                conflicting.insert("--workspace", at: 0)
+            } else if (!raw.monitors.isEmpty) {
+                conflicting.insert("--monitor", at: 0)
+            }
             return switch conflicting.count {
                 case 1: .cmd(raw)
                 case 0: .failure("Mandatory option is not specified (--focused|--all|--monitor|--workspace)")
@@ -98,17 +101,14 @@ private func parseWorkspaces(arg: String, nextArgs: inout [String]) -> Parsed<[W
     }
     var workspaces: [WorkspaceFilter] = []
     for workspaceRaw: String in args {
-        if workspaceRaw == "visible" {
-            workspaces.append(.visible)
-        } else if workspaceRaw == "focused" {
-            workspaces.append(.focused)
-        } else {
-            switch WorkspaceName.parse(workspaceRaw) {
-                case .success(let unwrapped):
-                    workspaces.append(.name(unwrapped))
-                case .failure(let msg):
-                    return .failure(msg)
-            }
+        switch workspaceRaw {
+            case "visible": workspaces.append(.visible)
+            case "focused": workspaces.append(.focused)
+            default:
+                switch WorkspaceName.parse(workspaceRaw) {
+                    case .success(let unwrapped): workspaces.append(.name(unwrapped))
+                    case .failure(let msg): return .failure(msg)
+                }
         }
     }
     return .success(workspaces)

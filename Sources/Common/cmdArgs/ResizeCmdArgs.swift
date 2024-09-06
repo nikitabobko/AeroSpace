@@ -56,14 +56,12 @@ private func parseDimension(arg: String, nextArgs: inout [String]) -> Parsed<Res
 
 private func parseUnits(arg: String, nextArgs: inout [String]) -> Parsed<ResizeCmdArgs.Units> {
     if let number = UInt(arg.removePrefix("+").removePrefix("-")) {
-        if arg.starts(with: "+") {
-            return .success(.add(number))
-        } else if arg.starts(with: "-") {
-            return .success(.subtract(number))
-        } else {
-            return .success(.set(number))
+        switch () {
+            case _ where arg.starts(with: "+"): .success(.add(number))
+            case _ where arg.starts(with: "-"): .success(.subtract(number))
+            default: .success(.set(number))
         }
     } else {
-        return .failure("<number> argument must be a number")
+        .failure("<number> argument must be a number")
     }
 }

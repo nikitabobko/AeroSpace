@@ -16,12 +16,10 @@ func findCustomConfigUrl() -> ConfigFile {
     }
     let existingCandidates: [URL] = candidates.filter { (candidate: URL) in FileManager.default.fileExists(atPath: candidate.path) }
     let count = existingCandidates.count
-    if count == 1 {
-        return .file(existingCandidates.first!)
-    } else if count > 1 {
-        return .ambiguousConfigError(existingCandidates)
-    } else {
-        return .noCustomConfigExists
+    return switch count {
+        case 0: .noCustomConfigExists
+        case 1: .file(existingCandidates.first!)
+        default: .ambiguousConfigError(existingCandidates)
     }
 }
 

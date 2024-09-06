@@ -125,24 +125,25 @@ private extension TilingContainer {
             let lPadding: CGFloat
             let rPadding: CGFloat
             let padding = CGFloat(config.accordionPadding)
-            if index == 0 && children.count == 1 {
-                lPadding = 0
-                rPadding = 0
-            } else if index == 0 {
-                lPadding = 0
-                rPadding = padding
-            } else if index == children.indices.last {
-                lPadding = padding
-                rPadding = 0
-            } else if index + 1 == mruIndex {
-                lPadding = 0
-                rPadding = 2 * padding
-            } else if index - 1 == mruIndex {
-                lPadding = 2 * padding
-                rPadding = 0
-            } else {
-                lPadding = padding
-                rPadding = padding
+            switch () {
+                case _ where index == 0 && children.count == 1:
+                    lPadding = 0
+                    rPadding = 0
+                case _ where index == 0:
+                    lPadding = 0
+                    rPadding = padding
+                case _ where index == children.indices.last:
+                    lPadding = padding
+                    rPadding = 0
+                case _ where index + 1 == mruIndex:
+                    lPadding = 0
+                    rPadding = 2 * padding
+                case _ where index - 1 == mruIndex:
+                    lPadding = 2 * padding
+                    rPadding = 0
+                default:
+                    lPadding = padding
+                    rPadding = padding
             }
             switch orientation {
                 case .h:

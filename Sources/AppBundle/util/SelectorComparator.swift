@@ -9,12 +9,10 @@ struct SelectorComparator<T, S: Comparable>: SortComparator, Hashable {
     func compare(_ lhs: T, _ rhs: T) -> ComparisonResult {
         let a = selector(lhs)
         let b = selector(rhs)
-        if a < b {
-            return .orderedAscending
-        } else if a > b {
-            return .orderedDescending
-        } else {
-            return .orderedSame
+        return switch () {
+            case _ where a < b: .orderedAscending
+            case _ where a > b: .orderedDescending
+            default: .orderedSame
         }
     }
 
