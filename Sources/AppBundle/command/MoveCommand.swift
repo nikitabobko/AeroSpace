@@ -29,14 +29,14 @@ struct MoveCommand: Command {
             case .workspace: // floating window
                 return state.failCmd(msg: "moving floating windows isn't yet supported") // todo
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-                return state.failCmd(msg: moveOutMacosSillyWindow)
+                return state.failCmd(msg: moveOutMacosUnconventionalWindow)
             case .macosPopupWindowsContainer:
                 return false // Impossible
         }
     }
 }
 
-private let moveOutMacosSillyWindow = "moving macOS fullscreen, minimized windows and windows of hidden apps isn't yet supported. This behavior is subject to change"
+private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimized windows and windows of hidden apps isn't yet supported. This behavior is subject to change"
 
 private func moveOut(_ state: CommandMutableState, window: Window, direction: CardinalDirection) -> Bool {
     let innerMostChild = window.parents.first(where: {
@@ -65,7 +65,7 @@ private func moveOut(_ state: CommandMutableState, window: Window, direction: Ca
             bindTo = parent.rootTilingContainer
             bindToIndex = direction.insertionOffset
         case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-            return state.failCmd(msg: moveOutMacosSillyWindow)
+            return state.failCmd(msg: moveOutMacosUnconventionalWindow)
         case .macosPopupWindowsContainer:
             return false // Impossible
         case .window:

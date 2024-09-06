@@ -51,7 +51,7 @@ If you only plan to build the debug version of AeroSpace, you can run it from th
 
 **Release build**
 - `build-release.sh` - Build release build to `.release` dir.
-- `install-release.sh` - Build and install release build to `/Applications/AeroSpace.app` and `~/.bin/aerospace`.
+- `install-from-sources.sh` - Build from sources and install release build to `aerospace-dev` brew cask
 
 ## IDE
 

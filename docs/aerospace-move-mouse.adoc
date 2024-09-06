@@ -37,8 +37,8 @@ Possible values:
 +
 * `monitor-lazy-center`. Move mouse to the center of the focused monitor, *unless* it is already within the monitor boundaries.
 * `monitor-force-center`. Move mouse to the center of the focused monitor.
-* `window-lazy-center`. Move mouse to the center of the focused window, *unless* it is already within the window boundaries. Fails the command if no window is focused.
-* `window-force-center`. Move mouse to the center of the focused window. Fails the command if no window is focused.
+* `window-lazy-center`. Move mouse to the center of the focused window, *unless* it is already within the window boundaries. Exit with non-zero code if no window is focused.
+* `window-force-center`. Move mouse to the center of the focused window. Exit with non-zero code if no window is focused.
 
 // =========================================================== Examples
 include::util/conditional-examples-header.adoc[]

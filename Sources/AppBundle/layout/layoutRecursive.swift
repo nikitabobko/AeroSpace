@@ -123,28 +123,14 @@ private extension TilingContainer {
     func layoutAccordion(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) {
         guard let mruIndex: Int = mostRecentChild?.ownIndexOrNil else { return }
         for (index, child) in children.enumerated() {
-            let lPadding: CGFloat
-            let rPadding: CGFloat
             let padding = CGFloat(config.accordionPadding)
-            switch () {
-                case _ where index == 0 && children.count == 1:
-                    lPadding = 0
-                    rPadding = 0
-                case _ where index == 0:
-                    lPadding = 0
-                    rPadding = padding
-                case _ where index == children.indices.last:
-                    lPadding = padding
-                    rPadding = 0
-                case _ where index + 1 == mruIndex:
-                    lPadding = 0
-                    rPadding = 2 * padding
-                case _ where index - 1 == mruIndex:
-                    lPadding = 2 * padding
-                    rPadding = 0
-                default:
-                    lPadding = padding
-                    rPadding = padding
+            let (lPadding, rPadding): (CGFloat, CGFloat) = switch index {
+                case 0 where children.count == 1: (0, 0)
+                case 0:                           (0, padding)
+                case children.indices.last:       (padding, 0)
+                case mruIndex - 1:                (0, 2 * padding)
+                case mruIndex + 1:                (2 * padding, 0)
+                default:                          (padding, padding)
             }
             switch orientation {
                 case .h:

@@ -348,7 +348,7 @@ final class ConfigTest: XCTestCase {
             unicorn = 'u'
 
             [mode.main.binding]
-            alt-unicorn = 'workspace unicorn'
+            alt-unicorn = 'workspace wonderland'
             """
         )
         assertEquals(errors.descriptions, [])

@@ -19,10 +19,11 @@ tell application "Terminal"
 end tell'
 '''
 
-alt-j = 'focus left'
-alt-k = 'focus down'
-alt-l = 'focus up'
-alt-semicolon = 'focus right'
+# i3 wraps focus by default
+alt-j =         'focus --boundaries-action wrap-around-the-workspace left'
+alt-k =         'focus --boundaries-action wrap-around-the-workspace down'
+alt-l =         'focus --boundaries-action wrap-around-the-workspace up'
+alt-semicolon = 'focus --boundaries-action wrap-around-the-workspace right'
 
 alt-shift-j = 'move left'
 alt-shift-k = 'move down'

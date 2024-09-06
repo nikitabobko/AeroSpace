@@ -175,7 +175,7 @@ If you use different layout, different alphabet, or you just want to have a fanc
 unicorn = 'u'
 
 [mode.main.binding]
-alt-unicorn = 'workspace unicorn' # (⁀ᗢ⁀)
+alt-unicorn = 'workspace wonderland' # (⁀ᗢ⁀)
 ----
 
 * For `dvorak` users, AeroSpace offers a preconfigured preset.
