@@ -30,8 +30,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
             refreshSession {
                 _ = EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle)).run(.focused)
             }
-        }
-            .keyboardShortcut("E", modifiers: .command)
+        }.keyboardShortcut("E", modifiers: .command)
         let editor = getTextEditorToOpenConfig()
         Button("Open config in '\(editor.lastPathComponent)'") {
             let fallbackConfig: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName)
@@ -44,19 +43,16 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
                 case .ambiguousConfigError:
                     fallbackConfig.open(with: editor)
             }
-        }
-            .keyboardShortcut("O", modifiers: .command)
+        }.keyboardShortcut("O", modifiers: .command)
         if viewModel.isEnabled {
             Button("Reload config") {
                 refreshSession { _ = reloadConfig() }
-            }
-                .keyboardShortcut("R", modifiers: .command)
+            }.keyboardShortcut("R", modifiers: .command)
         }
         Button("Quit \(aeroSpaceAppName)") {
             terminationHandler.beforeTermination()
             terminateApp()
-        }
-            .keyboardShortcut("Q", modifiers: .command)
+        }.keyboardShortcut("Q", modifiers: .command)
     } label: {
         // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
         Text(viewModel.isEnabled ? viewModel.trayText : "⏸️")

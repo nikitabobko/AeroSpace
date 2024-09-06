@@ -38,7 +38,8 @@ final class ShellTest: XCTestCase {
                 d && e \(backslash)
                 && f
             """.parseShell(), .and(.and(cmd("a", "b", "c", "d"), e), f))
-        assertSucc("""
+        assertSucc(
+            """
             echo "hi \\n $(foo bar)"
             """.parseShell(),
             .args([.text("echo"), .concatV(.text("hi \n "), .interpolation(cmd("foo", "bar")))])

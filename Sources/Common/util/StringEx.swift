@@ -51,9 +51,10 @@ public extension String {
                 tokens.mapAllOrFailures { token in
                     switch token {
                         case .literal(let literal): .success(literal)
-                        case .value(let value): variables[value].flatMap(Result.success)
-                            ?? .failure("Env variable '\(value)' isn't presented in AeroSpace.app env vars, " +
-                                "or not available for interpolation (because it's mutated)")
+                        case .value(let value):
+                            variables[value].flatMap(Result.success)
+                                ?? .failure("Env variable '\(value)' isn't presented in AeroSpace.app env vars, " +
+                                    "or not available for interpolation (because it's mutated)")
                     }
                 }
             }

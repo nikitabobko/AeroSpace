@@ -24,147 +24,145 @@ protocol WritableAttr: ReadableAttr {
     var setter: (T) -> CFTypeRef? { get }
 }
 
-/*
-	Quick reference:
-
-	// informational attributes
-	kAXRoleAttribute
-	kAXSubroleAttribute
-	kAXRoleDescriptionAttribute
-	kAXTitleAttribute
-	kAXDescriptionAttribute
-	kAXHelpAttribute
-
-	// hierarchy or relationship attributes
-	kAXParentAttribute
-	kAXChildrenAttribute
-	kAXSelectedChildrenAttribute
-	kAXVisibleChildrenAttribute
-	kAXWindowAttribute
-	kAXTopLevelUIElementAttribute
-	kAXTitleUIElementAttribute
-	kAXServesAsTitleForUIElementsAttribute
-	kAXLinkedUIElementsAttribute
-    kAXSharedFocusElementsAttribute
-
-	// visual state attributes
-	kAXEnabledAttribute
-	kAXFocusedAttribute
-	kAXPositionAttribute
-	kAXSizeAttribute
-
-	// value attributes
-	kAXValueAttribute
-    kAXValueDescriptionAttribute
-	kAXMinValueAttribute
-	kAXMaxValueAttribute
-	kAXValueIncrementAttribute
-	kAXValueWrapsAttribute
-	kAXAllowedValuesAttribute
-
-	// text-specific attributes
-	kAXSelectedTextAttribute
-	kAXSelectedTextRangeAttribute
-    kAXSelectedTextRangesAttribute
-	kAXVisibleCharacterRangeAttribute
-	kAXNumberOfCharactersAttribute
-	kAXSharedTextUIElementsAttribute
-	kAXSharedCharacterRangeAttribute
-
-	// window, sheet, or drawer-specific attributes
-	kAXMainAttribute
-	kAXMinimizedAttribute
-	kAXCloseButtonAttribute
-	kAXZoomButtonAttribute
-	kAXMinimizeButtonAttribute
-	kAXToolbarButtonAttribute
-	kAXProxyAttribute
-	kAXGrowAreaAttribute
-	kAXModalAttribute
-	kAXDefaultButtonAttribute
-	kAXCancelButtonAttribute
-
-	// menu or menu item-specific attributes
-	kAXMenuItemCmdCharAttribute
-	kAXMenuItemCmdVirtualKeyAttribute
-	kAXMenuItemCmdGlyphAttribute
-	kAXMenuItemCmdModifiersAttribute
-	kAXMenuItemMarkCharAttribute
-	kAXMenuItemPrimaryUIElementAttribute
-
-	// application element-specific attributes
-	kAXMenuBarAttribute
-	kAXWindowsAttribute
-	kAXFrontmostAttribute
-	kAXHiddenAttribute
-	kAXMainWindowAttribute
-	kAXFocusedWindowAttribute
-	kAXFocusedUIElementAttribute
-	kAXExtrasMenuBarAttribute
-
-	// date/time-specific attributes
-	kAXHourFieldAttribute
-	kAXMinuteFieldAttribute
-	kAXSecondFieldAttribute
-	kAXAMPMFieldAttribute
-	kAXDayFieldAttribute
-	kAXMonthFieldAttribute
-	kAXYearFieldAttribute
-
-	// table, outline, or browser-specific attributes
-	kAXRowsAttribute
-	kAXVisibleRowsAttribute
-	kAXSelectedRowsAttribute
-	kAXColumnsAttribute
-	kAXVisibleColumnsAttribute
-	kAXSelectedColumnsAttribute
-	kAXSortDirectionAttribute
-	kAXColumnHeaderUIElementsAttribute
-	kAXIndexAttribute
-	kAXDisclosingAttribute
-	kAXDisclosedRowsAttribute
-	kAXDisclosedByRowAttribute
-
-	// matte-specific attributes
-	kAXMatteHoleAttribute
-	kAXMatteContentUIElementAttribute
-
-	// ruler-specific attributes
-	kAXMarkerUIElementsAttribute
-	kAXUnitsAttribute
-	kAXUnitDescriptionAttribute
-	kAXMarkerTypeAttribute
-	kAXMarkerTypeDescriptionAttribute
-
-	// miscellaneous or role-specific attributes
-	kAXHorizontalScrollBarAttribute
-	kAXVerticalScrollBarAttribute
-	kAXOrientationAttribute
-	kAXHeaderAttribute
-	kAXEditedAttribute
-	kAXTabsAttribute
-	kAXOverflowButtonAttribute
-	kAXFilenameAttribute
-	kAXExpandedAttribute
-	kAXSelectedAttribute
-	kAXSplittersAttribute
-	kAXContentsAttribute
-	kAXNextContentsAttribute
-	kAXPreviousContentsAttribute
-	kAXDocumentAttribute
-	kAXIncrementorAttribute
-	kAXDecrementButtonAttribute
-	kAXIncrementButtonAttribute
-	kAXColumnTitleAttribute
-	kAXURLAttribute
-	kAXLabelUIElementsAttribute
-	kAXLabelValueAttribute
-	kAXShownMenuUIElementAttribute
-	kAXIsApplicationRunningAttribute
-	kAXFocusedApplicationAttribute
- 	kAXElementBusyAttribute
-	kAXAlternateUIVisibleAttribute
-*/
+// Quick reference:
+//
+// // informational attributes
+// kAXRoleAttribute
+// kAXSubroleAttribute
+// kAXRoleDescriptionAttribute
+// kAXTitleAttribute
+// kAXDescriptionAttribute
+// kAXHelpAttribute
+//
+// // hierarchy or relationship attributes
+// kAXParentAttribute
+// kAXChildrenAttribute
+// kAXSelectedChildrenAttribute
+// kAXVisibleChildrenAttribute
+// kAXWindowAttribute
+// kAXTopLevelUIElementAttribute
+// kAXTitleUIElementAttribute
+// kAXServesAsTitleForUIElementsAttribute
+// kAXLinkedUIElementsAttribute
+// kAXSharedFocusElementsAttribute
+//
+// // visual state attributes
+// kAXEnabledAttribute
+// kAXFocusedAttribute
+// kAXPositionAttribute
+// kAXSizeAttribute
+//
+// // value attributes
+// kAXValueAttribute
+// kAXValueDescriptionAttribute
+// kAXMinValueAttribute
+// kAXMaxValueAttribute
+// kAXValueIncrementAttribute
+// kAXValueWrapsAttribute
+// kAXAllowedValuesAttribute
+//
+// // text-specific attributes
+// kAXSelectedTextAttribute
+// kAXSelectedTextRangeAttribute
+// kAXSelectedTextRangesAttribute
+// kAXVisibleCharacterRangeAttribute
+// kAXNumberOfCharactersAttribute
+// kAXSharedTextUIElementsAttribute
+// kAXSharedCharacterRangeAttribute
+//
+// // window, sheet, or drawer-specific attributes
+// kAXMainAttribute
+// kAXMinimizedAttribute
+// kAXCloseButtonAttribute
+// kAXZoomButtonAttribute
+// kAXMinimizeButtonAttribute
+// kAXToolbarButtonAttribute
+// kAXProxyAttribute
+// kAXGrowAreaAttribute
+// kAXModalAttribute
+// kAXDefaultButtonAttribute
+// kAXCancelButtonAttribute
+//
+// // menu or menu item-specific attributes
+// kAXMenuItemCmdCharAttribute
+// kAXMenuItemCmdVirtualKeyAttribute
+// kAXMenuItemCmdGlyphAttribute
+// kAXMenuItemCmdModifiersAttribute
+// kAXMenuItemMarkCharAttribute
+// kAXMenuItemPrimaryUIElementAttribute
+//
+// // application element-specific attributes
+// kAXMenuBarAttribute
+// kAXWindowsAttribute
+// kAXFrontmostAttribute
+// kAXHiddenAttribute
+// kAXMainWindowAttribute
+// kAXFocusedWindowAttribute
+// kAXFocusedUIElementAttribute
+// kAXExtrasMenuBarAttribute
+//
+// // date/time-specific attributes
+// kAXHourFieldAttribute
+// kAXMinuteFieldAttribute
+// kAXSecondFieldAttribute
+// kAXAMPMFieldAttribute
+// kAXDayFieldAttribute
+// kAXMonthFieldAttribute
+// kAXYearFieldAttribute
+//
+// // table, outline, or browser-specific attributes
+// kAXRowsAttribute
+// kAXVisibleRowsAttribute
+// kAXSelectedRowsAttribute
+// kAXColumnsAttribute
+// kAXVisibleColumnsAttribute
+// kAXSelectedColumnsAttribute
+// kAXSortDirectionAttribute
+// kAXColumnHeaderUIElementsAttribute
+// kAXIndexAttribute
+// kAXDisclosingAttribute
+// kAXDisclosedRowsAttribute
+// kAXDisclosedByRowAttribute
+//
+// // matte-specific attributes
+// kAXMatteHoleAttribute
+// kAXMatteContentUIElementAttribute
+//
+// // ruler-specific attributes
+// kAXMarkerUIElementsAttribute
+// kAXUnitsAttribute
+// kAXUnitDescriptionAttribute
+// kAXMarkerTypeAttribute
+// kAXMarkerTypeDescriptionAttribute
+//
+// // miscellaneous or role-specific attributes
+// kAXHorizontalScrollBarAttribute
+// kAXVerticalScrollBarAttribute
+// kAXOrientationAttribute
+// kAXHeaderAttribute
+// kAXEditedAttribute
+// kAXTabsAttribute
+// kAXOverflowButtonAttribute
+// kAXFilenameAttribute
+// kAXExpandedAttribute
+// kAXSelectedAttribute
+// kAXSplittersAttribute
+// kAXContentsAttribute
+// kAXNextContentsAttribute
+// kAXPreviousContentsAttribute
+// kAXDocumentAttribute
+// kAXIncrementorAttribute
+// kAXDecrementButtonAttribute
+// kAXIncrementButtonAttribute
+// kAXColumnTitleAttribute
+// kAXURLAttribute
+// kAXLabelUIElementsAttribute
+// kAXLabelValueAttribute
+// kAXShownMenuUIElementAttribute
+// kAXIsApplicationRunningAttribute
+// kAXFocusedApplicationAttribute
+// kAXElementBusyAttribute
+// kAXAlternateUIVisibleAttribute
 enum Ax {
     struct ReadableAttrImpl<T>: ReadableAttr {
         var key: String

@@ -184,7 +184,8 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
             .flatMap { $0.commands }
             .contains { $0 is SplitCommand }
         if containsSplitCommand {
-            errors += [.semantic(.root, // todo Make 'split' + flatten normalization prettier
+            errors += [.semantic(
+                .root, // todo Make 'split' + flatten normalization prettier
                 """
                 The config contains:
                 1. usage of 'split' command
@@ -224,7 +225,8 @@ extension TOMLValueConvertible {
         guard let table = table else {
             return .failure(expectedActualTypeError(expected: .table, actual: type, backtrace))
         }
-        let singleKeyError: TomlParseError = .semantic(backtrace,
+        let singleKeyError: TomlParseError = .semantic(
+            backtrace,
             expectedKey != nil
                 ? "The table is expected to have a single key '\(expectedKey!)'"
                 : "The table is expected to have a single key"
