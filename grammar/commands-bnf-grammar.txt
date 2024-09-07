@@ -27,9 +27,9 @@ aerospace -h;
     | focus-monitor [--wrap-around] (next|prev) [--wrap-around]
     | focus-monitor <monitor_pattern>...
 
-    | fullscreen [--no-outer-gaps] [on]
-    | fullscreen [on] [--no-outer-gaps]
-    | fullscreen off
+    | fullscreen [--no-outer-gaps]
+    | fullscreen [--no-outer-gaps|--fail-if-noop]... on [--no-outer-gaps|--fail-if-noop]...
+    | fullscreen [--fail-if-noop] off [--fail-if-noop]
 
     | join-with (left|down|up|right)
 

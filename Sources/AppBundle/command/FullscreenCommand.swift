@@ -15,7 +15,9 @@ struct FullscreenCommand: Command {
             case .toggle: !window.isFullscreen
         }
         if newState == window.isFullscreen {
-            return state.failCmd(msg: newState ? "Already fullscreen" : "Already not fullscreen")
+            state.stderr.append((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
+                "Tip: use --fail-if-noop to exit with non-zero code")
+            return !args.failIfNoop
         }
         window.isFullscreen = newState
         window.noOuterGapsInFullscreen = args.noOuterGaps
