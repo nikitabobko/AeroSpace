@@ -8,28 +8,11 @@ generate_xcodeproj=1
 all=0
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --build-version)
-            build_version="$2"
-            shift
-            shift
-            ;;
-        --codesign-identity)
-            XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY="$2"
-            shift
-            shift
-            ;;
-        --ignore-xcodeproj)
-            generate_xcodeproj=0
-            shift
-            ;;
-        --all)
-            all=1
-            shift
-            ;;
-        *)
-            echo "Unknown option $1"
-            exit 1
-            ;;
+        --build-version) build_version="$2"; shift 2 ;;
+        --codesign-identity) XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY="$2"; shift 2 ;;
+        --ignore-xcodeproj) generate_xcodeproj=0; shift 1 ;;
+        --all) all=1; shift 1 ;;
+        *) echo "Unknown option $1"; exit 1 ;;
     esac
 done
 

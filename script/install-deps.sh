@@ -13,32 +13,24 @@ while [[ $# -gt 0 ]]; do
         --antlr)
             antlr=1
             all=0
-            shift
-            ;;
+            shift ;;
         --complgen)
             all=0
             complgen=1
-            shift
-            ;;
+            shift ;;
         --swiftlint)
             all=0
             swiftlint=1
-            shift
-            ;;
+            shift ;;
         --xcodegen)
             all=0
             xcodegen=1
-            shift
-            ;;
+            shift ;;
         --swiftformat)
             all=0
             swiftformat=1
-            shift
-            ;;
-        *)
-            echo "Unknown option $1"
-            exit 1
-            ;;
+            shift ;;
+        *) echo "Unknown option $1"; exit 1 ;;
     esac
 done
 

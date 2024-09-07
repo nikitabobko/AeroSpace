@@ -40,4 +40,5 @@ jobs:
           sw_vers -productVersion
           if sw_vers -productVersion | grep -q "^14"; then
             ./build-release.sh --codesign-identity -
+            ./install-from-sources.sh --dont-rebuild
           fi

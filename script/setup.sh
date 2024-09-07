@@ -4,40 +4,35 @@ set -u # Treat unset variables and parameters other than the special parameters 
 set -o pipefail # Any command failed in the pipe fails the whole pipe
 # set -x # Print shell commands as they are executed (or you can try -v which is less verbose)
 
-cmd-exist() {
-    command -v "$1" &> /dev/null
+add-to-bin() {
+    /usr/bin/which "$1" &> /dev/null && \
+        cat > ".deps/bin/${2:-$1}" <<EOF
+#!/bin/bash
+exec '$(/usr/bin/which "$1")' "\$@"
+EOF
 }
 
-setup() {
+nuke-path() {
     /bin/rm -rf .deps/bin
     /bin/mkdir -p .deps/bin
 
-    cmd-exist bash        && /usr/bin/printf "#!/bin/bash\nexec $(which bash) \"\$@\"" > .deps/bin/not-outdated-bash
-    cmd-exist brew        && /usr/bin/printf "#!/bin/bash\nexec $(which brew) \"\$@\"" > .deps/bin/brew # install-from-sources.sh
-    cmd-exist bundle      && /usr/bin/printf "#!/bin/bash\nexec $(which bundle) \"\$@\"" > .deps/bin/bundle # Ruby, asciidoc
-    cmd-exist bundler     && /usr/bin/printf "#!/bin/bash\nexec $(which bundler) \"\$@\"" > .deps/bin/bundler # Ruby, asciidoc
-    cmd-exist cargo       && /usr/bin/printf "#!/bin/bash\nexec $(which cargo) \"\$@\"" > .deps/bin/cargo
-    cmd-exist fish        && /usr/bin/printf "#!/bin/bash\nexec $(which fish) \"\$@\"" > .deps/bin/fish
-    cmd-exist git         && /usr/bin/printf "#!/bin/bash\nexec $(which git) \"\$@\"" > .deps/bin/git
-    cmd-exist rustc       && /usr/bin/printf "#!/bin/bash\nexec $(which rustc) \"\$@\"" > .deps/bin/rustc
-    cmd-exist xcbeautify  && /usr/bin/printf "#!/bin/bash\nexec $(which xcbeautify) \"\$@\"" > .deps/bin/xcbeautify
+    add-to-bin bash not-outdated-bash # build-shell-completion.sh
+    add-to-bin brew # install-from-sources.sh
+    add-to-bin bundle # Ruby, asciidoc
+    add-to-bin bundler # Ruby, asciidoc
+    add-to-bin cargo
+    add-to-bin fish
+    add-to-bin git
+    add-to-bin rustc
+    add-to-bin xcbeautify
 
-    tmp=(
-        "${PWD}/.deps/bin"
-        /bin # cat
-        /usr/bin # xcodebuild, zip, arch
-    )
-
+    export PATH="${PWD}/.deps/bin:/bin:/usr/bin"
     chmod +x .deps/bin/*
-
-    IFS=':'
-    export PATH=${tmp[*]}
-    unset IFS
 }
 
-if [ -z "${SETUP_SH:-}" ]; then
-    export SETUP_SH=true
-    setup
+if [ -z "${NUKE_PATH:-}" ]; then
+    export NUKE_PATH=1
+    nuke-path
 fi
 
 xcodebuild() {

@@ -6,20 +6,9 @@ build_version="0.0.0-SNAPSHOT"
 codesign_identity="aerospace-codesign-certificate"
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --build-version)
-            build_version="$2"
-            shift
-            shift
-            ;;
-        --codesign-identity)
-            codesign_identity="$2"
-            shift
-            shift
-            ;;
-        *)
-            echo "Unknown option $1"
-            exit 1
-            ;;
+        --build-version) build_version="$2"; shift 2 ;;
+        --codesign-identity) codesign_identity="$2"; shift 2 ;;
+        *) echo "Unknown option $1"; exit 1 ;;
     esac
 done
 
@@ -42,7 +31,7 @@ EOF
 ./generate.sh --build-version "$build_version" --codesign-identity "$codesign_identity"
 
 generate-git-hash
-swift build -c release --arch arm64 --arch x86_64
+swift build -c release --arch arm64 --arch x86_64 --product aerospace # CLI
 xcodebuild clean build \
     -scheme AeroSpace \
     -destination "generic/platform=macOS" \
@@ -125,3 +114,12 @@ cd .release
     cp -r AeroSpace.app AeroSpace-v$build_version
     zip -r AeroSpace-v$build_version.zip AeroSpace-v$build_version
 cd -
+
+#################
+### Brew Cask ###
+#################
+./script/build-brew-cask.sh \
+    --zip-uri .release/AeroSpace-v$build_version.zip \
+    --cask-name aerospace-dev \
+    --build-version $build_version \
+    --conflicts-with-casks aerospace
