@@ -9,23 +9,26 @@ cmd-exist() {
 }
 
 setup() {
-    mkdir -p .deps/bin
+    /bin/rm -rf .deps/bin
+    /bin/mkdir -p .deps/bin
 
-    cmd-exist git            && ln -fs "$(which git)" .deps/bin/git
-    cmd-exist cargo          && ln -fs "$(which cargo)" .deps/bin/cargo
-    cmd-exist rustc          && ln -fs "$(which rustc)" .deps/bin/rustc
-    cmd-exist xcbeautify     && ln -fs "$(which xcbeautify)" .deps/bin/xcbeautify
-    cmd-exist fish           && ln -fs "$(which fish)" .deps/bin/fish
-    cmd-exist bash           && ln -fs "$(which bash)" .deps/bin/bash
-    cmd-exist bundle         && ln -fs "$(which bundle)" .deps/bin/bundle # Ruby, asciidoc
-    cmd-exist bundler        && ln -fs "$(which bundler)" .deps/bin/bundler # Ruby, asciidoc
-    cmd-exist brew           && ln -fs "$(which brew)" .deps/bin/brew # install-release.sh
+    cmd-exist bash        && /usr/bin/printf "#!/bin/bash\nexec $(which bash) \"\$@\"" > .deps/bin/bash
+    cmd-exist brew        && /usr/bin/printf "#!/bin/bash\nexec $(which brew) \"\$@\"" > .deps/bin/brew # install-from-sources.sh
+    cmd-exist bundle      && /usr/bin/printf "#!/bin/bash\nexec $(which bundle) \"\$@\"" > .deps/bin/bundle # Ruby, asciidoc
+    cmd-exist bundler     && /usr/bin/printf "#!/bin/bash\nexec $(which bundler) \"\$@\"" > .deps/bin/bundler # Ruby, asciidoc
+    cmd-exist cargo       && /usr/bin/printf "#!/bin/bash\nexec $(which cargo) \"\$@\"" > .deps/bin/cargo
+    cmd-exist fish        && /usr/bin/printf "#!/bin/bash\nexec $(which fish) \"\$@\"" > .deps/bin/fish
+    cmd-exist git         && /usr/bin/printf "#!/bin/bash\nexec $(which git) \"\$@\"" > .deps/bin/git
+    cmd-exist rustc       && /usr/bin/printf "#!/bin/bash\nexec $(which rustc) \"\$@\"" > .deps/bin/rustc
+    cmd-exist xcbeautify  && /usr/bin/printf "#!/bin/bash\nexec $(which xcbeautify) \"\$@\"" > .deps/bin/xcbeautify
 
     tmp=(
         "${PWD}/.deps/bin"
         /bin # cat
         /usr/bin # xcodebuild, zip, arch
     )
+
+    chmod +x .deps/bin/*
 
     IFS=':'
     export PATH=${tmp[*]}
