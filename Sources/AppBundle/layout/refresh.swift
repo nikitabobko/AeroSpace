@@ -7,6 +7,7 @@ import Common
 func refreshSession<T>(startup: Bool = false, forceFocus: Bool = false, body: () -> T) -> T {
     check(Thread.current.isMainThread)
     gc()
+    gcMonitors()
 
     detectNewWindowsAndAttachThemToWorkspaces(startup: startup)
 

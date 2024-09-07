@@ -128,6 +128,12 @@ extension Monitor {
     }
 }
 
+func gcMonitors() {
+    if screenPointToVisibleWorkspace.count != monitors.count {
+        rearrangeWorkspacesOnMonitors()
+    }
+}
+
 private extension CGPoint {
     func setActiveWorkspace(_ workspace: Workspace) -> Bool {
         if !isValidAssignment(workspace: workspace, screen: self) {
