@@ -87,17 +87,14 @@ private func layoutWorkspaces() {
     }
 
     // to reduce flicker, first unhide visible workspaces, then hide invisible ones
-    for workspace in Workspace.all where workspace.isVisible {
-        // todo no need to unhide tiling windows (except for keeping hide/unhide state variables invariants)
+    for monitor in monitors {
+        let workspace = monitor.activeWorkspace
         workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
+        workspace.layoutWorkspace()
     }
     for workspace in Workspace.all where !workspace.isVisible {
         let corner = monitorToOptimalHideCorner[workspace.workspaceMonitor.rect.topLeftCorner] ?? .bottomRightCorner
         workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).hideInCorner(corner) } // todo as!
-    }
-
-    for monitor in monitors {
-        monitor.activeWorkspace.layoutWorkspace()
     }
 }
 

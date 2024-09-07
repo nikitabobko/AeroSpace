@@ -132,7 +132,14 @@ final class MacWindow: Window, CustomStringConvertible {
         guard let prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect else { return }
         guard let workspace else { return } // hiding only makes sense for workspace windows
 
-        _ = setTopLeftCorner(workspace.workspaceMonitor.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
+        switch getChildParentRelation(child: self, parent: parent) {
+            // Just a small optimization to avoid unnecessary AX calls for non floating windows
+            // Tiling windows should be unhidden with layoutRecursive anyway
+            case .floatingWindow:
+                _ = setTopLeftCorner(workspace.workspaceMonitor.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
+            case .macosNativeFullscreenWindow, .macosNativeHiddenAppWindow, .macosNativeMinimizedWindow,
+                 .macosPopupWindow, .tiling, .rootTilingContainer, .stubContainerRelation: break
+        }
 
         self.prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect = nil
     }

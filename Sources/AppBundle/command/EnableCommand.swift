@@ -30,7 +30,7 @@ struct EnableCommand: Command {
             activateMode(nil)
             for workspace in Workspace.all {
                 workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
-                workspace.layoutWorkspace()
+                workspace.layoutWorkspace() // Unhide tiling windows from corner
             }
         }
         return true
