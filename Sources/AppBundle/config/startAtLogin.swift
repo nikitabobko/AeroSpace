@@ -24,8 +24,9 @@ func syncStartAtLogin() {
             </dict>
             </plist>
             """
-        Result { try plist.write(to: url, atomically: false, encoding: .utf8) }
-            .getOrThrow("Can't write to \(url) ")
+        if plist != (try? String(contentsOf: url)) {
+            Result { try plist.write(to: url, atomically: false, encoding: .utf8) }.getOrThrow("Can't write to \(url) ")
+        }
     } else {
         try? FileManager.default.removeItem(at: url)
     }
