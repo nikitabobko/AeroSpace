@@ -25,7 +25,7 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
             case .debugWindows:
                 result[kind.rawValue] = defaultSubCommandParser(DebugWindowsCmdArgs.init)
             case .enable:
-                result[kind.rawValue] = defaultSubCommandParser(EnableCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(parseEnableCmdArgs)
             case .execAndForget:
                 break // exec-and-forget is parsed separately
             case .flattenWorkspaceTree:

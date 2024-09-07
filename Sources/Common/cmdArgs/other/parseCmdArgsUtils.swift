@@ -75,6 +75,10 @@ public enum ParsedCmd<T> {
         flatMap { this in predicate(this) ? .cmd(this) : .failure(msg) }
     }
 
+    public func filterNot(_ msg: String, _ predicate: (T) -> Bool) -> ParsedCmd<T> {
+        flatMap { this in !predicate(this) ? .cmd(this) : .failure(msg) }
+    }
+
     public func flatMap<R>(_ mapper: (T) -> ParsedCmd<R>) -> ParsedCmd<R> {
         return switch self {
             case .cmd(let cmd): mapper(cmd)

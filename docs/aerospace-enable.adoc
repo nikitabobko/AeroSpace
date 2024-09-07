@@ -7,8 +7,13 @@ include::util/man-attributes.adoc[]
 
 // =========================================================== Synopsis
 == Synopsis
+
+[verse]
 // tag::synopsis[]
-aerospace enable [-h|--help] (on|off|toggle)
+aerospace enable [-h|--help] toggle
+aerospace enable [-h|--help] on [--fail-if-noop]
+aerospace enable [-h|--help] off [--fail-if-noop]
+
 // end::synopsis[]
 
 // =========================================================== Description
@@ -21,12 +26,13 @@ When you disable AeroSpace, windows from currently invisible workspaces will be 
 
 Key events are not intercepted when AeroSpace is disabled
 
-// end::body[]
-
 // =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+--fail-if-noop:: Exit with non-zero exit code if already in the requested mode
+
+// end::body[]
 
 // =========================================================== Footer
 include::util/man-footer.adoc[]

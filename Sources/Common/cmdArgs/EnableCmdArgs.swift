@@ -3,18 +3,24 @@ public struct EnableCmdArgs: RawCmdArgs {
         kind: .enable,
         allowInConfig: true,
         help: """
-            USAGE: enable [-h|--help] \(EnableCmdArgs.State.unionLiteral)
+            USAGE: enable [-h|--help] toggle
+               OR: enable [-h|--help] on [--fail-if-noop]
+               OR: enable [-h|--help] off [--fail-if-noop]
 
             OPTIONS:
-              -h, --help   Print help
+              -h, --help       Print help
+              --fail-if-noop   Exit with non-zero exit code if already in the requested mode
             """,
-        options: [:],
+        options: [
+            "--fail-if-noop": trueBoolFlag(\.failIfNoop),
+        ],
         arguments: [newArgParser(\.targetState, parseState, mandatoryArgPlaceholder: EnableCmdArgs.State.unionLiteral)]
     )
     public var targetState: Lateinit<State> = .uninitialized
+    public var failIfNoop: Bool = false
 
     public let rawArgs: EquatableNoop<[String]>
-    init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
 
     public init(rawArgs: [String], targetState: State) {
         self.rawArgs = .init(rawArgs)
@@ -24,6 +30,11 @@ public struct EnableCmdArgs: RawCmdArgs {
     public enum State: String, CaseIterable {
         case on, off, toggle
     }
+}
+
+public func parseEnableCmdArgs(_ args: [String]) -> ParsedCmd<EnableCmdArgs> {
+    return parseRawCmdArgs(EnableCmdArgs(rawArgs: args), args)
+        .filterNot("--fail-if-noop is incompatible with 'toggle' argument") { $0.targetState.val == .toggle && $0.failIfNoop }
 }
 
 private func parseState(arg: String, nextArgs: inout [String]) -> Parsed<EnableCmdArgs.State> {
