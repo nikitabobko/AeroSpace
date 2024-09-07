@@ -138,7 +138,7 @@ final class MacWindow: Window, CustomStringConvertible {
             case .floatingWindow:
                 _ = setTopLeftCorner(workspace.workspaceMonitor.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
             case .macosNativeFullscreenWindow, .macosNativeHiddenAppWindow, .macosNativeMinimizedWindow,
-                 .macosPopupWindow, .tiling, .rootTilingContainer, .stubContainerRelation: break
+                 .macosPopupWindow, .tiling, .rootTilingContainer, .shimContainerRelation: break
         }
 
         self.prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect = nil

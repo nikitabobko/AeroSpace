@@ -109,7 +109,7 @@ enum ChildParentRelation: Equatable {
     case tiling(parent: TilingContainer) // todo consider splitting it on 'tiles' and 'accordion'
     case rootTilingContainer
 
-    case stubContainerRelation
+    case shimContainerRelation
 }
 
 func getChildParentRelation(child: TreeNode, parent: NonLeafTreeNodeObject) -> ChildParentRelation {
@@ -140,12 +140,12 @@ func getChildParentRelationOrNil(child: TreeNode, parent: NonLeafTreeNodeObject)
              (.window, .tilingContainer(let container)): .tiling(parent: container)
         case (.tilingContainer, .workspace): .rootTilingContainer
 
-        case (.macosFullscreenWindowsContainer, .workspace): .stubContainerRelation
+        case (.macosFullscreenWindowsContainer, .workspace): .shimContainerRelation
         case (.window, .macosFullscreenWindowsContainer): .macosNativeFullscreenWindow
         case (.macosFullscreenWindowsContainer, _): nil
         case (_, .macosFullscreenWindowsContainer): nil
 
-        case (.macosHiddenAppsWindowsContainer, .workspace): .stubContainerRelation
+        case (.macosHiddenAppsWindowsContainer, .workspace): .shimContainerRelation
         case (.window, .macosHiddenAppsWindowsContainer): .macosNativeHiddenAppWindow
         case (.macosHiddenAppsWindowsContainer, _): nil
         case (_, .macosHiddenAppsWindowsContainer): nil
