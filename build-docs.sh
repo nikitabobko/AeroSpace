@@ -17,10 +17,9 @@ build-site() {
 
     cd .site
         # Delete "aerospace " prefifx in synopsis
-        sed -i -E '/tag::synopsis/, /end::synopsis/ s/^(aerospace | {10})//' aerospace*
-        bundler exec asciidoctor ./*.adoc
+        sed -E -i '' '/tag::synopsis/, /end::synopsis/ s/^(aerospace | {10})//' aerospace*
+        bundler exec asciidoctor ./guide.adoc ./commands.adoc ./goodness.adoc
         rm -rf ./*.adoc
-        rm -rf aerospace* # Drop man pages
     cd - > /dev/null
 
     git rev-parse HEAD > .site/version.html
@@ -33,7 +32,7 @@ build-man() {
     cp-docs .man
     cd .man
         bundler exec asciidoctor -b manpage aerospace*.adoc
-        rm -rf *.adoc
+        rm -rf -- *.adoc
     cd - > /dev/null
 }
 
