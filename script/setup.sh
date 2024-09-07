@@ -12,7 +12,7 @@ setup() {
     /bin/rm -rf .deps/bin
     /bin/mkdir -p .deps/bin
 
-    cmd-exist bash        && /usr/bin/printf "#!/bin/bash\nexec $(which bash) \"\$@\"" > .deps/bin/bash
+    cmd-exist bash        && /usr/bin/printf "#!/bin/bash\nexec $(which bash) \"\$@\"" > .deps/bin/not-outdated-bash
     cmd-exist brew        && /usr/bin/printf "#!/bin/bash\nexec $(which brew) \"\$@\"" > .deps/bin/brew # install-from-sources.sh
     cmd-exist bundle      && /usr/bin/printf "#!/bin/bash\nexec $(which bundle) \"\$@\"" > .deps/bin/bundle # Ruby, asciidoc
     cmd-exist bundler     && /usr/bin/printf "#!/bin/bash\nexec $(which bundler) \"\$@\"" > .deps/bin/bundler # Ruby, asciidoc

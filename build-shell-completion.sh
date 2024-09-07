@@ -14,7 +14,7 @@ rm -rf .shell-completion && mkdir -p \
     --fish-script .shell-completion/fish/aerospace.fish 2>&1 \
     --bash-script .shell-completion/bash/aerospace 2>&1
 
-if ! (bash --version | grep -q 'version 5'); then
+if ! (not-outdated-bash --version | grep -q 'version 5'); then
     echo "bash version is too old. At least version 5 is required" > /dev/stderr
     exit 1
 fi
@@ -22,4 +22,4 @@ fi
 # Check basic syntax
 zsh -c 'autoload -Uz compinit; compinit; source ./.shell-completion/zsh/_aerospace'
 fish -c 'source ./.shell-completion/fish/aerospace.fish'
-bash -c 'source ./.shell-completion/bash/aerospace'
+not-outdated-bash -c 'source ./.shell-completion/bash/aerospace'
