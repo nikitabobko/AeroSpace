@@ -102,7 +102,8 @@ private func layoutWorkspaces() {
 }
 
 private func normalizeContainers() {
-    for workspace in Workspace.all { // todo do it only for visible workspaces?
+    // Can't do it only for visible workspace because most of the commands support --window-id and --workspace flags
+    for workspace in Workspace.all {
         workspace.normalizeContainers()
     }
 }
