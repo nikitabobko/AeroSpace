@@ -8,13 +8,13 @@ struct WorkspaceCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         let workspaceName: String
-        switch args.target {
-            case .relative(let relative):
-                guard let workspace = getNextPrevWorkspace(current: state.subject.workspace, relative: relative, stdin: stdin) else { return false }
+        switch args.target.val {
+            case .relative(let isNext):
+                guard let workspace = getNextPrevWorkspace(current: state.subject.workspace, isNext: isNext, wrapAround: args.wrapAround, stdin: stdin) else { return false }
                 workspaceName = workspace.name
-            case .direct(let direct):
-                workspaceName = direct.name.raw
-                if direct.autoBackAndForth && state.subject.workspace.name == workspaceName {
+            case .direct(let name):
+                workspaceName = name.raw
+                if args.autoBackAndForth && state.subject.workspace.name == workspaceName {
                     return WorkspaceBackAndForthCommand().run(state)
                 }
         }
@@ -25,7 +25,7 @@ struct WorkspaceCommand: Command {
     }
 }
 
-func getNextPrevWorkspace(current: Workspace, relative: WTarget.Relative, stdin: String) -> Workspace? {
+func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String) -> Workspace? {
     let stdinWorkspaces: [String] = stdin.split(separator: "\n").map { String($0).trim() }.filter { !$0.isEmpty }
     let currentMonitor = current.workspaceMonitor
     let workspaces: [Workspace] = stdinWorkspaces.isEmpty
@@ -35,10 +35,10 @@ func getNextPrevWorkspace(current: Workspace, relative: WTarget.Relative, stdin:
             .sorted()
         : stdinWorkspaces.map { Workspace.get(byName: $0) }
     let index = workspaces.firstIndex(where: { $0 == focus.workspace }) ?? 0
-    let workspace: Workspace? = if relative.wrapAround {
-        workspaces.get(wrappingIndex: relative.isNext ? index + 1 : index - 1)
+    let workspace: Workspace? = if wrapAround {
+        workspaces.get(wrappingIndex: isNext ? index + 1 : index - 1)
     } else {
-        workspaces.getOrNil(atIndex: relative.isNext ? index + 1 : index - 1)
+        workspaces.getOrNil(atIndex: isNext ? index + 1 : index - 1)
     }
     return workspace
 }

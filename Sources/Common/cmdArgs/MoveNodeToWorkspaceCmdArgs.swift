@@ -1,11 +1,15 @@
-private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
+public struct MoveNodeToWorkspaceCmdArgs: CmdArgs, RawCmdArgs {
     public let rawArgs: EquatableNoop<[String]>
-    var target: Lateinit<RawWorkspaceTarget> = .uninitialized
+    public var target: Lateinit<WorkspaceTarget> = .uninitialized
 
     // next|prev OPTIONS
-    var wrapAroundNextPrev: Bool?
+    public var _wrapAround: Bool?
 
-    static let parser: CmdParser<Self> = cmdParser(
+    public init(rawArgs: [String]) {
+        self.rawArgs = .init(rawArgs)
+    }
+
+    public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveNodeToWorkspace,
         allowInConfig: true,
         help: """
@@ -20,24 +24,18 @@ private struct RawMoveNodeToWorkspaceCmdArgs: RawCmdArgs {
             ARGUMENTS:
               <workspace-name>        Workspace name to move focused window to
             """,
-        options: ["--wrap-around": optionalTrueBoolFlag(\.wrapAroundNextPrev)],
-        arguments: [newArgParser(\.target, parseRawWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
+        options: ["--wrap-around": optionalTrueBoolFlag(\._wrapAround)],
+        arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
     )
 }
 
-public struct MoveNodeToWorkspaceCmdArgs: CmdArgs, Equatable {
-    public static let info: CmdStaticInfo = RawMoveNodeToWorkspaceCmdArgs.info
-    public let target: WTarget
-
-    public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String], _ target: WTarget) {
-        self.rawArgs = .init(rawArgs)
-        self.target = target
-    }
+public extension MoveNodeToWorkspaceCmdArgs {
+    var wrapAround: Bool { _wrapAround ?? false }
 }
 
+func implication(ifTrue: Bool, mustHold: @autoclosure () -> Bool) -> Bool { !ifTrue || mustHold() }
+
 public func parseMoveNodeToWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<MoveNodeToWorkspaceCmdArgs> {
-    parseRawCmdArgs(RawMoveNodeToWorkspaceCmdArgs(rawArgs: .init(args)), args)
-        .flatMap { raw in raw.target.val.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: nil) }
-        .flatMap { target in .cmd(MoveNodeToWorkspaceCmdArgs(rawArgs: args, target)) }
+    parseRawCmdArgs(MoveNodeToWorkspaceCmdArgs(rawArgs: .init(args)), args)
+        .filter("--wrapAround requires using (prev|next) argument") { ($0._wrapAround != nil).implies($0.target.val.isRelatve) }
 }

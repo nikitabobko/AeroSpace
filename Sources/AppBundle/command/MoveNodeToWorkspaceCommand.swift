@@ -9,12 +9,12 @@ struct MoveNodeToWorkspaceCommand: Command {
         }
         let prevWorkspace = focused.workspace ?? focus.workspace
         let targetWorkspace: Workspace
-        switch args.target {
-            case .relative(let relative):
-                guard let workspace = getNextPrevWorkspace(current: prevWorkspace, relative: relative, stdin: stdin) else { return false }
+        switch args.target.val {
+            case .relative(let isNext):
+                guard let workspace = getNextPrevWorkspace(current: prevWorkspace, isNext: isNext, wrapAround: args.wrapAround, stdin: stdin) else { return false }
                 targetWorkspace = workspace
-            case .direct(let direct):
-                targetWorkspace = Workspace.get(byName: direct.name.raw)
+            case .direct(let name):
+                targetWorkspace = Workspace.get(byName: name.raw)
         }
         if prevWorkspace == targetWorkspace {
             return state.failCmd(msg: "Window '\(focused.title)' already belongs to workspace '\(targetWorkspace.name)'")
@@ -28,7 +28,8 @@ struct MoveNodeToWorkspaceCommand: Command {
 
     public static func run(_ state: CommandMutableState, _ name: String) -> Bool {
         if let wName = WorkspaceName.parse(name).getOrNil(appendErrorTo: &state.stderr) {
-            let args = MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct(wName, autoBackAndForth: false)))
+            var args = MoveNodeToWorkspaceCmdArgs(rawArgs: [])
+            args.target = .initialized(.direct(wName))
             return MoveNodeToWorkspaceCommand(args: args).run(state)
         } else {
             return false

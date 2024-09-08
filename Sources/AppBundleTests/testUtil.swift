@@ -82,12 +82,25 @@ func testParseCommandFail(_ command: String, msg expected: String) {
     }
 }
 
-public extension WTarget.Direct {
-    init(
-        _ name: String,
-        autoBackAndForth: Bool = false
-    ) {
-        self.init(.parse(name).getOrNil()!, autoBackAndForth: autoBackAndForth)
+extension WorkspaceCmdArgs {
+    init(target: WorkspaceTarget, autoBackAndForth: Bool? = nil, wrapAround: Bool? = nil) {
+        self = WorkspaceCmdArgs(rawArgs: [])
+        self.target = .initialized(target)
+        self._autoBackAndForth = autoBackAndForth
+        self._wrapAround = wrapAround
+    }
+}
+
+extension MoveNodeToWorkspaceCmdArgs {
+    init(target: WorkspaceTarget, wrapAround: Bool? = nil) {
+        self = MoveNodeToWorkspaceCmdArgs(rawArgs: [])
+        self.target = .initialized(target)
+        self._wrapAround = wrapAround
+    }
+
+    init(workspace: String) {
+        self = MoveNodeToWorkspaceCmdArgs(rawArgs: [])
+        self.target = .initialized(.direct(.parse(workspace).getOrThrow()))
     }
 }
 

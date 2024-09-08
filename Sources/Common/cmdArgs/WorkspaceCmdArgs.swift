@@ -1,14 +1,18 @@
-private struct RawWorkspaceCmdArgs: RawCmdArgs {
+public struct WorkspaceCmdArgs: RawCmdArgs {
     public let rawArgs: EquatableNoop<[String]>
-    var target: Lateinit<RawWorkspaceTarget> = .uninitialized
+    public var target: Lateinit<WorkspaceTarget> = .uninitialized
 
     // direct workspace target OPTIONS
-    var autoBackAndForth: Bool?
+    public var _autoBackAndForth: Bool?
 
     // next|prev OPTIONS
-    var wrapAroundNextPrev: Bool?
+    public var _wrapAround: Bool?
 
-    static let parser: CmdParser<Self> = cmdParser(
+    public init(rawArgs: [String]) {
+        self.rawArgs = .init(rawArgs)
+    }
+
+    public static let parser: CmdParser<Self> = cmdParser(
         kind: .workspace,
         allowInConfig: true,
         help: """
@@ -26,97 +30,45 @@ private struct RawWorkspaceCmdArgs: RawCmdArgs {
               <workspace-name>        Workspace name to focus
             """,
         options: [
-            "--auto-back-and-forth": optionalTrueBoolFlag(\.autoBackAndForth),
-            "--wrap-around": optionalTrueBoolFlag(\.wrapAroundNextPrev),
+            "--auto-back-and-forth": optionalTrueBoolFlag(\._autoBackAndForth),
+            "--wrap-around": optionalTrueBoolFlag(\._wrapAround),
         ],
-        arguments: [newArgParser(\.target, parseRawWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
+        arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
     )
 }
 
-public struct WorkspaceCmdArgs: CmdArgs, Equatable {
-    public static let info: CmdStaticInfo = RawWorkspaceCmdArgs.info
-    public let target: WTarget
-
-    public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String], _ target: WTarget) {
-        self.rawArgs = .init(rawArgs)
-        self.target = target
-    }
+public extension WorkspaceCmdArgs {
+    var wrapAround: Bool { _wrapAround ?? false }
+    var autoBackAndForth: Bool { _autoBackAndForth ?? false }
 }
 
-enum RawWorkspaceTarget: Equatable {
-    case next
-    case prev
-    case workspaceName(WorkspaceName)
+public enum WorkspaceTarget: Equatable {
+    case relative(_ isNext: Bool)
+    case direct(WorkspaceName)
 
-    func parse(wrapAround: Bool?, autoBackAndForth: Bool?) -> ParsedCmd<WTarget> {
-        switch self {
-            case .prev, .next:
-                if autoBackAndForth != nil {
-                    return .failure("--auto-back-and-forth is not allowed for (next|prev)")
-                }
-                return .cmd(.relative(WTarget.Relative(isNext: self == .next, wrapAround: wrapAround ?? false)))
-            case .workspaceName(let name):
-                if wrapAround != nil {
-                    return .failure("--wrap-around is allowed only for (next|prev)")
-                }
-                return .cmd(.direct(WTarget.Direct(name, autoBackAndForth: autoBackAndForth ?? false)))
-        }
-    }
-}
-
-public enum WTarget: Equatable { // WorkspaceTarget
-    //case back_and_forth // todo what about 'prev-focused'? todo at least the name needs to be reserved
-    case direct(Direct)
-    case relative(Relative)
-
-    public struct Direct: Equatable {
-        public let name: WorkspaceName
-        public let autoBackAndForth: Bool
-
-        public init(
-            _ name: WorkspaceName,
-            autoBackAndForth: Bool
-        ) {
-            self.name = name
-            self.autoBackAndForth = autoBackAndForth
-        }
-    }
-
-    public struct Relative: Equatable {
-        public let isNext: Bool // next|prev
-        public let wrapAround: Bool
-
-        public init(
-            isNext: Bool,
-            wrapAround: Bool
-        ) {
-            self.isNext = isNext
-            self.wrapAround = wrapAround
-        }
-    }
+    var isDirect: Bool { !isRelatve }
+    var isRelatve: Bool { self == .relative(true) || self == .relative(false) }
 
     public func workspaceNameOrNil() -> WorkspaceName? {
-        if case .direct(let direct) = self {
-            return direct.name
-        } else {
-            return nil
+        switch self {
+            case .direct(let name): name
+            case .relative: nil
         }
     }
 }
 
 public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
-    parseRawCmdArgs(RawWorkspaceCmdArgs(rawArgs: .init(args)), args)
-        .flatMap { raw in raw.target.val.parse(wrapAround: raw.wrapAroundNextPrev, autoBackAndForth: raw.autoBackAndForth) }
-        .flatMap { target in .cmd(WorkspaceCmdArgs(rawArgs: args, target)) }
+    parseRawCmdArgs(WorkspaceCmdArgs(rawArgs: args), args)
+        .filter("--wrapAround requires using (prev|next) argument") { ($0._wrapAround != nil).implies($0.target.val.isRelatve) }
+        .filterNot("--auto-back-and-forth is incompatible with (next|prev)") { $0._autoBackAndForth != nil && $0.target.val.isRelatve }
 }
 
 let workspaceTargetPlaceholder = "(<workspace-name>|next|prev)"
 
-func parseRawWorkspaceTarget(arg: String, nextArgs: inout [String]) -> Parsed<RawWorkspaceTarget> {
+func parseWorkspaceTarget(arg: String, nextArgs: inout [String]) -> Parsed<WorkspaceTarget> {
     return switch arg {
-        case "next": .success(.next)
-        case "prev": .success(.prev)
-        default: WorkspaceName.parse(arg).map(RawWorkspaceTarget.workspaceName)
+        case "next": .success(.relative(true))
+        case "prev": .success(.relative(false))
+        default: WorkspaceName.parse(arg).map(WorkspaceTarget.direct)
     }
 }

@@ -110,6 +110,17 @@ public extension String {
     }
 }
 
+public extension Bool {
+    /// Implication
+    /// | a     | b     | a.implies(b) |
+    /// |-------|-------|--------------|
+    /// | false | false | true         |
+    /// | false | true  | true         |
+    /// | true  | false | false        |
+    /// | true  | true  | true         |
+    func implies(_ mustHold: @autoclosure () -> Bool) -> Bool { !self || mustHold() }
+}
+
 public extension Double {
     var squared: Double { self * self }
 }

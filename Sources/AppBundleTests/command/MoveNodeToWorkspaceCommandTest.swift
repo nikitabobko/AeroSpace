@@ -6,7 +6,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
     override func setUpWithError() throws { setUpWorkspacesForTests() }
 
     func testParse() {
-        testParseCommandSucc("move-node-to-workspace next", MoveNodeToWorkspaceCmdArgs(rawArgs: [], .relative(WTarget.Relative(isNext: true, wrapAround: false))))
+        testParseCommandSucc("move-node-to-workspace next", MoveNodeToWorkspaceCmdArgs(target: .relative(true)))
     }
 
     func testSimple() {
@@ -15,7 +15,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             _ = TestWindow(id: 1, parent: $0).focusWindow()
         }
 
-        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("b")))).run(.focused)
+        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.focused)
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         assertEquals((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }
@@ -28,7 +28,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
 
         let state: CommandMutableState = .focused
 
-        _ = MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("b"))))
+        _ = MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b"))
             .run(state)
 
         assertEquals(state.subject, .emptyWorkspace("a"))
@@ -44,7 +44,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
 
         let state: CommandMutableState = .focused
 
-        _ = MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("b"))))
+        _ = MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b"))
             .run(state)
 
         assertEquals(state.subject, .window(window1))
@@ -55,7 +55,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             _ = TestWindow(id: 1, parent: $0).focusWindow()
         }
 
-        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(rawArgs: [], .direct(WTarget.Direct("b")))).run(.focused)
+        MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.focused)
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         assertEquals(Workspace.get(byName: "b").children.filterIsInstance(of: Window.self).singleOrNil()?.windowId, 1)
     }
