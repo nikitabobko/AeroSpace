@@ -89,7 +89,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
         }
         if let command {
             let _answer: Result<ServerAnswer, Error> = await Task { @MainActor in
-                refreshSession(forceFocus: true) {
+                refreshSession {
                     let state: CommandMutableState = .focused // todo restore subject from "exec session"
                     let success = command.run(state, stdin: request.stdin)
                     return ServerAnswer(
