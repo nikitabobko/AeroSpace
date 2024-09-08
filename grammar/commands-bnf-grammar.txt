@@ -50,7 +50,7 @@ aerospace -h;
     | move-node-to-monitor <monitor_pattern>...
 
     | move-node-to-workspace [--wrap-around] (next|prev) [--wrap-around]
-    | move-node-to-workspace <workspace>
+    | move-node-to-workspace [--fail-if-noop] <workspace> [--fail-if-noop]
 
     | move-workspace-to-monitor [--wrap-around] (next|prev) [--wrap-around]
 

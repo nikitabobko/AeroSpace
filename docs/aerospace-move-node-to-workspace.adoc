@@ -10,7 +10,7 @@ include::util/man-attributes.adoc[]
 
 [verse]
 // tag::synopsis[]
-aerospace move-node-to-workspace [-h|--help] [--wrap-around] (next|prev)
+aerospace move-node-to-workspace [-h|--help] [--wrap-around] [--fail-if-noop] (next|prev)
 aerospace move-node-to-workspace [-h|--help] <workspace-name>
 
 // end::synopsis[]
@@ -27,8 +27,9 @@ aerospace move-node-to-workspace [-h|--help] <workspace-name>
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
---wrap-around::
-Make it possible to jump between first and last workspaces using (next|prev)
+include::./util/window-id-flag.adoc[]
+--wrap-around:: Make it possible to jump between first and last workspaces using (next|prev)
+--fail-if-noop:: Exit with non-zero code if move window to workspace it already belongs to
 
 // end::body[]
 
