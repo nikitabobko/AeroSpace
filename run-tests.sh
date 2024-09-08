@@ -9,10 +9,10 @@ swift test
 ./run-cli.sh -v
 
 ./script/install-dep.sh --swiftlint
-./.deps/swift-exec-deps/swiftlint lint --quiet
+./.deps/swiftlint/swiftlint lint --quiet
 
 ./script/install-dep.sh --swiftformat
-./.deps/swift-exec-deps/swiftformat .
+./.deps/swiftformat/swiftformat .
 
 ./generate.sh --all
 ./script/check-uncommitted-files.sh

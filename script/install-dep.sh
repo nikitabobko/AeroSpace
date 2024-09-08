@@ -43,25 +43,42 @@ if test $all == 1 || test $complgen == 1; then
     fi
 fi
 
-mkdir -p .deps/swift-exec-deps
+download-zip-and-extract-bin() {
+    artifact_name=$1
+    link=$2
+    path_inside_zip=$3
+    rm -rf ".deps/$artifact_name" && mkdir -p ".deps/$artifact_name/dist"
+    curl -L "$link" -o ".deps/$artifact_name/dist/zip.zip"
+    (cd "./.deps/$artifact_name/dist" && unzip zip.zip && rm -rf zip.zip)
+    (cd "./.deps/$artifact_name" && ln -s "./dist/$path_inside_zip" "$artifact_name")
+}
 
 if test $all == 1 || test $swiftlint == 1; then
-    if ! check-version 0.56.2 ./.deps/swift-exec-deps/swiftlint --version; then
-        swift run --package-path ./swift-exec-deps swiftlint --version > /dev/null
-        cp ./swift-exec-deps/.build/debug/swiftlint ./.deps/swift-exec-deps/swiftlint
+    swiftlint_version=0.56.2
+    if ! check-version $swiftlint_version ./.deps/swiftlint/swiftlint --version; then
+        download-zip-and-extract-bin \
+            swiftlint \
+            https://github.com/realm/SwiftLint/releases/download/$swiftlint_version/SwiftLintBinary-macos.artifactbundle.zip \
+            SwiftLintBinary.artifactbundle/swiftlint-$swiftlint_version-macos/bin/swiftlint
     fi
 fi
 
 if test $all == 1 || test $xcodegen == 1; then
-    if ! check-version 2.42.0 ./.deps/swift-exec-deps/xcodegen --version; then
-        swift run --package-path ./swift-exec-deps xcodegen --version > /dev/null
-        cp ./swift-exec-deps/.build/debug/xcodegen ./.deps/swift-exec-deps/xcodegen
+    xcodegen_version=2.42.0
+    if ! check-version $xcodegen_version ./.deps/xcodegen/xcodegen --version; then
+        download-zip-and-extract-bin \
+            xcodegen \
+            https://github.com/yonaskolb/XcodeGen/releases/download/$xcodegen_version/xcodegen.artifactbundle.zip \
+            xcodegen.artifactbundle/xcodegen-$xcodegen_version-macosx/bin/xcodegen
     fi
 fi
 
 if test $all == 1 || test $swiftformat == 1; then
-    if ! check-version 0.54.4 ./.deps/swift-exec-deps/swiftformat --version; then
-        swift run --package-path ./swift-exec-deps swiftformat --version > /dev/null
-        cp ./swift-exec-deps/.build/debug/swiftformat ./.deps/swift-exec-deps/swiftformat
+    swiftformat_version=0.54.4
+    if ! check-version $swiftformat_version ./.deps/swiftformat/swiftformat --version; then
+        download-zip-and-extract-bin \
+            swiftformat \
+            https://github.com/nicklockwood/SwiftFormat/releases/download/$swiftformat_version/swiftformat.artifactbundle.zip \
+            swiftformat.artifactbundle/swiftformat-$swiftformat_version-macos/bin/swiftformat
     fi
 fi
