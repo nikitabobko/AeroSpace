@@ -43,20 +43,25 @@ if test $all == 1 || test $complgen == 1; then
     fi
 fi
 
+mkdir -p .deps/swift-exec-deps
+
 if test $all == 1 || test $swiftlint == 1; then
-    if ! check-version 0.56.2 ./swift-exec-deps/.build/debug/swiftlint --version; then
-        swift run --package-path ./swift-exec-deps swiftlint --version
+    if ! check-version 0.56.2 ./.deps/swift-exec-deps/swiftlint --version; then
+        swift run --package-path ./swift-exec-deps swiftlint --version > /dev/null
+        cp ./swift-exec-deps/.build/debug/swiftlint ./.deps/swift-exec-deps/swiftlint
     fi
 fi
 
 if test $all == 1 || test $xcodegen == 1; then
-    if ! check-version 2.42.0 ./swift-exec-deps/.build/debug/xcodegen --version; then
-        swift run --package-path ./swift-exec-deps xcodegen --version
+    if ! check-version 2.42.0 ./.deps/swift-exec-deps/xcodegen --version; then
+        swift run --package-path ./swift-exec-deps xcodegen --version > /dev/null
+        cp ./swift-exec-deps/.build/debug/xcodegen ./.deps/swift-exec-deps/xcodegen
     fi
 fi
 
 if test $all == 1 || test $swiftformat == 1; then
-    if ! check-version 0.54.4 ./swift-exec-deps/.build/debug/swiftformat --version; then
-        swift run --package-path ./swift-exec-deps swiftformat --version
+    if ! check-version 0.54.4 ./.deps/swift-exec-deps/swiftformat --version; then
+        swift run --package-path ./swift-exec-deps swiftformat --version > /dev/null
+        cp ./swift-exec-deps/.build/debug/swiftformat ./.deps/swift-exec-deps/swiftformat
     fi
 fi
