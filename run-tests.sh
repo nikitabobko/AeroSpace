@@ -8,10 +8,10 @@ swift test
 ./run-cli.sh -h
 ./run-cli.sh -v
 
-./script/install-deps.sh --swiftlint
+./script/install-dep.sh --swiftlint
 ./swift-exec-deps/.build/debug/swiftlint lint --quiet
 
-./script/install-deps.sh --swiftformat
+./script/install-dep.sh --swiftformat
 ./swift-exec-deps/.build/debug/swiftformat .
 
 ./generate.sh --all

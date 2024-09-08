@@ -27,9 +27,9 @@ jobs:
           path: |
             swift-exec-deps/.build
             .deps
-          key: ${{ matrix.os }}-${{ runner.arch }}-${{ hashFiles('script/install-deps.sh', 'swift-exec-deps/Package.swift', 'swift-exec-deps/Package.resolved', 'Gemfile', '.bundle/config') }}
+          key: ${{ matrix.os }}-${{ runner.arch }}-${{ hashFiles('script/install-dep.sh', 'swift-exec-deps/Package.swift', 'swift-exec-deps/Package.resolved', 'Gemfile', '.bundle/config') }}
       - run: brew install bash fish xcbeautify
-      - run: ./script/install-deps.sh
+      - run: ./script/install-dep.sh --all
       - run: ./build-debug.sh
       - run: ./run-tests.sh
         # "-" means "Sign to run locally". There is no aerospace-codesign-certificate in GH Actions

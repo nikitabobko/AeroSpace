@@ -57,6 +57,6 @@ EOF
 
 if test $generate_xcodeproj = 1; then
     export XCODEGEN_AEROSPACE_VERSION=$build_version
-    ./script/install-deps.sh --xcodegen
+    ./script/install-dep.sh --xcodegen
     ./swift-exec-deps/.build/debug/xcodegen # https://github.com/yonaskolb/XcodeGen
 fi

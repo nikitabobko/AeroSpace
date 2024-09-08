@@ -2,7 +2,7 @@
 cd "$(dirname "$0")/.."
 source ./script/setup.sh
 
-all=1
+all=0
 antlr=0
 complgen=0
 swiftlint=0
@@ -10,26 +10,12 @@ swiftformat=0
 xcodegen=0
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --antlr)
-            antlr=1
-            all=0
-            shift ;;
-        --complgen)
-            all=0
-            complgen=1
-            shift ;;
-        --swiftlint)
-            all=0
-            swiftlint=1
-            shift ;;
-        --xcodegen)
-            all=0
-            xcodegen=1
-            shift ;;
-        --swiftformat)
-            all=0
-            swiftformat=1
-            shift ;;
+        --antlr) antlr=1; shift ;;
+        --complgen) complgen=1; shift ;;
+        --swiftlint) swiftlint=1; shift ;;
+        --xcodegen) xcodegen=1; shift ;;
+        --swiftformat) swiftformat=1; shift ;;
+        --all) all=1; shift ;;
         *) echo "Unknown option $1"; exit 1 ;;
     esac
 done

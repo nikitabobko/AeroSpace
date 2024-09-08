@@ -2,7 +2,7 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-./script/install-deps.sh --complgen
+./script/install-dep.sh --complgen
 
 rm -rf .shell-completion && mkdir -p \
     .shell-completion/zsh \

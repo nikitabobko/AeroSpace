@@ -2,7 +2,7 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-./script/install-deps.sh --antlr
+./script/install-dep.sh --antlr
 ./.deps/python-venv/bin/antlr4 -v 4.13.1 -no-listener -Dlanguage=Swift \
     -o ./Sources/ShellParserGenerated \
     ./grammar/ShellLexer.g4 \
