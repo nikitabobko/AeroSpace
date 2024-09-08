@@ -18,4 +18,6 @@ public struct CloseCmdArgs: RawCmdArgs, CmdArgs {
     )
 
     public var quitIfLastWindow: Bool = false
+    public var windowId: UInt32?
+    public var workspaceName: String?
 }

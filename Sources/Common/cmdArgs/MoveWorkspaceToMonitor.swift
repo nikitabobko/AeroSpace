@@ -17,6 +17,8 @@ public struct MoveWorkspaceToMonitorCmdArgs: RawCmdArgs {
         arguments: [newArgParser(\.target, parseMonitorTarget, mandatoryArgPlaceholder: "(next|prev)")]
     )
 
+    public var windowId: UInt32?
+    public var workspaceName: String?
     public var wrapAround: Bool = false
     public var target: Lateinit<MoveWorkspaceToMonitorCmdArgs.MonitorTarget> = .uninitialized
     public enum MonitorTarget: String, CaseIterable {

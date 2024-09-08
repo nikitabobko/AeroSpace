@@ -29,6 +29,8 @@ public struct MoveNodeToMonitorCmdArgs: RawCmdArgs, CmdArgs, Equatable {
 
     public var wrapAround: Bool = false
     public var target: Lateinit<MonitorTarget> = .uninitialized
+    public var windowId: UInt32?
+    public var workspaceName: String?
 }
 
 public func parseMoveNodeToMonitorCmdArgs(_ args: [String]) -> ParsedCmd<MoveNodeToMonitorCmdArgs> {

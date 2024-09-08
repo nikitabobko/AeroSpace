@@ -39,8 +39,10 @@ public struct ListWindowsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
     )
 
     fileprivate var all: Bool = false // ALIAS
-    public var focused: Bool = false
 
+    public var windowId: UInt32?
+    public var workspaceName: String?
+    public var focused: Bool = false
     public var monitors: [MonitorId] = []
     public var workspaces: [WorkspaceFilter] = []
     public var pidFilter: Int32?

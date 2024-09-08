@@ -1,4 +1,6 @@
 public struct ListMonitorsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
+    public let rawArgs: EquatableNoop<[String]>
+    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listMonitors,
         allowInConfig: false,
@@ -19,13 +21,12 @@ public struct ListMonitorsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
         arguments: []
     )
 
+    public var windowId: UInt32?
+    public var workspaceName: String?
     public var focused: Bool?
     public var mouse: Bool?
     public var format: [StringInterToken] = [
         .value("monitor-id"), .value("right-padding"), .literal(" | "),
         .value("monitor-name"),
     ]
-
-    public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
 }

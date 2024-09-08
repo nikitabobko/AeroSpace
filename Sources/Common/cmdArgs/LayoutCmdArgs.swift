@@ -1,4 +1,6 @@
 public struct LayoutCmdArgs: CmdArgs, RawCmdArgs, Equatable {
+    public let rawArgs: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .layout,
         allowInConfig: true,
@@ -11,10 +13,10 @@ public struct LayoutCmdArgs: CmdArgs, RawCmdArgs, Equatable {
         options: [:],
         arguments: [newArgParser(\.toggleBetween, parseToggleBetween, mandatoryArgPlaceholder: LayoutDescription.unionLiteral)]
     )
-    public var toggleBetween: Lateinit<[LayoutDescription]> = .uninitialized
 
-    public let rawArgs: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public var toggleBetween: Lateinit<[LayoutDescription]> = .uninitialized
+    public var windowId: UInt32?
+    public var workspaceName: String?
 
     public init(rawArgs: [String], toggleBetween: [LayoutDescription]) {
         self.rawArgs = .init(rawArgs)

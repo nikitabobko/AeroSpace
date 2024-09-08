@@ -22,6 +22,8 @@ public struct MoveMouseCmdArgs: CmdArgs, RawCmdArgs {
 
     public var failIfNoop: Bool = false
     public var mouseTarget: Lateinit<MouseTarget> = .uninitialized
+    public var windowId: UInt32?
+    public var workspaceName: String?
 }
 
 func parseMouseTarget(arg: String, nextArgs: inout [String]) -> Parsed<MouseTarget> {

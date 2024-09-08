@@ -9,6 +9,10 @@ public extension RawCmdArgs {
 public protocol CmdArgs: Equatable, CustomStringConvertible {
     static var info: CmdStaticInfo { get }
     var rawArgs: EquatableNoop<[String]> { get } // Non Equatable because test comparion
+
+    // Two very common flags among commands
+    var windowId: UInt32? { get set }
+    var workspaceName: String? { get set }
 }
 
 public extension CmdArgs {

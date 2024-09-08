@@ -1,4 +1,6 @@
 public struct ResizeCmdArgs: RawCmdArgs, Equatable {
+    public let rawArgs: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .resize,
         allowInConfig: true,
@@ -21,8 +23,9 @@ public struct ResizeCmdArgs: RawCmdArgs, Equatable {
 
     public var dimension: Lateinit<ResizeCmdArgs.Dimension> = .uninitialized
     public var units: Lateinit<ResizeCmdArgs.Units> = .uninitialized
+    public var windowId: UInt32?
+    public var workspaceName: String?
 
-    public let rawArgs: EquatableNoop<[String]>
     public init(
         rawArgs: [String],
         dimension: Dimension,
@@ -32,8 +35,6 @@ public struct ResizeCmdArgs: RawCmdArgs, Equatable {
         self.dimension = .initialized(dimension)
         self.units = .initialized(units)
     }
-
-    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
 
     public enum Dimension: String, CaseIterable, Equatable {
         case width, height, smart

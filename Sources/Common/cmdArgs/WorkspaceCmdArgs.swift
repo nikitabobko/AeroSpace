@@ -1,18 +1,6 @@
 public struct WorkspaceCmdArgs: RawCmdArgs {
     public let rawArgs: EquatableNoop<[String]>
-    public var target: Lateinit<WorkspaceTarget> = .uninitialized
-
-    // direct workspace target OPTIONS
-    public var _autoBackAndForth: Bool?
-    public var failIfNoop: Bool = false
-
-    // next|prev OPTIONS
-    public var _wrapAround: Bool?
-
-    public init(rawArgs: [String]) {
-        self.rawArgs = .init(rawArgs)
-    }
-
+    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .workspace,
         allowInConfig: true,
@@ -38,6 +26,21 @@ public struct WorkspaceCmdArgs: RawCmdArgs {
         ],
         arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
     )
+
+    public var windowId: UInt32?
+    public var workspaceName: String?
+    public var target: Lateinit<WorkspaceTarget> = .uninitialized
+    public var _autoBackAndForth: Bool?
+    public var failIfNoop: Bool = false
+    public var _wrapAround: Bool?
+}
+
+public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
+    parseRawCmdArgs(WorkspaceCmdArgs(rawArgs: args), args)
+        .filter("--wrapAround requires using (prev|next) argument") { ($0._wrapAround != nil).implies($0.target.val.isRelatve) }
+        .filterNot("--auto-back-and-forth is incompatible with (next|prev)") { $0._autoBackAndForth != nil && $0.target.val.isRelatve }
+        .filterNot("--fail-if-noop is incompatible with (next|prev)") { $0.failIfNoop && $0.target.val.isRelatve }
+        .filterNot("--fail-if-noop is incompatible with --auto-back-and-forth") { $0.autoBackAndForth && $0.failIfNoop }
 }
 
 public extension WorkspaceCmdArgs {
@@ -58,14 +61,6 @@ public enum WorkspaceTarget: Equatable {
             case .relative: nil
         }
     }
-}
-
-public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
-    parseRawCmdArgs(WorkspaceCmdArgs(rawArgs: args), args)
-        .filter("--wrapAround requires using (prev|next) argument") { ($0._wrapAround != nil).implies($0.target.val.isRelatve) }
-        .filterNot("--auto-back-and-forth is incompatible with (next|prev)") { $0._autoBackAndForth != nil && $0.target.val.isRelatve }
-        .filterNot("--fail-if-noop is incompatible with (next|prev)") { $0.failIfNoop && $0.target.val.isRelatve }
-        .filterNot("--fail-if-noop is incompatible with --auto-back-and-forth") { $0.autoBackAndForth && $0.failIfNoop }
 }
 
 let workspaceTargetPlaceholder = "(<workspace-name>|next|prev)"

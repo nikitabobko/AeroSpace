@@ -16,7 +16,10 @@ public struct ModeCmdArgs: RawCmdArgs {
         options: [:],
         arguments: [newArgParser(\.targetMode, parseTargetMode, mandatoryArgPlaceholder: "<binding-mode>")]
     )
+
     public var targetMode: Lateinit<String> = .uninitialized
+    public var windowId: UInt32?
+    public var workspaceName: String?
 }
 
 private func parseTargetMode(arg: String, nextArgs: inout [String]) -> Parsed<String> {

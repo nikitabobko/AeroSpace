@@ -2,6 +2,8 @@ private let boundar = "<boundary>"
 private let actio = "<action>"
 
 public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
+    public let rawArgs: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .focus,
         allowInConfig: true,
@@ -37,13 +39,11 @@ public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
 
     public var rawBoundaries: Boundaries? = nil // todo cover boundaries wrapping with tests
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
-    public var windowId: UInt32? = nil
     public var dfsIndex: UInt32? = nil
     public var direction: CardinalDirection? = nil
     public var floatingAsTiling: Bool = true
-
-    public let rawArgs: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public var windowId: UInt32?
+    public var workspaceName: String?
 
     public init(rawArgs: [String], direction: CardinalDirection) {
         self.rawArgs = .init(rawArgs)

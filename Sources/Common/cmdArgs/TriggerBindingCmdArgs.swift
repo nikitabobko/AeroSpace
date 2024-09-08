@@ -21,6 +21,8 @@ public struct TriggerBindingCmdArgs: RawCmdArgs, CmdArgs {
 
     public var _mode: String? = nil
     public var binding: Lateinit<String> = .uninitialized
+    public var windowId: UInt32?
+    public var workspaceName: String?
 }
 
 public extension TriggerBindingCmdArgs {

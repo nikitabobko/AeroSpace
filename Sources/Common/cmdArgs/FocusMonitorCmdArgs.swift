@@ -29,6 +29,8 @@ public struct FocusMonitorCmdArgs: RawCmdArgs, CmdArgs {
 
     public var wrapAround: Bool = false
     public var target: Lateinit<MonitorTarget> = .uninitialized
+    public var windowId: UInt32?
+    public var workspaceName: String?
 }
 
 public func parseFocusMonitorCmdArgs(_ args: [String]) -> ParsedCmd<FocusMonitorCmdArgs> {

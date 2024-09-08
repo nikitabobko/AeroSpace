@@ -28,6 +28,8 @@ public struct FullscreenCmdArgs: CmdArgs, RawCmdArgs {
     public var toggle: ToggleEnum = .toggle
     public var noOuterGaps: Bool = false
     public var failIfNoop: Bool = false
+    public var windowId: UInt32?
+    public var workspaceName: String?
 }
 
 public func parseFullscreenCmdArgs(_ args: [String]) -> ParsedCmd<FullscreenCmdArgs> {

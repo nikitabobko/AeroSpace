@@ -20,6 +20,8 @@ public struct ListAppsCmdArgs: RawCmdArgs, CmdArgs {
         arguments: []
     )
 
+    public var windowId: UInt32?
+    public var workspaceName: String?
     public var macosHidden: Bool?
     public var format: [StringInterToken] = [
         .value("app-pid"), .value("right-padding"), .literal(" | "),

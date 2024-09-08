@@ -1,14 +1,6 @@
 public struct MoveNodeToWorkspaceCmdArgs: CmdArgs, RawCmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     public var target: Lateinit<WorkspaceTarget> = .uninitialized
-
-    public var _wrapAround: Bool?
-    public var failIfNoop: Bool = false
-
-    public init(rawArgs: [String]) {
-        self.rawArgs = .init(rawArgs)
-    }
-
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveNodeToWorkspace,
         allowInConfig: true,
@@ -31,6 +23,15 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs, RawCmdArgs {
         ],
         arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
     )
+
+    public var _wrapAround: Bool?
+    public var failIfNoop: Bool = false
+    public var windowId: UInt32?
+    public var workspaceName: String?
+
+    public init(rawArgs: [String]) {
+        self.rawArgs = .init(rawArgs)
+    }
 }
 
 public extension MoveNodeToWorkspaceCmdArgs {

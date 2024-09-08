@@ -1,4 +1,6 @@
 public struct JoinWithCmdArgs: CmdArgs, RawCmdArgs {
+    public let rawArgs: EquatableNoop<[String]>
+    init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .joinWith,
         allowInConfig: true,
@@ -11,10 +13,10 @@ public struct JoinWithCmdArgs: CmdArgs, RawCmdArgs {
         options: [:],
         arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)]
     )
-    public var direction: Lateinit<CardinalDirection> = .uninitialized
 
-    public let rawArgs: EquatableNoop<[String]>
-    init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public var direction: Lateinit<CardinalDirection> = .uninitialized
+    public var windowId: UInt32?
+    public var workspaceName: String?
 
     public init(rawArgs: [String], direction: CardinalDirection) {
         self.rawArgs = .init(rawArgs)

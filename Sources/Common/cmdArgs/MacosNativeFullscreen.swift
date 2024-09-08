@@ -1,7 +1,5 @@
 public struct MacosNativeFullscreenCmdArgs: CmdArgs, RawCmdArgs {
     public let rawArgs: EquatableNoop<[String]>
-    public var failIfNoop: Bool = false
-
     public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .macosNativeFullscreen,
@@ -24,7 +22,11 @@ public struct MacosNativeFullscreenCmdArgs: CmdArgs, RawCmdArgs {
         ],
         arguments: [ArgParser(\.toggle, parseToggleEnum)]
     )
+
     public var toggle: ToggleEnum = .toggle
+    public var failIfNoop: Bool = false
+    public var windowId: UInt32?
+    public var workspaceName: String?
 }
 
 public func parseMacosNativeFullscreenCmdArgs(_ args: [String]) -> ParsedCmd<MacosNativeFullscreenCmdArgs> {

@@ -1,7 +1,6 @@
 public struct ReloadConfigCmdArgs: RawCmdArgs, CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
-
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .reloadConfig,
         allowInConfig: true,
@@ -22,4 +21,6 @@ public struct ReloadConfigCmdArgs: RawCmdArgs, CmdArgs {
 
     public var noGui: Bool = false
     public var dryRun: Bool = false
+    public var windowId: UInt32?
+    public var workspaceName: String?
 }
