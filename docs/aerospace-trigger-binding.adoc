@@ -7,8 +7,10 @@ include::util/man-attributes.adoc[]
 
 // =========================================================== Synopsis
 == Synopsis
+[verse]
 // tag::synopsis[]
 aerospace trigger-binding [-h|--help] <binding> --mode <mode-id>
+
 // end::synopsis[]
 
 // =========================================================== Description

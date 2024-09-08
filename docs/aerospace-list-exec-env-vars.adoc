@@ -7,8 +7,10 @@ include::util/man-attributes.adoc[]
 
 // =========================================================== Synopsis
 == Synopsis
+[verse]
 // tag::synopsis[]
 aerospace list-exec-env-vars [-h|--help]
+
 // end::synopsis[]
 
 // =========================================================== Description

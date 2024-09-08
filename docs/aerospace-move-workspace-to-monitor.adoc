@@ -7,6 +7,7 @@ include::util/man-attributes.adoc[]
 
 // =========================================================== Synopsis
 == Synopsis
+[verse]
 // tag::synopsis[]
 aerospace move-workspace-to-monitor [-h|--help] [--wrap-around] (next|prev)
 

@@ -7,8 +7,10 @@ include::util/man-attributes.adoc[]
 
 // =========================================================== Synopsis
 == Synopsis
+[verse]
 // tag::synopsis[]
 aerospace list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>]
+
 // end::synopsis[]
 
 // =========================================================== Description

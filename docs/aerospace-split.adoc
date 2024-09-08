@@ -7,8 +7,10 @@ include::util/man-attributes.adoc[]
 
 // =========================================================== Synopsis
 == Synopsis
+[verse]
 // tag::synopsis[]
 aerospace split [-h|--help] (horizontal|vertical|opposite)
+
 // end::synopsis[]
 
 // =========================================================== Description

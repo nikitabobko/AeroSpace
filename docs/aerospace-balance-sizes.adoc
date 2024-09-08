@@ -7,8 +7,10 @@ include::util/man-attributes.adoc[]
 
 // =========================================================== Synopsis
 == Synopsis
+[verse]
 // tag::synopsis[]
 aerospace balance-sizes [-h|--help]
+
 // end::synopsis[]
 
 // =========================================================== Description

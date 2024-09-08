@@ -7,8 +7,10 @@ include::util/man-attributes.adoc[]
 
 // =========================================================== Synopsis
 == Synopsis
+[verse]
 // tag::synopsis[]
 aerospace resize [-h|--help] (smart|width|height) [+|-]<number>
+
 // end::synopsis[]
 
 // =========================================================== Description

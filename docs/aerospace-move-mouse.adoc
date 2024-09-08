@@ -7,8 +7,10 @@ include::./util/man-attributes.adoc[]
 
 // =========================================================== Synopsis
 == Synopsis
+[verse]
 // tag::synopsis[]
 aerospace move-mouse [-h|--help] <mouse-position>
+
 // end::synopsis[]
 
 // =========================================================== Description

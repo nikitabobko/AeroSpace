@@ -7,8 +7,10 @@ include::util/man-attributes.adoc[]
 
 // =========================================================== Synopsis
 == Synopsis
+[verse]
 // tag::synopsis[]
 aerospace flatten-workspace-tree [-h|--help]
+
 // end::synopsis[]
 
 // =========================================================== Description

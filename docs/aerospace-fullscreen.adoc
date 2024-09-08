@@ -7,7 +7,6 @@ include::util/man-attributes.adoc[]
 
 // =========================================================== Synopsis
 == Synopsis
-
 [verse]
 // tag::synopsis[]
 aerospace fullscreen [-h|--help] [--no-outer-gaps]

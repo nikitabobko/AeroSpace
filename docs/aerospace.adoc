@@ -4,7 +4,7 @@ include::util/man-attributes.adoc[]
 :manpurpose: i3-like tiling window manager for macOS
 
 == Synopsis
-
+[verse]
 aerospace [-h|--help] [-v|--version] <subcommand> [<subcommand-options>...] [<subcommand-arguments>...]
 
 == Description

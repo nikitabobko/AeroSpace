@@ -7,8 +7,10 @@ include::util/man-attributes.adoc[]
 
 // =========================================================== Synopsis
 == Synopsis
+[verse]
 // tag::synopsis[]
 aerospace close-all-windows-but-current [-h|--help] [--quit-if-last-window]
+
 // end::synopsis[]
 
 // =========================================================== Description
