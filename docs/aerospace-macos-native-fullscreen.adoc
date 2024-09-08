@@ -7,8 +7,12 @@ include::util/man-attributes.adoc[]
 
 // =========================================================== Synopsis
 == Synopsis
+[verse]
 // tag::synopsis[]
-aerospace macos-native-fullscreen [-h|--help] [on|off]
+aerospace macos-native-fullscreen [-h|--help]
+aerospace macos-native-fullscreen [-h|--help] [--fail-if-noop] on
+aerospace macos-native-fullscreen [-h|--help] [--fail-if-noop] off
+
 // end::synopsis[]
 
 // =========================================================== Description
@@ -21,12 +25,14 @@ aerospace macos-native-fullscreen [-h|--help] [on|off]
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+--fail-if-noop:: Exit with non-zero exit code if already fullscreen or already not fullscreen
 
 // =========================================================== Arguments
 include::util/conditional-arguments-header.adoc[]
 
-[on|off]::
-`on` means enter fullscreen mode. `off` means exit fullscreen mode.
+on, off::
+`on` means enter fullscreen mode.
+`off` means exit fullscreen mode.
 Toggle between the two if not specified
 
 // end::body[]

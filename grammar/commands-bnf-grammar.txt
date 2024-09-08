@@ -35,7 +35,8 @@ aerospace -h;
 
     | layout (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
 
-    | macos-native-fullscreen [on|off]
+    | macos-native-fullscreen
+    | macos-native-fullscreen [--fail-if-noop] (on|off) [--fail-if-noop]
 
     | macos-native-minimize
 

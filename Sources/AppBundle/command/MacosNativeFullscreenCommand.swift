@@ -22,7 +22,9 @@ struct MacosNativeFullscreenCommand: Command {
             case .toggle: !prevState
         }
         if newState == prevState {
-            return state.failCmd(msg: newState ? "Already fullscreen" : "Already not fullscreen")
+            state.stderr.append((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
+                "Tip: use --fail-if-noop to exit with non-zero exit code")
+            return !args.failIfNoop
         }
         if axWindow.set(Ax.isFullscreenAttr, newState) {
             guard let workspace = window.visualWorkspace else {

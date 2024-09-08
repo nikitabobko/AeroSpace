@@ -53,7 +53,7 @@ private func initSubcommands() -> [String: any SubCommandParserProtocol] {
             case .listWorkspaces:
                 result[kind.rawValue] = SubCommandParser(parseListWorkspacesCmdArgs)
             case .macosNativeFullscreen:
-                result[kind.rawValue] = defaultSubCommandParser(MacosNativeFullscreenCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(parseMacosNativeFullscreenCmdArgs)
             case .macosNativeMinimize:
                 result[kind.rawValue] = defaultSubCommandParser(MacosNativeMinimizeCmdArgs.init)
             case .mode:

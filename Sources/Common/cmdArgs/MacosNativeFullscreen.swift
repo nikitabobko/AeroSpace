@@ -1,23 +1,35 @@
 public struct MacosNativeFullscreenCmdArgs: CmdArgs, RawCmdArgs {
     public let rawArgs: EquatableNoop<[String]>
+    public var failIfNoop: Bool = false
+
     public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .macosNativeFullscreen,
         allowInConfig: true,
         help: """
-            USAGE: macos-native-fullscreen [-h|--help] [on|off]
+            USAGE: macos-native-fullscreen [-h|--help]
+               OR: macos-native-fullscreen [-h|--help] [--fail-if-noop] on
+               OR: macos-native-fullscreen [-h|--help] [--fail-if-noop] off
 
             OPTIONS:
-              -h, --help   Print help
+              -h, --help       Print help
+              --fail-if-noop   Exit with non-zero exit code if already fullscreen or already not fullscreen
 
             ARGUMENTS:
-              [on|off]     'on' means enter fullscreen mode. 'off' means exit fullscreen mode.
-                           Toggle between the two if not specified
+              on, off          'on' means enter fullscreen mode. 'off' means exit fullscreen mode.
+                               Toggle between the two if not specified
             """,
-        options: [:],
+        options: [
+            "--fail-if-noop": trueBoolFlag(\.failIfNoop),
+        ],
         arguments: [ArgParser(\.toggle, parseToggleEnum)]
     )
     public var toggle: ToggleEnum = .toggle
+}
+
+public func parseMacosNativeFullscreenCmdArgs(_ args: [String]) -> ParsedCmd<MacosNativeFullscreenCmdArgs> {
+    parseRawCmdArgs(MacosNativeFullscreenCmdArgs(rawArgs: args), args)
+        .filter("--fail-if-noop requires 'on' or 'off' argument") { $0.failIfNoop.implies($0.toggle == .on || $0.toggle == .off) }
 }
 
 public enum ToggleEnum {
