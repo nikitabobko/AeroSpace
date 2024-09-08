@@ -9,7 +9,7 @@ include::./util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace move-mouse [-h|--help] <mouse-position>
+aerospace move-mouse [-h|--help] [--fail-if-noop] <mouse-position>
 
 // end::synopsis[]
 
@@ -23,6 +23,10 @@ aerospace move-mouse [-h|--help] <mouse-position>
 include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+--fail-if-noop::
+Exit with non-zero exit code if mouse is already at the requested position.
+The flag is compatible only with `window-lazy-center` and `monitor-lazy-center` arguments.
 
 // =========================================================== Arguments
 include::./util/conditional-arguments-header.adoc[]
@@ -40,7 +44,7 @@ Possible values:
 include::util/conditional-examples-header.adoc[]
 
 * Try to move mouse to the center of the window. If there is no window in focus, move mouse to the center of the monitor: +
-`aerospace move-mouse window-lazy-center || aerospace move-mouse monitor-lazy-center`
+`aerospace move-mouse --fail-if-noop window-lazy-center || aerospace move-mouse monitor-lazy-center`
 
 // end::body[]
 

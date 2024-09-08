@@ -7,45 +7,57 @@ struct MoveMouseCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         let mouse = mouseLocation
-        let point: Result<CGPoint, String> = switch args.mouseTarget.val {
+        switch args.mouseTarget.val {
             case .windowLazyCenter:
-                windowSubjectRect(state)
-                    .flatMap { $0.takeIf { !$0.contains(mouse) }.orFailure("The mouse already belongs to the window") }
-                    .map(\.center)
+                guard let rect = windowSubjectRect(state) else { return false }
+                if rect.contains(mouse) {
+                    state.stderr.append("The mouse already belongs to the window. Tip: use --fail-if-noop to exit with non-zero code")
+                    return !args.failIfNoop
+                }
+                return moveMouse(state, rect.center)
             case .windowForceCenter:
-                windowSubjectRect(state).map(\.center)
+                guard let rect = windowSubjectRect(state) else { return false }
+                return moveMouse(state, rect.center)
             case .monitorLazyCenter:
-                Result.success(state.subject.workspace.workspaceMonitor.rect)
-                    .flatMap { $0.takeIf { !$0.contains(mouse) }.orFailure("The mouse already belongs to the monitor") }
-                    .map(\.center)
+                let rect = state.subject.workspace.workspaceMonitor.rect
+                if rect.contains(mouse) {
+                    state.stderr.append("The mouse already belongs to the monitor. Tip: use --fail-if-noop to exit with non-zero code")
+                    return !args.failIfNoop
+                }
+                return moveMouse(state, rect.center)
             case .monitorForceCenter:
-                .success(state.subject.workspace.workspaceMonitor.rect.center)
-        }
-        switch point {
-            case .success(let point):
-                CGEvent(
-                    mouseEventSource: nil,
-                    mouseType: CGEventType.mouseMoved,
-                    mouseCursorPosition: point,
-                    mouseButton: CGMouseButton.left
-                )?.post(tap: CGEventTapLocation.cghidEventTap)
-                return true
-            case .failure(let msg):
-                return state.failCmd(msg: msg)
+                return moveMouse(state, state.subject.workspace.workspaceMonitor.rect.center)
         }
     }
 }
 
-private func windowSubjectRect(_ state: CommandMutableState) -> Result<Rect, String> {
+private func moveMouse(_ state: CommandMutableState, _ point: CGPoint) -> Bool {
+    let event = CGEvent(
+        mouseEventSource: nil,
+        mouseType: CGEventType.mouseMoved,
+        mouseCursorPosition: point,
+        mouseButton: CGMouseButton.left
+    )
+    if let event {
+        event.post(tap: CGEventTapLocation.cghidEventTap)
+        return true
+    } else {
+        return state.failCmd(msg: "Failed to move mouse")
+    }
+}
+
+private func windowSubjectRect(_ state: CommandMutableState) -> Rect? {
     // todo bug it's bad that we operate on the "ax physical" state directly. command seq won't work correctly
     //      focus <direction> command has the similar problem
     if let window: Window = state.subject.windowOrNil {
         if let rect = window.lastAppliedLayoutPhysicalRect ?? window.getRect() {
-            return .success(rect)
+            return rect
         } else {
-            return .failure("Failed to get rect of window '\(window.windowId)'")
+            state.stderr.append("Failed to get rect of window '\(window.windowId)'")
+            return nil
         }
     } else {
-        return .failure(noWindowIsFocused)
+        state.stderr.append(noWindowIsFocused)
+        return nil
     }
 }

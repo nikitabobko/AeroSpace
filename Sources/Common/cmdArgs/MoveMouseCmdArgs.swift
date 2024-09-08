@@ -5,23 +5,34 @@ public struct MoveMouseCmdArgs: CmdArgs, RawCmdArgs {
         kind: .moveMouse,
         allowInConfig: true,
         help: """
-            USAGE: move-mouse [-h|--help] <mouse-position>
+            USAGE: move-mouse [-h|--help] [--fail-if-noop] <mouse-position>
 
             OPTIONS:
               -h, --help         Print help
+              --fail-if-noop     Exit with non-zero exit code if mouse is already at the requested position
 
             ARGUMENTS:
               <mouse-position>   Position to move mouse to. See the man page for the possible values.
             """,
-        options: [:],
+        options: [
+            "--fail-if-noop": trueBoolFlag(\.failIfNoop),
+        ],
         arguments: [newArgParser(\.mouseTarget, parseMouseTarget, mandatoryArgPlaceholder: "<mouse-position>")]
     )
 
+    public var failIfNoop: Bool = false
     public var mouseTarget: Lateinit<MouseTarget> = .uninitialized
 }
 
 func parseMouseTarget(arg: String, nextArgs: inout [String]) -> Parsed<MouseTarget> {
     parseEnum(arg, MouseTarget.self)
+}
+
+public func parseMoveMouseCmdArgs(_ args: [String]) -> ParsedCmd<MoveMouseCmdArgs> {
+    parseRawCmdArgs(MoveMouseCmdArgs(rawArgs: args), args)
+        .filter("--fail-if-noop is only compatible with window-lazy-center or monitor-lazy-center") {
+            $0.failIfNoop.implies($0.mouseTarget.val == .windowLazyCenter || $0.mouseTarget.val == .monitorLazyCenter)
+        }
 }
 
 public enum MouseTarget: String, CaseIterable {
