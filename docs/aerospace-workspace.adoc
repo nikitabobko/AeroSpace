@@ -10,7 +10,7 @@ include::util/man-attributes.adoc[]
 
 [verse]
 // tag::synopsis[]
-aerospace workspace [-h|--help] [--auto-back-and-forth] <workspace-name>
+aerospace workspace [-h|--help] [--auto-back-and-forth] [--fail-if-noop] <workspace-name>
 aerospace workspace [-h|--help] [--wrap-around] (next|prev)
 
 // end::synopsis[]
@@ -34,12 +34,15 @@ Focuses next or previous workspace in *the list*.
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+--wrap-around:: Make it possible to jump between first and last workspaces using `(next|prev)`
 
 --auto-back-and-forth::
-Automatic `back-and-forth` when switching to already focused workspace
+Automatic `back-and-forth` when switching to already focused workspace.
+Incompatible with `--fail-if-noop`
 
---wrap-around::
-Make it possible to jump between first and last workspaces using `(next|prev)`
+--fail-if-noop::
+Exit with non-zero exit code if switch to the already focused workspace
+Incompatible with `--auto-back-and-forth`
 
 // =========================================================== Examples
 include::util/conditional-examples-header.adoc[]

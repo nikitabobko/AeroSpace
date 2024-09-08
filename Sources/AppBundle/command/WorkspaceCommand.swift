@@ -18,6 +18,10 @@ struct WorkspaceCommand: Command {
                     return WorkspaceBackAndForthCommand().run(state)
                 }
         }
+        if state.subject.workspace.name == workspaceName {
+            state.stderr.append("Workspace '\(workspaceName)' is already focused. Tip: use --fail-if-noop to exit with non-zero code")
+            return !args.failIfNoop
+        }
         let workspace = Workspace.get(byName: workspaceName)
         let result = workspace.focusWorkspace()
         state.subject = .focused

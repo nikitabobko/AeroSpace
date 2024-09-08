@@ -63,7 +63,7 @@ aerospace -h;
     | trigger-binding <binding> --mode <mode_id>
     | trigger-binding --mode <mode_id> <binding>
 
-    | workspace [--auto-back-and-forth] <workspace> [--auto-back-and-forth]
+    | workspace [--auto-back-and-forth|--fail-if-noop]... <workspace> [--auto-back-and-forth|--fail-if-noop]...
     | workspace [--wrap-around] (next|prev) [--wrap-around]
 
     | workspace-back-and-forth
