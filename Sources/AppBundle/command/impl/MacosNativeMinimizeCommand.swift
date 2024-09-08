@@ -8,7 +8,7 @@ struct MacosNativeMinimizeCommand: Command {
     func _run(_ state: CommandMutableState, stdin: String) -> Bool {
         check(Thread.current.isMainThread)
         guard let window = state.subject.windowOrNil else {
-            return state.failCmd(msg: "No window in focus")
+            return state.failCmd(msg: noWindowIsFocused)
         }
         let axWindow = window.asMacWindow().axWindow
         let newState: Bool = !window.isMacosMinimized

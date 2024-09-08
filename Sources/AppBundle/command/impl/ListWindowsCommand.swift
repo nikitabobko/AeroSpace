@@ -11,7 +11,7 @@ struct ListWindowsCommand: Command {
             if let window = state.subject.windowOrNil {
                 windows = [window]
             } else {
-                return state.failCmd(msg: "No window is focused")
+                return state.failCmd(msg: noWindowIsFocused)
             }
         } else {
             var workspaces: Set<Workspace> = args.workspaces.isEmpty ? Workspace.all.toSet() : args.workspaces

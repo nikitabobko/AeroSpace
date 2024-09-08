@@ -90,7 +90,7 @@ private func hitAllMonitorsOuterFrameBoundaries(
 
 private func wrapAroundTheWorkspace(_ state: CommandMutableState, _ direction: CardinalDirection) -> Bool {
     guard let windowToFocus = state.subject.workspace.findFocusTargetRecursive(snappedTo: direction.opposite) else {
-        return state.failCmd(msg: "No window to focus")
+        return state.failCmd(msg: noWindowIsFocused)
     }
     return windowToFocus.focusWindow()
 }

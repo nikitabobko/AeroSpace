@@ -9,8 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace focus [-h|--help] [--boundaries <boundary>]
-                [--boundaries-action <action>] [--ignore-floating] (left|down|up|right)
+aerospace focus [-h|--help] [--ignore-floating]
+                [--boundaries <boundary>] [--boundaries-action <action>]
+                (left|down|up|right)
 aerospace focus [-h|--help] --window-id <window-id>
 aerospace focus [-h|--help] --dfs-index <dfs-index>
 

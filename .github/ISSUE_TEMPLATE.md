@@ -16,8 +16,8 @@ Consider including in bug reports:
   - query 1
   - query 2
   - ...
-- [ ] I've read the documentation https://nikitabobko.github.io/AeroSpace/guide & https://nikitabobko.github.io/AeroSpace/commands
-- [ ] I've searched in the documentation. My search queries were:
+- [ ] I've read the guide https://nikitabobko.github.io/AeroSpace/guide
+- [ ] I've searched in the documentation (https://nikitabobko.github.io/AeroSpace/guide & https://nikitabobko.github.io/AeroSpace/commands). My search queries were:
   - dvorak
   - monitor
   - ...
