@@ -43,39 +43,39 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
     for kind in CmdKind.allCases {
         switch kind {
             case .balanceSizes:
-                result[kind.rawValue] = defaultSubCommandParser(BalanceSizesCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(BalanceSizesCmdArgs.init)
             case .close:
-                result[kind.rawValue] = defaultSubCommandParser(CloseCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(CloseCmdArgs.init)
             case .closeAllWindowsButCurrent:
-                result[kind.rawValue] = defaultSubCommandParser(CloseAllWindowsButCurrentCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(CloseAllWindowsButCurrentCmdArgs.init)
             case .config:
                 result[kind.rawValue] = SubCommandParser(parseConfigCmdArgs)
             case .debugWindows:
-                result[kind.rawValue] = defaultSubCommandParser(DebugWindowsCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(DebugWindowsCmdArgs.init)
             case .enable:
                 result[kind.rawValue] = SubCommandParser(parseEnableCmdArgs)
             case .execAndForget:
                 break // exec-and-forget is parsed separately
             case .flattenWorkspaceTree:
-                result[kind.rawValue] = defaultSubCommandParser(FlattenWorkspaceTreeCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(FlattenWorkspaceTreeCmdArgs.init)
             case .focus:
                 result[kind.rawValue] = SubCommandParser(parseFocusCmdArgs)
             case .focusBackAndForth:
-                result[kind.rawValue] = defaultSubCommandParser(FocusBackAndForthCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(FocusBackAndForthCmdArgs.init)
             case .focusMonitor:
                 result[kind.rawValue] = SubCommandParser(parseFocusMonitorCmdArgs)
             case .fullscreen:
                 result[kind.rawValue] = SubCommandParser(parseFullscreenCmdArgs)
             case .joinWith:
-                result[kind.rawValue] = defaultSubCommandParser(JoinWithCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(JoinWithCmdArgs.init)
             case .layout:
                 result[kind.rawValue] = SubCommandParser(parseLayoutCmdArgs)
             case .listApps:
-                result[kind.rawValue] = defaultSubCommandParser(ListAppsCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(ListAppsCmdArgs.init)
             case .listExecEnvVars:
-                result[kind.rawValue] = defaultSubCommandParser(ListExecEnvVarsCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(ListExecEnvVarsCmdArgs.init)
             case .listMonitors:
-                result[kind.rawValue] = defaultSubCommandParser(ListMonitorsCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(ListMonitorsCmdArgs.init)
             case .listWindows:
                 result[kind.rawValue] = SubCommandParser(parseRawListWindowsCmdArgs)
             case .listWorkspaces:
@@ -83,9 +83,9 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
             case .macosNativeFullscreen:
                 result[kind.rawValue] = SubCommandParser(parseMacosNativeFullscreenCmdArgs)
             case .macosNativeMinimize:
-                result[kind.rawValue] = defaultSubCommandParser(MacosNativeMinimizeCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(MacosNativeMinimizeCmdArgs.init)
             case .mode:
-                result[kind.rawValue] = defaultSubCommandParser(ModeCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(ModeCmdArgs.init)
             case .move:
                 result[kind.rawValue] = SubCommandParser(parseMoveCmdArgs)
                 // deprecated
@@ -97,25 +97,25 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
             case .moveNodeToWorkspace:
                 result[kind.rawValue] = SubCommandParser(parseMoveNodeToWorkspaceCmdArgs)
             case .moveWorkspaceToMonitor:
-                result[kind.rawValue] = defaultSubCommandParser(MoveWorkspaceToMonitorCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(MoveWorkspaceToMonitorCmdArgs.init)
                 // deprecated
-                result["move-workspace-to-display"] = defaultSubCommandParser(MoveWorkspaceToMonitorCmdArgs.init)
+                result["move-workspace-to-display"] = SubCommandParser(MoveWorkspaceToMonitorCmdArgs.init)
             case .reloadConfig:
-                result[kind.rawValue] = defaultSubCommandParser(ReloadConfigCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(ReloadConfigCmdArgs.init)
             case .resize:
                 result[kind.rawValue] = SubCommandParser(parseResizeCmdArgs)
             case .split:
                 result[kind.rawValue] = SubCommandParser(parseSplitCmdArgs)
             case .serverVersionInternalCommand:
                 if isServer {
-                    result[kind.rawValue] = defaultSubCommandParser(ServerVersionInternalCommandCmdArgs.init)
+                    result[kind.rawValue] = SubCommandParser(ServerVersionInternalCommandCmdArgs.init)
                 }
             case .triggerBinding:
                 result[kind.rawValue] = SubCommandParser(parseTriggerBindingCmdArgs)
             case .workspace:
                 result[kind.rawValue] = SubCommandParser(parseWorkspaceCmdArgs)
             case .workspaceBackAndForth:
-                result[kind.rawValue] = defaultSubCommandParser(WorkspaceBackAndForthCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(WorkspaceBackAndForthCmdArgs.init)
         }
     }
     return result

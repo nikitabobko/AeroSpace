@@ -1,13 +1,5 @@
 let subcommandParsers: [String: any SubCommandParserProtocol] = initSubcommands()
 
-func defaultSubCommandParser<T: CmdArgs>(_ raw: @escaping (EquatableNoop<[String]>) -> T) -> SubCommandParser<T> {
-    SubCommandParser { args in parseRawCmdArgs(raw(.init(args)), args) }
-}
-
-func defaultSubCommandParser<T: CmdArgs>(_ raw: @escaping ([String]) -> T) -> SubCommandParser<T> {
-    SubCommandParser { args in parseRawCmdArgs(raw(args), args) }
-}
-
 protocol SubCommandParserProtocol<T> {
     associatedtype T where T: CmdArgs
     var _parse: ([String]) -> ParsedCmd<T> { get }
@@ -23,6 +15,14 @@ struct SubCommandParser<T: CmdArgs>: SubCommandParserProtocol {
     let _parse: ([String]) -> ParsedCmd<T>
 
     init(_ parser: @escaping ([String]) -> ParsedCmd<T>) {
-        self._parse = parser
+        _parse = parser
+    }
+
+    init(_ raw: @escaping (EquatableNoop<[String]>) -> T) {
+        _parse = { args in parseRawCmdArgs(raw(.init(args)), args) }
+    }
+
+    init(_ raw: @escaping ([String]) -> T) {
+        _parse = { args in parseRawCmdArgs(raw(args), args) }
     }
 }
