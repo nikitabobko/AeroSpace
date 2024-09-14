@@ -1,5 +1,6 @@
 // todo support conflicting options
-public func parseRawCmdArgs<T: RawCmdArgs>(_ raw: T, _ args: [String]) -> ParsedCmd<T> {
+// todo come up with better name for this function
+public func parseRawCmdArgs<T: CmdArgs>(_ raw: T, _ args: [String]) -> ParsedCmd<T> {
     var args = args
     var raw = raw
     var errors: [String] = []
@@ -91,7 +92,7 @@ private extension ArgParserProtocol {
 }
 
 // Hack to preserve backwards compatibility
-private func isResizeNegativeUnitsArg(_ raw: any RawCmdArgs, arg: String) -> Bool {
+private func isResizeNegativeUnitsArg(_ raw: any CmdArgs, arg: String) -> Bool {
     var iter = arg.makeIterator()
     return raw is ResizeCmdArgs && iter.next() == "-" && iter.next()?.isNumber == true
 }

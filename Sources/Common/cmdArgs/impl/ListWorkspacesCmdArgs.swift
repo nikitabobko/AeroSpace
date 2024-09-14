@@ -3,7 +3,7 @@ import OrderedCollections
 let onitor = "<monitor>"
 let _monitors = "\(onitor)..."
 
-public struct ListWorkspacesCmdArgs: RawCmdArgs, CmdArgs {
+public struct ListWorkspacesCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listWorkspaces,

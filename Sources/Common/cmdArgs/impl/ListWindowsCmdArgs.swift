@@ -3,7 +3,7 @@ import OrderedCollections
 private let orkspace = "<workspace>"
 private let _workspaces = "\(orkspace)..."
 
-public struct ListWindowsCmdArgs: RawCmdArgs, CmdArgs, Equatable {
+public struct ListWindowsCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listWindows,

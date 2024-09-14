@@ -1,4 +1,4 @@
-public struct MoveMouseCmdArgs: CmdArgs, RawCmdArgs {
+public struct MoveMouseCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(

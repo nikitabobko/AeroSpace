@@ -1,4 +1,4 @@
-public struct LayoutCmdArgs: CmdArgs, RawCmdArgs, Equatable {
+public struct LayoutCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(

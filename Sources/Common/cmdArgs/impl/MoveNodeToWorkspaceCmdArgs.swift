@@ -1,4 +1,4 @@
-public struct MoveNodeToWorkspaceCmdArgs: CmdArgs, RawCmdArgs {
+public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     public var target: Lateinit<WorkspaceTarget> = .uninitialized
     public static let parser: CmdParser<Self> = cmdParser(

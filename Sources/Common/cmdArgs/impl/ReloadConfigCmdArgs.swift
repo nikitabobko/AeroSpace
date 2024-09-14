@@ -1,4 +1,4 @@
-public struct ReloadConfigCmdArgs: RawCmdArgs, CmdArgs {
+public struct ReloadConfigCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(

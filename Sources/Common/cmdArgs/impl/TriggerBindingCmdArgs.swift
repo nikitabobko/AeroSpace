@@ -1,4 +1,4 @@
-public struct TriggerBindingCmdArgs: RawCmdArgs, CmdArgs {
+public struct TriggerBindingCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .triggerBinding,

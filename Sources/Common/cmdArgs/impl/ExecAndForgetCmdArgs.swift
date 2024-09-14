@@ -1,9 +1,11 @@
 public struct ExecAndForgetCmdArgs: CmdArgs {
     public var rawArgs: EquatableNoop<[String]> { .init([bashScript]) }
-    public static let info: CmdStaticInfo = CmdStaticInfo(
-        help: "USAGE: exec-and-forget <bash-script>",
+    public static let parser: CmdParser<Self> = cmdParser(
         kind: .execAndForget,
-        allowInConfig: true
+        allowInConfig: true,
+        help: "USAGE: exec-and-forget <bash-script>",
+        options: [:],
+        arguments: []
     )
 
     public init(bashScript: String) {

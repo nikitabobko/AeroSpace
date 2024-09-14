@@ -1,4 +1,4 @@
-public struct ConfigCmdArgs: CmdArgs, RawCmdArgs, Equatable {
+public struct ConfigCmdArgs: CmdArgs, Equatable {
     public let rawArgs: EquatableNoop<[String]>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .config,

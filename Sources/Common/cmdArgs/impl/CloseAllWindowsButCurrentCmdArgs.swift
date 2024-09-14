@@ -1,4 +1,4 @@
-public struct CloseAllWindowsButCurrentCmdArgs: RawCmdArgs, CmdArgs {
+public struct CloseAllWindowsButCurrentCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(

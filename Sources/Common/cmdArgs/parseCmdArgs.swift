@@ -10,16 +10,8 @@ public func parseCmdArgs(_ args: [String]) -> ParsedCmd<any CmdArgs> {
     }
 }
 
-public protocol RawCmdArgs: Copyable, CmdArgs { // todo squash CmdArgs and RawCmdArgs into a single protocol
+public protocol CmdArgs: Copyable, Equatable, CustomStringConvertible, AeroAny {
     static var parser: CmdParser<Self> { get }
-}
-
-public extension RawCmdArgs {
-    static var info: CmdStaticInfo { Self.parser.info }
-}
-
-public protocol CmdArgs: Equatable, CustomStringConvertible {
-    static var info: CmdStaticInfo { get }
     var rawArgs: EquatableNoop<[String]> { get } // Non Equatable because test comparion
 
     // Two very common flags among commands
@@ -28,6 +20,8 @@ public protocol CmdArgs: Equatable, CustomStringConvertible {
 }
 
 public extension CmdArgs {
+    static var info: CmdStaticInfo { Self.parser.info }
+
     func equals(_ other: any CmdArgs) -> Bool { // My brain is cursed with Java
         (other as? Self).flatMap { self == $0 } ?? false
     }

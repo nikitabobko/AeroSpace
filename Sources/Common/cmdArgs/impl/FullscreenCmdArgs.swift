@@ -1,4 +1,4 @@
-public struct FullscreenCmdArgs: CmdArgs, RawCmdArgs {
+public struct FullscreenCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(

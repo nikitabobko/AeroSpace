@@ -1,7 +1,7 @@
 private let boundar = "<boundary>"
 private let actio = "<action>"
 
-public struct FocusCmdArgs: CmdArgs, RawCmdArgs, Equatable, AeroAny {
+public struct FocusCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(

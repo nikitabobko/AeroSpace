@@ -1,10 +1,10 @@
 let subcommandParsers: [String: any SubCommandParserProtocol] = initSubcommands()
 
-func defaultSubCommandParser<T: RawCmdArgs>(_ raw: @escaping (EquatableNoop<[String]>) -> T) -> SubCommandParser<T> {
+func defaultSubCommandParser<T: CmdArgs>(_ raw: @escaping (EquatableNoop<[String]>) -> T) -> SubCommandParser<T> {
     SubCommandParser { args in parseRawCmdArgs(raw(.init(args)), args) }
 }
 
-func defaultSubCommandParser<T: RawCmdArgs>(_ raw: @escaping ([String]) -> T) -> SubCommandParser<T> {
+func defaultSubCommandParser<T: CmdArgs>(_ raw: @escaping ([String]) -> T) -> SubCommandParser<T> {
     SubCommandParser { args in parseRawCmdArgs(raw(args), args) }
 }
 
