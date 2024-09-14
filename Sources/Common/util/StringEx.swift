@@ -12,6 +12,21 @@ public extension String {
     var doubleQuoted: String { "\"" + self + "\"" }
 }
 
+public extension [String] {
+    func joinErrors() -> String { // todo reuse in config parsing?
+        map { (error: String) -> String in
+            error.split(separator: "\n").enumerated()
+                .map { (i, line) in
+                    i == 0
+                        ? "ERROR: " + line
+                        : "       " + line
+                }
+                .joined(separator: "\n")
+        }
+        .joined(separator: "\n")
+    }
+}
+
 public extension [[String]] {
     func toPaddingTable(columnSeparator: String = " | ") -> [String] {
         let pads: [Int] = transposed().map { column in column.map { $0.count }.max()! }

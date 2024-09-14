@@ -3,121 +3,92 @@ public func parseCmdArgs(_ args: [String]) -> ParsedCmd<any CmdArgs> {
     if subcommand.isEmpty {
         return .failure("Can't parse empty string command")
     }
-    if let subcommandParser: any SubCommandParserProtocol = subcommands[subcommand] {
+    if let subcommandParser: any SubCommandParserProtocol = subcommandParsers[subcommand] {
         return subcommandParser.parse(args: Array(args.dropFirst()))
     } else {
         return .failure("Unrecognized subcommand '\(subcommand)'")
     }
 }
 
-private func initSubcommands() -> [String: any SubCommandParserProtocol] {
-    var result: [String: any SubCommandParserProtocol] = [:]
-    for kind in CmdKind.allCases {
-        switch kind {
-            case .balanceSizes:
-                result[kind.rawValue] = defaultSubCommandParser(BalanceSizesCmdArgs.init)
-            case .close:
-                result[kind.rawValue] = defaultSubCommandParser(CloseCmdArgs.init)
-            case .closeAllWindowsButCurrent:
-                result[kind.rawValue] = defaultSubCommandParser(CloseAllWindowsButCurrentCmdArgs.init)
-            case .config:
-                result[kind.rawValue] = SubCommandParser(parseConfigCmdArgs)
-            case .debugWindows:
-                result[kind.rawValue] = defaultSubCommandParser(DebugWindowsCmdArgs.init)
-            case .enable:
-                result[kind.rawValue] = SubCommandParser(parseEnableCmdArgs)
+public protocol RawCmdArgs: Copyable, CmdArgs { // todo squash CmdArgs and RawCmdArgs into a single protocol
+    static var parser: CmdParser<Self> { get }
+}
+
+public extension RawCmdArgs {
+    static var info: CmdStaticInfo { Self.parser.info }
+}
+
+public protocol CmdArgs: Equatable, CustomStringConvertible {
+    static var info: CmdStaticInfo { get }
+    var rawArgs: EquatableNoop<[String]> { get } // Non Equatable because test comparion
+
+    // Two very common flags among commands
+    var windowId: UInt32? { get set }
+    var workspaceName: String? { get set }
+}
+
+public extension CmdArgs {
+    func equals(_ other: any CmdArgs) -> Bool { // My brain is cursed with Java
+        (other as? Self).flatMap { self == $0 } ?? false
+    }
+
+    var description: String {
+        switch Self.info.kind {
             case .execAndForget:
-                break // exec-and-forget is parsed separately
-            case .flattenWorkspaceTree:
-                result[kind.rawValue] = defaultSubCommandParser(FlattenWorkspaceTreeCmdArgs.init)
-            case .focus:
-                result[kind.rawValue] = SubCommandParser(parseFocusCmdArgs)
-            case .focusBackAndForth:
-                result[kind.rawValue] = defaultSubCommandParser(FocusBackAndForthCmdArgs.init)
-            case .focusMonitor:
-                result[kind.rawValue] = SubCommandParser(parseFocusMonitorCmdArgs)
-            case .fullscreen:
-                result[kind.rawValue] = SubCommandParser(parseFullscreenCmdArgs)
-            case .joinWith:
-                result[kind.rawValue] = defaultSubCommandParser(JoinWithCmdArgs.init)
-            case .layout:
-                result[kind.rawValue] = SubCommandParser(parseLayoutCmdArgs)
-            case .listApps:
-                result[kind.rawValue] = defaultSubCommandParser(ListAppsCmdArgs.init)
-            case .listExecEnvVars:
-                result[kind.rawValue] = defaultSubCommandParser(ListExecEnvVarsCmdArgs.init)
-            case .listMonitors:
-                result[kind.rawValue] = defaultSubCommandParser(ListMonitorsCmdArgs.init)
-            case .listWindows:
-                result[kind.rawValue] = SubCommandParser(parseRawListWindowsCmdArgs)
-            case .listWorkspaces:
-                result[kind.rawValue] = SubCommandParser(parseListWorkspacesCmdArgs)
-            case .macosNativeFullscreen:
-                result[kind.rawValue] = SubCommandParser(parseMacosNativeFullscreenCmdArgs)
-            case .macosNativeMinimize:
-                result[kind.rawValue] = defaultSubCommandParser(MacosNativeMinimizeCmdArgs.init)
-            case .mode:
-                result[kind.rawValue] = defaultSubCommandParser(ModeCmdArgs.init)
-            case .move:
-                result[kind.rawValue] = SubCommandParser(parseMoveCmdArgs)
-                // deprecated
-                result["move-through"] = SubCommandParser(parseMoveCmdArgs)
-            case .moveMouse:
-                result[kind.rawValue] = SubCommandParser(parseMoveMouseCmdArgs)
-            case .moveNodeToMonitor:
-                result[kind.rawValue] = SubCommandParser(parseMoveNodeToMonitorCmdArgs)
-            case .moveNodeToWorkspace:
-                result[kind.rawValue] = SubCommandParser(parseMoveNodeToWorkspaceCmdArgs)
-            case .moveWorkspaceToMonitor:
-                result[kind.rawValue] = defaultSubCommandParser(MoveWorkspaceToMonitorCmdArgs.init)
-                // deprecated
-                result["move-workspace-to-display"] = defaultSubCommandParser(MoveWorkspaceToMonitorCmdArgs.init)
-            case .reloadConfig:
-                result[kind.rawValue] = defaultSubCommandParser(ReloadConfigCmdArgs.init)
-            case .resize:
-                result[kind.rawValue] = SubCommandParser(parseResizeCmdArgs)
-            case .split:
-                result[kind.rawValue] = SubCommandParser(parseSplitCmdArgs)
-            case .serverVersionInternalCommand:
-                if isServer {
-                    result[kind.rawValue] = defaultSubCommandParser(ServerVersionInternalCommandCmdArgs.init)
-                }
-            case .triggerBinding:
-                result[kind.rawValue] = SubCommandParser(parseTriggerBindingCmdArgs)
-            case .workspace:
-                result[kind.rawValue] = SubCommandParser(parseWorkspaceCmdArgs)
-            case .workspaceBackAndForth:
-                result[kind.rawValue] = defaultSubCommandParser(WorkspaceBackAndForthCmdArgs.init)
+                CmdKind.execAndForget.rawValue + " " + (self as! ExecAndForgetCmdArgs).bashScript
+            default:
+                ([Self.info.kind.rawValue] + rawArgs.value).joinArgs()
         }
     }
-    return result
 }
 
-private func defaultSubCommandParser<T: RawCmdArgs>(_ raw: @escaping (EquatableNoop<[String]>) -> T) -> SubCommandParser<T> {
-    SubCommandParser { args in parseRawCmdArgs(raw(.init(args)), args) }
+public struct CmdParser<T: Copyable> {
+    let info: CmdStaticInfo
+    let options: [String: any ArgParserProtocol<T>]
+    let arguments: [any ArgParserProtocol<T>]
 }
 
-private func defaultSubCommandParser<T: RawCmdArgs>(_ raw: @escaping ([String]) -> T) -> SubCommandParser<T> {
-    SubCommandParser { args in parseRawCmdArgs(raw(args), args) }
+public func cmdParser<T>(
+    kind: CmdKind,
+    allowInConfig: Bool,
+    help: String,
+    options: [String: any ArgParserProtocol<T>],
+    arguments: [any ArgParserProtocol<T>]
+) -> CmdParser<T> {
+    CmdParser(
+        info: CmdStaticInfo(help: help, kind: kind, allowInConfig: allowInConfig),
+        options: options,
+        arguments: arguments
+    )
 }
 
-private let subcommands: [String: any SubCommandParserProtocol] = initSubcommands()
+public struct CmdStaticInfo: Equatable {
+    public let help: String
+    public let kind: CmdKind
+    public let allowInConfig: Bool // Query commands are prohibited in config
 
-private protocol SubCommandParserProtocol<T> {
-    associatedtype T where T: CmdArgs
-    var _parse: ([String]) -> ParsedCmd<T> { get }
-}
-
-extension SubCommandParserProtocol {
-    func parse(args: [String]) -> ParsedCmd<any CmdArgs> {
-        _parse(args).map { $0 }
+    public init(
+        help: String,
+        kind: CmdKind,
+        allowInConfig: Bool
+    ) {
+        self.help = help
+        self.kind = kind
+        self.allowInConfig = allowInConfig
     }
 }
 
-private struct SubCommandParser<T: CmdArgs>: SubCommandParserProtocol {
-    let _parse: ([String]) -> ParsedCmd<T>
+func noArgsParser<T: Copyable>(_ kind: CmdKind, allowInConfig: Bool) -> CmdParser<T> {
+    cmdParser(
+        kind: kind,
+        allowInConfig: allowInConfig,
+        help: """
+            USAGE: \(kind.rawValue) [-h|--help]
 
-    init(_ parser: @escaping ([String]) -> ParsedCmd<T>) {
-        self._parse = parser
-    }
+            OPTIONS:
+              -h, --help        Print help
+            """,
+        options: [:],
+        arguments: []
+    )
 }
