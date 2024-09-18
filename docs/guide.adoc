@@ -182,7 +182,8 @@ alt-unicorn = 'workspace wonderland' # (⁀ᗢ⁀)
 +
 [source,toml]
 ----
-key-mapping.preset = 'dvorak'
+[key-mapping]
+preset = 'dvorak'
 ----
 
 * For `colemak` users, there is xref:goodness.adoc#colemak-keys-remap[a compiled mapping].
