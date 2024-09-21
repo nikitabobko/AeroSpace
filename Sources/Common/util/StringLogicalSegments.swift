@@ -1,6 +1,6 @@
 public typealias StringLogicalSegments = [StringLogicalSegment]
-extension StringLogicalSegments: Comparable {
-    public static func < (lhs: Self, rhs: Self) -> Bool {
+public extension StringLogicalSegments {
+    static func < (lhs: Self, rhs: Self) -> Bool {
         for (a, b) in zip(lhs, rhs) {
             if a < b {
                 return true

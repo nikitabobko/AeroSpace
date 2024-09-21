@@ -135,7 +135,7 @@ extension CGSize {
     }
 }
 
-extension CGPoint: Hashable {
+extension CGPoint: Swift.Hashable { // todo migrate to self written Point
     public func hash(into hasher: inout Hasher) {
         hasher.combine(x)
         hasher.combine(y)

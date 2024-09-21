@@ -1,4 +1,5 @@
 import AppKit
+import Darwin
 import Foundation
 
 public let unixUserName = NSUserName()
@@ -135,15 +136,8 @@ public extension URL {
     }
 }
 
-private var stderr = FileHandle.standardError
 public func printStderr(_ msg: String) {
-    print(msg, to: &stderr)
-}
-extension FileHandle: TextOutputStream {
-    public func write(_ string: String) {
-        let data = Data(string.utf8)
-        self.write(data)
-    }
+    fputs(msg + "\n", stderr)
 }
 
 public func cliError(_ message: String = "") -> Never {
