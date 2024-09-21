@@ -25,6 +25,11 @@ final class TestWindow: Window, CustomStringConvertible {
         return true
     }
 
+    override func close() -> Bool {
+        unbindFromParent()
+        return true
+    }
+
     override var title: String { description }
 
     override func getRect() -> Rect? { // todo change to not Optional

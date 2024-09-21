@@ -26,7 +26,7 @@ struct FocusCommand: Command {
                     return hitWorkspaceBoundaries(focus, io, args, direction)
                 }
             case .windowId(let windowId):
-                if let windowToFocus = MacWindow.allWindowsMap[windowId] {
+                if let windowToFocus = Window.get(byId: windowId) {
                     return windowToFocus.focusWindow()
                 } else {
                     return io.err("Can't find window with ID \(windowId)")

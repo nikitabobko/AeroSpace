@@ -10,7 +10,8 @@ struct CloseCommand: Command {
         guard let window = focus.windowOrNil else {
             return io.err("Empty workspace")
         }
-        if window.macAppUnsafe.axApp.get(Ax.windowsAttr)?.count == 1 && args.quitIfLastWindow {
+        // Access ax directly. Not cool :(
+        if args.quitIfLastWindow && window.macAppUnsafe.axApp.get(Ax.windowsAttr)?.count == 1 {
             if window.macAppUnsafe.nsApp.terminate() {
                 window.asMacWindow().garbageCollect()
                 return true
@@ -19,7 +20,7 @@ struct CloseCommand: Command {
             }
         } else {
             if window.close() {
-                window.asMacWindow().garbageCollect()
+                if !isUnitTest { window.asMacWindow().garbageCollect() }
                 return true
             } else {
                 return io.err("Can't close '\(window.app.name ?? "Unknown app")' window. Probably the window doesn't have a close button")

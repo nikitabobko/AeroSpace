@@ -38,13 +38,7 @@ struct FrozenFocus: AeroAny, Equatable {
 
     var live: LiveFocus { // Important: don't access focus.monitorId here. monitorId is not part of the focus. Always prefer workspace
         let windowId = windowId
-        let window: Window? = if let windowId {
-            isUnitTest
-                ? Workspace.all.flatMap { $0.allLeafWindowsRecursive }.first(where: { $0.windowId == windowId })
-                : MacWindow.allWindowsMap[windowId]
-        } else {
-            nil
-        }
+        let window: Window? = windowId.flatMap { Window.get(byId: $0) }
         if let window, let ws = window.visualWorkspace {
             return LiveFocus(windowOrNil: window, workspace: ws)
         }

@@ -8,7 +8,7 @@ extension CmdArgs {
     func resolveFocusOrReportError(_ env: CmdEnv, _ io: CmdIo) -> LiveFocus? {
         // Flags
         if let windowId {
-            if let wi = MacWindow.allWindowsMap[windowId] {
+            if let wi = Window.get(byId: windowId) {
                 return wi.toLiveFocusOrReportError(io)
             } else {
                 io.err("Invalid <window-id> \(windowId) passed to --window-id")
@@ -20,7 +20,7 @@ extension CmdArgs {
         }
         // Env
         if let windowId = env.windowId {
-            if let wi = MacWindow.allWindowsMap[windowId] {
+            if let wi = Window.get(byId: windowId) {
                 return wi.toLiveFocusOrReportError(io)
             } else {
                 io.err("Invalid <window-id> \(windowId) specified in \(AEROSPACE_FOCUSED_WINDOW_ID) env variable")

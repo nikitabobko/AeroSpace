@@ -18,6 +18,12 @@ class Window: TreeNode, Hashable {
         super.init(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
+    static func get(byId windowId: UInt32) -> Window? {
+        isUnitTest
+            ? Workspace.all.flatMap { $0.allLeafWindowsRecursive }.first(where: { $0.windowId == windowId })
+            : MacWindow.allWindowsMap[windowId]
+    }
+
     func close() -> Bool {
         error("Not implemented")
     }
