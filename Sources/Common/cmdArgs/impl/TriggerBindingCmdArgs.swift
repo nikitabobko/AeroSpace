@@ -5,13 +5,6 @@ public struct TriggerBindingCmdArgs: CmdArgs {
         allowInConfig: true,
         help: """
             USAGE: trigger-binding [-h|--help] <binding> --mode <mode-id>
-
-            OPTIONS:
-              -h, --help         Print help
-              --mode <mode-id>   Mode to search <binding> in
-
-            ARGUMENTS:
-              <binding>          Binding to trigger
             """,
         options: [
             "--mode": singleValueOption(\._mode, "<mode-id>") { $0 },

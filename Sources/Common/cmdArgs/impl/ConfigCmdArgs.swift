@@ -8,16 +8,6 @@ public struct ConfigCmdArgs: CmdArgs, Equatable {
                OR: config [-h|--help] --major-keys
                OR: config [-h|--help] --all-keys
                OR: config [-h|--help] --config-path
-
-            OPTIONS:
-              -h, --help      Print help
-              --get <name>    Get the value for a given key.
-                              You can inspect available keys with --major-keys or --all-keys
-              --major-keys    Print major keys
-              --all-keys      Print all available keys recursively
-              --json          Print result in JSON format
-              --keys          Print keys of the complicated object (map or array)
-              --config-path   Print absolute path to the loaded config
             """,
         options: [
             "--json": trueBoolFlag(\.json),

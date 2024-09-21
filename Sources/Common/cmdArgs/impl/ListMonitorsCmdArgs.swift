@@ -6,12 +6,6 @@ public struct ListMonitorsCmdArgs: CmdArgs {
         allowInConfig: false,
         help: """
             USAGE: list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>]
-
-            OPTIONS:
-              -h, --help                 Print help
-              --focused [no]             Filter results to only print the focused monitor
-              --mouse [no]               Filter results to only print the monitor with the mouse
-              --format <output-format>   Specify output format
             """,
         options: [
             "--focused": boolFlag(\.focused),

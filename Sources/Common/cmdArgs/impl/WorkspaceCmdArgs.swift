@@ -7,17 +7,6 @@ public struct WorkspaceCmdArgs: CmdArgs {
         help: """
             USAGE: workspace [-h|--help] [--auto-back-and-forth] [--fail-if-noop] <workspace-name>
                OR: workspace [-h|--help] [--wrap-around] (next|prev)
-
-            OPTIONS:
-              -h, --help              Print help
-              --auto-back-and-forth   Automatic 'back-and-forth' when switching to already
-                                      focused workspace
-              --wrap-around           Make it possible to jump between first and last workspaces
-                                      using (next|prev)
-              --fail-if-noop          Exit with non-zero exit code if switch to the already focused workspace
-
-            ARGUMENTS:
-              <workspace-name>        Workspace name to focus
             """,
         options: [
             "--auto-back-and-forth": optionalTrueBoolFlag(\._autoBackAndForth),

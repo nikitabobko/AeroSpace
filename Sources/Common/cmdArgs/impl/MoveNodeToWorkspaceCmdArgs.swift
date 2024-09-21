@@ -7,15 +7,6 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
         help: """
             USAGE: move-node-to-workspace [-h|--help] [--wrap-around] (next|prev)
                OR: move-node-to-workspace [-h|--help] [--fail-if-noop] <workspace-name>
-
-            OPTIONS:
-              -h, --help              Print help
-              --wrap-around           Make it possible to jump between first and last workspaces
-                                      using (next|prev)
-              --fail-if-noop          Exit with non-zero code if move window to workspace it already belongs to
-
-            ARGUMENTS:
-              <workspace-name>        Workspace name to move focused window to
             """,
         options: [
             "--wrap-around": optionalTrueBoolFlag(\._wrapAround),

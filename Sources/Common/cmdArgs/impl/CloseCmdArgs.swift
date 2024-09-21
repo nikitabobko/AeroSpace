@@ -6,10 +6,6 @@ public struct CloseCmdArgs: CmdArgs {
         allowInConfig: true,
         help: """
             USAGE: close [-h|--help] [--quit-if-last-window]
-
-            OPTIONS:
-              -h, --help              Print help
-              --quit-if-last-window   Quit the app instead of closing if it's the last window of the app
             """,
         options: [
             "--quit-if-last-window": trueBoolFlag(\.quitIfLastWindow),

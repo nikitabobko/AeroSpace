@@ -8,18 +8,6 @@ public struct FocusMonitorCmdArgs: CmdArgs {
             USAGE: focus-monitor [-h|--help] [--wrap-around] (left|down|up|right)
                OR: focus-monitor [-h|--help] [--wrap-around] (next|prev)
                OR: focus-monitor [-h|--help] <monitor-pattern>...
-
-            OPTIONS:
-              -h, --help            Print help
-              --wrap-around         Make it possible to wrap around focus
-
-            ARGUMENTS:
-              (left|down|up|right)  Focus monitor in direction relative to the focused monitor
-              (next|prev)           Focus next|prev monitor in order they appear in tray icon
-              <monitor-pattern>     Find the first monitor pattern in the list that
-                                    doesn't describe the current monitor and focus the appropriate monitor.
-                                    Monitor pattern is the same as in `workspace-to-monitor-force-assignment`
-                                    config option
             """,
         options: [
             "--wrap-around": trueBoolFlag(\.wrapAround),

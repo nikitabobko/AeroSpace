@@ -6,13 +6,6 @@ public struct ResizeCmdArgs: CmdArgs {
         allowInConfig: true,
         help: """
             USAGE: resize [-h|--help] (smart|width|height) [+|-]<number>
-
-            OPTIONS:
-              -h, --help             Print help
-
-            ARGUMENTS:
-              (smart|width|height)   Dimension to resize
-              <number>               Number of units
             """,
         options: [:],
         arguments: [

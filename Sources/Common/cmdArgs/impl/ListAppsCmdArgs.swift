@@ -6,12 +6,6 @@ public struct ListAppsCmdArgs: CmdArgs {
         allowInConfig: false,
         help: """
             USAGE: list-apps [-h|--help] [--macos-native-hidden [no]] [--format <output-format>]
-
-            OPTIONS:
-              -h, --help                  Print help
-              --macos-native-hidden [no]  Filter results to only print hidden applications.
-                                          [no] inverts the condition
-              --format <output-format>    Specify output format
             """,
         options: [
             "--macos-native-hidden": boolFlag(\.macosHidden),

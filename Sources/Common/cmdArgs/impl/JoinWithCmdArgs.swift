@@ -6,9 +6,6 @@ public struct JoinWithCmdArgs: CmdArgs {
         allowInConfig: true,
         help: """
             USAGE: join-with [-h|--help] \(CardinalDirection.unionLiteral)
-
-            OPTIONS:
-              -h, --help   Print help
             """,
         options: [:],
         arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)]

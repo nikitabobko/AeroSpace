@@ -6,9 +6,6 @@ public struct LayoutCmdArgs: CmdArgs {
         allowInConfig: true,
         help: """
             USAGE: layout [-h|--help] \(LayoutDescription.unionLiteral)...
-
-            OPTIONS:
-              -h, --help   Print help
             """,
         options: [:],
         arguments: [newArgParser(\.toggleBetween, parseToggleBetween, mandatoryArgPlaceholder: LayoutDescription.unionLiteral)]

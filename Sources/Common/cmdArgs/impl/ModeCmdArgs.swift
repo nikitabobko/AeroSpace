@@ -6,12 +6,6 @@ public struct ModeCmdArgs: CmdArgs {
         allowInConfig: true,
         help: """
             USAGE: mode [-h|--help] <binding-mode>
-
-            OPTIONS:
-              -h, --help      Print help
-
-            ARGUMENTS:
-              <binding-mode>   Binding mode to activate
             """,
         options: [:],
         arguments: [newArgParser(\.targetMode, parseTargetMode, mandatoryArgPlaceholder: "<binding-mode>")]

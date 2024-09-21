@@ -8,10 +8,6 @@ public struct EnableCmdArgs: CmdArgs {
             USAGE: enable [-h|--help] toggle
                OR: enable [-h|--help] on [--fail-if-noop]
                OR: enable [-h|--help] off [--fail-if-noop]
-
-            OPTIONS:
-              -h, --help       Print help
-              --fail-if-noop   Exit with non-zero exit code if already in the requested mode
             """,
         options: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),

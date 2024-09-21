@@ -6,13 +6,6 @@ public struct MoveMouseCmdArgs: CmdArgs {
         allowInConfig: true,
         help: """
             USAGE: move-mouse [-h|--help] [--fail-if-noop] <mouse-position>
-
-            OPTIONS:
-              -h, --help         Print help
-              --fail-if-noop     Exit with non-zero exit code if mouse is already at the requested position
-
-            ARGUMENTS:
-              <mouse-position>   Position to move mouse to. See the man page for the possible values.
             """,
         options: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),

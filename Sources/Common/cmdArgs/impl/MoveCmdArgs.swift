@@ -6,9 +6,6 @@ public struct MoveCmdArgs: CmdArgs {
         allowInConfig: true,
         help: """
             USAGE: move [-h|--help] \(CardinalDirection.unionLiteral)
-
-            OPTIONS:
-              -h, --help   Print help
             """,
         options: [:],
         arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)]

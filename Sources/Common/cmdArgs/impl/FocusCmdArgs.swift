@@ -8,24 +8,11 @@ public struct FocusCmdArgs: CmdArgs {
         kind: .focus,
         allowInConfig: true,
         help: """
-            USAGE: focus [<options>] \(CardinalDirection.unionLiteral)
+            USAGE: focus [-h|--help] [--ignore-floating]
+                                     [--boundaries <boundary>] [--boundaries-action <action>]
+                                     \(CardinalDirection.unionLiteral)
                OR: focus [-h|--help] --window-id <window-id>
                OR: focus [-h|--help] --dfs-index <dfs-index>
-
-            OPTIONS:
-              -h, --help                     Print help
-              --window-id <window-id>        Focus window with specified <window-id>
-              --dfs-index <dfs-index>        Focus window by its DFS index
-              --boundaries \(boundar)        Defines focus boundaries.
-                                             \(boundar) possible values: \(FocusCmdArgs.Boundaries.unionLiteral)
-                                             The default is: \(FocusCmdArgs.Boundaries.workspace.rawValue)
-              --boundaries-action \(actio)   Defines the behavior when requested to cross the \(boundar).
-                                             \(actio) possible values: \(FocusCmdArgs.WhenBoundariesCrossed.unionLiteral)
-                                             The default is: \(FocusCmdArgs.WhenBoundariesCrossed.stop.rawValue)
-              --ignore-floating              Don't perceive floating windows as part of the tree
-
-            ARGUMENTS:
-              (left|down|up|right)           Focus direction
             """,
         options: [
             "--ignore-floating": falseBoolFlag(\.floatingAsTiling),

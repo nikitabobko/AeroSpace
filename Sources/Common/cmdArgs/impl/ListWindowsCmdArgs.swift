@@ -14,16 +14,6 @@ public struct ListWindowsCmdArgs: CmdArgs {
                                 [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>]
                OR: list-windows [-h|--help] --all [--format <output-format>]
                OR: list-windows [-h|--help] --focused [--format <output-format>]
-
-            OPTIONS:
-              -h, --help                       Print help
-              --all                            Alias for "--monitor all"
-              --focused                        Print the focused window
-              --workspace \(_workspaces)       Filter results to only print windows that belong to specified workspaces
-              --monitor \(_monitors)           Filter results to only print the windows that are attached to specified monitors
-              --pid <pid>                      Filter results to only print windows that belong to the Application with specified <pid>
-              --app-bundle-id <app-bundle-id>  Filter results to only print windows that belong to the Application with specified Bundle ID
-              --format <output-format>         Specify output format
             """,
         options: [
             "--focused": trueBoolFlag(\.focused),
