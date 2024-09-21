@@ -4,9 +4,7 @@ public struct ListAppsCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listApps,
         allowInConfig: false,
-        help: """
-            USAGE: list-apps [-h|--help] [--macos-native-hidden [no]] [--format <output-format>]
-            """,
+        help: list_apps_help_generated,
         options: [
             "--macos-native-hidden": boolFlag(\.macosHidden),
             "--format": ArgParser(\.format, parseFormat),

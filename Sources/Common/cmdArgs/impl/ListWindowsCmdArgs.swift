@@ -1,6 +1,6 @@
 import OrderedCollections
 
-private let orkspace = "<workspace>"
+private let orkspace = "<workspace>" // todo
 private let _workspaces = "\(orkspace)..."
 
 public struct ListWindowsCmdArgs: CmdArgs {
@@ -8,13 +8,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listWindows,
         allowInConfig: false,
-        help: """
-            USAGE: list-windows [-h|--help] (--workspace \(_workspaces)|--monitor \(_monitors))
-                                [--monitor \(_monitors)] [--workspace \(_workspaces)]
-                                [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>]
-               OR: list-windows [-h|--help] --all [--format <output-format>]
-               OR: list-windows [-h|--help] --focused [--format <output-format>]
-            """,
+        help: list_windows_help_generated,
         options: [
             "--focused": trueBoolFlag(\.focused),
             "--all": trueBoolFlag(\.all),

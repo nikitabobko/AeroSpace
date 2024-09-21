@@ -7,13 +7,7 @@ public struct FocusCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .focus,
         allowInConfig: true,
-        help: """
-            USAGE: focus [-h|--help] [--ignore-floating]
-                                     [--boundaries <boundary>] [--boundaries-action <action>]
-                                     \(CardinalDirection.unionLiteral)
-               OR: focus [-h|--help] --window-id <window-id>
-               OR: focus [-h|--help] --dfs-index <dfs-index>
-            """,
+        help: focus_help_generated,
         options: [
             "--ignore-floating": falseBoolFlag(\.floatingAsTiling),
             "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),

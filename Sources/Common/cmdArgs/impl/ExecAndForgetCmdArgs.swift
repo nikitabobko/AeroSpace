@@ -3,7 +3,7 @@ public struct ExecAndForgetCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .execAndForget,
         allowInConfig: true,
-        help: "USAGE: exec-and-forget <bash-script>",
+        help: exec_and_forget_help_generated,
         options: [:],
         arguments: []
     )

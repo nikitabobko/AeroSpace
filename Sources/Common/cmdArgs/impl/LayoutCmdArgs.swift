@@ -4,9 +4,7 @@ public struct LayoutCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .layout,
         allowInConfig: true,
-        help: """
-            USAGE: layout [-h|--help] \(LayoutDescription.unionLiteral)...
-            """,
+        help: layout_help_generated,
         options: [:],
         arguments: [newArgParser(\.toggleBetween, parseToggleBetween, mandatoryArgPlaceholder: LayoutDescription.unionLiteral)]
     )

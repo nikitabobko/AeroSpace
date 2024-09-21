@@ -4,9 +4,7 @@ public struct ListMonitorsCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listMonitors,
         allowInConfig: false,
-        help: """
-            USAGE: list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>]
-            """,
+        help: list_monitors_help_generated,
         options: [
             "--focused": boolFlag(\.focused),
             "--mouse": boolFlag(\.mouse),

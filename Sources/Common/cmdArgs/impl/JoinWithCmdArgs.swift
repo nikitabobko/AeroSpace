@@ -4,9 +4,7 @@ public struct JoinWithCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .joinWith,
         allowInConfig: true,
-        help: """
-            USAGE: join-with [-h|--help] \(CardinalDirection.unionLiteral)
-            """,
+        help: join_with_help_generated,
         options: [:],
         arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)]
     )

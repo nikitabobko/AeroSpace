@@ -4,9 +4,7 @@ public struct ModeCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .mode,
         allowInConfig: true,
-        help: """
-            USAGE: mode [-h|--help] <binding-mode>
-            """,
+        help: mode_help_generated,
         options: [:],
         arguments: [newArgParser(\.targetMode, parseTargetMode, mandatoryArgPlaceholder: "<binding-mode>")]
     )

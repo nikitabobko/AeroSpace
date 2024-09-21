@@ -4,13 +4,7 @@ public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveWorkspaceToMonitor,
         allowInConfig: true,
-        help: """
-            USAGE: move-workspace-to-monitor [-h|--help] [--wrap-around] (next|prev)
-
-            OPTIONS:
-              -h, --help           Print help
-              --wrap-around        Allows to move workspace between first and last monitors
-            """,
+        help: move_workspace_to_monitor_help_generated,
         options: [
             "--wrap-around": trueBoolFlag(\.wrapAround),
         ],

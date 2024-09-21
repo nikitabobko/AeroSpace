@@ -71,15 +71,3 @@ public struct CmdStaticInfo: Equatable {
         self.allowInConfig = allowInConfig
     }
 }
-
-func noArgsParser<T: Copyable>(_ kind: CmdKind, allowInConfig: Bool) -> CmdParser<T> {
-    cmdParser(
-        kind: kind,
-        allowInConfig: allowInConfig,
-        help: """
-            USAGE: \(kind.rawValue) [-h|--help]
-            """,
-        options: [:],
-        arguments: []
-    )
-}

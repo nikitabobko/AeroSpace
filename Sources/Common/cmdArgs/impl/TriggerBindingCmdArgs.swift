@@ -3,9 +3,7 @@ public struct TriggerBindingCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .triggerBinding,
         allowInConfig: true,
-        help: """
-            USAGE: trigger-binding [-h|--help] <binding> --mode <mode-id>
-            """,
+        help: trigger_binding_help_generated,
         options: [
             "--mode": singleValueOption(\._mode, "<mode-id>") { $0 },
         ],

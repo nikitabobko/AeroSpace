@@ -4,9 +4,7 @@ public struct ResizeCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .resize,
         allowInConfig: true,
-        help: """
-            USAGE: resize [-h|--help] (smart|width|height) [+|-]<number>
-            """,
+        help: resize_help_generated,
         options: [:],
         arguments: [
             newArgParser(\.dimension, parseDimension, mandatoryArgPlaceholder: "(smart|width|height)"),

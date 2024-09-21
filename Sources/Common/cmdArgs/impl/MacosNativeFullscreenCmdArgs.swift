@@ -4,19 +4,7 @@ public struct MacosNativeFullscreenCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .macosNativeFullscreen,
         allowInConfig: true,
-        help: """
-            USAGE: macos-native-fullscreen [-h|--help]
-               OR: macos-native-fullscreen [-h|--help] [--fail-if-noop] on
-               OR: macos-native-fullscreen [-h|--help] [--fail-if-noop] off
-
-            OPTIONS:
-              -h, --help       Print help
-              --fail-if-noop   Exit with non-zero exit code if already fullscreen or already not fullscreen
-
-            ARGUMENTS:
-              on, off          'on' means enter fullscreen mode. 'off' means exit fullscreen mode.
-                               Toggle between the two if not specified
-            """,
+        help: macos_native_fullscreen_help_generated,
         options: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],

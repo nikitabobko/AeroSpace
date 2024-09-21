@@ -4,9 +4,7 @@ public struct SplitCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .split,
         allowInConfig: true,
-        help: """
-            USAGE: split [-h|--help] \(SplitArg.unionLiteral)
-            """,
+        help: split_help_generated,
         options: [:],
         arguments: [newArgParser(\.arg, parseSplitArg, mandatoryArgPlaceholder: SplitArg.unionLiteral)]
     )

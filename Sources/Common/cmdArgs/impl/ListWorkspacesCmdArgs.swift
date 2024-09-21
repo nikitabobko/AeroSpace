@@ -8,11 +8,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listWorkspaces,
         allowInConfig: false,
-        help: """
-            USAGE: list-workspaces [-h|--help] --monitor \(_monitors) [--visible [no]] [--empty [no]] [--format <output-format>]
-               OR: list-workspaces [-h|--help] --all [--format <output-format>]
-               OR: list-workspaces [-h|--help] --focused [--format <output-format>]
-            """,
+        help: list_workspaces_help_generated,
         options: [
             "--focused": trueBoolFlag(\.focused),
             "--all": trueBoolFlag(\.all),

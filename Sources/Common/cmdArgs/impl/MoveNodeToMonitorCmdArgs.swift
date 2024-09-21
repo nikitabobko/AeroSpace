@@ -4,11 +4,7 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveNodeToMonitor,
         allowInConfig: true,
-        help: """
-            USAGE: move-node-to-monitor [-h|--help] [--wrap-around] (left|down|up|right)
-               OR: move-node-to-monitor [-h|--help] [--wrap-around] (next|prev)
-               OR: move-node-to-monitor [-h|--help] <monitor-pattern>...
-            """,
+        help: move_node_to_monitor_help_generated,
         options: [
             "--wrap-around": trueBoolFlag(\.wrapAround),
         ],

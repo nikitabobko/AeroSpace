@@ -4,9 +4,7 @@ public struct MoveCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .move,
         allowInConfig: true,
-        help: """
-            USAGE: move [-h|--help] \(CardinalDirection.unionLiteral)
-            """,
+        help: move_help_generated,
         options: [:],
         arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)]
     )

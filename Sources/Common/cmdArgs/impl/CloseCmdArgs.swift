@@ -4,9 +4,7 @@ public struct CloseCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .close,
         allowInConfig: true,
-        help: """
-            USAGE: close [-h|--help] [--quit-if-last-window]
-            """,
+        help: close_help_generated,
         options: [
             "--quit-if-last-window": trueBoolFlag(\.quitIfLastWindow),
         ],

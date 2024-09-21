@@ -4,11 +4,7 @@ public struct FocusMonitorCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .focusMonitor,
         allowInConfig: true,
-        help: """
-            USAGE: focus-monitor [-h|--help] [--wrap-around] (left|down|up|right)
-               OR: focus-monitor [-h|--help] [--wrap-around] (next|prev)
-               OR: focus-monitor [-h|--help] <monitor-pattern>...
-            """,
+        help: focus_monitor_help_generated,
         options: [
             "--wrap-around": trueBoolFlag(\.wrapAround),
         ],

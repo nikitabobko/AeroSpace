@@ -3,12 +3,7 @@ public struct ConfigCmdArgs: CmdArgs, Equatable {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .config,
         allowInConfig: false,
-        help: """
-            USAGE: config [-h|--help] --get <name> [--json] [--keys]
-               OR: config [-h|--help] --major-keys
-               OR: config [-h|--help] --all-keys
-               OR: config [-h|--help] --config-path
-            """,
+        help: config_help_generated,
         options: [
             "--json": trueBoolFlag(\.json),
             "--keys": trueBoolFlag(\.keys),

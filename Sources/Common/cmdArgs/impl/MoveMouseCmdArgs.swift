@@ -4,9 +4,7 @@ public struct MoveMouseCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveMouse,
         allowInConfig: true,
-        help: """
-            USAGE: move-mouse [-h|--help] [--fail-if-noop] <mouse-position>
-            """,
+        help: move_mouse_help_generated,
         options: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],

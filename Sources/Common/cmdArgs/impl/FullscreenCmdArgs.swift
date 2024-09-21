@@ -4,11 +4,7 @@ public struct FullscreenCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .fullscreen,
         allowInConfig: true,
-        help: """
-            USAGE: fullscreen [-h|--help] [--no-outer-gaps]
-               OR: fullscreen [-h|--help] on [--no-outer-gaps] [--fail-if-noop]
-               OR: fullscreen [-h|--help] off [--fail-if-noop]
-            """,
+        help: fullscreen_help_generated,
         options: [
             "--no-outer-gaps": trueBoolFlag(\.noOuterGaps),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),

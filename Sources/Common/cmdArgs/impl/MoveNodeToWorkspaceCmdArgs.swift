@@ -4,10 +4,7 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveNodeToWorkspace,
         allowInConfig: true,
-        help: """
-            USAGE: move-node-to-workspace [-h|--help] [--wrap-around] (next|prev)
-               OR: move-node-to-workspace [-h|--help] [--fail-if-noop] <workspace-name>
-            """,
+        help: move_node_to_workspace_help_generated,
         options: [
             "--wrap-around": optionalTrueBoolFlag(\._wrapAround),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),

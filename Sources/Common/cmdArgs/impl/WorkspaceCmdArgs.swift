@@ -4,10 +4,7 @@ public struct WorkspaceCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .workspace,
         allowInConfig: true,
-        help: """
-            USAGE: workspace [-h|--help] [--auto-back-and-forth] [--fail-if-noop] <workspace-name>
-               OR: workspace [-h|--help] [--wrap-around] (next|prev)
-            """,
+        help: workspace_help_generated,
         options: [
             "--auto-back-and-forth": optionalTrueBoolFlag(\._autoBackAndForth),
             "--wrap-around": optionalTrueBoolFlag(\._wrapAround),

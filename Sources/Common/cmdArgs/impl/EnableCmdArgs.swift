@@ -4,11 +4,7 @@ public struct EnableCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .enable,
         allowInConfig: true,
-        help: """
-            USAGE: enable [-h|--help] toggle
-               OR: enable [-h|--help] on [--fail-if-noop]
-               OR: enable [-h|--help] off [--fail-if-noop]
-            """,
+        help: enable_help_generated,
         options: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],

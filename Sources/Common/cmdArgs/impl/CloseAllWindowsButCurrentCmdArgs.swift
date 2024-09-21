@@ -4,9 +4,7 @@ public struct CloseAllWindowsButCurrentCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .closeAllWindowsButCurrent,
         allowInConfig: true,
-        help: """
-            USAGE: close-all-windows-but-current [-h|--help] [--quit-if-last-window]
-            """,
+        help: close_all_windows_but_current_help_generated,
         options: [
             "--quit-if-last-window": trueBoolFlag(\.closeArgs.quitIfLastWindow),
         ],

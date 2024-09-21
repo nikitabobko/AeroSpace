@@ -4,9 +4,7 @@ public struct ReloadConfigCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .reloadConfig,
         allowInConfig: true,
-        help: """
-            USAGE: reload-config [-h|--help] [--no-gui] [--dry-run]
-            """,
+        help: reload_config_help_generated,
         options: [
             "--no-gui": trueBoolFlag(\.noGui),
             "--dry-run": trueBoolFlag(\.dryRun),
