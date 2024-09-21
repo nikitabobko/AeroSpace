@@ -6,7 +6,7 @@ final class TreeNodeTest: XCTestCase {
 
     func testChildParentCyclicReferenceMemoryLeak() {
         let workspace = Workspace.get(byName: name) // Don't cache root node
-        let window = TestWindow(id: 1, parent: workspace.rootTilingContainer)
+        let window = TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
 
         XCTAssertTrue(window.parentOrNilForTests != nil)
         workspace.rootTilingContainer.unbindFromParent()
@@ -17,14 +17,14 @@ final class TreeNodeTest: XCTestCase {
         let workspace = Workspace.get(byName: name)
 
         XCTAssertTrue(workspace.isEffectivelyEmpty)
-        weak var window: TestWindow? = TestWindow(id: 1, parent: workspace.rootTilingContainer)
+        weak var window: TestWindow? = .new(id: 1, parent: workspace.rootTilingContainer)
         XCTAssertNotEqual(window, nil)
         XCTAssertTrue(!workspace.isEffectivelyEmpty)
         window!.unbindFromParent()
         XCTAssertTrue(workspace.isEffectivelyEmpty)
 
         // Don't save to local variable
-        TestWindow(id: 2, parent: workspace.rootTilingContainer)
+        TestWindow.new(id: 2, parent: workspace.rootTilingContainer)
         XCTAssertTrue(!workspace.isEffectivelyEmpty)
     }
 
@@ -47,9 +47,9 @@ final class TreeNodeTest: XCTestCase {
         config.enableNormalizationFlattenContainers = true
         let workspace = Workspace.get(byName: name)
         workspace.rootTilingContainer.apply {
-            TestWindow(id: 0, parent: $0)
+            TestWindow.new(id: 0, parent: $0)
             TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
-                TestWindow(id: 1, parent: $0)
+                TestWindow.new(id: 1, parent: $0)
             }
         }
         workspace.normalizeContainers()
@@ -75,7 +75,7 @@ final class TreeNodeTest: XCTestCase {
         let workspace = Workspace.get(byName: name) // Don't cache root node
         workspace.rootTilingContainer.apply {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                TestWindow(id: 1, parent: $0, adaptiveWeight: 1)
+                TestWindow.new(id: 1, parent: $0, adaptiveWeight: 1)
             }
         }
         workspace.normalizeContainers()

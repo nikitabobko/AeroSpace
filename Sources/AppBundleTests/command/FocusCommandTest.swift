@@ -41,17 +41,17 @@ final class FocusCommandTest: XCTestCase {
     func testFocus() {
         assertEquals(focus.windowOrNil, nil)
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0)
-            assertEquals(TestWindow(id: 2, parent: $0).focusWindow(), true)
-            TestWindow(id: 3, parent: $0)
+            TestWindow.new(id: 1, parent: $0)
+            assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 3, parent: $0)
         }
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
     func testFocusAlongTheContainerOrientation() {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
-            TestWindow(id: 2, parent: $0)
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
         }
 
         assertEquals(focus.windowOrNil?.windowId, 1)
@@ -61,8 +61,8 @@ final class FocusCommandTest: XCTestCase {
 
     func testFocusAcrossTheContainerOrientation() {
         Workspace.get(byName: name).apply {
-            TestWindow(id: 1, parent: $0.rootTilingContainer)
-            TestWindow(id: 2, parent: $0.rootTilingContainer)
+            TestWindow.new(id: 1, parent: $0.rootTilingContainer)
+            TestWindow.new(id: 2, parent: $0.rootTilingContainer)
             assertEquals($0.focusWorkspace(), true)
         }
 
@@ -75,8 +75,8 @@ final class FocusCommandTest: XCTestCase {
 
     func testFocusNoWrapping() {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
-            TestWindow(id: 2, parent: $0)
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
         }
 
         assertEquals(focus.windowOrNil?.windowId, 1)
@@ -86,8 +86,8 @@ final class FocusCommandTest: XCTestCase {
 
     func testFocusWrapping() {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
-            TestWindow(id: 2, parent: $0)
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
         }
 
         assertEquals(focus.windowOrNil?.windowId, 1)
@@ -105,13 +105,13 @@ final class FocusCommandTest: XCTestCase {
         var window3: Window!
         var unrelatedWindow: Window!
         workspace.rootTilingContainer.apply {
-            startWindow = TestWindow(id: 1, parent: $0)
+            startWindow = TestWindow.new(id: 1, parent: $0)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
                 TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
-                    window2 = TestWindow(id: 2, parent: $0)
-                    unrelatedWindow = TestWindow(id: 5, parent: $0)
+                    window2 = TestWindow.new(id: 2, parent: $0)
+                    unrelatedWindow = TestWindow.new(id: 5, parent: $0)
                 }
-                window3 = TestWindow(id: 3, parent: $0)
+                window3 = TestWindow.new(id: 3, parent: $0)
             }
         }
 
@@ -134,9 +134,9 @@ final class FocusCommandTest: XCTestCase {
 
     func testFocusOutsideOfTheContainer() {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0)
+            TestWindow.new(id: 1, parent: $0)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                assertEquals(TestWindow(id: 2, parent: $0).focusWindow(), true)
+                assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
             }
         }
 
@@ -146,9 +146,9 @@ final class FocusCommandTest: XCTestCase {
 
     func testFocusOutsideOfTheContainer2() {
         Workspace.get(byName: name).rootTilingContainer.apply {
-            TestWindow(id: 1, parent: $0)
+            TestWindow.new(id: 1, parent: $0)
             TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
-                assertEquals(TestWindow(id: 2, parent: $0).focusWindow(), true)
+                assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
             }
         }
 

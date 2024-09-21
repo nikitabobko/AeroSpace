@@ -7,8 +7,8 @@ final class SplitCommandTest: XCTestCase {
 
     func testSplit() {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
-            assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
-            TestWindow(id: 2, parent: $0)
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
         }
 
         SplitCommand(args: SplitCmdArgs(rawArgs: [], .vertical)).run(.focused)
@@ -22,8 +22,8 @@ final class SplitCommandTest: XCTestCase {
 
     func testSplitOppositeOrientation() {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
-            assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
-            TestWindow(id: 2, parent: $0)
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
         }
 
         SplitCommand(args: SplitCmdArgs(rawArgs: [], .opposite)).run(.focused)
@@ -38,9 +38,9 @@ final class SplitCommandTest: XCTestCase {
     func testChangeOrientation() {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
+                assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             }
-            TestWindow(id: 2, parent: $0)
+            TestWindow.new(id: 2, parent: $0)
         }
 
         SplitCommand(args: SplitCmdArgs(rawArgs: [], .horizontal)).run(.focused)
@@ -55,9 +55,9 @@ final class SplitCommandTest: XCTestCase {
     func testToggleOrientation() {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
-                assertEquals(TestWindow(id: 1, parent: $0).focusWindow(), true)
+                assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             }
-            TestWindow(id: 2, parent: $0)
+            TestWindow.new(id: 2, parent: $0)
         }
 
         SplitCommand(args: SplitCmdArgs(rawArgs: [], .opposite)).run(.focused)
