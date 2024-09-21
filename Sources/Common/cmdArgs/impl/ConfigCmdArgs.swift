@@ -37,7 +37,7 @@ public struct ConfigCmdArgs: CmdArgs, Equatable {
     public var configPath: Bool = false
     public var keyNameToGet: String? = nil
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 }
 
 public extension ConfigCmdArgs {

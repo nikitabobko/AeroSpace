@@ -18,7 +18,7 @@ public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
     )
 
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
     public var wrapAround: Bool = false
     public var target: Lateinit<MoveWorkspaceToMonitorCmdArgs.MonitorTarget> = .uninitialized
     public enum MonitorTarget: String, CaseIterable {

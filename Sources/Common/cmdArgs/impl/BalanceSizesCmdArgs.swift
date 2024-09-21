@@ -3,5 +3,5 @@ public struct BalanceSizesCmdArgs: CmdArgs {
     public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = noArgsParser(.balanceSizes, allowInConfig: true)
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 }

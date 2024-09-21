@@ -4,5 +4,5 @@ public struct DebugWindowsCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = noArgsParser(.debugWindows, allowInConfig: false)
 
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 }

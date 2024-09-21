@@ -19,7 +19,7 @@ public struct ModeCmdArgs: CmdArgs {
 
     public var targetMode: Lateinit<String> = .uninitialized
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 }
 
 private func parseTargetMode(arg: String, nextArgs: inout [String]) -> Parsed<String> {

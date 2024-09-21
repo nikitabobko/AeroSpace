@@ -30,7 +30,7 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
     public var wrapAround: Bool = false
     public var target: Lateinit<MonitorTarget> = .uninitialized
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 }
 
 public func parseMoveNodeToMonitorCmdArgs(_ args: [String]) -> ParsedCmd<MoveNodeToMonitorCmdArgs> {

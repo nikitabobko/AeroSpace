@@ -27,7 +27,7 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     public var _wrapAround: Bool?
     public var failIfNoop: Bool = false
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String]) {
         self.rawArgs = .init(rawArgs)

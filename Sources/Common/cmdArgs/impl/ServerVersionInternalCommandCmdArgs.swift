@@ -4,5 +4,5 @@ public struct ServerVersionInternalCommandCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = noArgsParser(.serverVersionInternalCommand, allowInConfig: false)
 
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 }

@@ -4,5 +4,5 @@ public struct FlattenWorkspaceTreeCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = noArgsParser(.flattenWorkspaceTree, allowInConfig: true)
 
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 }

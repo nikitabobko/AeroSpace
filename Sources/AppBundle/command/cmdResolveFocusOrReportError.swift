@@ -2,7 +2,7 @@ import Common
 
 extension CmdArgs {
     var workspace: Workspace? {
-        if let workspaceName { Workspace.get(byName: workspaceName) } else { nil }
+        if let workspaceName { Workspace.get(byName: workspaceName.raw) } else { nil }
     }
 
     func resolveFocusOrReportError(_ env: CmdEnv, _ io: CmdIo) -> LiveFocus? {

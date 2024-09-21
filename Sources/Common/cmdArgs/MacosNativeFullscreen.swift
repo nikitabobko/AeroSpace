@@ -26,7 +26,7 @@ public struct MacosNativeFullscreenCmdArgs: CmdArgs {
     public var toggle: ToggleEnum = .toggle
     public var failIfNoop: Bool = false
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 }
 
 public func parseMacosNativeFullscreenCmdArgs(_ args: [String]) -> ParsedCmd<MacosNativeFullscreenCmdArgs> {

@@ -14,5 +14,5 @@ public struct ExecAndForgetCmdArgs: CmdArgs {
 
     public let bashScript: String
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 }

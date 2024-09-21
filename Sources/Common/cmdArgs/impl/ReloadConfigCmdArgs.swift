@@ -22,5 +22,5 @@ public struct ReloadConfigCmdArgs: CmdArgs {
     public var noGui: Bool = false
     public var dryRun: Bool = false
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 }

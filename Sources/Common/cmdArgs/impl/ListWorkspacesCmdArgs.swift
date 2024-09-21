@@ -38,7 +38,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     fileprivate var focused: Bool = false // Alias
 
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
     public var onMonitors: [MonitorId] = []
     public var visible: Bool?
     public var empty: Bool?

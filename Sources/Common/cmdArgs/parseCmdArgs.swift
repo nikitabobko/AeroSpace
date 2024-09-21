@@ -16,7 +16,7 @@ public protocol CmdArgs: Copyable, Equatable, CustomStringConvertible, AeroAny {
 
     // Two very common flags among commands
     var windowId: UInt32? { get set }
-    var workspaceName: String? { get set }
+    var workspaceName: WorkspaceName? { get set }
 }
 
 public extension CmdArgs {

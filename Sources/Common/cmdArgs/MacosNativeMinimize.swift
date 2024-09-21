@@ -4,5 +4,5 @@ public struct MacosNativeMinimizeCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = noArgsParser(.macosNativeMinimize, allowInConfig: true)
 
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 }

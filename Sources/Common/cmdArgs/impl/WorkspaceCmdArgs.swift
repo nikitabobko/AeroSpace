@@ -28,7 +28,7 @@ public struct WorkspaceCmdArgs: CmdArgs {
     )
 
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
     public var target: Lateinit<WorkspaceTarget> = .uninitialized
     public var _autoBackAndForth: Bool?
     public var failIfNoop: Bool = false

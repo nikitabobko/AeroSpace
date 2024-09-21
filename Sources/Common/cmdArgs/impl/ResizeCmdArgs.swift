@@ -24,7 +24,7 @@ public struct ResizeCmdArgs: CmdArgs {
     public var dimension: Lateinit<ResizeCmdArgs.Dimension> = .uninitialized
     public var units: Lateinit<ResizeCmdArgs.Units> = .uninitialized
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 
     public init(
         rawArgs: [String],

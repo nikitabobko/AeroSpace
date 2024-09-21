@@ -19,7 +19,7 @@ public struct EnableCmdArgs: CmdArgs {
         arguments: [newArgParser(\.targetState, parseState, mandatoryArgPlaceholder: EnableCmdArgs.State.unionLiteral)]
     )
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
     public var targetState: Lateinit<State> = .uninitialized
     public var failIfNoop: Bool = false
 

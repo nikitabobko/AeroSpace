@@ -22,7 +22,7 @@ public struct TriggerBindingCmdArgs: CmdArgs {
     public var _mode: String? = nil
     public var binding: Lateinit<String> = .uninitialized
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 }
 
 public extension TriggerBindingCmdArgs {

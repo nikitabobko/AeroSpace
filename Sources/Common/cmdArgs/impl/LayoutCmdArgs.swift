@@ -16,7 +16,7 @@ public struct LayoutCmdArgs: CmdArgs {
 
     public var toggleBetween: Lateinit<[LayoutDescription]> = .uninitialized
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String], toggleBetween: [LayoutDescription]) {
         self.rawArgs = .init(rawArgs)

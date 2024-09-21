@@ -16,7 +16,7 @@ public struct MoveCmdArgs: CmdArgs {
 
     public var direction: Lateinit<CardinalDirection> = .uninitialized
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String], _ direction: CardinalDirection) {
         self.rawArgs = .init(rawArgs)

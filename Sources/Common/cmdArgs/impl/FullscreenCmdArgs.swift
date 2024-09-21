@@ -29,7 +29,7 @@ public struct FullscreenCmdArgs: CmdArgs {
     public var noOuterGaps: Bool = false
     public var failIfNoop: Bool = false
     public var windowId: UInt32?
-    public var workspaceName: String?
+    public var workspaceName: WorkspaceName?
 }
 
 public func parseFullscreenCmdArgs(_ args: [String]) -> ParsedCmd<FullscreenCmdArgs> {
