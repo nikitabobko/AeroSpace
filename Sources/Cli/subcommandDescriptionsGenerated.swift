@@ -19,7 +19,7 @@ let subcommandDescriptions = [
     ["  list-windows", "Print windows that satisfy conditions"],
     ["  list-workspaces", "Print workspaces that satisfy conditions"],
     ["  macos-native-fullscreen", "Toggle macOS fullscreen for the focused window"],
-    ["  macos-native-minimize", "Toggle macOS minimize for the focused window"],
+    ["  macos-native-minimize", "Minimize focused window"],
     ["  mode", "Activate the specified binding mode"],
     ["  move-mouse", "Move mouse to the requested position"],
     ["  move-node-to-monitor", "Move window to monitor targeted by relative direction, by order, or by pattern"],

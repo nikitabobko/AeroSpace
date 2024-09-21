@@ -97,8 +97,10 @@ let move_node_to_monitor_help_generated = """
        OR: move-node-to-monitor [-h|--help] [--window-id <window-id>] <monitor-pattern>...
     """
 let move_node_to_workspace_help_generated = """
-    USAGE: move-node-to-workspace [-h|--help] [--focus-follows-window] [--wrap-around] (next|prev)
-       OR: move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-if-noop] [--window-id <window-id>] <workspace-name>
+    USAGE: move-node-to-workspace [-h|--help] [--focus-follows-window] [--wrap-around]
+                                  (next|prev)
+       OR: move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-if-noop]
+                                  [--window-id <window-id>] <workspace-name>
     """
 let move_workspace_to_monitor_help_generated = """
     USAGE: move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (next|prev)

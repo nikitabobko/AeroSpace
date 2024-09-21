@@ -9,8 +9,10 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace move-node-to-workspace [-h|--help] [--focus-follows-window] [--wrap-around] (next|prev)
-aerospace move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-if-noop] [--window-id <window-id>] <workspace-name>
+aerospace move-node-to-workspace [-h|--help] [--focus-follows-window] [--wrap-around]
+                                 (next|prev)
+aerospace move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-if-noop]
+                                 [--window-id <window-id>] <workspace-name>
 
 // end::synopsis[]
 
@@ -35,6 +37,12 @@ This flag is a shortcut for manually running `aerospace-workspace`/`aerospace-fo
 
 --window-id <window-id>::
 include::./util/window-id-flag-desc.adoc[]
+
+// =========================================================== Arguments
+include::./util/conditional-arguments-header.adoc[]
+
+(next|prev):: Move window to next or prev workspace
+<workspace-name>:: Specifies workspace name where to move window to
 
 // end::body[]
 
