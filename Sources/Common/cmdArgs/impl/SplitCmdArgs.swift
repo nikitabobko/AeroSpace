@@ -29,7 +29,7 @@ public struct SplitCmdArgs: CmdArgs {
 }
 
 public func parseSplitCmdArgs(_ args: [String]) -> ParsedCmd<SplitCmdArgs> {
-    parseRawCmdArgs(SplitCmdArgs(rawArgs: args), args)
+    parseSpecificCmdArgs(SplitCmdArgs(rawArgs: args), args)
 }
 
 private func parseSplitArg(arg: String, nextArgs: inout [String]) -> Parsed<SplitCmdArgs.SplitArg> {

@@ -34,7 +34,7 @@ public struct EnableCmdArgs: CmdArgs {
 }
 
 public func parseEnableCmdArgs(_ args: [String]) -> ParsedCmd<EnableCmdArgs> {
-    return parseRawCmdArgs(EnableCmdArgs(rawArgs: args), args)
+    return parseSpecificCmdArgs(EnableCmdArgs(rawArgs: args), args)
         .filterNot("--fail-if-noop is incompatible with 'toggle' argument") { $0.targetState.val == .toggle && $0.failIfNoop }
 }
 

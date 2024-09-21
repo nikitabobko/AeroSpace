@@ -34,7 +34,7 @@ public struct FocusMonitorCmdArgs: CmdArgs {
 }
 
 public func parseFocusMonitorCmdArgs(_ args: [String]) -> ParsedCmd<FocusMonitorCmdArgs> {
-    parseRawCmdArgs(FocusMonitorCmdArgs(rawArgs: args), args)
+    parseSpecificCmdArgs(FocusMonitorCmdArgs(rawArgs: args), args)
         .filter("--wrap-around is incompatible with <monitor-pattern> argument") { !$0.wrapAround || !$0.target.val.isPatterns }
 }
 

@@ -19,10 +19,10 @@ struct SubCommandParser<T: CmdArgs>: SubCommandParserProtocol {
     }
 
     init(_ raw: @escaping (EquatableNoop<[String]>) -> T) {
-        _parse = { args in parseRawCmdArgs(raw(.init(args)), args) }
+        _parse = { args in parseSpecificCmdArgs(raw(.init(args)), args) }
     }
 
     init(_ raw: @escaping ([String]) -> T) {
-        _parse = { args in parseRawCmdArgs(raw(args), args) }
+        _parse = { args in parseSpecificCmdArgs(raw(args), args) }
     }
 }

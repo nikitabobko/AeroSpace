@@ -48,7 +48,7 @@ private func parseToggleBetween(arg: String, _ nextArgs: inout [String]) -> Pars
 }
 
 public func parseLayoutCmdArgs(_ args: [String]) -> ParsedCmd<LayoutCmdArgs> {
-    parseRawCmdArgs(LayoutCmdArgs(rawArgs: args), args).map {
+    parseSpecificCmdArgs(LayoutCmdArgs(rawArgs: args), args).map {
         check(!$0.toggleBetween.val.isEmpty)
         return $0
     }

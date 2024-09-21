@@ -34,6 +34,6 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
 }
 
 public func parseMoveNodeToMonitorCmdArgs(_ args: [String]) -> ParsedCmd<MoveNodeToMonitorCmdArgs> {
-    parseRawCmdArgs(MoveNodeToMonitorCmdArgs(rawArgs: args), args)
+    parseSpecificCmdArgs(MoveNodeToMonitorCmdArgs(rawArgs: args), args)
         .filter("--wrap-around is incompatible with <monitor-pattern> argument") { !$0.wrapAround || !$0.target.val.isPatterns }
 }

@@ -96,7 +96,7 @@ public extension FocusCmdArgs {
 }
 
 public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
-    return parseRawCmdArgs(FocusCmdArgs(rawArgs: args), args)
+    return parseSpecificCmdArgs(FocusCmdArgs(rawArgs: args), args)
         .flatMap { (raw: FocusCmdArgs) -> ParsedCmd<FocusCmdArgs> in
             raw.boundaries == .workspace && raw.boundariesAction == .wrapAroundAllMonitors
                 ? .failure("\(raw.boundaries.rawValue) and \(raw.boundariesAction.rawValue) is an invalid combination of values")

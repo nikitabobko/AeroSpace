@@ -36,7 +36,7 @@ public struct WorkspaceCmdArgs: CmdArgs {
 }
 
 public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
-    parseRawCmdArgs(WorkspaceCmdArgs(rawArgs: args), args)
+    parseSpecificCmdArgs(WorkspaceCmdArgs(rawArgs: args), args)
         .filter("--wrapAround requires using (prev|next) argument") { ($0._wrapAround != nil).implies($0.target.val.isRelatve) }
         .filterNot("--auto-back-and-forth is incompatible with (next|prev)") { $0._autoBackAndForth != nil && $0.target.val.isRelatve }
         .filterNot("--fail-if-noop is incompatible with (next|prev)") { $0.failIfNoop && $0.target.val.isRelatve }

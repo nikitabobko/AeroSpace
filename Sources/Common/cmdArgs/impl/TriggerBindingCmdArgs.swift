@@ -30,6 +30,6 @@ public extension TriggerBindingCmdArgs {
 }
 
 public func parseTriggerBindingCmdArgs(_ args: [String]) -> ParsedCmd<TriggerBindingCmdArgs> {
-    parseRawCmdArgs(TriggerBindingCmdArgs(rawArgs: .init(args)), args)
+    parseSpecificCmdArgs(TriggerBindingCmdArgs(rawArgs: .init(args)), args)
         .filter("--mode flag is mandatory") { $0._mode != nil }
 }

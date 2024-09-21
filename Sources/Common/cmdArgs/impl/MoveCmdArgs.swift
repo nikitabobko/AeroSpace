@@ -25,5 +25,5 @@ public struct MoveCmdArgs: CmdArgs {
 }
 
 public func parseMoveCmdArgs(_ args: [String]) -> ParsedCmd<MoveCmdArgs> {
-    parseRawCmdArgs(MoveCmdArgs(rawArgs: args), args)
+    parseSpecificCmdArgs(MoveCmdArgs(rawArgs: args), args)
 }

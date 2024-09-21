@@ -48,7 +48,7 @@ public struct ResizeCmdArgs: CmdArgs {
 }
 
 public func parseResizeCmdArgs(_ args: [String]) -> ParsedCmd<ResizeCmdArgs> {
-    parseRawCmdArgs(ResizeCmdArgs(rawArgs: args), args)
+    parseSpecificCmdArgs(ResizeCmdArgs(rawArgs: args), args)
 }
 
 private func parseDimension(arg: String, nextArgs: inout [String]) -> Parsed<ResizeCmdArgs.Dimension> {

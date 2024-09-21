@@ -1,6 +1,5 @@
 // todo support conflicting options
-// todo come up with better name for this function
-public func parseRawCmdArgs<T: CmdArgs>(_ raw: T, _ args: [String]) -> ParsedCmd<T> {
+public func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: [String]) -> ParsedCmd<T> {
     var args = args
     var raw = raw
     var errors: [String] = []

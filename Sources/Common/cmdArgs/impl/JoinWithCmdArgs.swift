@@ -25,5 +25,5 @@ public struct JoinWithCmdArgs: CmdArgs {
 }
 
 public func parseJoinWithCmdArgs(_ args: [String]) -> ParsedCmd<JoinWithCmdArgs> {
-    parseRawCmdArgs(JoinWithCmdArgs(rawArgs: args), args)
+    parseSpecificCmdArgs(JoinWithCmdArgs(rawArgs: args), args)
 }

@@ -56,7 +56,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
 
 public func parseRawListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCmdArgs> {
     let args = args.map { $0 == "--app-id" ? "--app-bundle-id" : $0 } // Compatibility
-    return parseRawCmdArgs(ListWindowsCmdArgs(rawArgs: .init(args)), args)
+    return parseSpecificCmdArgs(ListWindowsCmdArgs(rawArgs: .init(args)), args)
         .flatMap { raw in
             var conflicting: OrderedSet<String> = []
             if (raw.all) { conflicting.insert("--all", at: 0) }

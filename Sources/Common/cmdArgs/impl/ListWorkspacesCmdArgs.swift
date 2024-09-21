@@ -46,7 +46,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
 }
 
 public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {
-    parseRawCmdArgs(ListWorkspacesCmdArgs(rawArgs: .init(args)), args)
+    parseSpecificCmdArgs(ListWorkspacesCmdArgs(rawArgs: .init(args)), args)
         .flatMap { raw in
             var conflicting: OrderedSet<String> = []
             if raw.all { conflicting.append("--all") }

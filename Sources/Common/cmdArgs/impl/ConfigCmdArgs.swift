@@ -55,7 +55,7 @@ public extension ConfigCmdArgs {
 }
 
 public func parseConfigCmdArgs(_ args: [String]) -> ParsedCmd<ConfigCmdArgs> {
-    parseRawCmdArgs(ConfigCmdArgs(rawArgs: .init(args)), args)
+    parseSpecificCmdArgs(ConfigCmdArgs(rawArgs: .init(args)), args)
         .flatMap { raw in
             var conflicting: Set<String> = []
             if raw.keyNameToGet != nil { conflicting.insert("--get") }

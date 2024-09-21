@@ -31,7 +31,7 @@ func parseMouseTarget(arg: String, nextArgs: inout [String]) -> Parsed<MouseTarg
 }
 
 public func parseMoveMouseCmdArgs(_ args: [String]) -> ParsedCmd<MoveMouseCmdArgs> {
-    parseRawCmdArgs(MoveMouseCmdArgs(rawArgs: args), args)
+    parseSpecificCmdArgs(MoveMouseCmdArgs(rawArgs: args), args)
         .filter("--fail-if-noop is only compatible with window-lazy-center or monitor-lazy-center") {
             $0.failIfNoop.implies($0.mouseTarget.val == .windowLazyCenter || $0.mouseTarget.val == .monitorLazyCenter)
         }
