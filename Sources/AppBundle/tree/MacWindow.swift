@@ -121,9 +121,15 @@ final class MacWindow: Window, CustomStringConvertible {
         switch corner {
             case .bottomLeftCorner:
                 guard let s = getSize() else { fallthrough }
-                p = nodeMonitor.visibleRect.bottomLeftCorner + CGPoint(x: 1, y: -1) + CGPoint(x: -s.width, y: 0)
+                // Zoom will jump off if you do one pixel offset https://github.com/nikitabobko/AeroSpace/issues/527
+                // todo this ad hoc won't be necessary once I implement optimization suggested by Zalim
+                let onePixelOffset = macApp.isZoom ? .zero : CGPoint(x: 1, y: -1)
+                p = nodeMonitor.visibleRect.bottomLeftCorner + onePixelOffset + CGPoint(x: -s.width, y: 0)
             case .bottomRightCorner:
-                p = nodeMonitor.visibleRect.bottomRightCorner - CGPoint(x: 1, y: 1)
+                // Zoom will jump off if you do one pixel offset https://github.com/nikitabobko/AeroSpace/issues/527
+                // todo this ad hoc won't be necessary once I implement optimization suggested by Zalim
+                let onePixelOffset = macApp.isZoom ? .zero : CGPoint(x: 1, y: 1)
+                p = nodeMonitor.visibleRect.bottomRightCorner - onePixelOffset
         }
         _ = setTopLeftCorner(p)
     }

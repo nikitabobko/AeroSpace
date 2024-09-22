@@ -3,12 +3,14 @@ import AppKit
 final class MacApp: AbstractApp {
     let nsApp: NSRunningApplication
     let axApp: AXUIElement
+    let isZoom: Bool
 
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 
     private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement) {
         self.nsApp = nsApp
         self.axApp = axApp
+        self.isZoom = nsApp.bundleIdentifier == "us.zoom.xos"
         super.init(pid: nsApp.processIdentifier, id: nsApp.bundleIdentifier)
     }
 
