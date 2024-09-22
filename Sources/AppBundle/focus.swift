@@ -37,13 +37,15 @@ struct FrozenFocus: AeroAny, Equatable {
     let monitorId: Int // 0-based
 
     var live: LiveFocus { // Important: don't access focus.monitorId here. monitorId is not part of the focus. Always prefer workspace
-        let windowId = windowId
         let window: Window? = windowId.flatMap { Window.get(byId: $0) }
-        if let window, let ws = window.visualWorkspace {
-            return LiveFocus(windowOrNil: window, workspace: ws)
-        }
         let workspace = Workspace.get(byName: workspaceName)
-        return LiveFocus(windowOrNil: workspace.mostRecentWindowRecursive, workspace: workspace)
+
+        let wsFocus = workspace.toLiveFocus()
+        let wdFocus = window?.toLiveFocusOrNil() ?? wsFocus
+
+        return wsFocus.workspace != wdFocus.workspace
+            ? wsFocus // If window and workspace become separated prefer workspace
+            : wdFocus
     }
 }
 
@@ -55,9 +57,7 @@ var _focus: FrozenFocus = {
 
 /// Global focus. This property must not be ever directly accessed from commands.
 /// Commands must firstly check --window-id, --workspace, AEROSPACE_FOCUSED_WINDOW_ID env and AEROSPACE_FOCUSED_WORKSPACE env
-/// before accessing global focus. The only valid use case of direct access from commands that I know is in
-/// move-node-to-workspace (which is unfortunate). todo make this property less easy to accidentially access from
-/// commands.
+/// before accessing global focus. todo make this property less easy to accidentially access from commands.
 var focus: LiveFocus { _focus.live }
 
 func setFocus(to newFocus: LiveFocus) -> Bool {
@@ -93,8 +93,8 @@ extension Workspace {
     func toLiveFocus() -> LiveFocus {
         // todo unfortunately mostRecentWindowRecursive may recursively reach empty rootTilingContainer
         //      while floating or macos unconventional windows might be presented
-        if let wi = mostRecentWindowRecursive ?? anyLeafWindowRecursive {
-            LiveFocus(windowOrNil: wi, workspace: self)
+        if let wd = mostRecentWindowRecursive ?? anyLeafWindowRecursive {
+            LiveFocus(windowOrNil: wd, workspace: self)
         } else {
             LiveFocus(windowOrNil: nil, workspace: self) // emptyWorkspace
         }

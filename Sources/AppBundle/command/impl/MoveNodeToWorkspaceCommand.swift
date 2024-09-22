@@ -4,8 +4,8 @@ struct MoveNodeToWorkspaceCommand: Command {
     let args: MoveNodeToWorkspaceCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        guard let f = args.resolveFocusOrReportError(env, io) else { return false }
-        guard let window = f.windowOrNil else { return io.err(noWindowIsFocused) }
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let window = focus.windowOrNil else { return io.err(noWindowIsFocused) }
         let subjectWs = window.workspace
         let targetWorkspace: Workspace
         switch args.target.val {
@@ -16,7 +16,7 @@ struct MoveNodeToWorkspaceCommand: Command {
                     isNext: isNext,
                     wrapAround: args.wrapAround,
                     stdin: io.readStdin(),
-                    focus: f
+                    focus: focus
                 )
                 guard let ws else { return io.err("Can't resolve next or prev workspace") }
                 targetWorkspace = ws
@@ -29,15 +29,8 @@ struct MoveNodeToWorkspaceCommand: Command {
         }
         let targetContainer: NonLeafTreeNodeObject = window.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
 
-        let capturedGlobalFocus = focus
         window.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-        return switch () {
-            case _ where args.focusFollowsWindow:
-                window.focusWindow()
-            case _ where capturedGlobalFocus.windowOrNil?.workspace != capturedGlobalFocus.workspace:
-                capturedGlobalFocus.workspace.focusWorkspace()
-            default: true
-        }
+        return args.focusFollowsWindow ? window.focusWindow() : true
     }
 
     public static func run(_ env: CmdEnv, _ io: CmdIo, _ name: String) -> Bool {
