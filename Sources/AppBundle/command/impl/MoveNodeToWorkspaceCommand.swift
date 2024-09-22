@@ -4,9 +4,6 @@ struct MoveNodeToWorkspaceCommand: Command {
     let args: MoveNodeToWorkspaceCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        let ws = focus.workspace
-        defer { check(ws.focusWorkspace()) } // When moving nodes, the focused workspace must stay unchanged
-
         guard let subject = args.resolveFocusOrReportError(env, io) else { return false }
         guard let window = subject.windowOrNil else {
             return io.err(noWindowIsFocused)
@@ -27,8 +24,16 @@ struct MoveNodeToWorkspaceCommand: Command {
             return !args.failIfNoop
         }
         let targetContainer: NonLeafTreeNodeObject = window.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
+
+        let capturedGlobalFocus = focus
         window.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-        return true
+        return switch () {
+            case _ where args.focusFollowsWindow:
+                window.focusWindow()
+            case _ where capturedGlobalFocus.windowOrNil?.workspace != capturedGlobalFocus.workspace:
+                capturedGlobalFocus.workspace.focusWorkspace()
+            default: true
+        }
     }
 
     public static func run(_ env: CmdEnv, _ io: CmdIo, _ name: String) -> Bool {

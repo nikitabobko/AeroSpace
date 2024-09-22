@@ -67,6 +67,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             .run(.defaultEnv, .emptyStdin)
 
         assertEquals(focus.workspace, workspaceA)
+        assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(Workspace.get(byName: "b").rootTilingContainer.children.count, 0)
         assertEquals(workspaceA.rootTilingContainer.children.count, 2)
     }

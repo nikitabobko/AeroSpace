@@ -9,12 +9,14 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
             "--wrap-around": optionalTrueBoolFlag(\._wrapAround),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
             "--window-id": optionalWindowIdFlag(),
+            "--focus-follows-window": trueBoolFlag(\.focusFollowsWindow),
         ],
         arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
     )
 
     public var _wrapAround: Bool?
     public var failIfNoop: Bool = false
+    public var focusFollowsWindow: Bool = false
     public var windowId: UInt32?
     public var workspaceName: WorkspaceName?
 
