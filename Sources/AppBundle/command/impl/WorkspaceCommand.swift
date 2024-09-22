@@ -7,20 +7,27 @@ struct WorkspaceCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool { // todo refactor
         check(Thread.current.isMainThread)
-        guard let subject = args.resolveFocusOrReportError(env, io)?.workspace else { return false }
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        let focusedWs = focus.workspace
         let workspaceName: String
         switch args.target.val {
             case .relative(let isNext):
-                let workspace = getNextPrevWorkspace(current: subject, isNext: isNext, wrapAround: args.wrapAround, stdin: io.readStdin())
+                let workspace = getNextPrevWorkspace(
+                    current: focusedWs,
+                    isNext: isNext,
+                    wrapAround: args.wrapAround,
+                    stdin: io.readStdin(),
+                    focus: focus
+                )
                 guard let workspace else { return false }
                 workspaceName = workspace.name
             case .direct(let name):
                 workspaceName = name.raw
-                if args.autoBackAndForth && subject.name == workspaceName {
+                if args.autoBackAndForth && focusedWs.name == workspaceName {
                     return WorkspaceBackAndForthCommand().run(env, io)
                 }
         }
-        if subject.name == workspaceName {
+        if focusedWs.name == workspaceName {
             io.err("Workspace '\(workspaceName)' is already focused. Tip: use --fail-if-noop to exit with non-zero code")
             return !args.failIfNoop
         } else {
@@ -29,7 +36,7 @@ struct WorkspaceCommand: Command {
     }
 }
 
-func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String) -> Workspace? {
+func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String, focus: LiveFocus) -> Workspace? {
     let stdinWorkspaces: [String] = stdin.split(separator: "\n").map { String($0).trim() }.filter { !$0.isEmpty }
     let currentMonitor = current.workspaceMonitor
     let workspaces: [Workspace] = stdinWorkspaces.isEmpty

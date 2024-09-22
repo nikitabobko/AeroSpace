@@ -52,6 +52,12 @@ var _focus: FrozenFocus = {
     let monitor = focusedMonitorInaccurate ?? mainMonitor
     return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId: monitor.monitorId ?? 0)
 }()
+
+/// Global focus. This property must not be ever directly accessed from commands.
+/// Commands must firstly check --window-id, --workspace, AEROSPACE_FOCUSED_WINDOW_ID env and AEROSPACE_FOCUSED_WORKSPACE env
+/// before accessing global focus. The only valid use case of direct access from commands that I know is in
+/// move-node-to-workspace (which is unfortunate). todo make this property less easy to accidentially access from
+/// commands.
 var focus: LiveFocus { _focus.live }
 
 func setFocus(to newFocus: LiveFocus) -> Bool {

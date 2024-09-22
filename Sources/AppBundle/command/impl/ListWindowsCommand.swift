@@ -6,9 +6,9 @@ struct ListWindowsCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
+        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
         var windows: [Window] = []
         if args.focused {
-            guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
             if let window = focus.windowOrNil {
                 windows = [window]
             } else {
@@ -25,7 +25,7 @@ struct ListWindowsCommand: Command {
                 }
                 .toSet()
             if !args.monitors.isEmpty {
-                let monitors: Set<CGPoint> = args.monitors.resolveMonitors(io)
+                let monitors: Set<CGPoint> = args.monitors.resolveMonitors(io, focus)
                 if monitors.isEmpty { return false }
                 workspaces = workspaces.filter { monitors.contains($0.workspaceMonitor.rect.topLeftCorner) }
             }
