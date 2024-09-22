@@ -378,7 +378,7 @@ For better or worse, macOS doesn’t allow to place windows outside the visible 
 You will still be able to see a 1 pixel vertical line of "hidden" windows in the bottom right or left corner of your screen.
 That means, that if AeroSpace crashes badly you will still be able to manually "unhide" the windows by dragging these few pixels to the center of the screen.
 
-If you want to minimize the visibility of hidden windows, it's recommended to place Dock in the bottom (and additionaly turn automatic hiding)
+If you want to minimize the visibility of hidden windows, it's recommended to place Dock in the bottom (and additionally turn automatic hiding)
 ====
 
 === Proper monitor arrangement
@@ -436,7 +436,7 @@ Spaces are just cursed in macOS. The less Spaces you have, the better macOS beha
 |❌ No. macOS limitation
 |👍 Yes
 
-|Overal stability and performance
+|Overall stability and performance
 |❌ Weird focus and performance issues may happen (see the list above)
 |👍 Public Apple API are more stable (which in turn affects AeroSpace stability)
 
