@@ -11,13 +11,11 @@ while [[ $# -gt 0 ]]; do
 done
 
 if test $rebuild == 1; then
-    ./build-release.sh
+    ./build-release.sh --configuration Dev
 fi
 
 brew list aerospace-dev > /dev/null 2>&1 && brew uninstall aerospace-dev
 brew list aerospace > /dev/null 2>&1 && brew uninstall aerospace
-rm -rf /Applications/AeroSpace.app
-rm -rf ~/Applications/AeroSpace.app
 
 # Override HOMEBREW_CACHE. Otherwise, homebrew refuses to "redownload" the snapshot file
 # Maybe there is a better way, I don't know

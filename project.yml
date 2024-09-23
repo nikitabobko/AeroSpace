@@ -7,6 +7,11 @@ packages:
   AeroSpacePackage:
     path: .
 
+configs:
+  Debug: debug
+  Release: release
+  Dev: release
+
 targets:
   AeroSpace:
     type: application
@@ -31,12 +36,17 @@ targets:
         INFOPLIST_KEY_LSUIElement: YES
         CODE_SIGN_IDENTITY: ${XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY}
       configs:
-        debug:
+        Debug:
           PRODUCT_NAME: AeroSpace-Debug
-          PRODUCT_BUNDLE_IDENTIFIER: bobko.debug.aerospace
-        release:
+          PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace.debug
+        Release:
           PRODUCT_NAME: AeroSpace
           PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace
+        # Dev builds have different identifier because they are signed by user's certificate.
+        # Release builds are signed by Nikita Bobko's certificate
+        Dev:
+          PRODUCT_NAME: AeroSpace-Dev
+          PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace.dev
     entitlements:
       path: resources/AeroSpace.entitlements
       properties:

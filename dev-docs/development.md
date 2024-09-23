@@ -9,6 +9,10 @@ Feel free to report GitHub issues if something doesn't work for you
 
 If you struggle to build AeroSpace locally, you can also refer to [builds in GitHub Actions](https://github.com/nikitabobko/AeroSpace/actions?query=branch%3Amain)
 
+## Definitions
+
+**SPM.** Swift package manager and Swift build tool. In other words, `swift` CLI tool
+
 ## 1. Install dependencies
 
 1.  Install Xcode from App Store https://apps.apple.com/us/app/xcode/id497799835
@@ -36,7 +40,7 @@ If you only plan to build the debug version of AeroSpace, you can run it from th
 ## 3. Entry point scripts
 
 **Debug build**
--   `build-debug.sh` - Build debug build to `.debug` dir.
+-   `build-debug.sh` - Build debug build to `.debug` dir by using SPM. (Xcode is not involved)
 -   `run-tests.sh` - Run tests.
 -   `run-debug.sh` - Run AeroSpace.app debug build.
 -   `run-cli.sh` - Run `aerospace` in CLI. Arguments are forwarded to `aerospace` binary.
@@ -50,8 +54,14 @@ If you only plan to build the debug version of AeroSpace, you can run it from th
 > Debug build uses `~/.aerospace-debug.toml` instead of `~/.aerospace.toml`
 
 **Release build**
-- `build-release.sh` - Build release build to `.release` dir.
-- `install-from-sources.sh` - Build from sources and install release build to `aerospace-dev` brew cask
+-   `build-release.sh` - Build release build to `.release` dir by using Xcode.
+-   `install-dev-from-sources.sh` - Build `AeroSpace-Dev.app` release build from sources and install it as `aerospace-dev` brew cask.
+    Suffix "-Dev" is used to distinguish self-build **release** builds from **release** builds published to GitHub.
+    Builds published to GitHub are signed by Nikita Bobko's private certificate.
+    "-Dev" builds are signed by your local `aerospace-codesign-certificate`.
+    If we didn't separate those builds, macOS would re-request accessibility permission when users switch between "-Dev" and GitHub builds.
+    "-Dev" builds and GitHub builds differ only in the application name and App Bundle ID.
+    If you want to build the release without "-Dev" suffix, you can use `./build-release.sh --configuration Release`, but be aware of the mentioned problem.
 
 ## IDE
 
