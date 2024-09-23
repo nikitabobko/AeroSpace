@@ -63,15 +63,12 @@ alt-2
 ----
 $ aerospace config --get mode.main.binding --json
 {
-  "alt-shift-5" : [
-    "move-node-to-workspace 5"
-  ],
-  "alt-r" : [
-    "workspace R"
-  ],
-  "alt-shift-6" : [
-    "move-node-to-workspace 6"
-  ],
+  "alt-w" : "workspace W",
+  "alt-y" : "workspace Y",
+  "alt-n" : "workspace N",
+  "alt-shift-e" : "move-node-to-workspace E",
+  "alt-shift-m" : "move-node-to-workspace M",
+  "alt-shift-t" : "move-node-to-workspace T",
 ...
 ----
 

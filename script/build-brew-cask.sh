@@ -45,7 +45,7 @@ sha=$(shasum -a 256 "$zip_file" | awk '{print $1}')
 
 cask_version=''
 zip_root_dir=''
-if grep -q SNAPSHOT <<< $build_version; then
+if grep -q SNAPSHOT <<< "$build_version"; then
     # Prevent 'Not upgrading aerospace, the latest version is already installed'
     cask_version=':latest'
     zip_root_dir="AeroSpace-v$build_version"

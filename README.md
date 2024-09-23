@@ -64,7 +64,7 @@ For the list of all the versions available for installation via brew see: https:
 >
 > I don't have anything against notarization as a concept.
 > I specifically don't like the way Apple does notarization.
-> I don't have time to fight Apple.
+> I don't have time to deal with Apple.
 >
 > [Homebrew installation script](https://github.com/nikitabobko/homebrew-tap/blob/main/Casks/aerospace.rb) is configured to
 > automatically delete `com.apple.quarantine` attribute, that's why the app should work out of the box, without any warnings that
@@ -94,8 +94,7 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
 - If "dark magic" (aka "private APIs", "code injections", etc) can be avoided, it must be avoided
   - Right now, AeroSpace uses only a single private API to get window ID of accessibility object `_AXUIElementGetWindow`.
     Everything else is [macOS public accessibility API](https://developer.apple.com/documentation/applicationservices/axuielement_h).
-  - AeroSpace will never require you to disable SIP (System Integrity Protection). For example, yabai [requires you to disable SIP](https://github.com/koekeishiya/yabai/issues/1863) to use some of its features.
-    AeroSpace will either find another way (such as [emulation of workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces)) or will not implement this feature at all (window transparency and window shadowing are not _practical_ features)
+  - AeroSpace will never require you to disable SIP (System Integrity Protection).
 
 **Non Values**
 - Play nicely with existing macOS features.

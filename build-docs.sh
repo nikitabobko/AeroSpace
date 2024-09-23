@@ -23,7 +23,7 @@ build-site() {
     cd - > /dev/null
 
     git rev-parse HEAD > .site/version.html
-    if [ ! -z "$(git status --porcelain)" ]; then
+    if ! test -z "$(git status --porcelain)"; then
         echo "git working directory is dirty" >> .site/version.html
     fi
 }

@@ -6,7 +6,6 @@ final class MacWindow: Window, CustomStringConvertible {
     let macApp: MacApp
     // todo take into account monitor proportions
     private var prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect: CGPoint?
-    fileprivate var previousSize: CGSize?
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 
     private init(_ id: CGWindowID, _ app: MacApp, _ axWindow: AXUIElement, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
@@ -111,7 +110,7 @@ final class MacWindow: Window, CustomStringConvertible {
         guard let nodeMonitor else { return }
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent
         // `hideEmulation` calls
-        if !isHiddenViaEmulation {
+        if !isHiddenInCorner {
             guard let topLeftCorner = getTopLeftCorner() else { return }
             guard let workspace else { return } // hiding only makes sense for workspace windows
             prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
@@ -150,14 +149,13 @@ final class MacWindow: Window, CustomStringConvertible {
         self.prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect = nil
     }
 
-    override var isHiddenViaEmulation: Bool {
+    override var isHiddenInCorner: Bool {
         prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect != nil
     }
 
     override func setSize(_ size: CGSize) -> Bool {
         disableAnimations {
-            previousSize = getSize()
-            return axWindow.set(Ax.sizeAttr, size)
+            axWindow.set(Ax.sizeAttr, size)
         }
     }
 

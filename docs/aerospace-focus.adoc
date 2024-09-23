@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-focus
 // tag::purpose[]
-:manpurpose: Set focus to the nearest window in in the given direction.
+:manpurpose: Set focus to the nearest window in the given direction.
 // end::purpose[]
 
 // =========================================================== Synopsis

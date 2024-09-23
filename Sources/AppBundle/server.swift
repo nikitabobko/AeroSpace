@@ -2,7 +2,7 @@ import AppKit
 import Common
 import Socket
 
-func startServer() {
+func startUnixSocketServer() {
     let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }
         .getOrThrow("Can't create socket ")
     let socketFile = "/tmp/\(aeroSpaceAppId)-\(unixUserName).sock"

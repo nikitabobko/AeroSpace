@@ -19,7 +19,7 @@ public func initAppBundle() {
     }
 
     checkAccessibilityPermissions()
-    startServer()
+    startUnixSocketServer()
     GlobalObserver.initObserver()
     refreshAndLayout(startup: true)
     refreshSession {

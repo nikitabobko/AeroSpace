@@ -37,7 +37,7 @@ class Window: TreeNode, Hashable {
     var title: String { error("Not implemented") }
     var isMacosFullscreen: Bool { false }
     var isMacosMinimized: Bool { false } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
-    var isHiddenViaEmulation: Bool { error("Not implemented") }
+    var isHiddenInCorner: Bool { error("Not implemented") }
     func setSize(_ size: CGSize) -> Bool { error("Not implemented") }
 
     func setTopLeftCorner(_ point: CGPoint) -> Bool { error("Not implemented") }

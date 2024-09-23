@@ -6,13 +6,13 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 
 add-to-bin() {
     /usr/bin/which "$1" &> /dev/null && \
-        cat > ".deps/bin/${2:-$1}" <<EOF
+        /bin/cat > ".deps/bin/${2:-$1}" <<EOF
 #!/bin/bash
 exec '$(/usr/bin/which "$1")' "\$@"
 EOF
 }
 
-nuke-path() {
+if /bin/test -z "${NUKE_PATH:-}"; then
     /bin/rm -rf .deps/bin
     /bin/mkdir -p .deps/bin
 
@@ -28,11 +28,7 @@ nuke-path() {
 
     export PATH="${PWD}/.deps/bin:/bin:/usr/bin"
     chmod +x .deps/bin/*
-}
-
-if [ -z "${NUKE_PATH:-}" ]; then
     export NUKE_PATH=1
-    nuke-path
 fi
 
 xcodebuild() {

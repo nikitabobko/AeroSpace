@@ -86,7 +86,7 @@ expected_layout=$(cat <<EOF
 EOF
 )
 
-if [ "$expected_layout" != "$(find .release/$aerospace_dot_app)" ]; then
+if test "$expected_layout" != "$(find .release/$aerospace_dot_app)"; then
     echo "!!! Expect/Actual layout don't match !!!"
     find .release/$aerospace_dot_app
     exit 1

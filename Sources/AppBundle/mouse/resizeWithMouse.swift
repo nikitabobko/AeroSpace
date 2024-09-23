@@ -22,7 +22,7 @@ func resetManipulatedWithMouseIfPossible() {
 private let adaptiveWeightBeforeResizeWithMouseKey = TreeNodeUserDataKey<CGFloat>(key: "adaptiveWeightBeforeResizeWithMouseKey")
 
 private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tests
-    if window.isHiddenViaEmulation || // Don't allow to resize windows of hidden workspaces
+    if window.isHiddenInCorner || // Don't allow to resize windows of hidden workspaces
         !isLeftMouseButtonPressed ||
         currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId ||
         getNativeFocusedWindow(startup: false) != window
