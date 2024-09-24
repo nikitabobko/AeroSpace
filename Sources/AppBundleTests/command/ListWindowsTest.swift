@@ -11,5 +11,6 @@ final class ListWindowsTest: XCTestCase {
         assertNil(parseCommand("list-windows --all").errorOrNil)
         assertEquals(parseCommand("list-windows --all --workspace M").errorOrNil, "Conflicting options: --workspace, --all")
         assertEquals(parseCommand("list-windows --all --focused").errorOrNil, "Conflicting options: --focused, --all")
+        assertEquals(parseCommand("list-windows --all --count --format %{window-title}").errorOrNil, "ERROR: Conflicting options: --count, --format")
     }
 }

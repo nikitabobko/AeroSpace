@@ -18,8 +18,12 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--pid": singleValueOption(\.pidFilter, "<pid>", Int32.init),
             "--app-bundle-id": singleValueOption(\.appIdFilter, "<app-bundle-id>") { $0 },
             "--format": ArgParser(\.format, parseFormat),
+            "--count": trueBoolFlag(\.outputOnlyCount),
         ],
-        arguments: []
+        arguments: [],
+        conflictingOptions: [
+            ["--format", "--count"],
+        ]
     )
 
     fileprivate var all: Bool = false // ALIAS
@@ -36,6 +40,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
         .value("app-name"), .value("right-padding"), .literal(" | "),
         .value("window-title"),
     ]
+    public var outputOnlyCount: Bool = false
 }
 
 public func parseRawListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCmdArgs> {
@@ -57,14 +62,14 @@ public func parseRawListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindow
             }
         }
         .filter("--all conflicts with \"filtering\" flags. Please use '--monitor all'") { raw in
-            !raw.all || raw == ListWindowsCmdArgs(rawArgs: .init([]), all: true, format: raw.format)
+            !raw.all || raw == ListWindowsCmdArgs(rawArgs: .init([]), all: true, format: raw.format, outputOnlyCount: raw.outputOnlyCount)
         }
         .filter("--focused conflicts with \"filtering\" flags") { raw in
-            !raw.focused || raw == ListWindowsCmdArgs(rawArgs: .init(args), focused: true, format: raw.format)
+            !raw.focused || raw == ListWindowsCmdArgs(rawArgs: .init(args), focused: true, format: raw.format, outputOnlyCount: raw.outputOnlyCount)
         }
         .map { raw in
             // Normalize alias
-            raw.all ? ListWindowsCmdArgs(rawArgs: .init(args), monitors: [.all], format: raw.format) : raw
+            raw.all ? ListWindowsCmdArgs(rawArgs: .init(args), monitors: [.all], format: raw.format, outputOnlyCount: raw.outputOnlyCount) : raw
         }
 }
 
