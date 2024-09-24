@@ -40,6 +40,7 @@ public struct CmdParser<T: Copyable> {
     let info: CmdStaticInfo
     let options: [String: any ArgParserProtocol<T>]
     let arguments: [any ArgParserProtocol<T>]
+    let conflictingOptions: [Set<String>]
 }
 
 public func cmdParser<T>(
@@ -47,12 +48,14 @@ public func cmdParser<T>(
     allowInConfig: Bool,
     help: String,
     options: [String: any ArgParserProtocol<T>],
-    arguments: [any ArgParserProtocol<T>]
+    arguments: [any ArgParserProtocol<T>],
+    conflictingOptions: [Set<String>] = []
 ) -> CmdParser<T> {
     CmdParser(
         info: CmdStaticInfo(help: help, kind: kind, allowInConfig: allowInConfig),
         options: options,
-        arguments: arguments
+        arguments: arguments,
+        conflictingOptions: conflictingOptions
     )
 }
 
