@@ -8,6 +8,7 @@ struct ListWindowsCommand: Command {
         check(Thread.current.isMainThread)
         guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
         var windows: [Window] = []
+
         if args.focused {
             if let window = focus.windowOrNil {
                 windows = [window]
@@ -37,11 +38,15 @@ struct ListWindowsCommand: Command {
                 windows = windows.filter { $0.app.id == appId }
             }
         }
-        windows = windows.sorted(using: [SelectorComparator { $0.app.name ?? "" }, SelectorComparator(selector: \.title)])
 
-        return switch windows.map({ AeroObj.window($0) }).format(args.format) {
-            case .success(let lines): io.out(lines)
-            case .failure(let msg): io.err(msg)
+        if args.outputOnlyCount {
+            return io.out("\(windows.count)")
+        } else {
+            windows = windows.sorted(using: [SelectorComparator { $0.app.name ?? "" }, SelectorComparator(selector: \.title)])
+            return switch windows.map({ AeroObj.window($0) }).format(args.format) {
+                case .success(let lines): io.out(lines)
+                case .failure(let msg): io.err(msg)
+            }
         }
     }
 }
