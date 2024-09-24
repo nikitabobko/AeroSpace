@@ -1,4 +1,3 @@
-// todo support conflicting options
 public func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: [String]) -> ParsedCmd<T> {
     var args = args
     var raw = raw
@@ -33,6 +32,14 @@ public func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: [String]) -> Pars
     for arg in T.parser.arguments[argumentIndex...] {
         if let placeholder = arg.argPlaceholderIfMandatory {
             errors.append("Argument \(placeholder.singleQuoted) is mandatory")
+        }
+    }
+
+    for conflictSet in T.parser.conflictingOptions {
+        let mutualOptions = conflictSet.intersection(options)
+        if mutualOptions.count > 1 {
+            errors.append("Conflicting options: \(mutualOptions.sorted().joined(separator: ", "))")
+            break
         }
     }
 
