@@ -12,5 +12,6 @@ final class ListWorkspacesTest: XCTestCase {
         assertNotNil(parseCommand("list-workspaces --visible --monitor 2").cmdOrNil)
         assertNotNil(parseCommand("list-workspaces --monitor focused").cmdOrNil)
         assertNil(parseCommand("list-workspaces --focused --monitor 2").cmdOrNil)
+        assertEquals(parseCommand("list-workspaces --all --format %{workspace} --count").errorOrNil, "ERROR: Conflicting options: --count, --format")
     }
 }

@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]] [--format <output-format>]
-aerospace list-workspaces [-h|--help] --all [--format <output-format>]
-aerospace list-workspaces [-h|--help] --focused [--format <output-format>]
+aerospace list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]] [--format <output-format>] [--count]
+aerospace list-workspaces [-h|--help] --all [--format <output-format>] [--count]
+aerospace list-workspaces [-h|--help] --focused [--format <output-format>] [--count]
 
 // end::synopsis[]
 
@@ -44,7 +44,11 @@ Several workspaces can be visible in multi-monitor setup
 Filter results to only print empty workspaces.
 `[no]` inverts the condition.
 
---format <output-format>:: Specify output format. See "Output Format" section for more details
+--format <output-format>:: Specify output format. See "Output Format" section for more details.
+Incompatible with `--count`
+
+--count:: Output only the number of workspaces.
+Incompatible with `--format`
 
 // =========================================================== Output Format
 include::util/conditional-output-format-header.adoc[]

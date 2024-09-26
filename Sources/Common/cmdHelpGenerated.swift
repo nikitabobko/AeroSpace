@@ -73,9 +73,9 @@ let list_windows_help_generated = """
        OR: list-windows [-h|--help] --focused [--format <output-format>] [--count]
     """
 let list_workspaces_help_generated = """
-    USAGE: list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]] [--format <output-format>]
-       OR: list-workspaces [-h|--help] --all [--format <output-format>]
-       OR: list-workspaces [-h|--help] --focused [--format <output-format>]
+    USAGE: list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]] [--format <output-format>] [--count]
+       OR: list-workspaces [-h|--help] --all [--format <output-format>] [--count]
+       OR: list-workspaces [-h|--help] --focused [--format <output-format>] [--count]
     """
 let macos_native_fullscreen_help_generated = """
     USAGE: macos-native-fullscreen [-h|--help] [--window-id <window-id>]

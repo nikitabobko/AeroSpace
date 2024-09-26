@@ -86,8 +86,8 @@ aerospace -h;
     | list-windows [--format <output_format>|--count] --focused [--format <output_format>|--count]
 
     | list-workspaces [<list_workspaces1_flag>]... --monitor <monitor_id>... [<list_workspaces1_flag>]...
-    | list-workspaces [--format <output_format>] --all [--format <output_format>]
-    | list-workspaces [--format <output_format>] --focused [--format <output_format>]
+    | list-workspaces [--format <output_format>|--count] --all [--format <output_format>|--count]
+    | list-workspaces [--format <output_format>|--count] --focused [--format <output_format>|--count]
     ;
 
 <window_id> ::= {{{ aerospace list-windows --all --format '%{window-id}%{right-padding}%{tab}%{app-name}%{right-padding} | %{window-title}' }}};
@@ -97,7 +97,7 @@ aerospace -h;
 <number> ::= {{{ true }}};
 <monitor_pattern> ::= {{{ true }}};
 
-<list_workspaces1_flag> ::= --visible [no] | --empty [no] | --format <output_format>;
+<list_workspaces1_flag> ::= --visible [no] | --empty [no] | --format <output_format> | --format <output_format> | --count;
 
 <focus_flag> ::= --boundaries <boundary>|--boundaries-action <boundaries_action>|--ignore-floating;
 <boundaries_action> ::= stop|wrap-around-the-workspace|wrap-around-all-monitors;
