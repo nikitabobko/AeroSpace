@@ -13,5 +13,7 @@ final class ListWorkspacesTest: XCTestCase {
         assertNotNil(parseCommand("list-workspaces --monitor focused").cmdOrNil)
         assertNil(parseCommand("list-workspaces --focused --monitor 2").cmdOrNil)
         assertEquals(parseCommand("list-workspaces --all --format %{workspace} --count").errorOrNil, "ERROR: Conflicting options: --count, --format")
+        assertEquals(parseCommand("list-workspaces --empty").errorOrNil, "Mandatory option is not specified (--all|--focused|--monitor)")
+        assertEquals(parseCommand("list-workspaces --all --focused --monitor mouse").errorOrNil, "ERROR: Conflicting options: --all, --focused, --monitor")
     }
 }
