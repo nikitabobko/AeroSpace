@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>]
+aerospace list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>] [--count]
 
 // end::synopsis[]
 
@@ -32,7 +32,11 @@ Filter results to only print the focused monitor.
 Filter results to only print the monitor with the mouse.
 `[no]` inverts the condition
 
---format <output-format>:: Specify output format. See "Output Format" section for more details
+--format <output-format>:: Specify output format. See "Output Format" section for more details.
+Incompatible with `--count`
+
+--count:: Output only the number of workspaces.
+Incompatible with `--format`
 
 // =========================================================== Output Format
 include::util/conditional-output-format-header.adoc[]
