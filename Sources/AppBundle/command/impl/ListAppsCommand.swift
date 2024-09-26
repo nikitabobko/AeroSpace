@@ -10,9 +10,14 @@ struct ListAppsCommand: Command {
         if let hidden = args.macosHidden {
             result = result.filter { $0.asMacApp().nsApp.isHidden == hidden }
         }
-        return switch result.map({ AeroObj.app($0) }).format(args.format) {
-            case .success(let lines): io.out(lines)
-            case .failure(let msg): io.err(msg)
+
+        if args.outputOnlyCount {
+            return io.out("\(result.count)")
+        } else {
+            return switch result.map({ AeroObj.app($0) }).format(args.format) {
+                case .success(let lines): io.out(lines)
+                case .failure(let msg): io.err(msg)
+            }
         }
     }
 }

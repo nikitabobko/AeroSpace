@@ -8,8 +8,12 @@ public struct ListAppsCmdArgs: CmdArgs {
         options: [
             "--macos-native-hidden": boolFlag(\.macosHidden),
             "--format": ArgParser(\.format, parseFormat),
+            "--count": trueBoolFlag(\.outputOnlyCount),
         ],
-        arguments: []
+        arguments: [],
+        conflictingOptions: [
+            ["--format", "--count"],
+        ]
     )
 
     public var windowId: UInt32?
@@ -20,4 +24,5 @@ public struct ListAppsCmdArgs: CmdArgs {
         .value("app-bundle-id"), .value("right-padding"), .literal(" | "),
         .value("app-name"),
     ]
+    public var outputOnlyCount: Bool = false
 }

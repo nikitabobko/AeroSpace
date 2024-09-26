@@ -75,7 +75,7 @@ aerospace -h;
 
     | debug-windows
 
-    | list-apps [--macos-native-hidden [no] | --format <output_format>]...
+    | list-apps [--macos-native-hidden [no] | --format <output_format> | --count]...
 
     | list-exec-env-vars
 
