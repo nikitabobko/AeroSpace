@@ -11,7 +11,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 if test $rebuild == 1; then
-    ./build-release.sh --configuration Dev
+    ./build-release.sh
 fi
 
 brew list aerospace-dev > /dev/null 2>&1 && brew uninstall aerospace-dev

@@ -5,28 +5,24 @@ source ./script/setup.sh
 zip_uri='' # mandatory
 cask_name='' # mandatory
 build_version="0.0.0-SNAPSHOT"
+app_bundle_dir_name='AeroSpace.app'
 while [[ $# -gt 0 ]]; do
     case $1 in
-        --build-version) build_version="$2"; shift 2 ;;
-        --zip-uri) zip_uri="$2"; shift 2 ;;
-        --cask-name) cask_name="$2"; shift 2 ;;
-        *) echo "Unknown arg $1"; exit 1 ;;
+        --build-version) build_version="$2"; shift 2;;
+        --zip-uri) zip_uri="$2"; shift 2;;
+        --app-bundle-dir-name) app_bundle_dir_name="$2"; shift 2;;
+        --cask-name) cask_name="$2"; shift 2;;
+        *) echo "Unknown arg $1"; exit 1;;
     esac
 done
 
 if test -z "$zip_uri"; then echo "--zip-uri is mandatory" > /dev/stderr; exit 1; fi
 if test -z "$cask_name"; then echo "--cask-name is mandatory" > /dev/stderr; exit 1; fi
 
-case $cask_name in
-    aerospace)
-        aerospace_dot_app="AeroSpace.app"
-        conflicts_with_casks="  conflicts_with cask: 'aerospace-dev'"
-        ;;
-    aerospace-dev)
-        aerospace_dot_app="AeroSpace-Dev.app"
-        conflicts_with_casks="  conflicts_with cask: 'aerospace'"
-        ;;
-    *) echo "The only allowed cask names are 'aerospace' or 'aerospace-dev'" > /dev/stderr; exit 1;;
+case "$cask_name" in
+    aerospace) conflicts_with_casks="  conflicts_with cask: 'aerospace-dev'";;
+    aerospace-dev) conflicts_with_casks="  conflicts_with cask: 'aerospace'";;
+    *) echo "Unknown cask name: $cask_name. Allowed cask names: aerospace, aerospace-dev" > /dev/stderr; exit 1;;
 esac
 
 zip_file=''
@@ -75,10 +71,10 @@ $conflicts_with_casks
 
   postflight do
     system "xattr -d com.apple.quarantine #{staged_path}/$zip_root_dir/bin/aerospace"
-    system "xattr -d com.apple.quarantine #{appdir}/$aerospace_dot_app"
+    system "xattr -d com.apple.quarantine #{appdir}/$app_bundle_dir_name"
   end
 
-  app "$zip_root_dir/$aerospace_dot_app"
+  app "$zip_root_dir/$app_bundle_dir_name"
   binary "$zip_root_dir/bin/aerospace"
 
   binary "$zip_root_dir/shell-completion/zsh/_aerospace",
