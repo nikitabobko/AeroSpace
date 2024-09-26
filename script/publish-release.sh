@@ -30,7 +30,7 @@ if ! test -d "$site_git_repo_path"; then
 fi
 
 ./run-tests.sh
-./build-release.sh --build-version "$build_version" --configuration Release
+./build-release.sh --build-version "$build_version"
 
 git tag -a "v$build_version" -m "v$build_version" && git push git@github.com:nikitabobko/AeroSpace.git "v$build_version"
 link="https://github.com/nikitabobko/AeroSpace/releases/new?tag=v$build_version"

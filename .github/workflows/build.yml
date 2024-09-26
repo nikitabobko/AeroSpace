@@ -35,16 +35,10 @@ jobs:
         # "-" means "Sign to run locally". There is no aerospace-codesign-certificate in GH Actions
         # build-release.sh takes too much time to complete in macos-13.
         # Running build-release.sh only in macos-15, cuts the build time twice in GH Actions.
-      - name: ./build-release.sh --configuration Dev on macos-15
+      - name: ./build-release.sh on macos-15
         run: |
           sw_vers -productVersion
           if sw_vers -productVersion | grep -q "^15"; then
-            ./build-release.sh --configuration Dev --codesign-identity -
-            ./install-dev-from-sources.sh --dont-rebuild
-          fi
-      - name: ./build-release.sh --configuration Release on macos-15
-        run: |
-          sw_vers -productVersion
-          if sw_vers -productVersion | grep -q "^15"; then
-            ./build-release.sh --configuration Release --codesign-identity -
+            ./build-release.sh --codesign-identity -
+            ./install-from-sources.sh --dont-rebuild
           fi

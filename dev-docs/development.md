@@ -55,13 +55,9 @@ If you only plan to build the debug version of AeroSpace, you can run it from th
 
 **Release build**
 -   `build-release.sh` - Build release build to `.release` dir by using Xcode.
--   `install-dev-from-sources.sh` - Build `AeroSpace-Dev.app` release build from sources and install it as `aerospace-dev` brew cask.
-    Suffix "-Dev" is used to distinguish self-build **release** builds from **release** builds published to GitHub.
-    Builds published to GitHub are signed by Nikita Bobko's private certificate.
-    "-Dev" builds are signed by your local `aerospace-codesign-certificate`.
-    If we didn't separate those builds, macOS would re-request accessibility permission when users switch between "-Dev" and GitHub builds.
-    "-Dev" builds and GitHub builds differ only in the application name and App Bundle ID.
-    If you want to build the release without "-Dev" suffix, you can use `./build-release.sh --configuration Release`, but be aware of the mentioned problem.
+-   `install-from-sources.sh` - Build release build from sources and install it as `aerospace-dev` brew cask.
+    This script is "work in progress".
+    Use it on your own risk.
 
 ## IDE
 
