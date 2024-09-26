@@ -9,8 +9,12 @@ public struct ListMonitorsCmdArgs: CmdArgs {
             "--focused": boolFlag(\.focused),
             "--mouse": boolFlag(\.mouse),
             "--format": ArgParser(\.format, parseFormat),
+            "--count": trueBoolFlag(\.outputOnlyCount),
         ],
-        arguments: []
+        arguments: [],
+        conflictingOptions: [
+            ["--format", "--count"],
+        ]
     )
 
     public var windowId: UInt32?
@@ -21,4 +25,5 @@ public struct ListMonitorsCmdArgs: CmdArgs {
         .value("monitor-id"), .value("right-padding"), .literal(" | "),
         .value("monitor-name"),
     ]
+    public var outputOnlyCount: Bool = false
 }

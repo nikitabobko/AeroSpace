@@ -15,9 +15,14 @@ struct ListMonitorsCommand: Command {
             let mouseWorkspace = mouseLocation.monitorApproximation.activeWorkspace
             result = result.filter { (monitor) in (monitor.activeWorkspace == mouseWorkspace) == mouse }
         }
-        return switch result.map({ AeroObj.monitor($0) }).format(args.format) {
-            case .success(let lines): io.out(lines)
-            case .failure(let msg): io.err(msg)
+
+        if args.outputOnlyCount {
+            return io.out("\(result.count)")
+        } else {
+            return switch result.map({ AeroObj.monitor($0) }).format(args.format) {
+                case .success(let lines): io.out(lines)
+                case .failure(let msg): io.err(msg)
+            }
         }
     }
 }

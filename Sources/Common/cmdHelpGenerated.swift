@@ -63,7 +63,7 @@ let list_exec_env_vars_help_generated = """
     USAGE: list-exec-env-vars [-h|--help]
     """
 let list_monitors_help_generated = """
-    USAGE: list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>]
+    USAGE: list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>] [--count]
     """
 let list_windows_help_generated = """
     USAGE: list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
