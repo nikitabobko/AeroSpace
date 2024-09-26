@@ -19,9 +19,14 @@ struct ListWorkspacesCommand: Command {
         if let empty = args.empty {
             result = result.filter { $0.isEffectivelyEmpty == empty }
         }
-        return switch result.map({ AeroObj.workspace($0) }).format(args.format) {
-            case .success(let lines): io.out(lines)
-            case .failure(let msg): io.err(msg)
+
+        if args.outputOnlyCount {
+            return io.out("\(result.count)")
+        } else {
+            return switch result.map({ AeroObj.workspace($0) }).format(args.format) {
+                case .success(let lines): io.out(lines)
+                case .failure(let msg): io.err(msg)
+            }
         }
     }
 }

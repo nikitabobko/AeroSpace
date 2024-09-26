@@ -17,8 +17,12 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
             "--empty": boolFlag(\.empty),
             "--monitor": ArgParser(\.onMonitors, parseMonitorIds),
             "--format": ArgParser(\.format, parseFormat),
+            "--count": trueBoolFlag(\.outputOnlyCount),
         ],
-        arguments: []
+        arguments: [],
+        conflictingOptions: [
+            ["--format", "--count"],
+        ]
     )
 
     fileprivate var all: Bool = false // Alias
@@ -30,6 +34,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     public var visible: Bool?
     public var empty: Bool?
     public var format: [StringInterToken] = [.value("workspace")]
+    public var outputOnlyCount: Bool = false
 }
 
 public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {
@@ -46,16 +51,16 @@ public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorksp
             }
         }
         .filter("--all conflicts with all other options") { raw in
-            !raw.all || raw == ListWorkspacesCmdArgs(rawArgs: .init(args), all: true)
+            !raw.all || raw == ListWorkspacesCmdArgs(rawArgs: .init(args), all: true, outputOnlyCount: raw.outputOnlyCount)
         }
         .map { raw in
-            raw.all ? ListWorkspacesCmdArgs(rawArgs: .init(args), onMonitors: [.all]) : raw
+            raw.all ? ListWorkspacesCmdArgs(rawArgs: .init(args), onMonitors: [.all], outputOnlyCount: raw.outputOnlyCount) : raw
         }
         .filter("--focused conflicts with all other options") { raw in
-            !raw.focused || raw == ListWorkspacesCmdArgs(rawArgs: .init(args), focused: true)
+            !raw.focused || raw == ListWorkspacesCmdArgs(rawArgs: .init(args), focused: true, outputOnlyCount: raw.outputOnlyCount)
         }
         .map { raw in
-            raw.focused ? ListWorkspacesCmdArgs(rawArgs: .init(args), onMonitors: [.focused], visible: true) : raw
+            raw.focused ? ListWorkspacesCmdArgs(rawArgs: .init(args), onMonitors: [.focused], visible: true, outputOnlyCount: raw.outputOnlyCount) : raw
         }
 }
 
