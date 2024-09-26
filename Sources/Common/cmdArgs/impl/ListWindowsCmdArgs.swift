@@ -22,6 +22,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
         ],
         arguments: [],
         conflictingOptions: [
+            ["--all", "--focused", "--workspace", "--monitor"],
             ["--format", "--count"],
         ]
     )
@@ -46,20 +47,8 @@ public struct ListWindowsCmdArgs: CmdArgs {
 public func parseRawListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCmdArgs> {
     let args = args.map { $0 == "--app-id" ? "--app-bundle-id" : $0 } // Compatibility
     return parseSpecificCmdArgs(ListWindowsCmdArgs(rawArgs: .init(args)), args)
-        .flatMap { raw in
-            var conflicting: OrderedSet<String> = []
-            if (raw.all) { conflicting.insert("--all", at: 0) }
-            if (raw.focused) { conflicting.insert("--focused", at: 0) }
-            if (!raw.workspaces.isEmpty) {
-                conflicting.insert("--workspace", at: 0)
-            } else if (!raw.monitors.isEmpty) {
-                conflicting.insert("--monitor", at: 0)
-            }
-            return switch conflicting.count {
-                case 1: .cmd(raw)
-                case 0: .failure("Mandatory option is not specified (--focused|--all|--monitor|--workspace)")
-                default: .failure("Conflicting options: \(conflicting.joined(separator: ", "))")
-            }
+        .filter("Mandatory option is not specified (--focused|--all|--monitor|--workspace)") { raw in
+            raw.focused || raw.all || !raw.monitors.isEmpty || !raw.workspaces.isEmpty
         }
         .filter("--all conflicts with \"filtering\" flags. Please use '--monitor all'") { raw in
             !raw.all || raw == ListWindowsCmdArgs(rawArgs: .init([]), all: true, format: raw.format, outputOnlyCount: raw.outputOnlyCount)

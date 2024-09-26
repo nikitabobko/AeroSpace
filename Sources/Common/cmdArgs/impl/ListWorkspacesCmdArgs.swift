@@ -21,6 +21,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
         ],
         arguments: [],
         conflictingOptions: [
+            ["--all", "--focused", "--monitor"],
             ["--format", "--count"],
         ]
     )
@@ -39,16 +40,8 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
 
 public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {
     parseSpecificCmdArgs(ListWorkspacesCmdArgs(rawArgs: .init(args)), args)
-        .flatMap { raw in
-            var conflicting: OrderedSet<String> = []
-            if raw.all { conflicting.append("--all") }
-            if raw.focused { conflicting.append("--focused") }
-            if !raw.onMonitors.isEmpty { conflicting.append("--monitor") }
-            return switch conflicting.count {
-                case 1: .cmd(raw)
-                case 0: .failure("Mandatory option is not specified (--all|--focused|--monitor)")
-                default: .failure("Conflicting options: \(conflicting.joined(separator: ", "))")
-            }
+        .filter("Mandatory option is not specified (--all|--focused|--monitor)") { raw in
+            raw.all || raw.focused || !raw.onMonitors.isEmpty
         }
         .filter("--all conflicts with all other options") { raw in
             !raw.all || raw == ListWorkspacesCmdArgs(rawArgs: .init(args), all: true, outputOnlyCount: raw.outputOnlyCount)
