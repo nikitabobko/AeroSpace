@@ -47,13 +47,13 @@ public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorksp
             !raw.all || raw == ListWorkspacesCmdArgs(rawArgs: .init(args), all: true, outputOnlyCount: raw.outputOnlyCount)
         }
         .map { raw in
-            raw.all ? ListWorkspacesCmdArgs(rawArgs: .init(args), onMonitors: [.all], outputOnlyCount: raw.outputOnlyCount) : raw
+            raw.all ? raw.copy(\.onMonitors, [.all]).copy(\.all, false) : raw
         }
         .filter("--focused conflicts with all other options") { raw in
             !raw.focused || raw == ListWorkspacesCmdArgs(rawArgs: .init(args), focused: true, outputOnlyCount: raw.outputOnlyCount)
         }
         .map { raw in
-            raw.focused ? ListWorkspacesCmdArgs(rawArgs: .init(args), onMonitors: [.focused], visible: true, outputOnlyCount: raw.outputOnlyCount) : raw
+            raw.focused ? raw.copy(\.onMonitors, [.focused]).copy(\.focused, false) : raw
         }
 }
 

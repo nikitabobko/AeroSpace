@@ -58,8 +58,7 @@ public func parseRawListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindow
             !raw.focused || raw == ListWindowsCmdArgs(rawArgs: .init(args), focused: true, format: raw.format, outputOnlyCount: raw.outputOnlyCount)
         }
         .map { raw in
-            // Normalize alias
-            raw.all ? ListWindowsCmdArgs(rawArgs: .init(args), monitors: [.all], format: raw.format, outputOnlyCount: raw.outputOnlyCount) : raw
+            raw.all ? raw.copy(\.monitors, [.all]).copy(\.all, false) : raw // Normalize alias
         }
 }
 
