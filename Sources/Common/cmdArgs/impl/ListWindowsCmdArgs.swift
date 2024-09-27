@@ -10,13 +10,14 @@ public struct ListWindowsCmdArgs: CmdArgs {
         allowInConfig: false,
         help: list_windows_help_generated,
         options: [
-            "--focused": trueBoolFlag(\.focused),
             "--all": trueBoolFlag(\.all),
 
-            "--monitor": ArgParser(\.monitors, parseMonitorIds),
-            "--workspace": ArgParser(\.workspaces, parseWorkspaces),
-            "--pid": singleValueOption(\.pidFilter, "<pid>", Int32.init),
-            "--app-bundle-id": singleValueOption(\.appIdFilter, "<app-bundle-id>") { $0 },
+            "--focused": trueBoolFlag(\.filteringOptions.focused),
+            "--monitor": ArgParser(\.filteringOptions.monitors, parseMonitorIds),
+            "--workspace": ArgParser(\.filteringOptions.workspaces, parseWorkspaces),
+            "--pid": singleValueOption(\.filteringOptions.pidFilter, "<pid>", Int32.init),
+            "--app-bundle-id": singleValueOption(\.filteringOptions.appIdFilter, "<app-bundle-id>") { $0 },
+
             "--format": ArgParser(\.format, parseFormat),
             "--count": trueBoolFlag(\.outputOnlyCount),
         ],
@@ -30,35 +31,40 @@ public struct ListWindowsCmdArgs: CmdArgs {
 
     fileprivate var all: Bool = false // ALIAS
 
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
-    public var focused: Bool = false
-    public var monitors: [MonitorId] = []
-    public var workspaces: [WorkspaceFilter] = []
-    public var pidFilter: Int32?
-    public var appIdFilter: String?
+    public var filteringOptions = FilteringOptions()
     public var format: [StringInterToken] = [
         .value("window-id"), .value("right-padding"), .literal(" | "),
         .value("app-name"), .value("right-padding"), .literal(" | "),
         .value("window-title"),
     ]
     public var outputOnlyCount: Bool = false
+
+    public var windowId: UInt32?               // unused
+    public var workspaceName: WorkspaceName?   // unused
+
+    public struct FilteringOptions: Copyable, Equatable {
+        public var monitors: [MonitorId] = []
+        public var focused: Bool = false
+        public var workspaces: [WorkspaceFilter] = []
+        public var pidFilter: Int32?
+        public var appIdFilter: String?
+    }
 }
 
 public func parseRawListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCmdArgs> {
     let args = args.map { $0 == "--app-id" ? "--app-bundle-id" : $0 } // Compatibility
     return parseSpecificCmdArgs(ListWindowsCmdArgs(rawArgs: .init(args)), args)
         .filter("Mandatory option is not specified (--focused|--all|--monitor|--workspace)") { raw in
-            raw.focused || raw.all || !raw.monitors.isEmpty || !raw.workspaces.isEmpty
+            raw.filteringOptions.focused || raw.all || !raw.filteringOptions.monitors.isEmpty || !raw.filteringOptions.workspaces.isEmpty
         }
-        .filter("--all conflicts with \"filtering\" flags. Please use '--monitor all'") { raw in
-            !raw.all || raw == ListWindowsCmdArgs(rawArgs: .init([]), all: true, format: raw.format, outputOnlyCount: raw.outputOnlyCount)
+        .filter("--all conflicts with \"filtering\" flags. Please use '--monitor all' instead of '--all' alias") { raw in
+            raw.all.implies(raw.filteringOptions == ListWindowsCmdArgs.FilteringOptions())
         }
-        .filter("--focused conflicts with \"filtering\" flags") { raw in
-            !raw.focused || raw == ListWindowsCmdArgs(rawArgs: .init(args), focused: true, format: raw.format, outputOnlyCount: raw.outputOnlyCount)
+        .filter("--focused conflicts with other \"filtering\" flags") { raw in
+            raw.filteringOptions.focused.implies(raw.filteringOptions.copy(\.focused, false) == ListWindowsCmdArgs.FilteringOptions())
         }
         .map { raw in
-            raw.all ? raw.copy(\.monitors, [.all]).copy(\.all, false) : raw // Normalize alias
+            raw.all ? raw.copy(\.filteringOptions.monitors, [.all]).copy(\.all, false) : raw // Normalize alias
         }
 }
 

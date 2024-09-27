@@ -9,32 +9,34 @@ struct ListWindowsCommand: Command {
         guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
         var windows: [Window] = []
 
-        if args.focused {
+        if args.filteringOptions.focused {
             if let window = focus.windowOrNil {
                 windows = [window]
             } else {
                 return io.err(noWindowIsFocused)
             }
         } else {
-            var workspaces: Set<Workspace> = args.workspaces.isEmpty ? Workspace.all.toSet() : args.workspaces
-                .flatMap { filter in
-                    switch filter {
-                        case .focused: [focus.workspace]
-                        case .visible: Workspace.all.filter(\.isVisible)
-                        case .name(let name): [Workspace.get(byName: name.raw)]
+            var workspaces: Set<Workspace> = args.filteringOptions.workspaces.isEmpty
+                ? Workspace.all.toSet()
+                : args.filteringOptions.workspaces
+                    .flatMap { filter in
+                        switch filter {
+                            case .focused: [focus.workspace]
+                            case .visible: Workspace.all.filter(\.isVisible)
+                            case .name(let name): [Workspace.get(byName: name.raw)]
+                        }
                     }
-                }
-                .toSet()
-            if !args.monitors.isEmpty {
-                let monitors: Set<CGPoint> = args.monitors.resolveMonitors(io, focus)
+                    .toSet()
+            if !args.filteringOptions.monitors.isEmpty {
+                let monitors: Set<CGPoint> = args.filteringOptions.monitors.resolveMonitors(io, focus)
                 if monitors.isEmpty { return false }
                 workspaces = workspaces.filter { monitors.contains($0.workspaceMonitor.rect.topLeftCorner) }
             }
             windows = workspaces.flatMap(\.allLeafWindowsRecursive)
-            if let pid = args.pidFilter {
+            if let pid = args.filteringOptions.pidFilter {
                 windows = windows.filter { $0.app.pid == pid }
             }
-            if let appId = args.appIdFilter {
+            if let appId = args.filteringOptions.appIdFilter {
                 windows = windows.filter { $0.app.id == appId }
             }
         }

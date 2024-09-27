@@ -13,9 +13,10 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
             "--focused": trueBoolFlag(\.focused),
             "--all": trueBoolFlag(\.all),
 
-            "--visible": boolFlag(\.visible),
-            "--empty": boolFlag(\.empty),
-            "--monitor": ArgParser(\.onMonitors, parseMonitorIds),
+            "--visible": boolFlag(\.filteringOptions.visible),
+            "--empty": boolFlag(\.filteringOptions.empty),
+            "--monitor": ArgParser(\.filteringOptions.onMonitors, parseMonitorIds),
+
             "--format": ArgParser(\.format, parseFormat),
             "--count": trueBoolFlag(\.outputOnlyCount),
         ],
@@ -29,31 +30,35 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     fileprivate var all: Bool = false // Alias
     fileprivate var focused: Bool = false // Alias
 
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
-    public var onMonitors: [MonitorId] = []
-    public var visible: Bool?
-    public var empty: Bool?
+    public var windowId: UInt32?              // unused
+    public var workspaceName: WorkspaceName?  // unused
+    public var filteringOptions = FilteringOptions()
     public var format: [StringInterToken] = [.value("workspace")]
     public var outputOnlyCount: Bool = false
+
+    public struct FilteringOptions: Copyable, Equatable {
+        public var onMonitors: [MonitorId] = []
+        public var visible: Bool?
+        public var empty: Bool?
+    }
 }
 
 public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {
     parseSpecificCmdArgs(ListWorkspacesCmdArgs(rawArgs: .init(args)), args)
         .filter("Mandatory option is not specified (--all|--focused|--monitor)") { raw in
-            raw.all || raw.focused || !raw.onMonitors.isEmpty
+            raw.all || raw.focused || !raw.filteringOptions.onMonitors.isEmpty
         }
-        .filter("--all conflicts with all other options") { raw in
-            !raw.all || raw == ListWorkspacesCmdArgs(rawArgs: .init(args), all: true, outputOnlyCount: raw.outputOnlyCount)
+        .filter("--all conflicts with any other \"filtering\" options") { raw in
+            raw.all.implies(raw.filteringOptions == ListWorkspacesCmdArgs.FilteringOptions())
         }
-        .map { raw in
-            raw.all ? raw.copy(\.onMonitors, [.all]).copy(\.all, false) : raw
-        }
-        .filter("--focused conflicts with all other options") { raw in
-            !raw.focused || raw == ListWorkspacesCmdArgs(rawArgs: .init(args), focused: true, outputOnlyCount: raw.outputOnlyCount)
+        .filter("--focused conflicts with all other \"filtering\" options") { raw in
+            raw.focused.implies(raw.filteringOptions == ListWorkspacesCmdArgs.FilteringOptions())
         }
         .map { raw in
-            raw.focused ? raw.copy(\.onMonitors, [.focused]).copy(\.focused, false) : raw
+            raw.all ? raw.copy(\.filteringOptions.onMonitors, [.all]).copy(\.all, false) : raw
+        }
+        .map { raw in
+            raw.focused ? raw.copy(\.filteringOptions.onMonitors, [.focused]).copy(\.focused, false) : raw
         }
 }
 

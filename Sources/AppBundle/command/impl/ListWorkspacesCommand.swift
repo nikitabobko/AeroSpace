@@ -8,15 +8,15 @@ struct ListWorkspacesCommand: Command {
         check(Thread.current.isMainThread)
         guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
         var result: [Workspace] = Workspace.all
-        if let visible = args.visible {
+        if let visible = args.filteringOptions.visible {
             result = result.filter { $0.isVisible == visible }
         }
-        if !args.onMonitors.isEmpty {
-            let monitors: Set<CGPoint> = args.onMonitors.resolveMonitors(io, focus)
+        if !args.filteringOptions.onMonitors.isEmpty {
+            let monitors: Set<CGPoint> = args.filteringOptions.onMonitors.resolveMonitors(io, focus)
             if monitors.isEmpty { return false }
             result = result.filter { monitors.contains($0.workspaceMonitor.rect.topLeftCorner) }
         }
-        if let empty = args.empty {
+        if let empty = args.filteringOptions.empty {
             result = result.filter { $0.isEffectivelyEmpty == empty }
         }
 
