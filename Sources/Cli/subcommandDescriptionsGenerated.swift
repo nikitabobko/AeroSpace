@@ -9,7 +9,7 @@ let subcommandDescriptions = [
     ["  flatten-workspace-tree", "Flatten the tree of the focused workspace"],
     ["  focus-back-and-forth", "Switch between the current and previously focused elements back and forth"],
     ["  focus-monitor", "Focus monitor by relative direction, by order, or by pattern"],
-    ["  focus", "Set focus to the nearest window in in the given direction."],
+    ["  focus", "Set focus to the nearest window in the given direction."],
     ["  fullscreen", "Toggle the fullscreen mode for the focused window"],
     ["  join-with", "Put the focused window and the nearest node in the specified direction under a common parent container"],
     ["  layout", "Change layout of the focused window to the given layout"],
