@@ -15,7 +15,7 @@ aerospace -h;
     | enable [--fail-if-noop] on [--fail-if-noop]
     | enable [--fail-if-noop] off [--fail-if-noop]
 
-    | flatten-workspace-tree
+    | flatten-workspace-tree [--workspace <workspace>]
 
     | focus [<focus_flag>]... (left|down|up|right) [<focus_flag>]...
     | focus --window-id <window_id>
