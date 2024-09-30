@@ -6,24 +6,24 @@ struct FocusCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         // todo bug: floating windows break mru
-        let floatingWindows = args.floatingAsTiling ? makeFloatingWindowsSeenAsTiling(workspace: focus.workspace) : []
+        let floatingWindows = args.floatingAsTiling ? makeFloatingWindowsSeenAsTiling(workspace: target.workspace) : []
         defer {
             if args.floatingAsTiling {
-                restoreFloatingWindows(floatingWindows: floatingWindows, workspace: focus.workspace)
+                restoreFloatingWindows(floatingWindows: floatingWindows, workspace: target.workspace)
             }
         }
 
         switch args.target {
             case .direction(let direction):
-                let window = focus.windowOrNil
+                let window = target.windowOrNil
                 if let (parent, ownIndex) = window?.closestParent(hasChildrenInDirection: direction, withLayout: nil) {
                     guard let windowToFocus = parent.children[ownIndex + direction.focusOffset]
                         .findFocusTargetRecursive(snappedTo: direction.opposite) else { return false }
                     return windowToFocus.focusWindow()
                 } else {
-                    return hitWorkspaceBoundaries(focus, io, args, direction)
+                    return hitWorkspaceBoundaries(target, io, args, direction)
                 }
             case .windowId(let windowId):
                 if let windowToFocus = Window.get(byId: windowId) {
@@ -32,7 +32,7 @@ struct FocusCommand: Command {
                     return io.err("Can't find window with ID \(windowId)")
                 }
             case .dfsIndex(let dfsIndex):
-                if let windowToFocus = focus.workspace.rootTilingContainer.allLeafWindowsRecursive.getOrNil(atIndex: Int(dfsIndex)) {
+                if let windowToFocus = target.workspace.rootTilingContainer.allLeafWindowsRecursive.getOrNil(atIndex: Int(dfsIndex)) {
                     return windowToFocus.focusWindow()
                 } else {
                     return io.err("Can't find window with DFS index \(dfsIndex)")
@@ -42,7 +42,7 @@ struct FocusCommand: Command {
 }
 
 private func hitWorkspaceBoundaries(
-    _ focus: LiveFocus,
+    _ target: LiveFocus,
     _ io: CmdIo,
     _ args: FocusCmdArgs,
     _ direction: CardinalDirection
@@ -51,11 +51,11 @@ private func hitWorkspaceBoundaries(
         case .workspace:
             return switch args.boundariesAction {
                 case .stop: true
-                case .wrapAroundTheWorkspace: wrapAroundTheWorkspace(focus, io, direction)
+                case .wrapAroundTheWorkspace: wrapAroundTheWorkspace(target, io, direction)
                 case .wrapAroundAllMonitors: errorT("Must be discarded by args parser")
             }
         case .allMonitorsUnionFrame:
-            let currentMonitor = focus.workspace.workspaceMonitor
+            let currentMonitor = target.workspace.workspaceMonitor
             guard let (monitors, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
                 return io.err("Can't find monitor in direction \(direction)")
             }
@@ -64,13 +64,13 @@ private func hitWorkspaceBoundaries(
                 return targetMonitor.activeWorkspace.focusWorkspace()
             } else {
                 guard let wrapped = monitors.get(wrappingIndex: index) else { return false }
-                return hitAllMonitorsOuterFrameBoundaries(focus, io, args, direction, wrapped)
+                return hitAllMonitorsOuterFrameBoundaries(target, io, args, direction, wrapped)
             }
     }
 }
 
 private func hitAllMonitorsOuterFrameBoundaries(
-    _ focus: LiveFocus,
+    _ target: LiveFocus,
     _ io: CmdIo,
     _ args: FocusCmdArgs,
     _ direction: CardinalDirection,
@@ -80,15 +80,15 @@ private func hitAllMonitorsOuterFrameBoundaries(
         case .stop:
             return true
         case .wrapAroundTheWorkspace:
-            return wrapAroundTheWorkspace(focus, io, direction)
+            return wrapAroundTheWorkspace(target, io, direction)
         case .wrapAroundAllMonitors:
             wrappedMonitor.activeWorkspace.findFocusTargetRecursive(snappedTo: direction.opposite)?.markAsMostRecentChild()
             return wrappedMonitor.activeWorkspace.focusWorkspace()
     }
 }
 
-private func wrapAroundTheWorkspace(_ focus: LiveFocus, _ io: CmdIo, _ direction: CardinalDirection) -> Bool {
-    guard let windowToFocus = focus.workspace.findFocusTargetRecursive(snappedTo: direction.opposite) else {
+private func wrapAroundTheWorkspace(_ target: LiveFocus, _ io: CmdIo, _ direction: CardinalDirection) -> Bool {
+    guard let windowToFocus = target.workspace.findFocusTargetRecursive(snappedTo: direction.opposite) else {
         return io.err(noWindowIsFocused)
     }
     return windowToFocus.focusWindow()

@@ -6,11 +6,11 @@ struct ListWindowsCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         var windows: [Window] = []
 
         if args.filteringOptions.focused {
-            if let window = focus.windowOrNil {
+            if let window = target.windowOrNil {
                 windows = [window]
             } else {
                 return io.err(noWindowIsFocused)
@@ -21,14 +21,14 @@ struct ListWindowsCommand: Command {
                 : args.filteringOptions.workspaces
                     .flatMap { filter in
                         switch filter {
-                            case .focused: [focus.workspace]
+                            case .focused: [target.workspace]
                             case .visible: Workspace.all.filter(\.isVisible)
                             case .name(let name): [Workspace.get(byName: name.raw)]
                         }
                     }
                     .toSet()
             if !args.filteringOptions.monitors.isEmpty {
-                let monitors: Set<CGPoint> = args.filteringOptions.monitors.resolveMonitors(io, focus)
+                let monitors: Set<CGPoint> = args.filteringOptions.monitors.resolveMonitors(io, target)
                 if monitors.isEmpty { return false }
                 workspaces = workspaces.filter { monitors.contains($0.workspaceMonitor.rect.topLeftCorner) }
             }

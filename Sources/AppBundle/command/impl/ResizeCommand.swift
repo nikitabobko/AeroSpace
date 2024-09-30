@@ -6,9 +6,9 @@ struct ResizeCommand: Command { // todo cover with tests
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
 
-        let candidates = focus.windowOrNil?.parentsWithSelf
+        let candidates = target.windowOrNil?.parentsWithSelf
             .filter { ($0.parent as? TilingContainer)?.layout == .tiles }
             ?? []
 

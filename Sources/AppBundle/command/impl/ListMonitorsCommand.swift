@@ -6,10 +6,10 @@ struct ListMonitorsCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         var result = sortedMonitors
         if let focused = args.focused {
-            result = result.filter { (monitor) in (monitor.activeWorkspace == focus.workspace) == focused }
+            result = result.filter { (monitor) in (monitor.activeWorkspace == target.workspace) == focused }
         }
         if let mouse = args.mouse {
             let mouseWorkspace = mouseLocation.monitorApproximation.activeWorkspace

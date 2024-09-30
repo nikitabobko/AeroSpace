@@ -4,8 +4,8 @@ struct MoveNodeToWorkspaceCommand: Command {
     let args: MoveNodeToWorkspaceCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
-        guard let window = focus.windowOrNil else { return io.err(noWindowIsFocused) }
+        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+        guard let window = target.windowOrNil else { return io.err(noWindowIsFocused) }
         let subjectWs = window.workspace
         let targetWorkspace: Workspace
         switch args.target.val {
@@ -16,7 +16,7 @@ struct MoveNodeToWorkspaceCommand: Command {
                     isNext: isNext,
                     wrapAround: args.wrapAround,
                     stdin: io.readStdin(),
-                    focus: focus
+                    target: target
                 )
                 guard let ws else { return io.err("Can't resolve next or prev workspace") }
                 targetWorkspace = ws

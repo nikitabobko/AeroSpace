@@ -6,8 +6,8 @@ struct FocusMonitorCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
-        return switch args.target.val.resolve(focus.workspace.workspaceMonitor, wrapAround: args.wrapAround) {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+        return switch args.target.val.resolve(target.workspace.workspaceMonitor, wrapAround: args.wrapAround) {
             case .success(let targetMonitor): targetMonitor.activeWorkspace.focusWorkspace()
             case .failure(let msg): io.err(msg)
         }

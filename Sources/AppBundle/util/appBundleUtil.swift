@@ -2,6 +2,7 @@ import AppKit
 import Common
 import Foundation
 
+// todo it's under the question if "focused" should be part of the name
 let AEROSPACE_FOCUSED_WINDOW_ID = "AEROSPACE_FOCUSED_WINDOW_ID" // env var
 let AEROSPACE_FOCUSED_WORKSPACE = "AEROSPACE_FOCUSED_WORKSPACE" // env var
 

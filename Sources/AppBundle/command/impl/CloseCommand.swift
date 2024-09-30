@@ -6,8 +6,8 @@ struct CloseCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
-        guard let window = focus.windowOrNil else {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+        guard let window = target.windowOrNil else {
             return io.err("Empty workspace")
         }
         // Access ax directly. Not cool :(

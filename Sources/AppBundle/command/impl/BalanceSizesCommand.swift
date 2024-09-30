@@ -7,8 +7,8 @@ struct BalanceSizesCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
-        balance(focus.workspace.rootTilingContainer)
+        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+        balance(target.workspace.rootTilingContainer)
         return true
     }
 }

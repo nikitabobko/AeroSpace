@@ -7,10 +7,10 @@ struct MacosNativeMinimizeCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        // resolveFocusOrReportError on already minimized windows will alwyas fail
+        // resolveTargetOrReportError on already minimized windows will alwyas fail
         // It would be easier if minimized windows were part of the workspace in tree hierarchy
-        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
-        guard let window = focus.windowOrNil else {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+        guard let window = target.windowOrNil else {
             return io.err(noWindowIsFocused)
         }
         let axWindow = window.asMacWindow().axWindow

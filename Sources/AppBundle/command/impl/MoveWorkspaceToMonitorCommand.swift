@@ -6,8 +6,8 @@ struct MoveWorkspaceToMonitorCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
-        let focusedWorkspace = focus.workspace
+        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+        let focusedWorkspace = target.workspace
         let prevMonitor = focusedWorkspace.workspaceMonitor
         let sortedMonitors = sortedMonitors
         guard let index = sortedMonitors.firstIndex(where: { $0.rect.topLeftCorner == prevMonitor.rect.topLeftCorner }) else { return false }

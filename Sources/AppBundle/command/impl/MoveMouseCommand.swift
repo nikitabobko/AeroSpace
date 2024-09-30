@@ -7,27 +7,27 @@ struct MoveMouseCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         let mouse = mouseLocation
-        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
+        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         switch args.mouseTarget.val {
             case .windowLazyCenter:
-                guard let rect = windowSubjectRectOrReportError(focus, io) else { return false }
+                guard let rect = windowSubjectRectOrReportError(target, io) else { return false }
                 if rect.contains(mouse) {
                     io.err("The mouse already belongs to the window. Tip: use --fail-if-noop to exit with non-zero code")
                     return !args.failIfNoop
                 }
                 return moveMouse(io, rect.center)
             case .windowForceCenter:
-                guard let rect = windowSubjectRectOrReportError(focus, io) else { return false }
+                guard let rect = windowSubjectRectOrReportError(target, io) else { return false }
                 return moveMouse(io, rect.center)
             case .monitorLazyCenter:
-                let rect = focus.workspace.workspaceMonitor.rect
+                let rect = target.workspace.workspaceMonitor.rect
                 if rect.contains(mouse) {
                     io.err("The mouse already belongs to the monitor. Tip: use --fail-if-noop to exit with non-zero code")
                     return !args.failIfNoop
                 }
                 return moveMouse(io, rect.center)
             case .monitorForceCenter:
-                return moveMouse(io, focus.workspace.workspaceMonitor.rect.center)
+                return moveMouse(io, target.workspace.workspaceMonitor.rect.center)
         }
     }
 }
@@ -47,10 +47,10 @@ private func moveMouse(_ io: CmdIo, _ point: CGPoint) -> Bool {
     }
 }
 
-private func windowSubjectRectOrReportError(_ focus: LiveFocus, _ io: CmdIo) -> Rect? {
+private func windowSubjectRectOrReportError(_ target: LiveFocus, _ io: CmdIo) -> Rect? {
     // todo bug it's bad that we operate on the "ax physical" state directly. command seq won't work correctly
     //      focus <direction> command has the similar problem
-    if let window: Window = focus.windowOrNil {
+    if let window: Window = target.windowOrNil {
         if let rect = window.lastAppliedLayoutPhysicalRect ?? window.getRect() {
             return rect
         } else {

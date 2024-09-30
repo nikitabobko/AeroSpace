@@ -48,8 +48,8 @@ struct DebugWindowsCommand: Command {
                 )
                 debugWindowsLog = [:]
                 // Make sure that the Terminal window that started the recording is recorded first
-                guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
-                if let window = focus.windowOrNil {
+                guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+                if let window = target.windowOrNil {
                     debugWindowsIfRecording(window)
                 }
                 return true

@@ -5,7 +5,7 @@ extension CmdArgs {
         if let workspaceName { Workspace.get(byName: workspaceName.raw) } else { nil }
     }
 
-    func resolveFocusOrReportError(_ env: CmdEnv, _ io: CmdIo) -> LiveFocus? {
+    func resolveTargetOrReportError(_ env: CmdEnv, _ io: CmdIo) -> LiveFocus? {
         // Flags
         if let windowId {
             if let wi = Window.get(byId: windowId) {

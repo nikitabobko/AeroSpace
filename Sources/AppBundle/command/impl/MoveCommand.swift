@@ -7,8 +7,8 @@ struct MoveCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         let direction = args.direction.val
-        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
-        guard let currentWindow = focus.windowOrNil else {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+        guard let currentWindow = target.windowOrNil else {
             return io.err(noWindowIsFocused)
         }
         switch currentWindow.parent.cases {

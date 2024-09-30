@@ -7,8 +7,8 @@ struct WorkspaceCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool { // todo refactor
         check(Thread.current.isMainThread)
-        guard let focus = args.resolveFocusOrReportError(env, io) else { return false }
-        let focusedWs = focus.workspace
+        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+        let focusedWs = target.workspace
         let workspaceName: String
         switch args.target.val {
             case .relative(let isNext):
@@ -17,7 +17,7 @@ struct WorkspaceCommand: Command {
                     isNext: isNext,
                     wrapAround: args.wrapAround,
                     stdin: io.readStdin(),
-                    focus: focus
+                    target: target
                 )
                 guard let workspace else { return false }
                 workspaceName = workspace.name
@@ -36,7 +36,7 @@ struct WorkspaceCommand: Command {
     }
 }
 
-func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String, focus: LiveFocus) -> Workspace? {
+func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String, target: LiveFocus) -> Workspace? {
     let stdinWorkspaces: [String] = stdin.split(separator: "\n").map { String($0).trim() }.filter { !$0.isEmpty }
     let currentMonitor = current.workspaceMonitor
     let workspaces: [Workspace] = stdinWorkspaces.isEmpty
@@ -45,7 +45,7 @@ func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, st
             .union([current])
             .sorted()
         : stdinWorkspaces.map { Workspace.get(byName: $0) }
-    let index = workspaces.firstIndex(where: { $0 == focus.workspace }) ?? 0
+    let index = workspaces.firstIndex(where: { $0 == target.workspace }) ?? 0
     let workspace: Workspace? = if wrapAround {
         workspaces.get(wrappingIndex: isNext ? index + 1 : index - 1)
     } else {
