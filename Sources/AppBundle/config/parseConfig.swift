@@ -83,6 +83,9 @@ struct Parser<S: Copyable, T>: ParserProtocol {
 private let keyMappingConfigRootKey = "key-mapping"
 private let modeConfigRootKey = "mode"
 
+// For every new config option you add, think:
+// 1. Does it make sense to have different value
+// 2. Prefer commands and commands flags over toml options if possible
 private let configParser: [String: any ParserProtocol<Config>] = [
     "after-login-command": Parser(\.afterLoginCommand) { parseCommandOrCommands($0).toParsedToml($1) },
     "after-startup-command": Parser(\.afterStartupCommand) { parseCommandOrCommands($0).toParsedToml($1) },

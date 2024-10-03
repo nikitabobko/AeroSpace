@@ -1,6 +1,5 @@
 public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
-    public var target: Lateinit<WorkspaceTarget> = .uninitialized
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveNodeToWorkspace,
         allowInConfig: true,
@@ -19,6 +18,7 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     public var focusFollowsWindow: Bool = false
     public var windowId: UInt32?
     public var workspaceName: WorkspaceName?
+    public var target: Lateinit<WorkspaceTarget> = .uninitialized
 
     public init(rawArgs: [String]) {
         self.rawArgs = .init(rawArgs)

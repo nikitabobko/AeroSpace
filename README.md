@@ -36,31 +36,16 @@ Install via [Homebrew](https://brew.sh/) to get autoupdates (Preferred)
 brew install --cask nikitabobko/tap/aerospace
 ```
 
-**(Optional)**
-You might need to configure your shell to enable completion provided by homebrew packages: https://docs.brew.sh/Shell-Completion
-AeroSpace provides bash, fish and zsh completions.
-
 In multi-monitor setup please make sure that monitors [are properly arranged](https://nikitabobko.github.io/AeroSpace/guide#proper-monitor-arrangement).
 
-You can also install specific previous versions:
-```
-brew install --cask nikitabobko/tap/aerospace@0.12.0
-```
-
-For the list of all the versions available for installation via brew see: https://github.com/nikitabobko/homebrew-tap/tree/main/Casks
-
-[Manual installation](https://nikitabobko.github.io/AeroSpace/guide#manual-installation)
+Other installation options: https://nikitabobko.github.io/AeroSpace/guide#installation
 
 > [!NOTE]
 > By using AeroSpace, you acknowledge that it's not [notarized](https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution).
 >
 > Notarization is a "security" feature by Apple.
-> You send binaries to Apple, and they either approve the binaries or not.
+> You send binaries to Apple, and they either approve them or not.
 > In reality, notarization is about building binaries the way Apple likes it.
->
-> Let's be honest.
-> Tiling window manager is not something Apple will be totally ok with.
-> Even if they approve one version, it doesn't mean that they won't revoke it (yes, they can do it), or approve further versions.
 >
 > I don't have anything against notarization as a concept.
 > I specifically don't like the way Apple does notarization.
