@@ -4,6 +4,9 @@ include::util/site-attributes.adoc[]
 
 include::util/header.adoc[]
 
+This Guide is designed to be read from top to bottom as a whole.
+You can skip parts that are obvious.
+
 [#installation]
 == Installation
 
@@ -20,13 +23,11 @@ brew install --cask nikitabobko/tap/aerospace
 *(Optional)* You might need to configure your shell to enable completion provided by homebrew packages: https://docs.brew.sh/Shell-Completion
 AeroSpace provides bash, fish and zsh completions.
 
-You can also install specific previous versions:
+You can also install specific previous https://github.com/nikitabobko/homebrew-tap/tree/main/Casks[pinned homebrew Casks versions]:
 [source,bash]
 ----
 brew install --cask nikitabobko/tap/aerospace@0.12.0
 ----
-
-For the list of all the versions available for installation via brew see: https://github.com/nikitabobko/homebrew-tap/tree/main/Casks
 
 [#manual-installation]
 === Manual installation
@@ -338,6 +339,14 @@ h_tiles
 ----
 
 Normalizations make it easier to understand the tree structure by looking at how windows are placed on the screen.
+Though you can disable normalizations by placing these lines to your config:
+
+[source,toml]
+----
+enable-normalization-flatten-containers = false
+enable-normalization-opposite-orientation-for-nested-containers = false
+----
+
 Unless you're hardcore i3 user who knows what they are doing, it's recommended to keep the normalizations enabled.
 
 [#floating-windows]
