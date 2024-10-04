@@ -22,6 +22,7 @@ struct WindowDetectedCallbackMatcher: Copyable, Equatable {
     var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
     var workspace: String?
     var duringAeroSpaceStartup: Bool?
+    var isDialog: Bool?
 
     static func == (lhs: WindowDetectedCallbackMatcher, rhs: WindowDetectedCallbackMatcher) -> Bool {
         check(
@@ -46,6 +47,7 @@ private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMa
     "app-name-regex-substring": Parser(\.appNameRegexSubstring, upcast(parseCasInsensitiveRegex)),
     "window-title-regex-substring": Parser(\.windowTitleRegexSubstring, upcast(parseCasInsensitiveRegex)),
     "during-aerospace-startup": Parser(\.duringAeroSpaceStartup, upcast(parseBool)),
+    "is-dialog": Parser(\.isDialog, upcast(parseBool))
 ]
 
 private func upcast<T>(_ fun: @escaping (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) -> (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T?> {

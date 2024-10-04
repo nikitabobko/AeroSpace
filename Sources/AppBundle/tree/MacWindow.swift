@@ -361,6 +361,14 @@ extension WindowDetectedCallback {
         if let workspace = matcher.workspace, workspace != window.workspace?.name {
             return false
         }
+        let macWindow = window.asMacWindow()
+        let axWindow = macWindow.axWindow
+        let app = macWindow.macApp
+        let isDialogStatus = shouldFloat(axWindow, app) || !isWindow(axWindow, app)
+        // Don't run callback if isDialog conf and isDialogStatus mismatch
+        if let isDialog = matcher.isDialog, isDialog != isDialogStatus{
+            return false
+        }
         return true
     }
 }
