@@ -4,14 +4,19 @@ set -u # Treat unset variables and parameters other than the special parameters 
 set -o pipefail # Any command failed in the pipe fails the whole pipe
 # set -x # Print shell commands as they are executed (or you can try -v which is less verbose)
 
+# Look for a given dependency, failing the whole script if not found.
+# If found, create a mapping script to that dependency in the .deps/bin folder
 add-to-bin() {
-    /usr/bin/which "$1" &> /dev/null && \
-        cat > ".deps/bin/${2:-$1}" <<EOF
+    /usr/bin/which "$1" &> /dev/null || (echo "Dependency $1 not found" && exit 1)
+    
+    cat > ".deps/bin/${2:-$1}" <<EOF
 #!/bin/bash
 exec '$(/usr/bin/which "$1")' "\$@"
 EOF
 }
 
+# Delete the dependency mapping scripts from .deps/bin, recreate them,
+# and establish our PATH with .deps/bin in it
 nuke-path() {
     /bin/rm -rf .deps/bin
     /bin/mkdir -p .deps/bin
