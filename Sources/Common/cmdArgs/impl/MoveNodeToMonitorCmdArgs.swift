@@ -6,22 +6,28 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
         allowInConfig: true,
         help: move_node_to_monitor_help_generated,
         options: [
+            // "Own" option
             "--wrap-around": trueBoolFlag(\.wrapAround),
+
+            // Forward to moveNodeToWorkspace
             "--window-id": optionalWindowIdFlag(),
-            "--focus-follows-window": trueBoolFlag(\.focusFollowsWindow),
+            "--focus-follows-window": trueBoolFlag(\.moveNodeToWorkspace.focusFollowsWindow),
         ],
         arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)")]
     )
 
-    public var windowId: UInt32?
     public var workspaceName: WorkspaceName?
+    public var windowId: UInt32? { // Forward to moveNodeToWorkspace
+        get { moveNodeToWorkspace.windowId }
+        set(newValue) { moveNodeToWorkspace.windowId = newValue }
+    }
 
+    public var moveNodeToWorkspace = MoveNodeToWorkspaceCmdArgs(rawArgs: [])
     public var wrapAround: Bool = false
     public var target: Lateinit<MonitorTarget> = .uninitialized
-    public var focusFollowsWindow: Bool = false
 }
 
 public func parseMoveNodeToMonitorCmdArgs(_ args: [String]) -> ParsedCmd<MoveNodeToMonitorCmdArgs> {
     parseSpecificCmdArgs(MoveNodeToMonitorCmdArgs(rawArgs: args), args)
-        .filter("--wrap-around is incompatible with <monitor-pattern> argument") { !$0.wrapAround || !$0.target.val.isPatterns }
+        .filter("--wrap-around is incompatible with <monitor-pattern> argument") { $0.wrapAround.implies(!$0.target.val.isPatterns) }
 }
