@@ -100,8 +100,8 @@ aerospace -h;
 
 <list_workspaces1_flag> ::= --visible [no] | --empty [no] | --format <output_format> | --format <output_format> | --count;
 
-<move_node_to_monitor1_flag> ::= --window-id <window_id>|--focus-follows-window|--wrap-around;
-<move_node_to_monitor2_flag> ::= --window-id <window_id>|--focus-follows-window;
+<move_node_to_monitor1_flag> ::= --window-id <window_id>|--focus-follows-window|--fail-if-noop|--wrap-around;
+<move_node_to_monitor2_flag> ::= --window-id <window_id>|--focus-follows-window|--fail-if-noop;
 
 <focus_flag> ::= --boundaries <boundary>|--boundaries-action <boundaries_action>|--ignore-floating;
 <boundaries_action> ::= stop|wrap-around-the-workspace|wrap-around-all-monitors;
