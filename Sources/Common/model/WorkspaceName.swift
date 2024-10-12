@@ -15,7 +15,7 @@ public struct WorkspaceName: Equatable {
             raw == "monitor" || raw == "workspace" ||
             raw == "monitors" || raw == "workspaces" ||
             raw == "all" || raw == "none" ||
-            raw == "mouse"
+            raw == "mouse" || raw == "target"
         {
             return .failure("'\(raw)' is a reserved workspace name")
         }
