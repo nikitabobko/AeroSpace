@@ -45,9 +45,9 @@ aerospace -h;
 
     | move-mouse [--fail-if-noop] (monitor-lazy-center|monitor-force-center|window-lazy-center|window-force-center) [--fail-if-noop]
 
-    | move-node-to-monitor [--wrap-around|--window-id <window_id>] (left|down|up|right) [--wrap-around|--window-id <window_id>]
-    | move-node-to-monitor [--wrap-around|--window-id <window_id>] (next|prev) [--wrap-around|--window-id <window_id>]
-    | move-node-to-monitor <monitor_pattern>...
+    | move-node-to-monitor [--wrap-around|--window-id <window_id>|--focus-follows-window] (left|down|up|right) [--wrap-around|--window-id <window_id>|--focus-follows-window]
+    | move-node-to-monitor [--wrap-around|--window-id <window_id>|--focus-follows-window] (next|prev)          [--wrap-around|--window-id <window_id>|--focus-follows-window]
+    | move-node-to-monitor [--focus-follows-window|--window-id <window_id>|] <monitor_pattern>... [--focus-follows-window|--window-id <window_id>|]
 
     | move-node-to-workspace [--wrap-around|--focus-follows-window]... (next|prev) [--wrap-around|--focus-follows-window]...
     | move-node-to-workspace [--fail-if-noop|--window-id <window_id>|--focus-follows-window]... <workspace> [--fail-if-noop|--window-id <window_id>|--focus-follows-window]...
