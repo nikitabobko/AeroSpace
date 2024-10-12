@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace join-with [-h|--help] (left|down|up|right)
+aerospace join-with [-h|--help] [--window-id <window-id>] (left|down|up|right)
 
 // end::synopsis[]
 
@@ -44,12 +44,15 @@ h_tiles
 NOTE: `join-with` is a high-level replacement for i3's https://i3wm.org/docs/userguide.html#_splitting_containers[split command].
 There is an observation that the only reason why you might want to split a node is to put several windows under a common "umbrella" parent. Unlike `split`, `join-with` can be used with xref:guide.adoc#normalization[`enable-normalization-flatten-containers`]
 
-// end::body[]
-
 // =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+--window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
+
+// end::body[]
 
 // =========================================================== Footer
 include::util/man-footer.adoc[]

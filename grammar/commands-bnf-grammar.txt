@@ -31,7 +31,7 @@ aerospace -h;
     | fullscreen [--no-outer-gaps|--fail-if-noop|--window-id <window_id>]... on [--no-outer-gaps|--fail-if-noop|--window-id <window_id>]...
     | fullscreen [--fail-if-noop|--window-id <window_id>] off [--fail-if-noop|--window-id <window_id>]
 
-    | join-with (left|down|up|right)
+    | join-with [--window-id <window_id>] (left|down|up|right)
 
     | layout [--window-id <window_id>] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
 

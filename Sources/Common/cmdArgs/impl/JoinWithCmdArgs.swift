@@ -5,7 +5,9 @@ public struct JoinWithCmdArgs: CmdArgs {
         kind: .joinWith,
         allowInConfig: true,
         help: join_with_help_generated,
-        options: [:],
+        options: [
+            "--window-id": optionalWindowIdFlag(),
+        ],
         arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)]
     )
 
