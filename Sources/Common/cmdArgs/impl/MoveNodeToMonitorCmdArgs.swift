@@ -12,6 +12,7 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
             // Forward to moveNodeToWorkspace
             "--window-id": optionalWindowIdFlag(),
             "--focus-follows-window": trueBoolFlag(\.moveNodeToWorkspace.focusFollowsWindow),
+            "--fail-if-noop": trueBoolFlag(\.moveNodeToWorkspace.failIfNoop),
         ],
         arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)")]
     )
