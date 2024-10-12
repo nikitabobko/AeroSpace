@@ -32,15 +32,4 @@ struct MoveNodeToWorkspaceCommand: Command {
         window.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         return args.focusFollowsWindow ? window.focusWindow() : true
     }
-
-    public static func run(_ env: CmdEnv, _ io: CmdIo, _ name: String, focusFollowsWindow: Bool) -> Bool {
-        if let wName = WorkspaceName.parse(name).getOrNil(appendErrorTo: &io.stderr) {
-            var args = MoveNodeToWorkspaceCmdArgs(rawArgs: [])
-            args.target = .initialized(.direct(wName))
-            args.focusFollowsWindow = focusFollowsWindow
-            return MoveNodeToWorkspaceCommand(args: args).run(env, io)
-        } else {
-            return false
-        }
-    }
 }

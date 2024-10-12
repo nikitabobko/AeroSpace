@@ -45,9 +45,8 @@ aerospace -h;
 
     | move-mouse [--fail-if-noop] (monitor-lazy-center|monitor-force-center|window-lazy-center|window-force-center) [--fail-if-noop]
 
-    | move-node-to-monitor [--wrap-around|--window-id <window_id>|--focus-follows-window] (left|down|up|right) [--wrap-around|--window-id <window_id>|--focus-follows-window]
-    | move-node-to-monitor [--wrap-around|--window-id <window_id>|--focus-follows-window] (next|prev)          [--wrap-around|--window-id <window_id>|--focus-follows-window]
-    | move-node-to-monitor [--focus-follows-window|--window-id <window_id>|] <monitor_pattern>... [--focus-follows-window|--window-id <window_id>|]
+    | move-node-to-monitor [<move_node_to_monitor1_flag>]... (left|down|up|right|next|prev) [<move_node_to_monitor1_flag>]...
+    | move-node-to-monitor [<move_node_to_monitor2_flag>]... <monitor_pattern>... [<move_node_to_monitor2_flag>]...
 
     | move-node-to-workspace [--wrap-around|--focus-follows-window]... (next|prev) [--wrap-around|--focus-follows-window]...
     | move-node-to-workspace [--fail-if-noop|--window-id <window_id>|--focus-follows-window]... <workspace> [--fail-if-noop|--window-id <window_id>|--focus-follows-window]...
@@ -100,6 +99,9 @@ aerospace -h;
 <monitor_pattern> ::= {{{ true }}};
 
 <list_workspaces1_flag> ::= --visible [no] | --empty [no] | --format <output_format> | --format <output_format> | --count;
+
+<move_node_to_monitor1_flag> ::= --window-id <window_id>|--focus-follows-window|--wrap-around;
+<move_node_to_monitor2_flag> ::= --window-id <window_id>|--focus-follows-window;
 
 <focus_flag> ::= --boundaries <boundary>|--boundaries-action <boundaries_action>|--ignore-floating;
 <boundaries_action> ::= stop|wrap-around-the-workspace|wrap-around-all-monitors;

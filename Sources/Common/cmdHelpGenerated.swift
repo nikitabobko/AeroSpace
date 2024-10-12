@@ -93,9 +93,10 @@ let move_mouse_help_generated = """
     USAGE: move-mouse [-h|--help] [--fail-if-noop] <mouse-position>
     """
 let move_node_to_monitor_help_generated = """
-    USAGE: move-node-to-monitor [-h|--help] [--window-id <window-id>] [--wrap-around] (left|down|up|right)
-       OR: move-node-to-monitor [-h|--help] [--window-id <window-id>] [--wrap-around] (next|prev)
-       OR: move-node-to-monitor [-h|--help] [--window-id <window-id>] <monitor-pattern>...
+    USAGE: move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
+                                [--wrap-around] (left|down|up|right|next|prev)
+       OR: move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
+                                <monitor-pattern>...
     """
 let move_node_to_workspace_help_generated = """
     USAGE: move-node-to-workspace [-h|--help] [--focus-follows-window] [--wrap-around]
