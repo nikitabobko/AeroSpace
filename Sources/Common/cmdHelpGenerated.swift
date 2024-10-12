@@ -51,7 +51,7 @@ let fullscreen_help_generated = """
        OR: fullscreen [-h|--help] off [--window-id <window-id>] [--fail-if-noop]
     """
 let join_with_help_generated = """
-    USAGE: join-with [-h|--help] (left|down|up|right)
+    USAGE: join-with [-h|--help] [--window-id <window-id>] (left|down|up|right)
     """
 let layout_help_generated = """
     USAGE: layout [-h|--help] [--window-id <window-id>]
