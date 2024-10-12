@@ -14,7 +14,8 @@ struct MoveNodeToMonitorCommand: Command {
             return io.err(windowIsntPartOfTree(window))
         }
         return switch args.target.val.resolve(currentMonitor, wrapAround: args.wrapAround) {
-            case .success(let targetMonitor): MoveNodeToWorkspaceCommand.run(env, io, targetMonitor.activeWorkspace.name)
+            case .success(let targetMonitor):
+                MoveNodeToWorkspaceCommand.run(env, io, targetMonitor.activeWorkspace.name, focusFollowsWindow: args.focusFollowsWindow)
             case .failure(let msg): io.err(msg)
         }
     }

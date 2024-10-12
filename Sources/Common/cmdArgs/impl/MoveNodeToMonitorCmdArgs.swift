@@ -8,14 +8,17 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
         options: [
             "--wrap-around": trueBoolFlag(\.wrapAround),
             "--window-id": optionalWindowIdFlag(),
+            "--focus-follows-window": trueBoolFlag(\.focusFollowsWindow),
         ],
         arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)")]
     )
 
-    public var wrapAround: Bool = false
-    public var target: Lateinit<MonitorTarget> = .uninitialized
     public var windowId: UInt32?
     public var workspaceName: WorkspaceName?
+
+    public var wrapAround: Bool = false
+    public var target: Lateinit<MonitorTarget> = .uninitialized
+    public var focusFollowsWindow: Bool = false
 }
 
 public func parseMoveNodeToMonitorCmdArgs(_ args: [String]) -> ParsedCmd<MoveNodeToMonitorCmdArgs> {

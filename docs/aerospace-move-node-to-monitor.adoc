@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] [--wrap-around] (left|down|up|right)
-aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] [--wrap-around] (next|prev)
-aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] <monitor-pattern>...
+aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window] [--wrap-around] (left|down|up|right)
+aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window] [--wrap-around] (next|prev)
+aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window] <monitor-pattern>...
 
 // end::synopsis[]
 
@@ -26,6 +26,10 @@ include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 --wrap-around:: Make it possible to wrap around the movement
+
+--focus-follows-window::
+Make sure that the window in question receives focus after moving.
+This flag is a shortcut for manually running `aerospace-workspace`/`aerospace-focus` after `move-node-to-monitor` successful execution.
 
 --window-id <window-id>::
 include::./util/window-id-flag-desc.adoc[]
