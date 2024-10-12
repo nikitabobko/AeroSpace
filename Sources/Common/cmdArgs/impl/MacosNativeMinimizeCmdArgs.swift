@@ -5,7 +5,9 @@ public struct MacosNativeMinimizeCmdArgs: CmdArgs {
         kind: .macosNativeMinimize,
         allowInConfig: true,
         help: macos_native_minimize_help_generated,
-        options: [:],
+        options: [
+            "--window-id": optionalWindowIdFlag(),
+        ],
         arguments: []
     )
 

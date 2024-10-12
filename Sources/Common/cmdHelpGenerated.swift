@@ -84,7 +84,7 @@ let macos_native_fullscreen_help_generated = """
        OR: macos-native-fullscreen [-h|--help] [--window-id <window-id>] [--fail-if-noop] off
     """
 let macos_native_minimize_help_generated = """
-    USAGE: macos-native-minimize [-h|--help]
+    USAGE: macos-native-minimize [-h|--help] [--window-id <window-id>]
     """
 let mode_help_generated = """
     USAGE: mode [-h|--help] <binding-mode>

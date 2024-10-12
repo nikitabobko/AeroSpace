@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace macos-native-minimize [-h|--help]
+aerospace macos-native-minimize [-h|--help] [--window-id <window-id>]
 
 // end::synopsis[]
 
@@ -23,6 +23,9 @@ aerospace macos-native-minimize [-h|--help]
 include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+--window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
 
 // end::body[]
 
