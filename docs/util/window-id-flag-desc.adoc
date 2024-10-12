@@ -1,1 +1,1 @@
-Act on the window with specified `window-id` instead of the focused window
+Act on the specified window instead of the focused window
