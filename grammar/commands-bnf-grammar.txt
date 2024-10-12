@@ -60,6 +60,8 @@ aerospace -h;
 
     | split [--window-id <window_id>] (horizontal|vertical|opposite) [--window-id <window_id>]
 
+    | summon-workspace [--fail-if-noop] <workspace> [--fail-if-noop]
+
     | trigger-binding <binding> --mode <mode_id>
     | trigger-binding --mode <mode_id> <binding>
 

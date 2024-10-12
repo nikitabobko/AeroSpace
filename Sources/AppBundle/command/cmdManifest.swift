@@ -64,6 +64,8 @@ extension CmdArgs {
                 command = ResizeCommand(args: self as! ResizeCmdArgs)
             case .split:
                 command = SplitCommand(args: self as! SplitCmdArgs)
+            case .summonWorkspace:
+                command = SummonWorkspaceCommand(args: self as! SummonWorkspaceCmdArgs)
             case .serverVersionInternalCommand:
                 command = ServerVersionInternalCommandCommand()
             case .triggerBinding:
