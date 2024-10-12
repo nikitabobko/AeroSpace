@@ -49,7 +49,6 @@ Command checklist:
 - [ ] Documentation in `../docs/aerospace-*` and `../docs/commands.adoc`
   - [ ] Check that site looks alright `./.site/commands.html`
   - [ ] Check that man page looks alright `./.man`
-- [ ] `--help` documentation
 - [ ] Do `--window-id` and/or `--workspace` flags make sense for the command?
 - [ ] Shell completion `../grammar/commands-bnf-grammar.txt`
 
