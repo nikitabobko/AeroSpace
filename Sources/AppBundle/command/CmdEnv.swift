@@ -29,10 +29,10 @@ struct CmdEnv: Copyable { // todo forward env from cli to server
             result["PWD"] = pwd
         }
         if let windowId {
-            result[AEROSPACE_FOCUSED_WINDOW_ID] = windowId.description
+            result[AEROSPACE_WINDOW_ID] = windowId.description
         }
         if let workspaceName {
-            result[AEROSPACE_FOCUSED_WORKSPACE] = workspaceName.description
+            result[AEROSPACE_WORKSPACE] = workspaceName.description
         }
         return result
     }

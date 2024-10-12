@@ -23,7 +23,7 @@ extension CmdArgs {
             if let wi = Window.get(byId: windowId) {
                 return wi.toLiveFocusOrReportError(io)
             } else {
-                io.err("Invalid <window-id> \(windowId) specified in \(AEROSPACE_FOCUSED_WINDOW_ID) env variable")
+                io.err("Invalid <window-id> \(windowId) specified in \(AEROSPACE_WINDOW_ID) env variable")
                 return nil
             }
         }
