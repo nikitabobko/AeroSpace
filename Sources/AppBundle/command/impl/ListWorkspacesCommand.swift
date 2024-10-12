@@ -6,13 +6,12 @@ struct ListWorkspacesCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
-        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         var result: [Workspace] = Workspace.all
         if let visible = args.filteringOptions.visible {
             result = result.filter { $0.isVisible == visible }
         }
         if !args.filteringOptions.onMonitors.isEmpty {
-            let monitors: Set<CGPoint> = args.filteringOptions.onMonitors.resolveMonitors(io, target)
+            let monitors: Set<CGPoint> = args.filteringOptions.onMonitors.resolveMonitors(io)
             if monitors.isEmpty { return false }
             result = result.filter { monitors.contains($0.workspaceMonitor.rect.topLeftCorner) }
         }
@@ -32,11 +31,11 @@ struct ListWorkspacesCommand: Command {
 }
 
 extension [MonitorId] {
-    func resolveMonitors(_ io: CmdIo, _ target: LiveFocus) -> Set<CGPoint> {
+    func resolveMonitors(_ io: CmdIo) -> Set<CGPoint> {
         var requested: Set<CGPoint> = []
         let sortedMonitors = sortedMonitors
         for id in self {
-            let resolved = id.resolve(io, target, sortedMonitors: sortedMonitors)
+            let resolved = id.resolve(io, sortedMonitors: sortedMonitors)
             if resolved.isEmpty {
                 return []
             }
@@ -49,10 +48,10 @@ extension [MonitorId] {
 }
 
 extension MonitorId {
-    func resolve(_ io: CmdIo, _ target: LiveFocus, sortedMonitors: [Monitor]) -> [Monitor] {
+    func resolve(_ io: CmdIo, sortedMonitors: [Monitor]) -> [Monitor] {
         switch self {
             case .focused:
-                return [target.workspace.workspaceMonitor]
+                return [focus.workspace.workspaceMonitor]
             case .mouse:
                 return [mouseLocation.monitorApproximation]
             case .all:

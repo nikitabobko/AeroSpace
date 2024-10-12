@@ -2,9 +2,8 @@ import AppKit
 import Common
 import Foundation
 
-// todo it's under the question if "focused" should be part of the name
-let AEROSPACE_FOCUSED_WINDOW_ID = "AEROSPACE_FOCUSED_WINDOW_ID" // env var
-let AEROSPACE_FOCUSED_WORKSPACE = "AEROSPACE_FOCUSED_WORKSPACE" // env var
+let AEROSPACE_WINDOW_ID = "AEROSPACE_WINDOW_ID" // env var
+let AEROSPACE_WORKSPACE = "AEROSPACE_WORKSPACE" // env var
 
 func stringType(of some: Any) -> String {
     let string = (some is Any.Type) ? String(describing: some) : String(describing: type(of: some))

@@ -55,9 +55,10 @@ var _focus: FrozenFocus = {
     return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId: monitor.monitorId ?? 0)
 }()
 
-/// Global focus. This property must not be ever directly accessed from commands.
-/// Commands must firstly check --window-id, --workspace, AEROSPACE_FOCUSED_WINDOW_ID env and AEROSPACE_FOCUSED_WORKSPACE env
-/// before accessing global focus. todo make this property less easy to accidentially access from commands.
+/// Global focus.
+/// Commands must be cautious about accessing this property directly. There are legitimate cases.
+/// But, in general, commands must firstly check --window-id, --workspace, AEROSPACE_WINDOW_ID env and
+/// AEROSPACE_WORKSPACE env before accessing the global focus.
 var focus: LiveFocus { _focus.live }
 
 func setFocus(to newFocus: LiveFocus) -> Bool {
@@ -161,7 +162,7 @@ private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String) 
         process.executableURL = URL(filePath: exec)
         process.arguments = Array(config.execOnWorkspaceChange.dropFirst())
         var environment = config.execConfig.envVariables
-        environment["AEROSPACE_FOCUSED_WORKSPACE"] = newWorkspace
+        environment["AEROSPACE_WORKSPACE"] = newWorkspace
         environment["AEROSPACE_PREV_WORKSPACE"] = oldWorkspace
         process.environment = environment
         Result { try process.run() }.getOrThrow() // todo It's not perfect to fail here
