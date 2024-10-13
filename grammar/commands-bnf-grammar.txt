@@ -89,7 +89,7 @@ aerospace -h;
     | list-workspaces [--format <output_format>|--count|--json] (--all|--focused) [--format <output_format>|--count|--json]
     ;
 
-<window_id> ::= {{{ aerospace list-windows --all --format '%{window-id}%{right-padding}%{tab}%{app-name}%{right-padding} | %{window-title}' }}};
+<window_id> ::= {{{ aerospace list-windows --all --format '%{window-id}%{tab}%{app-name}%{right-padding} | %{window-title}' }}};
 <binding> ::= {{{ aerospace config --get mode --keys | xargs -I{} aerospace config --get mode.{}.binding --keys }}};
 <mode_id> ::= {{{ aerospace config --get mode --keys }}};
 <workspace> ::= {{{ aerospace list-workspaces --monitor all --empty no }}};
