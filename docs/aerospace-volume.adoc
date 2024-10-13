@@ -1,0 +1,39 @@
+= aerospace-volume(1)
+include::util/man-attributes.adoc[]
+// tag::purpose[]
+:manpurpose: Manipulate volume
+// end::purpose[]
+:manname: aerospace-volume
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace volume [-h|--help] (up|down)
+aerospace volume [-h|--help] (mute-toggle|mute-off|mute-on)
+aerospace volume [-h|--help] set <number>
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+// =========================================================== Arguments
+include::./util/conditional-arguments-header.adoc[]
+
+(up|down):: Increase or decrease the volume
+(mute-toggle|mute-on|mute-off):: Toggle/On/Off mute
+set <number>:: Set volume to the exact value on scale from 0 to 100
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

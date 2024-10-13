@@ -182,6 +182,13 @@ include::aerospace-trigger-binding.adoc[tags=synopsis]
 include::aerospace-trigger-binding.adoc[tags=purpose]
 include::aerospace-trigger-binding.adoc[tags=body]
 
+== volume
+----
+include::./aerospace-volume.adoc[tags=synopsis]
+----
+include::./aerospace-volume.adoc[tags=purpose]
+include::./aerospace-volume.adoc[tags=body]
+
 == workspace
 ----
 include::aerospace-workspace.adoc[tags=synopsis]

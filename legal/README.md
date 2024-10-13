@@ -36,6 +36,11 @@ ANTLR is used to parse AeroSpace built-in shell like language.
 [swift-collections Apache 2.0 license](./third-party-license/LICENSE-swift-collections.txt).
 swift-collections is used for more advanced Swift collections.
 
+**ISSoundAdditions**
+[ISSoundAdditions GitHub link](https://github.com/InerziaSoft/ISSoundAdditions).
+[ISSoundAdditions MIT license](./third-party-license/LICENSE-ISSoundAdditions.txt).
+ISSoundAdditions is used as a convenient API to change system volume.
+
 **Mac OS X Snow Leopard • Wallpaper**.
 Created by Fons Mans.
 [Figma design file link](https://www.figma.com/community/file/1228988440310597758).
