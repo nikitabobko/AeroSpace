@@ -12,6 +12,10 @@ struct SummonWorkspaceCommand: Command {
             io.err("Workspace '\(workspace.name)' is already visible on the focused monitor. Tip: use --fail-if-noop to exit with non-zero code")
             return !args.failIfNoop
         }
-        return monitor.setActiveWorkspace(workspace) && workspace.focusWorkspace()
+        if monitor.setActiveWorkspace(workspace) {
+            return workspace.focusWorkspace()
+        } else {
+            return io.err("Can't move workspace '\(workspace.name)' to monitor '\(monitor.name)'. workspace-to-monitor-force-assignment doesn't allow it")
+        }
     }
 }
