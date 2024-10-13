@@ -4,11 +4,15 @@ Look who wants to contribute! Nice to see you here, let me show you what you can
 
 ## Report Issues
 
-* It's ok to use issues to ask questions. But please make sure to read:
-  * The guide https://nikitabobko.github.io/AeroSpace/guide
-  * Commands reference https://nikitabobko.github.io/AeroSpace/commands
+There are only two types of issues:
+* Feature proposal
+* Bug report
+
+Feature proposal is not a feature request/idea but a well-defined and complete proposal of feature which is clear how to implement.
+If you're unsure you can brainstorm your ideas in [#feature-ideas](https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas) in GitHub Discusssions.
+
+Rules:
 * Search for duplicates before reporting new issues
-  * Vote for duplicates with 👍 reaction
 * Vote for issues that you find useful with 👍 reaction
 
 **Consider including in bug reports**

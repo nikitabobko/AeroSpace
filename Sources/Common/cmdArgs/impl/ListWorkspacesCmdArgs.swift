@@ -27,8 +27,8 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
         arguments: [],
         conflictingOptions: [
             ["--all", "--focused", "--monitor"],
-            ["--format", "--count"],
-            ["--json", "--count"],
+            ["--count", "--format"],
+            ["--count", "--json"],
         ]
     )
 

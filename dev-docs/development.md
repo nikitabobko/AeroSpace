@@ -84,5 +84,5 @@ Even if you use LSP and another text editor, Xcode is still useful to attach deb
 ## Tips
 
 - Use built-in "Accessibility Inspector.app" to inspect accessibility properties of windows
-- Use [BetterDisplay 2](https://github.com/waydabber/BetterDisplay) to emulate several monitors
+- Use [DeskPad](https://github.com/Stengo/DeskPad) or [BetterDisplay 2](https://github.com/waydabber/BetterDisplay) to emulate several monitors
 - You can use `script/clean-project.sh` to clean the project when something goes wrong.

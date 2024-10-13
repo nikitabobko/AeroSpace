@@ -28,8 +28,8 @@ public struct ListWindowsCmdArgs: CmdArgs {
         conflictingOptions: [
             ["--all", "--focused", "--workspace"],
             ["--all", "--focused", "--monitor"],
-            ["--format", "--count"],
-            ["--json", "--count"],
+            ["--count", "--format"],
+            ["--count", "--json"],
         ]
     )
 

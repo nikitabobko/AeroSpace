@@ -17,7 +17,7 @@ let package = Package(
         .library(name: "AppBundle", targets: ["AppBundle"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/InerziaSoft/ISSoundAdditions", from: "2.0.1"),
+        .package(url: "https://github.com/InerziaSoft/ISSoundAdditions", exact: "2.0.1"),
         .package(url: "https://github.com/Kitura/BlueSocket", exact: "2.0.4"),
         .package(url: "https://github.com/soffes/HotKey", exact: "0.1.3"),
         .package(url: "https://github.com/LebJe/TOMLKit", exact: "0.5.5"),

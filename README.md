@@ -55,9 +55,34 @@ Other installation options: https://nikitabobko.github.io/AeroSpace/guide#instal
 > automatically delete `com.apple.quarantine` attribute, that's why the app should work out of the box, without any warnings that
 > "Apple cannot check AeroSpace for malicious software"
 
-## Contributing, creating issues, submitting pull requests
+## Community, discussions, issues, pull requests
 
+Informal community discussions happen at [GitHub Discussions](https://github.com/nikitabobko/AeroSpace/discussions).
+There you can ask your questions, show off your setup, bring other topic, or just chat.
+
+There are 5 channels:
+-   [#announcements](https://github.com/nikitabobko/AeroSpace/discussions/categories/announcements).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/announcements.atom).
+    Only maintainers can post here.
+    Highly moderated traffic.
+-   [#announcements-releases](https://github.com/nikitabobko/AeroSpace/discussions/categories/announcements-releases).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/announcements-releases.atom).
+    Announcements about non-patch releases.
+    Only maintainers can post here.
+-   [#feature-ideas](https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas.atom).
+-   [#general](https://github.com/nikitabobko/AeroSpace/discussions/categories/general).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/general.atom).
+-   [#questions-and-answers](https://github.com/nikitabobko/AeroSpace/discussions/categories/questions-and-answers).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/questions-and-answers.atom).
+    Everyone is welcome to ask questions.
+    Everyone is encouraged to answer other people's questions.
+
+You're welcome to submit bug reports and well-defined feature proposals in GitHub issues.
+You're welcome to submit pull requests as well.
 See: [CONTRIBUTING.md](./CONTRIBUTING.md)
+
+**Issues vs Discussions:** Issues are more formal and well-defined requests. Discussions are informal and casual.
 
 ## Development
 
@@ -76,10 +101,11 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
     For advanced users, it's easier to edit a configuration file in text editor rather than navigating through checkboxes in GUI.
   - Status menu icon is ok, because visual feedback is needed
 - Provide _practical_ features. Fancy appearance features are not _practical_ (e.g. window borders, transparency, animations, etc.)
-- If "dark magic" (aka "private APIs", "code injections", etc) can be avoided, it must be avoided
+- "dark magic" (aka "private APIs", "code injections", etc.) must be avoided as much as possible
   - Right now, AeroSpace uses only a single private API to get window ID of accessibility object `_AXUIElementGetWindow`.
     Everything else is [macOS public accessibility API](https://developer.apple.com/documentation/applicationservices/axuielement_h).
   - AeroSpace will never require you to disable SIP (System Integrity Protection).
+  - The goal is to make AeroSpace easily maintainable, and resistant to macOS updates.
 
 **Non Values**
 - Play nicely with existing macOS features.

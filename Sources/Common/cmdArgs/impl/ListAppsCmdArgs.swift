@@ -15,8 +15,8 @@ public struct ListAppsCmdArgs: CmdArgs {
         ],
         arguments: [],
         conflictingOptions: [
-            ["--format", "--count"],
-            ["--json", "--count"],
+            ["--count", "--format"],
+            ["--count", "--json"],
         ]
     )
 
