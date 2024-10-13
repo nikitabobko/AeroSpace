@@ -556,11 +556,8 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#assign-workspaces-to-monitors">6.1. Assign workspaces to monitors</a></li>
 </ul>
 </li>
-<li><a href="#caveats">7. Caveats</a>
-<ul class="sectlevel2">
-<li><a href="#dialog-heuristics">7.1. Dialog heuristics</a></li>
-</ul>
-</li>
+<li><a href="#dialog-heuristics">7. Dialog heuristics</a></li>
+<li><a href="#common-pitfall-keyboard-keys-handling">8. Common pitfall: keyboard keys handling</a></li>
 </ul>
 </div>
 </div>
@@ -593,6 +590,10 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 </div>
 </div>
 </div>
+<div class="paragraph">
+<p>This Guide is designed to be read from top to bottom as a whole.
+You can skip parts that are obvious.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -613,15 +614,12 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 AeroSpace provides bash, fish and zsh completions.</p>
 </div>
 <div class="paragraph">
-<p>You can also install specific previous versions:</p>
+<p>You can also install specific previous <a href="https://github.com/nikitabobko/homebrew-tap/tree/main/Casks">pinned homebrew Casks versions</a>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="bash"><span></span>brew<span class="tok-w"> </span>install<span class="tok-w"> </span>--cask<span class="tok-w"> </span>nikitabobko/tap/aerospace@0.12.0</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>For the list of all the versions available for installation via brew see: <a href="https://github.com/nikitabobko/homebrew-tap/tree/main/Casks" class="bare">https://github.com/nikitabobko/homebrew-tap/tree/main/Casks</a></p>
 </div>
 </div>
 <div class="sect2">
@@ -799,16 +797,22 @@ You can bootstrap your custom config by coping the default config from the app i
 <span class="tok-c1">#               tall monitor (anything higher than wide) gets vertical orientation</span>
 <span class="tok-n">default-root-container-orientation</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;auto&#39;</span>
 
-<span class="tok-c1"># Possible values: (qwerty|dvorak)</span>
-<span class="tok-c1"># See <a href="https://nikitabobko.github.io/AeroSpace/guide#key-mapping" class="bare">https://nikitabobko.github.io/AeroSpace/guide#key-mapping</a></span>
-<span class="tok-n">key-mapping</span><span class="tok-p">.</span><span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;qwerty&#39;</span>
-
 <span class="tok-c1"># Mouse follows focus when focused monitor changes</span>
 <span class="tok-c1"># Drop it from your config, if you don&#39;t like this behavior</span>
 <span class="tok-c1"># See <a href="https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks" class="bare">https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks</a></span>
 <span class="tok-c1"># See <a href="https://nikitabobko.github.io/AeroSpace/commands#move-mouse" class="bare">https://nikitabobko.github.io/AeroSpace/commands#move-mouse</a></span>
 <span class="tok-c1"># Fallback value (if you omit the key): on-focused-monitor-changed = []</span>
 <span class="tok-n">on-focused-monitor-changed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-mouse monitor-lazy-center&#39;</span><span class="tok-p">]</span>
+
+<span class="tok-c1"># You can effectively turn off macOS &quot;Hide application&quot; (cmd-h) feature by toggling this flag</span>
+<span class="tok-c1"># Useful if you don&#39;t use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key</span>
+<span class="tok-c1"># Also see: <a href="https://nikitabobko.github.io/AeroSpace/goodness#disable-hide-app" class="bare">https://nikitabobko.github.io/AeroSpace/goodness#disable-hide-app</a></span>
+<span class="tok-n">automatically-unhide-macos-hidden-apps</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
+
+<span class="tok-c1"># Possible values: (qwerty|dvorak)</span>
+<span class="tok-c1"># See <a href="https://nikitabobko.github.io/AeroSpace/guide#key-mapping" class="bare">https://nikitabobko.github.io/AeroSpace/guide#key-mapping</a></span>
+<span class="tok-k">[key-mapping]</span>
+<span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;qwerty&#39;</span>
 
 <span class="tok-c1"># Gaps between windows (inner-*) and between monitor edges (outer-*).</span>
 <span class="tok-c1"># Possible values:</span>
@@ -1044,7 +1048,7 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <span class="tok-n">unicorn</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;u&#39;</span>
 
 <span class="tok-k">[mode.main.binding]</span>
-<span class="tok-n">alt-unicorn</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace unicorn&#39;</span><span class="tok-w"> </span><span class="tok-c1"># (⁀ᗢ⁀)</span></code></pre>
+<span class="tok-n">alt-unicorn</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace wonderland&#39;</span><span class="tok-w"> </span><span class="tok-c1"># (⁀ᗢ⁀)</span></code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -1053,7 +1057,8 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <p>For <code>dvorak</code> users, AeroSpace offers a preconfigured preset.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">key-mapping</span><span class="tok-p">.</span><span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;dvorak&#39;</span></code></pre>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[key-mapping]</span>
+<span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;dvorak&#39;</span></code></pre>
 </div>
 </div>
 </li>
@@ -1192,7 +1197,7 @@ You use <a href="commands#focus">focus command</a> to do that.</p>
 <p><a href="commands#join-with">join-with</a></p>
 </li>
 <li>
-<p><a href="commands#split">split</a></p>
+<p><a href="commands#split">split</a> (it&#8217;s for compatibility with i3. Please prefer <code>join-with</code> over <code>split</code>)</p>
 </li>
 </ol>
 </div>
@@ -1324,16 +1329,17 @@ Configured by <code>enable-normalization-opposite-orientation-for-nested-contain
 </div>
 </div>
 <div class="paragraph">
-<p>Normalizations make it easier to understand the tree structure by looking at how windows are placed on the screen.</p>
-</div>
-<div class="paragraph">
-<p>You can disable normalizations by placing these lines to your config:</p>
+<p>Normalizations make it easier to understand the tree structure by looking at how windows are placed on the screen.
+Though you can disable normalizations by placing these lines to your config:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">enable-normalization-flatten-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
 <span class="tok-n">enable-normalization-opposite-orientation-for-nested-containers</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span></code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Unless you&#8217;re hardcore i3 user who knows what they are doing, it&#8217;s recommended to keep the normalizations enabled.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1408,7 +1414,7 @@ You will still be able to see a 1 pixel vertical line of "hidden" windows in the
 That means, that if AeroSpace crashes badly you will still be able to manually "unhide" the windows by dragging these few pixels to the center of the screen.</p>
 </div>
 <div class="paragraph">
-<p>If you want to minimize the visibility of hidden windows, it&#8217;s recommended to place Dock in the bottom (and additionaly turn automatic hiding)</p>
+<p>If you want to minimize the visibility of hidden windows, it&#8217;s recommended to place Dock in the bottom (and additionally turn automatic hiding)</p>
 </div>
 </td>
 </tr>
@@ -1514,7 +1520,7 @@ Spaces are just cursed in macOS. The less Spaces you have, the better macOS beha
 <td class="tableblock halign-left valign-top"><p class="tableblock">👍 Yes</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Overal stability and performance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Overall stability and performance</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">❌ Weird focus and performance issues may happen (see the list above)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">👍 Public Apple API are more stable (which in turn affects AeroSpace stability)</p></td>
 </tr>
@@ -1903,10 +1909,8 @@ The first matching pattern will be used</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="caveats"><a class="anchor" href="#caveats"></a><a class="link" href="#caveats">7. Caveats</a></h2>
+<h2 id="dialog-heuristics"><a class="anchor" href="#dialog-heuristics"></a><a class="link" href="#dialog-heuristics">7. Dialog heuristics</a></h2>
 <div class="sectionbody">
-<div class="sect2">
-<h3 id="dialog-heuristics"><a class="anchor" href="#dialog-heuristics"></a><a class="link" href="#dialog-heuristics">7.1. Dialog heuristics</a></h3>
 <div class="ulist">
 <ul>
 <li>
@@ -1931,11 +1935,8 @@ The first matching pattern will be used</p>
 <p>Windows that are recognized as dialogs are floated by default.</p>
 </div>
 <div class="paragraph">
-<p>It&#8217;s not possible to disable the heuristics, because the goal is to make the heuristics so good that there won&#8217;t problems with them.
-If you find that some windows are not handled properly please <a href="https://github.com/nikitabobko/AeroSpace/issues/new">report an issue</a></p>
-</div>
-<div class="paragraph">
-<p>Anyway, your alternatives are:</p>
+<p>If you find that some windows are not handled properly please <a href="https://github.com/nikitabobko/AeroSpace/issues/new">report an issue</a> (don&#8217;t forget to attach <a href="./commands#debug-windows">debug-windows output</a>).
+You can also use <code>on-window-detected</code> to force tile or force float all windows of a particular application:</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1944,7 +1945,7 @@ If you find that some windows are not handled properly please <a href="https://g
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;...&#39;</span>
 <span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout tiling&#39;</span></code></pre>
 </div>
 </div>
@@ -1954,7 +1955,7 @@ If you find that some windows are not handled properly please <a href="https://g
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
+<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;...&#39;</span>
 <span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout floating&#39;</span></code></pre>
 </div>
 </div>
@@ -1963,11 +1964,18 @@ If you find that some windows are not handled properly please <a href="https://g
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="common-pitfall-keyboard-keys-handling"><a class="anchor" href="#common-pitfall-keyboard-keys-handling"></a><a class="link" href="#common-pitfall-keyboard-keys-handling">8. Common pitfall: keyboard keys handling</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you can&#8217;t make AeroSpace handle some keys in your config, please make sure that you don&#8217;t have keys conflict with other software that might listen to global keys (e.g. skhd, Karabiner-Elements, Raycast)</p>
+</div>
+</div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-08-16 10:05:58 +0200
+Last updated 2024-10-13 14:21:16 +0200
 </div>
 </div>
 </body>

@@ -559,7 +559,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div class="paragraph">
 <p>Do you have a cool automatization, AeroSpace integration, or workflow?
 Feel free to open an issue or pull request to add it to this list!
-The source code of the page can be found in <code>./docs</code> directory.</p>
+The source code of the page can be found in the <code>./docs</code> directory.</p>
 </div>
 </div>
 </div>
@@ -743,6 +743,9 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <div class="sect1">
 <h2 id="disable-hide-app"><a class="anchor" href="#disable-hide-app"></a><a class="link" href="#disable-hide-app">8. Disable annoying and useless "hide application" shortcut</a></h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>If <code>automatically-unhide-macos-hidden-apps</code> isn&#8217;t enough, you can disable <code>cmd-h</code> altogether (which will make this hotkey unavailable for apps that might use it for other purposes)</p>
+</div>
 <div class="listingblock">
 <div class="title">~/.aerospace.toml</div>
 <div class="content">
@@ -829,10 +832,11 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <span class="tok-s1">end tell&#39;</span>
 <span class="tok-s1">&#39;&#39;&#39;</span>
 
-<span class="tok-n">alt-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus left&#39;</span>
-<span class="tok-n">alt-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus down&#39;</span>
-<span class="tok-n">alt-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus up&#39;</span>
-<span class="tok-n">alt-semicolon</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus right&#39;</span>
+<span class="tok-c1"># i3 wraps focus by default</span>
+<span class="tok-n">alt-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">         </span><span class="tok-s1">&#39;focus --boundaries-action wrap-around-the-workspace left&#39;</span>
+<span class="tok-n">alt-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">         </span><span class="tok-s1">&#39;focus --boundaries-action wrap-around-the-workspace down&#39;</span>
+<span class="tok-n">alt-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">         </span><span class="tok-s1">&#39;focus --boundaries-action wrap-around-the-workspace up&#39;</span>
+<span class="tok-n">alt-semicolon</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus --boundaries-action wrap-around-the-workspace right&#39;</span>
 
 <span class="tok-n">alt-shift-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move left&#39;</span>
 <span class="tok-n">alt-shift-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move down&#39;</span>
@@ -1261,7 +1265,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-08-16 10:05:58 +0200
+Last updated 2024-10-13 14:21:16 +0200
 </div>
 </div>
 </body>

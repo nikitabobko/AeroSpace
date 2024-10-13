@@ -1,0 +1,1 @@
+Act on the specified window instead of the focused window
