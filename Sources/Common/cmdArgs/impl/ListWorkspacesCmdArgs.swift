@@ -67,8 +67,12 @@ public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorksp
         .map { raw in
             raw.all ? raw.copy(\.filteringOptions.onMonitors, [.all]).copy(\.all, false) : raw
         }
-        .map { raw in
-            raw.focused ? raw.copy(\.filteringOptions.onMonitors, [.focused]).copy(\.focused, false) : raw
+        .map { raw in // Expand alias
+            raw.focused
+                ? raw.copy(\.filteringOptions.onMonitors, [.focused])
+                    .copy(\.filteringOptions.visible, true)
+                    .copy(\.focused, false)
+                : raw
         }
         .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
 }
