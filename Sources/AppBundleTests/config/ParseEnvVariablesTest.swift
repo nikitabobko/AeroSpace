@@ -58,7 +58,7 @@ final class ParseEnvVariablesTest: XCTestCase {
             PWD = ''
             """
         )
-        assertEquals(errors.descriptions, ["exec.env-vars.PWD: Chaning 'PWD' is not allowed"])
+        assertEquals(errors.descriptions, ["exec.env-vars.PWD: Changing 'PWD' is not allowed"])
     }
 }
 

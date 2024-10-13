@@ -4,7 +4,7 @@ public struct SummonWorkspaceCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .summonWorkspace,
         allowInConfig: true,
-        help: workspace_help_generated,
+        help: summon_workspace_help_generated,
         options: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],
