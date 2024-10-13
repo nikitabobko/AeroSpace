@@ -1,5 +1,8 @@
+import AppKit
 import Common
 import Foundation
+
+let systemWideAx = AXUIElementCreateSystemWide()
 
 public func initAppBundle() {
     initTerminationHandler()
@@ -17,6 +20,7 @@ public func initAppBundle() {
         printStderr("--started-at-login is passed but 'started-at-login = false' in the config. Terminating...")
         terminateApp()
     }
+    AXUIElementSetMessagingTimeout(systemWideAx, 1.0)
 
     checkAccessibilityPermissions()
     startUnixSocketServer()
