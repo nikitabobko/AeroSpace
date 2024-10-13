@@ -8,7 +8,7 @@ public struct ListMonitorsCmdArgs: CmdArgs {
         options: [
             "--focused": boolFlag(\.focused),
             "--mouse": boolFlag(\.mouse),
-            "--format": ArgParser(\.format, parseFormat),
+            "--format": ArgParser(\._format, parseFormat),
             "--count": trueBoolFlag(\.outputOnlyCount),
         ],
         arguments: [],
@@ -21,9 +21,17 @@ public struct ListMonitorsCmdArgs: CmdArgs {
     public var workspaceName: WorkspaceName?
     public var focused: Bool?
     public var mouse: Bool?
-    public var format: [StringInterToken] = [
-        .value("monitor-id"), .value("right-padding"), .literal(" | "),
-        .value("monitor-name"),
-    ]
+    public var _format: [StringInterToken] = []
     public var outputOnlyCount: Bool = false
+}
+
+public extension ListMonitorsCmdArgs {
+    var format: [StringInterToken] {
+        _format.isEmpty
+            ? [
+                .value("monitor-id"), .value("right-padding"), .literal(" | "),
+                .value("monitor-name"),
+            ]
+            : _format
+    }
 }

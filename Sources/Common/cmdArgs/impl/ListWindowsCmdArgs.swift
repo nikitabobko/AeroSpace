@@ -18,7 +18,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--pid": singleValueOption(\.filteringOptions.pidFilter, "<pid>", Int32.init),
             "--app-bundle-id": singleValueOption(\.filteringOptions.appIdFilter, "<app-bundle-id>") { $0 },
 
-            "--format": ArgParser(\.format, parseFormat),
+            "--format": ArgParser(\._format, parseFormat),
             "--count": trueBoolFlag(\.outputOnlyCount),
         ],
         arguments: [],
@@ -32,11 +32,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
     fileprivate var all: Bool = false // ALIAS
 
     public var filteringOptions = FilteringOptions()
-    public var format: [StringInterToken] = [
-        .value("window-id"), .value("right-padding"), .literal(" | "),
-        .value("app-name"), .value("right-padding"), .literal(" | "),
-        .value("window-title"),
-    ]
+    public var _format: [StringInterToken] = []
     public var outputOnlyCount: Bool = false
 
     public var windowId: UInt32?               // unused
@@ -48,6 +44,18 @@ public struct ListWindowsCmdArgs: CmdArgs {
         public var workspaces: [WorkspaceFilter] = []
         public var pidFilter: Int32?
         public var appIdFilter: String?
+    }
+}
+
+public extension ListWindowsCmdArgs {
+    var format: [StringInterToken] {
+        _format.isEmpty
+            ? [
+                .value("window-id"), .value("right-padding"), .literal(" | "),
+                .value("app-name"), .value("right-padding"), .literal(" | "),
+                .value("window-title"),
+            ]
+            : _format
     }
 }
 

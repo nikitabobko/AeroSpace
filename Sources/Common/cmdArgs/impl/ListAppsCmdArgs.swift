@@ -7,7 +7,7 @@ public struct ListAppsCmdArgs: CmdArgs {
         help: list_apps_help_generated,
         options: [
             "--macos-native-hidden": boolFlag(\.macosHidden),
-            "--format": ArgParser(\.format, parseFormat),
+            "--format": ArgParser(\._format, parseFormat),
             "--count": trueBoolFlag(\.outputOnlyCount),
         ],
         arguments: [],
@@ -19,10 +19,18 @@ public struct ListAppsCmdArgs: CmdArgs {
     public var windowId: UInt32?
     public var workspaceName: WorkspaceName?
     public var macosHidden: Bool?
-    public var format: [StringInterToken] = [
-        .value("app-pid"), .value("right-padding"), .literal(" | "),
-        .value("app-bundle-id"), .value("right-padding"), .literal(" | "),
-        .value("app-name"),
-    ]
+    public var _format: [StringInterToken] = []
     public var outputOnlyCount: Bool = false
+}
+
+public extension ListAppsCmdArgs {
+    var format: [StringInterToken] {
+        _format.isEmpty
+            ? [
+                .value("app-pid"), .value("right-padding"), .literal(" | "),
+                .value("app-bundle-id"), .value("right-padding"), .literal(" | "),
+                .value("app-name"),
+            ]
+            : _format
+    }
 }

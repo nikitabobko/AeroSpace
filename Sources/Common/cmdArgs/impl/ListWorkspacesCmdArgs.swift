@@ -17,7 +17,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
             "--empty": boolFlag(\.filteringOptions.empty),
             "--monitor": ArgParser(\.filteringOptions.onMonitors, parseMonitorIds),
 
-            "--format": ArgParser(\.format, parseFormat),
+            "--format": ArgParser(\._format, parseFormat),
             "--count": trueBoolFlag(\.outputOnlyCount),
         ],
         arguments: [],
@@ -33,7 +33,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     public var windowId: UInt32?              // unused
     public var workspaceName: WorkspaceName?  // unused
     public var filteringOptions = FilteringOptions()
-    public var format: [StringInterToken] = [.value("workspace")]
+    public var _format: [StringInterToken] = [.value("workspace")]
     public var outputOnlyCount: Bool = false
 
     public struct FilteringOptions: Copyable, Equatable {
@@ -41,6 +41,10 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
         public var visible: Bool?
         public var empty: Bool?
     }
+}
+
+public extension ListWorkspacesCmdArgs {
+    var format: [StringInterToken] { _format.isEmpty ? [.value("workspace")] : _format }
 }
 
 public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {
