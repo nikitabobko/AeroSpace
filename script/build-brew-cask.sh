@@ -51,7 +51,7 @@ else
 fi
 
 manpages=$(unzip -l "$zip_file" | \
-    grep --only-matching 'manpage/aerospace-.*' | \
+    grep --only-matching 'manpage/aerospace.*' | \
     while read -r it; do echo "  manpage \"$zip_root_dir/$it\""; done)
 
 rm -f ".release/$cask_name.rb" || true
