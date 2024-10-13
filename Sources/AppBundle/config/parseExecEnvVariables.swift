@@ -44,6 +44,7 @@ private func parseEnvVariables(_ raw: TOMLValueConvertible, _ backtrace: TomlBac
     var result: [String: String] = [:]
     for (key, value) in table {
         let backtrace = backtrace + .key(key)
+        if key == "PWD" { errors.append(.semantic(backtrace, "Chaning 'PWD' is not allowed")) }
         guard let rawStr = parseString(value, backtrace).getOrNil(appendErrorTo: &errors) else { continue }
         var env = baseEnv
         if let add: String = fullEnv[key] {

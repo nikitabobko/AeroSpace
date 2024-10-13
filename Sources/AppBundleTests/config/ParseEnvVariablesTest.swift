@@ -50,6 +50,16 @@ final class ParseEnvVariablesTest: XCTestCase {
             "exec.env-vars.FOO: Env variable 'BAR' isn't presented in AeroSpace.app env vars, or not available for interpolation (because it's mutated)",
         ])
     }
+
+    func testForbidPwd() {
+        let (_, errors) = parseConfig(
+            """
+            [exec.env-vars]
+            PWD = ''
+            """
+        )
+        assertEquals(errors.descriptions, ["exec.env-vars.PWD: Chaning 'PWD' is not allowed"])
+    }
 }
 
 private func testSucInterpolation(_ str: String, _ vars: [String: String] = [:], expected: String) {
