@@ -162,7 +162,7 @@ private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String) 
         process.executableURL = URL(filePath: exec)
         process.arguments = Array(config.execOnWorkspaceChange.dropFirst())
         var environment = config.execConfig.envVariables
-        environment["AEROSPACE_WORKSPACE"] = newWorkspace
+        environment["AEROSPACE_FOCUSED_WORKSPACE"] = newWorkspace
         environment["AEROSPACE_PREV_WORKSPACE"] = oldWorkspace
         process.environment = environment
         Result { try process.run() }.getOrThrow() // todo It's not perfect to fail here
