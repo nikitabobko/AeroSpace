@@ -47,7 +47,7 @@ read -r
     --build-version "$build_version"
 
 eval "$cask_git_repo_path/pin.sh"
-cp .release/aerospace.rb "$cask_git_repo_path/Casks/aerospace.rb"
+cp -r .release/aerospace.rb "$cask_git_repo_path/Casks/aerospace.rb"
 
 rm -rf "${site_git_repo_path:?}/*" # https://www.shellcheck.net/wiki/SC2115
-cp .site/* "$site_git_repo_path"
+cp -r .site/* "$site_git_repo_path"

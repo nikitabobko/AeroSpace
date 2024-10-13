@@ -52,7 +52,8 @@ fi
 
 manpages=$(unzip -l "$zip_file" | \
     grep --only-matching 'manpage/aerospace.*' | \
-    while read -r it; do echo "  manpage \"$zip_root_dir/$it\""; done)
+    while read -r it; do echo "  manpage \"$zip_root_dir/$it\""; done | \
+    sort)
 
 rm -f ".release/$cask_name.rb" || true
 mkdir -p .release
