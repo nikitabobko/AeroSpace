@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace list-apps [-h|--help] [--macos-native-hidden [no]] [--format <output-format>] [--count]
+aerospace list-apps [-h|--help] [--macos-native-hidden [no]] [--format <output-format>] [--count] [--json]
 
 // end::synopsis[]
 
@@ -34,7 +34,11 @@ Filter results to only print hidden applications.
 Incompatible with `--count`
 
 --count:: Output only the number of apps.
-Incompatible with `--format`
+Incompatible with: `--format`, `--json`
+
+--json:: Output in JSON format.
+Can be used in combination with `--format` to specify which data to include into the json.
+Incompatible with `--count`
 
 // =========================================================== Output Format
 include::util/conditional-output-format-header.adoc[]

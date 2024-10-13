@@ -72,13 +72,13 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
             case .layout:
                 result[kind.rawValue] = SubCommandParser(parseLayoutCmdArgs)
             case .listApps:
-                result[kind.rawValue] = SubCommandParser(ListAppsCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(parseListAppsCmdArgs)
             case .listExecEnvVars:
                 result[kind.rawValue] = SubCommandParser(ListExecEnvVarsCmdArgs.init)
             case .listMonitors:
-                result[kind.rawValue] = SubCommandParser(ListMonitorsCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(parseListMonitorsCmdArgs)
             case .listWindows:
-                result[kind.rawValue] = SubCommandParser(parseRawListWindowsCmdArgs)
+                result[kind.rawValue] = SubCommandParser(parseListWindowsCmdArgs)
             case .listWorkspaces:
                 result[kind.rawValue] = SubCommandParser(parseListWorkspacesCmdArgs)
             case .macosNativeFullscreen:

@@ -62,14 +62,10 @@ private func getKey(_ io: CmdIo, args: ConfigCmdArgs, key: String) -> Bool {
         }
     }
     if args.json {
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
-        let _json = Result { try encoder.encode(configMap) }.flatMap {
-            String(data: $0, encoding: .utf8).flatMap(Result.success) ?? .failure("Can't convert json Data to String")
-        }
-        return switch _json {
-            case .success(let json): io.out(json)
-            case .failure(let error): io.err(error.localizedDescription)
+        if let json = JSONEncoder.aeroSpaceDefault.encodeToString(configMap) {
+            return io.out(json)
+        } else {
+            return io.err("Can't convert json Data to String")
         }
     } else {
         switch configMap {

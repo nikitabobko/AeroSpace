@@ -58,25 +58,26 @@ let layout_help_generated = """
                   (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
     """
 let list_apps_help_generated = """
-    USAGE: list-apps [-h|--help] [--macos-native-hidden [no]] [--format <output-format>] [--count]
+    USAGE: list-apps [-h|--help] [--macos-native-hidden [no]] [--format <output-format>] [--count] [--json]
     """
 let list_exec_env_vars_help_generated = """
     USAGE: list-exec-env-vars [-h|--help]
     """
 let list_monitors_help_generated = """
-    USAGE: list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>] [--count]
+    USAGE: list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>] [--count] [--json]
     """
 let list_windows_help_generated = """
     USAGE: list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
                         [--monitor <monitor>...] [--workspace <workspace>...]
-                        [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>] [--count]
-       OR: list-windows [-h|--help] --all [--format <output-format>] [--count]
-       OR: list-windows [-h|--help] --focused [--format <output-format>] [--count]
+                        [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>]
+                        [--count] [--json]
+       OR: list-windows [-h|--help] --all [--format <output-format>] [--count] [--json]
+       OR: list-windows [-h|--help] --focused [--format <output-format>] [--count] [--json]
     """
 let list_workspaces_help_generated = """
-    USAGE: list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]] [--format <output-format>] [--count]
-       OR: list-workspaces [-h|--help] --all [--format <output-format>] [--count]
-       OR: list-workspaces [-h|--help] --focused [--format <output-format>] [--count]
+    USAGE: list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]] [--format <output-format>] [--count] [--json]
+       OR: list-workspaces [-h|--help] --all [--format <output-format>] [--count] [--json]
+       OR: list-workspaces [-h|--help] --focused [--format <output-format>] [--count] [--json]
     """
 let macos_native_fullscreen_help_generated = """
     USAGE: macos-native-fullscreen [-h|--help] [--window-id <window-id>]

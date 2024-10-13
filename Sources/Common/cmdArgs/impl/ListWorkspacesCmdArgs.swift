@@ -10,20 +10,25 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
         allowInConfig: false,
         help: list_workspaces_help_generated,
         options: [
+            // Aliases
             "--focused": trueBoolFlag(\.focused),
             "--all": trueBoolFlag(\.all),
 
+            // Filtering flags
             "--visible": boolFlag(\.filteringOptions.visible),
             "--empty": boolFlag(\.filteringOptions.empty),
             "--monitor": ArgParser(\.filteringOptions.onMonitors, parseMonitorIds),
 
+            // Formatting flags
             "--format": ArgParser(\._format, parseFormat),
             "--count": trueBoolFlag(\.outputOnlyCount),
+            "--json": trueBoolFlag(\.json),
         ],
         arguments: [],
         conflictingOptions: [
             ["--all", "--focused", "--monitor"],
             ["--format", "--count"],
+            ["--json", "--count"],
         ]
     )
 
@@ -35,6 +40,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     public var filteringOptions = FilteringOptions()
     public var _format: [StringInterToken] = [.value("workspace")]
     public var outputOnlyCount: Bool = false
+    public var json: Bool = false
 
     public struct FilteringOptions: Copyable, Equatable {
         public var onMonitors: [MonitorId] = []
@@ -64,6 +70,7 @@ public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorksp
         .map { raw in
             raw.focused ? raw.copy(\.filteringOptions.onMonitors, [.focused]).copy(\.focused, false) : raw
         }
+        .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
 }
 
 func parseMonitorIds(arg: String, nextArgs: inout [String]) -> Parsed<[MonitorId]> {

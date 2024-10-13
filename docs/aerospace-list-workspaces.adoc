@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]] [--format <output-format>] [--count]
-aerospace list-workspaces [-h|--help] --all [--format <output-format>] [--count]
-aerospace list-workspaces [-h|--help] --focused [--format <output-format>] [--count]
+aerospace list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]] [--format <output-format>] [--count] [--json]
+aerospace list-workspaces [-h|--help] --all [--format <output-format>] [--count] [--json]
+aerospace list-workspaces [-h|--help] --focused [--format <output-format>] [--count] [--json]
 
 // end::synopsis[]
 
@@ -49,6 +49,10 @@ Incompatible with `--count`
 
 --count:: Output only the number of workspaces.
 Incompatible with `--format`
+
+--json:: Output in JSON format.
+Can be used in combination with `--format` to specify which data to include into the json.
+Incompatible with `--count`
 
 // =========================================================== Output Format
 include::util/conditional-output-format-header.adoc[]

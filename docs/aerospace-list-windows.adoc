@@ -11,9 +11,10 @@ include::util/man-attributes.adoc[]
 // tag::synopsis[]
 aerospace list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
                        [--monitor <monitor>...] [--workspace <workspace>...]
-                       [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>] [--count]
-aerospace list-windows [-h|--help] --all [--format <output-format>] [--count]
-aerospace list-windows [-h|--help] --focused [--format <output-format>] [--count]
+                       [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>]
+                       [--count] [--json]
+aerospace list-windows [-h|--help] --all [--format <output-format>] [--count] [--json]
+aerospace list-windows [-h|--help] --focused [--format <output-format>] [--count] [--json]
 
 // end::synopsis[]
 
@@ -48,14 +49,21 @@ Possible values: +
 include::util/monitor-option.adoc[]
 
 --pid <pid>:: Filter results to only print windows that belong to the Application with specified `<pid>`
+
 --app-bundle-id <app-bundle-id>::
 Filter results to only print windows that belong to the Application with specified https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
 +
 Deprecated (but still supported) flag name: `--app-id`
+
 --format <output-format>:: Specify output format. See "Output Format" section for more details.
 Incompatible with `--count`
+
 --count:: Output only the number of windows.
 Incompatible with `--format`
+
+--json:: Output in JSON format.
+Can be used in combination with `--format` to specify which data to include into the json.
+Incompatible with `--count`
 
 // =========================================================== Output Format
 include::util/conditional-output-format-header.adoc[]

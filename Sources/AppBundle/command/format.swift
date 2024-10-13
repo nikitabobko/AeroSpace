@@ -23,7 +23,7 @@ extension [AeroObj] {
                         curCell += literal
                     case .value(let value):
                         switch value.expandFormatVar(obj: obj) {
-                            case .success(let expanded): curCell += expanded
+                            case .success(let expanded): curCell += expanded.toString()
                             case .failure(let error): errors.append(error)
                         }
                 }
@@ -75,21 +75,48 @@ private enum FormatVar: Equatable {
     }
 }
 
+enum Primitive: Encodable {
+    case int(Int)
+    case int32(Int32)
+    case uint32(UInt32)
+    case string(String)
+
+    func toString() -> String {
+        switch self {
+            case .int(let x): x.description
+            case .int32(let x): x.description
+            case .uint32(let x): x.description
+            case .string(let x): x
+        }
+    }
+
+    func encode(to encoder: any Encoder) throws {
+        let value: Encodable = switch self {
+            case .int(let x): x
+            case .int32(let x): x
+            case .uint32(let x): x
+            case .string(let x): x
+        }
+        var container = encoder.singleValueContainer()
+        try container.encode(value)
+    }
+}
+
 private struct Cell<T> {
     let value: T
     let rightPadding: Bool
 }
 
-private extension String {
-    func expandFormatVar(obj: AeroObj) -> Result<String, String> {
+extension String {
+    func expandFormatVar(obj: AeroObj) -> Result<Primitive, String> {
         let formatVar = self.toFormatVar()
         switch (obj, formatVar) {
             case (_, .none): break
 
             case (.window(let w), .workspace):
-                return w.workspace.flatMap(AeroObj.workspace).map(expandFormatVar) ?? .success("NULL-WOKRSPACE")
+                return w.workspace.flatMap(AeroObj.workspace).map(expandFormatVar) ?? .success(.string("NULL-WOKRSPACE"))
             case (.window(let w), .monitor):
-                return w.nodeMonitor.flatMap(AeroObj.monitor).map(expandFormatVar) ?? .success("NULL-MONITOR")
+                return w.nodeMonitor.flatMap(AeroObj.monitor).map(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
             case (.window(let w), .app):
                 return expandFormatVar(obj: .app(w.app))
             case (.window(_), .window): break
@@ -104,28 +131,28 @@ private extension String {
         switch (obj, formatVar) {
             case (.window(let w), .window(let f)):
                 return switch f {
-                    case .windowId: .success(w.windowId.description)
-                    case .windowTitle: .success(w.title)
+                    case .windowId: .success(.uint32(w.windowId))
+                    case .windowTitle: .success(.string(w.title))
                 }
             case (.workspace(let w), .workspace(let f)):
                 return switch f {
-                    case .workspaceName: .success(w.name)
+                    case .workspaceName: .success(.string(w.name))
                 }
             case (.monitor(let m), .monitor(let f)):
                 return switch f {
-                    case .monitorId: .success(m.monitorId.map { $0 + 1 }?.description ?? "NULL-MONITOR-ID")
-                    case .monitorName: .success(m.name)
+                    case .monitorId: .success(m.monitorId.map { .int($0 + 1) } ?? .string("NULL-MONITOR-ID"))
+                    case .monitorName: .success(.string(m.name))
                 }
             case (.app(let a), .app(let f)):
                 return switch f {
-                    case .appBundleId: .success(a.id ?? "NULL-APP-BUNDLE-ID")
-                    case .appName: .success(a.name ?? "NULL-APP-NAME")
-                    case .appPid: .success(a.pid.description)
+                    case .appBundleId: .success(.string(a.id ?? "NULL-APP-BUNDLE-ID"))
+                    case .appName: .success(.string(a.name ?? "NULL-APP-NAME"))
+                    case .appPid: .success(.int32(a.pid))
                 }
             default: break
         }
-        if self == "newline" { return .success("\n") }
-        if self == "tab" { return .success("\t") }
+        if self == "newline" { return .success(.string("\n")) }
+        if self == "tab" { return .success(.string("\t")) }
         return .failure("Unknown interpolation variable '\(self)'")
     }
 

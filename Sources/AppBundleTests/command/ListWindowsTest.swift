@@ -22,5 +22,11 @@ final class ListWindowsTest: XCTestCase {
             parseCommand("list-windows --all --workspace focused").errorOrNil,
             "ERROR: Conflicting options: --all, --workspace")
         assertNil(parseCommand("list-windows --monitor mouse").errorOrNil)
+
+        // --json
+        assertEquals(parseCommand("list-windows --all --count --json").errorOrNil, "ERROR: Conflicting options: --count, --json")
+        assertEquals(parseCommand("list-windows --all --format '%{right-padding}' --json").errorOrNil, "%{right-padding} interpolation variable is not allowed when --json is used")
+        assertEquals(parseCommand("list-windows --all --format '%{window-title} |' --json").errorOrNil, "Only interpolation variables and spaces are allowed in \'--format\' when \'--json\' is used")
+        assertNil(parseCommand("list-windows --all --format '%{window-title}' --json").errorOrNil)
     }
 }

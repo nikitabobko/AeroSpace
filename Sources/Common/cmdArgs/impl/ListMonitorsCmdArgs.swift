@@ -8,12 +8,16 @@ public struct ListMonitorsCmdArgs: CmdArgs {
         options: [
             "--focused": boolFlag(\.focused),
             "--mouse": boolFlag(\.mouse),
+
+            // Formatting flags
             "--format": ArgParser(\._format, parseFormat),
             "--count": trueBoolFlag(\.outputOnlyCount),
+            "--json": trueBoolFlag(\.json),
         ],
         arguments: [],
         conflictingOptions: [
             ["--format", "--count"],
+            ["--json", "--count"],
         ]
     )
 
@@ -23,6 +27,7 @@ public struct ListMonitorsCmdArgs: CmdArgs {
     public var mouse: Bool?
     public var _format: [StringInterToken] = []
     public var outputOnlyCount: Bool = false
+    public var json: Bool = false
 }
 
 public extension ListMonitorsCmdArgs {
@@ -34,4 +39,9 @@ public extension ListMonitorsCmdArgs {
             ]
             : _format
     }
+}
+
+public func parseListMonitorsCmdArgs(_ args: [String]) -> ParsedCmd<ListMonitorsCmdArgs> {
+    parseSpecificCmdArgs(ListMonitorsCmdArgs(rawArgs: args), args)
+        .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
 }

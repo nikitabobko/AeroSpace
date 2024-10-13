@@ -45,9 +45,17 @@ struct ListWindowsCommand: Command {
             return io.out("\(windows.count)")
         } else {
             windows = windows.sorted(using: [SelectorComparator { $0.app.name ?? "" }, SelectorComparator(selector: \.title)])
-            return switch windows.map({ AeroObj.window($0) }).format(args.format) {
-                case .success(let lines): io.out(lines)
-                case .failure(let msg): io.err(msg)
+            let list = windows.map { AeroObj.window($0) }
+            if args.json {
+                return switch list.formatToJson(args.format, ignoreRightPaddingVar: args._format.isEmpty) {
+                    case .success(let json): io.out(json)
+                    case .failure(let msg): io.err(msg)
+                }
+            } else {
+                return switch list.format(args.format) {
+                    case .success(let lines): io.out(lines)
+                    case .failure(let msg): io.err(msg)
+                }
             }
         }
     }
