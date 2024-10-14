@@ -71,6 +71,7 @@ private enum FormatVar: Equatable {
 
     enum MonitorFormatVar: String, Equatable {
         case monitorId = "monitor-id"
+        case monitorAppKitNsScreenScreensId = "monitor-appkit-nsscreen-screens-id"
         case monitorName = "monitor-name"
     }
 }
@@ -141,6 +142,7 @@ extension String {
             case (.monitor(let m), .monitor(let f)):
                 return switch f {
                     case .monitorId: .success(m.monitorId.map { .int($0 + 1) } ?? .string("NULL-MONITOR-ID"))
+                    case .monitorAppKitNsScreenScreensId: .success(.int(m.monitorAppKitNsScreenScreensId))
                     case .monitorName: .success(.string(m.name))
                 }
             case (.app(let a), .app(let f)):

@@ -67,7 +67,8 @@ The following variables can be used inside `<output-format>`:
 
 %{workspace}:: String. Name of the belonging workspace
 
-%{monitor-id}:: Number. Sequential number of the belonging monitor
+%{monitor-id}:: 1-based Number. Sequential number of the belonging monitor
+%{monitor-appkit-nsscreen-screens-id}:: 1-based Number. Sequential number of the belonging monitor in `NSScreen.screens`. Useful for integration with other tools that might be using `NSScreen.screens` ordering (like sketchybar).
 %{monitor-name}:: String. Name of the belonging monitor
 
 %{right-padding}:: A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column

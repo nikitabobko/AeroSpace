@@ -51,7 +51,7 @@ struct FrozenFocus: AeroAny, Equatable {
 
 var _focus: FrozenFocus = {
     // It's fine to call *Inaccurate during startup
-    let monitor = focusedMonitorInaccurate ?? mainMonitor
+    let monitor = mainMonitor
     return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId: monitor.monitorId ?? 0)
 }()
 
