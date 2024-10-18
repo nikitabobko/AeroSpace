@@ -5,6 +5,25 @@ enum AeroObj {
     case workspace(Workspace)
     case app(AbstractApp)
     case monitor(Monitor)
+
+    var kind: AeroObjKind {
+        switch self {
+            case .window: .window
+            case .workspace: .workspace
+            case .app: .app
+            case .monitor: .monitor
+        }
+    }
+}
+
+enum AeroObjKind: CaseIterable {
+    case window, workspace, app, monitor
+}
+
+enum PlainInterVar: String, CaseIterable {
+    case rightPadding = "right-padding"
+    case newline = "newline"
+    case tab = "tab"
 }
 
 extension [AeroObj] {
@@ -16,7 +35,7 @@ extension [AeroObj] {
             var errors: [String] = []
             for token in format {
                 switch token {
-                    case .interVar("right-padding"):
+                    case .interVar(PlainInterVar.rightPadding.rawValue):
                         line.append(Cell(value: curCell, rightPadding: true))
                         curCell = ""
                     case .literal(let literal):
@@ -48,22 +67,22 @@ extension [AeroObj] {
     }
 }
 
-private enum FormatVar: Equatable {
+enum FormatVar: Equatable {
     case window(WindowFormatVar)
     case workspace(WorkspaceFormatVar)
     case app(AppFormatVar)
     case monitor(MonitorFormatVar)
 
-    enum WindowFormatVar: String, Equatable {
+    enum WindowFormatVar: String, Equatable, CaseIterable {
         case windowId = "window-id"
         case windowTitle = "window-title"
     }
 
-    enum WorkspaceFormatVar: String, Equatable {
+    enum WorkspaceFormatVar: String, Equatable, CaseIterable {
         case workspaceName = "workspace"
     }
 
-    enum AppFormatVar: String, Equatable {
+    enum AppFormatVar: String, Equatable, CaseIterable {
         case appBundleId = "app-bundle-id"
         case appName = "app-name"
         case appPid = "app-pid"
@@ -71,7 +90,7 @@ private enum FormatVar: Equatable {
         case appBundlePath = "app-bundle-path"
     }
 
-    enum MonitorFormatVar: String, Equatable {
+    enum MonitorFormatVar: String, Equatable, CaseIterable {
         case monitorId = "monitor-id"
         case monitorAppKitNsScreenScreensId = "monitor-appkit-nsscreen-screens-id"
         case monitorName = "monitor-name"
@@ -102,6 +121,24 @@ enum Primitive: Encodable {
         }
         var container = encoder.singleValueContainer()
         try container.encode(value)
+    }
+}
+
+private func getAvailableInterVars(for kind: AeroObjKind) -> [String] {
+    _getAvailableInterVars(for: kind) + PlainInterVar.allCases.map(\.rawValue)
+}
+
+private func _getAvailableInterVars(for kind: AeroObjKind) -> [String] {
+    switch kind {
+        case .app: FormatVar.AppFormatVar.allCases.map(\.rawValue)
+        case .monitor: FormatVar.MonitorFormatVar.allCases.map(\.rawValue)
+        case .workspace:
+            FormatVar.WorkspaceFormatVar.allCases.map(\.rawValue) +
+                _getAvailableInterVars(for: .monitor)
+        case .window:
+            FormatVar.WindowFormatVar.allCases.map(\.rawValue) +
+                _getAvailableInterVars(for: .workspace) +
+                _getAvailableInterVars(for: .app)
     }
 }
 
@@ -157,9 +194,10 @@ extension String {
                 }
             default: break
         }
-        if self == "newline" { return .success(.string("\n")) }
-        if self == "tab" { return .success(.string("\t")) }
-        return .failure("Unknown interpolation variable '\(self)'")
+        if self == PlainInterVar.newline.rawValue { return .success(.string("\n")) }
+        if self == PlainInterVar.tab.rawValue { return .success(.string("\t")) }
+        return .failure("Unknown interpolation variable '\(self)'. " +
+            "Possible values: \(getAvailableInterVars(for: obj.kind).joined(separator: "|"))")
     }
 
     private func toFormatVar() -> FormatVar? {

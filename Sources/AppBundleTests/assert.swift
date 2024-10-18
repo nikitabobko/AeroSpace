@@ -1,6 +1,10 @@
 import Common
 import XCTest
 
+func assertTrue(_ actual: Bool, file: String = #file, line: Int = #line) {
+    assertEquals(actual, true, file: file, line: line)
+}
+
 // Because assertEquals default messages are unreadable!
 func assertNotEquals<T>(_ actual: T, _ expected: T, file: String = #file, line: Int = #line) where T: Equatable {
     if actual == expected {

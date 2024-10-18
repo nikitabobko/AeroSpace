@@ -29,4 +29,19 @@ final class ListWindowsTest: XCTestCase {
         assertEquals(parseCommand("list-windows --all --format '%{window-title} |' --json").errorOrNil, "Only interpolation variables and spaces are allowed in \'--format\' when \'--json\' is used")
         assertNil(parseCommand("list-windows --all --format '%{window-title}' --json").errorOrNil)
     }
+
+    func testInterpolationVariablesConsistency() {
+        for kind in AeroObjKind.allCases {
+            switch kind {
+                case .window:
+                    assertTrue(FormatVar.WindowFormatVar.allCases.allSatisfy { $0.rawValue.starts(with: "window-") })
+                case .app:
+                    assertTrue(FormatVar.AppFormatVar.allCases.allSatisfy { $0.rawValue.starts(with: "app-") })
+                case .workspace:
+                    assertTrue(FormatVar.WorkspaceFormatVar.allCases.allSatisfy { $0.rawValue.starts(with: "workspace") })
+                case .monitor:
+                    assertTrue(FormatVar.MonitorFormatVar.allCases.allSatisfy { $0.rawValue.starts(with: "monitor-") })
+            }
+        }
+    }
 }

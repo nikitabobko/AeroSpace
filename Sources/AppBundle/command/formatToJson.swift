@@ -8,7 +8,7 @@ extension [AeroObj] {
             var rawObj: [String: Primitive] = [:]
             for token in format {
                 switch token {
-                    case .interVar("right-padding") where ignoreRightPaddingVar:
+                    case .interVar(PlainInterVar.rightPadding.rawValue) where ignoreRightPaddingVar:
                         break
                     case .literal:
                         break // should be spaces
