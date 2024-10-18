@@ -20,9 +20,9 @@ public func initAppBundle() {
         printStderr("--started-at-login is passed but 'started-at-login = false' in the config. Terminating...")
         terminateApp()
     }
-    AXUIElementSetMessagingTimeout(systemWideAx, 1.0)
 
     checkAccessibilityPermissions()
+    AXUIElementSetMessagingTimeout(systemWideAx, 1.0)
     startUnixSocketServer()
     GlobalObserver.initObserver()
     refreshAndLayout(startup: true)
