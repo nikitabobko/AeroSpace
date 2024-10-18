@@ -56,9 +56,9 @@ public extension ListWindowsCmdArgs {
     var format: [StringInterToken] {
         _format.isEmpty
             ? [
-                .value("window-id"), .value("right-padding"), .literal(" | "),
-                .value("app-name"), .value("right-padding"), .literal(" | "),
-                .value("window-title"),
+                .interVar("window-id"), .interVar("right-padding"), .literal(" | "),
+                .interVar("app-name"), .interVar("right-padding"), .literal(" | "),
+                .interVar("window-title"),
             ]
             : _format
     }

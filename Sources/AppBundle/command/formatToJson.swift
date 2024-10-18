@@ -8,11 +8,11 @@ extension [AeroObj] {
             var rawObj: [String: Primitive] = [:]
             for token in format {
                 switch token {
-                    case .value("right-padding") where ignoreRightPaddingVar:
+                    case .interVar("right-padding") where ignoreRightPaddingVar:
                         break
                     case .literal:
                         break // should be spaces
-                    case .value(let varName):
+                    case .interVar(let varName):
                         switch varName.expandFormatVar(obj: richObj) {
                             case .success(let expanded): rawObj[varName] = expanded
                             case .failure(let error): return .failure(error)

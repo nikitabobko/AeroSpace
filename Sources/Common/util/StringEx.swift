@@ -66,7 +66,7 @@ public extension String {
                 tokens.mapAllOrFailures { token in
                     switch token {
                         case .literal(let literal): .success(literal)
-                        case .value(let value):
+                        case .interVar(let value):
                             variables[value].flatMap(Result.success)
                                 ?? .failure("Env variable '\(value)' isn't presented in AeroSpace.app env vars, " +
                                     "or not available for interpolation (because it's mutated)")
@@ -105,7 +105,7 @@ public extension String {
                     }
                     mode = .stringLiteral
                 case (.interpolatedValue(let value), "}"):
-                    result.append(.value(value))
+                    result.append(.interVar(value))
                     mode = .stringLiteral
                 case (.interpolatedValue(let value), "{"):
                     return .failure("Can't parse '\(value + "{")' inside interpolation (Open curly brace is invalid character)")
@@ -125,7 +125,7 @@ public extension String {
 
 public enum StringInterToken: Equatable {
     case literal(String)
-    case value(String)
+    case interVar(String) // "interpolation variable"
 }
 
 private enum InterpolationParserState {

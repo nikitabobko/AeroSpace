@@ -32,9 +32,9 @@ public extension ListAppsCmdArgs {
     var format: [StringInterToken] {
         _format.isEmpty
             ? [
-                .value("app-pid"), .value("right-padding"), .literal(" | "),
-                .value("app-bundle-id"), .value("right-padding"), .literal(" | "),
-                .value("app-name"),
+                .interVar("app-pid"), .interVar("right-padding"), .literal(" | "),
+                .interVar("app-bundle-id"), .interVar("right-padding"), .literal(" | "),
+                .interVar("app-name"),
             ]
             : _format
     }
@@ -48,9 +48,9 @@ public func parseListAppsCmdArgs(_ args: [String]) -> ParsedCmd<ListAppsCmdArgs>
 func getErrorIfFormatIsIncompatibleWithJson(_ format: [StringInterToken]) -> String? {
     for x in format {
         switch x {
-            case .value("right-padding"):
+            case .interVar("right-padding"):
                 return "%{right-padding} interpolation variable is not allowed when --json is used"
-            case .value: break // skip
+            case .interVar: break // skip
             case .literal(let literal):
                 if literal.contains(where: { $0 != " " }) {
                     return "Only interpolation variables and spaces are allowed in '--format' when '--json' is used"

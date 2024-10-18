@@ -16,12 +16,12 @@ extension [AeroObj] {
             var errors: [String] = []
             for token in format {
                 switch token {
-                    case .value("right-padding"):
+                    case .interVar("right-padding"):
                         line.append(Cell(value: curCell, rightPadding: true))
                         curCell = ""
                     case .literal(let literal):
                         curCell += literal
-                    case .value(let value):
+                    case .interVar(let value):
                         switch value.expandFormatVar(obj: obj) {
                             case .success(let expanded): curCell += expanded.toString()
                             case .failure(let error): errors.append(error)

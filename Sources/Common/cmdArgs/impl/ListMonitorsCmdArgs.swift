@@ -34,8 +34,8 @@ public extension ListMonitorsCmdArgs {
     var format: [StringInterToken] {
         _format.isEmpty
             ? [
-                .value("monitor-id"), .value("right-padding"), .literal(" | "),
-                .value("monitor-name"),
+                .interVar("monitor-id"), .interVar("right-padding"), .literal(" | "),
+                .interVar("monitor-name"),
             ]
             : _format
     }

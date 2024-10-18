@@ -38,7 +38,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     public var windowId: UInt32?              // unused
     public var workspaceName: WorkspaceName?  // unused
     public var filteringOptions = FilteringOptions()
-    public var _format: [StringInterToken] = [.value("workspace")]
+    public var _format: [StringInterToken] = [.interVar("workspace")]
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
 
@@ -50,7 +50,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
 }
 
 public extension ListWorkspacesCmdArgs {
-    var format: [StringInterToken] { _format.isEmpty ? [.value("workspace")] : _format }
+    var format: [StringInterToken] { _format.isEmpty ? [.interVar("workspace")] : _format }
 }
 
 public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {
