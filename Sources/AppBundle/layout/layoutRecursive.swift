@@ -7,7 +7,7 @@ extension Workspace {
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in mointors horizontal configuration. ¯\_(ツ)_/¯
-        layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, LayoutContext(workspace: self))
+        layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, LayoutContext(self))
     }
 }
 
@@ -54,6 +54,12 @@ private extension TreeNode {
 
 private struct LayoutContext {
     let workspace: Workspace
+    let resolvedGaps: ResolvedGaps
+
+    init(_ workspace: Workspace) {
+        self.workspace = workspace
+        self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor)
+    }
 }
 
 private extension Window {
@@ -86,7 +92,6 @@ private extension Window {
 
 private extension TilingContainer {
     func layoutTiles(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) {
-        let gaps = ResolvedGaps(gaps: config.gaps, monitor: context.workspace.workspaceMonitor)
         var point = point
         var virtualPoint = virtual.topLeftCorner
 
@@ -96,7 +101,7 @@ private extension TilingContainer {
         let lastIndex = children.indices.last
         for (i, child) in children.enumerated() {
             child.setWeight(orientation, child.getWeight(orientation) + delta)
-            let rawGap = gaps.inner.get(orientation).toDouble()
+            let rawGap = context.resolvedGaps.inner.get(orientation).toDouble()
             // Gaps. Consider 4 cases:
             // 1. Multiple children. Layout first child
             // 2. Multiple children. Layout last child
