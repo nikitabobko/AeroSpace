@@ -23,7 +23,7 @@ EOF
 ### BUILD ###
 #############
 
-./build-docs.sh
+./build-docs.sh --build-version "$build_version"
 ./build-shell-completion.sh
 
 ./generate.sh

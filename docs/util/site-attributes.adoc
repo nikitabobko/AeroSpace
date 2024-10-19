@@ -1,3 +1,5 @@
+v0.0.0-SNAPSHOT
+// The line above is auto updated by build-docs.sh --build-version
 :idprefix:
 :idseparator: -
 :prewrap!:
