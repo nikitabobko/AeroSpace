@@ -93,7 +93,7 @@ aerospace -h;
     | list-workspaces [--format <output_format>|--count|--json] (--all|--focused) [--format <output_format>|--count|--json]
     ;
 
-<window_id> ::= {{{ aerospace list-windows --all --format '%{window-id}%{tab}%{app-name}%{right-padding} | %{window-title}' }}};
+<window_id> ::= {{{ aerospace list-windows --all --format '%{window-id}%{tab}%{app-name} - %{window-title}' }}};
 <binding> ::= {{{ aerospace config --get mode --keys | xargs -I{} aerospace config --get mode.{}.binding --keys }}};
 <mode_id> ::= {{{ aerospace config --get mode --keys }}};
 <workspace> ::= {{{ aerospace list-workspaces --monitor all --empty no }}};
@@ -116,6 +116,6 @@ aerospace -h;
     ;
 <output_format> ::= {{{ true }}};
 
-<app_bundle_id> ::= {{{ aerospace list-apps --format '%{app-bundle-id}%{right-padding}%{tab}%{app-name}' }}};
-<pid> ::= {{{ aerospace list-apps --format '%{app-pid}%{right-padding}%{tab}%{app-name}' }}};
-<monitor_id> ::= all | mouse | focused | {{{ aerospace list-monitors --format '%{monitor-id}%{right-padding}%{tab}%{monitor-name}' }}};
+<app_bundle_id> ::= {{{ aerospace list-apps --format '%{app-bundle-id}%{tab}%{app-name}' }}};
+<pid> ::= {{{ aerospace list-apps --format '%{app-pid}%{tab}%{app-name}' }}};
+<monitor_id> ::= all | mouse | focused | {{{ aerospace list-monitors --format '%{monitor-id}%{tab}%{monitor-name}' }}};
