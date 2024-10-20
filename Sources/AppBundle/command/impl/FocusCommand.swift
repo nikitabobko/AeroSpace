@@ -17,6 +17,9 @@ struct FocusCommand: Command {
 
         switch args.target {
             case .direction(let direction):
+                if (direction == .next || direction == .prev) {
+                    return focusPrevOrNext(target, direction, io)
+                }
                 let window = target.windowOrNil
                 if let (parent, ownIndex) = window?.closestParent(hasChildrenInDirection: direction, withLayout: nil) {
                     guard let windowToFocus = parent.children[ownIndex + direction.focusOffset]
@@ -37,8 +40,29 @@ struct FocusCommand: Command {
                 } else {
                     return io.err("Can't find window with DFS index \(dfsIndex)")
                 }
+
         }
     }
+}
+
+private func focusPrevOrNext(_ target: LiveFocus, _ direction: CardinalDirection, _ io: CmdIo) -> Bool {
+    let allWindows = target.workspace.rootTilingContainer.allLeafWindowsRecursive
+    let index = allWindows.firstIndex { $0 == focus.windowOrNil }
+    if index != nil {
+        var nextIndex = index!
+        if direction.isPositive {
+            nextIndex = nextIndex + 1
+        } else {
+            nextIndex = nextIndex - 1
+        }
+
+        nextIndex = (nextIndex + allWindows.count) % allWindows.count;
+        if let windowToFocus = target.workspace.rootTilingContainer.allLeafWindowsRecursive.getOrNil(atIndex: Int(nextIndex)) {
+            return windowToFocus.focusWindow()
+        }
+    }
+
+    return io.err("No windows to cycle between on workspace")
 }
 
 private func hitWorkspaceBoundaries(
