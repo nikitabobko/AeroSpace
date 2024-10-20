@@ -191,3 +191,7 @@ private func isValidAssignment(workspace: Workspace, screen: CGPoint) -> Bool {
         return true
     }
 }
+
+func isValidAssignment(workspace: Workspace, monitor: Monitor) -> Bool {
+    isValidAssignment(workspace: workspace, screen: monitor.rect.topLeftCorner)
+}
