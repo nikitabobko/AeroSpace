@@ -4,27 +4,28 @@ set -u # Treat unset variables and parameters other than the special parameters 
 set -o pipefail # Any command failed in the pipe fails the whole pipe
 # set -x # Print shell commands as they are executed (or you can try -v which is less verbose)
 
-add-to-bin() {
-    /usr/bin/which "$1" &> /dev/null && \
+add-optional-dep-to-bin() {
+    if /usr/bin/which "$1" &> /dev/null; then
         /bin/cat > ".deps/bin/${2:-$1}" <<EOF
 #!/bin/bash
 exec '$(/usr/bin/which "$1")' "\$@"
 EOF
+    fi
 }
 
 if /bin/test -z "${NUKE_PATH:-}"; then
     /bin/rm -rf .deps/bin
     /bin/mkdir -p .deps/bin
 
-    add-to-bin bash not-outdated-bash # build-shell-completion.sh
-    add-to-bin brew # install-from-sources.sh
-    add-to-bin bundle # Ruby, asciidoc
-    add-to-bin bundler # Ruby, asciidoc
-    add-to-bin cargo
-    add-to-bin fish
-    add-to-bin git
-    add-to-bin rustc
-    add-to-bin xcbeautify
+    add-optional-dep-to-bin bash not-outdated-bash # build-shell-completion.sh
+    add-optional-dep-to-bin fish # build-shell-completion.sh
+    add-optional-dep-to-bin rustc # build-shell-completion.sh
+    add-optional-dep-to-bin cargo # build-shell-completion.sh
+    add-optional-dep-to-bin brew # install-from-sources.sh
+    add-optional-dep-to-bin bundle # build-docs.sh
+    add-optional-dep-to-bin bundler # build-docs.sh
+    add-optional-dep-to-bin xcbeautify # build-release.sh
+    add-optional-dep-to-bin git
 
     export PATH="${PWD}/.deps/bin:/bin:/usr/bin"
     chmod +x .deps/bin/*
