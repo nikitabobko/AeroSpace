@@ -54,6 +54,8 @@ The following variables can be used inside `<output-format>`:
 %{app-bundle-id}:: String. Application unique identifier. https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
 %{app-name}:: String. Application name
 %{app-pid}:: Number. https://en.wikipedia.org/wiki/Process_identifier[UNIX process identifier]
+%{app-exec-path}:: String. Application executable path
+%{app-bundle-path}:: String. Application bundle path
 
 %{right-padding}:: A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column
 %{newline}:: Unicode U+000A newline symbol `\n`
