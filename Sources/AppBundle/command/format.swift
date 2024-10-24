@@ -67,6 +67,8 @@ private enum FormatVar: Equatable {
         case appBundleId = "app-bundle-id"
         case appName = "app-name"
         case appPid = "app-pid"
+        case appExecPath = "app-exec-path"
+        case appBundlePath = "app-bundle-path"
     }
 
     enum MonitorFormatVar: String, Equatable {
@@ -150,6 +152,8 @@ extension String {
                     case .appBundleId: .success(.string(a.id ?? "NULL-APP-BUNDLE-ID"))
                     case .appName: .success(.string(a.name ?? "NULL-APP-NAME"))
                     case .appPid: .success(.int32(a.pid))
+                    case .appExecPath: .success(.string(a.execPath ?? "NULL-APP-EXEC-PATH"))
+                    case .appBundlePath: .success(.string(a.bundlePath ?? "NULL-APP-BUNDLE-PATH"))
                 }
             default: break
         }

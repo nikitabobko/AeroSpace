@@ -25,6 +25,8 @@ class AbstractApp: Hashable {
 
     func getFocusedWindow(startup: Bool) -> Window? { error("Not implemented") }
     var name: String? { nil }
+    var execPath: String? { nil }
+    var bundlePath: String? { nil }
     func detectNewWindowsAndGetAll(startup: Bool) -> [Window] { error("Not implemented") }
 }
 

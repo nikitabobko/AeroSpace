@@ -52,6 +52,10 @@ final class MacApp: AbstractApp {
 
     override var name: String? { nsApp.localizedName }
 
+    override var execPath: String? { nsApp.executableURL?.path }
+
+    override var bundlePath: String? { nsApp.bundleURL?.path }
+
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) -> Bool {
         guard let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, handler, data: nil) else { return false }
         axObservers.append(AxObserverWrapper(obs: observer, ax: axApp, notif: notifKey as CFString))
