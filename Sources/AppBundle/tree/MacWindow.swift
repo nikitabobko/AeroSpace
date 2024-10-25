@@ -237,6 +237,16 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
     if axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole {
         return true
     }
+
+    // Special Cases Overrides:
+    // - Ghostty Quick Terminal (com.mitchellh.ghostty.quickTerminal)
+    if let windowIdentifier = axWindow.get(Ax.identifierAttr) {
+        if windowIdentifier == "com.mitchellh.ghostty.quickTerminal"
+        {
+            return true
+        }
+    }
+
     // Heuristic: float windows without fullscreen button (such windows are not designed to be big)
     // - IntelliJ various dialogs (Rebase..., Edit commit message, Settings, Project structure)
     // - Finder copy file dialog
