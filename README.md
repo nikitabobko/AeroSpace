@@ -57,10 +57,13 @@ Other installation options: https://nikitabobko.github.io/AeroSpace/guide#instal
 
 ## Community, discussions, issues, pull requests
 
-Informal community discussions happen at [GitHub Discussions](https://github.com/nikitabobko/AeroSpace/discussions).
+Informal community discussions happen at GitHub Discussions.
 There you can ask your questions, show off your setup, bring other topic, or just chat.
 
-There are 5 channels:
+There are 6 channels:
+-   [#all](https://github.com/nikitabobko/AeroSpace/discussions).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions.atom).
+    Feed with all discussions.
 -   [#announcements](https://github.com/nikitabobko/AeroSpace/discussions/categories/announcements).
     [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/announcements.atom).
     Only maintainers can post here.
@@ -82,7 +85,7 @@ You're welcome to submit bug reports and well-defined feature proposals in GitHu
 You're welcome to submit pull requests as well.
 See: [CONTRIBUTING.md](./CONTRIBUTING.md)
 
-**Issues vs Discussions:** Issues are more formal and well-defined requests. Discussions are informal and casual.
+**Issues vs Discussions:** Issues are formal and well-defined. Discussions are informal and casual.
 
 ## Development
 
