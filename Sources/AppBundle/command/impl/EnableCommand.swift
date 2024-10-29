@@ -1,10 +1,16 @@
 import AppKit
 import Common
 
-struct EnableCommand: Command {
-    let args: EnableCmdArgs
+//public extension EnableCommand {
+//    public init(targetState: EnableCmdArgs.TargetState) {
+//        self.init(args: EnableCmdArgs(rawArgs: [], targetState: targetState))
+//    }
+//}
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+public struct EnableCommand: Command {
+    public let args: EnableCmdArgs
+    
+    public func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         let prevState = TrayMenuModel.shared.isEnabled
         let newState: Bool = switch args.targetState.val {

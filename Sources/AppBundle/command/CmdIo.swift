@@ -1,9 +1,9 @@
-class CmdStdin {
+public class CmdStdin {
     private var input: String = ""
     init(_ input: String) {
         self.input = input
     }
-    static var emptyStdin: CmdStdin { .init("") }
+    public static var emptyStdin: CmdStdin { .init("") }
 
     func readAll() -> String {
         let result = input
@@ -12,7 +12,7 @@ class CmdStdin {
     }
 }
 
-class CmdIo {
+public class CmdIo {
     private var stdin: CmdStdin
     var stdout: [String] = []
     var stderr: [String] = []
@@ -27,7 +27,7 @@ class CmdIo {
     func readStdin() -> String { stdin.readAll() }
 }
 
-struct CmdResult {
+public struct CmdResult {
     let stdout: [String]
     let stderr: [String]
     let exitCode: Int32

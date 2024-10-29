@@ -1,0 +1,780 @@
+{
+  "" : {
+    "const-values" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Antlr4-master.swiftconstvalues",
+    "dependencies" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Antlr4-master.d",
+    "diagnostics" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Antlr4-master.dia",
+    "emit-module-dependencies" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Antlr4-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Antlr4-master-emit-module.dia",
+    "swift-dependencies" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Antlr4-master.swiftdeps"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/ANTLRErrorListener.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRErrorListener.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRErrorListener.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRErrorListener.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/ANTLRErrorStrategy.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRErrorStrategy.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRErrorStrategy.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRErrorStrategy.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/ANTLRFileStream.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRFileStream.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRFileStream.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRFileStream.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/ANTLRInputStream.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRInputStream.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRInputStream.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRInputStream.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/BailErrorStrategy.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BailErrorStrategy.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BailErrorStrategy.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BailErrorStrategy.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/BaseErrorListener.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BaseErrorListener.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BaseErrorListener.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BaseErrorListener.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/BufferedTokenStream.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BufferedTokenStream.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BufferedTokenStream.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BufferedTokenStream.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/CharStream.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CharStream.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CharStream.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CharStream.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/CommonToken.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CommonToken.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CommonToken.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CommonToken.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/CommonTokenFactory.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CommonTokenFactory.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CommonTokenFactory.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CommonTokenFactory.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/CommonTokenStream.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CommonTokenStream.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CommonTokenStream.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CommonTokenStream.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/ConsoleErrorListener.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ConsoleErrorListener.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ConsoleErrorListener.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ConsoleErrorListener.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/DefaultErrorStrategy.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DefaultErrorStrategy.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DefaultErrorStrategy.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DefaultErrorStrategy.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/DiagnosticErrorListener.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DiagnosticErrorListener.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DiagnosticErrorListener.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DiagnosticErrorListener.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/FailedPredicateException.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/FailedPredicateException.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/FailedPredicateException.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/FailedPredicateException.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/InputMismatchException.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/InputMismatchException.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/InputMismatchException.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/InputMismatchException.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/IntStream.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/IntStream.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/IntStream.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/IntStream.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/InterpreterRuleContext.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/InterpreterRuleContext.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/InterpreterRuleContext.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/InterpreterRuleContext.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/Lexer.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Lexer.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Lexer.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Lexer.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/LexerInterpreter.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerInterpreter.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerInterpreter.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerInterpreter.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/LexerNoViableAltException.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerNoViableAltException.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerNoViableAltException.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerNoViableAltException.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/ListTokenSource.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ListTokenSource.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ListTokenSource.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ListTokenSource.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/NoViableAltException.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/NoViableAltException.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/NoViableAltException.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/NoViableAltException.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/Parser.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Parser.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Parser.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Parser.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/ParserInterpreter.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParserInterpreter.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParserInterpreter.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParserInterpreter.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/ParserRuleContext.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParserRuleContext.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParserRuleContext.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParserRuleContext.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/ProxyErrorListener.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ProxyErrorListener.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ProxyErrorListener.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ProxyErrorListener.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/RecognitionException.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RecognitionException.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RecognitionException.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RecognitionException.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/Recognizer.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Recognizer.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Recognizer.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Recognizer.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/RuleContext.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleContext.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleContext.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleContext.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/RuntimeMetaData.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuntimeMetaData.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuntimeMetaData.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuntimeMetaData.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/Token.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Token.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Token.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Token.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/TokenFactory.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenFactory.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenFactory.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenFactory.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/TokenSource.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenSource.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenSource.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenSource.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/TokenStream.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenStream.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenStream.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenStream.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/TokenStreamRewriter.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenStreamRewriter.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenStreamRewriter.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenStreamRewriter.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/UnbufferedCharStream.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/UnbufferedCharStream.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/UnbufferedCharStream.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/UnbufferedCharStream.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/UnbufferedTokenStream.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/UnbufferedTokenStream.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/UnbufferedTokenStream.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/UnbufferedTokenStream.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/VocabularySingle.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/VocabularySingle.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/VocabularySingle.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/VocabularySingle.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/WritableToken.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/WritableToken.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/WritableToken.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/WritableToken.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ATN.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATN.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATN.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATN.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ATNConfig.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNConfig.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNConfig.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNConfig.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ATNConfigSet.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNConfigSet.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNConfigSet.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNConfigSet.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ATNDeserializationOptions.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNDeserializationOptions.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNDeserializationOptions.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNDeserializationOptions.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ATNDeserializer.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNDeserializer.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNDeserializer.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNDeserializer.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ATNSimulator.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNSimulator.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNSimulator.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNSimulator.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ATNState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ATNType.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNType.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNType.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ATNType.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/AbstractPredicateTransition.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/AbstractPredicateTransition.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/AbstractPredicateTransition.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/AbstractPredicateTransition.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ActionTransition.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ActionTransition.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ActionTransition.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ActionTransition.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/AmbiguityInfo.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/AmbiguityInfo.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/AmbiguityInfo.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/AmbiguityInfo.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ArrayPredictionContext.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ArrayPredictionContext.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ArrayPredictionContext.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ArrayPredictionContext.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/AtomTransition.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/AtomTransition.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/AtomTransition.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/AtomTransition.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/BasicBlockStartState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BasicBlockStartState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BasicBlockStartState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BasicBlockStartState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/BasicState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BasicState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BasicState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BasicState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/BlockEndState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BlockEndState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BlockEndState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BlockEndState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/BlockStartState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BlockStartState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BlockStartState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BlockStartState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ContextSensitivityInfo.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ContextSensitivityInfo.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ContextSensitivityInfo.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ContextSensitivityInfo.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/DecisionEventInfo.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DecisionEventInfo.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DecisionEventInfo.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DecisionEventInfo.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/DecisionInfo.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DecisionInfo.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DecisionInfo.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DecisionInfo.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/DecisionState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DecisionState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DecisionState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DecisionState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/DefaultATNConfig.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DefaultATNConfig.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DefaultATNConfig.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DefaultATNConfig.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/EmptyPredictionContext.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/EmptyPredictionContext.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/EmptyPredictionContext.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/EmptyPredictionContext.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/EpsilonTransition.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/EpsilonTransition.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/EpsilonTransition.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/EpsilonTransition.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ErrorInfo.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ErrorInfo.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ErrorInfo.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ErrorInfo.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LL1Analyzer.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LL1Analyzer.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LL1Analyzer.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LL1Analyzer.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerATNConfig.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerATNConfig.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerATNConfig.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerATNConfig.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerATNSimulator.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerATNSimulator.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerATNSimulator.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerATNSimulator.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerAction.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerAction.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerAction.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerAction.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerActionExecutor.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerActionExecutor.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerActionExecutor.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerActionExecutor.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerActionType.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerActionType.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerActionType.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerActionType.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerChannelAction.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerChannelAction.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerChannelAction.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerChannelAction.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerCustomAction.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerCustomAction.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerCustomAction.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerCustomAction.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerIndexedCustomAction.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerIndexedCustomAction.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerIndexedCustomAction.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerIndexedCustomAction.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerModeAction.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerModeAction.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerModeAction.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerModeAction.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerMoreAction.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerMoreAction.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerMoreAction.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerMoreAction.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerPopModeAction.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerPopModeAction.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerPopModeAction.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerPopModeAction.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerPushModeAction.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerPushModeAction.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerPushModeAction.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerPushModeAction.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerSkipAction.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerSkipAction.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerSkipAction.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerSkipAction.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LexerTypeAction.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerTypeAction.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerTypeAction.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerTypeAction.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LookaheadEventInfo.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LookaheadEventInfo.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LookaheadEventInfo.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LookaheadEventInfo.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LookupATNConfig.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LookupATNConfig.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LookupATNConfig.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LookupATNConfig.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LookupDictionary.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LookupDictionary.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LookupDictionary.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LookupDictionary.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/LoopEndState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LoopEndState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LoopEndState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LoopEndState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/NotSetTransition.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/NotSetTransition.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/NotSetTransition.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/NotSetTransition.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ParseInfo.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseInfo.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseInfo.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseInfo.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ParserATNSimulator.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParserATNSimulator.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParserATNSimulator.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParserATNSimulator.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/PlusBlockStartState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PlusBlockStartState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PlusBlockStartState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PlusBlockStartState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/PlusLoopbackState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PlusLoopbackState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PlusLoopbackState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PlusLoopbackState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/PrecedencePredicateTransition.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PrecedencePredicateTransition.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PrecedencePredicateTransition.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PrecedencePredicateTransition.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/PredicateEvalInfo.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredicateEvalInfo.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredicateEvalInfo.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredicateEvalInfo.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/PredicateTransition.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredicateTransition.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredicateTransition.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredicateTransition.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/PredictionContext.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredictionContext.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredictionContext.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredictionContext.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/PredictionContextCache.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredictionContextCache.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredictionContextCache.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredictionContextCache.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/PredictionMode.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredictionMode.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredictionMode.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/PredictionMode.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/ProfilingATNSimulator.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ProfilingATNSimulator.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ProfilingATNSimulator.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ProfilingATNSimulator.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/RangeTransition.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RangeTransition.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RangeTransition.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RangeTransition.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/RuleStartState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleStartState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleStartState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleStartState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/RuleStopState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleStopState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleStopState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleStopState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/RuleTransition.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleTransition.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleTransition.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleTransition.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/SemanticContext.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/SemanticContext.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/SemanticContext.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/SemanticContext.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/SetTransition.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/SetTransition.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/SetTransition.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/SetTransition.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/SingletonPredictionContext.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/SingletonPredictionContext.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/SingletonPredictionContext.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/SingletonPredictionContext.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/StarBlockStartState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/StarBlockStartState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/StarBlockStartState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/StarBlockStartState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/StarLoopEntryState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/StarLoopEntryState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/StarLoopEntryState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/StarLoopEntryState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/StarLoopbackState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/StarLoopbackState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/StarLoopbackState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/StarLoopbackState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/TokensStartState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokensStartState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokensStartState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokensStartState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/Transition.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Transition.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Transition.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Transition.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/atn/WildcardTransition.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/WildcardTransition.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/WildcardTransition.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/WildcardTransition.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/dfa/DFA.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DFA.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DFA.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DFA.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/dfa/DFASerializer.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DFASerializer.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DFASerializer.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DFASerializer.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/dfa/DFAState.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DFAState.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DFAState.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DFAState.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/dfa/LexerDFASerializer.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerDFASerializer.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerDFASerializer.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/LexerDFASerializer.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/BitSet.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BitSet.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BitSet.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/BitSet.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/DoubleKeyMap.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DoubleKeyMap.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DoubleKeyMap.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/DoubleKeyMap.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/IntSet.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/IntSet.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/IntSet.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/IntSet.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/InterpreterDataReader.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/InterpreterDataReader.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/InterpreterDataReader.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/InterpreterDataReader.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/Interval.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Interval.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Interval.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Interval.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/IntervalSet.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/IntervalSet.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/IntervalSet.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/IntervalSet.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/MultiMap.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/MultiMap.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/MultiMap.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/MultiMap.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/MurmurHash.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/MurmurHash.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/MurmurHash.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/MurmurHash.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/Utils.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Utils.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Utils.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Utils.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/exception/ANTLRError.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRError.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRError.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRError.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/exception/ANTLRException.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRException.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRException.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ANTLRException.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/extension/ArrayExtension.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ArrayExtension.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ArrayExtension.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ArrayExtension.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/extension/CharacterExtension.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CharacterExtension.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CharacterExtension.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CharacterExtension.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/extension/IntStreamExtension.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/IntStreamExtension.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/IntStreamExtension.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/IntStreamExtension.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/extension/StringExtension.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/StringExtension.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/StringExtension.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/StringExtension.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/extension/TokenExtension.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenExtension.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenExtension.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenExtension.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/extension/UUIDExtension.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/UUIDExtension.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/UUIDExtension.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/UUIDExtension.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/utils/CommonUtil.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CommonUtil.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CommonUtil.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/CommonUtil.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/utils/Mutex.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Mutex.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Mutex.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Mutex.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/misc/utils/Stack.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Stack.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Stack.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Stack.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/AbstractParseTreeVisitor.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/AbstractParseTreeVisitor.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/AbstractParseTreeVisitor.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/AbstractParseTreeVisitor.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/ErrorNode.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ErrorNode.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ErrorNode.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ErrorNode.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/ParseTree.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTree.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTree.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTree.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/ParseTreeListener.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeListener.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeListener.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeListener.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/ParseTreeProperty.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeProperty.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeProperty.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeProperty.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/ParseTreeVisitor.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeVisitor.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeVisitor.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeVisitor.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/ParseTreeWalker.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeWalker.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeWalker.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeWalker.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/RuleNode.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleNode.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleNode.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleNode.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/SyntaxTree.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/SyntaxTree.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/SyntaxTree.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/SyntaxTree.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/TerminalNode.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TerminalNode.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TerminalNode.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TerminalNode.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/TerminalNodeImpl.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TerminalNodeImpl.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TerminalNodeImpl.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TerminalNodeImpl.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/Tree.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Tree.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Tree.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Tree.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/Trees.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Trees.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Trees.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Trees.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/pattern/Chunk.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Chunk.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Chunk.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/Chunk.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/pattern/ParseTreeMatch.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeMatch.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeMatch.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreeMatch.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/pattern/ParseTreePattern.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreePattern.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreePattern.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreePattern.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/pattern/ParseTreePatternMatcher.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreePatternMatcher.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreePatternMatcher.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/ParseTreePatternMatcher.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/pattern/RuleTagToken.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleTagToken.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleTagToken.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/RuleTagToken.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/pattern/TagChunk.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TagChunk.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TagChunk.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TagChunk.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/pattern/TextChunk.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TextChunk.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TextChunk.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TextChunk.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/runtime/Swift/Sources/Antlr4/tree/pattern/TokenTagToken.swift" : {
+    "index-unit-output-path" : "/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenTagToken.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenTagToken.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/antlr4/build/Antlr4.build/Release/Antlr4.build/Objects-normal/x86_64/TokenTagToken.o"
+  }
+}

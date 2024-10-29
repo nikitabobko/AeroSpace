@@ -13,9 +13,9 @@ extension LiveFocus {
 
 /// This object should be only passed around but never memorized
 /// Alternative name: ResolvedFocus
-struct LiveFocus: AeroAny, Equatable {
+public struct LiveFocus: AeroAny, Equatable {
     let windowOrNil: Window?
-    var workspace: Workspace
+    public var workspace: Workspace
 
     var frozen: FrozenFocus {
         return FrozenFocus(
@@ -59,7 +59,7 @@ var _focus: FrozenFocus = {
 /// Commands must be cautious about accessing this property directly. There are legitimate cases.
 /// But, in general, commands must firstly check --window-id, --workspace, AEROSPACE_WINDOW_ID env and
 /// AEROSPACE_WORKSPACE env before accessing the global focus.
-var focus: LiveFocus { _focus.live }
+public var focus: LiveFocus { _focus.live }
 
 func setFocus(to newFocus: LiveFocus) -> Bool {
     if _focus == newFocus.frozen { return true }
@@ -89,7 +89,7 @@ extension Window {
     func toLiveFocusOrNil() -> LiveFocus? { visualWorkspace.map { LiveFocus(windowOrNil: self, workspace: $0) } }
 }
 extension Workspace {
-    func focusWorkspace() -> Bool { setFocus(to: toLiveFocus()) }
+    public func focusWorkspace() -> Bool { setFocus(to: toLiveFocus()) }
 
     func toLiveFocus() -> LiveFocus {
         // todo unfortunately mostRecentWindowRecursive may recursively reach empty rootTilingContainer

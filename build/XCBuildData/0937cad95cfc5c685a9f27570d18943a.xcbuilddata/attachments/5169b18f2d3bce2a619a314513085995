@@ -1,0 +1,40 @@
+{
+  "" : {
+    "const-values" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/HotKey-master.swiftconstvalues",
+    "dependencies" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/HotKey-master.d",
+    "diagnostics" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/HotKey-master.dia",
+    "emit-module-dependencies" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/HotKey-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/HotKey-master-emit-module.dia",
+    "swift-dependencies" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/HotKey-master.swiftdeps"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/Sources/HotKey/HotKey.swift" : {
+    "index-unit-output-path" : "/HotKey.build/Release/HotKey.build/Objects-normal/arm64/HotKey.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/HotKey.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/HotKey.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/Sources/HotKey/HotKeysController.swift" : {
+    "index-unit-output-path" : "/HotKey.build/Release/HotKey.build/Objects-normal/arm64/HotKeysController.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/HotKeysController.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/HotKeysController.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/Sources/HotKey/Key.swift" : {
+    "index-unit-output-path" : "/HotKey.build/Release/HotKey.build/Objects-normal/arm64/Key.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/Key.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/Key.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/Sources/HotKey/KeyCombo+System.swift" : {
+    "index-unit-output-path" : "/HotKey.build/Release/HotKey.build/Objects-normal/arm64/KeyCombo+System.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/KeyCombo+System.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/KeyCombo+System.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/Sources/HotKey/KeyCombo.swift" : {
+    "index-unit-output-path" : "/HotKey.build/Release/HotKey.build/Objects-normal/arm64/KeyCombo.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/KeyCombo.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/KeyCombo.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/Sources/HotKey/NSEventModifierFlags+HotKey.swift" : {
+    "index-unit-output-path" : "/HotKey.build/Release/HotKey.build/Objects-normal/arm64/NSEventModifierFlags+HotKey.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/NSEventModifierFlags+HotKey.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/HotKey/build/HotKey.build/Release/HotKey.build/Objects-normal/arm64/NSEventModifierFlags+HotKey.o"
+  }
+}

@@ -15,7 +15,7 @@ struct ReloadConfigCommand: Command {
     }
 }
 
-func reloadConfig(forceConfigUrl: URL? = nil) -> Bool {
+public func reloadConfig(forceConfigUrl: URL? = nil) -> Bool {
     var devNull = ""
     return reloadConfig(forceConfigUrl: forceConfigUrl, stdout: &devNull)
 }

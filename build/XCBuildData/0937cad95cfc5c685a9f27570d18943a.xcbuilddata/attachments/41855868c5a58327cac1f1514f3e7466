@@ -1,0 +1,35 @@
+{
+  "" : {
+    "const-values" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket-master.swiftconstvalues",
+    "dependencies" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket-master.d",
+    "diagnostics" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket-master.dia",
+    "emit-module-dependencies" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket-master-emit-module.dia",
+    "swift-dependencies" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket-master.swiftdeps"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/Sources/Socket/Socket+Equatable.swift" : {
+    "index-unit-output-path" : "/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket+Equatable.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket+Equatable.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket+Equatable.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/Sources/Socket/Socket+Hashable.swift" : {
+    "index-unit-output-path" : "/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket+Hashable.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket+Hashable.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket+Hashable.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/Sources/Socket/Socket.swift" : {
+    "index-unit-output-path" : "/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/Socket.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/Sources/Socket/SocketProtocols.swift" : {
+    "index-unit-output-path" : "/Socket.build/Release/Socket.build/Objects-normal/arm64/SocketProtocols.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/SocketProtocols.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/SocketProtocols.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/Sources/Socket/SocketUtils.swift" : {
+    "index-unit-output-path" : "/Socket.build/Release/Socket.build/Objects-normal/arm64/SocketUtils.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/SocketUtils.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/BlueSocket/build/Socket.build/Release/Socket.build/Objects-normal/arm64/SocketUtils.o"
+  }
+}

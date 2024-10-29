@@ -1,0 +1,390 @@
+{
+  "" : {
+    "const-values" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopeModule-master.swiftconstvalues",
+    "dependencies" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopeModule-master.d",
+    "diagnostics" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopeModule-master.dia",
+    "emit-module-dependencies" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopeModule-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopeModule-master-emit-module.dia",
+    "swift-dependencies" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopeModule-master.swiftdeps"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Builder.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Builder.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Builder.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Builder.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Contents.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Contents.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Contents.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Contents.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Debugging.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Debugging.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Debugging.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Debugging.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Index.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Index.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Index.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Index.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Ingester.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Ingester.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Ingester.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Ingester.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Invariants.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Invariants.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Invariants.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Invariants.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Iterators.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Iterators.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Iterators.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Iterators.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Metrics.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Metrics.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Metrics.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Metrics.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Summary.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Summary.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Summary.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Summary.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Append and Insert.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Append and Insert.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Append and Insert.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Append and Insert.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Breaks.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Breaks.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Breaks.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Breaks.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Counts.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Counts.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Counts.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Counts.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Description.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Description.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Description.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Description.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Indexing by Characters.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Indexing by Characters.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Indexing by Characters.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Indexing by Characters.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Indexing by UTF16.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Indexing by UTF16.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Indexing by UTF16.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Indexing by UTF16.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+RopeElement.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+RopeElement.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+RopeElement.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+RopeElement.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Splitting.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Splitting.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Splitting.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk+Splitting.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Chunk.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+BidirectionalCollection.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+BidirectionalCollection.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+BidirectionalCollection.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+BidirectionalCollection.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+Comparable.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Comparable.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Comparable.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Comparable.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+CustomDebugStringConvertible.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+CustomDebugStringConvertible.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+CustomDebugStringConvertible.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+CustomDebugStringConvertible.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+CustomStringConvertible.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+CustomStringConvertible.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+CustomStringConvertible.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+CustomStringConvertible.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+Equatable.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Equatable.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Equatable.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Equatable.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+ExpressibleByStringLiteral.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+ExpressibleByStringLiteral.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+ExpressibleByStringLiteral.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+ExpressibleByStringLiteral.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+Hashing.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Hashing.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Hashing.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Hashing.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+LosslessStringConvertible.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+LosslessStringConvertible.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+LosslessStringConvertible.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+LosslessStringConvertible.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+RangeReplaceableCollection.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+RangeReplaceableCollection.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+RangeReplaceableCollection.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+RangeReplaceableCollection.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+Sequence.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Sequence.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Sequence.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Sequence.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+TextOutputStream.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+TextOutputStream.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+TextOutputStream.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+TextOutputStream.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+Append.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Append.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Append.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Append.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+Initializers.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Initializers.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Initializers.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Initializers.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+Insert.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Insert.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Insert.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Insert.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+Managing Breaks.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Managing Breaks.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Managing Breaks.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Managing Breaks.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+RemoveSubrange.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+RemoveSubrange.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+RemoveSubrange.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+RemoveSubrange.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+ReplaceSubrange.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+ReplaceSubrange.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+ReplaceSubrange.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+ReplaceSubrange.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+Split.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Split.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Split.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+Split.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/Range+BigString.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Range+BigString.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Range+BigString.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Range+BigString.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigString+UTF16View.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+UTF16View.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+UTF16View.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+UTF16View.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigString+UTF8View.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+UTF8View.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+UTF8View.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+UTF8View.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigString+UnicodeScalarView.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+UnicodeScalarView.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+UnicodeScalarView.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigString+UnicodeScalarView.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigSubstring+UTF16View.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigSubstring+UTF16View.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigSubstring+UTF16View.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigSubstring+UTF16View.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigSubstring+UTF8View.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigSubstring+UTF8View.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigSubstring+UTF8View.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigSubstring+UTF8View.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigSubstring+UnicodeScalarView.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigSubstring+UnicodeScalarView.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigSubstring+UnicodeScalarView.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigSubstring+UnicodeScalarView.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigSubstring.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigSubstring.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigSubstring.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/BigSubstring.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+Builder.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Builder.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Builder.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Builder.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+Debugging.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Debugging.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Debugging.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Debugging.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+Invariants.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Invariants.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Invariants.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Invariants.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+_Node.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+_Node.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+_Node.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+_Node.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+_Storage.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+_Storage.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+_Storage.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+_Storage.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+_UnmanagedLeaf.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+_UnmanagedLeaf.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+_UnmanagedLeaf.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+_UnmanagedLeaf.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+_UnsafeHandle.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+_UnsafeHandle.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+_UnsafeHandle.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+_UnsafeHandle.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/RopeElement.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/RopeElement.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/RopeElement.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/RopeElement.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/RopeMetric.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/RopeMetric.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/RopeMetric.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/RopeMetric.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/RopeSummary.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/RopeSummary.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/RopeSummary.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/RopeSummary.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/_RopeItem.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopeItem.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopeItem.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopeItem.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/_RopePath.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopePath.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopePath.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopePath.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/_RopeVersion.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopeVersion.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopeVersion.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_RopeVersion.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Conformances/Rope+Collection.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Collection.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Collection.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Collection.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Conformances/Rope+Index.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Index.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Index.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Index.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Conformances/Rope+Sequence.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Sequence.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Sequence.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Sequence.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Append.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Append.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Append.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Append.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Extract.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Extract.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Extract.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Extract.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Find.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Find.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Find.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Find.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+ForEachWhile.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+ForEachWhile.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+ForEachWhile.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+ForEachWhile.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Insert.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Insert.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Insert.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Insert.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Join.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Join.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Join.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Join.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+MutatingForEach.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+MutatingForEach.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+MutatingForEach.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+MutatingForEach.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Remove.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Remove.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Remove.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Remove.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+RemoveSubrange.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+RemoveSubrange.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+RemoveSubrange.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+RemoveSubrange.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Split.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Split.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Split.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Rope+Split.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Utilities/Optional Utilities.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Optional Utilities.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Optional Utilities.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/Optional Utilities.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Utilities/String Utilities.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/String Utilities.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/String Utilities.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/String Utilities.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Utilities/String.Index+ABI.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/String.Index+ABI.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/String.Index+ABI.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/String.Index+ABI.o"
+  },
+  "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Utilities/_CharacterRecognizer.swift" : {
+    "index-unit-output-path" : "/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_CharacterRecognizer.o",
+    "llvm-bc" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_CharacterRecognizer.bc",
+    "object" : "/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/build/swift-collections.build/Release/_RopeModule.build/Objects-normal/arm64/_CharacterRecognizer.o"
+  }
+}

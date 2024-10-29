@@ -1,0 +1,76 @@
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Builder.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Contents.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Debugging.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Index.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Ingester.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Invariants.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Iterators.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Metrics.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString+Summary.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Basics/BigString.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Append\ and\ Insert.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Breaks.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Counts.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Description.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Indexing\ by\ Characters.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Indexing\ by\ UTF16.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+RopeElement.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk+Splitting.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Chunk/BigString+Chunk.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+BidirectionalCollection.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+Comparable.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+CustomDebugStringConvertible.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+CustomStringConvertible.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+Equatable.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+ExpressibleByStringLiteral.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+Hashing.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+LosslessStringConvertible.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+RangeReplaceableCollection.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+Sequence.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Conformances/BigString+TextOutputStream.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+Append.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+Initializers.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+Insert.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+Managing\ Breaks.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+RemoveSubrange.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+ReplaceSubrange.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/BigString+Split.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Operations/Range+BigString.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigString+UTF16View.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigString+UTF8View.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigString+UnicodeScalarView.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigSubstring+UTF16View.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigSubstring+UTF8View.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigSubstring+UnicodeScalarView.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/BigString/Views/BigSubstring.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+Builder.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+Debugging.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+Invariants.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+_Node.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+_Storage.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+_UnmanagedLeaf.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope+_UnsafeHandle.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/Rope.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/RopeElement.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/RopeMetric.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/RopeSummary.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/_RopeItem.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/_RopePath.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Basics/_RopeVersion.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Conformances/Rope+Collection.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Conformances/Rope+Index.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Conformances/Rope+Sequence.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Append.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Extract.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Find.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+ForEachWhile.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Insert.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Join.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+MutatingForEach.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Remove.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+RemoveSubrange.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Rope/Operations/Rope+Split.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Utilities/Optional\ Utilities.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Utilities/String\ Utilities.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Utilities/String.Index+ABI.swift
+/Users/daniel/Library/Developer/Xcode/DerivedData/AeroSpace-dqvkapupgiqoatbaojwuvoltbpeh/SourcePackages/checkouts/swift-collections/Sources/RopeModule/Utilities/_CharacterRecognizer.swift

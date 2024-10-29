@@ -30,10 +30,10 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
         ?? errorT("Can't create empty workspace")
 }
 
-class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, CustomStringConvertible, Comparable {
-    let name: String
+public class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, CustomStringConvertible, Comparable {
+    public let name: String
     private let nameLogicalSegments: StringLogicalSegments
-    var id: String { name } // satisfy Identifiable
+    public var id: String { name } // satisfy Identifiable
     /// `assignedMonitorPoint` must be interpreted only when the workspace is invisible
     fileprivate var assignedMonitorPoint: CGPoint? = nil
 
@@ -43,7 +43,7 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, Custom
         super.init(parent: NilTreeNode.instance, adaptiveWeight: 0, index: 0)
     }
 
-    static var all: [Workspace] {
+    public static var all: [Workspace] {
         workspaceNameToWorkspace.values.sorted()
     }
 
@@ -57,7 +57,7 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, Custom
         }
     }
 
-    static func < (lhs: Workspace, rhs: Workspace) -> Bool { lhs.nameLogicalSegments < rhs.nameLogicalSegments }
+    public static func < (lhs: Workspace, rhs: Workspace) -> Bool { lhs.nameLogicalSegments < rhs.nameLogicalSegments }
 
     override func getWeight(_ targetOrientation: Orientation) -> CGFloat {
         workspaceMonitor.visibleRectPaddedByOuterGaps.getDimension(targetOrientation)
@@ -67,7 +67,7 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, Custom
         error("It's not possible to change weight of Workspace")
     }
 
-    var description: String {
+    public var description: String {
         let preservedNames = config.preservedWorkspaceNames.toSet()
         let description = [
             ("name", name),
@@ -96,14 +96,14 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, Custom
         return lhs === rhs
     }
 
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(name)
     }
 }
 
 extension Workspace {
-    var isVisible: Bool { visibleWorkspaceToScreenPoint.keys.contains(self) }
-    var workspaceMonitor: Monitor {
+    public var isVisible: Bool { visibleWorkspaceToScreenPoint.keys.contains(self) }
+    public var workspaceMonitor: Monitor {
         forceAssignedMonitor
             ?? visibleWorkspaceToScreenPoint[self]?.monitorApproximation
             ?? assignedMonitorPoint?.monitorApproximation

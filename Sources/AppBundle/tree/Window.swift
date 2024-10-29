@@ -1,12 +1,12 @@
 import AppKit
 import Common
 
-class Window: TreeNode, Hashable {
+public class Window: TreeNode, Hashable {
     let windowId: UInt32
     let app: AbstractApp
     override var parent: NonLeafTreeNodeObject { super.parent ?? errorT("Windows always have parent") }
     var parentOrNilForTests: NonLeafTreeNodeObject? { super.parent }
-    var lastFloatingSize: CGSize?
+    public var lastFloatingSize: CGSize?
     var isFullscreen: Bool = false
     var noOuterGapsInFullscreen: Bool = false
     var layoutReason: LayoutReason = .standard
@@ -28,12 +28,12 @@ class Window: TreeNode, Hashable {
         error("Not implemented")
     }
 
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(windowId)
     }
 
     func getTopLeftCorner() -> CGPoint? { error("Not implemented") }
-    func getSize() -> CGSize? { error("Not implemented") }
+    public func getSize() -> CGSize? { error("Not implemented") }
     var title: String { error("Not implemented") }
     var isMacosFullscreen: Bool { false }
     var isMacosMinimized: Bool { false } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
@@ -49,7 +49,7 @@ enum LayoutReason: Equatable {
     case macos(prevParentKind: NonLeafTreeNodeKind)
 }
 
-extension Window {
+public extension Window {
     var isFloating: Bool { parent is Workspace } // todo drop. It will be a source of bugs when sticky is introduced
 
     @discardableResult

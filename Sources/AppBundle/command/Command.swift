@@ -1,13 +1,15 @@
 import AppKit
 import Common
 
-protocol Command: AeroAny, Equatable {
+public protocol Command: AeroAny, Equatable {
     associatedtype T where T: CmdArgs
     var args: T { get }
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool
 }
 
-extension Command {
+
+
+public extension Command {
     static func == (lhs: any Command, rhs: any Command) -> Bool {
         return lhs.args.equals(rhs.args)
     }
@@ -17,11 +19,11 @@ extension Command {
     }
 }
 
-extension Command {
+public extension Command {
     var info: CmdStaticInfo { T.info }
 }
 
-extension Command {
+public extension Command {
     @discardableResult
     func run(_ env: CmdEnv, _ stdin: CmdStdin) -> CmdResult {
         check(Thread.current.isMainThread)
@@ -36,7 +38,7 @@ extension Command {
 // 2. CLI requests to server
 // 3. on-window-detected callback
 // 4. Tray icon buttons
-extension [Command] {
+public extension [Command] {
     func runCmdSeq(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         var isSucc = true

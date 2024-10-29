@@ -4,7 +4,7 @@ import Common
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input.
 /// The function is idempotent.
-func refreshSession<T>(startup: Bool = false, forceFocus: Bool = false, body: () -> T) -> T {
+public func refreshSession<T>(startup: Bool = false, forceFocus: Bool = false, body: () -> T) -> T {
     check(Thread.current.isMainThread)
     gc()
     gcMonitors()

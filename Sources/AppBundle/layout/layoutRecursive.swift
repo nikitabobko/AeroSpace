@@ -1,6 +1,6 @@
 import AppKit
 
-extension Workspace {
+public extension Workspace {
     func layoutWorkspace() {
         if isEffectivelyEmpty { return }
         let rect = workspaceMonitor.visibleRectPaddedByOuterGaps

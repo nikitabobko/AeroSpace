@@ -58,13 +58,13 @@ var apps: [AbstractApp] {
         : NSWorkspace.shared.runningApplications.lazy.filter { $0.activationPolicy == .regular }.map(\.macApp).filterNotNil()
 }
 
-func terminateApp() -> Never {
+public func terminateApp() -> Never {
     NSApplication.shared.terminate(nil)
     error("Unreachable code")
 }
 
 extension String {
-    func copyToClipboard() {
+    public func copyToClipboard() {
         let pasteboard = NSPasteboard.general
         pasteboard.declareTypes([.string], owner: nil)
         pasteboard.setString(self, forType: .string)

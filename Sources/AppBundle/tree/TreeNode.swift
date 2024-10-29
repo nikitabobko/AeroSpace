@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-class TreeNode: Equatable {
+public class TreeNode: Equatable {
     private var _children: [TreeNode] = []
     var children: [TreeNode] { _children }
     fileprivate weak var _parent: NonLeafTreeNodeObject? = nil
@@ -114,7 +114,7 @@ class TreeNode: Equatable {
         unbindIfBound() ?? errorT("\(self) is already unbound")
     }
 
-    static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {
+    public static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {
         lhs === rhs
     }
 
@@ -143,7 +143,7 @@ let WEIGHT_AUTO = CGFloat(-1)
 
 let INDEX_BIND_LAST = -1
 
-struct BindingData {
+public struct BindingData {
     let parent: NonLeafTreeNodeObject
     let adaptiveWeight: CGFloat
     let index: Int

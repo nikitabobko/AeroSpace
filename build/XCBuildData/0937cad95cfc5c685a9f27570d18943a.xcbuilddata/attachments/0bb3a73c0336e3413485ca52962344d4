@@ -1,0 +1,4 @@
+module BitCollections {
+header "BitCollections-Swift.h"
+export *
+}

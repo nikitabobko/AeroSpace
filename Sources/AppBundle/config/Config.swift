@@ -11,7 +11,7 @@ func getDefaultConfigUrlFromProject() -> URL {
     return projectRoot.appending(component: "docs/config-examples/default-config.toml")
 }
 
-var defaultConfigUrl: URL {
+public var defaultConfigUrl: URL {
     if isUnitTest {
         return getDefaultConfigUrlFromProject()
     } else {

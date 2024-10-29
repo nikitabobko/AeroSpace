@@ -1,0 +1,20 @@
+{
+  "" : {
+    "const-values" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/ShellParserGenerated.build/Objects-normal/x86_64/ShellParserGenerated-master.swiftconstvalues",
+    "dependencies" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/ShellParserGenerated.build/Objects-normal/x86_64/ShellParserGenerated-master.d",
+    "diagnostics" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/ShellParserGenerated.build/Objects-normal/x86_64/ShellParserGenerated-master.dia",
+    "emit-module-dependencies" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/ShellParserGenerated.build/Objects-normal/x86_64/ShellParserGenerated-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/ShellParserGenerated.build/Objects-normal/x86_64/ShellParserGenerated-master-emit-module.dia",
+    "swift-dependencies" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/ShellParserGenerated.build/Objects-normal/x86_64/ShellParserGenerated-master.swiftdeps"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/ShellParserGenerated/ShellLexer.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/ShellParserGenerated.build/Objects-normal/x86_64/ShellLexer.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/ShellParserGenerated.build/Objects-normal/x86_64/ShellLexer.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/ShellParserGenerated.build/Objects-normal/x86_64/ShellLexer.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/ShellParserGenerated/ShellParser.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/ShellParserGenerated.build/Objects-normal/x86_64/ShellParser.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/ShellParserGenerated.build/Objects-normal/x86_64/ShellParser.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/ShellParserGenerated.build/Objects-normal/x86_64/ShellParser.o"
+  }
+}

@@ -33,7 +33,7 @@ enum NonLeafTreeNodeKind: Equatable {
     case macosPopupWindowsContainer
 }
 
-protocol NonLeafTreeNodeObject: TreeNode {}
+public protocol NonLeafTreeNodeObject: TreeNode {}
 
 extension TreeNode {
     var nodeCases: TreeNodeCases {

@@ -1,0 +1,4 @@
+module HeapModule {
+header "HeapModule-Swift.h"
+export *
+}

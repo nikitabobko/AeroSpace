@@ -1,0 +1,4 @@
+module _CollectionsUtilities {
+header "_CollectionsUtilities-Swift.h"
+export *
+}

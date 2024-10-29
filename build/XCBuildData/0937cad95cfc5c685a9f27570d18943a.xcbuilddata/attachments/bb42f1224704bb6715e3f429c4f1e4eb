@@ -1,0 +1,4 @@
+module DequeModule {
+header "DequeModule-Swift.h"
+export *
+}

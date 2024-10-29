@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-extension TreeNode {
+public extension TreeNode {
     private func visit(node: TreeNode, result: inout [Window]) {
         if let node = node as? Window {
             result.append(node)
@@ -60,7 +60,7 @@ extension TreeNode {
     }
 
     // Doesn't contain at least one window
-    var isEffectivelyEmpty: Bool {
+    public var isEffectivelyEmpty: Bool {
         anyLeafWindowRecursive == nil
     }
 
@@ -77,7 +77,7 @@ extension TreeNode {
     func getCenter() -> CGPoint? { getRect()?.center }
 
     /// Returns closest parent that has children in specified direction relative to `self`
-    func closestParent(
+    internal func closestParent(
         hasChildrenInDirection direction: CardinalDirection,
         withLayout layout: Layout?
     ) -> (parent: TilingContainer, ownIndex: Int)? {

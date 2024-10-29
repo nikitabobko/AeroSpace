@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-final class MacWindow: Window, CustomStringConvertible {
+public final class MacWindow: Window, CustomStringConvertible {
     let axWindow: AXUIElement
     let macApp: MacApp
     // todo take into account monitor proportions
@@ -46,7 +46,7 @@ final class MacWindow: Window, CustomStringConvertible {
         }
     }
 
-    var description: String {
+    public var description: String {
         let description = [
             ("title", title),
             ("role", axWindow.get(Ax.roleAttr)),
@@ -133,7 +133,7 @@ final class MacWindow: Window, CustomStringConvertible {
         _ = setTopLeftCorner(p)
     }
 
-    func unhideFromCorner() {
+    public func unhideFromCorner() {
         guard let prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect else { return }
         guard let workspace else { return } // hiding only makes sense for workspace windows
 
@@ -159,7 +159,7 @@ final class MacWindow: Window, CustomStringConvertible {
         }
     }
 
-    override func getSize() -> CGSize? {
+    public override func getSize() -> CGSize? {
         axWindow.get(Ax.sizeAttr)
     }
 

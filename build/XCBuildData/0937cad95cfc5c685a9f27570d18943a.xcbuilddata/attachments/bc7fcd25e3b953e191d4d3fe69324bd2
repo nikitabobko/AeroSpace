@@ -1,0 +1,490 @@
+{
+  "" : {
+    "const-values" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/AppBundle-master.swiftconstvalues",
+    "dependencies" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/AppBundle-master.d",
+    "diagnostics" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/AppBundle-master.dia",
+    "emit-module-dependencies" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/AppBundle-master-emit-module.d",
+    "emit-module-diagnostics" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/AppBundle-master-emit-module.dia",
+    "swift-dependencies" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/AppBundle-master.swiftdeps"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/GlobalObserver.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/GlobalObserver.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/GlobalObserver.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/GlobalObserver.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/MenuBar.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MenuBar.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MenuBar.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MenuBar.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/TrayMenuModel.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TrayMenuModel.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TrayMenuModel.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TrayMenuModel.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/CmdEnv.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/CmdEnv.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/CmdEnv.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/CmdEnv.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/CmdIo.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/CmdIo.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/CmdIo.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/CmdIo.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/Command.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Command.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Command.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Command.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/cmdManifest.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/cmdManifest.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/cmdManifest.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/cmdManifest.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/cmdResolveTargetOrReportError.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/cmdResolveTargetOrReportError.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/cmdResolveTargetOrReportError.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/cmdResolveTargetOrReportError.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/format.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/format.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/format.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/format.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/formatToJson.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/formatToJson.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/formatToJson.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/formatToJson.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/BalanceSizesCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/BalanceSizesCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/BalanceSizesCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/BalanceSizesCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/CloseAllWindowsButCurrentCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/CloseAllWindowsButCurrentCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/CloseAllWindowsButCurrentCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/CloseAllWindowsButCurrentCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/CloseCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/CloseCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/CloseCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/CloseCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/ConfigCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ConfigCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ConfigCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ConfigCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/DebugWindowsCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/DebugWindowsCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/DebugWindowsCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/DebugWindowsCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/EnableCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/EnableCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/EnableCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/EnableCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/ExecAndForgetCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ExecAndForgetCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ExecAndForgetCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ExecAndForgetCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/FlattenWorkspaceTreeCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FlattenWorkspaceTreeCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FlattenWorkspaceTreeCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FlattenWorkspaceTreeCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/FocusBackAndForthCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FocusBackAndForthCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FocusBackAndForthCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FocusBackAndForthCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/FocusCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FocusCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FocusCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FocusCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/FocusMonitorCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FocusMonitorCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FocusMonitorCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FocusMonitorCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/FullscreenCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FullscreenCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FullscreenCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/FullscreenCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/JoinWithCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/JoinWithCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/JoinWithCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/JoinWithCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/LayoutCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/LayoutCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/LayoutCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/LayoutCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/ListAppsCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListAppsCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListAppsCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListAppsCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/ListExecEnvVarsCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListExecEnvVarsCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListExecEnvVarsCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListExecEnvVarsCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/ListMonitorsCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListMonitorsCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListMonitorsCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListMonitorsCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/ListWindowsCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListWindowsCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListWindowsCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListWindowsCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/ListWorkspacesCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListWorkspacesCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListWorkspacesCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ListWorkspacesCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/MacosNativeFullscreenCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacosNativeFullscreenCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacosNativeFullscreenCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacosNativeFullscreenCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/MacosNativeMinimizeCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacosNativeMinimizeCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacosNativeMinimizeCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacosNativeMinimizeCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/ModeCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ModeCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ModeCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ModeCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/MoveCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/MoveMouseCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveMouseCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveMouseCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveMouseCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/MoveNodeToMonitorCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveNodeToMonitorCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveNodeToMonitorCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveNodeToMonitorCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/MoveNodeToWorkspaceCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveNodeToWorkspaceCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveNodeToWorkspaceCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveNodeToWorkspaceCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/MoveWorkspaceToMonitorCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveWorkspaceToMonitorCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveWorkspaceToMonitorCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MoveWorkspaceToMonitorCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/ReloadConfigCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ReloadConfigCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ReloadConfigCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ReloadConfigCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/ResizeCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ResizeCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ResizeCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ResizeCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/ServerVersionInternalCommandCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ServerVersionInternalCommandCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ServerVersionInternalCommandCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ServerVersionInternalCommandCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/SplitCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/SplitCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/SplitCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/SplitCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/SummonWorkspaceCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/SummonWorkspaceCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/SummonWorkspaceCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/SummonWorkspaceCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/TriggerBindingCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TriggerBindingCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TriggerBindingCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TriggerBindingCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/VolumeCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/VolumeCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/VolumeCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/VolumeCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/WorkspaceBackAndForthCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/WorkspaceBackAndForthCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/WorkspaceBackAndForthCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/WorkspaceBackAndForthCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/impl/WorkspaceCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/WorkspaceCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/WorkspaceCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/WorkspaceCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/command/parseCommand.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseCommand.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseCommand.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseCommand.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/config/Config.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Config.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Config.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Config.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/config/ConfigFile.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ConfigFile.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ConfigFile.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ConfigFile.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/config/DynamicConfigValue.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/DynamicConfigValue.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/DynamicConfigValue.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/DynamicConfigValue.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/config/HotkeyBinding.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/HotkeyBinding.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/HotkeyBinding.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/HotkeyBinding.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/config/Mode.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Mode.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Mode.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Mode.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/config/keysMap.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/keysMap.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/keysMap.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/keysMap.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/config/parseConfig.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseConfig.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseConfig.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseConfig.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/config/parseExecEnvVariables.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseExecEnvVariables.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseExecEnvVariables.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseExecEnvVariables.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/config/parseGaps.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseGaps.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseGaps.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseGaps.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/config/parseKeyMapping.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseKeyMapping.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseKeyMapping.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseKeyMapping.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/config/parseOnWindowDetected.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseOnWindowDetected.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseOnWindowDetected.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseOnWindowDetected.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/config/parseWorkspaceToMonitorAssignment.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseWorkspaceToMonitorAssignment.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseWorkspaceToMonitorAssignment.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/parseWorkspaceToMonitorAssignment.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/config/startAtLogin.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/startAtLogin.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/startAtLogin.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/startAtLogin.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/focus.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/focus.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/focus.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/focus.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/focusCache.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/focusCache.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/focusCache.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/focusCache.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/getNativeFocusedWindow.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/getNativeFocusedWindow.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/getNativeFocusedWindow.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/getNativeFocusedWindow.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/initAppBundle.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/initAppBundle.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/initAppBundle.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/initAppBundle.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/layout/layoutRecursive.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/layoutRecursive.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/layoutRecursive.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/layoutRecursive.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/layout/refresh.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/refresh.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/refresh.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/refresh.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/model/Monitor.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Monitor.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Monitor.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Monitor.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/model/MonitorDescriptionEx.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MonitorDescriptionEx.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MonitorDescriptionEx.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MonitorDescriptionEx.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/model/MonitorEx.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MonitorEx.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MonitorEx.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MonitorEx.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/model/Rect.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Rect.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Rect.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Rect.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/mouse/mouse.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/mouse.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/mouse.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/mouse.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/mouse/moveWithMouse.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/moveWithMouse.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/moveWithMouse.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/moveWithMouse.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/mouse/resizeWithMouse.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/resizeWithMouse.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/resizeWithMouse.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/resizeWithMouse.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/normalizeLayoutReason.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/normalizeLayoutReason.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/normalizeLayoutReason.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/normalizeLayoutReason.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/server.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/server.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/server.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/server.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/shell/Shell.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Shell.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Shell.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Shell.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/tree/AbstractApp.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/AbstractApp.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/AbstractApp.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/AbstractApp.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/tree/MacApp.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacApp.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacApp.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacApp.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/tree/MacWindow.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacWindow.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacWindow.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacWindow.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/tree/MacosUnconventionalWindowsContainer.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacosUnconventionalWindowsContainer.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacosUnconventionalWindowsContainer.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MacosUnconventionalWindowsContainer.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/tree/TilingContainer.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TilingContainer.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TilingContainer.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TilingContainer.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/tree/TreeNode.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TreeNode.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TreeNode.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TreeNode.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/tree/TreeNodeCases.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TreeNodeCases.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TreeNodeCases.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TreeNodeCases.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/tree/TreeNodeEx.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TreeNodeEx.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TreeNodeEx.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/TreeNodeEx.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/tree/Window.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Window.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Window.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Window.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/tree/Workspace.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Workspace.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Workspace.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/Workspace.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/tree/WorkspaceEx.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/WorkspaceEx.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/WorkspaceEx.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/WorkspaceEx.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/tree/normalizeContainers.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/normalizeContainers.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/normalizeContainers.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/normalizeContainers.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/util/AeroAny.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/AeroAny.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/AeroAny.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/AeroAny.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/util/ArrayEx.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ArrayEx.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ArrayEx.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/ArrayEx.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/util/JsonEncoderEx.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/JsonEncoderEx.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/JsonEncoderEx.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/JsonEncoderEx.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/util/LazySequenceProtocolEx.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/LazySequenceProtocolEx.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/LazySequenceProtocolEx.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/LazySequenceProtocolEx.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/util/MruStack.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MruStack.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MruStack.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/MruStack.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/util/SelectorComparator.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/SelectorComparator.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/SelectorComparator.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/SelectorComparator.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/util/accessibility.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/accessibility.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/accessibility.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/accessibility.o"
+  },
+  "/Users/daniel/Developer/AeroSpace/Sources/AppBundle/util/appBundleUtil.swift" : {
+    "index-unit-output-path" : "/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/appBundleUtil.o",
+    "llvm-bc" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/appBundleUtil.bc",
+    "object" : "/Users/daniel/Developer/AeroSpace/build/AeroSpacePackage.build/Release/AppBundle.build/Objects-normal/arm64/appBundleUtil.o"
+  }
+}
