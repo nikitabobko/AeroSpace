@@ -1,4 +1,0 @@
-module Common {
-header "Common-Swift.h"
-export *
-}

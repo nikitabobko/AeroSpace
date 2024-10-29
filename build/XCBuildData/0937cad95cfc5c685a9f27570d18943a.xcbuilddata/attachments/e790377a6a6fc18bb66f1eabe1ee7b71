@@ -1,4 +1,0 @@
-module HashTreeCollections {
-header "HashTreeCollections-Swift.h"
-export *
-}

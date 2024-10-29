@@ -1,4 +1,0 @@
-module OrderedCollections {
-header "OrderedCollections-Swift.h"
-export *
-}

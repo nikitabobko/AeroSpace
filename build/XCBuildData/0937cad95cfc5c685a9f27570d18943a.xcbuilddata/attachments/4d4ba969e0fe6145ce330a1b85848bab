@@ -1,4 +1,0 @@
-module _RopeModule {
-header "_RopeModule-Swift.h"
-export *
-}

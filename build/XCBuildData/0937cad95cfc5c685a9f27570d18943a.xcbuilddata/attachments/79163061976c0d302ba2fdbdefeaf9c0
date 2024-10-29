@@ -1,4 +1,0 @@
-module TOMLKit {
-header "TOMLKit-Swift.h"
-export *
-}

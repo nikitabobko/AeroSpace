@@ -1,4 +1,0 @@
-module ISSoundAdditions {
-header "ISSoundAdditions-Swift.h"
-export *
-}

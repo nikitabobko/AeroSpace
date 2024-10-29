@@ -1,4 +1,0 @@
-module ShellParserGenerated {
-header "ShellParserGenerated-Swift.h"
-export *
-}

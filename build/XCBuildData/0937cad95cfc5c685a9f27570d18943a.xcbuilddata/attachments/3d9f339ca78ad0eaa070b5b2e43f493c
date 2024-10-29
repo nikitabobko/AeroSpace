@@ -1,4 +1,0 @@
-module Socket {
-header "Socket-Swift.h"
-export *
-}

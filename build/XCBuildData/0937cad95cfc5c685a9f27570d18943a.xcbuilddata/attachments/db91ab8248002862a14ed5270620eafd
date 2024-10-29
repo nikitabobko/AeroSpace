@@ -1,4 +1,0 @@
-module HotKey {
-header "HotKey-Swift.h"
-export *
-}

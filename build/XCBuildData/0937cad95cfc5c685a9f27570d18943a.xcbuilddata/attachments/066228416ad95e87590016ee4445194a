@@ -1,4 +1,0 @@
-module AppBundle {
-header "AppBundle-Swift.h"
-export *
-}
