@@ -1,11 +1,11 @@
 import AppKit
 
 class GlobalObserver {
-    @objc private static func onNsWorkspaceNotification() {
+    private static func onNotif(_ notification: Notification) {
         refreshAndLayout()
     }
 
-    @objc private static func onHideApp() {
+    private static func onHideApp(_ notification: Notification) {
         refreshSession(body: {
             if TrayMenuModel.shared.isEnabled && config.automaticallyUnhideMacosHiddenApps {
                 if let w = prevFocus?.windowOrNil,
@@ -26,13 +26,14 @@ class GlobalObserver {
     }
 
     static func initObserver() {
-        subscribe(NSWorkspace.didLaunchApplicationNotification)
-        subscribe(NSWorkspace.didActivateApplicationNotification)
-        subscribe(NSWorkspace.didHideApplicationNotification)
-        subscribe(NSWorkspace.didUnhideApplicationNotification)
-        subscribe(NSWorkspace.didDeactivateApplicationNotification)
-        subscribe(NSWorkspace.activeSpaceDidChangeNotification)
-        subscribe(NSWorkspace.didTerminateApplicationNotification)
+        let nc = NSWorkspace.shared.notificationCenter
+        nc.addObserver(forName: NSWorkspace.didLaunchApplicationNotification, object: nil, queue: .main, using: onNotif)
+        nc.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main, using: onNotif)
+        nc.addObserver(forName: NSWorkspace.didHideApplicationNotification, object: nil, queue: .main, using: onHideApp)
+        nc.addObserver(forName: NSWorkspace.didUnhideApplicationNotification, object: nil, queue: .main, using: onNotif)
+        nc.addObserver(forName: NSWorkspace.didDeactivateApplicationNotification, object: nil, queue: .main, using: onNotif)
+        nc.addObserver(forName: NSWorkspace.activeSpaceDidChangeNotification, object: nil, queue: .main, using: onNotif)
+        nc.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main, using: onNotif)
 
         NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseUp]) { _ in
             resetManipulatedWithMouseIfPossible()
@@ -44,16 +45,5 @@ class GlobalObserver {
                 }
             }
         }
-    }
-
-    private static func subscribe(_ name: NSNotification.Name) {
-        NSWorkspace.shared.notificationCenter.addObserver(
-            self,
-            selector: name == NSWorkspace.didHideApplicationNotification
-                ? #selector(onHideApp)
-                : #selector(onNsWorkspaceNotification),
-            name: name,
-            object: nil
-        )
     }
 }
