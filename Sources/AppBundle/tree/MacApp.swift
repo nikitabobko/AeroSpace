@@ -17,6 +17,11 @@ final class MacApp: AbstractApp {
     static var allAppsMap: [pid_t: MacApp] = [:]
 
     fileprivate static func get(_ nsApp: NSRunningApplication) -> MacApp? {
+        // Don't perceive any of the lock screen windows as real windows
+        // Otherwise, false positive ax notifications might trigger that lead to gcWindows
+        if nsApp.bundleIdentifier == lockScreenAppBundleId {
+            return nil
+        }
         let pid = nsApp.processIdentifier
         if let existing = allAppsMap[pid] {
             return existing

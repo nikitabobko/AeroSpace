@@ -2,6 +2,7 @@ import AppKit
 import Common
 import Foundation
 
+let lockScreenAppBundleId = "com.apple.loginwindow"
 let AEROSPACE_WINDOW_ID = "AEROSPACE_WINDOW_ID" // env var
 let AEROSPACE_WORKSPACE = "AEROSPACE_WORKSPACE" // env var
 

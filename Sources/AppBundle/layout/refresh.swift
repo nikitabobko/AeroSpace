@@ -60,10 +60,13 @@ func gcWindows() {
     // When lockscreen is active, all accessibility API becomes unobservable (all attributes become empty, window id
     // becomes nil, etc.) which tricks AeroSpace into thinking that all windows were closed.
     // The worst part is that windows don't becomes unobservable all together but window by window.
-    if NSWorkspace.shared.frontmostApplication?.bundleIdentifier == "com.apple.loginwindow" {
-        return
-    }
-    for window in MacWindow.allWindows where window.axWindow.containingWindowId() == nil {
+    if NSWorkspace.shared.frontmostApplication?.bundleIdentifier == lockScreenAppBundleId { return }
+    let allWindows = MacWindow.allWindows
+    let toKill: [MacWindow] = allWindows.filter { $0.axWindow.containingWindowId() == nil }
+    // If all windows are "unobservable", it's highly propable that loginwindow might be still active and we are still
+    // recovering from unlock
+    if toKill.count == allWindows.count { return }
+    for window in toKill {
         window.garbageCollect()
     }
 }
