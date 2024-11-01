@@ -29,7 +29,7 @@ final class MacWindow: Window, CustomStringConvertible {
             )
             let window = MacWindow(id, app, axWindow, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
 
-            if window.observe(destroyedObs, kAXUIElementDestroyedNotification) &&
+            if window.observe(refreshObs, kAXUIElementDestroyedNotification) &&
                 window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
                 window.observe(refreshObs, kAXWindowMiniaturizedNotification) &&
                 window.observe(movedObs, kAXMovedNotification) &&
@@ -315,11 +315,6 @@ private func getBindingDataForNewTilingWindow(_ workspace: Workspace) -> Binding
 
 extension UnsafeMutableRawPointer {
     var window: MacWindow? { Unmanaged.fromOpaque(self).takeUnretainedValue() }
-}
-
-private func destroyedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
-    data?.window?.garbageCollect()
-    refreshAndLayout()
 }
 
 func tryOnWindowDetected(_ window: Window, startup: Bool) {

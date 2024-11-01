@@ -51,8 +51,21 @@ func refreshModel() {
 private func gc() {
     // Garbage collect terminated apps and windows before working with all windows
     MacApp.garbageCollectTerminatedApps()
+    gcWindows()
     // Garbage collect workspaces after apps, because workspaces contain apps.
     Workspace.garbageCollectUnusedWorkspaces()
+}
+
+func gcWindows() {
+    // When lockscreen is active, all accessibility API becomes unobservable (all attributes become empty, window id
+    // becomes nil, etc.) which tricks AeroSpace into thinking that all windows were closed.
+    // The worst part is that windows don't becomes unobservable all together but window by window.
+    if NSWorkspace.shared.frontmostApplication?.bundleIdentifier == "com.apple.loginwindow" {
+        return
+    }
+    for window in MacWindow.allWindows where window.axWindow.containingWindowId() == nil {
+        window.garbageCollect()
+    }
 }
 
 func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
