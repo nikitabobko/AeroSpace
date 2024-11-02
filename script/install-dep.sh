@@ -8,7 +8,7 @@ complgen=0
 swiftlint=0
 swiftformat=0
 xcodegen=0
-while [[ $# -gt 0 ]]; do
+while test $# -gt 0; do
     case $1 in
         --antlr) antlr=1; shift ;;
         --complgen) complgen=1; shift ;;

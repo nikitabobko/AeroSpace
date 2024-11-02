@@ -6,7 +6,7 @@ rm -rf .site && mkdir .site
 rm -rf .man && mkdir .man
 
 build_version="0.0.0-SNAPSHOT"
-while [[ $# -gt 0 ]]; do
+while test $# -gt 0; do
     case $1 in
         --build-version) build_version="$2"; shift 2;;
         *) echo "Unknown option $1" > /dev/stderr; exit 1 ;;

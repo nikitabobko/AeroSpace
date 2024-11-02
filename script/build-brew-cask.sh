@@ -6,7 +6,7 @@ zip_uri='' # mandatory
 cask_name='' # mandatory
 build_version="0.0.0-SNAPSHOT"
 app_bundle_dir_name='AeroSpace.app'
-while [[ $# -gt 0 ]]; do
+while test $# -gt 0; do
     case $1 in
         --build-version) build_version="$2"; shift 2;;
         --zip-uri) zip_uri="$2"; shift 2;;
