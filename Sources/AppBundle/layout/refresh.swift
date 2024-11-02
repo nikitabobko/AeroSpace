@@ -61,13 +61,12 @@ func gcWindows() {
     // becomes nil, etc.) which tricks AeroSpace into thinking that all windows were closed.
     // The worst part is that windows don't becomes unobservable all together but window by window.
     if NSWorkspace.shared.frontmostApplication?.bundleIdentifier == lockScreenAppBundleId { return }
-    let allWindows = MacWindow.allWindows
-    let toKill: [MacWindow] = allWindows.filter { $0.axWindow.containingWindowId() == nil }
+    let toKill = MacWindow.allWindowsMap.filter { $0.value.axWindow.containingWindowId() == nil }
     // If all windows are "unobservable", it's highly propable that loginwindow might be still active and we are still
     // recovering from unlock
-    if toKill.count == allWindows.count { return }
+    if toKill.count == MacWindow.allWindowsMap.count { return }
     for window in toKill {
-        window.garbageCollect()
+        window.value.garbageCollect()
     }
 }
 
