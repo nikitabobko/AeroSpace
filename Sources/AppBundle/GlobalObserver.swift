@@ -2,6 +2,10 @@ import AppKit
 
 class GlobalObserver {
     private static func onNotif(_ notification: Notification) {
+        // Second line of defence against lock screen window. See: gcWindows
+        if (notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication)?.bundleIdentifier == lockScreenAppBundleId {
+            return
+        }
         refreshAndLayout()
     }
 
