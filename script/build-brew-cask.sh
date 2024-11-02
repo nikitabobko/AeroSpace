@@ -38,16 +38,12 @@ else
 fi
 sha=$(shasum -a 256 "$zip_file" | awk '{print $1}')
 
-
-cask_version=''
-zip_root_dir=''
-if grep -q SNAPSHOT <<< "$build_version"; then
-    # Prevent 'Not upgrading aerospace, the latest version is already installed'
-    cask_version=':latest'
-    zip_root_dir="AeroSpace-v$build_version"
-else
+cask_version=':latest' # Prevent 'Not upgrading aerospace, the latest version is already installed'
+zip_root_dir="AeroSpace-v$build_version"
+if ! grep -q SNAPSHOT <<< "$build_version"; then
     cask_version="'$build_version'"
-    zip_root_dir='AeroSpace-v#{version}'
+    zip_root_dir=$(sed "s/$build_version/#{version}/g" <<< "$zip_root_dir")
+    zip_uri=$(sed "s/$build_version/#{version}/g" <<< "$zip_uri")
 fi
 
 manpages=$(unzip -l "$zip_file" | \
