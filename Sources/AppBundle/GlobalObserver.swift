@@ -41,12 +41,20 @@ class GlobalObserver {
 
         NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseUp]) { _ in
             resetManipulatedWithMouseIfPossible()
-            // Detect clicks on desktop of different monitors
+            let mouseLocation = mouseLocation
             let clickedMonitor = mouseLocation.monitorApproximation
-            if clickedMonitor.activeWorkspace != focus.workspace {
-                _ = refreshSession {
-                    clickedMonitor.activeWorkspace.focusWorkspace()
-                }
+            let focus = focus
+            switch () {
+                // Detect clicks on desktop of different monitors
+                case _ where clickedMonitor.activeWorkspace != focus.workspace:
+                    _ = refreshSession {
+                        clickedMonitor.activeWorkspace.focusWorkspace()
+                    }
+                // Detect close button clicks for unfocused windows
+                case _ where  focus.windowOrNil?.getRect()?.contains(mouseLocation) == false: // todo replace getRect with preflushRect when it later becomes available
+                    refreshAndLayout()
+                default:
+                    break
             }
         }
     }
