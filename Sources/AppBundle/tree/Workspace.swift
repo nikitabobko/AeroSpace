@@ -102,7 +102,9 @@ public class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable,
 }
 
 extension Workspace {
-    public var isVisible: Bool { visibleWorkspaceToScreenPoint.keys.contains(self) }
+    public var isVisible: Bool {
+        visibleWorkspaceToScreenPoint.keys.contains(self)
+    }
     public var workspaceMonitor: Monitor {
         forceAssignedMonitor
             ?? visibleWorkspaceToScreenPoint[self]?.monitorApproximation

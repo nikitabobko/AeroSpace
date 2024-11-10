@@ -101,6 +101,9 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, parseDefaultContainerOrientation),
 
     "start-at-login": Parser(\.startAtLogin, parseBool),
+    "font-family": Parser(\.fontFamily, parseString),
+    "font-size": Parser(\.fontSize, parseDouble),
+    "workspace-indicator-style": Parser(\.workSpaceIndicatorStyle, parseWorkspaceIndicatorStyle),
     "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
     "accordion-padding": Parser(\.accordionPadding, parseInt),
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseExecOnWorkspaceChange),
@@ -220,6 +223,10 @@ func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Par
     raw.string.orFailure(expectedActualTypeError(expected: .string, actual: raw.type, backtrace))
 }
 
+func parseDouble(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Double>{
+    raw.double.orFailure(expectedActualTypeError(expected: .double, actual: raw.type, backtrace))
+}
+
 func parseSimpleType<T>(_ raw: TOMLValueConvertible) -> T? {
     (raw.int as? T) ?? (raw.string as? T) ?? (raw.bool as? T)
 }
@@ -290,6 +297,14 @@ private func parseDefaultContainerOrientation(_ raw: TOMLValueConvertible, _ bac
     parseString(raw, backtrace).flatMap {
         DefaultContainerOrientation(rawValue: $0)
             .orFailure(.semantic(backtrace, "Can't parse default container orientation '\($0)'"))
+    }
+}
+
+
+private func parseWorkspaceIndicatorStyle(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<WorkSpaceIndicatorStyle> {
+    parseString(raw, backtrace).flatMap{
+        WorkSpaceIndicatorStyle(rawValue: $0)
+            .orFailure(.semantic(backtrace, "Can't parse workspace indicator style '\($0)'"))
     }
 }
 

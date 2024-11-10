@@ -27,10 +27,10 @@ let defaultConfig: Config = {
     }
     return parsedConfig.config
 }()
-var config: Config = defaultConfig
+public var config: Config = defaultConfig
 var configUrl: URL = defaultConfigUrl
 
-struct Config: Copyable {
+public struct Config: Copyable {
     var afterLoginCommand: [any Command] = []
     var afterStartupCommand: [any Command] = []
     var _indentForNestedContainersWithTheSameOrientation: Void = ()
@@ -56,8 +56,18 @@ struct Config: Copyable {
     var onWindowDetected: [WindowDetectedCallback] = []
 
     var preservedWorkspaceNames: [String] = []
+    
+    
+    public var fontFamily: String = ""
+    public var fontSize: Double = 13.0
+    
+    public var workSpaceIndicatorStyle: WorkSpaceIndicatorStyle = .icon
 }
 
 enum DefaultContainerOrientation: String {
     case horizontal, vertical, auto
+}
+
+public enum WorkSpaceIndicatorStyle: String {
+    case icon, horizontal_full, horizontal_min
 }

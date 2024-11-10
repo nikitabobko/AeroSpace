@@ -1,9 +1,3 @@
-//
-//  File.swift
-//  AeroSpacePackage
-//
-//  Created by daniel on 29/10/24.
-//
 
 import Foundation
 import AppKit

@@ -60,7 +60,7 @@ public extension TreeNode {
     }
 
     // Doesn't contain at least one window
-    public var isEffectivelyEmpty: Bool {
+    var isEffectivelyEmpty: Bool {
         anyLeafWindowRecursive == nil
     }
 

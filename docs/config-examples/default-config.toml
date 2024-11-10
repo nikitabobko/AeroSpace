@@ -43,6 +43,19 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # Also see: https://nikitabobko.github.io/AeroSpace/goodness#disable-hide-app
 automatically-unhide-macos-hidden-apps = false
 
+# Font size for menu bar
+font-size = 12.0
+
+# Font family for the menu bar items
+# Use the Font Book to find fonts
+font-family = 'JetBrainsMono Nerd Font Mono'
+
+# Possible values: icon|horizontal_full|horizontal_min
+# icon: shows only the current workspace
+# horizontal_full: shows all workspaces, with the current one highlighted
+# horizontal_min: shows all workspaces with open windows,and the current one
+workspace-indicator-style = 'icon'
+
 # Possible values: (qwerty|dvorak)
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
 [key-mapping]

@@ -21,7 +21,7 @@ extension HotKey {
     }
 }
 
-var activeMode: String? = mainModeId
+public var activeMode: String? = mainModeId
 public func activateMode(_ targetMode: String?) {
     let targetBindings = targetMode.flatMap { config.modes[$0] }?.bindings ?? [:]
     for binding in targetBindings.values where !hotkeys.keys.contains(binding.descriptionWithKeyCode) {
