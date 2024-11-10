@@ -1,6 +1,6 @@
 
-import Foundation
 import AppKit
+import Foundation
 
 let appDelegate = AppDelegate()
 

@@ -7,7 +7,6 @@ import Foundation
 import SwiftUI
 
 class AppDelegate: NSObject, NSApplicationDelegate {
-
     @ObservedObject var viewModel: TrayMenuModel = TrayMenuModel.shared
     private var statusBarItem: NSStatusItem?
     private var iconHostingView: NSHostingView<AnyView>?
@@ -32,7 +31,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         updateStatusBarIcon()
     }
-    
+
     private func createStatusBarIcon() -> some View {
         StatusBarIndicator(viewModel: self.viewModel)
     }
@@ -45,31 +44,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Create new icon view
         let iconView = NSHostingView(rootView: AnyView(createStatusBarIcon()))
-        
+
         // Force layout to ensure proper sizing
         iconView.layout()
-        
+
         // Use a fixed size based on the status bar height
         let size = NSSize(width: 22, height: 22)  // Standard menu bar icon size
-        
+
         // Set the button's frame size first
         button.frame.size = size
-        
+
         // Set icon view frame to match button exactly
         iconView.frame = NSRect(origin: .zero, size: size)
-        
+
         button.addSubview(iconView)
         iconHostingView = iconView
-        
+
         // Use constraints to pin the icon view to all edges of the button
         iconView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             iconView.leadingAnchor.constraint(equalTo: button.leadingAnchor),
             iconView.trailingAnchor.constraint(equalTo: button.trailingAnchor),
             iconView.topAnchor.constraint(equalTo: button.topAnchor),
-            iconView.bottomAnchor.constraint(equalTo: button.bottomAnchor)
+            iconView.bottomAnchor.constraint(equalTo: button.bottomAnchor),
         ])
-        
+
         // Force a redraw of the button
         button.needsDisplay = true
     }
@@ -162,7 +161,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         menu.font =
             NSFont(name: config.fontFamily, size: config.fontSize)
-            ?? .monospacedDigitSystemFont(ofSize: 13, weight: .regular)
+                ?? .monospacedDigitSystemFont(ofSize: 13, weight: .regular)
     }
 
     @objc private func copyIdToClip(_ sender: Any?) {
@@ -205,13 +204,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let fallbackConfig: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName)
 
         switch findCustomConfigUrl() {
-        case .file(let url):
-            url.open(with: editor)
-        case .noCustomConfigExists:
-            _ = try? FileManager.default.copyItem(atPath: defaultConfigUrl.path, toPath: fallbackConfig.path)
-            fallbackConfig.open(with: editor)
-        case .ambiguousConfigError:
-            fallbackConfig.open(with: editor)
+            case .file(let url):
+                url.open(with: editor)
+            case .noCustomConfigExists:
+                _ = try? FileManager.default.copyItem(atPath: defaultConfigUrl.path, toPath: fallbackConfig.path)
+                fallbackConfig.open(with: editor)
+            case .ambiguousConfigError:
+                fallbackConfig.open(with: editor)
         }
     }
 

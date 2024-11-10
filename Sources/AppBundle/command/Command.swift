@@ -7,8 +7,6 @@ public protocol Command: AeroAny, Equatable {
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool
 }
 
-
-
 public extension Command {
     static func == (lhs: any Command, rhs: any Command) -> Bool {
         return lhs.args.equals(rhs.args)

@@ -56,11 +56,10 @@ public struct Config: Copyable {
     var onWindowDetected: [WindowDetectedCallback] = []
 
     var preservedWorkspaceNames: [String] = []
-    
-    
+
     public var fontFamily: String = ""
     public var fontSize: Double = 13.0
-    
+
     public var workSpaceIndicatorStyle: WorkSpaceIndicatorStyle = .icon
 }
 

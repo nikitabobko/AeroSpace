@@ -2,9 +2,6 @@ import Common
 import Foundation
 import SwiftUI
 
-
-
-
 @MainActor public func menuBar(viewModel: TrayMenuModel) -> some Scene {
     MenuBarExtra {
         let shortIdentification = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitShortHash)"
@@ -59,15 +56,13 @@ import SwiftUI
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
         // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
-Text(viewModel.trayText)
+        Text(viewModel.trayText)
         //            .onAppear{
 //                for family in NSFontManager.shared.availableFontFamilies {
 //                    print(family)
 //                }            }
     }
 }
-
-
 
 func getTextEditorToOpenConfig() -> URL {
     NSWorkspace.shared.urlForApplication(toOpen: findCustomConfigUrl().urlOrNil ?? defaultConfigUrl)?

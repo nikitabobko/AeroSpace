@@ -64,8 +64,8 @@ public func terminateApp() -> Never {
     error("Unreachable code")
 }
 
-extension String {
-    public func copyToClipboard() {
+public extension String {
+    func copyToClipboard() {
         let pasteboard = NSPasteboard.general
         pasteboard.declareTypes([.string], owner: nil)
         pasteboard.setString(self, forType: .string)

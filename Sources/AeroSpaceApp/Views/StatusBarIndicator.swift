@@ -9,7 +9,7 @@ struct StatusBarIndicator: View {
     var workSpaceSingle: some View {
         HStack {
             if let font = NSFont(name: config.fontFamily, size: config.fontSize) {
-                Text(Workspace.all.filter { $0.isVisible }.first?.name ?? "")
+                Text(Workspace.all.first(where: { $0.isVisible })?.name ?? "")
                     .shadow(radius: 3)
                     .font(Font(font))
             } else {
@@ -74,7 +74,7 @@ struct StatusBarIndicator: View {
 
     var modeIndicator: some View {
         let modeText = activeMode?.takeIf { $0 != mainModeId }?.first?.lets { String($0) } ?? ""
-        
+
         return Group {
             if !modeText.isEmpty {
                 //This has to be a ZStack, otherwise the text doesnt get displayed
@@ -82,7 +82,7 @@ struct StatusBarIndicator: View {
                     Circle()
                         .fill(Color.red.opacity(0.3))
                         .frame(width: 18, height: 18)
-                    
+
                     Text(modeText)
                         .shadow(radius: 3)
                         .font(
@@ -96,27 +96,26 @@ struct StatusBarIndicator: View {
         }
     }
 
-
     var body: some View {
         // This is a bit weird, but otherwise the mode indicator won't show for some reason
         ZStack(alignment: .leading) {
             HStack(spacing: 0) {
                 modeIndicator
                     .frame(maxHeight: .infinity)
-                
+
                 if activeMode?.takeIf({ $0 != mainModeId }) != nil {
                     Spacer()
                         .frame(width: 5)
                 }
-                
+
                 if viewModel.isEnabled {
                     switch config.workSpaceIndicatorStyle {
-                    case .icon:
-                        workSpaceSingle
-                    case .horizontal_full:
-                        workSpaceFull
-                    case .horizontal_min:
-                        workSpaceMin
+                        case .icon:
+                            workSpaceSingle
+                        case .horizontal_full:
+                            workSpaceFull
+                        case .horizontal_min:
+                            workSpaceMin
                     }
                 } else {
                     Image(systemName: "pause.fill")
@@ -128,9 +127,8 @@ struct StatusBarIndicator: View {
     }
 }
 
-extension View {
-    fileprivate func addBorder<S>(_ content: S, width: CGFloat = 1, cornerRadius: CGFloat) -> some View
-    where S: ShapeStyle {
+private extension View {
+    func addBorder(_ content: some ShapeStyle, width: CGFloat = 1, cornerRadius: CGFloat) -> some View {
         let roundedRect = RoundedRectangle(cornerRadius: cornerRadius)
         return clipShape(roundedRect)
             .overlay(roundedRect.strokeBorder(content, lineWidth: width))

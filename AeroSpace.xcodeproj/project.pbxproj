@@ -8,17 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		238EF26CAAADD1FE11312D7C /* default-config.toml in Resources */ = {isa = PBXBuildFile; fileRef = 8FE45A887100EB70912B07F0 /* default-config.toml */; };
+		4A23C41A57262BA1D7EFFE5B /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230F9C8CA287DEF2D275F1A0 /* main.swift */; };
 		852F88894A3B9FC385563665 /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = 018E55979F61DA6DA6DCB442 /* AppBundle */; };
 		883A44C8295FECF49F94269D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84C35D8E25B61D4D1ADB1851 /* Assets.xcassets */; };
-		C40E0D9C06086C58955237D9 /* AeroSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C104E927E079E60C91AE3E /* AeroSpaceApp.swift */; };
+		AEFB4A7D39DA8DC24CF3F0F1 /* StatusBarIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA28DD3924C758145693583 /* StatusBarIndicator.swift */; };
+		E811F1CB2C9C410EE448408A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6455EB62F9E689E9F078BD69 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		09685297933511208058F7CF /* AeroSpace.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroSpace.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		18C104E927E079E60C91AE3E /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
+		230F9C8CA287DEF2D275F1A0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		6455EB62F9E689E9F078BD69 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6606D24B4B23E9582CFA3B86 /* AeroSpace */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AeroSpace; path = .; sourceTree = SOURCE_ROOT; };
 		84C35D8E25B61D4D1ADB1851 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8FE45A887100EB70912B07F0 /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
+		BAA28DD3924C758145693583 /* StatusBarIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarIndicator.swift; sourceTree = "<group>"; };
 		CF85755BFF66B59A84F98262 /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,10 +86,20 @@
 		6F6BCFA26BF3E35072EF2C77 /* AeroSpaceApp */ = {
 			isa = PBXGroup;
 			children = (
-				18C104E927E079E60C91AE3E /* AeroSpaceApp.swift */,
+				6455EB62F9E689E9F078BD69 /* AppDelegate.swift */,
+				230F9C8CA287DEF2D275F1A0 /* main.swift */,
+				930C61D29AE84BB2A7E5016C /* Views */,
 			);
 			name = AeroSpaceApp;
 			path = Sources/AeroSpaceApp;
+			sourceTree = "<group>";
+		};
+		930C61D29AE84BB2A7E5016C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				BAA28DD3924C758145693583 /* StatusBarIndicator.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -159,7 +173,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C40E0D9C06086C58955237D9 /* AeroSpaceApp.swift in Sources */,
+				E811F1CB2C9C410EE448408A /* AppDelegate.swift in Sources */,
+				AEFB4A7D39DA8DC24CF3F0F1 /* StatusBarIndicator.swift in Sources */,
+				4A23C41A57262BA1D7EFFE5B /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

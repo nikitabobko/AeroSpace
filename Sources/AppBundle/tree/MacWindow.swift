@@ -159,7 +159,7 @@ public final class MacWindow: Window, CustomStringConvertible {
         }
     }
 
-    public override func getSize() -> CGSize? {
+    override public func getSize() -> CGSize? {
         axWindow.get(Ax.sizeAttr)
     }
 

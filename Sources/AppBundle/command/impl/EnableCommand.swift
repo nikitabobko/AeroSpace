@@ -9,7 +9,7 @@ import Common
 
 public struct EnableCommand: Command {
     public let args: EnableCmdArgs
-    
+
     public func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
         let prevState = TrayMenuModel.shared.isEnabled

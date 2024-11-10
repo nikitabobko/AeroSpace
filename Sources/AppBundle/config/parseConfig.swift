@@ -223,7 +223,7 @@ func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Par
     raw.string.orFailure(expectedActualTypeError(expected: .string, actual: raw.type, backtrace))
 }
 
-func parseDouble(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Double>{
+func parseDouble(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Double> {
     raw.double.orFailure(expectedActualTypeError(expected: .double, actual: raw.type, backtrace))
 }
 
@@ -300,9 +300,8 @@ private func parseDefaultContainerOrientation(_ raw: TOMLValueConvertible, _ bac
     }
 }
 
-
 private func parseWorkspaceIndicatorStyle(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<WorkSpaceIndicatorStyle> {
-    parseString(raw, backtrace).flatMap{
+    parseString(raw, backtrace).flatMap {
         WorkSpaceIndicatorStyle(rawValue: $0)
             .orFailure(.semantic(backtrace, "Can't parse workspace indicator style '\($0)'"))
     }
