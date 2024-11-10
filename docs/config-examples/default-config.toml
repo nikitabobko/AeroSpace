@@ -48,7 +48,7 @@ font-size = 12.0
 
 # Font family for the menu bar items
 # Use the Font Book to find fonts
-font-family = 'JetBrainsMono Nerd Font Mono'
+font-family = 'Andale Mono'
 
 # Possible values: icon|horizontal_full|horizontal_min
 # icon: shows only the current workspace
