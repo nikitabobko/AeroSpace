@@ -32,10 +32,23 @@ struct FocusCommand: Command {
                     return io.err("Can't find window with ID \(windowId)")
                 }
             case .dfsIndex(let dfsIndex):
-                if let windowToFocus = target.workspace.rootTilingContainer.allLeafWindowsRecursive.getOrNil(atIndex: Int(dfsIndex)) {
+                guard let window = target.windowOrNil else {
+                    return io.err("Can't focus window by DFS index without a window")
+                }
+
+                let allWindows = target.workspace.rootTilingContainer.allLeafWindowsRecursive
+
+                guard let dfsAbsoluteIndex = switch dfsIndex {
+                    case .absolute(let index): index
+                    case .relative(let index): allWindows.firstIndex(of: window).map { $0 + index }
+                } else {
+                    return io.err("Can't find window in allLeafWindowsRecursive")
+                }
+
+                if let windowToFocus = allWindows.get(wrappingIndex: dfsAbsoluteIndex) {
                     return windowToFocus.focusWindow()
                 } else {
-                    return io.err("Can't find window with DFS index \(dfsIndex)")
+                    return io.err("Can't find window with DFS index \(dfsAbsoluteIndex)")
                 }
         }
     }

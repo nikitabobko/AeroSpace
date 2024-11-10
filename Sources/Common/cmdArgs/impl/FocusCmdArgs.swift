@@ -1,5 +1,6 @@
 private let boundar = "<boundary>"
 private let actio = "<action>"
+private let dfsinde = "<dfs index>"
 
 public struct FocusCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
@@ -13,14 +14,14 @@ public struct FocusCmdArgs: CmdArgs {
             "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
             "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
             "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32)),
-            "--dfs-index": ArgParser(\.dfsIndex, upcastArgParserFun(parseArgWithUInt32)),
+            "--dfs-index": ArgParser(\.dfsIndex, upcastArgParserFun(parseDfsIndex)),
         ],
         arguments: [ArgParser(\.direction, upcastArgParserFun(parseCardinalDirectionArg))]
     )
 
     public var rawBoundaries: Boundaries? = nil // todo cover boundaries wrapping with tests
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
-    public var dfsIndex: UInt32? = nil
+    public var dfsIndex: DfsIndex? = nil
     public var direction: CardinalDirection? = nil
     public var floatingAsTiling: Bool = true
     public var windowId: UInt32?
@@ -36,7 +37,7 @@ public struct FocusCmdArgs: CmdArgs {
         self.windowId = windowId
     }
 
-    public init(rawArgs: [String], dfsIndex: UInt32) {
+    public init(rawArgs: [String], dfsIndex: DfsIndex) {
         self.rawArgs = .init(rawArgs)
         self.dfsIndex = dfsIndex
     }
@@ -55,7 +56,7 @@ public struct FocusCmdArgs: CmdArgs {
 public enum FocusCmdTarget {
     case direction(CardinalDirection)
     case windowId(UInt32)
-    case dfsIndex(UInt32)
+    case dfsIndex(DfsIndex)
 }
 
 public extension FocusCmdArgs {
@@ -108,4 +109,24 @@ private func parseBoundaries(arg: String, nextArgs: inout [String]) -> Parsed<Fo
     } else {
         return .failure("\(boundar) is mandatory")
     }
+}
+
+private func parseDfsIndex(arg: String, nextArgs: inout [String]) -> Parsed<DfsIndex> {
+    guard let arg = nextArgs.nextNonFullFlagOrNil() else {
+        return .failure("\(dfsinde) is mandatory")
+    }
+
+    // Handle relative indices with + or - prefix
+    if arg.hasPrefix("+") || arg.hasPrefix("-") {
+        if let value = Int(arg) {
+            return .success(.relative(value))
+        }
+        return .failure("Invalid relative DFS index format")
+    }
+
+    // Handle absolute indices (no prefix)
+    if let value = Int(arg) {
+        return .success(.absolute(value))
+    }
+    return .failure("Invalid DFS index format")
 }

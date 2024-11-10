@@ -7,6 +7,10 @@ extension [String] {
         first?.starts(with: "-") == true ? nil : nextOrNil()
     }
 
+    mutating func nextNonFullFlagOrNil() -> String? {
+        first?.starts(with: "--") == true ? nil : nextOrNil()
+    }
+
     mutating func allNextNonFlagArgs() -> [String] {
         var args: [String] = []
         while let nextArg = nextNonFlagOrNil() {
