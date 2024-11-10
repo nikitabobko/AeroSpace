@@ -33,7 +33,13 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) {
                     window.bind(to: macosMinimizedWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
                 } else if isMacosWindowOfHiddenApp {
                     window.layoutReason = .macos(prevParentKind: window.parent.kind)
-                    window.bind(to: workspace.macOsNativeHiddenAppsWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+                    if !config.crossWorkspaceFloatingWindows || window.parent.kind != .workspace {
+                        window.bind(to: workspace.macOsNativeHiddenAppsWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+                    } else {
+                        window.bind(to: macosMinimizedWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+                    }
+                } else if config.crossWorkspaceFloatingWindows && window.parent.kind == .workspace {
+                    window.bindAsFloatingWindow(to: focus.workspace)
                 }
             case .macos(let prevParentKind):
                 if !isMacosFullscreen && !isMacosMinimized && !isMacosWindowOfHiddenApp {
