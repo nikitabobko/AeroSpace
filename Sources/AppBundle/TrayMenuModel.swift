@@ -13,6 +13,7 @@ public class TrayMenuModel: ObservableObject {
 
 func updateTrayText() {
     let sortedMonitors = sortedMonitors
+    let focus = focus
     TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first?.lets { "[\($0)] " } ?? "") +
         sortedMonitors
         .map {
