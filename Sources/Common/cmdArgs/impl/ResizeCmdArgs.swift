@@ -30,7 +30,8 @@ public struct ResizeCmdArgs: CmdArgs {
     }
 
     public enum Dimension: String, CaseIterable, Equatable {
-        case width, height, smart, smartOpposite
+        case width, height, smart
+        case smartOpposite = "smart-opposite"
     }
 
     public enum Units: Equatable {
