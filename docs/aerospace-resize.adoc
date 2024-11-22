@@ -25,6 +25,7 @@ The dimension to resize is chosen by the first argument
 * `height` changes height
 * `smart` changes width if the parent has horizontal orientation, and
 it changes height if the parent has vertical orientation
+* `smart-opposite` does resizes the opposite axis of smart
 
 Second argument controls how much the size is changes
 

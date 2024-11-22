@@ -31,6 +31,11 @@ struct ResizeCommand: Command { // todo cover with tests
                 node = first
                 parent = first.parent as! TilingContainer
                 orientation = parent.orientation
+            case .smartOpposite:
+                guard let first = candidates.first else { return false }
+                node = first
+                parent = first.parent as! TilingContainer
+                orientation = parent.orientation == .h ? .v : .h
         }
         let diff: CGFloat = switch args.units.val {
             case .set(let unit): CGFloat(unit) - node.getWeight(orientation)
