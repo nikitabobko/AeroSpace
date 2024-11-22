@@ -115,7 +115,7 @@ let reload_config_help_generated = """
     USAGE: reload-config [-h|--help] [--no-gui] [--dry-run]
     """
 let resize_help_generated = """
-    USAGE: resize [-h|--help] [--window-id <window-id>] (smart|width|height) [+|-]<number>
+    USAGE: resize [-h|--help] [--window-id <window-id>] (smart|smart-opposite|width|height) [+|-]<number>
     """
 let split_help_generated = """
     USAGE: split [-h|--help] [--window-id <window-id>] (horizontal|vertical|opposite)

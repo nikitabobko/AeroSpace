@@ -55,7 +55,7 @@ aerospace -h;
 
     | reload-config [--no-gui | --dry-run]...
 
-    | resize [--window-id <window_id>] (smart|width|height) [+|-]<number> [--window-id <window_id>]
+    | resize [--window-id <window_id>] (smart|smart-opposite|width|height) [+|-]<number> [--window-id <window_id>]
 
     | split [--window-id <window_id>] (horizontal|vertical|opposite) [--window-id <window_id>]
 
