@@ -27,7 +27,8 @@ build-site() {
     cd .site
         # Delete "aerospace " prefifx in synopsis
         sed -E -i '' '/tag::synopsis/, /end::synopsis/ s/^(aerospace | {10})//' aerospace*
-        bundler exec asciidoctor ./guide.adoc ./commands.adoc ./goodness.adoc
+        bundler exec asciidoctor ./guide.adoc ./commands.adoc ./goodies.adoc
+        cp goodies.html goodness.html # backwards compatibility
         rm -rf ./*.adoc
     cd - > /dev/null
 

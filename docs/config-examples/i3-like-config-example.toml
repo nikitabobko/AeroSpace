@@ -11,7 +11,7 @@ enable-normalization-opposite-orientation-for-nested-containers = false
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [mode.main.binding]
-# See: https://nikitabobko.github.io/AeroSpace/goodness#open-a-new-window-with-applescript
+# See: https://nikitabobko.github.io/AeroSpace/goodies#open-a-new-window-with-applescript
 alt-enter = '''exec-and-forget osascript -e '
 tell application "Terminal"
     do script

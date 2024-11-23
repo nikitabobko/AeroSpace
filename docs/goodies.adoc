@@ -1,4 +1,4 @@
-= AeroSpace Goodness
+= AeroSpace Goodies
 include::util/site-attributes.adoc[]
 
 include::util/header.adoc[]

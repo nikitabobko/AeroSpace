@@ -11,7 +11,7 @@ Videos:
 Docs:
 - [AeroSpace Guide](https://nikitabobko.github.io/AeroSpace/guide)
 - [AeroSpace Commands](https://nikitabobko.github.io/AeroSpace/commands)
-- [AeroSpace Goodness](https://nikitabobko.github.io/AeroSpace/goodness)
+- [AeroSpace Goodies](https://nikitabobko.github.io/AeroSpace/goodies)
 
 ## Project status
 
