@@ -5,7 +5,7 @@ func resizedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     if let window = data?.window, TrayMenuModel.shared.isEnabled {
         resizeWithMouseIfTheCase(window)
     }
-    refreshAndLayout()
+    refreshAndLayout(screenIsDefinitelyUnlocked: false)
 }
 
 func resetManipulatedWithMouseIfPossible() {
@@ -15,7 +15,7 @@ func resetManipulatedWithMouseIfPossible() {
         for workspace in Workspace.all {
             workspace.resetResizeWeightBeforeResizeRecursive()
         }
-        refreshAndLayout()
+        refreshAndLayout(screenIsDefinitelyUnlocked: true)
     }
 }
 
@@ -29,6 +29,7 @@ private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tes
     {
         return
     }
+    resetClosedWindowsCache()
     switch window.parent.cases {
         case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
              .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:

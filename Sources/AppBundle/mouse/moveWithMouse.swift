@@ -4,7 +4,7 @@ func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeM
     if let window = data?.window, TrayMenuModel.shared.isEnabled {
         moveWithMouseIfTheCase(window)
     }
-    refreshAndLayout()
+    refreshAndLayout(screenIsDefinitelyUnlocked: false)
 }
 
 private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
@@ -15,6 +15,7 @@ private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
     {
         return
     }
+    resetClosedWindowsCache()
     switch window.parent.cases {
         case .workspace:
             moveFloatingWindow(window)

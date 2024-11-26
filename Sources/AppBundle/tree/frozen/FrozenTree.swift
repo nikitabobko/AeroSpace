@@ -141,6 +141,17 @@ private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonL
     }
 }
 
+// Consider the following case:
+// 1. Close window
+// 2. The previous step lead to caching the whole world
+// 3. Change something in the layout
+// 4. Lock the screen
+// 5. The cache won't be updated because all alive windows are already cached
+// 6. Unlock the screen
+// 7. The wrong cache is used
+//
+// That's why we have to reset the cache every time layout changes. The layout can only be changed by running commands
+// and with mouse manipulations
 func resetClosedWindowsCache() {
     closedWindowsCache = FrozenWorld(workspaces: [], monitors: [])
 }

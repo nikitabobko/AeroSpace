@@ -40,7 +40,7 @@ final class MacWindow: Window, CustomStringConvertible {
                 tryOnWindowDetected(window, startup: startup)
                 return window
             } else {
-                window.garbageCollect()
+                window.garbageCollect(skipClosedWindowsCache: true)
                 return nil
             }
         }
@@ -58,7 +58,10 @@ final class MacWindow: Window, CustomStringConvertible {
         return "Window(\(description))"
     }
 
-    func garbageCollect() {
+    // skipClosedWindowsCache is an optimization when it's definitely not necessary to cache closed window.
+    //                        If you are unsure, it's better to pass `false`
+    func garbageCollect(skipClosedWindowsCache: Bool) {
+        if !skipClosedWindowsCache { cacheClosedWindowIfNeeded(window: self) }
         if MacWindow.allWindowsMap.removeValue(forKey: windowId) == nil {
             return
         }
@@ -74,7 +77,8 @@ final class MacWindow: Window, CustomStringConvertible {
         if let workspace, workspace == focus.workspace.name || workspace == prevFocusedWorkspace?.name {
             switch parent.cases {
                 case .tilingContainer, .workspace, .macosHiddenAppsWindowsContainer, .macosFullscreenWindowsContainer:
-                    refreshSession(forceFocus: focus.windowOrNil?.app != app) {
+                    // todo is this refreshSession necessary? garbageCollect should already be called in a refreshSession
+                    refreshSession(screenIsDefinitelyUnlocked: false, forceFocus: focus.windowOrNil?.app != app) {
                         _ = Workspace.get(byName: workspace).focusWorkspace()
                     }
                 case .macosPopupWindowsContainer, .macosMinimizedWindowsContainer:

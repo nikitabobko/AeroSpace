@@ -25,8 +25,8 @@ public func initAppBundle() {
     AXUIElementSetMessagingTimeout(systemWideAx, 1.0)
     startUnixSocketServer()
     GlobalObserver.initObserver()
-    refreshAndLayout(startup: true)
-    refreshSession {
+    refreshAndLayout(screenIsDefinitelyUnlocked: false, startup: true)
+    refreshSession(screenIsDefinitelyUnlocked: false) {
         if serverArgs.startedAtLogin {
             _ = config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
         }

@@ -6,11 +6,11 @@ class GlobalObserver {
         if (notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication)?.bundleIdentifier == lockScreenAppBundleId {
             return
         }
-        refreshAndLayout()
+        refreshAndLayout(screenIsDefinitelyUnlocked: false)
     }
 
     private static func onHideApp(_ notification: Notification) {
-        refreshSession(body: {
+        refreshSession(screenIsDefinitelyUnlocked: false) {
             if TrayMenuModel.shared.isEnabled && config.automaticallyUnhideMacosHiddenApps {
                 if let w = prevFocus?.windowOrNil,
                    w.macAppUnsafe.nsApp.isHidden,
@@ -26,7 +26,7 @@ class GlobalObserver {
                     app.nsApp.unhide()
                 }
             }
-        })
+        }
     }
 
     static func initObserver() {
@@ -47,12 +47,12 @@ class GlobalObserver {
             switch () {
                 // Detect clicks on desktop of different monitors
                 case _ where clickedMonitor.activeWorkspace != focus.workspace:
-                    _ = refreshSession {
+                    _ = refreshSession(screenIsDefinitelyUnlocked: true) {
                         clickedMonitor.activeWorkspace.focusWorkspace()
                     }
                 // Detect close button clicks for unfocused windows
                 case _ where  focus.windowOrNil?.getRect()?.contains(mouseLocation) == false: // todo replace getRect with preflushRect when it later becomes available
-                    refreshAndLayout()
+                    refreshAndLayout(screenIsDefinitelyUnlocked: true)
                 default:
                     break
             }

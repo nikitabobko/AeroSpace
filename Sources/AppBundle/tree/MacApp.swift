@@ -34,24 +34,24 @@ final class MacApp: AbstractApp {
                 allAppsMap[pid] = app
                 return app
             } else {
-                app.garbageCollect()
+                app.garbageCollect(skipClosedWindowsCache: true)
                 return nil
             }
         }
     }
 
-    private func garbageCollect() {
+    private func garbageCollect(skipClosedWindowsCache: Bool) {
         MacApp.allAppsMap.removeValue(forKey: nsApp.processIdentifier)
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
         }
-        MacWindow.allWindows.lazy.filter { $0.app == self }.forEach { $0.garbageCollect() }
+        MacWindow.allWindows.lazy.filter { $0.app == self }.forEach { $0.garbageCollect(skipClosedWindowsCache: skipClosedWindowsCache) }
         axObservers = []
     }
 
     static func garbageCollectTerminatedApps() {
         for app in Array(allAppsMap.values) where app.nsApp.isTerminated {
-            app.garbageCollect()
+            app.garbageCollect(skipClosedWindowsCache: true)
         }
     }
 

@@ -28,7 +28,7 @@ func activateMode(_ targetMode: String?) {
         hotkeys[binding.descriptionWithKeyCode] = HotKey(key: binding.keyCode, modifiers: binding.modifiers, keyDownHandler: {
             check(Thread.current.isMainThread)
             if let activeMode {
-                refreshSession {
+                refreshSession(screenIsDefinitelyUnlocked: true) {
                     _ = config.modes[activeMode]?.bindings[binding.descriptionWithKeyCode]?.commands
                         .runCmdSeq(.defaultEnv, .emptyStdin)
                 }

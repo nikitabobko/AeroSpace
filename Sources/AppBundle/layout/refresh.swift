@@ -4,8 +4,9 @@ import Common
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input.
 /// The function is idempotent.
-func refreshSession<T>(startup: Bool = false, forceFocus: Bool = false, body: () -> T) -> T {
+func refreshSession<T>(screenIsDefinitelyUnlocked: Bool, startup: Bool = false, forceFocus: Bool = false, body: () -> T) -> T {
     check(Thread.current.isMainThread)
+    if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
     gc()
     gcMonitors()
 
@@ -38,8 +39,8 @@ func refreshSession<T>(startup: Bool = false, forceFocus: Bool = false, body: ()
     return result
 }
 
-func refreshAndLayout(startup: Bool = false) {
-    refreshSession(startup: startup, body: {})
+func refreshAndLayout(screenIsDefinitelyUnlocked: Bool, startup: Bool = false) {
+    refreshSession(screenIsDefinitelyUnlocked: screenIsDefinitelyUnlocked, startup: startup, body: {})
 }
 
 func refreshModel() {
@@ -66,12 +67,12 @@ func gcWindows() {
     // recovering from unlock
     if toKill.count == MacWindow.allWindowsMap.count { return }
     for window in toKill {
-        window.value.garbageCollect()
+        window.value.garbageCollect(skipClosedWindowsCache: false)
     }
 }
 
 func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
-    refreshAndLayout()
+    refreshAndLayout(screenIsDefinitelyUnlocked: false)
 }
 
 enum OptimalHideCorner {
