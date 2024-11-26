@@ -37,7 +37,9 @@ final class MacWindow: Window, CustomStringConvertible {
             {
                 allWindowsMap[id] = window
                 debugWindowsIfRecording(window)
-                tryOnWindowDetected(window, startup: startup)
+                if !restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window) {
+                    tryOnWindowDetected(window, startup: startup)
+                }
                 return window
             } else {
                 window.garbageCollect(skipClosedWindowsCache: true)

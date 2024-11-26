@@ -89,7 +89,10 @@ func cacheClosedWindowIfNeeded(window: Window) {
     )
 }
 
-func restoreWindowsFromClosedWindowsCache() {
+func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) -> Bool {
+    if !closedWindowsCache.windowIds.contains(newlyDetectedWindow.windowId) {
+        return false
+    }
     let monitors = monitors
     let topLeftCornerToMonitor = monitors.grouped { $0.rect.topLeftCorner }
 
@@ -117,6 +120,7 @@ func restoreWindowsFromClosedWindowsCache() {
             .singleOrNil()?
             .setActiveWorkspace(Workspace.get(byName: monitor.visibleWorkspace))
     }
+    return true
 }
 
 private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonLeafTreeNodeObject, index: Int) {
