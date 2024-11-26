@@ -71,9 +71,10 @@ class TreeNode: Equatable {
             self.adaptiveWeight = switch relation {
                 case .tiling(let newParent):
                     newParent.children.sumOf { $0.getWeight(newParent.orientation) }.div(newParent.children.count) ?? 1
-                case .floatingWindow, .macosNativeFullscreenWindow: WEIGHT_FLOATING
-                case .rootTilingContainer, .macosNativeMinimizedWindow,
-                     .shimContainerRelation, .macosPopupWindow, .macosNativeHiddenAppWindow: 1
+                case .floatingWindow, .macosNativeFullscreenWindow,
+                     .rootTilingContainer, .macosNativeMinimizedWindow,
+                     .shimContainerRelation, .macosPopupWindow, .macosNativeHiddenAppWindow:
+                    WEIGHT_DOESNT_MATTER
             }
         } else {
             self.adaptiveWeight = adaptiveWeight
@@ -135,7 +136,7 @@ struct TreeNodeUserDataKey<T> {
     let key: String
 }
 
-private let WEIGHT_FLOATING = CGFloat(-2)
+let WEIGHT_DOESNT_MATTER = CGFloat(-2)
 /// Splits containers evenly if tiling.
 ///
 /// Reset weight is bind to workspace (aka "floating windows")

@@ -146,10 +146,6 @@ extension CGPoint: Swift.Hashable { // todo migrate to self written Point
     }
 }
 
-extension Set {
-    func toArray() -> [Element] { Array(self) }
-}
-
 #if DEBUG
     let isDebug = true
 #else
