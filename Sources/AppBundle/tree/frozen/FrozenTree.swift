@@ -73,6 +73,8 @@ func getWeightOrNil(_ node: TreeNode) -> CGFloat? {
     ((node.parent as? TilingContainer)?.orientation).map { node.getWeight($0) }
 }
 
+/// First line of defence against lock screen
+///
 /// When you lock the screen, all accessibility API becomes unobservable (all attributes become empty, window id
 /// becomes nil, etc.) which tricks AeroSpace into thinking that all windows were closed.
 /// That's why every time a window dies AeroSpace caches the "entire world" (unless window is already presented in the cache)
