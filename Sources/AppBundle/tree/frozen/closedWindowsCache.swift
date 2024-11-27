@@ -1,5 +1,12 @@
 import AppKit
-import Common
+
+/// First line of defence against lock screen
+///
+/// When you lock the screen, all accessibility API becomes unobservable (all attributes become empty, window id
+/// becomes nil, etc.) which tricks AeroSpace into thinking that all windows were closed.
+/// That's why every time a window dies AeroSpace caches the "entire world" (unless window is already presented in the cache)
+/// so that once the screen is unlocked, AeroSpace could restore windows to where they were
+private var closedWindowsCache = FrozenWorld(workspaces: [], monitors: [])
 
 struct FrozenMonitor {
     let topLeftCorner: CGPoint
@@ -25,61 +32,9 @@ struct FrozenWorkspace {
         floatingWindows = workspace.floatingWindows.map(FrozenWindow.init)
         macosUnconventionalWindows =
             workspace.macOsNativeHiddenAppsWindowsContainer.children.map { FrozenWindow($0 as! Window) } +
-                workspace.macOsNativeFullscreenWindowsContainer.children.map { FrozenWindow($0 as! Window) }
+            workspace.macOsNativeFullscreenWindowsContainer.children.map { FrozenWindow($0 as! Window) }
     }
 }
-
-enum FrozenTreeNode {
-    case container(FrozenContainer)
-    case window(FrozenWindow)
-}
-
-struct FrozenContainer {
-    let children: [FrozenTreeNode]
-    let layout: Layout
-    let orientation: Orientation
-    let weight: CGFloat
-
-    init(_ container: TilingContainer) {
-        children = container.children.map {
-            switch $0.nodeCases {
-                case .window(let w): .window(FrozenWindow(w))
-                case .tilingContainer(let c): .container(FrozenContainer(c))
-                case .workspace,
-                     .macosMinimizedWindowsContainer,
-                     .macosHiddenAppsWindowsContainer,
-                     .macosFullscreenWindowsContainer,
-                     .macosPopupWindowsContainer:
-                    illegalChildParentRelation(child: $0, parent: container)
-            }
-        }
-        layout = container.layout
-        orientation = container.orientation
-        weight = getWeightOrNil(container) ?? 1
-    }
-}
-
-struct FrozenWindow {
-    let id: UInt32
-    let weight: CGFloat
-
-    init(_ window: Window) {
-        id = window.windowId
-        weight = getWeightOrNil(window) ?? 1
-    }
-}
-
-func getWeightOrNil(_ node: TreeNode) -> CGFloat? {
-    ((node.parent as? TilingContainer)?.orientation).map { node.getWeight($0) }
-}
-
-/// First line of defence against lock screen
-///
-/// When you lock the screen, all accessibility API becomes unobservable (all attributes become empty, window id
-/// becomes nil, etc.) which tricks AeroSpace into thinking that all windows were closed.
-/// That's why every time a window dies AeroSpace caches the "entire world" (unless window is already presented in the cache)
-/// so that once the screen is unlocked, AeroSpace could restore windows to where they were
-private var closedWindowsCache = FrozenWorld(workspaces: [], monitors: [])
 
 func cacheClosedWindowIfNeeded(window: Window) {
     if closedWindowsCache.windowIds.contains(window.windowId) {
@@ -134,8 +89,7 @@ private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonL
         index: index
     )
 
-    loop:
-    for (index, child) in frozenContainer.children.enumerated() {
+    loop: for (index, child) in frozenContainer.children.enumerated() {
         switch child {
             case .window(let w):
                 // Stop the loop if can't find the window, because otherwise all the subsequent windows will have incorrect index
