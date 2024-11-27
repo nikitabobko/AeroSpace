@@ -30,10 +30,9 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
         ?? errorT("Can't create empty workspace")
 }
 
-class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Identifiable, CustomStringConvertible, Comparable {
+class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, CustomStringConvertible, Comparable {
     let name: String
     private let nameLogicalSegments: StringLogicalSegments
-    var id: String { name } // satisfy Identifiable
     /// `assignedMonitorPoint` must be interpreted only when the workspace is invisible
     fileprivate var assignedMonitorPoint: CGPoint? = nil
 

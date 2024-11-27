@@ -12,16 +12,12 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
         Divider()
         if viewModel.isEnabled {
             Text("Workspaces:")
-            ForEach(Workspace.all) { (workspace: Workspace) in
+            ForEach(viewModel.workspaces, id: \.name) { workspace in
                 Button {
-                    refreshSession(screenIsDefinitelyUnlocked: true) { _ = workspace.focusWorkspace() }
+                    refreshSession(screenIsDefinitelyUnlocked: true) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
                 } label: {
-                    Toggle(isOn: workspace == focus.workspace
-                        ? Binding(get: { true }, set: { _, _ in })
-                        : Binding(get: { false }, set: { _, _ in }))
-                    {
-                        let monitor = workspace.isVisible || !workspace.isEffectivelyEmpty ? " - \(workspace.workspaceMonitor.name)" : ""
-                        Text(workspace.name + monitor).font(.system(.body, design: .monospaced))
+                    Toggle(isOn: .constant(workspace.isFocused)) {
+                        Text(workspace.name + workspace.suffix).font(.system(.body, design: .monospaced))
                     }
                 }
             }
