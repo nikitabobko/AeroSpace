@@ -40,7 +40,8 @@ class GlobalObserver {
         nc.addObserver(forName: NSWorkspace.activeSpaceDidChangeNotification, object: nil, queue: .main, using: onNotif)
         nc.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main, using: onNotif)
 
-        NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseUp]) { _ in
+        NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseUp]) { _ in // todo reduce number of refreshSession
+            resetClosedWindowsCache()
             resetManipulatedWithMouseIfPossible()
             let mouseLocation = mouseLocation
             let clickedMonitor = mouseLocation.monitorApproximation
