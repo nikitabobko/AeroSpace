@@ -1,3 +1,5 @@
+v0.16.0-Beta
+// The line above is auto updated by build-docs.sh --build-version
 :idprefix:
 :idseparator: -
 :prewrap!:

@@ -5,6 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
+<meta name="author" content="v0.16.0-Beta">
 <link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Commands</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -510,6 +511,9 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <body class="article toc2 toc-left">
 <div id="header">
 <h1>AeroSpace Commands</h1>
+<div class="details">
+<span id="author" class="author">v0.16.0-Beta</span><br>
+</div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -538,17 +542,18 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#split">23. split</a></li>
 <li><a href="#summon-workspace">24. summon-workspace</a></li>
 <li><a href="#trigger-binding">25. trigger-binding</a></li>
-<li><a href="#workspace">26. workspace</a></li>
-<li><a href="#workspace-back-and-forth">27. workspace-back-and-forth</a></li>
-<li><a href="#query-commands">28. Query commands</a>
+<li><a href="#volume">26. volume</a></li>
+<li><a href="#workspace">27. workspace</a></li>
+<li><a href="#workspace-back-and-forth">28. workspace-back-and-forth</a></li>
+<li><a href="#query-commands">29. Query commands</a>
 <ul class="sectlevel2">
-<li><a href="#config">28.1. config</a></li>
-<li><a href="#debug-windows">28.2. debug-windows</a></li>
-<li><a href="#list-apps">28.3. list-apps</a></li>
-<li><a href="#list-exec-env-vars">28.4. list-exec-env-vars</a></li>
-<li><a href="#list-monitors">28.5. list-monitors</a></li>
-<li><a href="#list-windows">28.6. list-windows</a></li>
-<li><a href="#list-workspaces">28.7. list-workspaces</a></li>
+<li><a href="#config">29.1. config</a></li>
+<li><a href="#debug-windows">29.2. debug-windows</a></li>
+<li><a href="#list-apps">29.3. list-apps</a></li>
+<li><a href="#list-exec-env-vars">29.4. list-exec-env-vars</a></li>
+<li><a href="#list-monitors">29.5. list-monitors</a></li>
+<li><a href="#list-windows">29.6. list-windows</a></li>
+<li><a href="#list-workspaces">29.7. list-workspaces</a></li>
 </ul>
 </li>
 </ul>
@@ -1645,7 +1650,7 @@ Focus follows the focused workspace, so the workspace stays focused.</p>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">resize [-h|--help] [--window-id &lt;window-id&gt;] (smart|width|height) [+|-]&lt;number&gt;</pre>
+<pre class="nowrap">resize [-h|--help] [--window-id &lt;window-id&gt;] (smart|smart-opposite|width|height) [+|-]&lt;number&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1665,6 +1670,9 @@ Focus follows the focused workspace, so the workspace stays focused.</p>
 <li>
 <p><code>smart</code> changes width if the parent has horizontal orientation, and
 it changes height if the parent has vertical orientation</p>
+</li>
+<li>
+<p><code>smart-opposite</code> does resizes the opposite axis of smart</p>
 </li>
 </ul>
 </div>
@@ -1870,7 +1878,52 @@ In single monitor setup the command is identical to <code>workspace</code> comma
 </div>
 </div>
 <div class="sect1">
-<h2 id="workspace"><a class="anchor" href="#workspace"></a><a class="link" href="#workspace">26. workspace</a></h2>
+<h2 id="volume"><a class="anchor" href="#volume"></a><a class="link" href="#volume">26. volume</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">volume [-h|--help] (up|down)
+volume [-h|--help] (mute-toggle|mute-off|mute-on)
+volume [-h|--help] set &lt;number&gt;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Manipulate volume</p>
+</div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph lead">
+<p><strong>ARGUMENTS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">(up|down)</dt>
+<dd>
+<p>Increase or decrease the volume</p>
+</dd>
+<dt class="hdlist1">(mute-toggle|mute-on|mute-off)</dt>
+<dd>
+<p>Toggle/On/Off mute</p>
+</dd>
+<dt class="hdlist1">set &lt;number&gt;</dt>
+<dd>
+<p>Set volume to the exact value on scale from 0 to 100</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="workspace"><a class="anchor" href="#workspace"></a><a class="link" href="#workspace">27. workspace</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -1939,7 +1992,7 @@ Incompatible with <code>--auto-back-and-forth</code></p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="workspace-back-and-forth"><a class="anchor" href="#workspace-back-and-forth"></a><a class="link" href="#workspace-back-and-forth">27. workspace-back-and-forth</a></h2>
+<h2 id="workspace-back-and-forth"><a class="anchor" href="#workspace-back-and-forth"></a><a class="link" href="#workspace-back-and-forth">28. workspace-back-and-forth</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -1961,7 +2014,7 @@ They are created and destroyed on the fly.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="query-commands"><a class="anchor" href="#query-commands"></a><a class="link" href="#query-commands">28. Query commands</a></h2>
+<h2 id="query-commands"><a class="anchor" href="#query-commands"></a><a class="link" href="#query-commands">29. Query commands</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Query commands are commands that do not change the state but rather allow the examination of the current state.</p>
@@ -1978,7 +2031,7 @@ They are created and destroyed on the fly.</p>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="config"><a class="anchor" href="#config"></a><a class="link" href="#config">28.1. config</a></h3>
+<h3 id="config"><a class="anchor" href="#config"></a><a class="link" href="#config">29.1. config</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">config [-h|--help] --get &lt;name&gt; [--json] [--keys]
@@ -2081,7 +2134,7 @@ alt-2
 </div>
 </div>
 <div class="sect2">
-<h3 id="debug-windows"><a class="anchor" href="#debug-windows"></a><a class="link" href="#debug-windows">28.2. debug-windows</a></h3>
+<h3 id="debug-windows"><a class="anchor" href="#debug-windows"></a><a class="link" href="#debug-windows">29.2. debug-windows</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">debug-windows [-h|--help]</pre>
@@ -2117,7 +2170,7 @@ The only intended use case is to report bugs about incorrect windows handling.</
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-apps"><a class="anchor" href="#list-apps"></a><a class="link" href="#list-apps">28.3. list-apps</a></h3>
+<h3 id="list-apps"><a class="anchor" href="#list-apps"></a><a class="link" href="#list-apps">29.3. list-apps</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-apps [-h|--help] [--macos-native-hidden [no]] [--format &lt;output-format&gt;] [--count] [--json]</pre>
@@ -2189,6 +2242,14 @@ Incompatible with <code>--count</code></p>
 <dd>
 <p>Number. <a href="https://en.wikipedia.org/wiki/Process_identifier">UNIX process identifier</a></p>
 </dd>
+<dt class="hdlist1">%{app-exec-path}</dt>
+<dd>
+<p>String. Application executable path</p>
+</dd>
+<dt class="hdlist1">%{app-bundle-path}</dt>
+<dd>
+<p>String. Application bundle path</p>
+</dd>
 <dt class="hdlist1">%{right-padding}</dt>
 <dd>
 <p>A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column</p>
@@ -2205,7 +2266,7 @@ Incompatible with <code>--count</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-exec-env-vars"><a class="anchor" href="#list-exec-env-vars"></a><a class="link" href="#list-exec-env-vars">28.4. list-exec-env-vars</a></h3>
+<h3 id="list-exec-env-vars"><a class="anchor" href="#list-exec-env-vars"></a><a class="link" href="#list-exec-env-vars">29.4. list-exec-env-vars</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-exec-env-vars [-h|--help]</pre>
@@ -2229,7 +2290,7 @@ Incompatible with <code>--count</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-monitors"><a class="anchor" href="#list-monitors"></a><a class="link" href="#list-monitors">28.5. list-monitors</a></h3>
+<h3 id="list-monitors"><a class="anchor" href="#list-monitors"></a><a class="link" href="#list-monitors">29.5. list-monitors</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format &lt;output-format&gt;] [--count] [--json]</pre>
@@ -2293,7 +2354,11 @@ Incompatible with <code>--count</code></p>
 <dl>
 <dt class="hdlist1">%{monitor-id}</dt>
 <dd>
-<p>Number. Sequential number of the belonging monitor</p>
+<p>1-based Number. Sequential number of the belonging monitor</p>
+</dd>
+<dt class="hdlist1">%{monitor-appkit-nsscreen-screens-id}</dt>
+<dd>
+<p>1-based index of the belonging monitor in <code>NSScreen.screens</code> array. Useful for integration with other tools that might be using <code>NSScreen.screens</code> ordering (like sketchybar).</p>
 </dd>
 <dt class="hdlist1">%{monitor-name}</dt>
 <dd>
@@ -2315,7 +2380,7 @@ Incompatible with <code>--count</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-windows"><a class="anchor" href="#list-windows"></a><a class="link" href="#list-windows">28.6. list-windows</a></h3>
+<h3 id="list-windows"><a class="anchor" href="#list-windows"></a><a class="link" href="#list-windows">29.6. list-windows</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-windows [-h|--help] (--workspace &lt;workspace&gt;...|--monitor &lt;monitor&gt;...)
@@ -2370,10 +2435,10 @@ In that case, error is reported.</p>
 <p>Workspace name</p>
 </li>
 <li>
-<p><code>visible</code> is a special workspace name that represents the currently visible workspaces</p>
+<p><code>focused</code> is a special workspace name that represents the focused workspace</p>
 </li>
 <li>
-<p><code>focused</code> is a special workspace name that represents the focused workspace</p>
+<p><code>visible</code> is a special workspace name that represents all currently visible workspaces (In multi-monitor setup, there are multiple visible workspaces)</p>
 </li>
 </ol>
 </div>
@@ -2467,13 +2532,25 @@ Incompatible with <code>--count</code></p>
 <dd>
 <p>Number. <a href="https://en.wikipedia.org/wiki/Process_identifier">UNIX process identifier</a></p>
 </dd>
+<dt class="hdlist1">%{app-exec-path}</dt>
+<dd>
+<p>String. Application executable path</p>
+</dd>
+<dt class="hdlist1">%{app-bundle-path}</dt>
+<dd>
+<p>String. Application bundle path</p>
+</dd>
 <dt class="hdlist1">%{workspace}</dt>
 <dd>
 <p>String. Name of the belonging workspace</p>
 </dd>
 <dt class="hdlist1">%{monitor-id}</dt>
 <dd>
-<p>Number. Sequential number of the belonging monitor</p>
+<p>1-based Number. Sequential number of the belonging monitor.</p>
+</dd>
+<dt class="hdlist1">%{monitor-appkit-nsscreen-screens-id}</dt>
+<dd>
+<p>1-based index of the belonging monitor in <code>NSScreen.screens</code> array. Useful for integration with other tools that might be using <code>NSScreen.screens</code> ordering (like sketchybar).</p>
 </dd>
 <dt class="hdlist1">%{monitor-name}</dt>
 <dd>
@@ -2495,7 +2572,7 @@ Incompatible with <code>--count</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-workspaces"><a class="anchor" href="#list-workspaces"></a><a class="link" href="#list-workspaces">28.7. list-workspaces</a></h3>
+<h3 id="list-workspaces"><a class="anchor" href="#list-workspaces"></a><a class="link" href="#list-workspaces">29.7. list-workspaces</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-workspaces [-h|--help] --monitor &lt;monitor&gt;... [--visible [no]] [--empty [no]] [--format &lt;output-format&gt;] [--count] [--json]
@@ -2612,7 +2689,11 @@ Incompatible with <code>--count</code></p>
 </dd>
 <dt class="hdlist1">%{monitor-id}</dt>
 <dd>
-<p>Number. Sequential number of the belonging monitor</p>
+<p>1-based Number. Sequential number of the belonging monitor</p>
+</dd>
+<dt class="hdlist1">%{monitor-appkit-nsscreen-screens-id}</dt>
+<dd>
+<p>1-based Number. Sequential number of the belonging monitor in <code>NSScreen.screens</code>. Useful for integration with other tools that might be using <code>NSScreen.screens</code> ordering (like sketchybar).</p>
 </dd>
 <dt class="hdlist1">%{monitor-name}</dt>
 <dd>
@@ -2638,7 +2719,7 @@ Incompatible with <code>--count</code></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-23 14:08:39 +0100
+Last updated 2024-11-28 00:45:18 +0100
 </div>
 </div>
 </body>
