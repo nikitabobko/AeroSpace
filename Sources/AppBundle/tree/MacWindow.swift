@@ -68,7 +68,7 @@ final class MacWindow: Window, CustomStringConvertible {
         }
         if !skipClosedWindowsCache { cacheClosedWindowIfNeeded(window: self) }
         let parent = unbindFromParent().parent
-        let deadWindowWorkspace = parent.workspace
+        let deadWindowWorkspace = parent.nodeWorkspace
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
         }
@@ -121,9 +121,9 @@ final class MacWindow: Window, CustomStringConvertible {
         // `hideEmulation` calls
         if !isHiddenInCorner {
             guard let topLeftCorner = getTopLeftCorner() else { return }
-            guard let workspace else { return } // hiding only makes sense for workspace windows
+            guard let nodeWorkspace else { return } // hiding only makes sense for workspace windows
             prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
-                topLeftCorner - workspace.workspaceMonitor.rect.topLeftCorner
+                topLeftCorner - nodeWorkspace.workspaceMonitor.rect.topLeftCorner
         }
         let p: CGPoint
         switch corner {
@@ -144,13 +144,13 @@ final class MacWindow: Window, CustomStringConvertible {
 
     func unhideFromCorner() {
         guard let prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect else { return }
-        guard let workspace else { return } // hiding only makes sense for workspace windows
+        guard let nodeWorkspace else { return } // hiding only makes sense for workspace windows
 
         switch getChildParentRelation(child: self, parent: parent) {
             // Just a small optimization to avoid unnecessary AX calls for non floating windows
             // Tiling windows should be unhidden with layoutRecursive anyway
             case .floatingWindow:
-                _ = setTopLeftCorner(workspace.workspaceMonitor.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
+                _ = setTopLeftCorner(nodeWorkspace.workspaceMonitor.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
             case .macosNativeFullscreenWindow, .macosNativeHiddenAppWindow, .macosNativeMinimizedWindow,
                  .macosPopupWindow, .tiling, .rootTilingContainer, .shimContainerRelation: break
         }
@@ -360,7 +360,7 @@ extension WindowDetectedCallback {
         if let regex = matcher.appNameRegexSubstring, !(window.app.name ?? "").contains(regex) {
             return false
         }
-        if let workspace = matcher.workspace, workspace != window.workspace?.name {
+        if let workspace = matcher.workspace, workspace != window.nodeWorkspace?.name {
             return false
         }
         return true

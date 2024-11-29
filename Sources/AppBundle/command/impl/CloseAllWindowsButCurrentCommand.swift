@@ -10,7 +10,7 @@ struct CloseAllWindowsButCurrentCommand: Command {
         guard let focused = target.windowOrNil else {
             return io.err("Empty workspace")
         }
-        guard let workspace = focused.workspace else {
+        guard let workspace = focused.nodeWorkspace else {
             return io.err("Focused window '\(focused.title)' doesn't belong to workspace")
         }
         var result = true

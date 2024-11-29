@@ -25,12 +25,12 @@ extension TreeNode {
     var parentsWithSelf: [TreeNode] { parent.flatMap { [self] + $0.parentsWithSelf } ?? [self] }
 
     /// Also see visualWorkspace
-    var workspace: Workspace? { // todo rename to nodeWorkspace
-        self as? Workspace ?? parent?.workspace
+    var nodeWorkspace: Workspace? {
+        self as? Workspace ?? parent?.nodeWorkspace
     }
 
     /// Also see: workspace
-    var visualWorkspace: Workspace? { workspace ?? nodeMonitor?.activeWorkspace }
+    var visualWorkspace: Workspace? { nodeWorkspace ?? nodeMonitor?.activeWorkspace }
 
     var nodeMonitor: Monitor? {
         switch self.nodeCases {

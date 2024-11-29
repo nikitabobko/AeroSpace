@@ -6,7 +6,7 @@ struct MoveNodeToWorkspaceCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         guard let window = target.windowOrNil else { return io.err(noWindowIsFocused) }
-        let subjectWs = window.workspace
+        let subjectWs = window.nodeWorkspace
         let targetWorkspace: Workspace
         switch args.target.val {
             case .relative(let isNext):
