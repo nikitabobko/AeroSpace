@@ -4,7 +4,7 @@ import Common
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input.
 /// The function is idempotent.
-func refreshSession<T>(screenIsDefinitelyUnlocked: Bool, startup: Bool = false, forceFocus: Bool = false, body: () -> T) -> T {
+func refreshSession<T>(screenIsDefinitelyUnlocked: Bool, startup: Bool = false, body: () -> T) -> T {
     check(Thread.current.isMainThread)
     if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
     gc()
@@ -28,7 +28,7 @@ func refreshSession<T>(screenIsDefinitelyUnlocked: Bool, startup: Bool = false, 
     }
 
     if TrayMenuModel.shared.isEnabled {
-        if forceFocus || focusBefore != focusAfter {
+        if focusBefore != focusAfter {
             focusAfter?.nativeFocus() // syncFocusToMacOs
         }
 
