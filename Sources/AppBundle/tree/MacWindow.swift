@@ -63,10 +63,10 @@ final class MacWindow: Window, CustomStringConvertible {
     // skipClosedWindowsCache is an optimization when it's definitely not necessary to cache closed window.
     //                        If you are unsure, it's better to pass `false`
     func garbageCollect(skipClosedWindowsCache: Bool) {
-        if !skipClosedWindowsCache { cacheClosedWindowIfNeeded(window: self) }
         if MacWindow.allWindowsMap.removeValue(forKey: windowId) == nil {
             return
         }
+        if !skipClosedWindowsCache { cacheClosedWindowIfNeeded(window: self) }
         let parent = unbindFromParent().parent
         let deadWindowWorkspace = parent.workspace
         for obs in axObservers {
