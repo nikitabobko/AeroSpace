@@ -19,12 +19,8 @@ struct CloseCommand: Command {
                 return io.err("Failed to quit '\(window.app.name ?? "Unknown app")'")
             }
         } else {
-            if window.close() {
-                if !isUnitTest { window.asMacWindow().garbageCollect(skipClosedWindowsCache: true) }
-                return true
-            } else {
-                return io.err("Can't close '\(window.app.name ?? "Unknown app")' window. Probably the window doesn't have a close button")
-            }
+            return window.close() ||
+                io.err("Can't close '\(window.app.name ?? "Unknown app")' window. Probably the window doesn't have a close button")
         }
     }
 }

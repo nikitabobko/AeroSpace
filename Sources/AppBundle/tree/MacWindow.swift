@@ -113,7 +113,9 @@ final class MacWindow: Window, CustomStringConvertible {
 
     override func close() -> Bool {
         guard let closeButton = axWindow.get(Ax.closeButtonAttr) else { return false }
-        return AXUIElementPerformAction(closeButton, kAXPressAction as CFString) == AXError.success
+        if AXUIElementPerformAction(closeButton, kAXPressAction as CFString) != AXError.success { return false }
+        garbageCollect(skipClosedWindowsCache: true)
+        return true
     }
 
     func hideInCorner(_ corner: OptimalHideCorner) {
