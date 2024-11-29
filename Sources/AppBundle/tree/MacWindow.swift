@@ -79,13 +79,10 @@ final class MacWindow: Window, CustomStringConvertible {
         if let workspace, workspace == focus.workspace.name || workspace == prevFocusedWorkspace?.name {
             switch parent.cases {
                 case .tilingContainer, .workspace, .macosHiddenAppsWindowsContainer, .macosFullscreenWindowsContainer:
-                    // todo is this refreshSession necessary? garbageCollect should already be called in a refreshSession
-                    refreshSession(screenIsDefinitelyUnlocked: false) {
-                        let newFocus = Workspace.get(byName: workspace).toLiveFocus()
-                        _ = setFocus(to: newFocus)
-                        if focus.windowOrNil?.app != app {
-                            newFocus.windowOrNil?.nativeFocus()
-                        }
+                    let newFocus = Workspace.get(byName: workspace).toLiveFocus()
+                    _ = setFocus(to: newFocus)
+                    if focus.windowOrNil?.app != app {
+                        newFocus.windowOrNil?.nativeFocus()
                     }
                 case .macosPopupWindowsContainer, .macosMinimizedWindowsContainer:
                     break // Don't switch back on popup destruction
