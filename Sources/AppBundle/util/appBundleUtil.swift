@@ -54,9 +54,16 @@ extension String? {
 }
 
 var apps: [AbstractApp] {
-    isUnitTest
-        ? appForTests.asList()
-        : NSWorkspace.shared.runningApplications.lazy.filter { $0.activationPolicy == .regular }.map(\.macApp).filterNotNil()
+    if isUnitTest {
+        return appForTests.asList()
+    }
+    var result = [AbstractApp]()
+    for _app in NSWorkspace.shared.runningApplications where _app.activationPolicy == .regular {
+        if let app = _app.macApp {
+            result.append(app)
+        }
+    }
+    return result
 }
 
 func terminateApp() -> Never {
