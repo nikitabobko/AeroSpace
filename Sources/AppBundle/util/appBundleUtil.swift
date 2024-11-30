@@ -1,6 +1,9 @@
 import AppKit
 import Common
 import Foundation
+import os
+
+let signposter = OSSignposter(subsystem: aeroSpaceAppId, category: .pointsOfInterest)
 
 let lockScreenAppBundleId = "com.apple.loginwindow"
 let AEROSPACE_WINDOW_ID = "AEROSPACE_WINDOW_ID" // env var

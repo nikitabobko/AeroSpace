@@ -299,7 +299,11 @@ private func tryGetWindow(_ any: Any?) -> AXUIElement? {
 }
 
 extension AXUIElement {
-    func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
+    func get<Attr: ReadableAttr>(_ attr: Attr, signpostEvent: String? = nil, function: String = #function) -> Attr.T? {
+        let state = signposter.beginInterval("AXUIElement.get", "\(function): \(signpostEvent)")
+        defer {
+            signposter.endInterval("AXUIElement.get", state)
+        }
         var raw: AnyObject?
         return AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success ? attr.getter(raw!) : nil
     }
@@ -309,7 +313,11 @@ extension AXUIElement {
         return AXUIElementSetAttributeValue(self, attr.key as CFString, value) == .success
     }
 
-    func containingWindowId() -> CGWindowID? {
+    func containingWindowId(signpostEvent: String? = nil, function: String = #function) -> CGWindowID? {
+        let state = signposter.beginInterval("AXUIElement.containingWindowId", "\(function): \(signpostEvent)")
+        defer {
+            signposter.endInterval("AXUIElement.containingWindowId", state)
+        }
         var cgWindowId = CGWindowID()
         return _AXUIElementGetWindow(self, &cgWindowId) == .success ? cgWindowId : nil
     }

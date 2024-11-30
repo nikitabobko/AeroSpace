@@ -63,7 +63,7 @@ func gcWindows() {
     // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
     // Second and third lines of defence are technically needed only to avoid potential flickering
     if NSWorkspace.shared.frontmostApplication?.bundleIdentifier == lockScreenAppBundleId { return }
-    let toKill = MacWindow.allWindowsMap.filter { $0.value.axWindow.containingWindowId() == nil }
+    let toKill = MacWindow.allWindowsMap.filter { $0.value.axWindow.containingWindowId(signpostEvent: $0.value.app.name) == nil }
     // If all windows are "unobservable", it's highly propable that loginwindow might be still active and we are still
     // recovering from unlock
     if toKill.count == MacWindow.allWindowsMap.count { return }

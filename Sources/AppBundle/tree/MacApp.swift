@@ -76,7 +76,7 @@ final class MacApp: AbstractApp {
     }
 
     override func detectNewWindowsAndGetAll(startup: Bool) -> [Window] {
-        (axApp.get(Ax.windowsAttr) ?? []).compactMap { MacWindow.get(app: self, axWindow: $0, startup: startup) }
+        (axApp.get(Ax.windowsAttr, signpostEvent: name) ?? []).compactMap { MacWindow.get(app: self, axWindow: $0, startup: startup) }
     }
 }
 
