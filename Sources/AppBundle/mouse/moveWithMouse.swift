@@ -4,7 +4,7 @@ func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeM
     if let window = data?.window, TrayMenuModel.shared.isEnabled {
         moveWithMouseIfTheCase(window)
     }
-    refreshAndLayout(screenIsDefinitelyUnlocked: false)
+    refreshAndLayout(.ax(notif as String), screenIsDefinitelyUnlocked: false)
 }
 
 private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests

@@ -4,7 +4,7 @@ import Common
 /// It's one of the most important function of the whole application.
 /// The function is called as a feedback response on every user input.
 /// The function is idempotent.
-func refreshSession<T>(screenIsDefinitelyUnlocked: Bool, startup: Bool = false, body: () -> T) -> T {
+func refreshSession<T>(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool, startup: Bool = false, body: () -> T) -> T {
     check(Thread.current.isMainThread)
     if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
     gc()
@@ -39,8 +39,20 @@ func refreshSession<T>(screenIsDefinitelyUnlocked: Bool, startup: Bool = false, 
     return result
 }
 
-func refreshAndLayout(screenIsDefinitelyUnlocked: Bool, startup: Bool = false) {
-    refreshSession(screenIsDefinitelyUnlocked: screenIsDefinitelyUnlocked, startup: startup, body: {})
+enum RefreshSessionEvent {
+    case globalObserver(String)
+    case globalObserverLeftMouseUp
+    case menuBarButton
+    case hotkeyBinding
+    case startup1
+    case startup2
+    case socketServer
+    case resetManipulatedWithMouse
+    case ax(String)
+}
+
+func refreshAndLayout(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool, startup: Bool = false) {
+    refreshSession(event, screenIsDefinitelyUnlocked: screenIsDefinitelyUnlocked, startup: startup, body: {})
 }
 
 func refreshModel() {
@@ -71,7 +83,7 @@ func gcWindows() {
 }
 
 func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
-    refreshAndLayout(screenIsDefinitelyUnlocked: false)
+    refreshAndLayout(.ax(notif as String), screenIsDefinitelyUnlocked: false)
 }
 
 enum OptimalHideCorner {
