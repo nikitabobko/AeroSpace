@@ -27,6 +27,9 @@ struct MoveCommand: Command {
                 } else {
                     if moveOut(io, window: currentWindow, direction: direction) {
                         return true;
+                    } else if args.boundaries == .allMonitorsUnionFrame {
+                        let moveNodeToMonitor = args.moveNodeToMonitor.copy(\.target, .initialized(.directional(direction)))
+                        return MoveNodeToMonitorCommand(args: moveNodeToMonitor).run(env, io)
                     } else {
                         io.err("Window is not moved. Tip: use --fail-if-noop to exit with non-zero exit code")
                         return !args.failIfNoop;
