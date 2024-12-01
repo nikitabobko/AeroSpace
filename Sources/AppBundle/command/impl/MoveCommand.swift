@@ -48,6 +48,7 @@ private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) 
                  .macosHiddenAppsWindowsContainer, .macosPopupWindowsContainer: true
         }
     }) as! TilingContainer
+    let lastAppliedLayoutVirtualRect: Rect? = window.lastAppliedLayoutVirtualRect
     let bindTo: TilingContainer
     let bindToIndex: Int
     switch innerMostChild.parent.nodeCases {
@@ -78,7 +79,7 @@ private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) 
         adaptiveWeight: WEIGHT_AUTO,
         index: bindToIndex
     )
-    return true
+    return window.lastAppliedLayoutVirtualRect != lastAppliedLayoutVirtualRect;
 }
 
 private func deepMoveIn(window: Window, into container: TilingContainer, moveDirection: CardinalDirection) {
