@@ -25,7 +25,12 @@ struct MoveCommand: Command {
                     }
                     return true
                 } else {
-                    return moveOut(io, window: currentWindow, direction: direction)
+                    if moveOut(io, window: currentWindow, direction: direction) {
+                        return true;
+                    } else {
+                        io.err("Window is not moved. Tip: use --fail-if-noop to exit with non-zero exit code")
+                        return !args.failIfNoop;
+                    }
                 }
             case .workspace: // floating window
                 return io.err("moving floating windows isn't yet supported") // todo

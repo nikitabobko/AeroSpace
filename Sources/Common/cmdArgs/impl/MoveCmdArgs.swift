@@ -6,6 +6,7 @@ public struct MoveCmdArgs: CmdArgs {
         allowInConfig: true,
         help: move_help_generated,
         options: [
+            "--fail-if-noop": trueBoolFlag(\.failIfNoop),
             "--window-id": optionalWindowIdFlag(),
         ],
         arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)]
@@ -14,6 +15,7 @@ public struct MoveCmdArgs: CmdArgs {
     public var direction: Lateinit<CardinalDirection> = .uninitialized
     public var windowId: UInt32?
     public var workspaceName: WorkspaceName?
+    public var failIfNoop: Bool = false
 
     public init(rawArgs: [String], _ direction: CardinalDirection) {
         self.rawArgs = .init(rawArgs)
