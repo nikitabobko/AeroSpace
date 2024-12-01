@@ -51,9 +51,18 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
             terminateApp()
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
-        // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
-        Text(viewModel.isEnabled ? viewModel.trayText : "⏸️")
-    }
+        Text(
+            viewModel.workspaces
+                .filter { !$0.suffix.isEmpty || $0.isFocused }
+                .map { workspace in
+                    let workspaceText = workspace.isFocused 
+                        ? "[ \(workspace.name) ]" 
+                        : workspace.name
+                    return workspaceText
+                }
+                .joined(separator: "  ")
+          )
+      }
 }
 
 func getTextEditorToOpenConfig() -> URL {
