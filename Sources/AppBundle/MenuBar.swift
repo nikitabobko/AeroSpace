@@ -2,6 +2,19 @@ import Common
 import Foundation
 import SwiftUI
 
+func createTextImage(_ text: String) -> NSImage {
+    let attributes: [NSAttributedString.Key: Any] = [
+        .font: NSFont.monospacedSystemFont(ofSize: 0, weight: .regular),
+        .foregroundColor: NSColor.white
+    ]
+    let size = (text as NSString).size(withAttributes: attributes)
+    let image = NSImage(size: size)
+    image.lockFocus()
+    (text as NSString).draw(at: .zero, withAttributes: attributes)
+    image.unlockFocus()
+    return image
+}
+
 public func menuBar(viewModel: TrayMenuModel) -> some Scene {
     MenuBarExtra {
         let shortIdentification = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitShortHash)"
@@ -52,7 +65,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
         // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
-        Text(viewModel.isEnabled ? viewModel.trayText : "⏸️")
+        Image(nsImage: createTextImage(viewModel.isEnabled ? viewModel.trayText : "⏸️"))
     }
 }
 
