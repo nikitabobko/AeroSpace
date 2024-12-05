@@ -64,10 +64,11 @@ func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) -> Bool {
         for frozenWindow in frozenWorkspace.macosUnconventionalWindows { // Will get fixed by normalizations
             MacWindow.get(byId: frozenWindow.id)?.bindAsFloatingWindow(to: workspace)
         }
-        let orphans = workspace.rootTilingContainer.allLeafWindowsRecursive
-        workspace.rootTilingContainer.unbindFromParent()
+        let prevRoot = workspace.rootTilingContainer // Save prevRoot into a variable to avoid it being garbage collected earlier than needed
+        let potentialOrphans = prevRoot.allLeafWindowsRecursive
+        prevRoot.unbindFromParent()
         restoreTreeRecursive(frozenContainer: frozenWorkspace.rootTilingNode, parent: workspace, index: INDEX_BIND_LAST)
-        for window in (orphans - workspace.rootTilingContainer.allLeafWindowsRecursive) {
+        for window in (potentialOrphans - workspace.rootTilingContainer.allLeafWindowsRecursive) {
             window.relayoutWindow(on: workspace, forceTile: true)
         }
     }
