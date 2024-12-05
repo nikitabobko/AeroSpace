@@ -7,24 +7,26 @@ public let mainModeId = "main"
 private var recursionDetectorDuringFailure: Bool = false
 
 public func errorT<T>(
-    _ message: String = "",
+    _ __message: String = "",
     file: String = #file,
     line: Int = #line,
     column: Int = #column,
     function: String = #function
 ) -> T {
+    let _message = __message.contains("\n") ? "\n" + __message.indent() : __message
     let message =
         """
         Please report to:
             https://github.com/nikitabobko/AeroSpace/issues/new
             Please describe what you did to trigger this error
 
-        Message: \(message)
+        Message: \(_message)
         Version: \(aeroSpaceAppVersion)
         Git hash: \(gitHash)
         Coordinate: \(file):\(line):\(column) \(function)
         recursionDetectorDuringFailure: \(recursionDetectorDuringFailure)
         cli: \(isCli)
+        Displays have separate spaces: \(NSScreen.screensHaveSeparateSpaces)
 
         Stacktrace:
         \(getStringStacktrace())

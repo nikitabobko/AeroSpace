@@ -17,6 +17,7 @@ class TreeNode: Equatable {
     // - drag window with mouse
     // - move-mouse command
     var lastAppliedLayoutPhysicalRect: Rect? = nil // with real inner gaps
+    private var unboundStacktrace: String? = nil
 
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
         self.adaptiveWeight = adaptiveWeight
@@ -81,6 +82,7 @@ class TreeNode: Equatable {
         }
         newParent._children.insert(self, at: index != INDEX_BIND_LAST ? index : newParent._children.count)
         _parent = newParent
+        unboundStacktrace = nil
         // todo consider disabling automatic mru propogation
         // 1. "floating windows" in FocusCommand break the MRU because of that :(
         // 2. Misbehaved apps that abuse real window as popups https://github.com/nikitabobko/AeroSpace/issues/106 (the
@@ -112,7 +114,13 @@ class TreeNode: Equatable {
 
     @discardableResult
     func unbindFromParent() -> BindingData {
-        unbindIfBound() ?? errorT("\(self) is already unbound")
+        let bindingData = unbindIfBound()
+        if let bindingData {
+            unboundStacktrace = getStringStacktrace()
+            return bindingData
+        } else {
+            error("\(self) is already unbound. The stacktrace where it was unbound:\n\(unboundStacktrace ?? "")")
+        }
     }
 
     static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {
