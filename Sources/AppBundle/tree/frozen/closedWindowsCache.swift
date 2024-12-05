@@ -1,4 +1,5 @@
 import AppKit
+import Common
 
 /// First line of defence against lock screen
 ///
@@ -44,6 +45,7 @@ func cacheClosedWindowIfNeeded(window: Window) {
         workspaces: Workspace.all.map { FrozenWorkspace($0) },
         monitors: monitors.map(FrozenMonitor.init)
     )
+    check(closedWindowsCache.windowIds.contains(window.windowId))
 }
 
 func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) -> Bool {
