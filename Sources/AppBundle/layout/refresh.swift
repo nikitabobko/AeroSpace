@@ -6,6 +6,8 @@ import Common
 /// The function is idempotent.
 func refreshSession<T>(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool, startup: Bool = false, body: () -> T) -> T {
     check(Thread.current.isMainThread)
+    refreshSessionEventForDebug = event
+    defer { refreshSessionEventForDebug = nil }
     if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
     gc()
     gcMonitors()
@@ -37,18 +39,6 @@ func refreshSession<T>(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked:
         layoutWorkspaces()
     }
     return result
-}
-
-enum RefreshSessionEvent {
-    case globalObserver(String)
-    case globalObserverLeftMouseUp
-    case menuBarButton
-    case hotkeyBinding
-    case startup1
-    case startup2
-    case socketServer
-    case resetManipulatedWithMouse
-    case ax(String)
 }
 
 func refreshAndLayout(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool, startup: Bool = false) {
