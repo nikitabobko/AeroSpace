@@ -121,7 +121,7 @@ let split_help_generated = """
     USAGE: split [-h|--help] [--window-id <window-id>] (horizontal|vertical|opposite)
     """
 let summon_workspace_help_generated = """
-    USAGE: summon-workspace [-h|--help] [--fail-if-noop] <workspace>
+    USAGE: summon-workspace [-h|--help] [--fail-if-noop] [--when-visible (focus|swap)] <workspace>
     """
 let trigger_binding_help_generated = """
     USAGE: trigger-binding [-h|--help] <binding> --mode <mode-id>
