@@ -39,7 +39,7 @@ public extension Result {
     @discardableResult
     func getOrThrow(
         _ msgPrefix: String = "",
-        file: String = #file,
+        file: String = #fileID,
         line: Int = #line,
         column: Int = #column,
         function: String = #function

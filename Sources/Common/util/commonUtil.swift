@@ -10,7 +10,7 @@ public var refreshSessionEventForDebug: RefreshSessionEvent? = nil
 
 public func errorT<T>(
     _ __message: String = "",
-    file: String = #file,
+    file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function
@@ -72,7 +72,7 @@ public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(sep
 
 @inlinable public func error(
     _ message: String = "",
-    file: String = #file,
+    file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function
@@ -83,7 +83,7 @@ public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(sep
 public func check(
     _ condition: Bool,
     _ message: @autoclosure () -> String = "",
-    file: String = #file,
+    file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function
@@ -94,7 +94,7 @@ public func check(
 }
 
 @inlinable public func tryCatch<T>(
-    file: String = #file,
+    file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,
