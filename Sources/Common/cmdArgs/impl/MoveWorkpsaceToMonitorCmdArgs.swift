@@ -9,18 +9,24 @@ public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
             "--wrap-around": trueBoolFlag(\.wrapAround),
             "--workspace": optionalWorkspaceFlag(),
         ],
-        arguments: [newArgParser(\.target, parseMonitorTarget, mandatoryArgPlaceholder: "(next|prev)")]
+        arguments: [
+            newArgParser(
+                \.target,
+                parseTarget,
+                mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)"
+            ),
+        ]
     )
 
     public var windowId: UInt32?
     public var workspaceName: WorkspaceName?
     public var wrapAround: Bool = false
-    public var target: Lateinit<MoveWorkspaceToMonitorCmdArgs.MonitorTarget> = .uninitialized
-    public enum MonitorTarget: String, CaseIterable {
-        case next, prev
-    }
+    public var target: Lateinit<MonitorTarget> = .uninitialized
 }
 
-private func parseMonitorTarget(arg: String, nextArgs: inout [String]) -> Parsed<MoveWorkspaceToMonitorCmdArgs.MonitorTarget> {
-    parseEnum(arg, MoveWorkspaceToMonitorCmdArgs.MonitorTarget.self)
+public func parseWorkspaceToMonitorCmdArgs(_ args: [String]) -> ParsedCmd<MoveWorkspaceToMonitorCmdArgs> {
+    parseSpecificCmdArgs(MoveWorkspaceToMonitorCmdArgs(rawArgs: args), args)
+        .filter("--wrap-around is incompatible with <monitor-pattern> argument") {
+            $0.wrapAround.implies(!$0.target.val.isPatterns)
+        }
 }
