@@ -97,6 +97,7 @@ class TreeNode: Equatable {
         let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
         check(_parent._mruChildren.remove(self))
         self._parent = nil
+        unboundStacktrace = getStringStacktrace()
 
         return BindingData(parent: _parent, adaptiveWeight: adaptiveWeight, index: index)
     }
@@ -114,13 +115,7 @@ class TreeNode: Equatable {
 
     @discardableResult
     func unbindFromParent() -> BindingData {
-        let bindingData = unbindIfBound()
-        if let bindingData {
-            unboundStacktrace = getStringStacktrace()
-            return bindingData
-        } else {
-            error("\(self) is already unbound. The stacktrace where it was unbound:\n\(unboundStacktrace ?? "nil")")
-        }
+        unbindIfBound() ?? errorT("\(self) is already unbound. The stacktrace where it was unbound:\n\(unboundStacktrace ?? "nil")")
     }
 
     static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {
