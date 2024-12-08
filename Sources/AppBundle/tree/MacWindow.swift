@@ -254,6 +254,7 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
     if app.id == "org.mozilla.firefox" && axWindow.get(Ax.minimizeButtonAttr)?.get(Ax.enabledAttr) != true {
         return true
     }
+    if app.id == "com.apple.PhotoBooth" { return true }
     // Heuristic: float windows without fullscreen button (such windows are not designed to be big)
     // - IntelliJ various dialogs (Rebase..., Edit commit message, Settings, Project structure)
     // - Finder copy file dialog
