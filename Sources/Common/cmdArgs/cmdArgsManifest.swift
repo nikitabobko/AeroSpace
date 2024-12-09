@@ -99,7 +99,7 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
             case .moveNodeToWorkspace:
                 result[kind.rawValue] = SubCommandParser(parseMoveNodeToWorkspaceCmdArgs)
             case .moveWorkspaceToMonitor:
-                result[kind.rawValue] = SubCommandParser(MoveWorkspaceToMonitorCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(parseWorkspaceToMonitorCmdArgs)
                 // deprecated
                 result["move-workspace-to-display"] = SubCommandParser(MoveWorkspaceToMonitorCmdArgs.init)
             case .reloadConfig:
