@@ -27,7 +27,7 @@ The dimension to resize is chosen by the first argument
 it changes height if the parent has vertical orientation
 * `smart-opposite` does resizes the opposite axis of smart
 
-Second argument controls how much the size is changes
+Second argument controls how much the size changes
 
 * If the `<number>` is prefixed with `+` then the dimension is increased
 * If the `<number>` is prefixed with `-` then the dimension is decreased

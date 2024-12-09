@@ -52,7 +52,7 @@ class GlobalObserver {
                     _ = refreshSession(.globalObserverLeftMouseUp, screenIsDefinitelyUnlocked: true) {
                         clickedMonitor.activeWorkspace.focusWorkspace()
                     }
-                // Detect close button clicks for unfocused windows
+                // Detect close button clicks for unfocused windows. Yes, kAXUIElementDestroyedNotification is that unreliable
                 case _ where  focus.windowOrNil?.getRect()?.contains(mouseLocation) == false: // todo replace getRect with preflushRect when it later becomes available
                     refreshAndLayout(.globalObserverLeftMouseUp, screenIsDefinitelyUnlocked: true)
                 default:

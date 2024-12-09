@@ -61,6 +61,7 @@ extension Window {
 
     func setFrame(_ topLeft: CGPoint?, _ size: CGSize?) -> Bool {
         // Set size and then the position. The order is important https://github.com/nikitabobko/AeroSpace/issues/143
+        //                                                        https://github.com/nikitabobko/AeroSpace/issues/335
         var result: Bool = true
         if let size { result = setSize(size) && result }
         if let topLeft { result = setTopLeftCorner(topLeft) && result }

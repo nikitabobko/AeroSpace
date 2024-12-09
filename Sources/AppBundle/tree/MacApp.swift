@@ -67,7 +67,7 @@ final class MacApp: AbstractApp {
         return true
     }
 
-    override func getFocusedWindow(startup: Bool) -> Window? {
+    override func getFocusedWindow(startup: Bool) -> Window? { // todo unused?
         getFocusedAxWindow()?.lets { MacWindow.get(app: self, axWindow: $0, startup: startup) }
     }
 

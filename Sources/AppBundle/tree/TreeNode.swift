@@ -119,7 +119,7 @@ class TreeNode: Equatable {
             unboundStacktrace = getStringStacktrace()
             return bindingData
         } else {
-            error("\(self) is already unbound. The stacktrace where it was unbound:\n\(unboundStacktrace ?? "")")
+            error("\(self) is already unbound. The stacktrace where it was unbound:\n\(unboundStacktrace ?? "nil")")
         }
     }
 

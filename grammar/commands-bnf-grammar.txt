@@ -5,7 +5,9 @@ aerospace --version;
 aerospace --help;
 aerospace -h;
 
-<subcommand> ::= balance-sizes
+<subcommand> ::=
+
+    balance-sizes [--workspace <workspace>]
 
     | close [--quit-if-last-window|--window-id <window_id>]...
 
