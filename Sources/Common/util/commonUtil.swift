@@ -25,6 +25,7 @@ public func errorT<T>(
         Message: \(_message)
         Version: \(aeroSpaceAppVersion)
         Git hash: \(gitHash)
+        Date: \(Date())
         Coordinate: \(file):\(line):\(column) \(function)
         recursionDetectorDuringFailure: \(recursionDetectorDuringFailure)
         cli: \(isCli)
