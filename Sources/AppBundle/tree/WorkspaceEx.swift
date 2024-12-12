@@ -47,4 +47,12 @@ extension Workspace {
             .compactMap { $0.resolveMonitor(sortedMonitors: sortedMonitors) }
             .first
     }
+
+    var defaultAssignedMonitor: Monitor? {
+        guard let monitorDescriptions = config.workspaceToMonitorDefaultAssignment[name] else { return nil }
+        let sortedMonitors = sortedMonitors
+        return monitorDescriptions.lazy
+            .compactMap { $0.resolveMonitor(sortedMonitors: sortedMonitors) }
+            .first
+    }
 }

@@ -643,12 +643,26 @@ When you switch to an empty workspace, AeroSpace puts the workspace on an assign
 [#assign-workspaces-to-monitors]
 === Assign workspaces to monitors
 
-You can use `workspace-to-monitor-force-assignment` syntax to assign
-workspaces to always appear on particular monitors
+You can use `workspace-to-monitor-force-assignment` and `workspace-to-monitor-default-assignment` syntax to assign
+workspaces to particular monitors.
+
+The default is a soft assignment, which means workspaces can still be moved to different monitors.
+The workspace can always be reset to the default assigned monitor using the xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] reset command.
+The xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command has no effect for workspaces that have forced monitor assignment
+
+`workspace-to-monitor-force-assignment` will always have preference over `workspace-to-monitor-default-assignment`.
 
 [source,toml]
 ----
 [workspace-to-monitor-force-assignment]
+1 = 1                            # Monitor sequence number from left to right. 1-based indexing
+2 = 'main'                       # Main monitor
+3 = 'secondary'                  # Non-main monitor in case when there are only two monitors
+4 = 'built-in'                   # Case insensitive regex substring
+5 = '^built-in retina display$'  # Case insensitive regex match
+6 = ['secondary', 'dell']        # You can specify multiple patterns. The first matching pattern will be used
+
+[workspace-to-monitor-default-assignment]
 1 = 1                            # Monitor sequence number from left to right. 1-based indexing
 2 = 'main'                       # Main monitor
 3 = 'secondary'                  # Non-main monitor in case when there are only two monitors
@@ -669,8 +683,6 @@ Supported monitor patterns:
 
 You can specify multiple patterns as an array.
 The first matching pattern will be used
-
-xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command has no effect for workspaces that have monitor assignment
 
 == Dialog heuristics
 

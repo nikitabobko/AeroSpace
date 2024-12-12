@@ -214,6 +214,44 @@ final class ConfigTest: XCTestCase {
         assertEquals([:], defaultConfig.workspaceToMonitorForceAssignment)
     }
 
+    func testParseWorkspaceToMonitorDefaultAssignment() {
+        let (parsed, errors) = parseConfig(
+            """
+            [workspace-to-monitor-default-assignment]
+            workspace_name_1 = 1                            # Sequence number of the monitor (from left to right, 1-based indexing)
+            workspace_name_2 = 'main'                       # main monitor
+            workspace_name_3 = 'secondary'                  # non-main monitor (in case when there are only two monitors)
+            workspace_name_4 = 'built-in'                   # case insensitive regex substring
+            workspace_name_5 = '^built-in retina display$'  # case insensitive regex match
+            workspace_name_6 = ['secondary', 1]             # you can specify multiple patterns. The first matching pattern will be used
+            7 = "foo"
+            w7 = ['', 'main']
+            w8 = 0
+            workspace_name_x = '2'                          # Sequence number of the monitor (from left to right, 1-based indexing)
+            """
+        )
+        assertEquals(
+            parsed.workspaceToMonitorDefaultAssignment,
+            [
+                "workspace_name_1": [.sequenceNumber(1)],
+                "workspace_name_2": [.main],
+                "workspace_name_3": [.secondary],
+                "workspace_name_4": [.pattern("built-in")!],
+                "workspace_name_5": [.pattern("^built-in retina display$")!],
+                "workspace_name_6": [.secondary, .sequenceNumber(1)],
+                "workspace_name_x": [.sequenceNumber(2)],
+                "7": [.pattern("foo")!],
+                "w7": [.main],
+                "w8": [],
+            ]
+        )
+        assertEquals([
+            "workspace-to-monitor-default-assignment.w7[0]: Empty string is an illegal monitor description",
+            "workspace-to-monitor-default-assignment.w8: Monitor sequence numbers uses 1-based indexing. Values less than 1 are illegal",
+        ], errors.descriptions)
+        assertEquals([:], defaultConfig.workspaceToMonitorDefaultAssignment)
+    }
+
     func testParseOnWindowDetected() {
         let (parsed, errors) = parseConfig(
             """

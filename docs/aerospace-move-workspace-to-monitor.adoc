@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-move-workspace-to-monitor
 // tag::purpose[]
-:manpurpose: Move the focused workspace to the next or previous monitor.
+:manpurpose: Move the focused workspace monitor by order, or resets to the default monitor.
 // end::purpose[]
 
 // =========================================================== Synopsis
@@ -10,6 +10,7 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (next|prev)
+aerospace move-workspace-to-monitor [-h|--help] [--workspace <workspace>] (reset)
 
 // end::synopsis[]
 
@@ -37,6 +38,10 @@ include::./util/conditional-arguments-header.adoc[]
 (next|prev)::
 Move the workspace to next or prev monitor.
 'next' or 'prev' monitor is calculated relative to the monitor `<workspace>` currently belongs to.
+
+(reset)::
+Move the workspace to the xref:guide.adoc#assign-workspaces-to-monitors[default monitor].
+Will default to the 'main' monitor if no default monitor is defined.
 
 // end::body[]
 
