@@ -51,8 +51,35 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
             terminateApp()
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
-        // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
-        Text(viewModel.isEnabled ? viewModel.trayText : "⏸️")
+        if viewModel.isEnabled {
+            menuLabel(viewModel: viewModel)
+                .id(viewModel.trayText.hashValue)
+        } else {
+            Text("⏸️")
+        }
+    }
+}
+
+struct menuLabel: View {
+    var viewModel: TrayMenuModel
+
+    var body: some View {
+        let renderer = ImageRenderer(content: imageContent)
+        if let cgImage = renderer.cgImage {
+            Image(cgImage, scale: 2, label: Text(viewModel.trayText))
+                .renderingMode(.template)
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+        } else {
+            // In case image can't be rendered fallback to plain text
+            Text(viewModel.trayText)
+        }
+    }
+
+    // I used a largeTitle font and then use a scale of 2 to make the image look smoother
+    private var imageContent: some View {
+        Text(viewModel.trayText)
+            .font(.system(.largeTitle, design: .monospaced))
     }
 }
 
