@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-struct Rect: Copyable, Equatable {
+struct Rect: Copyable {
     var topLeftX: CGFloat
     var topLeftY: CGFloat
     var width: CGFloat
