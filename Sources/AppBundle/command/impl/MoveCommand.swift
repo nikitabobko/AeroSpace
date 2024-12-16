@@ -56,7 +56,6 @@ private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) 
                  .macosHiddenAppsWindowsContainer, .macosPopupWindowsContainer: true
         }
     }) as! TilingContainer
-    let lastAppliedLayoutVirtualRect: Rect? = window.lastAppliedLayoutVirtualRect
     let bindTo: TilingContainer
     let bindToIndex: Int
     switch innerMostChild.parent.nodeCases {
@@ -65,6 +64,10 @@ private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) 
             bindTo = parent
             bindToIndex = innerMostChild.ownIndex + direction.insertionOffset
         case .workspace(let parent): // create implicit container
+            if !canMoveOutInDirection(window: window, direction: direction) {
+                return false;
+            }
+
             let prevRoot = parent.rootTilingContainer
             prevRoot.unbindFromParent()
             // Force tiles layout
@@ -87,7 +90,24 @@ private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) 
         adaptiveWeight: WEIGHT_AUTO,
         index: bindToIndex
     )
-    return window.lastAppliedLayoutVirtualRect != lastAppliedLayoutVirtualRect;
+    return true;
+}
+
+private func canMoveOutInDirection(window: Window, direction: CardinalDirection) -> Bool {
+    let rootTilingContainer = window.nodeWorkspace?.rootTilingContainer
+    if window.parent != rootTilingContainer {
+        return true
+    }
+    if rootTilingContainer?.orientation != direction.orientation {
+        return true
+    }
+
+    switch direction {
+        case .left, .up:
+            return window.ownIndex != 0
+        case .right, .down:
+            return window.ownIndex != window.parent.children.count - 1
+    }
 }
 
 private func deepMoveIn(window: Window, into container: TilingContainer, moveDirection: CardinalDirection) {
