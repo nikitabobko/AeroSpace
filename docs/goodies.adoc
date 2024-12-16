@@ -287,6 +287,7 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |Reminders|`com.apple.reminders`
 |Safari|`com.apple.Safari`
 |Shortcuts|`com.apple.shortcuts`
+|Shottr|`cc.ffitch.shottr`
 |Slack|`com.tinyspeck.slackmacgap`
 |Spotify|`com.spotify.client`
 |Steam|`com.valvesoftware.steam`
