@@ -26,13 +26,13 @@ struct MoveCommand: Command {
                     return true
                 } else {
                     if moveOut(io, window: currentWindow, direction: direction) {
-                        return true;
+                        return true
                     } else if args.boundaries == .allMonitorsUnionFrame {
                         let moveNodeToMonitor = args.moveNodeToMonitor.copy(\.target, .initialized(.directional(direction)))
                         return MoveNodeToMonitorCommand(args: moveNodeToMonitor).run(env, io)
                     } else {
                         io.err("Window is not moved. Tip: use --fail-if-noop to exit with non-zero exit code")
-                        return !args.failIfNoop;
+                        return !args.failIfNoop
                     }
                 }
             case .workspace: // floating window
@@ -65,7 +65,7 @@ private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) 
             bindToIndex = innerMostChild.ownIndex + direction.insertionOffset
         case .workspace(let parent): // create implicit container
             if !canMoveOutInDirection(window: window, direction: direction) {
-                return false;
+                return false
             }
 
             let prevRoot = parent.rootTilingContainer
@@ -90,7 +90,7 @@ private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) 
         adaptiveWeight: WEIGHT_AUTO,
         index: bindToIndex
     )
-    return true;
+    return true
 }
 
 private func canMoveOutInDirection(window: Window, direction: CardinalDirection) -> Bool {
