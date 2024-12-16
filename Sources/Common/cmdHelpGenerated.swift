@@ -109,7 +109,8 @@ let move_workspace_to_monitor_help_generated = """
     USAGE: move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (next|prev)
     """
 let move_help_generated = """
-    USAGE: move [-h|--help] [--window-id <window-id>] (left|down|up|right)
+    USAGE: move [-h|--help] [--window-id <window-id>] [--focus-follows-window]
+                [--fail-if-noop] [--boundaries <boundary>] [--wrap-around] (left|down|up|right)
     """
 let reload_config_help_generated = """
     USAGE: reload-config [-h|--help] [--no-gui] [--dry-run]

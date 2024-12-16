@@ -9,7 +9,8 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace move [-h|--help] [--window-id <window-id>] (left|down|up|right)
+aerospace move [-h|--help] [--window-id <window-id>] [--focus-follows-window]
+               [--fail-if-noop] [--boundaries <boundary>] [--wrap-around] (left|down|up|right)
 
 // end::synopsis[]
 
@@ -25,6 +26,17 @@ Deprecated name: `move-through`
 include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+--fail-if-noop:: Exit with a non-zero status if the window cannot move because it’s at the boundary
+--wrap-around:: Make it possible to wrap around the movement
+
+--boundaries <boundary>::
+Defines move boundaries. +
+`<boundary>` possible values: `(workspace|all-monitors-outer-frame)`. +
+The default is: `workspace`
+
+--focus-follows-window::
+Make sure that the window in question receives focus after moving.
+This flag is a shortcut for manually running `aerospace-workspace`/`aerospace-focus` after `move` successful execution.
 
 --window-id <window-id>::
 include::./util/window-id-flag-desc.adoc[]
