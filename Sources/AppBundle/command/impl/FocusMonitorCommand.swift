@@ -8,14 +8,14 @@ struct FocusMonitorCommand: Command {
         check(Thread.current.isMainThread)
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         return switch args.target.val.resolve(target.workspace.workspaceMonitor, wrapAround: args.wrapAround) {
-            case .success(let targetMonitor): targetMonitor.activeWorkspace.focusWorkspace()
+            case .success(let (targetMonitor, _)): targetMonitor.activeWorkspace.focusWorkspace()
             case .failure(let msg): io.err(msg)
         }
     }
 }
 
 extension MonitorTarget {
-    func resolve(_ currentMonitor: Monitor, wrapAround: Bool) -> Result<Monitor, String> {
+    func resolve(_ currentMonitor: Monitor, wrapAround: Bool) -> Result<(Monitor, Int), String> {
         switch self {
             case .directional(let direction):
                 guard let (monitorsInDirection, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
@@ -25,7 +25,7 @@ extension MonitorTarget {
                 guard let targetMonitor else {
                     return .failure("No monitors in direction \(direction)")
                 }
-                return .success(targetMonitor)
+                return .success((targetMonitor, direction.focusMonitorOffset))
             case .relative(let nextPrev):
                 let monitors = sortedMonitors
                 guard let curIndex = monitors.firstIndex(where: { $0.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }) else {
@@ -36,13 +36,13 @@ extension MonitorTarget {
                 guard let targetMonitor else {
                     return .failure("Can't find target monitor")
                 }
-                return .success(targetMonitor)
+                return .success((targetMonitor, -1))
             case .patterns(let patterns):
                 let monitors = sortedMonitors
                 guard let targetMonitor = patterns.lazy.compactMap({ $0.resolveMonitor(sortedMonitors: monitors) }).first else {
                     return .failure("None of the monitors match the pattern/patterns")
                 }
-                return .success(targetMonitor)
+                return .success((targetMonitor, -1))
         }
     }
 }

@@ -19,6 +19,7 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     public var windowId: UInt32?
     public var workspaceName: WorkspaceName?
     public var target: Lateinit<WorkspaceTarget> = .uninitialized
+    public var targetIndex: Int = -1 // = INDEX_BIND_LAST
 
     public init(rawArgs: [String]) {
         self.rawArgs = .init(rawArgs)

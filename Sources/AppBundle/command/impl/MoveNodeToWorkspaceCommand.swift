@@ -29,7 +29,7 @@ struct MoveNodeToWorkspaceCommand: Command {
         }
         let targetContainer: NonLeafTreeNodeObject = window.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
 
-        window.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+        window.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: args.targetIndex)
         return args.focusFollowsWindow ? window.focusWindow() : true
     }
 }

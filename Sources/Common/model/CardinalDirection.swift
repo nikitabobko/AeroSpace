@@ -14,5 +14,6 @@ public extension CardinalDirection {
         }
     }
     var focusOffset: Int { isPositive ? 1 : -1 }
+    var focusMonitorOffset: Int { isPositive ? 0 : -1 }
     var insertionOffset: Int { isPositive ? 1 : 0 }
 }

@@ -14,9 +14,12 @@ struct MoveNodeToMonitorCommand: Command {
             return io.err(windowIsntPartOfTree(window))
         }
         switch args.target.val.resolve(currentMonitor, wrapAround: args.wrapAround) {
-            case .success(let targetMonitor):
+            case .success(let (targetMonitor, targetIndex)):
                 if let wName = WorkspaceName.parse(targetMonitor.activeWorkspace.name).getOrNil(appendErrorTo: &io.stderr) {
-                    let moveNodeToWorkspace = args.moveNodeToWorkspace.copy(\.target, .initialized(.direct(wName)))
+                    let moveNodeToWorkspace = (args.moveNodeToWorkspace
+                        .copy(\.target, .initialized(.direct(wName)))
+                        .copy(\.targetIndex, targetIndex)
+                    )
                     return MoveNodeToWorkspaceCommand(args: moveNodeToWorkspace).run(env, io)
                 } else {
                     return false
