@@ -209,6 +209,14 @@ final class MacWindow: Window, CustomStringConvertible {
 func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     let subrole = axWindow.get(Ax.subroleAttr)
 
+    // Just don't do anything with "Ghostty Quick Terminal" windows.
+    // Its position and size are managed by the Ghostty itself
+    // https://github.com/nikitabobko/AeroSpace/issues/103
+    // https://github.com/ghostty-org/ghostty/discussions/3512
+    if app.id == "com.mitchellh.ghostty" && axWindow.get(Ax.identifierAttr) == "com.mitchellh.ghostty.quickTerminal" {
+        return false
+    }
+
     // Try to filter out incredibly weird popup like AXWindows without any buttons.
     // E.g.
     // - Sonoma (macOS 14) keyboard layout switch
