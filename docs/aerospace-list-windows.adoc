@@ -78,6 +78,7 @@ The following variables can be used inside `<output-format>`:
 
 %{window-id}:: Number. Window unique ID
 %{window-title}:: String. Window title
+%{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aerospace fullscreen` command
 
 %{app-bundle-id}:: String. Application unique identifier. https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
 %{app-name}:: String. Application name
