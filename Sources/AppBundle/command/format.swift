@@ -74,6 +74,7 @@ enum FormatVar: Equatable {
     case monitor(MonitorFormatVar)
 
     enum WindowFormatVar: String, Equatable, CaseIterable {
+        case isFullscreen = "is-fullscreen"
         case windowId = "window-id"
         case windowTitle = "window-title"
     }
@@ -98,6 +99,7 @@ enum FormatVar: Equatable {
 }
 
 enum Primitive: Encodable {
+    case bool(Bool)
     case int(Int)
     case int32(Int32)
     case uint32(UInt32)
@@ -105,6 +107,7 @@ enum Primitive: Encodable {
 
     func toString() -> String {
         switch self {
+            case .bool(let x): x.description
             case .int(let x): x.description
             case .int32(let x): x.description
             case .uint32(let x): x.description
@@ -114,6 +117,7 @@ enum Primitive: Encodable {
 
     func encode(to encoder: any Encoder) throws {
         let value: Encodable = switch self {
+            case .bool(let x): x
             case .int(let x): x
             case .int32(let x): x
             case .uint32(let x): x
@@ -171,6 +175,7 @@ extension String {
         switch (obj, formatVar) {
             case (.window(let w), .window(let f)):
                 return switch f {
+                    case .isFullscreen: .success(.bool(w.isFullscreen))
                     case .windowId: .success(.uint32(w.windowId))
                     case .windowTitle: .success(.string(w.title))
                 }
