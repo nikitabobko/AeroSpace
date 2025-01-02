@@ -258,6 +258,7 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |Finder|`com.apple.finder`
 |Firefox|`org.mozilla.firefox`
 |Freeform|`com.apple.freeform`
+|Ghostty|`com.mitchellh.ghostty`
 |GIMP|`org.gimp.gimp-2.10`
 |Google Chrome|`com.google.Chrome`
 |Grapher|`com.apple.grapher`
