@@ -246,6 +246,10 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
     if axWindow.get(Ax.subroleAttr) != kAXStandardWindowSubrole {
         return true
     }
+    // Firefox: Picture in Picture window doesn't have minimize button.
+    if app.id == "org.mozilla.firefox" && axWindow.get(Ax.minimizeButtonAttr)?.get(Ax.enabledAttr) != true {
+        return true
+    }
     // Heuristic: float windows without fullscreen button (such windows are not designed to be big)
     // - IntelliJ various dialogs (Rebase..., Edit commit message, Settings, Project structure)
     // - Finder copy file dialog
