@@ -128,12 +128,12 @@ Working with binding modes consists of two parts:
 
 [source,toml]
 ----
-[mode.main.binding]        # Declare 'main' binding mode
-alt-r = 'mode resize'      # 1. Define a binding to switch to 'resize' mode
+[mode.main.binding]            # Declare 'main' binding mode
+    alt-r = 'mode resize'      # 1. Define a binding to switch to 'resize' mode
 
-[mode.resize.binding]      # 2. Declare 'resize' binding mode
-minus = 'resize smart -50'
-equal = 'resize smart +50'
+[mode.resize.binding]          # 2. Declare 'resize' binding mode
+    minus = 'resize smart -50'
+    equal = 'resize smart +50'
 ----
 
 [#commands]
@@ -148,10 +148,10 @@ There are two ways on how you can use commands:
 [source,toml]
 ----
 [mode.main.binding]
-# Bind alt-1 key to switch to workspace 1
-alt-1 = 'workspace 1'
-# Or bind a sequence of commands
-alt-shift-1 = ['move-node-to-workspace 1', 'workspace 1']
+    # Bind alt-1 key to switch to workspace 1
+    alt-1 = 'workspace 1'
+    # Or bind a sequence of commands
+    alt-shift-1 = ['move-node-to-workspace 1', 'workspace 1']
 ----
 . Run commands in CLI. Open up a Terminal.app and type:
 +
@@ -173,10 +173,10 @@ If you use different layout, different alphabet, or you just want to have a fanc
 ----
 # Define my fancy unicorn key notation
 [key-mapping.key-notation-to-key-code]
-unicorn = 'u'
+    unicorn = 'u'
 
 [mode.main.binding]
-alt-unicorn = 'workspace wonderland' # (⁀ᗢ⁀)
+    alt-unicorn = 'workspace wonderland' # (⁀ᗢ⁀)
 ----
 
 * For `dvorak` users, AeroSpace offers a preconfigured preset.
@@ -184,7 +184,7 @@ alt-unicorn = 'workspace wonderland' # (⁀ᗢ⁀)
 [source,toml]
 ----
 [key-mapping]
-preset = 'dvorak'
+    preset = 'dvorak'
 ----
 
 * For `colemak` users, there is xref:./goodies.adoc#colemak-keys-remap[a compiled mapping].
@@ -201,7 +201,7 @@ You can configure environment variables of `exec-*` commands and callbacks (such
 [source,toml]
 ----
 [exec.env-vars]
-PATH = '${HOME}/bin:${PATH}'
+    PATH = '${HOME}/bin:${PATH}'
 ----
 +
 Environment variable substitution is supported in form of `+${ENV_VAR}+`
@@ -212,9 +212,9 @@ That's why unless you override `exec` section in your config, AeroSpace fallback
 [source,toml]
 ----
 [exec]
-inherit-env-vars = true
+    inherit-env-vars = true
 [exec.env-vars]
-PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
+    PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
 ----
 
 [#tree]
@@ -480,13 +480,13 @@ Here is a showcase example that uses all the possible configurations:
 [source,toml]
 ----
 [[on-window-detected]]
-if.app-id = 'com.apple.systempreferences'
-if.app-name-regex-substring = 'settings'
-if.window-title-regex-substring = 'substring'
-if.workspace = 'workspace-name'
-if.during-aerospace-startup = true
-check-further-callbacks = true
-run = ['layout floating', 'move-node-to-workspace S']  # The callback itself
+    if.app-id = 'com.apple.systempreferences'
+    if.app-name-regex-substring = 'settings'
+    if.window-title-regex-substring = 'substring'
+    if.workspace = 'workspace-name'
+    if.during-aerospace-startup = true
+    check-further-callbacks = true
+    run = ['layout floating', 'move-node-to-workspace S']  # The callback itself
 ----
 
 `run` commands are run only if the detected window matches all the specified conditions.
@@ -547,24 +547,24 @@ Examples of automations:
 [source,toml]
 ----
 [[on-window-detected]]
-if.app-id = 'org.alacritty'
-run = 'move-node-to-workspace T' # mnemonics T - Terminal
+    if.app-id = 'org.alacritty'
+    run = 'move-node-to-workspace T' # mnemonics T - Terminal
 
 [[on-window-detected]]
-if.app-id = 'com.google.Chrome'
-run = 'move-node-to-workspace W' # mnemonics W - Web browser
+    if.app-id = 'com.google.Chrome'
+    run = 'move-node-to-workspace W' # mnemonics W - Web browser
 
 [[on-window-detected]]
-if.app-id = 'com.jetbrains.intellij'
-run = 'move-node-to-workspace I' # mnemonics I - IDE
+    if.app-id = 'com.jetbrains.intellij'
+    run = 'move-node-to-workspace I' # mnemonics I - IDE
 ----
 * Make all windows float by default
 +
 [source,toml]
 ----
 [[on-window-detected]]
-check-further-callbacks = true
-run = 'layout floating'
+    check-further-callbacks = true
+    run = 'layout floating'
 ----
 
 [#on-focus-changed-callbacks]
@@ -649,12 +649,13 @@ workspaces to always appear on particular monitors
 [source,toml]
 ----
 [workspace-to-monitor-force-assignment]
-1 = 1                            # Monitor sequence number from left to right. 1-based indexing
-2 = 'main'                       # Main monitor
-3 = 'secondary'                  # Non-main monitor in case when there are only two monitors
-4 = 'built-in'                   # Case insensitive regex substring
-5 = '^built-in retina display$'  # Case insensitive regex match
-6 = ['secondary', 'dell']        # You can specify multiple patterns. The first matching pattern will be used
+    1 = 1                            # Monitor sequence number from left to right. 1-based indexing
+    2 = 'main'                       # Main monitor
+    3 = 'secondary'                  # Non-main monitor in case when there are only two monitors
+    4 = 'built-in'                   # Case insensitive regex substring
+    5 = '^built-in retina display$'  # Case insensitive regex match
+    6 = ['secondary', 'dell']        # You can specify multiple patterns.
+                                     #   The first matching pattern will be used
 ----
 
 * Left hand side of the assignment is the workspace name
@@ -694,16 +695,16 @@ You can also use `on-window-detected` to force tile or force float all windows o
 [source,toml]
 ----
 [[on-window-detected]]
-if.app-id = '...'
-run = 'layout tiling'
+    if.app-id = '...'
+    run = 'layout tiling'
 ----
 . Force float all the windows (or windows of a particular app)
 +
 [source,toml]
 ----
 [[on-window-detected]]
-if.app-id = '...'
-run = 'layout floating'
+    if.app-id = '...'
+    run = 'layout floating'
 ----
 
 == Common pitfall: keyboard keys handling

@@ -160,8 +160,8 @@ If `automatically-unhide-macos-hidden-apps` isn't enough, you can disable `cmd-h
 [source,toml]
 ----
 [mode.main.binding]
-cmd-h = [] # Disable "hide application"
-cmd-alt-h = [] # Disable "hide others"
+    cmd-h = [] # Disable "hide application"
+    cmd-alt-h = [] # Disable "hide others"
 ----
 
 [#colemak-keys-remap]
@@ -171,42 +171,42 @@ cmd-alt-h = [] # Disable "hide others"
 [source,toml]
 ----
 [key-mapping.key-notation-to-key-code]
-q = 'q'
-w = 'w'
-f = 'e'
-p = 'r'
-g = 't'
-j = 'y'
-l = 'u'
-u = 'i'
-y = 'o'
-semicolon = 'p'
-leftSquareBracket = 'leftSquareBracket'
-rightSquareBracket = 'rightSquareBracket'
-backslash = 'backslash'
+    q = 'q'
+    w = 'w'
+    f = 'e'
+    p = 'r'
+    g = 't'
+    j = 'y'
+    l = 'u'
+    u = 'i'
+    y = 'o'
+    semicolon = 'p'
+    leftSquareBracket = 'leftSquareBracket'
+    rightSquareBracket = 'rightSquareBracket'
+    backslash = 'backslash'
 
-a = 'a'
-r = 's'
-s = 'd'
-t = 'f'
-d = 'g'
-h = 'h'
-n = 'j'
-e = 'k'
-i = 'l'
-o = 'semicolon'
-quote = 'quote'
+    a = 'a'
+    r = 's'
+    s = 'd'
+    t = 'f'
+    d = 'g'
+    h = 'h'
+    n = 'j'
+    e = 'k'
+    i = 'l'
+    o = 'semicolon'
+    quote = 'quote'
 
-z = 'z'
-x = 'x'
-c = 'c'
-v = 'v'
-b = 'b'
-k = 'n'
-m = 'm'
-comma = 'comma'
-period = 'period'
-slash = 'slash'
+    z = 'z'
+    x = 'x'
+    c = 'c'
+    v = 'v'
+    b = 'b'
+    k = 'n'
+    m = 'm'
+    comma = 'comma'
+    period = 'period'
+    slash = 'slash'
 ----
 
 [#i3-like-config]
