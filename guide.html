@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<meta name="author" content="v0.16.0-Beta">
+<meta name="author" content="v0.16.2-Beta">
 <link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Guide</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -512,7 +512,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div id="header">
 <h1>AeroSpace Guide</h1>
 <div class="details">
-<span id="author" class="author">v0.16.0-Beta</span><br>
+<span id="author" class="author">v0.16.2-Beta</span><br>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -816,7 +816,7 @@ You can bootstrap your custom config by coping the default config from the app i
 <span class="tok-c1"># Possible values: (qwerty|dvorak)</span>
 <span class="tok-c1"># See <a href="https://nikitabobko.github.io/AeroSpace/guide#key-mapping" class="bare">https://nikitabobko.github.io/AeroSpace/guide#key-mapping</a></span>
 <span class="tok-k">[key-mapping]</span>
-<span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;qwerty&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;qwerty&#39;</span>
 
 <span class="tok-c1"># Gaps between windows (inner-*) and between monitor edges (outer-*).</span>
 <span class="tok-c1"># Possible values:</span>
@@ -824,14 +824,15 @@ You can bootstrap your custom config by coping the default config from the app i
 <span class="tok-c1"># - Per monitor:  gaps.outer.top = [{ monitor.main = 16 }, { monitor.&quot;some-pattern&quot; = 32 }, 24]</span>
 <span class="tok-c1">#                 In this example, 24 is a default value when there is no match.</span>
 <span class="tok-c1">#                 Monitor pattern is the same as for &#39;workspace-to-monitor-force-assignment&#39;.</span>
-<span class="tok-c1">#                 See: <a href="https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors" class="bare">https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors</a></span>
+<span class="tok-c1">#                 See:</span>
+<span class="tok-c1">#                 <a href="https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors" class="bare">https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors</a></span>
 <span class="tok-k">[gaps]</span>
-<span class="tok-n">inner</span><span class="tok-p">.</span><span class="tok-n">horizontal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span>
-<span class="tok-n">inner</span><span class="tok-p">.</span><span class="tok-n">vertical</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">   </span><span class="tok-mi">0</span>
-<span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">left</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">       </span><span class="tok-mi">0</span>
-<span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">bottom</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">     </span><span class="tok-mi">0</span>
-<span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">top</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">        </span><span class="tok-mi">0</span>
-<span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">right</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">      </span><span class="tok-mi">0</span>
+<span class="tok-w">    </span><span class="tok-n">inner</span><span class="tok-p">.</span><span class="tok-n">horizontal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">0</span>
+<span class="tok-w">    </span><span class="tok-n">inner</span><span class="tok-p">.</span><span class="tok-n">vertical</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">   </span><span class="tok-mi">0</span>
+<span class="tok-w">    </span><span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">left</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">       </span><span class="tok-mi">0</span>
+<span class="tok-w">    </span><span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">bottom</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">     </span><span class="tok-mi">0</span>
+<span class="tok-w">    </span><span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">top</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">        </span><span class="tok-mi">0</span>
+<span class="tok-w">    </span><span class="tok-n">outer</span><span class="tok-p">.</span><span class="tok-n">right</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">      </span><span class="tok-mi">0</span>
 
 <span class="tok-c1"># &#39;main&#39; binding mode declaration</span>
 <span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/guide#binding-modes" class="bare">https://nikitabobko.github.io/AeroSpace/guide#binding-modes</a></span>
@@ -839,143 +840,145 @@ You can bootstrap your custom config by coping the default config from the app i
 <span class="tok-c1"># Fallback value (if you omit the key): mode.main.binding = {}</span>
 <span class="tok-k">[mode.main.binding]</span>
 
-<span class="tok-c1"># All possible keys:</span>
-<span class="tok-c1"># - Letters.        a, b, c, ..., z</span>
-<span class="tok-c1"># - Numbers.        0, 1, 2, ..., 9</span>
-<span class="tok-c1"># - Keypad numbers. keypad0, keypad1, keypad2, ..., keypad9</span>
-<span class="tok-c1"># - F-keys.         f1, f2, ..., f20</span>
-<span class="tok-c1"># - Special keys.   minus, equal, period, comma, slash, backslash, quote, semicolon, backtick,</span>
-<span class="tok-c1">#                   leftSquareBracket, rightSquareBracket, space, enter, esc, backspace, tab</span>
-<span class="tok-c1"># - Keypad special. keypadClear, keypadDecimalMark, keypadDivide, keypadEnter, keypadEqual,</span>
-<span class="tok-c1">#                   keypadMinus, keypadMultiply, keypadPlus</span>
-<span class="tok-c1"># - Arrows.         left, down, up, right</span>
+<span class="tok-w">    </span><span class="tok-c1"># All possible keys:</span>
+<span class="tok-w">    </span><span class="tok-c1"># - Letters.        a, b, c, ..., z</span>
+<span class="tok-w">    </span><span class="tok-c1"># - Numbers.        0, 1, 2, ..., 9</span>
+<span class="tok-w">    </span><span class="tok-c1"># - Keypad numbers. keypad0, keypad1, keypad2, ..., keypad9</span>
+<span class="tok-w">    </span><span class="tok-c1"># - F-keys.         f1, f2, ..., f20</span>
+<span class="tok-w">    </span><span class="tok-c1"># - Special keys.   minus, equal, period, comma, slash, backslash, quote, semicolon,</span>
+<span class="tok-w">    </span><span class="tok-c1">#                   backtick, leftSquareBracket, rightSquareBracket, space, enter, esc,</span>
+<span class="tok-w">    </span><span class="tok-c1">#                   backspace, tab</span>
+<span class="tok-w">    </span><span class="tok-c1"># - Keypad special. keypadClear, keypadDecimalMark, keypadDivide, keypadEnter, keypadEqual,</span>
+<span class="tok-w">    </span><span class="tok-c1">#                   keypadMinus, keypadMultiply, keypadPlus</span>
+<span class="tok-w">    </span><span class="tok-c1"># - Arrows.         left, down, up, right</span>
 
-<span class="tok-c1"># All possible modifiers: cmd, alt, ctrl, shift</span>
+<span class="tok-w">    </span><span class="tok-c1"># All possible modifiers: cmd, alt, ctrl, shift</span>
 
-<span class="tok-c1"># All possible commands: <a href="https://nikitabobko.github.io/AeroSpace/commands" class="bare">https://nikitabobko.github.io/AeroSpace/commands</a></span>
+<span class="tok-w">    </span><span class="tok-c1"># All possible commands: <a href="https://nikitabobko.github.io/AeroSpace/commands" class="bare">https://nikitabobko.github.io/AeroSpace/commands</a></span>
 
-<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget" class="bare">https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget</a></span>
-<span class="tok-c1"># You can uncomment the following lines to open up terminal with alt + enter shortcut (like in i3)</span>
-<span class="tok-c1"># alt-enter = &#39;&#39;&#39;exec-and-forget osascript -e &#39;</span>
-<span class="tok-c1"># tell application &quot;Terminal&quot;</span>
-<span class="tok-c1">#     do script</span>
-<span class="tok-c1">#     activate</span>
-<span class="tok-c1"># end tell&#39;</span>
-<span class="tok-c1"># &#39;&#39;&#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget" class="bare">https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget</a></span>
+<span class="tok-w">    </span><span class="tok-c1"># You can uncomment the following lines to open up terminal with alt + enter shortcut</span>
+<span class="tok-w">    </span><span class="tok-c1"># (like in i3)</span>
+<span class="tok-w">    </span><span class="tok-c1"># alt-enter = &#39;&#39;&#39;exec-and-forget osascript -e &#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># tell application &quot;Terminal&quot;</span>
+<span class="tok-w">    </span><span class="tok-c1">#     do script</span>
+<span class="tok-w">    </span><span class="tok-c1">#     activate</span>
+<span class="tok-w">    </span><span class="tok-c1"># end tell&#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># &#39;&#39;&#39;</span>
 
-<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#layout" class="bare">https://nikitabobko.github.io/AeroSpace/commands#layout</a></span>
-<span class="tok-n">alt-slash</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout tiles horizontal vertical&#39;</span>
-<span class="tok-n">alt-comma</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout accordion horizontal vertical&#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#layout" class="bare">https://nikitabobko.github.io/AeroSpace/commands#layout</a></span>
+<span class="tok-w">    </span><span class="tok-n">alt-slash</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout tiles horizontal vertical&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-comma</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout accordion horizontal vertical&#39;</span>
 
-<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#focus" class="bare">https://nikitabobko.github.io/AeroSpace/commands#focus</a></span>
-<span class="tok-n">alt-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus left&#39;</span>
-<span class="tok-n">alt-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus down&#39;</span>
-<span class="tok-n">alt-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus up&#39;</span>
-<span class="tok-n">alt-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus right&#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#focus" class="bare">https://nikitabobko.github.io/AeroSpace/commands#focus</a></span>
+<span class="tok-w">    </span><span class="tok-n">alt-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus left&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus down&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus up&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;focus right&#39;</span>
 
-<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#move" class="bare">https://nikitabobko.github.io/AeroSpace/commands#move</a></span>
-<span class="tok-n">alt-shift-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move left&#39;</span>
-<span class="tok-n">alt-shift-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move down&#39;</span>
-<span class="tok-n">alt-shift-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move up&#39;</span>
-<span class="tok-n">alt-shift-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move right&#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#move" class="bare">https://nikitabobko.github.io/AeroSpace/commands#move</a></span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move left&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move down&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move up&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move right&#39;</span>
 
-<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#resize" class="bare">https://nikitabobko.github.io/AeroSpace/commands#resize</a></span>
-<span class="tok-n">alt-shift-minus</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize smart -50&#39;</span>
-<span class="tok-n">alt-shift-equal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize smart +50&#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#resize" class="bare">https://nikitabobko.github.io/AeroSpace/commands#resize</a></span>
+<span class="tok-w">    </span><span class="tok-n">alt-minus</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize smart -50&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-equal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize smart +50&#39;</span>
 
-<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#workspace" class="bare">https://nikitabobko.github.io/AeroSpace/commands#workspace</a></span>
-<span class="tok-n">alt-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 1&#39;</span>
-<span class="tok-n">alt-2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 2&#39;</span>
-<span class="tok-n">alt-3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 3&#39;</span>
-<span class="tok-n">alt-4</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 4&#39;</span>
-<span class="tok-n">alt-5</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 5&#39;</span>
-<span class="tok-n">alt-6</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 6&#39;</span>
-<span class="tok-n">alt-7</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 7&#39;</span>
-<span class="tok-n">alt-8</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 8&#39;</span>
-<span class="tok-n">alt-9</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 9&#39;</span>
-<span class="tok-n">alt-a</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace A&#39;</span><span class="tok-w"> </span><span class="tok-c1"># In your config, you can drop workspace bindings that you don&#39;t need</span>
-<span class="tok-n">alt-b</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace B&#39;</span>
-<span class="tok-n">alt-c</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace C&#39;</span>
-<span class="tok-n">alt-d</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace D&#39;</span>
-<span class="tok-n">alt-e</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace E&#39;</span>
-<span class="tok-n">alt-f</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace F&#39;</span>
-<span class="tok-n">alt-g</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace G&#39;</span>
-<span class="tok-n">alt-i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace I&#39;</span>
-<span class="tok-n">alt-m</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace M&#39;</span>
-<span class="tok-n">alt-n</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace N&#39;</span>
-<span class="tok-n">alt-o</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace O&#39;</span>
-<span class="tok-n">alt-p</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace P&#39;</span>
-<span class="tok-n">alt-q</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace Q&#39;</span>
-<span class="tok-n">alt-r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace R&#39;</span>
-<span class="tok-n">alt-s</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace S&#39;</span>
-<span class="tok-n">alt-t</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace T&#39;</span>
-<span class="tok-n">alt-u</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace U&#39;</span>
-<span class="tok-n">alt-v</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace V&#39;</span>
-<span class="tok-n">alt-w</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace W&#39;</span>
-<span class="tok-n">alt-x</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace X&#39;</span>
-<span class="tok-n">alt-y</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace Y&#39;</span>
-<span class="tok-n">alt-z</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace Z&#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#workspace" class="bare">https://nikitabobko.github.io/AeroSpace/commands#workspace</a></span>
+<span class="tok-w">    </span><span class="tok-n">alt-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 1&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 2&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 3&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-4</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 4&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-5</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 5&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-6</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 6&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-7</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 7&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-8</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 8&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-9</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 9&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-a</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace A&#39;</span><span class="tok-w"> </span><span class="tok-c1"># In your config, you can drop workspace bindings that you don&#39;t need</span>
+<span class="tok-w">    </span><span class="tok-n">alt-b</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace B&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-c</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace C&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-d</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace D&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-e</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace E&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-f</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace F&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-g</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace G&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace I&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-m</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace M&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-n</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace N&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-o</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace O&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-p</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace P&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-q</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace Q&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace R&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-s</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace S&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-t</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace T&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-u</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace U&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-v</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace V&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-w</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace W&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-x</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace X&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-y</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace Y&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-z</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace Z&#39;</span>
 
-<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace" class="bare">https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace</a></span>
-<span class="tok-n">alt-shift-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 1&#39;</span>
-<span class="tok-n">alt-shift-2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 2&#39;</span>
-<span class="tok-n">alt-shift-3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 3&#39;</span>
-<span class="tok-n">alt-shift-4</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 4&#39;</span>
-<span class="tok-n">alt-shift-5</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 5&#39;</span>
-<span class="tok-n">alt-shift-6</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 6&#39;</span>
-<span class="tok-n">alt-shift-7</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 7&#39;</span>
-<span class="tok-n">alt-shift-8</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 8&#39;</span>
-<span class="tok-n">alt-shift-9</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 9&#39;</span>
-<span class="tok-n">alt-shift-a</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace A&#39;</span>
-<span class="tok-n">alt-shift-b</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace B&#39;</span>
-<span class="tok-n">alt-shift-c</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace C&#39;</span>
-<span class="tok-n">alt-shift-d</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace D&#39;</span>
-<span class="tok-n">alt-shift-e</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace E&#39;</span>
-<span class="tok-n">alt-shift-f</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace F&#39;</span>
-<span class="tok-n">alt-shift-g</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace G&#39;</span>
-<span class="tok-n">alt-shift-i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace I&#39;</span>
-<span class="tok-n">alt-shift-m</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace M&#39;</span>
-<span class="tok-n">alt-shift-n</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace N&#39;</span>
-<span class="tok-n">alt-shift-o</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace O&#39;</span>
-<span class="tok-n">alt-shift-p</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace P&#39;</span>
-<span class="tok-n">alt-shift-q</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace Q&#39;</span>
-<span class="tok-n">alt-shift-r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace R&#39;</span>
-<span class="tok-n">alt-shift-s</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace S&#39;</span>
-<span class="tok-n">alt-shift-t</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace T&#39;</span>
-<span class="tok-n">alt-shift-u</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace U&#39;</span>
-<span class="tok-n">alt-shift-v</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace V&#39;</span>
-<span class="tok-n">alt-shift-w</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace W&#39;</span>
-<span class="tok-n">alt-shift-x</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace X&#39;</span>
-<span class="tok-n">alt-shift-y</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace Y&#39;</span>
-<span class="tok-n">alt-shift-z</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace Z&#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace" class="bare">https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace</a></span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 1&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 2&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 3&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-4</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 4&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-5</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 5&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-6</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 6&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-7</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 7&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-8</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 8&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-9</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace 9&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-a</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace A&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-b</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace B&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-c</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace C&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-d</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace D&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-e</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace E&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-f</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace F&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-g</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace G&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-i</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace I&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-m</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace M&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-n</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace N&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-o</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace O&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-p</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace P&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-q</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace Q&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace R&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-s</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace S&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-t</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace T&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-u</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace U&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-v</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace V&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-w</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace W&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-x</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace X&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-y</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace Y&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-z</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace Z&#39;</span>
 
-<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth" class="bare">https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth</a></span>
-<span class="tok-n">alt-tab</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace-back-and-forth&#39;</span>
-<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor" class="bare">https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor</a></span>
-<span class="tok-n">alt-shift-tab</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-workspace-to-monitor --wrap-around next&#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth" class="bare">https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth</a></span>
+<span class="tok-w">    </span><span class="tok-n">alt-tab</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace-back-and-forth&#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor" class="bare">https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor</a></span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-tab</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-workspace-to-monitor --wrap-around next&#39;</span>
 
-<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#mode" class="bare">https://nikitabobko.github.io/AeroSpace/commands#mode</a></span>
-<span class="tok-n">alt-shift-semicolon</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode service&#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#mode" class="bare">https://nikitabobko.github.io/AeroSpace/commands#mode</a></span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-semicolon</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode service&#39;</span>
 
 <span class="tok-c1"># &#39;service&#39; binding mode declaration.</span>
 <span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/guide#binding-modes" class="bare">https://nikitabobko.github.io/AeroSpace/guide#binding-modes</a></span>
 <span class="tok-k">[mode.service.binding]</span>
-<span class="tok-n">esc</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;reload-config&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
-<span class="tok-n">r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;flatten-workspace-tree&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-c1"># reset layout</span>
-<span class="tok-n">f</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;layout floating tiling&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-c1"># Toggle between floating and tiling layout</span>
-<span class="tok-n">backspace</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;close-all-windows-but-current&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
+<span class="tok-w">    </span><span class="tok-n">esc</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;reload-config&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
+<span class="tok-w">    </span><span class="tok-n">r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;flatten-workspace-tree&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-c1"># reset layout</span>
+<span class="tok-w">    </span><span class="tok-n">f</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;layout floating tiling&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span><span class="tok-w"> </span><span class="tok-c1"># Toggle between floating and tiling layout</span>
+<span class="tok-w">    </span><span class="tok-n">backspace</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;close-all-windows-but-current&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
 
-<span class="tok-c1"># sticky is not yet supported <a href="https://github.com/nikitabobko/AeroSpace/issues/2" class="bare">https://github.com/nikitabobko/AeroSpace/issues/2</a></span>
-<span class="tok-c1">#s = [&#39;layout sticky tiling&#39;, &#39;mode main&#39;]</span>
+<span class="tok-w">    </span><span class="tok-c1"># sticky is not yet supported <a href="https://github.com/nikitabobko/AeroSpace/issues/2" class="bare">https://github.com/nikitabobko/AeroSpace/issues/2</a></span>
+<span class="tok-w">    </span><span class="tok-c1">#s = [&#39;layout sticky tiling&#39;, &#39;mode main&#39;]</span>
 
-<span class="tok-n">alt-shift-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with left&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
-<span class="tok-n">alt-shift-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with down&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
-<span class="tok-n">alt-shift-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with up&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
-<span class="tok-n">alt-shift-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with right&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with left&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with down&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with up&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with right&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
 
-<span class="tok-n">down</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;volume down&#39;</span>
-<span class="tok-n">up</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;volume up&#39;</span>
-<span class="tok-n">shift-down</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;volume set 0&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span></code></pre>
+<span class="tok-w">    </span><span class="tok-n">down</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;volume down&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">up</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;volume up&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">shift-down</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;volume set 0&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span></code></pre>
 </div>
 </div>
 </div>
@@ -996,12 +999,12 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[mode.main.binding]</span><span class="tok-w">        </span><span class="tok-c1"># Declare &#39;main&#39; binding mode</span>
-<span class="tok-n">alt-r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode resize&#39;</span><span class="tok-w">      </span><span class="tok-c1"># 1. Define a binding to switch to &#39;resize&#39; mode</span>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[mode.main.binding]</span><span class="tok-w">            </span><span class="tok-c1"># Declare &#39;main&#39; binding mode</span>
+<span class="tok-w">    </span><span class="tok-n">alt-r</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode resize&#39;</span><span class="tok-w">      </span><span class="tok-c1"># 1. Define a binding to switch to &#39;resize&#39; mode</span>
 
-<span class="tok-k">[mode.resize.binding]</span><span class="tok-w">      </span><span class="tok-c1"># 2. Declare &#39;resize&#39; binding mode</span>
-<span class="tok-n">minus</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize smart -50&#39;</span>
-<span class="tok-n">equal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize smart +50&#39;</span></code></pre>
+<span class="tok-k">[mode.resize.binding]</span><span class="tok-w">          </span><span class="tok-c1"># 2. Declare &#39;resize&#39; binding mode</span>
+<span class="tok-w">    </span><span class="tok-n">minus</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize smart -50&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">equal</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;resize smart +50&#39;</span></code></pre>
 </div>
 </div>
 </div>
@@ -1020,10 +1023,10 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[mode.main.binding]</span>
-<span class="tok-c1"># Bind alt-1 key to switch to workspace 1</span>
-<span class="tok-n">alt-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 1&#39;</span>
-<span class="tok-c1"># Or bind a sequence of commands</span>
-<span class="tok-n">alt-shift-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-node-to-workspace 1&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 1&#39;</span><span class="tok-p">]</span></code></pre>
+<span class="tok-w">    </span><span class="tok-c1"># Bind alt-1 key to switch to workspace 1</span>
+<span class="tok-w">    </span><span class="tok-n">alt-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 1&#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># Or bind a sequence of commands</span>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;move-node-to-workspace 1&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace 1&#39;</span><span class="tok-p">]</span></code></pre>
 </div>
 </div>
 </li>
@@ -1053,10 +1056,10 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Define my fancy unicorn key notation</span>
 <span class="tok-k">[key-mapping.key-notation-to-key-code]</span>
-<span class="tok-n">unicorn</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;u&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">unicorn</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;u&#39;</span>
 
 <span class="tok-k">[mode.main.binding]</span>
-<span class="tok-n">alt-unicorn</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace wonderland&#39;</span><span class="tok-w"> </span><span class="tok-c1"># (⁀ᗢ⁀)</span></code></pre>
+<span class="tok-w">    </span><span class="tok-n">alt-unicorn</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace wonderland&#39;</span><span class="tok-w"> </span><span class="tok-c1"># (⁀ᗢ⁀)</span></code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -1066,7 +1069,7 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[key-mapping]</span>
-<span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;dvorak&#39;</span></code></pre>
+<span class="tok-w">    </span><span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;dvorak&#39;</span></code></pre>
 </div>
 </div>
 </li>
@@ -1092,7 +1095,7 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[exec.env-vars]</span>
-<span class="tok-n">PATH</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;${HOME}/bin:${PATH}&#39;</span></code></pre>
+<span class="tok-w">    </span><span class="tok-n">PATH</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;${HOME}/bin:${PATH}&#39;</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1108,9 +1111,9 @@ That&#8217;s why unless you override <code>exec</code> section in your config, A
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[exec]</span>
-<span class="tok-n">inherit-env-vars</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
+<span class="tok-w">    </span><span class="tok-n">inherit-env-vars</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
 <span class="tok-k">[exec.env-vars]</span>
-<span class="tok-n">PATH</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}&#39;</span></code></pre>
+<span class="tok-w">    </span><span class="tok-n">PATH</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}&#39;</span></code></pre>
 </div>
 </div>
 </li>
@@ -1576,13 +1579,13 @@ I recommend disabling <code>Displays have separate Spaces</code>.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;com.apple.systempreferences&#39;</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-name-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;settings&#39;</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">window-title-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;substring&#39;</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">workspace</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace-name&#39;</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">during-aerospace-startup</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
-<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;layout floating&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace S&#39;</span><span class="tok-p">]</span><span class="tok-w">  </span><span class="tok-c1"># The callback itself</span></code></pre>
+<span class="tok-w">    </span><span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;com.apple.systempreferences&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-name-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;settings&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">window-title-regex-substring</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;substring&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">workspace</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;workspace-name&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">during-aerospace-startup</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
+<span class="tok-w">    </span><span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
+<span class="tok-w">    </span><span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;layout floating&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace S&#39;</span><span class="tok-p">]</span><span class="tok-w">  </span><span class="tok-c1"># The callback itself</span></code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1698,16 +1701,16 @@ Some windows initialize their title after the window appears.
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;org.alacritty&#39;</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace T&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics T - Terminal</span>
+<span class="tok-w">    </span><span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;org.alacritty&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace T&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics T - Terminal</span>
 
 <span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;com.google.Chrome&#39;</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace W&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics W - Web browser</span>
+<span class="tok-w">    </span><span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;com.google.Chrome&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace W&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics W - Web browser</span>
 
 <span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;com.jetbrains.intellij&#39;</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace I&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics I - IDE</span></code></pre>
+<span class="tok-w">    </span><span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;com.jetbrains.intellij&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;move-node-to-workspace I&#39;</span><span class="tok-w"> </span><span class="tok-c1"># mnemonics I - IDE</span></code></pre>
 </div>
 </div>
 </li>
@@ -1716,8 +1719,8 @@ Some windows initialize their title after the window appears.
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout floating&#39;</span></code></pre>
+<span class="tok-w">    </span><span class="tok-n">check-further-callbacks</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">true</span>
+<span class="tok-w">    </span><span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout floating&#39;</span></code></pre>
 </div>
 </div>
 </li>
@@ -1869,12 +1872,13 @@ workspaces to always appear on particular monitors</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[workspace-to-monitor-force-assignment]</span>
-<span class="tok-n">1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-w">                            </span><span class="tok-c1"># Monitor sequence number from left to right. 1-based indexing</span>
-<span class="tok-n">2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;main&#39;</span><span class="tok-w">                       </span><span class="tok-c1"># Main monitor</span>
-<span class="tok-n">3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;secondary&#39;</span><span class="tok-w">                  </span><span class="tok-c1"># Non-main monitor in case when there are only two monitors</span>
-<span class="tok-n">4</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;built-in&#39;</span><span class="tok-w">                   </span><span class="tok-c1"># Case insensitive regex substring</span>
-<span class="tok-n">5</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;^built-in retina display$&#39;</span><span class="tok-w">  </span><span class="tok-c1"># Case insensitive regex match</span>
-<span class="tok-n">6</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;secondary&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;dell&#39;</span><span class="tok-p">]</span><span class="tok-w">        </span><span class="tok-c1"># You can specify multiple patterns. The first matching pattern will be used</span></code></pre>
+<span class="tok-w">    </span><span class="tok-n">1</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">1</span><span class="tok-w">                            </span><span class="tok-c1"># Monitor sequence number from left to right. 1-based indexing</span>
+<span class="tok-w">    </span><span class="tok-n">2</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;main&#39;</span><span class="tok-w">                       </span><span class="tok-c1"># Main monitor</span>
+<span class="tok-w">    </span><span class="tok-n">3</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;secondary&#39;</span><span class="tok-w">                  </span><span class="tok-c1"># Non-main monitor in case when there are only two monitors</span>
+<span class="tok-w">    </span><span class="tok-n">4</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;built-in&#39;</span><span class="tok-w">                   </span><span class="tok-c1"># Case insensitive regex substring</span>
+<span class="tok-w">    </span><span class="tok-n">5</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;^built-in retina display$&#39;</span><span class="tok-w">  </span><span class="tok-c1"># Case insensitive regex match</span>
+<span class="tok-w">    </span><span class="tok-n">6</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;secondary&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;dell&#39;</span><span class="tok-p">]</span><span class="tok-w">        </span><span class="tok-c1"># You can specify multiple patterns.</span>
+<span class="tok-w">                                     </span><span class="tok-c1">#   The first matching pattern will be used</span></code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -1953,8 +1957,8 @@ You can also use <code>on-window-detected</code> to force tile or force float al
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;...&#39;</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout tiling&#39;</span></code></pre>
+<span class="tok-w">    </span><span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;...&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout tiling&#39;</span></code></pre>
 </div>
 </div>
 </li>
@@ -1963,8 +1967,8 @@ You can also use <code>on-window-detected</code> to force tile or force float al
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[[on-window-detected]]</span>
-<span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;...&#39;</span>
-<span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout floating&#39;</span></code></pre>
+<span class="tok-w">    </span><span class="tok-n">if</span><span class="tok-p">.</span><span class="tok-n">app-id</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;...&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">run</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout floating&#39;</span></code></pre>
 </div>
 </div>
 </li>
@@ -1983,7 +1987,7 @@ You can also use <code>on-window-detected</code> to force tile or force float al
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2024-11-28 00:45:18 +0100
+Last updated 2025-01-09 23:28:16 +0100
 </div>
 </div>
 </body>
