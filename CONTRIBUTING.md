@@ -2,18 +2,14 @@
 
 Look who wants to contribute! Nice to see you here, let me show you what you can do :)
 
-## Report Issues
+## Submit bugs and feature ideas
 
-There are only two types of issues:
-* Feature proposal
-* Bug report
-
-Feature proposal is not a feature request/idea but a well-defined and complete proposal of feature which is clear how to implement.
-If you're unsure you can brainstorm your ideas in [#feature-ideas](https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas) in GitHub Discusssions.
+Submit bugs to https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs
+Submit feature ideas to https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas
 
 Rules:
-* Search for duplicates before reporting new issues
-* Vote for issues that you find useful with 👍 reaction
+* Search for duplicates (in GitHub Issues and Discusssions) before creating a new discussion
+* Upvote for issues/discussions that you find useful
 
 **Consider including in bug reports**
 
@@ -28,14 +24,31 @@ Rules:
 **Consider including in feature request**
 
 * Use cases!
+* Did I mention use cases?
 * Alternative approaches
 * Links to docs of similar features in other window managers that you know
 * Synopsis, if you suggest a new command
-* Alternative command names, if you suggest a new command
+* Mental model description
 
-## Discuss issues
+## Users cannot create GitHub Issues directly
 
-One of the most useful thing you can do is to discuss issues.
+Users are not allowed to create Issues directly in this repository - we ask that you create a Discussion first.
+
+Users can't create issues directly because:
+- Users submit too many duplicates without prior search
+- A lot of user issues are misunderstandings, environmental problems, or configuration errors by the users themselves
+- Few people can formulate proper bug reports
+- Even fewer people can formulate proper, actionable feature requests that align with other existing/planned features and the overall AeroSpace mental model
+
+Any Discussion which clearly identifies a problem and can be confirmed or reproduced will be converted to an Issue by maintainers.
+
+This whole pattern makes it easier for maintainers or contributors to find issues to work on.
+Issues are like a publicly observable maintainers' inbox.
+We want to keep this inbox tidy and clean.
+
+## Discuss issues/discussions
+
+One of the most useful thing you can do is to discuss issues/discussions.
 
 Imagine that you were assigned to fix the issue.
 Try to suggest the best approach and design on how to fix the issue.
@@ -56,7 +69,7 @@ You can take a look at the following issues:
 
 **Prior discussion**. For non-trivial changes (such as user visible changes), it's always better to ask for prior approval and discuss what you want to do before doing it.
 
-Please create an issue (or write a comment in existing one) and describe you want to do.
+Please create a new discussion and describe you want to do.
 
 Consider including
 

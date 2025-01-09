@@ -1,7 +1,11 @@
+blank_issues_enabled: true
 contact_links:
-  - name: Ask a question
-    url: https://github.com/nikitabobko/AeroSpace/discussions/categories/questions-and-answers
-    about: Please ask and answer questions here.
+  - name: Bug report
+    url: https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bug
+    about: 'All bug reports must firstly go to #potential-bug GH discussion'
   - name: Feature request/idea
     url: https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas
-    about: All not yet well-defined feature requests must be firstly brainstormed in "feature ideas".
+    about: 'All feature requests must be firstly discussed in #feature-ideas GH discussion'
+  - name: Ask a question
+    url: https://github.com/nikitabobko/AeroSpace/discussions/categories/questions-and-answers
+    about: 'Please ask and answer questions here'

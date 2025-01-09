@@ -55,10 +55,10 @@ Other installation options: https://nikitabobko.github.io/AeroSpace/guide#instal
 > automatically delete `com.apple.quarantine` attribute, that's why the app should work out of the box, without any warnings that
 > "Apple cannot check AeroSpace for malicious software"
 
-## Community, discussions, issues, pull requests
+## Community, discussions, issues
 
-Informal community discussions happen at GitHub Discussions.
-There you can ask your questions, show off your setup, bring other topic, or just chat.
+Community discussions happen at GitHub Discussions.
+There you can report bugs, propose new features, ask your questions, show off your setup, or just chat.
 
 There are 6 channels:
 -   [#all](https://github.com/nikitabobko/AeroSpace/discussions).
@@ -76,16 +76,16 @@ There are 6 channels:
     [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas.atom?discussions_q=category%3Afeature-ideas+sort%3Adate_created).
 -   [#general](https://github.com/nikitabobko/AeroSpace/discussions/categories/general).
     [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/general.atom?discussions_q=sort%3Adate_created+category%3Ageneral).
+-   [#potential-bugs](https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs.atom?discussions_q=category%3Apotential-bugs+sort%3Adate_created).
+    If you think that you encourage a bug, you can report it here.
 -   [#questions-and-answers](https://github.com/nikitabobko/AeroSpace/discussions/categories/questions-and-answers).
     [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/questions-and-answers.atom?discussions_q=category%3Aquestions-and-answers+sort%3Adate_created).
     Everyone is welcome to ask questions.
     Everyone is encouraged to answer other people's questions.
 
-You're welcome to submit bug reports and well-defined feature proposals in GitHub issues.
-You're welcome to submit pull requests as well.
+You're welcome to submit bug reports and feature ideas in GitHub Discussions.
 See: [CONTRIBUTING.md](./CONTRIBUTING.md)
-
-**Issues vs Discussions:** Issues are formal and well-defined. Discussions are informal and casual.
 
 ## Development
 
