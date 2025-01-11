@@ -51,6 +51,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
             terminateApp()
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
+        viewModel.isEnabled ?
         Text(
             viewModel.workspaces
                 .filter { !$0.suffix.isEmpty || $0.isFocused }
@@ -62,6 +63,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
                 }
                 .joined(separator: "  ")
           )
+        : Text("[ P ]")
       }
 }
 
