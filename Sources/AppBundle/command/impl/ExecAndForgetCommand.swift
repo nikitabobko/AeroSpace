@@ -12,7 +12,6 @@ struct ExecAndForgetCommand: Command {
         process.environment = config.execConfig.envVariables
         process.executableURL = URL(filePath: "/bin/bash")
         process.arguments = ["-c", args.bashScript]
-        Result { try process.run() }.getOrThrow()
-        return true
+        return Result { try process.run() }.isSuccess
     }
 }

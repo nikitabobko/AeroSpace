@@ -33,6 +33,13 @@ public extension Result {
             case .failure(let f): f
         }
     }
+
+    var isSuccess: Bool {
+        switch self {
+            case .success: true
+            case .failure: false
+        }
+    }
 }
 
 public extension Result {
