@@ -1,8 +1,8 @@
 blank_issues_enabled: true
 contact_links:
   - name: Bug report
-    url: https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bug
-    about: 'All bug reports must firstly go to #potential-bug GH discussion'
+    url: https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs
+    about: 'All bug reports must firstly go to #potential-bugs GH discussion'
   - name: Feature request/idea
     url: https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas
     about: 'All feature requests must be firstly discussed in #feature-ideas GH discussion'

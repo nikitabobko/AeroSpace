@@ -60,7 +60,7 @@ Other installation options: https://nikitabobko.github.io/AeroSpace/guide#instal
 Community discussions happen at GitHub Discussions.
 There you can report bugs, propose new features, ask your questions, show off your setup, or just chat.
 
-There are 6 channels:
+There are 7 channels:
 -   [#all](https://github.com/nikitabobko/AeroSpace/discussions).
     [RSS](https://github.com/nikitabobko/AeroSpace/discussions.atom?discussions_q=sort%3Adate_created).
     Feed with all discussions.
