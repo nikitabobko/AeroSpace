@@ -46,6 +46,7 @@ func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: Key] {
     return switch layout {
         case .qwerty: keyNotationToKeyCode
         case .dvorak: dvorakMap
+        case .azerty: azertyMap
     }
 }
 
@@ -194,6 +195,16 @@ private let dvorakMap: [String: Key] = keyNotationToKeyCode + [
     w: .comma,
     v: .period,
     z: .slash,
+]
+
+private let azertyMap: [String: Key] = keyNotationToKeyCode + [
+    a: .q,
+    q: .a,
+    z: .w,
+    w: .z,
+    m: .semicolon,
+    comma: .m,
+    semicolon: .comma
 ]
 
 let modifiersMap: [String: NSEvent.ModifierFlags] = [
