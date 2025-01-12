@@ -61,13 +61,14 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
 }
 
 struct menuLabel: View {
+    @Environment(\.colorScheme) var colorScheme
+
     var viewModel: TrayMenuModel
 
     var body: some View {
         let renderer = ImageRenderer(content: imageContent)
         if let cgImage = renderer.cgImage {
             Image(cgImage, scale: 2, label: Text(viewModel.trayText))
-                .renderingMode(.template)
                 .resizable()
                 .aspectRatio(contentMode: .fit)
         } else {
@@ -80,6 +81,7 @@ struct menuLabel: View {
     private var imageContent: some View {
         Text(viewModel.trayText)
             .font(.system(.largeTitle, design: .monospaced))
+            .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
     }
 }
 
