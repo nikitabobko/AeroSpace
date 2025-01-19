@@ -63,6 +63,9 @@ let list_apps_help_generated = """
 let list_exec_env_vars_help_generated = """
     USAGE: list-exec-env-vars [-h|--help]
     """
+let list_modes_help_generated = """
+    USAGE: list-modes [-h|--help] [--current]
+    """
 let list_monitors_help_generated = """
     USAGE: list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>] [--count] [--json]
     """
