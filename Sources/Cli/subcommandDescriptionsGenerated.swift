@@ -27,7 +27,7 @@ let subcommandDescriptions = [
     ["  move-mouse", "Move mouse to the requested position"],
     ["  move-node-to-monitor", "Move window to monitor targeted by relative direction, by order, or by pattern"],
     ["  move-node-to-workspace", "Move the focused window to the specified workspace"],
-    ["  move-workspace-to-monitor", "Move the focused workspace to the next or previous monitor."],
+    ["  move-workspace-to-monitor", "Move workspace to monitor targeted by relative direction, by order, or by pattern."],
     ["  move", "Move the focused window in the given direction"],
     ["  reload-config", "Reload currently active config"],
     ["  resize", "Resize the focused window"],
