@@ -15,7 +15,7 @@ public class TrayMenuModel: ObservableObject {
 func updateTrayText() {
     let sortedMonitors = sortedMonitors
     let focus = focus
-    TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first?.lets { "[\($0)] " } ?? "") +
+    TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first?.lets { "[\($0.uppercased())] " } ?? "") +
         sortedMonitors
         .map {
             ($0.activeWorkspace == focus.workspace && sortedMonitors.count > 1 ? "*" : "") + $0.activeWorkspace.name
