@@ -86,6 +86,8 @@ aerospace -h;
 
     | list-exec-env-vars
 
+    | list-modes [--current]
+
     | list-monitors [--focused [no] | --mouse [no] | --format <output_format> | --count | --json]...
 
     | list-windows [<list_windows_filter_flag> | --format <output_format> | --count | --json]...
