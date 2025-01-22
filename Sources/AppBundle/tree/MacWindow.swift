@@ -231,7 +231,11 @@ func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     return subrole == kAXStandardWindowSubrole ||
         subrole == kAXDialogSubrole || // macOS native file picker ("Open..." menu) (kAXDialogSubrole value)
         subrole == kAXFloatingWindowSubrole || // telegram image viewer
-        app.id == "com.apple.finder" && subrole == "Quick Look" // Finder preview (hit space) is a floating window
+        app.id == "com.apple.finder" && subrole == "Quick Look" || // Finder preview (hit space) is a floating window
+
+        // Firefox non-native video fullscreen
+        // about:config -> full-screen-api.macos-native-full-screen -> false
+        app.id == "org.mozilla.firefox" && subrole == kAXUnknownSubrole
 }
 
 func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lot of windows don't have title on startup
