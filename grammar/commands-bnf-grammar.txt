@@ -39,7 +39,7 @@ aerospace -h;
 
     | macos-native-fullscreen [--fail-if-noop|--window-id <window_id>]... [on|off] [--fail-if-noop|--window-id <window_id>]...
 
-    | macos-native-minimize
+    | macos-native-minimize [--window-id <window_id>]
 
     | mode <mode_id>
 
