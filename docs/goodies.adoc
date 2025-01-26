@@ -66,6 +66,8 @@ aerospace workspace "$(aerospace list-workspaces --monitor mouse --visible)" && 
 
 Beware that you might need to specify full path to aerospace executable https://community.folivora.ai/t/how-to-execute-terminal-command-to-switch-workspaces-with-aerospace/35914
 
+If you don't want to use BetterTouchTool, try link:https://github.com/MediosZ/SwipeAeroSpace[SwipeAeroSpace].
+
 [#show-aerospace-workspaces-in-sketchybar]
 == Show AeroSpace workspaces in Sketchybar
 
