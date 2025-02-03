@@ -51,11 +51,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
             terminateApp()
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
-        if viewModel.isEnabled {
-            MonospacedText(viewModel.trayText)
-        } else {
-            MonospacedText("⏸️")
-        }
+        AerospaceIcon(viewModel.isEnabled ? viewModel.trayText : "⏸️")
     }
 }
 
@@ -69,6 +65,65 @@ struct MonospacedText: View {
             content: Text(text)
                 .font(.system(.largeTitle, design: .monospaced))
                 .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
+        )
+        if let cgImage = renderer.cgImage {
+            // Using scale: 1 results in a blurry image for unknown reasons
+            Image(cgImage, scale: 2, label: Text(text))
+        } else {
+            // In case image can't be rendered fallback to plain text
+            Text(text)
+        }
+    }
+}
+
+struct AerospaceIcon: View {
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    var text: String
+    
+    let cornerRadius = 8.0
+    let elementSpacing = 4.0
+    let maxDisplayedMonitors = 4
+    init(_ text: String) {
+        self.text = text
+    }
+    
+    var body: some View {
+        let elements = text.split(separator: " │ ")
+        let renderer = ImageRenderer(
+            content: HStack (alignment: .bottom, spacing: elementSpacing) {
+                ForEach(0...maxDisplayedMonitors, id: \.self) {
+                    if ($0 < elements.count) {
+                        if (elements[$0].starts(with: "*")) {
+                            let index = elements[$0].index(elements[$0].startIndex, offsetBy: 1)
+                            let text = elements[$0][index...]
+                            let t = Text(text)
+                                .font(.system(.largeTitle, design: .monospaced))
+                                .bold()
+                                .foregroundStyle(.black)
+                                .padding(4)
+                            let r = t.background(
+                                RoundedRectangle(cornerRadius: cornerRadius)
+                                    .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
+                            )
+                            r.mask {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: cornerRadius)
+                                        .fill(.white)
+                                    t
+                                }
+                                .compositingGroup()
+                                .luminanceToAlpha()
+                            }
+                        } else {
+                            Text(elements[$0])
+                                .font(.system(.largeTitle, design: .monospaced))
+                                .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
+                                .padding(4)
+                                .background(RoundedRectangle(cornerRadius: cornerRadius).stroke(colorScheme == .light ? Color.black : Color.white, lineWidth: 2))
+                        }
+                    }
+                }
+            }
         )
         if let cgImage = renderer.cgImage {
             // Using scale: 1 results in a blurry image for unknown reasons
