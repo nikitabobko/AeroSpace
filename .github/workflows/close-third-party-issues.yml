@@ -17,15 +17,16 @@ jobs:
         set -u # Treat unset variables and parameters other than the special parameters ‘@’ or ‘*’ as an error
         set -o pipefail # Any command failed in the pipe fails the whole pipe
 
-        author="$(gh issue view --repo "$REPO" "$ISSUE" --json author --jq '.author.login')"
+        author="$(gh issue view "$ISSUE" --json author --jq '.author.login')"
 
         test "$author" = nikitabobko || \
-          { gh issue edit --repo "$REPO" --add-label bin "$ISSUE" && \
-          gh issue close \
-          --repo "$REPO" \
-          --comment "Please don't open issues directly, use GitHub Discussions instead. See: https://github.com/nikitabobko/AeroSpace/issues/947" \
-          "$ISSUE"; }
+          { \
+            gh issue edit "$ISSUE" --add-label bin && \
+            gh issue close "$ISSUE" \
+            --comment "Please don't open issues directly, use GitHub Discussions instead. See: https://github.com/nikitabobko/AeroSpace/issues/947" && \
+            gh issue lock "$ISSUE"; \
+          }
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        REPO: ${{ github.repository }}
+        GH_REPO: ${{ github.repository }}
         ISSUE: ${{ github.event.issue.number }}
