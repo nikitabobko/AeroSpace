@@ -1,0 +1,13 @@
+name: DON'T CLICK
+description: DON'T CLICK
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Please don't open issues directly, use GitHub Discussions instead. See: https://github.com/nikitabobko/AeroSpace/issues/947
+  - type: checkboxes
+    id: checkbox
+    attributes:
+      label: '_'
+      options:
+        - label: Dummy checkbox
