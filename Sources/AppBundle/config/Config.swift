@@ -25,7 +25,12 @@ let defaultConfig: Config = {
     if !parsedConfig.errors.isEmpty {
         error("Can't parse default config: \(parsedConfig.errors)")
     }
-    return parsedConfig.config
+    // Assign to a local variable so you can validate it
+    let config = parsedConfig.config
+    if !config.automaticallyUnhideMacosHiddenApps && !config.automaticallyUnhideMacosHiddenAppsExceptions.isEmpty {
+        error("Config error: automatically-unhide-macos-hidden-apps is false but exceptions array is non-empty.")
+    }
+    return config
 }()
 var config: Config = defaultConfig
 var configUrl: URL = defaultConfigUrl
@@ -49,6 +54,7 @@ struct Config: Copyable {
     var onFocusChanged: [any Command] = []
     // var onFocusedWorkspaceChanged: [any Command] = []
     var onFocusedMonitorChanged: [any Command] = []
+    var automaticallyUnhideMacosHiddenAppsExceptions: [String] = []
 
     var gaps: Gaps = .zero
     var workspaceToMonitorForceAssignment: [String: [MonitorDescription]] = [:]
