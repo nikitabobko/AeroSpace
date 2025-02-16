@@ -19,7 +19,7 @@ extension CmdArgs {
             case .execAndForget:
                 error("exec-and-forget is parsed separately")
             case .flattenWorkspaceTree:
-                command = FlattenWorkspaceTreeCommand()
+                command = FlattenWorkspaceTreeCommand(args: self as! FlattenWorkspaceTreeCmdArgs)
             case .focus:
                 command = FocusCommand(args: self as! FocusCmdArgs)
             case .focusBackAndForth:
