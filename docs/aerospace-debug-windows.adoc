@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace debug-windows [-h|--help]
+aerospace debug-windows [-h|--help] [--window-id <window-id>]
 
 // end::synopsis[]
 

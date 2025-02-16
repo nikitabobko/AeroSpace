@@ -42,7 +42,7 @@ struct DebugWindowsCommand: Command {
         switch debugWindowsState {
             case .recording:
                 debugWindowsState = .notRecording
-                io.out(debugWindowsLog.values + ["\n"])
+                io.out(debugWindowsLog.values.joined(separator: "\n\n") + "\n")
                 io.out(disclaimer + "\n")
                 io.out("Debug session finished" + "\n")
                 debugWindowsLog = [:]

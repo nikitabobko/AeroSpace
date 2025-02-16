@@ -17,7 +17,7 @@ let config_help_generated = """
        OR: config [-h|--help] --config-path
     """
 let debug_windows_help_generated = """
-    USAGE: debug-windows [-h|--help]
+    USAGE: debug-windows [-h|--help] [--window-id <window-id>]
     """
 let enable_help_generated = """
     USAGE: enable [-h|--help] toggle

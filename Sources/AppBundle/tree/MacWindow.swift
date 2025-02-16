@@ -86,8 +86,11 @@ final class MacWindow: Window, CustomStringConvertible {
                 case .tilingContainer, .workspace, .macosHiddenAppsWindowsContainer, .macosFullscreenWindowsContainer:
                     let deadWindowFocus = deadWindowWorkspace.toLiveFocus()
                     _ = setFocus(to: deadWindowFocus)
+                    // Guard against "Apple Reminders popup" bug: https://github.com/nikitabobko/AeroSpace/issues/201
                     if focus.windowOrNil?.app != app {
-                        deadWindowFocus.windowOrNil?.nativeFocus() // force focus
+                        // Force focus to fix macOS annoyance with focused apps without windows.
+                        //   https://github.com/nikitabobko/AeroSpace/issues/65
+                        deadWindowFocus.windowOrNil?.nativeFocus()
                     }
                 case .macosPopupWindowsContainer, .macosMinimizedWindowsContainer:
                     break // Don't switch back on popup destruction
@@ -309,7 +312,7 @@ func isDialogHeuristic(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
         return true
     }
     // Firefox: Picture in Picture window doesn't have minimize button.
-    // todo. bug: when firefox shows non-native fullscreen, minimize button disables for all other windows
+    // todo. bug: when firefox shows non-native fullscreen, minimize button is disabled for all other windows
     if app.isFirefox() && axWindow.get(Ax.minimizeButtonAttr)?.get(Ax.enabledAttr) != true {
         return true
     }
