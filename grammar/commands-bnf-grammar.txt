@@ -1,4 +1,5 @@
 # EBNF-like grammar of aerospace CLI args to generate shell completion. Managed by https://github.com/adaszko/complgen
+# Run ./build-shell-completion.sh to generate shell completion
 aerospace <subcommand>;
 aerospace -v;
 aerospace --version;

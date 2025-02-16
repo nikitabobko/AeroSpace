@@ -88,7 +88,7 @@ func debugWindowsIfRecording(_ window: Window) {
     result.append("\(windowPrefix) windowId: \(window.windowId)")
     result.append("\(windowPrefix) workspace: \(window.nodeWorkspace?.name ?? "nil")")
     result.append("\(windowPrefix) treeNodeParent: \(window.parent)")
-    result.append("\(windowPrefix) recognizedAsDialog: \(shouldFloat(window.axWindow, app))")
+    result.append("\(windowPrefix) recognizedAsDialog: \(isDialogHeuristic(window.axWindow, app))")
     result.append(dumpAx(window.axWindow, windowPrefix, .window))
 
     let appPrefix = appId.padding(toLength: windowPrefix.count, withPad: " ", startingAt: 0)

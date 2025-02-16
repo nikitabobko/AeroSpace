@@ -687,7 +687,10 @@ For example, windows without a fullscreen button (NB! fullscreen button and maxi
 
 Windows that are recognized as dialogs are floated by default.
 
-If you find that some windows are not handled properly please https://github.com/nikitabobko/AeroSpace/issues/new[report an issue] (don't forget to attach xref:./commands.adoc#debug-windows[debug-windows output]).
+If you find that some windows are not handled properly, you're welcome to create a PR that improves the heuristic.
+It's fine to hardcode special handling for popular applications, AeroSpace already does it.
+Please see `isDialogHeuristic` function in AeroSpace sources.
+
 You can also use `on-window-detected` to force tile or force float all windows of a particular application:
 
 . Force tile all the windows (or windows of a particular app)

@@ -246,7 +246,10 @@ func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
         app.id == "org.mozilla.firefox" && subrole == kAXUnknownSubrole
 }
 
-func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lot of windows don't have title on startup
+// This function is referenced in the guide
+func isDialogHeuristic(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
+    // Note: a lot of windows don't have title on startup. So please don't rely on the title
+
     // Don't tile:
     // - Chrome cmd+f window ("AXUnknown" value)
     // - login screen (Yes fuck, it's also a window from Apple's API perspective) ("AXUnknown" value)
@@ -259,6 +262,7 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
         return true
     }
     // Firefox: Picture in Picture window doesn't have minimize button.
+    // todo. bug: when firefox shows non-native fullscreen, minimize button disables for all other windows
     if app.id == "org.mozilla.firefox" && axWindow.get(Ax.minimizeButtonAttr)?.get(Ax.enabledAttr) != true {
         return true
     }
@@ -281,7 +285,7 @@ func shouldFloat(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // Note: a lo
         app.id != "com.apple.ActivityMonitor" && // Activity Monitor doesn't show fullscreen button
 
         // Terminal apps and Emacs have an option to hide their title bars
-        app.id != "org.alacritty" &&
+        app.id != "org.alacritty" && // ~/.alacritty.toml: window.decorations = "Buttonless"
         app.id != "net.kovidgoyal.kitty" && // ~/.config/kitty/kitty.conf: hide_window_decorations titlebar-and-corners
         app.id != "com.mitchellh.ghostty" && // ~/.config/ghostty/config: window-decoration = false
         app.id != "com.github.wez.wezterm" &&
@@ -315,7 +319,7 @@ private func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Wo
     if !isWindow(axWindow, app) {
         return BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
     }
-    if shouldFloat(axWindow, app) {
+    if isDialogHeuristic(axWindow, app) {
         return BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
     }
     return getBindingDataForNewTilingWindow(workspace)

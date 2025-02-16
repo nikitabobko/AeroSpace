@@ -44,6 +44,8 @@ func cacheClosedWindowIfNeeded(window: Window) {
         workspaces: Workspace.all.map { FrozenWorkspace($0) },
         monitors: monitors.map(FrozenMonitor.init)
     )
+    // todo why is this assertion false 21336ad382539b35fdc94b4fbd55408e10b101f8?
+    // check(closedWindowsCache.windowIds.contains(window.windowId))
 }
 
 func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) -> Bool {

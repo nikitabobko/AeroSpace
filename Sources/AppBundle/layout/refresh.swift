@@ -12,7 +12,7 @@ func refreshSession<T>(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked:
     gc()
     gcMonitors()
 
-    detectNewWindowsAndAttachThemToWorkspaces(startup: startup)
+    detectNewAppsAndWindows(startup: startup)
 
     let nativeFocused = getNativeFocusedWindow(startup: startup)
     if let nativeFocused { debugWindowsIfRecording(nativeFocused) }
@@ -123,9 +123,9 @@ private func normalizeContainers() {
     }
 }
 
-private func detectNewWindowsAndAttachThemToWorkspaces(startup: Bool) {
+private func detectNewAppsAndWindows(startup: Bool) {
     for app in apps {
-        _ = app.detectNewWindowsAndGetAll(startup: startup)
+        _ = app.detectNewWindows(startup: startup)
     }
 }
 
