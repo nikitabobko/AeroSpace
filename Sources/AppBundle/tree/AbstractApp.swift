@@ -27,7 +27,7 @@ class AbstractApp: Hashable {
     var name: String? { nil }
     var execPath: String? { nil }
     var bundlePath: String? { nil }
-    func detectNewWindows(startup: Bool) -> [Window] { error("Not implemented") }
+    func detectNewWindows(startup: Bool) { error("Not implemented") }
 }
 
 extension AbstractApp {

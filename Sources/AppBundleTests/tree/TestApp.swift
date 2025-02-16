@@ -9,7 +9,7 @@ final class TestApp: AbstractApp {
     }
 
     var _windows: [Window] = []
-    override func detectNewWindows(startup: Bool) -> [Window] { _windows }
+    override func detectNewWindows(startup: Bool) {}
     var windows: [Window] {
         get { _windows }
         set {

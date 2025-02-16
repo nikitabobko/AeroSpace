@@ -125,7 +125,7 @@ private func normalizeContainers() {
 
 private func detectNewAppsAndWindows(startup: Bool) {
     for app in apps {
-        _ = app.detectNewWindows(startup: startup)
+        app.detectNewWindows(startup: startup)
     }
 }
 
