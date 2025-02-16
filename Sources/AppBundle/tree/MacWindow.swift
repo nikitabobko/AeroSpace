@@ -74,9 +74,9 @@ final class MacWindow: Window, CustomStringConvertible {
         }
         axObservers = []
         // todo the if is an approximation to filter out cases when window just closed itself (or was killed remotely)
-        //  we might want to track the time of the latest workspace switch to make the approximation more accurate
+        // we check if the workspace switch was <1s ago
         let focus = focus
-        if let deadWindowWorkspace, deadWindowWorkspace == focus.workspace || deadWindowWorkspace == prevFocusedWorkspace {
+        if let deadWindowWorkspace, deadWindowWorkspace == focus.workspace || (deadWindowWorkspace == prevFocusedWorkspace && -prevFocusedWorkspaceDate.timeIntervalSinceNow < 1) {
             switch parent.cases {
                 case .tilingContainer, .workspace, .macosHiddenAppsWindowsContainer, .macosFullscreenWindowsContainer:
                     let deadWindowFocus = deadWindowWorkspace.toLiveFocus()
