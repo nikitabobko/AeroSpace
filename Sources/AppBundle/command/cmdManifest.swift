@@ -69,7 +69,7 @@ extension CmdArgs {
             case .summonWorkspace:
                 command = SummonWorkspaceCommand(args: self as! SummonWorkspaceCmdArgs)
             case .serverVersionInternalCommand:
-                command = ServerVersionInternalCommandCommand()
+                command = ServerVersionInternalCommandCommand(args: self as! ServerVersionInternalCommandCmdArgs)
             case .triggerBinding:
                 command = TriggerBindingCommand(args: self as! TriggerBindingCmdArgs)
             case .volume:
@@ -77,7 +77,7 @@ extension CmdArgs {
             case .workspace:
                 command = WorkspaceCommand(args: self as! WorkspaceCmdArgs)
             case .workspaceBackAndForth:
-                command = WorkspaceBackAndForthCommand()
+                command = WorkspaceBackAndForthCommand(args: self as! WorkspaceBackAndForthCmdArgs)
         }
         check(command.info == Self.info)
         return command

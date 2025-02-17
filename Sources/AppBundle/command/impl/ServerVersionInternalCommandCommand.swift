@@ -2,7 +2,7 @@ import AppKit
 import Common
 
 struct ServerVersionInternalCommandCommand: Command {
-    let args = ServerVersionInternalCommandCmdArgs(rawArgs: [])
+    let args: ServerVersionInternalCommandCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)

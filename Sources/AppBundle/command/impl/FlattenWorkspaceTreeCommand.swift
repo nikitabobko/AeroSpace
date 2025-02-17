@@ -2,7 +2,7 @@ import AppKit
 import Common
 
 struct FlattenWorkspaceTreeCommand: Command {
-    let args = FlattenWorkspaceTreeCmdArgs(rawArgs: [])
+    let args: FlattenWorkspaceTreeCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
