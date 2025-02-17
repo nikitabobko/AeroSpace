@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<meta name="author" content="v0.16.2-Beta">
+<meta name="author" content="v0.17.0-Beta">
 <link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Goodies</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -512,7 +512,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div id="header">
 <h1>AeroSpace Goodies</h1>
 <div class="details">
-<span id="author" class="author">v0.16.2-Beta</span><br>
+<span id="author" class="author">v0.17.0-Beta</span><br>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -628,9 +628,6 @@ The source code of the page can be found in the <code>./docs</code> directory.</
 <h2 id="use-trackpad-gestures-to-switch-workspaces"><a class="anchor" href="#use-trackpad-gestures-to-switch-workspaces"></a><a class="link" href="#use-trackpad-gestures-to-switch-workspaces">5. Use trackpad gestures to switch workspaces</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can use <a href="https://folivora.ai/">BetterTouchTool</a> to assign trackpad gestures to switch workspaces</p>
-</div>
-<div class="paragraph">
 <p>The following commands focus next or previous workspaces on monitors where the mouse is located</p>
 </div>
 <div class="listingblock">
@@ -641,7 +638,35 @@ aerospace<span class="tok-w"> </span>workspace<span class="tok-w"> </span><span 
 </div>
 </div>
 <div class="paragraph">
-<p>Beware that you might need to specify full path to aerospace executable <a href="https://community.folivora.ai/t/how-to-execute-terminal-command-to-switch-workspaces-with-aerospace/35914" class="bare">https://community.folivora.ai/t/how-to-execute-terminal-command-to-switch-workspaces-with-aerospace/35914</a></p>
+<p>Use the software of your choice to assign trackpad gestures to the respective commands.
+Here are a few third party options in alphabetical order:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/acsandmann/aerospace-swipe" class="bare">https://github.com/acsandmann/aerospace-swipe</a></p>
+</li>
+<li>
+<p><a href="https://folivora.ai/">BetterTouchTool</a> can assign arbitrary commands to trackpad gestures.
+Beware that you might need to specify full path to aerospace executable <a href="https://community.folivora.ai/t/how-to-execute-terminal-command-to-switch-workspaces-with-aerospace/35914" class="bare">https://community.folivora.ai/t/how-to-execute-terminal-command-to-switch-workspaces-with-aerospace/35914</a></p>
+</li>
+<li>
+<p><a href="https://github.com/MediosZ/SwipeAeroSpace" class="bare">https://github.com/MediosZ/SwipeAeroSpace</a></p>
+</li>
+</ul>
+</div>
+<div class="admonitionblock caution">
+<table>
+<tr>
+<td class="icon">
+<div class="title">Caution</div>
+</td>
+<td class="content">
+Make sure that you trust project authors before running the distributed binaries.
+Alternatively, inspect the source code, and build it yourself.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -976,10 +1001,6 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.brave.Browser</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CLion</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.jetbrains.CLion</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Calculator</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.calculator</code></p></td>
 </tr>
@@ -990,6 +1011,10 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Chess</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.Chess</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CLion</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.jetbrains.CLion</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Clock</p></td>
@@ -1064,6 +1089,10 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.Home</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iMovie</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.iMovieApp</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Inkscape</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.inkscape.Inkscape</code></p></td>
 </tr>
@@ -1076,8 +1105,16 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.jetbrains.intellij</code></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">iTerm2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.googlecode.iterm2</code></p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Karabiner-Elements</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.pqrs.Karabiner-Elements.Settings</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">kdenlive</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.kde.Kdenlive</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Keychain Access</p></td>
@@ -1192,10 +1229,6 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.systempreferences</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TV</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.TV</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Telegram</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.tdesktop.Telegram</code></p></td>
 </tr>
@@ -1228,12 +1261,16 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.m0k.transmission</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">VLC</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.videolan.vlc</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">TV</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.TV</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Visual Studio Code</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.microsoft.VSCode</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VLC</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.videolan.vlc</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">VoiceMemos</p></td>
@@ -1256,16 +1293,8 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.dt.Xcode</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">iMovie</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.iMovieApp</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">iTerm2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.googlecode.iterm2</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">kdenlive</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.kde.Kdenlive</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Zen Browser</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>app.zen-browser.zen</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -1274,7 +1303,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-01-09 23:28:16 +0100
+Last updated 2025-02-17 21:25:06 +0100
 </div>
 </div>
 </body>

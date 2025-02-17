@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<meta name="author" content="v0.16.2-Beta">
+<meta name="author" content="v0.17.0-Beta">
 <link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Commands</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -512,7 +512,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div id="header">
 <h1>AeroSpace Commands</h1>
 <div class="details">
-<span id="author" class="author">v0.16.2-Beta</span><br>
+<span id="author" class="author">v0.17.0-Beta</span><br>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -551,9 +551,10 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#debug-windows">29.2. debug-windows</a></li>
 <li><a href="#list-apps">29.3. list-apps</a></li>
 <li><a href="#list-exec-env-vars">29.4. list-exec-env-vars</a></li>
-<li><a href="#list-monitors">29.5. list-monitors</a></li>
-<li><a href="#list-windows">29.6. list-windows</a></li>
-<li><a href="#list-workspaces">29.7. list-workspaces</a></li>
+<li><a href="#list-modes">29.5. list-modes</a></li>
+<li><a href="#list-monitors">29.6. list-monitors</a></li>
+<li><a href="#list-windows">29.7. list-windows</a></li>
+<li><a href="#list-workspaces">29.8. list-workspaces</a></li>
 </ul>
 </li>
 </ul>
@@ -1552,11 +1553,13 @@ This flag is a shortcut for manually running <code>aerospace-workspace</code>/<c
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">move-workspace-to-monitor [-h|--help] [--workspace &lt;workspace&gt;] [--wrap-around] (next|prev)</pre>
+<pre class="nowrap">move-workspace-to-monitor [-h|--help] [--workspace &lt;workspace&gt;] [--wrap-around] (left|down|up|right)
+move-workspace-to-monitor [-h|--help] [--workspace &lt;workspace&gt;] [--wrap-around] (next|prev)
+move-workspace-to-monitor [-h|--help] [--workspace &lt;workspace&gt;] &lt;monitor-pattern&gt;...</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Move the focused workspace to the next or previous monitor.
+<p>Move workspace to monitor targeted by relative direction, by order, or by pattern.
 Focus follows the focused workspace, so the workspace stays focused.</p>
 </div>
 <div class="paragraph">
@@ -1586,10 +1589,19 @@ Focus follows the focused workspace, so the workspace stays focused.</p>
 </div>
 <div class="dlist">
 <dl>
+<dt class="hdlist1">(left|down|up|right)</dt>
+<dd>
+<p>Move workspace to monitor in direction relative to the focused monitor</p>
+</dd>
 <dt class="hdlist1">(next|prev)</dt>
 <dd>
 <p>Move the workspace to next or prev monitor.
 'next' or 'prev' monitor is calculated relative to the monitor <code>&lt;workspace&gt;</code> currently belongs to.</p>
+</dd>
+<dt class="hdlist1">&lt;monitor-pattern&gt;</dt>
+<dd>
+<p>Find the first monitor pattern in the list that doesn&#8217;t describe the current monitor and move the workspace to the appropriate monitor.
+Monitor pattern is the same as in <code>workspace-to-monitor-force-assignment</code> config option</p>
 </dd>
 </dl>
 </div>
@@ -2156,7 +2168,7 @@ alt-2
 <p>Run the command to start the debug session recording</p>
 </li>
 <li>
-<p>Focus problematic window</p>
+<p>Focus problematic window or make the window appear.</p>
 </li>
 <li>
 <p>Run the command one more time to stop the debug session recording and print the results</p>
@@ -2167,6 +2179,22 @@ alt-2
 <p><code>debug-windows</code> command is <strong>not stable API</strong>.
 Please <strong>don&#8217;t rely on</strong> the command existence and output format.
 The only intended use case is to report bugs about incorrect windows handling.</p>
+</div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+<dt class="hdlist1">--window-id &lt;window-id&gt;</dt>
+<dd>
+<p>Print debug information of the specified window right away.
+Usage of this flag disables interactive mode.</p>
+</dd>
+</dl>
 </div>
 </div>
 <div class="sect2">
@@ -2290,7 +2318,36 @@ Incompatible with <code>--count</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-monitors"><a class="anchor" href="#list-monitors"></a><a class="link" href="#list-monitors">29.5. list-monitors</a></h3>
+<h3 id="list-modes"><a class="anchor" href="#list-modes"></a><a class="link" href="#list-modes">29.5. list-modes</a></h3>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">list-modes [-h|--help] [--current]</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Print a list of modes currently specified in the configuration</p>
+</div>
+<div class="paragraph">
+<p>See <a href="guide#binding-modes">the guide</a> for documentation about binding modes</p>
+</div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+<dt class="hdlist1">--current</dt>
+<dd>
+<p>Only print the currently active mode</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="sect2">
+<h3 id="list-monitors"><a class="anchor" href="#list-monitors"></a><a class="link" href="#list-monitors">29.6. list-monitors</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format &lt;output-format&gt;] [--count] [--json]</pre>
@@ -2380,7 +2437,7 @@ Incompatible with <code>--count</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-windows"><a class="anchor" href="#list-windows"></a><a class="link" href="#list-windows">29.6. list-windows</a></h3>
+<h3 id="list-windows"><a class="anchor" href="#list-windows"></a><a class="link" href="#list-windows">29.7. list-windows</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-windows [-h|--help] (--workspace &lt;workspace&gt;...|--monitor &lt;monitor&gt;...)
@@ -2520,6 +2577,10 @@ Incompatible with <code>--count</code></p>
 <dd>
 <p>String. Window title</p>
 </dd>
+<dt class="hdlist1">%{window-is-fullscreen}</dt>
+<dd>
+<p>Boolean. Is window in fullscreen by <code>aerospace fullscreen</code> command</p>
+</dd>
 <dt class="hdlist1">%{app-bundle-id}</dt>
 <dd>
 <p>String. Application unique identifier. <a href="https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids">Bundle ID</a></p>
@@ -2572,7 +2633,7 @@ Incompatible with <code>--count</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-workspaces"><a class="anchor" href="#list-workspaces"></a><a class="link" href="#list-workspaces">29.7. list-workspaces</a></h3>
+<h3 id="list-workspaces"><a class="anchor" href="#list-workspaces"></a><a class="link" href="#list-workspaces">29.8. list-workspaces</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-workspaces [-h|--help] --monitor &lt;monitor&gt;... [--visible [no]] [--empty [no]] [--format &lt;output-format&gt;] [--count] [--json]
@@ -2719,7 +2780,7 @@ Incompatible with <code>--count</code></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-01-09 23:28:16 +0100
+Last updated 2025-02-17 21:25:06 +0100
 </div>
 </div>
 </body>
