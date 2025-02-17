@@ -22,6 +22,11 @@ final class MacWindow: Window, CustomStringConvertible {
         if let existing = allWindowsMap[id] {
             return existing
         } else {
+            // Delay new window detection if mouse is down
+            // It helps with apps that allow dragging their tabs out to create new windows
+            // https://github.com/nikitabobko/AeroSpace/issues/1001
+            if isLeftMouseButtonDown { return nil }
+
             let data = getBindingDataForNewWindow(
                 axWindow,
                 startup ? (axWindow.center?.monitorApproximation ?? mainMonitor).activeWorkspace : focus.workspace,
@@ -283,7 +288,6 @@ func isDialogHeuristic(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     // - flameshot? https://github.com/nikitabobko/AeroSpace/issues/112
     // - Drata Agent https://github.com/nikitabobko/AeroSpace/issues/134
     if !isFullscreenable(axWindow) &&
-        app.id != "com.google.Chrome" && // "Drag out" a tab out of Chrome window
         app.id != "org.gimp.gimp-2.10" && // Gimp doesn't show fullscreen button
         app.id != "com.apple.ActivityMonitor" && // Activity Monitor doesn't show fullscreen button
 

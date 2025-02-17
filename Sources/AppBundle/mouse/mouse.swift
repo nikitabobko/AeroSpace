@@ -1,7 +1,7 @@
 import AppKit
 
 var currentlyManipulatedWithMouseWindowId: UInt32? = nil
-var isLeftMouseButtonPressed: Bool { NSEvent.pressedMouseButtons == 1 }
+var isLeftMouseButtonDown: Bool { NSEvent.pressedMouseButtons == 1 }
 
 /// Same motivation as in monitorFrameNormalized
 var mouseLocation: CGPoint {
