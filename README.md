@@ -114,6 +114,11 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
 - Play nicely with existing macOS features.
   If limitations are imposed then AeroSpace won't play nicely with existing macOS features
   (For example, AeroSpace doesn't acknowledge the existence of macOS Spaces, and it uses [emulation of its own workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces))
+- Ricing.
+  AeroSpace provides only a very minimal support for ricing - gaps and a few callbacks for integrations with bars.
+  The current maintainer doesn't care about ricing.
+  Ricing issues are not a priority, and they are mostly ignored.
+  The ricing stance can change only with the appearance of more maintainers.
 
 ## Tip of the day
 
