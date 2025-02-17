@@ -81,7 +81,7 @@ aerospace -h;
     | config --all-keys
     | config --config-path
 
-    | debug-windows
+    | debug-windows [--window-id <window_id>]
 
     | list-apps [--macos-native-hidden [no] | --format <output_format> | --count | --json]...
 
