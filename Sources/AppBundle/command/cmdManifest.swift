@@ -13,7 +13,7 @@ extension CmdArgs {
             case .config:
                 command = ConfigCommand(args: self as! ConfigCmdArgs)
             case .debugWindows:
-                command = DebugWindowsCommand()
+                command = DebugWindowsCommand(args: self as! DebugWindowsCmdArgs)
             case .enable:
                 command = EnableCommand(args: self as! EnableCmdArgs)
             case .execAndForget:

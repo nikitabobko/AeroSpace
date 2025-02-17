@@ -27,18 +27,29 @@ enum DebugWindowsState {
 }
 
 struct DebugWindowsCommand: Command {
-    let args = DebugWindowsCmdArgs(rawArgs: .init([]))
+    let args: DebugWindowsCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         check(Thread.current.isMainThread)
+        if let windowId = args.windowId {
+            guard let window = Window.get(byId: windowId) else {
+                return io.err("Can't find window with the specified window-id: \(windowId)")
+            }
+            io.out(dumpWindowDebugInfo(window) + "\n")
+            io.out(disclaimer)
+            return true
+        }
         switch debugWindowsState {
             case .recording:
                 debugWindowsState = .notRecording
-                io.out((debugWindowsLog.values + [disclaimer, "Debug session finished"]).joined(separator: "\n\n"))
+                io.out(debugWindowsLog.values + ["\n"])
+                io.out(disclaimer + "\n")
+                io.out("Debug session finished" + "\n")
                 debugWindowsLog = [:]
                 return true
             case .notRecording:
                 debugWindowsState = .recording
+                debugWindowsLog = [:]
                 io.out(
                     """
                     Debug windows session has started
@@ -46,7 +57,6 @@ struct DebugWindowsCommand: Command {
                     2. Run 'aerospace debug-windows' once again to finish the session and get the results
                     """
                 )
-                debugWindowsLog = [:]
                 // Make sure that the Terminal window that started the recording is recorded first
                 guard let target = args.resolveTargetOrReportError(env, io) else { return false }
                 if let window = target.windowOrNil {
@@ -67,6 +77,26 @@ struct DebugWindowsCommand: Command {
     }
 }
 
+private func dumpWindowDebugInfo(_ window: Window) -> String {
+    let window = window as! MacWindow
+    let app = window.app as! MacApp
+    let appId = app.id ?? "NULL-APP-BUNDLE-ID"
+    let windowPrefix = appId + ".window.\(window.windowId)"
+    var result: [String] = []
+
+    result.append("\(windowPrefix) windowId: \(window.windowId)")
+    result.append("\(windowPrefix) workspace: \(window.nodeWorkspace?.name ?? "nil")")
+    result.append("\(windowPrefix) treeNodeParent: \(window.parent)")
+    result.append("\(windowPrefix) isWindow: \(isWindow(window.axWindow, app))")
+    result.append("\(windowPrefix) isDialogHeuristic: \(isDialogHeuristic(window.axWindow, app))")
+    result.append(dumpAx(window.axWindow, windowPrefix, .window))
+
+    let appPrefix = appId.padding(toLength: windowPrefix.count, withPad: " ", startingAt: 0)
+    result.append(dumpAx(app.axApp, appPrefix, .app))
+
+    return result.joined(separator: "\n")
+}
+
 func debugWindowsIfRecording(_ window: Window) {
     switch debugWindowsState {
         case .recording: break
@@ -76,25 +106,10 @@ func debugWindowsIfRecording(_ window: Window) {
         debugWindowsState = .recordingAborted
         debugWindowsLog = [:]
     }
-    let window = window as! MacWindow
     if debugWindowsLog.keys.contains(window.windowId) {
         return
     }
-    let app = window.app as! MacApp
-    let appId = app.id ?? "NULL-APP-BUNDLE-ID"
-    let windowPrefix = appId + ".window.\(window.windowId)"
-    var result: [String] = []
-
-    result.append("\(windowPrefix) windowId: \(window.windowId)")
-    result.append("\(windowPrefix) workspace: \(window.nodeWorkspace?.name ?? "nil")")
-    result.append("\(windowPrefix) treeNodeParent: \(window.parent)")
-    result.append("\(windowPrefix) recognizedAsDialog: \(isDialogHeuristic(window.axWindow, app))")
-    result.append(dumpAx(window.axWindow, windowPrefix, .window))
-
-    let appPrefix = appId.padding(toLength: windowPrefix.count, withPad: " ", startingAt: 0)
-    result.append(dumpAx(app.axApp, appPrefix, .app))
-
-    debugWindowsLog[window.windowId] = result.joined(separator: "\n")
+    debugWindowsLog[window.windowId] = dumpWindowDebugInfo(window)
 }
 
 private func prettyValue(_ value: Any?) -> String {

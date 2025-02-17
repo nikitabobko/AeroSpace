@@ -25,19 +25,23 @@ Use this command output to report bug reports about incorrect windows handling
 The intended usage is the following:
 
 . Run the command to start the debug session recording
-. Focus problematic window
+. Focus problematic window or make the window appear.
 . Run the command one more time to stop the debug session recording and print the results
 
 `debug-windows` command is *not stable API*.
 Please *don't rely on* the command existence and output format.
 The only intended use case is to report bugs about incorrect windows handling.
 
-// end::body[]
-
 // =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+--window-id <window-id>::
+Print debug information of the specified window right away.
+Usage of this flag disables interactive mode.
+
+// end::body[]
 
 // =========================================================== Footer
 include::util/man-footer.adoc[]
