@@ -217,6 +217,8 @@ func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
         return false
     }
 
+    lazy var title = axWindow.get(Ax.titleAttr) ?? ""
+
     // Try to filter out incredibly weird popup like AXWindows without any buttons.
     // E.g.
     // - Sonoma (macOS 14) keyboard layout switch
@@ -232,7 +234,8 @@ func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
         app.getFocusedAxWindow()?.containingWindowId() != axWindow.containingWindowId() &&
 
         subrole != kAXStandardWindowSubrole &&
-        (axWindow.get(Ax.titleAttr) ?? "").isEmpty
+        // Share window purple "pill" indicator has "Window" title https://github.com/nikitabobko/AeroSpace/issues/1101
+        (title.isEmpty || title == "Window") // Maybe it doesn't work in non-English locale
     {
         return false
     }
