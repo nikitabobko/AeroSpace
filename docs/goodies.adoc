@@ -248,10 +248,10 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |Battle.net|`net.battle.app`
 |Books|`com.apple.iBooksX`
 |Brave|`com.brave.Browser`
-|CLion|`com.jetbrains.CLion`
 |Calculator|`com.apple.calculator`
 |Calendar|`com.apple.iCal`
 |Chess|`com.apple.Chess`
+|CLion|`com.jetbrains.CLion`
 |Clock|`com.apple.clock`
 |ColorSync Utility|`com.apple.ColorSyncUtility`
 |Console|`com.apple.Console`
@@ -270,10 +270,13 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |Google Chrome|`com.google.Chrome`
 |Grapher|`com.apple.grapher`
 |Home|`com.apple.Home`
+|iMovie|`com.apple.iMovieApp`
 |Inkscape|`org.inkscape.Inkscape`
 |IntelliJ IDEA Community|`com.jetbrains.intellij.ce`
 |IntelliJ IDEA Ultimate|`com.jetbrains.intellij`
+|iTerm2|`com.googlecode.iterm2`
 |Karabiner-Elements|`org.pqrs.Karabiner-Elements.Settings`
+|kdenlive|`org.kde.Kdenlive`
 |Keychain Access|`com.apple.keychainaccess`
 |Keynote|`com.apple.iWork.Keynote`
 |Kitty|`net.kovidgoyal.kitty`
@@ -302,7 +305,6 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |Sublime Merge|`com.sublimemerge`
 |Sublime Text|`com.sublimetext.4`
 |System Settings|`com.apple.systempreferences`
-|TV|`com.apple.TV`
 |Telegram|`com.tdesktop.Telegram`
 |Terminal|`com.apple.Terminal`
 |TextEdit|`com.apple.TextEdit`
@@ -311,15 +313,14 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |Todoist|`com.todoist.mac.Todoist`
 |Tor Browser|`org.torproject.torbrowser`
 |Transmission|`org.m0k.transmission`
-|VLC|`org.videolan.vlc`
+|TV|`com.apple.TV`
 |Visual Studio Code|`com.microsoft.VSCode`
+|VLC|`org.videolan.vlc`
 |VoiceMemos|`com.apple.VoiceMemos`
 |VoiceOver Utility|`com.apple.VoiceOverUtility`
 |Weather|`com.apple.weather`
 |WezTerm|`com.github.wez.wezterm`
 |Xcode|`com.apple.dt.Xcode`
-|iMovie|`com.apple.iMovieApp`
-|iTerm2|`com.googlecode.iterm2`
-|kdenlive|`org.kde.Kdenlive`
+|Zen Browser|`app.zen-browser.zen`
 
 |===
