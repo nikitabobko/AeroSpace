@@ -19,11 +19,22 @@ class GlobalObserver {
                    // "Hide app" (cmd-h) -> force focus
                    MacApp.allAppsMap.values.filter({ $0.nsApp.isHidden }).count == 1
                 {
-                    // Force focus
-                    _ = w.focusWindow()
-                    _ = w.nativeFocus()
+                    if let identifier = w.macAppUnsafe.nsApp.bundleIdentifier,
+                       config.automaticallyUnhideMacosHiddenAppsExceptions.contains(identifier)
+                    {
+                    }
+                    else {
+                        // Force focus
+                        _ = w.focusWindow()
+                        _ = w.nativeFocus()
+                    }
                 }
                 for app in MacApp.allAppsMap.values {
+                    if let identifier = app.nsApp.bundleIdentifier,
+                       config.automaticallyUnhideMacosHiddenAppsExceptions.contains(identifier)
+                    {
+                        continue
+                    }
                     app.nsApp.unhide()
                 }
             }
