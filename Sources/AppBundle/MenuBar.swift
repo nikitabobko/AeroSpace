@@ -54,6 +54,8 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         if viewModel.isEnabled {
             switch config.menuBarStyle {
                 case .text:
+                    Text(viewModel.trayText)
+                case .monospaced:
                     MenuBarLabel(viewModel.trayText)
                 case .squares:
                     MenuBarLabel(viewModel.trayText, trayItems: viewModel.trayItems)
@@ -153,6 +155,7 @@ struct MenuBarLabel: View {
 
 enum MenuBarStyle: String {
     case text = "text"
+    case monospaced = "monospaced"
     case squares = "squares"
     case i3 = "i3"
 }
