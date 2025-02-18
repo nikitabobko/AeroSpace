@@ -52,24 +52,36 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
         if viewModel.isEnabled {
-            MonospacedText(viewModel.trayText)
+            switch config.menuBarStyle {
+                case .text:
+                    Text(viewModel.trayText)
+                case .monospaced:
+                    MenuBarLabel(viewModel.trayText)
+                case .squares:
+                    MenuBarLabel(viewModel.trayText, trayItems: viewModel.trayItems)
+                case .i3:
+                    MenuBarLabel(viewModel.trayText, trayItems: viewModel.trayItems, workspaces: viewModel.workspaces)
+            }
         } else {
-            MonospacedText("⏸️")
+            MenuBarLabel("⏸️")
         }
     }
 }
 
-struct MonospacedText: View {
+struct MenuBarLabel: View {
     @Environment(\.colorScheme) var colorScheme: ColorScheme
     var text: String
-    init(_ text: String) { self.text = text }
+    var trayItems: [TrayItem]?
+    var workspaces: [WorkspaceViewModel]?
+
+    init(_ text: String, trayItems: [TrayItem]? = nil, workspaces: [WorkspaceViewModel]? = nil) {
+        self.text = text
+        self.trayItems = trayItems
+        self.workspaces = workspaces
+    }
 
     var body: some View {
-        let renderer = ImageRenderer(
-            content: Text(text)
-                .font(.system(.largeTitle, design: .monospaced))
-                .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
-        )
+        let renderer = ImageRenderer(content: menuBarContent)
         if let cgImage = renderer.cgImage {
             // Using scale: 1 results in a blurry image for unknown reasons
             Image(cgImage, scale: 2, label: Text(text))
@@ -77,6 +89,88 @@ struct MonospacedText: View {
             // In case image can't be rendered fallback to plain text
             Text(text)
         }
+    }
+
+    @ViewBuilder
+    var menuBarContent: some View {
+        let color = colorScheme == .light ? Color.black : Color.white
+        if let trayItems {
+            HStack(spacing: 4) {
+                ForEach(trayItems, id: \.name) { item in
+                    if item.name.containsEmoji() {
+                        Text(item.name)
+                            .font(.system(.largeTitle, design: .monospaced))
+                            .foregroundStyle(color)
+                            .bold()
+                    } else {
+                        Image(systemName: item.systemImageName)
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .foregroundStyle(color)
+                        if item.type == .mode {
+                            Text(":")
+                                .font(.system(.largeTitle, design: .monospaced))
+                                .foregroundStyle(color)
+                                .bold()
+                        }
+                    }
+                }
+                if workspaces != nil {
+                    let otherWorkspaces = Workspace.all.filter { workspace in
+                        !workspace.isEffectivelyEmpty && !trayItems.contains(where: { item in item.name == workspace.name })
+                    }
+                    if !otherWorkspaces.isEmpty {
+                        Group {
+                            Text("|")
+                                .font(.system(.largeTitle, design: .monospaced))
+                                .foregroundStyle(color)
+                                .bold()
+                                .padding(.bottom, 2)
+                            ForEach(otherWorkspaces, id: \.name) { item in
+                                if item.name.containsEmoji() {
+                                    Text(item.name)
+                                        .font(.system(.largeTitle, design: .monospaced))
+                                        .foregroundStyle(color)
+                                        .bold()
+                                } else {
+                                    Image(systemName: "\(item.name.lowercased()).square")
+                                        .resizable()
+                                        .aspectRatio(contentMode: .fit)
+                                        .foregroundStyle(color)
+                                }
+                            }
+                        }
+                        .opacity(0.6)
+                    }
+                }
+            }
+            .frame(height: 40)
+        } else {
+            Text(text)
+                .font(.system(.largeTitle, design: .monospaced))
+                .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
+        }
+    }
+}
+
+enum MenuBarStyle: String {
+    case text = "text"
+    case monospaced = "monospaced"
+    case squares = "squares"
+    case i3 = "i3"
+}
+
+extension String {
+    func parseMenuBarStyle() -> MenuBarStyle? {
+        if let parsed = MenuBarStyle(rawValue: self) {
+            return parsed
+        } else {
+            return nil
+        }
+    }
+
+    func containsEmoji() -> Bool {
+        unicodeScalars.contains { $0.properties.isEmoji && $0.properties.isEmojiPresentation }
     }
 }
 

@@ -26,6 +26,15 @@ accordion-padding = 30
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
 
+# Possible values: text|monospaced|squares|i3
+# - text:          displays menu bar as text with default menu font (only active workspaces for each monitor).
+# - monospaced:    displays menu bar as monospaced text (only active workspaces for each monitor).
+# - squares:       displays menu bar as square with the workspace name inside. Filled square is the
+#                  active monitor, bordered square for other monitors (displays only active workspaces
+#                  for each monitor).
+# - i3:            same as squares + shows all other workspaces that contains windows in it, like i3.
+menu-bar-style = 'monospaced'
+
 # Possible values: horizontal|vertical|auto
 # 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
 #               tall monitor (anything higher than wide) gets vertical orientation
