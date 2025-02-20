@@ -21,8 +21,7 @@ class GlobalObserver {
                 {
                     if let identifier = w.macAppUnsafe.nsApp.bundleIdentifier,
                        config.automaticallyUnhideMacosHiddenAppsExceptions.contains(identifier)
-                    {
-                    }
+                    {}
                     else {
                         // Force focus
                         _ = w.focusWindow()
