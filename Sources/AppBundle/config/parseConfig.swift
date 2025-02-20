@@ -102,6 +102,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
 
     "start-at-login": Parser(\.startAtLogin, parseBool),
     "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
+    "automatically-unhide-macos-hidden-apps-exceptions": Parser(\.automaticallyUnhideMacosHiddenAppsExceptions, parseStringArray),
     "accordion-padding": Parser(\.accordionPadding, parseInt),
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseExecOnWorkspaceChange),
     "exec": Parser(\.execConfig, parseExecConfig),
@@ -201,6 +202,14 @@ func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]
             )]
         }
     }
+
+    if !config.automaticallyUnhideMacosHiddenApps && !config.automaticallyUnhideMacosHiddenAppsExceptions.isEmpty {
+        errors.append(.semantic(
+            .root,
+            "automatically-unhide-macos-hidden-apps is false but automatically-unhide-macos-hidden-apps-exceptions is not empty"
+        ))
+    }
+
     return (config, errors)
 }
 
@@ -280,6 +289,13 @@ private func skipParsing<T>(_ value: T) -> (_ raw: TOMLValueConvertible, _ backt
 }
 
 private func parseExecOnWorkspaceChange(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<[String]> {
+    parseTomlArray(raw, backtrace)
+        .flatMap { arr in
+            arr.mapAllOrFailure { elem in parseString(elem, backtrace) }
+        }
+}
+
+private func parseStringArray(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<[String]> {
     parseTomlArray(raw, backtrace)
         .flatMap { arr in
             arr.mapAllOrFailure { elem in parseString(elem, backtrace) }

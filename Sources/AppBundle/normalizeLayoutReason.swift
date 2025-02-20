@@ -22,7 +22,8 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) {
         let isMacosFullscreen = window.isMacosFullscreen
         let isMacosMinimized = !isMacosFullscreen && window.isMacosMinimized
         let isMacosWindowOfHiddenApp = !isMacosFullscreen && !isMacosMinimized &&
-            !config.automaticallyUnhideMacosHiddenApps && window.macAppUnsafe.nsApp.isHidden
+            (!config.automaticallyUnhideMacosHiddenApps || config.automaticallyUnhideMacosHiddenAppsExceptions.contains(window.app.id ?? "")) &&
+            window.macAppUnsafe.nsApp.isHidden
         switch window.layoutReason {
             case .standard:
                 if isMacosFullscreen {

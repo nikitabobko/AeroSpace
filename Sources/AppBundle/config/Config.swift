@@ -40,6 +40,7 @@ struct Config: Copyable {
     var defaultRootContainerOrientation: DefaultContainerOrientation = .auto
     var startAtLogin: Bool = false
     var automaticallyUnhideMacosHiddenApps: Bool = false
+    var automaticallyUnhideMacosHiddenAppsExceptions: [String] = []
     var accordionPadding: Int = 30
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
     var execOnWorkspaceChange: [String] = [] // todo deprecate
