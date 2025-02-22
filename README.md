@@ -57,8 +57,11 @@ Other installation options: https://nikitabobko.github.io/AeroSpace/guide#instal
 
 ## Community, discussions, issues
 
+Unfortunately, AeroSpace project doesn't accept bug reports and feature requests from everyone.
+Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for more details.
+
 Community discussions happen at GitHub Discussions.
-There you can report bugs, propose new features, ask your questions, show off your setup, or just chat.
+There you can discuss bugs, propose new features, ask your questions, show off your setup, or just chat.
 
 There are 7 channels:
 -   [#all](https://github.com/nikitabobko/AeroSpace/discussions).
@@ -78,14 +81,11 @@ There are 7 channels:
     [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/general.atom?discussions_q=sort%3Adate_created+category%3Ageneral).
 -   [#potential-bugs](https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs).
     [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs.atom?discussions_q=category%3Apotential-bugs+sort%3Adate_created).
-    If you think that you have encountered a bug, you can report it here.
+    If you think that you have encountered a bug, you can discuss your bugs here.
 -   [#questions-and-answers](https://github.com/nikitabobko/AeroSpace/discussions/categories/questions-and-answers).
     [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/questions-and-answers.atom?discussions_q=category%3Aquestions-and-answers+sort%3Adate_created).
     Everyone is welcome to ask questions.
     Everyone is encouraged to answer other people's questions.
-
-You're welcome to submit bug reports and feature ideas in GitHub Discussions.
-See: [CONTRIBUTING.md](./CONTRIBUTING.md)
 
 ## Development
 

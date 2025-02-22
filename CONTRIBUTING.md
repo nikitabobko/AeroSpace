@@ -1,6 +1,16 @@
 # Contributing
 
-Look who wants to contribute! Nice to see you here, let me show you what you can do :)
+## Users cannot create GitHub Issues directly
+
+Unfortunately, AeroSpace project doesn't accept bug reports and feature requests from everyone.
+
+The submitted Issues are often either obvious duplicates, environmental problems, or configuration errors by the users themselves.
+For a hobby project, I don't have enough time and energy to process every such submitted Issue.
+
+**As an alternative, you can start a Discussion on GitHub discussions forum** https://github.com/nikitabobko/AeroSpace/discussions.
+Any Discussion which clearly identifies a problem and can be confirmed or reproduced will be converted to an Issue by maintainers.
+
+Thank you for your understanding.
 
 ## Submit bugs and feature ideas
 
@@ -30,22 +40,6 @@ Rules:
 * Synopsis, if you suggest a new command
 * Mental model description
 
-## Users cannot create GitHub Issues directly
-
-Users are not allowed to create Issues directly in this repository - we ask that you create a Discussion first.
-
-Users can't create issues directly because:
-- Users submit too many duplicates without prior search
-- A lot of user issues are misunderstandings, environmental problems, or configuration errors by the users themselves
-- Few people can formulate proper bug reports
-- Even fewer people can formulate proper, actionable feature requests that align with other existing/planned features and the overall AeroSpace mental model
-
-Any Discussion which clearly identifies a problem and can be confirmed or reproduced will be converted to an Issue by maintainers.
-
-This whole pattern makes it easier for maintainers or contributors to find issues to work on.
-Issues are like a publicly observable maintainers' inbox.
-We want to keep this inbox tidy and clean.
-
 ## Discuss issues/discussions
 
 One of the most useful thing you can do is to discuss issues/discussions.
@@ -53,7 +47,7 @@ One of the most useful thing you can do is to discuss issues/discussions.
 Imagine that you were assigned to fix the issue.
 Try to suggest the best approach and design on how to fix the issue.
 Suggest the synopsis/config format, reason in written form what is good about it, what is bad about it, what are the alternatives, etc.
-Basically, see the "Prior discussion" section in [Submit Pull Requests](#submit-pull-requests) :)
+Basically, see the "Prior discussion" section in [Submit Pull Requests](#submit-pull-requests).
 
 If you have something to contribute to the conversation. Do it!
 
@@ -66,6 +60,8 @@ You can take a look at the following issues:
 * Issues that are unclear on how to fix, or issues that require design of the interface (CLI or config interface) are tagged with `design-needed` tag https://github.com/nikitabobko/AeroSpace/issues?q=is%3Aissue+is%3Aopen+label%3Adesign-needed
 
 ## Submit Pull Requests
+
+Small and trivial improvements can be submitted without any discussion.
 
 **Prior discussion**. For non-trivial changes (such as user visible changes), it's always better to ask for prior approval and discuss what you want to do before doing it.
 
@@ -82,8 +78,6 @@ Consider including
 * etc.
 
 Discussing that you want to do something doesn't put any obligations on you. If you don't want to start the discussion just because you're afraid that you won't do it. Don't be afraid!
-
-Small and trivial improvements can be submitted without any discussion.
 
 **Commit hygiene**. Each submitted commit must be atomic change (a Pull Request may contain several commits). Don't introduce new functional changes together with refactorings in the same commit.
 

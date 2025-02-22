@@ -1,0 +1,15 @@
+name: New Issue
+description: New Issue
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Unfortunately, AeroSpace project doesn't accept bug reports and feature requests from everyone. See: https://github.com/nikitabobko/AeroSpace/issues/947
+  - type: checkboxes
+    id: checkbox
+    attributes:
+      label: '_'
+      options:
+        - label: |
+            I read https://github.com/nikitabobko/AeroSpace/issues/947
+          required: true
