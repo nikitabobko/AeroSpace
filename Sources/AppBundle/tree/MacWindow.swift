@@ -251,7 +251,7 @@ func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
 
         // Firefox non-native video fullscreen
         // about:config -> full-screen-api.macos-native-full-screen -> false
-        app.id == "org.mozilla.firefox" && subrole == kAXUnknownSubrole
+        ["org.mozilla.firefox", "org.mozilla.firefoxdeveloperedition", "org.mozilla.nightly"].contains(app.id ?? "") && subrole == kAXUnknownSubrole
 }
 
 // This function is referenced in the guide
@@ -271,7 +271,7 @@ func isDialogHeuristic(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     }
     // Firefox: Picture in Picture window doesn't have minimize button.
     // todo. bug: when firefox shows non-native fullscreen, minimize button disables for all other windows
-    if app.id == "org.mozilla.firefox" && axWindow.get(Ax.minimizeButtonAttr)?.get(Ax.enabledAttr) != true {
+    if ["org.mozilla.firefox", "org.mozilla.firefoxdeveloperedition", "org.mozilla.nightly"].contains(app.id ?? "") && axWindow.get(Ax.minimizeButtonAttr)?.get(Ax.enabledAttr) != true {
         return true
     }
     if app.id == "com.apple.PhotoBooth" { return true }
