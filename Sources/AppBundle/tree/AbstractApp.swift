@@ -32,6 +32,10 @@ class AbstractApp: Hashable {
 
 extension AbstractApp {
     func asMacApp() -> MacApp { self as! MacApp }
+
+    func isFirefox() -> Bool {
+        ["org.mozilla.firefox", "org.mozilla.firefoxdeveloperedition", "org.mozilla.nightly"].contains(id ?? "")
+    }
 }
 
 extension Window {
