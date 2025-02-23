@@ -218,7 +218,7 @@ final class MacWindow: Window, CustomStringConvertible {
 /// Why do we need to filter out non-windows?
 /// - "floating by default" workflow
 /// - It's annoying that the focus command treats these popups as floating windows
-private func isWindowNew(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
+func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     // Just don't do anything with "Ghostty Quick Terminal" windows.
     // Its position and size are managed by the Ghostty itself
     // https://github.com/nikitabobko/AeroSpace/issues/103
@@ -250,50 +250,6 @@ private func isWindowNew(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
         app.getFocusedAxWindow()?.containingWindowId() == axWindow.containingWindowId() ||
 
         axWindow.get(Ax.subroleAttr) == kAXStandardWindowSubrole
-}
-
-/// Compatibility. Replace isWindow -> isWindowNew in 0.18.0
-func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
-    let subrole = axWindow.get(Ax.subroleAttr)
-
-    // Just don't do anything with "Ghostty Quick Terminal" windows.
-    // Its position and size are managed by the Ghostty itself
-    // https://github.com/nikitabobko/AeroSpace/issues/103
-    // https://github.com/ghostty-org/ghostty/discussions/3512
-    if app.id == "com.mitchellh.ghostty" && axWindow.get(Ax.identifierAttr) == "com.mitchellh.ghostty.quickTerminal" {
-        return false
-    }
-
-    if app.isFirefox() {
-        return isWindowNew(axWindow, app)
-    }
-
-    lazy var title = axWindow.get(Ax.titleAttr) ?? ""
-
-    // Try to filter out incredibly weird popup like AXWindows without any buttons.
-    // E.g.
-    // - Sonoma (macOS 14) keyboard layout switch
-    // - IntelliJ context menu (right mouse click)
-    // - Telegram context menu (right mouse click)
-    if axWindow.get(Ax.closeButtonAttr) == nil &&
-        axWindow.get(Ax.fullscreenButtonAttr) == nil &&
-        axWindow.get(Ax.zoomButtonAttr) == nil &&
-        axWindow.get(Ax.minimizeButtonAttr) == nil &&
-
-        axWindow.get(Ax.isFocused) == false &&  // Three different ways to detect if the window is not focused
-        axWindow.get(Ax.isMainAttr) == false &&
-        app.getFocusedAxWindow()?.containingWindowId() != axWindow.containingWindowId() &&
-
-        subrole != kAXStandardWindowSubrole &&
-        // Share window purple "pill" indicator has "Window" title https://github.com/nikitabobko/AeroSpace/issues/1101
-        (title.isEmpty || title == "Window") // Maybe it doesn't work in non-English locale
-    {
-        return false
-    }
-    return subrole == kAXStandardWindowSubrole ||
-        subrole == kAXDialogSubrole || // macOS native file picker ("Open..." menu) (kAXDialogSubrole value)
-        subrole == kAXFloatingWindowSubrole || // telegram image viewer
-        app.id == "com.apple.finder" && subrole == "Quick Look" // Finder preview (hit space) is a floating window
 }
 
 // This function is referenced in the guide
