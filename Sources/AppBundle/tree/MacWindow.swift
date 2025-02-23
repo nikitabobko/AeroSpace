@@ -211,6 +211,45 @@ final class MacWindow: Window, CustomStringConvertible {
 }
 
 /// Alternative name: !isPopup
+///
+/// Why do we need to filter out non-windows?
+/// - "floating by default" workflow
+/// - It's annoying that the focus command treats these popups as floating windows
+private func isWindowNew(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
+    // Just don't do anything with "Ghostty Quick Terminal" windows.
+    // Its position and size are managed by the Ghostty itself
+    // https://github.com/nikitabobko/AeroSpace/issues/103
+    // https://github.com/ghostty-org/ghostty/discussions/3512
+    if app.id == "com.mitchellh.ghostty" && axWindow.get(Ax.identifierAttr) == "com.mitchellh.ghostty.quickTerminal" {
+        return false
+    }
+
+    // Try to filter out incredibly weird popup like AXWindows without any buttons.
+    // E.g.
+    // - Sonoma (macOS 14) keyboard layout switch (AXSubrole == AXDialog)
+    // - IntelliJ context menu (right mouse click)
+    // - Telegram context menu (right mouse click)
+    // - Share window purple "pill" indicator https://github.com/nikitabobko/AeroSpace/issues/1101. Title is not empty
+    // - Tooltips on links mouse hover in browsers (Chrome, Firefox)
+    // - Tooltips on buttons (e.g. new tab, Extensions) mouse hover in browsers (Chrome, Firefox). Title is not empty
+    // Make sure that the following AXWindow remain windows:
+    // - macOS native file picker ("Open..." menu) (subrole == kAXDialogSubrole)
+    // - telegram image viewer (subrole == kAXFloatingWindowSubrole)
+    // - Finder preview (hit space) (subrole == "Quick Look")
+    // - Firefox non-native video fullscreen (about:config -> full-screen-api.macos-native-full-screen -> false, subrole == AXUnknown)
+    return axWindow.get(Ax.closeButtonAttr) != nil ||
+        axWindow.get(Ax.fullscreenButtonAttr) != nil ||
+        axWindow.get(Ax.zoomButtonAttr) != nil ||
+        axWindow.get(Ax.minimizeButtonAttr) != nil ||
+
+        axWindow.get(Ax.isFocused) == true ||  // 3 different ways to detect if the window is focused
+        axWindow.get(Ax.isMainAttr) == true ||
+        app.getFocusedAxWindow()?.containingWindowId() == axWindow.containingWindowId() ||
+
+        axWindow.get(Ax.subroleAttr) == kAXStandardWindowSubrole
+}
+
+/// Compatibility. Replace isWindow -> isWindowNew in 0.18.0
 func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     let subrole = axWindow.get(Ax.subroleAttr)
 
@@ -220,6 +259,10 @@ func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     // https://github.com/ghostty-org/ghostty/discussions/3512
     if app.id == "com.mitchellh.ghostty" && axWindow.get(Ax.identifierAttr) == "com.mitchellh.ghostty.quickTerminal" {
         return false
+    }
+
+    if app.id == "org.mozilla.firefox" {
+        return isWindowNew(axWindow, app)
     }
 
     lazy var title = axWindow.get(Ax.titleAttr) ?? ""
@@ -247,11 +290,7 @@ func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     return subrole == kAXStandardWindowSubrole ||
         subrole == kAXDialogSubrole || // macOS native file picker ("Open..." menu) (kAXDialogSubrole value)
         subrole == kAXFloatingWindowSubrole || // telegram image viewer
-        app.id == "com.apple.finder" && subrole == "Quick Look" || // Finder preview (hit space) is a floating window
-
-        // Firefox non-native video fullscreen
-        // about:config -> full-screen-api.macos-native-full-screen -> false
-        app.id == "org.mozilla.firefox" && subrole == kAXUnknownSubrole
+        app.id == "com.apple.finder" && subrole == "Quick Look" // Finder preview (hit space) is a floating window
 }
 
 // This function is referenced in the guide
