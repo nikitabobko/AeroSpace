@@ -120,6 +120,12 @@ let keyNotationToKeyCode: [String: Key] = [
     "keypadMultiply": .keypadMultiply,
     "keypadPlus": .keypadPlus,
 
+    "pageUp": .pageUp,
+    "pageDown": .pageDown,
+    "home": .home,
+    "end": .end,
+    "forwardDelete": .forwardDelete,
+
     "f1": .f1,
     "f2": .f2,
     "f3": .f3,
