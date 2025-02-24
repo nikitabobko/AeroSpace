@@ -1,5 +1,6 @@
 import AppKit
 import Common
+import Foundation
 import HotKey
 import TOMLKit
 
@@ -30,7 +31,7 @@ func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
     }
 }
 
-enum TomlParseError: Error, CustomStringConvertible, Equatable {
+enum TomlParseError: Error, CustomStringConvertible, Equatable, LocalizedError {
     case semantic(_ backtrace: TomlBacktrace, _ message: String)
     case syntax(_ message: String)
 
@@ -40,6 +41,9 @@ enum TomlParseError: Error, CustomStringConvertible, Equatable {
             case .semantic(let backtrace, let message): backtrace.isRoot ? message : "\(backtrace): \(message)"
             case .syntax(let message): message
         }
+    }
+    var errorDescription: String? {
+        return description
     }
 }
 
@@ -153,9 +157,26 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
     }
 }
 
+// Note: this is only required due to a TOML parsing bug in TOMLKit which throws SIGABORT in parsing failures
+// Should be removed once TOMLKit is patched
+private func validateTOMLTableHeaderSyntax(in input: String) throws {
+    // Matches [[ followed by at least one more [ While ignoring commented lines #
+    let pattern = #"^(?!\s*#)\s*\[\[(?=\[)"#
+    let regex = try NSRegularExpression(pattern: pattern, options: .anchorsMatchLines)
+    let lines = input.components(separatedBy: .newlines)
+
+    for (index, line) in lines.enumerated() {
+        let range = NSRange(location: 0, length: line.utf16.count)
+        if regex.firstMatch(in: line, options: [], range: range) != nil {
+            throw TomlParseError.syntax("TOML Parsing Error: Invalid Table Header \n→ expected a header string but found '[' \n→ Location: Line \(index + 1) \n→ Content: \(line)")
+        }
+    }
+}
+
 func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]) { // todo change return value to Result
     let rawTable: TOMLTable
     do {
+        try validateTOMLTableHeaderSyntax(in: rawToml)
         rawTable = try TOMLTable(string: rawToml)
     } catch let e as TOMLParseError {
         return (defaultConfig, [.syntax(e.debugDescription)])
