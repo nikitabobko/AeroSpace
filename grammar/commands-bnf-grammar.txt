@@ -112,7 +112,7 @@ aerospace -h;
 <move_node_to_monitor2_flag> ::= --window-id <window_id>|--focus-follows-window|--fail-if-noop;
 
 <focus_flag> ::= --boundaries <boundary>|--boundaries-action <boundaries_action>|--ignore-floating;
-<boundaries_action> ::= stop|wrap-around-the-workspace|wrap-around-all-monitors;
+<boundaries_action> ::= stop|fail|wrap-around-the-workspace|wrap-around-all-monitors;
 <boundary> ::= workspace|all-monitors-outer-frame;
 
 <list_windows_filter_flag> ::= --workspace (visible | focused | <workspace>)...

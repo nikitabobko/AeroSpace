@@ -51,6 +51,7 @@ private func hitWorkspaceBoundaries(
         case .workspace:
             return switch args.boundariesAction {
                 case .stop: true
+                case .fail: false
                 case .wrapAroundTheWorkspace: wrapAroundTheWorkspace(target, io, direction)
                 case .wrapAroundAllMonitors: errorT("Must be discarded by args parser")
             }
@@ -79,6 +80,8 @@ private func hitAllMonitorsOuterFrameBoundaries(
     switch args.boundariesAction {
         case .stop:
             return true
+        case .fail:
+            return false
         case .wrapAroundTheWorkspace:
             return wrapAroundTheWorkspace(target, io, direction)
         case .wrapAroundAllMonitors:
