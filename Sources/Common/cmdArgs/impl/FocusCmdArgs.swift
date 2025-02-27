@@ -47,6 +47,7 @@ public struct FocusCmdArgs: CmdArgs {
     }
     public enum WhenBoundariesCrossed: String, CaseIterable, Equatable {
         case stop = "stop"
+        case fail = "fail"
         case wrapAroundTheWorkspace = "wrap-around-the-workspace"
         case wrapAroundAllMonitors = "wrap-around-all-monitors"
     }
