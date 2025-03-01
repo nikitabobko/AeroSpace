@@ -11,72 +11,53 @@ struct ResizeCommand: Command { // todo cover with tests
         if let window = target.windowOrNil, window.isFloating {
             guard let size = window.getSize(), let topLeftCorner = window.getTopLeftCorner() else { return false }
 
-            let computeTopLeftCorner = { (newSize: CGSize) -> CGPoint in
-                let newX = if topLeftCorner.x + newSize.width > target.workspace.workspaceMonitor.width {
-                    max(0, topLeftCorner.x - (topLeftCorner.x + newSize.width - target.workspace.workspaceMonitor.width))
+            let computeTopLeftCornerAndSize = { (diffSize: CGSize) -> (CGPoint, CGSize) in
+                let newX = if topLeftCorner.x + size.width + diffSize.width / 2 > target.workspace.workspaceMonitor.width {
+                    max(0, target.workspace.workspaceMonitor.width - size.width - diffSize.width)
                 } else {
-                    topLeftCorner.x
+                    max(0, topLeftCorner.x - diffSize.width / 2)
                 }
 
-                let newY = if topLeftCorner.y + newSize.height > target.workspace.workspaceMonitor.height {
-                    max(0, topLeftCorner.y - (topLeftCorner.y + newSize.height - target.workspace.workspaceMonitor.height))
+                let newY = if topLeftCorner.y + size.height + diffSize.height / 2 > target.workspace.workspaceMonitor.height {
+                    max(0, target.workspace.workspaceMonitor.height - size.height - diffSize.height)
                 } else {
-                    topLeftCorner.y
+                    topLeftCorner.y - diffSize.height / 2
                 }
 
-                return CGPoint(x: newX, y: newY)
+                return (CGPoint(x: newX, y: newY), CGSize(width: size.width + diffSize.width, height: size.height + diffSize.height))
+            }
+
+            let isWidthDominant = size.width >= size.height
+            let diff: CGFloat = switch (args.units.val, args.dimension.val) {
+                case (.set(let unit), .width): CGFloat(unit) - size.width
+                case (.set(let unit), .height): CGFloat(unit) - size.height
+                case (.set(let unit), .smart): CGFloat(unit) - (isWidthDominant ? size.width : size.height)
+                case (.set(let unit), .smartOpposite): CGFloat(unit) - (isWidthDominant ? size.height : size.width)
+                case (.add(let unit), _): CGFloat(unit)
+                case (.subtract(let unit), _): -CGFloat(unit)
             }
 
             let newTopLeftCorner: CGPoint
             let newSize: CGSize
-            let isWidthDominant = size.width >= size.height
-
             switch args.dimension.val {
                 case .width:
-                    let diff: CGFloat = switch args.units.val {
-                        case .set(let unit): CGFloat(unit) - size.width
-                        case .add(let unit): CGFloat(unit)
-                        case .subtract(let unit): -CGFloat(unit)
-                    }
-                    let width = size.width + diff
-                    newSize = CGSize(width: width, height: size.height)
-                    newTopLeftCorner = computeTopLeftCorner(newSize)
-
+                    (newTopLeftCorner, newSize) = computeTopLeftCornerAndSize(CGSize(width: diff, height: 0))
                 case .height:
-                    let diff: CGFloat = switch args.units.val {
-                        case .set(let unit): CGFloat(unit) - size.height
-                        case .add(let unit): CGFloat(unit)
-                        case .subtract(let unit): -CGFloat(unit)
-                    }
-                    let height = size.height + diff
-                    newSize = CGSize(width: size.width, height: height)
-                    newTopLeftCorner = computeTopLeftCorner(newSize)
-
+                    (newTopLeftCorner, newSize) = computeTopLeftCornerAndSize(CGSize(width: 0, height: diff))
                 case .smart:
-                    let diff: CGFloat = switch args.units.val {
-                        case .set(let unit): CGFloat(unit) - (isWidthDominant ? size.width : size.height)
-                        case .add(let unit): CGFloat(unit)
-                        case .subtract(let unit): -CGFloat(unit)
-                    }
-                    newSize = if isWidthDominant {
-                        CGSize(width: size.width + diff, height: size.height + diff * (size.height / size.width))
+                    let diffSize = if isWidthDominant {
+                        CGSize(width: diff, height: diff * (size.height / size.width))
                     } else {
-                        CGSize(width: size.width + diff * (size.width / size.height), height: size.height + diff)
+                        CGSize(width: diff * (size.width / size.height), height: diff)
                     }
-                    newTopLeftCorner = computeTopLeftCorner(newSize)
-
+                    (newTopLeftCorner, newSize) = computeTopLeftCornerAndSize(diffSize)
                 case .smartOpposite:
-                    let diff: CGFloat = switch args.units.val {
-                        case .set(let unit): CGFloat(unit) - (isWidthDominant ? size.height : size.width)
-                        case .add(let unit): CGFloat(unit)
-                        case .subtract(let unit): -CGFloat(unit)
-                    }
-                    newSize = if isWidthDominant {
-                        CGSize(width: size.width + diff * (size.width / size.height), height: size.height + diff)
+                    let diffSize = if isWidthDominant {
+                        CGSize(width: diff * (size.width / size.height), height: diff)
                     } else {
-                        CGSize(width: size.width + diff, height: size.height + diff * (size.height / size.width))
+                        CGSize(width: diff, height: diff * (size.height / size.width))
                     }
-                    newTopLeftCorner = computeTopLeftCorner(newSize)
+                    (newTopLeftCorner, newSize) = computeTopLeftCornerAndSize(diffSize)
             }
             return window.setFrame(newTopLeftCorner, newSize)
         }
