@@ -6,7 +6,7 @@ public let unixUserName = NSUserName()
 public let mainModeId = "main"
 private let recursionDetectorDuringError = MyAtomicBool(false) // todo change to Ctx?
 
-public var refreshSessionEventForDebug: RefreshSessionEvent? = nil
+// public var refreshSessionEventForDebug: RefreshSessionEvent? = nil
 
 public func errorT<T>(
     _ __message: String = "",
@@ -30,12 +30,12 @@ public func errorT<T>(
         Coordinate: \(file):\(line):\(column) \(function)
         recursionDetectorDuringFailure: \(recursionDetectorDuringError.get())
         cli: \(isCli)
-        refreshSessionEvent: \(String(describing: refreshSessionEventForDebug))
         Displays have separate spaces: \(NSScreen.screensHaveSeparateSpaces)
 
         Stacktrace:
         \(getStringStacktrace())
         """
+        // refreshSessionEvent: \(String(describing: refreshSessionEventForDebug)) // todo return back when introduce Ctx
     if !isUnitTest && isServer {
         showMessageInGui(
             filenameIfConsoleApp: recursionDetectorDuringError.get()

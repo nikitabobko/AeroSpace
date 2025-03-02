@@ -6,8 +6,8 @@ import Common
 /// The function is idempotent.
 func refreshSession<T>(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool, startup: Bool = false, body: () -> T) -> T {
     check(Thread.current.isMainThread)
-    refreshSessionEventForDebug = event
-    defer { refreshSessionEventForDebug = nil }
+    // refreshSessionEventForDebug = event
+    // defer { refreshSessionEventForDebug = nil }
     if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
     gc()
     gcMonitors()
