@@ -4,7 +4,7 @@ import Foundation
 
 public let unixUserName = NSUserName()
 public let mainModeId = "main"
-private var recursionDetectorDuringFailure: Bool = false
+private let recursionDetectorDuringError = MyAtomicBool(false) // todo change to Ctx?
 
 public var refreshSessionEventForDebug: RefreshSessionEvent? = nil
 
@@ -28,7 +28,7 @@ public func errorT<T>(
         Date: \(Date.now)
         macOS version: \(ProcessInfo().operatingSystemVersionString)
         Coordinate: \(file):\(line):\(column) \(function)
-        recursionDetectorDuringFailure: \(recursionDetectorDuringFailure)
+        recursionDetectorDuringFailure: \(recursionDetectorDuringError.get())
         cli: \(isCli)
         refreshSessionEvent: \(String(describing: refreshSessionEventForDebug))
         Displays have separate spaces: \(NSScreen.screensHaveSeparateSpaces)
@@ -38,15 +38,15 @@ public func errorT<T>(
         """
     if !isUnitTest && isServer {
         showMessageInGui(
-            filenameIfConsoleApp: recursionDetectorDuringFailure
+            filenameIfConsoleApp: recursionDetectorDuringError.get()
                 ? "aerospace-runtime-error-recursion.txt"
                 : "aerospace-runtime-error.txt",
             title: "AeroSpace Runtime Error",
             message: message
         )
     }
-    if !recursionDetectorDuringFailure {
-        recursionDetectorDuringFailure = true
+    if !recursionDetectorDuringError.get() {
+        recursionDetectorDuringError.set(true)
         terminationHandler.beforeTermination()
     }
     fatalError("\n" + message)
