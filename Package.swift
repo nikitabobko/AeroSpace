@@ -22,7 +22,7 @@ let package = Package(
         .package(url: "https://github.com/soffes/HotKey", exact: "0.1.3"),
         .package(url: "https://github.com/LebJe/TOMLKit", exact: "0.5.5"),
         .package(url: "https://github.com/apple/swift-collections", exact: "1.1.0"),
-        .package(url: "https://github.com/antlr/antlr4", exact: "4.13.1"),
+        .package(path: "./ShellParserGenerated"),
     ],
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
@@ -40,18 +40,11 @@ let package = Package(
             ]
         ),
         .target(
-            name: "ShellParserGenerated",
-            dependencies: [
-                .product(name: "Antlr4Static", package: "antlr4"),
-            ]
-        ),
-        .target(
             name: "AppBundle",
             dependencies: [
                 .target(name: "PrivateApi"),
                 .target(name: "Common"),
-                .target(name: "ShellParserGenerated"),
-                .product(name: "Antlr4Static", package: "antlr4"),
+                .product(name: "ShellParserGenerated", package: "ShellParserGenerated"),
                 .product(name: "Socket", package: "BlueSocket"),
                 .product(name: "HotKey", package: "HotKey"),
                 .product(name: "ISSoundAdditions", package: "ISSoundAdditions"),
