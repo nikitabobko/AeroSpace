@@ -2,8 +2,6 @@ import AppKit
 import Common
 import Foundation
 
-let systemWideAx = AXUIElementCreateSystemWide()
-
 public func initAppBundle() {
     initTerminationHandler()
     isCli = false
@@ -22,7 +20,7 @@ public func initAppBundle() {
     }
 
     checkAccessibilityPermissions()
-    AXUIElementSetMessagingTimeout(systemWideAx, 1.0)
+    AXUIElementSetMessagingTimeout(AXUIElementCreateSystemWide(), 1.0)
     startUnixSocketServer()
     GlobalObserver.initObserver()
     refreshAndLayout(.startup1, screenIsDefinitelyUnlocked: false, startup: true)
