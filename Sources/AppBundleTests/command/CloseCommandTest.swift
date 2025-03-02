@@ -2,8 +2,9 @@
 import Common
 import XCTest
 
+@MainActor
 final class CloseCommandTest: XCTestCase {
-    override func setUpWithError() throws { setUpWorkspacesForTests() }
+    override func setUp() async throws { setUpWorkspacesForTests() }
 
     func testSimple() {
         Workspace.get(byName: name).rootTilingContainer.apply {

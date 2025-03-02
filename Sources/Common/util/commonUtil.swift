@@ -35,7 +35,7 @@ public func errorT<T>(
         Stacktrace:
         \(getStringStacktrace())
         """
-        // refreshSessionEvent: \(String(describing: refreshSessionEventForDebug)) // todo return back when introduce Ctx
+    // refreshSessionEvent: \(String(describing: refreshSessionEventForDebug)) // todo return back when introduce Ctx
     if !isUnitTest && isServer {
         showMessageInGui(
             filenameIfConsoleApp: recursionDetectorDuringError.get()
@@ -47,7 +47,9 @@ public func errorT<T>(
     }
     if !recursionDetectorDuringError.get() {
         recursionDetectorDuringError.set(true)
-        terminationHandler.beforeTermination()
+        DispatchQueue.main.asyncAndWait {
+            terminationHandler.beforeTermination()
+        }
     }
     fatalError("\n" + message)
 }

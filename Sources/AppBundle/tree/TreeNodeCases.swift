@@ -112,6 +112,7 @@ enum ChildParentRelation: Equatable {
     case shimContainerRelation
 }
 
+@MainActor
 func getChildParentRelation(child: TreeNode, parent: NonLeafTreeNodeObject) -> ChildParentRelation {
     if let relation = getChildParentRelationOrNil(child: child, parent: parent) {
         return relation
@@ -119,10 +120,12 @@ func getChildParentRelation(child: TreeNode, parent: NonLeafTreeNodeObject) -> C
     illegalChildParentRelation(child: child, parent: parent)
 }
 
+@MainActor
 func illegalChildParentRelation(child: TreeNode, parent: NonLeafTreeNodeObject?) -> Never {
     error("Illegal child-parent relation. Child: \(child), Parent: \((parent ?? child.parent).optionalToPrettyString())")
 }
 
+@MainActor
 func getChildParentRelationOrNil(child: TreeNode, parent: NonLeafTreeNodeObject) -> ChildParentRelation? {
     return switch (child.nodeCases, parent.cases) {
         case (.workspace, _): nil

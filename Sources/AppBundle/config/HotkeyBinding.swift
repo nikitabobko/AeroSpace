@@ -4,9 +4,9 @@ import Foundation
 import HotKey
 import TOMLKit
 
-private var hotkeys: [String: HotKey] = [:]
+@MainActor private var hotkeys: [String: HotKey] = [:]
 
-func resetHotKeys() {
+@MainActor func resetHotKeys() {
     hotkeys = [:]
 }
 
@@ -21,8 +21,8 @@ extension HotKey {
     }
 }
 
-var activeMode: String? = mainModeId
-func activateMode(_ targetMode: String?) {
+@MainActor var activeMode: String? = mainModeId
+@MainActor func activateMode(_ targetMode: String?) {
     let targetBindings = targetMode.flatMap { config.modes[$0] }?.bindings ?? [:]
     for binding in targetBindings.values where !hotkeys.keys.contains(binding.descriptionWithKeyCode) {
         hotkeys[binding.descriptionWithKeyCode] = HotKey(key: binding.keyCode, modifiers: binding.modifiers, keyDownHandler: {
@@ -45,7 +45,7 @@ func activateMode(_ targetMode: String?) {
     activeMode = targetMode
 }
 
-struct HotkeyBinding: Equatable {
+struct HotkeyBinding: Equatable, Sendable {
     let modifiers: NSEvent.ModifierFlags
     let keyCode: Key
     let commands: [any Command]

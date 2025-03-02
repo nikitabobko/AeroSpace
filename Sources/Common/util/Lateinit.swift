@@ -24,3 +24,5 @@ extension Lateinit: Equatable where T: Equatable {
             lhs.isInitialized == rhs.isInitialized
     }
 }
+
+extension Lateinit: Sendable where T: Sendable {}

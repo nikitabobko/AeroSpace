@@ -2,7 +2,7 @@ import AppKit
 import Common
 import Foundation
 
-public func initAppBundle() {
+@MainActor public func initAppBundle() {
     initTerminationHandler()
     isCli = false
     initServerArgs()
@@ -32,7 +32,7 @@ public func initAppBundle() {
     }
 }
 
-struct ServerArgs {
+struct ServerArgs: Sendable {
     var startedAtLogin = false
     var configLocation: String? = nil
 }
@@ -49,7 +49,8 @@ private let serverHelp = """
                               and ${XDG_CONFIG_HOME}/aerospace/aerospace.toml
     """
 
-var serverArgs = ServerArgs()
+private nonisolated(unsafe) var _serverArgs = ServerArgs()
+var serverArgs: ServerArgs { _serverArgs }
 private func initServerArgs() {
     var args: [String] = Array(CommandLine.arguments.dropFirst())
     if args.contains(where: { $0 == "-h" || $0 == "--help" }) {
@@ -63,13 +64,13 @@ private func initServerArgs() {
                 exit(0)
             case "--config-path":
                 if let arg = args.getOrNil(atIndex: 1) {
-                    serverArgs.configLocation = arg
+                    _serverArgs.configLocation = arg
                 } else {
                     cliError("Missing <path> in --config-path flag")
                 }
                 args = Array(args.dropFirst(2))
             case "--started-at-login":
-                serverArgs.startedAtLogin = true
+                _serverArgs.startedAtLogin = true
                 args = Array(args.dropFirst())
             default:
                 cliError("Unrecognized flag '\(args.first!)'")

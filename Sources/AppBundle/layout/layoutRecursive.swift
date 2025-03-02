@@ -56,6 +56,7 @@ private struct LayoutContext {
     let workspace: Workspace
     let resolvedGaps: ResolvedGaps
 
+    @MainActor
     init(_ workspace: Workspace) {
         self.workspace = workspace
         self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor)

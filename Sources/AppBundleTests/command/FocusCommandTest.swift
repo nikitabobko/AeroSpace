@@ -19,8 +19,9 @@ import XCTest
 // action: focus up
 // expected: mru(window3, window4) is focused
 
+@MainActor
 final class FocusCommandTest: XCTestCase {
-    override func setUpWithError() throws { setUpWorkspacesForTests() }
+    override func setUp() async throws { setUpWorkspacesForTests() }
 
     func testParse() {
         XCTAssertTrue(parseCommand("focus --boundaries left").errorOrNil?.contains("Possible values") == true)

@@ -49,7 +49,7 @@ let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .un
 defer {
     socket.close()
 }
-func run(_ args: [String], stdin: String) -> ServerAnswer {
+@MainActor func run(_ args: [String], stdin: String) -> ServerAnswer {
     let request = Result { try JSONEncoder().encode(ClientRequest(args: args, stdin: stdin)) }.getOrThrow()
     Result { try socket.write(from: request) }.getOrThrow()
     Result { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrThrow()

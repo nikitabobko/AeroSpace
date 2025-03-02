@@ -1,8 +1,8 @@
 let subcommandParsers: [String: any SubCommandParserProtocol] = initSubcommands()
 
-protocol SubCommandParserProtocol<T> {
+protocol SubCommandParserProtocol<T>: Sendable {
     associatedtype T where T: CmdArgs
-    var _parse: ([String]) -> ParsedCmd<T> { get }
+    var _parse: @Sendable ([String]) -> ParsedCmd<T> { get }
 }
 
 extension SubCommandParserProtocol {
@@ -11,18 +11,18 @@ extension SubCommandParserProtocol {
     }
 }
 
-struct SubCommandParser<T: CmdArgs>: SubCommandParserProtocol {
-    let _parse: ([String]) -> ParsedCmd<T>
+struct SubCommandParser<T: CmdArgs>: SubCommandParserProtocol, Sendable {
+    let _parse: @Sendable ([String]) -> ParsedCmd<T>
 
-    init(_ parser: @escaping ([String]) -> ParsedCmd<T>) {
+    init(_ parser: @escaping @Sendable ([String]) -> ParsedCmd<T>) {
         _parse = parser
     }
 
-    init(_ raw: @escaping (EquatableNoop<[String]>) -> T) {
+    init(_ raw: @escaping @Sendable (EquatableNoop<[String]>) -> T) {
         _parse = { args in parseSpecificCmdArgs(raw(.init(args)), args) }
     }
 
-    init(_ raw: @escaping ([String]) -> T) {
+    init(_ raw: @escaping @Sendable ([String]) -> T) {
         _parse = { args in parseSpecificCmdArgs(raw(args), args) }
     }
 }

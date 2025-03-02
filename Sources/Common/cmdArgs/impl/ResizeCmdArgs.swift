@@ -29,12 +29,12 @@ public struct ResizeCmdArgs: CmdArgs {
         self.units = .initialized(units)
     }
 
-    public enum Dimension: String, CaseIterable, Equatable {
+    public enum Dimension: String, CaseIterable, Equatable, Sendable {
         case width, height, smart
         case smartOpposite = "smart-opposite"
     }
 
-    public enum Units: Equatable {
+    public enum Units: Equatable, Sendable {
         case set(UInt)
         case add(UInt)
         case subtract(UInt)

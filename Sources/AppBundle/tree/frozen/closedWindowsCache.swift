@@ -6,26 +6,26 @@ import AppKit
 /// becomes nil, etc.) which tricks AeroSpace into thinking that all windows were closed.
 /// That's why every time a window dies AeroSpace caches the "entire world" (unless window is already presented in the cache)
 /// so that once the screen is unlocked, AeroSpace could restore windows to where they were
-private var closedWindowsCache = FrozenWorld(workspaces: [], monitors: [])
+@MainActor private var closedWindowsCache = FrozenWorld(workspaces: [], monitors: [])
 
-struct FrozenMonitor {
+struct FrozenMonitor: Sendable {
     let topLeftCorner: CGPoint
     let visibleWorkspace: String
 
-    init(_ monitor: Monitor) {
+    @MainActor init(_ monitor: Monitor) {
         topLeftCorner = monitor.rect.topLeftCorner
         visibleWorkspace = monitor.activeWorkspace.name
     }
 }
 
-struct FrozenWorkspace {
+struct FrozenWorkspace: Sendable {
     let name: String
     let monitor: FrozenMonitor // todo drop this property, once monitor to workspace assignment migrates to TreeNode
     let rootTilingNode: FrozenContainer
     let floatingWindows: [FrozenWindow]
     let macosUnconventionalWindows: [FrozenWindow]
 
-    init(_ workspace: Workspace) {
+    @MainActor init(_ workspace: Workspace) {
         name = workspace.name
         monitor = FrozenMonitor(workspace.workspaceMonitor)
         rootTilingNode = FrozenContainer(workspace.rootTilingContainer)
@@ -36,7 +36,7 @@ struct FrozenWorkspace {
     }
 }
 
-func cacheClosedWindowIfNeeded(window: Window) {
+@MainActor func cacheClosedWindowIfNeeded(window: Window) {
     if closedWindowsCache.windowIds.contains(window.windowId) {
         return // already cached
     }
@@ -48,7 +48,7 @@ func cacheClosedWindowIfNeeded(window: Window) {
     // check(closedWindowsCache.windowIds.contains(window.windowId))
 }
 
-func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) -> Bool {
+@MainActor func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) -> Bool {
     if !closedWindowsCache.windowIds.contains(newlyDetectedWindow.windowId) {
         return false
     }
@@ -84,6 +84,7 @@ func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) -> Bool {
 }
 
 @discardableResult
+@MainActor
 private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonLeafTreeNodeObject, index: Int) -> Bool {
     let container = TilingContainer(
         parent: parent,
@@ -118,6 +119,6 @@ private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonL
 //
 // That's why we have to reset the cache every time layout changes. The layout can only be changed by running commands
 // and with mouse manipulations
-func resetClosedWindowsCache() {
+@MainActor func resetClosedWindowsCache() {
     closedWindowsCache = FrozenWorld(workspaces: [], monitors: [])
 }

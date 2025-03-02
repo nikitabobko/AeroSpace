@@ -3,7 +3,7 @@ public struct ListModesCmdArgs: CmdArgs {
     public init(rawArgs: [String]) {
         self.rawArgs = .init(rawArgs)
     }
-    public static var parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = cmdParser(
         kind: .listModes,
         allowInConfig: false,
         help: list_modes_help_generated,

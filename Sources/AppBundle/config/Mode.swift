@@ -2,7 +2,7 @@ import Common
 import HotKey
 import TOMLKit
 
-struct Mode: Copyable, Equatable {
+struct Mode: Copyable, Equatable, Sendable {
     /// User visible name. Optional. todo drop it?
     var name: String?
     var bindings: [String: HotkeyBinding]

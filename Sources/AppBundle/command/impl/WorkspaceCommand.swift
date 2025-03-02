@@ -36,7 +36,7 @@ struct WorkspaceCommand: Command {
     }
 }
 
-func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String, target: LiveFocus) -> Workspace? {
+@MainActor func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String, target: LiveFocus) -> Workspace? {
     let stdinWorkspaces: [String] = stdin.split(separator: "\n").map { String($0).trim() }.filter { !$0.isEmpty }
     let currentMonitor = current.workspaceMonitor
     let workspaces: [Workspace] = stdinWorkspaces.isEmpty

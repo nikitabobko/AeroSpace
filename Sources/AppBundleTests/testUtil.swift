@@ -12,6 +12,7 @@ let projectRoot: URL = {
     return url
 }()
 
+@MainActor
 func setUpWorkspacesForTests() {
     config = defaultConfig
     configUrl = defaultConfigUrl

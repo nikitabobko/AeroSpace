@@ -1,17 +1,18 @@
 import AppKit
 import Common
 
-private var workspaceNameToWorkspace: [String: Workspace] = [:]
+@MainActor private var workspaceNameToWorkspace: [String: Workspace] = [:]
 
-private var screenPointToPrevVisibleWorkspace: [CGPoint: String] = [:]
-private var screenPointToVisibleWorkspace: [CGPoint: Workspace] = [:]
-private var visibleWorkspaceToScreenPoint: [Workspace: CGPoint] = [:]
+@MainActor private var screenPointToPrevVisibleWorkspace: [CGPoint: String] = [:]
+@MainActor private var screenPointToVisibleWorkspace: [CGPoint: Workspace] = [:]
+@MainActor private var visibleWorkspaceToScreenPoint: [Workspace: CGPoint] = [:]
 
 // The returned workspace must be invisible and it must belong to the requested monitor
-func getStubWorkspace(for monitor: Monitor) -> Workspace {
+@MainActor func getStubWorkspace(for monitor: Monitor) -> Workspace {
     getStubWorkspace(forPoint: monitor.rect.topLeftCorner)
 }
 
+@MainActor
 private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     if let prev = screenPointToPrevVisibleWorkspace[point]?.lets({ Workspace.get(byName: $0) }),
        !prev.isVisible && prev.workspaceMonitor.rect.topLeftCorner == point && prev.forceAssignedMonitor == nil
@@ -30,9 +31,9 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
         ?? errorT("Can't create empty workspace")
 }
 
-class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, CustomStringConvertible, Comparable {
+class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     let name: String
-    private let nameLogicalSegments: StringLogicalSegments
+    private nonisolated let nameLogicalSegments: StringLogicalSegments
     /// `assignedMonitorPoint` must be interpreted only when the workspace is invisible
     fileprivate var assignedMonitorPoint: CGPoint? = nil
 
@@ -56,7 +57,9 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, CustomStringConverti
         }
     }
 
-    static func < (lhs: Workspace, rhs: Workspace) -> Bool { lhs.nameLogicalSegments < rhs.nameLogicalSegments }
+    nonisolated static func < (lhs: Workspace, rhs: Workspace) -> Bool {
+        lhs.nameLogicalSegments < rhs.nameLogicalSegments
+    }
 
     override func getWeight(_ targetOrientation: Orientation) -> CGFloat {
         workspaceMonitor.visibleRectPaddedByOuterGaps.getDimension(targetOrientation)
@@ -90,14 +93,12 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, CustomStringConverti
         }
     }
 
-    static func == (lhs: Workspace, rhs: Workspace) -> Bool {
+    nonisolated static func == (lhs: Workspace, rhs: Workspace) -> Bool {
         check((lhs === rhs) == (lhs.name == rhs.name), "lhs: \(lhs) rhs: \(rhs)")
         return lhs === rhs
     }
 
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(name)
-    }
+    nonisolated func hash(into hasher: inout Hasher) { hasher.combine(name) }
 }
 
 extension Workspace {
@@ -111,6 +112,7 @@ extension Workspace {
 }
 
 extension Monitor {
+    @MainActor
     var activeWorkspace: Workspace {
         if let existing = screenPointToVisibleWorkspace[rect.topLeftCorner] {
             return existing
@@ -122,11 +124,13 @@ extension Monitor {
         return self.activeWorkspace
     }
 
+    @MainActor
     func setActiveWorkspace(_ workspace: Workspace) -> Bool {
         rect.topLeftCorner.setActiveWorkspace(workspace)
     }
 }
 
+@MainActor
 func gcMonitors() {
     if screenPointToVisibleWorkspace.count != monitors.count {
         rearrangeWorkspacesOnMonitors()
@@ -134,6 +138,7 @@ func gcMonitors() {
 }
 
 private extension CGPoint {
+    @MainActor
     func setActiveWorkspace(_ workspace: Workspace) -> Bool {
         if !isValidAssignment(workspace: workspace, screen: self) {
             return false
@@ -155,6 +160,7 @@ private extension CGPoint {
     }
 }
 
+@MainActor
 private func rearrangeWorkspacesOnMonitors() {
     var oldVisibleScreens: Set<CGPoint> = screenPointToVisibleWorkspace.keys.toSet()
 
@@ -183,6 +189,7 @@ private func rearrangeWorkspacesOnMonitors() {
     }
 }
 
+@MainActor
 private func isValidAssignment(workspace: Workspace, screen: CGPoint) -> Bool {
     if let forceAssigned = workspace.forceAssignedMonitor, forceAssigned.rect.topLeftCorner != screen {
         return false

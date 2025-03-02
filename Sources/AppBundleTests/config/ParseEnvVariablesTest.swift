@@ -2,6 +2,7 @@
 import Common
 import XCTest
 
+@MainActor
 final class ParseEnvVariablesTest: XCTestCase {
     func testInterpolation() {
         testSucInterpolation("echo ${foo}", ["foo": "bar"], expected: "echo bar")

@@ -17,11 +17,12 @@ func stringType(of some: Any) -> String {
 func interceptTermination(_ _signal: Int32) {
     signal(_signal, { signal in
         check(Thread.current.isMainThread)
-        terminationHandler.beforeTermination()
+        MainActor.assumeIsolated { terminationHandler.beforeTermination() }
         exit(signal)
     } as sig_t)
 }
 
+@MainActor
 func initTerminationHandler() {
     terminationHandler = AppServerTerminationHandler()
 }
@@ -35,6 +36,7 @@ private struct AppServerTerminationHandler: TerminationHandler {
     }
 }
 
+@MainActor
 private func makeAllWindowsVisibleAndRestoreSize() {
     // Make all windows fullscreen before Quit
     for (_, window) in MacWindow.allWindowsMap {
@@ -55,6 +57,7 @@ extension String? {
     var isNilOrEmpty: Bool { self == nil || self?.isEmpty == true }
 }
 
+@MainActor
 var apps: [AbstractApp] {
     if isUnitTest {
         return appForTests.asList()
@@ -68,6 +71,7 @@ var apps: [AbstractApp] {
     return result
 }
 
+@MainActor
 func terminateApp() -> Never {
     NSApplication.shared.terminate(nil)
     error("Unreachable code")

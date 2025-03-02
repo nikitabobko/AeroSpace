@@ -7,8 +7,8 @@ private let keyMappingParser: [String: any ParserProtocol<KeyMapping>] = [
     "key-notation-to-key-code": Parser(\.rawKeyNotationToKeyCode, parseKeyNotationToKeyCode),
 ]
 
-struct KeyMapping: Copyable, Equatable {
-    enum Preset: String, CaseIterable {
+struct KeyMapping: Copyable, Equatable, Sendable {
+    enum Preset: String, CaseIterable, Sendable {
         case qwerty, dvorak
     }
 

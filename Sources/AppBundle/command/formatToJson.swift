@@ -2,6 +2,7 @@ import Common
 import Foundation
 
 extension [AeroObj] {
+    @MainActor
     func formatToJson(_ format: [StringInterToken], ignoreRightPaddingVar: Bool) -> Result<String, String> {
         var list: [[String: Primitive]] = []
         for richObj in self {

@@ -13,6 +13,7 @@ struct BalanceSizesCommand: Command {
     }
 }
 
+@MainActor
 private func balance(_ parent: TilingContainer) {
     for child in parent.children {
         switch parent.layout {

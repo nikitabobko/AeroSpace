@@ -17,7 +17,7 @@ struct LiveFocus: AeroAny, Equatable {
     let windowOrNil: Window?
     var workspace: Workspace
 
-    var frozen: FrozenFocus {
+    @MainActor var frozen: FrozenFocus {
         return FrozenFocus(
             windowId: windowOrNil?.windowId,
             workspaceName: workspace.name,
@@ -30,13 +30,13 @@ struct LiveFocus: AeroAny, Equatable {
 /// It's safe to keep a hard reference to this object.
 /// Unlike in LiveFocus, information inside FrozenFocus isn't guaranteed to be self-consistent.
 /// window - workspace - monitor relation could change since the object is created
-struct FrozenFocus: AeroAny, Equatable {
+struct FrozenFocus: AeroAny, Equatable, Sendable {
     let windowId: UInt32?
     let workspaceName: String
     // monitorId is not part of the focus. We keep it here only for 'on-monitor-changed' to work
     let monitorId: Int // 0-based
 
-    var live: LiveFocus { // Important: don't access focus.monitorId here. monitorId is not part of the focus. Always prefer workspace
+    @MainActor var live: LiveFocus { // Important: don't access focus.monitorId here. monitorId is not part of the focus. Always prefer workspace
         let window: Window? = windowId.flatMap { Window.get(byId: $0) }
         let workspace = Workspace.get(byName: workspaceName)
 
@@ -49,7 +49,7 @@ struct FrozenFocus: AeroAny, Equatable {
     }
 }
 
-var _focus: FrozenFocus = {
+@MainActor var _focus: FrozenFocus = {
     let monitor = mainMonitor
     return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId: monitor.monitorId ?? 0)
 }()
@@ -58,9 +58,9 @@ var _focus: FrozenFocus = {
 /// Commands must be cautious about accessing this property directly. There are legitimate cases.
 /// But, in general, commands must firstly check --window-id, --workspace, AEROSPACE_WINDOW_ID env and
 /// AEROSPACE_WORKSPACE env before accessing the global focus.
-var focus: LiveFocus { _focus.live }
+@MainActor var focus: LiveFocus { _focus.live }
 
-func setFocus(to newFocus: LiveFocus) -> Bool {
+@MainActor func setFocus(to newFocus: LiveFocus) -> Bool {
     if _focus == newFocus.frozen { return true }
     let oldFocus = focus
     // Normalize mruWindow when focus away from a workspace
@@ -75,7 +75,7 @@ func setFocus(to newFocus: LiveFocus) -> Bool {
     return status
 }
 extension Window {
-    func focusWindow() -> Bool {
+    @MainActor func focusWindow() -> Bool {
         if let focus = toLiveFocusOrNil() {
             return setFocus(to: focus)
         } else {
@@ -88,7 +88,7 @@ extension Window {
     func toLiveFocusOrNil() -> LiveFocus? { visualWorkspace.map { LiveFocus(windowOrNil: self, workspace: $0) } }
 }
 extension Workspace {
-    func focusWorkspace() -> Bool { setFocus(to: toLiveFocus()) }
+    @MainActor func focusWorkspace() -> Bool { setFocus(to: toLiveFocus()) }
 
     func toLiveFocus() -> LiveFocus {
         // todo unfortunately mostRecentWindowRecursive may recursively reach empty rootTilingContainer
@@ -101,24 +101,24 @@ extension Workspace {
     }
 }
 
-private var _lastKnownFocus: FrozenFocus = _focus
+@MainActor private var _lastKnownFocus: FrozenFocus = _focus
 
 // Used by workspace-back-and-forth
-var _prevFocusedWorkspaceName: String? = nil {
+@MainActor var _prevFocusedWorkspaceName: String? = nil {
     didSet {
         prevFocusedWorkspaceDate = .now
     }
 }
-var prevFocusedWorkspaceDate: Date = .distantPast
-var prevFocusedWorkspace: Workspace? { _prevFocusedWorkspaceName.map { Workspace.get(byName: $0) } }
+@MainActor var prevFocusedWorkspaceDate: Date = .distantPast
+@MainActor var prevFocusedWorkspace: Workspace? { _prevFocusedWorkspaceName.map { Workspace.get(byName: $0) } }
 
 // Used by focus-back-and-forth
-var _prevFocus: FrozenFocus? = nil
-var prevFocus: LiveFocus? { _prevFocus?.live.takeIf { $0 != focus } }
+@MainActor var _prevFocus: FrozenFocus? = nil
+@MainActor var prevFocus: LiveFocus? { _prevFocus?.live.takeIf { $0 != focus } }
 
-private var onFocusChangedRecursionGuard = false
+@MainActor private var onFocusChangedRecursionGuard = false
 // Should be called in refreshSession
-func checkOnFocusChangedCallbacks() {
+@MainActor func checkOnFocusChangedCallbacks() {
     let focus = focus
     let frozenFocus = focus.frozen
     var hasFocusChanged = false
@@ -151,16 +151,16 @@ func checkOnFocusChangedCallbacks() {
     }
 }
 
-private func onFocusedMonitorChanged(_ focus: LiveFocus) {
+@MainActor private func onFocusedMonitorChanged(_ focus: LiveFocus) {
     if config.onFocusedMonitorChanged.isEmpty { return }
     _ = config.onFocusedMonitorChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
 }
-private func onFocusChanged(_ focus: LiveFocus) {
+@MainActor private func onFocusChanged(_ focus: LiveFocus) {
     if config.onFocusChanged.isEmpty { return }
     _ = config.onFocusChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
 }
 
-private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String) {
+@MainActor private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String) {
     if let exec = config.execOnWorkspaceChange.first {
         let process = Process()
         process.executableURL = URL(filePath: exec)

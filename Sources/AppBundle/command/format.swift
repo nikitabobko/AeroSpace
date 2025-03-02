@@ -27,6 +27,7 @@ enum PlainInterVar: String, CaseIterable {
 }
 
 extension [AeroObj] {
+    @MainActor
     func format(_ format: [StringInterToken]) -> Result<[String], String> {
         var cellTable: [[Cell<String>]] = []
         for obj in self {
@@ -152,6 +153,7 @@ private struct Cell<T> {
 }
 
 extension String {
+    @MainActor
     func expandFormatVar(obj: AeroObj) -> Result<Primitive, String> {
         let formatVar = self.toFormatVar()
         switch (obj, formatVar) {

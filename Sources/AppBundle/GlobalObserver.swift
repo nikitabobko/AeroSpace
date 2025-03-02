@@ -1,35 +1,45 @@
 import AppKit
+import Common
 
 class GlobalObserver {
     private static func onNotif(_ notification: Notification) {
+        check(Thread.isMainThread)
         // Third line of defence against lock screen window. See: closedWindowsCache
         // Second and third lines of defence are technically needed only to avoid potential flickering
         if (notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication)?.bundleIdentifier == lockScreenAppBundleId {
             return
         }
-        refreshAndLayout(.globalObserver(notification.name.rawValue), screenIsDefinitelyUnlocked: false)
+        let notifName = notification.name.rawValue
+        MainActor.assumeIsolated {
+            refreshAndLayout(.globalObserver(notifName), screenIsDefinitelyUnlocked: false)
+        }
     }
 
     private static func onHideApp(_ notification: Notification) {
-        refreshSession(.globalObserver(notification.name.rawValue), screenIsDefinitelyUnlocked: false) {
-            if TrayMenuModel.shared.isEnabled && config.automaticallyUnhideMacosHiddenApps {
-                if let w = prevFocus?.windowOrNil,
-                   w.macAppUnsafe.nsApp.isHidden,
-                   // "Hide others" (cmd-alt-h) -> don't force focus
-                   // "Hide app" (cmd-h) -> force focus
-                   MacApp.allAppsMap.values.filter({ $0.nsApp.isHidden }).count == 1
-                {
-                    // Force focus
-                    _ = w.focusWindow()
-                    _ = w.nativeFocus()
-                }
-                for app in MacApp.allAppsMap.values {
-                    app.nsApp.unhide()
+        check(Thread.isMainThread)
+        let notifName = notification.name.rawValue
+        MainActor.assumeIsolated {
+            refreshSession(.globalObserver(notifName), screenIsDefinitelyUnlocked: false) {
+                if TrayMenuModel.shared.isEnabled && config.automaticallyUnhideMacosHiddenApps {
+                    if let w = prevFocus?.windowOrNil,
+                       w.macAppUnsafe.nsApp.isHidden,
+                       // "Hide others" (cmd-alt-h) -> don't force focus
+                       // "Hide app" (cmd-h) -> force focus
+                       MacApp.allAppsMap.values.filter({ $0.nsApp.isHidden }).count == 1
+                    {
+                        // Force focus
+                        _ = w.focusWindow()
+                        _ = w.nativeFocus()
+                    }
+                    for app in MacApp.allAppsMap.values {
+                        app.nsApp.unhide()
+                    }
                 }
             }
         }
     }
 
+    @MainActor
     static func initObserver() {
         let nc = NSWorkspace.shared.notificationCenter
         nc.addObserver(forName: NSWorkspace.didLaunchApplicationNotification, object: nil, queue: .main, using: onNotif)

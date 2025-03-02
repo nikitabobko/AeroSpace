@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-final class MacWindow: Window, CustomStringConvertible {
+final class MacWindow: Window {
     let axWindow: AXUIElement
     let macApp: MacApp
     // todo take into account monitor proportions
@@ -218,7 +218,7 @@ final class MacWindow: Window, CustomStringConvertible {
 /// Why do we need to filter out non-windows?
 /// - "floating by default" workflow
 /// - It's annoying that the focus command treats these popups as floating windows
-func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
+@MainActor func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
     // Just don't do anything with "Ghostty Quick Terminal" windows.
     // Its position and size are managed by the Ghostty itself
     // https://github.com/nikitabobko/AeroSpace/issues/103
@@ -320,6 +320,7 @@ extension Window {
 }
 
 // The function is private because it's "unsafe". It requires the window to be in unbound state
+@MainActor
 private func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Workspace, _ app: MacApp) -> BindingData {
     if !isWindow(axWindow, app) {
         return BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
@@ -331,6 +332,7 @@ private func getBindingDataForNewWindow(_ axWindow: AXUIElement, _ workspace: Wo
 }
 
 // The function is private because it's "unsafe". It requires the window to be in unbound state
+@MainActor
 private func getBindingDataForNewTilingWindow(_ workspace: Workspace) -> BindingData {
     let mruWindow = workspace.mostRecentWindowRecursive
     if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
@@ -352,6 +354,7 @@ extension UnsafeMutableRawPointer {
     var window: MacWindow? { Unmanaged.fromOpaque(self).takeUnretainedValue() }
 }
 
+@MainActor
 func tryOnWindowDetected(_ window: Window, startup: Bool) {
     switch window.parent.cases {
         case .tilingContainer, .workspace, .macosMinimizedWindowsContainer,
@@ -362,6 +365,7 @@ func tryOnWindowDetected(_ window: Window, startup: Bool) {
     }
 }
 
+@MainActor
 private func onWindowDetected(_ window: Window, startup: Bool) {
     check(Thread.current.isMainThread)
     for callback in config.onWindowDetected where callback.matches(window, startup: startup) {
@@ -373,6 +377,7 @@ private func onWindowDetected(_ window: Window, startup: Bool) {
 }
 
 extension WindowDetectedCallback {
+    @MainActor
     func matches(_ window: Window, startup: Bool) -> Bool {
         if let startupMatcher = matcher.duringAeroSpaceStartup, startupMatcher != startup {
             return false

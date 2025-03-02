@@ -42,7 +42,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
 
-    public struct FilteringOptions: Copyable, Equatable {
+    public struct FilteringOptions: Copyable, Equatable, Sendable {
         public var onMonitors: [MonitorId] = []
         public var visible: Bool?
         public var empty: Bool?
@@ -100,7 +100,7 @@ func parseMonitorIds(arg: String, nextArgs: inout [String]) -> Parsed<[MonitorId
     return .success(monitors)
 }
 
-public enum MonitorId: Equatable {
+public enum MonitorId: Equatable, Sendable {
     case focused
     case all
     case mouse

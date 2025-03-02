@@ -1,5 +1,6 @@
 import AppKit
 
+@MainActor
 final class MacApp: AbstractApp {
     let nsApp: NSRunningApplication
     let axApp: AXUIElement
@@ -84,5 +85,6 @@ final class MacApp: AbstractApp {
 }
 
 extension NSRunningApplication {
+    @MainActor
     var macApp: MacApp? { MacApp.get(self) }
 }

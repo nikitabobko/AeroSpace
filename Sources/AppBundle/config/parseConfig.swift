@@ -3,6 +3,7 @@ import Common
 import HotKey
 import TOMLKit
 
+@MainActor
 func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
     let customConfigUrl: URL
     switch findCustomConfigUrl() {
@@ -58,23 +59,23 @@ extension ParserProtocol {
     }
 }
 
-protocol ParserProtocol<S> {
+protocol ParserProtocol<S>: Sendable {
     associatedtype T
     associatedtype S where S: Copyable
-    var keyPath: WritableKeyPath<S, T> { get }
-    var parse: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T> { get }
+    var keyPath: SendableWritableKeyPath<S, T> { get }
+    var parse: @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T> { get }
 }
 
 struct Parser<S: Copyable, T>: ParserProtocol {
-    let keyPath: WritableKeyPath<S, T>
-    let parse: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T>
+    let keyPath: SendableWritableKeyPath<S, T>
+    let parse: @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T>
 
-    init(_ keyPath: WritableKeyPath<S, T>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> T) {
+    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> T) {
         self.keyPath = keyPath
         self.parse = { raw, backtrace, errors -> ParsedToml<T> in .success(parse(raw, backtrace, &errors)) }
     }
 
-    init(_ keyPath: WritableKeyPath<S, T>, _ parse: @escaping (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) {
+    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) {
         self.keyPath = keyPath
         self.parse = { raw, backtrace, _ -> ParsedToml<T> in parse(raw, backtrace) }
     }
@@ -153,7 +154,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
     }
 }
 
-func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]) { // todo change return value to Result
+@MainActor func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]) { // todo change return value to Result
     let rawTable: TOMLTable
     do {
         rawTable = try TOMLTable(string: rawToml)
@@ -275,7 +276,7 @@ private func parseLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace
         .flatMap { $0.parseLayout().orFailure(.semantic(backtrace, "Can't parse layout '\($0)'")) }
 }
 
-private func skipParsing<T>(_ value: T) -> (_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<T> {
+private func skipParsing<T: Sendable>(_ value: T) -> @Sendable (_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<T> {
     { _, _ in .success(value) }
 }
 

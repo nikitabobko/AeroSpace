@@ -2,8 +2,9 @@
 import Common
 import XCTest
 
+@MainActor
 final class SplitCommandTest: XCTestCase {
-    override func setUpWithError() throws { setUpWorkspacesForTests() }
+    override func setUp() async throws { setUpWorkspacesForTests() }
 
     func testSplit() {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {

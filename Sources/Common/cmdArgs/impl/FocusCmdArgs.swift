@@ -41,11 +41,11 @@ public struct FocusCmdArgs: CmdArgs {
         self.dfsIndex = dfsIndex
     }
 
-    public enum Boundaries: String, CaseIterable, Equatable {
+    public enum Boundaries: String, CaseIterable, Equatable, Sendable {
         case workspace
         case allMonitorsUnionFrame = "all-monitors-outer-frame"
     }
-    public enum WhenBoundariesCrossed: String, CaseIterable, Equatable {
+    public enum WhenBoundariesCrossed: String, CaseIterable, Equatable, Sendable {
         case stop = "stop"
         case fail = "fail"
         case wrapAroundTheWorkspace = "wrap-around-the-workspace"

@@ -52,7 +52,7 @@ struct LayoutCommand: Command {
     }
 }
 
-private func changeTilingLayout(_ io: CmdIo, targetLayout: Layout?, targetOrientation: Orientation?, window: Window) -> Bool {
+@MainActor private func changeTilingLayout(_ io: CmdIo, targetLayout: Layout?, targetOrientation: Orientation?, window: Window) -> Bool {
     switch window.parent.cases {
         case .tilingContainer(let parent):
             let targetOrientation = targetOrientation ?? parent.orientation

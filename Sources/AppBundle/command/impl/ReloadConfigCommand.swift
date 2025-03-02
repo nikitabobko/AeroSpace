@@ -15,12 +15,12 @@ struct ReloadConfigCommand: Command {
     }
 }
 
-func reloadConfig(forceConfigUrl: URL? = nil) -> Bool {
+@MainActor func reloadConfig(forceConfigUrl: URL? = nil) -> Bool {
     var devNull = ""
     return reloadConfig(forceConfigUrl: forceConfigUrl, stdout: &devNull)
 }
 
-func reloadConfig(
+@MainActor func reloadConfig(
     args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []),
     forceConfigUrl: URL? = nil,
     stdout: inout String

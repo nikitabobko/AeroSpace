@@ -1,4 +1,4 @@
-public enum CmdKind: String, CaseIterable, Equatable {
+public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     // Sorted
 
     case balanceSizes = "balance-sizes"

@@ -48,7 +48,7 @@ private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMa
     "during-aerospace-startup": Parser(\.duringAeroSpaceStartup, upcast(parseBool)),
 ]
 
-private func upcast<T>(_ fun: @escaping (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) -> (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T?> {
+private func upcast<T>(_ fun: @escaping @Sendable (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) -> @Sendable (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T?> {
     { fun($0, $1).map { $0 } }
 }
 

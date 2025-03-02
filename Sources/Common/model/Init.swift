@@ -1,12 +1,13 @@
-public var isCli = true
+public nonisolated(unsafe) var isCli = true
 public var isServer: Bool { !isCli }
 
-public var terminationHandler: TerminationHandler = EmptyTerminationHandler()
+public nonisolated(unsafe) var terminationHandler: TerminationHandler = EmptyTerminationHandler()
 
 struct EmptyTerminationHandler: TerminationHandler {
     func beforeTermination() {}
 }
 
-public protocol TerminationHandler {
+@MainActor
+public protocol TerminationHandler: Sendable {
     func beforeTermination()
 }

@@ -16,7 +16,7 @@ final class TestWindow: Window, CustomStringConvertible {
         return wi
     }
 
-    var description: String { "TestWindow(\(windowId))" }
+    nonisolated var description: String { "TestWindow(\(windowId))" }
 
     @discardableResult
     override func nativeFocus() -> Bool {

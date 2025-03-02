@@ -47,7 +47,7 @@ private func moveMouse(_ io: CmdIo, _ point: CGPoint) -> Bool {
     }
 }
 
-private func windowSubjectRectOrReportError(_ target: LiveFocus, _ io: CmdIo) -> Rect? {
+@MainActor private func windowSubjectRectOrReportError(_ target: LiveFocus, _ io: CmdIo) -> Rect? {
     // todo bug it's bad that we operate on the "ax physical" state directly. command seq won't work correctly
     //      focus <direction> command has the similar problem
     if let window: Window = target.windowOrNil {

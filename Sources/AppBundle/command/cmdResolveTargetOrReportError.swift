@@ -1,10 +1,12 @@
 import Common
 
 extension CmdArgs {
+    @MainActor
     var workspace: Workspace? {
         if let workspaceName { Workspace.get(byName: workspaceName.raw) } else { nil }
     }
 
+    @MainActor
     func resolveTargetOrReportError(_ env: CmdEnv, _ io: CmdIo) -> LiveFocus? {
         // Flags
         if let windowId {

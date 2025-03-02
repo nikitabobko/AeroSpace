@@ -2,8 +2,9 @@
 import Common
 import XCTest
 
+@MainActor
 final class MoveNodeToWorkspaceCommandTest: XCTestCase {
-    override func setUpWithError() throws { setUpWorkspacesForTests() }
+    override func setUp() async throws { setUpWorkspacesForTests() }
 
     func testParse() {
         testParseCommandSucc("move-node-to-workspace next", MoveNodeToWorkspaceCmdArgs(target: .relative(true)))

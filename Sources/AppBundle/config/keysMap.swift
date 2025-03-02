@@ -49,6 +49,8 @@ func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: Key] {
     }
 }
 
+extension Key: @unchecked @retroactive Sendable {}
+
 let keyNotationToKeyCode: [String: Key] = [
     minus: .minus,
     equal: .equal,

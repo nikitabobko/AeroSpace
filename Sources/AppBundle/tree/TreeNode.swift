@@ -1,6 +1,7 @@
 import AppKit
 import Common
 
+@MainActor
 class TreeNode: Equatable {
     private var _children: [TreeNode] = []
     var children: [TreeNode] { _children }
@@ -118,7 +119,7 @@ class TreeNode: Equatable {
         unbindIfBound() ?? errorT("\(self) is already unbound. The stacktrace where it was unbound:\n\(unboundStacktrace ?? "nil")")
     }
 
-    static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {
+    nonisolated static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {
         lhs === rhs
     }
 

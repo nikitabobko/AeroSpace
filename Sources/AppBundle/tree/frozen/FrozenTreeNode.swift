@@ -1,18 +1,18 @@
 import AppKit
 import Common
 
-enum FrozenTreeNode {
+enum FrozenTreeNode: Sendable {
     case container(FrozenContainer)
     case window(FrozenWindow)
 }
 
-struct FrozenContainer {
+struct FrozenContainer: Sendable {
     let children: [FrozenTreeNode]
     let layout: Layout
     let orientation: Orientation
     let weight: CGFloat
 
-    init(_ container: TilingContainer) {
+    @MainActor init(_ container: TilingContainer) {
         children = container.children.map {
             switch $0.nodeCases {
                 case .window(let w): .window(FrozenWindow(w))
@@ -31,16 +31,16 @@ struct FrozenContainer {
     }
 }
 
-struct FrozenWindow {
+struct FrozenWindow: Sendable {
     let id: UInt32
     let weight: CGFloat
 
-    init(_ window: Window) {
+    @MainActor init(_ window: Window) {
         id = window.windowId
         weight = getWeightOrNil(window) ?? 1
     }
 }
 
-private func getWeightOrNil(_ node: TreeNode) -> CGFloat? {
+@MainActor private func getWeightOrNil(_ node: TreeNode) -> CGFloat? {
     ((node.parent as? TilingContainer)?.orientation).map { node.getWeight($0) }
 }

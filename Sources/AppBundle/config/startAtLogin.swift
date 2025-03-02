@@ -1,6 +1,7 @@
 import AppKit
 import Common
 
+@MainActor
 func syncStartAtLogin() {
     let launchAgentsDir = FileManager.default.homeDirectoryForCurrentUser.appending(component: "Library/LaunchAgents/")
     Result { try FileManager.default.createDirectory(at: launchAgentsDir, withIntermediateDirectories: true) }.getOrThrow()

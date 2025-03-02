@@ -2,7 +2,8 @@
 import Common
 
 final class TestApp: AbstractApp {
-    static var shared = TestApp()
+    @MainActor
+    static let shared = TestApp()
 
     private init() {
         super.init(pid: 0, id: "bobko.AeroSpace.test-app")

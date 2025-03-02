@@ -1,8 +1,8 @@
-public enum MonitorDescription: Equatable {
+public enum MonitorDescription: Equatable, Sendable {
     case sequenceNumber(Int)
     case main
     case secondary
-    case pattern(String, Regex<AnyRegexOutput>)
+    case pattern(String, SendableRegex<AnyRegexOutput>)
 
     public static func == (lhs: MonitorDescription, rhs: MonitorDescription) -> Bool {
         return switch (lhs, rhs) {
@@ -15,7 +15,7 @@ public enum MonitorDescription: Equatable {
     }
 
     public static func pattern(_ raw: String) -> MonitorDescription? {
-        (try? Regex(raw)).flatMap { .pattern(raw, $0) }
+        (try? SendableRegex(raw)).flatMap { .pattern(raw, $0) }
     }
 }
 
@@ -34,11 +34,24 @@ public func parseMonitorDescription(_ raw: String) -> Parsed<MonitorDescription>
 
     return raw.isEmpty
         ? .failure("Empty string is an illegal monitor description")
-        : parseCaseInsensitiveRegex(raw).map { MonitorDescription.pattern(raw, $0) }
+        : parseCaseInsensitiveRegex(raw).map { MonitorDescription.pattern(raw, .init($0)) }
 }
 
 public func parseCaseInsensitiveRegex(_ raw: String) -> Parsed<Regex<AnyRegexOutput>> {
     Result { try Regex(raw) }
         .mapError { e in "Can't parse '\(raw)' regex. \(e.localizedDescription)" }
         .map { $0.ignoresCase() }
+}
+
+/// Circumvent Regex not being Sendable by default
+public struct SendableRegex<Output>: Sendable {
+    public nonisolated(unsafe) let val: Regex<Output>
+    init(_ regex: Regex<Output>) { self.val = regex }
+    // init(_ str: String) { self.regex = regex }
+}
+
+public extension SendableRegex where Output == AnyRegexOutput {
+    init(_ pattern: String) throws {
+        self = SendableRegex(try Regex(pattern))
+    }
 }

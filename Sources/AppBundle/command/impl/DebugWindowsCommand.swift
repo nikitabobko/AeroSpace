@@ -16,8 +16,8 @@ private let disclaimer =
     !!! The only intended use case is to report bugs about incorrect windows handling !!!
     """
 
-private var debugWindowsState: DebugWindowsState = .notRecording
-private var debugWindowsLog: OrderedDictionary<UInt32, String> = [:]
+@MainActor private var debugWindowsState: DebugWindowsState = .notRecording
+@MainActor private var debugWindowsLog: OrderedDictionary<UInt32, String> = [:]
 private let debugWindowsLimit = 5
 
 enum DebugWindowsState {
@@ -77,6 +77,7 @@ struct DebugWindowsCommand: Command {
     }
 }
 
+@MainActor
 private func dumpWindowDebugInfo(_ window: Window) -> String {
     let window = window as! MacWindow
     let app = window.app as! MacApp
@@ -97,6 +98,7 @@ private func dumpWindowDebugInfo(_ window: Window) -> String {
     return result.joined(separator: "\n")
 }
 
+@MainActor
 func debugWindowsIfRecording(_ window: Window) {
     switch debugWindowsState {
         case .recording: break

@@ -23,6 +23,7 @@ struct CmdEnv: Copyable { // todo forward env from cli to server
         }
     }
 
+    @MainActor
     var asMap: [String: String] {
         var result = config.execConfig.envVariables
         if let pwd {

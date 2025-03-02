@@ -10,7 +10,7 @@ public func parseCmdArgs(_ args: [String]) -> ParsedCmd<any CmdArgs> {
     }
 }
 
-public protocol CmdArgs: Copyable, Equatable, CustomStringConvertible, AeroAny {
+public protocol CmdArgs: Copyable, Equatable, CustomStringConvertible, AeroAny, Sendable {
     static var parser: CmdParser<Self> { get }
     var rawArgs: EquatableNoop<[String]> { get } // Non Equatable because test comparion
 
@@ -36,7 +36,7 @@ public extension CmdArgs {
     }
 }
 
-public struct CmdParser<T: Copyable> {
+public struct CmdParser<T: Copyable>: Sendable {
     let info: CmdStaticInfo
     let options: [String: any ArgParserProtocol<T>]
     let arguments: [any ArgParserProtocol<T>]
@@ -59,7 +59,7 @@ public func cmdParser<T>(
     )
 }
 
-public struct CmdStaticInfo: Equatable {
+public struct CmdStaticInfo: Equatable, Sendable {
     public let help: String
     public let kind: CmdKind
     public let allowInConfig: Bool // Query commands are prohibited in config

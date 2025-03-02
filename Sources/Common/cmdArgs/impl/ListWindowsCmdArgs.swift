@@ -43,7 +43,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
     public var windowId: UInt32?               // unused
     public var workspaceName: WorkspaceName?   // unused
 
-    public struct FilteringOptions: Copyable, Equatable {
+    public struct FilteringOptions: Copyable, Equatable, Sendable {
         public var monitors: [MonitorId] = []
         public var focused: Bool = false
         public var workspaces: [WorkspaceFilter] = []
@@ -114,7 +114,7 @@ private func parseWorkspaces(arg: String, nextArgs: inout [String]) -> Parsed<[W
     return .success(workspaces)
 }
 
-public enum WorkspaceFilter: Equatable {
+public enum WorkspaceFilter: Equatable, Sendable {
     case focused
     case visible
     case name(WorkspaceName)

@@ -2,7 +2,7 @@ import AppKit
 import Common
 
 class Window: TreeNode, Hashable {
-    let windowId: UInt32
+    nonisolated let windowId: UInt32
     let app: AbstractApp
     override var parent: NonLeafTreeNodeObject { super.parent ?? errorT("Windows always have parent") }
     var parentOrNilForTests: NonLeafTreeNodeObject? { super.parent }
@@ -28,7 +28,7 @@ class Window: TreeNode, Hashable {
         error("Not implemented")
     }
 
-    func hash(into hasher: inout Hasher) {
+    nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(windowId)
     }
 

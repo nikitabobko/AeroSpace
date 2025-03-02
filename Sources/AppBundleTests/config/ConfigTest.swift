@@ -2,6 +2,7 @@
 import Common
 import XCTest
 
+@MainActor
 final class ConfigTest: XCTestCase {
     func testParseI3Config() {
         let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/i3-like-config-example.toml"))

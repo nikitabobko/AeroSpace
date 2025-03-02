@@ -2,8 +2,9 @@
 import Common
 import XCTest
 
+@MainActor
 final class BalanceSizesCommandTest: XCTestCase {
-    override func setUpWithError() throws { setUpWorkspacesForTests() }
+    override func setUp() async throws { setUpWorkspacesForTests() }
 
     func testBalanceSizesCommand() {
         let workspace = Workspace.get(byName: name).apply { wsp in

@@ -2,8 +2,9 @@ import AppKit
 import Common
 import PrivateApi
 
+@MainActor
 func checkAccessibilityPermissions() {
-    let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true]
+    let options = [axTrustedCheckOptionPrompt: true]
     if !AXIsProcessTrustedWithOptions(options as CFDictionary) {
         resetAccessibility() // Because macOS doesn't reset it for us when the app signature changes...
         terminateApp()
@@ -14,14 +15,14 @@ private func resetAccessibility() {
     _ = try? Process.run(URL(filePath: "/usr/bin/tccutil"), arguments: ["reset", "Accessibility", aeroSpaceAppId])
 }
 
-protocol ReadableAttr {
+protocol ReadableAttr: Sendable {
     associatedtype T
-    var getter: (AnyObject) -> T? { get }
+    var getter: @Sendable (AnyObject) -> T? { get }
     var key: String { get }
 }
 
-protocol WritableAttr: ReadableAttr {
-    var setter: (T) -> CFTypeRef? { get }
+protocol WritableAttr: ReadableAttr, Sendable {
+    var setter: @Sendable (T) -> CFTypeRef? { get }
 }
 
 // Quick reference:
@@ -166,13 +167,13 @@ protocol WritableAttr: ReadableAttr {
 enum Ax {
     struct ReadableAttrImpl<T>: ReadableAttr {
         var key: String
-        var getter: (AnyObject) -> T?
+        var getter: @Sendable (AnyObject) -> T?
     }
 
     struct WritableAttrImpl<T>: WritableAttr {
         var key: String
-        var getter: (AnyObject) -> T?
-        var setter: (T) -> CFTypeRef?
+        var getter: @Sendable (AnyObject) -> T?
+        var setter: @Sendable (T) -> CFTypeRef?
     }
 
     static let titleAttr = WritableAttrImpl<String>(

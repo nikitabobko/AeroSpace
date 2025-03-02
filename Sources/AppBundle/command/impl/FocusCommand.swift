@@ -41,7 +41,7 @@ struct FocusCommand: Command {
     }
 }
 
-private func hitWorkspaceBoundaries(
+@MainActor private func hitWorkspaceBoundaries(
     _ target: LiveFocus,
     _ io: CmdIo,
     _ args: FocusCmdArgs,
@@ -70,7 +70,7 @@ private func hitWorkspaceBoundaries(
     }
 }
 
-private func hitAllMonitorsOuterFrameBoundaries(
+@MainActor private func hitAllMonitorsOuterFrameBoundaries(
     _ target: LiveFocus,
     _ io: CmdIo,
     _ args: FocusCmdArgs,
@@ -90,14 +90,14 @@ private func hitAllMonitorsOuterFrameBoundaries(
     }
 }
 
-private func wrapAroundTheWorkspace(_ target: LiveFocus, _ io: CmdIo, _ direction: CardinalDirection) -> Bool {
+@MainActor private func wrapAroundTheWorkspace(_ target: LiveFocus, _ io: CmdIo, _ direction: CardinalDirection) -> Bool {
     guard let windowToFocus = target.workspace.findFocusTargetRecursive(snappedTo: direction.opposite) else {
         return io.err(noWindowIsFocused)
     }
     return windowToFocus.focusWindow()
 }
 
-private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingWindowData] {
+@MainActor private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingWindowData] {
     let mruBefore = workspace.mostRecentWindowRecursive
     defer {
         mruBefore?.markAsMostRecentChild()
@@ -126,7 +126,7 @@ private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) -> [FloatingW
     return floatingWindows
 }
 
-private func restoreFloatingWindows(floatingWindows: [FloatingWindowData], workspace: Workspace) {
+@MainActor private func restoreFloatingWindows(floatingWindows: [FloatingWindowData], workspace: Workspace) {
     let mruBefore = workspace.mostRecentWindowRecursive
     defer {
         mruBefore?.markAsMostRecentChild()

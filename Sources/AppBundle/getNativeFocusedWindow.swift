@@ -1,8 +1,10 @@
 import AppKit
 import Common
 
+@MainActor
 var appForTests: AbstractApp? = nil
 
+@MainActor
 private var focusedApp: AbstractApp? {
     if isUnitTest {
         return appForTests
@@ -12,6 +14,7 @@ private var focusedApp: AbstractApp? {
     }
 }
 
+@MainActor
 func getNativeFocusedWindow(startup: Bool) -> Window? {
     focusedApp?.getFocusedWindow(startup: startup)
 }

@@ -2,14 +2,20 @@ import AppKit
 import Common
 
 func resizedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
-    if let window = data?.window, TrayMenuModel.shared.isEnabled {
-        resizeWithMouseIfTheCase(window)
+    check(Thread.isMainThread)
+    let notif = notif as String
+    let windowId = data?.window?.windowId
+    MainActor.assumeIsolated {
+        if let windowId, let window = Window.get(byId: windowId), TrayMenuModel.shared.isEnabled {
+            resizeWithMouseIfTheCase(window)
+        }
+        refreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
     }
-    refreshAndLayout(.ax(notif as String), screenIsDefinitelyUnlocked: false)
 }
 
+@MainActor
 func resetManipulatedWithMouseIfPossible() {
-    check(Thread.current.isMainThread)
+    check(Thread.isMainThread)
     if currentlyManipulatedWithMouseWindowId != nil {
         currentlyManipulatedWithMouseWindowId = nil
         for workspace in Workspace.all {
@@ -21,6 +27,7 @@ func resetManipulatedWithMouseIfPossible() {
 
 private let adaptiveWeightBeforeResizeWithMouseKey = TreeNodeUserDataKey<CGFloat>(key: "adaptiveWeightBeforeResizeWithMouseKey")
 
+@MainActor
 private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tests
     if window.isHiddenInCorner || // Don't allow to resize windows of hidden workspaces
         !isLeftMouseButtonDown ||

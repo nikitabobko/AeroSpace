@@ -2,8 +2,9 @@
 import Common
 import XCTest
 
+@MainActor
 final class FlattenWorkspaceTreeCommandTest: XCTestCase {
-    override func setUpWithError() throws { setUpWorkspacesForTests() }
+    override func setUp() async throws { setUpWorkspacesForTests() }
 
     func testSimple() {
         let workspace = Workspace.get(byName: name).apply {

@@ -1,12 +1,19 @@
 import AppKit
+import Common
 
 func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
-    if let window = data?.window, TrayMenuModel.shared.isEnabled {
-        moveWithMouseIfTheCase(window)
+    check(Thread.current.isMainThread)
+    let windowId = data?.window?.windowId
+    let notif = notif as String
+    MainActor.assumeIsolated {
+        if let windowId, let window = Window.get(byId: windowId), TrayMenuModel.shared.isEnabled {
+            moveWithMouseIfTheCase(window)
+        }
+        refreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
     }
-    refreshAndLayout(.ax(notif as String), screenIsDefinitelyUnlocked: false)
 }
 
+@MainActor
 private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
     if window.isHiddenInCorner || // Don't allow to move windows of hidden workspaces
         !isLeftMouseButtonDown ||
@@ -27,6 +34,7 @@ private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
     }
 }
 
+@MainActor
 private func moveFloatingWindow(_ window: Window) {
     guard let targetWorkspace = window.getCenter()?.monitorApproximation.activeWorkspace else { return }
     if targetWorkspace != window.parent {
@@ -34,6 +42,7 @@ private func moveFloatingWindow(_ window: Window) {
     }
 }
 
+@MainActor
 private func moveTilingWindow(_ window: Window) {
     currentlyManipulatedWithMouseWindowId = window.windowId
     window.lastAppliedLayoutPhysicalRect = nil
@@ -58,6 +67,7 @@ private func moveTilingWindow(_ window: Window) {
     }
 }
 
+@MainActor
 func swapWindows(_ window1: Window, _ window2: Window) {
     if window1 == window2 { return }
 
@@ -77,6 +87,7 @@ func swapWindows(_ window1: Window, _ window2: Window) {
 }
 
 extension CGPoint {
+    @MainActor
     func findIn(tree: TilingContainer, virtual: Bool) -> Window? {
         let point = self
         let target: TreeNode? = switch tree.layout {

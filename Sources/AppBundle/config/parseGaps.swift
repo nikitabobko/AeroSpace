@@ -1,15 +1,17 @@
 import Common
 import TOMLKit
 
-struct Gaps: Copyable, Equatable {
+struct Gaps: Copyable, Equatable, Sendable {
     var inner: Inner
     var outer: Outer
 
-    struct Inner: Copyable, Equatable {
+    static let zero = Gaps(inner: .zero, outer: .zero)
+
+    struct Inner: Copyable, Equatable, Sendable {
         var vertical: DynamicConfigValue<Int>
         var horizontal: DynamicConfigValue<Int>
 
-        static var zero = Inner(vertical: 0, horizontal: 0)
+        static let zero = Inner(vertical: 0, horizontal: 0)
 
         init(vertical: Int, horizontal: Int) {
             self.vertical = .constant(vertical)
@@ -22,13 +24,13 @@ struct Gaps: Copyable, Equatable {
         }
     }
 
-    struct Outer: Copyable, Equatable {
+    struct Outer: Copyable, Equatable, Sendable {
         var left: DynamicConfigValue<Int>
         var bottom: DynamicConfigValue<Int>
         var top: DynamicConfigValue<Int>
         var right: DynamicConfigValue<Int>
 
-        static var zero = Outer(left: 0, bottom: 0, top: 0, right: 0)
+        static let zero = Outer(left: 0, bottom: 0, top: 0, right: 0)
 
         init(left: Int, bottom: Int, top: Int, right: Int) {
             self.left = .constant(left)
@@ -44,8 +46,6 @@ struct Gaps: Copyable, Equatable {
             self.right = right
         }
     }
-
-    static var zero = Gaps(inner: .zero, outer: .zero)
 }
 
 struct ResolvedGaps {

@@ -127,7 +127,7 @@ public extension String {
     }
 }
 
-public enum StringInterToken: Equatable {
+public enum StringInterToken: Equatable, Sendable {
     case literal(String)
     case interVar(String) // "interpolation variable"
 }

@@ -2,7 +2,7 @@ import AppKit
 import Common
 
 public class TrayMenuModel: ObservableObject {
-    public static let shared = TrayMenuModel()
+    @MainActor public static let shared = TrayMenuModel()
 
     private init() {}
 
@@ -12,7 +12,7 @@ public class TrayMenuModel: ObservableObject {
     @Published var workspaces: [WorkspaceViewModel] = []
 }
 
-func updateTrayText() {
+@MainActor func updateTrayText() {
     let sortedMonitors = sortedMonitors
     let focus = focus
     TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first?.lets { "[\($0.uppercased())] " } ?? "") +
