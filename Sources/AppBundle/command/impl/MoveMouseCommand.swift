@@ -5,7 +5,6 @@ struct MoveMouseCommand: Command {
     let args: MoveMouseCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         let mouse = mouseLocation
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         switch args.mouseTarget.val {

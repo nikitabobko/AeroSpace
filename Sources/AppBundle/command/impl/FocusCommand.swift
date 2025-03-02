@@ -5,7 +5,6 @@ struct FocusCommand: Command {
     let args: FocusCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         // todo bug: floating windows break mru
         let floatingWindows = args.floatingAsTiling ? makeFloatingWindowsSeenAsTiling(workspace: target.workspace) : []

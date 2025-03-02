@@ -5,7 +5,6 @@ struct ReloadConfigCommand: Command {
     let args: ReloadConfigCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         var stdout = ""
         let isOk = reloadConfig(args: args, stdout: &stdout)
         if !stdout.isEmpty {

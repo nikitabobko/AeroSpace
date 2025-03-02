@@ -5,7 +5,6 @@ struct ListWindowsCommand: Command {
     let args: ListWindowsCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         let focus = focus
         var windows: [Window] = []
 

@@ -5,7 +5,6 @@ struct SplitCommand: Command {
     let args: SplitCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         if config.enableNormalizationFlattenContainers {
             return io.err("'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled. My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.")
         }

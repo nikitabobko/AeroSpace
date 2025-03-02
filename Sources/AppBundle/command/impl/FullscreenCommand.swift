@@ -5,7 +5,6 @@ struct FullscreenCommand: Command {
     let args: FullscreenCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         guard let window = target.windowOrNil else {
             return io.err(noWindowIsFocused)

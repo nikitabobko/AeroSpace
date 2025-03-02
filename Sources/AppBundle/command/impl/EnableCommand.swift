@@ -5,7 +5,6 @@ struct EnableCommand: Command {
     let args: EnableCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         let prevState = TrayMenuModel.shared.isEnabled
         let newState: Bool = switch args.targetState.val {
             case .on: true

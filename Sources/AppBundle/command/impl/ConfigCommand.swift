@@ -5,7 +5,6 @@ struct ConfigCommand: Command {
     let args: ConfigCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         switch args.mode {
             case .getKey(let key):
                 return getKey(io, args: args, key: key)

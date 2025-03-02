@@ -30,7 +30,6 @@ struct DebugWindowsCommand: Command {
     let args: DebugWindowsCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         if let windowId = args.windowId {
             guard let window = Window.get(byId: windowId) else {
                 return io.err("Can't find window with the specified window-id: \(windowId)")

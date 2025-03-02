@@ -5,7 +5,6 @@ struct ListMonitorsCommand: Command {
     let args: ListMonitorsCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         let focus = focus
         var result = sortedMonitors
         if let focused = args.focused {

@@ -6,7 +6,6 @@ struct MacosNativeMinimizeCommand: Command {
     let args: MacosNativeMinimizeCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         // resolveTargetOrReportError on already minimized windows will alwyas fail
         // It would be easier if minimized windows were part of the workspace in tree hierarchy
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
