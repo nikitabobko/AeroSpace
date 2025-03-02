@@ -1,6 +1,6 @@
 public typealias Parsed<T> = Result<T, String>
-extension String: Swift.Error {} // Make it possible to use String in Result. todo migrate to self written Result monad
-extension Array: Swift.Error where Element: Error {} // Make it possible to use [String] in Result. todo migrate to self written Result monad
+extension String: @retroactive Error {} // Make it possible to use String in Result. todo migrate to self written Result monad
+extension Array: @retroactive Error where Element: Error {} // Make it possible to use [String] in Result. todo migrate to self written Result monad
 
 public extension String {
     func trim() -> String {
