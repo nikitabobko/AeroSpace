@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 'main'
-      - 'bobko/**'
+      - 'rr/**' # "rr" stands for "remote run"
   pull_request:
     branches: [ "main" ]
   schedule:
