@@ -28,6 +28,9 @@ jobs:
         with:
           path: .deps
           key: ${{ matrix.os }}-${{ runner.arch }}-${{ hashFiles('script/install-dep.sh', 'Gemfile', '.bundle/config') }}
+      - uses: swift-actions/setup-swift@v2
+        with:
+          swift-version: "6.0.2"
       - run: brew install bash fish xcbeautify
       - run: ./script/install-dep.sh --all
       - run: ./build-debug.sh
