@@ -1,4 +1,5 @@
 import AppKit
+import Common
 
 @MainActor
 final class MacApp: AbstractApp {

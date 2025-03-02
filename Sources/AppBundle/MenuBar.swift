@@ -79,7 +79,7 @@ struct MonospacedText: View {
                 // In case image can't be rendered fallback to plain text
                 Text(text)
             }
-        } else {
+        } else { // macOS 13 and lower
             Text(text)
         }
     }

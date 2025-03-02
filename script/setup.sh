@@ -26,10 +26,19 @@ if /bin/test -z "${NUKE_PATH:-}"; then
     add-optional-dep-to-bin bundler # build-docs.sh
     add-optional-dep-to-bin xcbeautify # build-release.sh
     add-optional-dep-to-bin git
+    add-optional-dep-to-bin swift # Use Swift from PATH
 
     export PATH="${PWD}/.deps/bin:/bin:/usr/bin"
     chmod +x .deps/bin/*
     export NUKE_PATH=1
+fi
+
+if test -z "${GITHUB_ACTIONS:-}"; then
+    export swift_build_args=()
+else
+    # Circumvent compiler crash https://github.com/swiftlang/swift/issues/76788
+    # For some reason, it happens only on GH Actions
+    export swift_build_args=(-Xswiftc -disable-round-trip-debug-types)
 fi
 
 xcodebuild() {
