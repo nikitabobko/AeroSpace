@@ -65,6 +65,18 @@ public extension Sequence {
         sorted(by: { a, b in selector(a) < selector(b) })
     }
 
+    @inlinable func sortedBy(_ selectors: [(Self.Element) -> some Comparable]) -> [Self.Element] {
+        sorted(by: { a, b in
+            for selector in selectors {
+                let a = selector(a)
+                let b = selector(b)
+                if a < b { return true }
+                if a > b { return false }
+            }
+            return false
+        })
+    }
+
     func sumOf(_ selector: (Self.Element) -> CGFloat) -> CGFloat {
         var result: CGFloat = 0
         for elem in self {

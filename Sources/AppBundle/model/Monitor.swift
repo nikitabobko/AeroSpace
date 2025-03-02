@@ -101,5 +101,5 @@ var monitors: [Monitor] {
 }
 
 var sortedMonitors: [Monitor] {
-    monitors.sorted(using: [SelectorComparator(selector: \.rect.minX), SelectorComparator(selector: \.rect.minY)])
+    monitors.sortedBy([\.rect.minX, \.rect.minY])
 }
