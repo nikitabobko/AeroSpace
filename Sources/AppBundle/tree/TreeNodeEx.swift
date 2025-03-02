@@ -44,7 +44,14 @@ extension TreeNode {
     }
 
     var mostRecentWindowRecursive: Window? {
-        self as? Window ?? mostRecentChild?.mostRecentWindowRecursive
+        if let window = self as? Window,
+           config.automaticallyUnhideMacosHiddenAppsExceptions.contains(window.app.id ?? "")
+           && window.app.asMacApp().nsApp.isHidden
+        {
+            // Skip hidden apps in automaticallyUnhideMacosHiddenAppsExceptions
+            return mostRecentChild?.mostRecentWindowRecursive
+        }
+        return self as? Window ?? mostRecentChild?.mostRecentWindowRecursive
     }
 
     var anyLeafWindowRecursive: Window? {
