@@ -4,7 +4,7 @@ import Foundation
 
 public let unixUserName = NSUserName()
 public let mainModeId = "main"
-private let recursionDetectorDuringError = MyAtomicBool(false) // todo change to Ctx?
+private let recursionDetectorDuringTermination = MyAtomicBool(false) // todo change to Ctx?
 
 // public var refreshSessionEventForDebug: RefreshSessionEvent? = nil
 
@@ -28,7 +28,7 @@ public func errorT<T>(
         Date: \(Date.now)
         macOS version: \(ProcessInfo().operatingSystemVersionString)
         Coordinate: \(file):\(line):\(column) \(function)
-        recursionDetectorDuringFailure: \(recursionDetectorDuringError.get())
+        recursionDetectorDuringTermination: \(recursionDetectorDuringTermination.get())
         cli: \(isCli)
         Displays have separate spaces: \(NSScreen.screensHaveSeparateSpaces)
 
@@ -38,15 +38,15 @@ public func errorT<T>(
     // refreshSessionEvent: \(String(describing: refreshSessionEventForDebug)) // todo return back when introduce Ctx
     if !isUnitTest && isServer {
         showMessageInGui(
-            filenameIfConsoleApp: recursionDetectorDuringError.get()
+            filenameIfConsoleApp: recursionDetectorDuringTermination.get()
                 ? "aerospace-runtime-error-recursion.txt"
                 : "aerospace-runtime-error.txt",
             title: "AeroSpace Runtime Error",
             message: message
         )
     }
-    if !recursionDetectorDuringError.get() {
-        recursionDetectorDuringError.set(true)
+    if !recursionDetectorDuringTermination.get() {
+        recursionDetectorDuringTermination.set(true)
         DispatchQueue.main.asyncAndWait {
             terminationHandler.beforeTermination()
         }
