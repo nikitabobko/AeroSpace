@@ -3,6 +3,9 @@ import Common
 
 private struct MonitorImpl {
     let monitorAppKitNsScreenScreensId: Int
+    let uuid: String
+    let serial: UInt32?
+    let contextualId: CGDirectDisplayID
     let name: String
     let rect: Rect
     let visibleRect: Rect
@@ -17,6 +20,9 @@ extension MonitorImpl: Monitor {
 protocol Monitor: AeroAny {
     /// The index in NSScreen.screens array. 1-based index
     var monitorAppKitNsScreenScreensId: Int { get }
+    var uuid: String { get }
+    var serial: UInt32? { get }
+    var contextualId: CGDirectDisplayID { get }
     var name: String { get }
     var rect: Rect { get }
     var visibleRect: Rect { get }
@@ -27,6 +33,9 @@ protocol Monitor: AeroAny {
 class LazyMonitor: Monitor {
     private let screen: NSScreen
     let monitorAppKitNsScreenScreensId: Int
+    let uuid: String
+    let serial: UInt32?
+    let contextualId: CGDirectDisplayID
     let name: String
     let width: CGFloat
     let height: CGFloat
@@ -35,6 +44,9 @@ class LazyMonitor: Monitor {
 
     init(monitorAppKitNsScreenScreensId: Int, _ screen: NSScreen) {
         self.monitorAppKitNsScreenScreensId = monitorAppKitNsScreenScreensId
+        self.uuid = screen.uuid
+        self.serial = screen.serial
+        self.contextualId = screen.displayId
         self.name = screen.localizedName
         self.width = screen.frame.width // Don't call rect because it would cause recursion during mainMonitor init
         self.height = screen.frame.height // Don't call rect because it would cause recursion during mainMonitor init
@@ -55,9 +67,33 @@ class LazyMonitor: Monitor {
 // 2. It's inaccurate because NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
 //    kAXFocusedWindowChangedNotification callbacks.
 private extension NSScreen {
+    // From https://github.com/AerialScreensaver/AerialCompanion/blob/b2cbb355e/AerialUpdater/Model/Helpers/NSScreen%2BId.swift#L9-L15,
+    // via https://gist.github.com/salexkidd/bcbea2372e92c6e5b04cbd7f48d9b204
+    var displayId: CGDirectDisplayID {
+        return deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as! CGDirectDisplayID
+    }
+
+    var uuid: String {
+        return CFUUIDCreateString(
+            nil, CGDisplayCreateUUIDFromDisplayID(displayId).takeRetainedValue()) as String
+    }
+
+    var serial: UInt32? {
+        switch CGDisplaySerialNumber(displayId) {
+            case 0x0000_0000,
+                0xFFFF_FFFF:
+                return nil
+            case let serial:
+                return serial
+        }
+    }
+
     func toMonitor(monitorAppKitNsScreenScreensId: Int) -> Monitor {
         MonitorImpl(
             monitorAppKitNsScreenScreensId: monitorAppKitNsScreenScreensId,
+            uuid: uuid,
+            serial: serial,
+            contextualId: displayId,
             name: localizedName,
             rect: rect,
             visibleRect: visibleRect
@@ -83,6 +119,9 @@ private extension NSScreen {
 private let testMonitorRect = Rect(topLeftX: 0, topLeftY: 0, width: 1920, height: 1080)
 private let testMonitor = MonitorImpl(
     monitorAppKitNsScreenScreensId: 1,
+    uuid: "3bafffce-f88e-48ab-98ee-5a0295879f29",
+    serial: nil,
+    contextualId: 12345,
     name: "Test Monitor",
     rect: testMonitorRect,
     visibleRect: testMonitorRect
