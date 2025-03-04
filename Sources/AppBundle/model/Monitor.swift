@@ -3,7 +3,7 @@ import Common
 
 private struct MonitorImpl {
     let monitorAppKitNsScreenScreensId: Int
-    let uuid: String
+    let uuid: UUID?
     let serial: UInt32?
     let contextualId: CGDirectDisplayID
     let name: String
@@ -20,7 +20,7 @@ extension MonitorImpl: Monitor {
 protocol Monitor: AeroAny {
     /// The index in NSScreen.screens array. 1-based index
     var monitorAppKitNsScreenScreensId: Int { get }
-    var uuid: String { get }
+    var uuid: UUID? { get }
     var serial: UInt32? { get }
     var contextualId: CGDirectDisplayID { get }
     var name: String { get }
@@ -33,7 +33,7 @@ protocol Monitor: AeroAny {
 class LazyMonitor: Monitor {
     private let screen: NSScreen
     let monitorAppKitNsScreenScreensId: Int
-    let uuid: String
+    let uuid: UUID?
     let serial: UInt32?
     let contextualId: CGDirectDisplayID
     let name: String
@@ -73,9 +73,9 @@ private extension NSScreen {
         return deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as! CGDirectDisplayID
     }
 
-    var uuid: String {
-        return CFUUIDCreateString(
-            nil, CGDisplayCreateUUIDFromDisplayID(displayId).takeRetainedValue()) as String
+    var uuid: UUID? {
+        let cfUuid = CGDisplayCreateUUIDFromDisplayID(displayId).takeRetainedValue()
+        return UUID(uuidString: CFUUIDCreateString(nil, cfUuid) as String)
     }
 
     var serial: UInt32? {
@@ -119,7 +119,7 @@ private extension NSScreen {
 private let testMonitorRect = Rect(topLeftX: 0, topLeftY: 0, width: 1920, height: 1080)
 private let testMonitor = MonitorImpl(
     monitorAppKitNsScreenScreensId: 1,
-    uuid: "3bafffce-f88e-48ab-98ee-5a0295879f29",
+    uuid: UUID(uuidString: "3bafffce-f88e-48ab-98ee-5a0295879f29"),
     serial: nil,
     contextualId: 12345,
     name: "Test Monitor",
