@@ -49,21 +49,26 @@ typealias ParsedToml<T> = Result<T, TomlParseError>
 protocol ParserProtocol<Tf>: Sendable {
     associatedtype Val
     associatedtype Tf where Tf: Copyable
-    var keyPath: SendableWritableKeyPath<Tf, Val> { get }
+
+    typealias Transformer<Tf> = @Sendable (Tf, Val) -> Tf
+
+    var transform: Transformer<Tf> { get }
     var parse: @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<Val> { get }
 }
 
 struct Parser<Tf: Copyable, Val>: ParserProtocol {
-    let keyPath: SendableWritableKeyPath<Tf, Val>
+    let transform: Transformer<Tf>
     let parse: @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<Val>
 
     init(_ keyPath: SendableWritableKeyPath<Tf, Val>, _ parse: @escaping @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> Val) {
-        self.keyPath = keyPath
+        self.transform = { [keyPath] existing, value in
+            existing.copy(keyPath, value) }
         self.parse = { raw, backtrace, errors -> ParsedToml<Val> in .success(parse(raw, backtrace, &errors)) }
     }
 
     init(_ keyPath: SendableWritableKeyPath<Tf, Val>, _ parse: @escaping @Sendable (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<Val>) {
-        self.keyPath = keyPath
+        self.transform = { [keyPath] existing, value in
+            existing.copy(keyPath, value) }
         self.parse = { raw, backtrace, _ -> ParsedToml<Val> in parse(raw, backtrace) }
     }
 }
@@ -75,7 +80,7 @@ extension ParserProtocol {
                             _ errors: inout [TomlParseError]) -> Tf
     {
         if let value = parse(value, backtrace, &errors).getOrNil(appendErrorTo: &errors) {
-            return existing.copy(keyPath, value)
+            return transform(existing, value)
         }
         return existing
     }
