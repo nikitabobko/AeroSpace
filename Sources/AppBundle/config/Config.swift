@@ -36,6 +36,7 @@ struct Config: Copyable {
     var _indentForNestedContainersWithTheSameOrientation: Void = ()
     var enableNormalizationFlattenContainers: Bool = true
     var _nonEmptyWorkspacesRootContainersLayoutOnStartup: Void = ()
+    var menuBarStyle: MenuBarStyle = .text
     var defaultRootContainerLayout: Layout = .tiles
     var defaultRootContainerOrientation: DefaultContainerOrientation = .auto
     var startAtLogin: Bool = false
