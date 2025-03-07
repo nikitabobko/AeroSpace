@@ -82,6 +82,8 @@ enum FormatVar: Equatable {
 
     enum WorkspaceFormatVar: String, Equatable, CaseIterable {
         case workspaceName = "workspace"
+        case workspaceFocused = "workspace-is-focused"
+        case workspaceVisible = "workspace-is-visible"
     }
 
     enum AppFormatVar: String, Equatable, CaseIterable {
@@ -184,6 +186,8 @@ extension String {
             case (.workspace(let w), .workspace(let f)):
                 return switch f {
                     case .workspaceName: .success(.string(w.name))
+                    case .workspaceVisible: .success(.bool(w.isVisible))
+                    case .workspaceFocused: .success(.bool(focus.workspace == w))
                 }
             case (.monitor(let m), .monitor(let f)):
                 return switch f {
