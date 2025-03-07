@@ -116,7 +116,7 @@ enum Primitive: Encodable {
             case .int32(let x): x.description
             case .uint32(let x): x.description
             case .string(let x): x
-            case .array(let x): x.map{$0.toString()}.joined(separator: ",")
+            case .array(let x): x.map { $0.toString() }.joined(separator: ",")
         }
     }
 
@@ -175,7 +175,7 @@ extension String {
             case (.workspace(let ws), .monitor):
                 return expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitor))
             case (.workspace(let ws), .app):
-                return .success(.array(ws.allLeafWindowsRecursive.compactMap{
+                return .success(.array(ws.allLeafWindowsRecursive.compactMap {
                     do {
                         return try expandFormatVar(obj: AeroObj.app($0.app)).get()
                     } catch {
@@ -183,7 +183,7 @@ extension String {
                     }
                 }))
             case (.workspace(let ws), .window):
-                return .success(.array(ws.allLeafWindowsRecursive.compactMap{
+                return .success(.array(ws.allLeafWindowsRecursive.compactMap {
                     do {
                         return try expandFormatVar(obj: AeroObj.window($0)).get()
                     } catch {
