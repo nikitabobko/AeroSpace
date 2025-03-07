@@ -1,5 +1,4 @@
 import Common
-import Foundation
 
 enum AeroObj {
     case window(Window)
