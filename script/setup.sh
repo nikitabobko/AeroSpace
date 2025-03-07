@@ -33,13 +33,15 @@ if /bin/test -z "${NUKE_PATH:-}"; then
     export NUKE_PATH=1
 fi
 
-if test -z "${GITHUB_ACTIONS:-}"; then
-    export swift_build_args=()
-else
-    # Circumvent compiler crash https://github.com/swiftlang/swift/issues/76788
-    # For some reason, it happens only on GH Actions
-    export swift_build_args=(-Xswiftc -disable-round-trip-debug-types)
-fi
+swift-build() {
+    if test -z "${GITHUB_ACTIONS:-}"; then
+        swift build "$@"
+    else
+        # Circumvent compiler crash https://github.com/swiftlang/swift/issues/76788
+        # For some reason, it happens only on GH Actions
+        swift build -Xswiftc -disable-round-trip-debug-types "$@"
+    fi
+}
 
 xcodebuild() {
     # Mute stderr
