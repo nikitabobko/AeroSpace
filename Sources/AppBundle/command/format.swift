@@ -1,4 +1,5 @@
 import Common
+import Foundation
 
 enum AeroObj {
     case window(Window)
@@ -82,6 +83,8 @@ enum FormatVar: Equatable {
 
     enum WorkspaceFormatVar: String, Equatable, CaseIterable {
         case workspaceName = "workspace"
+        case workspaceFocused = "workspace-focused"
+        case workspaceVisible = "workspace-visible"
     }
 
     enum AppFormatVar: String, Equatable, CaseIterable {
@@ -105,6 +108,7 @@ enum Primitive: Encodable {
     case int32(Int32)
     case uint32(UInt32)
     case string(String)
+    indirect case array([Primitive])
 
     func toString() -> String {
         switch self {
@@ -113,6 +117,7 @@ enum Primitive: Encodable {
             case .int32(let x): x.description
             case .uint32(let x): x.description
             case .string(let x): x
+            case .array(let x): x.map{$0.toString()}.joined(separator: ",")
         }
     }
 
@@ -123,6 +128,7 @@ enum Primitive: Encodable {
             case .int32(let x): x
             case .uint32(let x): x
             case .string(let x): x
+            case .array(let x): x
         }
         var container = encoder.singleValueContainer()
         try container.encode(value)
@@ -169,6 +175,22 @@ extension String {
 
             case (.workspace(let ws), .monitor):
                 return expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitor))
+            case (.workspace(let ws), .app):
+                return .success(.array(ws.allLeafWindowsRecursive.compactMap{
+                    do {
+                        return try expandFormatVar(obj: AeroObj.app($0.app)).get()
+                    } catch {
+                        return .string("Error: \(error)")
+                    }
+                }))
+            case (.workspace(let ws), .window):
+                return .success(.array(ws.allLeafWindowsRecursive.compactMap{
+                    do {
+                        return try expandFormatVar(obj: AeroObj.window($0)).get()
+                    } catch {
+                        return .string("Error: \(error)")
+                    }
+                }))
             case (.workspace, _): break
 
             case (.app(_), _): break
@@ -184,6 +206,8 @@ extension String {
             case (.workspace(let w), .workspace(let f)):
                 return switch f {
                     case .workspaceName: .success(.string(w.name))
+                    case .workspaceVisible: .success(.bool(w.isVisible))
+                    case .workspaceFocused: .success(.bool(focus.workspace == w))
                 }
             case (.monitor(let m), .monitor(let f)):
                 return switch f {
