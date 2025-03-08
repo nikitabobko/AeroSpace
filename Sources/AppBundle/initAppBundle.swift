@@ -31,32 +31,32 @@ import Foundation
         _ = config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
     }
 
-    var runLoop: CFRunLoop? = nil
-    let thread = Thread {
-        runLoop = CFRunLoopGetCurrent()!
-        let timer = CFRunLoopTimerCreateWithHandler(
-                kCFAllocatorDefault,
-                CFAbsoluteTimeGetCurrent(),
-                10000, 0, 0
-        ) { _ in }
-        CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, .defaultMode)
+    // var runLoop: CFRunLoop? = nil
+    // let thread = Thread {
+    //     runLoop = CFRunLoopGetCurrent()!
+    //     let timer = CFRunLoopTimerCreateWithHandler(
+    //             kCFAllocatorDefault,
+    //             CFAbsoluteTimeGetCurrent(),
+    //             10000, 0, 0
+    //     ) { _ in }
+    //     CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, .defaultMode)
+    //
+    //     print("CFRunLoopRun")
+    //     CFRunLoopRun()
+    //     print("wtf")
+    // }
+    // thread.name = "suka"
+    // thread.start()
 
-        print("CFRunLoopRun")
-        CFRunLoopRun()
-        print("wtf")
-    }
-    thread.name = "suka"
-    thread.start()
+    // sleep(3)
 
-    sleep(3)
+    // print("isExecuting: \(thread.isExecuting)")
 
-    print("isExecuting: \(thread.isExecuting)")
+    // Foo.main(thread)
 
-    Foo.main(thread)
+    // sleep(3)
 
-    sleep(3)
-
-    print("isExecuting: \(thread.isExecuting)")
+    // print("isExecuting: \(thread.isExecuting)")
 
     // var runLoop: CFRunLoop? = nil
     // Thread.detachNewThread {
@@ -118,20 +118,20 @@ import Foundation
 //     }
 // }
 
-class Foo: NSObject {
-    @objc static func foo() {
-        print("--- 1 \(Thread.current.name)")
-        CFRunLoopStop(CFRunLoopGetCurrent())
-        // error("yes!")
-        // fflush(stdout)
-    }
-
-    static func main(_ thread: Thread) {
-        print("NSObject.perform")
-        // perform(#selector(foo), on: thread, with: nil, waitUntilDone: false)
-        perform(#selector(foo), on: thread, with: nil, waitUntilDone: false)
-    }
-}
+// class Foo: NSObject {
+//     @objc static func foo() {
+//         print("--- 1 \(Thread.current.name)")
+//         CFRunLoopStop(CFRunLoopGetCurrent())
+//         // error("yes!")
+//         // fflush(stdout)
+//     }
+//
+//     static func main(_ thread: Thread) {
+//         print("NSObject.perform")
+//         // perform(#selector(foo), on: thread, with: nil, waitUntilDone: false)
+//         perform(#selector(foo), on: thread, with: nil, waitUntilDone: false)
+//     }
+// }
 
 // final class SerialRunLoopDedicatedThreadExecutor: SerialExecutor {
 //     let someThread = Thread {
