@@ -6,7 +6,7 @@ import XCTest
 final class BalanceSizesCommandTest: XCTestCase {
     override func setUp() async throws { setUpWorkspacesForTests() }
 
-    func testBalanceSizesCommand() {
+    func testBalanceSizesCommand() async throws {
         let workspace = Workspace.get(byName: name).apply { wsp in
             wsp.rootTilingContainer.apply {
                 TestWindow.new(id: 1, parent: $0).setWeight(wsp.rootTilingContainer.orientation, 1)
@@ -15,7 +15,7 @@ final class BalanceSizesCommandTest: XCTestCase {
             }
         }
 
-        BalanceSizesCommand(args: BalanceSizesCmdArgs(rawArgs: []))
+        try await BalanceSizesCommand(args: BalanceSizesCmdArgs(rawArgs: []))
             .run(.defaultEnv.copy(\.workspaceName, name), .emptyStdin)
 
         for window in workspace.rootTilingContainer.children {

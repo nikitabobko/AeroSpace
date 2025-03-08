@@ -49,18 +49,18 @@ final class FocusCommandTest: XCTestCase {
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
-    func testFocusAlongTheContainerOrientation() {
+    func testFocusAlongTheContainerOrientation() async throws {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0)
         }
 
         assertEquals(focus.windowOrNil?.windowId, 1)
-        FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+        try await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
-    func testFocusAcrossTheContainerOrientation() {
+    func testFocusAcrossTheContainerOrientation() async throws {
         Workspace.get(byName: name).apply {
             TestWindow.new(id: 1, parent: $0.rootTilingContainer)
             TestWindow.new(id: 2, parent: $0.rootTilingContainer)
@@ -68,24 +68,24 @@ final class FocusCommandTest: XCTestCase {
         }
 
         assertEquals(focus.windowOrNil?.windowId, 2)
-        FocusCommand.new(direction: .up).run(.defaultEnv, .emptyStdin)
+        try await FocusCommand.new(direction: .up).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
-        FocusCommand.new(direction: .down).run(.defaultEnv, .emptyStdin)
+        try await FocusCommand.new(direction: .down).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
-    func testFocusNoWrapping() {
+    func testFocusNoWrapping() async throws {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0)
         }
 
         assertEquals(focus.windowOrNil?.windowId, 1)
-        FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
+        try await FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 
-    func testFocusWrapping() {
+    func testFocusWrapping() async throws {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0)
@@ -95,11 +95,11 @@ final class FocusCommandTest: XCTestCase {
         var args = FocusCmdArgs(rawArgs: [], direction: .left)
         args.rawBoundaries = .workspace
         args.rawBoundariesAction = .wrapAroundTheWorkspace
-        FocusCommand(args: args).run(.defaultEnv, .emptyStdin)
+        try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
-    func testFocusFindMruLeaf() {
+    func testFocusFindMruLeaf() async throws {
         let workspace = Workspace.get(byName: name)
         var startWindow: Window!
         var window2: Window!
@@ -118,22 +118,22 @@ final class FocusCommandTest: XCTestCase {
 
         assertEquals(workspace.mostRecentWindowRecursive?.windowId, 3) // The latest bound
         _ = startWindow.focusWindow()
-        FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+        try await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 3)
 
         window2.markAsMostRecentChild()
         _ = startWindow.focusWindow()
-        FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+        try await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
 
         window3.markAsMostRecentChild()
         unrelatedWindow.markAsMostRecentChild()
         _ = startWindow.focusWindow()
-        FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+        try await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
-    func testFocusOutsideOfTheContainer() {
+    func testFocusOutsideOfTheContainer() async throws {
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
@@ -141,11 +141,11 @@ final class FocusCommandTest: XCTestCase {
             }
         }
 
-        FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
+        try await FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 
-    func testFocusOutsideOfTheContainer2() {
+    func testFocusOutsideOfTheContainer2() async throws {
         Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
             TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
@@ -153,7 +153,7 @@ final class FocusCommandTest: XCTestCase {
             }
         }
 
-        FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
+        try await FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 }

@@ -6,17 +6,17 @@ import XCTest
 final class MoveCommandTest: XCTestCase {
     override func setUp() async throws { setUpWorkspacesForTests() }
 
-    func testMove_swapWindows() {
+    func testMove_swapWindows() async throws {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0)
         }
 
-        MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
+        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([.window(2), .window(1)]))
     }
 
-    func testMoveInto_findTopMostContainerWithRightOrientation() {
+    func testMoveInto_findTopMostContainerWithRightOrientation() async throws {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow.new(id: 0, parent: $0)
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
@@ -27,7 +27,7 @@ final class MoveCommandTest: XCTestCase {
             }
         }
 
-        MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
+        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
         assertEquals(
             root.layoutDescription,
             .h_tiles([
@@ -42,7 +42,7 @@ final class MoveCommandTest: XCTestCase {
         )
     }
 
-    func testMove_mru() {
+    func testMove_mru() async throws {
         var window3: Window!
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow.new(id: 0, parent: $0)
@@ -57,7 +57,7 @@ final class MoveCommandTest: XCTestCase {
         }
         window3.markAsMostRecentChild()
 
-        MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
+        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
         assertEquals(
             root.layoutDescription,
             .h_tiles([
@@ -74,18 +74,18 @@ final class MoveCommandTest: XCTestCase {
         )
     }
 
-    func testSwap_preserveWeight() {
+    func testSwap_preserveWeight() async throws {
         let root = Workspace.get(byName: name).rootTilingContainer
         let window1 = TestWindow.new(id: 1, parent: root, adaptiveWeight: 1)
         let window2 = TestWindow.new(id: 2, parent: root, adaptiveWeight: 2)
         _ = window2.focusWindow()
 
-        MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.defaultEnv, .emptyStdin)
+        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.defaultEnv, .emptyStdin)
         assertEquals(window2.hWeight, 2)
         assertEquals(window1.hWeight, 1)
     }
 
-    func testMoveIn_newWeight() {
+    func testMoveIn_newWeight() async throws {
         var window1: Window!
         var window2: Window!
         Workspace.get(byName: name).rootTilingContainer.apply {
@@ -97,14 +97,14 @@ final class MoveCommandTest: XCTestCase {
         }
         _ = window1.focusWindow()
 
-        MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
+        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
         assertEquals(window2.hWeight, 1)
         assertEquals(window2.vWeight, 1)
         assertEquals(window1.vWeight, 1)
         assertEquals(window1.hWeight, 1)
     }
 
-    func testCreateImplicitContainer() {
+    func testCreateImplicitContainer() async throws {
         let workspace = Workspace.get(byName: name)
         workspace.rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
@@ -112,7 +112,7 @@ final class MoveCommandTest: XCTestCase {
             TestWindow.new(id: 3, parent: $0)
         }
 
-        MoveCommand(args: MoveCmdArgs(rawArgs: [], .up)).run(.defaultEnv, .emptyStdin)
+        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .up)).run(.defaultEnv, .emptyStdin)
         assertEquals(
             workspace.layoutDescription,
             .workspace([
@@ -124,7 +124,7 @@ final class MoveCommandTest: XCTestCase {
         )
     }
 
-    func testMoveOut() {
+    func testMoveOut() async throws {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
             TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
@@ -134,7 +134,7 @@ final class MoveCommandTest: XCTestCase {
             }
         }
 
-        MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.defaultEnv, .emptyStdin)
+        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.defaultEnv, .emptyStdin)
         assertEquals(
             root.layoutDescription,
             .h_tiles([
@@ -148,7 +148,7 @@ final class MoveCommandTest: XCTestCase {
         )
     }
 
-    func testMoveOutWithNormalization_right() {
+    func testMoveOutWithNormalization_right() async throws {
         config.enableNormalizationFlattenContainers = true
 
         let workspace = Workspace.get(byName: name).apply {
@@ -156,7 +156,7 @@ final class MoveCommandTest: XCTestCase {
             assertEquals(TestWindow.new(id: 2, parent: $0.rootTilingContainer).focusWindow(), true)
         }
 
-        MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
+        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
         assertEquals(
             workspace.rootTilingContainer.layoutDescription,
             .h_tiles([
@@ -167,7 +167,7 @@ final class MoveCommandTest: XCTestCase {
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
-    func testMoveOutWithNormalization_left() {
+    func testMoveOutWithNormalization_left() async throws {
         config.enableNormalizationFlattenContainers = true
 
         let workspace = Workspace.get(byName: name).apply {
@@ -175,7 +175,7 @@ final class MoveCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0.rootTilingContainer)
         }
 
-        MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.defaultEnv, .emptyStdin)
+        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.defaultEnv, .emptyStdin)
         assertEquals(
             workspace.rootTilingContainer.layoutDescription,
             .h_tiles([

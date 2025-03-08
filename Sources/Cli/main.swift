@@ -3,6 +3,25 @@ import Darwin
 import Foundation
 import Socket
 
+// func foo() {
+// }
+//
+// let task = Task.detached {
+//     let subtask = Task {
+//         print("subtask started")
+//         try await Task.sleep(for: .seconds(3))
+//         print("subtask finished")
+//     }
+// }
+//
+// sleep(1)
+//
+// task.cancel()
+//
+// sleep(3)
+//
+// exit(0)
+
 func printVersionAndExit(serverVersion: String?) -> Never {
     print(
         """

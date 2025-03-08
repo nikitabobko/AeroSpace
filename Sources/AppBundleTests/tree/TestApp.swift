@@ -17,7 +17,7 @@ final class TestApp: AbstractApp {
     }
 
     var _windows: [Window] = []
-    func detectNewWindows(startup: Bool) {}
+    @MainActor func detectNewWindows(startup: Bool) {}
     var windows: [Window] {
         get { _windows }
         set {
@@ -38,5 +38,5 @@ final class TestApp: AbstractApp {
             _focusedWindow = newValue
         }
     }
-    func getFocusedWindow(startup: Bool) -> Window? { _focusedWindow }
+    @MainActor func getFocusedWindow() -> Window? { _focusedWindow }
 }

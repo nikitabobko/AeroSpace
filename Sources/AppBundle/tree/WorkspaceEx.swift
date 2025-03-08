@@ -1,7 +1,7 @@
 import Common
 
 extension Workspace {
-    var rootTilingContainer: TilingContainer {
+    @MainActor var rootTilingContainer: TilingContainer {
         let containers = children.filterIsInstance(of: TilingContainer.self)
         switch containers.count {
             case 0:
@@ -22,7 +22,7 @@ extension Workspace {
         children.filterIsInstance(of: Window.self)
     }
 
-    var macOsNativeFullscreenWindowsContainer: MacosFullscreenWindowsContainer {
+    @MainActor var macOsNativeFullscreenWindowsContainer: MacosFullscreenWindowsContainer {
         let containers = children.filterIsInstance(of: MacosFullscreenWindowsContainer.self)
         return switch containers.count {
             case 0: MacosFullscreenWindowsContainer(parent: self)
@@ -31,7 +31,7 @@ extension Workspace {
         }
     }
 
-    var macOsNativeHiddenAppsWindowsContainer: MacosHiddenAppsWindowsContainer {
+    @MainActor var macOsNativeHiddenAppsWindowsContainer: MacosHiddenAppsWindowsContainer {
         let containers = children.filterIsInstance(of: MacosHiddenAppsWindowsContainer.self)
         return switch containers.count {
             case 0: MacosHiddenAppsWindowsContainer(parent: self)
@@ -40,7 +40,7 @@ extension Workspace {
         }
     }
 
-    var forceAssignedMonitor: Monitor? {
+    @MainActor var forceAssignedMonitor: Monitor? {
         guard let monitorDescriptions = config.workspaceToMonitorForceAssignment[name] else { return nil }
         let sortedMonitors = sortedMonitors
         return monitorDescriptions.lazy

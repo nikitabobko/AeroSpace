@@ -5,24 +5,28 @@ import Common
 /// The function is called as a feedback response on every user input.
 /// The function is idempotent.
 @MainActor
-func refreshSession<T>(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool, startup: Bool = false, body: () -> T) -> T {
-    check(Thread.current.isMainThread)
+func refreshSession<T>(
+    _ event: RefreshSessionEvent,
+    screenIsDefinitelyUnlocked: Bool,
+    startup: Bool = false, // todo drop in favor of TaskLocal isStartup
+    body: @MainActor () async throws -> T
+) async throws -> T {
     // refreshSessionEventForDebug = event
     // defer { refreshSessionEventForDebug = nil }
     if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
     gc()
     gcMonitors()
 
-    detectNewAppsAndWindows(startup: startup)
+    try await detectNewAppsAndWindows(startup: startup)
 
-    let nativeFocused = getNativeFocusedWindow(startup: startup)
-    if let nativeFocused { debugWindowsIfRecording(nativeFocused) }
+    let nativeFocused = try await getNativeFocusedWindow(startup: startup)
+    if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
     updateFocusCache(nativeFocused)
     let focusBefore = focus.windowOrNil
 
-    refreshModel()
-    let result = body()
-    refreshModel()
+    try await refreshModel()
+    let result = try await body()
+    try await refreshModel()
 
     let focusAfter = focus.windowOrNil
 
@@ -32,25 +36,25 @@ func refreshSession<T>(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked:
 
     if TrayMenuModel.shared.isEnabled {
         if focusBefore != focusAfter {
-            focusAfter?.nativeFocus() // syncFocusToMacOs
+            focusAfter?.nativeFocusAsync() // syncFocusToMacOs
         }
 
         updateTrayText()
-        normalizeLayoutReason(startup: startup)
-        layoutWorkspaces()
+        try await normalizeLayoutReason(startup: startup)
+        try await layoutWorkspaces()
     }
     return result
 }
 
 @MainActor
-func refreshAndLayout(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool, startup: Bool = false) {
-    refreshSession(event, screenIsDefinitelyUnlocked: screenIsDefinitelyUnlocked, startup: startup, body: {})
+func refreshAndLayout(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool, startup: Bool = false) async throws {
+    try await refreshSession(event, screenIsDefinitelyUnlocked: screenIsDefinitelyUnlocked, startup: startup, body: {})
 }
 
 @MainActor
-func refreshModel() {
+func refreshModel() async throws {
     gc()
-    checkOnFocusChangedCallbacks()
+    try await checkOnFocusChangedCallbacks()
     normalizeContainers()
 }
 
@@ -58,30 +62,40 @@ func refreshModel() {
 private func gc() {
     // Garbage collect terminated apps and windows before working with all windows
     MacApp.garbageCollectTerminatedApps()
-    gcWindows()
+    // gcWindows() // todo
     // Garbage collect workspaces after apps, because workspaces contain apps.
     Workspace.garbageCollectUnusedWorkspaces()
 }
 
-@MainActor
-func gcWindows() {
-    // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
-    // Second and third lines of defence are technically needed only to avoid potential flickering
-    if NSWorkspace.shared.frontmostApplication?.bundleIdentifier == lockScreenAppBundleId { return }
-    let toKill = MacWindow.allWindowsMap.filter { $0.value.axWindow.containingWindowId(signpostEvent: $0.value.app.name) == nil }
-    // If all windows are "unobservable", it's highly propable that loginwindow might be still active and we are still
-    // recovering from unlock
-    if toKill.count == MacWindow.allWindowsMap.count { return }
-    for window in toKill {
-        window.value.garbageCollect(skipClosedWindowsCache: false)
-    }
+func foo() async -> Bool {
+    return true
 }
+
+func bar() async {
+    // let f = Task { await foo() }
+    async let f = foo()
+    print(await f)
+}
+
+// @MainActor
+// func gcWindows() {
+//     // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
+//     // Second and third lines of defence are technically needed only to avoid potential flickering
+//     if NSWorkspace.shared.frontmostApplication?.bundleIdentifier == lockScreenAppBundleId { return }
+//     let toKill = MacWindow.allWindowsMap.filter { $0.value.axWindow.containingWindowId(signpostEvent: $0.value.app.name) == nil }
+//     // If all windows are "unobservable", it's highly propable that loginwindow might be still active and we are still
+//     // recovering from unlock
+//     if toKill.count == MacWindow.allWindowsMap.count { return }
+//     for window in toKill {
+//         window.value.garbageCollect(skipClosedWindowsCache: false)
+//     }
+// }
 
 func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
     check(Thread.isMainThread)
     let notif = notif as String
-    MainActor.assumeIsolated {
-        refreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
+    Task {
+        try await refreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
     }
 }
 
@@ -90,7 +104,7 @@ enum OptimalHideCorner {
 }
 
 @MainActor
-private func layoutWorkspaces() {
+private func layoutWorkspaces() async throws {
     let monitors = monitors
     var monitorToOptimalHideCorner: [CGPoint: OptimalHideCorner] = [:]
     for monitor in monitors {
@@ -118,11 +132,13 @@ private func layoutWorkspaces() {
     for monitor in monitors {
         let workspace = monitor.activeWorkspace
         workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
-        workspace.layoutWorkspace()
+        try await workspace.layoutWorkspace()
     }
     for workspace in Workspace.all where !workspace.isVisible {
         let corner = monitorToOptimalHideCorner[workspace.workspaceMonitor.rect.topLeftCorner] ?? .bottomRightCorner
-        workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).hideInCorner(corner) } // todo as!
+        for window in workspace.allLeafWindowsRecursive {
+            try await (window as! MacWindow).hideInCorner(corner) // todo as!
+        }
     }
 }
 
@@ -135,9 +151,9 @@ private func normalizeContainers() {
 }
 
 @MainActor
-private func detectNewAppsAndWindows(startup: Bool) {
-    for app in apps {
-        app.detectNewWindows(startup: startup)
+private func detectNewAppsAndWindows(startup: Bool) async throws {
+    for app in try await apps { // todo parallelize
+        try await app.detectNewWindows(startup: startup)
     }
 }
 

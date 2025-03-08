@@ -4,17 +4,15 @@ protocol AbstractApp: AnyObject, Hashable, AeroAny {
     var pid: Int32 { get }
     var id: String? { get }
 
-    @MainActor func getFocusedWindow(startup: Bool) -> Window?
+    @MainActor func getFocusedWindow() async throws -> Window?
     var name: String? { get }
     var execPath: String? { get }
     var bundlePath: String? { get }
-    @MainActor func detectNewWindows(startup: Bool)
+    @MainActor func detectNewWindows(startup: Bool) async throws
 }
 
 extension AbstractApp {
-    func asMacApp() -> MacApp { self as! MacApp }
-
-    func isFirefox() -> Bool {
+    func isFirefox() -> Bool { // todo drop?
         ["org.mozilla.firefox", "org.mozilla.firefoxdeveloperedition", "org.mozilla.nightly"].contains(id ?? "")
     }
 
@@ -34,5 +32,5 @@ extension AbstractApp {
 }
 
 extension Window {
-    var macAppUnsafe: MacApp { app.asMacApp() }
+    var macAppUnsafe: MacApp { app as! MacApp } // todo rename to macAppUnsafe
 }

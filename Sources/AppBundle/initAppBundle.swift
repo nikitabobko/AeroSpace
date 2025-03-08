@@ -23,14 +23,129 @@ import Foundation
     AXUIElementSetMessagingTimeout(AXUIElementCreateSystemWide(), 1.0)
     startUnixSocketServer()
     GlobalObserver.initObserver()
-    refreshAndLayout(.startup1, screenIsDefinitelyUnlocked: false, startup: true)
-    refreshSession(.startup2, screenIsDefinitelyUnlocked: false) {
-        if serverArgs.startedAtLogin {
-            _ = config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+    Task {
+        try await $isStartup.withValue(true) {
+            try await refreshAndLayout(.startup1, screenIsDefinitelyUnlocked: false, startup: true)
         }
-        _ = config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+        try await refreshSession(.startup2, screenIsDefinitelyUnlocked: false) {
+            if serverArgs.startedAtLogin {
+                _ = try await config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+            }
+            _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+        }
     }
 }
+
+@TaskLocal
+var isStartup: Bool = false
+
+extension Thread {
+    @discardableResult
+    func runInLoopAsync( // todo rename to runInLoopInBg
+        job: RunLoopJob = RunLoopJob(),
+        autoCheckCancelled: Bool = true,
+        _ body: @Sendable @escaping (RunLoopJob) -> ()
+    ) -> RunLoopJob {
+        let action = RunLoopAction(job: job, autoCheckCancelled: autoCheckCancelled, body)
+        // Alternative: CFRunLoopPerformBlock + CFRunLoopWakeUp
+        action.perform(#selector(action.action), on: self, with: nil, waitUntilDone: false)
+        return job
+    }
+
+    @MainActor // todo swift is stupid
+    func runInLoop<T>(_ body: @Sendable @escaping (RunLoopJob) -> T) async throws -> T { // todo try to convert to typed throws
+        try checkCancellation()
+        let job = RunLoopJob()
+        return //try await allowOnlyCancellationError {
+            try await withTaskCancellationHandler {
+                try await withCheckedThrowingContinuation { cont in
+                    // It's unsafe to implicitly cancel because cont.resume should be invoked exactly once
+                    self.runInLoopAsync(job: job, autoCheckCancelled: false) { job in
+                        if job.isCancelled {
+                            cont.resume(throwing: CancellationError())
+                        } else {
+                            cont.resume(returning: body(job))
+                        }
+                    }
+                }
+            } onCancel: {
+                job.cancel()
+            }
+        //}
+    }
+}
+
+final class RunLoopAction: NSObject {
+    private let _action: (RunLoopJob) -> ()
+    let job: RunLoopJob
+    private let autoCheckCancelled: Bool
+    init(job: RunLoopJob, autoCheckCancelled: Bool, _ action: @escaping @Sendable (RunLoopJob) -> ()) {
+        self.job = job
+        self.autoCheckCancelled = autoCheckCancelled
+        _action = action
+    }
+    @objc func action() {
+        if autoCheckCancelled && job.isCancelled { return }
+        _action(job)
+    }
+}
+
+final class RunLoopJob: Sendable, AeroAny {
+    private let cancellationLatch = OneTimeLatch()
+    var isCancelled: Bool { cancellationLatch.isTriggered }
+    func cancel() { cancellationLatch.trigger() }
+
+    static let cancelled: RunLoopJob = RunLoopJob().also { $0.cancel() }
+}
+
+// final class SerialRunLoopDedicatedThreadExecutor: SerialExecutor {
+//     let someThread = Thread {
+//         CFRunLoopRun()
+//     }
+//
+//     func enqueue(_ job: consuming ExecutorJob) {
+//         let unownedJob = UnownedExecutorJob(job) // in order to escape it to the run{} closure
+//         someThread.run {
+//             unownedJob.runSynchronously(on: self)
+//         }
+//     }
+//
+//     func asUnownedSerialExecutor() -> UnownedSerialExecutor {
+//         UnownedSerialExecutor(ordinary: self)
+//     }
+// }
+
+// class MyThread : Thread {
+//     var runLoop: CFRunLoop? = nil
+//     override func main() {
+//         runLoop = CFRunLoopGetCurrent()
+//         name = "hello"
+//         print("--- run MyThread.main")
+//         print(runLoop)
+//         CFRunLoopRun()
+//     }
+// }
+
+// let queue = DispatchQueue(label: "hi") as! DispatchSerialQueue
+
+// actor Wtf {
+//     private let thread: Thread
+//     private var runLoop: CFRunLoop? = nil
+//     init() {
+//         thread = Thread {
+//             let _loop: CFRunLoop = CFRunLoopGetCurrent()
+//             Task {
+//                 await self.run { wtf in
+//                     wtf.runLoop = _loop
+//                 }
+//             }
+//             CFRunLoopRun()
+//         }
+//         thread.start()
+//     }
+//
+//     nonisolated private func run<R: Sendable>(_ body: (isolated Wtf) async -> R) async -> R { await body(self) }
+// }
 
 struct ServerArgs: Sendable {
     var startedAtLogin = false
