@@ -32,29 +32,41 @@ import Foundation
     }
 
     // var runLoop: CFRunLoop? = nil
-    // let thread = Thread {
-    //     runLoop = CFRunLoopGetCurrent()!
-    //     let timer = CFRunLoopTimerCreateWithHandler(
-    //             kCFAllocatorDefault,
-    //             CFAbsoluteTimeGetCurrent(),
-    //             10000, 0, 0
-    //     ) { _ in }
-    //     CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, .defaultMode)
-    //
-    //     print("CFRunLoopRun")
-    //     CFRunLoopRun()
-    //     print("wtf")
-    // }
-    // thread.name = "suka"
-    // thread.start()
+    let thread = Thread {
+        // runLoop = CFRunLoopGetCurrent()!
+        let timer = CFRunLoopTimerCreateWithHandler(
+                kCFAllocatorDefault,
+                CFAbsoluteTimeGetCurrent(),
+                10000, 0, 0
+        ) { _ in }
+        CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, .defaultMode)
 
-    // sleep(3)
+        print("CFRunLoopRun")
+        CFRunLoopRun()
+        print("wtf")
+    }
+    thread.name = "suka"
+    thread.start()
 
-    // print("isExecuting: \(thread.isExecuting)")
+    sleep(3)
+
+    print("isExecuting: \(thread.isExecuting)")
 
     // Foo.main(thread)
-
-    // sleep(3)
+    Task.detached {
+        print("task started")
+        await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
+            print("Thread.schedule")
+            thread.runInLoopAsync {
+                print("--- 1 \(Thread.current.name ?? "")")
+            }
+            thread.runInLoopAsync {
+                print("--- 2 \(Thread.current.name ?? "")")
+                cont.resume()
+            }
+        }
+        print("continuation")
+    }
 
     // print("isExecuting: \(thread.isExecuting)")
 
@@ -110,28 +122,28 @@ import Foundation
     // }
 }
 
-// final class SelectorLambda0: NSObject {
-//     private let _action: () -> ()
-//     init(_ action: @escaping () -> ()) { _action = action }
-//     @objc func action() {
-//         _action()
-//     }
-// }
+extension Thread {
+    public func runInLoopAsync(_ body: @Sendable @escaping () -> ()) {
+        check(self.isExecuting) // The thread must already be in the RunLoop
+        let action = Action(body)
+        // Alternative: CFRunLoopPerformBlock + CFRunLoopWakeUp
+        action.perform(#selector(action.action), on: self, with: nil, waitUntilDone: false)
+    }
 
-// class Foo: NSObject {
-//     @objc static func foo() {
-//         print("--- 1 \(Thread.current.name)")
-//         CFRunLoopStop(CFRunLoopGetCurrent())
-//         // error("yes!")
-//         // fflush(stdout)
-//     }
-//
-//     static func main(_ thread: Thread) {
-//         print("NSObject.perform")
-//         // perform(#selector(foo), on: thread, with: nil, waitUntilDone: false)
-//         perform(#selector(foo), on: thread, with: nil, waitUntilDone: false)
-//     }
-// }
+    public func runInLoop<T>(isolation: isolated (any Actor)? = #isolation, _ body: @Sendable @escaping () -> T) async -> T {
+        await withCheckedContinuation { (cont: Continuation<T>) in
+            self.runInLoopAsync {
+                cont.resume(returning: body())
+            }
+        }
+    }
+}
+
+final class Action: NSObject {
+    private let _action: () -> ()
+    init(_ action: @escaping () -> ()) { _action = action }
+    @objc func action() { _action() }
+}
 
 // final class SerialRunLoopDedicatedThreadExecutor: SerialExecutor {
 //     let someThread = Thread {
