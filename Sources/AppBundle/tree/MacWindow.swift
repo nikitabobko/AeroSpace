@@ -213,17 +213,22 @@ final class MacWindow: Window {
     }
 }
 
+
+@MainActor func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // todo drop
+    return isWindow(axWindow: axWindow, axApp: app.axApp, appBundleId: app.id)
+}
+
 /// Alternative name: !isPopup
 ///
 /// Why do we need to filter out non-windows?
 /// - "floating by default" workflow
 /// - It's annoying that the focus command treats these popups as floating windows
-@MainActor func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool {
+func isWindow(axWindow: AXUIElement, axApp: AXUIElement, appBundleId: String?) -> Bool {
     // Just don't do anything with "Ghostty Quick Terminal" windows.
     // Its position and size are managed by the Ghostty itself
     // https://github.com/nikitabobko/AeroSpace/issues/103
     // https://github.com/ghostty-org/ghostty/discussions/3512
-    if app.id == "com.mitchellh.ghostty" && axWindow.get(Ax.identifierAttr) == "com.mitchellh.ghostty.quickTerminal" {
+    if appBundleId == "com.mitchellh.ghostty" && axWindow.get(Ax.identifierAttr) == "com.mitchellh.ghostty.quickTerminal" {
         return false
     }
 
@@ -247,7 +252,7 @@ final class MacWindow: Window {
 
         axWindow.get(Ax.isFocused) == true ||  // 3 different ways to detect if the window is focused
         axWindow.get(Ax.isMainAttr) == true ||
-        app.getFocusedAxWindow()?.containingWindowId() == axWindow.containingWindowId() ||
+        axApp.get(Ax.focusedWindowAttr)?.containingWindowId() == axWindow.containingWindowId() ||
 
         axWindow.get(Ax.subroleAttr) == kAXStandardWindowSubrole
 }
