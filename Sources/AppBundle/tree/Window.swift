@@ -3,7 +3,7 @@ import Common
 
 class Window: TreeNode, Hashable {
     nonisolated let windowId: UInt32
-    let app: AbstractApp
+    let app: any AbstractApp
     override var parent: NonLeafTreeNodeObject { super.parent ?? errorT("Windows always have parent") }
     var parentOrNilForTests: NonLeafTreeNodeObject? { super.parent }
     var lastFloatingSize: CGSize?
@@ -11,7 +11,7 @@ class Window: TreeNode, Hashable {
     var noOuterGapsInFullscreen: Bool = false
     var layoutReason: LayoutReason = .standard
 
-    init(id: UInt32, _ app: AbstractApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
+    init(id: UInt32, _ app: any AbstractApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
         self.windowId = id
         self.app = app
         self.lastFloatingSize = lastFloatingSize

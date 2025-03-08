@@ -2,10 +2,10 @@ import AppKit
 import Common
 
 @MainActor
-var appForTests: AbstractApp? = nil
+var appForTests: (any AbstractApp)? = nil
 
 @MainActor
-private var focusedApp: AbstractApp? {
+private var focusedApp: (any AbstractApp)? {
     if isUnitTest {
         return appForTests
     } else {

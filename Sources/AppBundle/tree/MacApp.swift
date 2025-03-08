@@ -6,6 +6,8 @@ final class MacApp: AbstractApp {
     let nsApp: NSRunningApplication
     let axApp: AXUIElement
     let isZoom: Bool
+    let pid: Int32
+    let id: String?
 
     private var axObservers: [AxObserverWrapper] = [] // keep observers in memory
 
@@ -13,7 +15,8 @@ final class MacApp: AbstractApp {
         self.nsApp = nsApp
         self.axApp = axApp
         self.isZoom = nsApp.bundleIdentifier == "us.zoom.xos"
-        super.init(pid: nsApp.processIdentifier, id: nsApp.bundleIdentifier)
+        self.pid = nsApp.processIdentifier
+        self.id = nsApp.bundleIdentifier
     }
 
     static var allAppsMap: [pid_t: MacApp] = [:]
@@ -47,7 +50,7 @@ final class MacApp: AbstractApp {
         for obs in axObservers {
             AXObserverRemoveNotification(obs.obs, obs.ax, obs.notif)
         }
-        MacWindow.allWindows.lazy.filter { $0.app == self }.forEach { $0.garbageCollect(skipClosedWindowsCache: skipClosedWindowsCache) }
+        MacWindow.allWindows.lazy.filter { $0.app.pid == self.pid }.forEach { $0.garbageCollect(skipClosedWindowsCache: skipClosedWindowsCache) }
         axObservers = []
     }
 
@@ -57,11 +60,11 @@ final class MacApp: AbstractApp {
         }
     }
 
-    override var name: String? { nsApp.localizedName }
+    nonisolated var name: String? { nsApp.localizedName }
 
-    override var execPath: String? { nsApp.executableURL?.path }
+    nonisolated var execPath: String? { nsApp.executableURL?.path }
 
-    override var bundlePath: String? { nsApp.bundleURL?.path }
+    nonisolated var bundlePath: String? { nsApp.bundleURL?.path }
 
     private func observe(_ handler: AXObserverCallback, _ notifKey: String) -> Bool {
         guard let observer = AXObserver.observe(nsApp.processIdentifier, notifKey, axApp, handler, data: nil) else { return false }
@@ -69,7 +72,7 @@ final class MacApp: AbstractApp {
         return true
     }
 
-    override func getFocusedWindow(startup: Bool) -> Window? { // todo unused?
+    func getFocusedWindow(startup: Bool) -> Window? { // todo unused?
         getFocusedAxWindow()?.lets { MacWindow.get(app: self, axWindow: $0, startup: startup) }
     }
 
@@ -77,7 +80,7 @@ final class MacApp: AbstractApp {
         axApp.get(Ax.focusedWindowAttr)
     }
 
-    override func detectNewWindows(startup: Bool) {
+    func detectNewWindows(startup: Bool) {
         guard let windows = axApp.get(Ax.windowsAttr, signpostEvent: name) else { return }
         for window in windows {
             _ = MacWindow.get(app: self, axWindow: window, startup: startup)
