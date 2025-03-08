@@ -2,15 +2,22 @@
 import Common
 
 final class TestApp: AbstractApp {
+    let pid: Int32
+    let id: String?
+    let name: String?
+    let execPath: String? = nil
+    let bundlePath: String? = nil
     @MainActor
     static let shared = TestApp()
 
     private init() {
-        super.init(pid: 0, id: "bobko.AeroSpace.test-app")
+        self.pid = 0
+        self.id = "bobko.AeroSpace.test-app"
+        self.name = id
     }
 
     var _windows: [Window] = []
-    override func detectNewWindows(startup: Bool) {}
+    func detectNewWindows(startup: Bool) {}
     var windows: [Window] {
         get { _windows }
         set {
@@ -31,5 +38,5 @@ final class TestApp: AbstractApp {
             _focusedWindow = newValue
         }
     }
-    override func getFocusedWindow(startup: Bool) -> Window? { _focusedWindow }
+    func getFocusedWindow(startup: Bool) -> Window? { _focusedWindow }
 }

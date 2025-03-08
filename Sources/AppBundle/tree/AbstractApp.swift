@@ -1,15 +1,24 @@
 import Common
 
-class AbstractApp: Hashable {
-    let pid: Int32
-    let id: String?
+protocol AbstractApp: AnyObject, Hashable, AeroAny {
+    var pid: Int32 { get }
+    var id: String? { get }
 
-    init(pid: Int32, id: String?) {
-        self.pid = pid
-        self.id = id
+    @MainActor func getFocusedWindow(startup: Bool) -> Window?
+    var name: String? { get }
+    var execPath: String? { get }
+    var bundlePath: String? { get }
+    @MainActor func detectNewWindows(startup: Bool)
+}
+
+extension AbstractApp {
+    func asMacApp() -> MacApp { self as! MacApp }
+
+    func isFirefox() -> Bool {
+        ["org.mozilla.firefox", "org.mozilla.firefoxdeveloperedition", "org.mozilla.nightly"].contains(id ?? "")
     }
 
-    static func == (lhs: AbstractApp, rhs: AbstractApp) -> Bool {
+    static func == (lhs: Self, rhs: Self) -> Bool {
         if lhs.pid == rhs.pid {
             check(lhs === rhs)
             return true
@@ -21,20 +30,6 @@ class AbstractApp: Hashable {
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(pid)
-    }
-
-    @MainActor func getFocusedWindow(startup: Bool) -> Window? { error("Not implemented") }
-    var name: String? { nil }
-    var execPath: String? { nil }
-    var bundlePath: String? { nil }
-    @MainActor func detectNewWindows(startup: Bool) { error("Not implemented") }
-}
-
-extension AbstractApp {
-    func asMacApp() -> MacApp { self as! MacApp }
-
-    func isFirefox() -> Bool {
-        ["org.mozilla.firefox", "org.mozilla.firefoxdeveloperedition", "org.mozilla.nightly"].contains(id ?? "")
     }
 }
 

@@ -58,11 +58,11 @@ extension String? {
 }
 
 @MainActor
-var apps: [AbstractApp] {
+var apps: [any AbstractApp] {
     if isUnitTest {
         return appForTests.asList()
     }
-    var result = [AbstractApp]()
+    var result = [any AbstractApp]()
     for _app in NSWorkspace.shared.runningApplications where _app.activationPolicy == .regular {
         if let app = _app.macApp {
             result.append(app)

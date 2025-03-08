@@ -87,7 +87,7 @@ final class MacWindow: Window {
                     let deadWindowFocus = deadWindowWorkspace.toLiveFocus()
                     _ = setFocus(to: deadWindowFocus)
                     // Guard against "Apple Reminders popup" bug: https://github.com/nikitabobko/AeroSpace/issues/201
-                    if focus.windowOrNil?.app != app {
+                    if focus.windowOrNil?.app.pid != app.pid {
                         // Force focus to fix macOS annoyance with focused apps without windows.
                         //   https://github.com/nikitabobko/AeroSpace/issues/65
                         deadWindowFocus.windowOrNil?.nativeFocus()
