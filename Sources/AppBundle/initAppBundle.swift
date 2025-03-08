@@ -30,7 +30,157 @@ import Foundation
         }
         _ = config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
     }
+
+    var runLoop: CFRunLoop? = nil
+    let thread = Thread {
+        runLoop = CFRunLoopGetCurrent()!
+        let timer = CFRunLoopTimerCreateWithHandler(
+                kCFAllocatorDefault,
+                CFAbsoluteTimeGetCurrent(),
+                10000, 0, 0
+        ) { _ in }
+        CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, .defaultMode)
+
+        print("CFRunLoopRun")
+        CFRunLoopRun()
+        print("wtf")
+    }
+    thread.name = "suka"
+    thread.start()
+
+    sleep(3)
+
+    print("isExecuting: \(thread.isExecuting)")
+
+    Foo.main(thread)
+
+    sleep(3)
+
+    print("isExecuting: \(thread.isExecuting)")
+
+    // var runLoop: CFRunLoop? = nil
+    // Thread.detachNewThread {
+    //     runLoop = CFRunLoopGetCurrent()
+    //     print("--- run detachNewThread.main")
+    //     print(runLoop)
+    //     CFRunLoopRun()
+    // }
+
+    // CFRunLoopPerformBlock(runLoop!, CFRunLoopMode.defaultMode.rawValue) {
+    //     print("--- 1 \(Thread.current.name)")
+    // }
+    // CFRunLoopWakeUp(runLoop)
+    // NSObject.perform
+
+    // Task {
+    //     try await Task.sleep(for: .seconds(1))
+    //     print("--- here")
+    //     print("\(runLoop)")
+    //     CFRunLoopPerformBlock(runLoop!, CFRunLoopMode.commonModes.rawValue) {
+    //         print("--- 1 \(Thread.current.name)")
+    //     }
+    //     CFRunLoopWakeUp(runLoop)
+    // }
+
+    // CFRunLoopPerformBlock(thread.runLoop, CFRunLoopMode.defaultMode.rawValue) {
+    //     print("---  \(Thread.current.name)")
+    // }
+
+    // Thread.detachNewThread {
+    //     CFRunLoopGetCurrent()
+    //     CFRunLoopRun()
+    // }
+
+    // var foo = 1
+
+    // let thread = Thread {
+    //     RunLoop.current.perform { }
+    // }
+    // thread.start()
+
+    // let foo = SelectorLambda0 {}
+
+
+    // Thread.detachNewThread {
+    //     Thread.current.name = "suka"
+    //     print(Thread.current.name)
+    //     let finder = NSWorkspace.shared.runningApplications.first { $0.bundleIdentifier == "com.apple.finder" }!
+    //     let macApp = MacApp.get(finder, mainThread: false)
+    //     CFRunLoopRun()
+    // }
 }
+
+// final class SelectorLambda0: NSObject {
+//     private let _action: () -> ()
+//     init(_ action: @escaping () -> ()) { _action = action }
+//     @objc func action() {
+//         _action()
+//     }
+// }
+
+class Foo: NSObject {
+    @objc static func foo() {
+        print("--- 1 \(Thread.current.name)")
+        CFRunLoopStop(CFRunLoopGetCurrent())
+        // error("yes!")
+        // fflush(stdout)
+    }
+
+    static func main(_ thread: Thread) {
+        print("NSObject.perform")
+        // perform(#selector(foo), on: thread, with: nil, waitUntilDone: false)
+        perform(#selector(foo), on: thread, with: nil, waitUntilDone: false)
+    }
+}
+
+// final class SerialRunLoopDedicatedThreadExecutor: SerialExecutor {
+//     let someThread = Thread {
+//         CFRunLoopRun()
+//     }
+//
+//     func enqueue(_ job: consuming ExecutorJob) {
+//         let unownedJob = UnownedExecutorJob(job) // in order to escape it to the run{} closure
+//         someThread.run {
+//             unownedJob.runSynchronously(on: self)
+//         }
+//     }
+//
+//     func asUnownedSerialExecutor() -> UnownedSerialExecutor {
+//         UnownedSerialExecutor(ordinary: self)
+//     }
+// }
+
+// class MyThread : Thread {
+//     var runLoop: CFRunLoop? = nil
+//     override func main() {
+//         runLoop = CFRunLoopGetCurrent()
+//         name = "hello"
+//         print("--- run MyThread.main")
+//         print(runLoop)
+//         CFRunLoopRun()
+//     }
+// }
+
+// let queue = DispatchQueue(label: "hi") as! DispatchSerialQueue
+
+// actor Wtf {
+//     private let thread: Thread
+//     private var runLoop: CFRunLoop? = nil
+//     init() {
+//         thread = Thread {
+//             let _loop: CFRunLoop = CFRunLoopGetCurrent()
+//             Task {
+//                 await self.run { wtf in
+//                     wtf.runLoop = _loop
+//                 }
+//             }
+//             CFRunLoopRun()
+//         }
+//         thread.start()
+//     }
+//
+//     nonisolated private func run<R: Sendable>(_ body: (isolated Wtf) async -> R) async -> R { await body(self) }
+// }
 
 struct ServerArgs: Sendable {
     var startedAtLogin = false
