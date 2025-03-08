@@ -3,7 +3,7 @@ import Common
 enum AeroObj {
     case window(Window)
     case workspace(Workspace)
-    case app(AbstractApp)
+    case app(any AbstractApp)
     case monitor(Monitor)
 
     var kind: AeroObjKind {
