@@ -2,7 +2,7 @@
 
 ## Users cannot create GitHub Issues directly
 
-Unfortunately, AeroSpace project doesn't accept bug reports and feature requests from everyone.
+Unfortunately, AeroSpace project doesn't openly accept bug reports and feature requests.
 
 The submitted Issues are often either obvious duplicates, environmental problems, or configuration errors by the users themselves.
 For a hobby project, I don't have enough time and energy to process every such submitted Issue.
