@@ -187,8 +187,13 @@ If you use different layout, different alphabet, or you just want to have a fanc
     preset = 'dvorak'
 ----
 
-* For `colemak` users, there is xref:./goodies.adoc#colemak-keys-remap[a compiled mapping].
-`colemak` may be added as preconfigured preset similar to `dvorak` in the future, if there is enough demand
+* For `colemak` users, AeroSpace offers a preconfigured preset.
++
+[source,toml]
+----
+[key-mapping]
+    preset = 'colemak'
+----
 
 [#exec-env-vars]
 === exec-* Environment Variables
