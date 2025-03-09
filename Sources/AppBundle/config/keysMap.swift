@@ -242,7 +242,6 @@ private let colemakMap: [String: Key] = keyNotationToKeyCode + [
     comma: .comma,
     period: .period,
     slash: .slash,
-
 ]
 
 let modifiersMap: [String: NSEvent.ModifierFlags] = [
