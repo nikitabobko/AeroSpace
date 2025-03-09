@@ -173,7 +173,7 @@ final class ConfigTest: XCTestCase {
 
                 My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.
                 """],
-            errors.description
+            errors.descriptions
         )
     }
 
@@ -380,7 +380,6 @@ final class ConfigTest: XCTestCase {
         assertEquals(dvorakErrors, [])
         assertEquals(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
         assertEquals(dvorakConfig.keyMapping.resolve()["quote"], .q)
-        
         let (colemakConfig, colemakErrors) = parseConfig(
             """
             key-mapping.preset = 'colemak'
