@@ -9,7 +9,7 @@ private let keyMappingParser: [String: any ParserProtocol<KeyMapping>] = [
 
 struct KeyMapping: Copyable, Equatable, Sendable {
     enum Preset: String, CaseIterable, Sendable {
-        case qwerty, dvorak
+        case qwerty, dvorak, colemak
     }
 
     public init(
