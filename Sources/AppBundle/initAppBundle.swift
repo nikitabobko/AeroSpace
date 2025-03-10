@@ -31,42 +31,37 @@ import Foundation
         _ = config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
     }
 
-    // var runLoop: CFRunLoop? = nil
-    let thread = Thread {
-        // runLoop = CFRunLoopGetCurrent()!
-        let timer = CFRunLoopTimerCreateWithHandler(
-                kCFAllocatorDefault,
-                CFAbsoluteTimeGetCurrent(),
-                10000, 0, 0
-        ) { _ in }
-        CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, .defaultMode)
-
-        print("CFRunLoopRun")
-        CFRunLoopRun()
-        print("wtf")
-    }
-    thread.name = "suka"
-    thread.start()
-
-    sleep(3)
-
-    print("isExecuting: \(thread.isExecuting)")
-
-    // Foo.main(thread)
     Task.detached {
-        print("task started")
-        await withCheckedContinuation { (cont: CheckedContinuation<Void, Never>) in
-            print("Thread.schedule")
-            thread.runInLoopAsync {
-                print("--- 1 \(Thread.current.name ?? "")")
-            }
-            thread.runInLoopAsync {
-                print("--- 2 \(Thread.current.name ?? "")")
-                cont.resume()
-            }
+        let thread = Thread {
+            let timer = CFRunLoopTimerCreateWithHandler(
+                    kCFAllocatorDefault,
+                    CFAbsoluteTimeGetCurrent(),
+                    10000, 0, 0
+                    ) { _ in }
+            CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, .defaultMode)
+
+            // sleep(3)
+            print("CFRunLoopRun")
+            CFRunLoopRun()
+            print("wtf")
         }
-        print("continuation")
+        thread.name = "suka"
+        thread.start()
+
+        // sleep(3)
+
+        check(thread.isExecuting)
+
+        print("task started")
+        print("Thread.schedule")
+        thread.runInLoopAsync {
+            print("--- 1 \(Thread.current.name ?? "")")
+        }
+        thread.runInLoopAsync {
+            print("--- 2 \(Thread.current.name ?? "")")
+        }
     }
+
 
     // print("isExecuting: \(thread.isExecuting)")
 
@@ -124,7 +119,6 @@ import Foundation
 
 extension Thread {
     public func runInLoopAsync(_ body: @Sendable @escaping () -> ()) {
-        check(self.isExecuting) // The thread must already be in the RunLoop
         let action = Action(body)
         // Alternative: CFRunLoopPerformBlock + CFRunLoopWakeUp
         action.perform(#selector(action.action), on: self, with: nil, waitUntilDone: false)

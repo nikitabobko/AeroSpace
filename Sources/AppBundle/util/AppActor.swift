@@ -1,9 +1,40 @@
 import AppKit
 import Common
 
+func foo(app: Foo) async {
+    await app.foo()
+}
+
+// Don't convert to AppActor.static https://github.com/swiftlang/swift/issues/78435
+@MainActor
+var allAppsMap: [pid_t: AppActor] = [:]
+
+class Foo {
+    nonisolated let pid: Int32
+    nonisolated let bundleId: String?
+    nonisolated let nsApp: NSRunningApplication
+    private let axApp: SendableAxUiElement
+    // private var windows: [UInt32: SendableAxUiElement] = [:]
+    let thread: Thread
+
+    private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement, _ thread: Thread) {
+        self.pid = nsApp.processIdentifier
+        self.bundleId = nsApp.bundleIdentifier
+        self.nsApp = nsApp
+        self.axApp = SendableAxUiElement(axApp)
+        self.thread = thread
+    }
+
+    @MainActor
+    func foo() {
+    }
+}
+
 // Potential alternative implementation
 // https://github.com/swiftlang/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md
 // (only available since macOS 14)
+//
+// Or it could be a class + @MainActor to avoid potential unnecessary context switches
 actor AppActor {
     nonisolated let pid: Int32
     nonisolated let bundleId: String?
@@ -12,19 +43,41 @@ actor AppActor {
     private var windows: [UInt32: SendableAxUiElement] = [:]
     let thread: Thread
 
-    init(_ nsApp: NSRunningApplication) {
+    private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement, _ thread: Thread) {
         // self.ax = ax
         self.pid = nsApp.processIdentifier
         self.bundleId = nsApp.bundleIdentifier
         self.nsApp = nsApp
-        self.thread = Thread()
-        self.axApp = errorT()
+        self.axApp = SendableAxUiElement(axApp)
+        self.thread = thread
     }
 
-    public static var allAppsMap: [pid_t: AppActor] = [:]
-
-    static func get(_ nsApp: NSRunningApplication) async -> AppActor? {
-        return nil
+    @MainActor
+    static func get(_ nsApp: NSRunningApplication) -> AppActor? {
+        // Don't perceive any of the lock screen windows as real windows
+        // Otherwise, false positive ax notifications might trigger that lead to gcWindows
+        if nsApp.bundleIdentifier == lockScreenAppBundleId {
+            return nil
+        }
+        let pid = nsApp.processIdentifier
+        if let existing = allAppsMap[pid] {
+            return existing
+        } else {
+            // let app = AppActor(nsApp, AXUIElementCreateApplication(nsApp.processIdentifier))
+            //
+            // // self.thread.name = "app-dedicated-thread pid=\(pid) \(bundleId ?? nsApp.executableURL?.description ?? "")"
+            //
+            // if app.observe(refreshObs, kAXWindowCreatedNotification) &&
+            //     app.observe(refreshObs, kAXFocusedWindowChangedNotification)
+            // {
+            //     allAppsMap[pid] = app
+            //     return app
+            // } else {
+            //     app.garbageCollect(skipClosedWindowsCache: true)
+            //     return nil
+            // }
+            error()
+        }
     }
 
     func closeWindow(_ windowId: UInt32) async -> Bool {
@@ -35,7 +88,7 @@ actor AppActor {
         } == true
     }
 
-    func nativeFocusAsync(_ windowId: UInt32) {
+    nonisolated func nativeFocusAsync(_ windowId: UInt32) {
         withWindowAsync(windowId) { window in
             // Raise firstly to make sure that by the time we activate the app, the window would be already on top
             window.set(Ax.isMainAttr, true)
@@ -44,7 +97,9 @@ actor AppActor {
         }
     }
 
-    func setFrameAsync(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {
+    // todo: cancel previous requests
+    // todo invert the nesting? once the TreeNode structure is sendable and immutable, we could send it to all AppActors
+    nonisolated func setFrameAsync(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {
         guard let window = windows[windowId] else { return }
         thread.runInLoopAsync {
             let window = window.unsafe
@@ -72,6 +127,40 @@ actor AppActor {
         }
     }
 
+    func isWindow(_ windowId: UInt32) async -> Bool {
+        await withWindow(windowId) { window in
+            isWindowImpl(axWindow: window, axApp: self.axApp.unsafe, appBundleId: self.bundleId)
+        } == true
+    }
+
+    func setNativeFullscreen(_ windowId: UInt32, _ value: Bool) async -> Bool {
+        await withWindow(windowId) { window in
+            window.set(Ax.isFullscreenAttr, value)
+        } == true
+    }
+
+    // func gcWindowsAsync(frontmostAppBundleId: String) {
+    //     // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
+    //     // Second and third lines of defence are technically needed only to avoid potential flickering
+    //     if frontmostAppBundleId == lockScreenAppBundleId { return }
+    //     let windows = windows
+    //     thread.runInLoopAsync {
+    //         let toKill = windows.filter { $0.value.unsafe.containingWindowId(signpostEvent: bundleId) == nil }
+    //         // If all windows are "unobservable", it's highly propable that loginwindow might be still active and we are still
+    //         // recovering from unlock
+    //         if toKill.count == windows.count { return }
+    //         for window in toKill {
+    //             window.value.unsafe.garbageCollect(skipClosedWindowsCache: false) // todo
+    //         }
+    //     }
+    // }
+
+    func setNativeMinimized(_ windowId: UInt32, _ value: Bool) async -> Bool {
+        await withWindow(windowId) { window in
+            window.set(Ax.minimizedAttr, value)
+        } == true
+    }
+
     private func withWindow<T>(_ windowId: UInt32, _ body: @Sendable @escaping (AXUIElement) -> T?) async -> T? {
         guard let window = windows[windowId] else { return nil }
         return await thread.runInLoop {
@@ -80,7 +169,13 @@ actor AppActor {
         }
     }
 
-    private func withWindowAsync(_ windowId: UInt32, _ body: @Sendable @escaping (AXUIElement) -> ()) {
+    nonisolated private func withWindowAsync(_ windowId: UInt32, _ body: @Sendable @escaping (AXUIElement) -> ()) {
+        Task {
+            await withWindowAsync(windowId, body)
+        }
+    }
+
+    private func withWindowAsync(_ windowId: UInt32, _ body: @Sendable @escaping (AXUIElement) -> ()) async {
         guard let window = windows[windowId] else { return }
         thread.runInLoopAsync {
             let window = window.unsafe
@@ -102,6 +197,11 @@ private func disableAnimations<T>(app: AXUIElement, _ body: () -> T) -> T {
         app.set(Ax.enhancedUserInterfaceAttr, true)
     }
     return result
+}
+
+public final class UnsafeSendable<T>: Sendable {
+    nonisolated(unsafe) let unsafe: T
+    public init(_ value: T) { self.unsafe = value }
 }
 
 // Properties of this class should only be accessed in the guard thread

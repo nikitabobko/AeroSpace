@@ -63,6 +63,16 @@ private func gc() {
     Workspace.garbageCollectUnusedWorkspaces()
 }
 
+func foo() async -> Bool {
+    return true
+}
+
+func bar() async {
+    // let f = Task { await foo() }
+    async let f = foo()
+    print(await f)
+}
+
 @MainActor
 func gcWindows() {
     // Second line of defence against lock screen. See the first line of defence: closedWindowsCache

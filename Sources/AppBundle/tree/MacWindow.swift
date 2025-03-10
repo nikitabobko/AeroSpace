@@ -215,7 +215,7 @@ final class MacWindow: Window {
 
 
 @MainActor func isWindow(_ axWindow: AXUIElement, _ app: MacApp) -> Bool { // todo drop
-    return isWindow(axWindow: axWindow, axApp: app.axApp, appBundleId: app.id)
+    return isWindowImpl(axWindow: axWindow, axApp: app.axApp, appBundleId: app.id)
 }
 
 /// Alternative name: !isPopup
@@ -223,7 +223,7 @@ final class MacWindow: Window {
 /// Why do we need to filter out non-windows?
 /// - "floating by default" workflow
 /// - It's annoying that the focus command treats these popups as floating windows
-func isWindow(axWindow: AXUIElement, axApp: AXUIElement, appBundleId: String?) -> Bool {
+func isWindowImpl(axWindow: AXUIElement, axApp: AXUIElement, appBundleId: String?) -> Bool {
     // Just don't do anything with "Ghostty Quick Terminal" windows.
     // Its position and size are managed by the Ghostty itself
     // https://github.com/nikitabobko/AeroSpace/issues/103
