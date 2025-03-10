@@ -39,7 +39,7 @@ private let serverVersionAndHash = "\(aeroSpaceAppVersion) \(gitHash)"
 
 private func newConnection(_ socket: Socket) async { // todo add exit codes
     func answerToClient(exitCode: Int32, stdout: String = "", stderr: String = "") {
-        let ans = ServerAnswer(exitCode: exitCode, stdout: stderr, stderr: stderr, serverVersionAndHash: serverVersionAndHash)
+        let ans = ServerAnswer(exitCode: exitCode, stdout: stdout, stderr: stderr, serverVersionAndHash: serverVersionAndHash)
         answerToClient(ans)
     }
     func answerToClient(_ ans: ServerAnswer) {
