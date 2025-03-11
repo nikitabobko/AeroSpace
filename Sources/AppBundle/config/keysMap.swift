@@ -208,9 +208,9 @@ private let dvorakMap: [String: Key] = keyNotationToKeyCode + [
 private let colemakMap: [String: Key] = keyNotationToKeyCode + [
     q: .q,
     w: .w,
-    f: .t,
+    f: .e,
     p: .r,
-    g: .g,
+    g: .t,
     j: .y,
     l: .u,
     u: .i,
