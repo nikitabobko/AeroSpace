@@ -179,20 +179,12 @@ If you use different layout, different alphabet, or you just want to have a fanc
     alt-unicorn = 'workspace wonderland' # (⁀ᗢ⁀)
 ----
 
-* For `dvorak` users, AeroSpace offers a preconfigured preset.
+* For `dvorak` and `colemak` users, AeroSpace offers preconfigured presets.
 +
 [source,toml]
 ----
 [key-mapping]
-    preset = 'dvorak'
-----
-
-* For `colemak` users, AeroSpace offers a preconfigured preset.
-+
-[source,toml]
-----
-[key-mapping]
-    preset = 'colemak'
+    preset = 'dvorak'  # or 'colemak'
 ----
 
 [#exec-env-vars]
