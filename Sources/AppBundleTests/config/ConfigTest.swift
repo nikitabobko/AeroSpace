@@ -387,6 +387,6 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(colemakErrors, [])
         assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(colemakConfig.keyMapping.resolve()["f"], .t)
+        assertEquals(colemakConfig.keyMapping.resolve()["f"], .e)
     }
 }
