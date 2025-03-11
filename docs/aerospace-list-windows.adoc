@@ -87,6 +87,8 @@ The following variables can be used inside `<output-format>`:
 %{app-bundle-path}:: String. Application bundle path
 
 %{workspace}:: String. Name of the belonging workspace
+%{workspace-is-focused}:: Boolean. True if the workspace has focus
+%{workspace-is-visible}:: Boolean. True if the workspace is visible. A workspace can be visible but not focused in a multi-monitor setup
 
 %{monitor-id}:: 1-based Number. Sequential number of the belonging monitor.
 %{monitor-appkit-nsscreen-screens-id}:: 1-based index of the belonging monitor in `NSScreen.screens` array. Useful for integration with other tools that might be using `NSScreen.screens` ordering (like sketchybar).
