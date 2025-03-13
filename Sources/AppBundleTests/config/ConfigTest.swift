@@ -187,6 +187,9 @@ final class ConfigTest: XCTestCase {
             workspace_name_4 = 'built-in'                   # case insensitive regex substring
             workspace_name_5 = '^built-in retina display$'  # case insensitive regex match
             workspace_name_6 = ['secondary', 1]             # you can specify multiple patterns. The first matching pattern will be used
+            workspace_name_7 = { uuid = '3bafffce-f88e-48ab-98ee-5a0295879f29' } # CFUUID
+            workspace_name_8 = { contextual-id = 123456 }   # Potentially, CGDirectDisplayID
+            workspace_name_9 = { serial = 7890 }    # Potentially, a display-unique serial number
             7 = "foo"
             w7 = ['', 'main']
             w8 = 0
@@ -202,6 +205,9 @@ final class ConfigTest: XCTestCase {
                 "workspace_name_4": [.pattern("built-in")!],
                 "workspace_name_5": [.pattern("^built-in retina display$")!],
                 "workspace_name_6": [.secondary, .sequenceNumber(1)],
+                "workspace_name_7": [.uuid("3bafffce-f88e-48ab-98ee-5a0295879f29")],
+                "workspace_name_8": [.contextualId(123456)],
+                "workspace_name_9": [.serial(7890)],
                 "workspace_name_x": [.sequenceNumber(2)],
                 "7": [.pattern("foo")!],
                 "w7": [.main],
