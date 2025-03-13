@@ -98,6 +98,8 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, parseBool),
     "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, parseBool),
 
+    "menu-bar-style": Parser(\.menuBarStyle, parseMenuBarStyle),
+
     "default-root-container-layout": Parser(\.defaultRootContainerLayout, parseLayout),
     "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, parseDefaultContainerOrientation),
 
@@ -274,6 +276,11 @@ private func parseStartupRootContainerLayout(_ raw: TOMLValueConvertible, _ back
 private func parseLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Layout> {
     parseString(raw, backtrace)
         .flatMap { $0.parseLayout().orFailure(.semantic(backtrace, "Can't parse layout '\($0)'")) }
+}
+
+private func parseMenuBarStyle(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<MenuBarStyle> {
+    parseString(raw, backtrace)
+        .flatMap { $0.parseMenuBarStyle().orFailure(.semantic(backtrace, "Can't parse menu bar style '\($0)'")) }
 }
 
 private func skipParsing<T: Sendable>(_ value: T) -> @Sendable (_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<T> {
