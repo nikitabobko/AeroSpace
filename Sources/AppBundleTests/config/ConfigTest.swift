@@ -379,7 +379,7 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(dvorakErrors, [])
         assertEquals(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(dvorakConfig.keyMapping.resolve()["quote"], .q)
+        assertEquals(dvorakConfig.keyMapping.resolveKeys()["quote"], .q)
         let (colemakConfig, colemakErrors) = parseConfig(
             """
             key-mapping.preset = 'colemak'
@@ -387,6 +387,6 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(colemakErrors, [])
         assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(colemakConfig.keyMapping.resolve()["f"], .e)
+        assertEquals(colemakConfig.keyMapping.resolveKeys()["f"], .e)
     }
 }
