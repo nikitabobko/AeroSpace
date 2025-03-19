@@ -15,6 +15,8 @@ func syncStartAtLogin() {
             <dict>
                 <key>Label</key>
                 <string>\(aeroSpaceAppId)</string>
+                <key>ProcessType</key>
+                <string>Interactive</string>
                 <key>ProgramArguments</key>
                 <array>
                     <string>\(URL(filePath: CommandLine.arguments.first ?? errorT("Can't get first argument")).absoluteURL.path)</string>
