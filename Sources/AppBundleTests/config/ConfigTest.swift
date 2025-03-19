@@ -348,28 +348,65 @@ final class ConfigTest: XCTestCase {
             q = 'q'
             unicorn = 'u'
 
+            [key-mapping.mod-notation-to-mod-flags]
+            hyper = 'ctrl-shift-alt-cmd'
+            uniquehorn = 'ctrl'
+
             [mode.main.binding]
             alt-unicorn = 'workspace wonderland'
+            uniquehorn-unicorn = 'workspace candyland'
+            hyper-u = 'workspace hyprland'
             """
         )
         assertEquals(errors.descriptions, [])
-        assertEquals(config.keyMapping, KeyMapping(preset: .qwerty, rawKeyNotationToKeyCode: [
-            "q": .q,
-            "unicorn": .u,
-        ]))
-        let binding = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrThrow())))])
-        assertEquals(config.modes[mainModeId]?.bindings, [binding.descriptionWithKeyCode: binding])
+        assertEquals(config.keyMapping, KeyMapping(
+            preset: .qwerty,
+            rawKeyNotationToKeyCode: [
+                "q": .q,
+                "unicorn": .u,
+            ],
+            rawModNotationToModFlags: [
+                "hyper": [.control, .shift, .option, .command],
+                "uniquehorn": .control,
+            ]
+        ))
+        let binding1 = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrThrow())))])
+        let binding2 = HotkeyBinding(.control, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(target:
+            .direct(.parse("unicorn").getOrThrow())))])
+        let binding3 = HotkeyBinding([.control, .shift, .option, .command], .u, [WorkspaceCommand(args:
+            WorkspaceCmdArgs(target: .direct(.parse("u").getOrThrow())))])
+        assertEquals(config.modes[mainModeId]?.bindings, [
+            binding1.descriptionWithKeyCode: binding1,
+            binding2.descriptionWithKeyCode: binding2,
+            binding3.descriptionWithKeyCode: binding3,
+        ])
 
         let (_, errors1) = parseConfig(
             """
             [key-mapping.key-notation-to-key-code]
             q = 'qw'
             ' f' = 'f'
+            hyper = 'ctrl-shift'
             """
         )
         assertEquals(errors1.descriptions, [
             "key-mapping.key-notation-to-key-code: ' f' is invalid key notation",
+            "key-mapping.key-notation-to-key-code.hyper: 'ctrl-shift' is invalid key code",
             "key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code",
+        ])
+
+        let (_, errors2) = parseConfig(
+            """
+            [key-mapping.mod-notation-to-mod-flags]
+            hyper = 'ctrl-wrong-shift'
+            ' hype' = 'ctrl'
+            q = 'q'
+            """
+        )
+        assertEquals(errors2.descriptions, [
+            "key-mapping.mod-notation-to-mod-flags: ' hype' is invalid mod notation",
+            "key-mapping.mod-notation-to-mod-flags.hyper: 'ctrl-wrong-shift' is invalid mod flag",
+            "key-mapping.mod-notation-to-mod-flags.q: 'q' is invalid mod flag",
         ])
 
         let (dvorakConfig, dvorakErrors) = parseConfig(
