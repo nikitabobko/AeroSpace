@@ -2,10 +2,11 @@ import Common
 import TOMLKit
 
 struct Gaps: Copyable, Equatable, Sendable {
+    var smart: Bool
     var inner: Inner
     var outer: Outer
 
-    static let zero = Gaps(inner: .zero, outer: .zero)
+    static let zero = Gaps(smart: false, inner: .zero, outer: .zero)
 
     struct Inner: Copyable, Equatable, Sendable {
         var vertical: DynamicConfigValue<Int>
@@ -49,6 +50,7 @@ struct Gaps: Copyable, Equatable, Sendable {
 }
 
 struct ResolvedGaps {
+    let smartGaps: Bool
     let inner: Inner
     let outer: Outer
 
@@ -69,6 +71,8 @@ struct ResolvedGaps {
     }
 
     init(gaps: Gaps, monitor: any Monitor) {
+        smartGaps = gaps.smart
+
         inner = .init(
             vertical: gaps.inner.vertical.getValue(for: monitor),
             horizontal: gaps.inner.horizontal.getValue(for: monitor)
@@ -84,6 +88,7 @@ struct ResolvedGaps {
 }
 
 private let gapsParser: [String: any ParserProtocol<Gaps>] = [
+    "smart": Parser(\.smart, parseBool),
     "inner": Parser(\.inner, parseInner),
     "outer": Parser(\.outer, parseOuter),
 ]

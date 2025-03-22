@@ -49,6 +49,8 @@ automatically-unhide-macos-hidden-apps = false
     preset = 'qwerty'
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
+# The smart property, if set to true, will remove outer gaps when there is only one tiled 
+# window in the workspace.
 # Possible values:
 # - Constant:     gaps.outer.top = 8
 # - Per monitor:  gaps.outer.top = [{ monitor.main = 16 }, { monitor."some-pattern" = 32 }, 24]
@@ -57,6 +59,7 @@ automatically-unhide-macos-hidden-apps = false
 #                 See:
 #                 https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
+    smart =            false
     inner.horizontal = 0
     inner.vertical =   0
     outer.left =       0

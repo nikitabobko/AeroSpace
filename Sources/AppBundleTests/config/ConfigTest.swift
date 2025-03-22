@@ -293,6 +293,7 @@ final class ConfigTest: XCTestCase {
         let (config, errors1) = parseConfig(
             """
             [gaps]
+            smart = true
             inner.horizontal = 10
             inner.vertical = [{ monitor."main" = 1 }, { monitor."secondary" = 2 }, 5]
             outer.left = 12
@@ -305,6 +306,7 @@ final class ConfigTest: XCTestCase {
         assertEquals(
             config.gaps,
             Gaps(
+                smart: true,
                 inner: .init(
                     vertical: .perMonitor(
                         [PerMonitorValue(description: .main, value: 1), PerMonitorValue(description: .secondary, value: 2)],

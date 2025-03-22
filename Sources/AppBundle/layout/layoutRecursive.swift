@@ -3,7 +3,11 @@ import AppKit
 extension Workspace {
     func layoutWorkspace() {
         if isEffectivelyEmpty { return }
-        let rect = workspaceMonitor.visibleRectPaddedByOuterGaps
+        var rect = workspaceMonitor.visibleRect
+        let windowCount = workspaceMonitor.activeWorkspace.allLeafWindowsRecursive.filter { !$0.isFloating }.count
+        if (windowCount > 1 || !config.gaps.smart) {
+            rect = workspaceMonitor.visibleRectPaddedByOuterGaps
+        }
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in mointors horizontal configuration. ¯\_(ツ)_/¯
