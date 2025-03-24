@@ -10,13 +10,15 @@ func startUnixSocketServer() {
         Result { try socket.listen(on: socketFile) }.getOrThrow("Can't listen to socket \(socketFile) ")
         while true {
             guard let connection = try? socket.acceptClientConnection() else { continue }
-            // Circumvent error:
-            //     Value of non-Sendable type '@isolated(any) @async @callee_guaranteed @substituted <τ_0_0> () -> @out τ_0_0 for <()>' accessed after being transferred; later accesses could race
-            DispatchQueue.global().async {
-                Task { await newConnection(connection) }
-            }
+            handleConnectionAsync(connection)
         }
     }
+}
+
+// Circumvent error https://github.com/swiftlang/swift/issues/80234:
+//     Value of non-Sendable type '@isolated(any) @async @callee_guaranteed @substituted <τ_0_0> () -> @out τ_0_0 for <()>' accessed after being transferred; later accesses could race
+private func handleConnectionAsync(_ connection: sending Socket) {
+    Task { await newConnection(connection) }
 }
 
 func sendCommandToReleaseServer(args: [String]) {
