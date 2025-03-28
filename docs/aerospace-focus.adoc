@@ -12,6 +12,9 @@ include::util/man-attributes.adoc[]
 aerospace focus [-h|--help] [--ignore-floating]
                 [--boundaries <boundary>] [--boundaries-action <action>]
                 (left|down|up|right)
+aerospace focus [-h|--help] [--ignore-floating]
+                [--boundaries <boundary>] [--boundaries-action <action>]
+                (dfs-next|dfs-prev)
 aerospace focus [-h|--help] --window-id <window-id>
 aerospace focus [-h|--help] --dfs-index <dfs-index>
 
@@ -31,6 +34,15 @@ This behavior can be disabled with `--ignore-floating` flag.
 
 `focus child|parent` isn't supported because the necessity of this operation is under the question.
 https://github.com/nikitabobko/AeroSpace/issues/5
+
+*1. (left|down|up|right) arguments*
+
+{manpurpose}
+
+*2. (dfs-next|dfs-prev) arguments*
+
+Set focus to the window before or after the current window in the depth-first order (top-to-bottom and left-to-right) of windows in the current workspace tree.
+In this mode, `--boundaries` must be `workspace` (the default) and `--boundaries-action` can be set to one of `(stop|fail|wrap-around-the-workspace)`.
 
 // =========================================================== Options
 include::util/conditional-options-header.adoc[]

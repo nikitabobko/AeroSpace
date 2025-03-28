@@ -36,6 +36,24 @@ struct FocusCommand: Command {
                 } else {
                     return io.err("Can't find window with DFS index \(dfsIndex)")
                 }
+            case .dfsRelative(let nextPrev):
+                let windows = target.workspace.rootTilingContainer.allLeafWindowsRecursive
+                guard let currentIndex = windows.firstIndex(where: { $0 == target.windowOrNil }) else {
+                    return false
+                }
+                var targetIndex = switch nextPrev {
+                    case .next: currentIndex + 1
+                    case .prev: currentIndex - 1
+                }
+                if targetIndex < 0 || targetIndex >= windows.count {
+                    switch args.boundariesAction {
+                        case .stop: return true
+                        case .fail: return false
+                        case .wrapAroundTheWorkspace: targetIndex = (targetIndex + windows.count) % windows.count
+                        case .wrapAroundAllMonitors: return errorT("Must be discarded by args parser")
+                    }
+                }
+                return windows[targetIndex].focusWindow()
         }
     }
 }
