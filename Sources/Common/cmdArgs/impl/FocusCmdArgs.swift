@@ -12,20 +12,20 @@ public struct FocusCmdArgs: CmdArgs {
             "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32)),
             "--dfs-index": ArgParser(\.dfsIndex, upcastArgParserFun(parseArgWithUInt32)),
         ],
-        arguments: [ArgParser(\.direction, upcastArgParserFun(parseCardinalDirectionArg))],
+        arguments: [ArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
     )
 
     public var rawBoundaries: Boundaries? = nil // todo cover boundaries wrapping with tests
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
     public var dfsIndex: UInt32? = nil
-    public var direction: CardinalDirection? = nil
+    public var cardinalOrDfsDirection: CardinalOrDfsDirection? = nil
     public var floatingAsTiling: Bool = true
     /*conforms*/ public var windowId: UInt32?
     /*conforms*/ public var workspaceName: WorkspaceName?
 
-    public init(rawArgs: [String], direction: CardinalDirection) {
+    public init(rawArgs: [String], cardinalOrDfsDirection: CardinalOrDfsDirection) {
         self.rawArgs = .init(rawArgs)
-        self.direction = direction
+        self.cardinalOrDfsDirection = cardinalOrDfsDirection
     }
 
     public init(rawArgs: [String], windowId: UInt32) {
@@ -54,12 +54,24 @@ public enum FocusCmdTarget {
     case direction(CardinalDirection)
     case windowId(UInt32)
     case dfsIndex(UInt32)
+    case dfsRelative(DfsNextPrev)
+
+    var isDfsRelative: Bool {
+        if case .dfsRelative = self {
+            return true
+        } else {
+            return false
+        }
+    }
 }
 
 extension FocusCmdArgs {
     public var target: FocusCmdTarget {
-        if let direction {
-            return .direction(direction)
+        if let cardinalOrDfsDirection {
+            return switch cardinalOrDfsDirection {
+                case .direction(let dir): .direction(dir)
+                case .dfsRelative(let nextPrev): .dfsRelative(nextPrev)
+            }
         }
         if let windowId {
             return .windowId(windowId)
@@ -81,14 +93,17 @@ public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
                 ? .failure("\(raw.boundaries.rawValue) and \(raw.boundariesAction.rawValue) is an invalid combination of values")
                 : .cmd(raw)
         }
-        .filter("Mandatory argument is missing. '\(CardinalDirection.unionLiteral)', --window-id or --dfs-index is required") {
-            $0.direction != nil || $0.windowId != nil || $0.dfsIndex != nil
+        .filter("Mandatory argument is missing. \(CardinalOrDfsDirection.unionLiteral), --window-id or --dfs-index is required") {
+            $0.cardinalOrDfsDirection != nil || $0.windowId != nil || $0.dfsIndex != nil
         }
         .filter("--window-id is incompatible with other options") {
             $0.windowId == nil || $0 == FocusCmdArgs(rawArgs: args, windowId: $0.windowId.orDie())
         }
         .filter("--dfs-index is incompatible with other options") {
             $0.dfsIndex == nil || $0 == FocusCmdArgs(rawArgs: args, dfsIndex: $0.dfsIndex.orDie())
+        }
+        .filter("(dfs-next|dfs-prev) only supports --boundaries workspace") {
+            !$0.target.isDfsRelative || $0.boundaries == .workspace
         }
 }
 
