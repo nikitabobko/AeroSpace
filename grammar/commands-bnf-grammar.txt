@@ -20,9 +20,10 @@ aerospace -h;
 
     | flatten-workspace-tree [--workspace <workspace>]
 
-    | focus [<focus_flag>]... (left|down|up|right) [<focus_flag>]...
+    | focus [<focus_direction_flag>]... (left|down|up|right) [<focus_direction_flag>]...
     | focus --window-id <window_id>
     | focus --dfs-index <number>
+    | focus [<focus_dfs_relative_flag>]... (dfs-next|dfs-prev) [<focus_dfs_relative_flag>]...
 
     | focus-back-and-forth
 
@@ -114,7 +115,8 @@ aerospace -h;
 <move_node_to_monitor1_flag> ::= --window-id <window_id>|--focus-follows-window|--fail-if-noop|--wrap-around;
 <move_node_to_monitor2_flag> ::= --window-id <window_id>|--focus-follows-window|--fail-if-noop;
 
-<focus_flag> ::= --boundaries <boundary>|--boundaries-action <boundaries_action>|--ignore-floating;
+<focus_direction_flag> ::= --boundaries <boundary>|--boundaries-action <boundaries_action>|--ignore-floating;
+<focus_dfs_relative_flag> ::= --boundaries-action <boundaries_action>|--ignore-floating;
 <boundaries_action> ::= stop|fail|wrap-around-the-workspace|wrap-around-all-monitors;
 <boundary> ::= workspace|all-monitors-outer-frame;
 
