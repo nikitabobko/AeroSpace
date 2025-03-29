@@ -164,7 +164,7 @@ private struct FloatingWindowData {
 
 extension TreeNode {
     @MainActor
-    fileprivate func findFocusTargetRecursive(snappedTo direction: CardinalDirection) -> Window? {
+    func findFocusTargetRecursive(snappedTo direction: CardinalDirection) -> Window? {
         switch nodeCases {
             case .workspace(let workspace):
                 return workspace.rootTilingContainer.findFocusTargetRecursive(snappedTo: direction)
