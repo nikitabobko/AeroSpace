@@ -64,12 +64,14 @@ extension CmdArgs {
                 command = ReloadConfigCommand(args: self as! ReloadConfigCmdArgs)
             case .resize:
                 command = ResizeCommand(args: self as! ResizeCmdArgs)
+            case .serverVersionInternalCommand:
+                command = ServerVersionInternalCommandCommand(args: self as! ServerVersionInternalCommandCmdArgs)
             case .split:
                 command = SplitCommand(args: self as! SplitCmdArgs)
             case .summonWorkspace:
                 command = SummonWorkspaceCommand(args: self as! SummonWorkspaceCmdArgs)
-            case .serverVersionInternalCommand:
-                command = ServerVersionInternalCommandCommand(args: self as! ServerVersionInternalCommandCmdArgs)
+            case .swap:
+                command = SwapCommand(args: self as! SwapCmdArgs)
             case .triggerBinding:
                 command = TriggerBindingCommand(args: self as! TriggerBindingCmdArgs)
             case .volume:

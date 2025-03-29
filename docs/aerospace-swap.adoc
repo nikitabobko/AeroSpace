@@ -1,0 +1,45 @@
+= aerospace-swap(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-swap
+// tag::purpose[]
+:manpurpose: Swaps the focused window with the nearest window in the given direction.
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace swap [-h|--help] [--move-focus-to-target] [--wrap-around]
+               (left|down|up|right|dfs-next|dfs-prev)
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+*1. (left|down|up|right) arguments*
+
+{manpurpose}
+
+*2. (dfs-next|dfs-prev) arguments*
+
+Swaps the focused window with the next or previous window in the depth-first order (top-to-bottom and left-to-right) of windows in the current workspace tree.
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--swap-focus::
+Swap focus away from the currently focused window. By default, this command does not change the focused window.
+
+--wrap-around::
+Wrap around if the window is at the edge of the workspace (for `(left|down|up|right)`) or the start/end of the depth first order (for `(dfs-next|dfs-prev)`).
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

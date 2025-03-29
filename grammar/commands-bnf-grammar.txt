@@ -64,6 +64,8 @@ aerospace -h;
 
     | split [--window-id <window_id>] (horizontal|vertical|opposite) [--window-id <window_id>]
 
+    | swap [--swap-focus|--wrap-around] (left|down|up|right|dfs-next|dfs-prev) [--swap-focus|--wrap-around]
+
     | summon-workspace [--fail-if-noop] <workspace> [--fail-if-noop]
 
     | trigger-binding <binding> --mode <mode_id>
