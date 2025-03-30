@@ -9,7 +9,7 @@ func resizedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
         if let windowId, let window = Window.get(byId: windowId), TrayMenuModel.shared.isEnabled {
             resizeWithMouseIfTheCase(window)
         }
-        refreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
+        scheduleRefreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
     }
 }
 
@@ -21,7 +21,7 @@ func resetManipulatedWithMouseIfPossible() {
         for workspace in Workspace.all {
             workspace.resetResizeWeightBeforeResizeRecursive()
         }
-        refreshAndLayout(.resetManipulatedWithMouse, screenIsDefinitelyUnlocked: true)
+        scheduleRefreshAndLayout(.resetManipulatedWithMouse, screenIsDefinitelyUnlocked: true)
     }
 }
 

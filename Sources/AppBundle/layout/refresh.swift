@@ -47,6 +47,25 @@ func refreshAndLayout(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: 
     refreshSession(event, screenIsDefinitelyUnlocked: screenIsDefinitelyUnlocked, startup: startup, body: {})
 }
 
+@MainActor private var havePendingRefresh = false
+@MainActor private var pendingRefreshScreenIsDefinitelyUnlocked = false
+
+@MainActor
+func scheduleRefreshAndLayout(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool = false) {
+    if havePendingRefresh {
+        if screenIsDefinitelyUnlocked {
+            pendingRefreshScreenIsDefinitelyUnlocked = true
+        }
+        return
+    }
+    havePendingRefresh = true
+    pendingRefreshScreenIsDefinitelyUnlocked = screenIsDefinitelyUnlocked
+    DispatchQueue.main.async { @MainActor in
+        havePendingRefresh = false
+        refreshSession(event, screenIsDefinitelyUnlocked: pendingRefreshScreenIsDefinitelyUnlocked, startup: false, body: {})
+    }
+}
+
 @MainActor
 func refreshModel() {
     gc()
@@ -81,7 +100,7 @@ func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     check(Thread.isMainThread)
     let notif = notif as String
     MainActor.assumeIsolated {
-        refreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
+        scheduleRefreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
     }
 }
 
