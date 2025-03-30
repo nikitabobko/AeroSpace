@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Unfortunately, AeroSpace project doesn't accept bug reports and feature requests from everyone. See: https://github.com/nikitabobko/AeroSpace/issues/947
+        Unfortunately, AeroSpace project doesn't openly accept Issues. See: https://github.com/nikitabobko/AeroSpace/issues/947
   - type: checkboxes
     id: checkbox
     attributes:
