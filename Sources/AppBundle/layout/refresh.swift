@@ -42,9 +42,17 @@ func refreshSession<T>(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked:
     return result
 }
 
+@MainActor private var havePendingRefresh = false
+
 @MainActor
-func refreshAndLayout(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool, startup: Bool = false) {
-    refreshSession(event, screenIsDefinitelyUnlocked: screenIsDefinitelyUnlocked, startup: startup, body: {})
+func scheduleRefreshAndLayout(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool = false) {
+    if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
+    if havePendingRefresh { return }
+    havePendingRefresh = true
+    DispatchQueue.main.async { @MainActor in
+        havePendingRefresh = false
+        refreshSession(event, screenIsDefinitelyUnlocked: false, startup: false, body: {})
+    }
 }
 
 @MainActor
@@ -81,7 +89,7 @@ func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     check(Thread.isMainThread)
     let notif = notif as String
     MainActor.assumeIsolated {
-        refreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
+        scheduleRefreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
     }
 }
 

@@ -11,7 +11,7 @@ class GlobalObserver {
         }
         let notifName = notification.name.rawValue
         MainActor.assumeIsolated {
-            refreshAndLayout(.globalObserver(notifName), screenIsDefinitelyUnlocked: false)
+            scheduleRefreshAndLayout(.globalObserver(notifName), screenIsDefinitelyUnlocked: false)
         }
     }
 
@@ -67,7 +67,7 @@ class GlobalObserver {
                 // Detect close button clicks for unfocused windows. Yes, kAXUIElementDestroyedNotification is that unreliable
                 //  And trigger new window detection that could be delayed due to mouseDown event
                 default:
-                    refreshAndLayout(.globalObserverLeftMouseUp, screenIsDefinitelyUnlocked: true)
+                    scheduleRefreshAndLayout(.globalObserverLeftMouseUp, screenIsDefinitelyUnlocked: true)
             }
         }
     }
