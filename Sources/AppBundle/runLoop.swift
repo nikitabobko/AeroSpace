@@ -27,8 +27,8 @@ extension Thread {
                     } else {
                         do {
                             cont.resume(returning: try body(job))
-                        } catch let e {
-                            cont.resume(throwing: e)
+                        } catch {
+                            cont.resume(throwing: error)
                         }
                     }
                 }
