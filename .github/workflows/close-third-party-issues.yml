@@ -19,13 +19,13 @@ jobs:
 
         author="$(gh issue view "$ISSUE" --json author --jq '.author.login')"
 
-        test "$author" = nikitabobko || \
-          { \
-            gh issue edit "$ISSUE" --add-label bin && \
-            gh issue close "$ISSUE" \
-            --comment "Please don't open issues directly, use GitHub Discussions instead. See: https://github.com/nikitabobko/AeroSpace/issues/947" && \
-            gh issue lock "$ISSUE"; \
-          }
+        close() {
+          gh issue edit "$ISSUE" --add-label bin
+          gh issue close "$ISSUE" --comment "Please don't open issues directly, use GitHub Discussions instead. See: https://github.com/nikitabobko/AeroSpace/issues/947"
+          gh issue lock "$ISSUE"
+        }
+
+        test "$author" = nikitabobko || close
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GH_REPO: ${{ github.repository }}

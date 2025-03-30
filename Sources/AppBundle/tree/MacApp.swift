@@ -61,7 +61,7 @@ final class MacApp: AbstractApp {
                     cont.resume(returning: nil)
                 }
             }
-            thread.name = "app-dedicated-thread pid=\(pid) \(nsApp.bundleIdentifier ?? nsApp.executableURL?.description ?? "")"
+            thread.name = "app-dedicated-thread \(nsApp.idForDebug)"
             thread.start()
         }
         if let app {
@@ -401,7 +401,7 @@ extension NSRunningApplication {
     }
 
     var idForDebug: String {
-        bundleIdentifier ?? executableURL?.description ?? "PID: \(processIdentifier)"
+        "PID: \(processIdentifier) ID: \(bundleIdentifier ?? executableURL?.description ?? "")"
     }
 
     @MainActor

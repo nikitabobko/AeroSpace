@@ -34,6 +34,7 @@ public func dieT<T>(
         Coordinate: \(file):\(line):\(column) \(function)
         recursionDetectorDuringTermination: \(recursionDetectorDuringTermination)
         cli: \(isCli)
+        Monitor count: \(NSScreen.screens.count)
         Displays have separate spaces: \(NSScreen.screensHaveSeparateSpaces)
 
         Stacktrace:
@@ -181,12 +182,10 @@ public func cliErrorT<T>(_ message: String = "") -> T {
 public func allowOnlyCancellationError<T>(isolation: isolated (any Actor)? = #isolation, _ block: () async throws -> sending T) async throws -> sending T {
     do {
         return try await block()
-    } catch let foo {
-        if let bar = foo as? CancellationError {
-            throw bar
-        } else {
-            die("throws must only be used for CancellationError")
-        }
+    } catch let e as CancellationError {
+        throw e
+    } catch {
+        die("throws must only be used for CancellationError")
     }
 }
 

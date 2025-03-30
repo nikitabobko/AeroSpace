@@ -11,8 +11,6 @@ func refreshSession<T>(
     body: @MainActor () async throws -> T
 ) async throws -> T {
     try await $refreshSessionEventForDebug.withValue(event) {
-        // refreshSessionEventForDebug = event
-        // defer { refreshSessionEventForDebug = nil }
         if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
         try await gc()
         gcMonitors()
