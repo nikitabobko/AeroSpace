@@ -7,6 +7,11 @@ import TOMLKit
 @MainActor private var hotkeys: [String: HotKey] = [:]
 
 @MainActor func resetHotKeys() {
+    // Explicitly unregister all hotkeys. We cannot always rely on destruction of the HotKey object to trigger
+    // unregistration because we might be running inside a hotkey handler that is keeping its HotKey object alive.
+    for (_, key) in hotkeys {
+        key.isEnabled = false
+    }
     hotkeys = [:]
 }
 
