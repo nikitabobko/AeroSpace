@@ -9,7 +9,7 @@ protocol Command: AeroAny, Equatable, Sendable {
 }
 
 extension Command {
-    static func == (lhs: any Command, rhs: any Command) -> Bool {
+    static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.args.equals(rhs.args)
     }
 
