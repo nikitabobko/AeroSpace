@@ -211,6 +211,7 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |ColorSync Utility|`com.apple.ColorSyncUtility`
 |Console|`com.apple.Console`
 |Contacts|`com.apple.AddressBook`
+|Cursor|`com.todesktop.230313mzl4w4u92`
 |Dictionary|`com.apple.Dictionary`
 |Disk Utility|`com.apple.DiskUtility`
 |Docker|`com.docker.docker`
@@ -259,6 +260,7 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |Stocks|`com.apple.stocks`
 |Sublime Merge|`com.sublimemerge`
 |Sublime Text|`com.sublimetext.4`
+|Superhuman|`com.superhuman.electron`
 |System Settings|`com.apple.systempreferences`
 |Telegram|`com.tdesktop.Telegram`
 |Terminal|`com.apple.Terminal`
@@ -273,8 +275,10 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |VLC|`org.videolan.vlc`
 |VoiceMemos|`com.apple.VoiceMemos`
 |VoiceOver Utility|`com.apple.VoiceOverUtility`
+|Warp|`dev.warp.Warp-Stable`
 |Weather|`com.apple.weather`
 |WezTerm|`com.github.wez.wezterm`
+|Windsurf|`com.exafunction.windsurf`
 |Xcode|`com.apple.dt.Xcode`
 |Zen Browser|`app.zen-browser.zen`
 
