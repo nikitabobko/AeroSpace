@@ -33,6 +33,7 @@ final class MacWindow: Window {
                 app
             )
             let window = MacWindow(id, app, axWindow, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
+            allWindowsMap[id] = window
 
             if window.observe(refreshObs, kAXUIElementDestroyedNotification) &&
                 window.observe(refreshObs, kAXWindowDeminiaturizedNotification) &&
@@ -40,13 +41,13 @@ final class MacWindow: Window {
                 window.observe(movedObs, kAXMovedNotification) &&
                 window.observe(resizedObs, kAXResizedNotification)
             {
-                allWindowsMap[id] = window
                 debugWindowsIfRecording(window)
                 if !restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window) {
                     tryOnWindowDetected(window, startup: startup)
                 }
                 return window
             } else {
+                // Removes `window` from `allWindowsMap`.
                 window.garbageCollect(skipClosedWindowsCache: true)
                 return nil
             }
