@@ -33,14 +33,6 @@ if /bin/test -z "${NUKE_PATH:-}"; then
     export NUKE_PATH=1
 fi
 
-if test -z "${GITHUB_ACTIONS:-}"; then
-    export swift_build_args=()
-else
-    # Circumvent compiler crash https://github.com/swiftlang/swift/issues/76788
-    # For some reason, it happens only on GH Actions
-    export swift_build_args=(-Xswiftc -disable-round-trip-debug-types)
-fi
-
 xcodebuild() {
     # Mute stderr
     # 2024-02-12 23:48:11.713 xcodebuild[60777:7403664] [MT] DVTAssertions: Warning in /System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot11/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/IDEFrameworks/IDEFrameworks-22269/IDEFoundation/Provisioning/Capabilities Infrastructure/IDECapabilityQuerySelection.swift:103

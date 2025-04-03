@@ -77,8 +77,8 @@ public extension Sequence {
         })
     }
 
-    func sumOf(_ selector: (Self.Element) -> CGFloat) -> CGFloat {
-        var result: CGFloat = 0
+    func sumOf(_ selector: (Self.Element) -> Double) -> Double {
+        var result: Double = 0
         for elem in self {
             result += selector(elem)
         }

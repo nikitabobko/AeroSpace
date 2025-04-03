@@ -96,7 +96,7 @@ private extension TilingContainer {
         var point = point
         var virtualPoint = virtual.topLeftCorner
 
-        guard let delta = ((orientation == .h ? width : height) - children.sumOf { $0.getWeight(orientation) })
+        guard let delta = ((orientation == .h ? width : height) - CGFloat(children.sumOf { $0.getWeight(orientation) }))
             .div(children.count) else { return }
 
         let lastIndex = children.indices.last
