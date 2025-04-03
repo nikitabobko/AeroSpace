@@ -28,9 +28,9 @@ jobs:
         with:
           path: .deps
           key: ${{ matrix.os }}-${{ runner.arch }}-${{ hashFiles('script/install-dep.sh', 'Gemfile', '.bundle/config') }}
-      - uses: swift-actions/setup-swift@v2
+      - uses: nikitabobko/setup-swift@21e0b6448e6aa76937c51d4b172f6cba5e537cde # todo migrate to swiftly
         with:
-          swift-version: '6.0.2'
+          swift-version: '6.1.0'
       - run: |
           if sw_vers -productVersion | grep -q "^13"; then # macOS 13
             true
