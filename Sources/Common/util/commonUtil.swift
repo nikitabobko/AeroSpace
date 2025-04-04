@@ -4,9 +4,9 @@ import Foundation
 
 public let unixUserName = NSUserName()
 public let mainModeId = "main"
-private let recursionDetectorDuringTermination = MyAtomicBool(false) // todo change to Ctx?
 
-// public var refreshSessionEventForDebug: RefreshSessionEvent? = nil
+@TaskLocal
+private var recursionDetectorDuringTermination = false
 
 public func errorT<T>(
     _ __message: String = "",
@@ -28,7 +28,7 @@ public func errorT<T>(
         Date: \(Date.now)
         macOS version: \(ProcessInfo().operatingSystemVersionString)
         Coordinate: \(file):\(line):\(column) \(function)
-        recursionDetectorDuringTermination: \(recursionDetectorDuringTermination.get())
+        recursionDetectorDuringTermination: \(recursionDetectorDuringTermination)
         cli: \(isCli)
         Displays have separate spaces: \(NSScreen.screensHaveSeparateSpaces)
 
@@ -38,18 +38,22 @@ public func errorT<T>(
     // refreshSessionEvent: \(String(describing: refreshSessionEventForDebug)) // todo return back when introduce Ctx
     if !isUnitTest && isServer {
         showMessageInGui(
-            filenameIfConsoleApp: recursionDetectorDuringTermination.get()
+            filenameIfConsoleApp: recursionDetectorDuringTermination
                 ? "aerospace-runtime-error-recursion.txt"
                 : "aerospace-runtime-error.txt",
             title: "AeroSpace Runtime Error",
             message: message
         )
     }
-    if !recursionDetectorDuringTermination.get() {
-        recursionDetectorDuringTermination.set(true)
-        DispatchQueue.main.asyncAndWait {
-            terminationHandler.beforeTermination()
+    if !recursionDetectorDuringTermination {
+        let semaphore = DispatchSemaphore(value: 0)
+        Task {
+            defer { semaphore.signal() }
+            try await $recursionDetectorDuringTermination.withValue(true) {
+                try await terminationHandler.beforeTermination()
+            }
         }
+        semaphore.wait()
     }
     fatalError("\n" + message)
 }
@@ -168,4 +172,23 @@ public func cliError(_ message: String = "") -> Never {
 public func cliErrorT<T>(_ message: String = "") -> T {
     printStderr(message)
     exit(1)
+}
+
+@inlinable
+public func allowOnlyCancellationError<T>(isolation: isolated (any Actor)? = #isolation, _ block: () async throws -> sending T) async throws -> sending T {
+    do {
+        return try await block()
+    } catch let foo {
+        if let bar = foo as? CancellationError {
+            throw bar
+        } else {
+            error("throws must only be used for CancellationError")
+        }
+    }
+}
+
+public func checkCancellation() throws {
+    if Task.isCancelled {
+        throw CancellationError()
+    }
 }

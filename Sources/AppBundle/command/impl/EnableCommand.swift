@@ -4,7 +4,7 @@ import Common
 struct EnableCommand: Command {
     let args: EnableCmdArgs
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         let prevState = TrayMenuModel.shared.isEnabled
         let newState: Bool = switch args.targetState.val {
             case .on: true
@@ -21,7 +21,7 @@ struct EnableCommand: Command {
         if newState {
             for workspace in Workspace.all {
                 for window in workspace.allLeafWindowsRecursive where window.isFloating {
-                    window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
+                    window.lastFloatingSize = try await window.getAxSize() ?? window.lastFloatingSize
                 }
             }
             activateMode(mainModeId)
@@ -29,7 +29,7 @@ struct EnableCommand: Command {
             activateMode(nil)
             for workspace in Workspace.all {
                 workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
-                workspace.layoutWorkspace() // Unhide tiling windows from corner
+                try await workspace.layoutWorkspace() // Unhide tiling windows from corner
             }
         }
         return true

@@ -28,7 +28,7 @@ enum PlainInterVar: String, CaseIterable {
 
 extension [AeroObj] {
     @MainActor
-    func format(_ format: [StringInterToken]) -> Result<[String], String> {
+    func format(_ format: [StringInterToken]) async throws -> Result<[String], String> {
         var cellTable: [[Cell<String>]] = []
         for obj in self {
             var line: [Cell<String>] = []
@@ -42,7 +42,7 @@ extension [AeroObj] {
                     case .literal(let literal):
                         curCell += literal
                     case .interVar(let value):
-                        switch value.expandFormatVar(obj: obj) {
+                        switch try await value.expandFormatVar(obj: obj) {
                             case .success(let expanded): curCell += expanded.toString()
                             case .failure(let error): errors.append(error)
                         }
@@ -156,21 +156,21 @@ private struct Cell<T> {
 
 extension String {
     @MainActor
-    func expandFormatVar(obj: AeroObj) -> Result<Primitive, String> {
+    func expandFormatVar(obj: AeroObj) async throws -> Result<Primitive, String> {
         let formatVar = self.toFormatVar()
         switch (obj, formatVar) {
             case (_, .none): break
 
             case (.window(let w), .workspace):
-                return w.nodeWorkspace.flatMap(AeroObj.workspace).map(expandFormatVar) ?? .success(.string("NULL-WOKRSPACE"))
+                return try await w.nodeWorkspace.flatMap(AeroObj.workspace).mapAsyncMainActor(expandFormatVar) ?? .success(.string("NULL-WOKRSPACE"))
             case (.window(let w), .monitor):
-                return w.nodeMonitor.flatMap(AeroObj.monitor).map(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
+                return try await w.nodeMonitor.flatMap(AeroObj.monitor).mapAsyncMainActor(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
             case (.window(let w), .app):
-                return expandFormatVar(obj: .app(w.app))
+                return try await expandFormatVar(obj: .app(w.app))
             case (.window(_), .window): break
 
             case (.workspace(let ws), .monitor):
-                return expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitor))
+                return try await expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitor))
             case (.workspace, _): break
 
             case (.app(_), _): break
@@ -181,7 +181,7 @@ extension String {
                 return switch f {
                     case .windowId: .success(.uint32(w.windowId))
                     case .windowIsFullscreen: .success(.bool(w.isFullscreen))
-                    case .windowTitle: .success(.string(w.title))
+                    case .windowTitle: .success(.string(try await w.title))
                 }
             case (.workspace(let w), .workspace(let f)):
                 return switch f {
@@ -197,7 +197,7 @@ extension String {
                 }
             case (.app(let a), .app(let f)):
                 return switch f {
-                    case .appBundleId: .success(.string(a.id ?? "NULL-APP-BUNDLE-ID"))
+                    case .appBundleId: .success(.string(a.bundleId ?? "NULL-APP-BUNDLE-ID"))
                     case .appName: .success(.string(a.name ?? "NULL-APP-NAME"))
                     case .appPid: .success(.int32(a.pid))
                     case .appExecPath: .success(.string(a.execPath ?? "NULL-APP-EXEC-PATH"))

@@ -85,7 +85,7 @@ extension Window {
         }
     }
 
-    func toLiveFocusOrNil() -> LiveFocus? { visualWorkspace.map { LiveFocus(windowOrNil: self, workspace: $0) } }
+    @MainActor func toLiveFocusOrNil() -> LiveFocus? { visualWorkspace.map { LiveFocus(windowOrNil: self, workspace: $0) } }
 }
 extension Workspace {
     @MainActor func focusWorkspace() -> Bool { setFocus(to: toLiveFocus()) }
@@ -118,7 +118,7 @@ extension Workspace {
 
 @MainActor private var onFocusChangedRecursionGuard = false
 // Should be called in refreshSession
-@MainActor func checkOnFocusChangedCallbacks() {
+@MainActor func checkOnFocusChangedCallbacks() async throws {
     let focus = focus
     let frozenFocus = focus.frozen
     var hasFocusChanged = false
@@ -141,23 +141,23 @@ extension Workspace {
     onFocusChangedRecursionGuard = true
     defer { onFocusChangedRecursionGuard = false }
     if hasFocusChanged {
-        onFocusChanged(focus)
+        try await onFocusChanged(focus)
     }
     if let _prevFocusedWorkspaceName, hasFocusedWorkspaceChanged {
         onWorkspaceChanged(_prevFocusedWorkspaceName, frozenFocus.workspaceName)
     }
     if hasFocusedMonitorChanged {
-        onFocusedMonitorChanged(focus)
+        try await onFocusedMonitorChanged(focus)
     }
 }
 
-@MainActor private func onFocusedMonitorChanged(_ focus: LiveFocus) {
+@MainActor private func onFocusedMonitorChanged(_ focus: LiveFocus) async throws {
     if config.onFocusedMonitorChanged.isEmpty { return }
-    _ = config.onFocusedMonitorChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
+    _ = try await config.onFocusedMonitorChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
 }
-@MainActor private func onFocusChanged(_ focus: LiveFocus) {
+@MainActor private func onFocusChanged(_ focus: LiveFocus) async throws {
     if config.onFocusChanged.isEmpty { return }
-    _ = config.onFocusChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
+    _ = try await config.onFocusChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
 }
 
 @MainActor private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String) {

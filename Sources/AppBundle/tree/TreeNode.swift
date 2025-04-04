@@ -1,7 +1,6 @@
 import AppKit
 import Common
 
-@MainActor
 class TreeNode: Equatable {
     private var _children: [TreeNode] = []
     var children: [TreeNode] { _children }
@@ -20,6 +19,7 @@ class TreeNode: Equatable {
     var lastAppliedLayoutPhysicalRect: Rect? = nil // with real inner gaps
     private var unboundStacktrace: String? = nil
 
+    @MainActor
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
         self.adaptiveWeight = adaptiveWeight
         bind(to: parent, adaptiveWeight: adaptiveWeight, index: index)
@@ -47,6 +47,7 @@ class TreeNode: Equatable {
     }
 
     /// Weight itself doesn't make sense. The parent container controls semantics of weight
+    @MainActor
     func getWeight(_ targetOrientation: Orientation) -> CGFloat {
         guard let parent else { error("Weight doesn't make sense for containers without parent") }
         return switch getChildParentRelation(child: self, parent: parent) {
@@ -61,6 +62,7 @@ class TreeNode: Equatable {
         }
     }
 
+    @MainActor
     @discardableResult
     func bind(to newParent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) -> BindingData? {
         let result = unbindIfBound()
@@ -130,10 +132,6 @@ class TreeNode: Equatable {
     }
     @discardableResult
     func cleanUserData<T>(key: TreeNodeUserDataKey<T>) -> T? { userData.removeValue(forKey: key.key) as! T? }
-
-    @discardableResult
-    func nativeFocus() -> Bool { error("Not implemented") }
-    func getRect() -> Rect? { error("Not implemented") }
 }
 
 struct TreeNodeUserDataKey<T> {
@@ -158,5 +156,5 @@ class NilTreeNode: TreeNode, NonLeafTreeNodeObject {
     override private init() {
         super.init()
     }
-    static let instance = NilTreeNode()
+    @MainActor static let instance = NilTreeNode()
 }

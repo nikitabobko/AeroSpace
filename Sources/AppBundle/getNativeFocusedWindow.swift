@@ -6,15 +6,17 @@ var appForTests: (any AbstractApp)? = nil
 
 @MainActor
 private var focusedApp: (any AbstractApp)? {
-    if isUnitTest {
-        return appForTests
-    } else {
-        check(appForTests == nil)
-        return NSWorkspace.shared.frontmostApplication?.macApp
+    get async throws {
+        if isUnitTest {
+            return appForTests
+        } else {
+            check(appForTests == nil)
+            return try await NSWorkspace.shared.frontmostApplication?.macApp
+        }
     }
 }
 
 @MainActor
-func getNativeFocusedWindow(startup: Bool) -> Window? {
-    focusedApp?.getFocusedWindow(startup: startup)
+func getNativeFocusedWindow(startup: Bool) async throws -> Window? {
+    try await focusedApp?.getFocusedWindow()
 }

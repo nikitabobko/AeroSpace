@@ -4,7 +4,7 @@ import Common
 struct ListWindowsCommand: Command {
     let args: ListWindowsCmdArgs
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         let focus = focus
         var windows: [Window] = []
 
@@ -36,22 +36,27 @@ struct ListWindowsCommand: Command {
                 windows = windows.filter { $0.app.pid == pid }
             }
             if let appId = args.filteringOptions.appIdFilter {
-                windows = windows.filter { $0.app.id == appId }
+                windows = windows.filter { $0.app.bundleId == appId }
             }
         }
 
         if args.outputOnlyCount {
             return io.out("\(windows.count)")
         } else {
-            windows = windows.sortedBy([{ $0.app.name ?? "" }, \.title])
+            var _windows: [(window: Window, title: String)] = [] // todo cleanup
+            for window in windows {
+                _windows.append((window, try await window.title))
+            }
+            windows = _windows.sortedBy([{ $0.window.app.name ?? "" }, \.title]).map { $0.window }
+
             let list = windows.map { AeroObj.window($0) }
             if args.json {
-                return switch list.formatToJson(args.format, ignoreRightPaddingVar: args._format.isEmpty) {
+                return switch try await list.formatToJson(args.format, ignoreRightPaddingVar: args._format.isEmpty) {
                     case .success(let json): io.out(json)
                     case .failure(let msg): io.err(msg)
                 }
             } else {
-                return switch list.format(args.format) {
+                return switch try await list.format(args.format) {
                     case .success(let lines): io.out(lines)
                     case .failure(let msg): io.err(msg)
                 }

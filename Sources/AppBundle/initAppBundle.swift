@@ -23,14 +23,21 @@ import Foundation
     AXUIElementSetMessagingTimeout(AXUIElementCreateSystemWide(), 1.0)
     startUnixSocketServer()
     GlobalObserver.initObserver()
-    refreshSession(.startup1, screenIsDefinitelyUnlocked: false, startup: true, body: {})
-    refreshSession(.startup2, screenIsDefinitelyUnlocked: false) {
-        if serverArgs.startedAtLogin {
-            _ = config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+    Task {
+        try await $isStartup.withValue(true) {
+            try await refreshAndLayout(.startup1, screenIsDefinitelyUnlocked: false, startup: true)
         }
-        _ = config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+        try await refreshSession(.startup2, screenIsDefinitelyUnlocked: false) {
+            if serverArgs.startedAtLogin {
+                _ = try await config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+            }
+            _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+        }
     }
 }
+
+@TaskLocal
+var isStartup: Bool = false
 
 struct ServerArgs: Sendable {
     var startedAtLogin = false

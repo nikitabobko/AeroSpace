@@ -15,7 +15,9 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             Text("Workspaces:")
             ForEach(viewModel.workspaces, id: \.name) { workspace in
                 Button {
-                    refreshSession(.menuBarButton, screenIsDefinitelyUnlocked: true) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
+                    Task {
+                        try await refreshSession(.menuBarButton, screenIsDefinitelyUnlocked: true) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
+                    }
                 } label: {
                     Toggle(isOn: .constant(workspace.isFocused)) {
                         Text(workspace.name + workspace.suffix).font(.system(.body, design: .monospaced))
@@ -25,8 +27,11 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             Divider()
         }
         Button(viewModel.isEnabled ? "Disable" : "Enable") {
-            refreshSession(.menuBarButton, screenIsDefinitelyUnlocked: true) {
-                _ = EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle)).run(.defaultEnv, .emptyStdin)
+            Task {
+                try await refreshSession(.menuBarButton, screenIsDefinitelyUnlocked: true) { () throws in
+                    _ = try await EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle))
+                        .run(.defaultEnv, .emptyStdin)
+                }
             }
         }.keyboardShortcut("E", modifiers: .command)
         let editor = getTextEditorToOpenConfig()
@@ -44,12 +49,16 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         }.keyboardShortcut(",", modifiers: .command)
         if viewModel.isEnabled {
             Button("Reload config") {
-                refreshSession(.menuBarButton, screenIsDefinitelyUnlocked: true) { _ = reloadConfig() }
+                Task {
+                    try await refreshSession(.menuBarButton, screenIsDefinitelyUnlocked: true) { _ = reloadConfig() }
+                }
             }.keyboardShortcut("R", modifiers: .command)
         }
         Button("Quit \(aeroSpaceAppName)") {
-            terminationHandler.beforeTermination()
-            terminateApp()
+            Task {
+                defer { terminateApp() }
+                try await terminationHandler.beforeTermination()
+            }
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
         if viewModel.isEnabled {

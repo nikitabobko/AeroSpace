@@ -9,13 +9,12 @@ import Common
 struct MacosNativeFullscreenCommand: Command {
     let args: MacosNativeFullscreenCmdArgs
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         guard let window = target.windowOrNil else {
             return io.err(noWindowIsFocused)
         }
-        let axWindow = window.asMacWindow().axWindow
-        let prevState = window.isMacosFullscreen
+        let prevState = try await window.isMacosFullscreen
         let newState: Bool = switch args.toggle {
             case .on: true
             case .off: false
@@ -26,23 +25,20 @@ struct MacosNativeFullscreenCommand: Command {
                 "Tip: use --fail-if-noop to exit with non-zero exit code")
             return !args.failIfNoop
         }
-        if axWindow.set(Ax.isFullscreenAttr, newState) {
-            guard let workspace = window.visualWorkspace else {
-                return io.err(windowIsntPartOfTree(window))
-            }
-            if newState { // Enter fullscreen
-                window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
-            } else { // Exit fullscreen
-                switch window.layoutReason {
-                    case .macos(let prevParentKind):
-                        exitMacOsNativeUnconventionalState(window: window, prevParentKind: prevParentKind, workspace: workspace)
-                    default:
-                        window.relayoutWindow(on: workspace)
-                }
-            }
-            return true
-        } else {
-            return io.err("AX API returned error")
+        window.asMacWindow().setNativeFullscreen(newState)
+        guard let workspace = window.visualWorkspace else {
+            return io.err(windowIsntPartOfTree(window))
         }
+        if newState { // Enter fullscreen
+            window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+        } else { // Exit fullscreen
+            switch window.layoutReason {
+                case .macos(let prevParentKind):
+                    try await exitMacOsNativeUnconventionalState(window: window, prevParentKind: prevParentKind, workspace: workspace)
+                default:
+                    try await window.relayoutWindow(on: workspace)
+            }
+        }
+        return true
     }
 }
