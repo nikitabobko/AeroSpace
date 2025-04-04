@@ -41,7 +41,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
                 case .ambiguousConfigError:
                     fallbackConfig.open(with: editor)
             }
-        }.keyboardShortcut("O", modifiers: .command)
+        }.keyboardShortcut(",", modifiers: .command)
         if viewModel.isEnabled {
             Button("Reload config") {
                 refreshSession(.menuBarButton, screenIsDefinitelyUnlocked: true) { _ = reloadConfig() }
