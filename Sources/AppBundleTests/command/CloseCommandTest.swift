@@ -6,7 +6,7 @@ import XCTest
 final class CloseCommandTest: XCTestCase {
     override func setUp() async throws { setUpWorkspacesForTests() }
 
-    func testSimple() {
+    func testSimple() async throws {
         Workspace.get(byName: name).rootTilingContainer.apply {
             _ = TestWindow.new(id: 1, parent: $0).focusWindow()
             TestWindow.new(id: 2, parent: $0)
@@ -15,13 +15,13 @@ final class CloseCommandTest: XCTestCase {
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(focus.workspace.rootTilingContainer.children.count, 2)
 
-        CloseCommand(args: CloseCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin)
+        try await CloseCommand(args: CloseCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin)
 
         assertEquals(focus.windowOrNil?.windowId, 2)
         assertEquals(focus.workspace.rootTilingContainer.children.count, 1)
     }
 
-    func testCloseViaWindowIdFlag() {
+    func testCloseViaWindowIdFlag() async throws {
         Workspace.get(byName: name).rootTilingContainer.apply {
             _ = TestWindow.new(id: 1, parent: $0).focusWindow()
             TestWindow.new(id: 2, parent: $0)
@@ -30,7 +30,7 @@ final class CloseCommandTest: XCTestCase {
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(focus.workspace.rootTilingContainer.children.count, 2)
 
-        CloseCommand(args: CloseCmdArgs(rawArgs: []).copy(\.windowId, 2)).run(.defaultEnv, .emptyStdin)
+        try await CloseCommand(args: CloseCmdArgs(rawArgs: []).copy(\.windowId, 2)).run(.defaultEnv, .emptyStdin)
 
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(focus.workspace.rootTilingContainer.children.count, 1)

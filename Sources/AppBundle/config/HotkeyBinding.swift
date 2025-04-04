@@ -31,11 +31,12 @@ extension HotKey {
     let targetBindings = targetMode.flatMap { config.modes[$0] }?.bindings ?? [:]
     for binding in targetBindings.values where !hotkeys.keys.contains(binding.descriptionWithKeyCode) {
         hotkeys[binding.descriptionWithKeyCode] = HotKey(key: binding.keyCode, modifiers: binding.modifiers, keyDownHandler: {
-            check(Thread.current.isMainThread)
-            if let activeMode {
-                refreshSession(.hotkeyBinding, screenIsDefinitelyUnlocked: true) {
-                    _ = config.modes[activeMode]?.bindings[binding.descriptionWithKeyCode]?.commands
-                        .runCmdSeq(.defaultEnv, .emptyStdin)
+            Task {
+                if let activeMode {
+                    try await refreshSession(.hotkeyBinding, screenIsDefinitelyUnlocked: true) { () throws in
+                        _ = try await config.modes[activeMode]?.bindings[binding.descriptionWithKeyCode]?.commands
+                            .runCmdSeq(.defaultEnv, .emptyStdin)
+                    }
                 }
             }
         })

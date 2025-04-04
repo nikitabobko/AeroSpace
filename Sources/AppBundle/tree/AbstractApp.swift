@@ -2,22 +2,16 @@ import Common
 
 protocol AbstractApp: AnyObject, Hashable, AeroAny {
     var pid: Int32 { get }
-    var id: String? { get }
+    var bundleId: String? { get }
 
-    @MainActor func getFocusedWindow(startup: Bool) -> Window?
+    @MainActor func getFocusedWindow() async throws -> Window?
     var name: String? { get }
     var execPath: String? { get }
     var bundlePath: String? { get }
-    @MainActor func detectNewWindows(startup: Bool)
+    @MainActor func detectNewWindowsAndGetIds() async throws -> [UInt32]
 }
 
 extension AbstractApp {
-    func asMacApp() -> MacApp { self as! MacApp }
-
-    func isFirefox() -> Bool {
-        ["org.mozilla.firefox", "org.mozilla.firefoxdeveloperedition", "org.mozilla.nightly"].contains(id ?? "")
-    }
-
     static func == (lhs: Self, rhs: Self) -> Bool {
         if lhs.pid == rhs.pid {
             check(lhs === rhs)
@@ -34,5 +28,5 @@ extension AbstractApp {
 }
 
 extension Window {
-    var macAppUnsafe: MacApp { app.asMacApp() }
+    var macAppUnsafe: MacApp { app as! MacApp }
 }

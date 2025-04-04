@@ -4,7 +4,7 @@ import Common
 struct LayoutCommand: Command {
     let args: LayoutCmdArgs
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         guard let window = target.windowOrNil else {
             return io.err(noWindowIsFocused)
@@ -38,15 +38,15 @@ struct LayoutCommand: Command {
                     case .tilingContainer:
                         return true // Nothing to do
                     case .workspace(let workspace):
-                        window.lastFloatingSize = window.getSize() ?? window.lastFloatingSize
-                        window.relayoutWindow(on: workspace, forceTile: true)
+                        window.lastFloatingSize = try await window.getAxSize() ?? window.lastFloatingSize
+                        try await window.relayoutWindow(on: workspace, forceTile: true)
                         return true
                 }
             case .floating:
                 let workspace = target.workspace
                 window.bindAsFloatingWindow(to: workspace)
-                guard let topLeftCorner = window.getTopLeftCorner() else { return false }
-                return window.setFrame(topLeftCorner, window.lastFloatingSize)
+                if let size = window.lastFloatingSize { window.setSizeAsync(size) }
+                return true
         }
     }
 }

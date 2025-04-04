@@ -9,5 +9,5 @@ struct EmptyTerminationHandler: TerminationHandler {
 
 @MainActor
 public protocol TerminationHandler: Sendable {
-    func beforeTermination()
+    func beforeTermination() async throws
 }

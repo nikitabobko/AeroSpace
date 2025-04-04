@@ -48,7 +48,7 @@ struct FrozenWorkspace: Sendable {
     // check(closedWindowsCache.windowIds.contains(window.windowId))
 }
 
-@MainActor func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) -> Bool {
+@MainActor func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) async throws -> Bool {
     if !closedWindowsCache.windowIds.contains(newlyDetectedWindow.windowId) {
         return false
     }
@@ -71,7 +71,7 @@ struct FrozenWorkspace: Sendable {
         prevRoot.unbindFromParent()
         restoreTreeRecursive(frozenContainer: frozenWorkspace.rootTilingNode, parent: workspace, index: INDEX_BIND_LAST)
         for window in (potentialOrphans - workspace.rootTilingContainer.allLeafWindowsRecursive) {
-            window.relayoutWindow(on: workspace, forceTile: true)
+            try await window.relayoutWindow(on: workspace, forceTile: true)
         }
     }
 

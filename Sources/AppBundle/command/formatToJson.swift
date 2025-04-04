@@ -3,7 +3,7 @@ import Foundation
 
 extension [AeroObj] {
     @MainActor
-    func formatToJson(_ format: [StringInterToken], ignoreRightPaddingVar: Bool) -> Result<String, String> {
+    func formatToJson(_ format: [StringInterToken], ignoreRightPaddingVar: Bool) async throws -> Result<String, String> {
         var list: [[String: Primitive]] = []
         for richObj in self {
             var rawObj: [String: Primitive] = [:]
@@ -14,7 +14,7 @@ extension [AeroObj] {
                     case .literal:
                         break // should be spaces
                     case .interVar(let varName):
-                        switch varName.expandFormatVar(obj: richObj) {
+                        switch try await varName.expandFormatVar(obj: richObj) {
                             case .success(let expanded): rawObj[varName] = expanded
                             case .failure(let error): return .failure(error)
                         }
