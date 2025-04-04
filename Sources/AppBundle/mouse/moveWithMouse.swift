@@ -9,7 +9,7 @@ func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeM
         if let windowId, let window = Window.get(byId: windowId), TrayMenuModel.shared.isEnabled {
             moveWithMouseIfTheCase(window)
         }
-        scheduleRefreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
+        refreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
     }
 }
 

@@ -23,7 +23,7 @@ import Foundation
     AXUIElementSetMessagingTimeout(AXUIElementCreateSystemWide(), 1.0)
     startUnixSocketServer()
     GlobalObserver.initObserver()
-    refreshSession(.startup1, screenIsDefinitelyUnlocked: false, startup: true, body: {})
+    refreshAndLayout(.startup1, screenIsDefinitelyUnlocked: false, startup: true)
     refreshSession(.startup2, screenIsDefinitelyUnlocked: false) {
         if serverArgs.startedAtLogin {
             _ = config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
