@@ -11,6 +11,7 @@
 --disable blankLinesBetweenScopes
 --disable consecutiveSpaces
 --disable consistentSwitchCaseSpacing
+--disable hoistAwait
 --disable hoistTry
 --disable preferKeyPath
 --disable redundantNilInit
@@ -22,6 +23,7 @@
 --disable redundantType
 --disable spaceAroundComments
 --disable spaceInsideComments
+--disable void
 --disable wrapArguments
 --disable wrapMultilineConditionalAssignment
 
