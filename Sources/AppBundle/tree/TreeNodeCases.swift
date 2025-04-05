@@ -56,7 +56,7 @@ extension TreeNode {
         }
     }
 
-    func tilingTreeNodeCasesOrThrow() -> TilingTreeNodeCases {
+    func tilingTreeNodeCasesOrDie() -> TilingTreeNodeCases {
         if let window = self as? Window {
             return .window(window)
         } else if let tilingContainer = self as? TilingContainer {

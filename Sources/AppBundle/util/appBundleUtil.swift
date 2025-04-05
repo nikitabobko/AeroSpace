@@ -108,7 +108,7 @@ extension CGPoint {
                 distance(to: rect.topRightCorner),
                 distance(to: rect.bottomLeftCorner),
             ]
-        return list.minOrThrow()
+        return list.minOrDie()
     }
 
     func coerceIn(rect: Rect) -> CGPoint {
@@ -130,7 +130,7 @@ extension CGPoint {
     var monitorApproximation: Monitor {
         let monitors = monitors
         return monitors.first(where: { $0.rect.contains(self) })
-            ?? monitors.minByOrThrow { distanceToRectFrame(to: $0.rect) }
+            ?? monitors.minByOrDie { distanceToRectFrame(to: $0.rect) }
     }
 }
 

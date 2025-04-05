@@ -101,7 +101,7 @@ extension MoveNodeToWorkspaceCmdArgs {
 
     init(workspace: String) {
         self = MoveNodeToWorkspaceCmdArgs(rawArgs: [])
-        self.target = .initialized(.direct(.parse(workspace).getOrThrow()))
+        self.target = .initialized(.direct(.parse(workspace).getOrDie()))
     }
 }
 

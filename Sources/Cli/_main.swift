@@ -39,7 +39,7 @@ struct Main {
             }
         }
 
-        let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrThrow()
+        let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrDie()
         defer {
             socket.close()
         }
@@ -100,11 +100,11 @@ func printVersionAndExit(serverVersion: String?) -> Never {
 }
 
 func run(_ socket: Socket, _ args: [String], stdin: String) -> ServerAnswer {
-    let request = Result { try JSONEncoder().encode(ClientRequest(args: args, stdin: stdin)) }.getOrThrow()
-    Result { try socket.write(from: request) }.getOrThrow()
-    Result { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrThrow()
+    let request = Result { try JSONEncoder().encode(ClientRequest(args: args, stdin: stdin)) }.getOrDie()
+    Result { try socket.write(from: request) }.getOrDie()
+    Result { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrDie()
 
     var answer = Data()
-    Result { try socket.read(into: &answer) }.getOrThrow()
-    return Result { try JSONDecoder().decode(ServerAnswer.self, from: answer) }.getOrThrow()
+    Result { try socket.read(into: &answer) }.getOrDie()
+    return Result { try JSONDecoder().decode(ServerAnswer.self, from: answer) }.getOrDie()
 }
