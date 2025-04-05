@@ -74,6 +74,7 @@ final class MacApp: AbstractApp {
 
     @MainActor // todo swift is stupid
     func closeAndUnregisterAxWindow(_ windowId: UInt32) {
+        setFrameJobs.removeValue(forKey: windowId)?.cancel()
         withWindowAsync(windowId) { [windows] window, job in
             guard let closeButton = window.get(Ax.closeButtonAttr) else { return }
             if AXUIElementPerformAction(closeButton, kAXPressAction as CFString) == .success {
@@ -108,10 +109,10 @@ final class MacApp: AbstractApp {
         }
     }
 
-    private var setFrameJob: [UInt32: RunLoopJob] = [:]
+    private var setFrameJobs: [UInt32: RunLoopJob] = [:]
     func setAxFrame(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {
-        setFrameJob[windowId]?.cancel()
-        setFrameJob[windowId] = withWindowAsync(windowId) { [axApp] window, job in
+        setFrameJobs.removeValue(forKey: windowId)?.cancel()
+        setFrameJobs[windowId] = withWindowAsync(windowId) { [axApp] window, job in
             disableAnimations(app: axApp.unsafe) {
                 setFrame(window, topLeft, size)
             }
@@ -120,8 +121,8 @@ final class MacApp: AbstractApp {
 
     @MainActor // todo swift is stupid
     func setAxFrameBlocking(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) async throws {
-        setFrameJob[windowId]?.cancel()
-        setFrameJob[windowId] = nil
+        setFrameJobs.removeValue(forKey: windowId)?.cancel()
+        setFrameJobs[windowId] = nil
         try await withWindow(windowId) { [axApp] window, job in
             disableAnimations(app: axApp.unsafe) {
                 setFrame(window, topLeft, size)
@@ -130,8 +131,8 @@ final class MacApp: AbstractApp {
     }
 
     func setAxSize(_ windowId: UInt32, _ size: CGSize) {
-        setFrameJob[windowId]?.cancel()
-        setFrameJob[windowId] = withWindowAsync(windowId) { [axApp] window, job in
+        setFrameJobs.removeValue(forKey: windowId)?.cancel()
+        setFrameJobs[windowId] = withWindowAsync(windowId) { [axApp] window, job in
             disableAnimations(app: axApp.unsafe) {
                 _ = window.set(Ax.sizeAttr, size)
             }
@@ -139,8 +140,8 @@ final class MacApp: AbstractApp {
     }
 
     func setAxTopLeftCorner(_ windowId: UInt32, _ point: CGPoint) {
-        setFrameJob[windowId]?.cancel()
-        setFrameJob[windowId] = withWindowAsync(windowId) { [axApp] window, job in
+        setFrameJobs.removeValue(forKey: windowId)?.cancel()
+        setFrameJobs[windowId] = withWindowAsync(windowId) { [axApp] window, job in
             disableAnimations(app: axApp.unsafe) {
                 _ = window.set(Ax.topLeftCornerAttr, point)
             }
@@ -185,12 +186,14 @@ final class MacApp: AbstractApp {
     }
 
     func setNativeFullscreen(_ windowId: UInt32, _ value: Bool) {
+        setFrameJobs.removeValue(forKey: windowId)?.cancel()
         withWindowAsync(windowId) { window, job in
             window.set(Ax.isFullscreenAttr, value)
         }
     }
 
     func setNativeMinimized(_ windowId: UInt32, _ value: Bool) {
+        setFrameJobs.removeValue(forKey: windowId)?.cancel()
         withWindowAsync(windowId) { window, job in
             window.set(Ax.minimizedAttr, value)
         }
