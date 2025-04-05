@@ -5,7 +5,8 @@ func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeM
     let windowId = ax.containingWindowId()
     let notif = notif as String
     Task { @MainActor in
-        if let windowId, let window = Window.get(byId: windowId), TrayMenuModel.shared.isEnabled {
+        if !TrayMenuModel.shared.isEnabled { return }
+        if let windowId, let window = Window.get(byId: windowId) {
             try await moveWithMouseIfTheCase(window)
         }
         try await refreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)

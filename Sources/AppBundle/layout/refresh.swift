@@ -34,15 +34,13 @@ func refreshSession<T>(
             smartLayoutAtStartup()
         }
 
-        if TrayMenuModel.shared.isEnabled {
-            if focusBefore != focusAfter {
-                focusAfter?.nativeFocus() // syncFocusToMacOs
-            }
-
-            updateTrayText()
-            try await normalizeLayoutReason()
-            try await layoutWorkspaces()
+        if focusBefore != focusAfter {
+            focusAfter?.nativeFocus() // syncFocusToMacOs
         }
+
+        updateTrayText()
+        try await normalizeLayoutReason()
+        try await layoutWorkspaces()
         return result
     }
 }
@@ -81,7 +79,8 @@ private func gc() async throws {
 
 func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
     let notif = notif as String
-    Task {
+    Task { @MainActor in
+        if !TrayMenuModel.shared.isEnabled { return }
         try await refreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
     }
 }

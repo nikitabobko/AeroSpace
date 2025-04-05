@@ -5,7 +5,8 @@ func resizedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     let notif = notif as String
     let windowId = ax.containingWindowId()
     Task { @MainActor in
-        if let windowId, let window = Window.get(byId: windowId), TrayMenuModel.shared.isEnabled {
+        if TrayMenuModel.shared.isEnabled { return }
+        if let windowId, let window = Window.get(byId: windowId) {
             try await resizeWithMouseIfTheCase(window)
         }
         try await refreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
