@@ -24,7 +24,7 @@ import Foundation
     GlobalObserver.initObserver()
     Task {
         try await $isStartup.withValue(true) {
-            try await refreshAndLayout(.startup1, screenIsDefinitelyUnlocked: false, startup: true)
+            try await refreshAndLayout(.startup1, screenIsDefinitelyUnlocked: false)
         }
         try await refreshSession(.startup2, screenIsDefinitelyUnlocked: false) {
             if serverArgs.startedAtLogin {

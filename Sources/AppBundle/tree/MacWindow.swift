@@ -36,7 +36,7 @@ final class MacWindow: Window {
 
         try await debugWindowsIfRecording(window)
         if try await !restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window) {
-            try await tryOnWindowDetected(window, startup: isStartup)
+            try await tryOnWindowDetected(window)
         }
         return window
     }
@@ -246,19 +246,19 @@ private func getBindingDataForNewTilingWindow(_ workspace: Workspace) -> Binding
 }
 
 @MainActor
-func tryOnWindowDetected(_ window: Window, startup: Bool) async throws {
+func tryOnWindowDetected(_ window: Window) async throws {
     switch window.parent.cases {
         case .tilingContainer, .workspace, .macosMinimizedWindowsContainer,
              .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-            try await onWindowDetected(window, startup: startup)
+            try await onWindowDetected(window)
         case .macosPopupWindowsContainer:
             break
     }
 }
 
 @MainActor
-private func onWindowDetected(_ window: Window, startup: Bool) async throws {
-    for callback in config.onWindowDetected where try await callback.matches(window, startup: startup) {
+private func onWindowDetected(_ window: Window) async throws {
+    for callback in config.onWindowDetected where try await callback.matches(window) {
         _ = try await callback.run.runCmdSeq(.defaultEnv.copy(\.windowId, window.windowId), .emptyStdin)
         if !callback.checkFurtherCallbacks {
             return
@@ -268,8 +268,8 @@ private func onWindowDetected(_ window: Window, startup: Bool) async throws {
 
 extension WindowDetectedCallback {
     @MainActor
-    func matches(_ window: Window, startup: Bool) async throws -> Bool {
-        if let startupMatcher = matcher.duringAeroSpaceStartup, startupMatcher != startup {
+    func matches(_ window: Window) async throws -> Bool {
+        if let startupMatcher = matcher.duringAeroSpaceStartup, startupMatcher != isStartup {
             return false
         }
         if let regex = matcher.windowTitleRegexSubstring, !(try await window.title).contains(regex) {

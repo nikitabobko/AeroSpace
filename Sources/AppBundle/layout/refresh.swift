@@ -8,7 +8,6 @@ import Common
 func refreshSession<T>(
     _ event: RefreshSessionEvent,
     screenIsDefinitelyUnlocked: Bool,
-    startup: Bool = false, // todo drop in favor of TaskLocal isStartup
     body: @MainActor () async throws -> T
 ) async throws -> T {
     // refreshSessionEventForDebug = event
@@ -17,9 +16,9 @@ func refreshSession<T>(
     try await gc()
     gcMonitors()
 
-    try await detectNewAppsAndWindows(startup: startup)
+    try await detectNewAppsAndWindows()
 
-    let nativeFocused = try await getNativeFocusedWindow(startup: startup)
+    let nativeFocused = try await getNativeFocusedWindow()
     if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
     updateFocusCache(nativeFocused)
     let focusBefore = focus.windowOrNil
@@ -30,7 +29,7 @@ func refreshSession<T>(
 
     let focusAfter = focus.windowOrNil
 
-    if startup {
+    if isStartup {
         smartLayoutAtStartup()
     }
 
@@ -40,15 +39,15 @@ func refreshSession<T>(
         }
 
         updateTrayText()
-        try await normalizeLayoutReason(startup: startup)
+        try await normalizeLayoutReason()
         try await layoutWorkspaces()
     }
     return result
 }
 
 @MainActor
-func refreshAndLayout(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool, startup: Bool = false) async throws {
-    try await refreshSession(event, screenIsDefinitelyUnlocked: screenIsDefinitelyUnlocked, startup: startup, body: {})
+func refreshAndLayout(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool) async throws {
+    try await refreshSession(event, screenIsDefinitelyUnlocked: screenIsDefinitelyUnlocked, body: {})
 }
 
 @MainActor
@@ -137,7 +136,7 @@ private func normalizeContainers() {
 }
 
 @MainActor
-private func detectNewAppsAndWindows(startup: Bool) async throws {
+private func detectNewAppsAndWindows() async throws {
     for app in try await detectNewApps() { // todo parallelize
         for id in try await app.detectNewWindowsAndGetIds() {
             _ = try await MacWindow.getOrRegister(windowId: id, macApp: app as! MacApp)
