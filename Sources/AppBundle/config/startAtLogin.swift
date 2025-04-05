@@ -4,7 +4,7 @@ import Common
 @MainActor
 func syncStartAtLogin() {
     let launchAgentsDir = FileManager.default.homeDirectoryForCurrentUser.appending(component: "Library/LaunchAgents/")
-    Result { try FileManager.default.createDirectory(at: launchAgentsDir, withIntermediateDirectories: true) }.getOrThrow()
+    Result { try FileManager.default.createDirectory(at: launchAgentsDir, withIntermediateDirectories: true) }.getOrDie()
     let url: URL = launchAgentsDir.appending(path: "bobko.aerospace.plist")
     if config.startAtLogin {
         let plist =
@@ -26,7 +26,7 @@ func syncStartAtLogin() {
             </plist>
             """
         if plist != (try? String(contentsOf: url)) {
-            Result { try plist.write(to: url, atomically: false, encoding: .utf8) }.getOrThrow("Can't write to \(url) ")
+            Result { try plist.write(to: url, atomically: false, encoding: .utf8) }.getOrDie("Can't write to \(url) ")
         }
     } else {
         try? FileManager.default.removeItem(at: url)

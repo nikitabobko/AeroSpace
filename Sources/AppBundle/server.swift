@@ -5,9 +5,9 @@ import Common
 func startUnixSocketServer() {
     DispatchQueue.global().async {
         let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }
-            .getOrThrow("Can't create socket ")
+            .getOrDie("Can't create socket ")
         let socketFile = "/tmp/\(aeroSpaceAppId)-\(unixUserName).sock"
-        Result { try socket.listen(on: socketFile) }.getOrThrow("Can't listen to socket \(socketFile) ")
+        Result { try socket.listen(on: socketFile) }.getOrDie("Can't listen to socket \(socketFile) ")
         while true {
             guard let connection = try? socket.acceptClientConnection() else { continue }
             handleConnectionAsync(connection)
@@ -23,7 +23,7 @@ private func handleConnectionAsync(_ connection: sending Socket) {
 
 func sendCommandToReleaseServer(args: [String]) {
     check(isDebug)
-    let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrThrow()
+    let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrDie()
     defer {
         socket.close()
     }
@@ -32,7 +32,7 @@ func sendCommandToReleaseServer(args: [String]) {
         return
     }
 
-    _ = try? socket.write(from: Result { try JSONEncoder().encode(ClientRequest(args: args, stdin: "")) }.getOrThrow())
+    _ = try? socket.write(from: Result { try JSONEncoder().encode(ClientRequest(args: args, stdin: "")) }.getOrDie())
     _ = try? Socket.wait(for: [socket], timeout: 0, waitForever: true)
     _ = try? socket.readString()
 }
@@ -45,7 +45,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
         answerToClient(ans)
     }
     func answerToClient(_ ans: ServerAnswer) {
-        _ = try? socket.write(from: Result { try JSONEncoder().encode(ans) }.getOrThrow())
+        _ = try? socket.write(from: Result { try JSONEncoder().encode(ans) }.getOrDie())
     }
     defer {
         socket.close()

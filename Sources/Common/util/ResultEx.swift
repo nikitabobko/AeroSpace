@@ -44,7 +44,7 @@ public extension Result {
 
 public extension Result {
     @discardableResult
-    func getOrThrow(
+    func getOrDie(
         _ msgPrefix: String = "",
         file: String = #fileID,
         line: Int = #line,

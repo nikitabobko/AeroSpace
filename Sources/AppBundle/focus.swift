@@ -169,6 +169,6 @@ extension Workspace {
         environment["AEROSPACE_FOCUSED_WORKSPACE"] = newWorkspace
         environment["AEROSPACE_PREV_WORKSPACE"] = oldWorkspace
         process.environment = environment
-        Result { try process.run() }.getOrThrow() // todo It's not perfect to fail here
+        Result { try process.run() }.getOrDie() // todo It's not perfect to fail here
     }
 }
