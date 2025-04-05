@@ -30,10 +30,6 @@ func refreshSession<T>(
 
         let focusAfter = focus.windowOrNil
 
-        if isStartup {
-            smartLayoutAtStartup()
-        }
-
         if focusBefore != focusAfter {
             focusAfter?.nativeFocus() // syncFocusToMacOs
         }
@@ -142,16 +138,5 @@ private func detectNewAppsAndWindows() async throws {
         for id in try await app.detectNewWindowsAndGetIds() {
             _ = try await MacWindow.getOrRegister(windowId: id, macApp: app as! MacApp)
         }
-    }
-}
-
-@MainActor
-private func smartLayoutAtStartup() {
-    let workspace = focus.workspace
-    let root = workspace.rootTilingContainer
-    if root.children.count <= 3 {
-        root.layout = .tiles
-    } else {
-        root.layout = .accordion
     }
 }
