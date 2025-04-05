@@ -30,7 +30,7 @@ var defaultConfigUrl: URL {
 @MainActor var config: Config = defaultConfig // todo move to Ctx?
 @MainActor var configUrl: URL = defaultConfigUrl
 
-struct Config: Copyable {
+struct Config: ConvenienceCopyable {
     var afterLoginCommand: [any Command] = []
     var afterStartupCommand: [any Command] = []
     var _indentForNestedContainersWithTheSameOrientation: Void = ()

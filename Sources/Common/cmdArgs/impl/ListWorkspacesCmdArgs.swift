@@ -42,7 +42,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
 
-    public struct FilteringOptions: Copyable, Equatable, Sendable {
+    public struct FilteringOptions: ConvenienceCopyable, Equatable, Sendable {
         public var onMonitors: [MonitorId] = []
         public var visible: Bool?
         public var empty: Bool?
