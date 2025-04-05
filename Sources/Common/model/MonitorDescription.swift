@@ -1,15 +1,23 @@
+import Foundation
+
 public enum MonitorDescription: Equatable, Sendable {
     case sequenceNumber(Int)
     case main
     case secondary
+    case uuid(String)
+    case contextualId(Int)
+    case serial(Int)
     case pattern(String, SendableRegex<AnyRegexOutput>)
 
     public static func == (lhs: MonitorDescription, rhs: MonitorDescription) -> Bool {
         return switch (lhs, rhs) {
             case (.main, .main): true
             case (.secondary, .secondary): true
-            case (.sequenceNumber(let a), .sequenceNumber(let b)): a == b
-            case (.pattern(let a, _), .pattern(let b, _)): a == b
+            case (.sequenceNumber(let a), .sequenceNumber(let b)),
+                 (.contextualId(let a), .contextualId(let b)),
+                 (.serial(let a), .serial(let b)): a == b
+            case (.pattern(let a, _), .pattern(let b, _)),
+                 (.uuid(let a), .uuid(let b)): a == b
             default: false
         }
     }
