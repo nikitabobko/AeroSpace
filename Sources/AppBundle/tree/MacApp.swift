@@ -259,9 +259,6 @@ final class MacApp: AbstractApp {
                 try job.checkCancellation()
                 return $0.value.ax.containingWindowId(signpostEvent: nsApp.idForDebug) != nil
             }
-            // If all windows are "unobservable", it's highly propable that loginwindow might be still active and we are still
-            // recovering from unlock
-            if toKeepAlive.count == 0 { return Set(_windows.keys) }
             windows.unsafe = toKeepAlive
             return Set(toKeepAlive.keys)
         } ?? []
