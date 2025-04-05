@@ -13,7 +13,7 @@ struct CloseCommand: Command {
             // Access ax directly. Not cool :(
             if try await args.quitIfLastWindow.andAsyncMainActor(try await window.macAppUnsafe.getAxWindowsCount() == 1) {
                 if window.macAppUnsafe.nsApp.terminate() {
-                    window.asMacWindow().garbageCollect(skipClosedWindowsCache: true)
+                    window.asMacWindow().macApp.destroy(skipClosedWindowsCache: true)
                     return true
                 } else {
                     return io.err("Failed to quit '\(window.app.name ?? "Unknown app")'")
