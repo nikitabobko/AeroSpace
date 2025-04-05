@@ -43,7 +43,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
     public var windowId: UInt32?               // unused
     public var workspaceName: WorkspaceName?   // unused
 
-    public struct FilteringOptions: Copyable, Equatable, Sendable {
+    public struct FilteringOptions: ConvenienceCopyable, Equatable, Sendable {
         public var monitors: [MonitorId] = []
         public var focused: Bool = false
         public var workspaces: [WorkspaceFilter] = []

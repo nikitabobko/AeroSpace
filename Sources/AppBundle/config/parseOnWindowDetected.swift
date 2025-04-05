@@ -1,7 +1,7 @@
 import Common
 import TOMLKit
 
-struct WindowDetectedCallback: Copyable, Equatable {
+struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
     var matcher: WindowDetectedCallbackMatcher = WindowDetectedCallbackMatcher()
     var checkFurtherCallbacks: Bool = false
     var rawRun: [any Command]? = nil
@@ -16,7 +16,7 @@ struct WindowDetectedCallback: Copyable, Equatable {
     }
 }
 
-struct WindowDetectedCallbackMatcher: Copyable, Equatable {
+struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
     var appId: String?
     var appNameRegexSubstring: Regex<AnyRegexOutput>?
     var windowTitleRegexSubstring: Regex<AnyRegexOutput>?

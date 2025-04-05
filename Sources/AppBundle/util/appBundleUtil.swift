@@ -93,7 +93,7 @@ func + (a: CGPoint, b: CGPoint) -> CGPoint {
     CGPoint(x: a.x + b.x, y: a.y + b.y)
 }
 
-extension CGPoint: Copyable {}
+extension CGPoint: ConvenienceCopyable {}
 
 extension CGPoint {
     /// Distance to ``Rect`` outline frame

@@ -1,13 +1,13 @@
 import Common
 import TOMLKit
 
-struct Gaps: Copyable, Equatable, Sendable {
+struct Gaps: ConvenienceCopyable, Equatable, Sendable {
     var inner: Inner
     var outer: Outer
 
     static let zero = Gaps(inner: .zero, outer: .zero)
 
-    struct Inner: Copyable, Equatable, Sendable {
+    struct Inner: ConvenienceCopyable, Equatable, Sendable {
         var vertical: DynamicConfigValue<Int>
         var horizontal: DynamicConfigValue<Int>
 
@@ -24,7 +24,7 @@ struct Gaps: Copyable, Equatable, Sendable {
         }
     }
 
-    struct Outer: Copyable, Equatable, Sendable {
+    struct Outer: ConvenienceCopyable, Equatable, Sendable {
         var left: DynamicConfigValue<Int>
         var bottom: DynamicConfigValue<Int>
         var top: DynamicConfigValue<Int>

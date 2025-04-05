@@ -61,12 +61,12 @@ extension ParserProtocol {
 
 protocol ParserProtocol<S>: Sendable {
     associatedtype T
-    associatedtype S where S: Copyable
+    associatedtype S where S: ConvenienceCopyable
     var keyPath: SendableWritableKeyPath<S, T> { get }
     var parse: @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T> { get }
 }
 
-struct Parser<S: Copyable, T>: ParserProtocol {
+struct Parser<S: ConvenienceCopyable, T>: ParserProtocol {
     let keyPath: SendableWritableKeyPath<S, T>
     let parse: @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T>
 
@@ -251,7 +251,7 @@ func parseTomlArray(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> 
     raw.array.orFailure(expectedActualTypeError(expected: .array, actual: raw.type, backtrace))
 }
 
-func parseTable<T: Copyable>(
+func parseTable<T: ConvenienceCopyable>(
     _ raw: TOMLValueConvertible,
     _ initial: T,
     _ fieldsParser: [String: any ParserProtocol<T>],
@@ -342,7 +342,7 @@ indirect enum TomlBacktrace: CustomStringConvertible, Equatable {
 }
 
 extension TOMLTable {
-    func parseTable<T: Copyable>(
+    func parseTable<T: ConvenienceCopyable>(
         _ initial: T,
         _ fieldsParser: [String: any ParserProtocol<T>],
         _ backtrace: TomlBacktrace,

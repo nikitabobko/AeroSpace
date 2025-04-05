@@ -1,6 +1,6 @@
 import Common
 
-struct CmdEnv: Copyable { // todo forward env from cli to server
+struct CmdEnv: ConvenienceCopyable { // todo forward env from cli to server
     var windowId: UInt32?
     var workspaceName: String?
     var pwd: String?
