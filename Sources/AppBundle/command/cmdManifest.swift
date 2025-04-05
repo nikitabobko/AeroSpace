@@ -17,7 +17,7 @@ extension CmdArgs {
             case .enable:
                 command = EnableCommand(args: self as! EnableCmdArgs)
             case .execAndForget:
-                error("exec-and-forget is parsed separately")
+                die("exec-and-forget is parsed separately")
             case .flattenWorkspaceTree:
                 command = FlattenWorkspaceTreeCommand(args: self as! FlattenWorkspaceTreeCmdArgs)
             case .focus:

@@ -31,34 +31,34 @@ class TreeNode: Equatable {
 
     /// See: ``getWeight(_:)``
     func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {
-        guard let parent else { error("Can't change weight if TreeNode doesn't have parent") }
+        guard let parent else { die("Can't change weight if TreeNode doesn't have parent") }
         switch getChildParentRelation(child: self, parent: parent) {
             case .tiling(let parent):
                 if parent.orientation != targetOrientation {
-                    error("You can't change \(targetOrientation) weight of nodes located in \(parent.orientation) container")
+                    die("You can't change \(targetOrientation) weight of nodes located in \(parent.orientation) container")
                 }
                 if parent.layout != .tiles {
-                    error("Weight can be changed only for nodes whose parent has 'tiles' layout")
+                    die("Weight can be changed only for nodes whose parent has 'tiles' layout")
                 }
                 adaptiveWeight = newValue
             default:
-                error("Can't change weight")
+                die("Can't change weight")
         }
     }
 
     /// Weight itself doesn't make sense. The parent container controls semantics of weight
     @MainActor
     func getWeight(_ targetOrientation: Orientation) -> CGFloat {
-        guard let parent else { error("Weight doesn't make sense for containers without parent") }
+        guard let parent else { die("Weight doesn't make sense for containers without parent") }
         return switch getChildParentRelation(child: self, parent: parent) {
             case .tiling(let parent):
                 parent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
             case .rootTilingContainer: parent.getWeight(targetOrientation)
-            case .floatingWindow, .macosNativeFullscreenWindow: errorT("Weight doesn't make sense for floating windows")
-            case .macosNativeMinimizedWindow: errorT("Weight doesn't make sense for minimized windows")
-            case .macosPopupWindow: errorT("Weight doesn't make sense for popup windows")
-            case .macosNativeHiddenAppWindow: errorT("Weight doesn't make sense for windows of hidden apps")
-            case .shimContainerRelation: errorT("Weight doesn't make sense for stub containers")
+            case .floatingWindow, .macosNativeFullscreenWindow: dieT("Weight doesn't make sense for floating windows")
+            case .macosNativeMinimizedWindow: dieT("Weight doesn't make sense for minimized windows")
+            case .macosPopupWindow: dieT("Weight doesn't make sense for popup windows")
+            case .macosNativeHiddenAppWindow: dieT("Weight doesn't make sense for windows of hidden apps")
+            case .shimContainerRelation: dieT("Weight doesn't make sense for stub containers")
         }
     }
 
@@ -97,7 +97,7 @@ class TreeNode: Equatable {
     private func unbindIfBound() -> BindingData? {
         guard let _parent else { return nil }
 
-        let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
+        let index = _parent._children.remove(element: self) ?? dieT("Can't find child in its parent")
         check(_parent._mruChildren.remove(self))
         self._parent = nil
         unboundStacktrace = getStringStacktrace()
@@ -118,7 +118,7 @@ class TreeNode: Equatable {
 
     @discardableResult
     func unbindFromParent() -> BindingData {
-        unbindIfBound() ?? errorT("\(self) is already unbound. The stacktrace where it was unbound:\n\(unboundStacktrace ?? "nil")")
+        unbindIfBound() ?? dieT("\(self) is already unbound. The stacktrace where it was unbound:\n\(unboundStacktrace ?? "nil")")
     }
 
     nonisolated static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {

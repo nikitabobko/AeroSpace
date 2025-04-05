@@ -6,7 +6,7 @@ public enum Lateinit<T> {
     public var val: T {
         switch self {
             case .initialized(let value): return value
-            case .uninitialized: error("Property is not initialized")
+            case .uninitialized: die("Property is not initialized")
         }
     }
 

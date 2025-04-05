@@ -14,7 +14,7 @@ extension Workspace {
             case 1:
                 return containers.singleOrNil()!
             default:
-                error("Workspace must contain zero or one tiling container as its child")
+                die("Workspace must contain zero or one tiling container as its child")
         }
     }
 
@@ -27,7 +27,7 @@ extension Workspace {
         return switch containers.count {
             case 0: MacosFullscreenWindowsContainer(parent: self)
             case 1: containers.singleOrNil()!
-            default: errorT("Workspace must contain zero or one MacosFullscreenWindowsContainer")
+            default: dieT("Workspace must contain zero or one MacosFullscreenWindowsContainer")
         }
     }
 
@@ -36,7 +36,7 @@ extension Workspace {
         return switch containers.count {
             case 0: MacosHiddenAppsWindowsContainer(parent: self)
             case 1: containers.singleOrNil()!
-            default: errorT("Workspace must contain zero or one MacosHiddenAppsWindowsContainer")
+            default: dieT("Workspace must contain zero or one MacosHiddenAppsWindowsContainer")
         }
     }
 

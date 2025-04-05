@@ -7,7 +7,7 @@ struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
     var rawRun: [any Command]? = nil
 
     var run: [any Command] {
-        rawRun ?? errorT("ID-46D063B2 should have discarded nil")
+        rawRun ?? dieT("ID-46D063B2 should have discarded nil")
     }
 
     static func == (lhs: WindowDetectedCallback, rhs: WindowDetectedCallback) -> Bool {

@@ -46,7 +46,7 @@ public extension Sequence {
     }
 
     @inlinable func minByOrThrow(_ selector: (Self.Element) -> some Comparable) -> Self.Element {
-        minBy(selector) ?? errorT("Empty sequence")
+        minBy(selector) ?? dieT("Empty sequence")
     }
 
     @inlinable func minBy(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
@@ -54,7 +54,7 @@ public extension Sequence {
     }
 
     @inlinable func maxByOrThrow(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
-        self.maxBy(selector) ?? errorT("Empty sequence")
+        self.maxBy(selector) ?? dieT("Empty sequence")
     }
 
     @inlinable func maxBy(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
@@ -100,11 +100,11 @@ public extension Sequence {
 
 public extension Sequence where Self.Element: Comparable {
     func minOrThrow() -> Self.Element {
-        self.min() ?? errorT("Empty sequence")
+        self.min() ?? dieT("Empty sequence")
     }
 
     func maxOrThrow() -> Self.Element {
-        self.max() ?? errorT("Empty sequence")
+        self.max() ?? dieT("Empty sequence")
     }
 }
 

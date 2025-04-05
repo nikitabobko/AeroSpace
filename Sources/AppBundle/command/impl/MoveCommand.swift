@@ -69,7 +69,7 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
         case .macosPopupWindowsContainer:
             return false // Impossible
         case .window:
-            error("Window can't contain children nodes")
+            die("Window can't contain children nodes")
     }
 
     window.bind(
@@ -103,7 +103,7 @@ private extension TilingTreeNodeCases {
                 if container.orientation == orientation {
                     .tilingContainer(container)
                 } else {
-                    (container.mostRecentChild ?? errorT("Empty containers must be detached during normalization"))
+                    (container.mostRecentChild ?? dieT("Empty containers must be detached during normalization"))
                         .tilingTreeNodeCasesOrThrow()
                         .findDeepMoveInTargetRecursive(orientation)
                 }

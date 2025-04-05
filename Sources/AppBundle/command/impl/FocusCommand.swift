@@ -52,7 +52,7 @@ struct FocusCommand: Command {
                 case .stop: true
                 case .fail: false
                 case .wrapAroundTheWorkspace: wrapAroundTheWorkspace(target, io, direction)
-                case .wrapAroundAllMonitors: errorT("Must be discarded by args parser")
+                case .wrapAroundAllMonitors: dieT("Must be discarded by args parser")
             }
         case .allMonitorsUnionFrame:
             let currentMonitor = target.workspace.workspaceMonitor
@@ -159,7 +159,7 @@ private extension TreeNode {
                 }
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
                  .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
-                error("Impossible")
+                die("Impossible")
         }
     }
 }

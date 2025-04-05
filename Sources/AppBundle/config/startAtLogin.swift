@@ -17,7 +17,7 @@ func syncStartAtLogin() {
                 <string>\(aeroSpaceAppId)</string>
                 <key>ProgramArguments</key>
                 <array>
-                    <string>\(URL(filePath: CommandLine.arguments.first ?? errorT("Can't get first argument")).absoluteURL.path)</string>
+                    <string>\(URL(filePath: CommandLine.arguments.first ?? dieT("Can't get first argument")).absoluteURL.path)</string>
                     <string>--started-at-login</string>
                 </array>
                 <key>RunAtLoad</key>

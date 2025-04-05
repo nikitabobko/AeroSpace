@@ -35,7 +35,7 @@ public extension ConfigCmdArgs {
         if majorKeys { return .majorKeys }
         if allKeys { return .allKeys }
         if configPath { return .configPath }
-        error("At least one mode must be specified")
+        die("At least one mode must be specified")
     }
 }
 

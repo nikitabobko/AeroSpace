@@ -43,7 +43,7 @@ func testParseCommandSucc(_ command: String, _ expected: any CmdArgs) {
     let parsed = parseCommand(command)
     switch parsed {
         case .cmd(let command): XCTAssertTrue(command.args.equals(expected), "actual: \(command.args) expected: \(expected)")
-        case .help: error() // todo test help
+        case .help: die() // todo test help
         case .failure(let msg): XCTFail(msg)
     }
 }
@@ -79,7 +79,7 @@ func testParseCommandFail(_ command: String, msg expected: String) {
     switch parsed {
         case .cmd(let command): XCTFail("\(command) isn't supposed to be parcelable")
         case .failure(let msg): assertEquals(msg, expected)
-        case .help: error() // todo test help
+        case .help: die() // todo test help
     }
 }
 
