@@ -10,7 +10,8 @@ class GlobalObserver {
             return
         }
         let notifName = notification.name.rawValue
-        Task {
+        Task { @MainActor in
+            if !TrayMenuModel.shared.isEnabled { return }
             try await refreshAndLayout(.globalObserver(notifName), screenIsDefinitelyUnlocked: false)
         }
     }
@@ -19,8 +20,9 @@ class GlobalObserver {
         check(Thread.isMainThread)
         let notifName = notification.name.rawValue
         Task { @MainActor in
+            if !TrayMenuModel.shared.isEnabled { return }
             try await refreshSession(.globalObserver(notifName), screenIsDefinitelyUnlocked: false) {
-                if TrayMenuModel.shared.isEnabled && config.automaticallyUnhideMacosHiddenApps {
+                if config.automaticallyUnhideMacosHiddenApps {
                     if let w = prevFocus?.windowOrNil,
                        w.macAppUnsafe.nsApp.isHidden,
                        // "Hide others" (cmd-alt-h) -> don't force focus
@@ -54,7 +56,8 @@ class GlobalObserver {
             // todo reduce number of refreshSession in the callback
             //  resetManipulatedWithMouseIfPossible might call its own refreshSession
             //  The end of the callback calls refreshSession
-            Task {
+            Task { @MainActor in
+                if !TrayMenuModel.shared.isEnabled { return }
                 resetClosedWindowsCache()
                 try await resetManipulatedWithMouseIfPossible()
                 let mouseLocation = mouseLocation
