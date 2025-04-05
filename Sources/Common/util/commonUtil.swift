@@ -6,6 +6,9 @@ public let unixUserName = NSUserName()
 public let mainModeId = "main"
 
 @TaskLocal
+public var refreshSessionEventForDebug: RefreshSessionEvent? = nil
+
+@TaskLocal
 private var recursionDetectorDuringTermination = false
 
 public func errorT<T>(
@@ -25,6 +28,7 @@ public func errorT<T>(
         Message: \(_message)
         Version: \(aeroSpaceAppVersion)
         Git hash: \(gitHash)
+        refreshSessionEvent: \(refreshSessionEventForDebug.optionalToPrettyString())
         Date: \(Date.now)
         macOS version: \(ProcessInfo().operatingSystemVersionString)
         Coordinate: \(file):\(line):\(column) \(function)
@@ -35,7 +39,6 @@ public func errorT<T>(
         Stacktrace:
         \(getStringStacktrace())
         """
-    // refreshSessionEvent: \(String(describing: refreshSessionEventForDebug)) // todo return back when introduce Ctx
     if !isUnitTest && isServer {
         showMessageInGui(
             filenameIfConsoleApp: recursionDetectorDuringTermination
@@ -58,7 +61,7 @@ public func errorT<T>(
     fatalError("\n" + message)
 }
 
-public enum RefreshSessionEvent {
+public enum RefreshSessionEvent: Sendable {
     case globalObserver(String)
     case globalObserverLeftMouseUp
     case menuBarButton

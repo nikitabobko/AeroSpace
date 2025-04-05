@@ -10,39 +10,41 @@ func refreshSession<T>(
     screenIsDefinitelyUnlocked: Bool,
     body: @MainActor () async throws -> T
 ) async throws -> T {
-    // refreshSessionEventForDebug = event
-    // defer { refreshSessionEventForDebug = nil }
-    if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
-    try await gc()
-    gcMonitors()
+    try await $refreshSessionEventForDebug.withValue(event) {
+        // refreshSessionEventForDebug = event
+        // defer { refreshSessionEventForDebug = nil }
+        if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
+        try await gc()
+        gcMonitors()
 
-    try await detectNewAppsAndWindows()
+        try await detectNewAppsAndWindows()
 
-    let nativeFocused = try await getNativeFocusedWindow()
-    if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
-    updateFocusCache(nativeFocused)
-    let focusBefore = focus.windowOrNil
+        let nativeFocused = try await getNativeFocusedWindow()
+        if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
+        updateFocusCache(nativeFocused)
+        let focusBefore = focus.windowOrNil
 
-    try await refreshModel()
-    let result = try await body()
-    try await refreshModel()
+        try await refreshModel()
+        let result = try await body()
+        try await refreshModel()
 
-    let focusAfter = focus.windowOrNil
+        let focusAfter = focus.windowOrNil
 
-    if isStartup {
-        smartLayoutAtStartup()
-    }
-
-    if TrayMenuModel.shared.isEnabled {
-        if focusBefore != focusAfter {
-            focusAfter?.nativeFocus() // syncFocusToMacOs
+        if isStartup {
+            smartLayoutAtStartup()
         }
 
-        updateTrayText()
-        try await normalizeLayoutReason()
-        try await layoutWorkspaces()
+        if TrayMenuModel.shared.isEnabled {
+            if focusBefore != focusAfter {
+                focusAfter?.nativeFocus() // syncFocusToMacOs
+            }
+
+            updateTrayText()
+            try await normalizeLayoutReason()
+            try await layoutWorkspaces()
+        }
+        return result
     }
-    return result
 }
 
 @MainActor
