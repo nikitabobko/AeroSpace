@@ -46,7 +46,7 @@ func refreshAndLayout(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: 
 
 @MainActor
 func refreshModel() async throws {
-    try await gc()
+    Workspace.garbageCollectUnusedWorkspaces()
     try await checkOnFocusChangedCallbacks()
     normalizeContainers()
 }
