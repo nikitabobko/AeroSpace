@@ -279,7 +279,7 @@ final class MacApp: AbstractApp {
     }
 
     @MainActor
-    private func destroy(skipClosedWindowsCache: Bool) {
+    func destroy(skipClosedWindowsCache: Bool) {
         MacApp.allAppsMap.removeValue(forKey: nsApp.processIdentifier)
         for (_, window) in MacWindow.allWindowsMap where window.app.pid == self.pid {
             window.garbageCollect(skipClosedWindowsCache: skipClosedWindowsCache, unregisterAxWindow: false)
