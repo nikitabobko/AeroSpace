@@ -25,13 +25,25 @@ import Foundation
     Task {
         try await $isStartup.withValue(true) {
             try await refreshAndLayout(.startup1, screenIsDefinitelyUnlocked: false)
-        }
-        try await refreshSession(.startup2, screenIsDefinitelyUnlocked: false) {
-            if serverArgs.startedAtLogin {
-                _ = try await config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+            try await refreshSession(.startup2, screenIsDefinitelyUnlocked: false) {
+                smartLayoutAtStartup()
+                if serverArgs.startedAtLogin {
+                    _ = try await config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+                }
+                _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
             }
-            _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
         }
+    }
+}
+
+@MainActor
+private func smartLayoutAtStartup() {
+    let workspace = focus.workspace
+    let root = workspace.rootTilingContainer
+    if root.children.count <= 3 {
+        root.layout = .tiles
+    } else {
+        root.layout = .accordion
     }
 }
 
