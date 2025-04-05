@@ -20,7 +20,6 @@ import Foundation
     }
 
     checkAccessibilityPermissions()
-    AXUIElementSetMessagingTimeout(AXUIElementCreateSystemWide(), 1.0)
     startUnixSocketServer()
     GlobalObserver.initObserver()
     Task {
