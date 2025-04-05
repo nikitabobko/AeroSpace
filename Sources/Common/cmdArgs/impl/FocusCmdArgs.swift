@@ -70,7 +70,7 @@ public extension FocusCmdArgs {
         if let dfsIndex {
             return .dfsIndex(dfsIndex)
         }
-        error("Parser invariants are broken")
+        die("Parser invariants are broken")
     }
 
     var boundaries: Boundaries { rawBoundaries ?? .workspace }

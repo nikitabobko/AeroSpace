@@ -4,7 +4,7 @@ import Common
 class Window: TreeNode, Hashable {
     nonisolated let windowId: UInt32 // todo nonisolated keyword is no longer necessary?
     let app: any AbstractApp
-    override var parent: NonLeafTreeNodeObject { super.parent ?? errorT("Windows always have parent") }
+    override var parent: NonLeafTreeNodeObject { super.parent ?? dieT("Windows always have parent") }
     var parentOrNilForTests: NonLeafTreeNodeObject? { super.parent }
     var lastFloatingSize: CGSize?
     var isFullscreen: Bool = false
@@ -26,34 +26,34 @@ class Window: TreeNode, Hashable {
     }
 
     @MainActor
-    func closeAxWindow() { error("Not implemented") }
+    func closeAxWindow() { die("Not implemented") }
 
     nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(windowId)
     }
 
     @MainActor // todo can be dropped in future Swift versions?
-    func getAxTopLeftCorner() async throws -> CGPoint? { error("Not implemented") }
+    func getAxTopLeftCorner() async throws -> CGPoint? { die("Not implemented") }
     @MainActor // todo swift is stupid
-    func getAxSize() async throws -> CGSize? { error("Not implemented") }
+    func getAxSize() async throws -> CGSize? { die("Not implemented") }
     @MainActor // todo swift is stupid
-    var title: String { get async throws { error("Not implemented") } }
+    var title: String { get async throws { die("Not implemented") } }
     @MainActor // todo swift is stupid
     var isMacosFullscreen: Bool { get async throws { false } }
     @MainActor // todo swift is stupid
     var isMacosMinimized: Bool { get async throws { false } } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
-    var isHiddenInCorner: Bool { error("Not implemented") }
+    var isHiddenInCorner: Bool { die("Not implemented") }
     @MainActor
-    func nativeFocus() { error("Not implemented") }
+    func nativeFocus() { die("Not implemented") }
     @MainActor // todo can be dropped in future Swift versions
-    func getAxRect() async throws -> Rect? { error("Not implemented") }
+    func getAxRect() async throws -> Rect? { die("Not implemented") }
     @MainActor // todo can be dropped in future Swift versions
     func getCenter() async throws -> CGPoint? { try await getAxRect()?.center }
 
-    func setAxTopLeftCorner(_ point: CGPoint) { error("Not implemented") }
-    func setAxFrameDuringTermination(_ topLeft: CGPoint?, _ size: CGSize?) async throws { error("Not implemented") }
-    func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) { error("Not implemented") }
-    func setSizeAsync(_ size: CGSize) { error("Not implemented") }
+    func setAxTopLeftCorner(_ point: CGPoint) { die("Not implemented") }
+    func setAxFrameDuringTermination(_ topLeft: CGPoint?, _ size: CGSize?) async throws { die("Not implemented") }
+    func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) { die("Not implemented") }
+    func setSizeAsync(_ size: CGSize) { die("Not implemented") }
 }
 
 enum LayoutReason: Equatable {

@@ -11,7 +11,7 @@ public var refreshSessionEventForDebug: RefreshSessionEvent? = nil
 @TaskLocal
 private var recursionDetectorDuringTermination = false
 
-public func errorT<T>(
+public func dieT<T>(
     _ __message: String = "",
     file: String = #fileID,
     line: Int = #line,
@@ -80,14 +80,14 @@ public func throwT<T>(_ error: Error) throws -> T {
 public func printStacktrace() { print(getStringStacktrace()) }
 public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(separator: "\n") }
 
-@inlinable public func error(
+@inlinable public func die(
     _ message: String = "",
     file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function
 ) -> Never {
-    errorT(message, file: file, line: line, column: column, function: function)
+    dieT(message, file: file, line: line, column: column, function: function)
 }
 
 public func check(
@@ -99,7 +99,7 @@ public func check(
     function: String = #function
 ) {
     if !condition {
-        error(message(), file: file, line: line, column: column, function: function)
+        die(message(), file: file, line: line, column: column, function: function)
     }
 }
 
@@ -185,7 +185,7 @@ public func allowOnlyCancellationError<T>(isolation: isolated (any Actor)? = #is
         if let bar = foo as? CancellationError {
             throw bar
         } else {
-            error("throws must only be used for CancellationError")
+            die("throws must only be used for CancellationError")
         }
     }
 }

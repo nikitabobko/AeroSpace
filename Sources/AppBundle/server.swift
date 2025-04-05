@@ -114,7 +114,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             answerToClient(answer)
             continue
         }
-        error("Unreachable")
+        die("Unreachable")
     }
 }
 

@@ -1,6 +1,6 @@
 extension [String] {
     mutating func next() -> String {
-        nextOrNil() ?? errorT("args is empty")
+        nextOrNil() ?? dieT("args is empty")
     }
 
     mutating func nextNonFlagOrNil() -> String? {

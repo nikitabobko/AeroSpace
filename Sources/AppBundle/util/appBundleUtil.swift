@@ -76,7 +76,7 @@ func detectNewApps() async throws -> [any AbstractApp] {
 @MainActor
 func terminateApp() -> Never {
     NSApplication.shared.terminate(nil)
-    error("Unreachable code")
+    die("Unreachable code")
 }
 
 extension String {

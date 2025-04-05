@@ -55,7 +55,7 @@ public extension Result {
             case .success(let suc):
                 return suc
             case .failure(let e):
-                error(msgPrefix + e.localizedDescription, file: file, line: line, column: column, function: function)
+                die(msgPrefix + e.localizedDescription, file: file, line: line, column: column, function: function)
         }
     }
 }
