@@ -37,8 +37,6 @@ public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     case volume
     case workspace
     case workspaceBackAndForth = "workspace-back-and-forth"
-
-    case serverVersionInternalCommand = "server-version-internal-command"
 }
 
 func initSubcommands() -> [String: any SubCommandParserProtocol] {
@@ -113,10 +111,6 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = SubCommandParser(parseSplitCmdArgs)
             case .summonWorkspace:
                 result[kind.rawValue] = SubCommandParser(SummonWorkspaceCmdArgs.init)
-            case .serverVersionInternalCommand:
-                if isServer {
-                    result[kind.rawValue] = SubCommandParser(ServerVersionInternalCommandCmdArgs.init)
-                }
             case .triggerBinding:
                 result[kind.rawValue] = SubCommandParser(parseTriggerBindingCmdArgs)
             case .volume:

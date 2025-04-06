@@ -66,8 +66,8 @@ struct Main {
             }
         }
 
-        let ans = isVersion ? run(socket, ["server-version-internal-command"], stdin: stdin) : run(socket, args, stdin: stdin)
-        if ans.exitCode == 0 && isVersion {
+        let ans = isVersion ? run(socket, [], stdin: stdin) : run(socket, args, stdin: stdin)
+        if isVersion {
             printVersionAndExit(serverVersion: ans.serverVersionAndHash)
         }
 
