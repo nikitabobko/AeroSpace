@@ -388,47 +388,4 @@ private func disableAnimations<T>(app: AXUIElement, _ body: () -> T) -> T {
     return body()
 }
 
-public final class ThreadGuardedValue<Value>: Sendable {
-    private nonisolated(unsafe) var _threadGuarded: Value?
-    private let threadToken: AxAppThreadToken = axTaskLocalAppThreadToken ?? dieT("axTaskLocalAppThreadToken is not initialized")
-    public init(_ value: Value) { self._threadGuarded = value }
-    var threadGuarded: Value {
-        get {
-            threadToken.checkEquals(axTaskLocalAppThreadToken)
-            return _threadGuarded ?? dieT("Value is already destroyed")
-        }
-        set(newValue) {
-            threadToken.checkEquals(axTaskLocalAppThreadToken)
-            _threadGuarded = newValue
-        }
-    }
-    func destroy() {
-        threadToken.checkEquals(axTaskLocalAppThreadToken)
-        _threadGuarded = nil
-    }
-    deinit {
-        check(_threadGuarded == nil, "The Value must be explicitly destroyed on the appropriate thread before deinit")
-    }
-}
-
-public final class MutableUnsafeSendable<T>: Sendable {
-    nonisolated(unsafe) var unsafe: T
-    public init(_ value: T) { self.unsafe = value }
-}
-
-public final class UnsafeSendable<T>: Sendable {
-    nonisolated(unsafe) let unsafe: T
-    public init(_ value: T) { self.unsafe = value }
-}
-
 public typealias Continuation<T> = CheckedContinuation<T, Never>
-
-extension NSRunningApplication {
-    func isFirefox() -> Bool {
-        ["org.mozilla.firefox", "org.mozilla.firefoxdeveloperedition", "org.mozilla.nightly"].contains(bundleIdentifier ?? "")
-    }
-
-    var idForDebug: String {
-        "PID: \(processIdentifier) ID: \(bundleIdentifier ?? executableURL?.description ?? "")"
-    }
-}
