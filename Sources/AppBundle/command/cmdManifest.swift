@@ -68,8 +68,6 @@ extension CmdArgs {
                 command = SplitCommand(args: self as! SplitCmdArgs)
             case .summonWorkspace:
                 command = SummonWorkspaceCommand(args: self as! SummonWorkspaceCmdArgs)
-            case .serverVersionInternalCommand:
-                command = ServerVersionInternalCommandCommand(args: self as! ServerVersionInternalCommandCmdArgs)
             case .triggerBinding:
                 command = TriggerBindingCommand(args: self as! TriggerBindingCmdArgs)
             case .volume:
