@@ -78,7 +78,7 @@ final class MacApp: AbstractApp {
     @MainActor // todo swift is stupid
     func closeAndUnregisterAxWindow(_ windowId: UInt32) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
-        withWindowAsync(windowId) { [windows] window, job in
+        _ = withWindowAsync(windowId) { [windows] window, job in
             guard let closeButton = window.get(Ax.closeButtonAttr) else { return }
             if AXUIElementPerformAction(closeButton, kAXPressAction as CFString) == .success {
                 windows.threadGuarded.removeValue(forKey: windowId)
@@ -103,8 +103,10 @@ final class MacApp: AbstractApp {
         return try await MacWindow.getOrRegister(windowId: windowId, macApp: self)
     }
 
-    func nativeFocus(_ windowId: UInt32) {
-        withWindowAsync(windowId) { [nsApp] window, job in
+    @MainActor private static var focusJob: RunLoopJob? = nil
+    @MainActor func nativeFocus(_ windowId: UInt32) {
+        MacApp.focusJob?.cancel()
+        MacApp.focusJob = withWindowAsync(windowId) { [nsApp] window, job in
             // Raise firstly to make sure that by the time we activate the app, the window would be already on top
             window.set(Ax.isMainAttr, true)
             _ = window.raise()
@@ -190,14 +192,14 @@ final class MacApp: AbstractApp {
 
     func setNativeFullscreen(_ windowId: UInt32, _ value: Bool) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
-        withWindowAsync(windowId) { window, job in
+        setFrameJobs[windowId] = withWindowAsync(windowId) { window, job in
             window.set(Ax.isFullscreenAttr, value)
         }
     }
 
     func setNativeMinimized(_ windowId: UInt32, _ value: Bool) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
-        withWindowAsync(windowId) { window, job in
+        setFrameJobs[windowId] = withWindowAsync(windowId) { window, job in
             window.set(Ax.minimizedAttr, value)
         }
     }
@@ -308,7 +310,6 @@ final class MacApp: AbstractApp {
         }
     }
 
-    @discardableResult
     private func withWindowAsync(_ windowId: UInt32, _ body: @Sendable @escaping (AXUIElement, RunLoopJob) -> ()) -> RunLoopJob {
         thread?.runInLoopAsync { [windows] job in
             guard let window = windows.threadGuarded[windowId] else { return }
