@@ -8,10 +8,10 @@ final class MacApp: AbstractApp {
     /*conforms*/ let pid: Int32
     /*conforms*/ let bundleId: String?
     let nsApp: NSRunningApplication
-    private let axApp: UnsafeSendable<AXUIElement>
+    private let axApp: ThreadGuardedValue<AXUIElement>
     let isZoom: Bool
-    private let appAxSubscriptions: MutableUnsafeSendable<[AxSubscription]> // keep subscriptions in memory
-    private let windows: MutableUnsafeSendable<[UInt32: AxWindow]> = .init([:])
+    private let appAxSubscriptions: ThreadGuardedValue<[AxSubscription]> // keep subscriptions in memory
+    private let windows: ThreadGuardedValue<[UInt32: AxWindow]> = .init([:])
     private var thread: Thread?
 
     /*conforms*/ var name: String? { nsApp.localizedName }
@@ -47,18 +47,20 @@ final class MacApp: AbstractApp {
         defer { wipPids.remove(pid) }
         let app = await withCheckedContinuation { (cont: Continuation<MacApp?>) in
             let thread = Thread {
-                let axApp = AXUIElementCreateApplication(nsApp.processIdentifier)
-                var ticker = IntTicker(value: 0)
-                let handlers: HandlerToNotifKeyMapping = [
-                    .init(key: ticker.incAndGet(), value: refreshObs): [kAXWindowCreatedNotification, kAXFocusedWindowChangedNotification],
-                ]
-                let subscriptions = AxSubscription.bulkSubscribe(nsApp, axApp, handlers)
-                if !subscriptions.isEmpty {
-                    let app = MacApp(nsApp, axApp, subscriptions, Thread.current)
-                    cont.resume(returning: app)
-                    CFRunLoopRun()
-                } else {
-                    cont.resume(returning: nil)
+                $axAppThreadToken.withValue(AxAppThreadToken(pid: pid, idForDebug: nsApp.idForDebug)) {
+                    let axApp = AXUIElementCreateApplication(nsApp.processIdentifier)
+                    var ticker = IntTicker(value: 0)
+                    let handlers: HandlerToNotifKeyMapping = [
+                        .init(key: ticker.incAndGet(), value: refreshObs): [kAXWindowCreatedNotification, kAXFocusedWindowChangedNotification],
+                    ]
+                    let subscriptions = AxSubscription.bulkSubscribe(nsApp, axApp, handlers)
+                    if !subscriptions.isEmpty {
+                        let app = MacApp(nsApp, axApp, subscriptions, Thread.current)
+                        cont.resume(returning: app)
+                        CFRunLoopRun()
+                    } else {
+                        cont.resume(returning: nil)
+                    }
                 }
             }
             thread.name = "app-dedicated-thread \(nsApp.idForDebug)"
@@ -78,7 +80,7 @@ final class MacApp: AbstractApp {
         withWindowAsync(windowId) { [windows] window, job in
             guard let closeButton = window.get(Ax.closeButtonAttr) else { return }
             if AXUIElementPerformAction(closeButton, kAXPressAction as CFString) == .success {
-                windows.unsafe.removeValue(forKey: windowId)
+                windows.threadGuarded.removeValue(forKey: windowId)
             }
         }
     }
@@ -94,7 +96,7 @@ final class MacApp: AbstractApp {
     @MainActor // todo swift is stupid
     func getFocusedWindow() async throws -> Window? {
         let windowId = try await getThreadOrCancel().runInLoop { [nsApp, axApp, windows] job in
-            axApp.unsafe.get(Ax.focusedWindowAttr).flatMap { windows.unsafe.getOrRegisterAxWindow($0, nsApp) }?.windowId
+            axApp.threadGuarded.get(Ax.focusedWindowAttr).flatMap { windows.threadGuarded.getOrRegisterAxWindow($0, nsApp) }?.windowId
         }
         guard let windowId else { return nil }
         return try await MacWindow.getOrRegister(windowId: windowId, macApp: self)
@@ -113,7 +115,7 @@ final class MacApp: AbstractApp {
     func setAxFrame(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = withWindowAsync(windowId) { [axApp] window, job in
-            disableAnimations(app: axApp.unsafe) {
+            disableAnimations(app: axApp.threadGuarded) {
                 setFrame(window, topLeft, size)
             }
         }
@@ -124,7 +126,7 @@ final class MacApp: AbstractApp {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = nil
         try await withWindow(windowId) { [axApp] window, job in
-            disableAnimations(app: axApp.unsafe) {
+            disableAnimations(app: axApp.threadGuarded) {
                 setFrame(window, topLeft, size)
             }
         }
@@ -133,7 +135,7 @@ final class MacApp: AbstractApp {
     func setAxSize(_ windowId: UInt32, _ size: CGSize) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = withWindowAsync(windowId) { [axApp] window, job in
-            disableAnimations(app: axApp.unsafe) {
+            disableAnimations(app: axApp.threadGuarded) {
                 _ = window.set(Ax.sizeAttr, size)
             }
         }
@@ -142,7 +144,7 @@ final class MacApp: AbstractApp {
     func setAxTopLeftCorner(_ windowId: UInt32, _ point: CGPoint) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = withWindowAsync(windowId) { [axApp] window, job in
-            disableAnimations(app: axApp.unsafe) {
+            disableAnimations(app: axApp.threadGuarded) {
                 _ = window.set(Ax.topLeftCornerAttr, point)
             }
         }
@@ -151,7 +153,7 @@ final class MacApp: AbstractApp {
     @MainActor // todo swift is stupid
     func getAxWindowsCount() async throws -> Int? {
         try await getThreadOrCancel().runInLoop { [axApp] job in
-            axApp.unsafe.get(Ax.windowsAttr)?.count
+            axApp.threadGuarded.get(Ax.windowsAttr)?.count
         }
     }
 
@@ -174,7 +176,7 @@ final class MacApp: AbstractApp {
     @MainActor // todo swift is stupid
     func isWindowHeuristic(_ windowId: UInt32) async throws -> Bool {
         try await withWindow(windowId) { [axApp, bundleId] window, job in
-            window.isWindowHeuristic(axApp: axApp.unsafe, appBundleId: bundleId)
+            window.isWindowHeuristic(axApp: axApp.threadGuarded, appBundleId: bundleId)
         } == true
     }
 
@@ -230,17 +232,17 @@ final class MacApp: AbstractApp {
     @MainActor // todo swift is stupid
     func dumpAppAxInfo(_ prefix: String) async throws -> String {
         try await getThreadOrCancel().runInLoop { [axApp] job in
-            dumpAx(axApp.unsafe, prefix, .app)
+            dumpAx(axApp.threadGuarded, prefix, .app)
         }
     }
 
     @MainActor func detectNewWindowsAndGetIds() async throws -> [UInt32] {
         try await thread?.runInLoop { [axApp, windows, nsApp] job in
-            guard let newWindows = axApp.unsafe.get(Ax.windowsAttr, signpostEvent: nsApp.idForDebug) else { return Array(windows.unsafe.keys) }
+            guard let newWindows = axApp.threadGuarded.get(Ax.windowsAttr, signpostEvent: nsApp.idForDebug) else { return Array(windows.threadGuarded.keys) }
             var result: [UInt32] = []
             for window in newWindows {
                 try job.checkCancellation()
-                if let windowId = windows.unsafe.getOrRegisterAxWindow(window, nsApp)?.windowId {
+                if let windowId = windows.threadGuarded.getOrRegisterAxWindow(window, nsApp)?.windowId {
                     result.append(windowId)
                 }
             }
@@ -250,16 +252,16 @@ final class MacApp: AbstractApp {
 
     @MainActor
     func gcDeadWindowsAndGetAliveIds(frontmostAppBundleId: String?) async throws -> Set<UInt32> {
-        try await thread?.runInLoop { [nsApp, windows] job in
+        try await thread?.runInLoop { [nsApp, windows] (job) -> Set<UInt32> in
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
             // Second and third lines of defence are technically needed only to avoid potential flickering
-            let _windows = windows.unsafe
+            let _windows: [UInt32: AxWindow] = windows.threadGuarded
             if frontmostAppBundleId == lockScreenAppBundleId { return Set(_windows.keys) }
             let toKeepAlive: [UInt32: AxWindow] = try _windows.filter {
                 try job.checkCancellation()
                 return $0.value.ax.containingWindowId(signpostEvent: nsApp.idForDebug) != nil
             }
-            windows.unsafe = toKeepAlive
+            windows.threadGuarded = toKeepAlive
             return Set(toKeepAlive.keys)
         } ?? []
     }
@@ -267,7 +269,7 @@ final class MacApp: AbstractApp {
     @MainActor
     func unregisterWindow(_ windowId: UInt32) {
         thread?.runInLoopAsync { [windows] job in
-            windows.unsafe.removeValue(forKey: windowId)
+            windows.threadGuarded.removeValue(forKey: windowId)
         }
     }
 
@@ -284,9 +286,10 @@ final class MacApp: AbstractApp {
         for (_, window) in MacWindow.allWindowsMap where window.app.pid == self.pid {
             window.garbageCollect(skipClosedWindowsCache: skipClosedWindowsCache, unregisterAxWindow: false)
         }
-        thread?.runInLoopAsync { [windows, appAxSubscriptions] job in
-            appAxSubscriptions.unsafe = []
-            windows.unsafe = [:]
+        thread?.runInLoopAsync { [windows, appAxSubscriptions, axApp] job in
+            axApp.destroy()
+            appAxSubscriptions.destroy()
+            windows.destroy()
             CFRunLoopStop(CFRunLoopGetCurrent())
         }
         thread = nil // Disallow all future job submissions
@@ -300,7 +303,7 @@ final class MacApp: AbstractApp {
     @MainActor // todo swift is stupid
     private func withWindow<T>(_ windowId: UInt32, _ body: @Sendable @escaping (AXUIElement, RunLoopJob) throws -> T?) async throws -> T? {
         try await getThreadOrCancel().runInLoop { [windows] job in
-            guard let window = windows.unsafe[windowId] else { return nil }
+            guard let window = windows.threadGuarded[windowId] else { return nil }
             return try body(window.ax, job)
         }
     }
@@ -308,7 +311,7 @@ final class MacApp: AbstractApp {
     @discardableResult
     private func withWindowAsync(_ windowId: UInt32, _ body: @Sendable @escaping (AXUIElement, RunLoopJob) -> ()) -> RunLoopJob {
         thread?.runInLoopAsync { [windows] job in
-            guard let window = windows.unsafe[windowId] else { return }
+            guard let window = windows.threadGuarded[windowId] else { return }
             body(window.ax, job)
         } ?? .cancelled
     }
@@ -381,6 +384,38 @@ private func disableAnimations<T>(app: AXUIElement, _ body: () -> T) -> T {
         }
     }
     return body()
+}
+
+@TaskLocal
+var axAppThreadToken: AxAppThreadToken? = nil
+
+struct AxAppThreadToken: Sendable, Equatable {
+    let pid: pid_t
+    let idForDebug: String
+    static func == (lhs: Self, rhs: Self) -> Bool { lhs.pid == rhs.pid }
+}
+
+public final class ThreadGuardedValue<Value>: Sendable {
+    private nonisolated(unsafe) var _threadGuarded: Value?
+    private let threadToken: AxAppThreadToken = axAppThreadToken ?? dieT("axAppThreadToken is not initialized")
+    public init(_ value: Value) { self._threadGuarded = value }
+    var threadGuarded: Value {
+        get {
+            check(axAppThreadToken == threadToken)
+            return _threadGuarded ?? dieT("Value is already destroyed")
+        }
+        set(newValue) {
+            check(axAppThreadToken == threadToken)
+            _threadGuarded = newValue
+        }
+    }
+    func destroy() {
+        check(axAppThreadToken == threadToken)
+        _threadGuarded = nil
+    }
+    deinit {
+        check(_threadGuarded == nil, "The Value must be explicitly destroyed on the appropriate thread before deinit")
+    }
 }
 
 public final class MutableUnsafeSendable<T>: Sendable {
