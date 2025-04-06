@@ -9,7 +9,7 @@ func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeM
         if let windowId, let window = Window.get(byId: windowId) {
             try await moveWithMouseIfTheCase(window)
         }
-        try await refreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
+        runRefreshSession(.ax(notif), screenIsDefinitelyUnlocked: false)
     }
 }
 

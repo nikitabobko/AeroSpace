@@ -12,7 +12,7 @@ class GlobalObserver {
         let notifName = notification.name.rawValue
         Task { @MainActor in
             if !TrayMenuModel.shared.isEnabled { return }
-            try await refreshAndLayout(.globalObserver(notifName), screenIsDefinitelyUnlocked: false)
+            runRefreshSession(.globalObserver(notifName), screenIsDefinitelyUnlocked: false)
         }
     }
 
@@ -21,7 +21,7 @@ class GlobalObserver {
         let notifName = notification.name.rawValue
         Task { @MainActor in
             if !TrayMenuModel.shared.isEnabled { return }
-            try await refreshSession(.globalObserver(notifName), screenIsDefinitelyUnlocked: false) {
+            try await runSession(.globalObserver(notifName)) {
                 if config.automaticallyUnhideMacosHiddenApps {
                     if let w = prevFocus?.windowOrNil,
                        w.macAppUnsafe.nsApp.isHidden,
@@ -65,13 +65,13 @@ class GlobalObserver {
                 switch () {
                     // Detect clicks on desktop of different monitors
                     case _ where clickedMonitor.activeWorkspace != focus.workspace:
-                        _ = try await refreshSession(.globalObserverLeftMouseUp, screenIsDefinitelyUnlocked: true) {
+                        _ = try await runSession(.globalObserverLeftMouseUp) {
                             clickedMonitor.activeWorkspace.focusWorkspace()
                         }
                     // Detect close button clicks for unfocused windows. Yes, kAXUIElementDestroyedNotification is that unreliable
                     //  And trigger new window detection that could be delayed due to mouseDown event
                     default:
-                        try await refreshAndLayout(.globalObserverLeftMouseUp, screenIsDefinitelyUnlocked: true)
+                        runRefreshSession(.globalObserverLeftMouseUp, screenIsDefinitelyUnlocked: true)
                 }
             }
         }

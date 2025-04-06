@@ -33,7 +33,7 @@ extension HotKey {
         hotkeys[binding.descriptionWithKeyCode] = HotKey(key: binding.keyCode, modifiers: binding.modifiers, keyDownHandler: {
             Task {
                 if let activeMode {
-                    try await refreshSession(.hotkeyBinding, screenIsDefinitelyUnlocked: true) { () throws in
+                    try await runSession(.hotkeyBinding) { () throws in
                         _ = try await config.modes[activeMode]?.bindings[binding.descriptionWithKeyCode]?.commands
                             .runCmdSeq(.defaultEnv, .emptyStdin)
                     }

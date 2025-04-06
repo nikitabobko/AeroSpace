@@ -16,7 +16,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             ForEach(viewModel.workspaces, id: \.name) { workspace in
                 Button {
                     Task {
-                        try await refreshSession(.menuBarButton, screenIsDefinitelyUnlocked: true) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
+                        try await runSession(.menuBarButton) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
                     }
                 } label: {
                     Toggle(isOn: .constant(workspace.isFocused)) {
@@ -28,7 +28,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         }
         Button(viewModel.isEnabled ? "Disable" : "Enable") {
             Task {
-                try await refreshSession(.menuBarButton, screenIsDefinitelyUnlocked: true) { () throws in
+                try await runSession(.menuBarButton) { () throws in
                     _ = try await EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle))
                         .run(.defaultEnv, .emptyStdin)
                 }
@@ -50,7 +50,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         if viewModel.isEnabled {
             Button("Reload config") {
                 Task {
-                    try await refreshSession(.menuBarButton, screenIsDefinitelyUnlocked: true) { _ = reloadConfig() }
+                    try await runSession(.menuBarButton) { _ = reloadConfig() }
                 }
             }.keyboardShortcut("R", modifiers: .command)
         }
