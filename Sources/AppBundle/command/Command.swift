@@ -42,10 +42,8 @@ extension [Command] {
     func runCmdSeq(_ env: CmdEnv, _ io: sending CmdIo) async throws -> Bool {
         var isSucc = true
         for command in self {
-            if await Task(operation: { @MainActor in TrayMenuModel.shared.isEnabled }).result.get() || isAllowedToRunWhenDisabled(command) {
-                isSucc = try await command.run(env, io) && isSucc
-                try await refreshModel()
-            }
+            isSucc = try await command.run(env, io) && isSucc
+            try await refreshModel()
         }
         return isSucc
     }
