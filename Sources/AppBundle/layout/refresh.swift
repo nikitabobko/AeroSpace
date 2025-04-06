@@ -1,21 +1,45 @@
 import AppKit
 import Common
 
-/// It's one of the most important function of the whole application.
-/// The function is called as a feedback response on every user input.
-/// The function is idempotent.
 @MainActor
-func refreshSession<T>(
+private var activeRefreshTask: Task<(), any Error>? = nil
+
+@MainActor
+func runRefreshSession(
     _ event: RefreshSessionEvent,
-    screenIsDefinitelyUnlocked: Bool,
-    body: @MainActor () async throws -> T
-) async throws -> T {
+    screenIsDefinitelyUnlocked: Bool // todo rename
+) {
+    if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
+    activeRefreshTask?.cancel()
+    activeRefreshTask = Task { try await runRefreshSessionBlocking(event) }
+}
+
+@MainActor
+func runRefreshSessionBlocking(_ event: RefreshSessionEvent) async throws {
     try await $refreshSessionEventForDebug.withValue(event) {
-        if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
         try await gc()
         gcMonitors()
-
         try await detectNewAppsAndWindows()
+
+        let nativeFocused = try await getNativeFocusedWindow()
+        if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
+        updateFocusCache(nativeFocused)
+
+        updateTrayText()
+        try await normalizeLayoutReason()
+        try await layoutWorkspaces()
+    }
+}
+
+@MainActor
+func runSession<T>(
+    _ event: RefreshSessionEvent,
+    body: @MainActor () async throws -> T
+) async throws -> T {
+    activeRefreshTask?.cancel() // Give priority to runSession
+    activeRefreshTask = nil
+    return try await $refreshSessionEventForDebug.withValue(event) {
+        resetClosedWindowsCache()
 
         let nativeFocused = try await getNativeFocusedWindow()
         if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
@@ -35,13 +59,9 @@ func refreshSession<T>(
         updateTrayText()
         try await normalizeLayoutReason()
         try await layoutWorkspaces()
+        runRefreshSession(event, screenIsDefinitelyUnlocked: false)
         return result
     }
-}
-
-@MainActor
-func refreshAndLayout(_ event: RefreshSessionEvent, screenIsDefinitelyUnlocked: Bool) async throws {
-    try await refreshSession(event, screenIsDefinitelyUnlocked: screenIsDefinitelyUnlocked, body: {})
 }
 
 @MainActor
@@ -75,7 +95,7 @@ func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     let notif = notif as String
     Task { @MainActor in
         if !TrayMenuModel.shared.isEnabled { return }
-        try await refreshAndLayout(.ax(notif), screenIsDefinitelyUnlocked: false)
+        runRefreshSession(.ax(notif), screenIsDefinitelyUnlocked: false)
     }
 }
 

@@ -24,8 +24,8 @@ import Foundation
     GlobalObserver.initObserver()
     Task {
         try await $isStartup.withValue(true) {
-            try await refreshAndLayout(.startup1, screenIsDefinitelyUnlocked: false)
-            try await refreshSession(.startup2, screenIsDefinitelyUnlocked: false) {
+            try await runRefreshSessionBlocking(.startup1)
+            try await runSession(.startup2) {
                 smartLayoutAtStartup()
                 if serverArgs.startedAtLogin {
                     _ = try await config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
