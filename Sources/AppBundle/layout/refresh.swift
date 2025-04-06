@@ -18,9 +18,8 @@ func runRefreshSession(
 func runRefreshSessionBlocking(_ event: RefreshSessionEvent) async throws {
     if !TrayMenuModel.shared.isEnabled { return }
     try await $refreshSessionEventForDebug.withValue(event) {
-        try await gc()
+        try await refresh()
         gcMonitors()
-        try await detectNewAppsAndWindows()
 
         let nativeFocused = try await getNativeFocusedWindow()
         if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
@@ -87,18 +86,19 @@ func refreshModel() async throws {
 }
 
 @MainActor
-private func gc() async throws {
+private func refresh() async throws {
     // Garbage collect terminated apps and windows before working with all windows
-    MacApp.gcTerminatedApps()
+    let mapping = try await MacApp.refreshAllAndGetAliveWindowIds(frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier)
+    let aliveWindowIds = mapping.values.flatMap { $0 }
 
-    let frontmostAppBundleId = NSWorkspace.shared.frontmostApplication?.bundleIdentifier
-    var aliveIds: Set<UInt32> = []
-    for (_, app) in MacApp.allAppsMap {
-        aliveIds.formUnion(try await app.gcDeadWindowsAndGetAliveIds(frontmostAppBundleId: frontmostAppBundleId))
-    }
     for window in MacWindow.allWindows {
-        if !aliveIds.contains(window.windowId) {
-            window.garbageCollect(skipClosedWindowsCache: false, unregisterAxWindow: false)
+        if !aliveWindowIds.contains(window.windowId) {
+            window.garbageCollect(skipClosedWindowsCache: false)
+        }
+    }
+    for (app, windowIds) in mapping {
+        for windowId in windowIds {
+            try await MacWindow.getOrRegister(windowId: windowId, macApp: app)
         }
     }
 
@@ -169,14 +169,5 @@ private func normalizeContainers() {
     // Can't do it only for visible workspace because most of the commands support --window-id and --workspace flags
     for workspace in Workspace.all {
         workspace.normalizeContainers()
-    }
-}
-
-@MainActor
-private func detectNewAppsAndWindows() async throws {
-    for app in try await detectNewApps() { // todo parallelize
-        for id in try await app.detectNewWindowsAndGetIds() {
-            _ = try await MacWindow.getOrRegister(windowId: id, macApp: app as! MacApp)
-        }
     }
 }

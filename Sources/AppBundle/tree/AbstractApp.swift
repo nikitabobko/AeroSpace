@@ -8,7 +8,6 @@ protocol AbstractApp: AnyObject, Hashable, AeroAny {
     var name: String? { get }
     var execPath: String? { get }
     var bundlePath: String? { get }
-    @MainActor func detectNewWindowsAndGetIds() async throws -> [UInt32]
 }
 
 extension AbstractApp {

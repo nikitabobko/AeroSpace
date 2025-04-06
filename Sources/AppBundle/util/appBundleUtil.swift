@@ -60,20 +60,6 @@ extension String? {
 }
 
 @MainActor
-func detectNewApps() async throws -> [any AbstractApp] {
-    if isUnitTest {
-        return appForTests.asList()
-    }
-    var result = [any AbstractApp]()
-    for _app in NSWorkspace.shared.runningApplications where _app.activationPolicy == .regular {
-        if let app = try await _app.macApp {
-            result.append(app)
-        }
-    }
-    return result
-}
-
-@MainActor
 func terminateApp() -> Never {
     NSApplication.shared.terminate(nil)
     die("Unreachable code")

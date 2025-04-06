@@ -8,8 +8,8 @@ final class MacApp: AbstractApp {
     /*conforms*/ let pid: Int32
     /*conforms*/ let bundleId: String?
     let nsApp: NSRunningApplication
-    private let axApp: ThreadGuardedValue<AXUIElement>
     let isZoom: Bool
+    private let axApp: ThreadGuardedValue<AXUIElement>
     private let appAxSubscriptions: ThreadGuardedValue<[AxSubscription]> // keep subscriptions in memory
     private let windows: ThreadGuardedValue<[UInt32: AxWindow]> = .init([:])
     private var thread: Thread?
@@ -34,7 +34,8 @@ final class MacApp: AbstractApp {
     }
 
     @MainActor
-    static func get(_ nsApp: NSRunningApplication) async throws -> MacApp? {
+    @discardableResult
+    static func getOrRegister(_ nsApp: NSRunningApplication) async throws -> MacApp? {
         // Don't perceive any of the lock screen windows as real windows
         // Otherwise, false positive ax notifications might trigger that lead to gcWindows
         if nsApp.bundleIdentifier == lockScreenAppBundleId {
@@ -236,68 +237,67 @@ final class MacApp: AbstractApp {
         } ?? ""
     }
 
-    @MainActor func detectNewWindowsAndGetIds() async throws -> [UInt32] {
-        try await thread?.runInLoop { [axApp, windows, nsApp] job in
-            guard let newWindows = axApp.threadGuarded.get(Ax.windowsAttr, signpostEvent: nsApp.idForDebug) else { return Array(windows.threadGuarded.keys) }
-            var result: [UInt32] = []
-            for window in newWindows {
-                try job.checkCancellation()
-                if let windowId = windows.threadGuarded.getOrRegisterAxWindow(window, nsApp)?.windowId {
-                    result.append(windowId)
+    @MainActor
+    static func refreshAllAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [MacApp: [UInt32]] {
+        try await withThrowingTaskGroup(of: Void.self) { group in
+            // Register new apps
+            for nsApp in NSWorkspace.shared.runningApplications where nsApp.activationPolicy == .regular {
+                try group.addTaskOrCancelAll { @Sendable @MainActor in
+                    _ = try await getOrRegister(nsApp)
+                }
+            }
+            try await group.waitForAll()
+        }
+        return try await withThrowingTaskGroup(of: (pid_t, [UInt32]).self, returning: [MacApp: [UInt32]].self) { group in
+            // gc dead apps. refresh underlying windows
+            for (_, app) in MacApp.allAppsMap {
+                try group.addTaskOrCancelAll { @Sendable @MainActor in
+                    (app.pid, try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
+                }
+            }
+            var result: [MacApp: [UInt32]] = [:]
+            for try await (pid, windowIds) in group {
+                if let app = allAppsMap[pid] {
+                    result[app] = windowIds
                 }
             }
             return result
-        } ?? []
+        }
     }
 
     @MainActor
-    func gcDeadWindowsAndGetAliveIds(frontmostAppBundleId: String?) async throws -> Set<UInt32> {
-        try await thread?.runInLoop { [nsApp, windows] (job) -> Set<UInt32> in
+    private func refreshAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [UInt32] {
+        if nsApp.isTerminated {
+            MacApp.allAppsMap.removeValue(forKey: pid)
+            thread?.runInLoopAsync { [windows, appAxSubscriptions, axApp] job in
+                axApp.destroy()
+                appAxSubscriptions.destroy()
+                windows.destroy()
+                CFRunLoopStop(CFRunLoopGetCurrent())
+            }
+            thread = nil // Disallow all future job submissions
+            return []
+        }
+        guard let thread else { return [] }
+        return try await thread.runInLoop { [nsApp, windows, axApp] (job) -> [UInt32] in
+            var result: [UInt32: AxWindow] = windows.threadGuarded
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
             // Second and third lines of defence are technically needed only to avoid potential flickering
-            let _windows: [UInt32: AxWindow] = windows.threadGuarded
-            if frontmostAppBundleId == lockScreenAppBundleId { return Set(_windows.keys) }
-            let toKeepAlive: [UInt32: AxWindow] = try _windows.filter {
-                try job.checkCancellation()
-                return $0.value.ax.containingWindowId(signpostEvent: nsApp.idForDebug) != nil
+            if frontmostAppBundleId != lockScreenAppBundleId {
+                result = try result.filter {
+                    try job.checkCancellation()
+                    return $0.value.ax.containingWindowId(signpostEvent: nsApp.idForDebug) != nil
+                }
             }
-            windows.threadGuarded = toKeepAlive
-            return Set(toKeepAlive.keys)
-        } ?? []
-    }
 
-    @MainActor
-    func unregisterWindow(_ windowId: UInt32) {
-        thread?.runInLoopAsync { [windows] job in
-            windows.threadGuarded.removeValue(forKey: windowId)
-        }
-    }
+            for window in axApp.threadGuarded.get(Ax.windowsAttr, signpostEvent: nsApp.idForDebug) ?? [] {
+                try job.checkCancellation()
+                result.getOrRegisterAxWindow(window, nsApp)
+            }
 
-    @MainActor
-    static func gcTerminatedApps() {
-        for app in allAppsMap.values where app.nsApp.isTerminated {
-            app.destroy(skipClosedWindowsCache: true)
+            windows.threadGuarded = result
+            return Array(result.keys)
         }
-    }
-
-    @MainActor
-    func destroy(skipClosedWindowsCache: Bool) {
-        MacApp.allAppsMap.removeValue(forKey: nsApp.processIdentifier)
-        for (_, window) in MacWindow.allWindowsMap where window.app.pid == self.pid {
-            window.garbageCollect(skipClosedWindowsCache: skipClosedWindowsCache, unregisterAxWindow: false)
-        }
-        thread?.runInLoopAsync { [windows, appAxSubscriptions, axApp] job in
-            axApp.destroy()
-            appAxSubscriptions.destroy()
-            windows.destroy()
-            CFRunLoopStop(CFRunLoopGetCurrent())
-        }
-        thread = nil // Disallow all future job submissions
-    }
-
-    private func getThreadOrCancel() throws -> Thread { // todo convert untyped throws to throws across the whole app
-        if let thread { return thread }
-        throw CancellationError()
     }
 
     @MainActor // todo swift is stupid
@@ -342,6 +342,7 @@ private class AxWindow {
 }
 
 extension [UInt32: AxWindow] {
+    @discardableResult
     fileprivate mutating func getOrRegisterAxWindow(_ axWindow: AXUIElement, _ nsApp: NSRunningApplication) -> AxWindow? {
         guard let id = axWindow.containingWindowId() else { return nil }
         if let existing = self[id] {
@@ -429,7 +430,4 @@ extension NSRunningApplication {
     var idForDebug: String {
         "PID: \(processIdentifier) ID: \(bundleIdentifier ?? executableURL?.description ?? "")"
     }
-
-    @MainActor
-    var macApp: MacApp? { get async throws { try await MacApp.get(self) } }
 }
