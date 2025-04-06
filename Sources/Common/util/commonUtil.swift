@@ -66,7 +66,7 @@ public func dieT<T>(
     fatalError("\n" + message)
 }
 
-public enum RefreshSessionEvent: Sendable {
+public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
     case globalObserver(String)
     case globalObserverLeftMouseUp
     case menuBarButton
@@ -76,6 +76,20 @@ public enum RefreshSessionEvent: Sendable {
     case socketServer
     case resetManipulatedWithMouse
     case ax(String)
+
+    public var description: String {
+        switch self {
+            case .ax(let str): "ax(\(str))"
+            case .globalObserver(let str): "globalObserver(\(str))"
+            case .globalObserverLeftMouseUp: "globalObserverLeftMouseUp"
+            case .hotkeyBinding: "hotkeyBinding"
+            case .menuBarButton: "menuBarButton"
+            case .resetManipulatedWithMouse: "resetManipulatedWithMouse"
+            case .socketServer: " socketServer"
+            case .startup1: "startup1"
+            case .startup2: "startup2"
+        }
+    }
 }
 
 public func throwT<T>(_ error: Error) throws -> T {

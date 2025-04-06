@@ -3,7 +3,7 @@ import Foundation
 @TaskLocal
 public var axTaskLocalAppThreadToken: AxAppThreadToken? = nil
 
-public struct AxAppThreadToken: Sendable, Equatable {
+public struct AxAppThreadToken: Sendable, Equatable, CustomStringConvertible {
     public let pid: pid_t
     public let idForDebug: String
 
@@ -17,4 +17,6 @@ public struct AxAppThreadToken: Sendable, Equatable {
     public func checkEquals(_ other: AxAppThreadToken?) {
         check(self == other, "\(self) != \(other.optionalToPrettyString())")
     }
+
+    public var description: String { idForDebug }
 }

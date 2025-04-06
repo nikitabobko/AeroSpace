@@ -16,6 +16,10 @@ func runRefreshSession(
 
 @MainActor
 func runRefreshSessionBlocking(_ event: RefreshSessionEvent) async throws {
+    let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
+    defer {
+        signposter.endInterval(#function, state)
+    }
     if !TrayMenuModel.shared.isEnabled { return }
     try await $refreshSessionEventForDebug.withValue(event) {
         try await refresh()
@@ -37,6 +41,10 @@ func runSession<T>(
     _ token: RunSessionGuard,
     body: @MainActor () async throws -> T
 ) async throws -> T {
+    let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
+    defer {
+        signposter.endInterval(#function, state)
+    }
     activeRefreshTask?.cancel() // Give priority to runSession
     activeRefreshTask = nil
     return try await $refreshSessionEventForDebug.withValue(event) {

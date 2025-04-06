@@ -300,16 +300,20 @@ private func tryGetWindow(_ any: Any?) -> AXUIElement? {
 }
 
 extension AXUIElement {
-    func get<Attr: ReadableAttr>(_ attr: Attr, signpostEvent: String? = nil, function: String = #function) -> Attr.T? {
-        let state = signposter.beginInterval("AXUIElement.get", "\(function): \(signpostEvent)")
+    func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
+        let state = signposter.beginInterval(#function, "axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
         defer {
-            signposter.endInterval("AXUIElement.get", state)
+            signposter.endInterval(#function, state)
         }
         var raw: AnyObject?
         return AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success ? attr.getter(raw!) : nil
     }
 
     @discardableResult func set<Attr: WritableAttr>(_ attr: Attr, _ value: Attr.T) -> Bool {
+        let state = signposter.beginInterval(#function, "axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
+        defer {
+            signposter.endInterval(#function, state)
+        }
         guard let value = attr.setter(value) else { return false }
         return AXUIElementSetAttributeValue(self, attr.key as CFString, value) == .success
     }

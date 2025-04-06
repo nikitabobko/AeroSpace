@@ -290,7 +290,7 @@ final class MacApp: AbstractApp {
                 }
             }
 
-            for window in axApp.threadGuarded.get(Ax.windowsAttr, signpostEvent: nsApp.idForDebug) ?? [] {
+            for window in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
                 try job.checkCancellation()
                 result.getOrRegisterAxWindow(window, nsApp)
             }
