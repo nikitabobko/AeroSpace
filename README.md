@@ -57,7 +57,7 @@ Other installation options: https://nikitabobko.github.io/AeroSpace/guide#instal
 
 ## Community, discussions, issues
 
-Unfortunately, AeroSpace project doesn't accept bug reports and feature requests from everyone.
+Unfortunately, AeroSpace project doesn't openly accept Issues.
 Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for more details.
 
 Community discussions happen at GitHub Discussions.

@@ -11,15 +11,16 @@ func runRefreshSession(
 ) {
     if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
     activeRefreshTask?.cancel()
-    activeRefreshTask = Task { try await runRefreshSessionBlocking(event) }
+    activeRefreshTask = Task { @MainActor in
+        try checkCancellation()
+        try await runRefreshSessionBlocking(event)
+    }
 }
 
 @MainActor
 func runRefreshSessionBlocking(_ event: RefreshSessionEvent, layoutWorkspaces shouldLayoutWorkspaces: Bool = true) async throws {
     let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
-    defer {
-        signposter.endInterval(#function, state)
-    }
+    defer { signposter.endInterval(#function, state) }
     if !TrayMenuModel.shared.isEnabled { return }
     try await $refreshSessionEventForDebug.withValue(event) {
         try await refresh()
@@ -42,9 +43,7 @@ func runSession<T>(
     body: @MainActor () async throws -> T
 ) async throws -> T {
     let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
-    defer {
-        signposter.endInterval(#function, state)
-    }
+    defer { signposter.endInterval(#function, state) }
     activeRefreshTask?.cancel() // Give priority to runSession
     activeRefreshTask = nil
     return try await $refreshSessionEventForDebug.withValue(event) {
@@ -81,7 +80,7 @@ struct RunSessionGuard: Sendable {
         command is EnableCommand ? .forceRun : .isServerEnabled
     }
     @MainActor
-    static var checkServerIsEnabled: RunSessionGuard { .isServerEnabled ?? dieT("server is disabled") }
+    static var checkServerIsEnabledOrDie: RunSessionGuard { .isServerEnabled ?? dieT("server is disabled") }
     static let forceRun = RunSessionGuard()
     private init() {}
 }

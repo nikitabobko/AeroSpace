@@ -6,7 +6,7 @@ struct CmdEnv: ConvenienceCopyable { // todo forward env from cli to server
     var pwd: String?
 
     static var defaultEnv: CmdEnv { CmdEnv(windowId: nil, workspaceName: nil, pwd: nil) }
-    public init(
+    init(
         windowId: UInt32?,
         workspaceName: String?,
         pwd: String?

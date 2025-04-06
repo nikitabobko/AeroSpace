@@ -1,9 +1,9 @@
 import Common
 
-public final class ThreadGuardedValue<Value>: Sendable {
+final class ThreadGuardedValue<Value>: Sendable {
     private nonisolated(unsafe) var _threadGuarded: Value?
     private let threadToken: AxAppThreadToken = axTaskLocalAppThreadToken ?? dieT("axTaskLocalAppThreadToken is not initialized")
-    public init(_ value: Value) { self._threadGuarded = value }
+    init(_ value: Value) { self._threadGuarded = value }
     var threadGuarded: Value {
         get {
             threadToken.checkEquals(axTaskLocalAppThreadToken)

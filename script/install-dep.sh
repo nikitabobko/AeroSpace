@@ -32,6 +32,7 @@ if test $all == 1 || test $bundler == 1; then
 fi
 
 if test $all == 1 || test $antlr == 1; then
+    # https://github.com/antlr/antlr4/releases
     if ! check-version 4.13.1 ./.deps/python-venv/bin/antlr4 -v 4.13.1; then
         python3 -m venv .deps/python-venv
         source .deps/python-venv/bin/activate
@@ -40,6 +41,7 @@ if test $all == 1 || test $antlr == 1; then
 fi
 
 if test $all == 1 || test $complgen == 1; then
+    # https://github.com/adaszko/complgen/releases
     if ! check-version cacb3970eb ./.deps/cargo-root/bin/complgen version; then
         cargo install --git https://github.com/adaszko/complgen --rev cacb3970eb --root ./.deps/cargo-root
     fi
@@ -56,6 +58,7 @@ download-zip-and-link-bin() {
 }
 
 if test $all == 1 || test $swiftlint == 1; then
+    # https://github.com/realm/SwiftLint/releases
     swiftlint_version=0.56.2
     if ! check-version $swiftlint_version ./.deps/swiftlint/swiftlint --version; then
         download-zip-and-link-bin \
@@ -66,6 +69,7 @@ if test $all == 1 || test $swiftlint == 1; then
 fi
 
 if test $all == 1 || test $xcodegen == 1; then
+    # https://github.com/yonaskolb/XcodeGen/releases
     xcodegen_version=2.42.0
     if ! check-version $xcodegen_version ./.deps/xcodegen/xcodegen --version; then
         download-zip-and-link-bin \
@@ -76,7 +80,8 @@ if test $all == 1 || test $xcodegen == 1; then
 fi
 
 if test $all == 1 || test $swiftformat == 1; then
-    swiftformat_version=0.54.4
+    # https://github.com/nicklockwood/SwiftFormat/releases
+    swiftformat_version=0.55.5
     if ! check-version $swiftformat_version ./.deps/swiftformat/swiftformat --version; then
         download-zip-and-link-bin \
             swiftformat \

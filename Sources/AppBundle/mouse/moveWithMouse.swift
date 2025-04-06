@@ -18,7 +18,7 @@ private func moveWithMouseIfTheCase(_ window: Window) async throws { // todo cov
     if try await (window.isHiddenInCorner || // Don't allow to move windows of hidden workspaces
         !isLeftMouseButtonDown ||
         currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId)
-        .orAsyncMainActor({ try await getNativeFocusedWindow() != window })
+        .orAsync({ @MainActor @Sendable in try await getNativeFocusedWindow() != window })
     {
         return
     }

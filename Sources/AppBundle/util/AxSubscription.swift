@@ -8,13 +8,13 @@ class AxSubscription {
     let axThreadToken: AxAppThreadToken = axTaskLocalAppThreadToken ?? dieT("axTaskLocalAppThreadToken is not initialized")
     var notifKeys: Set<String> = []
 
-    init(obs: AXObserver, ax: AXUIElement) {
+    private init(obs: AXObserver, ax: AXUIElement) {
         check(!Thread.current.isMainThread)
         self.obs = obs
         self.ax = ax
     }
 
-    func subscribe(_ key: String) -> Bool {
+    private func subscribe(_ key: String) -> Bool {
         axThreadToken.checkEquals(axTaskLocalAppThreadToken)
         if AXObserverAddNotification(obs, ax, key as CFString, nil) == .success {
             notifKeys.insert(key)
@@ -28,10 +28,10 @@ class AxSubscription {
         var result: [AxSubscription] = []
         var visitedNotifKeys: Set<String> = []
         for (handler, notifKeys) in handlerToNotifKeyMapping {
-            guard let obs = AXObserver.new(nsApp.processIdentifier, handler.value) else { return [] }
+            guard let obs = AXObserver.new(nsApp.processIdentifier, handler) else { return [] }
             let subscription = AxSubscription(obs: obs, ax: ax)
             for key: String in notifKeys {
-                check(visitedNotifKeys.insert(key).inserted)
+                assert(visitedNotifKeys.insert(key).inserted)
                 if !subscription.subscribe(key) { return [] }
             }
             CFRunLoopAddSource(CFRunLoopGetCurrent(), AXObserverGetRunLoopSource(obs), .defaultMode)
@@ -49,12 +49,4 @@ class AxSubscription {
     }
 }
 
-typealias HandlerToNotifKeyMapping = [ManualHashable<Int, AXObserverCallback>: Set<String>]
-
-struct ManualHashable<K: Hashable, V>: Hashable, Equatable {
-    let key: K
-    let value: V
-
-    func hash(into hasher: inout Hasher) { hasher.combine(key) }
-    static func == (lhs: Self, rhs: Self) -> Bool { lhs.key == rhs.key }
-}
+typealias HandlerToNotifKeyMapping = [(AXObserverCallback, [String])]

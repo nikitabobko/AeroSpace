@@ -3,7 +3,6 @@ import Common
 
 class GlobalObserver {
     private static func onNotif(_ notification: Notification) {
-        check(Thread.isMainThread)
         // Third line of defence against lock screen window. See: closedWindowsCache
         // Second and third lines of defence are technically needed only to avoid potential flickering
         if (notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication)?.bundleIdentifier == lockScreenAppBundleId {

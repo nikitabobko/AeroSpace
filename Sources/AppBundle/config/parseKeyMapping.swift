@@ -12,7 +12,7 @@ struct KeyMapping: ConvenienceCopyable, Equatable, Sendable {
         case qwerty, dvorak, colemak
     }
 
-    public init(
+    init(
         preset: Preset = .qwerty,
         rawKeyNotationToKeyCode: [String: Key] = [:]
     ) {

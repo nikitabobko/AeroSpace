@@ -31,7 +31,7 @@ private func resizeWithMouseIfTheCase(_ window: Window) async throws { // todo c
     if try await (window.isHiddenInCorner || // Don't allow to resize windows of hidden workspaces
         !isLeftMouseButtonDown ||
         currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId)
-        .orAsyncMainActor({ try await getNativeFocusedWindow() != window })
+        .orAsync({ @Sendable @MainActor in try await getNativeFocusedWindow() != window })
     {
         return
     }
