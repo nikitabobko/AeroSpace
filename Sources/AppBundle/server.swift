@@ -73,7 +73,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             answerToClient(exitCode: 1, stderr: "Unknown failure during isEnabled server state access")
             continue
         }
-        if !isEnabled && !isAllowedToRunWhenDisabled(command) {
+        if !isEnabled && !(command is EnableCommand) {
             answerToClient(
                 exitCode: 1,
                 stderr: "\(aeroSpaceAppName) server is disabled and doesn't accept commands. " +
@@ -95,7 +95,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
         }
         if let command {
             let _answer: Result<ServerAnswer, Error> = await Task { @MainActor in
-                try await runSession(.socketServer) { () throws in
+                try await runSession(.socketServer, runEvenIfDisabled: command is EnableCommand) { () throws in
                     let cmdResult = try await command.run(.defaultEnv, CmdStdin(request.stdin)) // todo pass AEROSPACE_ env vars from CLI instead of defaultEnv
                     return ServerAnswer(
                         exitCode: cmdResult.exitCode,
@@ -116,11 +116,4 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
         }
         die("Unreachable")
     }
-}
-
-func isAllowedToRunWhenDisabled(_ command: (any Command)?) -> Bool {
-    if let enable = command as? EnableCommand, enable.args.targetState.val != .off {
-        return true
-    }
-    return false
 }

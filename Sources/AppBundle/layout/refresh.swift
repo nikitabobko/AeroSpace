@@ -16,6 +16,7 @@ func runRefreshSession(
 
 @MainActor
 func runRefreshSessionBlocking(_ event: RefreshSessionEvent) async throws {
+    if !TrayMenuModel.shared.isEnabled { throw CancellationError() }
     try await $refreshSessionEventForDebug.withValue(event) {
         try await gc()
         gcMonitors()
@@ -34,8 +35,10 @@ func runRefreshSessionBlocking(_ event: RefreshSessionEvent) async throws {
 @MainActor
 func runSession<T>(
     _ event: RefreshSessionEvent,
+    runEvenIfDisabled: Bool = false,
     body: @MainActor () async throws -> T
 ) async throws -> T {
+    if !runEvenIfDisabled && !TrayMenuModel.shared.isEnabled { throw CancellationError() }
     activeRefreshTask?.cancel() // Give priority to runSession
     activeRefreshTask = nil
     return try await $refreshSessionEventForDebug.withValue(event) {

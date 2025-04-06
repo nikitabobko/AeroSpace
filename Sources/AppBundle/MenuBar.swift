@@ -28,7 +28,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         }
         Button(viewModel.isEnabled ? "Disable" : "Enable") {
             Task {
-                try await runSession(.menuBarButton) { () throws in
+                try await runSession(.menuBarButton, runEvenIfDisabled: true) { () throws in
                     _ = try await EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle))
                         .run(.defaultEnv, .emptyStdin)
                 }
