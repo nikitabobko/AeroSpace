@@ -47,7 +47,7 @@ final class MacApp: AbstractApp {
         defer { wipPids.remove(pid) }
         let app = await withCheckedContinuation { (cont: Continuation<MacApp?>) in
             let thread = Thread {
-                $axAppThreadToken.withValue(AxAppThreadToken(pid: pid, idForDebug: nsApp.idForDebug)) {
+                $axTaskLocalAppThreadToken.withValue(AxAppThreadToken(pid: pid, idForDebug: nsApp.idForDebug)) {
                     let axApp = AXUIElementCreateApplication(nsApp.processIdentifier)
                     var ticker = IntTicker(value: 0)
                     let handlers: HandlerToNotifKeyMapping = [
@@ -386,31 +386,22 @@ private func disableAnimations<T>(app: AXUIElement, _ body: () -> T) -> T {
     return body()
 }
 
-@TaskLocal
-var axAppThreadToken: AxAppThreadToken? = nil
-
-struct AxAppThreadToken: Sendable, Equatable {
-    let pid: pid_t
-    let idForDebug: String
-    static func == (lhs: Self, rhs: Self) -> Bool { lhs.pid == rhs.pid }
-}
-
 public final class ThreadGuardedValue<Value>: Sendable {
     private nonisolated(unsafe) var _threadGuarded: Value?
-    private let threadToken: AxAppThreadToken = axAppThreadToken ?? dieT("axAppThreadToken is not initialized")
+    private let threadToken: AxAppThreadToken = axTaskLocalAppThreadToken ?? dieT("axTaskLocalAppThreadToken is not initialized")
     public init(_ value: Value) { self._threadGuarded = value }
     var threadGuarded: Value {
         get {
-            check(axAppThreadToken == threadToken)
+            threadToken.checkEquals(axTaskLocalAppThreadToken)
             return _threadGuarded ?? dieT("Value is already destroyed")
         }
         set(newValue) {
-            check(axAppThreadToken == threadToken)
+            threadToken.checkEquals(axTaskLocalAppThreadToken)
             _threadGuarded = newValue
         }
     }
     func destroy() {
-        check(axAppThreadToken == threadToken)
+        threadToken.checkEquals(axTaskLocalAppThreadToken)
         _threadGuarded = nil
     }
     deinit {

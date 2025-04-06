@@ -5,18 +5,17 @@ import Common
 class AxSubscription {
     let obs: AXObserver
     let ax: AXUIElement
-    let appIdForDebug: String? // bundleId or execPath
+    let axThreadToken: AxAppThreadToken = axTaskLocalAppThreadToken ?? dieT("axTaskLocalAppThreadToken is not initialized")
     var notifKeys: Set<String> = []
 
-    init(obs: AXObserver, ax: AXUIElement, appIdForDebug: String?) {
+    init(obs: AXObserver, ax: AXUIElement) {
         check(!Thread.current.isMainThread)
         self.obs = obs
         self.ax = ax
-        self.appIdForDebug = appIdForDebug
     }
 
     func subscribe(_ key: String) -> Bool {
-        check(!notifKeys.contains(key))
+        axThreadToken.checkEquals(axTaskLocalAppThreadToken)
         if AXObserverAddNotification(obs, ax, key as CFString, nil) == .success {
             notifKeys.insert(key)
             return true
@@ -28,10 +27,9 @@ class AxSubscription {
     static func bulkSubscribe(_ nsApp: NSRunningApplication, _ ax: AXUIElement, _ handlerToNotifKeyMapping: HandlerToNotifKeyMapping) -> [AxSubscription] {
         var result: [AxSubscription] = []
         var visitedNotifKeys: Set<String> = []
-        let appIdForDebug = nsApp.idForDebug
         for (handler, notifKeys) in handlerToNotifKeyMapping {
             guard let obs = AXObserver.new(nsApp.processIdentifier, handler.value) else { return [] }
-            let subscription = AxSubscription(obs: obs, ax: ax, appIdForDebug: appIdForDebug)
+            let subscription = AxSubscription(obs: obs, ax: ax)
             for key: String in notifKeys {
                 check(visitedNotifKeys.insert(key).inserted)
                 if !subscription.subscribe(key) { return [] }
@@ -43,7 +41,7 @@ class AxSubscription {
     }
 
     deinit {
-        check(!Thread.current.isMainThread)
+        axThreadToken.checkEquals(axTaskLocalAppThreadToken)
         CFRunLoopRemoveSource(CFRunLoopGetCurrent(), AXObserverGetRunLoopSource(obs), .defaultMode)
         for notifKey in notifKeys {
             AXObserverRemoveNotification(obs, ax, notifKey as CFString)

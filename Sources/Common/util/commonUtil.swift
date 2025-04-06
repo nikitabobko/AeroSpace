@@ -19,6 +19,7 @@ public func dieT<T>(
     function: String = #function
 ) -> T {
     let _message = __message.contains("\n") ? "\n" + __message.indent() : __message
+    let thread = Thread.current
     let message =
         """
         Please report to:
@@ -30,6 +31,9 @@ public func dieT<T>(
         Git hash: \(gitHash)
         refreshSessionEvent: \(refreshSessionEventForDebug.optionalToPrettyString())
         Date: \(Date.now)
+        Thread name: \(thread.name.optionalToPrettyString())
+        Is main thread: \(thread.isMainThread)
+        axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken.optionalToPrettyString())
         macOS version: \(ProcessInfo().operatingSystemVersionString)
         Coordinate: \(file):\(line):\(column) \(function)
         recursionDetectorDuringTermination: \(recursionDetectorDuringTermination)

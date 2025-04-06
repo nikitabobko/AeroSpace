@@ -8,6 +8,7 @@ complgen=0
 swiftlint=0
 swiftformat=0
 xcodegen=0
+bundler=0
 while test $# -gt 0; do
     case $1 in
         --antlr) antlr=1; shift ;;
@@ -15,6 +16,7 @@ while test $# -gt 0; do
         --swiftlint) swiftlint=1; shift ;;
         --xcodegen) xcodegen=1; shift ;;
         --swiftformat) swiftformat=1; shift ;;
+        --bundler) bundler=1; shift ;;
         --all) all=1; shift ;;
         *) echo "Unknown option $1"; exit 1 ;;
     esac
@@ -25,7 +27,7 @@ check-version() {
     test -f "$1" && "$@" | grep --fixed-strings -q "$version"
 }
 
-if test $all == 1; then
+if test $all == 1 || test $bundler == 1; then
     bundler install
 fi
 
