@@ -90,6 +90,8 @@ private func initServerArgs() {
             case "--started-at-login":
                 _serverArgs.startedAtLogin = true
                 args = Array(args.dropFirst())
+            case "-NSDocumentRevisionsDebugMode":
+                cliError("Xcode -> Edit Scheme ... -> Options -> Document Versions -> Allow debugging when browsing versions -> false")
             default:
                 cliError("Unrecognized flag '\(args.first!)'")
         }

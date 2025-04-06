@@ -2,6 +2,8 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
+./script/install-dep.sh --bundler
+
 rm -rf .site && mkdir .site
 rm -rf .man && mkdir .man
 
