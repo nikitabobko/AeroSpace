@@ -16,6 +16,7 @@ final class MacWindow: Window {
     @MainActor static var allWindows: [MacWindow] { Array(allWindowsMap.values) }
 
     @MainActor
+    @discardableResult
     static func getOrRegister(windowId: UInt32, macApp: MacApp) async throws -> MacWindow {
         if let existing = allWindowsMap[windowId] { return existing }
         let rect = try await macApp.getAxRect(windowId)
@@ -79,7 +80,7 @@ final class MacWindow: Window {
     // skipClosedWindowsCache is an optimization when it's definitely not necessary to cache closed window.
     //                        If you are unsure, it's better to pass `false`
     @MainActor
-    func garbageCollect(skipClosedWindowsCache: Bool, unregisterAxWindow: Bool = true) {
+    func garbageCollect(skipClosedWindowsCache: Bool) {
         if MacWindow.allWindowsMap.removeValue(forKey: windowId) == nil {
             return
         }
@@ -104,9 +105,6 @@ final class MacWindow: Window {
                     break // Don't switch back on popup destruction
             }
         }
-        if unregisterAxWindow {
-            macApp.unregisterWindow(windowId)
-        }
     }
 
     @MainActor override var title: String { get async throws { try await macApp.getAxTitle(windowId) ?? "" } }
@@ -119,7 +117,7 @@ final class MacWindow: Window {
     }
 
     override func closeAxWindow() {
-        garbageCollect(skipClosedWindowsCache: true, unregisterAxWindow: false)
+        garbageCollect(skipClosedWindowsCache: true)
         macApp.closeAndUnregisterAxWindow(windowId)
     }
 
