@@ -69,11 +69,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             continue
         }
         let (command, help, err) = parseCommand(request.args).unwrap()
-        guard let isEnabled = await Task(operation: { @MainActor in TrayMenuModel.shared.isEnabled }).result.getOrNil() else {
-            answerToClient(exitCode: 1, stderr: "Unknown failure during isEnabled server state access")
-            continue
-        }
-        if !isEnabled && !(command is EnableCommand) {
+        guard let token: RunSessionGuard = await .isServerEnabled(orIsEnableCommand: command) else {
             answerToClient(
                 exitCode: 1,
                 stderr: "\(aeroSpaceAppName) server is disabled and doesn't accept commands. " +
@@ -95,7 +91,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
         }
         if let command {
             let _answer: Result<ServerAnswer, Error> = await Task { @MainActor in
-                try await runSession(.socketServer, runEvenIfDisabled: command is EnableCommand) { () throws in
+                try await runSession(.socketServer, token) { () throws in
                     let cmdResult = try await command.run(.defaultEnv, CmdStdin(request.stdin)) // todo pass AEROSPACE_ env vars from CLI instead of defaultEnv
                     return ServerAnswer(
                         exitCode: cmdResult.exitCode,

@@ -95,7 +95,7 @@ final class MacApp: AbstractApp {
     // todo merge together with detectNewWindows
     @MainActor // todo swift is stupid
     func getFocusedWindow() async throws -> Window? {
-        let windowId = try await getThreadOrCancel().runInLoop { [nsApp, axApp, windows] job in
+        let windowId = try await thread?.runInLoop { [nsApp, axApp, windows] job in
             axApp.threadGuarded.get(Ax.focusedWindowAttr).flatMap { windows.threadGuarded.getOrRegisterAxWindow($0, nsApp) }?.windowId
         }
         guard let windowId else { return nil }
@@ -152,7 +152,7 @@ final class MacApp: AbstractApp {
 
     @MainActor // todo swift is stupid
     func getAxWindowsCount() async throws -> Int? {
-        try await getThreadOrCancel().runInLoop { [axApp] job in
+        try await thread?.runInLoop { [axApp] job in
             axApp.threadGuarded.get(Ax.windowsAttr)?.count
         }
     }
@@ -231,9 +231,9 @@ final class MacApp: AbstractApp {
 
     @MainActor // todo swift is stupid
     func dumpAppAxInfo(_ prefix: String) async throws -> String {
-        try await getThreadOrCancel().runInLoop { [axApp] job in
+        try await thread?.runInLoop { [axApp] job in
             dumpAx(axApp.threadGuarded, prefix, .app)
-        }
+        } ?? ""
     }
 
     @MainActor func detectNewWindowsAndGetIds() async throws -> [UInt32] {
@@ -302,7 +302,7 @@ final class MacApp: AbstractApp {
 
     @MainActor // todo swift is stupid
     private func withWindow<T>(_ windowId: UInt32, _ body: @Sendable @escaping (AXUIElement, RunLoopJob) throws -> T?) async throws -> T? {
-        try await getThreadOrCancel().runInLoop { [windows] job in
+        try await thread?.runInLoop { [windows] job in
             guard let window = windows.threadGuarded[windowId] else { return nil }
             return try body(window.ax, job)
         }

@@ -11,12 +11,12 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         Button("Copy to clipboard") { identification.copyToClipboard() }
             .keyboardShortcut("C", modifiers: .command)
         Divider()
-        if viewModel.isEnabled {
+        if let token: RunSessionGuard = .isServerEnabled {
             Text("Workspaces:")
             ForEach(viewModel.workspaces, id: \.name) { workspace in
                 Button {
                     Task {
-                        try await runSession(.menuBarButton) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
+                        try await runSession(.menuBarButton, token) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
                     }
                 } label: {
                     Toggle(isOn: .constant(workspace.isFocused)) {
@@ -28,7 +28,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         }
         Button(viewModel.isEnabled ? "Disable" : "Enable") {
             Task {
-                try await runSession(.menuBarButton, runEvenIfDisabled: true) { () throws in
+                try await runSession(.menuBarButton, .forceRun) { () throws in
                     _ = try await EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle))
                         .run(.defaultEnv, .emptyStdin)
                 }
@@ -47,10 +47,10 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
                     fallbackConfig.open(with: editor)
             }
         }.keyboardShortcut(",", modifiers: .command)
-        if viewModel.isEnabled {
+        if let token: RunSessionGuard = .isServerEnabled {
             Button("Reload config") {
                 Task {
-                    try await runSession(.menuBarButton) { _ = reloadConfig() }
+                    try await runSession(.menuBarButton, token) { _ = reloadConfig() }
                 }
             }.keyboardShortcut("R", modifiers: .command)
         }

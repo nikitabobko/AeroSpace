@@ -25,7 +25,7 @@ import Foundation
     Task {
         try await $isStartup.withValue(true) {
             try await runRefreshSessionBlocking(.startup1)
-            try await runSession(.startup2) {
+            try await runSession(.startup2, .checkServerIsEnabled) {
                 smartLayoutAtStartup()
                 if serverArgs.startedAtLogin {
                     _ = try await config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)

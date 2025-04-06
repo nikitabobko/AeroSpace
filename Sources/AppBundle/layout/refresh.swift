@@ -16,7 +16,7 @@ func runRefreshSession(
 
 @MainActor
 func runRefreshSessionBlocking(_ event: RefreshSessionEvent) async throws {
-    if !TrayMenuModel.shared.isEnabled { throw CancellationError() }
+    if !TrayMenuModel.shared.isEnabled { return }
     try await $refreshSessionEventForDebug.withValue(event) {
         try await gc()
         gcMonitors()
@@ -35,10 +35,9 @@ func runRefreshSessionBlocking(_ event: RefreshSessionEvent) async throws {
 @MainActor
 func runSession<T>(
     _ event: RefreshSessionEvent,
-    runEvenIfDisabled: Bool = false,
+    _ token: RunSessionGuard,
     body: @MainActor () async throws -> T
 ) async throws -> T {
-    if !runEvenIfDisabled && !TrayMenuModel.shared.isEnabled { throw CancellationError() }
     activeRefreshTask?.cancel() // Give priority to runSession
     activeRefreshTask = nil
     return try await $refreshSessionEventForDebug.withValue(event) {
@@ -65,6 +64,19 @@ func runSession<T>(
         runRefreshSession(event, screenIsDefinitelyUnlocked: false)
         return result
     }
+}
+
+struct RunSessionGuard: Sendable {
+    @MainActor
+    static var isServerEnabled: RunSessionGuard? { TrayMenuModel.shared.isEnabled ? forceRun : nil }
+    @MainActor
+    static func isServerEnabled(orIsEnableCommand command: (any Command)?) -> RunSessionGuard? {
+        command is EnableCommand ? .forceRun : .isServerEnabled
+    }
+    @MainActor
+    static var checkServerIsEnabled: RunSessionGuard { .isServerEnabled ?? dieT("server is disabled") }
+    static let forceRun = RunSessionGuard()
+    private init() {}
 }
 
 @MainActor
