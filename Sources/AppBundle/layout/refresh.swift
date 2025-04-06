@@ -15,7 +15,7 @@ func runRefreshSession(
 }
 
 @MainActor
-func runRefreshSessionBlocking(_ event: RefreshSessionEvent) async throws {
+func runRefreshSessionBlocking(_ event: RefreshSessionEvent, layoutWorkspaces shouldLayoutWorkspaces: Bool = true) async throws {
     let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
     defer {
         signposter.endInterval(#function, state)
@@ -31,7 +31,7 @@ func runRefreshSessionBlocking(_ event: RefreshSessionEvent) async throws {
 
         updateTrayText()
         try await normalizeLayoutReason()
-        try await layoutWorkspaces()
+        if shouldLayoutWorkspaces { try await layoutWorkspaces() }
     }
 }
 

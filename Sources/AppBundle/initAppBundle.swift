@@ -24,7 +24,7 @@ import Foundation
     GlobalObserver.initObserver()
     Task {
         try await $isStartup.withValue(true) {
-            try await runRefreshSessionBlocking(.startup1)
+            try await runRefreshSessionBlocking(.startup1, layoutWorkspaces: false)
             try await runSession(.startup2, .checkServerIsEnabled) {
                 smartLayoutAtStartup()
                 if serverArgs.startedAtLogin {
