@@ -34,7 +34,10 @@ enum ExperimentalUISettingsItems: String {
 @MainActor
 func getExperimentalUISettingsMenu(viewModel: TrayMenuModel) -> some View {
     Menu {
-        Text("Menu bar display style:")
+        Text("These settings are EXPERIMENTAL.")
+        Text("No stability guarantees are provided.")
+        Divider()
+        Text("Menu bar style (macOS 14 or later):")
         ForEach(MenuBarStyle.allCases) { item in
             Button {
                 viewModel.experimentalUISettings.displayStyle = item
