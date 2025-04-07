@@ -271,9 +271,9 @@ final class MacApp: AbstractApp {
         if nsApp.isTerminated {
             MacApp.allAppsMap.removeValue(forKey: pid)
             thread?.runInLoopAsync { [windows, appAxSubscriptions, axApp] job in
-                axApp.destroy()
-                appAxSubscriptions.destroy()
+                appAxSubscriptions.destroy() // Destroy AX objects in reverse order of their creation
                 windows.destroy()
+                axApp.destroy()
                 CFRunLoopStop(CFRunLoopGetCurrent())
             }
             thread = nil // Disallow all future job submissions
