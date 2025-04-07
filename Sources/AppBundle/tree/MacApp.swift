@@ -242,9 +242,12 @@ final class MacApp: AbstractApp {
     static func refreshAllAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [MacApp: [UInt32]] {
         try await withThrowingTaskGroup(of: Void.self) { group in
             // Register new apps
-            for nsApp in NSWorkspace.shared.runningApplications where nsApp.activationPolicy == .regular {
-                try group.addTaskOrCancelAll { @Sendable @MainActor in
-                    _ = try await getOrRegister(nsApp)
+            for nsApp in NSWorkspace.shared.runningApplications {
+                try checkCancellation()
+                if nsApp.activationPolicy == .regular {
+                    group.addTask { @Sendable @MainActor in
+                        try await getOrRegister(nsApp)
+                    }
                 }
             }
             try await group.waitForAll()
@@ -252,7 +255,8 @@ final class MacApp: AbstractApp {
         return try await withThrowingTaskGroup(of: (pid_t, [UInt32]).self, returning: [MacApp: [UInt32]].self) { group in
             // gc dead apps. refresh underlying windows
             for (_, app) in MacApp.allAppsMap {
-                try group.addTaskOrCancelAll { @Sendable @MainActor in
+                try checkCancellation()
+                group.addTask { @Sendable @MainActor in
                     (app.pid, try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
                 }
             }

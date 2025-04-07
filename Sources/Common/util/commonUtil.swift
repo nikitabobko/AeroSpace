@@ -206,9 +206,3 @@ public func allowOnlyCancellationError<T>(isolation: isolated (any Actor)? = #is
         die("throws must only be used for CancellationError")
     }
 }
-
-public func checkCancellation() throws {
-    if Task.isCancelled {
-        throw CancellationError()
-    }
-}
