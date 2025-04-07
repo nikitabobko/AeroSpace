@@ -5,7 +5,7 @@ import Foundation
 // https://forums.swift.org/t/potential-false-positive-sending-risks-causing-data-races/78859
 public extension Bool {
     @inlinable
-    func andAsync(isolation: isolated (any Actor)? = #isolation, _ rhs: @autoclosure () async throws -> Bool) async rethrows -> Bool {
+    func andAsync(isolation: isolated (any Actor)? = #isolation, _ rhs: () async throws -> Bool) async rethrows -> Bool {
         if self {
             return try await rhs()
         }
@@ -14,7 +14,7 @@ public extension Bool {
 
     @inlinable
     @MainActor
-    func andAsyncMainActor(_ rhs: @MainActor @Sendable @autoclosure () async throws -> Bool) async rethrows -> Bool {
+    func andAsyncMainActor(_ rhs: @MainActor @Sendable () async throws -> Bool) async rethrows -> Bool {
         if self {
             return try await rhs()
         }
@@ -22,7 +22,7 @@ public extension Bool {
     }
 
     @inlinable
-    func orAsync(isolation: isolated (any Actor)? = #isolation, _ rhs: @autoclosure () async throws -> Bool) async rethrows -> Bool {
+    func orAsync(isolation: isolated (any Actor)? = #isolation, _ rhs: () async throws -> Bool) async rethrows -> Bool {
         if self {
             return true
         }
@@ -31,7 +31,7 @@ public extension Bool {
 
     @inlinable
     @MainActor
-    func orAsyncMainActor(_ rhs: @MainActor @Sendable @autoclosure () async throws -> Bool) async rethrows -> Bool {
+    func orAsyncMainActor(_ rhs: @MainActor @Sendable () async throws -> Bool) async rethrows -> Bool {
         if self {
             return true
         }

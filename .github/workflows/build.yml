@@ -19,7 +19,9 @@ jobs:
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-14-arm64-Readme.md
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md
         #
-        # Xcode version comparison: https://en.wikipedia.org/wiki/Xcode
+        # Xcode versions:
+        # - https://en.wikipedia.org/wiki/Xcode
+        # - https://xcodereleases.com/?scope=release
         os: [macos-13, macos-14, macos-15]
     name: Build
     runs-on: ${{ matrix.os }}
