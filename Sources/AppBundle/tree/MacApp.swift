@@ -270,6 +270,9 @@ final class MacApp: AbstractApp {
     private func refreshAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [UInt32] {
         if nsApp.isTerminated {
             MacApp.allAppsMap.removeValue(forKey: pid)
+            for (_, job) in setFrameJobs {
+                job.cancel()
+            }
             thread?.runInLoopAsync { [windows, appAxSubscriptions, axApp] job in
                 appAxSubscriptions.destroy() // Destroy AX objects in reverse order of their creation
                 windows.destroy()
