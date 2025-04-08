@@ -154,7 +154,7 @@ extension CGPoint: @retroactive Hashable { // todo migrate to self written Point
 #endif
 
 @inlinable
-public func checkCancellation() throws {
+public func checkCancellation() throws(CancellationError) {
     if Task.isCancelled {
         throw CancellationError()
     }

@@ -31,6 +31,7 @@ final class MacApp: AbstractApp {
         self.isZoom = nsApp.bundleIdentifier == "us.zoom.xos"
         self.pid = nsApp.processIdentifier
         self.bundleId = nsApp.bundleIdentifier
+        assert(!axSubscriptions.isEmpty)
         self.appAxSubscriptions = .init(axSubscriptions)
         self.thread = thread
     }
@@ -40,39 +41,38 @@ final class MacApp: AbstractApp {
     static func getOrRegister(_ nsApp: NSRunningApplication) async throws -> MacApp? {
         // Don't perceive any of the lock screen windows as real windows
         // Otherwise, false positive ax notifications might trigger that lead to gcWindows
-        if nsApp.bundleIdentifier == lockScreenAppBundleId {
-            return nil
-        }
+        if nsApp.bundleIdentifier == lockScreenAppBundleId { return nil }
         let pid = nsApp.processIdentifier
-        if let existing = allAppsMap[pid] { return existing }
-        try checkCancellation()
-        if !wipPids.insert(pid).inserted { return nil } // todo think if it's better to wait or return nil
-        defer { wipPids.remove(pid) }
-        let app = await withCheckedContinuation { (cont: Continuation<MacApp?>) in
+
+        while true {
+            if let existing = allAppsMap[pid] { return existing }
+            try checkCancellation()
+            if !wipPids.insert(pid).inserted {
+                try await Task.sleep(for: .milliseconds(100)) // busy waiting
+                continue
+            }
+
             let thread = Thread {
                 $axTaskLocalAppThreadToken.withValue(AxAppThreadToken(pid: pid, idForDebug: nsApp.idForDebug)) {
                     let axApp = AXUIElementCreateApplication(nsApp.processIdentifier)
                     let handlers: HandlerToNotifKeyMapping = [
                         (refreshObs, [kAXWindowCreatedNotification, kAXFocusedWindowChangedNotification]),
                     ]
-                    let subscriptions = AxSubscription.bulkSubscribe(nsApp, axApp, handlers)
-                    if !subscriptions.isEmpty {
-                        let app = MacApp(nsApp, axApp, subscriptions, Thread.current)
-                        cont.resume(returning: app)
+                    let job = RunLoopJob()
+                    let subscriptions = (try? AxSubscription.bulkSubscribe(nsApp, axApp, job, handlers)) ?? []
+                    let isGood = !subscriptions.isEmpty
+                    let app = isGood ? MacApp(nsApp, axApp, subscriptions, Thread.current) : nil
+                    Task { @MainActor in
+                        allAppsMap[pid] = app
+                        wipPids.remove(pid)
+                    }
+                    if isGood {
                         CFRunLoopRun()
-                    } else {
-                        cont.resume(returning: nil)
                     }
                 }
             }
             thread.name = "AxAppThread \(nsApp.idForDebug)"
             thread.start()
-        }
-        if let app {
-            allAppsMap[pid] = app
-            return app
-        } else {
-            return nil
         }
     }
 
@@ -98,7 +98,9 @@ final class MacApp: AbstractApp {
     @MainActor // todo swift is stupid
     func getFocusedWindow() async throws -> Window? {
         let windowId = try await thread?.runInLoop { [nsApp, axApp, windows] job in
-            axApp.threadGuarded.get(Ax.focusedWindowAttr).flatMap { windows.threadGuarded.getOrRegisterAxWindow($0, nsApp) }?.windowId
+            try axApp.threadGuarded.get(Ax.focusedWindowAttr)
+                .flatMap { try windows.threadGuarded.getOrRegisterAxWindow($0, nsApp, job) }?
+                .windowId
         }
         guard let windowId else { return nil }
         return try await MacWindow.getOrRegister(windowId: windowId, macApp: self)
@@ -300,7 +302,7 @@ final class MacApp: AbstractApp {
 
             for window in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
                 try job.checkCancellation()
-                result.getOrRegisterAxWindow(window, nsApp)
+                try result.getOrRegisterAxWindow(window, nsApp, job)
             }
 
             windows.threadGuarded = result
@@ -332,24 +334,24 @@ private class AxWindow {
     private init(windowId: UInt32, _ ax: AXUIElement, _ axSubscriptions: [AxSubscription]) {
         self.windowId = windowId
         self.ax = ax
+        assert(!axSubscriptions.isEmpty)
         self.axSubscriptions = axSubscriptions
     }
 
-    static func new(windowId: UInt32, _ ax: AXUIElement, _ nsApp: NSRunningApplication) -> AxWindow? {
-        guard let id = ax.containingWindowId() else { return nil }
+    static func new(windowId: UInt32, _ ax: AXUIElement, _ nsApp: NSRunningApplication, _ job: RunLoopJob) throws -> AxWindow? {
         let handlers: HandlerToNotifKeyMapping = [
             (refreshObs, [kAXUIElementDestroyedNotification, kAXWindowDeminiaturizedNotification, kAXWindowMiniaturizedNotification]),
             (movedObs, [kAXMovedNotification]),
             (resizedObs, [kAXResizedNotification]),
         ]
-        let subscriptions = AxSubscription.bulkSubscribe(nsApp, ax, handlers)
-        return !subscriptions.isEmpty ? AxWindow(windowId: id, ax, subscriptions) : nil
+        let subscriptions = try AxSubscription.bulkSubscribe(nsApp, ax, job, handlers)
+        return !subscriptions.isEmpty ? AxWindow(windowId: windowId, ax, subscriptions) : nil
     }
 }
 
 extension [UInt32: AxWindow] {
     @discardableResult
-    fileprivate mutating func getOrRegisterAxWindow(_ axWindow: AXUIElement, _ nsApp: NSRunningApplication) -> AxWindow? {
+    fileprivate mutating func getOrRegisterAxWindow(_ axWindow: AXUIElement, _ nsApp: NSRunningApplication, _ job: RunLoopJob) throws -> AxWindow? {
         guard let id = axWindow.containingWindowId() else { return nil }
         if let existing = self[id] { return existing }
         // Delay new window detection if mouse is down
@@ -357,7 +359,7 @@ extension [UInt32: AxWindow] {
         // https://github.com/nikitabobko/AeroSpace/issues/1001
         if isLeftMouseButtonDown { return nil }
 
-        if let window = AxWindow.new(windowId: id, axWindow, nsApp) {
+        if let window = try AxWindow.new(windowId: id, axWindow, nsApp, job) {
             self[id] = window
             return window
         } else {
