@@ -28,12 +28,10 @@ final class MacWindow: Window {
                 : focus.workspace
         )
 
-        let window = { // atomic synchronous section
-            if let existing = allWindowsMap[windowId] { return existing }
-            let window = MacWindow(windowId, macApp, lastFloatingSize: rect?.size, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
-            allWindowsMap[windowId] = window
-            return window
-        }()
+        // atomic synchronous section
+        if let existing = allWindowsMap[windowId] { return existing }
+        let window = MacWindow(windowId, macApp, lastFloatingSize: rect?.size, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
+        allWindowsMap[windowId] = window
 
         try await debugWindowsIfRecording(window)
         if try await !restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window) {
