@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<meta name="author" content="v0.17.0-Beta">
+<meta name="author" content="v0.18.0-Beta">
 <link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Guide</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -512,7 +512,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div id="header">
 <h1>AeroSpace Guide</h1>
 <div class="details">
-<span id="author" class="author">v0.17.0-Beta</span><br>
+<span id="author" class="author">v0.18.0-Beta</span><br>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -813,7 +813,7 @@ You can bootstrap your custom config by coping the default config from the app i
 <span class="tok-c1"># Also see: <a href="https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app" class="bare">https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app</a></span>
 <span class="tok-n">automatically-unhide-macos-hidden-apps</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
 
-<span class="tok-c1"># Possible values: (qwerty|dvorak)</span>
+<span class="tok-c1"># Possible values: (qwerty|dvorak|colemak)</span>
 <span class="tok-c1"># See <a href="https://nikitabobko.github.io/AeroSpace/guide#key-mapping" class="bare">https://nikitabobko.github.io/AeroSpace/guide#key-mapping</a></span>
 <span class="tok-k">[key-mapping]</span>
 <span class="tok-w">    </span><span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;qwerty&#39;</span>
@@ -847,7 +847,8 @@ You can bootstrap your custom config by coping the default config from the app i
 <span class="tok-w">    </span><span class="tok-c1"># - F-keys.         f1, f2, ..., f20</span>
 <span class="tok-w">    </span><span class="tok-c1"># - Special keys.   minus, equal, period, comma, slash, backslash, quote, semicolon,</span>
 <span class="tok-w">    </span><span class="tok-c1">#                   backtick, leftSquareBracket, rightSquareBracket, space, enter, esc,</span>
-<span class="tok-w">    </span><span class="tok-c1">#                   backspace, tab</span>
+<span class="tok-w">    </span><span class="tok-c1">#                   backspace, tab, pageUp, pageDown, home, end, forwardDelete,</span>
+<span class="tok-w">    </span><span class="tok-c1">#                   sectionSign (ISO keyboards only, european keyboards only)</span>
 <span class="tok-w">    </span><span class="tok-c1"># - Keypad special. keypadClear, keypadDecimalMark, keypadDivide, keypadEnter, keypadEqual,</span>
 <span class="tok-w">    </span><span class="tok-c1">#                   keypadMinus, keypadMultiply, keypadPlus</span>
 <span class="tok-w">    </span><span class="tok-c1"># - Arrows.         left, down, up, right</span>
@@ -1065,17 +1066,13 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <div class="ulist">
 <ul>
 <li>
-<p>For <code>dvorak</code> users, AeroSpace offers a preconfigured preset.</p>
+<p>For <code>dvorak</code> and <code>colemak</code> users, AeroSpace offers preconfigured presets.</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[key-mapping]</span>
-<span class="tok-w">    </span><span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;dvorak&#39;</span></code></pre>
+<span class="tok-w">    </span><span class="tok-n">preset</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;dvorak&#39;</span><span class="tok-w">  </span><span class="tok-c1"># or &#39;colemak&#39;</span></code></pre>
 </div>
 </div>
-</li>
-<li>
-<p>For <code>colemak</code> users, there is <a href="./goodies#colemak-keys-remap">a compiled mapping</a>.
-<code>colemak</code> may be added as preconfigured preset similar to <code>dvorak</code> in the future, if there is enough demand</p>
 </li>
 </ul>
 </div>
@@ -1991,7 +1988,7 @@ Please see <code>isDialogHeuristic</code> function in AeroSpace sources.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-02-17 21:25:06 +0100
+Last updated 2025-04-12 20:35:25 +0200
 </div>
 </div>
 </body>

@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<meta name="author" content="v0.17.0-Beta">
+<meta name="author" content="v0.18.0-Beta">
 <link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Commands</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -512,7 +512,7 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div id="header">
 <h1>AeroSpace Commands</h1>
 <div class="details">
-<span id="author" class="author">v0.17.0-Beta</span><br>
+<span id="author" class="author">v0.18.0-Beta</span><br>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -832,7 +832,7 @@ The default is: <code>workspace</code></p>
 <dt class="hdlist1">--boundaries-action &lt;action&gt;</dt>
 <dd>
 <p>Defines the behavior when requested to cross the <code>&lt;boundary&gt;</code>.<br>
-<code>&lt;action&gt;</code> possible values: <code>(stop|wrap-around-the-workspace|wrap-around-all-monitors)</code><br>
+<code>&lt;action&gt;</code> possible values: <code>(stop|fail|wrap-around-the-workspace|wrap-around-all-monitors)</code><br>
 The default is: <code>stop</code></p>
 </dd>
 <dt class="hdlist1">--window-id &lt;window-id&gt;</dt>
@@ -2149,7 +2149,7 @@ alt-2
 <h3 id="debug-windows"><a class="anchor" href="#debug-windows"></a><a class="link" href="#debug-windows">29.2. debug-windows</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">debug-windows [-h|--help]</pre>
+<pre class="nowrap">debug-windows [-h|--help] [--window-id &lt;window-id&gt;]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2605,6 +2605,14 @@ Incompatible with <code>--count</code></p>
 <dd>
 <p>String. Name of the belonging workspace</p>
 </dd>
+<dt class="hdlist1">%{workspace-is-focused}</dt>
+<dd>
+<p>Boolean. True if the workspace has focus</p>
+</dd>
+<dt class="hdlist1">%{workspace-is-visible}</dt>
+<dd>
+<p>Boolean. True if the workspace is visible. A workspace can be visible but not focused in a multi-monitor setup</p>
+</dd>
 <dt class="hdlist1">%{monitor-id}</dt>
 <dd>
 <p>1-based Number. Sequential number of the belonging monitor.</p>
@@ -2748,6 +2756,14 @@ Incompatible with <code>--count</code></p>
 <dd>
 <p>String. Name of the belonging workspace</p>
 </dd>
+<dt class="hdlist1">%{workspace-is-focused}</dt>
+<dd>
+<p>Boolean. True if the workspace has focus</p>
+</dd>
+<dt class="hdlist1">%{workspace-is-visible}</dt>
+<dd>
+<p>Boolean. True if the workspace is visible. A workspace can be visible but not focused in a multi-monitor setup</p>
+</dd>
 <dt class="hdlist1">%{monitor-id}</dt>
 <dd>
 <p>1-based Number. Sequential number of the belonging monitor</p>
@@ -2780,7 +2796,7 @@ Incompatible with <code>--count</code></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-02-17 21:25:06 +0100
+Last updated 2025-04-12 20:35:25 +0200
 </div>
 </div>
 </body>
