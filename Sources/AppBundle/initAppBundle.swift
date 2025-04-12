@@ -23,15 +23,13 @@ import Foundation
     startUnixSocketServer()
     GlobalObserver.initObserver()
     Task {
-        try await $isStartup.withValue(true) {
-            try await runRefreshSessionBlocking(.startup1, layoutWorkspaces: false)
-            try await runSession(.startup2, .checkServerIsEnabledOrDie) {
-                smartLayoutAtStartup()
-                if serverArgs.startedAtLogin {
-                    _ = try await config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
-                }
-                _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+        try await runRefreshSessionBlocking(.startup, layoutWorkspaces: false)
+        try await runSession(.startup, .checkServerIsEnabledOrDie) {
+            smartLayoutAtStartup()
+            if serverArgs.startedAtLogin {
+                _ = try await config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
             }
+            _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
         }
     }
 }
@@ -48,7 +46,8 @@ private func smartLayoutAtStartup() {
 }
 
 @TaskLocal
-var isStartup: Bool = false
+var _isStartup: Bool? = false
+var isStartup: Bool { _isStartup ?? dieT("isStartup is not initialized") }
 
 struct ServerArgs: Sendable {
     var startedAtLogin = false

@@ -23,16 +23,18 @@ func runRefreshSessionBlocking(_ event: RefreshSessionEvent, layoutWorkspaces sh
     defer { signposter.endInterval(#function, state) }
     if !TrayMenuModel.shared.isEnabled { return }
     try await $refreshSessionEventForDebug.withValue(event) {
-        try await refresh()
-        gcMonitors()
+        try await $_isStartup.withValue(event.isStartup) {
+            try await refresh()
+            gcMonitors()
 
-        let nativeFocused = try await getNativeFocusedWindow()
-        if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
-        updateFocusCache(nativeFocused)
+            let nativeFocused = try await getNativeFocusedWindow()
+            if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
+            updateFocusCache(nativeFocused)
 
-        updateTrayText()
-        try await normalizeLayoutReason()
-        if shouldLayoutWorkspaces { try await layoutWorkspaces() }
+            updateTrayText()
+            try await normalizeLayoutReason()
+            if shouldLayoutWorkspaces { try await layoutWorkspaces() }
+        }
     }
 }
 
@@ -47,28 +49,30 @@ func runSession<T>(
     activeRefreshTask?.cancel() // Give priority to runSession
     activeRefreshTask = nil
     return try await $refreshSessionEventForDebug.withValue(event) {
-        resetClosedWindowsCache()
+        try await $_isStartup.withValue(event.isStartup) {
+            resetClosedWindowsCache()
 
-        let nativeFocused = try await getNativeFocusedWindow()
-        if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
-        updateFocusCache(nativeFocused)
-        let focusBefore = focus.windowOrNil
+            let nativeFocused = try await getNativeFocusedWindow()
+            if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
+            updateFocusCache(nativeFocused)
+            let focusBefore = focus.windowOrNil
 
-        try await refreshModel()
-        let result = try await body()
-        try await refreshModel()
+            try await refreshModel()
+            let result = try await body()
+            try await refreshModel()
 
-        let focusAfter = focus.windowOrNil
+            let focusAfter = focus.windowOrNil
 
-        if focusBefore != focusAfter {
-            focusAfter?.nativeFocus() // syncFocusToMacOs
+            if focusBefore != focusAfter {
+                focusAfter?.nativeFocus() // syncFocusToMacOs
+            }
+
+            updateTrayText()
+            try await normalizeLayoutReason()
+            try await layoutWorkspaces()
+            runRefreshSession(event, screenIsDefinitelyUnlocked: false)
+            return result
         }
-
-        updateTrayText()
-        try await normalizeLayoutReason()
-        try await layoutWorkspaces()
-        runRefreshSession(event, screenIsDefinitelyUnlocked: false)
-        return result
     }
 }
 

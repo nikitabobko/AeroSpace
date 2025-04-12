@@ -71,11 +71,14 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
     case globalObserverLeftMouseUp
     case menuBarButton
     case hotkeyBinding
-    case startup1
-    case startup2
+    case startup
     case socketServer
     case resetManipulatedWithMouse
     case ax(String)
+
+    public var isStartup: Bool {
+        if case .startup = self { return true } else { return false }
+    }
 
     public var description: String {
         switch self {
@@ -86,8 +89,7 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
             case .menuBarButton: "menuBarButton"
             case .resetManipulatedWithMouse: "resetManipulatedWithMouse"
             case .socketServer: " socketServer"
-            case .startup1: "startup1"
-            case .startup2: "startup2"
+            case .startup: "startup"
         }
     }
 }
