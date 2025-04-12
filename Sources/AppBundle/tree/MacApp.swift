@@ -242,24 +242,21 @@ final class MacApp: AbstractApp {
 
     @MainActor
     static func refreshAllAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [MacApp: [UInt32]] {
-        try await withThrowingTaskGroup(of: Void.self) { group in
+        for (_, app) in MacApp.allAppsMap { // gc dead apps
+            try checkCancellation()
+            if app.nsApp.isTerminated {
+                app.destroy()
+            }
+        }
+        return try await withThrowingTaskGroup(of: (pid_t, [UInt32]).self, returning: [MacApp: [UInt32]].self) { group in
             // Register new apps
             for nsApp in NSWorkspace.shared.runningApplications {
                 try checkCancellation()
                 if nsApp.activationPolicy == .regular {
                     group.addTask { @Sendable @MainActor in
-                        try await getOrRegister(nsApp)
+                        guard let app = try await getOrRegister(nsApp) else { return (nsApp.processIdentifier, []) }
+                        return (nsApp.processIdentifier, try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
                     }
-                }
-            }
-            try await group.waitForAll()
-        }
-        return try await withThrowingTaskGroup(of: (pid_t, [UInt32]).self, returning: [MacApp: [UInt32]].self) { group in
-            // gc dead apps. refresh underlying windows
-            for (_, app) in MacApp.allAppsMap {
-                try checkCancellation()
-                group.addTask { @Sendable @MainActor in
-                    (app.pid, try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
                 }
             }
             var result: [MacApp: [UInt32]] = [:]
@@ -275,17 +272,7 @@ final class MacApp: AbstractApp {
     @MainActor
     private func refreshAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [UInt32] {
         if nsApp.isTerminated {
-            MacApp.allAppsMap.removeValue(forKey: pid)
-            for (_, job) in setFrameJobs {
-                job.cancel()
-            }
-            thread?.runInLoopAsync { [windows, appAxSubscriptions, axApp] job in
-                appAxSubscriptions.destroy() // Destroy AX objects in reverse order of their creation
-                windows.destroy()
-                axApp.destroy()
-                CFRunLoopStop(CFRunLoopGetCurrent())
-            }
-            thread = nil // Disallow all future job submissions
+            destroy()
             return []
         }
         guard let thread else { return [] }
@@ -308,6 +295,21 @@ final class MacApp: AbstractApp {
             windows.threadGuarded = result
             return Array(result.keys)
         }
+    }
+
+    @MainActor
+    private func destroy() {
+        MacApp.allAppsMap.removeValue(forKey: pid)
+        for (_, job) in setFrameJobs {
+            job.cancel()
+        }
+        thread?.runInLoopAsync { [windows, appAxSubscriptions, axApp] job in
+            appAxSubscriptions.destroy() // Destroy AX objects in reverse order of their creation
+            windows.destroy()
+            axApp.destroy()
+            CFRunLoopStop(CFRunLoopGetCurrent())
+        }
+        thread = nil // Disallow all future job submissions
     }
 
     @MainActor // todo swift is stupid
