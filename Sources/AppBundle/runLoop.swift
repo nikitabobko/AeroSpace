@@ -36,18 +36,22 @@ extension Thread {
     }
 }
 
-private final class RunLoopAction: NSObject {
-    private let _action: (RunLoopJob) -> ()
+private final class RunLoopAction: NSObject, Sendable {
+    private let _action: @Sendable (RunLoopJob) -> ()
     let job: RunLoopJob
     private let autoCheckCancelled: Bool
+    private let _refreshSessionEventForDebug: RefreshSessionEvent?
     init(job: RunLoopJob, autoCheckCancelled: Bool, _ action: @escaping @Sendable (RunLoopJob) -> ()) {
         self.job = job
         self.autoCheckCancelled = autoCheckCancelled
         _action = action
+        _refreshSessionEventForDebug = refreshSessionEventForDebug
     }
     @objc func action() {
         if autoCheckCancelled && job.isCancelled { return }
-        _action(job)
+        $refreshSessionEventForDebug.withValue(_refreshSessionEventForDebug) {
+            _action(job)
+        }
     }
 }
 
