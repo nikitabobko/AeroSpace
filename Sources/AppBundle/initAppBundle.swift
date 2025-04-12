@@ -23,6 +23,8 @@ import Foundation
     startUnixSocketServer()
     GlobalObserver.initObserver()
     Task {
+        Workspace.garbageCollectUnusedWorkspaces() // init workspaces
+        _ = Workspace.all.first?.focusWorkspace()
         try await runRefreshSessionBlocking(.startup, layoutWorkspaces: false)
         try await runSession(.startup, .checkServerIsEnabledOrDie) {
             smartLayoutAtStartup()
