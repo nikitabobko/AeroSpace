@@ -257,13 +257,13 @@ enum Ax {
     )
     /// Returns windows visible on all monitors
     /// If some windows are located on not active macOS Spaces then they won't be returned
-    static let windowsAttr = ReadableAttrImpl<[AXUIElement]>(
+    static let windowsAttr = ReadableAttrImpl<[WindowIdAndAxUiElement]>(
         key: kAXWindowsAttribute,
-        getter: { ($0 as! NSArray).compactMap(tryGetWindow) }
+        getter: { ($0 as! NSArray).compactMap(windowOrNil) }
     )
-    static let focusedWindowAttr = ReadableAttrImpl<AXUIElement>(
+    static let focusedWindowAttr = ReadableAttrImpl<WindowIdAndAxUiElement>(
         key: kAXFocusedWindowAttribute,
-        getter: tryGetWindow
+        getter: windowOrNil
     )
     //static let mainWindowAttr = ReadableAttrImpl<AXUIElement>(
     //    key: kAXMainWindowAttribute,
@@ -292,11 +292,18 @@ enum Ax {
     //)
 }
 
-private func tryGetWindow(_ any: Any?) -> AXUIElement? {
+typealias WindowIdAndAxUiElement = (windowId: UInt32, ax: AXUIElement)
+
+private func windowOrNil(_ any: Any?) -> WindowIdAndAxUiElement? {
     guard let any else { return nil }
     let potentialWindow = any as! AXUIElement
     // Filter out non-window objects (e.g. Finder's desktop)
-    return potentialWindow.containingWindowId() != nil ? potentialWindow : nil
+    let windowId = potentialWindow.containingWindowId()
+    if let windowId {
+        return (windowId, potentialWindow)
+    } else {
+        return nil
+    }
 }
 
 extension AXUIElement {

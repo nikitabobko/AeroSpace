@@ -99,7 +99,7 @@ final class MacApp: AbstractApp {
     func getFocusedWindow() async throws -> Window? {
         let windowId = try await thread?.runInLoop { [nsApp, axApp, windows] job in
             try axApp.threadGuarded.get(Ax.focusedWindowAttr)
-                .flatMap { try windows.threadGuarded.getOrRegisterAxWindow($0, nsApp, job) }?
+                .flatMap { try windows.threadGuarded.getOrRegisterAxWindow(windowId: $0.windowId, $0.ax, nsApp, job) }?
                 .windowId
         }
         guard let windowId else { return nil }
@@ -287,9 +287,9 @@ final class MacApp: AbstractApp {
                 }
             }
 
-            for window in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
+            for (id, window) in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
                 try job.checkCancellation()
-                try result.getOrRegisterAxWindow(window, nsApp, job)
+                try result.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
             }
 
             windows.threadGuarded = result
@@ -353,8 +353,7 @@ private class AxWindow {
 
 extension [UInt32: AxWindow] {
     @discardableResult
-    fileprivate mutating func getOrRegisterAxWindow(_ axWindow: AXUIElement, _ nsApp: NSRunningApplication, _ job: RunLoopJob) throws -> AxWindow? {
-        guard let id = axWindow.containingWindowId() else { return nil }
+    fileprivate mutating func getOrRegisterAxWindow(windowId id: UInt32, _ axWindow: AXUIElement, _ nsApp: NSRunningApplication, _ job: RunLoopJob) throws -> AxWindow? {
         if let existing = self[id] { return existing }
         // Delay new window detection if mouse is down
         // It helps with apps that allow dragging their tabs out to create new windows

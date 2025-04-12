@@ -87,7 +87,7 @@ extension AXUIElement {
 
             get(Ax.isFocused) == true ||  // 3 different ways to detect if the window is focused
             get(Ax.isMainAttr) == true ||
-            axApp.get(Ax.focusedWindowAttr)?.containingWindowId() == self.containingWindowId() ||
+            axApp.get(Ax.focusedWindowAttr)?.windowId == self.containingWindowId() ||
 
             get(Ax.subroleAttr) == kAXStandardWindowSubrole
     }
