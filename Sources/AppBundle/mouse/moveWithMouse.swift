@@ -1,27 +1,30 @@
 import AppKit
 import Common
 
+@MainActor
+private var moveWithMouseTask: Task<(), any Error>? = nil
+
 func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
     let windowId = ax.containingWindowId()
     let notif = notif as String
     Task { @MainActor in
-        if !TrayMenuModel.shared.isEnabled { return }
-        if let windowId, let window = Window.get(byId: windowId) {
-            try await moveWithMouseIfTheCase(window)
+        guard let token: RunSessionGuard = .isServerEnabled else { return }
+        guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
+            runRefreshSession(.ax(notif), screenIsDefinitelyUnlocked: false)
+            return
         }
-        runRefreshSession(.ax(notif), screenIsDefinitelyUnlocked: false)
+        moveWithMouseTask?.cancel()
+        moveWithMouseTask = Task {
+            try checkCancellation()
+            try await runSession(.ax(notif), token) {
+                try await moveWithMouse(window)
+            }
+        }
     }
 }
 
 @MainActor
-private func moveWithMouseIfTheCase(_ window: Window) async throws { // todo cover with tests
-    if try await (window.isHiddenInCorner || // Don't allow to move windows of hidden workspaces
-        !isLeftMouseButtonDown ||
-        currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId)
-        .orAsync({ @MainActor @Sendable in try await getNativeFocusedWindow() != window })
-    {
-        return
-    }
+private func moveWithMouse(_ window: Window) async throws { // todo cover with tests
     resetClosedWindowsCache()
     switch window.parent.cases {
         case .workspace:
