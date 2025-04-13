@@ -13,15 +13,16 @@ If you struggle to build AeroSpace locally, you can also refer to [builds in Git
 
 ## 1. Install dependencies
 
-1.  Install Xcode from App Store https://apps.apple.com/us/app/xcode/id497799835
-    I believe it will also install Swift.
-2.  If you want to build shell completion, install rust, bash and fish
+1.  Install [swiftly](https://github.com/swiftlang/swiftly).
+    Swiftly is a Swift toolchain manager that will make sure that you use the same swift version as written in `.swift-version` file
+2.  Install Xcode from App Store https://apps.apple.com/us/app/xcode/id497799835
+3.  If you want to build shell completion, install rust, bash and fish
     -   Install Rust using rustup. https://www.rust-lang.org/tools/install
     -   `brew install bash fish`
-3.  If you want to build man pages, install Ruby >= 3.0. I recommend using [rbenv](https://github.com/rbenv/rbenv).
+4.  If you want to build man pages, install Ruby >= 3.0. I recommend using [rbenv](https://github.com/rbenv/rbenv).
     -   `rbenv install 3.3.4` (or whatever 3.x version)
     -   Install asciidoctor using Ruby `bundler`. `cd AeroSpace && bundler install`
-4.  Install optional `xcbeautify` to make Xcode build logs readable. `brew install xcbeautify`
+5.  Install optional `xcbeautify` to make Xcode build logs readable. `brew install xcbeautify`
 
 ## 2. Create codesign certificate
 

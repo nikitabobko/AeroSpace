@@ -26,12 +26,22 @@ if /bin/test -z "${NUKE_PATH:-}"; then
     add-optional-dep-to-bin bundler # build-docs.sh
     add-optional-dep-to-bin xcbeautify # build-release.sh
     add-optional-dep-to-bin git
-    add-optional-dep-to-bin swift # Use Swift from PATH
+    add-optional-dep-to-bin swift
+    add-optional-dep-to-bin swiftly
 
     export PATH="${PWD}/.deps/bin:/bin:/usr/bin"
     chmod +x .deps/bin/*
     export NUKE_PATH=1
 fi
+
+_swift() {
+    if /usr/bin/which swiftly &> /dev/null; then
+        swiftly run swift "$@"
+    else
+        echo "warning: swiftly is not installed. Fallback to plain swift. Swift compilation might not be reproducible" > /dev/stderr
+        swift "$@"
+    fi
+}
 
 xcodebuild() {
     # Mute stderr

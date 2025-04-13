@@ -33,7 +33,7 @@ EOF
 configuration="Release"
 
 generate-git-hash
-swift build -c release --arch arm64 --arch x86_64 --product aerospace # CLI
+_swift build -c release --arch arm64 --arch x86_64 --product aerospace # CLI
 xcodebuild clean build \
     -scheme AeroSpace \
     -destination "generic/platform=macOS" \
