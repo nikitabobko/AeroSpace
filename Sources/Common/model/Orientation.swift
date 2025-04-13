@@ -1,4 +1,4 @@
-public enum Orientation {
+public enum Orientation: Sendable {
     /// Windows are planced along the **horizontal** line
     /// x-axis
     case h

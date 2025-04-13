@@ -2,6 +2,7 @@
 import Common
 import XCTest
 
+@MainActor
 final class ConfigTest: XCTestCase {
     func testParseI3Config() {
         let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/i3-like-config-example.toml"))
@@ -22,7 +23,7 @@ final class ConfigTest: XCTestCase {
         let (_, errors) = parseConfig(
             """
             [mode.main.binding]
-            alt-a = 'list-apps'
+                alt-a = 'list-apps'
             """
         )
         XCTAssertTrue(errors.descriptions.singleOrNil()?.contains("cannot be used in config") == true)
@@ -42,7 +43,7 @@ final class ConfigTest: XCTestCase {
         let (config, errors) = parseConfig(
             """
             [mode.main.binding]
-            alt-h = 'focus left'
+                alt-h = 'focus left'
             """
         )
         assertEquals(errors, [])
@@ -57,7 +58,7 @@ final class ConfigTest: XCTestCase {
         let (config, errors) = parseConfig(
             """
             [mode.foo.binding]
-            alt-h = 'focus left'
+                alt-h = 'focus left'
             """
         )
         assertEquals(
@@ -71,9 +72,9 @@ final class ConfigTest: XCTestCase {
         let (config, errors) = parseConfig(
             """
             [mode.main.binding]
-            alt-hh = 'focus left'
-            aalt-j = 'focus down'
-            alt-k = 'focus up'
+                alt-hh = 'focus left'
+                aalt-j = 'focus down'
+                alt-k = 'focus up'
             """
         )
         assertEquals(
@@ -94,10 +95,10 @@ final class ConfigTest: XCTestCase {
         let (config, errors) = parseConfig(
             """
             [mode.main.binding]
-            alt-1 = 'workspace 1'
-            alt-2 = 'workspace 2'
-            alt-3 = ['workspace 3']
-            alt-4 = ['workspace 4', 'focus left']
+                alt-1 = 'workspace 1'
+                alt-2 = 'workspace 2'
+                alt-3 = ['workspace 3']
+                alt-4 = ['workspace 4', 'focus left']
             """
         )
         assertEquals(errors.descriptions, [])
@@ -160,7 +161,7 @@ final class ConfigTest: XCTestCase {
             enable-normalization-flatten-containers = true
             [mode.main.binding]
             [mode.foo.binding]
-            alt-s = 'split horizontal'
+                alt-s = 'split horizontal'
             """
         )
         assertEquals(
@@ -180,16 +181,16 @@ final class ConfigTest: XCTestCase {
         let (parsed, errors) = parseConfig(
             """
             [workspace-to-monitor-force-assignment]
-            workspace_name_1 = 1                            # Sequence number of the monitor (from left to right, 1-based indexing)
-            workspace_name_2 = 'main'                       # main monitor
-            workspace_name_3 = 'secondary'                  # non-main monitor (in case when there are only two monitors)
-            workspace_name_4 = 'built-in'                   # case insensitive regex substring
-            workspace_name_5 = '^built-in retina display$'  # case insensitive regex match
-            workspace_name_6 = ['secondary', 1]             # you can specify multiple patterns. The first matching pattern will be used
-            7 = "foo"
-            w7 = ['', 'main']
-            w8 = 0
-            workspace_name_x = '2'                          # Sequence number of the monitor (from left to right, 1-based indexing)
+                workspace_name_1 = 1                            # Sequence number of the monitor (from left to right, 1-based indexing)
+                workspace_name_2 = 'main'                       # main monitor
+                workspace_name_3 = 'secondary'                  # non-main monitor (in case when there are only two monitors)
+                workspace_name_4 = 'built-in'                   # case insensitive regex substring
+                workspace_name_5 = '^built-in retina display$'  # case insensitive regex match
+                workspace_name_6 = ['secondary', 1]             # you can specify multiple patterns. The first matching pattern will be used
+                7 = "foo"
+                w7 = ['', 'main']
+                w8 = 0
+                workspace_name_x = '2'                          # Sequence number of the monitor (from left to right, 1-based indexing)
             """
         )
         assertEquals(
@@ -218,23 +219,18 @@ final class ConfigTest: XCTestCase {
         let (parsed, errors) = parseConfig(
             """
             [[on-window-detected]]
-            check-further-callbacks = true
-            run = ['layout floating', 'move-node-to-workspace W']
-
+                check-further-callbacks = true
+                run = ['layout floating', 'move-node-to-workspace W']
             [[on-window-detected]]
-            if.app-id = 'com.apple.systempreferences'
-            run = []
-
+                if.app-id = 'com.apple.systempreferences'
+                run = []
             [[on-window-detected]]
-
             [[on-window-detected]]
-            run = ['move-node-to-workspace S', 'layout tiling']
-
+                run = ['move-node-to-workspace S', 'layout tiling']
             [[on-window-detected]]
-            run = ['move-node-to-workspace S', 'move-node-to-workspace W']
-
+                run = ['move-node-to-workspace S', 'move-node-to-workspace W']
             [[on-window-detected]]
-            run = ['move-node-to-workspace S', 'layout h_tiles']
+                run = ['move-node-to-workspace S', 'layout h_tiles']
             """
         )
         assertEquals(parsed.onWindowDetected, [
@@ -274,8 +270,8 @@ final class ConfigTest: XCTestCase {
         let (config, errors) = parseConfig(
             """
             [[on-window-detected]]
-            if.app-name-regex-substring = '^system settings$'
-            run = []
+                if.app-name-regex-substring = '^system settings$'
+                run = []
             """
         )
         XCTAssertTrue(config.onWindowDetected.singleOrNil()!.matcher.appNameRegexSubstring != nil)
@@ -292,12 +288,12 @@ final class ConfigTest: XCTestCase {
         let (config, errors1) = parseConfig(
             """
             [gaps]
-            inner.horizontal = 10
-            inner.vertical = [{ monitor."main" = 1 }, { monitor."secondary" = 2 }, 5]
-            outer.left = 12
-            outer.bottom = 13
-            outer.top = [{ monitor."built-in" = 3 }, { monitor."secondary" = 4 }, 6]
-            outer.right = [{ monitor.2 = 7 }, 8]
+                inner.horizontal = 10
+                inner.vertical = [{ monitor."main" = 1 }, { monitor."secondary" = 2 }, 5]
+                outer.left = 12
+                outer.bottom = 13
+                outer.top = [{ monitor."built-in" = 3 }, { monitor."secondary" = 4 }, 6]
+                outer.right = [{ monitor.2 = 7 }, 8]
             """
         )
         assertEquals(errors1, [])
@@ -329,8 +325,8 @@ final class ConfigTest: XCTestCase {
         let (_, errors2) = parseConfig(
             """
             [gaps]
-            inner.horizontal = [true]
-            inner.vertical = [{ foo.main = 1 }, { monitor = { foo = 2, bar = 3 } }, 1]
+                inner.horizontal = [true]
+                inner.vertical = [{ foo.main = 1 }, { monitor = { foo = 2, bar = 3 } }, 1]
             """
         )
         assertEquals(errors2.descriptions, [
@@ -344,11 +340,11 @@ final class ConfigTest: XCTestCase {
         let (config, errors) = parseConfig(
             """
             [key-mapping.key-notation-to-key-code]
-            q = 'q'
-            unicorn = 'u'
+                q = 'q'
+                unicorn = 'u'
 
             [mode.main.binding]
-            alt-unicorn = 'workspace wonderland'
+                alt-unicorn = 'workspace wonderland'
             """
         )
         assertEquals(errors.descriptions, [])
@@ -356,14 +352,14 @@ final class ConfigTest: XCTestCase {
             "q": .q,
             "unicorn": .u,
         ]))
-        let binding = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrThrow())))])
+        let binding = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrDie())))])
         assertEquals(config.modes[mainModeId]?.bindings, [binding.descriptionWithKeyCode: binding])
 
         let (_, errors1) = parseConfig(
             """
             [key-mapping.key-notation-to-key-code]
-            q = 'qw'
-            ' f' = 'f'
+                q = 'qw'
+                ' f' = 'f'
             """
         )
         assertEquals(errors1.descriptions, [
@@ -379,5 +375,13 @@ final class ConfigTest: XCTestCase {
         assertEquals(dvorakErrors, [])
         assertEquals(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
         assertEquals(dvorakConfig.keyMapping.resolve()["quote"], .q)
+        let (colemakConfig, colemakErrors) = parseConfig(
+            """
+            key-mapping.preset = 'colemak'
+            """
+        )
+        assertEquals(colemakErrors, [])
+        assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
+        assertEquals(colemakConfig.keyMapping.resolve()["f"], .e)
     }
 }

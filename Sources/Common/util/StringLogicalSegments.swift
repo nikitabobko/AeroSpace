@@ -16,7 +16,7 @@ public extension StringLogicalSegments {
     }
 }
 
-public enum StringLogicalSegment: Comparable, Equatable {
+public enum StringLogicalSegment: Comparable, Equatable, Sendable {
     case string(String)
     case number(Int)
 

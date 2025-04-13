@@ -1,8 +1,9 @@
 @testable import AppBundle
 import XCTest
 
+@MainActor
 final class TreeNodeTest: XCTestCase {
-    override func setUpWithError() throws { setUpWorkspacesForTests() }
+    override func setUp() async throws { setUpWorkspacesForTests() }
 
     func testChildParentCyclicReferenceMemoryLeak() {
         let workspace = Workspace.get(byName: name) // Don't cache root node

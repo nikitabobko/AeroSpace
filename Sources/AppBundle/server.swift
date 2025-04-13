@@ -1,23 +1,29 @@
 import AppKit
 import Common
-import Socket
+@preconcurrency import Socket
 
 func startUnixSocketServer() {
-    let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }
-        .getOrThrow("Can't create socket ")
-    let socketFile = "/tmp/\(aeroSpaceAppId)-\(unixUserName).sock"
-    Result { try socket.listen(on: socketFile) }.getOrThrow("Can't listen to socket \(socketFile) ")
     DispatchQueue.global().async {
+        let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }
+            .getOrDie("Can't create socket ")
+        let socketFile = "/tmp/\(aeroSpaceAppId)-\(unixUserName).sock"
+        Result { try socket.listen(on: socketFile) }.getOrDie("Can't listen to socket \(socketFile) ")
         while true {
             guard let connection = try? socket.acceptClientConnection() else { continue }
-            Task { await newConnection(connection) }
+            handleConnectionAsync(connection)
         }
     }
 }
 
+// Circumvent error https://github.com/swiftlang/swift/issues/80234:
+//     Value of non-Sendable type '@isolated(any) @async @callee_guaranteed @substituted <τ_0_0> () -> @out τ_0_0 for <()>' accessed after being transferred; later accesses could race
+private func handleConnectionAsync(_ connection: sending Socket) {
+    Task { await newConnection(connection) }
+}
+
 func sendCommandToReleaseServer(args: [String]) {
     check(isDebug)
-    let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrThrow()
+    let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrDie()
     defer {
         socket.close()
     }
@@ -26,7 +32,7 @@ func sendCommandToReleaseServer(args: [String]) {
         return
     }
 
-    _ = try? socket.write(from: Result { try JSONEncoder().encode(ClientRequest(args: args, stdin: "")) }.getOrThrow())
+    _ = try? socket.write(from: Result { try JSONEncoder().encode(ClientRequest(args: args, stdin: "")) }.getOrDie())
     _ = try? Socket.wait(for: [socket], timeout: 0, waitForever: true)
     _ = try? socket.readString()
 }
@@ -35,11 +41,11 @@ private let serverVersionAndHash = "\(aeroSpaceAppVersion) \(gitHash)"
 
 private func newConnection(_ socket: Socket) async { // todo add exit codes
     func answerToClient(exitCode: Int32, stdout: String = "", stderr: String = "") {
-        let ans = ServerAnswer(exitCode: exitCode, stdout: stderr, stderr: stderr, serverVersionAndHash: serverVersionAndHash)
+        let ans = ServerAnswer(exitCode: exitCode, stdout: stdout, stderr: stderr, serverVersionAndHash: serverVersionAndHash)
         answerToClient(ans)
     }
     func answerToClient(_ ans: ServerAnswer) {
-        _ = try? socket.write(from: Result { try JSONEncoder().encode(ans) }.getOrThrow())
+        _ = try? socket.write(from: Result { try JSONEncoder().encode(ans) }.getOrDie())
     }
     defer {
         socket.close()
@@ -63,11 +69,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             continue
         }
         let (command, help, err) = parseCommand(request.args).unwrap()
-        guard let isEnabled = await Task(operation: { @MainActor in TrayMenuModel.shared.isEnabled }).result.getOrNil() else {
-            answerToClient(exitCode: 1, stderr: "Unknown failure during isEnabled server state access")
-            continue
-        }
-        if !isEnabled && !isAllowedToRunWhenDisabled(command) {
+        guard let token: RunSessionGuard = await .isServerEnabled(orIsEnableCommand: command) else {
             answerToClient(
                 exitCode: 1,
                 stderr: "\(aeroSpaceAppName) server is disabled and doesn't accept commands. " +
@@ -89,8 +91,8 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
         }
         if let command {
             let _answer: Result<ServerAnswer, Error> = await Task { @MainActor in
-                refreshSession(screenIsDefinitelyUnlocked: true) {
-                    let cmdResult = command.run(.defaultEnv, CmdStdin(request.stdin)) // todo pass AEROSPACE_ env vars from CLI instead of defaultEnv
+                try await runSession(.socketServer, token) { () throws in
+                    let cmdResult = try await command.run(.defaultEnv, CmdStdin(request.stdin)) // todo pass AEROSPACE_ env vars from CLI instead of defaultEnv
                     return ServerAnswer(
                         exitCode: cmdResult.exitCode,
                         stdout: cmdResult.stdout.joined(separator: "\n"),
@@ -108,16 +110,6 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             answerToClient(answer)
             continue
         }
-        error("Unreachable")
+        die("Unreachable")
     }
-}
-
-func isAllowedToRunWhenDisabled(_ command: (any Command)?) -> Bool {
-    if let enable = command as? EnableCommand, enable.args.targetState.val != .off {
-        return true
-    }
-    if command is ServerVersionInternalCommandCommand {
-        return true
-    }
-    return false
 }

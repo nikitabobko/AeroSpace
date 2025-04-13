@@ -46,7 +46,7 @@ public func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: [String]) -> Pars
     return errors.isEmpty ? .cmd(raw) : .failure(errors.joinErrors())
 }
 
-public enum ParsedCmd<T> {
+public enum ParsedCmd<T: Sendable>: Sendable {
     case cmd(T)
     case help(String)
     case failure(String)

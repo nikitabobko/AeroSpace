@@ -55,37 +55,37 @@ Other installation options: https://nikitabobko.github.io/AeroSpace/guide#instal
 > automatically delete `com.apple.quarantine` attribute, that's why the app should work out of the box, without any warnings that
 > "Apple cannot check AeroSpace for malicious software"
 
-## Community, discussions, issues, pull requests
+## Community, discussions, issues
 
-Informal community discussions happen at GitHub Discussions.
-There you can ask your questions, show off your setup, bring other topic, or just chat.
+Unfortunately, AeroSpace project doesn't openly accept Issues.
+Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for more details.
 
-There are 6 channels:
+Community discussions happen at GitHub Discussions.
+There you can discuss bugs, propose new features, ask your questions, show off your setup, or just chat.
+
+There are 7 channels:
 -   [#all](https://github.com/nikitabobko/AeroSpace/discussions).
-    [RSS](https://github.com/nikitabobko/AeroSpace/discussions.atom).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions.atom?discussions_q=sort%3Adate_created).
     Feed with all discussions.
 -   [#announcements](https://github.com/nikitabobko/AeroSpace/discussions/categories/announcements).
-    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/announcements.atom).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/announcements.atom?discussions_q=category%3Aannouncements+sort%3Adate_created).
     Only maintainers can post here.
     Highly moderated traffic.
 -   [#announcements-releases](https://github.com/nikitabobko/AeroSpace/discussions/categories/announcements-releases).
-    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/announcements-releases.atom).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/announcements-releases.atom?discussions_q=category%3Aannouncements-releases+sort%3Adate_created).
     Announcements about non-patch releases.
     Only maintainers can post here.
 -   [#feature-ideas](https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas).
-    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas.atom).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas.atom?discussions_q=category%3Afeature-ideas+sort%3Adate_created).
 -   [#general](https://github.com/nikitabobko/AeroSpace/discussions/categories/general).
-    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/general.atom).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/general.atom?discussions_q=sort%3Adate_created+category%3Ageneral).
+-   [#potential-bugs](https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs.atom?discussions_q=category%3Apotential-bugs+sort%3Adate_created).
+    If you think that you have encountered a bug, you can discuss your bugs here.
 -   [#questions-and-answers](https://github.com/nikitabobko/AeroSpace/discussions/categories/questions-and-answers).
-    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/questions-and-answers.atom).
+    [RSS](https://github.com/nikitabobko/AeroSpace/discussions/categories/questions-and-answers.atom?discussions_q=category%3Aquestions-and-answers+sort%3Adate_created).
     Everyone is welcome to ask questions.
     Everyone is encouraged to answer other people's questions.
-
-You're welcome to submit bug reports and well-defined feature proposals in GitHub issues.
-You're welcome to submit pull requests as well.
-See: [CONTRIBUTING.md](./CONTRIBUTING.md)
-
-**Issues vs Discussions:** Issues are formal and well-defined. Discussions are informal and casual.
 
 ## Development
 
@@ -114,6 +114,11 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
 - Play nicely with existing macOS features.
   If limitations are imposed then AeroSpace won't play nicely with existing macOS features
   (For example, AeroSpace doesn't acknowledge the existence of macOS Spaces, and it uses [emulation of its own workspaces](https://nikitabobko.github.io/AeroSpace/guide#emulation-of-virtual-workspaces))
+- Ricing.
+  AeroSpace provides only a very minimal support for ricing - gaps and a few callbacks for integrations with bars.
+  The current maintainer doesn't care about ricing.
+  Ricing issues are not a priority, and they are mostly ignored.
+  The ricing stance can change only with the appearance of more maintainers.
 
 ## Tip of the day
 

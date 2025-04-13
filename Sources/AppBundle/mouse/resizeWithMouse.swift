@@ -1,41 +1,50 @@
 import AppKit
 import Common
 
+@MainActor
+private var resizeWithMouseTask: Task<(), any Error>? = nil
+
 func resizedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
-    if let window = data?.window, TrayMenuModel.shared.isEnabled {
-        resizeWithMouseIfTheCase(window)
+    let notif = notif as String
+    let windowId = ax.containingWindowId()
+    Task { @MainActor in
+        guard let token: RunSessionGuard = .isServerEnabled else { return }
+        guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
+            runRefreshSession(.ax(notif), screenIsDefinitelyUnlocked: false)
+            return
+        }
+        resizeWithMouseTask?.cancel()
+        resizeWithMouseTask = Task {
+            try checkCancellation()
+            try await runSession(.ax(notif), token) {
+                try await resizeWithMouse(window)
+            }
+        }
     }
-    refreshAndLayout(screenIsDefinitelyUnlocked: false)
 }
 
-func resetManipulatedWithMouseIfPossible() {
-    check(Thread.current.isMainThread)
+@MainActor
+func resetManipulatedWithMouseIfPossible() async throws {
     if currentlyManipulatedWithMouseWindowId != nil {
         currentlyManipulatedWithMouseWindowId = nil
         for workspace in Workspace.all {
             workspace.resetResizeWeightBeforeResizeRecursive()
         }
-        refreshAndLayout(screenIsDefinitelyUnlocked: true)
+        runRefreshSession(.resetManipulatedWithMouse, screenIsDefinitelyUnlocked: true, optimisticallyPreLayoutWorkspaces: true)
     }
 }
 
 private let adaptiveWeightBeforeResizeWithMouseKey = TreeNodeUserDataKey<CGFloat>(key: "adaptiveWeightBeforeResizeWithMouseKey")
 
-private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tests
-    if window.isHiddenInCorner || // Don't allow to resize windows of hidden workspaces
-        !isLeftMouseButtonPressed ||
-        currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId ||
-        getNativeFocusedWindow(startup: false) != window
-    {
-        return
-    }
+@MainActor
+private func resizeWithMouse(_ window: Window) async throws { // todo cover with tests
     resetClosedWindowsCache()
     switch window.parent.cases {
         case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
              .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
             return // Nothing to do for floating, or unconventional windows
         case .tilingContainer:
-            guard let rect = window.getRect() else { return }
+            guard let rect = try await window.getAxRect() else { return }
             guard let lastAppliedLayoutRect = window.lastAppliedLayoutPhysicalRect else { return }
             let (lParent, lOwnIndex) = window.closestParent(hasChildrenInDirection: .left, withLayout: .tiles) ?? (nil, nil)
             let (dParent, dOwnIndex) = window.closestParent(hasChildrenInDirection: .down, withLayout: .tiles) ?? (nil, nil)
@@ -69,6 +78,7 @@ private func resizeWithMouseIfTheCase(_ window: Window) { // todo cover with tes
 }
 
 private extension TreeNode {
+    @MainActor
     func getWeightBeforeResize(_ orientation: Orientation) -> CGFloat {
         let currentWeight = getWeight(orientation) // Check assertions
         return getUserData(key: adaptiveWeightBeforeResizeWithMouseKey)

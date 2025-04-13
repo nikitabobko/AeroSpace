@@ -5,7 +5,6 @@ struct ConfigCommand: Command {
     let args: ConfigCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         switch args.mode {
             case .getKey(let key):
                 return getKey(io, args: args, key: key)
@@ -37,7 +36,7 @@ private extension String {
     }
 }
 
-private func getKey(_ io: CmdIo, args: ConfigCmdArgs, key: String) -> Bool {
+@MainActor private func getKey(_ io: CmdIo, args: ConfigCmdArgs, key: String) -> Bool {
     let keyPath: [String]
     switch key.toKeyPath() {
         case .success(let _keyPath): keyPath = _keyPath
@@ -136,7 +135,7 @@ extension ConfigMapValue {
     }
 }
 
-func buildConfigMap() -> ConfigMapValue {
+@MainActor func buildConfigMap() -> ConfigMapValue {
     let mode = config.modes.mapValues { (mode: Mode) -> ConfigMapValue in
         var keyNotationToScript: [String: ConfigMapValue] = [:]
         for binding in mode.bindings.values {

@@ -6,7 +6,6 @@ struct VolumeCommand: Command {
     let args: VolumeCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         switch args.action.val {
             case .up:
                 Sound.output.increaseVolume(by: 0.0625, autoMuteUnmute: true)

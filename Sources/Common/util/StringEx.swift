@@ -1,10 +1,14 @@
 public typealias Parsed<T> = Result<T, String>
-extension String: Swift.Error {} // Make it possible to use String in Result. todo migrate to self written Result monad
-extension Array: Swift.Error where Element: Error {} // Make it possible to use [String] in Result. todo migrate to self written Result monad
+extension String: @retroactive Error {} // Make it possible to use String in Result. todo migrate to self written Result monad
+extension Array: @retroactive Error where Element: Error {} // Make it possible to use [String] in Result. todo migrate to self written Result monad
 
 public extension String {
     func trim() -> String {
         self.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    func indent(indentation: String = "    ") -> String {
+        split(separator: "\n", omittingEmptySubsequences: false).map { indentation + $0 }.joined(separator: "\n")
     }
 
     func quoted(with char: String) -> String { char + self + char }
@@ -123,7 +127,7 @@ public extension String {
     }
 }
 
-public enum StringInterToken: Equatable {
+public enum StringInterToken: Equatable, Sendable {
     case literal(String)
     case interVar(String) // "interpolation variable"
 }

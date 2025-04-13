@@ -1,17 +1,18 @@
 import AppKit
 import Common
 
-private var workspaceNameToWorkspace: [String: Workspace] = [:]
+@MainActor private var workspaceNameToWorkspace: [String: Workspace] = [:]
 
-private var screenPointToPrevVisibleWorkspace: [CGPoint: String] = [:]
-private var screenPointToVisibleWorkspace: [CGPoint: Workspace] = [:]
-private var visibleWorkspaceToScreenPoint: [Workspace: CGPoint] = [:]
+@MainActor private var screenPointToPrevVisibleWorkspace: [CGPoint: String] = [:]
+@MainActor private var screenPointToVisibleWorkspace: [CGPoint: Workspace] = [:]
+@MainActor private var visibleWorkspaceToScreenPoint: [Workspace: CGPoint] = [:]
 
 // The returned workspace must be invisible and it must belong to the requested monitor
-func getStubWorkspace(for monitor: Monitor) -> Workspace {
+@MainActor func getStubWorkspace(for monitor: Monitor) -> Workspace {
     getStubWorkspace(forPoint: monitor.rect.topLeftCorner)
 }
 
+@MainActor
 private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     if let prev = screenPointToPrevVisibleWorkspace[point]?.lets({ Workspace.get(byName: $0) }),
        !prev.isVisible && prev.workspaceMonitor.rect.topLeftCorner == point && prev.forceAssignedMonitor == nil
@@ -27,26 +28,27 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     return (1 ... Int.max).lazy
         .map { Workspace.get(byName: String($0)) }
         .first { $0.isEffectivelyEmpty && !$0.isVisible && !preservedNames.contains($0.name) && $0.forceAssignedMonitor == nil }
-        ?? errorT("Can't create empty workspace")
+        ?? dieT("Can't create empty workspace")
 }
 
-class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, CustomStringConvertible, Comparable {
+class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     let name: String
-    private let nameLogicalSegments: StringLogicalSegments
+    private nonisolated let nameLogicalSegments: StringLogicalSegments
     /// `assignedMonitorPoint` must be interpreted only when the workspace is invisible
     fileprivate var assignedMonitorPoint: CGPoint? = nil
 
+    @MainActor
     private init(_ name: String) {
         self.name = name
         self.nameLogicalSegments = name.toLogicalSegments()
         super.init(parent: NilTreeNode.instance, adaptiveWeight: 0, index: 0)
     }
 
-    static var all: [Workspace] {
+    @MainActor static var all: [Workspace] {
         workspaceNameToWorkspace.values.sorted()
     }
 
-    static func get(byName name: String) -> Workspace {
+    @MainActor static func get(byName name: String) -> Workspace {
         if let existing = workspaceNameToWorkspace[name] {
             return existing
         } else {
@@ -56,16 +58,19 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, CustomStringConverti
         }
     }
 
-    static func < (lhs: Workspace, rhs: Workspace) -> Bool { lhs.nameLogicalSegments < rhs.nameLogicalSegments }
+    nonisolated static func < (lhs: Workspace, rhs: Workspace) -> Bool {
+        lhs.nameLogicalSegments < rhs.nameLogicalSegments
+    }
 
     override func getWeight(_ targetOrientation: Orientation) -> CGFloat {
         workspaceMonitor.visibleRectPaddedByOuterGaps.getDimension(targetOrientation)
     }
 
     override func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {
-        error("It's not possible to change weight of Workspace")
+        die("It's not possible to change weight of Workspace")
     }
 
+    @MainActor
     var description: String {
         let preservedNames = config.preservedWorkspaceNames.toSet()
         let description = [
@@ -77,6 +82,7 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, CustomStringConverti
         return "Workspace(\(description))"
     }
 
+    @MainActor
     static func garbageCollectUnusedWorkspaces() {
         let preservedNames = config.preservedWorkspaceNames.toSet()
         for name in preservedNames {
@@ -90,18 +96,18 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, CustomStringConverti
         }
     }
 
-    static func == (lhs: Workspace, rhs: Workspace) -> Bool {
+    nonisolated static func == (lhs: Workspace, rhs: Workspace) -> Bool {
         check((lhs === rhs) == (lhs.name == rhs.name), "lhs: \(lhs) rhs: \(rhs)")
         return lhs === rhs
     }
 
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(name)
-    }
+    nonisolated func hash(into hasher: inout Hasher) { hasher.combine(name) }
 }
 
 extension Workspace {
+    @MainActor
     var isVisible: Bool { visibleWorkspaceToScreenPoint.keys.contains(self) }
+    @MainActor
     var workspaceMonitor: Monitor {
         forceAssignedMonitor
             ?? visibleWorkspaceToScreenPoint[self]?.monitorApproximation
@@ -111,6 +117,7 @@ extension Workspace {
 }
 
 extension Monitor {
+    @MainActor
     var activeWorkspace: Workspace {
         if let existing = screenPointToVisibleWorkspace[rect.topLeftCorner] {
             return existing
@@ -122,11 +129,13 @@ extension Monitor {
         return self.activeWorkspace
     }
 
+    @MainActor
     func setActiveWorkspace(_ workspace: Workspace) -> Bool {
         rect.topLeftCorner.setActiveWorkspace(workspace)
     }
 }
 
+@MainActor
 func gcMonitors() {
     if screenPointToVisibleWorkspace.count != monitors.count {
         rearrangeWorkspacesOnMonitors()
@@ -134,6 +143,7 @@ func gcMonitors() {
 }
 
 private extension CGPoint {
+    @MainActor
     func setActiveWorkspace(_ workspace: Workspace) -> Bool {
         if !isValidAssignment(workspace: workspace, screen: self) {
             return false
@@ -155,6 +165,7 @@ private extension CGPoint {
     }
 }
 
+@MainActor
 private func rearrangeWorkspacesOnMonitors() {
     var oldVisibleScreens: Set<CGPoint> = screenPointToVisibleWorkspace.keys.toSet()
 
@@ -183,6 +194,7 @@ private func rearrangeWorkspacesOnMonitors() {
     }
 }
 
+@MainActor
 private func isValidAssignment(workspace: Workspace, screen: CGPoint) -> Bool {
     if let forceAssigned = workspace.forceAssignedMonitor, forceAssigned.rect.topLeftCorner != screen {
         return false

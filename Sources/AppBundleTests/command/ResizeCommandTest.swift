@@ -3,8 +3,6 @@ import Common
 import XCTest
 
 final class ResizeCommandTest: XCTestCase {
-    override func setUpWithError() throws { setUpWorkspacesForTests() }
-
     func testParseCommand() {
         testParseCommandSucc("resize smart +10", ResizeCmdArgs(rawArgs: [], dimension: .smart, units: .add(10)))
         testParseCommandSucc("resize smart -10", ResizeCmdArgs(rawArgs: [], dimension: .smart, units: .subtract(10)))

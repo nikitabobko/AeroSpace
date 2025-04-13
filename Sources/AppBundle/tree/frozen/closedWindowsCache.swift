@@ -6,26 +6,26 @@ import AppKit
 /// becomes nil, etc.) which tricks AeroSpace into thinking that all windows were closed.
 /// That's why every time a window dies AeroSpace caches the "entire world" (unless window is already presented in the cache)
 /// so that once the screen is unlocked, AeroSpace could restore windows to where they were
-private var closedWindowsCache = FrozenWorld(workspaces: [], monitors: [])
+@MainActor private var closedWindowsCache = FrozenWorld(workspaces: [], monitors: [])
 
-struct FrozenMonitor {
+struct FrozenMonitor: Sendable {
     let topLeftCorner: CGPoint
     let visibleWorkspace: String
 
-    init(_ monitor: Monitor) {
+    @MainActor init(_ monitor: Monitor) {
         topLeftCorner = monitor.rect.topLeftCorner
         visibleWorkspace = monitor.activeWorkspace.name
     }
 }
 
-struct FrozenWorkspace {
+struct FrozenWorkspace: Sendable {
     let name: String
     let monitor: FrozenMonitor // todo drop this property, once monitor to workspace assignment migrates to TreeNode
     let rootTilingNode: FrozenContainer
     let floatingWindows: [FrozenWindow]
     let macosUnconventionalWindows: [FrozenWindow]
 
-    init(_ workspace: Workspace) {
+    @MainActor init(_ workspace: Workspace) {
         name = workspace.name
         monitor = FrozenMonitor(workspace.workspaceMonitor)
         rootTilingNode = FrozenContainer(workspace.rootTilingContainer)
@@ -36,7 +36,7 @@ struct FrozenWorkspace {
     }
 }
 
-func cacheClosedWindowIfNeeded(window: Window) {
+@MainActor func cacheClosedWindowIfNeeded(window: Window) {
     if closedWindowsCache.windowIds.contains(window.windowId) {
         return // already cached
     }
@@ -44,9 +44,11 @@ func cacheClosedWindowIfNeeded(window: Window) {
         workspaces: Workspace.all.map { FrozenWorkspace($0) },
         monitors: monitors.map(FrozenMonitor.init)
     )
+    // todo why is this assertion false 21336ad382539b35fdc94b4fbd55408e10b101f8?
+    // check(closedWindowsCache.windowIds.contains(window.windowId))
 }
 
-func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) -> Bool {
+@MainActor func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) async throws -> Bool {
     if !closedWindowsCache.windowIds.contains(newlyDetectedWindow.windowId) {
         return false
     }
@@ -64,11 +66,12 @@ func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) -> Bool {
         for frozenWindow in frozenWorkspace.macosUnconventionalWindows { // Will get fixed by normalizations
             MacWindow.get(byId: frozenWindow.id)?.bindAsFloatingWindow(to: workspace)
         }
-        let orphans = workspace.rootTilingContainer.allLeafWindowsRecursive
-        workspace.rootTilingContainer.unbindFromParent()
+        let prevRoot = workspace.rootTilingContainer // Save prevRoot into a variable to avoid it being garbage collected earlier than needed
+        let potentialOrphans = prevRoot.allLeafWindowsRecursive
+        prevRoot.unbindFromParent()
         restoreTreeRecursive(frozenContainer: frozenWorkspace.rootTilingNode, parent: workspace, index: INDEX_BIND_LAST)
-        for window in (orphans - workspace.rootTilingContainer.allLeafWindowsRecursive) {
-            window.relayoutWindow(on: workspace, forceTile: true)
+        for window in (potentialOrphans - workspace.rootTilingContainer.allLeafWindowsRecursive) {
+            try await window.relayoutWindow(on: workspace, forceTile: true)
         }
     }
 
@@ -80,7 +83,9 @@ func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) -> Bool {
     return true
 }
 
-private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonLeafTreeNodeObject, index: Int) {
+@discardableResult
+@MainActor
+private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonLeafTreeNodeObject, index: Int) -> Bool {
     let container = TilingContainer(
         parent: parent,
         adaptiveWeight: frozenContainer.weight,
@@ -89,16 +94,18 @@ private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonL
         index: index
     )
 
-    loop: for (index, child) in frozenContainer.children.enumerated() {
+    for (index, child) in frozenContainer.children.enumerated() {
         switch child {
             case .window(let w):
                 // Stop the loop if can't find the window, because otherwise all the subsequent windows will have incorrect index
-                guard let window = MacWindow.get(byId: w.id) else { break loop }
+                guard let window = MacWindow.get(byId: w.id) else { return false }
                 window.bind(to: container, adaptiveWeight: w.weight, index: index)
             case .container(let c):
-                restoreTreeRecursive(frozenContainer: c, parent: container, index: index)
+                // There is no reason to continue
+                if !restoreTreeRecursive(frozenContainer: c, parent: container, index: index) { return false }
         }
     }
+    return true
 }
 
 // Consider the following case:
@@ -112,6 +119,6 @@ private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonL
 //
 // That's why we have to reset the cache every time layout changes. The layout can only be changed by running commands
 // and with mouse manipulations
-func resetClosedWindowsCache() {
+@MainActor func resetClosedWindowsCache() {
     closedWindowsCache = FrozenWorld(workspaces: [], monitors: [])
 }

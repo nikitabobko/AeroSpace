@@ -5,7 +5,9 @@ public struct DebugWindowsCmdArgs: CmdArgs {
         kind: .debugWindows,
         allowInConfig: false,
         help: debug_windows_help_generated,
-        options: [:],
+        options: [
+            "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32)),
+        ],
         arguments: []
     )
 

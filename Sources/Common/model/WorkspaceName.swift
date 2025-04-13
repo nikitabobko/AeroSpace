@@ -1,4 +1,4 @@
-public struct WorkspaceName: Equatable {
+public struct WorkspaceName: Equatable, Sendable {
     public let raw: String
 
     private init(_ raw: String) {

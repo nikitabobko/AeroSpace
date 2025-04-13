@@ -33,13 +33,20 @@ public extension Result {
             case .failure(let f): f
         }
     }
+
+    var isSuccess: Bool {
+        switch self {
+            case .success: true
+            case .failure: false
+        }
+    }
 }
 
 public extension Result {
     @discardableResult
-    func getOrThrow(
+    func getOrDie(
         _ msgPrefix: String = "",
-        file: String = #file,
+        file: String = #fileID,
         line: Int = #line,
         column: Int = #column,
         function: String = #function
@@ -48,7 +55,7 @@ public extension Result {
             case .success(let suc):
                 return suc
             case .failure(let e):
-                error(msgPrefix + e.localizedDescription, file: file, line: line, column: column, function: function)
+                die(msgPrefix + e.localizedDescription, file: file, line: line, column: column, function: function)
         }
     }
 }

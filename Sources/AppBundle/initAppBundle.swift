@@ -2,9 +2,7 @@ import AppKit
 import Common
 import Foundation
 
-let systemWideAx = AXUIElementCreateSystemWide()
-
-public func initAppBundle() {
+@MainActor public func initAppBundle() {
     initTerminationHandler()
     isCli = false
     initServerArgs()
@@ -22,19 +20,38 @@ public func initAppBundle() {
     }
 
     checkAccessibilityPermissions()
-    AXUIElementSetMessagingTimeout(systemWideAx, 1.0)
     startUnixSocketServer()
     GlobalObserver.initObserver()
-    refreshAndLayout(screenIsDefinitelyUnlocked: false, startup: true)
-    refreshSession(screenIsDefinitelyUnlocked: false) {
-        if serverArgs.startedAtLogin {
-            _ = config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+    Task {
+        Workspace.garbageCollectUnusedWorkspaces() // init workspaces
+        _ = Workspace.all.first?.focusWorkspace()
+        try await runRefreshSessionBlocking(.startup, layoutWorkspaces: false)
+        try await runSession(.startup, .checkServerIsEnabledOrDie) {
+            smartLayoutAtStartup()
+            if serverArgs.startedAtLogin {
+                _ = try await config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+            }
+            _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
         }
-        _ = config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
     }
 }
 
-struct ServerArgs {
+@MainActor
+private func smartLayoutAtStartup() {
+    let workspace = focus.workspace
+    let root = workspace.rootTilingContainer
+    if root.children.count <= 3 {
+        root.layout = .tiles
+    } else {
+        root.layout = .accordion
+    }
+}
+
+@TaskLocal
+var _isStartup: Bool? = false
+var isStartup: Bool { _isStartup ?? dieT("isStartup is not initialized") }
+
+struct ServerArgs: Sendable {
     var startedAtLogin = false
     var configLocation: String? = nil
 }
@@ -51,7 +68,8 @@ private let serverHelp = """
                               and ${XDG_CONFIG_HOME}/aerospace/aerospace.toml
     """
 
-var serverArgs = ServerArgs()
+private nonisolated(unsafe) var _serverArgs = ServerArgs()
+var serverArgs: ServerArgs { _serverArgs }
 private func initServerArgs() {
     var args: [String] = Array(CommandLine.arguments.dropFirst())
     if args.contains(where: { $0 == "-h" || $0 == "--help" }) {
@@ -65,14 +83,16 @@ private func initServerArgs() {
                 exit(0)
             case "--config-path":
                 if let arg = args.getOrNil(atIndex: 1) {
-                    serverArgs.configLocation = arg
+                    _serverArgs.configLocation = arg
                 } else {
                     cliError("Missing <path> in --config-path flag")
                 }
                 args = Array(args.dropFirst(2))
             case "--started-at-login":
-                serverArgs.startedAtLogin = true
+                _serverArgs.startedAtLogin = true
                 args = Array(args.dropFirst())
+            case "-NSDocumentRevisionsDebugMode":
+                cliError("Xcode -> Edit Scheme ... -> Options -> Document Versions -> Allow debugging when browsing versions -> false")
             default:
                 cliError("Unrecognized flag '\(args.first!)'")
         }

@@ -1,4 +1,5 @@
 import AppKit
+import Common
 
 class GlobalObserver {
     private static func onNotif(_ notification: Notification) {
@@ -7,56 +8,73 @@ class GlobalObserver {
         if (notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication)?.bundleIdentifier == lockScreenAppBundleId {
             return
         }
-        refreshAndLayout(screenIsDefinitelyUnlocked: false)
+        let notifName = notification.name.rawValue
+        Task { @MainActor in
+            if !TrayMenuModel.shared.isEnabled { return }
+            if notifName == NSWorkspace.didActivateApplicationNotification.rawValue {
+                runRefreshSession(.globalObserver(notifName), screenIsDefinitelyUnlocked: false, optimisticallyPreLayoutWorkspaces: true)
+            } else {
+                runRefreshSession(.globalObserver(notifName), screenIsDefinitelyUnlocked: false)
+            }
+        }
     }
 
     private static func onHideApp(_ notification: Notification) {
-        refreshSession(screenIsDefinitelyUnlocked: false) {
-            if TrayMenuModel.shared.isEnabled && config.automaticallyUnhideMacosHiddenApps {
-                if let w = prevFocus?.windowOrNil,
-                   w.macAppUnsafe.nsApp.isHidden,
-                   // "Hide others" (cmd-alt-h) -> don't force focus
-                   // "Hide app" (cmd-h) -> force focus
-                   MacApp.allAppsMap.values.filter({ $0.nsApp.isHidden }).count == 1
-                {
-                    // Force focus
-                    _ = w.focusWindow()
-                    _ = w.nativeFocus()
-                }
-                for app in MacApp.allAppsMap.values {
-                    app.nsApp.unhide()
+        check(Thread.isMainThread)
+        let notifName = notification.name.rawValue
+        Task { @MainActor in
+            guard let token: RunSessionGuard = .isServerEnabled else { return }
+            try await runSession(.globalObserver(notifName), token) {
+                if config.automaticallyUnhideMacosHiddenApps {
+                    if let w = prevFocus?.windowOrNil,
+                       w.macAppUnsafe.nsApp.isHidden,
+                       // "Hide others" (cmd-alt-h) -> don't force focus
+                       // "Hide app" (cmd-h) -> force focus
+                       MacApp.allAppsMap.values.filter({ $0.nsApp.isHidden }).count == 1
+                    {
+                        // Force focus
+                        _ = w.focusWindow()
+                        w.nativeFocus()
+                    }
+                    for app in MacApp.allAppsMap.values {
+                        app.nsApp.unhide()
+                    }
                 }
             }
         }
     }
 
+    @MainActor
     static func initObserver() {
         let nc = NSWorkspace.shared.notificationCenter
         nc.addObserver(forName: NSWorkspace.didLaunchApplicationNotification, object: nil, queue: .main, using: onNotif)
         nc.addObserver(forName: NSWorkspace.didActivateApplicationNotification, object: nil, queue: .main, using: onNotif)
         nc.addObserver(forName: NSWorkspace.didHideApplicationNotification, object: nil, queue: .main, using: onHideApp)
         nc.addObserver(forName: NSWorkspace.didUnhideApplicationNotification, object: nil, queue: .main, using: onNotif)
-        nc.addObserver(forName: NSWorkspace.didDeactivateApplicationNotification, object: nil, queue: .main, using: onNotif)
         nc.addObserver(forName: NSWorkspace.activeSpaceDidChangeNotification, object: nil, queue: .main, using: onNotif)
         nc.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main, using: onNotif)
 
-        NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseUp]) { _ in // todo reduce number of refreshSession
-            resetClosedWindowsCache()
-            resetManipulatedWithMouseIfPossible()
-            let mouseLocation = mouseLocation
-            let clickedMonitor = mouseLocation.monitorApproximation
-            let focus = focus
-            switch () {
-                // Detect clicks on desktop of different monitors
-                case _ where clickedMonitor.activeWorkspace != focus.workspace:
-                    _ = refreshSession(screenIsDefinitelyUnlocked: true) {
-                        clickedMonitor.activeWorkspace.focusWorkspace()
-                    }
-                // Detect close button clicks for unfocused windows
-                case _ where  focus.windowOrNil?.getRect()?.contains(mouseLocation) == false: // todo replace getRect with preflushRect when it later becomes available
-                    refreshAndLayout(screenIsDefinitelyUnlocked: true)
-                default:
-                    break
+        NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp) { _ in
+            // todo reduce number of refreshSession in the callback
+            //  resetManipulatedWithMouseIfPossible might call its own refreshSession
+            //  The end of the callback calls refreshSession
+            Task { @MainActor in
+                guard let token: RunSessionGuard = .isServerEnabled else { return }
+                resetClosedWindowsCache()
+                try await resetManipulatedWithMouseIfPossible()
+                let mouseLocation = mouseLocation
+                let clickedMonitor = mouseLocation.monitorApproximation
+                switch () {
+                    // Detect clicks on desktop of different monitors
+                    case _ where clickedMonitor.activeWorkspace != focus.workspace:
+                        _ = try await runSession(.globalObserverLeftMouseUp, token) {
+                            clickedMonitor.activeWorkspace.focusWorkspace()
+                        }
+                    // Detect close button clicks for unfocused windows. Yes, kAXUIElementDestroyedNotification is that unreliable
+                    //  And trigger new window detection that could be delayed due to mouseDown event
+                    default:
+                        runRefreshSession(.globalObserverLeftMouseUp, screenIsDefinitelyUnlocked: true)
+                }
             }
         }
     }

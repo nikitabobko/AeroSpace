@@ -2,45 +2,58 @@ import AppKit
 import Common
 
 class Window: TreeNode, Hashable {
-    let windowId: UInt32
-    let app: AbstractApp
-    override var parent: NonLeafTreeNodeObject { super.parent ?? errorT("Windows always have parent") }
+    nonisolated let windowId: UInt32 // todo nonisolated keyword is no longer necessary?
+    let app: any AbstractApp
+    override var parent: NonLeafTreeNodeObject { super.parent ?? dieT("Windows always have parent") }
     var parentOrNilForTests: NonLeafTreeNodeObject? { super.parent }
     var lastFloatingSize: CGSize?
     var isFullscreen: Bool = false
     var noOuterGapsInFullscreen: Bool = false
     var layoutReason: LayoutReason = .standard
 
-    init(id: UInt32, _ app: AbstractApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
+    @MainActor
+    init(id: UInt32, _ app: any AbstractApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
         self.windowId = id
         self.app = app
         self.lastFloatingSize = lastFloatingSize
         super.init(parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }
 
-    static func get(byId windowId: UInt32) -> Window? {
+    @MainActor static func get(byId windowId: UInt32) -> Window? { // todo make non optional
         isUnitTest
             ? Workspace.all.flatMap { $0.allLeafWindowsRecursive }.first(where: { $0.windowId == windowId })
             : MacWindow.allWindowsMap[windowId]
     }
 
-    func close() -> Bool {
-        error("Not implemented")
-    }
+    @MainActor
+    func closeAxWindow() { die("Not implemented") }
 
-    func hash(into hasher: inout Hasher) {
+    nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(windowId)
     }
 
-    func getTopLeftCorner() -> CGPoint? { error("Not implemented") }
-    func getSize() -> CGSize? { error("Not implemented") }
-    var title: String { error("Not implemented") }
-    var isMacosFullscreen: Bool { false }
-    var isMacosMinimized: Bool { false } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
-    var isHiddenInCorner: Bool { error("Not implemented") }
-    func setSize(_ size: CGSize) -> Bool { error("Not implemented") }
+    @MainActor // todo can be dropped in future Swift versions?
+    func getAxTopLeftCorner() async throws -> CGPoint? { die("Not implemented") }
+    @MainActor // todo swift is stupid
+    func getAxSize() async throws -> CGSize? { die("Not implemented") }
+    @MainActor // todo swift is stupid
+    var title: String { get async throws { die("Not implemented") } }
+    @MainActor // todo swift is stupid
+    var isMacosFullscreen: Bool { get async throws { false } }
+    @MainActor // todo swift is stupid
+    var isMacosMinimized: Bool { get async throws { false } } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
+    var isHiddenInCorner: Bool { die("Not implemented") }
+    @MainActor
+    func nativeFocus() { die("Not implemented") }
+    @MainActor // todo can be dropped in future Swift versions
+    func getAxRect() async throws -> Rect? { die("Not implemented") }
+    @MainActor // todo can be dropped in future Swift versions
+    func getCenter() async throws -> CGPoint? { try await getAxRect()?.center }
 
-    func setTopLeftCorner(_ point: CGPoint) -> Bool { error("Not implemented") }
+    func setAxTopLeftCorner(_ point: CGPoint) { die("Not implemented") }
+    func setAxFrameDuringTermination(_ topLeft: CGPoint?, _ size: CGSize?) async throws { die("Not implemented") }
+    func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) { die("Not implemented") }
+    func setSizeAsync(_ size: CGSize) { die("Not implemented") }
 }
 
 enum LayoutReason: Equatable {
@@ -53,20 +66,12 @@ extension Window {
     var isFloating: Bool { parent is Workspace } // todo drop. It will be a source of bugs when sticky is introduced
 
     @discardableResult
+    @MainActor
     func bindAsFloatingWindow(to workspace: Workspace) -> BindingData? {
         bind(to: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
     }
 
     var ownIndex: Int { ownIndexOrNil! }
-
-    func setFrame(_ topLeft: CGPoint?, _ size: CGSize?) -> Bool {
-        // Set size and then the position. The order is important https://github.com/nikitabobko/AeroSpace/issues/143
-        var result: Bool = true
-        if let size { result = setSize(size) && result }
-        if let topLeft { result = setTopLeftCorner(topLeft) && result }
-        if let size { result = setSize(size) && result }
-        return result
-    }
 
     func asMacWindow() -> MacWindow { self as! MacWindow }
 }

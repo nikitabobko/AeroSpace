@@ -10,9 +10,6 @@ _______or_prefix="      OR:"
 ____strip_prefix="   "
 
 triple_quote='"""'
-nl=$'\n'
-sed_insert="i \\$nl"
-sed_append="a \\$nl"
 
 cat << EOF > $out_file
 // FILE IS GENERATED FROM docs/aerospace-*.adoc files
@@ -29,7 +26,7 @@ for file in docs/aerospace-*.adoc; do
         sed "1   s/^$aerospace_prefix/$____usage_prefix/" | \
         sed "2,$ s/^$aerospace_prefix/$_______or_prefix/" | \
         sed     "s/^$____strip_prefix//" | \
-        sed "1 ${sed_insert}let ${subcommand}_help_generated = $triple_quote$nl" | \
-        sed "\$ ${sed_append}$triple_quote$nl" | \
+        sed "1 s/^/let ${subcommand}_help_generated = $triple_quote\n/" | \
+        sed "\$ s/$/\n${triple_quote}/" | \
         sed '2,$ s/^/    /' >> $out_file
 done

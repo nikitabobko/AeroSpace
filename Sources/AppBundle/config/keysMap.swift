@@ -18,6 +18,7 @@ private let p = "p"
 private let leftSquareBracket = "leftSquareBracket"
 private let rightSquareBracket = "rightSquareBracket"
 private let backslash = "backslash"
+private let sectionSign = "sectionSign"
 
 private let a = "a"
 private let s = "s"
@@ -46,10 +47,24 @@ func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: Key] {
     return switch layout {
         case .qwerty: keyNotationToKeyCode
         case .dvorak: dvorakMap
+        case .colemak: colemakMap
     }
 }
 
+extension Key: @unchecked @retroactive Sendable {}
+
 let keyNotationToKeyCode: [String: Key] = [
+    sectionSign: .section,
+    "0": .zero,
+    "1": .one,
+    "2": .two,
+    "3": .three,
+    "4": .four,
+    "5": .five,
+    "6": .six,
+    "7": .seven,
+    "8": .eight,
+    "9": .nine,
     minus: .minus,
     equal: .equal,
 
@@ -90,17 +105,6 @@ let keyNotationToKeyCode: [String: Key] = [
     period: .period,
     slash: .slash,
 
-    "0": .zero,
-    "1": .one,
-    "2": .two,
-    "3": .three,
-    "4": .four,
-    "5": .five,
-    "6": .six,
-    "7": .seven,
-    "8": .eight,
-    "9": .nine,
-
     "keypad0": .keypad0,
     "keypad1": .keypad1,
     "keypad2": .keypad2,
@@ -119,6 +123,12 @@ let keyNotationToKeyCode: [String: Key] = [
     "keypadMinus": .keypadMinus,
     "keypadMultiply": .keypadMultiply,
     "keypadPlus": .keypadPlus,
+
+    "pageUp": .pageUp,
+    "pageDown": .pageDown,
+    "home": .home,
+    "end": .end,
+    "forwardDelete": .forwardDelete,
 
     "f1": .f1,
     "f2": .f2,
@@ -196,6 +206,45 @@ private let dvorakMap: [String: Key] = keyNotationToKeyCode + [
     z: .slash,
 ]
 
+private let colemakMap: [String: Key] = keyNotationToKeyCode + [
+    q: .q,
+    w: .w,
+    f: .e,
+    p: .r,
+    g: .t,
+    j: .y,
+    l: .u,
+    u: .i,
+    y: .o,
+    semicolon: .p,
+    leftSquareBracket: .leftBracket,
+    rightSquareBracket: .rightBracket,
+    backslash: .backslash,
+
+    a: .a,
+    r: .s,
+    s: .d,
+    t: .f,
+    d: .g,
+    h: .h,
+    n: .j,
+    e: .k,
+    i: .l,
+    o: .semicolon,
+    quote: .quote,
+
+    z: .z,
+    x: .x,
+    c: .c,
+    v: .v,
+    b: .b,
+    k: .n,
+    m: .m,
+    comma: .comma,
+    period: .period,
+    slash: .slash,
+]
+
 let modifiersMap: [String: NSEvent.ModifierFlags] = [
     "shift": .shift,
     "alt": .option,
@@ -243,6 +292,7 @@ extension Key {
             case .x: "x"
             case .y: "y"
             case .z: "z"
+
             case .zero: "0"
             case .one: "1"
             case .two: "2"
@@ -253,6 +303,7 @@ extension Key {
             case .seven: "7"
             case .eight: "8"
             case .nine: "9"
+
             case .period: "period"
             case .quote: "quote"
             case .leftBracket: "leftSquareBracket"
@@ -275,6 +326,10 @@ extension Key {
             case .downArrow: "down"
             case .upArrow: "up"
             case .rightArrow: "right"
+            case .escape: "esc"
+            case .delete: "backspace"
+            case .section: "sectionSign"
+
             case .f1: "f1"
             case .f2: "f2"
             case .f3: "f3"
@@ -295,6 +350,7 @@ extension Key {
             case .f18: "f18"
             case .f19: "f19"
             case .f20: "f20"
+
             case .keypad0: "keypad0"
             case .keypad1: "keypad1"
             case .keypad2: "keypad2"
@@ -313,8 +369,6 @@ extension Key {
             case .keypadMinus: "keypadMinus"
             case .keypadMultiply: "keypadMultiply"
             case .keypadPlus: "keypadPlus"
-            case .escape: "esc"
-            case .delete: "backspace"
 
             // wtf
             case .command: "cmd"

@@ -15,7 +15,7 @@ public struct VolumeCmdArgs: CmdArgs {
     public var action: Lateinit<VolumeAction> = .uninitialized
 }
 
-public enum VolumeAction: Equatable {
+public enum VolumeAction: Equatable, Sendable {
     case up, down, muteToggle, muteOn, muteOff
     case set(Int)
 

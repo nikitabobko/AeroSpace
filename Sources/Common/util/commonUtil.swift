@@ -4,45 +4,94 @@ import Foundation
 
 public let unixUserName = NSUserName()
 public let mainModeId = "main"
-private var recursionDetectorDuringFailure: Bool = false
 
-public func errorT<T>(
-    _ message: String = "",
-    file: String = #file,
+@TaskLocal
+public var refreshSessionEventForDebug: RefreshSessionEvent? = nil
+
+@TaskLocal
+private var recursionDetectorDuringTermination = false
+
+public func dieT<T>(
+    _ __message: String = "",
+    file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function
 ) -> T {
+    let _message = __message.contains("\n") ? "\n" + __message.indent() : __message
+    let thread = Thread.current
     let message =
         """
         Please report to:
-            https://github.com/nikitabobko/AeroSpace/issues/new
+            https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs
             Please describe what you did to trigger this error
 
-        Message: \(message)
+        Message: \(_message)
         Version: \(aeroSpaceAppVersion)
         Git hash: \(gitHash)
+        refreshSessionEvent: \(refreshSessionEventForDebug.optionalToPrettyString())
+        Date: \(Date.now)
+        Thread name: \(thread.name.optionalToPrettyString())
+        Is main thread: \(thread.isMainThread)
+        axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken.optionalToPrettyString())
+        macOS version: \(ProcessInfo().operatingSystemVersionString)
         Coordinate: \(file):\(line):\(column) \(function)
-        recursionDetectorDuringFailure: \(recursionDetectorDuringFailure)
+        recursionDetectorDuringTermination: \(recursionDetectorDuringTermination)
         cli: \(isCli)
+        Monitor count: \(NSScreen.screens.count)
+        Displays have separate spaces: \(NSScreen.screensHaveSeparateSpaces)
 
         Stacktrace:
         \(getStringStacktrace())
         """
     if !isUnitTest && isServer {
         showMessageInGui(
-            filenameIfConsoleApp: recursionDetectorDuringFailure
+            filenameIfConsoleApp: recursionDetectorDuringTermination
                 ? "aerospace-runtime-error-recursion.txt"
                 : "aerospace-runtime-error.txt",
             title: "AeroSpace Runtime Error",
             message: message
         )
     }
-    if !recursionDetectorDuringFailure {
-        recursionDetectorDuringFailure = true
-        terminationHandler.beforeTermination()
+    if !recursionDetectorDuringTermination {
+        let semaphore = DispatchSemaphore(value: 0)
+        Task {
+            defer { semaphore.signal() }
+            try await $recursionDetectorDuringTermination.withValue(true) {
+                try await terminationHandler.beforeTermination()
+            }
+        }
+        semaphore.wait()
     }
     fatalError("\n" + message)
+}
+
+public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
+    case globalObserver(String)
+    case globalObserverLeftMouseUp
+    case menuBarButton
+    case hotkeyBinding
+    case startup
+    case socketServer
+    case resetManipulatedWithMouse
+    case ax(String)
+
+    public var isStartup: Bool {
+        if case .startup = self { return true } else { return false }
+    }
+
+    public var description: String {
+        switch self {
+            case .ax(let str): "ax(\(str))"
+            case .globalObserver(let str): "globalObserver(\(str))"
+            case .globalObserverLeftMouseUp: "globalObserverLeftMouseUp"
+            case .hotkeyBinding: "hotkeyBinding"
+            case .menuBarButton: "menuBarButton"
+            case .resetManipulatedWithMouse: "resetManipulatedWithMouse"
+            case .socketServer: " socketServer"
+            case .startup: "startup"
+        }
+    }
 }
 
 public func throwT<T>(_ error: Error) throws -> T {
@@ -52,31 +101,31 @@ public func throwT<T>(_ error: Error) throws -> T {
 public func printStacktrace() { print(getStringStacktrace()) }
 public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(separator: "\n") }
 
-@inlinable public func error(
+@inlinable public func die(
     _ message: String = "",
-    file: String = #file,
+    file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function
 ) -> Never {
-    errorT(message, file: file, line: line, column: column, function: function)
+    dieT(message, file: file, line: line, column: column, function: function)
 }
 
 public func check(
     _ condition: Bool,
     _ message: @autoclosure () -> String = "",
-    file: String = #file,
+    file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function
 ) {
     if !condition {
-        error(message(), file: file, line: line, column: column, function: function)
+        die(message(), file: file, line: line, column: column, function: function)
     }
 }
 
 @inlinable public func tryCatch<T>(
-    file: String = #file,
+    file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,
@@ -147,4 +196,15 @@ public func cliError(_ message: String = "") -> Never {
 public func cliErrorT<T>(_ message: String = "") -> T {
     printStderr(message)
     exit(1)
+}
+
+@inlinable
+public func allowOnlyCancellationError<T>(isolation: isolated (any Actor)? = #isolation, _ block: () async throws -> sending T) async throws -> sending T {
+    do {
+        return try await block()
+    } catch let e as CancellationError {
+        throw e
+    } catch {
+        die("throws must only be used for CancellationError")
+    }
 }

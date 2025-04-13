@@ -1,19 +1,25 @@
 # Contributing
 
-Look who wants to contribute! Nice to see you here, let me show you what you can do :)
+## Users cannot create GitHub Issues directly
 
-## Report Issues
+Unfortunately, AeroSpace project doesn't openly accept Issues.
 
-There are only two types of issues:
-* Feature proposal
-* Bug report
+The submitted Issues are often either obvious duplicates, environmental problems, or configuration errors by the users themselves.
+For a hobby project, I don't have enough time and energy to process every such submitted Issue.
 
-Feature proposal is not a feature request/idea but a well-defined and complete proposal of feature which is clear how to implement.
-If you're unsure you can brainstorm your ideas in [#feature-ideas](https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas) in GitHub Discusssions.
+**As an alternative, you can start a Discussion on GitHub discussions forum** https://github.com/nikitabobko/AeroSpace/discussions.
+Any Discussion which clearly identifies a problem and can be confirmed or reproduced will be converted to an Issue by maintainers.
+
+Thank you for your understanding.
+
+## Submit bugs and feature ideas
+
+Submit bugs to https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs
+Submit feature ideas to https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas
 
 Rules:
-* Search for duplicates before reporting new issues
-* Vote for issues that you find useful with 👍 reaction
+* Search for duplicates (in GitHub Issues and Discusssions) before creating a new discussion
+* Upvote for issues/discussions that you find useful
 
 **Consider including in bug reports**
 
@@ -28,19 +34,20 @@ Rules:
 **Consider including in feature request**
 
 * Use cases!
+* Did I mention use cases?
 * Alternative approaches
 * Links to docs of similar features in other window managers that you know
 * Synopsis, if you suggest a new command
-* Alternative command names, if you suggest a new command
+* Mental model description
 
-## Discuss issues
+## Discuss issues/discussions
 
-One of the most useful thing you can do is to discuss issues.
+One of the most useful thing you can do is to discuss issues/discussions.
 
 Imagine that you were assigned to fix the issue.
 Try to suggest the best approach and design on how to fix the issue.
 Suggest the synopsis/config format, reason in written form what is good about it, what is bad about it, what are the alternatives, etc.
-Basically, see the "Prior discussion" section in [Submit Pull Requests](#submit-pull-requests) :)
+Basically, see the "Prior discussion" section in [Submit Pull Requests](#submit-pull-requests).
 
 If you have something to contribute to the conversation. Do it!
 
@@ -54,9 +61,11 @@ You can take a look at the following issues:
 
 ## Submit Pull Requests
 
+Small and trivial improvements can be submitted without any discussion.
+
 **Prior discussion**. For non-trivial changes (such as user visible changes), it's always better to ask for prior approval and discuss what you want to do before doing it.
 
-Please create an issue (or write a comment in existing one) and describe you want to do.
+Please create a new discussion and describe you want to do.
 
 Consider including
 
@@ -69,8 +78,6 @@ Consider including
 * etc.
 
 Discussing that you want to do something doesn't put any obligations on you. If you don't want to start the discussion just because you're afraid that you won't do it. Don't be afraid!
-
-Small and trivial improvements can be submitted without any discussion.
 
 **Commit hygiene**. Each submitted commit must be atomic change (a Pull Request may contain several commits). Don't introduce new functional changes together with refactorings in the same commit.
 

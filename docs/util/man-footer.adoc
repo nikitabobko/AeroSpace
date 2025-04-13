@@ -5,7 +5,9 @@
 
 == BUGS
 
-Bugs can be reported to https://github.com/nikitabobko/AeroSpace/issues/new
+Bugs can be reported to https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs
+
+Maintainers will move verified bugs to https://github.com/nikitabobko/AeroSpace/issues
 
 == License
 

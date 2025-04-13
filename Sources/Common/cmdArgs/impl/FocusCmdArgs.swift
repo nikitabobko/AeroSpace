@@ -41,12 +41,13 @@ public struct FocusCmdArgs: CmdArgs {
         self.dfsIndex = dfsIndex
     }
 
-    public enum Boundaries: String, CaseIterable, Equatable {
+    public enum Boundaries: String, CaseIterable, Equatable, Sendable {
         case workspace
         case allMonitorsUnionFrame = "all-monitors-outer-frame"
     }
-    public enum WhenBoundariesCrossed: String, CaseIterable, Equatable {
+    public enum WhenBoundariesCrossed: String, CaseIterable, Equatable, Sendable {
         case stop = "stop"
+        case fail = "fail"
         case wrapAroundTheWorkspace = "wrap-around-the-workspace"
         case wrapAroundAllMonitors = "wrap-around-all-monitors"
     }
@@ -69,7 +70,7 @@ public extension FocusCmdArgs {
         if let dfsIndex {
             return .dfsIndex(dfsIndex)
         }
-        error("Parser invariants are broken")
+        die("Parser invariants are broken")
     }
 
     var boundaries: Boundaries { rawBoundaries ?? .workspace }

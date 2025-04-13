@@ -1,18 +1,19 @@
 import AppKit
 import Common
 
-protocol Command: AeroAny, Equatable {
+protocol Command: AeroAny, Equatable, Sendable {
     associatedtype T where T: CmdArgs
     var args: T { get }
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool
+    @MainActor
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool
 }
 
 extension Command {
-    static func == (lhs: any Command, rhs: any Command) -> Bool {
+    static func == (lhs: Self, rhs: Self) -> Bool {
         return lhs.args.equals(rhs.args)
     }
 
-    func equals(_ other: any Command) -> Bool {
+    nonisolated func equals(_ other: any Command) -> Bool {
         (other as? Self).flatMap { self == $0 } ?? false
     }
 }
@@ -22,10 +23,10 @@ extension Command {
 }
 
 extension Command {
+    @MainActor
     @discardableResult
-    func run(_ env: CmdEnv, _ stdin: CmdStdin) -> CmdResult {
-        check(Thread.current.isMainThread)
-        return [self].runCmdSeq(env, stdin)
+    func run(_ env: CmdEnv, _ stdin: CmdStdin) async throws -> CmdResult {
+        return try await [self].runCmdSeq(env, stdin)
     }
 
     var isExec: Bool { self is ExecAndForgetCommand }
@@ -37,21 +38,20 @@ extension Command {
 // 3. on-window-detected callback
 // 4. Tray icon buttons
 extension [Command] {
-    func runCmdSeq(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
+    @MainActor
+    func runCmdSeq(_ env: CmdEnv, _ io: sending CmdIo) async throws -> Bool {
         var isSucc = true
         for command in self {
-            if TrayMenuModel.shared.isEnabled || isAllowedToRunWhenDisabled(command) {
-                isSucc = command.run(env, io) && isSucc
-                refreshModel()
-            }
+            isSucc = try await command.run(env, io) && isSucc
+            try await refreshModel()
         }
         return isSucc
     }
 
-    func runCmdSeq(_ env: CmdEnv, _ stdin: CmdStdin) -> CmdResult {
+    @MainActor
+    func runCmdSeq(_ env: CmdEnv, _ stdin: CmdStdin) async throws -> CmdResult {
         let io: CmdIo = CmdIo(stdin: stdin)
-        let isSucc = runCmdSeq(env, io)
+        let isSucc = try await runCmdSeq(env, io)
         return CmdResult(stdout: io.stdout, stderr: io.stderr, exitCode: isSucc ? 0 : 1)
     }
 }

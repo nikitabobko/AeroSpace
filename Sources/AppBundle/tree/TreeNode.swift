@@ -17,7 +17,9 @@ class TreeNode: Equatable {
     // - drag window with mouse
     // - move-mouse command
     var lastAppliedLayoutPhysicalRect: Rect? = nil // with real inner gaps
+    private var unboundStacktrace: String? = nil
 
+    @MainActor
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
         self.adaptiveWeight = adaptiveWeight
         bind(to: parent, adaptiveWeight: adaptiveWeight, index: index)
@@ -29,36 +31,38 @@ class TreeNode: Equatable {
 
     /// See: ``getWeight(_:)``
     func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {
-        guard let parent else { error("Can't change weight if TreeNode doesn't have parent") }
+        guard let parent else { die("Can't change weight if TreeNode doesn't have parent") }
         switch getChildParentRelation(child: self, parent: parent) {
             case .tiling(let parent):
                 if parent.orientation != targetOrientation {
-                    error("You can't change \(targetOrientation) weight of nodes located in \(parent.orientation) container")
+                    die("You can't change \(targetOrientation) weight of nodes located in \(parent.orientation) container")
                 }
                 if parent.layout != .tiles {
-                    error("Weight can be changed only for nodes whose parent has 'tiles' layout")
+                    die("Weight can be changed only for nodes whose parent has 'tiles' layout")
                 }
                 adaptiveWeight = newValue
             default:
-                error("Can't change weight")
+                die("Can't change weight")
         }
     }
 
     /// Weight itself doesn't make sense. The parent container controls semantics of weight
+    @MainActor
     func getWeight(_ targetOrientation: Orientation) -> CGFloat {
-        guard let parent else { error("Weight doesn't make sense for containers without parent") }
+        guard let parent else { die("Weight doesn't make sense for containers without parent") }
         return switch getChildParentRelation(child: self, parent: parent) {
             case .tiling(let parent):
                 parent.orientation == targetOrientation ? adaptiveWeight : parent.getWeight(targetOrientation)
             case .rootTilingContainer: parent.getWeight(targetOrientation)
-            case .floatingWindow, .macosNativeFullscreenWindow: errorT("Weight doesn't make sense for floating windows")
-            case .macosNativeMinimizedWindow: errorT("Weight doesn't make sense for minimized windows")
-            case .macosPopupWindow: errorT("Weight doesn't make sense for popup windows")
-            case .macosNativeHiddenAppWindow: errorT("Weight doesn't make sense for windows of hidden apps")
-            case .shimContainerRelation: errorT("Weight doesn't make sense for stub containers")
+            case .floatingWindow, .macosNativeFullscreenWindow: dieT("Weight doesn't make sense for floating windows")
+            case .macosNativeMinimizedWindow: dieT("Weight doesn't make sense for minimized windows")
+            case .macosPopupWindow: dieT("Weight doesn't make sense for popup windows")
+            case .macosNativeHiddenAppWindow: dieT("Weight doesn't make sense for windows of hidden apps")
+            case .shimContainerRelation: dieT("Weight doesn't make sense for stub containers")
         }
     }
 
+    @MainActor
     @discardableResult
     func bind(to newParent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) -> BindingData? {
         let result = unbindIfBound()
@@ -70,7 +74,7 @@ class TreeNode: Equatable {
         if adaptiveWeight == WEIGHT_AUTO {
             self.adaptiveWeight = switch relation {
                 case .tiling(let newParent):
-                    newParent.children.sumOf { $0.getWeight(newParent.orientation) }.div(newParent.children.count) ?? 1
+                    CGFloat(newParent.children.sumOf { $0.getWeight(newParent.orientation) }).div(newParent.children.count) ?? 1
                 case .floatingWindow, .macosNativeFullscreenWindow,
                      .rootTilingContainer, .macosNativeMinimizedWindow,
                      .shimContainerRelation, .macosPopupWindow, .macosNativeHiddenAppWindow:
@@ -81,6 +85,7 @@ class TreeNode: Equatable {
         }
         newParent._children.insert(self, at: index != INDEX_BIND_LAST ? index : newParent._children.count)
         _parent = newParent
+        unboundStacktrace = nil
         // todo consider disabling automatic mru propogation
         // 1. "floating windows" in FocusCommand break the MRU because of that :(
         // 2. Misbehaved apps that abuse real window as popups https://github.com/nikitabobko/AeroSpace/issues/106 (the
@@ -92,9 +97,10 @@ class TreeNode: Equatable {
     private func unbindIfBound() -> BindingData? {
         guard let _parent else { return nil }
 
-        let index = _parent._children.remove(element: self) ?? errorT("Can't find child in its parent")
+        let index = _parent._children.remove(element: self) ?? dieT("Can't find child in its parent")
         check(_parent._mruChildren.remove(self))
         self._parent = nil
+        unboundStacktrace = getStringStacktrace()
 
         return BindingData(parent: _parent, adaptiveWeight: adaptiveWeight, index: index)
     }
@@ -112,10 +118,10 @@ class TreeNode: Equatable {
 
     @discardableResult
     func unbindFromParent() -> BindingData {
-        unbindIfBound() ?? errorT("\(self) is already unbound")
+        unbindIfBound() ?? dieT("\(self) is already unbound. The stacktrace where it was unbound:\n\(unboundStacktrace ?? "nil")")
     }
 
-    static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {
+    nonisolated static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {
         lhs === rhs
     }
 
@@ -126,10 +132,6 @@ class TreeNode: Equatable {
     }
     @discardableResult
     func cleanUserData<T>(key: TreeNodeUserDataKey<T>) -> T? { userData.removeValue(forKey: key.key) as! T? }
-
-    @discardableResult
-    func nativeFocus() -> Bool { error("Not implemented") }
-    func getRect() -> Rect? { error("Not implemented") }
 }
 
 struct TreeNodeUserDataKey<T> {
@@ -154,5 +156,5 @@ class NilTreeNode: TreeNode, NonLeafTreeNodeObject {
     override private init() {
         super.init()
     }
-    static let instance = NilTreeNode()
+    @MainActor static let instance = NilTreeNode()
 }

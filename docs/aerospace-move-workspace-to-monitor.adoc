@@ -2,14 +2,16 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-move-workspace-to-monitor
 // tag::purpose[]
-:manpurpose: Move the focused workspace to the next or previous monitor.
+:manpurpose: Move workspace to monitor targeted by relative direction, by order, or by pattern.
 // end::purpose[]
 
 // =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
+aerospace move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (left|down|up|right)
 aerospace move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (next|prev)
+aerospace move-workspace-to-monitor [-h|--help] [--workspace <workspace>] <monitor-pattern>...
 
 // end::synopsis[]
 
@@ -34,9 +36,16 @@ include::./util/workspace-flag-desc.adoc[]
 // =========================================================== Arguments
 include::./util/conditional-arguments-header.adoc[]
 
+(left|down|up|right)::
+Move workspace to monitor in direction relative to the focused monitor
+
 (next|prev)::
 Move the workspace to next or prev monitor.
 'next' or 'prev' monitor is calculated relative to the monitor `<workspace>` currently belongs to.
+
+<monitor-pattern>::
+Find the first monitor pattern in the list that doesn't describe the current monitor and move the workspace to the appropriate monitor.
+Monitor pattern is the same as in `workspace-to-monitor-force-assignment` config option
 
 // end::body[]
 

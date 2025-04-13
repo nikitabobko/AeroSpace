@@ -5,7 +5,6 @@ struct ReloadConfigCommand: Command {
     let args: ReloadConfigCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         var stdout = ""
         let isOk = reloadConfig(args: args, stdout: &stdout)
         if !stdout.isEmpty {
@@ -15,12 +14,12 @@ struct ReloadConfigCommand: Command {
     }
 }
 
-func reloadConfig(forceConfigUrl: URL? = nil) -> Bool {
+@MainActor func reloadConfig(forceConfigUrl: URL? = nil) -> Bool {
     var devNull = ""
     return reloadConfig(forceConfigUrl: forceConfigUrl, stdout: &devNull)
 }
 
-func reloadConfig(
+@MainActor func reloadConfig(
     args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []),
     forceConfigUrl: URL? = nil,
     stdout: inout String

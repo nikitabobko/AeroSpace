@@ -1,0 +1,35 @@
+= aerospace-list-modes(1)
+include::util/man-attributes.adoc[]
+// tag::purpose[]
+:manpurpose: Print a list of modes currently specified in the configuration
+// end::purpose[]
+:manname: aerospace-list-modes
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace list-modes [-h|--help] [--current]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+See xref:guide.adoc#binding-modes[the guide] for documentation about binding modes
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--current::
+Only print the currently active mode
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

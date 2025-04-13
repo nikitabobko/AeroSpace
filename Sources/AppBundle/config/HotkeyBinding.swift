@@ -4,9 +4,14 @@ import Foundation
 import HotKey
 import TOMLKit
 
-private var hotkeys: [String: HotKey] = [:]
+@MainActor private var hotkeys: [String: HotKey] = [:]
 
-func resetHotKeys() {
+@MainActor func resetHotKeys() {
+    // Explicitly unregister all hotkeys. We cannot always rely on destruction of the HotKey object to trigger
+    // unregistration because we might be running inside a hotkey handler that is keeping its HotKey object alive.
+    for (_, key) in hotkeys {
+        key.isEnabled = false
+    }
     hotkeys = [:]
 }
 
@@ -21,16 +26,17 @@ extension HotKey {
     }
 }
 
-var activeMode: String? = mainModeId
-func activateMode(_ targetMode: String?) {
+@MainActor var activeMode: String? = mainModeId
+@MainActor func activateMode(_ targetMode: String?) {
     let targetBindings = targetMode.flatMap { config.modes[$0] }?.bindings ?? [:]
     for binding in targetBindings.values where !hotkeys.keys.contains(binding.descriptionWithKeyCode) {
         hotkeys[binding.descriptionWithKeyCode] = HotKey(key: binding.keyCode, modifiers: binding.modifiers, keyDownHandler: {
-            check(Thread.current.isMainThread)
-            if let activeMode {
-                refreshSession(screenIsDefinitelyUnlocked: true) {
-                    _ = config.modes[activeMode]?.bindings[binding.descriptionWithKeyCode]?.commands
-                        .runCmdSeq(.defaultEnv, .emptyStdin)
+            Task {
+                if let activeMode {
+                    try await runSession(.hotkeyBinding, .checkServerIsEnabledOrDie) { () throws in
+                        _ = try await config.modes[activeMode]?.bindings[binding.descriptionWithKeyCode]?.commands
+                            .runCmdSeq(.defaultEnv, .emptyStdin)
+                    }
                 }
             }
         })
@@ -45,7 +51,7 @@ func activateMode(_ targetMode: String?) {
     activeMode = targetMode
 }
 
-struct HotkeyBinding: Equatable {
+struct HotkeyBinding: Equatable, Sendable {
     let modifiers: NSEvent.ModifierFlags
     let keyCode: Key
     let commands: [any Command]
@@ -62,7 +68,7 @@ struct HotkeyBinding: Equatable {
         self.descriptionWithKeyNotation = descriptionWithKeyNotation
     }
 
-    public static func == (lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
+    static func == (lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
         lhs.modifiers == rhs.modifiers &&
             lhs.keyCode == rhs.keyCode &&
             lhs.descriptionWithKeyCode == rhs.descriptionWithKeyCode &&

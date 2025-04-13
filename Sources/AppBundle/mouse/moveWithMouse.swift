@@ -1,24 +1,34 @@
 import AppKit
+import Common
+
+@MainActor
+private var moveWithMouseTask: Task<(), any Error>? = nil
 
 func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
-    if let window = data?.window, TrayMenuModel.shared.isEnabled {
-        moveWithMouseIfTheCase(window)
+    let windowId = ax.containingWindowId()
+    let notif = notif as String
+    Task { @MainActor in
+        guard let token: RunSessionGuard = .isServerEnabled else { return }
+        guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
+            runRefreshSession(.ax(notif), screenIsDefinitelyUnlocked: false)
+            return
+        }
+        moveWithMouseTask?.cancel()
+        moveWithMouseTask = Task {
+            try checkCancellation()
+            try await runSession(.ax(notif), token) {
+                try await moveWithMouse(window)
+            }
+        }
     }
-    refreshAndLayout(screenIsDefinitelyUnlocked: false)
 }
 
-private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
-    if window.isHiddenInCorner || // Don't allow to move windows of hidden workspaces
-        !isLeftMouseButtonPressed ||
-        currentlyManipulatedWithMouseWindowId != nil && window.windowId != currentlyManipulatedWithMouseWindowId ||
-        getNativeFocusedWindow(startup: false) != window
-    {
-        return
-    }
+@MainActor
+private func moveWithMouse(_ window: Window) async throws { // todo cover with tests
     resetClosedWindowsCache()
     switch window.parent.cases {
         case .workspace:
-            moveFloatingWindow(window)
+            try await moveFloatingWindow(window)
         case .tilingContainer:
             moveTilingWindow(window)
         case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
@@ -27,13 +37,15 @@ private func moveWithMouseIfTheCase(_ window: Window) { // todo cover with tests
     }
 }
 
-private func moveFloatingWindow(_ window: Window) {
-    guard let targetWorkspace = window.getCenter()?.monitorApproximation.activeWorkspace else { return }
+@MainActor
+private func moveFloatingWindow(_ window: Window) async throws {
+    guard let targetWorkspace = try await window.getCenter()?.monitorApproximation.activeWorkspace else { return }
     if targetWorkspace != window.parent {
         window.bindAsFloatingWindow(to: targetWorkspace)
     }
 }
 
+@MainActor
 private func moveTilingWindow(_ window: Window) {
     currentlyManipulatedWithMouseWindowId = window.windowId
     window.lastAppliedLayoutPhysicalRect = nil
@@ -58,6 +70,7 @@ private func moveTilingWindow(_ window: Window) {
     }
 }
 
+@MainActor
 func swapWindows(_ window1: Window, _ window2: Window) {
     if window1 == window2 { return }
 
@@ -77,6 +90,7 @@ func swapWindows(_ window1: Window, _ window2: Window) {
 }
 
 extension CGPoint {
+    @MainActor
     func findIn(tree: TilingContainer, virtual: Bool) -> Window? {
         let point = self
         let target: TreeNode? = switch tree.layout {
@@ -88,7 +102,7 @@ extension CGPoint {
                 tree.mostRecentChild
         }
         guard let target else { return nil }
-        return switch target.tilingTreeNodeCasesOrThrow() {
+        return switch target.tilingTreeNodeCasesOrDie() {
             case .window(let window): window
             case .tilingContainer(let container): findIn(tree: container, virtual: virtual)
         }

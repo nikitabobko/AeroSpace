@@ -2,10 +2,11 @@
 import Common
 import XCTest
 
+@MainActor
 final class FlattenWorkspaceTreeCommandTest: XCTestCase {
-    override func setUpWithError() throws { setUpWorkspacesForTests() }
+    override func setUp() async throws { setUpWorkspacesForTests() }
 
-    func testSimple() {
+    func testSimple() async throws {
         let workspace = Workspace.get(byName: name).apply {
             $0.rootTilingContainer.apply {
                 TestWindow.new(id: 1, parent: $0)
@@ -17,7 +18,7 @@ final class FlattenWorkspaceTreeCommandTest: XCTestCase {
         }
         assertEquals(workspace.focusWorkspace(), true)
 
-        FlattenWorkspaceTreeCommand().run(.defaultEnv, .emptyStdin)
+        try await FlattenWorkspaceTreeCommand(args: FlattenWorkspaceTreeCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin)
         workspace.normalizeContainers()
         assertEquals(workspace.layoutDescription, .workspace([.h_tiles([.window(1), .window(2)]), .window(3)]))
     }

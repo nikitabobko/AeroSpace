@@ -1,15 +1,17 @@
 import Common
 
-class AbstractApp: Hashable {
-    let pid: Int32
-    let id: String?
+protocol AbstractApp: AnyObject, Hashable, AeroAny {
+    var pid: Int32 { get }
+    var bundleId: String? { get }
 
-    init(pid: Int32, id: String?) {
-        self.pid = pid
-        self.id = id
-    }
+    @MainActor func getFocusedWindow() async throws -> Window?
+    var name: String? { get }
+    var execPath: String? { get }
+    var bundlePath: String? { get }
+}
 
-    static func == (lhs: AbstractApp, rhs: AbstractApp) -> Bool {
+extension AbstractApp {
+    static func == (lhs: Self, rhs: Self) -> Bool {
         if lhs.pid == rhs.pid {
             check(lhs === rhs)
             return true
@@ -22,18 +24,8 @@ class AbstractApp: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(pid)
     }
-
-    func getFocusedWindow(startup: Bool) -> Window? { error("Not implemented") }
-    var name: String? { nil }
-    var execPath: String? { nil }
-    var bundlePath: String? { nil }
-    func detectNewWindowsAndGetAll(startup: Bool) -> [Window] { error("Not implemented") }
-}
-
-extension AbstractApp {
-    func asMacApp() -> MacApp { self as! MacApp }
 }
 
 extension Window {
-    var macAppUnsafe: MacApp { app.asMacApp() }
+    var macAppUnsafe: MacApp { app as! MacApp }
 }

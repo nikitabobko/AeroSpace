@@ -3,7 +3,7 @@ import Common
 enum AeroObj {
     case window(Window)
     case workspace(Workspace)
-    case app(AbstractApp)
+    case app(any AbstractApp)
     case monitor(Monitor)
 
     var kind: AeroObjKind {
@@ -27,7 +27,8 @@ enum PlainInterVar: String, CaseIterable {
 }
 
 extension [AeroObj] {
-    func format(_ format: [StringInterToken]) -> Result<[String], String> {
+    @MainActor
+    func format(_ format: [StringInterToken]) async throws -> Result<[String], String> {
         var cellTable: [[Cell<String>]] = []
         for obj in self {
             var line: [Cell<String>] = []
@@ -41,7 +42,7 @@ extension [AeroObj] {
                     case .literal(let literal):
                         curCell += literal
                     case .interVar(let value):
-                        switch value.expandFormatVar(obj: obj) {
+                        switch try await value.expandFormatVar(obj: obj) {
                             case .success(let expanded): curCell += expanded.toString()
                             case .failure(let error): errors.append(error)
                         }
@@ -75,11 +76,14 @@ enum FormatVar: Equatable {
 
     enum WindowFormatVar: String, Equatable, CaseIterable {
         case windowId = "window-id"
+        case windowIsFullscreen = "window-is-fullscreen"
         case windowTitle = "window-title"
     }
 
     enum WorkspaceFormatVar: String, Equatable, CaseIterable {
         case workspaceName = "workspace"
+        case workspaceFocused = "workspace-is-focused"
+        case workspaceVisible = "workspace-is-visible"
     }
 
     enum AppFormatVar: String, Equatable, CaseIterable {
@@ -98,6 +102,7 @@ enum FormatVar: Equatable {
 }
 
 enum Primitive: Encodable {
+    case bool(Bool)
     case int(Int)
     case int32(Int32)
     case uint32(UInt32)
@@ -105,6 +110,7 @@ enum Primitive: Encodable {
 
     func toString() -> String {
         switch self {
+            case .bool(let x): x.description
             case .int(let x): x.description
             case .int32(let x): x.description
             case .uint32(let x): x.description
@@ -114,6 +120,7 @@ enum Primitive: Encodable {
 
     func encode(to encoder: any Encoder) throws {
         let value: Encodable = switch self {
+            case .bool(let x): x
             case .int(let x): x
             case .int32(let x): x
             case .uint32(let x): x
@@ -148,21 +155,22 @@ private struct Cell<T> {
 }
 
 extension String {
-    func expandFormatVar(obj: AeroObj) -> Result<Primitive, String> {
+    @MainActor
+    func expandFormatVar(obj: AeroObj) async throws -> Result<Primitive, String> {
         let formatVar = self.toFormatVar()
         switch (obj, formatVar) {
             case (_, .none): break
 
             case (.window(let w), .workspace):
-                return w.nodeWorkspace.flatMap(AeroObj.workspace).map(expandFormatVar) ?? .success(.string("NULL-WOKRSPACE"))
+                return try await w.nodeWorkspace.flatMap(AeroObj.workspace).mapAsyncMainActor(expandFormatVar) ?? .success(.string("NULL-WOKRSPACE"))
             case (.window(let w), .monitor):
-                return w.nodeMonitor.flatMap(AeroObj.monitor).map(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
+                return try await w.nodeMonitor.flatMap(AeroObj.monitor).mapAsyncMainActor(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
             case (.window(let w), .app):
-                return expandFormatVar(obj: .app(w.app))
+                return try await expandFormatVar(obj: .app(w.app))
             case (.window(_), .window): break
 
             case (.workspace(let ws), .monitor):
-                return expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitor))
+                return try await expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitor))
             case (.workspace, _): break
 
             case (.app(_), _): break
@@ -172,11 +180,14 @@ extension String {
             case (.window(let w), .window(let f)):
                 return switch f {
                     case .windowId: .success(.uint32(w.windowId))
-                    case .windowTitle: .success(.string(w.title))
+                    case .windowIsFullscreen: .success(.bool(w.isFullscreen))
+                    case .windowTitle: .success(.string(try await w.title))
                 }
             case (.workspace(let w), .workspace(let f)):
                 return switch f {
                     case .workspaceName: .success(.string(w.name))
+                    case .workspaceVisible: .success(.bool(w.isVisible))
+                    case .workspaceFocused: .success(.bool(focus.workspace == w))
                 }
             case (.monitor(let m), .monitor(let f)):
                 return switch f {
@@ -186,7 +197,7 @@ extension String {
                 }
             case (.app(let a), .app(let f)):
                 return switch f {
-                    case .appBundleId: .success(.string(a.id ?? "NULL-APP-BUNDLE-ID"))
+                    case .appBundleId: .success(.string(a.bundleId ?? "NULL-APP-BUNDLE-ID"))
                     case .appName: .success(.string(a.name ?? "NULL-APP-NAME"))
                     case .appPid: .success(.int32(a.pid))
                     case .appExecPath: .success(.string(a.execPath ?? "NULL-APP-EXEC-PATH"))

@@ -1,12 +1,12 @@
 import Common
 
-struct CmdEnv: Copyable { // todo forward env from cli to server
+struct CmdEnv: ConvenienceCopyable { // todo forward env from cli to server
     var windowId: UInt32?
     var workspaceName: String?
     var pwd: String?
 
     static var defaultEnv: CmdEnv { CmdEnv(windowId: nil, workspaceName: nil, pwd: nil) }
-    public init(
+    init(
         windowId: UInt32?,
         workspaceName: String?,
         pwd: String?
@@ -23,6 +23,7 @@ struct CmdEnv: Copyable { // todo forward env from cli to server
         }
     }
 
+    @MainActor
     var asMap: [String: String] {
         var result = config.execConfig.envVariables
         if let pwd {
