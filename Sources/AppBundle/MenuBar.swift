@@ -67,7 +67,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
                 .map { workspace in
                     workspace.isFocused ? "[\(workspace.name)]" : workspace.name
                 }
-                .joined(separator: "  ")
+                .joined(separator: " ")
             MonospacedText(workspaceTexts)
         } else {
             MonospacedText("[P]")
