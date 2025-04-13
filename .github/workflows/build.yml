@@ -28,10 +28,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v3
-        with:
-          path: .deps
-          key: ${{ matrix.os }}-${{ runner.arch }}-${{ hashFiles('script/install-dep.sh', 'Gemfile', '.bundle/config') }}
       - uses: nikitabobko/setup-swift@21e0b6448e6aa76937c51d4b172f6cba5e537cde # todo migrate to swiftly
         with:
           swift-version: '6.1.0'
