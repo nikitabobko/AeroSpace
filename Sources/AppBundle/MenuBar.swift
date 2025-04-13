@@ -62,9 +62,15 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
         if viewModel.isEnabled {
-            MonospacedText(viewModel.trayText)
+            let workspaceTexts = viewModel.workspaces
+                .filter { !$0.suffix.isEmpty || $0.isFocused }
+                .map { workspace in
+                    workspace.isFocused ? "[\(workspace.name)]" : workspace.name
+                }
+                .joined(separator: "  ")
+            MonospacedText(workspaceTexts)
         } else {
-            MonospacedText("⏸️")
+            MonospacedText("[P]")
         }
     }
 }
