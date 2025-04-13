@@ -11,7 +11,11 @@ class GlobalObserver {
         let notifName = notification.name.rawValue
         Task { @MainActor in
             if !TrayMenuModel.shared.isEnabled { return }
-            runRefreshSession(.globalObserver(notifName), screenIsDefinitelyUnlocked: false)
+            if notifName == NSWorkspace.didActivateApplicationNotification.rawValue {
+                runRefreshSession(.globalObserver(notifName), screenIsDefinitelyUnlocked: false, optimisticallyPreLayoutWorkspaces: true)
+            } else {
+                runRefreshSession(.globalObserver(notifName), screenIsDefinitelyUnlocked: false)
+            }
         }
     }
 
