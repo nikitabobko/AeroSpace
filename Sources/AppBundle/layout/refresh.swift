@@ -75,7 +75,6 @@ func runSession<T>(
             }
 
             updateTrayText()
-            try await normalizeLayoutReason()
             try await layoutWorkspaces()
             runRefreshSession(event, screenIsDefinitelyUnlocked: false)
             return result
