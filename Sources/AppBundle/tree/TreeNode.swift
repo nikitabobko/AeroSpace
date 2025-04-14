@@ -17,7 +17,7 @@ class TreeNode: Equatable {
     // - drag window with mouse
     // - move-mouse command
     var lastAppliedLayoutPhysicalRect: Rect? = nil // with real inner gaps
-    private var unboundStacktrace: String? = nil
+    var unboundStacktrace: String? = nil
 
     @MainActor
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
