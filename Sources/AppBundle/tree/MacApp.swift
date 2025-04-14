@@ -249,14 +249,26 @@ final class MacApp: AbstractApp {
             }
         }
         return try await withThrowingTaskGroup(of: (pid_t, [UInt32]).self, returning: [MacApp: [UInt32]].self) { group in
+            func refreshTheApp(_ nsApp: NSRunningApplication) {
+                group.addTask { @Sendable @MainActor in
+                    guard let app = try await getOrRegister(nsApp) else { return (nsApp.processIdentifier, []) }
+                    return (nsApp.processIdentifier, try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
+                }
+            }
             // Register new apps
             for nsApp in NSWorkspace.shared.runningApplications {
                 try checkCancellation()
                 if nsApp.activationPolicy == .regular {
-                    group.addTask { @Sendable @MainActor in
-                        guard let app = try await getOrRegister(nsApp) else { return (nsApp.processIdentifier, []) }
-                        return (nsApp.processIdentifier, try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
-                    }
+                    refreshTheApp(nsApp)
+                }
+            }
+            for (_, app) in MacApp.allAppsMap {
+                try checkCancellation()
+                // "About this Mac" window, TouchID, and a lot of other utility windows
+                // We don't monitor them actively as we do for regular apps, but if a window of one of those utility
+                // apps got focused it will end up in allAppsMap
+                if app.nsApp.activationPolicy != .regular {
+                    refreshTheApp(app.nsApp)
                 }
             }
             var result: [MacApp: [UInt32]] = [:]

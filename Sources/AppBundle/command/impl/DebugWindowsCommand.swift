@@ -85,6 +85,8 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
 
     let appPrefix = appId.padding(toLength: windowPrefix.count, withPad: " ", startingAt: 0)
     result.append(try await window.macApp.dumpAppAxInfo(appPrefix))
+    result.append("\(appPrefix) nsApp activationPolicy: \(window.macApp.nsApp.activationPolicy.prettyDescription)")
+    // todo add app bundle version to debug log
 
     return result.joined(separator: "\n")
 }
