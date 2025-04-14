@@ -20,12 +20,13 @@ final class MacWindow: Window {
     static func getOrRegister(windowId: UInt32, macApp: MacApp) async throws -> MacWindow {
         if let existing = allWindowsMap[windowId] { return existing }
         let rect = try await macApp.getAxRect(windowId)
-        let data = try await getBindingDataForNewWindow(
+        let data = try await unbindAndGetBindingDataForNewWindow(
             windowId,
             macApp,
             isStartup
                 ? (rect?.center.monitorApproximation ?? mainMonitor).activeWorkspace
-                : focus.workspace
+                : focus.workspace,
+            window: nil
         )
 
         // atomic synchronous section
@@ -202,29 +203,31 @@ final class MacWindow: Window {
 extension Window {
     @MainActor // todo swift is stupid
     func relayoutWindow(on workspace: Workspace, forceTile: Bool = false) async throws {
-        unbindFromParent() // It's important to unbind to get correct data from getBindingData*
-        let data = forceTile
-            ? getBindingDataForNewTilingWindow(workspace)
-            : try await getBindingDataForNewWindow(self.asMacWindow().windowId, self.asMacWindow().macApp, workspace)
+        let data = if forceTile {
+            unbindAndGetBindingDataForNewTilingWindow(workspace, window: self)
+        } else {
+            try await unbindAndGetBindingDataForNewWindow(self.asMacWindow().windowId, self.asMacWindow().macApp, workspace, window: self)
+        }
         bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
     }
 }
 
-// The function is private because it's "unsafe". It requires the window to be in unbound state
+// The function is private because it's unsafe. It leaves the window in unbound state
 @MainActor // todo swift is stupid
-private func getBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace) async throws -> BindingData {
+private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace, window: Window?) async throws -> BindingData {
     if try await !macApp.isWindowHeuristic(windowId) {
         return BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
     }
     if try await macApp.isDialogHeuristic(windowId) {
         return BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
     }
-    return getBindingDataForNewTilingWindow(workspace)
+    return unbindAndGetBindingDataForNewTilingWindow(workspace, window: window)
 }
 
-// The function is private because it's unsafe. It requires the window to be in unbound state
+// The function is private because it's unsafe. It leaves the window in unbound state
 @MainActor
-private func getBindingDataForNewTilingWindow(_ workspace: Workspace) -> BindingData {
+private func unbindAndGetBindingDataForNewTilingWindow(_ workspace: Workspace, window: Window?) -> BindingData {
+    window?.unbindFromParent() // It's important to unbind to get correct data from below
     let mruWindow = workspace.mostRecentWindowRecursive
     if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
         return BindingData(
