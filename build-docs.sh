@@ -24,7 +24,8 @@ cp-docs() {
 }
 
 build-site() {
-    cp-docs .site
+    cp-docs ./.site
+    cp ./docs/index.html ./.site
 
     cd .site
         # Delete "aerospace " prefifx in synopsis
