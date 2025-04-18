@@ -6,6 +6,8 @@ struct Rect: ConvenienceCopyable {
     var topLeftY: CGFloat
     var width: CGFloat
     var height: CGFloat
+
+    static let zero = Rect(topLeftX: 0, topLeftY: 0, width: 0, height: 0)
 }
 
 extension CGRect {

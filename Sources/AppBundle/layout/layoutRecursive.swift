@@ -2,7 +2,7 @@ import AppKit
 
 extension Workspace {
     @MainActor // todo can be dropped in future Swift versions?
-    func layoutWorkspace() async throws {
+    func calcWorkspaceLayout() async throws {
         if isEffectivelyEmpty { return }
         let rect = workspaceMonitor.visibleRectPaddedByOuterGaps
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
@@ -35,7 +35,7 @@ private extension TreeNode {
                     } else {
                         lastAppliedLayoutPhysicalRect = physicalRect
                         window.isFullscreen = false
-                        window.setAxFrame(point, CGSize(width: width, height: height))
+                        window.frame = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
                     }
                 }
             case .tilingContainer(let container):
@@ -75,10 +75,10 @@ private extension Window {
             let yProportion = (windowTopLeftCorner.y - currentMonitor.visibleRect.topLeftY) / currentMonitor.visibleRect.height
 
             let moveTo = workspace.workspaceMonitor
-            setAxTopLeftCorner(CGPoint(
+            self.topLeftCorner = CGPoint(
                 x: moveTo.visibleRect.topLeftX + xProportion * moveTo.visibleRect.width,
                 y: moveTo.visibleRect.topLeftY + yProportion * moveTo.visibleRect.height
-            ))
+            )
         }
         if isFullscreen {
             layoutFullscreen(context)
@@ -91,7 +91,8 @@ private extension Window {
         let monitorRect = noOuterGapsInFullscreen
             ? context.workspace.workspaceMonitor.visibleRect
             : context.workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
-        setAxFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height))
+        let topLeftCorner = monitorRect.topLeftCorner
+        self.frame = Rect(topLeftX: topLeftCorner.x, topLeftY: topLeftCorner.y, width: monitorRect.width, height: monitorRect.height)
     }
 }
 
