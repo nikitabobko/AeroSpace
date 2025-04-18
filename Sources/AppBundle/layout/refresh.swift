@@ -141,6 +141,9 @@ private func layoutWorkspaces() async throws {
         for workspace in Workspace.all {
             workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
             try await workspace.calcWorkspaceLayout() // Unhide tiling windows from corner
+            for window in workspace.allLeafWindowsRecursive {
+                window.setAxFrame(window.frame.topLeftCorner, window.frame.size)
+            }
         }
         return
     }
@@ -167,12 +170,26 @@ private func layoutWorkspaces() async throws {
         monitorToOptimalHideCorner[monitor.rect.topLeftCorner] = corner
     }
 
-    // to reduce flicker, first unhide visible workspaces, then hide invisible ones
+    for monitor in monitors {
+        try await monitor.activeWorkspace.calcWorkspaceLayout()
+    }
+    let focusedWindow: Window? = focus.windowOrNil?.takeIf { window in
+        window.parents.contains { ($0 as? TilingContainer)?.layout == .accordion }
+    }
+    // To reduce wallpaper flicker, 1. Layout the focused window AND WAIT
+    if let focusedWindow {
+        (focusedWindow as! MacWindow).unhideFromCorner()
+        try await focusedWindow.setAxFrameBlocking(focusedWindow.frame.topLeftCorner, focusedWindow.frame.size)
+    }
+    // To reduce wallpaper flicker, 2. Concurrently send AX requests to visible workspaces first
     for monitor in monitors {
         let workspace = monitor.activeWorkspace
-        workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
-        try await workspace.calcWorkspaceLayout()
+        for window in workspace.allLeafWindowsRecursive where window != focusedWindow {
+            (window as! MacWindow).unhideFromCorner() // todo as!
+            window.setAxFrame(window.frame.topLeftCorner, window.frame.size)
+        }
     }
+    // To reduce wallpaper flicker, 3. Finally, concurrently send AX requests to invisible windows
     for workspace in Workspace.all where !workspace.isVisible {
         let corner = monitorToOptimalHideCorner[workspace.workspaceMonitor.rect.topLeftCorner] ?? .bottomRightCorner
         for window in workspace.allLeafWindowsRecursive {
