@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace summon-workspace [-h|--help] [--fail-if-noop] <workspace>
+aerospace summon-workspace [-h|--help] [--fail-if-noop] [--when-visible (focus|swap)] <workspace>
 
 // end::synopsis[]
 
@@ -29,6 +29,11 @@ include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 --fail-if-noop:: Exit with non-zero exit code if the workspace already visible on the focused monitor.
+
+--when-visible <action>::
+Defines the behavior if the workspace is already visible on another monitor.
+`<action>` possible values: `(focus|swap)`. +
+The default is: `focus`
 
 // =========================================================== Arguments
 include::./util/conditional-arguments-header.adoc[]
