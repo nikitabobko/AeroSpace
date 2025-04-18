@@ -40,16 +40,16 @@ private final class RunLoopAction: NSObject, Sendable {
     private let _action: @Sendable (RunLoopJob) -> ()
     let job: RunLoopJob
     private let autoCheckCancelled: Bool
-    private let _refreshSessionEventForDebug: RefreshSessionEvent?
+    private let _refreshSessionEvent: RefreshSessionEvent?
     init(job: RunLoopJob, autoCheckCancelled: Bool, _ action: @escaping @Sendable (RunLoopJob) -> ()) {
         self.job = job
         self.autoCheckCancelled = autoCheckCancelled
         _action = action
-        _refreshSessionEventForDebug = refreshSessionEventForDebug
+        _refreshSessionEvent = refreshSessionEvent
     }
     @objc func action() {
         if autoCheckCancelled && job.isCancelled { return }
-        $refreshSessionEventForDebug.withValue(_refreshSessionEventForDebug) {
+        $refreshSessionEvent.withValue(_refreshSessionEvent) {
             _action(job)
         }
     }

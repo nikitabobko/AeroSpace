@@ -118,7 +118,10 @@ extension Workspace {
 
 @MainActor private var onFocusChangedRecursionGuard = false
 // Should be called in refreshSession
-@MainActor func checkOnFocusChangedCallbacks() async throws {
+@MainActor func checkOnFocusChangedCallbacks() {
+    if refreshSessionEvent?.isStartup == true {
+        return
+    }
     let focus = focus
     let frozenFocus = focus.frozen
     var hasFocusChanged = false
@@ -141,23 +144,35 @@ extension Workspace {
     onFocusChangedRecursionGuard = true
     defer { onFocusChangedRecursionGuard = false }
     if hasFocusChanged {
-        try await onFocusChanged(focus)
+        onFocusChanged(focus)
     }
     if let _prevFocusedWorkspaceName, hasFocusedWorkspaceChanged {
         onWorkspaceChanged(_prevFocusedWorkspaceName, frozenFocus.workspaceName)
     }
     if hasFocusedMonitorChanged {
-        try await onFocusedMonitorChanged(focus)
+        onFocusedMonitorChanged(focus)
     }
 }
 
-@MainActor private func onFocusedMonitorChanged(_ focus: LiveFocus) async throws {
+@MainActor private func onFocusedMonitorChanged(_ focus: LiveFocus) {
     if config.onFocusedMonitorChanged.isEmpty { return }
-    _ = try await config.onFocusedMonitorChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
+    guard let token: RunSessionGuard = .isServerEnabled else { return }
+    // todo potential optimization: don't run runSession if we are already in runSession
+    Task {
+        try await runSession(.onFocusedMonitorChanged, token) {
+            _ = try await config.onFocusedMonitorChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
+        }
+    }
 }
-@MainActor private func onFocusChanged(_ focus: LiveFocus) async throws {
+@MainActor private func onFocusChanged(_ focus: LiveFocus) {
     if config.onFocusChanged.isEmpty { return }
-    _ = try await config.onFocusChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
+    guard let token: RunSessionGuard = .isServerEnabled else { return }
+    // todo potential optimization: don't run runSession if we are already in runSession
+    Task {
+        try await runSession(.onFocusChanged, token) {
+            _ = try await config.onFocusChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
+        }
+    }
 }
 
 @MainActor private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String) {

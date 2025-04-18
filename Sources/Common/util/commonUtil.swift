@@ -6,7 +6,7 @@ public let unixUserName = NSUserName()
 public let mainModeId = "main"
 
 @TaskLocal
-public var refreshSessionEventForDebug: RefreshSessionEvent? = nil
+public var refreshSessionEvent: RefreshSessionEvent? = nil
 
 @TaskLocal
 private var recursionDetectorDuringTermination = false
@@ -29,7 +29,7 @@ public func dieT<T>(
         Message: \(_message)
         Version: \(aeroSpaceAppVersion)
         Git hash: \(gitHash)
-        refreshSessionEvent: \(refreshSessionEventForDebug.optionalToPrettyString())
+        refreshSessionEvent: \(refreshSessionEvent.optionalToPrettyString())
         Date: \(Date.now)
         Thread name: \(thread.name.optionalToPrettyString())
         Is main thread: \(thread.isMainThread)
@@ -75,6 +75,8 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
     case socketServer
     case resetManipulatedWithMouse
     case ax(String)
+    case onFocusedMonitorChanged
+    case onFocusChanged
 
     public var isStartup: Bool {
         if case .startup = self { return true } else { return false }
@@ -90,6 +92,8 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
             case .resetManipulatedWithMouse: "resetManipulatedWithMouse"
             case .socketServer: " socketServer"
             case .startup: "startup"
+            case .onFocusedMonitorChanged: "onFocusedMonitorChanged"
+            case .onFocusChanged: "onFocusChanged"
         }
     }
 }

@@ -43,7 +43,7 @@ extension [Command] {
         var isSucc = true
         for command in self {
             isSucc = try await command.run(env, io) && isSucc
-            try await refreshModel()
+            refreshModel()
         }
         return isSucc
     }
