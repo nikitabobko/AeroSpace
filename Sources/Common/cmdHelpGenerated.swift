@@ -122,6 +122,9 @@ let reload_config_help_generated = """
 let resize_help_generated = """
     USAGE: resize [-h|--help] [--window-id <window-id>] (smart|smart-opposite|width|height) [+|-]<number>
     """
+let show_notifiaction_help_generated = """
+    USAGE: show-notification [-h|--help] <title> [<body>]
+    """
 let split_help_generated = """
     USAGE: split [-h|--help] [--window-id <window-id>] (horizontal|vertical|opposite)
     """

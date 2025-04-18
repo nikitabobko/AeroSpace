@@ -1,0 +1,36 @@
+= aerospace-show-notification(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-show-notification
+// tag::purpose[]
+:manpurpose: Show macOS notification
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace show-notification [-h|--help] <title> [<body>]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+// =========================================================== Arguments
+include::./util/conditional-arguments-header.adoc[]
+
+<title>:: Notification title
+<body>:: Notification body
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

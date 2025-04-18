@@ -31,6 +31,7 @@ public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     case moveWorkspaceToMonitor = "move-workspace-to-monitor"
     case reloadConfig = "reload-config"
     case resize
+    case showNotification = "show-notification"
     case split
     case summonWorkspace = "summon-workspace"
     case triggerBinding = "trigger-binding"
@@ -107,6 +108,8 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = SubCommandParser(ReloadConfigCmdArgs.init)
             case .resize:
                 result[kind.rawValue] = SubCommandParser(parseResizeCmdArgs)
+            case .showNotification:
+                result[kind.rawValue] = SubCommandParser(ShowNotificationCmdArgs.init)
             case .split:
                 result[kind.rawValue] = SubCommandParser(parseSplitCmdArgs)
             case .summonWorkspace:

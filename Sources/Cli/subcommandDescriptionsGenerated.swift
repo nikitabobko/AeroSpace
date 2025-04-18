@@ -31,6 +31,7 @@ let subcommandDescriptions = [
     ["  move", "Move the focused window in the given direction"],
     ["  reload-config", "Reload currently active config"],
     ["  resize", "Resize the focused window"],
+    ["  show-notifiaction", "Show macOS notification"],
     ["  split", "Split focused window"],
     ["  summon-workspace", "Move the requested workspace to the focused monitor."],
     ["  trigger-binding", "Trigger AeroSpace binding as if it was pressed by user"],
