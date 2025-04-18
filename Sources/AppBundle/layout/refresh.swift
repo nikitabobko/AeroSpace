@@ -35,6 +35,7 @@ func runRefreshSessionBlocking(
 
             if shouldLayoutWorkspaces && optimisticallyPreLayoutWorkspaces { try await layoutWorkspaces() }
 
+            try await refreshModel()
             try await refresh()
             gcMonitors()
 
