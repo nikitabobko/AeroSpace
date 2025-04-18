@@ -68,17 +68,18 @@ struct ResolvedGaps {
         let right: Int
     }
 
-    init(gaps: Gaps, monitor: any Monitor) {
+    @MainActor
+    init(gaps: Gaps, monitor: any Monitor, windowCount: Int = 1) {
         inner = .init(
-            vertical: gaps.inner.vertical.getValue(for: monitor),
-            horizontal: gaps.inner.horizontal.getValue(for: monitor)
+            vertical: gaps.inner.vertical.getValue(for: monitor, windowCount: windowCount),
+            horizontal: gaps.inner.horizontal.getValue(for: monitor, windowCount: windowCount)
         )
 
         outer = .init(
-            left: gaps.outer.left.getValue(for: monitor),
-            bottom: gaps.outer.bottom.getValue(for: monitor),
-            top: gaps.outer.top.getValue(for: monitor),
-            right: gaps.outer.right.getValue(for: monitor)
+            left: gaps.outer.left.getValue(for: monitor, windowCount: windowCount),
+            bottom: gaps.outer.bottom.getValue(for: monitor, windowCount: windowCount),
+            top: gaps.outer.top.getValue(for: monitor, windowCount: windowCount),
+            right: gaps.outer.right.getValue(for: monitor, windowCount: windowCount)
         )
     }
 }
