@@ -53,7 +53,7 @@ class Window: TreeNode, Hashable {
     func getCenter() async throws -> CGPoint? { try await getAxRect()?.center }
 
     func setAxTopLeftCorner(_ point: CGPoint) { die("Not implemented") }
-    func setAxFrameDuringTermination(_ topLeft: CGPoint?, _ size: CGSize?) async throws { die("Not implemented") }
+    func setAxFrameBlocking(_ topLeft: CGPoint?, _ size: CGSize?) async throws { die("Not implemented") }
     func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) { die("Not implemented") }
     func setSizeAsync(_ size: CGSize) { die("Not implemented") }
 }

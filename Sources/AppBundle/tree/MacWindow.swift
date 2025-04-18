@@ -183,7 +183,7 @@ final class MacWindow: Window {
     }
 
     @MainActor // todo swift is stupid
-    override func setAxFrameDuringTermination(_ topLeft: CGPoint?, _ size: CGSize?) async throws {
+    override func setAxFrameBlocking(_ topLeft: CGPoint?, _ size: CGSize?) async throws {
         try await macApp.setAxFrameBlocking(windowId, topLeft, size)
     }
 
