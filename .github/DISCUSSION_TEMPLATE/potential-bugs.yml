@@ -1,0 +1,21 @@
+body:
+  - type: textarea
+    id: body
+    attributes:
+      label: Add a body
+      value: |
+        Steps to reproduce:
+        1.
+        2.
+        3.
+
+        Expected result:
+        Actual result:
+
+        ## Additional info
+
+        ```shell
+        $ aerospace -v
+        ```
+    validations:
+      required: true
