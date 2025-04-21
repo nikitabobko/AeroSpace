@@ -7,8 +7,8 @@ public extension String {
         self.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    func indent(indentation: String = "    ") -> String {
-        split(separator: "\n", omittingEmptySubsequences: false).map { indentation + $0 }.joined(separator: "\n")
+    func prefixLines(with: String) -> String {
+        split(separator: "\n", omittingEmptySubsequences: false).map { with + $0 }.joined(separator: "\n")
     }
 
     func quoted(with char: String) -> String { char + self + char }

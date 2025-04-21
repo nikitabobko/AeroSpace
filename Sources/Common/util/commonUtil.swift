@@ -18,7 +18,7 @@ public func dieT<T>(
     column: Int = #column,
     function: String = #function
 ) -> T {
-    let _message = __message.contains("\n") ? "\n" + __message.indent() : __message
+    let _message = __message.contains("\n") ? "\n" + __message.prefixLines(with: "    ") : __message
     let thread = Thread.current
     let message =
         """

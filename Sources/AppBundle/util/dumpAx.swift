@@ -1,8 +1,8 @@
 import AppKit
 import Common
 
-func dumpAx(_ ax: AXUIElement, _ prefix: String, _ kind: AxKind) -> String {
-    var result: [String] = []
+func dumpAx(_ ax: AXUIElement, _ kind: AxKind) -> [String: Json] {
+    var result: [String: Json] = [:]
     var ignored: [String] = []
     for key: String in ax.attrs.sortedBy({ priorityAx.contains($0) ? 0 : 1 }) {
         var raw: AnyObject?
@@ -10,13 +10,13 @@ func dumpAx(_ ax: AXUIElement, _ prefix: String, _ kind: AxKind) -> String {
         if globalIgnore.contains(key) || kindSpecificIgnore[kind]?.contains(key) == true {
             ignored.append(key)
         } else {
-            result.append("\(key): \(prettyValue(raw as Any?))".prependLines("\(prefix) "))
+            result[key] = prettyValue(raw as Any?)
         }
     }
     if !ignored.isEmpty {
-        result.append("\(prefix) Ignored: \(ignored.joined(separator: ", "))")
+        result["Aero.AxIgnored"] = .string(ignored.joined(separator: ", "))
     }
-    return result.joined(separator: "\n")
+    return result
 }
 
 enum AxKind: Hashable {
@@ -25,27 +25,30 @@ enum AxKind: Hashable {
     case app
 }
 
-private func prettyValue(_ value: Any?) -> String {
-    if value is NSArray, let arr = value as? [Any?] {
-        return "[\n" + arr.map(prettyValue).joined(separator: ",\n").prependLines("    ") + "\n]"
+private func prettyValue(_ value: Any?) -> Json {
+    if let arr = value as? [Any?] {
+        return .array(arr.map(prettyValue))
+    }
+    if let value = value as? Int {
+        return .int(value)
+    }
+    if let value = value as? Bool {
+        return .bool(value)
     }
     if let value {
         let ax = value as! AXUIElement
         if ax.get(Ax.roleAttr) == kAXButtonRole {
-            let dumped = dumpAx(ax, "", .button).prependLines("    ")
-            return "AXUIElement {\n" + dumped + "\n}"
+            return .dict(dumpAx(ax, .button))
         }
         if let windowId = ax.containingWindowId() {
             let title = ax.get(Ax.titleAttr)?.doubleQuoted ?? "nil"
             let role = ax.get(Ax.roleAttr)?.doubleQuoted ?? "nil"
             let subrole = ax.get(Ax.subroleAttr)?.doubleQuoted ?? "nil"
-            return "AXUIElement(windowId=\(windowId), title=\(title), role=\(role), subrole=\(subrole))"
+            return .string("AXUIElement(AxWindowId=\(windowId), title=\(title), role=\(role), subrole=\(subrole))")
         }
+        return .string(String(describing: value))
     }
-    let str = String(describing: value)
-    return str.contains("\n")
-        ? "\n" + str.prependLines("    ")
-        : str
+    return .null
 }
 
 private extension AXUIElement {

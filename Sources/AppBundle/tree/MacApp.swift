@@ -206,10 +206,17 @@ final class MacApp: AbstractApp {
     }
 
     @MainActor // todo swift is stupid
-    func dumpWindowAxInfo(windowId: UInt32, _ prefix: String) async throws -> String {
+    func dumpWindowAxInfo(windowId: UInt32) async throws -> [String: Json] {
         try await withWindow(windowId) { window, job in
-            dumpAx(window, prefix, .window)
-        } ?? ""
+            dumpAx(window, .window)
+        } ?? [:]
+    }
+
+    @MainActor // todo swift is stupid
+    func dumpAppAxInfo() async throws -> [String: Json] {
+        try await thread?.runInLoop { [axApp] job in
+            dumpAx(axApp.threadGuarded, .app)
+        } ?? [:]
     }
 
     @MainActor // todo swift is stupid
@@ -231,13 +238,6 @@ final class MacApp: AbstractApp {
         try await withWindow(windowId) { window, job in
             window.get(Ax.minimizedAttr)
         }
-    }
-
-    @MainActor // todo swift is stupid
-    func dumpAppAxInfo(_ prefix: String) async throws -> String {
-        try await thread?.runInLoop { [axApp] job in
-            dumpAx(axApp.threadGuarded, prefix, .app)
-        } ?? ""
     }
 
     @MainActor
