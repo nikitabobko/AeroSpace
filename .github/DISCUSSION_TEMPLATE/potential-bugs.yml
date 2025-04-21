@@ -2,7 +2,7 @@ body:
   - type: textarea
     id: body
     attributes:
-      label: Add a body
+      label: Body
       value: |
         Steps to reproduce:
         1.
@@ -12,7 +12,7 @@ body:
         Expected result:
         Actual result:
 
-        ## Additional info
+        ### Additional info
 
         ```shell
         $ aerospace -v

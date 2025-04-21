@@ -34,7 +34,7 @@ struct DebugWindowsCommand: Command {
         switch debugWindowsState {
             case .recording:
                 debugWindowsState = .notRecording
-                io.out(debugWindowsLog.values.joined(separator: "\n-----\n"))
+                io.out(debugWindowsLog.values.joined(separator: "\n\n"))
                 io.out("\n" + disclaimer + "\n")
                 io.out("Debug session finished" + "\n")
                 debugWindowsLog = [:]
@@ -74,21 +74,20 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
     let window = window as! MacWindow
     var result: [String: Json] = try await window.dumpAxInfo()
 
-    result["Aero.axWindowId"] = .fromOrDie(window.windowId)
+    result["Aero.axWindowId"] = .newOrDie(window.windowId)
     result["Aero.workspace"] = .string(window.nodeWorkspace?.name ?? "nil")
-    result["Aero.treeNodeParent"] = .fromOrDie(String(describing: window.parent))
-    result["Aero.isWindowHeuristic"] = .fromOrDie(try await window.isWindowHeuristic())
-    result["Aero.isDialogHeuristic"] = .fromOrDie(try await window.isDialogHeuristic())
+    result["Aero.treeNodeParent"] = .newOrDie(String(describing: window.parent))
+    result["Aero.isWindowHeuristic"] = .newOrDie(try await window.isWindowHeuristic())
+    result["Aero.isDialogHeuristic"] = .newOrDie(try await window.isDialogHeuristic())
 
     let appInfoDic = window.macApp.nsApp.bundleURL.flatMap { Bundle.init(url: $0) }?.infoDictionary ?? [:]
-    result["Aero.App.appBundleId"] = .fromOrDie(window.app.bundleId ?? "NULL-APP-BUNDLE-ID")
-    result["Aero.App.versionShort"] = .fromOrDie(appInfoDic["CFBundleShortVersionString"])
-    result["Aero.App.version"] = .fromOrDie(appInfoDic["CFBundleVersion"])
+    result["Aero.App.appBundleId"] = .newOrDie(window.app.bundleId)
+    result["Aero.App.versionShort"] = .newOrDie(appInfoDic["CFBundleShortVersionString"])
+    result["Aero.App.version"] = .newOrDie(appInfoDic["CFBundleVersion"])
     result["Aero.App.nsApp.activationPolicy"] = .string(window.macApp.nsApp.activationPolicy.prettyDescription)
     result["Aero.App.nsApp.execPath"] = .string(window.macApp.nsApp.executableURL.prettyDescription)
 
     result["Aero.AXApp"] = .dict(try await window.macApp.dumpAppAxInfo())
-    // todo add app bundle version to debug log
 
     var matchingCallbacks: [Json] = []
     for callback in config.onWindowDetected where try await callback.matches(window) {
@@ -96,7 +95,7 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
     }
     result["Aero.on-window-detected"] = .array(matchingCallbacks)
 
-    return (JSONEncoder.aeroSpaceDefault.encodeToString(result) ?? "nil")
+    return JSONEncoder.aeroSpaceDefault.encodeToString(result).prettyDescription
         .prefixLines(with: "\(window.app.bundleId ?? "nil-bundle-id").\(window.windowId) ||| ")
 }
 

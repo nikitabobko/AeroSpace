@@ -204,11 +204,9 @@ final class MacWindow: Window {
 extension Window {
     @MainActor // todo swift is stupid
     func relayoutWindow(on workspace: Workspace, forceTile: Bool = false) async throws {
-        let data = if forceTile {
-            unbindAndGetBindingDataForNewTilingWindow(workspace, window: self)
-        } else {
-            try await unbindAndGetBindingDataForNewWindow(self.asMacWindow().windowId, self.asMacWindow().macApp, workspace, window: self)
-        }
+        let data = forceTile
+            ? unbindAndGetBindingDataForNewTilingWindow(workspace, window: self)
+            : try await unbindAndGetBindingDataForNewWindow(self.asMacWindow().windowId, self.asMacWindow().macApp, workspace, window: self)
         bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
     }
 }

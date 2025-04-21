@@ -27,6 +27,7 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
+      - run: env # Debug
       - uses: actions/checkout@v3
       - uses: nikitabobko/setup-swift@21e0b6448e6aa76937c51d4b172f6cba5e537cde # todo migrate to swiftly
         with:
@@ -38,7 +39,6 @@ jobs:
             sudo xcode-select -s "$XCODE_16_DEVELOPER_DIR" # Affects macOS SDK
           fi
       - run: brew install bash fish xcbeautify
-      - run: env # Debug
       - run: ./script/install-dep.sh --all
       - run: ./build-debug.sh
       - run: ./run-tests.sh

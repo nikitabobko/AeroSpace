@@ -25,11 +25,11 @@ enum Json: Encodable {
         }
     }
 
-    static func fromOrDie(_ value: Any?) -> Json {
-        if let value = value as? [String: Any] {
-            return .dict(value.mapValues(fromOrDie))
-        } else if let value = value as? [Any] {
-            return .array(value.map(fromOrDie))
+    static func newOrDie(_ value: Any?) -> Json {
+        if let value = value as? [String: Any?] {
+            return .dict(value.mapValues(newOrDie))
+        } else if let value = value as? [Any?] {
+            return .array(value.map(newOrDie))
         } else if let value = value as? Int {
             return .int(value)
         } else if let value = value as? UInt32 {

@@ -16,10 +16,10 @@ while test $# -gt 0; do
 done
 
 cp-docs() {
-    cp -r docs/*.adoc "$1"
-    cp -r docs/assets "$1"
-    cp -r docs/util "$1"
-    cp -r docs/config-examples "$1"
+    cp -r ./docs/*.adoc "$1"
+    cp -r ./docs/assets "$1"
+    cp -r ./docs/util "$1"
+    cp -r ./docs/config-examples "$1"
     sed -i '' "1 s/.*/v$build_version/" "$1/util/site-attributes.adoc"
 }
 

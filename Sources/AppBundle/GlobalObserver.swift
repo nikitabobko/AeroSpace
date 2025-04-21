@@ -20,7 +20,6 @@ class GlobalObserver {
     }
 
     private static func onHideApp(_ notification: Notification) {
-        check(Thread.isMainThread)
         let notifName = notification.name.rawValue
         Task { @MainActor in
             guard let token: RunSessionGuard = .isServerEnabled else { return }

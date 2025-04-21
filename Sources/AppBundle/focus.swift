@@ -49,7 +49,7 @@ struct FrozenFocus: AeroAny, Equatable, Sendable {
     }
 }
 
-@MainActor var _focus: FrozenFocus = {
+@MainActor private var _focus: FrozenFocus = {
     let monitor = mainMonitor
     return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId: monitor.monitorId ?? 0)
 }()
