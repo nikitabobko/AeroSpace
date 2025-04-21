@@ -32,6 +32,9 @@ private func prettyValue(_ value: Any?) -> Json {
     if let value = value as? Int {
         return .int(value)
     }
+    if let value = value as? UInt32 {
+        return .uint32(value)
+    }
     if let value = value as? Bool {
         return .bool(value)
     }

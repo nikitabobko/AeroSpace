@@ -76,7 +76,7 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
 
     result["Aero.axWindowId"] = .fromOrDie(window.windowId)
     result["Aero.workspace"] = .string(window.nodeWorkspace?.name ?? "nil")
-    result["Aero.treeNodeParent"] = .fromOrDie(window.parent)
+    result["Aero.treeNodeParent"] = .fromOrDie(String(describing: window.parent))
     result["Aero.isWindowHeuristic"] = .fromOrDie(try await window.isWindowHeuristic())
     result["Aero.isDialogHeuristic"] = .fromOrDie(try await window.isDialogHeuristic())
 
