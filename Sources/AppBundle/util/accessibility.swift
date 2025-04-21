@@ -269,27 +269,36 @@ enum Ax {
     //    key: kAXMainWindowAttribute,
     //    getter: tryGetWindow
     //)
-    static let closeButtonAttr = ReadableAttrImpl<AXUIElement>(
+    static let closeButtonAttr = ReadableAttrImpl<any AxUiElementMock>(
         key: kAXCloseButtonAttribute,
-        getter: { ($0 as! AXUIElement) }
+        getter: { castToAxUiElementMock($0) }
     )
     // Note! fullscreen is not the same as "zoom" (green plus)
-    static let fullscreenButtonAttr = ReadableAttrImpl<AXUIElement>(
+    static let fullscreenButtonAttr = ReadableAttrImpl<any AxUiElementMock>(
         key: kAXFullScreenButtonAttribute,
-        getter: { ($0 as! AXUIElement) }
+        getter: { castToAxUiElementMock($0) }
     )
-    static let zoomButtonAttr = ReadableAttrImpl<AXUIElement>(
+    // green plus
+    static let zoomButtonAttr = ReadableAttrImpl<any AxUiElementMock>(
         key: kAXZoomButtonAttribute,
-        getter: { ($0 as! AXUIElement) }
+        getter: { castToAxUiElementMock($0) }
     )
-    static let minimizeButtonAttr = ReadableAttrImpl<AXUIElement>(
+    static let minimizeButtonAttr = ReadableAttrImpl<any AxUiElementMock>(
         key: kAXMinimizeButtonAttribute,
-        getter: { ($0 as! AXUIElement) }
+        getter: { castToAxUiElementMock($0) }
     )
     //static let growAreaAttr = ReadableAttrImpl<AXUIElement>(
     //    key: kAXGrowAreaAttribute,
     //    getter: { ($0 as! AXUIElement) }
     //)
+}
+
+private func castToAxUiElementMock(_ a: AnyObject) -> AxUiElementMock {
+    if let dict = a as? [String: Json] { // Convert from _SwiftDeferredNSDictionary<String, Json>
+        dict as? AxUiElementMock ?? dieT("Cannot cast \(type(of: a)) to AxUiElementMock")
+    } else {
+        a as? AxUiElementMock ?? dieT("Cannot cast \(type(of: a)) to AxUiElementMock")
+    }
 }
 
 typealias WindowIdAndAxUiElement = (windowId: UInt32, ax: AXUIElement)
@@ -306,7 +315,7 @@ private func windowOrNil(_ any: Any?) -> WindowIdAndAxUiElement? {
     }
 }
 
-extension AXUIElement {
+extension AXUIElement: AxUiElementMock {
     func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
         let state = signposter.beginInterval(#function, "attr: \(attr.key) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
         defer { signposter.endInterval(#function, state) }

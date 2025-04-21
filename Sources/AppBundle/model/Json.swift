@@ -1,5 +1,5 @@
+import AppKit
 import Common
-import Foundation
 
 enum Json: Encodable {
     // vector
@@ -42,6 +42,28 @@ enum Json: Encodable {
             return .null
         } else {
             die("Can't parse \(String(describing: value)) (\(type(of: value))) to JSON")
+        }
+    }
+
+    var rawValue: Any? {
+        switch self {
+            case .null: nil
+
+            case .array(let x): x
+            case .dict(let x): x
+
+            case .bool(let x): x
+            case .int(let x): x
+            case .string(let x): x
+            case .uint32(let x): x
+        }
+    }
+
+    var asDictOrDie: [String: Json] {
+        if case .dict(let dict) = self {
+            dict
+        } else {
+            dieT("\(self) is not a dict")
         }
     }
 }

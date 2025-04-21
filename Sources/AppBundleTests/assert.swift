@@ -24,9 +24,9 @@ func assertNotNil(_ actual: Any?, file: String = #file, line: Int = #line) {
     }
 }
 
-func assertEquals<T>(_ actual: T, _ expected: T, file: String = #file, line: Int = #line) where T: Equatable {
+func assertEquals<T>(_ actual: T, _ expected: T, additionalMsg: String? = nil, file: String = #file, line: Int = #line) where T: Equatable {
     if actual != expected {
-        failExpectedActual(expected, actual, file: file, line: line)
+        failExpectedActual(expected, actual, additionalMsg: additionalMsg, file: file, line: line)
     }
 }
 
@@ -49,11 +49,12 @@ func assertFail<F>(_ actual: Result<some Any, F>, _ expected: F? = nil, file: St
     }
 }
 
-private func failExpectedActual(_ expected: Any, _ actual: Any, file: String = #file, line: Int = #line) {
+private func failExpectedActual(_ expected: Any, _ actual: Any, additionalMsg: String? = nil, file: String = #file, line: Int = #line) {
+    let additionalMsg = additionalMsg.map { "\n    Additional Message:\n        \($0)" } ?? ""
     XCTFail(
         """
 
-        \(file):\(line): Assertion failed
+        \(file):\(line): Assertion failed\(additionalMsg)
             Expected:
                 \(expected)
             Actual:

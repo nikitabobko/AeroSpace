@@ -1,9 +1,8 @@
 import AppKit
 
-extension AXUIElement {
+extension AxUiElementMock {
     // 'isDialogHeuristic' function name is referenced in the guide
-    func isDialogHeuristic(_ app: NSRunningApplication) -> Bool {
-        let id = app.bundleIdentifier
+    func isDialogHeuristic(appBundleId id: String?) -> Bool {
         // Note: a lot of windows don't have title on startup. So please don't rely on the title
 
         // Don't tile:
@@ -58,7 +57,7 @@ extension AXUIElement {
     /// Why do we need to filter out non-windows?
     /// - "floating by default" workflow
     /// - It's annoying that the focus command treats these popups as floating windows
-    func isWindowHeuristic(axApp: AXUIElement, appBundleId: String?) -> Bool {
+    func isWindowHeuristic(axApp: AxUiElementMock, appBundleId: String?) -> Bool {
         // Just don't do anything with "Ghostty Quick Terminal" windows.
         // Its position and size are managed by the Ghostty itself
         // https://github.com/nikitabobko/AeroSpace/issues/103
@@ -96,7 +95,7 @@ extension AXUIElement {
             get(Ax.subroleAttr) == kAXStandardWindowSubrole
     }
 
-    private func isWindowHeuristicOld(axApp: AXUIElement, appBundleId: String?) -> Bool { // 0.18.3 hotfix
+    private func isWindowHeuristicOld(axApp: AxUiElementMock, appBundleId: String?) -> Bool { // 0.18.3 hotfix
         lazy var subrole = get(Ax.subroleAttr)
         lazy var title = get(Ax.titleAttr) ?? ""
 
@@ -133,7 +132,7 @@ private extension String {
     }
 }
 
-private func isFullscreenable(_ axWindow: AXUIElement) -> Bool {
+private func isFullscreenable(_ axWindow: AxUiElementMock) -> Bool {
     if let fullscreenButton = axWindow.get(Ax.fullscreenButtonAttr) {
         return fullscreenButton.get(Ax.enabledAttr) == true
     }

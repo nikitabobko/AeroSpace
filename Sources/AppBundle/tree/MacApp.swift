@@ -81,7 +81,7 @@ final class MacApp: AbstractApp {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         _ = withWindowAsync(windowId) { [windows] window, job in
             guard let closeButton = window.get(Ax.closeButtonAttr) else { return }
-            if AXUIElementPerformAction(closeButton, kAXPressAction as CFString) == .success {
+            if AXUIElementPerformAction(closeButton.cast, kAXPressAction as CFString) == .success {
                 windows.threadGuarded.removeValue(forKey: windowId)
             }
         }
@@ -187,7 +187,7 @@ final class MacApp: AbstractApp {
     @MainActor // todo swift is stupid
     func isDialogHeuristic(_ windowId: UInt32) async throws -> Bool {
         try await withWindow(windowId) { [nsApp] window, job in
-            window.isDialogHeuristic(nsApp)
+            window.isDialogHeuristic(appBundleId: nsApp.bundleIdentifier)
         } == true
     }
 
