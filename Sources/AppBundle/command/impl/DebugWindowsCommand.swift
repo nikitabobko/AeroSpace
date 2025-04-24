@@ -88,7 +88,13 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
 
     result["Aero.AXApp"] = .dict(try await window.macApp.dumpAppAxInfo())
     // todo add app bundle version to debug log
-
+    
+    var matchingCallbacks: [Json] = []
+    for callback in config.onWindowDetected where try await callback.matches(window) {
+        matchingCallbacks.append(callback.debugInfo)
+    }
+    result["Aero.on-window-detected"] = .array(matchingCallbacks)
+    
     return (JSONEncoder.aeroSpaceDefault.encodeToString(result) ?? "nil").prefixLines(with: "\(window.app.bundleId ?? "nil-bundle-id") ||| ")
 }
 

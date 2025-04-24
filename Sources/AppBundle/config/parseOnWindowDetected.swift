@@ -10,6 +10,19 @@ struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
         rawRun ?? dieT("ID-46D063B2 should have discarded nil")
     }
 
+    var debugInfo: Json {
+        var result: [String: Json] = [:]
+        result ["matcher"] = matcher.debugInfo
+        if let commands = rawRun {
+            let commandsJson: [Json] = commands.map { command in
+                let args = command.args.rawArgs.value.joined(separator: ",")
+                return .string("\(command.info.kind.rawValue) \(args)")
+            }
+            result["commands"] = .array(commandsJson)
+        }
+        return .dict(result)
+    }
+    
     static func == (lhs: WindowDetectedCallback, rhs: WindowDetectedCallback) -> Bool {
         return lhs.matcher == rhs.matcher && lhs.checkFurtherCallbacks == rhs.checkFurtherCallbacks &&
             zip(lhs.run, rhs.run).allSatisfy { $0.equals($1) }
@@ -22,7 +35,27 @@ struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
     var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
     var workspace: String?
     var duringAeroSpaceStartup: Bool?
-
+    
+    var debugInfo: Json {
+        var resultParts: [String] = []
+        if let appId = appId {
+            resultParts.append("appId=\"\(appId)\"")
+        }
+        if let _ = appNameRegexSubstring {
+            resultParts.append("appNameRegexSubstrin=Regex")
+        }
+        if let _ = windowTitleRegexSubstring {
+            resultParts.append("windowTitleRegexSubstring=Regex")
+        }
+        if let workspace = workspace {
+            resultParts.append("workspace=\"\(workspace)\"")
+        }
+        if let duringAeroSpaceStartup = duringAeroSpaceStartup {
+            resultParts.append("duringAeroSpaceStartup=\(duringAeroSpaceStartup)")
+        }
+        return .string(resultParts.joined(separator: ", "))
+    }
+    
     static func == (lhs: WindowDetectedCallbackMatcher, rhs: WindowDetectedCallbackMatcher) -> Bool {
         check(
             lhs.appNameRegexSubstring == nil &&
