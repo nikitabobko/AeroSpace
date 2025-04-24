@@ -12,7 +12,7 @@ struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
 
     var debugInfo: Json {
         var result: [String: Json] = [:]
-        result ["matcher"] = matcher.debugInfo
+        result["matcher"] = matcher.debugInfo
         if let commands = rawRun {
             let commandsJson: [Json] = commands.map { command in
                 let args = command.args.rawArgs.value.joined(separator: ",")
@@ -35,16 +35,16 @@ struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
     var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
     var workspace: String?
     var duringAeroSpaceStartup: Bool?
-    
+
     var debugInfo: Json {
         var resultParts: [String] = []
         if let appId = appId {
             resultParts.append("appId=\"\(appId)\"")
         }
-        if let _ = appNameRegexSubstring {
+        if appNameRegexSubstring != nil {
             resultParts.append("appNameRegexSubstrin=Regex")
         }
-        if let _ = windowTitleRegexSubstring {
+        if windowTitleRegexSubstring != nil {
             resultParts.append("windowTitleRegexSubstring=Regex")
         }
         if let workspace = workspace {
