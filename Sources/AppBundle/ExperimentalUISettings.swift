@@ -1,0 +1,68 @@
+import AppKit
+import SwiftUI
+
+struct ExperimentalUISettings {
+    var displayStyle: MenuBarStyle {
+        get {
+            if let value = UserDefaults.standard.string(forKey: ExperimentalUISettingsItems.displayStyle.rawValue) {
+                return MenuBarStyle(rawValue: value) ?? .monospacedText
+            } else {
+                return .monospacedText
+            }
+        }
+        set {
+            UserDefaults.standard.setValue(newValue.rawValue, forKey: ExperimentalUISettingsItems.displayStyle.rawValue)
+            UserDefaults.standard.synchronize()
+        }
+    }
+}
+
+enum ExperimentalUISettingsItems: String {
+    case displayStyle
+}
+
+@MainActor
+func getExperimentalUISettingsMenu(viewModel: TrayMenuModel) -> some View {
+    let appearence = NSApplication.shared.effectiveAppearance.name
+    let color = (appearence == .vibrantDark || appearence == .darkAqua) ? Color.white : Color.black
+    return Menu {
+        Text("These settings are EXPERIMENTAL.")
+        Text("No stability guarantees are provided.")
+        Divider()
+        Text("Menu bar style (macOS 14 or later):")
+        Text(MenuBarStyle.systemText.title)
+        Button {
+            viewModel.experimentalUISettings.displayStyle = .systemText
+        } label: {
+            Toggle(isOn: .constant(viewModel.experimentalUISettings.displayStyle == .systemText)) {
+                MenuBarLabel(viewModel.trayText, textStyle: .system, color: color)
+            }
+        }
+        Text(MenuBarStyle.monospacedText.title)
+        Button {
+            viewModel.experimentalUISettings.displayStyle = .monospacedText
+        } label: {
+            Toggle(isOn: .constant(viewModel.experimentalUISettings.displayStyle == .monospacedText)) {
+                MenuBarLabel(viewModel.trayText, color: color)
+            }
+        }
+        Text(MenuBarStyle.squares.title)
+        Button {
+            viewModel.experimentalUISettings.displayStyle = .squares
+        } label: {
+            Toggle(isOn: .constant(viewModel.experimentalUISettings.displayStyle == .squares)) {
+                MenuBarLabel(viewModel.trayText, color: color, trayItems: viewModel.trayItems)
+            }
+        }
+        Text(MenuBarStyle.i3.title)
+        Button {
+            viewModel.experimentalUISettings.displayStyle = .i3
+        } label: {
+            Toggle(isOn: .constant(viewModel.experimentalUISettings.displayStyle == .i3)) {
+                MenuBarLabel(viewModel.trayText, color: color, trayItems: viewModel.trayItems, workspaces: viewModel.workspaces)
+            }
+        }
+    } label: {
+        Text("Experimental UI Settings")
+    }
+}
