@@ -171,6 +171,18 @@ If `automatically-unhide-macos-hidden-apps` isn't enough, you can disable `cmd-h
     cmd-alt-h = [] # Disable "hide others"
 ----
 
+[#screenshoot-shortcut]
+== Take screenshots to clipboard using keyboard shortcut
+
+You can configure a custom shortcut take a screenshot.
+`screencapture` is a built-in macOS command.
+
+.~/.aerospace.toml
+[source,toml]
+----
+alt-shift-s = 'exec-and-forget screencapture -i -c'
+----
+
 [#i3-like-config]
 == i3 like config
 
