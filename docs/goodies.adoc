@@ -171,6 +171,19 @@ If `automatically-unhide-macos-hidden-apps` isn't enough, you can disable `cmd-h
     cmd-alt-h = [] # Disable "hide others"
 ----
 
+[#screenshoot-shortcut]
+== Take screenshots to clipboard using keyboard shortcut
+
+You can configure a shorcut to run a external command, for instance take a screenshot to clipboard
+
+.~/.aerospace.toml
+[source,toml]
+----
+alt-shift-s = 'exec-and-forget screencapture -i -c'
+----
+
+Note: this might require to remove and enable back AeroSpace in `Screen & System Audio Recording` macosx settings, as link:https://github.com/nikitabobko/AeroSpace/discussions/1335#discussioncomment-12939445[described here].
+
 [#i3-like-config]
 == i3 like config
 
