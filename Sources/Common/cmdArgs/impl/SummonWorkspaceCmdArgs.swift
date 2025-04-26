@@ -21,7 +21,7 @@ public struct SummonWorkspaceCmdArgs: CmdArgs {
     public var failIfNoop: Bool = false
     public var rawWhenVisibleAction: WhenVisible? = nil
 
-    public enum WhenVisible: String, CaseIterable, Equatable {
+    public enum WhenVisible: String, CaseIterable, Equatable, Sendable {
         case focus = "focus"
         case swap = "swap"
     }
