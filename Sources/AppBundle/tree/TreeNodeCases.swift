@@ -120,7 +120,7 @@ func getChildParentRelation(child: TreeNode, parent: NonLeafTreeNodeObject) -> C
 }
 
 func illegalChildParentRelation(child: TreeNode, parent: NonLeafTreeNodeObject?) -> Never {
-    die("Illegal child-parent relation. Child: \(child), Parent: \((parent ?? child.parent).optionalToPrettyString())")
+    die("Illegal child-parent relation. Child: \(child), Parent: \((parent ?? child.parent).prettyDescription)")
 }
 
 func getChildParentRelationOrNil(child: TreeNode, parent: NonLeafTreeNodeObject) -> ChildParentRelation? {

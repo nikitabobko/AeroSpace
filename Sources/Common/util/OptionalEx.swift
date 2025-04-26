@@ -53,7 +53,7 @@ public extension Optional {
         }
     }
 
-    func optionalToPrettyString() -> String {
+    var prettyDescription: String {
         if let unwrapped = self {
             return String(describing: unwrapped)
         }

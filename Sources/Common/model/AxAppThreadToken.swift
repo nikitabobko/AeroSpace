@@ -15,7 +15,7 @@ public struct AxAppThreadToken: Sendable, Equatable, CustomStringConvertible {
     public static func == (lhs: Self, rhs: Self) -> Bool { lhs.pid == rhs.pid }
 
     public func checkEquals(_ other: AxAppThreadToken?) {
-        check(self == other, "\(self) != \(other.optionalToPrettyString())")
+        check(self == other, "\(self) != \(other.prettyDescription)")
     }
 
     public var description: String { idForDebug }
