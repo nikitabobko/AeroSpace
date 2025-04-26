@@ -96,7 +96,8 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
     }
     result["Aero.on-window-detected"] = .array(matchingCallbacks)
 
-    return (JSONEncoder.aeroSpaceDefault.encodeToString(result) ?? "nil").prefixLines(with: "\(window.app.bundleId ?? "nil-bundle-id") ||| ")
+    return (JSONEncoder.aeroSpaceDefault.encodeToString(result) ?? "nil")
+        .prefixLines(with: "\(window.app.bundleId ?? "nil-bundle-id").\(window.windowId) ||| ")
 }
 
 @MainActor
