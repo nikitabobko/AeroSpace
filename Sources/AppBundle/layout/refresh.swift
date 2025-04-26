@@ -71,12 +71,11 @@ func runSession<T>(
 
             let focusAfter = focus.windowOrNil
 
+            updateTrayText()
+            try await layoutWorkspaces()
             if focusBefore != focusAfter {
                 focusAfter?.nativeFocus() // syncFocusToMacOs
             }
-
-            updateTrayText()
-            try await layoutWorkspaces()
             runRefreshSession(event, screenIsDefinitelyUnlocked: false)
             return result
         }
