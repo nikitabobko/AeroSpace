@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -17,12 +17,12 @@ let package = Package(
         .library(name: "AppBundle", targets: ["AppBundle"]),
     ],
     dependencies: [
+        .package(path: "./ShellParserGenerated"),
         .package(url: "https://github.com/InerziaSoft/ISSoundAdditions", exact: "2.0.1"),
         .package(url: "https://github.com/Kitura/BlueSocket", exact: "2.0.4"),
-        .package(url: "https://github.com/soffes/HotKey", exact: "0.1.3"),
         .package(url: "https://github.com/LebJe/TOMLKit", exact: "0.5.5"),
-        .package(url: "https://github.com/apple/swift-collections", exact: "1.1.0"),
-        .package(url: "https://github.com/antlr/antlr4", exact: "4.13.1"),
+        .package(url: "https://github.com/apple/swift-collections", exact: "1.1.4"),
+        .package(url: "https://github.com/soffes/HotKey", exact: "0.2.1"),
     ],
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
@@ -40,23 +40,16 @@ let package = Package(
             ]
         ),
         .target(
-            name: "ShellParserGenerated",
-            dependencies: [
-                .product(name: "Antlr4Static", package: "antlr4"),
-            ]
-        ),
-        .target(
             name: "AppBundle",
             dependencies: [
-                .target(name: "PrivateApi"),
-                .target(name: "Common"),
-                .target(name: "ShellParserGenerated"),
-                .product(name: "Antlr4Static", package: "antlr4"),
-                .product(name: "Socket", package: "BlueSocket"),
+                .product(name: "Collections", package: "swift-collections"),
                 .product(name: "HotKey", package: "HotKey"),
                 .product(name: "ISSoundAdditions", package: "ISSoundAdditions"),
+                .product(name: "ShellParserGenerated", package: "ShellParserGenerated"),
+                .product(name: "Socket", package: "BlueSocket"),
                 .product(name: "TOMLKit", package: "TOMLKit"),
-                .product(name: "Collections", package: "swift-collections"),
+                .target(name: "Common"),
+                .target(name: "PrivateApi"),
             ]
         ),
         .executableTarget(

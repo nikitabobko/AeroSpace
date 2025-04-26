@@ -2,11 +2,13 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
+./script/install-dep.sh --bundler
+
 rm -rf .site && mkdir .site
 rm -rf .man && mkdir .man
 
 build_version="0.0.0-SNAPSHOT"
-while [[ $# -gt 0 ]]; do
+while test $# -gt 0; do
     case $1 in
         --build-version) build_version="$2"; shift 2;;
         *) echo "Unknown option $1" > /dev/stderr; exit 1 ;;
@@ -22,12 +24,14 @@ cp-docs() {
 }
 
 build-site() {
-    cp-docs .site
+    cp-docs ./.site
+    cp ./docs/index.html ./.site
 
     cd .site
         # Delete "aerospace " prefifx in synopsis
         sed -E -i '' '/tag::synopsis/, /end::synopsis/ s/^(aerospace | {10})//' aerospace*
-        bundler exec asciidoctor ./guide.adoc ./commands.adoc ./goodness.adoc
+        bundler exec asciidoctor ./guide.adoc ./commands.adoc ./goodies.adoc
+        cp goodies.html goodness.html # backwards compatibility
         rm -rf ./*.adoc
     cd - > /dev/null
 

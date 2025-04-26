@@ -1,4 +1,5 @@
 extension Monitor {
+    @MainActor
     var visibleRectPaddedByOuterGaps: Rect {
         let topLeft = visibleRect.topLeftCorner
         let gaps = ResolvedGaps(gaps: config.gaps, monitor: self)

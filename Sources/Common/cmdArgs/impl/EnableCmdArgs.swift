@@ -20,7 +20,7 @@ public struct EnableCmdArgs: CmdArgs {
         self.targetState = .initialized(targetState)
     }
 
-    public enum State: String, CaseIterable {
+    public enum State: String, CaseIterable, Sendable {
         case on, off, toggle
     }
 }

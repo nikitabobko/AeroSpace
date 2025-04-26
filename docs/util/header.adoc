@@ -7,5 +7,5 @@ image:assets/icon.png[300,300,float="right"]
 
 * xref:guide.adoc[AeroSpace Guide]
 * xref:commands.adoc[AeroSpace Commands]
-* xref:goodness.adoc[AeroSpace Goodness]
+* xref:goodies.adoc[AeroSpace Goodies]
 ====

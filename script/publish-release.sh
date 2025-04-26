@@ -5,7 +5,7 @@ source ./script/setup.sh
 build_version=""
 cask_git_repo_path=""
 site_git_repo_path=""
-while [[ $# -gt 0 ]]; do
+while test $# -gt 0; do
     case $1 in
         --build-version) build_version="$2"; shift 2;;
         --cask-git-repo-path) cask_git_repo_path="$2"; shift 2;;

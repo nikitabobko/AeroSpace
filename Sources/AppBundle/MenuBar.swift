@@ -2,7 +2,8 @@ import Common
 import Foundation
 import SwiftUI
 
-public func menuBar(viewModel: TrayMenuModel) -> some Scene {
+@MainActor
+public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it be converted to "SwiftUI struct"?
     MenuBarExtra {
         let shortIdentification = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitShortHash)"
         let identification      = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitHash)"
@@ -10,26 +11,27 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
         Button("Copy to clipboard") { identification.copyToClipboard() }
             .keyboardShortcut("C", modifiers: .command)
         Divider()
-        if viewModel.isEnabled {
+        if let token: RunSessionGuard = .isServerEnabled {
             Text("Workspaces:")
-            ForEach(Workspace.all) { (workspace: Workspace) in
+            ForEach(viewModel.workspaces, id: \.name) { workspace in
                 Button {
-                    refreshSession { _ = workspace.focusWorkspace() }
+                    Task {
+                        try await runSession(.menuBarButton, token) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
+                    }
                 } label: {
-                    Toggle(isOn: workspace == focus.workspace
-                        ? Binding(get: { true }, set: { _, _ in })
-                        : Binding(get: { false }, set: { _, _ in }))
-                    {
-                        let monitor = workspace.isVisible || !workspace.isEffectivelyEmpty ? " - \(workspace.workspaceMonitor.name)" : ""
-                        Text(workspace.name + monitor).font(.system(.body, design: .monospaced))
+                    Toggle(isOn: .constant(workspace.isFocused)) {
+                        Text(workspace.name + workspace.suffix).font(.system(.body, design: .monospaced))
                     }
                 }
             }
             Divider()
         }
         Button(viewModel.isEnabled ? "Disable" : "Enable") {
-            refreshSession {
-                _ = EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle)).run(.defaultEnv, .emptyStdin)
+            Task {
+                try await runSession(.menuBarButton, .forceRun) { () throws in
+                    _ = try await EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle))
+                        .run(.defaultEnv, .emptyStdin)
+                }
             }
         }.keyboardShortcut("E", modifiers: .command)
         let editor = getTextEditorToOpenConfig()
@@ -44,19 +46,51 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene {
                 case .ambiguousConfigError:
                     fallbackConfig.open(with: editor)
             }
-        }.keyboardShortcut("O", modifiers: .command)
-        if viewModel.isEnabled {
+        }.keyboardShortcut(",", modifiers: .command)
+        if let token: RunSessionGuard = .isServerEnabled {
             Button("Reload config") {
-                refreshSession { _ = reloadConfig() }
+                Task {
+                    try await runSession(.menuBarButton, token) { _ = reloadConfig() }
+                }
             }.keyboardShortcut("R", modifiers: .command)
         }
         Button("Quit \(aeroSpaceAppName)") {
-            terminationHandler.beforeTermination()
-            terminateApp()
+            Task {
+                defer { terminateApp() }
+                try await terminationHandler.beforeTermination()
+            }
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
-        // .font(.system(.body, design: .monospaced)) doesn't work unfortunately :(
-        Text(viewModel.isEnabled ? viewModel.trayText : "⏸️")
+        if viewModel.isEnabled {
+            MonospacedText(viewModel.trayText)
+        } else {
+            MonospacedText("⏸️")
+        }
+    }
+}
+
+struct MonospacedText: View {
+    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    var text: String
+    init(_ text: String) { self.text = text }
+
+    var body: some View {
+        if #available(macOS 14, *) { // https://github.com/nikitabobko/AeroSpace/issues/1122
+            let renderer = ImageRenderer(
+                content: Text(text)
+                    .font(.system(.largeTitle, design: .monospaced))
+                    .foregroundStyle(colorScheme == .light ? Color.black : Color.white)
+            )
+            if let cgImage = renderer.cgImage {
+                // Using scale: 1 results in a blurry image for unknown reasons
+                Image(cgImage, scale: 2, label: Text(text))
+            } else {
+                // In case image can't be rendered fallback to plain text
+                Text(text)
+            }
+        } else { // macOS 13 and lower
+            Text(text)
+        }
     }
 }
 

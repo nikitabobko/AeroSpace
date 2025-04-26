@@ -42,11 +42,11 @@ func parseTarget(_ arg: String, _ nextArgs: inout [String]) -> Parsed<MonitorTar
     }
 }
 
-public enum NextPrev: Equatable {
+public enum NextPrev: Equatable, Sendable {
     case next, prev
 }
 
-public enum MonitorTarget: Equatable {
+public enum MonitorTarget: Equatable, Sendable {
     case directional(CardinalDirection)
     case relative(NextPrev)
     case patterns([MonitorDescription])

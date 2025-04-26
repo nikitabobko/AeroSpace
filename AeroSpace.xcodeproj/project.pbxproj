@@ -246,7 +246,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace.debug;
 				PRODUCT_NAME = "AeroSpace-Debug";
 				SDKROOT = macosx;
-				SWIFT_VERSION = 5.9;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -323,7 +323,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace;
 				PRODUCT_NAME = AeroSpace;
 				SDKROOT = macosx;
-				SWIFT_VERSION = 5.9;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};

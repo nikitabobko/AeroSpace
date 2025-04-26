@@ -6,7 +6,7 @@ zip_uri='' # mandatory
 cask_name='' # mandatory
 build_version="0.0.0-SNAPSHOT"
 app_bundle_dir_name='AeroSpace.app'
-while [[ $# -gt 0 ]]; do
+while test $# -gt 0; do
     case $1 in
         --build-version) build_version="$2"; shift 2;;
         --zip-uri) zip_uri="$2"; shift 2;;
@@ -38,16 +38,12 @@ else
 fi
 sha=$(shasum -a 256 "$zip_file" | awk '{print $1}')
 
-
-cask_version=''
-zip_root_dir=''
-if grep -q SNAPSHOT <<< "$build_version"; then
-    # Prevent 'Not upgrading aerospace, the latest version is already installed'
-    cask_version=':latest'
-    zip_root_dir="AeroSpace-v$build_version"
-else
+cask_version=':latest' # Prevent 'Not upgrading aerospace, the latest version is already installed'
+zip_root_dir="AeroSpace-v$build_version"
+if ! grep -q SNAPSHOT <<< "$build_version"; then
     cask_version="'$build_version'"
-    zip_root_dir='AeroSpace-v#{version}'
+    zip_root_dir=$(sed "s/$build_version/#{version}/g" <<< "$zip_root_dir")
+    zip_uri=$(sed "s/$build_version/#{version}/g" <<< "$zip_uri")
 fi
 
 manpages=$(unzip -l "$zip_file" | \

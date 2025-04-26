@@ -3,7 +3,7 @@ cd "$(dirname "$0")"
 source ./script/setup.sh
 
 rebuild=1
-while [[ $# -gt 0 ]]; do
+while test $# -gt 0; do
     case $1 in
         --dont-rebuild) rebuild=0; shift ;;
         *) echo "Unknown option $1"; exit 1 ;;

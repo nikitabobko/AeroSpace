@@ -239,6 +239,13 @@ include::aerospace-list-exec-env-vars.adoc[tags=synopsis]
 include::aerospace-list-exec-env-vars.adoc[tags=purpose]
 include::aerospace-list-exec-env-vars.adoc[tags=body]
 
+=== list-modes
+----
+include::aerospace-list-modes.adoc[tags=synopsis]
+----
+include::aerospace-list-modes.adoc[tags=purpose]
+include::aerospace-list-modes.adoc[tags=body]
+
 === list-monitors
 ----
 include::aerospace-list-monitors.adoc[tags=synopsis]

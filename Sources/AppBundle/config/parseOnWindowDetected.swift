@@ -1,13 +1,22 @@
 import Common
 import TOMLKit
 
-struct WindowDetectedCallback: Copyable, Equatable {
+struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
     var matcher: WindowDetectedCallbackMatcher = WindowDetectedCallbackMatcher()
     var checkFurtherCallbacks: Bool = false
     var rawRun: [any Command]? = nil
 
     var run: [any Command] {
-        rawRun ?? errorT("ID-46D063B2 should have discarded nil")
+        rawRun ?? dieT("ID-46D063B2 should have discarded nil")
+    }
+
+    var debugJson: Json {
+        var result: [String: Json] = [:]
+        result["matcher"] = matcher.debugJson
+        if let commands = rawRun {
+            result["commands"] = .string(commands.prettyDescription)
+        }
+        return .dict(result)
     }
 
     static func == (lhs: WindowDetectedCallback, rhs: WindowDetectedCallback) -> Bool {
@@ -16,12 +25,32 @@ struct WindowDetectedCallback: Copyable, Equatable {
     }
 }
 
-struct WindowDetectedCallbackMatcher: Copyable, Equatable {
+struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
     var appId: String?
     var appNameRegexSubstring: Regex<AnyRegexOutput>?
     var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
     var workspace: String?
     var duringAeroSpaceStartup: Bool?
+
+    var debugJson: Json {
+        var resultParts: [String] = []
+        if let appId {
+            resultParts.append("appId=\"\(appId)\"")
+        }
+        if appNameRegexSubstring != nil {
+            resultParts.append("appNameRegexSubstrin=Regex")
+        }
+        if windowTitleRegexSubstring != nil {
+            resultParts.append("windowTitleRegexSubstring=Regex")
+        }
+        if let workspace {
+            resultParts.append("workspace=\"\(workspace)\"")
+        }
+        if let duringAeroSpaceStartup {
+            resultParts.append("duringAeroSpaceStartup=\(duringAeroSpaceStartup)")
+        }
+        return .string(resultParts.joined(separator: ", "))
+    }
 
     static func == (lhs: WindowDetectedCallbackMatcher, rhs: WindowDetectedCallbackMatcher) -> Bool {
         check(
@@ -48,7 +77,7 @@ private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMa
     "during-aerospace-startup": Parser(\.duringAeroSpaceStartup, upcast(parseBool)),
 ]
 
-private func upcast<T>(_ fun: @escaping (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) -> (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T?> {
+private func upcast<T>(_ fun: @escaping @Sendable (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) -> @Sendable (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T?> {
     { fun($0, $1).map { $0 } }
 }
 

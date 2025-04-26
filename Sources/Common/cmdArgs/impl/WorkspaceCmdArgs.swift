@@ -34,7 +34,7 @@ public extension WorkspaceCmdArgs {
     var autoBackAndForth: Bool { _autoBackAndForth ?? false }
 }
 
-public enum WorkspaceTarget: Equatable {
+public enum WorkspaceTarget: Equatable, Sendable {
     case relative(_ isNext: Bool)
     case direct(WorkspaceName)
 

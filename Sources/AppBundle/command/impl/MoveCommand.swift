@@ -5,7 +5,6 @@ struct MoveCommand: Command {
     let args: MoveCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         let direction = args.direction.val
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         guard let currentWindow = target.windowOrNil else {
@@ -16,7 +15,7 @@ struct MoveCommand: Command {
                 let indexOfCurrent = currentWindow.ownIndex
                 let indexOfSiblingTarget = indexOfCurrent + direction.focusOffset
                 if parent.orientation == direction.orientation && parent.children.indices.contains(indexOfSiblingTarget) {
-                    switch parent.children[indexOfSiblingTarget].tilingTreeNodeCasesOrThrow() {
+                    switch parent.children[indexOfSiblingTarget].tilingTreeNodeCasesOrDie() {
                         case .tilingContainer(let topLevelSiblingTargetContainer):
                             deepMoveIn(window: currentWindow, into: topLevelSiblingTargetContainer, moveDirection: direction)
                         case .window: // "swap windows"
@@ -39,7 +38,7 @@ struct MoveCommand: Command {
 
 private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimized windows and windows of hidden apps isn't yet supported. This behavior is subject to change"
 
-private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) -> Bool {
+@MainActor private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) -> Bool {
     let innerMostChild = window.parents.first(where: {
         return switch $0.parent?.cases {
             case .tilingContainer(let parent): parent.orientation == direction.orientation
@@ -70,7 +69,7 @@ private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) 
         case .macosPopupWindowsContainer:
             return false // Impossible
         case .window:
-            error("Window can't contain children nodes")
+            die("Window can't contain children nodes")
     }
 
     window.bind(
@@ -81,8 +80,8 @@ private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) 
     return true
 }
 
-private func deepMoveIn(window: Window, into container: TilingContainer, moveDirection: CardinalDirection) {
-    let deepTarget = container.tilingTreeNodeCasesOrThrow().findDeepMoveInTargetRecursive(moveDirection.orientation)
+@MainActor private func deepMoveIn(window: Window, into container: TilingContainer, moveDirection: CardinalDirection) {
+    let deepTarget = container.tilingTreeNodeCasesOrDie().findDeepMoveInTargetRecursive(moveDirection.orientation)
     switch deepTarget {
         case .tilingContainer(let deepTarget):
             window.bind(to: deepTarget, adaptiveWeight: WEIGHT_AUTO, index: 0)
@@ -96,7 +95,7 @@ private func deepMoveIn(window: Window, into container: TilingContainer, moveDir
 }
 
 private extension TilingTreeNodeCases {
-    func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TilingTreeNodeCases {
+    @MainActor func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TilingTreeNodeCases {
         return switch self {
             case .window:
                 self
@@ -104,8 +103,8 @@ private extension TilingTreeNodeCases {
                 if container.orientation == orientation {
                     .tilingContainer(container)
                 } else {
-                    (container.mostRecentChild ?? errorT("Empty containers must be detached during normalization"))
-                        .tilingTreeNodeCasesOrThrow()
+                    (container.mostRecentChild ?? dieT("Empty containers must be detached during normalization"))
+                        .tilingTreeNodeCasesOrDie()
                         .findDeepMoveInTargetRecursive(orientation)
                 }
         }

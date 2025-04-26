@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-struct Rect: Copyable {
+struct Rect: ConvenienceCopyable {
     var topLeftX: CGFloat
     var topLeftY: CGFloat
     var width: CGFloat
@@ -42,6 +42,8 @@ extension Rect {
     var maxY: CGFloat { topLeftY + height }
     var minX: CGFloat { topLeftX }
     var maxX: CGFloat { topLeftX + width }
+
+    var size: CGSize { CGSize(width: width, height: height) }
 
     func getDimension(_ orientation: Orientation) -> CGFloat { orientation == .h ? width : height }
 }

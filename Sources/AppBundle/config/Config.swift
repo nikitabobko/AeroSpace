@@ -20,17 +20,17 @@ var defaultConfigUrl: URL {
             ?? getDefaultConfigUrlFromProject()
     }
 }
-let defaultConfig: Config = {
+@MainActor let defaultConfig: Config = {
     let parsedConfig = parseConfig(try! String(contentsOf: defaultConfigUrl))
     if !parsedConfig.errors.isEmpty {
-        error("Can't parse default config: \(parsedConfig.errors)")
+        die("Can't parse default config: \(parsedConfig.errors)")
     }
     return parsedConfig.config
 }()
-var config: Config = defaultConfig
-var configUrl: URL = defaultConfigUrl
+@MainActor var config: Config = defaultConfig // todo move to Ctx?
+@MainActor var configUrl: URL = defaultConfigUrl
 
-struct Config: Copyable {
+struct Config: ConvenienceCopyable {
     var afterLoginCommand: [any Command] = []
     var afterStartupCommand: [any Command] = []
     var _indentForNestedContainersWithTheSameOrientation: Void = ()

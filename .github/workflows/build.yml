@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - 'main'
-      - 'bobko/**'
+      - 'rr/**' # "rr" stands for "remote run"
   pull_request:
     branches: [ "main" ]
   schedule:
@@ -18,17 +18,27 @@ jobs:
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-14-arm64-Readme.md
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md
+        #
+        # Xcode versions:
+        # - https://en.wikipedia.org/wiki/Xcode
+        # - https://xcodereleases.com/?scope=release
         os: [macos-13, macos-14, macos-15]
     name: Build
     runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/cache@v3
+      - uses: nikitabobko/setup-swift@21e0b6448e6aa76937c51d4b172f6cba5e537cde # todo migrate to swiftly
         with:
-          path: .deps
-          key: ${{ matrix.os }}-${{ runner.arch }}-${{ hashFiles('script/install-dep.sh', 'Gemfile', '.bundle/config') }}
+          swift-version: '6.1.0'
+      - run: |
+          if sw_vers -productVersion | grep -q "^13"; then # macOS 13
+            true
+          else
+            sudo xcode-select -s "$XCODE_16_DEVELOPER_DIR" # Affects macOS SDK
+          fi
       - run: brew install bash fish xcbeautify
+      - run: env # Debug
       - run: ./script/install-dep.sh --all
       - run: ./build-debug.sh
       - run: ./run-tests.sh

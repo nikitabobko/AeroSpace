@@ -20,7 +20,7 @@ public struct SplitCmdArgs: CmdArgs {
         self.arg = .initialized(arg)
     }
 
-    public enum SplitArg: String, CaseIterable {
+    public enum SplitArg: String, CaseIterable, Sendable {
         case horizontal, vertical, opposite
     }
 }

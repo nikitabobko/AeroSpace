@@ -1,7 +1,7 @@
 import Common
 
 extension Workspace {
-    var rootTilingContainer: TilingContainer {
+    @MainActor var rootTilingContainer: TilingContainer {
         let containers = children.filterIsInstance(of: TilingContainer.self)
         switch containers.count {
             case 0:
@@ -14,7 +14,7 @@ extension Workspace {
             case 1:
                 return containers.singleOrNil()!
             default:
-                error("Workspace must contain zero or one tiling container as its child")
+                die("Workspace must contain zero or one tiling container as its child")
         }
     }
 
@@ -22,25 +22,25 @@ extension Workspace {
         children.filterIsInstance(of: Window.self)
     }
 
-    var macOsNativeFullscreenWindowsContainer: MacosFullscreenWindowsContainer {
+    @MainActor var macOsNativeFullscreenWindowsContainer: MacosFullscreenWindowsContainer {
         let containers = children.filterIsInstance(of: MacosFullscreenWindowsContainer.self)
         return switch containers.count {
             case 0: MacosFullscreenWindowsContainer(parent: self)
             case 1: containers.singleOrNil()!
-            default: errorT("Workspace must contain zero or one MacosFullscreenWindowsContainer")
+            default: dieT("Workspace must contain zero or one MacosFullscreenWindowsContainer")
         }
     }
 
-    var macOsNativeHiddenAppsWindowsContainer: MacosHiddenAppsWindowsContainer {
+    @MainActor var macOsNativeHiddenAppsWindowsContainer: MacosHiddenAppsWindowsContainer {
         let containers = children.filterIsInstance(of: MacosHiddenAppsWindowsContainer.self)
         return switch containers.count {
             case 0: MacosHiddenAppsWindowsContainer(parent: self)
             case 1: containers.singleOrNil()!
-            default: errorT("Workspace must contain zero or one MacosHiddenAppsWindowsContainer")
+            default: dieT("Workspace must contain zero or one MacosHiddenAppsWindowsContainer")
         }
     }
 
-    var forceAssignedMonitor: Monitor? {
+    @MainActor var forceAssignedMonitor: Monitor? {
         guard let monitorDescriptions = config.workspaceToMonitorForceAssignment[name] else { return nil }
         let sortedMonitors = sortedMonitors
         return monitorDescriptions.lazy

@@ -26,7 +26,7 @@ targets:
     # https://developer.apple.com/documentation/xcode/build-settings-reference
     settings:
       base:
-        SWIFT_VERSION: 5.9
+        SWIFT_VERSION: 6.0
         GENERATE_INFOPLIST_FILE: YES
         MARKETING_VERSION: ${XCODEGEN_AEROSPACE_VERSION}
         # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256

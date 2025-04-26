@@ -1,9 +1,9 @@
 import Foundation
 
-extension JSONEncoder {
+public extension JSONEncoder {
     static var aeroSpaceDefault: JSONEncoder {
         let encoder = JSONEncoder()
-        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes]
+        encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes, .sortedKeys]
         return encoder
     }
 

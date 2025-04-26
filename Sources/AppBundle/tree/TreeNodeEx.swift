@@ -25,13 +25,15 @@ extension TreeNode {
     var parentsWithSelf: [TreeNode] { parent.flatMap { [self] + $0.parentsWithSelf } ?? [self] }
 
     /// Also see visualWorkspace
-    var workspace: Workspace? { // todo rename to nodeWorkspace
-        self as? Workspace ?? parent?.workspace
+    var nodeWorkspace: Workspace? {
+        self as? Workspace ?? parent?.nodeWorkspace
     }
 
     /// Also see: workspace
-    var visualWorkspace: Workspace? { workspace ?? nodeMonitor?.activeWorkspace }
+    @MainActor
+    var visualWorkspace: Workspace? { nodeWorkspace ?? nodeMonitor?.activeWorkspace }
 
+    @MainActor
     var nodeMonitor: Monitor? {
         switch self.nodeCases {
             case .workspace(let ws): ws.workspaceMonitor
@@ -64,17 +66,17 @@ extension TreeNode {
         anyLeafWindowRecursive == nil
     }
 
+    @MainActor
     var hWeight: CGFloat {
         get { getWeight(.h) }
         set { setWeight(.h, newValue) }
     }
 
+    @MainActor
     var vWeight: CGFloat {
         get { getWeight(.v) }
         set { setWeight(.v, newValue) }
     }
-
-    func getCenter() -> CGPoint? { getRect()?.center }
 
     /// Returns closest parent that has children in specified direction relative to `self`
     func closestParent(

@@ -1,4 +1,4 @@
-public enum CardinalDirection: String, CaseIterable, Equatable {
+public enum CardinalDirection: String, CaseIterable, Equatable, Sendable {
     case left, down, up, right
 }
 

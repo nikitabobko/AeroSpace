@@ -6,7 +6,6 @@ struct WorkspaceCommand: Command {
     let args: WorkspaceCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool { // todo refactor
-        check(Thread.current.isMainThread)
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         let focusedWs = target.workspace
         let workspaceName: String
@@ -24,7 +23,7 @@ struct WorkspaceCommand: Command {
             case .direct(let name):
                 workspaceName = name.raw
                 if args.autoBackAndForth && focusedWs.name == workspaceName {
-                    return WorkspaceBackAndForthCommand().run(env, io)
+                    return WorkspaceBackAndForthCommand(args: WorkspaceBackAndForthCmdArgs(rawArgs: [])).run(env, io)
                 }
         }
         if focusedWs.name == workspaceName {
@@ -36,7 +35,7 @@ struct WorkspaceCommand: Command {
     }
 }
 
-func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String, target: LiveFocus) -> Workspace? {
+@MainActor func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String, target: LiveFocus) -> Workspace? {
     let stdinWorkspaces: [String] = stdin.split(separator: "\n").map { String($0).trim() }.filter { !$0.isEmpty }
     let currentMonitor = current.workspaceMonitor
     let workspaces: [Workspace] = stdinWorkspaces.isEmpty

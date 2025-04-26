@@ -2,8 +2,9 @@ import AppKit
 import Common
 import PrivateApi
 
+@MainActor
 func checkAccessibilityPermissions() {
-    let options = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true]
+    let options = [axTrustedCheckOptionPrompt: true]
     if !AXIsProcessTrustedWithOptions(options as CFDictionary) {
         resetAccessibility() // Because macOS doesn't reset it for us when the app signature changes...
         terminateApp()
@@ -14,14 +15,14 @@ private func resetAccessibility() {
     _ = try? Process.run(URL(filePath: "/usr/bin/tccutil"), arguments: ["reset", "Accessibility", aeroSpaceAppId])
 }
 
-protocol ReadableAttr {
+protocol ReadableAttr: Sendable {
     associatedtype T
-    var getter: (AnyObject) -> T? { get }
+    var getter: @Sendable (AnyObject) -> T? { get }
     var key: String { get }
 }
 
-protocol WritableAttr: ReadableAttr {
-    var setter: (T) -> CFTypeRef? { get }
+protocol WritableAttr: ReadableAttr, Sendable {
+    var setter: @Sendable (T) -> CFTypeRef? { get }
 }
 
 // Quick reference:
@@ -166,13 +167,13 @@ protocol WritableAttr: ReadableAttr {
 enum Ax {
     struct ReadableAttrImpl<T>: ReadableAttr {
         var key: String
-        var getter: (AnyObject) -> T?
+        var getter: @Sendable (AnyObject) -> T?
     }
 
     struct WritableAttrImpl<T>: WritableAttr {
         var key: String
-        var getter: (AnyObject) -> T?
-        var setter: (T) -> CFTypeRef?
+        var getter: @Sendable (AnyObject) -> T?
+        var setter: @Sendable (T) -> CFTypeRef?
     }
 
     static let titleAttr = WritableAttrImpl<String>(
@@ -256,13 +257,13 @@ enum Ax {
     )
     /// Returns windows visible on all monitors
     /// If some windows are located on not active macOS Spaces then they won't be returned
-    static let windowsAttr = ReadableAttrImpl<[AXUIElement]>(
+    static let windowsAttr = ReadableAttrImpl<[WindowIdAndAxUiElement]>(
         key: kAXWindowsAttribute,
-        getter: { ($0 as! NSArray).compactMap(tryGetWindow) }
+        getter: { ($0 as! NSArray).compactMap(windowOrNil) }
     )
-    static let focusedWindowAttr = ReadableAttrImpl<AXUIElement>(
+    static let focusedWindowAttr = ReadableAttrImpl<WindowIdAndAxUiElement>(
         key: kAXFocusedWindowAttribute,
-        getter: tryGetWindow
+        getter: windowOrNil
     )
     //static let mainWindowAttr = ReadableAttrImpl<AXUIElement>(
     //    key: kAXMainWindowAttribute,
@@ -291,66 +292,46 @@ enum Ax {
     //)
 }
 
-private func tryGetWindow(_ any: Any?) -> AXUIElement? {
+typealias WindowIdAndAxUiElement = (windowId: UInt32, ax: AXUIElement)
+
+private func windowOrNil(_ any: Any?) -> WindowIdAndAxUiElement? {
     guard let any else { return nil }
     let potentialWindow = any as! AXUIElement
     // Filter out non-window objects (e.g. Finder's desktop)
-    return potentialWindow.containingWindowId() != nil ? potentialWindow : nil
+    let windowId = potentialWindow.containingWindowId()
+    if let windowId {
+        return (windowId, potentialWindow)
+    } else {
+        return nil
+    }
 }
 
 extension AXUIElement {
     func get<Attr: ReadableAttr>(_ attr: Attr) -> Attr.T? {
+        let state = signposter.beginInterval(#function, "attr: \(attr.key) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
+        defer { signposter.endInterval(#function, state) }
         var raw: AnyObject?
         return AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success ? attr.getter(raw!) : nil
     }
 
     @discardableResult func set<Attr: WritableAttr>(_ attr: Attr, _ value: Attr.T) -> Bool {
+        let state = signposter.beginInterval(#function, "attr: \(attr.key) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
+        defer { signposter.endInterval(#function, state) }
         guard let value = attr.setter(value) else { return false }
         return AXUIElementSetAttributeValue(self, attr.key as CFString, value) == .success
     }
 
     func containingWindowId() -> CGWindowID? {
+        let state = signposter.beginInterval(#function, "axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
+        defer { signposter.endInterval(#function, state) }
         var cgWindowId = CGWindowID()
         return _AXUIElementGetWindow(self, &cgWindowId) == .success ? cgWindowId : nil
-    }
-
-    var center: CGPoint? {
-        guard let topLeft = get(Ax.topLeftCornerAttr) else { return nil }
-        guard let size = get(Ax.sizeAttr) else { return nil }
-        return CGPoint(x: topLeft.x + size.width / 2, y: topLeft.y + size.height)
-    }
-
-    func raise() -> Bool {
-        AXUIElementPerformAction(self, kAXRaiseAction as CFString) == AXError.success
     }
 }
 
 extension AXObserver {
-    private static func newImpl(_ pid: pid_t, _ handler: AXObserverCallback) -> AXObserver? {
+    static func new(_ pid: pid_t, _ handler: AXObserverCallback) -> AXObserver? {
         var observer: AXObserver? = nil
         return AXObserverCreate(pid, handler, &observer) == .success ? observer : nil
     }
-
-    static func observe(_ pid: pid_t, _ notifKey: String, _ ax: AXUIElement, _ handler: AXObserverCallback, data: AnyObject?) -> AXObserver? {
-        guard let observer = newImpl(pid, handler) else { return nil }
-        let dataPtr: UnsafeMutableRawPointer? = data.flatMap { Unmanaged.passUnretained($0).toOpaque() }
-        // kAXWindowCreatedNotification takes more than 1 attempt to subscribe. Probably, it's because the application
-        // is still initializing
-        for _ in 1 ... SUBSCRIBE_OBSERVER_ATTEMPTS_THRESHOLD {
-            if AXObserverAddNotification(observer, ax, notifKey as CFString, dataPtr) == .success {
-                CFRunLoopAddSource(CFRunLoopGetCurrent(), AXObserverGetRunLoopSource(observer), .defaultMode)
-                return observer
-            }
-        }
-        return nil
-    }
 }
-
-struct AxObserverWrapper {
-    let obs: AXObserver
-    let ax: AXUIElement
-    let notif: CFString
-}
-
-/// Pure heuristic. Usually it takes around 1000 attempts to subscribe
-private let SUBSCRIBE_OBSERVER_ATTEMPTS_THRESHOLD = 1 // todo drop

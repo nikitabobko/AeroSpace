@@ -1,0 +1,32 @@
+name: close-third-party-issues
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  close-third-party-issues:
+    name: Close third party issues
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+    steps:
+    - name: Close third party issues
+      run: |
+        set -e # Exit if one of commands exit with non-zero exit code
+        set -u # Treat unset variables and parameters other than the special parameters ‘@’ or ‘*’ as an error
+        set -o pipefail # Any command failed in the pipe fails the whole pipe
+
+        author="$(gh issue view "$ISSUE" --json author --jq '.author.login')"
+
+        close() {
+          gh issue edit "$ISSUE" --add-label bin
+          gh issue close "$ISSUE" --comment "Please don't open issues directly, use GitHub Discussions instead. See: https://github.com/nikitabobko/AeroSpace/issues/947"
+          gh issue lock "$ISSUE"
+        }
+
+        test "$author" = nikitabobko || close
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        ISSUE: ${{ github.event.issue.number }}

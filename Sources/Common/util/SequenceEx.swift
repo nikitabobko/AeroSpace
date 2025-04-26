@@ -45,16 +45,16 @@ public extension Sequence {
         return errors.isEmpty ? .success(result) : .failure(errors)
     }
 
-    @inlinable func minByOrThrow(_ selector: (Self.Element) -> some Comparable) -> Self.Element {
-        minBy(selector) ?? errorT("Empty sequence")
+    @inlinable func minByOrDie(_ selector: (Self.Element) -> some Comparable) -> Self.Element {
+        minBy(selector) ?? dieT("Empty sequence")
     }
 
     @inlinable func minBy(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
         self.min(by: { a, b in selector(a) < selector(b) })
     }
 
-    @inlinable func maxByOrThrow(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
-        self.maxBy(selector) ?? errorT("Empty sequence")
+    @inlinable func maxByOrDie(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
+        self.maxBy(selector) ?? dieT("Empty sequence")
     }
 
     @inlinable func maxBy(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
@@ -65,8 +65,20 @@ public extension Sequence {
         sorted(by: { a, b in selector(a) < selector(b) })
     }
 
-    func sumOf(_ selector: (Self.Element) -> CGFloat) -> CGFloat {
-        var result: CGFloat = 0
+    @inlinable func sortedBy(_ selectors: [(Self.Element) -> some Comparable]) -> [Self.Element] {
+        sorted(by: { a, b in
+            for selector in selectors {
+                let a = selector(a)
+                let b = selector(b)
+                if a < b { return true }
+                if a > b { return false }
+            }
+            return false
+        })
+    }
+
+    func sumOf(_ selector: (Self.Element) -> Double) -> Double {
+        var result: Double = 0
         for elem in self {
             result += selector(elem)
         }
@@ -87,12 +99,12 @@ public extension Sequence {
 }
 
 public extension Sequence where Self.Element: Comparable {
-    func minOrThrow() -> Self.Element {
-        self.min() ?? errorT("Empty sequence")
+    func minOrDie() -> Self.Element {
+        self.min() ?? dieT("Empty sequence")
     }
 
-    func maxOrThrow() -> Self.Element {
-        self.max() ?? errorT("Empty sequence")
+    func maxOrDie() -> Self.Element {
+        self.max() ?? dieT("Empty sequence")
     }
 }
 

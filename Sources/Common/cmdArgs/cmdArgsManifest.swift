@@ -1,4 +1,4 @@
-public enum CmdKind: String, CaseIterable, Equatable {
+public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     // Sorted
 
     case balanceSizes = "balance-sizes"
@@ -17,6 +17,7 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case layout
     case listApps = "list-apps"
     case listExecEnvVars = "list-exec-env-vars"
+    case listModes = "list-modes"
     case listMonitors = "list-monitors"
     case listWindows = "list-windows"
     case listWorkspaces = "list-workspaces"
@@ -36,8 +37,6 @@ public enum CmdKind: String, CaseIterable, Equatable {
     case volume
     case workspace
     case workspaceBackAndForth = "workspace-back-and-forth"
-
-    case serverVersionInternalCommand = "server-version-internal-command"
 }
 
 func initSubcommands() -> [String: any SubCommandParserProtocol] {
@@ -76,6 +75,8 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = SubCommandParser(parseListAppsCmdArgs)
             case .listExecEnvVars:
                 result[kind.rawValue] = SubCommandParser(ListExecEnvVarsCmdArgs.init)
+            case .listModes:
+                result[kind.rawValue] = SubCommandParser(parseListModesCmdArgs)
             case .listMonitors:
                 result[kind.rawValue] = SubCommandParser(parseListMonitorsCmdArgs)
             case .listWindows:
@@ -99,7 +100,7 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
             case .moveNodeToWorkspace:
                 result[kind.rawValue] = SubCommandParser(parseMoveNodeToWorkspaceCmdArgs)
             case .moveWorkspaceToMonitor:
-                result[kind.rawValue] = SubCommandParser(MoveWorkspaceToMonitorCmdArgs.init)
+                result[kind.rawValue] = SubCommandParser(parseWorkspaceToMonitorCmdArgs)
                 // deprecated
                 result["move-workspace-to-display"] = SubCommandParser(MoveWorkspaceToMonitorCmdArgs.init)
             case .reloadConfig:
@@ -110,10 +111,6 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = SubCommandParser(parseSplitCmdArgs)
             case .summonWorkspace:
                 result[kind.rawValue] = SubCommandParser(SummonWorkspaceCmdArgs.init)
-            case .serverVersionInternalCommand:
-                if isServer {
-                    result[kind.rawValue] = SubCommandParser(ServerVersionInternalCommandCmdArgs.init)
-                }
             case .triggerBinding:
                 result[kind.rawValue] = SubCommandParser(parseTriggerBindingCmdArgs)
             case .volume:

@@ -1,6 +1,6 @@
 import Foundation
 
-public struct ServerAnswer: Codable {
+public struct ServerAnswer: Codable, Sendable {
     public let exitCode: Int32
     public let stdout: String
     public let stderr: String
@@ -19,7 +19,7 @@ public struct ServerAnswer: Codable {
     }
 }
 
-public struct ClientRequest: Codable {
+public struct ClientRequest: Codable, Sendable {
     public let command: String // Unused. keep it for API compatibility with old servers for a couple of version
     public let args: [String]
     public let stdin: String

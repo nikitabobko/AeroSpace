@@ -4,8 +4,7 @@ import Common
 struct ListWorkspacesCommand: Command {
     let args: ListWorkspacesCmdArgs
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         var result: [Workspace] = Workspace.all
         if let visible = args.filteringOptions.visible {
             result = result.filter { $0.isVisible == visible }
@@ -24,12 +23,12 @@ struct ListWorkspacesCommand: Command {
         } else {
             let list = result.map { AeroObj.workspace($0) }
             if args.json {
-                return switch list.formatToJson(args.format, ignoreRightPaddingVar: args._format.isEmpty) {
+                return switch try await list.formatToJson(args.format, ignoreRightPaddingVar: args._format.isEmpty) {
                     case .success(let json): io.out(json)
                     case .failure(let msg): io.err(msg)
                 }
             } else {
-                return switch list.format(args.format) {
+                return switch try await list.format(args.format) {
                     case .success(let lines): io.out(lines)
                     case .failure(let msg): io.err(msg)
                 }
@@ -39,7 +38,7 @@ struct ListWorkspacesCommand: Command {
 }
 
 extension [MonitorId] {
-    func resolveMonitors(_ io: CmdIo) -> Set<CGPoint> {
+    @MainActor func resolveMonitors(_ io: CmdIo) -> Set<CGPoint> {
         var requested: Set<CGPoint> = []
         let sortedMonitors = sortedMonitors
         for id in self {
@@ -56,7 +55,7 @@ extension [MonitorId] {
 }
 
 extension MonitorId {
-    func resolve(_ io: CmdIo, sortedMonitors: [Monitor]) -> [Monitor] {
+    @MainActor func resolve(_ io: CmdIo, sortedMonitors: [Monitor]) -> [Monitor] {
         switch self {
             case .focused:
                 return [focus.workspace.workspaceMonitor]

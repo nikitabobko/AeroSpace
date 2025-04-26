@@ -1,5 +1,5 @@
 # https://github.com/nicklockwood/SwiftFormat/blob/main/Rules.md
---exclude Sources/ShellParserGenerated
+--exclude ./ShellParserGenerated
 --indentcase true
 --patternlet inline
 --indentstrings true
@@ -7,10 +7,12 @@
 # https://github.com/nicklockwood/SwiftFormat/issues/483 fix indentation for expressions nested in ternary
 --wrapternary before-operators
 
+--disable redundantInit
 --disable andOperator
 --disable blankLinesBetweenScopes
 --disable consecutiveSpaces
 --disable consistentSwitchCaseSpacing
+--disable hoistAwait
 --disable hoistTry
 --disable preferKeyPath
 --disable redundantNilInit
@@ -22,6 +24,7 @@
 --disable redundantType
 --disable spaceAroundComments
 --disable spaceInsideComments
+--disable void
 --disable wrapArguments
 --disable wrapMultilineConditionalAssignment
 

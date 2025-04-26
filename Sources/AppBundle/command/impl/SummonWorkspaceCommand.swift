@@ -5,7 +5,6 @@ struct SummonWorkspaceCommand: Command {
     let args: SummonWorkspaceCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        check(Thread.current.isMainThread)
         let workspace = Workspace.get(byName: args.target.val.raw)
         let focusedMonitor = focus.workspace.workspaceMonitor
 
