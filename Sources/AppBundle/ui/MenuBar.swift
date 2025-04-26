@@ -65,10 +65,10 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
     } label: {
         if viewModel.isEnabled {
             switch viewModel.experimentalUISettings.displayStyle {
-                case .systemText:
-                    MenuBarLabel(viewModel.trayText, textStyle: .system)
                 case .monospacedText:
                     MenuBarLabel(viewModel.trayText)
+                case .systemText:
+                    MenuBarLabel(viewModel.trayText, textStyle: .system)
                 case .squares:
                     MenuBarLabel(viewModel.trayText, trayItems: viewModel.trayItems)
                 case .i3:
@@ -134,9 +134,9 @@ struct MenuBarLabel: View {
                                 .bold()
                         }
                     }
-                    if workspaces != nil {
-                        let otherWorkspaces = Workspace.all.filter { workspace in
-                            !workspace.isEffectivelyEmpty && !trayItems.contains(where: { item in item.type == .monitor && item.name == workspace.name })
+                    if let workspaces {
+                        let otherWorkspaces = workspaces.filter { workspace in
+                            !workspace.isEffectivelyEmpty && !trayItems.contains(where: { item in item.type == .workspace && item.name == workspace.name })
                         }
                         if !otherWorkspaces.isEmpty {
                             Group {
@@ -146,7 +146,7 @@ struct MenuBarLabel: View {
                                     .bold()
                                     .padding(.bottom, 2)
                                 ForEach(otherWorkspaces, id: \.name) { item in
-                                    itemView(for: TrayItem(type: .monitor, name: item.name, isActive: false))
+                                    itemView(for: TrayItem(type: .workspace, name: item.name, isActive: false))
                                 }
                             }
                             .opacity(0.6)

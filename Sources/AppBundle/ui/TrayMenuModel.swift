@@ -25,10 +25,10 @@ public class TrayMenuModel: ObservableObject {
         .joined(separator: " │ ")
     TrayMenuModel.shared.workspaces = Workspace.all.map {
         let monitor = $0.isVisible || !$0.isEffectivelyEmpty ? " - \($0.workspaceMonitor.name)" : ""
-        return WorkspaceViewModel(name: $0.name, suffix: monitor, isFocused: focus.workspace == $0)
+        return WorkspaceViewModel(name: $0.name, suffix: monitor, isFocused: focus.workspace == $0, isEffectivelyEmpty: $0.isEffectivelyEmpty)
     }
     var items = sortedMonitors.map {
-        TrayItem(type: .monitor, name: $0.activeWorkspace.name, isActive: $0.activeWorkspace == focus.workspace && sortedMonitors.count > 1)
+        TrayItem(type: .workspace, name: $0.activeWorkspace.name, isActive: $0.activeWorkspace == focus.workspace && sortedMonitors.count > 1)
     }
     let mode = activeMode?.takeIf { $0 != mainModeId }?.first?.lets { TrayItem(type: .mode, name: $0.uppercased(), isActive: true) }
     if let mode {
@@ -41,14 +41,15 @@ struct WorkspaceViewModel: Hashable {
     let name: String
     let suffix: String
     let isFocused: Bool
+    let isEffectivelyEmpty: Bool
 }
 
 enum TrayItemType: String, Hashable {
     case mode
-    case monitor
+    case workspace
 }
 
-private let validNumbers = "0" ... "9"
+private let validNumbers = (0 ... 50).map { String($0) }
 private let validLetters = "A" ... "Z"
 
 struct TrayItem: Hashable, Identifiable {
@@ -56,14 +57,14 @@ struct TrayItem: Hashable, Identifiable {
     let name: String
     let isActive: Bool
     var systemImageName: String? {
-        // System image type is only valid for single number and single capital char workspace name
-        guard name.count == 1 else { return nil }
+        // System image type is only valid for numbers 0 to 50 and single capital char workspace name
+        guard name.count <= 2 else { return nil }
         guard validNumbers.contains(name) || validLetters.contains(name) else { return nil }
         let lowercasedName = name.lowercased()
         switch type {
             case .mode:
                 return "\(lowercasedName).circle"
-            case .monitor:
+            case .workspace:
                 if isActive {
                     return "\(lowercasedName).square.fill"
                 } else {
