@@ -91,6 +91,8 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "after-login-command": Parser(\.afterLoginCommand) { parseCommandOrCommands($0).toParsedToml($1) },
     "after-startup-command": Parser(\.afterStartupCommand) { parseCommandOrCommands($0).toParsedToml($1) },
 
+    "mouse-window-focus": Parser(\.mouseWindowFocus, parseBool),
+
     "on-focus-changed": Parser(\.onFocusChanged) { parseCommandOrCommands($0).toParsedToml($1) },
     "on-focused-monitor-changed": Parser(\.onFocusedMonitorChanged) { parseCommandOrCommands($0).toParsedToml($1) },
     // "on-focused-workspace-changed": Parser(\.onFocusedWorkspaceChanged, { parseCommandOrCommands($0).toParsedToml($1) }),
@@ -167,6 +169,10 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
     var errors: [TomlParseError] = []
 
     var config = rawTable.parseTable(Config(), configParser, .root, &errors)
+    if config.mouseWindowFocus {
+        config.onFocusChanged = []
+        config.onFocusedMonitorChanged = []
+    }
 
     if let mapping = rawTable[keyMappingConfigRootKey].flatMap({ parseKeyMapping($0, .rootKey(keyMappingConfigRootKey), &errors) }) {
         config.keyMapping = mapping

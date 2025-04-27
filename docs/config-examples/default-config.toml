@@ -13,6 +13,7 @@ after-startup-command = []
 
 # Start AeroSpace at login
 start-at-login = false
+mouse-window-focus = false
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
