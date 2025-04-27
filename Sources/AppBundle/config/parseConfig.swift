@@ -170,8 +170,12 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
 
     var config = rawTable.parseTable(Config(), configParser, .root, &errors)
     if config.mouseWindowFocus {
-        config.onFocusChanged = []
-        config.onFocusedMonitorChanged = []
+        config.onFocusChanged.removeAll { cmd in
+            cmd.info.kind.rawValue.localizedCaseInsensitiveContains("mouse")
+        }
+        config.onFocusedMonitorChanged.removeAll { cmd in
+            cmd.info.kind.rawValue.localizedCaseInsensitiveContains("mouse")
+        }
     }
 
     if let mapping = rawTable[keyMappingConfigRootKey].flatMap({ parseKeyMapping($0, .rootKey(keyMappingConfigRootKey), &errors) }) {
