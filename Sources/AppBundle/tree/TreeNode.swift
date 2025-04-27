@@ -17,7 +17,8 @@ class TreeNode: Equatable {
     // - drag window with mouse
     // - move-mouse command
     var lastAppliedLayoutPhysicalRect: Rect? = nil // with real inner gaps
-    var unboundStacktrace: String? = nil
+    final var unboundStacktrace: String? = nil
+    var isBound: Bool { unboundStacktrace == nil } // todo drop, once https://github.com/nikitabobko/AeroSpace/issues/1215 is fixed
 
     @MainActor
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {

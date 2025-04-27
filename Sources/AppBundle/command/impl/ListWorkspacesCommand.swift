@@ -4,7 +4,7 @@ import Common
 struct ListWorkspacesCommand: Command {
     let args: ListWorkspacesCmdArgs
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         var result: [Workspace] = Workspace.all
         if let visible = args.filteringOptions.visible {
             result = result.filter { $0.isVisible == visible }
@@ -23,12 +23,12 @@ struct ListWorkspacesCommand: Command {
         } else {
             let list = result.map { AeroObj.workspace($0) }
             if args.json {
-                return switch try await list.formatToJson(args.format, ignoreRightPaddingVar: args._format.isEmpty) {
+                return switch list.formatToJson(args.format, ignoreRightPaddingVar: args._format.isEmpty) {
                     case .success(let json): io.out(json)
                     case .failure(let msg): io.err(msg)
                 }
             } else {
-                return switch try await list.format(args.format) {
+                return switch list.format(args.format) {
                     case .success(let lines): io.out(lines)
                     case .failure(let msg): io.err(msg)
                 }

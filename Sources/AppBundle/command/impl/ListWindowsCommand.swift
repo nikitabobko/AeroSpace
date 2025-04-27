@@ -43,20 +43,21 @@ struct ListWindowsCommand: Command {
         if args.outputOnlyCount {
             return io.out("\(windows.count)")
         } else {
-            var _windows: [(window: Window, title: String)] = [] // todo cleanup
+            var _list: [(window: Window, title: String)] = [] // todo cleanup
             for window in windows {
-                _windows.append((window, try await window.title))
+                _list.append((window, try await window.title))
             }
-            windows = _windows.sortedBy([{ $0.window.app.name ?? "" }, \.title]).map { $0.window }
+            _list = _list.filter { $0.window.isBound }
+            _list = _list.sortedBy([{ $0.window.app.name ?? "" }, \.title])
 
-            let list = windows.map { AeroObj.window($0) }
+            let list = _list.map { AeroObj.window(window: $0.window, title: $0.title) }
             if args.json {
-                return switch try await list.formatToJson(args.format, ignoreRightPaddingVar: args._format.isEmpty) {
+                return switch list.formatToJson(args.format, ignoreRightPaddingVar: args._format.isEmpty) {
                     case .success(let json): io.out(json)
                     case .failure(let msg): io.err(msg)
                 }
             } else {
-                return switch try await list.format(args.format) {
+                return switch list.format(args.format) {
                     case .success(let lines): io.out(lines)
                     case .failure(let msg): io.err(msg)
                 }

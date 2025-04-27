@@ -1,7 +1,7 @@
 import Common
 
 enum AeroObj {
-    case window(Window)
+    case window(window: Window, title: String)
     case workspace(Workspace)
     case app(any AbstractApp)
     case monitor(Monitor)
@@ -28,7 +28,7 @@ enum PlainInterVar: String, CaseIterable {
 
 extension [AeroObj] {
     @MainActor
-    func format(_ format: [StringInterToken]) async throws -> Result<[String], String> {
+    func format(_ format: [StringInterToken]) -> Result<[String], String> {
         var cellTable: [[Cell<String>]] = []
         for obj in self {
             var line: [Cell<String>] = []
@@ -42,7 +42,7 @@ extension [AeroObj] {
                     case .literal(let literal):
                         curCell += literal
                     case .interVar(let value):
-                        switch try await value.expandFormatVar(obj: obj) {
+                        switch value.expandFormatVar(obj: obj) {
                             case .success(let expanded): curCell += expanded.toString()
                             case .failure(let error): errors.append(error)
                         }
@@ -156,32 +156,32 @@ private struct Cell<T> {
 
 extension String {
     @MainActor
-    func expandFormatVar(obj: AeroObj) async throws -> Result<Primitive, String> {
+    func expandFormatVar(obj: AeroObj) -> Result<Primitive, String> {
         let formatVar = self.toFormatVar()
         switch (obj, formatVar) {
             case (_, .none): break
 
-            case (.window(let w), .workspace):
-                return try await w.nodeWorkspace.flatMap(AeroObj.workspace).mapAsyncMainActor(expandFormatVar) ?? .success(.string("NULL-WOKRSPACE"))
-            case (.window(let w), .monitor):
-                return try await w.nodeMonitor.flatMap(AeroObj.monitor).mapAsyncMainActor(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
-            case (.window(let w), .app):
-                return try await expandFormatVar(obj: .app(w.app))
-            case (.window(_), .window): break
+            case (.window(let w, _), .workspace):
+                return w.nodeWorkspace.flatMap(AeroObj.workspace).map(expandFormatVar) ?? .success(.string("NULL-WOKRSPACE"))
+            case (.window(let w, _), .monitor):
+                return w.nodeMonitor.flatMap(AeroObj.monitor).map(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
+            case (.window(let w, _), .app):
+                return expandFormatVar(obj: .app(w.app))
+            case (.window(_, _), .window): break
 
             case (.workspace(let ws), .monitor):
-                return try await expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitor))
+                return expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitor))
             case (.workspace, _): break
 
             case (.app(_), _): break
             case (.monitor(_), _): break
         }
         switch (obj, formatVar) {
-            case (.window(let w), .window(let f)):
+            case (.window(let w, let title), .window(let f)):
                 return switch f {
                     case .windowId: .success(.uint32(w.windowId))
                     case .windowIsFullscreen: .success(.bool(w.isFullscreen))
-                    case .windowTitle: .success(.string(try await w.title))
+                    case .windowTitle: .success(.string(title))
                 }
             case (.workspace(let w), .workspace(let f)):
                 return switch f {
