@@ -3,7 +3,7 @@ import Foundation
 import SwiftUI
 
 @MainActor
-public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it be converted to "SwiftUI struct"?
+public func menuBar(viewModel: TrayMenuModel, appearance: Appearance) -> some Scene { // todo should it be converted to "SwiftUI struct"?
     MenuBarExtra {
         let shortIdentification = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitShortHash)"
         let identification      = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitHash)"
@@ -26,7 +26,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             }
             Divider()
         }
-        getExperimentalUISettingsMenu(viewModel: viewModel)
+        getExperimentalUISettingsMenu(viewModel: viewModel, appearance: appearance)
         Divider()
         Button(viewModel.isEnabled ? "Disable" : "Enable") {
             Task {
@@ -82,7 +82,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
 
 @MainActor
 struct MenuBarLabel: View {
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
+    @Environment(\.colorScheme) var menuColorScheme: ColorScheme
     var text: String
     var textStyle: MenuBarTextStyle
     var color: Color?
@@ -94,8 +94,8 @@ struct MenuBarLabel: View {
     let itemBorderSize = CGFloat(4)
     let itemCornerRadius = CGFloat(6)
 
-    var finalColor: Color {
-        return color ?? (colorScheme == .dark ? Color.white : Color.black)
+    private var finalColor: Color {
+        return color ?? (menuColorScheme == .dark ? Color.white : Color.black)
     }
 
     init(_ text: String, textStyle: MenuBarTextStyle = .monospaced, color: Color? = nil, trayItems: [TrayItem]? = nil, workspaces: [WorkspaceViewModel]? = nil) {
