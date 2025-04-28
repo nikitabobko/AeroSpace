@@ -28,7 +28,7 @@ public class TrayMenuModel: ObservableObject {
         return WorkspaceViewModel(name: $0.name, suffix: monitor, isFocused: focus.workspace == $0, isEffectivelyEmpty: $0.isEffectivelyEmpty)
     }
     var items = sortedMonitors.map {
-        TrayItem(type: .workspace, name: $0.activeWorkspace.name, isActive: $0.activeWorkspace == focus.workspace && sortedMonitors.count > 1)
+        TrayItem(type: .workspace, name: $0.activeWorkspace.name, isActive: $0.activeWorkspace == focus.workspace)
     }
     let mode = activeMode?.takeIf { $0 != mainModeId }?.first?.lets { TrayItem(type: .mode, name: $0.uppercased(), isActive: true) }
     if let mode {
@@ -49,7 +49,6 @@ enum TrayItemType: String, Hashable {
     case workspace
 }
 
-private let validNumbers = (0 ... 50).map { String($0) }
 private let validLetters = "A" ... "Z"
 
 struct TrayItem: Hashable, Identifiable {
@@ -58,8 +57,13 @@ struct TrayItem: Hashable, Identifiable {
     let isActive: Bool
     var systemImageName: String? {
         // System image type is only valid for numbers 0 to 50 and single capital char workspace name
-        guard name.count <= 2 else { return nil }
-        guard validNumbers.contains(name) || validLetters.contains(name) else { return nil }
+        if let number = Int(name) {
+            guard number >= 0 && number <= 50 else { return nil }
+        } else if name.count == 1 {
+            guard validLetters.contains(name) else { return nil }
+        } else {
+            return nil
+        }
         let lowercasedName = name.lowercased()
         switch type {
             case .mode:
