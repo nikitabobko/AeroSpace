@@ -89,9 +89,10 @@ struct MenuBarLabel: View {
     var trayItems: [TrayItem]?
     var workspaces: [WorkspaceViewModel]?
 
-    let hStackSpacing = CGFloat(4)
-    let itemHeight = CGFloat(40)
+    let hStackSpacing = CGFloat(6)
+    let itemSize = CGFloat(40)
     let itemBorderSize = CGFloat(4)
+    let itemPadding = CGFloat(8)
     let itemCornerRadius = CGFloat(6)
 
     private var finalColor: Color {
@@ -141,10 +142,10 @@ struct MenuBarLabel: View {
                         if !otherWorkspaces.isEmpty {
                             Group {
                                 Text("|")
-                                    .font(.system(.largeTitle, design: textStyle.design))
+                                    .font(.system(.largeTitle))
                                     .foregroundStyle(finalColor)
                                     .bold()
-                                    .padding(.bottom, 2)
+                                    .padding(.bottom, 6)
                                 ForEach(otherWorkspaces, id: \.name) { item in
                                     itemView(for: TrayItem(type: .workspace, name: item.name, isActive: false))
                                 }
@@ -153,7 +154,7 @@ struct MenuBarLabel: View {
                         }
                     }
                 }
-                .frame(height: itemHeight)
+                .frame(height: itemSize)
             } else {
                 HStack(spacing: hStackSpacing) {
                     Text(text)
@@ -169,8 +170,9 @@ struct MenuBarLabel: View {
         if item.name.containsEmoji() {
             // If workspace name contains emojis we use the plain emoji in text to avoid visibility issues scaling the emoji to fit the squares
             Text(item.name)
-                .font(.system(.largeTitle, design: textStyle.design))
+                .font(.system(.largeTitle))
                 .foregroundStyle(finalColor)
+                .frame(height: itemSize)
         } else {
             if let imageName = item.systemImageName {
                 Image(systemName: imageName)
@@ -178,30 +180,30 @@ struct MenuBarLabel: View {
                     .aspectRatio(contentMode: .fit)
                     .symbolRenderingMode(.monochrome)
                     .foregroundStyle(finalColor)
+                    .frame(width: itemSize, height: itemSize)
             } else {
                 let text = Text(item.name)
-                    .font(.system(.largeTitle, design: textStyle.design))
+                    .font(.system(.largeTitle))
                     .bold()
-                    .padding(.horizontal, item.isActive ? itemBorderSize * 2 : itemBorderSize * 1.5)
-                    .frame(height: itemHeight)
+                    .padding(.horizontal, itemBorderSize * 2)
+                    .frame(height: itemSize)
                 if item.isActive {
                     ZStack {
-                        text.foregroundStyle(.clear)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: itemCornerRadius, style: .circular)
-                            )
+                        text.background {
+                            RoundedRectangle(cornerRadius: itemCornerRadius, style: .circular)
+                        }
                         text.blendMode(.destinationOut)
                     }
                     .compositingGroup()
                     .foregroundStyle(finalColor)
+                    .frame(height: itemSize)
                 } else {
-                    text
-                        .padding(.horizontal, itemBorderSize)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: itemCornerRadius, style: .circular)
-                                .strokeBorder(lineWidth: itemBorderSize)
-                        )
-                        .foregroundStyle(finalColor)
+                    text.background {
+                        RoundedRectangle(cornerRadius: itemCornerRadius, style: .circular)
+                            .strokeBorder(lineWidth: itemBorderSize)
+                    }
+                    .foregroundStyle(finalColor)
+                    .frame(height: itemSize)
                 }
             }
         }
