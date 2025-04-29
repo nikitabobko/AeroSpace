@@ -25,7 +25,13 @@ public class TrayMenuModel: ObservableObject {
         .joined(separator: " │ ")
     TrayMenuModel.shared.workspaces = Workspace.all.map {
         let monitor = $0.isVisible || !$0.isEffectivelyEmpty ? " - \($0.workspaceMonitor.name)" : ""
-        return WorkspaceViewModel(name: $0.name, suffix: monitor, isFocused: focus.workspace == $0, isEffectivelyEmpty: $0.isEffectivelyEmpty)
+        return WorkspaceViewModel(
+            name: $0.name,
+            suffix: monitor,
+            isFocused: focus.workspace == $0,
+            isEffectivelyEmpty: $0.isEffectivelyEmpty,
+            isVisible: $0.isVisible
+        )
     }
     var items = sortedMonitors.map {
         TrayItem(type: .workspace, name: $0.activeWorkspace.name, isActive: $0.activeWorkspace == focus.workspace)
@@ -42,6 +48,7 @@ struct WorkspaceViewModel: Hashable {
     let suffix: String
     let isFocused: Bool
     let isEffectivelyEmpty: Bool
+    let isVisible: Bool
 }
 
 enum TrayItemType: String, Hashable {

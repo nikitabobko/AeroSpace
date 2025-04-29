@@ -136,9 +136,7 @@ struct MenuBarLabel: View {
                         }
                     }
                     if let workspaces {
-                        let otherWorkspaces = workspaces.filter { workspace in
-                            !workspace.isEffectivelyEmpty && !trayItems.contains(where: { item in item.type == .workspace && item.name == workspace.name })
-                        }
+                        let otherWorkspaces = workspaces.filter { !$0.isEffectivelyEmpty && !$0.isVisible }
                         if !otherWorkspaces.isEmpty {
                             Group {
                                 Text("|")
