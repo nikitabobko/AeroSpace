@@ -117,6 +117,8 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     // Deprecated
     "non-empty-workspaces-root-containers-layout-on-startup": Parser(\._nonEmptyWorkspacesRootContainersLayoutOnStartup, parseStartupRootContainerLayout),
     "indent-for-nested-containers-with-the-same-orientation": Parser(\._indentForNestedContainersWithTheSameOrientation, parseIndentForNestedContainersWithTheSameOrientation),
+
+    "excluded-app-bundle-ids": Parser(\.excludedAppBundleIds, parseExcludeBundleIDs),
 ]
 
 private extension ParsedCmd where T == any Command {
@@ -281,6 +283,13 @@ private func skipParsing<T: Sendable>(_ value: T) -> @Sendable (_ raw: TOMLValue
 }
 
 private func parseExecOnWorkspaceChange(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<[String]> {
+    parseTomlArray(raw, backtrace)
+        .flatMap { arr in
+            arr.mapAllOrFailure { elem in parseString(elem, backtrace) }
+        }
+}
+
+private func parseExcludeBundleIDs(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<[String]> {
     parseTomlArray(raw, backtrace)
         .flatMap { arr in
             arr.mapAllOrFailure { elem in parseString(elem, backtrace) }

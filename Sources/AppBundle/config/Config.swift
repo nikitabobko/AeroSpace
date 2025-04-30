@@ -56,6 +56,8 @@ struct Config: ConvenienceCopyable {
     var onWindowDetected: [WindowDetectedCallback] = []
 
     var preservedWorkspaceNames: [String] = []
+
+    var excludedAppBundleIds: [String] = []
 }
 
 enum DefaultContainerOrientation: String {
