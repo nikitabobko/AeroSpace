@@ -1,0 +1,91 @@
+// top left corner -> apple logo -> about this mac
+{
+  "AXActivationPoint" : "<AXValue 0x6000018dd2c0> {value = x:830.000000 y:219.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14658, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14658, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14658, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600000db4640> {value = x:760.000000 y:205.000000 w:280.000000 h:483.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=14658, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14658, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14658, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x60000193b780> {pid=45870}",
+  "AXPosition" : "<AXValue 0x60000193b780> {value = x:760.000000 y:205.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x6000018def40> {pid=45870}\";\n    SectionUniqueID = AXContent;\n}"
+  ],
+  "AXSize" : "<AXValue 0x6000018ddb60> {value = w:280.000000 h:483.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "",
+  "AXTitleUIElement" : "AXUIElement(AxWindowId=14658, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=14658, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXZoomButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14658, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14658, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : null,
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=14658, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=14658, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x6000018dff60> {pid=45870}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "System Information",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=14658, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.apple.SystemProfiler",
+  "Aero.App.nsApp.activationPolicy" : "accessory",
+  "Aero.App.nsApp.execPath" : "file:///System/Applications/Utilities/System%20Information.app/Contents/MacOS/System%20Information",
+  "Aero.App.version" : "915",
+  "Aero.App.versionShort" : "11.0",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 14658,
+  "Aero.isDialogHeuristic" : true,
+  "Aero.isWindowHeuristic" : true,
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "AppBundle.Workspace",
+  "Aero.workspace" : "M"
+}

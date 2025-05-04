@@ -1,0 +1,103 @@
+{
+  "AXActivationPoint" : "<AXValue 0x6000019c6850> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : "chrome://newtab/",
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x60000029fd00> {value = x:1799.000000 y:1128.000000 w:1800.000000 h:1124.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x6000018d5fe0> {pid=34617}",
+  "AXPosition" : "<AXValue 0x600001968750> {value = x:1799.000000 y:1128.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x6000018d6520> {pid=34617}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x6000018d45d0> {pid=34617}\";\n    SectionUniqueID = AXContainer;\n}"
+  ],
+  "AXSize" : "<AXValue 0x6000019c7210> {value = w:1800.000000 h:1124.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "New Tab - Google Chrome",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=14057, title=\"\", role=\"AXTextField\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x6000018d4120> {pid=34617}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Chrome",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=14057, title=\"New Tab - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.google.Chrome",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Google%20Chrome.app/Contents/MacOS/Google%20Chrome",
+  "Aero.App.version" : "7049.116",
+  "Aero.App.versionShort" : "135.0.7049.116",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 14057,
+  "Aero.isDialogHeuristic" : false,
+  "Aero.isWindowHeuristic" : true,
+  "Aero.on-window-detected" : [
+    {
+      "commands" : "move-node-to-workspace F",
+      "matcher" : "appId=\"com.google.Chrome\""
+    }
+  ],
+  "Aero.treeNodeParent" : "AppBundle.TilingContainer",
+  "Aero.workspace" : "F"
+}

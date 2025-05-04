@@ -1,0 +1,99 @@
+{
+  "AXActivationPoint" : "<AXValue 0x6000018c3060> {value = x:70.000000 y:58.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 1,
+  "AXFrame" : "<AXValue 0x600000294e40> {value = x:0.000000 y:44.000000 w:1800.000000 h:1124.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x6000018cc9f0> {pid=97586}",
+  "AXPosition" : "<AXValue 0x6000018ce4c0> {value = x:0.000000 y:44.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x6000018c26d0> {pid=97586}\";\n    SectionUniqueID = AXContent;\n}"
+  ],
+  "AXSize" : "<AXValue 0x6000018c1a40> {value = w:1800.000000 h:1124.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "untitled",
+  "AXTitleUIElement" : "AXUIElement(AxWindowId=11259, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x6000018cc960> {pid=97586}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Sublime Text",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=11259, title=\"untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.sublimetext.4",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Sublime%20Text.app/Contents/MacOS/sublime_text",
+  "Aero.App.version" : "4192",
+  "Aero.App.versionShort" : "Build 4192",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 11259,
+  "Aero.isDialogHeuristic" : false,
+  "Aero.isWindowHeuristic" : true,
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "AppBundle.TilingContainer",
+  "Aero.workspace" : "E"
+}

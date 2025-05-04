@@ -1,0 +1,100 @@
+{
+  "AXActivationPoint" : "<AXValue 0x6000018c7240> {value = x:100.000000 y:58.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : "file:///Users/bobko/",
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600000d4e300> {value = x:30.000000 y:44.000000 w:1767.000000 h:1113.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXGrowArea" : null,
+  "AXIdentifier" : "_NS:136",
+  "AXMain" : 1,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x6000018c7240> {pid=43740}",
+  "AXPosition" : "<AXValue 0x6000018c3330> {value = x:30.000000 y:44.000000 type = kAXValueCGPointType}",
+  "AXProxy" : "AXUIElement(AxWindowId=14623, title=\"bobko\", role=\"AXImage\", subrole=nil)",
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x6000018d1770> {pid=43740}\";\n    SectionUniqueID = AXContent;\n}"
+  ],
+  "AXSize" : "<AXValue 0x6000018c7240> {value = w:1767.000000 h:1113.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "bobko — -zsh — 251×77",
+  "AXTitleUIElement" : "AXUIElement(AxWindowId=14623, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=14623, title=nil, role=\"AXTextArea\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x6000019278a0> {pid=43740}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Terminal",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=14623, title=\"bobko — -zsh — 251×77\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.apple.Terminal",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///System/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal",
+  "Aero.App.version" : "455.1",
+  "Aero.App.versionShort" : "2.14",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 14623,
+  "Aero.isDialogHeuristic" : false,
+  "Aero.isWindowHeuristic" : true,
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "AppBundle.TilingContainer",
+  "Aero.workspace" : "M"
+}

@@ -1,0 +1,111 @@
+{
+  "AXActivationPoint" : "<AXValue 0x60000193b4e0> {value = x:10.000000 y:58.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXLayoutDirection" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x6000002c9180> {value = x:0.000000 y:44.000000 w:1800.000000 h:1124.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : {
+    "AXEnabled" : 1,
+    "AXLayoutDirection" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXGrowArea" : null,
+  "AXIdentifier" : "FinderWindow",
+  "AXMain" : 1,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 1,
+    "AXLayoutDirection" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x6000018c7330> {pid=1312}",
+  "AXPosition" : "<AXValue 0x60000193b660> {value = x:0.000000 y:44.000000 type = kAXValueCGPointType}",
+  "AXProxy" : "AXUIElement(AxWindowId=14283, title=\"Macintosh HD\", role=\"AXImage\", subrole=nil)",
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Toolbar;\n    SectionObject = \"<AXUIElement 0x60000193b0f0> {pid=1312}\";\n    SectionUniqueID = AXToolbar;\n}",
+    "{\n    SectionDescription = \"Content Navigator\";\n    SectionObject = \"<AXUIElement 0x60000193b030> {pid=1312}\";\n    SectionUniqueID = AXContentNavigator;\n}",
+    "{\n    SectionDescription = Search;\n    SectionObject = \"<AXUIElement 0x60000193af40> {pid=1312}\";\n    SectionUniqueID = AXSearch;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x60000193b090> {pid=1312}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x60000193b2a0> {pid=1312}\";\n    SectionUniqueID = AXTopLevelNavigator;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600001995bc0> {value = w:1800.000000 h:1124.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "/Users/bobko",
+  "AXTitleUIElement" : "AXUIElement(AxWindowId=14283, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXToolbarButton" : null,
+  "AXValue" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 1,
+    "AXLayoutDirection" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=14283, title=nil, role=\"AXOutline\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : "<AXValue 0x60000029e800> {value = x:0.000000 y:1169.000000 w:0.000000 h:0.000000 type = kAXValueCGRectType}",
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x6000018d0030> {pid=1312}",
+    "AXPosition" : "<AXValue 0x600001995bc0> {value = x:0.000000 y:1169.000000 type = kAXValueCGPointType}",
+    "AXRole" : "AXApplication",
+    "AXSize" : "<AXValue 0x60000192b900> {value = w:0.000000 h:0.000000 type = kAXValueCGSizeType}",
+    "AXTitle" : "Finder",
+    "AXValue" : null,
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=14283, title=\"/Users/bobko\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "<AXUIElement 0x6000019c2ee0> {pid=1312}"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.apple.finder",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///System/Library/CoreServices/Finder.app/Contents/MacOS/Finder",
+  "Aero.App.version" : "1732.4.3",
+  "Aero.App.versionShort" : "15.4",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 14283,
+  "Aero.isDialogHeuristic" : false,
+  "Aero.isWindowHeuristic" : true,
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "AppBundle.TilingContainer",
+  "Aero.workspace" : "F"
+}

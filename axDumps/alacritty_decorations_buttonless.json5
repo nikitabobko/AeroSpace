@@ -1,3 +1,6 @@
+// ~/.alacritty.toml:
+//     [window]
+//     decorations = "Buttonless"
 {
   "AXActivationPoint" : "<AXValue 0x6000031adef0> {value = x:10.000000 y:58.000000 type = kAXValueCGPointType}",
   "AXCancelButton" : null,

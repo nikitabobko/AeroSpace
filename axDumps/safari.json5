@@ -1,0 +1,103 @@
+{
+  "AXActivationPoint" : "<AXValue 0x6000019a7de0> {value = x:910.000000 y:58.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600000294f00> {value = x:900.000000 y:44.000000 w:900.000000 h:1124.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXGrowArea" : null,
+  "AXIdentifier" : "SafariWindow?IsSecure=false&UUID=DC64557C-318F-4644-8AE3-8925469E902C",
+  "AXMain" : 1,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x6000019ac8d0> {pid=45941}",
+  "AXPosition" : "<AXValue 0x60000193b660> {value = x:900.000000 y:44.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Toolbar;\n    SectionObject = \"<AXUIElement 0x60000191b510> {pid=45941}\";\n    SectionUniqueID = AXToolbar;\n}",
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x60000191aca0> {pid=45941}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionDescription = \"Top Level Navigator\";\n    SectionObject = \"<AXUIElement 0x6000019581e0> {pid=45941}\";\n    SectionUniqueID = AXTopLevelNavigator;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600001939c50> {value = w:900.000000 h:1124.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "Start Page",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=14665, title=nil, role=\"AXTextField\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXIsScribbleActive" : 0,
+    "AXMainWindow" : "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x6000018d3990> {pid=45941}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Safari",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=14665, title=\"Start Page\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.apple.Safari",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/Contents/MacOS/Safari",
+  "Aero.App.version" : "20621.1.15.11.10",
+  "Aero.App.versionShort" : "18.4",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 14665,
+  "Aero.isDialogHeuristic" : false,
+  "Aero.isWindowHeuristic" : true,
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "AppBundle.TilingContainer",
+  "Aero.workspace" : "M"
+}

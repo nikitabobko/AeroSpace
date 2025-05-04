@@ -1,0 +1,64 @@
+{
+  "AXActivationPoint" : "<AXValue 0x6000019898c0> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600000240900> {value = x:1032.000000 y:48.000000 w:440.000000 h:700.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x6000019898c0> {pid=92331}",
+  "AXPosition" : "<AXValue 0x6000019c7450> {value = x:1032.000000 y:48.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x6000019c7900> {pid=92331}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x6000019c6a30> {pid=92331}\";\n    SectionUniqueID = AXContainer;\n}"
+  ],
+  "AXSize" : "<AXValue 0x6000019898c0> {value = w:440.000000 h:700.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "Toolbox",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : "<AXUIElement 0x60000198b390> {pid=92331}",
+    "AXFocusedUIElement" : "<AXUIElement 0x60000198b390> {pid=92331}",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=14148, title=\"Toolbox\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=14148, title=\"Toolbox\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : null,
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "JetBrains Toolbox",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=14148, title=\"Toolbox\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.jetbrains.toolbox",
+  "Aero.App.nsApp.activationPolicy" : "accessory",
+  "Aero.App.nsApp.execPath" : "file:///Applications/JetBrains%20Toolbox.app/Contents/MacOS/jetbrains-toolbox",
+  "Aero.App.version" : "2.6.0.40632",
+  "Aero.App.versionShort" : "2.6.0.40632",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 14148,
+  "Aero.isDialogHeuristic" : true,
+  "Aero.isWindowHeuristic" : true,
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "AppBundle.Workspace",
+  "Aero.workspace" : "M"
+}

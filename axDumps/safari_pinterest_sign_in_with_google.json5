@@ -1,0 +1,54 @@
+// https://www.pinterest.com -> Sign in with Google
+{
+  "AXContents" : [
+    "AXUIElement(AxWindowId=14676, title=nil, role=\"AXTable\", subrole=nil)"
+  ],
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x6000002e3dc0> {value = x:669.000000 y:664.000000 w:182.000000 h:53.000000 type = kAXValueCGRectType}",
+  "AXHorizontalScrollBar" : null,
+  "AXMakeScreenRectVisible" : null,
+  "AXParent" : "<AXUIElement Application 0x600001924000> {pid=45941}",
+  "AXPosition" : "<AXValue 0x6000019278d0> {value = x:669.000000 y:664.000000 type = kAXValueCGPointType}",
+  "AXRole" : "AXScrollArea",
+  "AXSize" : "<AXValue 0x600001924000> {value = w:182.000000 h:53.000000 type = kAXValueCGSizeType}",
+  "AXTopLevelUIElement" : null,
+  "AXVerticalScrollBar" : null,
+  "AXWindow" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "<AXUIElement 0x60000193ad60> {pid=46016}",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=14671, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXIsScribbleActive" : 0,
+    "AXMainWindow" : "AXUIElement(AxWindowId=14671, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x6000018e3690> {pid=45941}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Safari",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=14676, title=nil, role=\"AXScrollArea\", subrole=nil)",
+      "AXUIElement(AxWindowId=14671, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(AxWindowId=14665, title=\"Pinterest\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.apple.Safari",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/Contents/MacOS/Safari",
+  "Aero.App.version" : "20621.1.15.11.10",
+  "Aero.App.versionShort" : "18.4",
+  "Aero.AxIgnored" : "AXChildren, AXHelp, AXChildrenInNavigationOrder, AXRoleDescription",
+  "Aero.axWindowId" : 14676,
+  "Aero.isDialogHeuristic" : true,
+  "Aero.isWindowHeuristic" : false,
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "AppBundle.MacosPopupWindowsContainer",
+  "Aero.workspace" : "nil"
+}

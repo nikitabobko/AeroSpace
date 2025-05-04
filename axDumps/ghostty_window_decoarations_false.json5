@@ -1,0 +1,66 @@
+// ~/.config/ghostty/config -> window-decoration = false
+{
+  "AXActivationPoint" : "<AXValue 0x6000018c7c00> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : "file:///Users/bobko/",
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600000d957c0> {value = x:900.000000 y:44.000000 w:900.000000 h:1124.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXIdentifier" : "TerminalWindowRestoration",
+  "AXMain" : 1,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600001996b80> {pid=46546}",
+  "AXPosition" : "<AXValue 0x600001906130> {value = x:900.000000 y:44.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x6000018e5740> {pid=46546}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x6000018e7a20> {pid=46546}\";\n    SectionUniqueID = AXContainer;\n}"
+  ],
+  "AXSize" : "<AXValue 0x6000018e0660> {value = w:900.000000 h:1124.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "~",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=14769, title=nil, role=\"AXUnknown\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=14769, title=\"~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=14769, title=\"~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x6000018c5a10> {pid=46546}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Ghostty",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=14769, title=\"~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.mitchellh.ghostty",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Ghostty.app/Contents/MacOS/ghostty",
+  "Aero.App.version" : "9438",
+  "Aero.App.versionShort" : "1.1.3",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 14769,
+  "Aero.isDialogHeuristic" : false,
+  "Aero.isWindowHeuristic" : true,
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "AppBundle.TilingContainer",
+  "Aero.workspace" : "M"
+}

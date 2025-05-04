@@ -1,0 +1,65 @@
+{
+  "AXActivationPoint" : "<AXValue 0x6000018ced00> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600000297580> {value = x:0.000000 y:0.000000 w:1800.000000 h:1169.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x6000018ced00> {pid=1405}",
+  "AXPosition" : "<AXValue 0x6000018ced00> {value = x:0.000000 y:0.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x600001969020> {pid=1405}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x600001969890> {pid=1405}\";\n    SectionUniqueID = AXContainer;\n}"
+  ],
+  "AXSize" : "<AXValue 0x6000018ced00> {value = w:1800.000000 h:1169.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXUnknown",
+  "AXTitle" : "Поперечный - ПОП КУЛЬТУРА - YouTube",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=14384, title=\"YouTube Video Player in Full screen\", role=\"AXGroup\", subrole=\"AXApplicationGroup\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=14384, title=\"Поперечный - ПОП КУЛЬТУРА - YouTube\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=14384, title=\"Поперечный - ПОП КУЛЬТУРА - YouTube\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXMenuBar" : "<AXUIElement 0x6000018d05d0> {pid=1405}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Firefox",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=14384, title=\"Поперечный - ПОП КУЛЬТУРА - YouTube\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(AxWindowId=13054, title=\"YouTube\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "org.mozilla.firefox",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Firefox.app/Contents/MacOS/firefox",
+  "Aero.App.version" : "13725.4.14",
+  "Aero.App.versionShort" : "137.0.2",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 14384,
+  "Aero.isDialogHeuristic" : true,
+  "Aero.isWindowHeuristic" : true,
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "AppBundle.Workspace",
+  "Aero.workspace" : "W"
+}

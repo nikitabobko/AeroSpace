@@ -1,0 +1,91 @@
+{
+  "AXActivationPoint" : "<AXValue 0x6000018cc480> {value = x:292.000000 y:146.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : "file:///Users/bobko/The%20past,%20present,%20and%20future%20of%20local-first%20-%20Martin%20Kleppmann%20(Local-First%20Conf)%20%5BNMq0vncHJvU%5D.mkv",
+  "AXFocused" : 1,
+  "AXFrame" : "<AXValue 0x6000002bbe80> {value = x:222.000000 y:132.000000 w:1519.000000 h:919.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXIdentifier" : "_NS:122",
+  "AXMain" : 1,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600001931ad0> {pid=38681}",
+  "AXPosition" : "<AXValue 0x6000018ccc90> {value = x:222.000000 y:132.000000 type = kAXValueCGPointType}",
+  "AXProxy" : "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXImage\", subrole=nil)",
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x6000018d1470> {pid=38681}\";\n    SectionUniqueID = AXContent;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600001931ad0> {value = w:1519.000000 h:919.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv",
+  "AXTitleUIElement" : "AXUIElement(AxWindowId=14277, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXZoomButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : "<AXUIElement 0x6000018cd4d0> {pid=38681}",
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x600001931830> {pid=38681}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "VLC",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=14277, title=\"The past, present, and future of local-first - Martin Kleppmann (Local-First Conf) [NMq0vncHJvU].mkv\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "org.videolan.vlc",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Applications/VLC.app/Contents/MacOS/VLC",
+  "Aero.App.version" : "3.0.21",
+  "Aero.App.versionShort" : "3.0.21",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 14277,
+  "Aero.isDialogHeuristic" : true,
+  "Aero.isWindowHeuristic" : true,
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "AppBundle.Workspace",
+  "Aero.workspace" : "F"
+}

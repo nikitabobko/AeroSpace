@@ -1,0 +1,68 @@
+{
+  "AXActivationPoint" : "<AXValue 0x6000018cf060> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : "",
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600000d96640> {value = x:1218.000000 y:587.000000 w:400.000000 h:225.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x60000194ff00> {pid=34617}",
+  "AXPosition" : "<AXValue 0x6000018cf060> {value = x:1218.000000 y:587.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x6000018cc000> {pid=34617}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x6000018cc2a0> {pid=34617}\";\n    SectionUniqueID = AXContainer;\n}"
+  ],
+  "AXSize" : "<AXValue 0x6000018cf060> {value = w:400.000000 h:225.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "Picture-in-picture",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : null,
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=14413, title=\"Picture-in-picture\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=14413, title=\"Picture-in-picture\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x6000018cd3e0> {pid=34617}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Chrome",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=14413, title=\"Picture-in-picture\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(AxWindowId=14400, title=\"John Cena Prank Call - YouTube – Video playing in picture-in-picture mode - Google Chrome\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.google.Chrome",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Google%20Chrome.app/Contents/MacOS/Google%20Chrome",
+  "Aero.App.version" : "7049.116",
+  "Aero.App.versionShort" : "135.0.7049.116",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 14413,
+  "Aero.isDialogHeuristic" : true,
+  "Aero.isWindowHeuristic" : true,
+  "Aero.on-window-detected" : [
+    {
+      "commands" : "move-node-to-workspace F",
+      "matcher" : "appId=\"com.google.Chrome\""
+    }
+  ],
+  "Aero.treeNodeParent" : "AppBundle.Workspace",
+  "Aero.workspace" : "F"
+}

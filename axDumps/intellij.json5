@@ -1,0 +1,101 @@
+{
+  "AXActivationPoint" : "<AXValue 0x6000018c05a0> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600000242480> {value = x:30.000000 y:44.000000 w:1770.000000 h:1124.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x6000018cc2a0> {pid=8947}",
+  "AXPosition" : "<AXValue 0x6000018c4c60> {value = x:30.000000 y:44.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x6000018c00f0> {pid=8947}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x6000018c0a20> {pid=8947}\";\n    SectionUniqueID = AXContainer;\n}"
+  ],
+  "AXSize" : "<AXValue 0x6000018c05a0> {value = w:1770.000000 h:1124.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=13585, title=nil, role=\"AXTextArea\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x6000018c14d0> {pid=8947}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "IntelliJ IDEA",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=13585, title=\"jvm-gradle-sandbox [~/a/jvm-gradle-sandbox] – /Users/bobko/a/jvm-gradle-sandbox/app/src/main/kotlin/jvm/gradle/sandbox/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(AxWindowId=13583, title=\"jvm-sandbox [~/a/jvm-sandbox] – /Users/bobko/a/jvm-sandbox/src/main/kotlin/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.jetbrains.intellij",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Users/bobko/Applications/ij-241.app/Contents/MacOS/idea",
+  "Aero.App.version" : "IU-241.17011.79",
+  "Aero.App.versionShort" : "2024.1.2",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 13585,
+  "Aero.isDialogHeuristic" : false,
+  "Aero.isWindowHeuristic" : true,
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "AppBundle.TilingContainer",
+  "Aero.workspace" : "I"
+}
