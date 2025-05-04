@@ -3,7 +3,7 @@ import Foundation
 import SwiftUI
 
 @MainActor
-public func menuBar(viewModel: TrayMenuModel, appearance: Appearance) -> some Scene { // todo should it be converted to "SwiftUI struct"?
+public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it be converted to "SwiftUI struct"?
     MenuBarExtra {
         let shortIdentification = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitShortHash)"
         let identification      = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitHash)"
@@ -26,7 +26,7 @@ public func menuBar(viewModel: TrayMenuModel, appearance: Appearance) -> some Sc
             }
             Divider()
         }
-        getExperimentalUISettingsMenu(viewModel: viewModel, appearance: appearance)
+        getExperimentalUISettingsMenu(viewModel: viewModel)
         Divider()
         Button(viewModel.isEnabled ? "Disable" : "Enable") {
             Task {
