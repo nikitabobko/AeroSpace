@@ -16,6 +16,24 @@ struct ExperimentalUISettings {
     }
 }
 
+enum MenuBarStyle: String, CaseIterable, Identifiable, Equatable, Hashable {
+    case monospacedText
+    case systemText
+    case squares
+    case i3
+    var id: Int {
+        return self.hashValue
+    }
+    var title: String {
+        switch self {
+            case .monospacedText: "Monospaced font"
+            case .systemText: "System font"
+            case .squares: "Square images"
+            case .i3: "i3 style"
+        }
+    }
+}
+
 enum ExperimentalUISettingsItems: String {
     case displayStyle
 }
