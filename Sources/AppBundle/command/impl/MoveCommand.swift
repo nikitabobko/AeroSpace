@@ -10,7 +10,8 @@ struct MoveCommand: Command {
         guard let currentWindow = target.windowOrNil else {
             return io.err(noWindowIsFocused)
         }
-        switch currentWindow.parent.cases {
+        guard let parent = currentWindow.parent else { return false }
+        switch parent.cases {
             case .tilingContainer(let parent):
                 let indexOfCurrent = currentWindow.ownIndex
                 let indexOfSiblingTarget = indexOfCurrent + direction.focusOffset
@@ -49,11 +50,13 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
     }) as! TilingContainer
     let bindTo: TilingContainer
     let bindToIndex: Int
-    switch innerMostChild.parent.nodeCases {
+    guard let parent = innerMostChild.parent else { return false }
+    switch parent.nodeCases {
         case .tilingContainer(let parent):
             check(parent.orientation == direction.orientation)
             bindTo = parent
-            bindToIndex = innerMostChild.ownIndex + direction.insertionOffset
+            guard let ownIndex = innerMostChild.ownIndex else { return false }
+            bindToIndex = ownIndex + direction.insertionOffset
         case .workspace(let parent): // create implicit container
             let prevRoot = parent.rootTilingContainer
             prevRoot.unbindFromParent()

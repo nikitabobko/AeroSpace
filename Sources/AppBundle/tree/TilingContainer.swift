@@ -5,7 +5,6 @@ class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider renami
     fileprivate var _orientation: Orientation
     var orientation: Orientation { _orientation }
     var layout: Layout
-    override var parent: NonLeafTreeNodeObject { super.parent ?? dieT("TilingContainers always have parent") }
 
     @MainActor
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, _ orientation: Orientation, _ layout: Layout, index: Int) {
@@ -26,7 +25,7 @@ class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider renami
 }
 
 extension TilingContainer {
-    var ownIndex: Int { parent.children.firstIndex(of: self)! }
+    var ownIndex: Int? { parent?.children.firstIndex(of: self) }
     var isRootContainer: Bool { parent is Workspace }
 
     @MainActor

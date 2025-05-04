@@ -11,7 +11,7 @@ private extension TilingContainer {
     @MainActor func unbindEmptyAndAutoFlatten() {
         if let child = children.singleOrNil(), config.enableNormalizationFlattenContainers && (child is TilingContainer || !isRootContainer) {
             child.unbindFromParent()
-            let mru = parent.mostRecentChild
+            let mru = parent?.mostRecentChild
             let previousBinding = unbindFromParent()
             child.bind(to: previousBinding.parent, adaptiveWeight: previousBinding.adaptiveWeight, index: previousBinding.index)
             (child as? TilingContainer)?.unbindEmptyAndAutoFlatten()

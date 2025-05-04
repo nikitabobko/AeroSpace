@@ -4,10 +4,6 @@ import Common
 class Window: TreeNode, Hashable {
     nonisolated let windowId: UInt32 // todo nonisolated keyword is no longer necessary?
     let app: any AbstractApp
-    override var parent: NonLeafTreeNodeObject {
-        super.parent ?? dieT("Windows must always have a parent. The Window was unbound at:\n\(unboundStacktrace ?? "nil")")
-    }
-    var parentOrNilForTests: NonLeafTreeNodeObject? { super.parent }
     var lastFloatingSize: CGSize?
     var isFullscreen: Bool = false
     var noOuterGapsInFullscreen: Bool = false

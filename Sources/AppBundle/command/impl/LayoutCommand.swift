@@ -30,7 +30,8 @@ struct LayoutCommand: Command {
             case .vertical:
                 return changeTilingLayout(io, targetLayout: nil, targetOrientation: .v, window: window)
             case .tiling:
-                switch window.parent.cases {
+                guard let parent = window.parent else { return false }
+                switch parent.cases {
                     case .macosPopupWindowsContainer:
                         return false // Impossible
                     case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
@@ -52,7 +53,8 @@ struct LayoutCommand: Command {
 }
 
 @MainActor private func changeTilingLayout(_ io: CmdIo, targetLayout: Layout?, targetOrientation: Orientation?, window: Window) -> Bool {
-    switch window.parent.cases {
+    guard let parent = window.parent else { return false }
+    switch parent.cases {
         case .tilingContainer(let parent):
             let targetOrientation = targetOrientation ?? parent.orientation
             let targetLayout = targetLayout ?? parent.layout

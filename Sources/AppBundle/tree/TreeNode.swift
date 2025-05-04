@@ -4,8 +4,8 @@ import Common
 class TreeNode: Equatable {
     private var _children: [TreeNode] = []
     var children: [TreeNode] { _children }
-    fileprivate weak var _parent: NonLeafTreeNodeObject? = nil
-    var parent: NonLeafTreeNodeObject? { _parent }
+    fileprivate final weak var _parent: NonLeafTreeNodeObject? = nil
+    final var parent: NonLeafTreeNodeObject? { _parent }
     private var adaptiveWeight: CGFloat
     private let _mruChildren: MruStack<TreeNode> = MruStack()
     // Usages:
@@ -18,7 +18,7 @@ class TreeNode: Equatable {
     // - move-mouse command
     var lastAppliedLayoutPhysicalRect: Rect? = nil // with real inner gaps
     final var unboundStacktrace: String? = nil
-    var isBound: Bool { unboundStacktrace == nil } // todo drop, once https://github.com/nikitabobko/AeroSpace/issues/1215 is fixed
+    var isBound: Bool { parent != nil } // todo drop, once https://github.com/nikitabobko/AeroSpace/issues/1215 is fixed
 
     @MainActor
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {

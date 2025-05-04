@@ -152,6 +152,7 @@ final class MacWindow: Window {
     func unhideFromCorner() {
         guard let prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect else { return }
         guard let nodeWorkspace else { return } // hiding only makes sense for workspace windows
+        guard let parent else { return }
 
         switch getChildParentRelation(child: self, parent: parent) {
             // Just a small optimization to avoid unnecessary AX calls for non floating windows
@@ -246,7 +247,8 @@ private func unbindAndGetBindingDataForNewTilingWindow(_ workspace: Workspace, w
 
 @MainActor
 func tryOnWindowDetected(_ window: Window) async throws {
-    switch window.parent.cases {
+    guard let parent = window.parent else { return }
+    switch parent.cases {
         case .tilingContainer, .workspace, .macosMinimizedWindowsContainer,
              .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
             try await onWindowDetected(window)

@@ -12,7 +12,8 @@ struct SplitCommand: Command {
         guard let window = target.windowOrNil else {
             return io.err(noWindowIsFocused)
         }
-        switch window.parent.cases {
+        guard let parent = window.parent else { return false }
+        switch parent.cases {
             case .workspace:
                 // Nothing to do for floating and macOS native fullscreen windows
                 return io.err("Can't split floating windows")
