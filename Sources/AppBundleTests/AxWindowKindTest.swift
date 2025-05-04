@@ -25,10 +25,22 @@ final class AxWindowKindTest: XCTestCase {
 
 extension [String: Json]: AxUiElementMock {
     public func get<Attr>(_ attr: Attr) -> Attr.T? where Attr: ReadableAttr {
-        self[attr.key]?.rawValue.flatMap { attr.getter($0 as AnyObject) }
+        guard let value = self[attr.key] else {
+            return isSynthetic ? dieT("\(self) doesn't contain \(attr.key)") : nil
+        }
+        if let value = value.rawValue {
+            return attr.getter(value as AnyObject)
+                ?? dieT("Value \(value) (of type \(Swift.type(of: value))) isn't convertible to \(attr.key)")
+        } else {
+            return nil
+        }
     }
 
-    public func containingWindowId() -> CGWindowID? {
+    private var isSynthetic: Bool { self[kAXAeroSynthetic] != nil }
+
+    public func containingWindowId() -> CGWindowID? { _containingWindowId() }
+
+    private func _containingWindowId() -> CGWindowID {
         let windowId = self["Aero.axWindowId"]?.rawValue ?? dieT()
         if let windowId = windowId as? Int {
             return UInt32.init(windowId)

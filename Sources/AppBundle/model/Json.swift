@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-enum Json: Encodable {
+enum Json: Encodable, Equatable {
     // vector
     case dict([String: Json])
     case array([Json])

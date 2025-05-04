@@ -259,9 +259,9 @@ enum Ax {
     /// If some windows are located on not active macOS Spaces then they won't be returned
     static let windowsAttr = ReadableAttrImpl<[WindowIdAndAxUiElement]>(
         key: kAXWindowsAttribute,
-        getter: { ($0 as! NSArray).compactMap(windowOrNil) }
+        getter: { ($0 as! NSArray).compactMap(windowOrNil).map { ($0.windowId, $0.ax.cast) } }
     )
-    static let focusedWindowAttr = ReadableAttrImpl<WindowIdAndAxUiElement>(
+    static let focusedWindowAttr = ReadableAttrImpl<WindowIdAndAxUiElementMock>(
         key: kAXFocusedWindowAttribute,
         getter: windowOrNil
     )
@@ -293,19 +293,30 @@ enum Ax {
     //)
 }
 
+let kAXAeroSynthetic = "Aero.synthetic"
+
 private func castToAxUiElementMock(_ a: AnyObject) -> AxUiElementMock {
-    if let dict = a as? [String: Json] { // Convert from _SwiftDeferredNSDictionary<String, Json>
-        dict as? AxUiElementMock ?? dieT("Cannot cast \(type(of: a)) to AxUiElementMock")
-    } else {
-        a as! AXUIElement
+    if let str = a as? String, let commaIndex = str.firstIndex(of: ",") {
+        let windowId = UInt32.init(String(str.prefix(upTo: commaIndex)).removePrefix("AXUIElement(AxWindowId="))
+        if let windowId {
+            return castToAxUiElementMock([
+                "Aero.axWindowId": Json.uint32(windowId),
+                kAXAeroSynthetic: Json.bool(true),
+            ] as AnyObject)
+        }
     }
+    if let dict = a as? [String: Json] { // Convert from _SwiftDeferredNSDictionary<String, Json>
+        return dict as? AxUiElementMock ?? dieT("Cannot cast \(type(of: a)) to AxUiElementMock")
+    }
+    return a as! AXUIElement
 }
 
 typealias WindowIdAndAxUiElement = (windowId: UInt32, ax: AXUIElement)
+typealias WindowIdAndAxUiElementMock = (windowId: UInt32, ax: AxUiElementMock)
 
-private func windowOrNil(_ any: Any?) -> WindowIdAndAxUiElement? {
+private func windowOrNil(_ any: Any?) -> WindowIdAndAxUiElementMock? {
     guard let any else { return nil }
-    let potentialWindow = any as! AXUIElement
+    let potentialWindow = castToAxUiElementMock(any as AnyObject)
     // Filter out non-window objects (e.g. Finder's desktop)
     let windowId = potentialWindow.containingWindowId()
     if let windowId {
