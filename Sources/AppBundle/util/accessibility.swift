@@ -297,7 +297,7 @@ private func castToAxUiElementMock(_ a: AnyObject) -> AxUiElementMock {
     if let dict = a as? [String: Json] { // Convert from _SwiftDeferredNSDictionary<String, Json>
         dict as? AxUiElementMock ?? dieT("Cannot cast \(type(of: a)) to AxUiElementMock")
     } else {
-        a as? AxUiElementMock ?? dieT("Cannot cast \(type(of: a)) to AxUiElementMock")
+        a as! AXUIElement
     }
 }
 
