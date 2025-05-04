@@ -4,8 +4,9 @@ import Foundation
 import HotKey
 import XCTest
 
-let projectRoot: URL = { // todo make it work in Xcode
-    var url = URL(filePath: #file)
+let projectRoot: URL = {
+    var url = URL(filePath: #filePath).absoluteURL
+    check(FileManager.default.fileExists(atPath: url.path))
     while !FileManager.default.fileExists(atPath: url.appending(component: ".git").path) {
         url.deleteLastPathComponent()
     }
