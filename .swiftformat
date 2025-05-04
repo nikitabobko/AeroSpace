@@ -27,6 +27,7 @@
 --disable void
 --disable wrapArguments
 --disable wrapMultilineConditionalAssignment
+--disable sortImports
 
 # This rule is cool but buggy. It feels like heuristics are used instead of real code analysis
 --disable unusedArguments
