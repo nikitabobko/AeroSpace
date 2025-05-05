@@ -34,12 +34,12 @@ if /bin/test -z "${NUKE_PATH:-}"; then
     export NUKE_PATH=1
 fi
 
-_swift() {
+swift() {
     if /usr/bin/which swiftly &> /dev/null; then
         swiftly run swift "$@"
     else
         echo "warning: swiftly is not installed. Fallback to plain swift. Swift compilation might not be reproducible" > /dev/stderr
-        swift "$@"
+        /usr/bin/env swift "$@"
     fi
 }
 

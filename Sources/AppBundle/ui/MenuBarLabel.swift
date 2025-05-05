@@ -87,8 +87,8 @@ struct MenuBarLabel: View {
 
     @ViewBuilder
     fileprivate func itemView(for item: TrayItem) -> some View {
+        // If workspace name contains emojis we use the plain emoji in text to avoid visibility issues scaling the emoji to fit the squares
         if item.name.containsEmoji() {
-            // If workspace name contains emojis we use the plain emoji in text to avoid visibility issues scaling the emoji to fit the squares
             Text(item.name)
                 .font(.system(.largeTitle))
                 .foregroundStyle(finalColor)

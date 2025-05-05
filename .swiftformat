@@ -7,7 +7,6 @@
 # https://github.com/nicklockwood/SwiftFormat/issues/483 fix indentation for expressions nested in ternary
 --wrapternary before-operators
 
---disable redundantInit
 --disable andOperator
 --disable blankLinesBetweenScopes
 --disable consecutiveSpaces
@@ -15,6 +14,7 @@
 --disable hoistAwait
 --disable hoistTry
 --disable preferKeyPath
+--disable redundantInit
 --disable redundantNilInit
 --disable redundantParens
 --disable redundantRawValues
@@ -22,12 +22,12 @@
 --disable redundantSelf
 --disable redundantStaticSelf
 --disable redundantType
+--disable sortImports
 --disable spaceAroundComments
 --disable spaceInsideComments
 --disable void
 --disable wrapArguments
 --disable wrapMultilineConditionalAssignment
---disable sortImports
 
 # This rule is cool but buggy. It feels like heuristics are used instead of real code analysis
 --disable unusedArguments

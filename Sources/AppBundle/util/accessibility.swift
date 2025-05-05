@@ -271,21 +271,21 @@ enum Ax {
     //)
     static let closeButtonAttr = ReadableAttrImpl<any AxUiElementMock>(
         key: kAXCloseButtonAttribute,
-        getter: { castToAxUiElementMock($0) }
+        getter: castToAxUiElementMock
     )
     // Note! fullscreen is not the same as "zoom" (green plus)
     static let fullscreenButtonAttr = ReadableAttrImpl<any AxUiElementMock>(
         key: kAXFullScreenButtonAttribute,
-        getter: { castToAxUiElementMock($0) }
+        getter: castToAxUiElementMock
     )
     // green plus
     static let zoomButtonAttr = ReadableAttrImpl<any AxUiElementMock>(
         key: kAXZoomButtonAttribute,
-        getter: { castToAxUiElementMock($0) }
+        getter: castToAxUiElementMock
     )
     static let minimizeButtonAttr = ReadableAttrImpl<any AxUiElementMock>(
         key: kAXMinimizeButtonAttribute,
-        getter: { castToAxUiElementMock($0) }
+        getter: castToAxUiElementMock
     )
     //static let growAreaAttr = ReadableAttrImpl<AXUIElement>(
     //    key: kAXGrowAreaAttribute,
@@ -296,17 +296,20 @@ enum Ax {
 let kAXAeroSynthetic = "Aero.synthetic"
 
 private func castToAxUiElementMock(_ a: AnyObject) -> AxUiElementMock {
-    if let str = a as? String, let commaIndex = str.firstIndex(of: ",") {
-        let windowId = UInt32.init(String(str.prefix(upTo: commaIndex)).removePrefix("AXUIElement(AxWindowId="))
-        if let windowId {
-            return castToAxUiElementMock([
-                "Aero.axWindowId": Json.uint32(windowId),
-                kAXAeroSynthetic: Json.bool(true),
-            ] as AnyObject)
+    if isUnitTest {
+        if let str = a as? String, let commaIndex = str.firstIndex(of: ",") {
+            let windowId = UInt32.init(String(str.prefix(upTo: commaIndex)).removePrefix("AXUIElement(AxWindowId="))
+            if let windowId {
+                return castToAxUiElementMock([
+                    "Aero.axWindowId": Json.uint32(windowId),
+                    kAXAeroSynthetic: Json.bool(true),
+                ] as AnyObject)
+            }
         }
-    }
-    if let dict = a as? [String: Json] { // Convert from _SwiftDeferredNSDictionary<String, Json>
-        return dict as? AxUiElementMock ?? dieT("Cannot cast \(type(of: a)) to AxUiElementMock")
+        if let dict = a as? [String: Json] { // Convert from _SwiftDeferredNSDictionary<String, Json>
+            return dict as? AxUiElementMock ?? dieT("Cannot cast \(type(of: a)) to AxUiElementMock")
+        }
+        die("Can't convert \(a) to AxUiElementMock")
     }
     return a as! AXUIElement
 }

@@ -21,9 +21,7 @@ enum MenuBarStyle: String, CaseIterable, Identifiable, Equatable, Hashable {
     case systemText
     case squares
     case i3
-    var id: Int {
-        return self.hashValue
-    }
+    var id: String { rawValue }
     var title: String {
         switch self {
             case .monospacedText: "Monospaced font"

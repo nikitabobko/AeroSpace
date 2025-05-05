@@ -2,5 +2,5 @@
 cd "$(dirname "$0")/.."
 source ./script/setup.sh
 
-./clean-xcode.sh
+./script/clean-xcode.sh
 git clean -ffxd

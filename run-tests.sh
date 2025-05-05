@@ -3,7 +3,7 @@ cd "$(dirname "$0")"
 source ./script/setup.sh
 
 ./build-debug.sh
-_swift test
+swift test
 
 ./.debug/aerospace -h > /dev/null
 ./.debug/aerospace --help > /dev/null
