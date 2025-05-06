@@ -53,3 +53,5 @@ jobs:
             ./build-release.sh --codesign-identity -
             ./install-from-sources.sh --dont-rebuild
           fi
+      - name: cat ./.release/xcodebuild.log
+        run: 'if test -f ./.release/xcodebuild.log; then cat ./.release/xcodebuild.log; fi'
