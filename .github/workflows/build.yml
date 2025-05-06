@@ -29,9 +29,6 @@ jobs:
     steps:
       - run: env # Debug
       - uses: actions/checkout@v3
-      - uses: nikitabobko/setup-swift@21e0b6448e6aa76937c51d4b172f6cba5e537cde # todo migrate to swiftly
-        with:
-          swift-version: '6.1.0'
       - name: xcode-select
         run: |
           sw_vers -productVersion
@@ -40,7 +37,8 @@ jobs:
           else
             sudo xcode-select -s "$XCODE_16_DEVELOPER_DIR" # Affects macOS SDK
           fi
-      - run: brew install bash fish xcbeautify
+      - run: brew update && brew install bash fish xcbeautify swiftly
+      - run: swiftly init --skip-install --assume-yes --verbose && swiftly install
       - run: ./script/install-dep.sh --all
       - run: ./build-debug.sh
       - run: ./run-tests.sh

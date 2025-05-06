@@ -13,9 +13,10 @@ If you struggle to build AeroSpace locally, you can also refer to [builds in Git
 
 ## 1. Install dependencies
 
-1.  Install [swiftly](https://github.com/swiftlang/swiftly).
-    Swiftly is a Swift toolchain manager that will make sure that you use the same swift version as written in `.swift-version` file
-2.  Install Xcode from App Store https://apps.apple.com/us/app/xcode/id497799835
+1.  Install Xcode from App Store https://apps.apple.com/us/app/xcode/id497799835
+2.  Install [swiftly](https://github.com/swiftlang/swiftly).
+    Swiftly is a Swift toolchain manager that will make sure that you use the same swift version as written in `.swift-version` file.
+    `brew install swiftly`
 3.  If you want to build shell completion, install rust, bash and fish
     -   Install Rust using rustup. https://www.rust-lang.org/tools/install
     -   `brew install bash fish`
