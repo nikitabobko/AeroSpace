@@ -45,7 +45,7 @@ jobs:
         # We build release artifacts only on the latest macOS because:
         # 1. It cuts the build time twice on GH Actions
         # 2. The latest Xcode version is not available on old macOS, and old Xcode versions bundle too old Swift version
-      - name: ./build-release.sh on macos-15
+      - name: './build-release.sh # on macos-15'
         run: |
           sw_vers -productVersion
           if sw_vers -productVersion | grep -q "^15"; then

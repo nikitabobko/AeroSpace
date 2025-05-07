@@ -43,7 +43,9 @@ swift() {
     fi
 }
 
-xcodebuild() {
+xcodebuild-pretty() {
+    log_file="$1"
+    shift
     # Mute stderr
     # 2024-02-12 23:48:11.713 xcodebuild[60777:7403664] [MT] DVTAssertions: Warning in /System/Volumes/Data/SWE/Apps/DT/BuildRoots/BuildRoot11/ActiveBuildRoot/Library/Caches/com.apple.xbs/Sources/IDEFrameworks/IDEFrameworks-22269/IDEFoundation/Provisioning/Capabilities Infrastructure/IDECapabilityQuerySelection.swift:103
     # Details:  createItemModels creation requirements should not create capability item model for a capability item model that already exists.
@@ -51,11 +53,9 @@ xcodebuild() {
     # Thread:   <_NSMainThread: 0x6000037202c0>{number = 1, name = main}
     # Please file a bug at https://feedbackassistant.apple.com with this warning message and any useful information you can provide.
     if /usr/bin/which xcbeautify &> /dev/null; then
-        rm -rf .release/xcodebuild.log
-        mkdir -p .release
-        /usr/bin/xcrun xcodebuild "$@" 2>&1 | tee .release/xcodebuild.log | xcbeautify --quiet # Only print tasks that have warnings or errors
-        echo "The full unmodified xcodebuild log is saved to .release/xcodebuild.log"
+        /usr/bin/xcrun xcodebuild "$@" 2>&1 | tee "$log_file" | xcbeautify --quiet # Only print tasks that have warnings or errors
+        echo "The full unmodified xcodebuild log is saved to $log_file"
     else
-        /usr/bin/xcrun xcodebuild "$@"
+        /usr/bin/xcrun xcodebuild "$@" 2>&1 | tee "$log_file"
     fi
 }
