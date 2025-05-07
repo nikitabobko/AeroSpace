@@ -1,0 +1,232 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "start-at-login": {
+      "description": "start aerospace at login to macos user session.",
+      "type": "boolean",
+      "default": false
+    },
+    "after-login-command": {
+      "description": "run aerospace command at login, only used if start-at-login is true. https://nikitabobko.github.io/AeroSpace/guide#commands",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    },
+    "after-startup-command": {
+      "description": "run aerospace command when aerospace starts, this is after login commands. https://nikitabobko.github.io/AeroSpace/guide#commands",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    },
+    "enable-normalization-flatten-containers": {
+      "description": "combine container with parent if it only contains one node. https://nikitabobko.github.io/AeroSpace/guide#normalization",
+      "type": "boolean",
+      "default": true
+    },
+    "enable-normalization-opposite-orientation-for-nested-containers": {
+      "description": "ensure nested containers have different orientations. https://nikitabobko.github.io/AeroSpace/guide#normalization",
+      "type": "boolean",
+      "default": true
+    },
+    "accordion-padding": {
+      "description": "size of background windows' visible edge.",
+      "type": "integer",
+      "minimum": 0,
+      "default": 30
+    },
+    "default-root-container-layout": {
+      "description": "layout to use for a workspace's root node. https://nikitabobko.github.io/AeroSpace/guide#layouts",
+      "type": "string",
+      "enum": ["tiles", "accordion"],
+      "default": "tiles"
+    },
+    "default-root-container-orientation": {
+      "description": "orientation to use for a workspace's root node",
+      "type": "string",
+      "enum": ["horizontal", "vertical", "auto"],
+      "default": "auto"
+    },
+    "automatically-unhide-macos-hidden-apps": {
+      "description": "effectively disable the hide application feature in macos. useful for accidental presses of cmd-h/cmd-alt-h. https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app",
+      "type": "boolean",
+      "default": false
+    },
+    "key-mapping": {
+      "description": "use different layouts or alphabets",
+      "type": "object",
+      "properties": {
+        "preset": {
+          "description": "use a preset keyboard mapping. https://nikitabobko.github.io/AeroSpace/guide#key-mapping",
+          "type": "string",
+          "enum": ["qwerty", "dvorak", "colemak"],
+          "default": "qwerty"
+        },
+        "key-notation-to-key-code": {
+          "description": "use a custom keyboard mapping. https://nikitabobko.github.io/AeroSpace/guide#key-mapping",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "gaps": {
+      "description": "gaps between windows and monitor edges",
+      "type": "object",
+      "properties": {
+        "inner": {
+          "description": "gaps between windows",
+          "type": "object",
+          "properties": {
+            "horizontal": { "type": "integer", "minimum": 0, "default": 0 },
+            "vertical": { "type": "integer", "minimum": 0, "default": 0 }
+          },
+          "additionalProperties": false
+        },
+        "outer": {
+          "description": "gaps between windows and monitor edges",
+          "type": "object",
+          "properties": {
+            "left": { "type": "integer", "minimum": 0, "default": 0 },
+            "bottom": { "type": "integer", "minimum": 0, "default": 0 },
+            "top": { "type": "integer", "minimum": 0, "default": 0 },
+            "right": { "type": "integer", "minimum": 0, "default": 0 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "mode": {
+      "description": "declare different modes for different sets of key bindings. https://nikitabobko.github.io/AeroSpace/guide#binding-modes",
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z]+$": {
+          "type": "object",
+          "properties": {
+            "binding": {
+              "type": "object",
+              "patternProperties": {
+                "^((cmd|alt|ctrl|shift)-)*([a-z0-9]+|f[0-9]+|minus|equal|period|comma|(back)?slash|quote|semicolon|backtick|(left|right)SquareBracket|(back)?space|enter|esc|tab|page(Up|Down)|home|end|forwardDelete|sectionSign|keypad([0-9]|Clear|DecimalMark|Divide|Enter|Equal|Minus|Multiply|Plus)|left|down|up|right)$": {
+                  "description": "define a keybind to trigger an aerospace command. https://nikitabobko.github.io/AeroSpace/guide#commands",
+                  "oneOf": [
+                    { "type": "string" },
+                    { "type": "array", "items": { "type": "string" } }
+                  ]
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "workspace-to-monitor-force-assignment": {
+      "description": "assign given workspaces to specific monitor(s). https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors",
+      "type": "object",
+      "patternProperties": {
+        "^[a-zA-Z0-9]$": {
+          "oneOf": [
+            { "type": "string" },
+            { "type": "integer" },
+            { "type": "array", "items": { "type": ["string", "integer"] } }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "on-focused-monitor-changed": {
+      "description": "run an aerospace command when focused monitor is changed. https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks",
+      "anyOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    },
+    "on-focus-changed": {
+      "description": "run an aerospace command when any focus is changed. https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    },
+    "exec": {
+      "description": "configure behavior for running arbitrary commands. https://nikitabobko.github.io/AeroSpace/guide#exec-env-vars",
+      "type": "object",
+      "properties": {
+        "inherit-env-vars": {
+          "description": "wether or not to inherit the enviornment variables from aerospace.app",
+          "type": "boolean",
+          "default": true
+        },
+        "env-vars": {
+          "description": "define environment variables to be passed to the command",
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "exec-on-workspace-change": {
+      "description": "run arbitrary command when workspace is changed. https://nikitabobko.github.io/AeroSpace/guide#exec-on-workspace-change-callback",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    },
+    "on-window-detected": {
+      "description": "run aerospace commands when a specified window is detected. https://nikitabobko.github.io/AeroSpace/guide#on-window-detected-callback",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "if": {
+            "description": "conditions to check the detected window against",
+            "type": "object",
+            "properties": {
+              "app-id": {
+                "description": "application id exact match of detected window",
+                "type": "string"
+              },
+              "app-name-regex-substring": {
+                "description": "application match of detected window",
+                "type": "string"
+              },
+              "window-title-regex-substring": {
+                "description": "window title match of detected window",
+                "type": "string"
+              },
+              "workspace": {
+                "description": "workspace match of detected window",
+                "type": "string"
+              },
+              "during-aerospace-startup": {
+                "description": "only trigger during aerospace startup",
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": false
+          },
+          "check-further-callbacks": {
+            "description": "check additional callbacks after running current one",
+            "type": "boolean"
+          },
+          "run": {
+            "description": "aerospace command(s) to run",
+            "oneOf": [
+              { "type": "string" },
+              { "type": "array", "items": { "type": "string" } }
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
