@@ -42,9 +42,11 @@ swift build -c release --arch arm64 --arch x86_64 --product aerospace # CLI
 #       <unknown>:0: warning: legacy driver is now deprecated; consider avoiding specifying '-disallow-use-new-driver'
 #     <unknown>:0: error: unable to execute command: <unknown>
 
+rm -rf .release && mkdir .release
+
 xcode_configuration="Release"
 xcodebuild -version
-xcodebuild clean build \
+xcodebuild-pretty .release/xcodebuild.log clean build \
     -scheme AeroSpace \
     -destination "generic/platform=macOS" \
     -configuration "$xcode_configuration" \
@@ -52,7 +54,6 @@ xcodebuild clean build \
 
 git checkout .
 
-rm -rf .release && mkdir .release
 cp -r ".xcode-build/Build/Products/$xcode_configuration/AeroSpace.app" .release
 cp -r .build/apple/Products/Release/aerospace .release
 
