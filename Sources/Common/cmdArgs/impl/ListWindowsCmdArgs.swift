@@ -58,7 +58,8 @@ public extension ListWindowsCmdArgs {
             ? [
                 .interVar("window-id"), .interVar("right-padding"), .literal(" | "),
                 .interVar("app-name"), .interVar("right-padding"), .literal(" | "),
-                .interVar("window-title"),
+                .interVar("window-title"), .interVar("right-padding"), .literal(" | "),
+                .interVar("layout")
             ]
             : _format
     }
