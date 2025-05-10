@@ -99,7 +99,7 @@ If the key is omitted in the custom config, it fallbacks to the value in the def
 Rule of thumb: all the "scalar like" values always fallback to the default config. All the "vector like" values fallback to the empty TOML array or table.
 
 That allows you to keep your config tidy and clean from trivial config keys for which you like the default values.
-You can bootstrap your custom config by coping the default config from the app installation
+You can bootstrap your custom config by copying the default config from the app installation -
 
 [source,shell]
 ----
