@@ -51,7 +51,7 @@ xattr -d com.apple.quarantine /Applications/AeroSpace.app
 
 *Option 2: Using Finder*
 
-. Navigate `/Applications/AeroSpace.app` in Finder
+. Navigate to `/Applications/AeroSpace.app` in Finder
 . Right-click the app and select *Open*
 . Confirm that you want to open the app, bypassing the security warning
 
@@ -158,7 +158,7 @@ Commands are used to manipulate AeroSpace and query its state. There are two way
 aerospace workspace 1
 ----
 
-For a list of available commands, see xref:commands.adoc[]
+A list of available commands is provided in the xref:commands.adoc[commands documentation].
 
 [#key-mapping]
 === Keyboard layouts and key mapping
@@ -403,7 +403,7 @@ defaults write com.apple.dock expose-group-apps -bool true && killall Dock
 [#a-note-on-displays-have-separate-spaces]
 ==== Disable "Displays have separate Spaces"
 
-Disabling "Displays have separate Spaces" often results in:
+Disabling "Displays have separate Spaces" will grant you:
 
 * Fewer focus bugs
 * Improved performance
@@ -427,7 +427,7 @@ Callbacks enable automating actions based on window events, focus changes and mo
 
 By default, the first callback that matches the criteria is run, and further callbacks are not considered. This behaviour can be overridden with the `check-further-callbacks` option.
 
-Please post your use cases to https://github.com/nikitabobko/AeroSpace/issues/20[in this GitHub issue] if you want additional commands to be supported.
+Please post your use cases to https://github.com/nikitabobko/AeroSpace/issues/20[this GitHub issue] if you want additional commands to be supported.
 
 [#on-window-detected-callback]
 === 'on-window-detected'
@@ -587,7 +587,7 @@ To move a workspace to a different monitor, use the xref:commands.adoc#move-work
 
 === Why share the workspace pool?
 
-The idea of sharing the workspace pool is based on the [#observation]observation that most users have a limited set of workspaces on their secondary monitors. Secondary monitors are often dedicated to specific tasks such as running a browser, terminal or monitoring logs. Therefore, using one workspace per secondary monitor and placing the rest on the main monitor is often a good fit.
+The idea of sharing the workspace pool is based on the observation that most users have a limited set of workspaces on their secondary monitors. Secondary monitors are often dedicated to specific tasks such as running a browser, terminal or monitoring logs. Therefore, using one workspace per secondary monitor and placing the rest on the main monitor is often a good fit.
 
 [NOTE]
 ====
@@ -627,7 +627,7 @@ If a workspace has a forced monitor assignment, the xref:commands.adoc#move-work
 
 == Dialog heuristics
 
-macOS provides an accessibility API for identifying dialog windows, but many apps either don't use it correctly or at all. Even some Apple apps (like Finder’s "Copy" progress window) fail to mark dialogs properly. AeroSpace uses the API when available but also applies additional heuristics to identify dialogs.
+macOS provides an accessibility API for identifying dialog windows, but many apps either use it incorrectly or not at all. Even some Apple apps (like Finder’s "Copy" progress window) fail to mark dialogs properly. AeroSpace uses the API when available but also applies additional heuristics to identify dialogs.
 
 === Heuristic rules
 
