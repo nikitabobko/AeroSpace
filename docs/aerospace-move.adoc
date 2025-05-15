@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace move [-h|--help] [--window-id <window-id>] (left|down|up|right)
+aerospace move [-h|--help] [--window-id <window-id>] [--boundaries <boundary>] [--boundaries-action <boundary-action>] (left|down|up|right)
 
 // end::synopsis[]
 
@@ -28,6 +28,16 @@ include::./util/conditional-options-header.adoc[]
 
 --window-id <window-id>::
 include::./util/window-id-flag-desc.adoc[]
+
+--boundaries <boundary>::
+Defines move boundaries. +
+`<boundary>` possible values: `(workspace|all-monitors-outer-frame)`. +
+The default is: `workspace`
+
+--boundaries-action <boundary-action>::
+Defines the behavior when requested to move across the `<boundary>`. +
+`<boundary-action>` possible values: `(stop|fail|create-implicit-container)`. +
+The default is: `create-implicit-container`
 
 // =========================================================== Examples
 include::util/conditional-examples-header.adoc[]
@@ -91,6 +101,7 @@ h_tiles
     ├── window 3
     └── window 4
 ----
+
 . *Implicit container example*
 +
 In some cases, `move` needs to implicitly create a container to fulfill your command.
@@ -115,6 +126,11 @@ v_tiles
 ----
 +
 `v_tiles` is an implicitly created container.
++
+*Remark*: If `--boundaries` is set to `all-monitors-outer-frame` and there is a monitor in the `up` direction,
+the implicit container isn't be created.
++
+Instead, `window 2` would be moved to the monitor above the current.
 
 // end::body[]
 
