@@ -24,9 +24,21 @@ struct MoveCommand: Command {
                             currentWindow.bind(to: parent, adaptiveWeight: prevBinding.adaptiveWeight, index: indexOfSiblingTarget)
                             return true
                     }
-                } else {
-                    return moveOut(io, window: currentWindow, direction: direction)
                 }
+
+                if args.boundaries == .allMonitorsUnionFrame, hasWorkspaceBoundaryInDirection(window: currentWindow, direction: direction),
+                    let moveNodeToMonitorArgs = parseMoveNodeToMonitorCmdArgs([
+                        "--fail-if-noop",
+                        "--focus-follows-window",
+                        "--window-id", "\(currentWindow.windowId)",
+                        direction.rawValue,
+                    ]).unwrap().0,
+                    MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
+                {
+                    return true
+                }
+
+                return moveOut(io, window: currentWindow, direction: direction)
             case .workspace: // floating window
                 return io.err("moving floating windows isn't yet supported") // todo
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
@@ -37,7 +49,34 @@ struct MoveCommand: Command {
     }
 }
 
-private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimized windows and windows of hidden apps isn't yet supported. This behavior is subject to change"
+@MainActor private func hasWorkspaceBoundaryInDirection(
+    window: Window, direction: CardinalDirection
+) -> Bool {
+    guard let rootTilingContainer = window.nodeWorkspace?.rootTilingContainer else {
+        return false
+    }
+
+    guard let windowParent = window.parent else {
+        return false
+    }
+
+    if windowParent != rootTilingContainer {
+        return false
+    }
+    if rootTilingContainer.orientation != direction.orientation {
+        return false
+    }
+
+    switch direction {
+        case .left, .up:
+            return window.ownIndex == 0
+        case .right, .down:
+            return window.ownIndex == rootTilingContainer.children.count - 1
+    }
+}
+
+private let moveOutMacosUnconventionalWindow =
+    "moving macOS fullscreen, minimized windows and windows of hidden apps isn't yet supported. This behavior is subject to change"
 
 @MainActor private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) -> Bool {
     let innerMostChild = window.parents.first(where: {
@@ -68,7 +107,8 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
 
             bindTo = parent.rootTilingContainer
             bindToIndex = direction.insertionOffset
-        case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
+        case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
+            .macosHiddenAppsWindowsContainer:
             return io.err(moveOutMacosUnconventionalWindow)
         case .macosPopupWindowsContainer:
             return false // Impossible
@@ -100,8 +140,8 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
     return true
 }
 
-private extension TilingTreeNodeCases {
-    @MainActor func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TilingTreeNodeCases {
+extension TilingTreeNodeCases {
+    @MainActor fileprivate func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TilingTreeNodeCases {
         return switch self {
             case .window:
                 self
