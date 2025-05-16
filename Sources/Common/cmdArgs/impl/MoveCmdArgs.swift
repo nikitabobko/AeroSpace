@@ -36,7 +36,6 @@ public struct MoveCmdArgs: CmdArgs {
         case stop = "stop"
         case fail = "fail"
         case createImplicitContainer = "create-implicit-container"
-        case wrapAroundAllMonitors = "wrap-around-all-monitors"
     }
 }
 

@@ -26,8 +26,8 @@ struct MoveCommand: Command {
                     }
                 }
 
-                if args.boundaries == .allMonitorsUnionFrame {
-                    if hasWorkspaceBoundaryInDirection(window: currentWindow, direction: direction),
+                if hasWorkspaceBoundaryInDirection(window: currentWindow, direction: direction) {
+                    if args.boundaries == .allMonitorsUnionFrame,
                         let moveNodeToMonitorArgs = parseMoveNodeToMonitorCmdArgs([
                             "--fail-if-noop",
                             "--focus-follows-window",
@@ -73,6 +73,7 @@ struct MoveCommand: Command {
     if windowParent != rootTilingContainer {
         return false
     }
+
     if rootTilingContainer.orientation != direction.orientation {
         return false
     }

@@ -1,6 +1,7 @@
-@testable import AppBundle
 import Common
 import XCTest
+
+@testable import AppBundle
 
 @MainActor
 final class MoveCommandTest: XCTestCase {
@@ -35,7 +36,7 @@ final class MoveCommandTest: XCTestCase {
                 .h_tiles([
                     .window(1),
                     .h_tiles([
-                        .window(2),
+                        .window(2)
                     ]),
                 ]),
             ])
@@ -112,16 +113,53 @@ final class MoveCommandTest: XCTestCase {
             TestWindow.new(id: 3, parent: $0)
         }
 
-        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .up)).run(.defaultEnv, .emptyStdin)
+        let result = try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .up)).run(.defaultEnv, .emptyStdin)
         assertEquals(
             workspace.layoutDescription,
             .workspace([
                 .v_tiles([
                     .window(2),
                     .h_tiles([.window(1), .window(3)]),
-                ]),
+                ])
             ])
         )
+        assertEquals(result.exitCode, 0)
+    }
+
+    func testStop() async throws {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
+            TestWindow.new(id: 3, parent: $0)
+        }
+
+        let result = try await MoveCommand(args: parseMoveCmdArgs(["--boundaries-action", "stop", "left"]).unwrap().0!).run(.defaultEnv, .emptyStdin)
+        assertEquals(
+            workspace.layoutDescription,
+            .workspace([
+                .h_tiles([.window(1), .window(2), .window(3)])
+            ])
+        )
+        assertEquals(result.exitCode, 0)
+    }
+
+    func testFail() async throws {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
+            TestWindow.new(id: 3, parent: $0)
+        }
+
+        let result = try await MoveCommand(args: parseMoveCmdArgs(["--boundaries-action", "fail", "left"]).unwrap().0!).run(.defaultEnv, .emptyStdin)
+        assertEquals(
+            workspace.layoutDescription,
+            .workspace([
+                .h_tiles([.window(1), .window(2), .window(3)])
+            ])
+        )
+        assertEquals(result.exitCode, 1)
     }
 
     func testMoveOut() async throws {
