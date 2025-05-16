@@ -36,7 +36,7 @@ final class MoveCommandTest: XCTestCase {
                 .h_tiles([
                     .window(1),
                     .h_tiles([
-                        .window(2)
+                        .window(2),
                     ]),
                 ]),
             ])
@@ -120,7 +120,7 @@ final class MoveCommandTest: XCTestCase {
                 .v_tiles([
                     .window(2),
                     .h_tiles([.window(1), .window(3)]),
-                ])
+                ]),
             ])
         )
         assertEquals(result.exitCode, 0)
@@ -138,7 +138,7 @@ final class MoveCommandTest: XCTestCase {
         assertEquals(
             workspace.layoutDescription,
             .workspace([
-                .h_tiles([.window(1), .window(2), .window(3)])
+                .h_tiles([.window(1), .window(2), .window(3)]),
             ])
         )
         assertEquals(result.exitCode, 0)
@@ -156,7 +156,7 @@ final class MoveCommandTest: XCTestCase {
         assertEquals(
             workspace.layoutDescription,
             .workspace([
-                .h_tiles([.window(1), .window(2), .window(3)])
+                .h_tiles([.window(1), .window(2), .window(3)]),
             ])
         )
         assertEquals(result.exitCode, 1)

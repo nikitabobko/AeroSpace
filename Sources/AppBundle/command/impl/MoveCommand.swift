@@ -28,13 +28,13 @@ struct MoveCommand: Command {
 
                 if hasWorkspaceBoundaryInDirection(window: currentWindow, direction: direction) {
                     if args.boundaries == .allMonitorsUnionFrame,
-                        let moveNodeToMonitorArgs = parseMoveNodeToMonitorCmdArgs([
-                            "--fail-if-noop",
-                            "--focus-follows-window",
-                            "--window-id", "\(currentWindow.windowId)",
-                            direction.rawValue,
-                        ]).unwrap().0,
-                        MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
+                       let moveNodeToMonitorArgs = parseMoveNodeToMonitorCmdArgs([
+                           "--fail-if-noop",
+                           "--focus-follows-window",
+                           "--window-id", "\(currentWindow.windowId)",
+                           direction.rawValue,
+                       ]).unwrap().0,
+                       MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
                     {
                         return true
                     }
@@ -119,7 +119,7 @@ private let moveOutMacosUnconventionalWindow =
             bindTo = parent.rootTilingContainer
             bindToIndex = direction.insertionOffset
         case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
-            .macosHiddenAppsWindowsContainer:
+             .macosHiddenAppsWindowsContainer:
             return io.err(moveOutMacosUnconventionalWindow)
         case .macosPopupWindowsContainer:
             return false // Impossible
@@ -151,8 +151,8 @@ private let moveOutMacosUnconventionalWindow =
     return true
 }
 
-extension TilingTreeNodeCases {
-    @MainActor fileprivate func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TilingTreeNodeCases {
+private extension TilingTreeNodeCases {
+    @MainActor func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TilingTreeNodeCases {
         return switch self {
             case .window:
                 self
