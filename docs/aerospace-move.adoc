@@ -96,6 +96,7 @@ h_tiles
     ├── window 3
     └── window 4
 ----
+
 . *Implicit container example*
 +
 In some cases, `move` needs to implicitly create a container to fulfill your command.
@@ -121,9 +122,9 @@ v_tiles
 +
 `v_tiles` is an implicitly created container.
 +
-If `--boundaries` is set to `all-monitors-outer-frame` and there is a monitor in the `up` direction, the implicit container wouldn't be created.
+*Remark*: If `--boundaries` is set to `all-monitors-outer-frame` and there is a monitor in the `up` direction, the implicit container isn't be created.
 +
-Instead, `window 2` would be send to the monitor. If there's no monitor in the direction, the implicit container would be created.
+Instead, `window 2` would be sent to the monitor.
 
 // end::body[]
 
