@@ -26,16 +26,26 @@ struct MoveCommand: Command {
                     }
                 }
 
-                if args.boundaries == .allMonitorsUnionFrame, hasWorkspaceBoundaryInDirection(window: currentWindow, direction: direction),
-                    let moveNodeToMonitorArgs = parseMoveNodeToMonitorCmdArgs([
-                        "--fail-if-noop",
-                        "--focus-follows-window",
-                        "--window-id", "\(currentWindow.windowId)",
-                        direction.rawValue,
-                    ]).unwrap().0,
-                    MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
-                {
-                    return true
+                if args.boundaries == .allMonitorsUnionFrame {
+                    if hasWorkspaceBoundaryInDirection(window: currentWindow, direction: direction),
+                        let moveNodeToMonitorArgs = parseMoveNodeToMonitorCmdArgs([
+                            "--fail-if-noop",
+                            "--focus-follows-window",
+                            "--window-id", "\(currentWindow.windowId)",
+                            direction.rawValue,
+                        ]).unwrap().0,
+                        MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
+                    {
+                        return true
+                    }
+
+                    if args.boundariesAction == .stop {
+                        return true
+                    }
+
+                    if args.boundariesAction == .fail {
+                        return false
+                    }
                 }
 
                 return moveOut(io, window: currentWindow, direction: direction)
@@ -53,11 +63,11 @@ struct MoveCommand: Command {
     window: Window, direction: CardinalDirection
 ) -> Bool {
     guard let rootTilingContainer = window.nodeWorkspace?.rootTilingContainer else {
-        return false
+        return false // Shouldn't happen
     }
 
     guard let windowParent = window.parent else {
-        return false
+        return false // Shouldn't happen
     }
 
     if windowParent != rootTilingContainer {

@@ -1,4 +1,5 @@
 private let boundar = "<boundary>"
+private let actio = "<action>"
 
 public struct MoveCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
@@ -10,6 +11,7 @@ public struct MoveCmdArgs: CmdArgs {
         options: [
             "--window-id": optionalWindowIdFlag(),
             "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
+            "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
         ],
         arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)]
     )
@@ -18,6 +20,7 @@ public struct MoveCmdArgs: CmdArgs {
     public var windowId: UInt32?
     public var workspaceName: WorkspaceName?
     public var rawBoundaries: Boundaries? = nil
+    public var rawBoundariesAction: WhenBoundariesCrossed? = nil
 
     public init(rawArgs: [String], _ direction: CardinalDirection) {
         self.rawArgs = .init(rawArgs)
@@ -28,10 +31,18 @@ public struct MoveCmdArgs: CmdArgs {
         case workspace
         case allMonitorsUnionFrame = "all-monitors-outer-frame"
     }
+
+    public enum WhenBoundariesCrossed: String, CaseIterable, Equatable, Sendable {
+        case stop = "stop"
+        case fail = "fail"
+        case createImplicitContainer = "create-implicit-container"
+        case wrapAroundAllMonitors = "wrap-around-all-monitors"
+    }
 }
 
 public extension MoveCmdArgs {
     var boundaries: Boundaries { rawBoundaries ?? .workspace }
+    var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .createImplicitContainer }
 }
 
 public func parseMoveCmdArgs(_ args: [String]) -> ParsedCmd<MoveCmdArgs> {
@@ -43,5 +54,13 @@ private func parseBoundaries(arg: String, nextArgs: inout [String]) -> Parsed<Mo
         return parseEnum(arg, MoveCmdArgs.Boundaries.self)
     } else {
         return .failure("\(boundar) is mandatory")
+    }
+}
+
+private func parseBoundariesAction(arg: String, nextArgs: inout [String]) -> Parsed<MoveCmdArgs.WhenBoundariesCrossed> {
+    if let arg = nextArgs.nextNonFlagOrNil() {
+        return parseEnum(arg, MoveCmdArgs.WhenBoundariesCrossed.self)
+    } else {
+        return .failure("\(actio) is mandatory")
     }
 }
