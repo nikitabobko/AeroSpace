@@ -34,6 +34,11 @@ Defines move boundaries. +
 `<boundary>` possible values: `(workspace|all-monitors-outer-frame)`. +
 The default is: `workspace`
 
+--boundaries-action <boundary-action>::
+Defines move boundaries action. +
+`<boundary-action>` possible values: `(stop|fail|create-implicit-container)`. +
+The default is: `create-implicit-container`
+
 // =========================================================== Examples
 include::util/conditional-examples-header.adoc[]
 
