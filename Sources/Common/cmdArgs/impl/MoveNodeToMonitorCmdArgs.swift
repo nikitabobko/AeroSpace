@@ -17,6 +17,12 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
         arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)")]
     )
 
+    public init(rawArgs: [String], moveNodeToWorkspace: MoveNodeToWorkspaceCmdArgs, target: MonitorTarget) {
+        self.rawArgs = .init(rawArgs)
+        self.moveNodeToWorkspace = moveNodeToWorkspace
+        self.target = .initialized(target)
+    }
+
     public var workspaceName: WorkspaceName?
     public var windowId: UInt32? { // Forward to moveNodeToWorkspace
         get { moveNodeToWorkspace.windowId }

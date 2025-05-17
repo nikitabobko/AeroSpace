@@ -27,25 +27,7 @@ struct MoveCommand: Command {
                 }
 
                 if hasWorkspaceBoundaryInDirection(window: currentWindow, direction: direction) {
-                    if args.boundaries == .allMonitorsUnionFrame,
-                       let moveNodeToMonitorArgs = parseMoveNodeToMonitorCmdArgs([
-                           "--fail-if-noop",
-                           "--focus-follows-window",
-                           "--window-id", "\(currentWindow.windowId)",
-                           direction.rawValue,
-                       ]).unwrap().0,
-                       MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
-                    {
-                        return true
-                    }
-
-                    if args.boundariesAction == .stop {
-                        return true
-                    }
-
-                    if args.boundariesAction == .fail {
-                        return false
-                    }
+                    return hitWorkspaceBoundaries(currentWindow, io, args, direction, env)
                 }
 
                 return moveOut(io, window: currentWindow, direction: direction)
@@ -60,7 +42,7 @@ struct MoveCommand: Command {
 }
 
 @MainActor private func hasWorkspaceBoundaryInDirection(
-    window: Window, direction: CardinalDirection
+    window: Window, direction: CardinalDirection,
 ) -> Bool {
     guard let rootTilingContainer = window.nodeWorkspace?.rootTilingContainer else {
         return false // Shouldn't happen
@@ -83,6 +65,56 @@ struct MoveCommand: Command {
             return window.ownIndex == 0
         case .right, .down:
             return window.ownIndex == rootTilingContainer.children.count - 1
+    }
+}
+
+@MainActor private func hitWorkspaceBoundaries(
+    _ window: Window,
+    _ io: CmdIo,
+    _ args: MoveCmdArgs,
+    _ direction: CardinalDirection,
+    _ env: CmdEnv,
+) -> Bool {
+    switch args.boundaries {
+        case .workspace:
+            return switch args.boundariesAction {
+                case .stop: true
+                case .fail: false
+                case .createImplicitContainer: moveOut(io, window: window, direction: direction)
+            }
+        case .allMonitorsUnionFrame:
+            return hitAllMonitorsOuterFrameBoundaries(window, io, args, direction, env)
+    }
+}
+
+@MainActor private func hitAllMonitorsOuterFrameBoundaries(
+    _ window: Window,
+    _ io: CmdIo,
+    _ args: MoveCmdArgs,
+    _ direction: CardinalDirection,
+    _ env: CmdEnv,
+) -> Bool {
+    switch args.boundariesAction {
+        case .stop:
+            return true
+        case .fail:
+            return false
+        case .createImplicitContainer:
+            let moveNodeToWorkspaceArgs = MoveNodeToWorkspaceCmdArgs(
+                rawArgs: [],
+                windowId: window.windowId,
+                focusFollowsWindow: true
+            )
+            let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(
+                rawArgs: [],
+                moveNodeToWorkspace: moveNodeToWorkspaceArgs,
+                target: .directional(direction)
+            )
+
+            if  MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io) {
+                return true
+            }
+            return moveOut(io, window: window, direction: direction)
     }
 }
 
