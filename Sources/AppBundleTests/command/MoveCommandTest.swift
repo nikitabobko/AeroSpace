@@ -1,7 +1,6 @@
+@testable import AppBundle
 import Common
 import XCTest
-
-@testable import AppBundle
 
 @MainActor
 final class MoveCommandTest: XCTestCase {

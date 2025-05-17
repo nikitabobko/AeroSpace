@@ -86,8 +86,7 @@ struct MoveCommand: Command {
     }
 }
 
-private let moveOutMacosUnconventionalWindow =
-    "moving macOS fullscreen, minimized windows and windows of hidden apps isn't yet supported. This behavior is subject to change"
+private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimized windows and windows of hidden apps isn't yet supported. This behavior is subject to change"
 
 @MainActor private func moveOut(_ io: CmdIo, window: Window, direction: CardinalDirection) -> Bool {
     let innerMostChild = window.parents.first(where: {
@@ -118,8 +117,7 @@ private let moveOutMacosUnconventionalWindow =
 
             bindTo = parent.rootTilingContainer
             bindToIndex = direction.insertionOffset
-        case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
-             .macosHiddenAppsWindowsContainer:
+        case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
             return io.err(moveOutMacosUnconventionalWindow)
         case .macosPopupWindowsContainer:
             return false // Impossible
