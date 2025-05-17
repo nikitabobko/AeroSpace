@@ -8,7 +8,7 @@ private var activeRefreshTask: Task<(), any Error>? = nil
 func runRefreshSession(
     _ event: RefreshSessionEvent,
     screenIsDefinitelyUnlocked: Bool, // todo rename
-    optimisticallyPreLayoutWorkspaces: Bool = false,
+    optimisticallyPreLayoutWorkspaces: Bool = false
 ) {
     if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
     activeRefreshTask?.cancel()
@@ -22,7 +22,7 @@ func runRefreshSession(
 func runRefreshSessionBlocking(
     _ event: RefreshSessionEvent,
     layoutWorkspaces shouldLayoutWorkspaces: Bool = true,
-    optimisticallyPreLayoutWorkspaces: Bool = false,
+    optimisticallyPreLayoutWorkspaces: Bool = false
 ) async throws {
     let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
     defer { signposter.endInterval(#function, state) }
