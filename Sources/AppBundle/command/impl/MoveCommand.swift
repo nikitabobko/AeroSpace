@@ -57,7 +57,7 @@ struct MoveCommand: Command {
     }
 
     if rootTilingContainer.orientation != direction.orientation {
-        return false
+        return true
     }
 
     switch direction {
