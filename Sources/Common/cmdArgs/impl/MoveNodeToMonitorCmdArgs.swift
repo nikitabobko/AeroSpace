@@ -18,7 +18,8 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
     )
 
     public init(rawArgs: [String], target: MonitorTarget,
-        focusFollowsWindow: Bool) {
+                focusFollowsWindow: Bool)
+    {
         self.rawArgs = .init(rawArgs)
         self.moveNodeToWorkspace.focusFollowsWindow = focusFollowsWindow
         self.target = .initialized(target)
