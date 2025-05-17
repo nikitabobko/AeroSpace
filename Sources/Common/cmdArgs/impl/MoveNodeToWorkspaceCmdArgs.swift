@@ -23,12 +23,6 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     public init(rawArgs: [String]) {
         self.rawArgs = .init(rawArgs)
     }
-
-    public init(rawArgs: [String], windowId: UInt32?, focusFollowsWindow: Bool) {
-        self.rawArgs = .init(rawArgs)
-        self.windowId = windowId
-        self.focusFollowsWindow = focusFollowsWindow
-    }
 }
 
 public extension MoveNodeToWorkspaceCmdArgs {

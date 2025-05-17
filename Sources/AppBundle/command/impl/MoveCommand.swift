@@ -83,15 +83,10 @@ struct MoveCommand: Command {
                 case .createImplicitContainer: moveOut(io, window: window, direction: direction)
             }
         case .allMonitorsUnionFrame:
-            let moveNodeToWorkspaceArgs = MoveNodeToWorkspaceCmdArgs(
-                rawArgs: [],
-                windowId: window.windowId,
-                focusFollowsWindow: true
-            )
             let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(
                 rawArgs: [],
-                moveNodeToWorkspace: moveNodeToWorkspaceArgs,
-                target: .directional(direction)
+                target: .directional(direction),
+                focusFollowsWindow: true
             )
 
             if MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io) {
