@@ -3,12 +3,12 @@ import Common
 import Foundation
 
 // Create a global instance of the hotkey monitor
-@MainActor // Ensure it's created on the main thread if it interacts with UI/AppKit later
+@MainActor  // Ensure it's created on the main thread if it interacts with UI/AppKit later
 let globalHotkeyMonitor = GlobalHotkeyMonitor()
 
 @MainActor public func initAppBundle() {
     initTerminationHandler()
-    setupMonitorTermination() // Register for graceful shutdown of the monitor
+    setupMonitorTermination()  // Register for graceful shutdown of the monitor
     isCli = false
     initServerArgs()
     if isDebug {
@@ -20,7 +20,9 @@ let globalHotkeyMonitor = GlobalHotkeyMonitor()
         check(reloadConfig(forceConfigUrl: defaultConfigUrl))
     }
     if serverArgs.startedAtLogin && !config.startAtLogin {
-        printStderr("--started-at-login is passed but 'started-at-login = false' in the config. Terminating...")
+        printStderr(
+            "--started-at-login is passed but 'started-at-login = false' in the config. Terminating..."
+        )
         terminateApp()
     }
 
@@ -32,7 +34,7 @@ let globalHotkeyMonitor = GlobalHotkeyMonitor()
     startUnixSocketServer()
     GlobalObserver.initObserver()
     Task {
-        Workspace.garbageCollectUnusedWorkspaces() // init workspaces
+        Workspace.garbageCollectUnusedWorkspaces()  // init workspaces
         _ = Workspace.all.first?.focusWorkspace()
         try await runRefreshSessionBlocking(.startup, layoutWorkspaces: false)
         try await runSession(.startup, .checkServerIsEnabledOrDie) {
@@ -51,10 +53,10 @@ private func setupMonitorTermination() {
     NotificationCenter.default.addObserver(
         forName: NSApplication.willTerminateNotification,
         object: nil,
-        queue: .main // .main queue helps, but explicit Task @MainActor is safer for actor-isolated calls
+        queue: .main  // .main queue helps, but explicit Task @MainActor is safer for actor-isolated calls
     ) { _ in
         print("INFO: Application is terminating. Stopping GlobalHotkeyMonitor.")
-        Task { @MainActor in // Explicitly dispatch to main actor
+        Task { @MainActor in  // Explicitly dispatch to main actor
             globalHotkeyMonitor.stop()
         }
     }
@@ -116,7 +118,9 @@ private func initServerArgs() {
                 _serverArgs.startedAtLogin = true
                 args = Array(args.dropFirst())
             case "-NSDocumentRevisionsDebugMode":
-                cliError("Xcode -> Edit Scheme ... -> Options -> Document Versions -> Allow debugging when browsing versions -> false")
+                cliError(
+                    "Xcode -> Edit Scheme ... -> Options -> Document Versions -> Allow debugging when browsing versions -> false"
+                )
             default:
                 cliError("Unrecognized flag '\(args.first!)'")
         }

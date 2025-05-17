@@ -29,6 +29,7 @@ public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     case moveNodeToMonitor = "move-node-to-monitor"
     case moveNodeToWorkspace = "move-node-to-workspace"
     case moveWorkspaceToMonitor = "move-workspace-to-monitor"
+    case noop
     case reloadConfig = "reload-config"
     case resize
     case split
@@ -56,7 +57,7 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
             case .enable:
                 result[kind.rawValue] = SubCommandParser(parseEnableCmdArgs)
             case .execAndForget:
-                break // exec-and-forget is parsed separately
+                break  // exec-and-forget is parsed separately
             case .flattenWorkspaceTree:
                 result[kind.rawValue] = SubCommandParser(FlattenWorkspaceTreeCmdArgs.init)
             case .focus:
@@ -102,7 +103,10 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
             case .moveWorkspaceToMonitor:
                 result[kind.rawValue] = SubCommandParser(parseWorkspaceToMonitorCmdArgs)
                 // deprecated
-                result["move-workspace-to-display"] = SubCommandParser(MoveWorkspaceToMonitorCmdArgs.init)
+                result["move-workspace-to-display"] = SubCommandParser(
+                    MoveWorkspaceToMonitorCmdArgs.init)
+            case .noop:
+                result[kind.rawValue] = SubCommandParser(NoopCmdArgs.init)
             case .reloadConfig:
                 result[kind.rawValue] = SubCommandParser(ReloadConfigCmdArgs.init)
             case .resize:

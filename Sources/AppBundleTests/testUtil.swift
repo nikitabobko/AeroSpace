@@ -1,9 +1,10 @@
-@testable import AppBundle
 import Common
 import Foundation
 
 // import HotKey // REMOVE
 import XCTest
+
+@testable import AppBundle
 
 let projectRoot: URL = {
     var url = URL(filePath: #filePath).absoluteURL
@@ -18,9 +19,9 @@ let projectRoot: URL = {
 func setUpWorkspacesForTests() {
     config = defaultConfig
     configUrl = defaultConfigUrl
-    config.enableNormalizationFlattenContainers = false // Make layout tests more predictable
-    config.enableNormalizationOppositeOrientationForNestedContainers = false // Make layout tests more predictable
-    config.defaultRootContainerOrientation = .horizontal // Make default layout predictable
+    config.enableNormalizationFlattenContainers = false  // Make layout tests more predictable
+    config.enableNormalizationOppositeOrientationForNestedContainers = false  // Make layout tests more predictable
+    config.defaultRootContainerOrientation = .horizontal  // Make default layout predictable
 
     // Don't create any bindings and workspaces for tests
     config.modes = [mainModeId: Mode(name: nil, bindings: [:])]
@@ -34,7 +35,9 @@ func setUpWorkspacesForTests() {
     check(Workspace.get(byName: "setUpWorkspacesForTests").focusWorkspace())
     Workspace.garbageCollectUnusedWorkspaces()
     check(focus.workspace.isEffectivelyEmpty)
-    check(focus.workspace === Workspace.all.singleOrNil(), Workspace.all.map(\.description).joined(separator: ", "))
+    check(
+        focus.workspace === Workspace.all.singleOrNil(),
+        Workspace.all.map(\.description).joined(separator: ", "))
     check(mainMonitor.setActiveWorkspace(focus.workspace))
 
     TestApp.shared.focusedWindow = nil
@@ -44,8 +47,10 @@ func setUpWorkspacesForTests() {
 func testParseCommandSucc(_ command: String, _ expected: any CmdArgs) {
     let parsed = parseCommand(command)
     switch parsed {
-        case .cmd(let command): XCTAssertTrue(command.args.equals(expected), "actual: \(command.args) expected: \(expected)")
-        case .help: die() // todo test help
+        case .cmd(let command):
+            XCTAssertTrue(
+                command.args.equals(expected), "actual: \(command.args) expected: \(expected)")
+        case .help: die()  // todo test help
         case .failure(let msg): XCTFail(msg)
     }
 }
@@ -81,7 +86,7 @@ func testParseCommandFail(_ command: String, msg expected: String) {
     switch parsed {
         case .cmd(let command): XCTFail("\(command) isn't supposed to be parcelable")
         case .failure(let msg): assertEquals(msg, expected)
-        case .help: die() // todo test help
+        case .help: die()  // todo test help
     }
 }
 
@@ -117,17 +122,19 @@ extension HotkeyBinding {
         // for tests, we either pass it or construct a similar representation.
         _ descriptionForTests: String? = nil
     ) {
-        let constructedDescription = specificModifiers.isEmpty
-            ? virtualKeyCodeToString(keyCode)
-            : specificModifiers.toString() + "-" + virtualKeyCodeToString(keyCode)
+        let constructedDescription =
+            specificModifiers.isEmpty
+                ? virtualKeyCodeToString(keyCode)
+                : specificModifiers.toString() + "-" + virtualKeyCodeToString(keyCode)
 
         // The main HotkeyBinding init takes descriptionWithKeyNotation, which is the raw binding string.
         // For tests, if descriptionForTests is nil, we use the constructed one.
         // This matches how descriptionWithKeyCode is generated.
         self.init(
-            specificModifiers,
-            keyCode,
-            commands,
+            exactModifiers: specificModifiers,
+            genericModifiers: [],
+            keyCode: keyCode,
+            commands: commands,
             descriptionWithKeyNotation: descriptionForTests ?? constructedDescription
         )
     }

@@ -1,6 +1,5 @@
 import AppKit
 import Common
-
 // import Foundation // Common already imports Foundation
 // import HotKey // REMOVE: No longer using HotKey.Key or HotKey objects here
 import TOMLKit
@@ -8,46 +7,84 @@ import TOMLKit
 // TODO: Refactor hotkey management. This will be replaced by CGEventTap logic.
 // @MainActor private var hotkeys: [String: HotKey] = [:]
 
-@MainActor func resetHotKeys() {
-    // TODO: Refactor hotkey management.
-    print("TODO: resetHotKeys needs to be refactored for CGEventTap")
-}
+// @MainActor func resetHotKeys() { // REMOVE THIS FUNCTION
+//     // TODO: Refactor hotkey management.
+//     print("TODO: resetHotKeys needs to be refactored for CGEventTap")
+// }
 
 // TODO: Refactor: HotKey extension will likely be removed.
 
 @MainActor var activeMode: String? = mainModeId
 @MainActor func activateMode(_ targetMode: String?) {
-    // TODO: Refactor hotkey management. This function will change significantly.
-    print("TODO: activateMode needs to be refactored for CGEventTap. Current mode: \(targetMode ?? "none")")
     activeMode = targetMode
 }
 
+// Define GenericModifierType here if not accessible from keysMap.swift or for clarity
+// For now, assuming it's available from keysMap.swift via `import Common` or similar in consuming files
+// If not, it should be defined here or in a shared Common place.
+
 struct HotkeyBinding: Equatable, Sendable {
-    let specificModifiers: Set<PhysicalModifierKey>
-    let keyCode: UInt16 // NEW: Using virtual key code directly
+    let exactModifiers: Set<PhysicalModifierKey>
+    let genericModifiers: Set<GenericModifierType>  // Assumes GenericModifierType is defined (e.g., in keysMap.swift)
+    let keyCode: UInt16
     let commands: [any Command]
     let descriptionWithKeyCode: String
     let descriptionWithKeyNotation: String
 
-    init(_ specificModifiers: Set<PhysicalModifierKey>, _ keyCode: UInt16, _ commands: [any Command], descriptionWithKeyNotation: String) {
-        self.specificModifiers = specificModifiers
+    init(
+        exactModifiers: Set<PhysicalModifierKey> = [],  // Default to empty set
+        genericModifiers: Set<GenericModifierType> = [],  // Default to empty set
+        keyCode: UInt16,
+        commands: [any Command],
+        descriptionWithKeyNotation: String
+    ) {
+        self.exactModifiers = exactModifiers
+        self.genericModifiers = genericModifiers
         self.keyCode = keyCode
         self.commands = commands
-        self.descriptionWithKeyCode = specificModifiers.isEmpty
-            ? virtualKeyCodeToString(keyCode) // NEW: Use our helper from keysMap.swift
-            : specificModifiers.toString() + "-" + virtualKeyCodeToString(keyCode) // NEW
         self.descriptionWithKeyNotation = descriptionWithKeyNotation
+
+        // Construct descriptionWithKeyCode carefully based on exact and generic modifiers
+        var modifierParts: [String] = []  // Ensure GenericModifierType is accessible here
+        modifierParts += self.exactModifiers.sorted(by: { $0.rawValue < $1.rawValue }).map {
+            $0.configKey
+        }
+        modifierParts += self.genericModifiers.sorted(by: { $0.rawValue < $1.rawValue }).map {
+            $0.rawValue
+        }
+
+        // Critical: Ensure canonical representation by sorting and removing duplicates if any were allowed by parsing (parser should prevent this)
+        let sortedModifierString = modifierParts.sorted().joined(separator: "-")
+
+        self.descriptionWithKeyCode =
+            sortedModifierString.isEmpty
+            ? virtualKeyCodeToString(keyCode)
+            : sortedModifierString + "-" + virtualKeyCodeToString(keyCode)
     }
 
+    // Convenience init for old structure, will be removed or refactored by parseBinding
+    // init(
+    //     _ specificModifiers: Set<PhysicalModifierKey>, _ keyCode: UInt16, _ commands: [any Command],
+    //     descriptionWithKeyNotation: String
+    // ) {
+    //     self.init(exactModifiers: specificModifiers, genericModifiers: [], keyCode: keyCode, commands: commands, descriptionWithKeyNotation: descriptionWithKeyNotation)
+    // }
+
     static func == (lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
-        lhs.specificModifiers == rhs.specificModifiers &&
-            lhs.keyCode == rhs.keyCode &&
-            lhs.descriptionWithKeyCode == rhs.descriptionWithKeyCode &&
-            zip(lhs.commands, rhs.commands).allSatisfy { $0.equals($1) }
+        // Equality should primarily depend on the effective modifiers, keycode, and commands.
+        // descriptionWithKeyCode should be canonical if parsing is correct.
+        lhs.descriptionWithKeyCode == rhs.descriptionWithKeyCode  // This relies on canonical description
+            && lhs.keyCode == rhs.keyCode  // keyCode is part of descriptionWithKeyCode, but good to be explicit
+            && lhs.exactModifiers == rhs.exactModifiers  // Explicit check
+            && lhs.genericModifiers == rhs.genericModifiers  // Explicit check
+            && zip(lhs.commands, rhs.commands).allSatisfy { $0.equals($1) }  // Command equality
     }
 }
 
-func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError], _ mapping: [String: UInt16]) -> [String: HotkeyBinding] {
+func parseBindings(
+    _ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError],
+    _ mapping: [String: UInt16]
+) -> [String: HotkeyBinding] {
     guard let rawTable = raw.table else {
         errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
         return [:]
@@ -55,46 +92,126 @@ func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ er
     var result: [String: HotkeyBinding] = [:]
     for (bindingKeyString, rawCommand): (String, TOMLValueConvertible) in rawTable {
         let itemBacktrace = backtrace + .key(bindingKeyString)
-        let parsedBindingParts = parseBinding(bindingKeyString, itemBacktrace, mapping)
 
-        let binding = parsedBindingParts.flatMap { specificModifiers, keyCode -> ParsedToml<HotkeyBinding> in
-            parseCommandOrCommands(rawCommand).toParsedToml(itemBacktrace).map { commands -> HotkeyBinding in
-                HotkeyBinding(specificModifiers, keyCode, commands, descriptionWithKeyNotation: bindingKeyString)
+        let binding = parseBinding(bindingKeyString, itemBacktrace, mapping).flatMap {
+            components -> ParsedToml<HotkeyBinding> in
+            parseCommandOrCommands(rawCommand).toParsedToml(itemBacktrace).map {
+                commands -> HotkeyBinding in
+                HotkeyBinding(
+                    exactModifiers: components.exact,
+                    genericModifiers: components.generic,
+                    keyCode: components.keyCode,
+                    commands: commands,
+                    descriptionWithKeyNotation: bindingKeyString
+                )
             }
         }
         .getOrNil(appendErrorTo: &errors)
 
         if let binding {
-            // Using descriptionWithKeyNotation for uniqueness check as it's the raw string from config.
-            // descriptionWithKeyCode might have collisions if virtualKeyCodeToString is not perfectly unique or canonical for all keys.
-            if result.values.contains(where: { $0.descriptionWithKeyNotation == binding.descriptionWithKeyNotation && $0.descriptionWithKeyCode != binding.descriptionWithKeyCode }) {
-                // This case is tricky, means same notation maps to different key codes due to presets etc.
-                // However, descriptionWithKeyCode should be the canonical representation based on resolved key codes.
+            if result.keys.contains(binding.descriptionWithKeyCode) {
+                errors.append(
+                    .semantic(
+                        itemBacktrace,
+                        "'\(binding.descriptionWithKeyCode)' Binding redeclaration. Original binding notation was '\(binding.descriptionWithKeyNotation)'."
+                    )
+                )
             }
-            if result.keys.contains(binding.descriptionWithKeyCode) { // Check canonical form
-                errors.append(.semantic(itemBacktrace, "'\(binding.descriptionWithKeyCode)' Binding redeclaration. Original binding notation was '\(binding.descriptionWithKeyNotation)'."))
-            }
-            result[binding.descriptionWithKeyCode] = binding // Store by canonical key code description
+            result[binding.descriptionWithKeyCode] = binding
         }
     }
     return result
 }
 
-func parseBinding(_ raw: String, _ backtrace: TomlBacktrace, _ mapping: [String: UInt16]) -> ParsedToml<(Set<PhysicalModifierKey>, UInt16)> {
+func parseBinding(_ raw: String, _ backtrace: TomlBacktrace, _ mapping: [String: UInt16])
+    -> ParsedToml<
+        (exact: Set<PhysicalModifierKey>, generic: Set<GenericModifierType>, keyCode: UInt16)
+    >
+{
     let rawKeys = raw.lowercased().split(separator: "-")
-    let specificModifiersResult: ParsedToml<Set<PhysicalModifierKey>> = rawKeys.dropLast()
-        .mapAllOrFailure { token -> ParsedToml<PhysicalModifierKey> in
-            specificModifiersMap[String(token)].orFailure(.semantic(backtrace, "Can't parse modifier token '\(token)' in '\(raw)'. Available: \(specificModifiersMap.keys.joined(separator: ", "))"))
-        }
-        .map { Set($0) }
+    guard !rawKeys.isEmpty else {
+        return .failure(.semantic(backtrace, "Binding string cannot be empty."))
+    }
 
-    let keyString = String(rawKeys.last ?? "")
-    let key: ParsedToml<UInt16> = mapping[keyString]
-        .orFailure(.semantic(backtrace, "Can't parse the key '\(keyString)' in '\(raw)' binding. Available keys: \(mapping.keys.sorted().joined(separator: ", "))"))
+    var exactModifiers = Set<PhysicalModifierKey>()
+    var genericModifiers = Set<GenericModifierType>()
+    var parsedModifierTokens: [String] = []
 
-    return specificModifiersResult.flatMap { smods -> ParsedToml<(Set<PhysicalModifierKey>, UInt16)> in
-        key.flatMap { k -> ParsedToml<(Set<PhysicalModifierKey>, UInt16)> in
-            .success((smods, k))
+    for token in rawKeys.dropLast() {
+        let tokenString = String(token)
+        parsedModifierTokens.append(tokenString)
+        if let physicalMod = specificModifiersMap[tokenString] {
+            guard !exactModifiers.contains(physicalMod) else {
+                return .failure(
+                    .semantic(
+                        backtrace, "Duplicate specific modifier '\(tokenString)' in '\(raw)'."))
+            }
+            exactModifiers.insert(physicalMod)
+        } else if let genericMod = genericModifiersMap[tokenString] {
+            guard !genericModifiers.contains(genericMod) else {
+                return .failure(
+                    .semantic(backtrace, "Duplicate generic modifier '\(tokenString)' in '\(raw)'.")
+                )
+            }
+            genericModifiers.insert(genericMod)
+        } else {
+            let availableSpecific = specificModifiersMap.keys.sorted().joined(separator: ", ")
+            let availableGeneric = genericModifiersMap.keys.sorted().joined(separator: ", ")
+            return .failure(
+                .semantic(
+                    backtrace,
+                    "Can't parse modifier token '\(tokenString)' in '\(raw)'. Available specific: [\(availableSpecific)]. Available generic: [\(availableGeneric)]."
+                )
+            )
         }
+    }
+
+    // Validation: Generic vs Specific conflicts
+    for genModType in genericModifiers {
+        let specificCounterparts: Set<PhysicalModifierKey> =
+            switch genModType {
+            case .option: [.leftOption, .rightOption]
+            case .command: [.leftCommand, .rightCommand]
+            case .control: [.leftControl, .rightControl]
+            case .shift: [.leftShift, .rightShift]
+            }
+        if !exactModifiers.isDisjoint(with: specificCounterparts) {
+            return .failure(
+                .semantic(
+                    backtrace,
+                    "Binding '\(raw)' cannot specify both a generic modifier for '\(genModType.rawValue)' (e.g., '\(exampleGenericToken(for: genModType))') and a specific one (e.g., 'lalt', 'ralt') for the same type."
+                )
+            )
+        }
+    }
+
+    // Validation: lctrl and rctrl for example implies ctrl. User can't specify lctrl and ctrl for example.
+    // This is implicitly handled by the previous check: if `genericModifiers` contains `.control`
+    // and `exactModifiers` contains `.leftControl`, it's an error.
+
+    let keyString = String(rawKeys.last!)
+    let keyBinding: ParsedToml<UInt16> = mapping[keyString]
+        .orFailure(
+            .semantic(
+                backtrace,
+                "Can't parse the key '\(keyString)' in '\(raw)' binding. Available keys: \(mapping.keys.sorted().joined(separator: ", "))"
+            )
+        )
+
+    return keyBinding.map {
+        keyCode -> (
+            exact: Set<PhysicalModifierKey>, generic: Set<GenericModifierType>, keyCode: UInt16
+        ) in
+        return (exact: exactModifiers, generic: genericModifiers, keyCode: keyCode)
+    }
+}
+
+private func exampleGenericToken(for type: GenericModifierType) -> String {
+    // Return a common token for the generic type
+    switch type {
+    case .option: return "alt"
+    case .command: return "cmd"
+    case .control: return "ctrl"
+    case .shift: return "shift"
     }
 }

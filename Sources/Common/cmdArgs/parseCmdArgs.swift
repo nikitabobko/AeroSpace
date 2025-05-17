@@ -3,16 +3,27 @@ public func parseCmdArgs(_ args: [String]) -> ParsedCmd<any CmdArgs> {
     if subcommand.isEmpty {
         return .failure("Can't parse empty string command")
     }
-    if let subcommandParser: any SubCommandParserProtocol = subcommandParsers[subcommand] {
+    // ---- START DEBUG ----
+    // print(
+    //     "DEBUG parseCmdArgs: Looking for subcommand '\(subcommand)'"
+    // )
+    let foundParser = subcommandParsers[subcommand]  // Ensure this line remains active
+    // print("DEBUG parseCmdArgs: Parser found for '\(subcommand)': \(foundParser != nil)")
+    // ---- END DEBUG ----
+    if let subcommandParser = foundParser {  // Use the explicitly looked-up parser
         return subcommandParser.parse(args: Array(args.dropFirst()))
     } else {
+        // This branch should NOT be taken for "noop" if the above debug says "Parser found for 'noop': true"
+        // print(
+        //     "DEBUG parseCmdArgs: SUBCOMMAND '\(subcommand)' NOT FOUND. Ensure it is in CmdKind and initSubcommands."
+        // )
         return .failure("Unrecognized subcommand '\(subcommand)'")
     }
 }
 
 public protocol CmdArgs: ConvenienceCopyable, Equatable, CustomStringConvertible, AeroAny, Sendable {
     static var parser: CmdParser<Self> { get }
-    var rawArgs: EquatableNoop<[String]> { get } // Non Equatable because test comparion
+    var rawArgs: EquatableNoop<[String]> { get }  // Non Equatable because test comparion
 
     // Two very common flags among commands
     var windowId: UInt32? { get set }
@@ -22,7 +33,7 @@ public protocol CmdArgs: ConvenienceCopyable, Equatable, CustomStringConvertible
 public extension CmdArgs {
     static var info: CmdStaticInfo { Self.parser.info }
 
-    func equals(_ other: any CmdArgs) -> Bool { // My brain is cursed with Java
+    func equals(_ other: any CmdArgs) -> Bool {  // My brain is cursed with Java
         (other as? Self).flatMap { self == $0 } ?? false
     }
 
@@ -62,7 +73,7 @@ public func cmdParser<T>(
 public struct CmdStaticInfo: Equatable, Sendable {
     public let help: String
     public let kind: CmdKind
-    public let allowInConfig: Bool // Query commands are prohibited in config
+    public let allowInConfig: Bool  // Query commands are prohibited in config
 
     public init(
         help: String,

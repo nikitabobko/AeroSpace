@@ -45,7 +45,7 @@ private let period = "period"
 private let slash = "slash"
 
 // Define virtual key codes (subset, expand as needed based on keyNotationToKeyCode)
-enum VirtualKeyCodes { // Using an enum namespace for clarity
+enum VirtualKeyCodes {  // Using an enum namespace for clarity
     static let a: UInt16 = 0x00
     static let s: UInt16 = 0x01
     static let d: UInt16 = 0x02
@@ -57,7 +57,7 @@ enum VirtualKeyCodes { // Using an enum namespace for clarity
     static let c: UInt16 = 0x08
     static let v: UInt16 = 0x09
     // sectionSign for ISO layout
-    static let section: UInt16 = 0x0A // Or grave for ANSI on some mappings
+    static let section: UInt16 = 0x0A  // Or grave for ANSI on some mappings
     static let b: UInt16 = 0x0B
     static let q: UInt16 = 0x0C
     static let w: UInt16 = 0x0D
@@ -77,30 +77,30 @@ enum VirtualKeyCodes { // Using an enum namespace for clarity
     static let minus: UInt16 = 0x1B
     static let _8: UInt16 = 0x1C
     static let _0: UInt16 = 0x1D
-    static let rightBracket: UInt16 = 0x1E // ]
+    static let rightBracket: UInt16 = 0x1E  // ]
     static let o: UInt16 = 0x1F
     static let u: UInt16 = 0x20
     static let leftBracket: UInt16 = 0x21  // [
     static let i: UInt16 = 0x22
     static let p: UInt16 = 0x23
-    static let enter: UInt16 = 0x24       // Primary Enter/Return
+    static let enter: UInt16 = 0x24  // Primary Enter/Return
     static let l: UInt16 = 0x25
     static let j: UInt16 = 0x26
-    static let quote: UInt16 = 0x27       // '
+    static let quote: UInt16 = 0x27  // '
     static let k: UInt16 = 0x28
-    static let semicolon: UInt16 = 0x29   // ;
-    static let backslash: UInt16 = 0x2A   // \
-    static let comma: UInt16 = 0x2B       // ,
-    static let slash: UInt16 = 0x2C       // /
+    static let semicolon: UInt16 = 0x29  // ;
+    static let backslash: UInt16 = 0x2A  // \
+    static let comma: UInt16 = 0x2B  // ,
+    static let slash: UInt16 = 0x2C  // /
     static let n: UInt16 = 0x2D
     static let m: UInt16 = 0x2E
-    static let period: UInt16 = 0x2F      // .
+    static let period: UInt16 = 0x2F  // .
     static let tab: UInt16 = 0x30
     static let space: UInt16 = 0x31
-    static let grave: UInt16 = 0x32       // ` / ~ (ANSI) , or § / ± (ISO)
+    static let grave: UInt16 = 0x32  // ` / ~ (ANSI) , or § / ± (ISO)
     // For sectionSign, some use 0x0A. Let's stick to 0x32 for grave/backtick common on ANSI
     // and handle sectionSign separately if needed via specific mapping.
-    static let backspace: UInt16 = 0x33   // Delete (Backspace)
+    static let backspace: UInt16 = 0x33  // Delete (Backspace)
     // static let enterPowerbook: UInt16 = 0x34 // Less common
     static let escape: UInt16 = 0x35
     // Modifier key codes are handled by physicalModifierKeyToKeyCode
@@ -108,7 +108,7 @@ enum VirtualKeyCodes { // Using an enum namespace for clarity
     static let keypadDecimal: UInt16 = 0x41
     static let keypadMultiply: UInt16 = 0x43
     static let keypadPlus: UInt16 = 0x45
-    static let keypadClear: UInt16 = 0x47    // Num Lock on some
+    static let keypadClear: UInt16 = 0x47  // Num Lock on some
     static let keypadDivide: UInt16 = 0x4B
     static let keypadEnter: UInt16 = 0x4C
     static let keypadMinus: UInt16 = 0x4E
@@ -147,7 +147,7 @@ enum VirtualKeyCodes { // Using an enum namespace for clarity
 
     static let home: UInt16 = 0x73
     static let pageUp: UInt16 = 0x74
-    static let forwardDelete: UInt16 = 0x75 // Del key below Help
+    static let forwardDelete: UInt16 = 0x75  // Del key below Help
     static let end: UInt16 = 0x77
     static let pageDown: UInt16 = 0x79
 
@@ -159,10 +159,10 @@ enum VirtualKeyCodes { // Using an enum namespace for clarity
 }
 
 // func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: Key] { // OLD
-func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: UInt16] { // NEW
+func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: UInt16] {  // NEW
     return switch layout {
         // case .qwerty: keyNotationToKeyCode // OLD
-        case .qwerty: keyNotationToVirtualKeyCode // NEW
+        case .qwerty: keyNotationToVirtualKeyCode  // NEW
         case .dvorak: dvorakMap
         case .colemak: colemakMap
     }
@@ -171,9 +171,9 @@ func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: UInt16] { // NEW
 // extension Key: @unchecked @retroactive Sendable {} // This comes from HotKey, remove if HotKey is fully removed
 
 // let keyNotationToKeyCode: [String: Key] = [ // OLD
-let keyNotationToVirtualKeyCode: [String: UInt16] = [ // NEW
+let keyNotationToVirtualKeyCode: [String: UInt16] = [  // NEW
     // sectionSign: .section, // OLD Key enum
-    sectionSign: VirtualKeyCodes.section, // NEW UInt16
+    sectionSign: VirtualKeyCodes.section,  // NEW UInt16
     "0": VirtualKeyCodes._0,
     "1": VirtualKeyCodes._1,
     "2": VirtualKeyCodes._2,
@@ -270,7 +270,7 @@ let keyNotationToVirtualKeyCode: [String: UInt16] = [ // NEW
     "f19": VirtualKeyCodes.f19,
     "f20": VirtualKeyCodes.f20,
 
-    "backtick": VirtualKeyCodes.grave, // For ANSI layout, grave is 0x32. Section sign is 0x0A for ISO.
+    "backtick": VirtualKeyCodes.grave,  // For ANSI layout, grave is 0x32. Section sign is 0x0A for ISO.
     // The original HotKey.Key.grave might map to 0x32 (kVK_ANSI_Grave)
     // HotKey.Key.section maps to 0x0A (kVK_ISO_Section)
     // For simplicity, "backtick" maps to ANSI grave. "sectionSign" handles ISO.
@@ -287,67 +287,69 @@ let keyNotationToVirtualKeyCode: [String: UInt16] = [ // NEW
 ]
 
 // private let dvorakMap: [String: Key] = keyNotationToKeyCode + [ // OLD
-private let dvorakMap: [String: UInt16] = keyNotationToVirtualKeyCode + [ // NEW
-    leftSquareBracket: VirtualKeyCodes.minus,
-    rightSquareBracket: VirtualKeyCodes.equal,
+private let dvorakMap: [String: UInt16] =
+    keyNotationToVirtualKeyCode + [  // NEW
+        leftSquareBracket: VirtualKeyCodes.minus,
+        rightSquareBracket: VirtualKeyCodes.equal,
 
-    quote: VirtualKeyCodes.q,
-    comma: VirtualKeyCodes.w,
-    period: VirtualKeyCodes.e,
-    p: VirtualKeyCodes.r,
-    y: VirtualKeyCodes.t,
-    f: VirtualKeyCodes.y,
-    g: VirtualKeyCodes.u,
-    c: VirtualKeyCodes.i,
-    r: VirtualKeyCodes.o,
-    l: VirtualKeyCodes.p,
-    slash: VirtualKeyCodes.leftBracket,
-    equal: VirtualKeyCodes.rightBracket,
-    backslash: VirtualKeyCodes.backslash,
+        quote: VirtualKeyCodes.q,
+        comma: VirtualKeyCodes.w,
+        period: VirtualKeyCodes.e,
+        p: VirtualKeyCodes.r,
+        y: VirtualKeyCodes.t,
+        f: VirtualKeyCodes.y,
+        g: VirtualKeyCodes.u,
+        c: VirtualKeyCodes.i,
+        r: VirtualKeyCodes.o,
+        l: VirtualKeyCodes.p,
+        slash: VirtualKeyCodes.leftBracket,
+        equal: VirtualKeyCodes.rightBracket,
+        backslash: VirtualKeyCodes.backslash,
 
-    a: VirtualKeyCodes.a,
-    o: VirtualKeyCodes.s,
-    e: VirtualKeyCodes.d,
-    u: VirtualKeyCodes.f,
-    i: VirtualKeyCodes.g,
-    d: VirtualKeyCodes.h,
-    h: VirtualKeyCodes.j,
-    t: VirtualKeyCodes.k,
-    n: VirtualKeyCodes.l,
-    s: VirtualKeyCodes.semicolon,
-    minus: VirtualKeyCodes.quote,
+        a: VirtualKeyCodes.a,
+        o: VirtualKeyCodes.s,
+        e: VirtualKeyCodes.d,
+        u: VirtualKeyCodes.f,
+        i: VirtualKeyCodes.g,
+        d: VirtualKeyCodes.h,
+        h: VirtualKeyCodes.j,
+        t: VirtualKeyCodes.k,
+        n: VirtualKeyCodes.l,
+        s: VirtualKeyCodes.semicolon,
+        minus: VirtualKeyCodes.quote,
 
-    semicolon: VirtualKeyCodes.z,
-    q: VirtualKeyCodes.x,
-    j: VirtualKeyCodes.c,
-    k: VirtualKeyCodes.v,
-    x: VirtualKeyCodes.b,
-    b: VirtualKeyCodes.n,
-    w: VirtualKeyCodes.comma,
-    v: VirtualKeyCodes.period,
-    z: VirtualKeyCodes.slash,
-]
+        semicolon: VirtualKeyCodes.z,
+        q: VirtualKeyCodes.x,
+        j: VirtualKeyCodes.c,
+        k: VirtualKeyCodes.v,
+        x: VirtualKeyCodes.b,
+        b: VirtualKeyCodes.n,
+        w: VirtualKeyCodes.comma,
+        v: VirtualKeyCodes.period,
+        z: VirtualKeyCodes.slash,
+    ]
 
 // private let colemakMap: [String: Key] = keyNotationToKeyCode + [ // OLD
-private let colemakMap: [String: UInt16] = keyNotationToVirtualKeyCode + [ // NEW
-    f: VirtualKeyCodes.e,
-    p: VirtualKeyCodes.r,
-    g: VirtualKeyCodes.t,
-    j: VirtualKeyCodes.y,
-    l: VirtualKeyCodes.u,
-    u: VirtualKeyCodes.i,
-    y: VirtualKeyCodes.o,
-    semicolon: VirtualKeyCodes.p,
-    r: VirtualKeyCodes.s,
-    s: VirtualKeyCodes.d,
-    t: VirtualKeyCodes.f,
-    d: VirtualKeyCodes.g,
-    n: VirtualKeyCodes.j,
-    e: VirtualKeyCodes.k,
-    i: VirtualKeyCodes.l,
-    o: VirtualKeyCodes.semicolon,
-    k: VirtualKeyCodes.n,
-]
+private let colemakMap: [String: UInt16] =
+    keyNotationToVirtualKeyCode + [  // NEW
+        f: VirtualKeyCodes.e,
+        p: VirtualKeyCodes.r,
+        g: VirtualKeyCodes.t,
+        j: VirtualKeyCodes.y,
+        l: VirtualKeyCodes.u,
+        u: VirtualKeyCodes.i,
+        y: VirtualKeyCodes.o,
+        semicolon: VirtualKeyCodes.p,
+        r: VirtualKeyCodes.s,
+        s: VirtualKeyCodes.d,
+        t: VirtualKeyCodes.f,
+        d: VirtualKeyCodes.g,
+        n: VirtualKeyCodes.j,
+        e: VirtualKeyCodes.k,
+        i: VirtualKeyCodes.l,
+        o: VirtualKeyCodes.semicolon,
+        k: VirtualKeyCodes.n,
+    ]
 
 let modifiersMap: [String: NSEvent.ModifierFlags] = [
     "shift": .shift,
@@ -358,7 +360,8 @@ let modifiersMap: [String: NSEvent.ModifierFlags] = [
 
 // Added for specific modifier key handling
 enum PhysicalModifierKey: String, CaseIterable, Hashable, Sendable {
-    case leftShift, rightShift, leftControl, rightControl, leftOption, rightOption, leftCommand, rightCommand, function
+    case leftShift, rightShift, leftControl, rightControl, leftOption, rightOption, leftCommand,
+         rightCommand, function
 
     // Helper to get the string representation used in config files
     var configKey: String {
@@ -376,13 +379,31 @@ enum PhysicalModifierKey: String, CaseIterable, Hashable, Sendable {
     }
 }
 
-let specificModifiersMap: [String: PhysicalModifierKey] = PhysicalModifierKey.allCases.reduce(into: [:]) { result, key in
-    result[key.configKey] = key
-    // Add alternative generic keys if desired, e.g., map "alt" to LeftOption as a default or a special "either" type
-    // For now, keeping it strict to specific modifiers.
-    // Example for also allowing generic "alt":
-    // if key == .leftOption { result["alt"] = key } // Or handle "alt" to mean "leftOption OR rightOption"
+// Explicitly define the map with all keys for robustness, especially in test environments
+let specificModifiersMap: [String: PhysicalModifierKey] = [
+    // Specific left/right
+    PhysicalModifierKey.leftShift.configKey: .leftShift,
+    PhysicalModifierKey.rightShift.configKey: .rightShift,
+    PhysicalModifierKey.leftControl.configKey: .leftControl,
+    PhysicalModifierKey.rightControl.configKey: .rightControl,
+    PhysicalModifierKey.leftOption.configKey: .leftOption,
+    PhysicalModifierKey.rightOption.configKey: .rightOption,
+    PhysicalModifierKey.leftCommand.configKey: .leftCommand,
+    PhysicalModifierKey.rightCommand.configKey: .rightCommand,
+    PhysicalModifierKey.function.configKey: .function,
+]
+
+// New: For generic modifier parsing
+enum GenericModifierType: String, CaseIterable, Hashable, Sendable {
+    case option, command, control, shift
 }
+
+let genericModifiersMap: [String: GenericModifierType] = [
+    "alt": .option, "option": .option,
+    "cmd": .command, "command": .command,
+    "ctrl": .control, "control": .control,
+    "shift": .shift,
+]
 
 let physicalModifierKeyToKeyCode: [PhysicalModifierKey: UInt16] = [
     .leftShift: 0x38, .rightShift: 0x3C,
