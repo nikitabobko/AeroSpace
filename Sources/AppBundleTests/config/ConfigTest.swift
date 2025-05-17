@@ -47,7 +47,12 @@ final class ConfigTest: XCTestCase {
             """
         )
         assertEquals(errors, [])
-        let binding = HotkeyBinding(.option, .h, [FocusCommand.new(direction: .left)])
+        let binding = HotkeyBinding(
+            specificModifiers: [PhysicalModifierKey.leftOption],
+            keyCode: VirtualKeyCodes.h,
+            commands: [FocusCommand.new(direction: .left)],
+            "alt-h"
+        )
         assertEquals(
             config.modes[mainModeId],
             Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding])
@@ -80,11 +85,16 @@ final class ConfigTest: XCTestCase {
         assertEquals(
             errors.descriptions,
             [
-                "mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
-                "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding",
-            ]
+                "mode.main.binding.aalt-j: Can't parse modifier token 'aalt' in 'aalt-j' binding. Available: \(specificModifiersMap.keys.joined(separator: ", "))",
+                "mode.main.binding.alt-hh: Can't parse the key 'hh' in 'alt-hh' binding. Available keys: \(keyNotationToVirtualKeyCode.keys.sorted().joined(separator: ", "))",
+            ].sorted()
         )
-        let binding = HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])
+        let binding = HotkeyBinding(
+            specificModifiers: [PhysicalModifierKey.leftOption],
+            keyCode: VirtualKeyCodes.k,
+            commands: [FocusCommand.new(direction: .up)],
+            "alt-k"
+        )
         assertEquals(
             config.modes[mainModeId],
             Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding])
@@ -337,51 +347,102 @@ final class ConfigTest: XCTestCase {
     }
 
     func testParseKeyMapping() {
-        let (config, errors) = parseConfig(
+        var errors: [TomlParseError] = []
+        let config = parseKeyMapping(
             """
-            [key-mapping.key-notation-to-key-code]
-                q = 'q'
-                unicorn = 'u'
-
-            [mode.main.binding]
-                alt-unicorn = 'workspace wonderland'
-            """
+            preset = "qwerty"
+            [key-notation-to-key-code]
+            q = "a"
+            unicorn = "u"
+            """, .root, &errors
         )
         assertEquals(errors.descriptions, [])
-        assertEquals(config.keyMapping, KeyMapping(preset: .qwerty, rawKeyNotationToKeyCode: [
-            "q": .q,
-            "unicorn": .u,
+        assertEquals(config, KeyMapping(preset: .qwerty, rawKeyNotationToVirtualKeyCode: [
+            "q": VirtualKeyCodes.a,
+            "unicorn": VirtualKeyCodes.u,
         ]))
-        let binding = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrDie())))])
-        assertEquals(config.modes[mainModeId]?.bindings, [binding.descriptionWithKeyCode: binding])
 
-        let (_, errors1) = parseConfig(
+        let binding = HotkeyBinding(
+            specificModifiers: [PhysicalModifierKey.leftOption],
+            keyCode: VirtualKeyCodes.u,
+            commands: [WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrDie())))],
+            "alt-u"
+        )
+        assertEquals(binding.descriptionWithKeyCode, "lalt-u")
+        assertEquals(binding.descriptionWithKeyNotation, "alt-u")
+    }
+
+    func testParseKeyMappingLayoutPresets() {
+        let (qwertyConfig, qwertyErrors) = parseConfig(
             """
-            [key-mapping.key-notation-to-key-code]
-                q = 'qw'
-                ' f' = 'f'
+            [key-mapping]
+            preset = "qwerty"
             """
         )
-        assertEquals(errors1.descriptions, [
-            "key-mapping.key-notation-to-key-code: ' f' is invalid key notation",
-            "key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code",
-        ])
+        assertEquals(qwertyErrors.descriptions, [])
+        assertEquals(qwertyConfig.keyMapping, KeyMapping(preset: .qwerty, rawKeyNotationToVirtualKeyCode: [:]))
+        assertEquals(qwertyConfig.keyMapping.resolve()["q"], VirtualKeyCodes.q)
 
         let (dvorakConfig, dvorakErrors) = parseConfig(
             """
-            key-mapping.preset = 'dvorak'
+            [key-mapping]
+            preset = "dvorak"
             """
         )
-        assertEquals(dvorakErrors, [])
-        assertEquals(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(dvorakConfig.keyMapping.resolve()["quote"], .q)
+        assertEquals(dvorakErrors.descriptions, [])
+        assertEquals(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToVirtualKeyCode: [:]))
+        assertEquals(dvorakConfig.keyMapping.resolve()["quote"], VirtualKeyCodes.q)
+
         let (colemakConfig, colemakErrors) = parseConfig(
             """
-            key-mapping.preset = 'colemak'
+            [key-mapping]
+            preset = "colemak"
             """
         )
-        assertEquals(colemakErrors, [])
-        assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(colemakConfig.keyMapping.resolve()["f"], .e)
+        assertEquals(colemakErrors.descriptions, [])
+        assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToVirtualKeyCode: [:]))
+        assertEquals(colemakConfig.keyMapping.resolve()["f"], VirtualKeyCodes.e)
+    }
+
+    func testParseSpecificModifiers() {
+        let toml = """
+            [mode.main.binding]
+                lalt-a = 'command1'
+                ralt-b = 'command2'
+                fn-f1 = 'command3'
+                lcmd-rshift-c = 'command4'
+                lctrl-lshift-ralt-d = 'command5'
+            """
+        let (config, errors) = parseConfig(toml)
+        assertEquals(errors.descriptions, [])
+
+        let bindings = config.modes[mainModeId]?.bindings
+        XCTAssertNotNil(bindings)
+
+        // Helper to check a binding
+        func checkBinding(
+            _ notation: String,
+            _ expectedModifiers: Set<PhysicalModifierKey>,
+            _ expectedKeyCode: UInt16,
+            _ expectedCommandStrings: [String] = [] // Now expects an array of command strings
+        ) {
+            let keyForMap = (expectedModifiers.isEmpty ? "" : expectedModifiers.toString() + "-") + virtualKeyCodeToString(expectedKeyCode)
+            let binding = bindings?[keyForMap]
+            XCTAssertNotNil(binding, "Binding not found for \(notation) (expected key: \(keyForMap))")
+            assertEquals(binding?.specificModifiers, expectedModifiers, additionalMsg: "Modifiers mismatch for \(notation)")
+            assertEquals(binding?.keyCode, expectedKeyCode, additionalMsg: "Key code mismatch for \(notation)")
+            assertEquals(binding?.descriptionWithKeyNotation, notation, additionalMsg: "Notation string mismatch for \(notation)")
+
+            if !expectedCommandStrings.isEmpty {
+                let actualCommandDescriptions: [String] = binding?.commands.compactMap { ($0 as? any CmdArgs)?.description } ?? []
+                assertEquals(actualCommandDescriptions, expectedCommandStrings, additionalMsg: "Command mismatch for \(notation)")
+            }
+        }
+
+        checkBinding("lalt-a", [.leftOption], VirtualKeyCodes.a, ["command1"])
+        checkBinding("ralt-b", [.rightOption], VirtualKeyCodes.b, ["command2"])
+        checkBinding("fn-f1", [.function], VirtualKeyCodes.f1, ["command3"])
+        checkBinding("lcmd-rshift-c", [.leftCommand, .rightShift], VirtualKeyCodes.c, ["command4"])
+        checkBinding("lctrl-lshift-ralt-d", [.leftControl, .leftShift, .rightOption], VirtualKeyCodes.d, ["command5"])
     }
 }

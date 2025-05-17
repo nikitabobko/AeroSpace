@@ -1,6 +1,5 @@
 import AppKit
 import Common
-import HotKey
 
 func getDefaultConfigUrlFromProject() -> URL {
     var url = URL(filePath: #file)

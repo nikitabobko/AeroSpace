@@ -1,118 +1,100 @@
 import AppKit
 import Common
-import Foundation
-import HotKey
+
+// import Foundation // Common already imports Foundation
+// import HotKey // REMOVE: No longer using HotKey.Key or HotKey objects here
 import TOMLKit
 
-@MainActor private var hotkeys: [String: HotKey] = [:]
+// TODO: Refactor hotkey management. This will be replaced by CGEventTap logic.
+// @MainActor private var hotkeys: [String: HotKey] = [:]
 
 @MainActor func resetHotKeys() {
-    // Explicitly unregister all hotkeys. We cannot always rely on destruction of the HotKey object to trigger
-    // unregistration because we might be running inside a hotkey handler that is keeping its HotKey object alive.
-    for (_, key) in hotkeys {
-        key.isEnabled = false
-    }
-    hotkeys = [:]
+    // TODO: Refactor hotkey management.
+    print("TODO: resetHotKeys needs to be refactored for CGEventTap")
 }
 
-extension HotKey {
-    var isEnabled: Bool {
-        get { !isPaused }
-        set {
-            if isEnabled != newValue {
-                isPaused = !newValue
-            }
-        }
-    }
-}
+// TODO: Refactor: HotKey extension will likely be removed.
 
 @MainActor var activeMode: String? = mainModeId
 @MainActor func activateMode(_ targetMode: String?) {
-    let targetBindings = targetMode.flatMap { config.modes[$0] }?.bindings ?? [:]
-    for binding in targetBindings.values where !hotkeys.keys.contains(binding.descriptionWithKeyCode) {
-        hotkeys[binding.descriptionWithKeyCode] = HotKey(key: binding.keyCode, modifiers: binding.modifiers, keyDownHandler: {
-            Task {
-                if let activeMode {
-                    try await runSession(.hotkeyBinding, .checkServerIsEnabledOrDie) { () throws in
-                        _ = try await config.modes[activeMode]?.bindings[binding.descriptionWithKeyCode]?.commands
-                            .runCmdSeq(.defaultEnv, .emptyStdin)
-                    }
-                }
-            }
-        })
-    }
-    for (binding, key) in hotkeys {
-        if targetBindings.keys.contains(binding) {
-            key.isEnabled = true
-        } else {
-            key.isEnabled = false
-        }
-    }
+    // TODO: Refactor hotkey management. This function will change significantly.
+    print("TODO: activateMode needs to be refactored for CGEventTap. Current mode: \(targetMode ?? "none")")
     activeMode = targetMode
 }
 
 struct HotkeyBinding: Equatable, Sendable {
-    let modifiers: NSEvent.ModifierFlags
-    let keyCode: Key
+    let specificModifiers: Set<PhysicalModifierKey>
+    let keyCode: UInt16 // NEW: Using virtual key code directly
     let commands: [any Command]
     let descriptionWithKeyCode: String
     let descriptionWithKeyNotation: String
 
-    init(_ modifiers: NSEvent.ModifierFlags, _ keyCode: Key, _ commands: [any Command], descriptionWithKeyNotation: String) {
-        self.modifiers = modifiers
+    init(_ specificModifiers: Set<PhysicalModifierKey>, _ keyCode: UInt16, _ commands: [any Command], descriptionWithKeyNotation: String) {
+        self.specificModifiers = specificModifiers
         self.keyCode = keyCode
         self.commands = commands
-        self.descriptionWithKeyCode = modifiers.isEmpty
-            ? keyCode.toString()
-            : modifiers.toString() + "-" + keyCode.toString()
+        self.descriptionWithKeyCode = specificModifiers.isEmpty
+            ? virtualKeyCodeToString(keyCode) // NEW: Use our helper from keysMap.swift
+            : specificModifiers.toString() + "-" + virtualKeyCodeToString(keyCode) // NEW
         self.descriptionWithKeyNotation = descriptionWithKeyNotation
     }
 
     static func == (lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
-        lhs.modifiers == rhs.modifiers &&
+        lhs.specificModifiers == rhs.specificModifiers &&
             lhs.keyCode == rhs.keyCode &&
             lhs.descriptionWithKeyCode == rhs.descriptionWithKeyCode &&
             zip(lhs.commands, rhs.commands).allSatisfy { $0.equals($1) }
     }
 }
 
-func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError], _ mapping: [String: Key]) -> [String: HotkeyBinding] {
+func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError], _ mapping: [String: UInt16]) -> [String: HotkeyBinding] {
     guard let rawTable = raw.table else {
         errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
         return [:]
     }
     var result: [String: HotkeyBinding] = [:]
-    for (binding, rawCommand): (String, TOMLValueConvertible) in rawTable {
-        let backtrace = backtrace + .key(binding)
-        let binding = parseBinding(binding, backtrace, mapping)
-            .flatMap { modifiers, key -> ParsedToml<HotkeyBinding> in
-                parseCommandOrCommands(rawCommand).toParsedToml(backtrace).map {
-                    HotkeyBinding(modifiers, key, $0, descriptionWithKeyNotation: binding)
-                }
+    for (bindingKeyString, rawCommand): (String, TOMLValueConvertible) in rawTable {
+        let itemBacktrace = backtrace + .key(bindingKeyString)
+        let parsedBindingParts = parseBinding(bindingKeyString, itemBacktrace, mapping)
+
+        let binding = parsedBindingParts.flatMap { specificModifiers, keyCode -> ParsedToml<HotkeyBinding> in
+            parseCommandOrCommands(rawCommand).toParsedToml(itemBacktrace).map { commands -> HotkeyBinding in
+                HotkeyBinding(specificModifiers, keyCode, commands, descriptionWithKeyNotation: bindingKeyString)
             }
-            .getOrNil(appendErrorTo: &errors)
+        }
+        .getOrNil(appendErrorTo: &errors)
+
         if let binding {
-            if result.keys.contains(binding.descriptionWithKeyCode) {
-                errors.append(.semantic(backtrace, "'\(binding.descriptionWithKeyCode)' Binding redeclaration"))
+            // Using descriptionWithKeyNotation for uniqueness check as it's the raw string from config.
+            // descriptionWithKeyCode might have collisions if virtualKeyCodeToString is not perfectly unique or canonical for all keys.
+            if result.values.contains(where: { $0.descriptionWithKeyNotation == binding.descriptionWithKeyNotation && $0.descriptionWithKeyCode != binding.descriptionWithKeyCode }) {
+                // This case is tricky, means same notation maps to different key codes due to presets etc.
+                // However, descriptionWithKeyCode should be the canonical representation based on resolved key codes.
             }
-            result[binding.descriptionWithKeyCode] = binding
+            if result.keys.contains(binding.descriptionWithKeyCode) { // Check canonical form
+                errors.append(.semantic(itemBacktrace, "'\(binding.descriptionWithKeyCode)' Binding redeclaration. Original binding notation was '\(binding.descriptionWithKeyNotation)'."))
+            }
+            result[binding.descriptionWithKeyCode] = binding // Store by canonical key code description
         }
     }
     return result
 }
 
-func parseBinding(_ raw: String, _ backtrace: TomlBacktrace, _ mapping: [String: Key]) -> ParsedToml<(NSEvent.ModifierFlags, Key)> {
-    let rawKeys = raw.split(separator: "-")
-    let modifiers: ParsedToml<NSEvent.ModifierFlags> = rawKeys.dropLast()
-        .mapAllOrFailure {
-            modifiersMap[String($0)].orFailure(.semantic(backtrace, "Can't parse modifiers in '\(raw)' binding"))
+func parseBinding(_ raw: String, _ backtrace: TomlBacktrace, _ mapping: [String: UInt16]) -> ParsedToml<(Set<PhysicalModifierKey>, UInt16)> {
+    let rawKeys = raw.lowercased().split(separator: "-")
+    let specificModifiersResult: ParsedToml<Set<PhysicalModifierKey>> = rawKeys.dropLast()
+        .mapAllOrFailure { token -> ParsedToml<PhysicalModifierKey> in
+            specificModifiersMap[String(token)].orFailure(.semantic(backtrace, "Can't parse modifier token '\(token)' in '\(raw)'. Available: \(specificModifiersMap.keys.joined(separator: ", "))"))
         }
-        .map { NSEvent.ModifierFlags($0) }
-    let key: ParsedToml<Key> = rawKeys.last.flatMap { mapping[String($0)] }
-        .orFailure(.semantic(backtrace, "Can't parse the key in '\(raw)' binding"))
-    return modifiers.flatMap { modifiers -> ParsedToml<(NSEvent.ModifierFlags, Key)> in
-        key.flatMap { key -> ParsedToml<(NSEvent.ModifierFlags, Key)> in
-            .success((modifiers, key))
+        .map { Set($0) }
+
+    let keyString = String(rawKeys.last ?? "")
+    let key: ParsedToml<UInt16> = mapping[keyString]
+        .orFailure(.semantic(backtrace, "Can't parse the key '\(keyString)' in '\(raw)' binding. Available keys: \(mapping.keys.sorted().joined(separator: ", "))"))
+
+    return specificModifiersResult.flatMap { smods -> ParsedToml<(Set<PhysicalModifierKey>, UInt16)> in
+        key.flatMap { k -> ParsedToml<(Set<PhysicalModifierKey>, UInt16)> in
+            .success((smods, k))
         }
     }
 }

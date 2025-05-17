@@ -2,8 +2,13 @@ import AppKit
 import Common
 import Foundation
 
+// Create a global instance of the hotkey monitor
+@MainActor // Ensure it's created on the main thread if it interacts with UI/AppKit later
+let globalHotkeyMonitor = GlobalHotkeyMonitor()
+
 @MainActor public func initAppBundle() {
     initTerminationHandler()
+    setupMonitorTermination() // Register for graceful shutdown of the monitor
     isCli = false
     initServerArgs()
     if isDebug {
@@ -20,6 +25,10 @@ import Foundation
     }
 
     checkAccessibilityPermissions()
+
+    // Start the hotkey monitor after accessibility is checked and config is likely loaded
+    globalHotkeyMonitor.start()
+
     startUnixSocketServer()
     GlobalObserver.initObserver()
     Task {
@@ -32,6 +41,21 @@ import Foundation
                 _ = try await config.afterLoginCommand.runCmdSeq(.defaultEnv, .emptyStdin)
             }
             _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+        }
+    }
+}
+
+// New function to handle monitor shutdown
+@MainActor
+private func setupMonitorTermination() {
+    NotificationCenter.default.addObserver(
+        forName: NSApplication.willTerminateNotification,
+        object: nil,
+        queue: .main // .main queue helps, but explicit Task @MainActor is safer for actor-isolated calls
+    ) { _ in
+        print("INFO: Application is terminating. Stopping GlobalHotkeyMonitor.")
+        Task { @MainActor in // Explicitly dispatch to main actor
+            globalHotkeyMonitor.stop()
         }
     }
 }

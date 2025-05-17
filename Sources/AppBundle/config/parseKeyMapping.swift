@@ -1,10 +1,11 @@
 import Common
-import HotKey
+
+// import HotKey // REMOVE
 import TOMLKit
 
 private let keyMappingParser: [String: any ParserProtocol<KeyMapping>] = [
     "preset": Parser(\.preset, parsePreset),
-    "key-notation-to-key-code": Parser(\.rawKeyNotationToKeyCode, parseKeyNotationToKeyCode),
+    "key-notation-to-key-code": Parser(\.rawKeyNotationToVirtualKeyCode, parseKeyNotationToVirtualKeyCode),
 ]
 
 struct KeyMapping: ConvenienceCopyable, Equatable, Sendable {
@@ -14,17 +15,17 @@ struct KeyMapping: ConvenienceCopyable, Equatable, Sendable {
 
     init(
         preset: Preset = .qwerty,
-        rawKeyNotationToKeyCode: [String: Key] = [:]
+        rawKeyNotationToVirtualKeyCode: [String: UInt16] = [:]
     ) {
         self.preset = preset
-        self.rawKeyNotationToKeyCode = rawKeyNotationToKeyCode
+        self.rawKeyNotationToVirtualKeyCode = rawKeyNotationToVirtualKeyCode
     }
 
     fileprivate var preset: Preset = .qwerty
-    fileprivate var rawKeyNotationToKeyCode: [String: Key] = [:]
+    fileprivate var rawKeyNotationToVirtualKeyCode: [String: UInt16] = [:]
 
-    func resolve() -> [String: Key] {
-        getKeysPreset(preset) + rawKeyNotationToKeyCode
+    func resolve() -> [String: UInt16] {
+        getKeysPreset(preset) + rawKeyNotationToVirtualKeyCode
     }
 }
 
@@ -36,24 +37,24 @@ private func parsePreset(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace
     parseString(raw, backtrace).flatMap { parseEnum($0, KeyMapping.Preset.self).toParsedToml(backtrace) }
 }
 
-private func parseKeyNotationToKeyCode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: Key] {
-    var result: [String: Key] = [:]
+private func parseKeyNotationToVirtualKeyCode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: UInt16] {
+    var result: [String: UInt16] = [:]
     guard let table = raw.table else {
         errors.append(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))
         return result
     }
-    for (key, value): (String, TOMLValueConvertible) in table {
-        if isValidKeyNotation(key) {
-            let backtrace = backtrace + .key(key)
-            if let value = parseString(value, backtrace).getOrNil(appendErrorTo: &errors) {
-                if let value = keyNotationToKeyCode[value] {
-                    result[key] = value
+    for (customKeyNotation, keyCodeStringValue): (String, TOMLValueConvertible) in table {
+        if isValidKeyNotation(customKeyNotation) {
+            let itemBacktrace = backtrace + .key(customKeyNotation)
+            if let keyCodeString = parseString(keyCodeStringValue, itemBacktrace).getOrNil(appendErrorTo: &errors) {
+                if let virtualKeyCode = keyNotationToVirtualKeyCode[keyCodeString.lowercased()] {
+                    result[customKeyNotation] = virtualKeyCode
                 } else {
-                    errors.append(.semantic(backtrace, "'\(value)' is invalid key code"))
+                    errors.append(.semantic(itemBacktrace, "'\(keyCodeString)' is an invalid key string. It does not map to a known virtual key code. Check keysMap.swift for available keys."))
                 }
             }
         } else {
-            errors.append(.semantic(backtrace, "'\(key)' is invalid key notation"))
+            errors.append(.semantic(backtrace + .key(customKeyNotation), "'\(customKeyNotation)' is invalid as a custom key notation string. It must not contain spaces or '-'."))
         }
     }
     return result

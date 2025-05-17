@@ -1,7 +1,8 @@
 @testable import AppBundle
 import Common
 import Foundation
-import HotKey
+
+// import HotKey // REMOVE
 import XCTest
 
 let projectRoot: URL = {
@@ -107,10 +108,47 @@ extension MoveNodeToWorkspaceCmdArgs {
 }
 
 extension HotkeyBinding {
-    init(_ modifiers: NSEvent.ModifierFlags, _ keyCode: Key, _ commands: [any Command]) {
-        let descriptionWithKeyNotation = modifiers.isEmpty
-            ? keyCode.toString()
-            : modifiers.toString() + "-" + keyCode.toString()
-        self.init(modifiers, keyCode, commands, descriptionWithKeyNotation: descriptionWithKeyNotation)
+    // Convenience init for tests using specific modifiers and UInt16 keycode
+    init(
+        specificModifiers: Set<PhysicalModifierKey>,
+        keyCode: UInt16,
+        commands: [any Command],
+        // descriptionWithKeyNotation is the raw string from config,
+        // for tests, we either pass it or construct a similar representation.
+        _ descriptionForTests: String? = nil
+    ) {
+        let constructedDescription = specificModifiers.isEmpty
+            ? virtualKeyCodeToString(keyCode)
+            : specificModifiers.toString() + "-" + virtualKeyCodeToString(keyCode)
+
+        // The main HotkeyBinding init takes descriptionWithKeyNotation, which is the raw binding string.
+        // For tests, if descriptionForTests is nil, we use the constructed one.
+        // This matches how descriptionWithKeyCode is generated.
+        self.init(
+            specificModifiers,
+            keyCode,
+            commands,
+            descriptionWithKeyNotation: descriptionForTests ?? constructedDescription
+        )
     }
+
+    // Example of how a test might call it, assuming default NSEvent.ModifierFlags map to left versions for simplicity in old tests
+    // This is a helper and might need adjustment based on how tests want to represent generic modifiers.
+    // For now, tests should be updated to use the above initializer with Set<PhysicalModifierKey>.
+    /*
+     init(_ modifiers: NSEvent.ModifierFlags, _ virtualKeyCode: UInt16, _ commands: [any Command]) {
+         var specificMods: Set<PhysicalModifierKey> = []
+         if modifiers.contains(.command) { specificMods.insert(.leftCommand) } // Default to left for tests
+         if modifiers.contains(.option) { specificMods.insert(.leftOption) }
+         if modifiers.contains(.control) { specificMods.insert(.leftControl) }
+         if modifiers.contains(.shift) { specificMods.insert(.leftShift) }
+         // FN key isn't typically in NSEvent.ModifierFlags in the same way for old HotKey lib.
+
+         let constructedDescription = specificMods.isEmpty
+             ? virtualKeyCodeToString(virtualKeyCode)
+             : specificMods.toString() + "-" + virtualKeyCodeToString(virtualKeyCode)
+
+         self.init(specificMods, virtualKeyCode, commands, descriptionWithKeyNotation: constructedDescription)
+     }
+     */
 }
