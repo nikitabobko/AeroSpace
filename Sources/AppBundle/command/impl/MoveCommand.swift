@@ -83,17 +83,21 @@ struct MoveCommand: Command {
                 case .createImplicitContainer: moveOut(io, window: window, direction: direction)
             }
         case .allMonitorsUnionFrame:
+            guard let (monitors, index) = window.nodeMonitor?.findRelativeMonitor(inDirection: direction) else {
+                return io.err("Can't find monitors in direction \(direction)")
+            }
+
+            guard monitors.getOrNil(atIndex: index) != nil else {
+                return hitAllMonitorsOuterFrameBoundaries(window, io, args, direction)
+            }
+
             let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(
                 rawArgs: [],
                 target: .directional(direction),
                 focusFollowsWindow: true
             )
 
-            if MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io) {
-                return true
-            }
-
-            return hitAllMonitorsOuterFrameBoundaries(window, io, args, direction, env)
+            return MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
     }
 }
 
@@ -101,8 +105,7 @@ struct MoveCommand: Command {
     _ window: Window,
     _ io: CmdIo,
     _ args: MoveCmdArgs,
-    _ direction: CardinalDirection,
-    _ env: CmdEnv,
+    _ direction: CardinalDirection
 ) -> Bool {
     switch args.boundariesAction {
         case .stop:
