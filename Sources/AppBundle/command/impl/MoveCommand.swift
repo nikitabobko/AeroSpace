@@ -83,6 +83,21 @@ struct MoveCommand: Command {
                 case .createImplicitContainer: moveOut(io, window: window, direction: direction)
             }
         case .allMonitorsUnionFrame:
+            let moveNodeToWorkspaceArgs = MoveNodeToWorkspaceCmdArgs(
+                rawArgs: [],
+                windowId: window.windowId,
+                focusFollowsWindow: true
+            )
+            let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(
+                rawArgs: [],
+                moveNodeToWorkspace: moveNodeToWorkspaceArgs,
+                target: .directional(direction)
+            )
+
+            if MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io) {
+                return true
+            }
+
             return hitAllMonitorsOuterFrameBoundaries(window, io, args, direction, env)
     }
 }
@@ -100,20 +115,6 @@ struct MoveCommand: Command {
         case .fail:
             return false
         case .createImplicitContainer:
-            let moveNodeToWorkspaceArgs = MoveNodeToWorkspaceCmdArgs(
-                rawArgs: [],
-                windowId: window.windowId,
-                focusFollowsWindow: true
-            )
-            let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(
-                rawArgs: [],
-                moveNodeToWorkspace: moveNodeToWorkspaceArgs,
-                target: .directional(direction)
-            )
-
-            if  MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io) {
-                return true
-            }
             return moveOut(io, window: window, direction: direction)
     }
 }
