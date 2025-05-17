@@ -44,7 +44,7 @@ aerospace -h;
 
     | mode <mode_id>
 
-    | move [--window-id <window_id>] (left|down|up|right) [--window-id <window_id>]
+    | move [<move_command_flag>]... (left|down|up|right) [<move_command_flag>]...
 
     | move-mouse [--fail-if-noop] (monitor-lazy-center|monitor-force-center|window-lazy-center|window-force-center) [--fail-if-noop]
 
@@ -107,6 +107,9 @@ aerospace -h;
 <monitor_pattern> ::= {{{ true }}};
 
 <list_workspaces1_flag> ::= --visible [no] | --empty [no] | --format <output_format> | --format <output_format> | --count | --json;
+
+<move_command_flag> ::= --window-id <window_id> | --boundaries <boundary> | --boundaries-action <move_boundaries_action>;
+<move_boundaries_action> ::= stop|fail|create-implicit-container;
 
 <move_node_to_monitor1_flag> ::= --window-id <window_id>|--focus-follows-window|--fail-if-noop|--wrap-around;
 <move_node_to_monitor2_flag> ::= --window-id <window_id>|--focus-follows-window|--fail-if-noop;
