@@ -39,7 +39,7 @@ let package = Package(
         .target(
             name: "Common",
             dependencies: [
-                .product(name: "Collections", package: "swift-collections"),
+                .product(name: "Collections", package: "swift-collections")
             ]
         ),
         .target(
@@ -61,7 +61,7 @@ let package = Package(
         .executableTarget(
             name: "AeroSpaceApp",
             dependencies: [
-                .target(name: "AppBundle"),
+                .target(name: "AppBundle")
             ]
         ),
         .executableTarget(
@@ -74,7 +74,7 @@ let package = Package(
         .testTarget(
             name: "AppBundleTests",
             dependencies: [
-                .target(name: "AppBundle"),
+                .target(name: "AppBundle")
             ]
         ),
     ]

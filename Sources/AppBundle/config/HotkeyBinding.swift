@@ -1,6 +1,5 @@
 import AppKit
 import Common
-
 // import Foundation // Common already imports Foundation
 // import HotKey // REMOVE: No longer using HotKey.Key or HotKey objects here
 import TOMLKit
@@ -59,8 +58,8 @@ struct HotkeyBinding: Equatable, Sendable {
 
         self.descriptionWithKeyCode =
             sortedModifierString.isEmpty
-                ? virtualKeyCodeToString(keyCode)
-                : sortedModifierString + "-" + virtualKeyCodeToString(keyCode)
+            ? virtualKeyCodeToString(keyCode)
+            : sortedModifierString + "-" + virtualKeyCodeToString(keyCode)
     }
 
     // Convenience init for old structure, will be removed or refactored by parseBinding
@@ -171,10 +170,10 @@ func parseBinding(_ raw: String, _ backtrace: TomlBacktrace, _ mapping: [String:
     for genModType in genericModifiers {
         let specificCounterparts: Set<PhysicalModifierKey> =
             switch genModType {
-                case .option: [.leftOption, .rightOption]
-                case .command: [.leftCommand, .rightCommand]
-                case .control: [.leftControl, .rightControl]
-                case .shift: [.leftShift, .rightShift]
+            case .option: [.leftOption, .rightOption]
+            case .command: [.leftCommand, .rightCommand]
+            case .control: [.leftControl, .rightControl]
+            case .shift: [.leftShift, .rightShift]
             }
         if !exactModifiers.isDisjoint(with: specificCounterparts) {
             return .failure(
@@ -210,9 +209,9 @@ func parseBinding(_ raw: String, _ backtrace: TomlBacktrace, _ mapping: [String:
 private func exampleGenericToken(for type: GenericModifierType) -> String {
     // Return a common token for the generic type
     switch type {
-        case .option: return "alt"
-        case .command: return "cmd"
-        case .control: return "ctrl"
-        case .shift: return "shift"
+    case .option: return "alt"
+    case .command: return "cmd"
+    case .control: return "ctrl"
+    case .shift: return "shift"
     }
 }
