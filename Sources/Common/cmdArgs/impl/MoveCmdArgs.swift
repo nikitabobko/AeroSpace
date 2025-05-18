@@ -29,7 +29,7 @@ public struct MoveCmdArgs: CmdArgs {
 
     public enum Boundaries: String, CaseIterable, Equatable, Sendable {
         case workspace
-        case allMonitorsUnionFrame = "all-monitors-outer-frame"
+        case allMonitorsOuterFrame = "all-monitors-outer-frame"
     }
 
     public enum WhenBoundariesCrossed: String, CaseIterable, Equatable, Sendable {

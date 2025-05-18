@@ -54,7 +54,7 @@ struct MoveCommand: Command {
                     createImplicitContainerAndMoveWindow(window, workspace, direction)
                     return true
             }
-        case .allMonitorsUnionFrame:
+        case .allMonitorsOuterFrame:
             guard let (monitors, index) = window.nodeMonitor?.findRelativeMonitor(inDirection: direction) else {
                 return io.err("Should never happen. Can't find the current monitor")
             }

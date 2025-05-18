@@ -54,7 +54,7 @@ struct FocusCommand: Command {
                 case .wrapAroundTheWorkspace: wrapAroundTheWorkspace(target, io, direction)
                 case .wrapAroundAllMonitors: dieT("Must be discarded by args parser")
             }
-        case .allMonitorsUnionFrame:
+        case .allMonitorsOuterFrame:
             let currentMonitor = target.workspace.workspaceMonitor
             guard let (monitors, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
                 return io.err("Should never happen. Can't find the current monitor")
