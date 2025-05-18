@@ -22,6 +22,10 @@ extension AxUiElementMock {
             return true
         }
         if id == "com.apple.PhotoBooth" { return true }
+        if id == "com.mitchellh.ghostty" {
+            return get(Ax.fullscreenButtonAttr)?.get(Ax.enabledAttr) != true &&
+                get(Ax.closeButtonAttr)?.get(Ax.enabledAttr) == true
+        }
         // Heuristic: float windows without fullscreen button (such windows are not designed to be big)
         // - IntelliJ various dialogs (Rebase..., Edit commit message, Settings, Project structure)
         // - Finder copy file dialog
@@ -34,14 +38,13 @@ extension AxUiElementMock {
         // - Kap screen recorder https://github.com/wulkano/Kap
         // - flameshot? https://github.com/nikitabobko/AeroSpace/issues/112
         // - Drata Agent https://github.com/nikitabobko/AeroSpace/issues/134
-        if !isFullscreenable(self) &&
+        if get(Ax.fullscreenButtonAttr)?.get(Ax.enabledAttr) != true &&
             id != "org.gimp.gimp-2.10" && // Gimp doesn't show fullscreen button
             id != "com.apple.ActivityMonitor" && // Activity Monitor doesn't show fullscreen button
 
             // Terminal apps and Emacs have an option to hide their title bars
             id != "org.alacritty" && // ~/.alacritty.toml: window.decorations = "Buttonless"
             id != "net.kovidgoyal.kitty" && // ~/.config/kitty/kitty.conf: hide_window_decorations titlebar-and-corners
-            id != "com.mitchellh.ghostty" && // ~/.config/ghostty/config: window-decoration = false
             id != "com.github.wez.wezterm" &&
             id != "com.googlecode.iterm2" &&
             id != "org.gnu.Emacs"
@@ -130,11 +133,4 @@ private extension String {
     func isFirefoxId() -> Bool {
         ["org.mozilla.firefox", "org.mozilla.firefoxdeveloperedition", "org.mozilla.nightly"].contains(self)
     }
-}
-
-private func isFullscreenable(_ axWindow: AxUiElementMock) -> Bool {
-    if let fullscreenButton = axWindow.get(Ax.fullscreenButtonAttr) {
-        return fullscreenButton.get(Ax.enabledAttr) == true
-    }
-    return false
 }
