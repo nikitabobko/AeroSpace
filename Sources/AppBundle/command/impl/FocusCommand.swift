@@ -57,7 +57,7 @@ struct FocusCommand: Command {
         case .allMonitorsUnionFrame:
             let currentMonitor = target.workspace.workspaceMonitor
             guard let (monitors, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
-                return io.err("Can't find monitor in direction \(direction)")
+                return io.err("Should never happen. Can't find the current monitor")
             }
 
             if let targetMonitor = monitors.getOrNil(atIndex: index) {

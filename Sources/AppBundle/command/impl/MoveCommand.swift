@@ -24,9 +24,13 @@ struct MoveCommand: Command {
                             currentWindow.bind(to: parent, adaptiveWeight: prevBinding.adaptiveWeight, index: indexOfSiblingTarget)
                             return true
                     }
-                } else {
-                    return moveOut(io, window: currentWindow, direction: direction)
                 }
+
+                if hasWorkspaceBoundaryInDirection(node: currentWindow, direction: direction) {
+                    return hitWorkspaceBoundaries(currentWindow, io, args, direction, env)
+                }
+
+                return moveOut(io, window: currentWindow, direction: direction)
             case .workspace: // floating window
                 return io.err("moving floating windows isn't yet supported") // todo
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
@@ -34,6 +38,112 @@ struct MoveCommand: Command {
             case .macosPopupWindowsContainer:
                 return false // Impossible
         }
+    }
+}
+
+protocol TilingTreeMember {
+    var nodeWorkspace: Workspace? { get }
+    var parent: NonLeafTreeNodeObject? { get }
+    var index: Int { get }
+}
+
+extension TilingContainer: TilingTreeMember {
+    var index: Int { ownIndex ?? -1 }
+}
+
+extension Window: TilingTreeMember {
+    var index: Int { ownIndex }
+}
+
+@MainActor private func hasWorkspaceBoundaryInDirection(
+    node: TilingTreeMember, direction: CardinalDirection,
+) -> Bool {
+    // Asserts that the node is part of the tiling tree
+    guard let rootTilingContainer = node.nodeWorkspace?.rootTilingContainer else {
+        return false
+    }
+
+    // Make node mutable
+    var node = node
+
+    while node as? TilingContainer != rootTilingContainer {
+        // Asserts that the node is part of the tiling tree
+        guard let nodeParent = node.parent as? TilingContainer else {
+            return false
+        }
+
+        // If it's on the boundary of its parent, check for the parent
+        if nodeParent.orientation != direction.orientation {
+            node = nodeParent
+            continue
+        }
+
+        // If it's not on the boundary of its parent, it's not on the boundary of the workspace
+        switch direction {
+            case .left, .up:
+                if node.index != 0 {
+                    return false
+                }
+            case .right, .down:
+                if node.index != rootTilingContainer.children.count - 1 {
+                    return false
+                }
+        }
+
+        // If it's on the boundary of its parent, check for the parent
+        node = nodeParent
+    }
+
+    // If we reached the root tiling container, it's on the boundary of the workspace
+    return true
+}
+
+@MainActor private func hitWorkspaceBoundaries(
+    _ window: Window,
+    _ io: CmdIo,
+    _ args: MoveCmdArgs,
+    _ direction: CardinalDirection,
+    _ env: CmdEnv,
+) -> Bool {
+    switch args.boundaries {
+        case .workspace:
+            return switch args.boundariesAction {
+                case .stop: true
+                case .fail: false
+                case .createImplicitContainer: moveOut(io, window: window, direction: direction)
+            }
+        case .allMonitorsUnionFrame:
+            guard let (monitors, index) = window.nodeMonitor?.findRelativeMonitor(inDirection: direction) else {
+                return io.err("Should never happen. Can't find the current monitor")
+            }
+
+            guard monitors.getOrNil(atIndex: index) != nil else {
+                return hitAllMonitorsOuterFrameBoundaries(window, io, args, direction)
+            }
+
+            let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(
+                rawArgs: [],
+                target: .directional(direction),
+                focusFollowsWindow: true
+            )
+
+            return MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
+    }
+}
+
+@MainActor private func hitAllMonitorsOuterFrameBoundaries(
+    _ window: Window,
+    _ io: CmdIo,
+    _ args: MoveCmdArgs,
+    _ direction: CardinalDirection
+) -> Bool {
+    switch args.boundariesAction {
+        case .stop:
+            return true
+        case .fail:
+            return false
+        case .createImplicitContainer:
+            return moveOut(io, window: window, direction: direction)
     }
 }
 

@@ -18,7 +18,7 @@ extension MonitorTarget {
         switch self {
             case .directional(let direction):
                 guard let (monitorsInDirection, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
-                    return .failure("Can't find monitors in direction \(direction)")
+                    return .failure("Should never happen. Can't find the current monitor")
                 }
                 let targetMonitor = wrapAround ? monitorsInDirection.get(wrappingIndex: index) : monitorsInDirection.getOrNil(atIndex: index)
                 guard let targetMonitor else {
