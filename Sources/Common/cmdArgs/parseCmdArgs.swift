@@ -21,8 +21,7 @@ public func parseCmdArgs(_ args: [String]) -> ParsedCmd<any CmdArgs> {
     }
 }
 
-public protocol CmdArgs: ConvenienceCopyable, Equatable, CustomStringConvertible, AeroAny, Sendable
-{
+public protocol CmdArgs: ConvenienceCopyable, Equatable, CustomStringConvertible, AeroAny, Sendable {
     static var parser: CmdParser<Self> { get }
     var rawArgs: EquatableNoop<[String]> { get }  // Non Equatable because test comparion
 
@@ -31,19 +30,19 @@ public protocol CmdArgs: ConvenienceCopyable, Equatable, CustomStringConvertible
     var workspaceName: WorkspaceName? { get set }
 }
 
-extension CmdArgs {
-    public static var info: CmdStaticInfo { Self.parser.info }
+public extension CmdArgs {
+    static var info: CmdStaticInfo { Self.parser.info }
 
-    public func equals(_ other: any CmdArgs) -> Bool {  // My brain is cursed with Java
+    func equals(_ other: any CmdArgs) -> Bool {  // My brain is cursed with Java
         (other as? Self).flatMap { self == $0 } ?? false
     }
 
-    public var description: String {
+    var description: String {
         switch Self.info.kind {
-        case .execAndForget:
-            CmdKind.execAndForget.rawValue + " " + (self as! ExecAndForgetCmdArgs).bashScript
-        default:
-            ([Self.info.kind.rawValue] + rawArgs.value).joinArgs()
+            case .execAndForget:
+                CmdKind.execAndForget.rawValue + " " + (self as! ExecAndForgetCmdArgs).bashScript
+            default:
+                ([Self.info.kind.rawValue] + rawArgs.value).joinArgs()
         }
     }
 }
