@@ -125,7 +125,7 @@ final class MoveCommandTest: XCTestCase {
         assertEquals(result.exitCode, 0)
     }
 
-    func testStop() async throws {
+    func testStop_onRootNode() async throws {
         let workspace = Workspace.get(byName: name)
         workspace.rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
@@ -138,6 +138,62 @@ final class MoveCommandTest: XCTestCase {
             workspace.layoutDescription,
             .workspace([
                 .h_tiles([.window(1), .window(2), .window(3)]),
+            ])
+        )
+        assertEquals(result.exitCode, 0)
+    }
+
+    func testStop_onRootNode_withOppositeOrientation() async throws {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
+            TestWindow.new(id: 3, parent: $0)
+        }
+
+        let result = try await MoveCommand(args: parseMoveCmdArgs(["--boundaries-action", "stop", "up"]).unwrap().0!).run(.defaultEnv, .emptyStdin)
+        assertEquals(
+            workspace.layoutDescription,
+            .workspace([
+                .h_tiles([.window(1), .window(2), .window(3)]),
+            ])
+        )
+        assertEquals(result.exitCode, 0)
+    }
+
+    func testStop_onRootNode_whenNoBoundary() async throws {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 3, parent: $0)
+        }
+
+        let result = try await MoveCommand(args: parseMoveCmdArgs(["--boundaries-action", "stop", "left"]).unwrap().0!).run(.defaultEnv, .emptyStdin)
+        assertEquals(
+            workspace.layoutDescription,
+            .workspace([
+                .h_tiles([.window(2), .window(1), .window(3)]),
+            ])
+        )
+        assertEquals(result.exitCode, 0)
+    }
+
+    func testStop_onInnerNode() async throws {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
+                TestWindow.new(id: 3, parent: $0)
+            }
+        }
+
+        let result = try await MoveCommand(args: parseMoveCmdArgs(["--boundaries-action", "stop", "right"]).unwrap().0!).run(.defaultEnv, .emptyStdin)
+        assertEquals(
+            workspace.layoutDescription,
+            .workspace([
+                .h_tiles([.window(1), .v_tiles([.window(2), .window(3)])]),
             ])
         )
         assertEquals(result.exitCode, 0)
