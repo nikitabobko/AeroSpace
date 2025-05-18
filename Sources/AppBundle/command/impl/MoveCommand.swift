@@ -26,7 +26,7 @@ struct MoveCommand: Command {
                     }
                 }
 
-                if hasWorkspaceBoundaryInDirection(window: currentWindow, direction: direction) {
+                if hasWorkspaceBoundaryInDirection(node: currentWindow, direction: direction) {
                     return hitWorkspaceBoundaries(currentWindow, io, args, direction, env)
                 }
 
@@ -41,31 +41,61 @@ struct MoveCommand: Command {
     }
 }
 
+protocol TilingTreeMember {
+    var nodeWorkspace: Workspace? { get }
+    var parent: NonLeafTreeNodeObject? { get }
+    var index: Int { get }
+}
+
+extension TilingContainer: TilingTreeMember {
+    var index: Int { ownIndex ?? -1 }
+}
+
+extension Window: TilingTreeMember {
+    var index: Int { ownIndex }
+}
+
 @MainActor private func hasWorkspaceBoundaryInDirection(
-    window: Window, direction: CardinalDirection,
+    node: TilingTreeMember, direction: CardinalDirection,
 ) -> Bool {
-    guard let rootTilingContainer = window.nodeWorkspace?.rootTilingContainer else {
-        return false // Shouldn't happen
-    }
-
-    guard let windowParent = window.parent else {
-        return false // Shouldn't happen
-    }
-
-    if windowParent != rootTilingContainer {
+    // Asserts that the node is part of the tiling tree
+    guard let rootTilingContainer = node.nodeWorkspace?.rootTilingContainer else {
         return false
     }
 
-    if rootTilingContainer.orientation != direction.orientation {
-        return true
+    // Make node mutable
+    var node = node
+
+    while node as? TilingContainer != rootTilingContainer {
+        // Asserts that the node is part of the tiling tree
+        guard let nodeParent = node.parent as? TilingContainer else {
+            return false
+        }
+
+        // If it's on the boundary of its parent, check for the parent
+        if nodeParent.orientation != direction.orientation {
+            node = nodeParent
+            continue
+        }
+
+        // If it's not on the boundary of its parent, it's not on the boundary of the workspace
+        switch direction {
+            case .left, .up:
+                if node.index != 0 {
+                    return false
+                }
+            case .right, .down:
+                if node.index != rootTilingContainer.children.count - 1 {
+                    return false
+                }
+        }
+
+        // If it's on the boundary of its parent, check for the parent
+        node = nodeParent
     }
 
-    switch direction {
-        case .left, .up:
-            return window.ownIndex == 0
-        case .right, .down:
-            return window.ownIndex == rootTilingContainer.children.count - 1
-    }
+    // If we reached the root tiling container, it's on the boundary of the workspace
+    return true
 }
 
 @MainActor private func hitWorkspaceBoundaries(
