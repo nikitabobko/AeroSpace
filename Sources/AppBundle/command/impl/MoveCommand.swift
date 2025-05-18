@@ -84,7 +84,7 @@ struct MoveCommand: Command {
             }
         case .allMonitorsUnionFrame:
             guard let (monitors, index) = window.nodeMonitor?.findRelativeMonitor(inDirection: direction) else {
-                return io.err("Can't find monitors in direction \(direction)")
+                return io.err("Should never happen. Can't find the current monitor")
             }
 
             guard monitors.getOrNil(atIndex: index) != nil else {
