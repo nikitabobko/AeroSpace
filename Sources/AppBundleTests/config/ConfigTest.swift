@@ -183,7 +183,7 @@ final class ConfigTest: XCTestCase {
         assertEquals(
             errors.descriptions,
             [
-                "enable-normalization-flatten-containers: Expected type is \'bool\'. But actual type is \'string\'",
+                "enable-normalization-flatten-containers: Expected type is \'bool\'. But actual type is \'string\'"
             ]
         )
     }
@@ -236,7 +236,7 @@ final class ConfigTest: XCTestCase {
                 These two settings don't play nicely together. 'split' command has no effect when enable-normalization-flatten-containers is disabled.
 
                 My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.
-                """,
+                """
             ],
             errors.descriptions
         )
@@ -443,13 +443,13 @@ final class ConfigTest: XCTestCase {
                 ]), additionalMsg: "Parsed KeyMapping does not match expected.")
 
         let binding = HotkeyBinding(
-            specificModifiers: [PhysicalModifierKey.leftOption],
+            exactModifiers: [PhysicalModifierKey.leftOption],
             keyCode: VirtualKeyCodes.u,
             commands: [
                 WorkspaceCommand(
-                    args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrDie()))),
+                    args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrDie())))
             ],
-            "alt-u"
+            descriptionWithKeyNotation: "alt-u"
         )
         assertEquals(binding.descriptionWithKeyCode, "lalt-u")
         assertEquals(binding.descriptionWithKeyNotation, "alt-u")
@@ -509,7 +509,7 @@ final class ConfigTest: XCTestCase {
         assertEquals(
             errors.descriptions, [],
             additionalMsg:
-            "Parsing specific modifiers produced errors: \(errors.descriptions.joined(separator: "\n"))"
+                "Parsing specific modifiers produced errors: \(errors.descriptions.joined(separator: "\n"))"
         )
 
         let bindings = config.modes[mainModeId]?.bindings
@@ -524,7 +524,7 @@ final class ConfigTest: XCTestCase {
         ) {
             let keyForMap =
                 (expectedModifiers.isEmpty ? "" : expectedModifiers.toString() + "-")
-                    + virtualKeyCodeToString(expectedKeyCode)
+                + virtualKeyCodeToString(expectedKeyCode)
 
             // DEBUG: Print available binding keys
             // print(
@@ -574,70 +574,70 @@ final class ConfigTest: XCTestCase {
         let testCases: [(config: String, expectedErrorSubstring: String, description: String)] = [
             (
                 config: """
-                    [mode.main.binding]
-                        alt-lalt-h = 'noop'
-                    """,
+                [mode.main.binding]
+                    alt-lalt-h = 'noop'
+                """,
                 expectedErrorSubstring:
-                "cannot specify both a generic modifier for 'option' (e.g., 'alt') and a specific one (e.g., 'lalt', 'ralt')",
+                    "cannot specify both a generic modifier for 'option' (e.g., 'alt') and a specific one (e.g., 'lalt', 'ralt')",
                 description: "Generic 'alt' and specific 'lalt' for option type conflict"
             ),
             (
                 config: """
-                    [mode.main.binding]
-                        cmd-rcmd-h = 'noop'
-                    """,
+                [mode.main.binding]
+                    cmd-rcmd-h = 'noop'
+                """,
                 expectedErrorSubstring:
-                "cannot specify both a generic modifier for 'command' (e.g., 'cmd') and a specific one",
+                    "cannot specify both a generic modifier for 'command' (e.g., 'cmd') and a specific one",
                 description: "Generic 'cmd' and specific 'rcmd' for command type conflict"
             ),
             (
                 config: """
-                    [mode.main.binding]
-                        shift-lshift-h = 'noop'
-                    """,
+                [mode.main.binding]
+                    shift-lshift-h = 'noop'
+                """,
                 expectedErrorSubstring:
-                "cannot specify both a generic modifier for 'shift' (e.g., 'shift') and a specific one",
+                    "cannot specify both a generic modifier for 'shift' (e.g., 'shift') and a specific one",
                 description: "Generic 'shift' and specific 'lshift' for shift type conflict"
             ),
             (
                 config: """
-                    [mode.main.binding]
-                        ctrl-rctrl-h = 'noop'
-                    """,
+                [mode.main.binding]
+                    ctrl-rctrl-h = 'noop'
+                """,
                 expectedErrorSubstring:
-                "cannot specify both a generic modifier for 'control' (e.g., 'ctrl') and a specific one",
+                    "cannot specify both a generic modifier for 'control' (e.g., 'ctrl') and a specific one",
                 description: "Generic 'ctrl' and specific 'rctrl' for control type conflict"
             ),
             (
                 config: """
-                    [mode.main.binding]
-                        alt-alt-h = 'noop'
-                    """,
+                [mode.main.binding]
+                    alt-alt-h = 'noop'
+                """,
                 expectedErrorSubstring: "Duplicate generic modifier 'alt'",
                 description: "Duplicate generic modifier 'alt-alt'"
             ),
             (
                 config: """
-                    [mode.main.binding]
-                        lalt-lalt-h = 'noop'
-                    """,
+                [mode.main.binding]
+                    lalt-lalt-h = 'noop'
+                """,
                 expectedErrorSubstring: "Duplicate specific modifier 'lalt'",
                 description: "Duplicate specific modifier 'lalt-lalt'"
             ),
             // Add more cases if needed, e.g. for cmd, ctrl, shift duplicates
             (
                 config: """
-                    [mode.main.binding]
-                        cmd-cmd-h = 'noop'
-                    """,
+                [mode.main.binding]
+                    cmd-cmd-h = 'noop'
+                """,
                 expectedErrorSubstring: "Duplicate generic modifier 'cmd'",
                 description: "Duplicate generic modifier 'cmd-cmd'"
             ),
             (
                 config: """
-                    [mode.main.binding]
-                        lcmd-lcmd-h = 'noop'
-                    """,
+                [mode.main.binding]
+                    lcmd-lcmd-h = 'noop'
+                """,
                 expectedErrorSubstring: "Duplicate specific modifier 'lcmd'",
                 description: "Duplicate specific modifier 'lcmd-lcmd'"
             ),
