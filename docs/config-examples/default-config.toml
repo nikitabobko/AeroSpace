@@ -83,7 +83,11 @@ automatically-unhide-macos-hidden-apps = false
     #                   keypadMinus, keypadMultiply, keypadPlus
     # - Arrows.         left, down, up, right
 
-    # All possible modifiers: cmd, alt, ctrl, shift
+    # Modifiers:
+    # - Generic: cmd, alt, ctrl, shift (e.g., 'alt' means Left-Alt OR Right-Alt)
+    # - Specific: lcmd, rcmd, lalt, ralt, lctrl, rctrl, lshift, rshift, fn
+    #   (e.g., 'lalt' means only Left-Alt)
+    # See the user guide for detailed behavior and combinations.
 
     # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
 
