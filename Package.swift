@@ -22,10 +22,10 @@ let package = Package(
         .package(url: "https://github.com/Kitura/BlueSocket", exact: "2.0.4"),
         .package(url: "https://github.com/LebJe/TOMLKit", exact: "0.5.5"),
         .package(url: "https://github.com/apple/swift-collections", exact: "1.1.4"),
-        .package(url: "https://github.com/ChimeHQ/GlobPattern", exact: "0.1.1"),
-        .package(url: "https://github.com/sparkle-project/Sparkle", exact: "2.4.1"),
-        .package(url: "https://github.com/YOCKOW/SwiftPredicate", exact: "1.1.1"),
-        .package(url: "https://github.com/MaxDesiatov/XMLCoder", exact: "0.17.1"),
+        // .package(url: "https://github.com/ChimeHQ/GlobPattern", exact: "0.1.1"), // Removing GlobPattern
+        // .package(url: "https://github.com/sparkle-project/Sparkle", exact: "2.4.1"), // Removing Sparkle
+        // .package(url: "https://github.com/YOCKOW/SwiftPredicate", exact: "1.3.0"), // Removed
+        // .package(url: "https://github.com/MaxDesiatov/XMLCoder", exact: "0.17.1"), // Removed
     ],
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
@@ -39,7 +39,7 @@ let package = Package(
         .target(
             name: "Common",
             dependencies: [
-                .product(name: "Collections", package: "swift-collections")
+                .product(name: "Collections", package: "swift-collections"),
             ]
         ),
         .target(
@@ -52,16 +52,16 @@ let package = Package(
                 .product(name: "TOMLKit", package: "TOMLKit"),
                 .target(name: "Common"),
                 .target(name: "PrivateApi"),
-                .product(name: "GlobPattern", package: "GlobPattern"),
-                .product(name: "Sparkle", package: "Sparkle"),
-                .product(name: "SwiftPredicate", package: "SwiftPredicate"),
-                .product(name: "XMLCoder", package: "XMLCoder"),
+                // .product(name: "GlobPattern", package: "GlobPattern"), // Removing GlobPattern
+                // .product(name: "Sparkle", package: "Sparkle"), // Removing Sparkle
+                // .product(name: "SwiftPredicate", package: "SwiftPredicate"), // Removed
+                // .product(name: "XMLCoder", package: "XMLCoder"), // Removed
             ]
         ),
         .executableTarget(
             name: "AeroSpaceApp",
             dependencies: [
-                .target(name: "AppBundle")
+                .target(name: "AppBundle"),
             ]
         ),
         .executableTarget(
@@ -74,7 +74,7 @@ let package = Package(
         .testTarget(
             name: "AppBundleTests",
             dependencies: [
-                .target(name: "AppBundle")
+                .target(name: "AppBundle"),
             ]
         ),
     ]

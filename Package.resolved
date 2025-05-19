@@ -1,5 +1,5 @@
 {
-  "originHash" : "61d7d37be674d8792e9370480fdc91f76651cbbf9011b58bf8de5e671ef59d2b",
+  "originHash" : "26a72fab44133b00beab50dc3d48000c4f5e3cd8a74eab55168a15b174489ab7",
   "pins" : [
     {
       "identity" : "antlr4",
@@ -20,30 +20,12 @@
       }
     },
     {
-      "identity" : "globpattern",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/ChimeHQ/GlobPattern",
-      "state" : {
-        "revision" : "4ebb9e89e07cc475efa74f87dc6d21f4a9e060f8",
-        "version" : "0.1.1"
-      }
-    },
-    {
       "identity" : "issoundadditions",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/InerziaSoft/ISSoundAdditions",
       "state" : {
         "revision" : "4b555f0354e6c280917bae8a598a258efe87ab98",
         "version" : "2.0.1"
-      }
-    },
-    {
-      "identity" : "sparkle",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/sparkle-project/Sparkle",
-      "state" : {
-        "revision" : "0ca3004e98712ea2b39dd881d28448630cce1c99",
-        "version" : "2.7.0"
       }
     },
     {
@@ -56,39 +38,12 @@
       }
     },
     {
-      "identity" : "swiftpredicate",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/YOCKOW/SwiftPredicate",
-      "state" : {
-        "revision" : "24842ad4386598882890cc369f5580ef165ed634",
-        "version" : "1.3.0"
-      }
-    },
-    {
-      "identity" : "swiftranges",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/YOCKOW/SwiftRanges.git",
-      "state" : {
-        "revision" : "97a25be1410234d03de69e1ac93f54ba853b04ef",
-        "version" : "3.2.1"
-      }
-    },
-    {
       "identity" : "tomlkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/LebJe/TOMLKit",
       "state" : {
         "revision" : "404c4dd011743461bff12d00a5118d0ed59d630c",
         "version" : "0.5.5"
-      }
-    },
-    {
-      "identity" : "xmlcoder",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/MaxDesiatov/XMLCoder",
-      "state" : {
-        "revision" : "b1e944cbd0ef33787b13f639a5418d55b3bed501",
-        "version" : "0.17.1"
       }
     }
   ],

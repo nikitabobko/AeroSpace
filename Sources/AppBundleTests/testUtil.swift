@@ -1,5 +1,6 @@
 import Common
 import Foundation
+
 // import HotKey // REMOVE
 import XCTest
 
@@ -46,11 +47,11 @@ func setUpWorkspacesForTests() {
 func testParseCommandSucc(_ command: String, _ expected: any CmdArgs) {
     let parsed = parseCommand(command)
     switch parsed {
-    case .cmd(let command):
-        XCTAssertTrue(
-            command.args.equals(expected), "actual: \(command.args) expected: \(expected)")
-    case .help: die()  // todo test help
-    case .failure(let msg): XCTFail(msg)
+        case .cmd(let command):
+            XCTAssertTrue(
+                command.args.equals(expected), "actual: \(command.args) expected: \(expected)")
+        case .help: die()  // todo test help
+        case .failure(let msg): XCTFail(msg)
     }
 }
 
@@ -83,9 +84,9 @@ extension ParsedCmd {
 func testParseCommandFail(_ command: String, msg expected: String) {
     let parsed = parseCommand(command)
     switch parsed {
-    case .cmd(let command): XCTFail("\(command) isn't supposed to be parcelable")
-    case .failure(let msg): assertEquals(msg, expected)
-    case .help: die()  // todo test help
+        case .cmd(let command): XCTFail("\(command) isn't supposed to be parcelable")
+        case .failure(let msg): assertEquals(msg, expected)
+        case .help: die()  // todo test help
     }
 }
 
@@ -123,8 +124,8 @@ extension HotkeyBinding {
     ) {
         let constructedDescription =
             exactModifiers.isEmpty
-            ? virtualKeyCodeToString(keyCode)
-            : exactModifiers.toString() + "-" + virtualKeyCodeToString(keyCode)
+                ? virtualKeyCodeToString(keyCode)
+                : exactModifiers.toString() + "-" + virtualKeyCodeToString(keyCode)
 
         // The main HotkeyBinding init takes descriptionWithKeyNotation, which is the raw binding string.
         // For tests, if descriptionForTests is nil, we use the constructed one.

@@ -161,10 +161,10 @@ enum VirtualKeyCodes {  // Using an enum namespace for clarity
 // func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: Key] { // OLD
 func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: UInt16] {  // NEW
     return switch layout {
-    // case .qwerty: keyNotationToKeyCode // OLD
-    case .qwerty: keyNotationToVirtualKeyCode  // NEW
-    case .dvorak: dvorakMap
-    case .colemak: colemakMap
+        // case .qwerty: keyNotationToKeyCode // OLD
+        case .qwerty: keyNotationToVirtualKeyCode  // NEW
+        case .dvorak: dvorakMap
+        case .colemak: colemakMap
     }
 }
 
@@ -363,20 +363,20 @@ private let colemakMap: [String: UInt16] =
 // Added for specific modifier key handling
 enum PhysicalModifierKey: String, CaseIterable, Hashable, Sendable {
     case leftShift, rightShift, leftControl, rightControl, leftOption, rightOption, leftCommand,
-        rightCommand, function
+         rightCommand, function
 
     // Helper to get the string representation used in config files
     var configKey: String {
         switch self {
-        case .leftShift: "lshift"
-        case .rightShift: "rshift"
-        case .leftControl: "lctrl"
-        case .rightControl: "rctrl"
-        case .leftOption: "lalt"
-        case .rightOption: "ralt"
-        case .leftCommand: "lcmd"
-        case .rightCommand: "rcmd"
-        case .function: "fn"
+            case .leftShift: "lshift"
+            case .rightShift: "rshift"
+            case .leftControl: "lctrl"
+            case .rightControl: "rctrl"
+            case .leftOption: "lalt"
+            case .rightOption: "ralt"
+            case .leftCommand: "lcmd"
+            case .rightCommand: "rcmd"
+            case .function: "fn"
         }
     }
 }
@@ -443,8 +443,8 @@ func virtualKeyCodeToString(_ keyCode: UInt16) -> String {
     }
     // Fallback for less common keys or if not in the map
     switch keyCode {
-    case VirtualKeyCodes.a: return "a"
-    // ... add more cases as needed for complete coverage for descriptions
-    default: return "keyCode_0x" + String(keyCode, radix: 16)
+        case VirtualKeyCodes.a: return "a"
+        // ... add more cases as needed for complete coverage for descriptions
+        default: return "keyCode_0x" + String(keyCode, radix: 16)
     }
 }
