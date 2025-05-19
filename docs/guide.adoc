@@ -242,7 +242,7 @@ You can configure environment variables of `exec-*` commands and callbacks (such
 +
 Environment variable substitution is supported in form of `+${ENV_VAR}+`
 * You can inspect what is the end result of environment variables using xref:commands.adoc#list-exec-env-vars[`list-exec-env-vars` command]
-* GUI apps on macOS don't have Homebrew’s prefix in their `PATH` by default (https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities[docs.brew.sh]).
+* GUI apps on macOS don’t have Homebrew’s prefix in their `PATH` by default (https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities[docs.brew.sh]).
 That's why unless you override `exec` section in your config, AeroSpace fallbacks to the following `exec` configuration:
 +
 [source,toml]
@@ -389,7 +389,7 @@ Unless you're hardcore i3 user who knows what they are doing, it's recommended t
 === Floating windows
 
 Normally, floating windows are not considered to be part of the <<tree,tiling tree>>.
-But it's not the case with xref:commands.adoc#focus[focus] command.
+But it’s not the case with xref:commands.adoc#focus[focus] command.
 
 From xref:commands.adoc#focus[focus] command perspective, floating windows are part of <<tree,tiling tree>>.
 The floating window parent container is determined as the smallest tiling container that contains the center of the floating window.

@@ -2,10 +2,6 @@ import AppKit
 import Common
 import Foundation
 
-// Create a global instance of the hotkey monitor - This will be removed, using GlobalHotkeyMonitor.shared instead
-// @MainActor  // Ensure it's created on the main thread if it interacts with UI/AppKit later
-// let globalHotkeyMonitor = GlobalHotkeyMonitor() // Remove this line
-
 @MainActor public func initAppBundle() {
     initTerminationHandler()
     setupMonitorTermination()  // Register for graceful shutdown of the monitor
