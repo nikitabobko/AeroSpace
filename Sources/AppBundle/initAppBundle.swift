@@ -2,9 +2,9 @@ import AppKit
 import Common
 import Foundation
 
-// Create a global instance of the hotkey monitor
-@MainActor  // Ensure it's created on the main thread if it interacts with UI/AppKit later
-let globalHotkeyMonitor = GlobalHotkeyMonitor()
+// Create a global instance of the hotkey monitor - This will be removed, using GlobalHotkeyMonitor.shared instead
+// @MainActor  // Ensure it's created on the main thread if it interacts with UI/AppKit later
+// let globalHotkeyMonitor = GlobalHotkeyMonitor() // Remove this line
 
 @MainActor public func initAppBundle() {
     initTerminationHandler()
@@ -29,7 +29,7 @@ let globalHotkeyMonitor = GlobalHotkeyMonitor()
     checkAccessibilityPermissions()
 
     // Start the hotkey monitor after accessibility is checked and config is likely loaded
-    globalHotkeyMonitor.start()
+    GlobalHotkeyMonitor.shared.start()  // Use shared instance
 
     startUnixSocketServer()
     GlobalObserver.initObserver()
@@ -57,7 +57,7 @@ private func setupMonitorTermination() {
     ) { _ in
         print("INFO: Application is terminating. Stopping GlobalHotkeyMonitor.")
         Task { @MainActor in  // Explicitly dispatch to main actor
-            globalHotkeyMonitor.stop()
+            GlobalHotkeyMonitor.shared.stop()  // Use shared instance
         }
     }
 }
@@ -104,25 +104,25 @@ private func initServerArgs() {
     }
     while !args.isEmpty {
         switch args.first {
-            case "--version", "-v":
-                print("\(aeroSpaceAppVersion) \(gitHash)")
-                exit(0)
-            case "--config-path":
-                if let arg = args.getOrNil(atIndex: 1) {
-                    _serverArgs.configLocation = arg
-                } else {
-                    cliError("Missing <path> in --config-path flag")
-                }
-                args = Array(args.dropFirst(2))
-            case "--started-at-login":
-                _serverArgs.startedAtLogin = true
-                args = Array(args.dropFirst())
-            case "-NSDocumentRevisionsDebugMode":
-                cliError(
-                    "Xcode -> Edit Scheme ... -> Options -> Document Versions -> Allow debugging when browsing versions -> false"
-                )
-            default:
-                cliError("Unrecognized flag '\(args.first!)'")
+        case "--version", "-v":
+            print("\(aeroSpaceAppVersion) \(gitHash)")
+            exit(0)
+        case "--config-path":
+            if let arg = args.getOrNil(atIndex: 1) {
+                _serverArgs.configLocation = arg
+            } else {
+                cliError("Missing <path> in --config-path flag")
+            }
+            args = Array(args.dropFirst(2))
+        case "--started-at-login":
+            _serverArgs.startedAtLogin = true
+            args = Array(args.dropFirst())
+        case "-NSDocumentRevisionsDebugMode":
+            cliError(
+                "Xcode -> Edit Scheme ... -> Options -> Document Versions -> Allow debugging when browsing versions -> false"
+            )
+        default:
+            cliError("Unrecognized flag '\(args.first!)'")
         }
     }
     if let path = serverArgs.configLocation, !FileManager.default.fileExists(atPath: path) {

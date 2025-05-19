@@ -1,23 +1,15 @@
 import AppKit
 import Common
-
 // import Foundation // Common already imports Foundation
-// import HotKey // REMOVE: No longer using HotKey.Key or HotKey objects here
+// REMOVED: import HotKey // REMOVE: No longer using HotKey.Key or HotKey objects here
 import TOMLKit
 
-// TODO: Refactor hotkey management. This will be replaced by CGEventTap logic.
-// @MainActor private var hotkeys: [String: HotKey] = [:]
-
-// @MainActor func resetHotKeys() { // REMOVE THIS FUNCTION
-//     // TODO: Refactor hotkey management.
-//     print("TODO: resetHotKeys needs to be refactored for CGEventTap")
-// }
-
-// TODO: Refactor: HotKey extension will likely be removed.
+// Block of TODOs and old comments removed.
 
 @MainActor var activeMode: String? = mainModeId
 @MainActor func activateMode(_ targetMode: String?) {
     activeMode = targetMode
+    GlobalHotkeyMonitor.shared.updateBindingsCache()
 }
 
 // Define GenericModifierType here if not accessible from keysMap.swift or for clarity
@@ -59,17 +51,11 @@ struct HotkeyBinding: Equatable, Sendable {
 
         self.descriptionWithKeyCode =
             sortedModifierString.isEmpty
-                ? virtualKeyCodeToString(keyCode)
-                : sortedModifierString + "-" + virtualKeyCodeToString(keyCode)
+            ? virtualKeyCodeToString(keyCode)
+            : sortedModifierString + "-" + virtualKeyCodeToString(keyCode)
     }
 
-    // Convenience init for old structure, will be removed or refactored by parseBinding
-    // init(
-    //     _ specificModifiers: Set<PhysicalModifierKey>, _ keyCode: UInt16, _ commands: [any Command],
-    //     descriptionWithKeyNotation: String
-    // ) {
-    //     self.init(exactModifiers: specificModifiers, genericModifiers: [], keyCode: keyCode, commands: commands, descriptionWithKeyNotation: descriptionWithKeyNotation)
-    // }
+    // REMOVED commented-out convenience init
 
     static func == (lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
         // Equality should primarily depend on the effective modifiers, keycode, and commands.
@@ -170,10 +156,10 @@ func parseBinding(_ raw: String, _ backtrace: TomlBacktrace, _ mapping: [String:
     for genModType in genericModifiers {
         let specificCounterparts: Set<PhysicalModifierKey> =
             switch genModType {
-                case .option: [.leftOption, .rightOption]
-                case .command: [.leftCommand, .rightCommand]
-                case .control: [.leftControl, .rightControl]
-                case .shift: [.leftShift, .rightShift]
+            case .option: [.leftOption, .rightOption]
+            case .command: [.leftCommand, .rightCommand]
+            case .control: [.leftControl, .rightControl]
+            case .shift: [.leftShift, .rightShift]
             }
         if !exactModifiers.isDisjoint(with: specificCounterparts) {
             return .failure(
@@ -209,9 +195,9 @@ func parseBinding(_ raw: String, _ backtrace: TomlBacktrace, _ mapping: [String:
 private func exampleGenericToken(for type: GenericModifierType) -> String {
     // Return a common token for the generic type
     switch type {
-        case .option: return "alt"
-        case .command: return "cmd"
-        case .control: return "ctrl"
-        case .shift: return "shift"
+    case .option: return "alt"
+    case .command: return "cmd"
+    case .control: return "ctrl"
+    case .shift: return "shift"
     }
 }
