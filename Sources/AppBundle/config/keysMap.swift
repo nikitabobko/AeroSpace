@@ -1,8 +1,6 @@
 import AppKit
 import Common
 
-// import HotKey // Will be removed if Key type is fully replaced
-
 private let minus = "minus"
 private let equal = "equal"
 
@@ -158,22 +156,16 @@ enum VirtualKeyCodes {  // Using an enum namespace for clarity
     // Help/Insert is 0x72, but often remapped
 }
 
-// func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: Key] { // OLD
-func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: UInt16] {  // NEW
+func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: UInt16] {
     return switch layout {
-        // case .qwerty: keyNotationToKeyCode // OLD
-        case .qwerty: keyNotationToVirtualKeyCode  // NEW
+        case .qwerty: keyNotationToVirtualKeyCode
         case .dvorak: dvorakMap
         case .colemak: colemakMap
     }
 }
 
-// extension Key: @unchecked @retroactive Sendable {} // This comes from HotKey, remove if HotKey is fully removed
-
-// let keyNotationToKeyCode: [String: Key] = [ // OLD
-let keyNotationToVirtualKeyCode: [String: UInt16] = [  // NEW
-    // sectionSign: .section, // OLD Key enum
-    sectionSign: VirtualKeyCodes.section,  // NEW UInt16
+let keyNotationToVirtualKeyCode: [String: UInt16] = [
+    sectionSign: VirtualKeyCodes.section,
     "0": VirtualKeyCodes._0,
     "1": VirtualKeyCodes._1,
     "2": VirtualKeyCodes._2,
@@ -286,9 +278,8 @@ let keyNotationToVirtualKeyCode: [String: UInt16] = [  // NEW
     "right": VirtualKeyCodes.rightArrow,
 ]
 
-// private let dvorakMap: [String: Key] = keyNotationToKeyCode + [ // OLD
 private let dvorakMap: [String: UInt16] =
-    keyNotationToVirtualKeyCode + [  // NEW
+    keyNotationToVirtualKeyCode + [
         leftSquareBracket: VirtualKeyCodes.minus,
         rightSquareBracket: VirtualKeyCodes.equal,
 
@@ -329,9 +320,8 @@ private let dvorakMap: [String: UInt16] =
         z: VirtualKeyCodes.slash,
     ]
 
-// private let colemakMap: [String: Key] = keyNotationToKeyCode + [ // OLD
 private let colemakMap: [String: UInt16] =
-    keyNotationToVirtualKeyCode + [  // NEW
+    keyNotationToVirtualKeyCode + [
         f: VirtualKeyCodes.e,
         p: VirtualKeyCodes.r,
         g: VirtualKeyCodes.t,

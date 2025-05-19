@@ -1,7 +1,5 @@
 import AppKit
 import Common
-
-// import HotKey
 import TOMLKit
 
 @MainActor
@@ -18,7 +16,8 @@ func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
             return .failure(msg)
     }
     let configUrl: URL = forceConfigUrl ?? customConfigUrl
-    let (parsedConfig, errors) = (try? String(contentsOf: configUrl)).map { parseConfig($0) } ?? (defaultConfig, [])
+    let (parsedConfig, errors) =
+        (try? String(contentsOf: configUrl)).map { parseConfig($0) } ?? (defaultConfig, [])
 
     if errors.isEmpty {
         return .success((parsedConfig, configUrl))
@@ -39,7 +38,8 @@ enum TomlParseError: Error, CustomStringConvertible, Equatable {
     var description: String {
         return switch self {
             // todo Make 'split' + flatten normalization prettier
-            case .semantic(let backtrace, let message): backtrace.isRoot ? message : "\(backtrace): \(message)"
+            case .semantic(let backtrace, let message):
+                backtrace.isRoot ? message : "\(backtrace): \(message)"
             case .syntax(let message): message
         }
     }
@@ -48,11 +48,12 @@ enum TomlParseError: Error, CustomStringConvertible, Equatable {
 typealias ParsedToml<T> = Result<T, TomlParseError>
 
 extension ParserProtocol {
-    func transformRawConfig(_ raw: S,
-                            _ value: TOMLValueConvertible,
-                            _ backtrace: TomlBacktrace,
-                            _ errors: inout [TomlParseError]) -> S
-    {
+    func transformRawConfig(
+        _ raw: S,
+        _ value: TOMLValueConvertible,
+        _ backtrace: TomlBacktrace,
+        _ errors: inout [TomlParseError]
+    ) -> S {
         if let value = parse(value, backtrace, &errors).getOrNil(appendErrorTo: &errors) {
             return raw.copy(keyPath, value)
         }
@@ -64,19 +65,31 @@ protocol ParserProtocol<S>: Sendable {
     associatedtype T
     associatedtype S where S: ConvenienceCopyable
     var keyPath: SendableWritableKeyPath<S, T> { get }
-    var parse: @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T> { get }
+    var parse:
+        @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T>
+    { get }
 }
 
 struct Parser<S: ConvenienceCopyable, T>: ParserProtocol {
     let keyPath: SendableWritableKeyPath<S, T>
-    let parse: @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T>
+    let parse:
+        @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> ParsedToml<T>
 
-    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> T) {
+    init(
+        _ keyPath: SendableWritableKeyPath<S, T>,
+        _ parse: @escaping @Sendable (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError])
+            -> T
+    ) {
         self.keyPath = keyPath
-        self.parse = { raw, backtrace, errors -> ParsedToml<T> in .success(parse(raw, backtrace, &errors)) }
+        self.parse = { raw, backtrace, errors -> ParsedToml<T> in
+            .success(parse(raw, backtrace, &errors))
+        }
     }
 
-    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) {
+    init(
+        _ keyPath: SendableWritableKeyPath<S, T>,
+        _ parse: @escaping @Sendable (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>
+    ) {
         self.keyPath = keyPath
         self.parse = { raw, backtrace, _ -> ParsedToml<T> in parse(raw, backtrace) }
     }
@@ -89,35 +102,49 @@ private let modeConfigRootKey = "mode"
 // 1. Does it make sense to have different value
 // 2. Prefer commands and commands flags over toml options if possible
 private let configParser: [String: any ParserProtocol<Config>] = [
-    "after-login-command": Parser(\.afterLoginCommand) { parseCommandOrCommands($0).toParsedToml($1) },
-    "after-startup-command": Parser(\.afterStartupCommand) { parseCommandOrCommands($0).toParsedToml($1) },
+    "after-login-command": Parser(\.afterLoginCommand) {
+        parseCommandOrCommands($0).toParsedToml($1)
+    },
+    "after-startup-command": Parser(\.afterStartupCommand) {
+        parseCommandOrCommands($0).toParsedToml($1)
+    },
 
     "on-focus-changed": Parser(\.onFocusChanged) { parseCommandOrCommands($0).toParsedToml($1) },
-    "on-focused-monitor-changed": Parser(\.onFocusedMonitorChanged) { parseCommandOrCommands($0).toParsedToml($1) },
+    "on-focused-monitor-changed": Parser(\.onFocusedMonitorChanged) {
+        parseCommandOrCommands($0).toParsedToml($1)
+    },
     // "on-focused-workspace-changed": Parser(\.onFocusedWorkspaceChanged, { parseCommandOrCommands($0).toParsedToml($1) }),
 
-    "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, parseBool),
-    "enable-normalization-opposite-orientation-for-nested-containers": Parser(\.enableNormalizationOppositeOrientationForNestedContainers, parseBool),
+    "enable-normalization-flatten-containers": Parser(
+        \.enableNormalizationFlattenContainers, parseBool),
+    "enable-normalization-opposite-orientation-for-nested-containers": Parser(
+        \.enableNormalizationOppositeOrientationForNestedContainers, parseBool),
 
     "default-root-container-layout": Parser(\.defaultRootContainerLayout, parseLayout),
-    "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, parseDefaultContainerOrientation),
+    "default-root-container-orientation": Parser(
+        \.defaultRootContainerOrientation, parseDefaultContainerOrientation),
 
     "start-at-login": Parser(\.startAtLogin, parseBool),
-    "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
+    "automatically-unhide-macos-hidden-apps": Parser(
+        \.automaticallyUnhideMacosHiddenApps, parseBool),
     "accordion-padding": Parser(\.accordionPadding, parseInt),
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseExecOnWorkspaceChange),
     "exec": Parser(\.execConfig, parseExecConfig),
 
-    keyMappingConfigRootKey: Parser(\.keyMapping, skipParsing(Config().keyMapping)), // Parsed manually
-    modeConfigRootKey: Parser(\.modes, skipParsing(Config().modes)), // Parsed manually
+    keyMappingConfigRootKey: Parser(\.keyMapping, skipParsing(Config().keyMapping)),  // Parsed manually
+    modeConfigRootKey: Parser(\.modes, skipParsing(Config().modes)),  // Parsed manually
 
     "gaps": Parser(\.gaps, parseGaps),
-    "workspace-to-monitor-force-assignment": Parser(\.workspaceToMonitorForceAssignment, parseWorkspaceToMonitorAssignment),
+    "workspace-to-monitor-force-assignment": Parser(
+        \.workspaceToMonitorForceAssignment, parseWorkspaceToMonitorAssignment),
     "on-window-detected": Parser(\.onWindowDetected, parseOnWindowDetectedArray),
 
     // Deprecated
-    "non-empty-workspaces-root-containers-layout-on-startup": Parser(\._nonEmptyWorkspacesRootContainersLayoutOnStartup, parseStartupRootContainerLayout),
-    "indent-for-nested-containers-with-the-same-orientation": Parser(\._indentForNestedContainersWithTheSameOrientation, parseIndentForNestedContainersWithTheSameOrientation),
+    "non-empty-workspaces-root-containers-layout-on-startup": Parser(
+        \._nonEmptyWorkspacesRootContainersLayoutOnStartup, parseStartupRootContainerLayout),
+    "indent-for-nested-containers-with-the-same-orientation": Parser(
+        \._indentForNestedContainersWithTheSameOrientation,
+        parseIndentForNestedContainersWithTheSameOrientation),
 ]
 
 private extension ParsedCmd where T == any Command {
@@ -134,7 +161,7 @@ private extension ParsedCmd where T == any Command {
 }
 
 private extension Command {
-    var isMacOsNativeCommand: Bool { // Problem ID-B6E178F2
+    var isMacOsNativeCommand: Bool {  // Problem ID-B6E178F2
         self is MacosNativeMinimizeCommand || self is MacosNativeFullscreenCommand
     }
 }
@@ -144,10 +171,14 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
         return parseCommand(rawString).toEither().map { [$0] }
     } else if let rawArray = raw.array {
         let commands: Parsed<[any Command]> = (0 ..< rawArray.count).mapAllOrFailure { index in
-            let rawString: String = rawArray[index].string ?? expectedActualTypeError(expected: .string, actual: rawArray[index].type)
+            let rawString: String =
+                rawArray[index].string
+                    ?? expectedActualTypeError(expected: .string, actual: rawArray[index].type)
             return parseCommand(rawString).toEither()
         }
-        return commands.filter("macos-native-* commands are only allowed to be the last commands in the list") {
+        return commands.filter(
+            "macos-native-* commands are only allowed to be the last commands in the list"
+        ) {
             !$0.dropLast().contains(where: { $0.isMacOsNativeCommand })
         }
     } else {
@@ -155,7 +186,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
     }
 }
 
-@MainActor func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]) { // todo change return value to Result
+@MainActor func parseConfig(_ rawToml: String) -> (config: Config, errors: [TomlParseError]) {  // todo change return value to Result
     let rawTable: TOMLTable
     do {
         rawTable = try TOMLTable(string: rawToml)
@@ -169,38 +200,48 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
 
     var config = rawTable.parseTable(Config(), configParser, .root, &errors)
 
-    if let mapping = rawTable[keyMappingConfigRootKey].flatMap({ parseKeyMapping($0, .rootKey(keyMappingConfigRootKey), &errors) }) {
+    if let mapping = rawTable[keyMappingConfigRootKey].flatMap({
+        parseKeyMapping($0, .rootKey(keyMappingConfigRootKey), &errors)
+    }) {
         config.keyMapping = mapping
     }
 
-    if let modes = rawTable[modeConfigRootKey].flatMap({ parseModes($0, .rootKey(modeConfigRootKey), &errors, config.keyMapping.resolve()) }) {
+    if let modes = rawTable[modeConfigRootKey].flatMap({
+        parseModes($0, .rootKey(modeConfigRootKey), &errors, config.keyMapping.resolve())
+    }) {
         config.modes = modes
     }
 
-    config.preservedWorkspaceNames = config.modes.values.lazy
-        .flatMap { (mode: Mode) -> [HotkeyBinding] in Array(mode.bindings.values) }
-        .flatMap { (binding: HotkeyBinding) -> [String] in
-            binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw } +
-                binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw }
-        }
-        + (config.workspaceToMonitorForceAssignment).keys
+    config.preservedWorkspaceNames =
+        config.modes.values.lazy
+            .flatMap { (mode: Mode) -> [HotkeyBinding] in Array(mode.bindings.values) }
+            .flatMap { (binding: HotkeyBinding) -> [String] in
+                binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap {
+                    $0.args.target.val.workspaceNameOrNil()?.raw
+                }
+                    + binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap
+                    { $0.args.target.val.workspaceNameOrNil()?.raw }
+            }
+            + (config.workspaceToMonitorForceAssignment).keys
 
     if config.enableNormalizationFlattenContainers {
         let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings.values }
             .flatMap { $0.commands }
             .contains { $0 is SplitCommand }
         if containsSplitCommand {
-            errors += [.semantic(
-                .root, // todo Make 'split' + flatten normalization prettier
-                """
-                The config contains:
-                1. usage of 'split' command
-                2. enable-normalization-flatten-containers = true
-                These two settings don't play nicely together. 'split' command has no effect when enable-normalization-flatten-containers is disabled.
+            errors += [
+                .semantic(
+                    .root,  // todo Make 'split' + flatten normalization prettier
+                    """
+                    The config contains:
+                    1. usage of 'split' command
+                    2. enable-normalization-flatten-containers = true
+                    These two settings don't play nicely together. 'split' command has no effect when enable-normalization-flatten-containers is disabled.
 
-                My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.
-                """
-            )]
+                    My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.
+                    """
+                ),
+            ]
         }
     }
     return (config, errors)
@@ -210,7 +251,8 @@ func parseIndentForNestedContainersWithTheSameOrientation(
     _ raw: TOMLValueConvertible,
     _ backtrace: TomlBacktrace
 ) -> ParsedToml<Void> {
-    let msg = "Deprecated. Please drop it from the config. See https://github.com/nikitabobko/AeroSpace/issues/96"
+    let msg =
+        "Deprecated. Please drop it from the config. See https://github.com/nikitabobko/AeroSpace/issues/96"
     return .failure(.semantic(backtrace, msg))
 }
 
@@ -227,7 +269,9 @@ func parseSimpleType<T>(_ raw: TOMLValueConvertible) -> T? {
 }
 
 extension TOMLValueConvertible {
-    func unwrapTableWithSingleKey(expectedKey: String? = nil, _ backtrace: inout TomlBacktrace) -> ParsedToml<(key: String, value: TOMLValueConvertible)> {
+    func unwrapTableWithSingleKey(expectedKey: String? = nil, _ backtrace: inout TomlBacktrace)
+        -> ParsedToml<(key: String, value: TOMLValueConvertible)>
+    {
         guard let table else {
             return .failure(expectedActualTypeError(expected: .table, actual: type, backtrace))
         }
@@ -237,7 +281,10 @@ extension TOMLValueConvertible {
                 ? "The table is expected to have a single key '\(expectedKey!)'"
                 : "The table is expected to have a single key"
         )
-        guard let (actualKey, value): (String, TOMLValueConvertible) = table.count == 1 ? table.first : nil else {
+        guard
+            let (actualKey, value): (String, TOMLValueConvertible) = table.count == 1
+            ? table.first : nil
+        else {
             return .failure(singleKeyError)
         }
         if expectedKey != nil && expectedKey != actualKey {
@@ -248,7 +295,9 @@ extension TOMLValueConvertible {
     }
 }
 
-func parseTomlArray(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<TOMLArray> {
+func parseTomlArray(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<
+    TOMLArray
+> {
     raw.array.orFailure(expectedActualTypeError(expected: .array, actual: raw.type, backtrace))
 }
 
@@ -266,29 +315,44 @@ func parseTable<T: ConvenienceCopyable>(
     return table.parseTable(initial, fieldsParser, backtrace, &errors)
 }
 
-private func parseStartupRootContainerLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Void> {
+private func parseStartupRootContainerLayout(
+    _ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace
+) -> ParsedToml<Void> {
     parseString(raw, backtrace)
-        .filter(.semantic(backtrace, "'non-empty-workspaces-root-containers-layout-on-startup' is deprecated. Please drop it from your config")) { raw in raw == "smart" }
+        .filter(
+            .semantic(
+                backtrace,
+                "'non-empty-workspaces-root-containers-layout-on-startup' is deprecated. Please drop it from your config"
+            )
+        ) { raw in raw == "smart" }
         .map { _ in () }
 }
 
-private func parseLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Layout> {
+private func parseLayout(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<
+    Layout
+> {
     parseString(raw, backtrace)
         .flatMap { $0.parseLayout().orFailure(.semantic(backtrace, "Can't parse layout '\($0)'")) }
 }
 
-private func skipParsing<T: Sendable>(_ value: T) -> @Sendable (_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<T> {
+private func skipParsing<T: Sendable>(_ value: T) -> @Sendable (
+    _ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace
+) -> ParsedToml<T> {
     { _, _ in .success(value) }
 }
 
-private func parseExecOnWorkspaceChange(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<[String]> {
+private func parseExecOnWorkspaceChange(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace)
+    -> ParsedToml<[String]>
+{
     parseTomlArray(raw, backtrace)
         .flatMap { arr in
             arr.mapAllOrFailure { elem in parseString(elem, backtrace) }
         }
 }
 
-private func parseDefaultContainerOrientation(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<DefaultContainerOrientation> {
+private func parseDefaultContainerOrientation(
+    _ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace
+) -> ParsedToml<DefaultContainerOrientation> {
     parseString(raw, backtrace).flatMap {
         DefaultContainerOrientation(rawValue: $0)
             .orFailure(.semantic(backtrace, "Can't parse default container orientation '\($0)'"))
@@ -368,10 +432,14 @@ func unknownKeyError(_ backtrace: TomlBacktrace) -> TomlParseError {
     .semantic(backtrace, "Unknown key")
 }
 
-func expectedActualTypeError(expected: TOMLType, actual: TOMLType, _ backtrace: TomlBacktrace) -> TomlParseError {
+func expectedActualTypeError(expected: TOMLType, actual: TOMLType, _ backtrace: TomlBacktrace)
+    -> TomlParseError
+{
     .semantic(backtrace, expectedActualTypeError(expected: expected, actual: actual))
 }
 
-func expectedActualTypeError(expected: [TOMLType], actual: TOMLType, _ backtrace: TomlBacktrace) -> TomlParseError {
+func expectedActualTypeError(expected: [TOMLType], actual: TOMLType, _ backtrace: TomlBacktrace)
+    -> TomlParseError
+{
     .semantic(backtrace, expectedActualTypeError(expected: expected, actual: actual))
 }

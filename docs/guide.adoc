@@ -242,7 +242,7 @@ You can configure environment variables of `exec-*` commands and callbacks (such
 +
 Environment variable substitution is supported in form of `+${ENV_VAR}+`
 * You can inspect what is the end result of environment variables using xref:commands.adoc#list-exec-env-vars[`list-exec-env-vars` command]
-* GUI apps on macOS don't have Homebrew's prefix in their `PATH` by default (https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities[docs.brew.sh]).
+* GUI apps on macOS don't have Homebrew’s prefix in their `PATH` by default (https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities[docs.brew.sh]).
 That's why unless you override `exec` section in your config, AeroSpace fallbacks to the following `exec` configuration:
 +
 [source,toml]
@@ -271,9 +271,9 @@ WARNING: i3 has a different terminology.
 . <<layouts,Layout>> (Possible values: `tiles`, `accordion`)
 . Orientation (Possible values: `horizontal`, `vertical`)
 
-When we say "layout of the window", we refer to the layout of the window's parent container.
+When we say "layout of the window", we refer to the layout of the window’s parent container.
 
-It's easier to understand tree tiling model by looking at examples
+It’s easier to understand tree tiling model by looking at examples
 
 .Simple tree structure. Two windows side-by-side
 image::assets/h_tiles.png[]
@@ -297,12 +297,12 @@ The tree structure can be changed with three commands:
 
 In total, AeroSpace provides 4 possible layouts:
 
-- `h_tiles` horizontal tiles (in i3, it's called "horizontal split")
-- `v_tiles` vertical tiles (in i3, it's called "vertical split")
-- `h_accordion` horizontal accordion (analog of i3's "tabbed layout")
-- `v_accordion` vertical accordion (analog of i3's "stacked layout")
+- `h_tiles` horizontal tiles (in i3, it’s called "horizontal split")
+- `v_tiles` vertical tiles (in i3, it’s called "vertical split")
+- `h_accordion` horizontal accordion (analog of i3’s "tabbed layout")
+- `v_accordion` vertical accordion (analog of i3’s "stacked layout")
 
-<<tree,From the previous section>>, you're already familiar with the `tiles` layout.
+<<tree,From the previous section>>, you’re already familiar with the `tiles` layout.
 
 Accordion is a layout where windows are placed on top of each other.
 
@@ -336,7 +336,7 @@ Configured by `enable-normalization-opposite-orientation-for-nested-containers`
 [.lead]
 *Example 1*
 
-According to the first normalization, such layout isn't possible:
+According to the first normalization, such layout isn’t possible:
 
 ----
 h_tiles (root node)
@@ -354,7 +354,7 @@ v_tiles (new root node)
 [.lead]
 *Example 2*
 
-According to the second normalization, such layout isn't possible:
+According to the second normalization, such layout isn’t possible:
 
 ----
 h_tiles
@@ -402,24 +402,24 @@ This technique eliminates the need for an additional binding for focusing floati
 Native macOS Spaces have a lot of problems
 
 * The animation for Spaces switching is slow
-** You can't disable animation for Spaces switching (you can only make it slightly faster by turning on `Reduce motion` setting, but it's suboptimal)
+** You can’t disable animation for Spaces switching (you can only make it slightly faster by turning on `Reduce motion` setting, but it’s suboptimal)
 * You have a limit of Spaces (up to 16 Spaces with one monitor)
-* You can't create/delete/reorder Space and move windows between Spaces with hotkeys (you can only switch between Spaces with hotkeys)
+* You can’t create/delete/reorder Space and move windows between Spaces with hotkeys (you can only switch between Spaces with hotkeys)
 * Apple doesn't provide public API to communicate with Spaces (create/delete/reorder/switch Space and move windows between Spaces)
 
 Since Spaces are so hard to deal with, AeroSpace reimplements Spaces and calls them "Workspaces".
-The idea is that if the workspace isn't active then all of its windows are placed outside the visible area of the screen, in the bottom right or left corner.
+The idea is that if the workspace isn’t active then all of its windows are placed outside the visible area of the screen, in the bottom right or left corner.
 Once you switch back to the workspace, (e.g. by the means of xref:commands.adoc#workspace[workspace] command, or `cmd + tab`) windows are placed back to the visible area of the screen.
 
 When you quit the AeroSpace or when the AeroSpace detects that it's about to crash, AeroSpace will place all windows back to the visible area of the screen.
 
 AeroSpace shows the name of currently active workspace in its tray icon (top right corner), to give users a visual feedback on what workspace is currently active.
 
-The intended workflow of using AeroSpace workspaces is to only have one macOS Space (or as many monitors you have, if `Displays have separate Spaces` is enabled) and don't interact with macOS Spaces anymore.
+The intended workflow of using AeroSpace workspaces is to only have one macOS Space (or as many monitors you have, if `Displays have separate Spaces` is enabled) and don’t interact with macOS Spaces anymore.
 
 [NOTE]
 ====
-For better or worse, macOS doesn't allow to place windows outside the visible area entirely.
+For better or worse, macOS doesn’t allow to place windows outside the visible area entirely.
 You will still be able to see a 1 pixel vertical line of "hidden" windows in the bottom right or left corner of your screen.
 That means, that if AeroSpace crashes badly you will still be able to manually "unhide" the windows by dragging these few pixels to the center of the screen.
 
@@ -555,7 +555,7 @@ Available window conditions are:
 a|
 * If `true` then run the callback only during AeroSpace startup.
 * If `false` then run callback only *NOT* during AeroSpace startup.
-* If not specified then the condition isn't checked
+* If not specified then the condition isn’t checked
 
 |`if.workspace`
 |Window's workspace name exact match
@@ -564,7 +564,7 @@ a|
 
 * `if.during-aerospace-startup = true` is useful if you want to do the initial app arrangement only on startup.
 
-* `if.during-aerospace-startup = false` is useful if you want to relaunch AeroSpace, but the callback has side effects that you don't want to run on every relaunch.
+* `if.during-aerospace-startup = false` is useful if you want to relaunch AeroSpace, but the callback has side effects that you don’t want to run on every relaunch.
 (e.g. the callback opens new windows)
 
 There are several ways to know `app-id`:
@@ -652,7 +652,7 @@ xref:./goodies.adoc#show-aerospace-workspaces-in-sketchybar[]
 * The pool of workspaces is shared between monitors
 * Each monitor shows its own workspace.
 The showed workspaces are called"visible" workspaces
-* Different monitors can't show the same workspace at the same time
+* Different monitors can’t show the same workspace at the same time
 * Each workspace (even invisible, even empty) has a monitor assigned to it
 * By default, all workspaces are assigned to the "main" monitor ("main" as in `System -> Displays -> Use as`)
 

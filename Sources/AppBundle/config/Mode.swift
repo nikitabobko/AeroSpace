@@ -1,6 +1,4 @@
 import Common
-
-// import HotKey // REMOVE
 import TOMLKit
 
 struct Mode: ConvenienceCopyable, Equatable, Sendable {
@@ -11,7 +9,10 @@ struct Mode: ConvenienceCopyable, Equatable, Sendable {
     static let zero = Mode(name: nil, bindings: [:])
 }
 
-func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError], _ mapping: [String: UInt16]) -> [String: Mode] {
+func parseModes(
+    _ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError],
+    _ mapping: [String: UInt16]
+) -> [String: Mode] {
     guard let rawTable = raw.table else {
         errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
         return [:]
@@ -26,7 +27,10 @@ func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ error
     return result
 }
 
-func parseMode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError], _ mapping: [String: UInt16]) -> Mode {
+func parseMode(
+    _ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError],
+    _ mapping: [String: UInt16]
+) -> Mode {
     guard let rawTable: TOMLTable = raw.table else {
         errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
         return .zero

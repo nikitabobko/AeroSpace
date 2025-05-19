@@ -1,10 +1,7 @@
+@testable import AppBundle
 import Common
 import Foundation
-
-// import HotKey // REMOVE
 import XCTest
-
-@testable import AppBundle
 
 let projectRoot: URL = {
     var url = URL(filePath: #filePath).absoluteURL

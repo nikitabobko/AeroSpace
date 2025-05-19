@@ -3,20 +3,10 @@ public func parseCmdArgs(_ args: [String]) -> ParsedCmd<any CmdArgs> {
     if subcommand.isEmpty {
         return .failure("Can't parse empty string command")
     }
-    // ---- START DEBUG ----
-    // print(
-    //     "DEBUG parseCmdArgs: Looking for subcommand '\(subcommand)'"
-    // )
-    let foundParser = subcommandParsers[subcommand]  // Ensure this line remains active
-    // print("DEBUG parseCmdArgs: Parser found for '\(subcommand)': \(foundParser != nil)")
-    // ---- END DEBUG ----
-    if let subcommandParser = foundParser {  // Use the explicitly looked-up parser
+    let foundParser = subcommandParsers[subcommand]
+    if let subcommandParser = foundParser {
         return subcommandParser.parse(args: Array(args.dropFirst()))
     } else {
-        // This branch should NOT be taken for "noop" if the above debug says "Parser found for 'noop': true"
-        // print(
-        //     "DEBUG parseCmdArgs: SUBCOMMAND '\(subcommand)' NOT FOUND. Ensure it is in CmdKind and initSubcommands."
-        // )
         return .failure("Unrecognized subcommand '\(subcommand)'")
     }
 }

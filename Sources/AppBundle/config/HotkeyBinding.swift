@@ -1,21 +1,12 @@
 import AppKit
 import Common
-
-// import Foundation // Common already imports Foundation
-// REMOVED: import HotKey // REMOVE: No longer using HotKey.Key or HotKey objects here
 import TOMLKit
-
-// Block of TODOs and old comments removed.
 
 @MainActor var activeMode: String? = mainModeId
 @MainActor func activateMode(_ targetMode: String?) {
     activeMode = targetMode
     GlobalHotkeyMonitor.shared.updateBindingsCache()
 }
-
-// Define GenericModifierType here if not accessible from keysMap.swift or for clarity
-// For now, assuming it's available from keysMap.swift via `import Common` or similar in consuming files
-// If not, it should be defined here or in a shared Common place.
 
 struct HotkeyBinding: Equatable, Sendable {
     let exactModifiers: Set<PhysicalModifierKey>
@@ -55,8 +46,6 @@ struct HotkeyBinding: Equatable, Sendable {
                 ? virtualKeyCodeToString(keyCode)
                 : sortedModifierString + "-" + virtualKeyCodeToString(keyCode)
     }
-
-    // REMOVED commented-out convenience init
 
     static func == (lhs: HotkeyBinding, rhs: HotkeyBinding) -> Bool {
         // Equality should primarily depend on the effective modifiers, keycode, and commands.
