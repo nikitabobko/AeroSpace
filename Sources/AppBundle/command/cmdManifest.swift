@@ -68,6 +68,8 @@ extension CmdArgs {
                 command = SplitCommand(args: self as! SplitCmdArgs)
             case .summonWorkspace:
                 command = SummonWorkspaceCommand(args: self as! SummonWorkspaceCmdArgs)
+            case .swap:
+                command = SwapCommand(args: self as! SwapCmdArgs)
             case .triggerBinding:
                 command = TriggerBindingCommand(args: self as! TriggerBindingCmdArgs)
             case .volume:
