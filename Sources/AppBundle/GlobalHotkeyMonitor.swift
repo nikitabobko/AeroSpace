@@ -1,10 +1,15 @@
 import AppKit  // For NSEvent, CGEvent
 import Common  // For Config, Command, etc.
+import os.lock  // Import for os_unfair_lock
 
 class GlobalHotkeyMonitor {
     private var eventTap: CFMachPort?
     private var runLoopSource: CFRunLoopSource?
-    private let stateLock = NSLock()  // Lock for protecting shared state
+    private var stateLock = os_unfair_lock_s()  // Use os_unfair_lock
+
+    // Precomputed set for O(1) modifier key code lookup
+    private static let modifierKeyCodeSet: Set<UInt16> = Set(
+        physicalModifierKeyToKeyCode.values)
 
     // State to track pressed keys, accessed with stateLock
     private var pressedModifierKeyCodes: Set<UInt16> = []
@@ -29,30 +34,31 @@ class GlobalHotkeyMonitor {
               let modeConfig = config.modes[currentGlobalActiveModeName]
         else {
             // If no active mode or mode config, clear local bindings
-            stateLock.lock()
+            os_unfair_lock_lock(&stateLock)  // Use os_unfair_lock API
             self.bindingsByKeyCode.removeAll()
             self.lastKnownModeName = nil
-            stateLock.unlock()
+            os_unfair_lock_unlock(&stateLock)  // Use os_unfair_lock API
             print(
                 "INFO: GlobalHotkeyMonitor cleared bindings cache due to no active mode/config."
             )
             return
         }
 
-        stateLock.lock()
+        os_unfair_lock_lock(&stateLock)  // Use os_unfair_lock API
         if self.lastKnownModeName != currentGlobalActiveModeName
             || (self.bindingsByKeyCode.isEmpty && !modeConfig.bindings.isEmpty)
         {
             print(
                 "INFO: GlobalHotkeyMonitor rebuilding bindings cache for mode: \(currentGlobalActiveModeName)."
             )
-            self.bindingsByKeyCode.removeAll()
+            var freshBindings: [UInt16: [HotkeyBinding]] = [:]  // Build locally
             for (_, binding) in modeConfig.bindings {
-                self.bindingsByKeyCode[binding.keyCode, default: []].append(binding)
+                freshBindings[binding.keyCode, default: []].append(binding)
             }
+            self.bindingsByKeyCode = freshBindings  // Atomic swap
             self.lastKnownModeName = currentGlobalActiveModeName
         }
-        stateLock.unlock()
+        os_unfair_lock_unlock(&stateLock)  // Use os_unfair_lock API
     }
 
     @MainActor  // Added @MainActor
@@ -70,8 +76,9 @@ class GlobalHotkeyMonitor {
         // flagsChanged can be supplementary or primary for modifiers if direct key up/down for them is noisy or problematic.
         // Let's start with keyDown and keyUp.
         let eventsToTap: CGEventMask =
-            (1 << CGEventType.keyDown.rawValue) | (1 << CGEventType.keyUp.rawValue)
-                | (1 << CGEventType.flagsChanged.rawValue)
+            (UInt64(1) << CGEventType.keyDown.rawValue)
+                | (UInt64(1) << CGEventType.keyUp.rawValue)
+                | (UInt64(1) << CGEventType.flagsChanged.rawValue)
 
         // Create the event tap.
         // '.cghidEventTap' is a common choice for system-wide hardware events.
@@ -138,12 +145,12 @@ class GlobalHotkeyMonitor {
             self.eventTap = nil
             print("INFO: GlobalHotkeyMonitor stopped.")
         }
-        stateLock.lock()  // Use lock
+        os_unfair_lock_lock(&stateLock)  // Use os_unfair_lock API
         pressedModifierKeyCodes.removeAll()
         // Clear optimized lookup cache
         bindingsByKeyCode.removeAll()
         lastKnownModeName = nil
-        stateLock.unlock()  // Use lock
+        os_unfair_lock_unlock(&stateLock)  // Use os_unfair_lock API
     }
 
     // Entry point from C callback. Runs on event tap thread.
@@ -156,24 +163,24 @@ class GlobalHotkeyMonitor {
 
         switch cgEventType {
             case .keyDown:
-                stateLock.lock()
+                os_unfair_lock_lock(&stateLock)  // Use os_unfair_lock API
                 if isModifierKeyCode_Raw(keyCode) {  // Use a raw checker that doesn't need self if possible, or call it on self.
                     pressedModifierKeyCodes.insert(keyCode)
-                    stateLock.unlock()
+                    os_unfair_lock_unlock(&stateLock)  // Use os_unfair_lock API
                 } else {
-                    stateLock.unlock()  // Unlock before calling potentially complex logic
+                    os_unfair_lock_unlock(&stateLock)  // Use os_unfair_lock API
                     if findAndExecuteHotkeyMatch_TapThread(nonModifierKeyCode: keyCode) {
                         consumed = true
                     }
                 }
             case .keyUp:
-                stateLock.lock()
+                os_unfair_lock_lock(&stateLock)  // Use os_unfair_lock API
                 if isModifierKeyCode_Raw(keyCode) {
                     pressedModifierKeyCodes.remove(keyCode)
                 }
-                stateLock.unlock()
+                os_unfair_lock_unlock(&stateLock)  // Use os_unfair_lock API
             case .flagsChanged:
-                stateLock.lock()
+                os_unfair_lock_lock(&stateLock)  // Use os_unfair_lock API
                 let changedModifierKeyCode = keyCode
                 // Determine if the specific modifier key that changed is now pressed or released.
                 guard
@@ -181,10 +188,13 @@ class GlobalHotkeyMonitor {
                         $0.value == changedModifierKeyCode
                     })?.key
                 else {
-                    print(
-                        "WARN: flagsChanged event for unknown modifier keyCode: \(changedModifierKeyCode) (raw flags: \(flags))"
-                    )
-                    stateLock.unlock()
+                    // Consider if keyCode 0 with flags is a common/ignorable scenario
+                    if keyCode != 0 {  // Print warning only if keyCode is not 0
+                        print(
+                            "WARN: flagsChanged event for unknown modifier keyCode: \(changedModifierKeyCode) (raw flags: \(flags))"
+                        )
+                    }
+                    os_unfair_lock_unlock(&stateLock)  // Use os_unfair_lock API
                     break
                 }
 
@@ -205,7 +215,7 @@ class GlobalHotkeyMonitor {
                 } else {
                     pressedModifierKeyCodes.remove(changedModifierKeyCode)
                 }
-                stateLock.unlock()
+                os_unfair_lock_unlock(&stateLock)  // Use os_unfair_lock API
             default:
                 break
         }
@@ -215,43 +225,32 @@ class GlobalHotkeyMonitor {
     // This function will be called from the tap thread (nonisolated context)
     // It needs to handle its own synchronization for shared state.
     private func findAndExecuteHotkeyMatch_TapThread(nonModifierKeyCode: UInt16) -> Bool {
-        stateLock.lock()  // Lock at the beginning
+        // Copy shared data under lock first
+        os_unfair_lock_lock(&stateLock)
+        let candidateBindingsForKeyCode = self.bindingsByKeyCode[nonModifierKeyCode] ?? []
+        let localPressedModifierKeyCodes = self.pressedModifierKeyCodes
+        os_unfair_lock_unlock(&stateLock)
 
-        // bindingsByKeyCode and lastKnownModeName are now populated by updateBindingsCache()
-        // No need to check activeMode or config directly here.
-        // The cache (self.bindingsByKeyCode) is assumed to be up-to-date for the current mode.
-
-        guard let candidateBindings = self.bindingsByKeyCode[nonModifierKeyCode],
-              !candidateBindings.isEmpty
-        else {
-            stateLock.unlock()
+        // Proceed with matching on local copies if candidates exist
+        guard !candidateBindingsForKeyCode.isEmpty else {
             return false
         }
 
-        let localPressedModifierKeyCodes = self.pressedModifierKeyCodes  // Copy while holding lock
-
         var currentPhysicalKeys = Set<PhysicalModifierKey>()
         var activeGenericTypes = Set<GenericModifierType>()
-
-        // Unlock *after* copying shared data needed for matching, but *before* iterating if possible,
-        // or keep lock if iteration logic is simple and doesn't call out.
-        // For now, keep lock for simplicity during matching as well, as it involves reading config too.
 
         for pressedKc in localPressedModifierKeyCodes {
             if let physicalKey = physicalModifierKeyToKeyCode.first(where: {
                 $0.value == pressedKc
             })?.key {
                 currentPhysicalKeys.insert(physicalKey)
-                if let genericType = physicalKey.genericType {  // Using the extension method
+                if let genericType = physicalKey.genericType {
                     activeGenericTypes.insert(genericType)
                 }
             }
         }
-        // At this point, localPressedModifierKeyCodes, currentPhysicalKeys, activeGenericTypes are derived.
-        // The candidateBindings are also from shared state (bindingsByKeyCode).
 
-        // Iterate only over bindings that match the nonModifierKeyCode
-        for binding in candidateBindings {  // candidateBindings was derived from shared state under lock
+        for binding in candidateBindingsForKeyCode {  // Iterate over the local copy
             guard binding.exactModifiers.isSubset(of: currentPhysicalKeys) else {
                 continue
             }
@@ -268,12 +267,10 @@ class GlobalHotkeyMonitor {
             let bindingEffectiveModifierCount =
                 binding.exactModifiers.count + binding.genericModifiers.count
             if currentPhysicalKeys.count == bindingEffectiveModifierCount {
-                // Match found!
-                stateLock.unlock()  // Unlock before dispatching to main actor
-
+                // Match found! No lock needed here before dispatching.
                 print("INFO: Hotkey matched: \(binding.descriptionWithKeyNotation)")
-                DispatchQueue.main.async {  // Dispatch command execution to main actor
-                    Task {  // Task on MainActor to run async commands
+                DispatchQueue.main.async {
+                    Task {
                         try await runSession(
                             .hotkeyBinding, .checkServerIsEnabledOrDie
                         ) { () throws in
@@ -285,29 +282,15 @@ class GlobalHotkeyMonitor {
                 return true  // Consume event
             }
         }
-
-        stateLock.unlock()  // Ensure unlock if no match found
-        return false
+        return false  // No match found among candidates
     }
 
     // Helper function to check if a keycode is a modifier. Can be called with lock held or not, doesn't modify state.
     // Renamed from isModifierKeyCode to avoid confusion with any potential @MainActor version.
     private func isModifierKeyCode_Raw(_ keyCode: UInt16) -> Bool {
-        physicalModifierKeyToKeyCode.values.contains(keyCode)
+        GlobalHotkeyMonitor.modifierKeyCodeSet.contains(keyCode)  // Use the precomputed set
     }
 }
 
-// Helper extension for PhysicalModifierKey to get its generic type (if any)
-// This should ideally be in keysMap.swift or a shared location if GenericModifierType is there.
-// For now, adding it here for GlobalHotkeyMonitor's use.
-private extension PhysicalModifierKey {
-    var genericType: GenericModifierType? {
-        switch self {
-            case .leftOption, .rightOption: return .option
-            case .leftCommand, .rightCommand: return .command
-            case .leftControl, .rightControl: return .control
-            case .leftShift, .rightShift: return .shift
-            case .function: return nil  // Fn is always specific
-        }
-    }
-}
+// Removed PhysicalModifierKey.genericType extension, will be moved to keysMap.swift
+// extension PhysicalModifierKey { ... }

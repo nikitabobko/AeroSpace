@@ -438,3 +438,17 @@ func virtualKeyCodeToString(_ keyCode: UInt16) -> String {
         default: return "keyCode_0x" + String(keyCode, radix: 16)
     }
 }
+
+// Extension moved from GlobalHotkeyMonitor.swift
+// This makes the utility available to any other component that needs it.
+extension PhysicalModifierKey {
+    var genericType: GenericModifierType? {
+        switch self {
+            case .leftOption, .rightOption: return .option
+            case .leftCommand, .rightCommand: return .command
+            case .leftControl, .rightControl: return .control
+            case .leftShift, .rightShift: return .shift
+            case .function: return nil  // Fn is always specific
+        }
+    }
+}
