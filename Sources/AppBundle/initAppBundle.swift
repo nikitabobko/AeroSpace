@@ -104,25 +104,25 @@ private func initServerArgs() {
     }
     while !args.isEmpty {
         switch args.first {
-        case "--version", "-v":
-            print("\(aeroSpaceAppVersion) \(gitHash)")
-            exit(0)
-        case "--config-path":
-            if let arg = args.getOrNil(atIndex: 1) {
-                _serverArgs.configLocation = arg
-            } else {
-                cliError("Missing <path> in --config-path flag")
-            }
-            args = Array(args.dropFirst(2))
-        case "--started-at-login":
-            _serverArgs.startedAtLogin = true
-            args = Array(args.dropFirst())
-        case "-NSDocumentRevisionsDebugMode":
-            cliError(
-                "Xcode -> Edit Scheme ... -> Options -> Document Versions -> Allow debugging when browsing versions -> false"
-            )
-        default:
-            cliError("Unrecognized flag '\(args.first!)'")
+            case "--version", "-v":
+                print("\(aeroSpaceAppVersion) \(gitHash)")
+                exit(0)
+            case "--config-path":
+                if let arg = args.getOrNil(atIndex: 1) {
+                    _serverArgs.configLocation = arg
+                } else {
+                    cliError("Missing <path> in --config-path flag")
+                }
+                args = Array(args.dropFirst(2))
+            case "--started-at-login":
+                _serverArgs.startedAtLogin = true
+                args = Array(args.dropFirst())
+            case "-NSDocumentRevisionsDebugMode":
+                cliError(
+                    "Xcode -> Edit Scheme ... -> Options -> Document Versions -> Allow debugging when browsing versions -> false"
+                )
+            default:
+                cliError("Unrecognized flag '\(args.first!)'")
         }
     }
     if let path = serverArgs.configLocation, !FileManager.default.fileExists(atPath: path) {
