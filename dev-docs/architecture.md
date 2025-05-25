@@ -32,8 +32,8 @@
 `aerospace` CLI binary is client. `AeroSpace.app` is server. Client and server talk to each other via predefined UNIX file.
 
 Each time you run a CLI command:
-1. Args are parsed by the client, args parsing errors are reporeted if any. Help is shown if `-h`/`--help` is passed.
-1. If args are parsed successufly, the args are send to the server
+1. Args are parsed by the client, args parsing errors are reported if any. Help is shown if `-h`/`--help` is passed.
+1. If args are parsed successfully, the args are send to the server
 1. Server parses the args once again, and runs the command
 1. Server returns stdout, stderr, and exit code to the client
 1. Client shows stdout, stderr, and ends the process with the requested exit code
