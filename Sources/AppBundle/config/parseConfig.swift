@@ -103,7 +103,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
 
     "start-at-login": Parser(\.startAtLogin, parseBool),
     "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
-    "accordion-padding": Parser(\.accordionPadding, parseInt),
+    "accordion-padding": Parser(\.accordionPadding, parseDimensionValue),
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseExecOnWorkspaceChange),
     "exec": Parser(\.execConfig, parseExecConfig),
 
@@ -388,4 +388,18 @@ func expectedActualTypeError(expected: TOMLType, actual: TOMLType, _ backtrace: 
 
 func expectedActualTypeError(expected: [TOMLType], actual: TOMLType, _ backtrace: TomlBacktrace) -> TomlParseError {
     .semantic(backtrace, expectedActualTypeError(expected: expected, actual: actual))
+}
+
+func parseDimensionValue(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<DimensionValue> {
+    if let intValue = raw.int {
+        return .success(.pixels(intValue))
+    } else if let strValue = raw.string {
+        if let dimensionValue = DimensionValue.parse(strValue) {
+            return .success(dimensionValue)
+        } else {
+            return .failure(.semantic(backtrace, "Invalid dimension value: '\(strValue)'. Expected integer or percentage (e.g., '30' or '5%')"))
+        }
+    } else {
+        return .failure(.semantic(backtrace, "Expected integer or string. But '\(raw.type)' is found"))
+    }
 }
