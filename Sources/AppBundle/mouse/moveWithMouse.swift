@@ -57,8 +57,8 @@ private func moveTilingWindow(_ window: Window) {
     if targetWorkspace != window.nodeWorkspace { // Move window to a different monitor
         let index: Int = if let swapTarget, let parent = swapTarget.parent as? TilingContainer, let targetRect = swapTarget.lastAppliedLayoutPhysicalRect {
             mouseLocation.getProjection(parent.orientation) >= targetRect.center.getProjection(parent.orientation)
-                ? swapTarget.ownIndex + 1
-                : swapTarget.ownIndex
+                ? swapTarget.ownIndex.orDie() + 1
+                : swapTarget.ownIndex.orDie()
         } else {
             0
         }
@@ -75,8 +75,10 @@ private func moveTilingWindow(_ window: Window) {
 @MainActor
 func swapWindows(_ window1: Window, _ window2: Window) {
     if window1 == window2 { return }
+    guard let index1 = window1.ownIndex else { return }
+    guard let index2 = window1.ownIndex else { return }
 
-    if window1.ownIndex < window2.ownIndex {
+    if index1 < index2 {
         let binding2 = window2.unbindFromParent()
         let binding1 = window1.unbindFromParent()
 

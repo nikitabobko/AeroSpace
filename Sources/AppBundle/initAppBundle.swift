@@ -94,7 +94,7 @@ private func initServerArgs() {
             case "-NSDocumentRevisionsDebugMode":
                 cliError("Xcode -> Edit Scheme ... -> Options -> Document Versions -> Allow debugging when browsing versions -> false")
             default:
-                cliError("Unrecognized flag '\(args.first!)'")
+                cliError("Unrecognized flag '\(args.first.orDie())'")
         }
     }
     if let path = serverArgs.configLocation, !FileManager.default.fileExists(atPath: path) {

@@ -33,7 +33,7 @@ public extension [String] {
 
 public extension [[String]] {
     func toPaddingTable(columnSeparator: String = " | ") -> [String] {
-        let pads: [Int] = transposed().map { column in column.map { $0.count }.max()! }
+        let pads: [Int] = transposed().map { column in column.map { $0.count }.max().orDie() }
         return self.map { (row: [String]) in
             zip(row.enumerated(), pads)
                 .map { (elem: (Int, String), pad: Int) in
@@ -52,7 +52,7 @@ public extension Array { // todo move to ArrayEx.swift
         let table: [[T]] = self
         var result: [[T]] = []
         for columnIndex in 0... {
-            if columnIndex < table.first!.count {
+            if columnIndex < table.first.orDie().count {
                 result += [table.map { row in row[columnIndex] }]
             } else {
                 break

@@ -7,20 +7,19 @@ public func showMessageInGui(filenameIfConsoleApp: String?, title: String, messa
         print(titleAndMessage)
     } else if let filenameIfConsoleApp {
         let cachesDir = URL(filePath: "/tmp/bobko.aerospace/")
-        try! FileManager.default.createDirectory(at: cachesDir, withIntermediateDirectories: true)
+        Result { try FileManager.default.createDirectory(at: cachesDir, withIntermediateDirectories: true) }.getOrDie()
         let file = cachesDir.appending(component: filenameIfConsoleApp)
-        try! (titleAndMessage + "\n").write(to: file, atomically: true, encoding: .utf8)
+        Result { try (titleAndMessage + "\n").write(to: file, atomically: true, encoding: .utf8) }.getOrDie()
 
         file.absoluteURL.open(with: URL(filePath: "/System/Applications/Utilities/Console.app"))
     } else {
-        try! Process.run(URL(filePath: "/usr/bin/osascript"),
-                         arguments: [
-                             "-e",
-                             """
-                             display dialog "\(message.replacing("\"", with: "\\\""))" with title "\(title)"
-                             """,
-                         ]
-        )
+        let args = [
+            "-e",
+            """
+            display dialog "\(message.replacing("\"", with: "\\\""))" with title "\(title)"
+            """,
+        ]
+        Result { try? Process.run(URL(filePath: "/usr/bin/osascript"), arguments: args) }.getOrDie()
         // === Alternatives ===
         // let myPopup = NSAlert()
         // myPopup.messageText = message

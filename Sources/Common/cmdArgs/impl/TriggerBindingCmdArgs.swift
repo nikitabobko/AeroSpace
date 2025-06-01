@@ -17,7 +17,7 @@ public struct TriggerBindingCmdArgs: CmdArgs {
 }
 
 public extension TriggerBindingCmdArgs {
-    var mode: String { _mode! }
+    var mode: String { _mode.orDie() }
 }
 
 public func parseTriggerBindingCmdArgs(_ args: [String]) -> ParsedCmd<TriggerBindingCmdArgs> {

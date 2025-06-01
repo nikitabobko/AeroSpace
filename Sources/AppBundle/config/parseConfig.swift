@@ -233,7 +233,7 @@ extension TOMLValueConvertible {
         let singleKeyError: TomlParseError = .semantic(
             backtrace,
             expectedKey != nil
-                ? "The table is expected to have a single key '\(expectedKey!)'"
+                ? "The table is expected to have a single key '\(expectedKey.orDie())'"
                 : "The table is expected to have a single key"
         )
         guard let (actualKey, value): (String, TOMLValueConvertible) = table.count == 1 ? table.first : nil else {

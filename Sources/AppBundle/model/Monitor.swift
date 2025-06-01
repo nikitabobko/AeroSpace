@@ -90,7 +90,7 @@ private let testMonitor = MonitorImpl(
 
 var mainMonitor: Monitor {
     if isUnitTest { return testMonitor }
-    let elem = NSScreen.screens.withIndex.singleOrNil(where: \.value.isMainScreen)!
+    let elem = NSScreen.screens.withIndex.singleOrNil(where: \.value.isMainScreen).orDie()
     return LazyMonitor(monitorAppKitNsScreenScreensId: elem.index + 1, elem.value)
 }
 

@@ -10,7 +10,7 @@ struct LayoutCommand: Command {
             return io.err(noWindowIsFocused)
         }
         let targetDescription = args.toggleBetween.val.first(where: { !window.matchesDescription($0) })
-            ?? args.toggleBetween.val.first!
+            ?? args.toggleBetween.val.first.orDie()
         if window.matchesDescription(targetDescription) { return false }
         switch targetDescription {
             case .h_accordion:

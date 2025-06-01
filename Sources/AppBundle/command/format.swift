@@ -55,7 +55,7 @@ extension [AeroObj] {
         let result = cellTable
             .transposed()
             .map { column in
-                let columndWidth = column.map { $0.value.count }.max()!
+                let columndWidth = column.map { $0.value.count }.max().orDie()
                 return column.map {
                     $0.rightPadding
                         ? $0.value + String(repeating: " ", count: columndWidth - $0.value.count)

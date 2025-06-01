@@ -28,7 +28,7 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     return (1 ... Int.max).lazy
         .map { Workspace.get(byName: String($0)) }
         .first { $0.isEffectivelyEmpty && !$0.isVisible && !preservedNames.contains($0.name) && $0.forceAssignedMonitor == nil }
-        ?? dieT("Can't create empty workspace")
+        .orDie("Can't create empty workspace")
 }
 
 class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {

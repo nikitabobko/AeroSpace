@@ -1,6 +1,16 @@
 public extension Optional {
     func orElse(_ other: () -> Wrapped) -> Wrapped { self ?? other() }
 
+    func orDie(
+        _ message: String = "",
+        file: String = #fileID,
+        line: Int = #line,
+        column: Int = #column,
+        function: String = #function
+    ) -> Wrapped {
+        self ?? dieT("orDie: " + message, file: file, line: line, column: column, function: function)
+    }
+
     func orFailure<F: Error>(_ or: @autoclosure () -> F) -> Result<Wrapped, F> {
         if let ok = self {
             return .success(ok)

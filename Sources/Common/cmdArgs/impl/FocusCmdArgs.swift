@@ -88,10 +88,10 @@ public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
             $0.direction != nil || $0.windowId != nil || $0.dfsIndex != nil
         }
         .filter("--window-id is incompatible with other options") {
-            $0.windowId == nil || $0 == FocusCmdArgs(rawArgs: args, windowId: $0.windowId!)
+            $0.windowId == nil || $0 == FocusCmdArgs(rawArgs: args, windowId: $0.windowId.orDie())
         }
         .filter("--dfs-index is incompatible with other options") {
-            $0.dfsIndex == nil || $0 == FocusCmdArgs(rawArgs: args, dfsIndex: $0.dfsIndex!)
+            $0.dfsIndex == nil || $0 == FocusCmdArgs(rawArgs: args, dfsIndex: $0.dfsIndex.orDie())
         }
 }
 

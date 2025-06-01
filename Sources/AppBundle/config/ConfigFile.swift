@@ -18,7 +18,7 @@ func findCustomConfigUrl() -> ConfigFile {
     let count = existingCandidates.count
     return switch count {
         case 0: .noCustomConfigExists
-        case 1: .file(existingCandidates.first!)
+        case 1: .file(existingCandidates.first.orDie())
         default: .ambiguousConfigError(existingCandidates)
     }
 }

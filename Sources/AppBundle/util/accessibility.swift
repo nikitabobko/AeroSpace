@@ -334,7 +334,9 @@ extension AXUIElement: AxUiElementMock {
         let state = signposter.beginInterval(#function, "attr: \(attr.key) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
         defer { signposter.endInterval(#function, state) }
         var raw: AnyObject?
-        return AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success ? attr.getter(raw!) : nil
+        return AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success
+            ? raw.flatMap(attr.getter)
+            : nil
     }
 
     @discardableResult func set<Attr: WritableAttr>(_ attr: Attr, _ value: Attr.T) -> Bool {

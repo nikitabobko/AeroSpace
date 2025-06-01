@@ -13,7 +13,7 @@ struct MoveCommand: Command {
         guard let parent = currentWindow.parent else { return false }
         switch parent.cases {
             case .tilingContainer(let parent):
-                let indexOfCurrent = currentWindow.ownIndex
+                let indexOfCurrent = currentWindow.ownIndex.orDie()
                 let indexOfSiblingTarget = indexOfCurrent + direction.focusOffset
                 if parent.orientation == direction.orientation && parent.children.indices.contains(indexOfSiblingTarget) {
                     switch parent.children[indexOfSiblingTarget].tilingTreeNodeCasesOrDie() {
@@ -149,7 +149,7 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
             window.bind(
                 to: parent,
                 adaptiveWeight: WEIGHT_AUTO,
-                index: deepTarget.ownIndex + 1
+                index: deepTarget.ownIndex.orDie() + 1
             )
     }
     return true
@@ -164,7 +164,7 @@ private extension TilingTreeNodeCases {
                 if container.orientation == orientation {
                     .tilingContainer(container)
                 } else {
-                    (container.mostRecentChild ?? dieT("Empty containers must be detached during normalization"))
+                    container.mostRecentChild.orDie("Empty containers must be detached during normalization")
                         .tilingTreeNodeCasesOrDie()
                         .findDeepMoveInTargetRecursive(orientation)
                 }

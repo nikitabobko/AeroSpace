@@ -73,7 +73,7 @@ extension ShellParser.CmdsContext {
                     let seq = [$0.0] + $0.1
                     return switch seq.count {
                         case 0: .failure("seq node: 0 children")
-                        case 1: .success(seq.first!)
+                        case 1: .success(seq.first.orDie())
                         default: .success(Shell.seq(seq))
                     }
                 }

@@ -59,7 +59,7 @@ private func resizeWithMouse(_ window: Window) async throws { // todo cover with
             ]
             for (diff, parent, startIndex, pastTheEndIndex) in table {
                 if let parent, let startIndex, let pastTheEndIndex, pastTheEndIndex - startIndex > 0 && abs(diff) > 5 { // 5 pixels should be enough to fight with accumulated floating precision error
-                    let siblingDiff = diff.div(pastTheEndIndex - startIndex)!
+                    let siblingDiff = diff.div(pastTheEndIndex - startIndex).orDie()
                     let orientation = parent.orientation
 
                     window.parentsWithSelf.lazy

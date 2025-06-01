@@ -110,8 +110,8 @@ struct FocusCommand: Command {
         guard let targetCenter = try await target.getCenter() else { continue }
         guard let tilingParent = target.parent as? TilingContainer else { continue }
         let index = center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)
-            ? target.ownIndex + 1
-            : target.ownIndex
+            ? target.ownIndex.orDie() + 1
+            : target.ownIndex.orDie()
         let data = window.unbindFromParent()
         _floatingWindows.append(FloatingWindowData(window: window, center: center, parent: tilingParent, adaptiveWeight: data.adaptiveWeight, index: index))
     }

@@ -133,7 +133,7 @@ private extension TilingContainer {
 
     @MainActor // todo can be dropped in future Swift versions?
     func layoutAccordion(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
-        guard let mruIndex: Int = mostRecentChild?.ownIndexOrNil else { return }
+        guard let mruIndex: Int = mostRecentChild?.ownIndex else { return }
         for (index, child) in children.enumerated() {
             let padding = CGFloat(config.accordionPadding)
             let (lPadding, rPadding): (CGFloat, CGFloat) = switch index {

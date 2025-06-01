@@ -21,7 +21,7 @@ var defaultConfigUrl: URL {
     }
 }
 @MainActor let defaultConfig: Config = {
-    let parsedConfig = parseConfig(try! String(contentsOf: defaultConfigUrl))
+    let parsedConfig = parseConfig((try? String(contentsOf: defaultConfigUrl)).orDie())
     if !parsedConfig.errors.isEmpty {
         die("Can't parse default config: \(parsedConfig.errors)")
     }
