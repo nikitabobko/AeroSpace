@@ -16,9 +16,14 @@ struct EnableCommand: Command {
                 "Tip: use --fail-if-noop to exit with non-zero code")
             return !args.failIfNoop
         }
+        if newState && args.noPreserveWindows {
+            io.out("--no-preserve-windows doesn't mean anything when aerospace is enabled")
+            return false
+        }
 
         TrayMenuModel.shared.isEnabled = newState
         if newState {
+            TrayMenuModel.shared.shouldPreserveWindowsOnDisable = true
             for workspace in Workspace.all {
                 for window in workspace.allLeafWindowsRecursive where window.isFloating {
                     window.lastFloatingSize = try await window.getAxSize() ?? window.lastFloatingSize
@@ -26,6 +31,7 @@ struct EnableCommand: Command {
             }
             activateMode(mainModeId)
         } else {
+            TrayMenuModel.shared.shouldPreserveWindowsOnDisable = !args.noPreserveWindows
             activateMode(nil)
         }
         return true

@@ -10,6 +10,7 @@ public class TrayMenuModel: ObservableObject {
     @Published var trayItems: [TrayItem] = []
     /// Is "layouting" enabled
     @Published var isEnabled: Bool = true
+    @Published var shouldPreserveWindowsOnDisable: Bool = true
     @Published var workspaces: [WorkspaceViewModel] = []
     @Published var experimentalUISettings: ExperimentalUISettings = ExperimentalUISettings()
 }

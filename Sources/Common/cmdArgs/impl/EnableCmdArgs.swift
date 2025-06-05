@@ -7,6 +7,7 @@ public struct EnableCmdArgs: CmdArgs {
         help: enable_help_generated,
         options: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
+            "--no-preserve-windows": trueBoolFlag(\.noPreserveWindows),
         ],
         arguments: [newArgParser(\.targetState, parseState, mandatoryArgPlaceholder: EnableCmdArgs.State.unionLiteral)]
     )
@@ -14,6 +15,7 @@ public struct EnableCmdArgs: CmdArgs {
     public var workspaceName: WorkspaceName?
     public var targetState: Lateinit<State> = .uninitialized
     public var failIfNoop: Bool = false
+    public var noPreserveWindows: Bool = false
 
     public init(rawArgs: [String], targetState: State) {
         self.rawArgs = .init(rawArgs)
@@ -28,6 +30,7 @@ public struct EnableCmdArgs: CmdArgs {
 public func parseEnableCmdArgs(_ args: [String]) -> ParsedCmd<EnableCmdArgs> {
     return parseSpecificCmdArgs(EnableCmdArgs(rawArgs: args), args)
         .filterNot("--fail-if-noop is incompatible with 'toggle' argument") { $0.targetState.val == .toggle && $0.failIfNoop }
+        .filterNot("--no-preserve-windows is incompatible with 'enable' argument") { $0.targetState.val == .on && $0.noPreserveWindows }
 }
 
 private func parseState(arg: String, nextArgs: inout [String]) -> Parsed<EnableCmdArgs.State> {
