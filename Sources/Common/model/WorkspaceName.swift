@@ -19,6 +19,9 @@ public struct WorkspaceName: Equatable, Sendable {
         {
             return .failure("'\(raw)' is a reserved workspace name")
         }
+        if raw.isEmpty {
+            return .failure("Empty workspace name is forbidden")
+        }
         if raw.contains(",") {
             return .failure("Workspace names are not allowed to contain comma")
         }
