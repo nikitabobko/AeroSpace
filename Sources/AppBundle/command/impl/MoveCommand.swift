@@ -47,12 +47,11 @@ struct MoveCommand: Command {
 ) -> Bool {
     switch args.boundaries {
         case .workspace:
-            switch args.boundariesAction {
-                case .stop: return true
-                case .fail: return false
+            return switch args.boundariesAction {
+                case .stop: true
+                case .fail: false
                 case .createImplicitContainer:
-                    createImplicitContainerAndMoveWindow(window, workspace, direction)
-                    return true
+                    (createImplicitContainerAndMoveWindow(window, workspace, direction), true).1
             }
         case .allMonitorsOuterFrame:
             guard let (monitors, index) = window.nodeMonitor?.findRelativeMonitor(inDirection: direction) else {
@@ -81,11 +80,9 @@ struct MoveCommand: Command {
     _ direction: CardinalDirection
 ) -> Bool {
     switch args.boundariesAction {
-        case .stop: return true
-        case .fail: return false
-        case .createImplicitContainer:
-            createImplicitContainerAndMoveWindow(window, workspace, direction)
-            return true
+        case .stop: true
+        case .fail: false
+        case .createImplicitContainer: (createImplicitContainerAndMoveWindow(window, workspace, direction), true).1
     }
 }
 
