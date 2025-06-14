@@ -51,11 +51,32 @@ automatically-unhide-macos-hidden-apps = false
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
 # - Constant:     gaps.outer.top = 8
-# - Per monitor:  gaps.outer.top = [{ monitor.main = 16 }, { monitor."some-pattern" = 32 }, 24]
-#                 In this example, 24 is a default value when there is no match.
-#                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
-#                 See:
-#                 https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
+# - Per monitor:  gaps.outer.top = [
+#     # Match specific monitor with window count and workspace
+#     { monitor.main = { value = 16, windows = 1, workspace = "[123]" } },
+#     # Match specific monitor with window count only
+#     { monitor.main = { value = 32, windows = 2 } },
+#     # Match specific monitor with workspace only
+#     { monitor.secondary = { value = 24, workspace = "[^B]" } },
+#     # Match specific monitor without conditions
+#     { monitor."some-pattern" = 32 },
+#     24  # default value when there is no match
+# ]
+#
+# Parameters:
+# - value:     The gap size in pixels
+# - windows:   (optional) Apply this value only when the monitor has exactly this many windows
+# - workspace: (optional) Apply this value only when the workspace name matches this regex pattern
+#
+# When multiple rules match:
+# 1. Rule with matching windows AND workspace has highest priority
+# 2. Rule with matching windows only has second priority
+# 3. Rule with matching workspace only has third priority
+# 4. Rule without conditions has fourth priority
+# 5. Default value is used if no rules match
+#
+# Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
+# See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
 [gaps]
     inner.horizontal = 0
     inner.vertical =   0

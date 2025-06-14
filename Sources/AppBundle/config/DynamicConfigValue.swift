@@ -1,9 +1,12 @@
 import Common
+import Foundation
 import TOMLKit
 
 struct PerMonitorValue<Value: Equatable>: Equatable {
     let description: MonitorDescription
     let value: Value
+    let windows: Int?
+    let workspace: String?
 }
 extension PerMonitorValue: Sendable where Value: Sendable {}
 
@@ -14,21 +17,73 @@ enum DynamicConfigValue<Value: Equatable>: Equatable {
 extension DynamicConfigValue: Sendable where Value: Sendable {}
 
 extension DynamicConfigValue {
-    func getValue(for monitor: any Monitor) -> Value {
+    @MainActor
+    func getValue(for monitor: any Monitor, windowCount: Int = 1) -> Value {
+        let actualWindowCount = getActualWindowCount(monitor: monitor, windowCount: windowCount)
+
         switch self {
             case .constant(let value):
                 return value
             case .perMonitor(let array, let defaultValue):
-                let sortedMonitors = sortedMonitors
-                return array
-                    .lazy
-                    .compactMap {
-                        $0.description.resolveMonitor(sortedMonitors: sortedMonitors)?.rect.topLeftCorner == monitor.rect.topLeftCorner
-                            ? $0.value
-                            : nil
-                    }
-                    .first ?? defaultValue
+                return getPerMonitorValue(
+                    array: array,
+                    monitor: monitor,
+                    windowCount: actualWindowCount,
+                    defaultValue: defaultValue
+                )
         }
+    }
+
+    @MainActor
+    private func getActualWindowCount(monitor: any Monitor, windowCount: Int) -> Int {
+        guard !isUnitTest else { return windowCount }
+
+        return monitor.activeWorkspace.allLeafWindowsRecursive
+            .filter { !$0.isFloating }
+            .count
+    }
+
+    private func isMonitorMatching(_ description: MonitorDescription, _ monitor: any Monitor) -> Bool {
+        switch description {
+            case .main: return monitor.name == "main"
+            case .secondary: return monitor.name == "secondary"
+            case .pattern(_, let regex): return (try? regex.val.firstMatch(in: monitor.name)) != nil
+            case .sequenceNumber(let num): return num == monitor.monitorAppKitNsScreenScreensId
+        }
+    }
+
+    private func matchesWorkspace(_ pattern: String?, _ workspaceName: String) -> Bool {
+        guard let pattern else { return true }
+        guard let regex = try? NSRegularExpression(pattern: pattern) else { return false }
+        let range = NSRange(workspaceName.startIndex..., in: workspaceName)
+        return regex.firstMatch(in: workspaceName, range: range) != nil
+    }
+
+    @MainActor
+    private func getPerMonitorValue(
+        array: [PerMonitorValue<Value>],
+        monitor: any Monitor,
+        windowCount: Int,
+        defaultValue: Value
+    ) -> Value {
+        let matchingValues = array.filter { isMonitorMatching($0.description, monitor) }
+        let workspaceName = monitor.activeWorkspace.name
+
+        if let value = matchingValues.first(where: {
+            $0.windows == windowCount && matchesWorkspace($0.workspace, workspaceName)
+        }) {
+            return value.value
+        }
+
+        if let value = matchingValues.first(where: {
+            $0.windows == nil && matchesWorkspace($0.workspace, workspaceName)
+        }) {
+            return value.value
+        }
+
+        return matchingValues.first(where: {
+            $0.windows == nil && $0.workspace == nil
+        })?.value ?? defaultValue
     }
 }
 
@@ -41,51 +96,56 @@ func parseDynamicValue<T>(
 ) -> DynamicConfigValue<T> {
     if let simpleValue = parseSimpleType(raw) as T? {
         return .constant(simpleValue)
-    } else if let array = raw.array {
-        if array.isEmpty {
-            errors.append(.semantic(backtrace, "The array must not be empty"))
-            return .constant(fallback)
-        }
+    }
 
-        guard let defaultValue = array.last.flatMap({ parseSimpleType($0) as T? }) else {
-            errors.append(.semantic(backtrace, "The last item in the array must be of type \(T.self)"))
-            return .constant(fallback)
-        }
-
-        if array.dropLast().isEmpty {
-            errors.append(.semantic(backtrace, "The array must contain at least one monitor pattern"))
-            return .constant(fallback)
-        }
-
-        let rules: [PerMonitorValue<T>] = parsePerMonitorValues(TOMLArray(array.dropLast()), backtrace, &errors)
-
-        return .perMonitor(rules, default: defaultValue)
-    } else {
-        errors.append(.semantic(backtrace, "Unsupported type: \(raw.type), expected: \(valueType) or array"))
+    guard let array = raw.array, !array.isEmpty else {
+        errors.append(.semantic(backtrace, "Expected non-empty array"))
         return .constant(fallback)
     }
+
+    guard let defaultValue = array.last.flatMap({ parseSimpleType($0) as T? }) else {
+        errors.append(.semantic(backtrace, "The last item in the array must be of type \(T.self)"))
+        return .constant(fallback)
+    }
+
+    let rules = parsePerMonitorValues(TOMLArray(array.dropLast()), backtrace, &errors) as [PerMonitorValue<T>]
+    return .perMonitor(rules, default: defaultValue)
 }
 
 func parsePerMonitorValues<T>(_ array: TOMLArray, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [PerMonitorValue<T>] {
-    array.enumerated().compactMap { (index: Int, raw: TOMLValueConvertible) -> PerMonitorValue<T>? in
+    array.enumerated().compactMap { (index, raw) in
         var backtrace = backtrace + .index(index)
 
-        guard let (key, value) = raw.unwrapTableWithSingleKey(expectedKey: "monitor", &backtrace)
+        guard let (key, configValue) = raw.unwrapTableWithSingleKey(expectedKey: "monitor", &backtrace)
             .flatMap({ $0.value.unwrapTableWithSingleKey(expectedKey: nil, &backtrace) })
-            .getOrNil(appendErrorTo: &errors)
+            .getOrNil(appendErrorTo: &errors),
+            let monitorDescription = parseMonitorDescription(key, backtrace).getOrNil(appendErrorTo: &errors)
+        else { return nil }
+
+        if let simpleValue = parseSimpleType(configValue) as T? {
+            return PerMonitorValue(description: monitorDescription, value: simpleValue, windows: nil, workspace: nil)
+        }
+
+        guard let table = configValue.table,
+              let value = table["value"].flatMap({ parseSimpleType($0) as T? })
         else {
+            errors.append(.semantic(backtrace, "Expected '\(T.self)' or table with 'value' field"))
             return nil
         }
 
-        let monitorDescriptionResult = parseMonitorDescription(key, backtrace)
+        let windows = table["windows"].flatMap { parseSimpleType($0) as Int? }
+        let workspace = table["workspace"].flatMap { parseSimpleType($0) as String? }
 
-        guard let monitorDescription = monitorDescriptionResult.getOrNil(appendErrorTo: &errors) else { return nil }
-
-        guard let value = parseSimpleType(value) as T? else {
-            errors.append(.semantic(backtrace, "Expected type is '\(T.self)'. But actual type is '\(value.type)'"))
+        if let workspace, (try? NSRegularExpression(pattern: workspace)) == nil {
+            errors.append(.semantic(backtrace, "Invalid workspace pattern"))
             return nil
         }
 
-        return PerMonitorValue(description: monitorDescription, value: value)
+        return PerMonitorValue(
+            description: monitorDescription,
+            value: value,
+            windows: windows,
+            workspace: workspace
+        )
     }
 }
