@@ -1,6 +1,3 @@
-private let boundar = "<boundary>"
-private let actio = "<action>"
-
 public struct FocusCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
@@ -99,7 +96,7 @@ private func parseBoundariesAction(arg: String, nextArgs: inout [String]) -> Par
     if let arg = nextArgs.nextNonFlagOrNil() {
         return parseEnum(arg, FocusCmdArgs.WhenBoundariesCrossed.self)
     } else {
-        return .failure("\(actio) is mandatory")
+        return .failure("<action> is mandatory")
     }
 }
 
@@ -107,6 +104,6 @@ private func parseBoundaries(arg: String, nextArgs: inout [String]) -> Parsed<Fo
     if let arg = nextArgs.nextNonFlagOrNil() {
         return parseEnum(arg, FocusCmdArgs.Boundaries.self)
     } else {
-        return .failure("\(boundar) is mandatory")
+        return .failure("<boundary> is mandatory")
     }
 }

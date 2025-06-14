@@ -14,12 +14,10 @@ struct MoveNodeToMonitorCommand: Command {
         }
         switch args.target.val.resolve(currentMonitor, wrapAround: args.wrapAround) {
             case .success(let targetMonitor):
-                if let wName = WorkspaceName.parse(targetMonitor.activeWorkspace.name).getOrNil(appendErrorTo: &io.stderr) {
-                    let moveNodeToWorkspace = args.moveNodeToWorkspace.copy(\.target, .initialized(.direct(wName)))
-                    return MoveNodeToWorkspaceCommand(args: moveNodeToWorkspace).run(env, io)
-                } else {
-                    return false
-                }
+                let wName = WorkspaceName.parse(targetMonitor.activeWorkspace.name).getOrNil(appendErrorTo: &io.stderr)
+                guard let wName else { return false }
+                let moveNodeToWorkspace = args.moveNodeToWorkspace.copy(\.target, .initialized(.direct(wName)))
+                return MoveNodeToWorkspaceCommand(args: moveNodeToWorkspace).run(env, io)
             case .failure(let msg):
                 return io.err(msg)
         }

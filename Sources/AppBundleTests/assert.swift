@@ -1,3 +1,4 @@
+@testable import AppBundle
 import Common
 import XCTest
 
@@ -46,6 +47,18 @@ func assertFail<F>(_ actual: Result<some Any, F>, _ expected: F? = nil, file: St
             if let expected {
                 assertEquals(actual, expected, file: file, line: line)
             }
+    }
+}
+
+func testParseCommandSucc(_ command: String, _ expected: any CmdArgs) {
+    let parsed = parseCommand(command)
+    switch parsed {
+        case .cmd(let command):
+            if !command.args.equals(expected) {
+                failExpectedActual(expected, command.args)
+            }
+        case .help: die() // todo test help
+        case .failure(let msg): XCTFail(msg)
     }
 }
 

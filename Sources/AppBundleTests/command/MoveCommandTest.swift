@@ -133,7 +133,7 @@ final class MoveCommandTest: XCTestCase {
             TestWindow.new(id: 3, parent: $0)
         }
 
-        let result = try await MoveCommand(args: parseMoveCmdArgs(["--boundaries-action", "stop", "left"]).unwrap().0!).run(.defaultEnv, .emptyStdin)
+        let result = try await parseCommand("move --boundaries-action stop left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(
             workspace.layoutDescription,
             .workspace([
@@ -151,7 +151,7 @@ final class MoveCommandTest: XCTestCase {
             TestWindow.new(id: 3, parent: $0)
         }
 
-        let result = try await MoveCommand(args: parseMoveCmdArgs(["--boundaries-action", "stop", "up"]).unwrap().0!).run(.defaultEnv, .emptyStdin)
+        let result = try await parseCommand("move --boundaries-action stop up").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(
             workspace.layoutDescription,
             .workspace([
@@ -169,7 +169,7 @@ final class MoveCommandTest: XCTestCase {
             TestWindow.new(id: 3, parent: $0)
         }
 
-        let result = try await MoveCommand(args: parseMoveCmdArgs(["--boundaries-action", "stop", "left"]).unwrap().0!).run(.defaultEnv, .emptyStdin)
+        let result = try await parseCommand("move --boundaries-action stop left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(
             workspace.layoutDescription,
             .workspace([
@@ -189,7 +189,7 @@ final class MoveCommandTest: XCTestCase {
             }
         }
 
-        let result = try await MoveCommand(args: parseMoveCmdArgs(["--boundaries-action", "stop", "right"]).unwrap().0!).run(.defaultEnv, .emptyStdin)
+        let result = try await parseCommand("move --boundaries-action stop right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(
             workspace.layoutDescription,
             .workspace([
@@ -207,7 +207,7 @@ final class MoveCommandTest: XCTestCase {
             TestWindow.new(id: 3, parent: $0)
         }
 
-        let result = try await MoveCommand(args: parseMoveCmdArgs(["--boundaries-action", "fail", "left"]).unwrap().0!).run(.defaultEnv, .emptyStdin)
+        let result = try await parseCommand("move --boundaries-action fail left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(
             workspace.layoutDescription,
             .workspace([

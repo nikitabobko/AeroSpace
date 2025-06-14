@@ -17,11 +17,8 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
         arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)")]
     )
 
-    public init(rawArgs: [String], target: MonitorTarget,
-                focusFollowsWindow: Bool)
-    {
-        self.rawArgs = .init(rawArgs)
-        self.moveNodeToWorkspace.focusFollowsWindow = focusFollowsWindow
+    public init(target: MonitorTarget) {
+        self.rawArgs = .init([])
         self.target = .initialized(target)
     }
 

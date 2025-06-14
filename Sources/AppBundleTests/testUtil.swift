@@ -40,15 +40,6 @@ func setUpWorkspacesForTests() {
     TestApp.shared.windows = []
 }
 
-func testParseCommandSucc(_ command: String, _ expected: any CmdArgs) {
-    let parsed = parseCommand(command)
-    switch parsed {
-        case .cmd(let command): XCTAssertTrue(command.args.equals(expected), "actual: \(command.args) expected: \(expected)")
-        case .help: die() // todo test help
-        case .failure(let msg): XCTFail(msg)
-    }
-}
-
 extension ParsedCmd {
     var errorOrNil: String? {
         if case .failure(let e) = self {
@@ -59,12 +50,13 @@ extension ParsedCmd {
     }
 
     var cmdOrNil: T? {
-        if case .cmd(let cmd) = self {
-            return cmd
-        } else {
-            return nil
+        switch self {
+            case .cmd(let t): t
+            default: nil
         }
     }
+
+    var cmdOrDie: T { cmdOrNil ?? dieT() }
 
     var isHelp: Bool {
         if case .help = self {

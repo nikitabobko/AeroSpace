@@ -1,6 +1,3 @@
-private let boundar = "<boundary>"
-private let actio = "<action>"
-
 public struct MoveCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
     fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
@@ -52,7 +49,7 @@ private func parseBoundaries(arg: String, nextArgs: inout [String]) -> Parsed<Mo
     if let arg = nextArgs.nextNonFlagOrNil() {
         return parseEnum(arg, MoveCmdArgs.Boundaries.self)
     } else {
-        return .failure("\(boundar) is mandatory")
+        return .failure("<boundary> is mandatory")
     }
 }
 
@@ -60,6 +57,6 @@ private func parseBoundariesAction(arg: String, nextArgs: inout [String]) -> Par
     if let arg = nextArgs.nextNonFlagOrNil() {
         return parseEnum(arg, MoveCmdArgs.WhenBoundariesCrossed.self)
     } else {
-        return .failure("\(actio) is mandatory")
+        return .failure("<action> is mandatory")
     }
 }
