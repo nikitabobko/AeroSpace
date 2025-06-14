@@ -74,10 +74,10 @@ private extension Window {
             case .tiles:       (parent as? TilingContainer)?.layout == .tiles
             case .horizontal:  (parent as? TilingContainer)?.orientation == .h
             case .vertical:    (parent as? TilingContainer)?.orientation == .v
-            case .h_accordion: (parent as? TilingContainer)?.lets { $0.layout == .accordion && $0.orientation == .h } == true
-            case .v_accordion: (parent as? TilingContainer)?.lets { $0.layout == .accordion && $0.orientation == .v } == true
-            case .h_tiles:     (parent as? TilingContainer)?.lets { $0.layout == .tiles && $0.orientation == .h } == true
-            case .v_tiles:     (parent as? TilingContainer)?.lets { $0.layout == .tiles && $0.orientation == .v } == true
+            case .h_accordion: (parent as? TilingContainer).map { $0.layout == .accordion && $0.orientation == .h } == true
+            case .v_accordion: (parent as? TilingContainer).map { $0.layout == .accordion && $0.orientation == .v } == true
+            case .h_tiles:     (parent as? TilingContainer).map { $0.layout == .tiles && $0.orientation == .h } == true
+            case .v_tiles:     (parent as? TilingContainer).map { $0.layout == .tiles && $0.orientation == .v } == true
             case .tiling:      parent is TilingContainer
             case .floating:    parent is Workspace
         }

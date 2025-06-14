@@ -18,7 +18,7 @@ public extension AeroAny {
     }
 
     @inlinable func takeIf(_ predicate: (Self) -> Bool) -> Self? { predicate(self) ? self : nil }
-    @inlinable func lets<R>(_ body: (Self) -> R) -> R { body(self) }
+    @inlinable func then<R>(_ body: (Self) -> R) -> R { body(self) }
 }
 
 extension Int: AeroAny {}
