@@ -42,7 +42,7 @@ func parseTarget(_ arg: String, _ nextArgs: inout [String]) -> Parsed<MonitorTar
     }
 }
 
-public enum NextPrev: Equatable, Sendable {
+public enum NextPrev: String, Equatable, Sendable, CaseIterable {
     case next, prev
 }
 
@@ -52,10 +52,11 @@ public enum MonitorTarget: Equatable, Sendable {
     case patterns([MonitorDescription])
 
     var isPatterns: Bool {
-        if case .patterns = self {
-            return true
-        } else {
-            return false
+        switch self {
+            case .patterns: true
+            default: false
         }
     }
+
+    static var casesExceptPatterns: [String] { CardinalDirection.cliArgsCases + NextPrev.cliArgsCases }
 }

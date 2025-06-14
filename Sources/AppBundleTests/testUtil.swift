@@ -49,13 +49,6 @@ extension ParsedCmd {
         }
     }
 
-    var cmdOrNil: T? {
-        switch self {
-            case .cmd(let t): t
-            default: nil
-        }
-    }
-
     var cmdOrDie: T { cmdOrNil ?? dieT() }
 
     var isHelp: Bool {

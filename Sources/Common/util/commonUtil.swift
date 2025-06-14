@@ -141,9 +141,12 @@ public func check(
 public var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
 
 public extension CaseIterable where Self: RawRepresentable, RawValue == String {
-    static var unionLiteral: String {
-        "(" + allCases.map(\.rawValue).joined(separator: "|") + ")"
-    }
+    static var cliArgsCases: [String] { allCases.map(\.rawValue) }
+    static var unionLiteral: String { cliArgsCases.joinedCliArgs }
+}
+
+public extension [String] {
+    var joinedCliArgs: String { "(" + self.joined(separator: "|") + ")" }
 }
 
 public extension Int {
