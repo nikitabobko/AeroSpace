@@ -11,8 +11,8 @@ public struct SummonWorkspaceCmdArgs: CmdArgs {
         arguments: [newArgParser(\.target, parseWorkspaceName, mandatoryArgPlaceholder: "<workspace>")]
     )
 
-    public var windowId: UInt32?               // unused
-    public var workspaceName: WorkspaceName?   // unused
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public var target: Lateinit<WorkspaceName> = .uninitialized
     public var failIfNoop: Bool = false

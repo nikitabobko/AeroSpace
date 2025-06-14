@@ -18,3 +18,6 @@ swift test
 
 ./generate.sh --all
 ./script/check-uncommitted-files.sh
+
+echo
+echo "All tests have passed successfully"

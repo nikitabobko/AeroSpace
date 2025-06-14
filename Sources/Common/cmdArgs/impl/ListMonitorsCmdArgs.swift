@@ -21,8 +21,8 @@ public struct ListMonitorsCmdArgs: CmdArgs {
         ]
     )
 
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
     public var focused: Bool?
     public var mouse: Bool?
     public var _format: [StringInterToken] = []

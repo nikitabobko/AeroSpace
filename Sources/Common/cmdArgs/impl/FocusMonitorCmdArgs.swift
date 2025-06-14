@@ -8,13 +8,13 @@ public struct FocusMonitorCmdArgs: CmdArgs {
         options: [
             "--wrap-around": trueBoolFlag(\.wrapAround),
         ],
-        arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)")]
+        arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs)]
     )
 
     public var wrapAround: Bool = false
     public var target: Lateinit<MonitorTarget> = .uninitialized
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
 public func parseFocusMonitorCmdArgs(_ args: [String]) -> ParsedCmd<FocusMonitorCmdArgs> {
@@ -59,4 +59,5 @@ public enum MonitorTarget: Equatable, Sendable {
     }
 
     static var casesExceptPatterns: [String] { CardinalDirection.cliArgsCases + NextPrev.cliArgsCases }
+    static var cases: [String] { casesExceptPatterns + ["<monitor-pattern>"] }
 }

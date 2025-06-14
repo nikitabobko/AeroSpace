@@ -12,8 +12,8 @@ public struct CloseAllWindowsButCurrentCmdArgs: CmdArgs {
     )
 
     public var closeArgs = CloseCmdArgs(rawArgs: [])
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
 public func parseCloseAllWindowsButCurrentCmdArgs(_ args: [String]) -> ParsedCmd<CloseAllWindowsButCurrentCmdArgs> {

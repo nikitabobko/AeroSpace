@@ -40,8 +40,8 @@ public struct ListWindowsCmdArgs: CmdArgs {
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
 
-    public var windowId: UInt32?               // unused
-    public var workspaceName: WorkspaceName?   // unused
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public struct FilteringOptions: ConvenienceCopyable, Equatable, Sendable {
         public var monitors: [MonitorId] = []

@@ -14,7 +14,7 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
             "--focus-follows-window": trueBoolFlag(\.moveNodeToWorkspace.focusFollowsWindow),
             "--fail-if-noop": trueBoolFlag(\.moveNodeToWorkspace.failIfNoop),
         ],
-        arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)")]
+        arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs)]
     )
 
     public init(target: MonitorTarget) {
@@ -22,8 +22,8 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
         self.target = .initialized(target)
     }
 
-    public var workspaceName: WorkspaceName?
-    public var windowId: UInt32? { // Forward to moveNodeToWorkspace
+    /*conforms*/ public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32? { // Forward to moveNodeToWorkspace
         get { moveNodeToWorkspace.windowId }
         set(newValue) { moveNodeToWorkspace.windowId = newValue }
     }

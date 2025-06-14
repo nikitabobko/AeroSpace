@@ -12,8 +12,8 @@ public struct SplitCmdArgs: CmdArgs {
     )
 
     public var arg: Lateinit<SplitArg> = .uninitialized
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String], _ arg: SplitArg) {
         self.rawArgs = .init(rawArgs)

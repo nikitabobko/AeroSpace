@@ -14,8 +14,8 @@ public struct MoveCmdArgs: CmdArgs {
     )
 
     public var direction: Lateinit<CardinalDirection> = .uninitialized
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
     public var rawBoundaries: Boundaries? = nil
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
 

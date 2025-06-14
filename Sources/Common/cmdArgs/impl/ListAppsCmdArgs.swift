@@ -20,8 +20,8 @@ public struct ListAppsCmdArgs: CmdArgs {
         ]
     )
 
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
     public var macosHidden: Bool?
     public var _format: [StringInterToken] = []
     public var outputOnlyCount: Bool = false

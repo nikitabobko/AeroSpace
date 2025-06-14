@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-struct Rect: ConvenienceCopyable {
+struct Rect: ConvenienceCopyable, AeroAny {
     var topLeftX: CGFloat
     var topLeftY: CGFloat
     var width: CGFloat

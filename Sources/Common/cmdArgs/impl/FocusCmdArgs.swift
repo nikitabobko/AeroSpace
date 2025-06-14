@@ -20,8 +20,8 @@ public struct FocusCmdArgs: CmdArgs {
     public var dfsIndex: UInt32? = nil
     public var direction: CardinalDirection? = nil
     public var floatingAsTiling: Bool = true
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String], direction: CardinalDirection) {
         self.rawArgs = .init(rawArgs)

@@ -16,8 +16,8 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     public var _wrapAround: Bool?
     public var failIfNoop: Bool = false
     public var focusFollowsWindow: Bool = false
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
     public var target: Lateinit<WorkspaceTarget> = .uninitialized
 
     public init(rawArgs: [String]) {

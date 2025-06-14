@@ -13,8 +13,8 @@ public struct WorkspaceCmdArgs: CmdArgs {
         arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
     )
 
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
     public var target: Lateinit<WorkspaceTarget> = .uninitialized
     public var _autoBackAndForth: Bool?
     public var failIfNoop: Bool = false
@@ -23,9 +23,9 @@ public struct WorkspaceCmdArgs: CmdArgs {
 
 public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
     parseSpecificCmdArgs(WorkspaceCmdArgs(rawArgs: args), args)
-        .filter("--wrapAround requires using (prev|next) argument") { ($0._wrapAround != nil).implies($0.target.val.isRelatve) }
-        .filterNot("--auto-back-and-forth is incompatible with (next|prev)") { $0._autoBackAndForth != nil && $0.target.val.isRelatve }
-        .filterNot("--fail-if-noop is incompatible with (next|prev)") { $0.failIfNoop && $0.target.val.isRelatve }
+        .filter("--wrapAround requires using \(NextPrev.unionLiteral) argument") { ($0._wrapAround != nil).implies($0.target.val.isRelatve) }
+        .filterNot("--auto-back-and-forth is incompatible with \(NextPrev.unionLiteral)") { $0._autoBackAndForth != nil && $0.target.val.isRelatve }
+        .filterNot("--fail-if-noop is incompatible with \(NextPrev.unionLiteral)") { $0.failIfNoop && $0.target.val.isRelatve }
         .filterNot("--fail-if-noop is incompatible with --auto-back-and-forth") { $0.autoBackAndForth && $0.failIfNoop }
 }
 
@@ -35,11 +35,16 @@ public extension WorkspaceCmdArgs {
 }
 
 public enum WorkspaceTarget: Equatable, Sendable {
-    case relative(_ isNext: Bool)
+    case relative(NextPrev)
     case direct(WorkspaceName)
 
     var isDirect: Bool { !isRelatve }
-    var isRelatve: Bool { self == .relative(true) || self == .relative(false) }
+    var isRelatve: Bool {
+        switch self {
+            case .relative: true
+            default: false
+        }
+    }
 
     public func workspaceNameOrNil() -> WorkspaceName? {
         switch self {
@@ -53,8 +58,8 @@ let workspaceTargetPlaceholder = "(<workspace-name>|next|prev)"
 
 func parseWorkspaceTarget(arg: String, nextArgs: inout [String]) -> Parsed<WorkspaceTarget> {
     return switch arg {
-        case "next": .success(.relative(true))
-        case "prev": .success(.relative(false))
+        case "next": .success(.relative(.next))
+        case "prev": .success(.relative(.prev))
         default: WorkspaceName.parse(arg).map(WorkspaceTarget.direct)
     }
 }

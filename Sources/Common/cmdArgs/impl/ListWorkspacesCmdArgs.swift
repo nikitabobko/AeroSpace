@@ -35,8 +35,8 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     fileprivate var all: Bool = false // Alias
     fileprivate var focused: Bool = false // Alias
 
-    public var windowId: UInt32?              // unused
-    public var workspaceName: WorkspaceName?  // unused
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
     public var filteringOptions = FilteringOptions()
     public var _format: [StringInterToken] = [.interVar("workspace")]
     public var outputOnlyCount: Bool = false

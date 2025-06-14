@@ -56,7 +56,7 @@ public func boolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<
     ArgParser(keyPath) { _, nextArgs in
         let value: Bool
         if let nextArg = nextArgs.first, nextArg == "no" {
-            _ = nextArgs.next() // Eat the argument
+            _ = nextArgs.next() // Consume the argument
             value = false
         } else {
             value = true

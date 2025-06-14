@@ -21,8 +21,8 @@ public struct ConfigCmdArgs: CmdArgs, Equatable {
     public var allKeys: Bool = false
     public var configPath: Bool = false
     public var keyNameToGet: String? = nil
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
 public extension ConfigCmdArgs {

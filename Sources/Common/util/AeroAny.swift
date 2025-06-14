@@ -1,4 +1,5 @@
 import Foundation
+import AppKit
 
 public protocol AeroAny {}
 
@@ -27,3 +28,6 @@ extension Character: AeroAny {}
 extension Regex: AeroAny {}
 extension Array: AeroAny {}
 extension URL: AeroAny {}
+extension CGFloat: AeroAny {}
+extension AXUIElement: AeroAny {}
+extension CGPoint: AeroAny {}

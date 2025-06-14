@@ -9,11 +9,11 @@ struct MoveNodeToWorkspaceCommand: Command {
         let subjectWs = window.nodeWorkspace
         let targetWorkspace: Workspace
         switch args.target.val {
-            case .relative(let isNext):
+            case .relative(let nextPrev):
                 guard let subjectWs else { return io.err("Window \(window.windowId) doesn't belong to any workspace") }
                 let ws = getNextPrevWorkspace(
                     current: subjectWs,
-                    isNext: isNext,
+                    isNext: nextPrev == .next,
                     wrapAround: args.wrapAround,
                     stdin: io.readStdin(),
                     target: target
