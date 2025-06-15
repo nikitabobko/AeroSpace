@@ -1,5 +1,6 @@
 import AppKit
 
+// Covered by tests in ./axDumps in the repor root
 extension AxUiElementMock {
     // 'isDialogHeuristic' function name is referenced in the guide
     func isDialogHeuristic(appBundleId id: String?) -> Bool {
