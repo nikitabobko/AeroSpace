@@ -6,7 +6,7 @@ public struct VolumeCmdArgs: CmdArgs {
         allowInConfig: true,
         help: volume_help_generated,
         options: [:],
-        arguments: [newArgParser(\.action, parseVolumeAction, mandatoryArgPlaceholder: VolumeAction.argsUnion)]
+        arguments: [newArgParser(\.action, parseVolumeAction, mandatoryArgPlaceholder: VolumeAction.argsUnion)],
     )
 
     /*conforms*/ public var windowId: UInt32?

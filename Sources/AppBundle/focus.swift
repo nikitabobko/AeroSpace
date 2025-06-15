@@ -21,7 +21,7 @@ struct LiveFocus: AeroAny, Equatable {
         return FrozenFocus(
             windowId: windowOrNil?.windowId,
             workspaceName: workspace.name,
-            monitorId: workspace.workspaceMonitor.monitorId ?? 0
+            monitorId: workspace.workspaceMonitor.monitorId ?? 0,
         )
     }
 }

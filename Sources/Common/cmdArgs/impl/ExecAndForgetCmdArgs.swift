@@ -5,7 +5,7 @@ public struct ExecAndForgetCmdArgs: CmdArgs {
         allowInConfig: true,
         help: exec_and_forget_help_generated,
         options: [:],
-        arguments: []
+        arguments: [],
     )
 
     public init(bashScript: String) {

@@ -42,7 +42,7 @@ struct FrozenWorkspace: Sendable {
     }
     closedWindowsCache = FrozenWorld(
         workspaces: Workspace.all.map { FrozenWorkspace($0) },
-        monitors: monitors.map(FrozenMonitor.init)
+        monitors: monitors.map(FrozenMonitor.init),
     )
     // todo why is this assertion false 21336ad382539b35fdc94b4fbd55408e10b101f8?
     // check(closedWindowsCache.windowIds.contains(window.windowId))
@@ -91,7 +91,7 @@ private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonL
         adaptiveWeight: frozenContainer.weight,
         frozenContainer.orientation,
         frozenContainer.layout,
-        index: index
+        index: index,
     )
 
     for (index, child) in frozenContainer.children.enumerated() {

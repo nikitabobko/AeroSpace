@@ -29,7 +29,7 @@ class GlobalObserver {
                        w.macAppUnsafe.nsApp.isHidden,
                        // "Hide others" (cmd-alt-h) -> don't force focus
                        // "Hide app" (cmd-h) -> force focus
-                       MacApp.allAppsMap.values.filter({ $0.nsApp.isHidden }).count == 1
+                       MacApp.allAppsMap.values.count(where: { $0.nsApp.isHidden }) == 1
                     {
                         // Force focus
                         _ = w.focusWindow()

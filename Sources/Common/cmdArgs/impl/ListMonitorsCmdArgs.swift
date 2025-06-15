@@ -18,7 +18,7 @@ public struct ListMonitorsCmdArgs: CmdArgs {
         conflictingOptions: [
             ["--count", "--format"],
             ["--count", "--json"],
-        ]
+        ],
     )
 
     /*conforms*/ public var windowId: UInt32?

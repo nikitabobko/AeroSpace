@@ -44,7 +44,7 @@ struct FocusCommand: Command {
     _ target: LiveFocus,
     _ io: CmdIo,
     _ args: FocusCmdArgs,
-    _ direction: CardinalDirection
+    _ direction: CardinalDirection,
 ) -> Bool {
     switch args.boundaries {
         case .workspace:
@@ -74,7 +74,7 @@ struct FocusCommand: Command {
     _ io: CmdIo,
     _ args: FocusCmdArgs,
     _ direction: CardinalDirection,
-    _ wrappedMonitor: Monitor
+    _ wrappedMonitor: Monitor,
 ) -> Bool {
     switch args.boundariesAction {
         case .stop:

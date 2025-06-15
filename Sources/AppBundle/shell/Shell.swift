@@ -44,7 +44,7 @@ class ErrorListenerCollector: BaseErrorListener {
         _ line: Int,
         _ charPositionInLine: Int,
         _ msg: String,
-        _ e: AnyObject?
+        _ e: AnyObject?,
     ) {
         let offendingToken = (offendingSymbol as? Token)?.getType()
         if offendingToken == TK.TRIPLE_QUOTE.rawValue {
@@ -184,7 +184,7 @@ extension ShellParser.DStringFragmentContext {
 private func binaryNode(
     _ op: (RawShell, RawShell) -> RawShell,
     _ a: ShellParser.CmdContext?,
-    _ b: ShellParser.CmdContext?
+    _ b: ShellParser.CmdContext?,
 ) -> Result<RawShell, String> {
     a.toTyped("binary node: nil child 0").combine { b.toTyped("binary node: nil child 1") }.map(op)
 }
@@ -279,7 +279,7 @@ enum ShellString<T> {
     private static func _concatOptimized(
         _ fragments: [ShellString<T>],
         _ result: inout [ShellString<T>],
-        _ current: inout String
+        _ current: inout String,
     ) {
         for fragment in fragments {
             switch fragment {

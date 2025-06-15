@@ -8,7 +8,7 @@ public struct MoveMouseCmdArgs: CmdArgs {
         options: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],
-        arguments: [newArgParser(\.mouseTarget, parseMouseTarget, mandatoryArgPlaceholder: "<mouse-position>")]
+        arguments: [newArgParser(\.mouseTarget, parseMouseTarget, mandatoryArgPlaceholder: "<mouse-position>")],
     )
 
     public var failIfNoop: Bool = false

@@ -30,7 +30,7 @@ public class TrayMenuModel: ObservableObject {
             suffix: monitor,
             isFocused: focus.workspace == $0,
             isEffectivelyEmpty: $0.isEffectivelyEmpty,
-            isVisible: $0.isVisible
+            isVisible: $0.isVisible,
         )
     }
     var items = sortedMonitors.map {

@@ -9,7 +9,7 @@ public struct ReloadConfigCmdArgs: CmdArgs {
             "--no-gui": trueBoolFlag(\.noGui),
             "--dry-run": trueBoolFlag(\.dryRun),
         ],
-        arguments: []
+        arguments: [],
     )
 
     public var noGui: Bool = false

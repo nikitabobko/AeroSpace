@@ -16,7 +16,7 @@ struct MoveNodeToWorkspaceCommand: Command {
                     isNext: nextPrev == .next,
                     wrapAround: args.wrapAround,
                     stdin: io.readStdin(),
-                    target: target
+                    target: target,
                 )
                 guard let ws else { return io.err("Can't resolve next or prev workspace") }
                 targetWorkspace = ws

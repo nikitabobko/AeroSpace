@@ -6,7 +6,7 @@ public struct ModeCmdArgs: CmdArgs {
         allowInConfig: true,
         help: mode_help_generated,
         options: [:],
-        arguments: [newArgParser(\.targetMode, parseTargetMode, mandatoryArgPlaceholder: "<binding-mode>")]
+        arguments: [newArgParser(\.targetMode, parseTargetMode, mandatoryArgPlaceholder: "<binding-mode>")],
     )
 
     public var targetMode: Lateinit<String> = .uninitialized

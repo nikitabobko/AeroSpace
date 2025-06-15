@@ -50,7 +50,7 @@ public func dieT<T>(
                 ? "aerospace-runtime-error-recursion.txt"
                 : "aerospace-runtime-error.txt",
             title: "AeroSpace Runtime Error",
-            message: message
+            message: message,
         )
     }
     if !recursionDetectorDuringTermination {
@@ -110,7 +110,7 @@ public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(sep
     file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
-    function: String = #function
+    function: String = #function,
 ) -> Never {
     dieT(message, file: file, line: line, column: column, function: function)
 }
@@ -121,7 +121,7 @@ public func check(
     file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
-    function: String = #function
+    function: String = #function,
 ) {
     if !condition {
         die(message(), file: file, line: line, column: column, function: function)

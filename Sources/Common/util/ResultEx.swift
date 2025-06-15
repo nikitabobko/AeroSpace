@@ -49,7 +49,7 @@ public extension Result {
         file: String = #fileID,
         line: Int = #line,
         column: Int = #column,
-        function: String = #function
+        function: String = #function,
     ) -> Success {
         switch self {
             case .success(let suc):

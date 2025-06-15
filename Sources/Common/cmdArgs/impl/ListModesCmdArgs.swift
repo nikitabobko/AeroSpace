@@ -10,7 +10,7 @@ public struct ListModesCmdArgs: CmdArgs {
         options: [
             "--current": trueBoolFlag(\.current),
         ],
-        arguments: []
+        arguments: [],
     )
 
     /*conforms*/ public var windowId: UInt32?

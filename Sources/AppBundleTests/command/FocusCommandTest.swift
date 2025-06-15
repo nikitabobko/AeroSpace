@@ -31,11 +31,11 @@ final class FocusCommandTest: XCTestCase {
 
         assertEquals(
             parseCommand("focus --boundaries workspace --boundaries workspace left").errorOrNil,
-            "ERROR: Duplicated option '--boundaries'"
+            "ERROR: Duplicated option '--boundaries'",
         )
         assertEquals(
             parseCommand("focus --window-id 42 --ignore-floating").errorOrNil,
-            "--window-id is incompatible with other options"
+            "--window-id is incompatible with other options",
         )
     }
 

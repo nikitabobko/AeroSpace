@@ -81,7 +81,7 @@ fi
 
 if test $all == 1 || test $swiftformat == 1; then
     # https://github.com/nicklockwood/SwiftFormat/releases
-    swiftformat_version=0.55.5
+    swiftformat_version=0.56.4
     if ! check-version $swiftformat_version ./.deps/swiftformat/swiftformat --version; then
         download-zip-and-link-bin \
             swiftformat \

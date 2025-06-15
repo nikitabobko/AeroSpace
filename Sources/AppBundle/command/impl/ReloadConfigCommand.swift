@@ -22,7 +22,7 @@ struct ReloadConfigCommand: Command {
 @MainActor func reloadConfig(
     args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []),
     forceConfigUrl: URL? = nil,
-    stdout: inout String
+    stdout: inout String,
 ) -> Bool {
     switch readConfig(forceConfigUrl: forceConfigUrl) {
         case .success(let (parsedConfig, url)):
@@ -40,7 +40,7 @@ struct ReloadConfigCommand: Command {
                 showMessageInGui(
                     filenameIfConsoleApp: nil,
                     title: "AeroSpace Config Error",
-                    message: msg
+                    message: msg,
                 )
             }
             return false

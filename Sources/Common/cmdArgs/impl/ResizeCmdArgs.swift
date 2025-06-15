@@ -11,7 +11,7 @@ public struct ResizeCmdArgs: CmdArgs {
         arguments: [
             newArgParser(\.dimension, parseDimension, mandatoryArgPlaceholder: "(smart|smart-opposite|width|height)"),
             newArgParser(\.units, parseUnits, mandatoryArgPlaceholder: "[+|-]<number>"),
-        ]
+        ],
     )
 
     public var dimension: Lateinit<ResizeCmdArgs.Dimension> = .uninitialized

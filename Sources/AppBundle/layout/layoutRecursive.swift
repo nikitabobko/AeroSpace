@@ -77,7 +77,7 @@ private extension Window {
             let moveTo = workspace.workspaceMonitor
             setAxTopLeftCorner(CGPoint(
                 x: moveTo.visibleRect.topLeftX + xProportion * moveTo.visibleRect.width,
-                y: moveTo.visibleRect.topLeftY + yProportion * moveTo.visibleRect.height
+                y: moveTo.visibleRect.topLeftY + yProportion * moveTo.visibleRect.height,
             ))
         }
         if isFullscreen {
@@ -122,9 +122,9 @@ private extension TilingContainer {
                     topLeftX: virtualPoint.x,
                     topLeftY: virtualPoint.y,
                     width: orientation == .h ? child.hWeight : width,
-                    height: orientation == .v ? child.vWeight : height
+                    height: orientation == .v ? child.vWeight : height,
                 ),
-                context
+                context,
             )
             virtualPoint = orientation == .h ? virtualPoint.addingXOffset(child.hWeight) : virtualPoint.addingYOffset(child.vWeight)
             point = orientation == .h ? point.addingXOffset(child.hWeight) : point.addingYOffset(child.vWeight)
@@ -151,7 +151,7 @@ private extension TilingContainer {
                         width: width - rPadding - lPadding,
                         height: height,
                         virtual: virtual,
-                        context
+                        context,
                     )
                 case .v:
                     try await child.layoutRecursive(
@@ -159,7 +159,7 @@ private extension TilingContainer {
                         width: width,
                         height: height - lPadding - rPadding,
                         virtual: virtual,
-                        context
+                        context,
                     )
             }
         }

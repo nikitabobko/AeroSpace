@@ -16,7 +16,7 @@ struct WorkspaceCommand: Command {
                     isNext: nextPrev == .next,
                     wrapAround: args.wrapAround,
                     stdin: io.readStdin(),
-                    target: target
+                    target: target,
                 )
                 guard let workspace else { return false }
                 workspaceName = workspace.name

@@ -42,7 +42,7 @@ final class ShellTest: XCTestCase {
             """
             echo "hi \\n $(foo bar)"
             """.parseShell(),
-            .args([.text("echo"), .concatV(.text("hi \n "), .interpolation(cmd("foo", "bar")))])
+            .args([.text("echo"), .concatV(.text("hi \n "), .interpolation(cmd("foo", "bar")))]),
         )
         assertSucc("echo \"\\n\\t\\$\"".parseShell(), cmd("echo", "\n\t$"))
         assertSucc("echo 'single quoted \\n'".parseShell(), cmd("echo", "single quoted \\n"))

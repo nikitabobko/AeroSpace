@@ -8,7 +8,7 @@ public struct MacosNativeMinimizeCmdArgs: CmdArgs {
         options: [
             "--window-id": optionalWindowIdFlag(),
         ],
-        arguments: []
+        arguments: [],
     )
 
     /*conforms*/ public var windowId: UInt32?

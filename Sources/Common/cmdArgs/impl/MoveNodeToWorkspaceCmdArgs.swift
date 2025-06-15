@@ -10,7 +10,7 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
             "--window-id": optionalWindowIdFlag(),
             "--focus-follows-window": trueBoolFlag(\.focusFollowsWindow),
         ],
-        arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
+        arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)],
     )
 
     public var _wrapAround: Bool?

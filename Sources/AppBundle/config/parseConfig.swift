@@ -198,7 +198,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
                 These two settings don't play nicely together. 'split' command has no effect when enable-normalization-flatten-containers is disabled.
 
                 My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.
-                """
+                """,
             )]
         }
     }
@@ -207,7 +207,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
 
 func parseIndentForNestedContainersWithTheSameOrientation(
     _ raw: TOMLValueConvertible,
-    _ backtrace: TomlBacktrace
+    _ backtrace: TomlBacktrace,
 ) -> ParsedToml<Void> {
     let msg = "Deprecated. Please drop it from the config. See https://github.com/nikitabobko/AeroSpace/issues/96"
     return .failure(.semantic(backtrace, msg))
@@ -234,7 +234,7 @@ extension TOMLValueConvertible {
             backtrace,
             expectedKey != nil
                 ? "The table is expected to have a single key '\(expectedKey.orDie())'"
-                : "The table is expected to have a single key"
+                : "The table is expected to have a single key",
         )
         guard let (actualKey, value): (String, TOMLValueConvertible) = table.count == 1 ? table.first : nil else {
             return .failure(singleKeyError)

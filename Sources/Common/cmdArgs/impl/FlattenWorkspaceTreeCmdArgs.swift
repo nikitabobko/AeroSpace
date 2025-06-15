@@ -8,7 +8,7 @@ public struct FlattenWorkspaceTreeCmdArgs: CmdArgs {
         options: [
             "--workspace": optionalWorkspaceFlag(),
         ],
-        arguments: []
+        arguments: [],
     )
 
     /*conforms*/ public var windowId: UInt32?

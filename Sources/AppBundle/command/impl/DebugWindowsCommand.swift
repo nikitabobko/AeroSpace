@@ -47,7 +47,7 @@ struct DebugWindowsCommand: Command {
                     Debug windows session has started
                     1. Focus the problematic window
                     2. Run 'aerospace debug-windows' once again to finish the session and get the results
-                    """
+                    """,
                 )
                 // Make sure that the Terminal window that started the recording is recorded first
                 guard let target = args.resolveTargetOrReportError(env, io) else { return false }
@@ -60,7 +60,7 @@ struct DebugWindowsCommand: Command {
                     """
                     Recording of the previous session was aborted after \(debugWindowsLimit) windows has been focused
                     Run the command one more time to start new debug session
-                    """
+                    """,
                 )
                 debugWindowsState = .notRecording
                 debugWindowsLog = [:]

@@ -29,7 +29,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
             ["--all", "--focused", "--monitor"],
             ["--count", "--format"],
             ["--count", "--json"],
-        ]
+        ],
     )
 
     fileprivate var all: Bool = false // Alias

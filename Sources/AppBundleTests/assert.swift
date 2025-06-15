@@ -72,6 +72,6 @@ private func failExpectedActual(_ expected: Any, _ actual: Any, additionalMsg: S
                 \(expected)
             Actual:
                 \(actual)
-        """
+        """,
     )
 }

@@ -6,7 +6,7 @@ public struct FocusBackAndForthCmdArgs: CmdArgs {
         allowInConfig: true,
         help: focus_back_and_forth_help_generated,
         options: [:],
-        arguments: []
+        arguments: [],
     )
 
     /*conforms*/ public var windowId: UInt32?

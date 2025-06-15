@@ -60,7 +60,7 @@ private extension NSScreen {
             monitorAppKitNsScreenScreensId: monitorAppKitNsScreenScreensId,
             name: localizedName,
             rect: rect,
-            visibleRect: visibleRect
+            visibleRect: visibleRect,
         )
     }
 
@@ -85,7 +85,7 @@ private let testMonitor = MonitorImpl(
     monitorAppKitNsScreenScreensId: 1,
     name: "Test Monitor",
     rect: testMonitorRect,
-    visibleRect: testMonitorRect
+    visibleRect: testMonitorRect,
 )
 
 var mainMonitor: Monitor {

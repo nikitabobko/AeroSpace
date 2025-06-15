@@ -19,7 +19,7 @@ struct MoveNodeToMonitorCommand: Command {
                     targetMonitor.activeWorkspace,
                     io,
                     focusFollowsWindow: true,
-                    failIfNoop: args.failIfNoop
+                    failIfNoop: args.failIfNoop,
                 )
             case .failure(let msg):
                 return io.err(msg)

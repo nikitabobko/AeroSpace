@@ -11,7 +11,7 @@ public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
         ],
         arguments: [
             newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs),
-        ]
+        ],
     )
 
     /*conforms*/ public var windowId: UInt32?

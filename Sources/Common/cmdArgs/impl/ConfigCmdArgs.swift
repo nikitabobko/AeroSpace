@@ -12,7 +12,7 @@ public struct ConfigCmdArgs: CmdArgs, Equatable {
             "--config-path": trueBoolFlag(\.configPath),
             "--get": singleValueOption(\.keyNameToGet, "<name>") { $0 },
         ],
-        arguments: []
+        arguments: [],
     )
 
     public var json: Bool = false

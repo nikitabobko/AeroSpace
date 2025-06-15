@@ -31,13 +31,13 @@ let package = Package(
         .target(
             name: "PrivateApi",
             path: "Sources/PrivateApi",
-            publicHeadersPath: "include"
+            publicHeadersPath: "include",
         ),
         .target(
             name: "Common",
             dependencies: [
                 .product(name: "Collections", package: "swift-collections"),
-            ]
+            ],
         ),
         .target(
             name: "AppBundle",
@@ -50,26 +50,26 @@ let package = Package(
                 .product(name: "TOMLKit", package: "TOMLKit"),
                 .target(name: "Common"),
                 .target(name: "PrivateApi"),
-            ]
+            ],
         ),
         .executableTarget(
             name: "AeroSpaceApp",
             dependencies: [
                 .target(name: "AppBundle"),
-            ]
+            ],
         ),
         .executableTarget(
             name: "Cli",
             dependencies: [
                 .target(name: "Common"),
                 .product(name: "Socket", package: "BlueSocket"),
-            ]
+            ],
         ),
         .testTarget(
             name: "AppBundleTests",
             dependencies: [
                 .target(name: "AppBundle"),
-            ]
+            ],
         ),
-    ]
+    ],
 )

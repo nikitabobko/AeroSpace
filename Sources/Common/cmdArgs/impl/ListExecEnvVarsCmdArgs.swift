@@ -6,7 +6,7 @@ public struct ListExecEnvVarsCmdArgs: CmdArgs {
         allowInConfig: true,
         help: list_exec_env_vars_help_generated,
         options: [:],
-        arguments: []
+        arguments: [],
     )
 
     /*conforms*/ public var windowId: UInt32?

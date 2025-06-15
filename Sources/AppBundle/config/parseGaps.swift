@@ -71,14 +71,14 @@ struct ResolvedGaps {
     init(gaps: Gaps, monitor: any Monitor) {
         inner = .init(
             vertical: gaps.inner.vertical.getValue(for: monitor),
-            horizontal: gaps.inner.horizontal.getValue(for: monitor)
+            horizontal: gaps.inner.horizontal.getValue(for: monitor),
         )
 
         outer = .init(
             left: gaps.outer.left.getValue(for: monitor),
             bottom: gaps.outer.bottom.getValue(for: monitor),
             top: gaps.outer.top.getValue(for: monitor),
-            right: gaps.outer.right.getValue(for: monitor)
+            right: gaps.outer.right.getValue(for: monitor),
         )
     }
 }

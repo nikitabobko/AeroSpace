@@ -12,7 +12,7 @@ public struct FocusCmdArgs: CmdArgs {
             "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32)),
             "--dfs-index": ArgParser(\.dfsIndex, upcastArgParserFun(parseArgWithUInt32)),
         ],
-        arguments: [ArgParser(\.direction, upcastArgParserFun(parseCardinalDirectionArg))]
+        arguments: [ArgParser(\.direction, upcastArgParserFun(parseCardinalDirectionArg))],
     )
 
     public var rawBoundaries: Boundaries? = nil // todo cover boundaries wrapping with tests

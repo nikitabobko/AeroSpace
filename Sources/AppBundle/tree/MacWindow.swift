@@ -26,7 +26,7 @@ final class MacWindow: Window {
             isStartup
                 ? (rect?.center.monitorApproximation ?? mainMonitor).activeWorkspace
                 : focus.workspace,
-            window: nil
+            window: nil,
         )
 
         // atomic synchronous section
@@ -232,13 +232,13 @@ private func unbindAndGetBindingDataForNewTilingWindow(_ workspace: Workspace, w
         return BindingData(
             parent: tilingParent,
             adaptiveWeight: WEIGHT_AUTO,
-            index: mruWindow.ownIndex.orDie() + 1
+            index: mruWindow.ownIndex.orDie() + 1,
         )
     } else {
         return BindingData(
             parent: workspace.rootTilingContainer,
             adaptiveWeight: WEIGHT_AUTO,
-            index: INDEX_BIND_LAST
+            index: INDEX_BIND_LAST,
         )
     }
 }

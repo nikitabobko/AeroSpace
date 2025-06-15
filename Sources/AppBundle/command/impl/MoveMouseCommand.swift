@@ -36,7 +36,7 @@ private func moveMouse(_ io: CmdIo, _ point: CGPoint) -> Bool {
         mouseEventSource: nil,
         mouseType: CGEventType.mouseMoved,
         mouseCursorPosition: point,
-        mouseButton: CGMouseButton.left
+        mouseButton: CGMouseButton.left,
     )
     if let event {
         event.post(tap: CGEventTapLocation.cghidEventTap)

@@ -6,7 +6,7 @@ public struct WorkspaceBackAndForthCmdArgs: CmdArgs {
         allowInConfig: true,
         help: workspace_back_and_forth_help_generated,
         options: [:],
-        arguments: []
+        arguments: [],
     )
 
     /*conforms*/ public var windowId: UInt32?

@@ -8,7 +8,7 @@ public struct DebugWindowsCmdArgs: CmdArgs {
         options: [
             "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32)),
         ],
-        arguments: []
+        arguments: [],
     )
 
     /*conforms*/ public var windowId: UInt32?

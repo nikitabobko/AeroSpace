@@ -55,7 +55,7 @@ public func cmdParser<T>(
         info: CmdStaticInfo(help: help, kind: kind, allowInConfig: allowInConfig),
         options: options,
         arguments: arguments,
-        conflictingOptions: conflictingOptions
+        conflictingOptions: conflictingOptions,
     )
 }
 

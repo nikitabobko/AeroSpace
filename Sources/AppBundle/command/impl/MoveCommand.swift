@@ -74,7 +74,7 @@ struct MoveCommand: Command {
     _ workspace: Workspace,
     _ io: CmdIo,
     _ args: MoveCmdArgs,
-    _ direction: CardinalDirection
+    _ direction: CardinalDirection,
 ) -> Bool {
     switch args.boundariesAction {
         case .stop: true
@@ -122,7 +122,7 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
 @MainActor private func createImplicitContainerAndMoveWindow(
     _ window: Window,
     _ workspace: Workspace,
-    _ direction: CardinalDirection
+    _ direction: CardinalDirection,
 ) {
     let prevRoot = workspace.rootTilingContainer
     prevRoot.unbindFromParent()
@@ -143,7 +143,7 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
             window.bind(
                 to: parent,
                 adaptiveWeight: WEIGHT_AUTO,
-                index: deepTarget.ownIndex.orDie() + 1
+                index: deepTarget.ownIndex.orDie() + 1,
             )
     }
     return true

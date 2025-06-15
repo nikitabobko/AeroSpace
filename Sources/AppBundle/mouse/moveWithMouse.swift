@@ -65,7 +65,7 @@ private func moveTilingWindow(_ window: Window) {
         window.bind(
             to: swapTarget?.parent ?? targetWorkspace.rootTilingContainer,
             adaptiveWeight: WEIGHT_AUTO,
-            index: index
+            index: index,
         )
     } else if let swapTarget {
         swapWindows(window, swapTarget)

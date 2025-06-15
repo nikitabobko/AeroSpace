@@ -6,7 +6,7 @@ public extension Optional {
         file: String = #fileID,
         line: Int = #line,
         column: Int = #column,
-        function: String = #function
+        function: String = #function,
     ) -> Wrapped {
         self ?? dieT("orDie: " + message, file: file, line: line, column: column, function: function)
     }
