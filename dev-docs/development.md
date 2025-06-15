@@ -42,6 +42,7 @@ If you only plan to build the debug version of AeroSpace, you can run it from th
 **Debug build**
 -   `build-debug.sh` - Build debug build to `.debug` dir by using SPM. (Xcode is not involved)
 -   `run-tests.sh` - Run tests.
+-   `swiftformat.sh` - Format the code.
 -   `run-debug.sh` - Run AeroSpace.app debug build.
 -   `run-cli.sh` - Run `aerospace` in CLI. Arguments are forwarded to `aerospace` binary.
 -   `build-docs.sh` - Build the site and man pages to `.site` and `.man` dirs respectively.
