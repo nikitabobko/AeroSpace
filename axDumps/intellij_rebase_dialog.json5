@@ -84,8 +84,8 @@
   "Aero.App.versionShort" : "2024.1.2",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
   "Aero.axWindowId" : 14799,
-  "Aero.isDialogHeuristic" : true,
-  "Aero.isWindowHeuristic" : true,
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxUiElementWindowType" : "dialog",
   "Aero.on-window-detected" : [
 
   ],

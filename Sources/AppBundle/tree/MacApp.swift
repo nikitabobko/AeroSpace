@@ -184,6 +184,13 @@ final class MacApp: AbstractApp {
         } == true
     }
 
+    @MainActor
+    func getAxUiElementWindowType(_ windowId: UInt32) async throws -> AxUiElementWindowType {
+        try await withWindow(windowId) { [axApp, bundleId] window, job in
+            window.getWindowType(axApp: axApp.threadGuarded, appBundleId: bundleId)
+        } ?? .window
+    }
+
     @MainActor // todo swift is stupid
     func isDialogHeuristic(_ windowId: UInt32) async throws -> Bool {
         try await withWindow(windowId) { [nsApp] window, job in

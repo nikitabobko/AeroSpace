@@ -127,6 +127,28 @@ extension AxUiElementMock {
             subrole == kAXFloatingWindowSubrole || // telegram image viewer
             appBundleId == "com.apple.finder" && subrole == "Quick Look" // Finder preview (hit space) is a floating window
     }
+
+    func getWindowType(axApp: AxUiElementMock, appBundleId: String?) -> AxUiElementWindowType {
+        .new(
+            isWindow: isWindowHeuristic(axApp: axApp, appBundleId: appBundleId),
+            isDialog: { isDialogHeuristic(appBundleId: appBundleId) },
+        )
+    }
+}
+
+enum AxUiElementWindowType: String {
+    case window
+    case dialog
+    /// Not even a real window
+    case popup
+
+    static func new(isWindow: Bool, isDialog: () -> Bool) -> AxUiElementWindowType {
+        switch () {
+            case _ where !isWindow: .popup
+            case _ where isDialog(): .dialog
+            default: .window
+        }
+    }
 }
 
 extension String {

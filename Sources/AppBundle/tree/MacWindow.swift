@@ -63,6 +63,11 @@ final class MacWindow: Window {
         try await macApp.isDialogHeuristic(windowId)
     }
 
+    @MainActor
+    func getAxUiElementWindowType() async throws -> AxUiElementWindowType {
+        try await macApp.getAxUiElementWindowType(windowId)
+    }
+
     @MainActor // todo swift is stupid
     func dumpAxInfo() async throws -> [String: Json] {
         try await macApp.dumpWindowAxInfo(windowId: windowId)
@@ -214,13 +219,11 @@ extension Window {
 // The function is private because it's unsafe. It leaves the window in unbound state
 @MainActor // todo swift is stupid
 private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace, window: Window?) async throws -> BindingData {
-    if try await !macApp.isWindowHeuristic(windowId) {
-        return BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+    switch try await macApp.getAxUiElementWindowType(windowId) {
+        case .popup: BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+        case .dialog: BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+        case .window: unbindAndGetBindingDataForNewTilingWindow(workspace, window: window)
     }
-    if try await macApp.isDialogHeuristic(windowId) {
-        return BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-    }
-    return unbindAndGetBindingDataForNewTilingWindow(workspace, window: window)
 }
 
 // The function is private because it's unsafe. It leaves the window in unbound state

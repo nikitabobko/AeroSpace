@@ -10,14 +10,14 @@ final class AxWindowKindTest: XCTestCase {
             let app = json["Aero.AXApp"]!.asDictOrDie
             let appBundleId = rawJson["Aero.App.appBundleId"] as? String
             assertEquals(
-                json.isWindowHeuristic(axApp: app, appBundleId: appBundleId),
-                rawJson["Aero.isWindowHeuristic"] as? Bool ?? dieT(),
-                additionalMsg: "isWindowHeuristic doesn't match for \(file)",
+                json.getWindowType(axApp: app, appBundleId: appBundleId),
+                AxUiElementWindowType(rawValue: rawJson["Aero.AxUiElementWindowType"] as? String ?? dieT()),
+                additionalMsg: "AxUiElementWindowType doesn't match for \(file)",
             )
             assertEquals(
                 json.isDialogHeuristic(appBundleId: appBundleId),
-                rawJson["Aero.isDialogHeuristic"] as? Bool ?? dieT(),
-                additionalMsg: "isDialogHeuristic doesn't match for \(file)",
+                rawJson["Aero.AxUiElementWindowType_isDialogHeuristic"] as? Bool ?? dieT(),
+                additionalMsg: "AxUiElementWindowType_isDialogHeuristic doesn't match for \(file)",
             )
         }
     }

@@ -52,8 +52,8 @@
   "Aero.App.versionShort" : "1.20",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
   "Aero.axWindowId" : 223,
-  "Aero.isDialogHeuristic" : true,
-  "Aero.isWindowHeuristic" : false,
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxUiElementWindowType" : "popup",
   "Aero.macOS.version" : "Version 26.0 Beta (Build 25A5279m)",
   "Aero.on-window-detected" : [
 

@@ -53,8 +53,8 @@
   "Aero.App.versionShort" : null,
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
   "Aero.axWindowId" : 836,
-  "Aero.isDialogHeuristic" : true,
-  "Aero.isWindowHeuristic" : true,
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxUiElementWindowType" : "dialog",
   "Aero.treeNodeParent" : "AppBundle.Workspace",
   "Aero.workspace" : "M"
 }
