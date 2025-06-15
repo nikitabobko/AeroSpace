@@ -23,13 +23,17 @@ struct MoveNodeToWorkspaceCommand: Command {
             case .direct(let name):
                 targetWorkspace = Workspace.get(byName: name.raw)
         }
-        if subjectWs == targetWorkspace {
-            io.err("Window '\(window.windowId)' already belongs to workspace '\(targetWorkspace.name)'. Tip: use --fail-if-noop to exit with non-zero code")
-            return !args.failIfNoop
-        }
-        let targetContainer: NonLeafTreeNodeObject = window.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
-
-        window.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-        return args.focusFollowsWindow ? window.focusWindow() : true
+        return moveWindowToWorkspace(window, targetWorkspace, io, focusFollowsWindow: args.focusFollowsWindow, failIfNoop: args.failIfNoop)
     }
+}
+
+@MainActor
+func moveWindowToWorkspace(_ window: Window, _ targetWorkspace: Workspace, _ io: CmdIo, focusFollowsWindow: Bool, failIfNoop: Bool) -> Bool {
+    if window.nodeWorkspace == targetWorkspace {
+        io.err("Window '\(window.windowId)' already belongs to workspace '\(targetWorkspace.name)'. Tip: use --fail-if-noop to exit with non-zero code")
+        return !failIfNoop
+    }
+    let targetContainer: NonLeafTreeNodeObject = window.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
+    window.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+    return focusFollowsWindow ? window.focusWindow() : false
 }

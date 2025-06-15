@@ -63,7 +63,7 @@ struct MoveCommand: Command {
             }
 
             let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(target: .directional(direction))
-                .copy(\.moveNodeToWorkspace.focusFollowsWindow, true)
+                .copy(\.focusFollowsWindow, true)
 
             return MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
     }
