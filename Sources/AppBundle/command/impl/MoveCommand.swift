@@ -62,7 +62,7 @@ struct MoveCommand: Command {
                 return hitAllMonitorsOuterFrameBoundaries(window, workspace, io, args, direction)
             }
 
-            let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(target: .directional(direction))
+            let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(target: .direction(direction))
                 .copy(\.focusFollowsWindow, true)
 
             return MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)

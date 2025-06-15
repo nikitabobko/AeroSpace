@@ -29,13 +29,13 @@ func parseTarget(_ arg: String, _ nextArgs: inout [String]) -> Parsed<MonitorTar
         case "prev":
             return .success(.relative(.prev))
         case "left":
-            return .success(.directional(.left))
+            return .success(.direction(.left))
         case "down":
-            return .success(.directional(.down))
+            return .success(.direction(.down))
         case "up":
-            return .success(.directional(.up))
+            return .success(.direction(.up))
         case "right":
-            return .success(.directional(.right))
+            return .success(.direction(.right))
         default:
             let args: [String] = [arg] + nextArgs.allNextNonFlagArgs()
             return args.mapAllOrFailure(parseMonitorDescription).map { .patterns($0) }
@@ -47,7 +47,7 @@ public enum NextPrev: String, Equatable, Sendable, CaseIterable {
 }
 
 public enum MonitorTarget: Equatable, Sendable {
-    case directional(CardinalDirection)
+    case direction(CardinalDirection)
     case relative(NextPrev)
     case patterns([MonitorDescription])
 
