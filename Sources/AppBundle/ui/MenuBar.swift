@@ -75,7 +75,9 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
                     MenuBarLabel(viewModel.trayText, trayItems: viewModel.trayItems, workspaces: viewModel.workspaces)
             }
         } else {
-            MenuBarLabel("⏸️")
+            Image(systemName: "pause.circle.fill")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
         }
     }
 }
