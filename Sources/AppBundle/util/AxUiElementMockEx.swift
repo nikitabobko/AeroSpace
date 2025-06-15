@@ -55,7 +55,6 @@ extension AxUiElementMock {
         return false
     }
 
-    // todo create a database of problematic windows and cover the function with tests
     /// Alternative name: !isPopup
     ///
     /// Why do we need to filter out non-windows?
