@@ -6,3 +6,6 @@ build:
 
 test:
 	./run-tests.sh
+
+format:
+	./swiftformat.sh
