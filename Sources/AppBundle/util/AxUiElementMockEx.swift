@@ -6,6 +6,8 @@ extension AxUiElementMock {
     func isDialogHeuristic(appBundleId id: String?) -> Bool {
         // Note: a lot of windows don't have title on startup. So please don't rely on the title
 
+        lazy var isQutebrowser = id == "org.qutebrowser.qutebrowser"
+
         // Don't tile:
         // - Chrome cmd+f window ("AXUnknown" value)
         // - login screen (Yes fuck, it's also a window from Apple's API perspective) ("AXUnknown" value)
@@ -14,7 +16,9 @@ extension AxUiElementMock {
         // - macOS native file picker (IntelliJ -> "Open...") (kAXDialogSubrole value)
         //
         // Minimized windows or windows of a hidden app have subrole "AXDialog"
-        if get(Ax.subroleAttr) != kAXStandardWindowSubrole {
+        if get(Ax.subroleAttr) != kAXStandardWindowSubrole &&
+            !isQutebrowser // qutebrowser regular window has AXDialog subrole when decorations are disabled
+        {
             return true
         }
         // Firefox: Picture in Picture window doesn't have minimize button.
@@ -47,6 +51,7 @@ extension AxUiElementMock {
             id != "org.alacritty" && // ~/.alacritty.toml: window.decorations = "Buttonless"
             id != "net.kovidgoyal.kitty" && // ~/.config/kitty/kitty.conf: hide_window_decorations titlebar-and-corners
             id != "com.github.wez.wezterm" &&
+            !isQutebrowser && // :set window.hide_decoration
             id != "com.googlecode.iterm2" &&
             id != "org.gnu.Emacs"
         {

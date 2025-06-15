@@ -56,8 +56,8 @@
   "Aero.App.versionShort" : "3.5.1",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
   "Aero.axWindowId" : 209,
-  "Aero.AxUiElementWindowType_isDialogHeuristic" : true, // todo fix
-  "Aero.AxUiElementWindowType" : "dialog",
+  "Aero.AxUiElementWindowType" : "window",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
   "Aero.on-window-detected" : [
 
