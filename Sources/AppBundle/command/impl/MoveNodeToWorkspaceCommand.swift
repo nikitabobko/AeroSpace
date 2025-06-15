@@ -28,12 +28,12 @@ struct MoveNodeToWorkspaceCommand: Command {
 }
 
 @MainActor
-func moveWindowToWorkspace(_ window: Window, _ targetWorkspace: Workspace, _ io: CmdIo, focusFollowsWindow: Bool, failIfNoop: Bool) -> Bool {
+func moveWindowToWorkspace(_ window: Window, _ targetWorkspace: Workspace, _ io: CmdIo, focusFollowsWindow: Bool, failIfNoop: Bool, index: Int = INDEX_BIND_LAST) -> Bool {
     if window.nodeWorkspace == targetWorkspace {
         io.err("Window '\(window.windowId)' already belongs to workspace '\(targetWorkspace.name)'. Tip: use --fail-if-noop to exit with non-zero code")
         return !failIfNoop
     }
     let targetContainer: NonLeafTreeNodeObject = window.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
-    window.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+    window.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: index)
     return focusFollowsWindow ? window.focusWindow() : false
 }

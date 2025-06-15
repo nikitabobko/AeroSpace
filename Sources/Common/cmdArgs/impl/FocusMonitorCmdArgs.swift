@@ -60,4 +60,11 @@ public enum MonitorTarget: Equatable, Sendable {
 
     static var casesExceptPatterns: [String] { CardinalDirection.cliArgsCases + NextPrev.cliArgsCases }
     static var cases: [String] { casesExceptPatterns + ["<monitor-pattern>"] }
+
+    public var directionOrNil: CardinalDirection? {
+        switch self {
+            case .direction(let direction): direction
+            default: nil
+        }
+    }
 }
