@@ -130,8 +130,8 @@ extension AxUiElementMock {
     }
 }
 
-private extension String {
-    func isFirefoxId() -> Bool {
+extension String {
+    fileprivate func isFirefoxId() -> Bool {
         ["org.mozilla.firefox", "org.mozilla.firefoxdeveloperedition", "org.mozilla.nightly"].contains(self)
     }
 }

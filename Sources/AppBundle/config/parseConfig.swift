@@ -119,8 +119,8 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "indent-for-nested-containers-with-the-same-orientation": Parser(\._indentForNestedContainersWithTheSameOrientation, parseIndentForNestedContainersWithTheSameOrientation),
 ]
 
-private extension ParsedCmd where T == any Command {
-    func toEither() -> Parsed<T> {
+extension ParsedCmd where T == any Command {
+    fileprivate func toEither() -> Parsed<T> {
         return switch self {
             case .cmd(let a):
                 a.info.allowInConfig
@@ -132,8 +132,8 @@ private extension ParsedCmd where T == any Command {
     }
 }
 
-private extension Command {
-    var isMacOsNativeCommand: Bool { // Problem ID-B6E178F2
+extension Command {
+    fileprivate var isMacOsNativeCommand: Bool { // Problem ID-B6E178F2
         self is MacosNativeMinimizeCommand || self is MacosNativeFullscreenCommand
     }
 }

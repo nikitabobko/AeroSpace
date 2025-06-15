@@ -28,8 +28,8 @@ public struct ListAppsCmdArgs: CmdArgs {
     public var json: Bool = false
 }
 
-public extension ListAppsCmdArgs {
-    var format: [StringInterToken] {
+extension ListAppsCmdArgs {
+    public var format: [StringInterToken] {
         _format.isEmpty
             ? [
                 .interVar("app-pid"), .interVar("right-padding"), .literal(" | "),

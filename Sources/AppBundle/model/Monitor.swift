@@ -54,8 +54,8 @@ class LazyMonitor: Monitor {
 // 1. The name is misleading, it's supposed to be called "focusedScreen"
 // 2. It's inaccurate because NSScreen.main doesn't work correctly from NSWorkspace.didActivateApplicationNotification &
 //    kAXFocusedWindowChangedNotification callbacks.
-private extension NSScreen {
-    func toMonitor(monitorAppKitNsScreenScreensId: Int) -> Monitor {
+extension NSScreen {
+    fileprivate func toMonitor(monitorAppKitNsScreenScreensId: Int) -> Monitor {
         MonitorImpl(
             monitorAppKitNsScreenScreensId: monitorAppKitNsScreenScreensId,
             name: localizedName,
@@ -64,7 +64,7 @@ private extension NSScreen {
         )
     }
 
-    var isMainScreen: Bool {
+    fileprivate var isMainScreen: Bool {
         frame.minX == 0 && frame.minY == 0
     }
 
@@ -74,10 +74,10 @@ private extension NSScreen {
     /// - For ``frame``, (0, 0) is main screen bottom left corner, and positive y-axis goes up (which is crazy).
     ///
     /// The property "normalizes" ``frame``
-    var rect: Rect { frame.monitorFrameNormalized() }
+    fileprivate var rect: Rect { frame.monitorFrameNormalized() }
 
     /// Same as ``rect`` but for ``visibleFrame``
-    var visibleRect: Rect { visibleFrame.monitorFrameNormalized() }
+    fileprivate var visibleRect: Rect { visibleFrame.monitorFrameNormalized() }
 }
 
 private let testMonitorRect = Rect(topLeftX: 0, topLeftY: 0, width: 1920, height: 1080)

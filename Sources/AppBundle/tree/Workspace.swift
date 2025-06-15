@@ -142,9 +142,9 @@ func gcMonitors() {
     }
 }
 
-private extension CGPoint {
+extension CGPoint {
     @MainActor
-    func setActiveWorkspace(_ workspace: Workspace) -> Bool {
+    fileprivate func setActiveWorkspace(_ workspace: Workspace) -> Bool {
         if !isValidAssignment(workspace: workspace, screen: self) {
             return false
         }

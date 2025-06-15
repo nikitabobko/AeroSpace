@@ -55,4 +55,4 @@
 --enable wrapMultilineStatementBraces
 
 --enable extensionAccessControl
-# --extensionacl on-declarations
+--extensionacl on-declarations

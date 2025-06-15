@@ -25,8 +25,8 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     }
 }
 
-public extension MoveNodeToWorkspaceCmdArgs {
-    var wrapAround: Bool { _wrapAround ?? false }
+extension MoveNodeToWorkspaceCmdArgs {
+    public var wrapAround: Bool { _wrapAround ?? false }
 }
 
 func implication(ifTrue: Bool, mustHold: @autoclosure () -> Bool) -> Bool { !ifTrue || mustHold() }

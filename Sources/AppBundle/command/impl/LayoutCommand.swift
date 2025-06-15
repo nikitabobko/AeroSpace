@@ -67,8 +67,8 @@ struct LayoutCommand: Command {
     }
 }
 
-private extension Window {
-    func matchesDescription(_ layout: LayoutCmdArgs.LayoutDescription) -> Bool {
+extension Window {
+    fileprivate func matchesDescription(_ layout: LayoutCmdArgs.LayoutDescription) -> Bool {
         return switch layout {
             case .accordion:   (parent as? TilingContainer)?.layout == .accordion
             case .tiles:       (parent as? TilingContainer)?.layout == .tiles

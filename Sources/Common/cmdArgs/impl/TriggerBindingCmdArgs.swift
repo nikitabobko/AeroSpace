@@ -16,8 +16,8 @@ public struct TriggerBindingCmdArgs: CmdArgs {
     /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
-public extension TriggerBindingCmdArgs {
-    var mode: String { _mode.orDie() }
+extension TriggerBindingCmdArgs {
+    public var mode: String { _mode.orDie() }
 }
 
 public func parseTriggerBindingCmdArgs(_ args: [String]) -> ParsedCmd<TriggerBindingCmdArgs> {

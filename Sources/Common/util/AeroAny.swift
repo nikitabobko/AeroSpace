@@ -3,23 +3,23 @@ import AppKit
 
 public protocol AeroAny {}
 
-public extension AeroAny {
+extension AeroAny {
     @discardableResult
     @inlinable
-    func apply(_ block: (Self) -> Void) -> Self {
+    public func apply(_ block: (Self) -> Void) -> Self {
         block(self)
         return self
     }
 
     @discardableResult
     @inlinable
-    func also(_ block: (Self) -> Void) -> Self {
+    public func also(_ block: (Self) -> Void) -> Self {
         block(self)
         return self
     }
 
-    @inlinable func takeIf(_ predicate: (Self) -> Bool) -> Self? { predicate(self) ? self : nil }
-    @inlinable func then<R>(_ body: (Self) -> R) -> R { body(self) }
+    @inlinable public func takeIf(_ predicate: (Self) -> Bool) -> Self? { predicate(self) ? self : nil }
+    @inlinable public func then<R>(_ body: (Self) -> R) -> R { body(self) }
 }
 
 extension Int: AeroAny {}

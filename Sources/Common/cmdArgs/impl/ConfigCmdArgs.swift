@@ -25,12 +25,12 @@ public struct ConfigCmdArgs: CmdArgs, Equatable {
     /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
-public extension ConfigCmdArgs {
-    enum Mode {
+extension ConfigCmdArgs {
+    public enum Mode {
         case getKey(key: String), majorKeys, allKeys, configPath
     }
 
-    var mode: Mode {
+    public var mode: Mode {
         if let keyNameToGet { return .getKey(key: keyNameToGet) }
         if majorKeys { return .majorKeys }
         if allKeys { return .allKeys }

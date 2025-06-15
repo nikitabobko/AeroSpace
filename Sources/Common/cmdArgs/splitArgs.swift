@@ -1,7 +1,7 @@
-public extension String {
+extension String {
     // Input: "  foo   bar ". Output: ["foo", "bar"]
     // Input "foo 'bar baz'". Output ["foo", "bar baz"]
-    func splitArgs() -> Parsed<[String]> {
+    public func splitArgs() -> Parsed<[String]> {
         var result: [String] = []
         var arg: String = ""
         var state: State = .parseArgWhitespaceSeparator
@@ -41,8 +41,8 @@ public extension String {
     }
 }
 
-private extension Character {
-    var isQuote: Bool { self == "\'" || self == "\"" }
+extension Character {
+    fileprivate var isQuote: Bool { self == "\'" || self == "\"" }
 }
 
 private enum State {
@@ -50,8 +50,8 @@ private enum State {
     case parseArgWhitespaceSeparator
 }
 
-public extension [String] {
-    func joinArgs() -> String {
+extension [String] {
+    public func joinArgs() -> String {
         self.map {
             let containsWhitespaces = $0.rangeOfCharacter(from: .whitespacesAndNewlines) != nil
             let containsSingleQuote = $0.contains("'")

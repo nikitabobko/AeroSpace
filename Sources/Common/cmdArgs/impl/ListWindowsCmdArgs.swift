@@ -52,8 +52,8 @@ public struct ListWindowsCmdArgs: CmdArgs {
     }
 }
 
-public extension ListWindowsCmdArgs {
-    var format: [StringInterToken] {
+extension ListWindowsCmdArgs {
+    public var format: [StringInterToken] {
         _format.isEmpty
             ? [
                 .interVar("window-id"), .interVar("right-padding"), .literal(" | "),

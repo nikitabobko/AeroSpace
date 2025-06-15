@@ -36,9 +36,9 @@ public struct MoveCmdArgs: CmdArgs {
     }
 }
 
-public extension MoveCmdArgs {
-    var boundaries: Boundaries { rawBoundaries ?? .workspace }
-    var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .createImplicitContainer }
+extension MoveCmdArgs {
+    public var boundaries: Boundaries { rawBoundaries ?? .workspace }
+    public var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .createImplicitContainer }
 }
 
 public func parseMoveCmdArgs(_ args: [String]) -> ParsedCmd<MoveCmdArgs> {

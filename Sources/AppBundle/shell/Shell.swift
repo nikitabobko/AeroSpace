@@ -206,11 +206,11 @@ extension Result where Success == ShellParser.CmdsContext, Failure == String {
     func toTyped() -> Result<RawShell, String> { flatMap { $0.toTyped() } }
 }
 
-private extension ShellParser.CmdContext? {
-    func toTyped(_ msg: String) -> Result<RawShell, String> { orFailure(msg).toTyped() }
+extension ShellParser.CmdContext? {
+    fileprivate func toTyped(_ msg: String) -> Result<RawShell, String> { orFailure(msg).toTyped() }
 }
-private extension ShellParser.CmdsContext? {
-    func toTyped(_ msg: String) -> Result<RawShell, String> { orFailure(msg).toTyped() }
+extension ShellParser.CmdsContext? {
+    fileprivate func toTyped(_ msg: String) -> Result<RawShell, String> { orFailure(msg).toTyped() }
 }
 
 struct CmdOut {

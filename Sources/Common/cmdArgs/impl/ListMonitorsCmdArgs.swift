@@ -30,8 +30,8 @@ public struct ListMonitorsCmdArgs: CmdArgs {
     public var json: Bool = false
 }
 
-public extension ListMonitorsCmdArgs {
-    var format: [StringInterToken] {
+extension ListMonitorsCmdArgs {
+    public var format: [StringInterToken] {
         _format.isEmpty
             ? [
                 .interVar("monitor-id"), .interVar("right-padding"), .literal(" | "),

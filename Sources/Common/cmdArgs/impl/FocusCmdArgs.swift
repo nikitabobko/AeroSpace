@@ -56,8 +56,8 @@ public enum FocusCmdTarget {
     case dfsIndex(UInt32)
 }
 
-public extension FocusCmdArgs {
-    var target: FocusCmdTarget {
+extension FocusCmdArgs {
+    public var target: FocusCmdTarget {
         if let direction {
             return .direction(direction)
         }
@@ -70,8 +70,8 @@ public extension FocusCmdArgs {
         die("Parser invariants are broken")
     }
 
-    var boundaries: Boundaries { rawBoundaries ?? .workspace }
-    var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .stop }
+    public var boundaries: Boundaries { rawBoundaries ?? .workspace }
+    public var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .stop }
 }
 
 public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {

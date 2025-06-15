@@ -54,8 +54,8 @@ private func prettyValue(_ value: Any?) -> Json {
     return .null
 }
 
-private extension AXUIElement {
-    var attrs: [String] {
+extension AXUIElement {
+    fileprivate var attrs: [String] {
         var rawArray: CFArray?
         AXUIElementCopyAttributeNames(self, &rawArray)
         return rawArray as? [String] ?? []

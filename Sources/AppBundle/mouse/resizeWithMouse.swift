@@ -78,16 +78,16 @@ private func resizeWithMouse(_ window: Window) async throws { // todo cover with
     }
 }
 
-private extension TreeNode {
+extension TreeNode {
     @MainActor
-    func getWeightBeforeResize(_ orientation: Orientation) -> CGFloat {
+    fileprivate func getWeightBeforeResize(_ orientation: Orientation) -> CGFloat {
         let currentWeight = getWeight(orientation) // Check assertions
         return getUserData(key: adaptiveWeightBeforeResizeWithMouseKey)
             ?? (lastAppliedLayoutVirtualRect?.getDimension(orientation) ?? currentWeight)
             .also { putUserData(key: adaptiveWeightBeforeResizeWithMouseKey, data: $0) }
     }
 
-    func resetResizeWeightBeforeResizeRecursive() {
+    fileprivate func resetResizeWeightBeforeResizeRecursive() {
         cleanUserData(key: adaptiveWeightBeforeResizeWithMouseKey)
         for child in children {
             child.resetResizeWeightBeforeResizeRecursive()

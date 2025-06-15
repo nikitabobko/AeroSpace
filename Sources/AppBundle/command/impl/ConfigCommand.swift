@@ -26,8 +26,8 @@ struct ConfigCommand: Command {
     }
 }
 
-private extension String {
-    func toKeyPath() -> Result<[String], String> {
+extension String {
+    fileprivate func toKeyPath() -> Result<[String], String> {
         if self == "." { return .success([]) }
         if isEmpty { return .failure("Invalid empty key") }
         if self.contains("..") { return .failure("Invalid key '\(self)'") }

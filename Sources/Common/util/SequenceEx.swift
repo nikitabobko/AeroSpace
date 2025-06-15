@@ -1,11 +1,11 @@
 import AppKit
 
-public extension Sequence {
-    func filterNotNil<Unwrapped>() -> [Unwrapped] where Element == Unwrapped? {
+extension Sequence {
+    public func filterNotNil<Unwrapped>() -> [Unwrapped] where Element == Unwrapped? {
         compactMap { $0 }
     }
 
-    func filterIsInstance<R>(of _: R.Type) -> [R] {
+    public func filterIsInstance<R>(of _: R.Type) -> [R] {
         var result: [R] = []
         for elem in self {
             if let elemR = elem as? R {
@@ -15,12 +15,12 @@ public extension Sequence {
         return result
     }
 
-    var first: Element? {
+    public var first: Element? {
         var iter = makeIterator()
         return iter.next()
     }
 
-    func mapAllOrFailure<T, E>(_ transform: (Self.Element) -> Result<T, E>) -> Result<[T], E> {
+    public func mapAllOrFailure<T, E>(_ transform: (Self.Element) -> Result<T, E>) -> Result<[T], E> {
         var result: [T] = []
         for element in self {
             switch transform(element) {
@@ -33,7 +33,7 @@ public extension Sequence {
         return .success(result)
     }
 
-    func mapAllOrFailures<T, E>(_ transform: (Self.Element) -> Result<T, E>) -> Result<[T], [E]> {
+    public func mapAllOrFailures<T, E>(_ transform: (Self.Element) -> Result<T, E>) -> Result<[T], [E]> {
         var result: [T] = []
         var errors: [E] = []
         for element in self {
@@ -45,27 +45,27 @@ public extension Sequence {
         return errors.isEmpty ? .success(result) : .failure(errors)
     }
 
-    @inlinable func minByOrDie(_ selector: (Self.Element) -> some Comparable) -> Self.Element {
+    @inlinable public func minByOrDie(_ selector: (Self.Element) -> some Comparable) -> Self.Element {
         minBy(selector) ?? dieT("Empty sequence")
     }
 
-    @inlinable func minBy(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
+    @inlinable public func minBy(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
         self.min(by: { a, b in selector(a) < selector(b) })
     }
 
-    @inlinable func maxByOrDie(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
+    @inlinable public func maxByOrDie(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
         self.maxBy(selector) ?? dieT("Empty sequence")
     }
 
-    @inlinable func maxBy(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
+    @inlinable public func maxBy(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
         self.max(by: { a, b in selector(a) < selector(b) })
     }
 
-    @inlinable func sortedBy(_ selector: (Self.Element) -> some Comparable) -> [Self.Element] {
+    @inlinable public func sortedBy(_ selector: (Self.Element) -> some Comparable) -> [Self.Element] {
         sorted(by: { a, b in selector(a) < selector(b) })
     }
 
-    @inlinable func sortedBy(_ selectors: [(Self.Element) -> some Comparable]) -> [Self.Element] {
+    @inlinable public func sortedBy(_ selectors: [(Self.Element) -> some Comparable]) -> [Self.Element] {
         sorted(by: { a, b in
             for selector in selectors {
                 let a = selector(a)
@@ -77,7 +77,7 @@ public extension Sequence {
         })
     }
 
-    func sumOf(_ selector: (Self.Element) -> Double) -> Double {
+    public func sumOf(_ selector: (Self.Element) -> Double) -> Double {
         var result: Double = 0
         for elem in self {
             result += selector(elem)
@@ -85,11 +85,11 @@ public extension Sequence {
         return result
     }
 
-    func grouped<Group>(by criterion: (_ transforming: Element) -> Group) -> [Group: [Element]] {
+    public func grouped<Group>(by criterion: (_ transforming: Element) -> Group) -> [Group: [Element]] {
         Dictionary(grouping: self, by: criterion)
     }
 
-    var withIndex: [(index: Int, value: Element)] {
+    public var withIndex: [(index: Int, value: Element)] {
         var index = -1
         return map {
             index += 1
@@ -98,16 +98,16 @@ public extension Sequence {
     }
 }
 
-public extension Sequence where Self.Element: Comparable {
-    func minOrDie() -> Self.Element {
+extension Sequence where Self.Element: Comparable {
+    public func minOrDie() -> Self.Element {
         self.min() ?? dieT("Empty sequence")
     }
 
-    func maxOrDie() -> Self.Element {
+    public func maxOrDie() -> Self.Element {
         self.max() ?? dieT("Empty sequence")
     }
 }
 
-public extension Sequence where Element: Hashable {
-    func toSet() -> Set<Element> { Set(self) }
+extension Sequence where Element: Hashable {
+    public func toSet() -> Set<Element> { Set(self) }
 }

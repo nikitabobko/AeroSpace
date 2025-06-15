@@ -149,8 +149,8 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
     return true
 }
 
-private extension TilingTreeNodeCases {
-    @MainActor func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TilingTreeNodeCases {
+extension TilingTreeNodeCases {
+    @MainActor fileprivate func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TilingTreeNodeCases {
         return switch self {
             case .window:
                 self

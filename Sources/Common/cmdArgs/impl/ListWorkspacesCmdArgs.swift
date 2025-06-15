@@ -49,8 +49,8 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     }
 }
 
-public extension ListWorkspacesCmdArgs {
-    var format: [StringInterToken] { _format.isEmpty ? [.interVar("workspace")] : _format }
+extension ListWorkspacesCmdArgs {
+    public var format: [StringInterToken] { _format.isEmpty ? [.interVar("workspace")] : _format }
 }
 
 public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {

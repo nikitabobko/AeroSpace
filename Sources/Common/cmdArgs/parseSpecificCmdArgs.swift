@@ -94,8 +94,8 @@ public enum ParsedCmd<T: Sendable>: Sendable {
     }
 }
 
-private extension ArgParserProtocol {
-    func transformRaw(_ raw: T, _ arg: String, _ args: inout [String], _ errors: inout [String]) -> T {
+extension ArgParserProtocol {
+    fileprivate func transformRaw(_ raw: T, _ arg: String, _ args: inout [String], _ errors: inout [String]) -> T {
         if let value = parse(arg, &args).getOrNil(appendErrorTo: &errors) {
             return raw.copy(keyPath, value)
         } else {

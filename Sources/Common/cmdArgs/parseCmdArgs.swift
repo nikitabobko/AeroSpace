@@ -19,14 +19,14 @@ public protocol CmdArgs: ConvenienceCopyable, Equatable, CustomStringConvertible
     var workspaceName: WorkspaceName? { get set }
 }
 
-public extension CmdArgs {
-    static var info: CmdStaticInfo { Self.parser.info }
+extension CmdArgs {
+    public static var info: CmdStaticInfo { Self.parser.info }
 
-    func equals(_ other: any CmdArgs) -> Bool { // My brain is cursed with Java
+    public func equals(_ other: any CmdArgs) -> Bool { // My brain is cursed with Java
         (other as? Self).flatMap { self == $0 } ?? false
     }
 
-    var description: String {
+    public var description: String {
         switch Self.info.kind {
             case .execAndForget:
                 CmdKind.execAndForget.rawValue + " " + (self as! ExecAndForgetCmdArgs).bashScript

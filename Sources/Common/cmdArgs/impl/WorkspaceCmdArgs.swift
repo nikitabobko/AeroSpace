@@ -29,9 +29,9 @@ public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArg
         .filterNot("--fail-if-noop is incompatible with --auto-back-and-forth") { $0.autoBackAndForth && $0.failIfNoop }
 }
 
-public extension WorkspaceCmdArgs {
-    var wrapAround: Bool { _wrapAround ?? false }
-    var autoBackAndForth: Bool { _autoBackAndForth ?? false }
+extension WorkspaceCmdArgs {
+    public var wrapAround: Bool { _wrapAround ?? false }
+    public var autoBackAndForth: Bool { _autoBackAndForth ?? false }
 }
 
 public enum WorkspaceTarget: Equatable, Sendable {

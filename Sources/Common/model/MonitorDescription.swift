@@ -50,8 +50,8 @@ public struct SendableRegex<Output>: Sendable {
     // init(_ str: String) { self.regex = regex }
 }
 
-public extension SendableRegex where Output == AnyRegexOutput {
-    init(_ pattern: String) throws {
+extension SendableRegex where Output == AnyRegexOutput {
+    public init(_ pattern: String) throws {
         self = SendableRegex(try Regex(pattern))
     }
 }

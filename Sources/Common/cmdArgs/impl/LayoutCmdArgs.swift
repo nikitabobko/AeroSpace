@@ -51,8 +51,8 @@ public func parseLayoutCmdArgs(_ args: [String]) -> ParsedCmd<LayoutCmdArgs> {
     }
 }
 
-private extension String {
-    func parseLayoutDescription() -> LayoutCmdArgs.LayoutDescription? {
+extension String {
+    fileprivate func parseLayoutDescription() -> LayoutCmdArgs.LayoutDescription? {
         if let parsed = LayoutCmdArgs.LayoutDescription(rawValue: self) {
             return parsed
         } else if self == "list" {

@@ -7,8 +7,8 @@ extension Workspace {
     }
 }
 
-private extension TilingContainer {
-    @MainActor func unbindEmptyAndAutoFlatten() {
+extension TilingContainer {
+    @MainActor fileprivate func unbindEmptyAndAutoFlatten() {
         if let child = children.singleOrNil(), config.enableNormalizationFlattenContainers && (child is TilingContainer || !isRootContainer) {
             child.unbindFromParent()
             let mru = parent?.mostRecentChild
