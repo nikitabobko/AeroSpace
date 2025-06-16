@@ -72,6 +72,7 @@ extension AXUIElement {
 private let globalIgnore: Set<String> = [
     "AXChildren", // too verbose
     "AXChildrenInNavigationOrder", // too verbose
+    "AXFocusableAncestor", // infinite recursion
     kAXHelpAttribute, // localized - not helpful
     kAXRoleDescriptionAttribute, // localized - not helpful
 ]
