@@ -11,7 +11,7 @@ private let disclaimer =
 
 @MainActor private var debugWindowsState: DebugWindowsState = .notRecording
 @MainActor private var debugWindowsLog: OrderedDictionary<UInt32, String> = [:]
-private let debugWindowsLimit = 5
+private let debugWindowsLimit = 10
 
 enum DebugWindowsState {
     case recording
