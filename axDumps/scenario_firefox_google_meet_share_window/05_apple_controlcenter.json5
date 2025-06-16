@@ -1,0 +1,36 @@
+{
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : "<AXUIElement 0x600003383ed0> {pid=562}",
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=385, title=nil, role=\"AXGroup\", subrole=\"AXHostingView\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=385, title=nil, role=\"AXWindow\", subrole=\"AXSystemDialog\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : null,
+    "AXMenuBar" : null,
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Control Centre",
+    "AXWindows" : [
+
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.apple.controlcenter",
+  "Aero.App.nsApp.activationPolicy" : "accessory",
+  "Aero.App.nsApp.execPath" : "file:///System/Library/CoreServices/ControlCenter.app/Contents/MacOS/ControlCenter",
+  "Aero.App.version" : "1",
+  "Aero.App.versionShort" : "1.0",
+  "Aero.AxUiElementWindowType" : "popup",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.axWindowId" : 15,
+  "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.TilingContainer)",
+  "Aero.workspace" : "F"
+}

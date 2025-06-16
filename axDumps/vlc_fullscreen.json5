@@ -1,3 +1,4 @@
+// non-native fullscreen (default)
 {
   "AXActivationPoint" : "<AXValue 0x600001c36e20> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
   "AXCancelButton" : null,
