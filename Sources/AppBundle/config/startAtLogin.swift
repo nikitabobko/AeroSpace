@@ -1,34 +1,21 @@
 import AppKit
 import Common
+import ServiceManagement
 
 @MainActor
 func syncStartAtLogin() {
+    cleanupPlistFromPrevVersions()
+    let service = SMAppService.mainApp
+    if config.startAtLogin {
+        _ = try? service.register()
+    } else {
+        _ = try? service.unregister()
+    }
+}
+
+private func cleanupPlistFromPrevVersions() { // Drop after a couple of versions
     let launchAgentsDir = FileManager.default.homeDirectoryForCurrentUser.appending(component: "Library/LaunchAgents/")
     Result { try FileManager.default.createDirectory(at: launchAgentsDir, withIntermediateDirectories: true) }.getOrDie()
     let url: URL = launchAgentsDir.appending(path: "bobko.aerospace.plist")
-    if config.startAtLogin {
-        let plist =
-            """
-            <?xml version="1.0" encoding="UTF-8"?>
-            <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-            <plist version="1.0">
-            <dict>
-                <key>Label</key>
-                <string>\(aeroSpaceAppId)</string>
-                <key>ProgramArguments</key>
-                <array>
-                    <string>\(URL(filePath: CommandLine.arguments.first ?? dieT("Can't get first argument")).absoluteURL.path)</string>
-                    <string>--started-at-login</string>
-                </array>
-                <key>RunAtLoad</key>
-                <true/>
-            </dict>
-            </plist>
-            """
-        if plist != (try? String(contentsOf: url)) {
-            Result { try plist.write(to: url, atomically: false, encoding: .utf8) }.getOrDie("Can't write to \(url) ")
-        }
-    } else {
-        try? FileManager.default.removeItem(at: url)
-    }
+    try? FileManager.default.removeItem(at: url)
 }
