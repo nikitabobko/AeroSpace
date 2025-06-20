@@ -34,6 +34,7 @@ targets:
         # Agent apps do not appear in the Dock or in the Force Quit window
         INFOPLIST_KEY_LSUIElement: YES
         CODE_SIGN_IDENTITY: ${XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY}
+        BUILD_LIBRARY_FOR_DISTRIBUTION: YES
       configs:
         Debug:
           PRODUCT_NAME: AeroSpace-Debug
