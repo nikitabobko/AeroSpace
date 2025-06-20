@@ -13,7 +13,7 @@ on:
 jobs:
   build:
     strategy:
-      # fail-fast: false # Disable fail-fast in matrix
+      fail-fast: false # Disable fail-fast in matrix
       matrix:
         # https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md
@@ -24,6 +24,9 @@ jobs:
         # - https://en.wikipedia.org/wiki/Xcode
         # - https://xcodereleases.com/?scope=release
         os: [macos-13, macos-14, macos-15]
+        include:
+          - os: macos-15
+            use_xcode_26: '1'
     name: Build
     runs-on: ${{ matrix.os }}
 
@@ -35,9 +38,16 @@ jobs:
           sw_vers -productVersion
           if sw_vers -productVersion | grep -q "^13"; then # macOS 13
             true # Xcode 16 is not supported on macOS 13 :(
+          elif test -n "$use_xcode_26"; then
+            echo "Use Xcode 26"
+            sudo xcode-select -s "/Applications/Xcode_26.0.app"
           else
-            sudo xcode-select -s "$XCODE_16_DEVELOPER_DIR" # Affects macOS SDK
+            echo "Use Xcode 26"
+            sudo xcode-select -s "/Applications/Xcode_26.0.app"
+            # sudo xcode-select -s "$XCODE_16_DEVELOPER_DIR" # Affects macOS SDK
           fi
+        env:
+          use_xcode_26: ${{ matrix.use_xcode_26 }}
       - run: brew update && brew install bash fish xcbeautify swiftly
       - run: swiftly init --skip-install --assume-yes --verbose && swiftly install
       - run: ./script/install-dep.sh --all
