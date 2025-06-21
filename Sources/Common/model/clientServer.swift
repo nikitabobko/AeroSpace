@@ -20,7 +20,6 @@ public struct ServerAnswer: Codable, Sendable {
 }
 
 public struct ClientRequest: Codable, Sendable, Equatable {
-    public let command: String // Unused. keep it for API compatibility with old servers for a couple of version
     public let args: [String]
     public let stdin: String
 
@@ -28,11 +27,6 @@ public struct ClientRequest: Codable, Sendable, Equatable {
         args: [String],
         stdin: String
     ) {
-        if args.contains(where: { $0.rangeOfCharacter(from: .whitespacesAndNewlines) != nil || $0.contains("\"") || $0.contains("\'") }) {
-            self.command = "" // Old server won't understand it anyway
-        } else {
-            self.command = args.joined(separator: " ")
-        }
         self.args = args
         self.stdin = stdin
     }
