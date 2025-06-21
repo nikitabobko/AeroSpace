@@ -19,7 +19,7 @@ public struct ServerAnswer: Codable, Sendable {
     }
 }
 
-public struct ClientRequest: Codable, Sendable, Equatable {
+public struct ClientRequest: Codable, Sendable {
     public let args: [String]
     public let stdin: String
 

@@ -31,13 +31,18 @@ func assertEquals<T>(_ actual: T, _ expected: T, additionalMsg: String? = nil, f
     }
 }
 
-func assertSucc<T>(_ actual: Result<T, some Any>, _ expected: T? = nil, file: String = #filePath, line: Int = #line) where T: Equatable {
+
+func assertSucc<T>(_ actual: Result<T, some Any>, file: String = #filePath, line: Int = #line) {
     switch actual {
         case .failure: failExpectedActual("Result.success", actual, file: file, line: line)
-        case .success(let actual):
-            if let expected {
-                assertEquals(actual, expected, file: file, line: line)
-            }
+        case .success: break
+    }
+}
+
+func assertSucc<T>(_ actual: Result<T, some Any>, _ expected: T, file: String = #filePath, line: Int = #line) where T: Equatable {
+    switch actual {
+        case .failure: failExpectedActual("Result.success", actual, file: file, line: line)
+        case .success(let actual): assertEquals(actual, expected, file: file, line: line)
     }
 }
 func assertFail<F>(_ actual: Result<some Any, F>, _ expected: F? = nil, file: String = #filePath, line: Int = #line) where F: Equatable {
