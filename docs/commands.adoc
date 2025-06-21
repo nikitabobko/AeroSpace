@@ -168,6 +168,13 @@ include::aerospace-split.adoc[tags=synopsis]
 include::aerospace-split.adoc[tags=purpose]
 include::aerospace-split.adoc[tags=body]
 
+== swap
+----
+include::aerospace-swap.adoc[tags=synopsis]
+----
+include::aerospace-swap.adoc[tags=purpose]
+include::aerospace-swap.adoc[tags=body]
+
 == summon-workspace
 ----
 include::./aerospace-summon-workspace.adoc[tags=synopsis]

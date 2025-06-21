@@ -25,7 +25,7 @@ final class FocusCommandTest: XCTestCase {
 
     func testParse() {
         XCTAssertTrue(parseCommand("focus --boundaries left").errorOrNil?.contains("Possible values") == true)
-        var expected = FocusCmdArgs(rawArgs: [], direction: .left)
+        var expected = FocusCmdArgs(rawArgs: [], cardinalOrDfsDirection: .direction(.left))
         expected.rawBoundaries = .workspace
         testParseCommandSucc("focus --boundaries workspace left", expected)
 
@@ -36,6 +36,10 @@ final class FocusCommandTest: XCTestCase {
         assertEquals(
             parseCommand("focus --window-id 42 --ignore-floating").errorOrNil,
             "--window-id is incompatible with other options",
+        )
+        assertEquals(
+            parseCommand("focus --boundaries all-monitors-outer-frame dfs-next").errorOrNil,
+            "(dfs-next|dfs-prev) only supports --boundaries workspace",
         )
     }
 
@@ -92,7 +96,7 @@ final class FocusCommandTest: XCTestCase {
         }
 
         assertEquals(focus.windowOrNil?.windowId, 1)
-        var args = FocusCmdArgs(rawArgs: [], direction: .left)
+        var args = FocusCmdArgs(rawArgs: [], cardinalOrDfsDirection: .direction(.left))
         args.rawBoundaries = .workspace
         args.rawBoundariesAction = .wrapAroundTheWorkspace
         try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin)
@@ -156,10 +160,79 @@ final class FocusCommandTest: XCTestCase {
         try await FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
+
+    func testFocusDfsRelative() async throws {
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+                TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
+                    TestWindow.new(id: 2, parent: $0)
+                    TestWindow.new(id: 3, parent: $0)
+                }
+            }
+            TestWindow.new(id: 4, parent: $0)
+        }
+
+        assertEquals(focus.windowOrNil?.windowId, 1)
+
+        try await FocusCommand.new(dfsRelative: .dfsNext).run(.defaultEnv, .emptyStdin)
+        assertEquals(focus.windowOrNil?.windowId, 2)
+        try await FocusCommand.new(dfsRelative: .dfsNext).run(.defaultEnv, .emptyStdin)
+        assertEquals(focus.windowOrNil?.windowId, 3)
+        try await FocusCommand.new(dfsRelative: .dfsNext).run(.defaultEnv, .emptyStdin)
+        assertEquals(focus.windowOrNil?.windowId, 4)
+
+        try await FocusCommand.new(dfsRelative: .dfsPrev).run(.defaultEnv, .emptyStdin)
+        assertEquals(focus.windowOrNil?.windowId, 3)
+        try await FocusCommand.new(dfsRelative: .dfsPrev).run(.defaultEnv, .emptyStdin)
+        assertEquals(focus.windowOrNil?.windowId, 2)
+        try await FocusCommand.new(dfsRelative: .dfsPrev).run(.defaultEnv, .emptyStdin)
+        assertEquals(focus.windowOrNil?.windowId, 1)
+    }
+
+    func testFocusDfsRelativeWrapping() async throws {
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
+        }
+
+        assertEquals(focus.windowOrNil?.windowId, 1)
+
+        var args = FocusCmdArgs(rawArgs: [], cardinalOrDfsDirection: .dfsRelative(.dfsPrev))
+
+        args.rawBoundariesAction = .stop
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        assertEquals(focus.windowOrNil?.windowId, 1)
+
+        args.rawBoundariesAction = .fail
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 1)
+        assertEquals(focus.windowOrNil?.windowId, 1)
+
+        args.rawBoundariesAction = .wrapAroundTheWorkspace
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        assertEquals(focus.windowOrNil?.windowId, 2)
+
+        args.cardinalOrDfsDirection = .dfsRelative(.dfsNext)
+
+        args.rawBoundariesAction = .stop
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        assertEquals(focus.windowOrNil?.windowId, 2)
+
+        args.rawBoundariesAction = .fail
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 1)
+        assertEquals(focus.windowOrNil?.windowId, 2)
+
+        args.rawBoundariesAction = .wrapAroundTheWorkspace
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        assertEquals(focus.windowOrNil?.windowId, 1)
+    }
 }
 
 extension FocusCommand {
     static func new(direction: CardinalDirection) -> FocusCommand {
-        FocusCommand(args: FocusCmdArgs(rawArgs: [], direction: direction))
+        FocusCommand(args: FocusCmdArgs(rawArgs: [], cardinalOrDfsDirection: .direction(direction)))
+    }
+    static func new(dfsRelative: DfsNextPrev) -> FocusCommand {
+        FocusCommand(args: FocusCmdArgs(rawArgs: [], cardinalOrDfsDirection: .dfsRelative(dfsRelative)))
     }
 }
