@@ -46,7 +46,7 @@ struct Main {
 
         let socketFile = "/tmp/\(aeroSpaceAppId)-\(unixUserName).sock"
 
-        if let e: Error = Result(catching: { try socket.connect(to: socketFile) }).errorOrNil {
+        if let e: Error = Result(catching: { try socket.connect(to: socketFile) }).failureOrNil {
             if isVersion {
                 printVersionAndExit(serverVersion: nil)
             } else {

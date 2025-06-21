@@ -128,16 +128,6 @@ public func check(
     }
 }
 
-@inlinable public func tryCatch<T>(
-    file: String = #fileID,
-    line: Int = #line,
-    column: Int = #column,
-    function: String = #function,
-    body: () throws -> T
-) -> Result<T, Error> {
-    Result(catching: body)
-}
-
 public var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
 
 extension CaseIterable where Self: RawRepresentable, RawValue == String {

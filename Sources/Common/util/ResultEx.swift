@@ -27,7 +27,7 @@ extension Result {
         }
     }
 
-    public var errorOrNil: Failure? {
+    public var failureOrNil: Failure? {
         return switch self {
             case .success: nil
             case .failure(let f): f

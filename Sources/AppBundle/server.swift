@@ -57,13 +57,13 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             answerToClient(exitCode: 1, stderr: "Empty request")
             return
         }
-        let _request = tryCatch(body: { try JSONDecoder().decode(ClientRequest.self, from: rawRequest) })
+        let _request = ClientRequest.decodeJson(rawRequest)
         guard let request: ClientRequest = _request.getOrNil() else {
             answerToClient(
                 exitCode: 1,
                 stderr: """
-                    Can't parse request '\(String(describing: String(data: rawRequest, encoding: .utf8)))'.
-                    Error: \(String(describing: _request.errorOrNil))
+                    Can't parse request '\(String(describing: String(data: rawRequest, encoding: .utf8)).singleQuoted)'.
+                    Error: \(_request.failureOrNil.prettyDescription)
                     """,
             )
             continue
@@ -104,7 +104,7 @@ private func newConnection(_ socket: Socket) async { // todo add exit codes
             let answer = _answer.getOrNil() ??
                 ServerAnswer(
                     exitCode: 1,
-                    stderr: "Fail to await main thread. \(_answer.errorOrNil?.localizedDescription ?? "")",
+                    stderr: "Fail to await main thread. \(_answer.failureOrNil?.localizedDescription ?? "")",
                     serverVersionAndHash: serverVersionAndHash,
                 )
             answerToClient(answer)

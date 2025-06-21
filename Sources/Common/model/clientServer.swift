@@ -19,7 +19,7 @@ public struct ServerAnswer: Codable, Sendable {
     }
 }
 
-public struct ClientRequest: Codable, Sendable {
+public struct ClientRequest: Codable, Sendable, Equatable {
     public let command: String // Unused. keep it for API compatibility with old servers for a couple of version
     public let args: [String]
     public let stdin: String
@@ -35,5 +35,9 @@ public struct ClientRequest: Codable, Sendable {
         }
         self.args = args
         self.stdin = stdin
+    }
+
+    public static func decodeJson(_ data: Data) -> Result<ClientRequest, String> {
+        Result { try JSONDecoder().decode(Self.self, from: data) }.mapError { $0.localizedDescription }
     }
 }
