@@ -13,7 +13,7 @@ func syncStartAtLogin() {
     }
 }
 
-private func cleanupPlistFromPrevVersions() { // Drop after a couple of versions
+private func cleanupPlistFromPrevVersions() { // todo Drop after a couple of versions
     let launchAgentsDir = FileManager.default.homeDirectoryForCurrentUser.appending(component: "Library/LaunchAgents/")
     Result { try FileManager.default.createDirectory(at: launchAgentsDir, withIntermediateDirectories: true) }.getOrDie()
     let url: URL = launchAgentsDir.appending(path: "bobko.aerospace.plist")

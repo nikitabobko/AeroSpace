@@ -78,11 +78,9 @@ private func initServerArgs() {
                     cliError("Missing <path> in --config-path flag")
                 }
                 args = Array(args.dropFirst(2))
-            case "-NSDocumentRevisionsDebugMode":
-                if (isDebug) {
-                    printStderr("Running from Xcode. Skip args parsing...")
-                    return
-                }
+            case "-NSDocumentRevisionsDebugMode" where isDebug:
+                printStderr("Running from Xcode. Skip args parsing...")
+                return
             default:
                 cliError("Unrecognized flag '\(args.first.orDie())'")
         }

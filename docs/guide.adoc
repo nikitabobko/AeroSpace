@@ -680,7 +680,7 @@ Even some Apple dialogs don't implement the API properly.
 
 AeroSpace uses the API to gently ask windows whether they are dialogs, but AeroSpace also applies some heuristics.
 
-For example, windows without a fullscreen button (NB! fullscreen button and maximize button are different buttons) are considered dialogs, excluding terminal apps (WezTerm, Alacritty, iTerm2).
+For example, windows without a fullscreen button (NB! fullscreen button and maximize button are different buttons) are generally considered dialogs, excluding terminal apps (WezTerm, Alacritty, iTerm2, etc.).
 
 Windows that are recognized as dialogs are floated by default.
 
