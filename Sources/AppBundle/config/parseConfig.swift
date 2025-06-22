@@ -88,7 +88,7 @@ private let modeConfigRootKey = "mode"
 // 1. Does it make sense to have different value
 // 2. Prefer commands and commands flags over toml options if possible
 private let configParser: [String: any ParserProtocol<Config>] = [
-    "after-login-command": Parser(\.afterLoginCommand) { parseCommandOrCommands($0).toParsedToml($1) },
+    "after-login-command": Parser(\.afterLoginCommand, parseAfterLoginCommand),
     "after-startup-command": Parser(\.afterStartupCommand) { parseCommandOrCommands($0).toParsedToml($1) },
 
     "on-focus-changed": Parser(\.onFocusChanged) { parseCommandOrCommands($0).toParsedToml($1) },
@@ -136,6 +136,14 @@ extension Command {
     fileprivate var isMacOsNativeCommand: Bool { // Problem ID-B6E178F2
         self is MacosNativeMinimizeCommand || self is MacosNativeFullscreenCommand
     }
+}
+
+func parseAfterLoginCommand(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<[any Command]> {
+    if let array = raw.array, array.count == 0 {
+        return .success([])
+    }
+    let msg = "after-login-command is deprecated since AeroSpace 0.19.0. https://github.com/nikitabobko/AeroSpace/issues/1482"
+    return .failure(.semantic(backtrace, msg))
 }
 
 func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]> {
