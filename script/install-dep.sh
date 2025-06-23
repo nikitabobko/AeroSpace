@@ -47,45 +47,59 @@ if test $all == 1 || test $complgen == 1; then
     fi
 fi
 
-download-zip-and-link-bin() {
+lazy-download-zip-and-link-bin() {
     artifact_name=$1
-    link=$2
-    path_inside_zip=$3
-    rm -rf ".deps/$artifact_name" && mkdir -p ".deps/$artifact_name/dist"
-    curl -L "$link" -o ".deps/$artifact_name/dist/zip.zip"
-    (cd "./.deps/$artifact_name/dist" && unzip zip.zip && rm -rf zip.zip)
-    (cd "./.deps/$artifact_name" && ln -s "./dist/$path_inside_zip" "$artifact_name")
+    version=$2
+    link=$3
+    sha=$4
+    path_inside_zip=$5
+
+    root_path=".deps/$artifact_name"
+    marker_path="$root_path/$version.marker"
+    root_dist_path="$root_path/dist"
+    zip_name="zip.zip"
+    zip_path="$root_dist_path/$zip_name"
+
+    if ! test -f "$marker_path"; then
+        rm -rf "$root_path" && mkdir -p "$root_dist_path"
+        curl -L "$link" -o "$zip_path"
+        (cd "$root_dist_path" && unzip "$zip_name")
+        (cd "$root_path" && ln -s "./dist/$path_inside_zip" "$artifact_name")
+
+        diff --color <(echo "$sha") <(shasum -a 256 "$zip_path")
+        touch "$marker_path"
+    fi
 }
 
 if test $all == 1 || test $swiftlint == 1; then
     # https://github.com/realm/SwiftLint/releases
     swiftlint_version=0.56.2
-    if ! check-version $swiftlint_version ./.deps/swiftlint/swiftlint --version; then
-        download-zip-and-link-bin \
-            swiftlint \
-            https://github.com/realm/SwiftLint/releases/download/$swiftlint_version/SwiftLintBinary-macos.artifactbundle.zip \
-            SwiftLintBinary.artifactbundle/swiftlint-$swiftlint_version-macos/bin/swiftlint
-    fi
+    lazy-download-zip-and-link-bin \
+        swiftlint \
+        $swiftlint_version \
+        https://github.com/realm/SwiftLint/releases/download/$swiftlint_version/SwiftLintBinary-macos.artifactbundle.zip \
+        '197df93d7f5041d8cd46d6902a34ad57914efe1b5b50635995f3b9065f2c3ffd  .deps/swiftlint/dist/zip.zip' \
+        SwiftLintBinary.artifactbundle/swiftlint-$swiftlint_version-macos/bin/swiftlint
 fi
 
 if test $all == 1 || test $xcodegen == 1; then
     # https://github.com/yonaskolb/XcodeGen/releases
     xcodegen_version=2.42.0
-    if ! check-version $xcodegen_version ./.deps/xcodegen/xcodegen --version; then
-        download-zip-and-link-bin \
-            xcodegen \
-            https://github.com/yonaskolb/XcodeGen/releases/download/$xcodegen_version/xcodegen.artifactbundle.zip \
-            xcodegen.artifactbundle/xcodegen-$xcodegen_version-macosx/bin/xcodegen
-    fi
+    lazy-download-zip-and-link-bin \
+        xcodegen \
+        $xcodegen_version \
+        https://github.com/yonaskolb/XcodeGen/releases/download/$xcodegen_version/xcodegen.artifactbundle.zip \
+        '1b677f04a4239e90c5b4a1b2ed0d5eefaf5afab2f012af6dacef6d4d3a53ccba  .deps/xcodegen/dist/zip.zip' \
+        xcodegen.artifactbundle/xcodegen-$xcodegen_version-macosx/bin/xcodegen
 fi
 
 if test $all == 1 || test $swiftformat == 1; then
     # https://github.com/nicklockwood/SwiftFormat/releases
     swiftformat_version=0.56.4
-    if ! check-version $swiftformat_version ./.deps/swiftformat/swiftformat --version; then
-        download-zip-and-link-bin \
-            swiftformat \
-            https://github.com/nicklockwood/SwiftFormat/releases/download/$swiftformat_version/swiftformat.artifactbundle.zip \
-            swiftformat.artifactbundle/swiftformat-$swiftformat_version-macos/bin/swiftformat
-    fi
+    lazy-download-zip-and-link-bin \
+        swiftformat \
+        $swiftformat_version \
+        https://github.com/nicklockwood/SwiftFormat/releases/download/$swiftformat_version/swiftformat.artifactbundle.zip \
+        '8b9c5ce7e3172b7d6f3d5c450495e8fbc5f60e2b80e03dff215cfff36f35425b  .deps/swiftformat/dist/zip.zip' \
+        swiftformat.artifactbundle/swiftformat-$swiftformat_version-macos/bin/swiftformat
 fi
