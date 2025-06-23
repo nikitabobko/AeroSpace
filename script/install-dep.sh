@@ -84,12 +84,12 @@ fi
 
 if test $all == 1 || test $xcodegen == 1; then
     # https://github.com/yonaskolb/XcodeGen/releases
-    xcodegen_version=2.42.0
+    xcodegen_version=2.43.0
     lazy-download-zip-and-link-bin \
         xcodegen \
         $xcodegen_version \
         https://github.com/yonaskolb/XcodeGen/releases/download/$xcodegen_version/xcodegen.artifactbundle.zip \
-        '1b677f04a4239e90c5b4a1b2ed0d5eefaf5afab2f012af6dacef6d4d3a53ccba  .deps/xcodegen/dist/zip.zip' \
+        'b08135558e9e061440c148a91cc07142a534e99dd8a17bc050a3d30a5b5d340d  .deps/xcodegen/dist/zip.zip' \
         xcodegen.artifactbundle/xcodegen-$xcodegen_version-macosx/bin/xcodegen
 fi
 
