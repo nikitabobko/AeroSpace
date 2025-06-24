@@ -48,7 +48,9 @@ extension MonitorTarget {
 
 extension Monitor {
     func relation(to monitor: Monitor) -> Orientation {
-        (rect.minY ..< rect.maxY).overlaps(monitor.rect.minY ..< monitor.rect.maxY) ? .h : .v
+        guard let otherYRange = monitor.rect.minY.until(excl: monitor.rect.maxY) else { return .h }
+        guard let myYRange = rect.minY.until(excl: rect.maxY) else { return .h }
+        return myYRange.overlaps(otherYRange) ? .h : .v
     }
 
     func findRelativeMonitor(inDirection direction: CardinalDirection) -> (monitorsInDirection: [Monitor], index: Int)? {

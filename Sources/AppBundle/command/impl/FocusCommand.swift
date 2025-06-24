@@ -106,7 +106,7 @@ struct FocusCommand: Command {
         let center = try await window.getCenter() // todo bug: we shouldn't access ax api here. What if the window was moved but it wasn't committed to ax yet?
         guard let center else { continue }
         // todo bug: what if there are no tiling windows on the workspace?
-        guard let target = center.coerceIn(rect: workspace.workspaceMonitor.visibleRectPaddedByOuterGaps).findIn(tree: workspace.rootTilingContainer, virtual: true) else { continue }
+        guard let target = center.coerceIn(rect: workspace.workspaceMonitor.visibleRectPaddedByOuterGaps)?.findIn(tree: workspace.rootTilingContainer, virtual: true) else { continue }
         guard let targetCenter = try await target.getCenter() else { continue }
         guard let tilingParent = target.parent as? TilingContainer else { continue }
         let index = center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)

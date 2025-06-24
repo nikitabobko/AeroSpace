@@ -4,8 +4,25 @@ import Common
 struct Rect: ConvenienceCopyable, AeroAny {
     var topLeftX: CGFloat
     var topLeftY: CGFloat
-    var width: CGFloat
-    var height: CGFloat
+
+    private var _width: CGFloat
+    var width: CGFloat {
+        get { max(_width, 0) }
+        set(newValue) { _width = newValue }
+    }
+
+    private var _height: CGFloat
+    var height: CGFloat {
+        get { max(_height, 0) }
+        set(newValue) { _height = newValue }
+    }
+
+    init(topLeftX: CGFloat, topLeftY: CGFloat, width: CGFloat, height: CGFloat) {
+        self.topLeftX = topLeftX
+        self.topLeftY = topLeftY
+        self._width = width
+        self._height = height
+    }
 }
 
 extension CGRect {
@@ -24,9 +41,7 @@ extension CGRect {
 
 extension Rect {
     func contains(_ point: CGPoint) -> Bool {
-        let x = point.x
-        let y = point.y
-        return (minX ..< maxX).contains(x) && (minY ..< maxY).contains(y)
+        minX.until(excl: maxX)?.contains(point.x) == true && minY.until(excl: maxY)?.contains(point.y) == true
     }
 
     var center: CGPoint {

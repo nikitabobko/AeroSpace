@@ -86,8 +86,8 @@ extension CGPoint: ConvenienceCopyable {}
 extension CGPoint {
     /// Distance to ``Rect`` outline frame
     func distanceToRectFrame(to rect: Rect) -> CGFloat {
-        let list: [CGFloat] = ((rect.minY ..< rect.maxY).contains(y) ? [abs(rect.minX - x), abs(rect.maxX - x)] : []) +
-            ((rect.minX ..< rect.maxX).contains(x) ? [abs(rect.minY - y), abs(rect.maxY - y)] : []) +
+        let list: [CGFloat] = (rect.minY.until(excl: rect.maxY)?.contains(y) == true ? [abs(rect.minX - x), abs(rect.maxX - x)] : []) +
+            (rect.minX.until(excl: rect.maxX)?.contains(x) == true ? [abs(rect.minY - y), abs(rect.maxY - y)] : []) +
             [
                 distance(to: rect.topLeftCorner),
                 distance(to: rect.bottomRightCorner),
@@ -97,8 +97,10 @@ extension CGPoint {
         return list.minOrDie()
     }
 
-    func coerceIn(rect: Rect) -> CGPoint {
-        CGPoint(x: x.coerceIn(rect.minX ... (rect.maxX - 1)), y: y.coerceIn(rect.minY ... (rect.maxY - 1)))
+    func coerceIn(rect: Rect) -> CGPoint? {
+        guard let xRange = rect.minX.until(incl: rect.maxX - 1) else { return nil }
+        guard let yRange = rect.minY.until(incl: rect.maxY - 1) else { return nil }
+        return CGPoint(x: x.coerceIn(xRange), y: y.coerceIn(yRange))
     }
 
     func addingXOffset(_ offset: CGFloat) -> CGPoint { CGPoint(x: x + offset, y: y) }
