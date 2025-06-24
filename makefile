@@ -8,4 +8,4 @@ test:
 	./run-tests.sh
 
 format:
-	./swiftformat.sh
+	./format.sh
