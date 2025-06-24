@@ -48,8 +48,8 @@ extension [AeroObj] {
                         }
                 }
             }
-            if !curCell.isEmpty { line.append(Cell(value: curCell, rightPadding: false)) }
             if !errors.isEmpty { return .failure(errors.joinErrors()) }
+            line.append(Cell(value: curCell, rightPadding: false))
             cellTable.append(line)
         }
         let result = cellTable

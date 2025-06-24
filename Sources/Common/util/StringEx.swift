@@ -53,7 +53,7 @@ extension Array { // todo move to ArrayEx.swift
         var result: [[T]] = []
         for columnIndex in 0... {
             if columnIndex < table.first.orDie().count {
-                result += [table.map { row in row[columnIndex] }]
+                result += [table.map { row in row.getOrNil(atIndex: columnIndex).orDie() }]
             } else {
                 break
             }
