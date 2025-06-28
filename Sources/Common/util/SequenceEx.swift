@@ -77,7 +77,7 @@ extension Sequence {
         })
     }
 
-    public func sumOf(_ selector: (Self.Element) -> Double) -> Double {
+    public func sumOfDouble(_ selector: (Self.Element) -> Double) -> Double {
         var result: Double = 0
         for elem in self {
             result += selector(elem)
