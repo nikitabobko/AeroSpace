@@ -336,6 +336,13 @@ indirect enum TomlBacktrace: CustomStringConvertible, Equatable {
         }
     }
 
+    var isRootKey: Bool {
+        return switch self {
+            case .rootKey: true
+            default: false
+        }
+    }
+
     static func + (lhs: TomlBacktrace, rhs: TomlBacktrace) -> TomlBacktrace {
         if case .emptyRoot = lhs {
             if case .key(let newRoot) = rhs {
@@ -372,7 +379,7 @@ extension TOMLTable {
 }
 
 func unknownKeyError(_ backtrace: TomlBacktrace) -> TomlParseError {
-    .semantic(backtrace, "Unknown key")
+    .semantic(backtrace, backtrace.isRootKey ? "Unknown top-level key" : "Unknown key")
 }
 
 func expectedActualTypeError(expected: TOMLType, actual: TOMLType, _ backtrace: TomlBacktrace) -> TomlParseError {

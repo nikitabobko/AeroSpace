@@ -105,7 +105,7 @@ final class ConfigTest: XCTestCase {
         assertEquals(config.preservedWorkspaceNames.sorted(), ["1", "2", "3", "4"])
     }
 
-    func testUnknownKeyParseError() {
+    func testUnknownTopLevelKeyParseError() {
         let (config, errors) = parseConfig(
             """
             unknownKey = true
@@ -114,7 +114,22 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(
             errors.descriptions,
-            ["unknownKey: Unknown key"],
+            ["unknownKey: Unknown top-level key"],
+        )
+        assertEquals(config.enableNormalizationFlattenContainers, false)
+    }
+
+    func testUnknownKeyParseError() {
+        let (config, errors) = parseConfig(
+            """
+            enable-normalization-flatten-containers = false
+            [gaps]
+                unknownKey = true
+            """,
+        )
+        assertEquals(
+            errors.descriptions,
+            ["gaps.unknownKey: Unknown key"],
         )
         assertEquals(config.enableNormalizationFlattenContainers, false)
     }
