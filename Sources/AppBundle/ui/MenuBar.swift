@@ -33,8 +33,6 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             Text(sponsorshipPrompts.randomElement().orDie())
         }
         Divider()
-        getExperimentalUISettingsMenu(viewModel: viewModel)
-        Divider()
         Button(viewModel.isEnabled ? "Disable" : "Enable") {
             Task {
                 try await runSession(.menuBarButton, .forceRun) { () throws in
@@ -43,6 +41,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
                 }
             }
         }.keyboardShortcut("E", modifiers: .command)
+        getExperimentalUISettingsMenu(viewModel: viewModel)
         let editor = getTextEditorToOpenConfig()
         Button("Open config in '\(editor.lastPathComponent)'") {
             let fallbackConfig: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName)
