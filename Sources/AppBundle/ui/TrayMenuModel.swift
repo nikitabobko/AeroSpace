@@ -24,10 +24,16 @@ public class TrayMenuModel: ObservableObject {
         }
         .joined(separator: " │ ")
     TrayMenuModel.shared.workspaces = Workspace.all.map {
-        let monitor = $0.isVisible || !$0.isEffectivelyEmpty ? " - \($0.workspaceMonitor.name)" : ""
+        let apps = $0.allLeafWindowsRecursive.map { $0.app.name?.takeIf { !$0.isEmpty } }.filterNotNil().toSet()
+        let dash = " - "
+        let suffix = switch () {
+            case _ where !apps.isEmpty: dash + apps.sorted().joinTruncating(separator: ", ", length: 25)
+            case _ where $0.isVisible: dash + $0.workspaceMonitor.name
+            default: ""
+        }
         return WorkspaceViewModel(
             name: $0.name,
-            suffix: monitor,
+            suffix: suffix,
             isFocused: focus.workspace == $0,
             isEffectivelyEmpty: $0.isEffectivelyEmpty,
             isVisible: $0.isVisible,

@@ -29,6 +29,29 @@ extension [String] {
         }
         .joined(separator: "\n")
     }
+
+    public func joinTruncating(separator: String, length maxLength: Int, trailing: String = "…") -> String {
+        if isEmpty {
+            return ""
+        }
+        var remainingLen = maxLength
+        let separatorCount = separator.count
+        var result: String = first.orDie()
+        for _elem in self.dropFirst() {
+            let elemCount = separatorCount + _elem.count
+            if remainingLen < elemCount / 2 {
+                return result + separator + trailing
+            }
+            let elem = separator + _elem
+            if elemCount < remainingLen {
+                result += elem
+                remainingLen -= elemCount
+            } else {
+                return result + elem.prefix(remainingLen) + trailing
+            }
+        }
+        return result
+    }
 }
 
 extension [[String]] {
