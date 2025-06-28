@@ -4,11 +4,16 @@ extension Workspace {
     @MainActor // todo can be dropped in future Swift versions?
     func layoutWorkspace() async throws {
         if isEffectivelyEmpty { return }
-        let rect = workspaceMonitor.visibleRectPaddedByOuterGaps
+
+        // Create LayoutContext first to get correct gaps including single-window adjustments
+        let context = LayoutContext(self)
+        let baseRect = workspaceMonitor.visibleRect
+        let rect = context.resolvedGaps.applyToRect(baseRect)
+
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in mointors horizontal configuration. ¯\_(ツ)_/¯
-        try await layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, LayoutContext(self))
+        try await layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, context)
     }
 }
 
@@ -34,7 +39,6 @@ extension TreeNode {
                         window.layoutFullscreen(context)
                     } else {
                         lastAppliedLayoutPhysicalRect = physicalRect
-                        window.isFullscreen = false
                         window.setAxFrame(point, CGSize(width: width, height: height))
                     }
                 }
@@ -61,7 +65,72 @@ private struct LayoutContext {
     @MainActor
     init(_ workspace: Workspace) {
         self.workspace = workspace
-        self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor)
+        let singleWindowSideGap = Self.calculateSingleWindowSideGap(for: workspace)
+        self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor, singleWindowSideGap: singleWindowSideGap)
+    }
+
+    @MainActor
+    init(_ workspace: Workspace, forceFullscreenAsSingleWindow fullscreenWindow: Window) {
+        self.workspace = workspace
+        let singleWindowSideGap = Self.calculateSingleWindowSideGap(for: workspace, forceFullscreenAsSingleWindow: fullscreenWindow)
+        self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor, singleWindowSideGap: singleWindowSideGap)
+    }
+
+    @MainActor
+    private static func calculateSingleWindowSideGap(for workspace: Workspace, forceFullscreenAsSingleWindow fullscreenWindow: Window? = nil) -> Int {
+        let windowCount = workspace.rootTilingContainer.allLeafWindowsRecursive.count
+
+        guard let window = getEffectiveWindow(workspace: workspace, fullscreenOverride: fullscreenWindow) else {
+            return 0
+        }
+
+        guard shouldApplySingleWindowConstraints(window: window, windowCount: windowCount, fullscreenOverride: fullscreenWindow) else {
+            return 0
+        }
+
+        return calculateSideGapForWindow(window, monitor: workspace.workspaceMonitor)
+    }
+
+    @MainActor
+    private static func getEffectiveWindow(workspace: Workspace, fullscreenOverride: Window?) -> Window? {
+        if let fullscreenWindow = fullscreenOverride {
+            // For fullscreen windows, treat as single window regardless of actual count
+            return fullscreenWindow
+        } else {
+            // Normal behavior: only apply single-window logic when there's exactly one window
+            let windowCount = workspace.rootTilingContainer.allLeafWindowsRecursive.count
+            guard windowCount == 1,
+                  let singleWindow = workspace.rootTilingContainer.allLeafWindowsRecursive.first
+            else {
+                return nil
+            }
+            return singleWindow
+        }
+    }
+
+    @MainActor
+    private static func shouldApplySingleWindowConstraints(window: Window, windowCount: Int, fullscreenOverride: Window?) -> Bool {
+        // Check if this window has --no-max-width flag set for fullscreen
+        if window.noMaxWidthInFullscreen && window.isFullscreen {
+            return false
+        }
+
+        // Check if app is excluded from width limiting
+        let appId = window.app.bundleId ?? ""
+        let isExcluded = config.singleWindowExcludeAppIds.contains(appId)
+
+        return !isExcluded
+    }
+
+    @MainActor
+    private static func calculateSideGapForWindow(_ window: Window, monitor: any Monitor) -> Int {
+        let maxWidthPercent = config.singleWindowMaxWidthPercent.getValue(for: monitor)
+
+        guard maxWidthPercent < 100 else { return 0 }
+
+        let totalWidth = monitor.visibleRect.width
+        let maxWidth = totalWidth * Double(maxWidthPercent) / 100.0
+        return Int((totalWidth - maxWidth) / 2.0)
     }
 }
 
@@ -82,7 +151,6 @@ extension Window {
         }
         if isFullscreen {
             layoutFullscreen(context)
-            isFullscreen = false
         }
     }
 
@@ -90,8 +158,19 @@ extension Window {
     fileprivate func layoutFullscreen(_ context: LayoutContext) {
         let monitorRect = noOuterGapsInFullscreen
             ? context.workspace.workspaceMonitor.visibleRect
-            : context.workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
+            : {
+                // Avoid potential infinite recursion when dealing with excluded apps
+                // by reusing existing gaps if they were already calculated for this window
+                let fullscreenContext = LayoutContext(context.workspace, forceFullscreenAsSingleWindow: self)
+                return fullscreenContext.resolvedGaps.applyToRect(context.workspace.workspaceMonitor.visibleRect)
+            }()
         setAxFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height))
+        lastAppliedLayoutPhysicalRect = Rect(
+            topLeftX: monitorRect.topLeftX,
+            topLeftY: monitorRect.topLeftY,
+            width: monitorRect.width,
+            height: monitorRect.height,
+        )
     }
 }
 

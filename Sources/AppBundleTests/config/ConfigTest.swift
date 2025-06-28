@@ -384,4 +384,203 @@ final class ConfigTest: XCTestCase {
         assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
         assertEquals(colemakConfig.keyMapping.resolve()["f"], .e)
     }
+
+    func testSingleWindowMaxWidthConfigConstant() {
+        let (config, errors) = parseConfig(
+            """
+            single-window-max-width-percent = 70
+            """,
+        )
+        assertEquals(errors, [])
+        if case let .constant(value) = config.singleWindowMaxWidthPercent {
+            assertEquals(value, 70)
+        } else {
+            XCTFail("Expected constant value")
+        }
+    }
+
+    func testSingleWindowMaxWidthConfigDefault() {
+        let (config, errors) = parseConfig("")
+        assertEquals(errors, [])
+        if case let .constant(value) = config.singleWindowMaxWidthPercent {
+            assertEquals(value, 100)
+        } else {
+            XCTFail("Expected default constant value of 100")
+        }
+    }
+
+    func testSingleWindowMaxWidthConfigPerMonitor() {
+        let (config, errors) = parseConfig(
+            """
+            single-window-max-width-percent = [
+                { monitor."built-in" = 100 },
+                { monitor."secondary" = 70 },
+                80
+            ]
+            """,
+        )
+        assertEquals(errors, [])
+        if case let .perMonitor(values, defaultValue) = config.singleWindowMaxWidthPercent {
+            assertEquals(defaultValue, 80)
+            assertEquals(values.count, 2)
+            assertEquals(values[0].description, .pattern("built-in")!)
+            assertEquals(values[0].value, 100)
+            assertEquals(values[1].description, .secondary)
+            assertEquals(values[1].value, 70)
+        } else {
+            XCTFail("Expected per-monitor configuration")
+        }
+    }
+
+    func testSingleWindowMaxWidthConfigInvalidType() {
+        let (_, errors) = parseConfig(
+            """
+            single-window-max-width-percent = "70"
+            """,
+        )
+        XCTAssertTrue(errors.descriptions.count > 0)
+        XCTAssertTrue(errors.descriptions.first?.contains("Unsupported type") == true)
+    }
+
+    func testSingleWindowMaxWidthConfigInvalidValue() {
+        let (_, errors) = parseConfig(
+            """
+            single-window-max-width-percent = 150
+            """,
+        )
+        XCTAssertTrue(errors.descriptions.count > 0)
+        XCTAssertTrue(errors.descriptions.first?.contains("must be between 1 and 100") == true)
+    }
+
+    func testSingleWindowMaxWidthConfigZeroValue() {
+        let (_, errors) = parseConfig(
+            """
+            single-window-max-width-percent = 0
+            """,
+        )
+        XCTAssertTrue(errors.descriptions.count > 0)
+        XCTAssertTrue(errors.descriptions.first?.contains("must be between 1 and 100") == true)
+    }
+
+    func testSingleWindowExcludeAppIdsDefault() {
+        let (config, errors) = parseConfig("")
+        assertEquals(errors, [])
+        assertEquals(config.singleWindowExcludeAppIds, [])
+    }
+
+    func testSingleWindowExcludeAppIdsValid() {
+        let (config, errors) = parseConfig(
+            """
+            single-window-exclude-app-ids = [
+                'com.figma.Desktop',
+                'com.apple.finder',
+                'com.adobe.Photoshop'
+            ]
+            """,
+        )
+        assertEquals(errors, [])
+        assertEquals(config.singleWindowExcludeAppIds, [
+            "com.figma.Desktop",
+            "com.apple.finder",
+            "com.adobe.Photoshop",
+        ])
+    }
+
+    func testSingleWindowExcludeAppIdsInvalidType() {
+        let (_, errors) = parseConfig(
+            """
+            single-window-exclude-app-ids = "not-an-array"
+            """,
+        )
+        XCTAssertTrue(errors.descriptions.count > 0)
+        XCTAssertTrue(errors.descriptions.first?.contains("Expected type is 'array'") == true)
+    }
+
+    func testSingleWindowExcludeAppIdsEmptyString() {
+        let (_, errors) = parseConfig(
+            """
+            single-window-exclude-app-ids = ['com.figma.Desktop', '']
+            """,
+        )
+        XCTAssertTrue(errors.descriptions.count > 0)
+        XCTAssertTrue(errors.descriptions.first?.contains("cannot contain empty strings") == true)
+    }
+
+    func testSingleWindowExcludeAppIdsEmptyArray() {
+        let (config, errors) = parseConfig(
+            """
+            single-window-exclude-app-ids = []
+            """,
+        )
+        assertEquals(errors, [])
+        assertEquals(config.singleWindowExcludeAppIds, [])
+    }
+
+    func testSingleWindowMaxWidthMultiplePatterns() {
+        // Test that the new format with multiple patterns is no longer supported
+        let (_, errors) = parseConfig(
+            """
+            single-window-max-width-percent = [
+                { monitor = ["secondary", "dell"], value = 70 },
+                { monitor = "built-in", value = 100 },
+                80
+            ]
+            """,
+        )
+        // Should have parsing errors since new format is not supported
+        XCTAssertFalse(errors.isEmpty)
+    }
+
+    func testSingleWindowMaxWidthEmptyPatternArray() {
+        // Test that empty pattern arrays in new format produce errors
+        let (_, errors) = parseConfig(
+            """
+            single-window-max-width-percent = [
+                { monitor = [], value = 70 },
+                80
+            ]
+            """,
+        )
+        // Should have parsing errors since new format is not supported
+        XCTAssertFalse(errors.isEmpty)
+    }
+
+    func testSingleWindowMaxWidthMixedPatterns() {
+        // Test that mixing old and new formats produces errors
+        let (_, errors) = parseConfig(
+            """
+            single-window-max-width-percent = [
+                { monitor = "built-in", value = 100 },
+                { monitor = ["external", "dell"], value = 70 },
+                { monitor = 2, value = 90 },
+                85
+            ]
+            """,
+        )
+        // Should have parsing errors since new format entries are not supported
+        XCTAssertFalse(errors.isEmpty)
+    }
+
+    func testSingleWindowMaxWidthBackwardCompatibility() {
+        let (config, errors) = parseConfig(
+            """
+            single-window-max-width-percent = [
+                { monitor."built-in" = 100 },
+                { monitor."secondary" = 70 },
+                80
+            ]
+            """,
+        )
+        assertEquals(errors, [])
+        if case let .perMonitor(values, defaultValue) = config.singleWindowMaxWidthPercent {
+            assertEquals(defaultValue, 80)
+            assertEquals(values.count, 2)
+            assertEquals(values[0].description, .pattern("built-in")!)
+            assertEquals(values[0].value, 100)
+            assertEquals(values[1].description, .secondary)
+            assertEquals(values[1].value, 70)
+        } else {
+            XCTFail("Expected per-monitor configuration")
+        }
+    }
 }

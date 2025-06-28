@@ -68,6 +68,11 @@ struct FrozenFocus: AeroAny, Equatable, Sendable {
         oldFocus.windowOrNil?.markAsMostRecentChild()
     }
 
+    // Clear fullscreen state when focus switches away from a fullscreen window
+    if let oldWindow = oldFocus.windowOrNil, oldWindow.isFullscreen, oldWindow != newFocus.windowOrNil {
+        oldWindow.isFullscreen = false
+    }
+
     _focus = newFocus.frozen
     let status = newFocus.workspace.workspaceMonitor.setActiveWorkspace(newFocus.workspace)
 

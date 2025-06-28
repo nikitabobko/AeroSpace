@@ -111,6 +111,8 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     modeConfigRootKey: Parser(\.modes, skipParsing(Config().modes)), // Parsed manually
 
     "gaps": Parser(\.gaps, parseGaps),
+    "single-window-max-width-percent": Parser(\.singleWindowMaxWidthPercent, parseSingleWindowMaxWidthPercent),
+    "single-window-exclude-app-ids": Parser(\.singleWindowExcludeAppIds, parseSingleWindowExcludeAppIds),
     "workspace-to-monitor-force-assignment": Parser(\.workspaceToMonitorForceAssignment, parseWorkspaceToMonitorAssignment),
     "on-window-detected": Parser(\.onWindowDetected, parseOnWindowDetectedArray),
 
@@ -381,4 +383,54 @@ func expectedActualTypeError(expected: TOMLType, actual: TOMLType, _ backtrace: 
 
 func expectedActualTypeError(expected: [TOMLType], actual: TOMLType, _ backtrace: TomlBacktrace) -> TomlParseError {
     .semantic(backtrace, expectedActualTypeError(expected: expected, actual: actual))
+}
+
+func parseSingleWindowMaxWidthPercent(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> DynamicConfigValue<Int> {
+    let result = parseDynamicValue(raw, Int.self, 100, backtrace, &errors)
+
+    // Validate the values are within acceptable range (1-100)
+    switch result {
+        case .constant(let value):
+            if value < 1 || value > 100 {
+                errors.append(.semantic(backtrace, "single-window-max-width-percent must be between 1 and 100, got \(value)"))
+                return .constant(100)
+            }
+        case .perMonitor(let values, let defaultValue):
+            if defaultValue < 1 || defaultValue > 100 {
+                errors.append(.semantic(backtrace, "single-window-max-width-percent default value must be between 1 and 100, got \(defaultValue)"))
+                return .constant(100)
+            }
+            for (index, perMonitorValue) in values.enumerated() {
+                if perMonitorValue.value < 1 || perMonitorValue.value > 100 {
+                    errors.append(.semantic(backtrace + .index(index), "single-window-max-width-percent must be between 1 and 100, got \(perMonitorValue.value)"))
+                    return .constant(100)
+                }
+            }
+    }
+
+    return result
+}
+
+func parseSingleWindowExcludeAppIds(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String] {
+    guard let array = raw.array else {
+        errors.append(expectedActualTypeError(expected: [.array], actual: raw.type, backtrace))
+        return []
+    }
+
+    var result: [String] = []
+    for (index, element) in array.enumerated() {
+        guard let string = element.string else {
+            errors.append(expectedActualTypeError(expected: [.string], actual: element.type, backtrace + .index(index)))
+            continue
+        }
+
+        if string.isEmpty {
+            errors.append(.semantic(backtrace + .index(index), "single-window-exclude-app-ids cannot contain empty strings"))
+            continue
+        }
+
+        result.append(string)
+    }
+
+    return result
 }

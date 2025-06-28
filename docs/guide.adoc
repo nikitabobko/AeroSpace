@@ -283,6 +283,48 @@ While in a `v_accordion`, you can navigate the windows using the `focus (up|down
 
 Accordion padding is configurable via `accordion-padding` option.
 
+[#single-window-max-width]
+=== Single window max width configuration
+
+When you have only one window in a workspace, AeroSpace can automatically limit its width and center it on the screen.
+
+The xref:commands.adoc#fullscreen[fullscreen] command will also, by default, respect this setting.
+
+Configuration options:
+
+* `single-window-max-width-percent` - Limits single windows to a percentage of screen width (1-100, default 100)
+* `single-window-exclude-app-ids` - Array of bundle IDs to exclude from width limiting
+
+The feature only applies when exactly one window exists in the workspace, automatically centering the window using the gap system.
+
+[source,toml]
+----
+# Limit single windows to 70% of screen width
+single-window-max-width-percent = 70
+
+# Per-monitor configuration
+single-window-max-width-percent = [
+    { monitor."built-in" = 100 },    # Full width on built-in display
+    { monitor."secondary" = 70 },    # 70% width on secondary monitor
+    80                               # Default 80% for other monitors
+]
+
+# Exclude design applications that benefit from full width
+single-window-exclude-app-ids = [
+    'com.figma.Desktop',
+    'com.adobe.Photoshop',
+    'com.apple.finder'
+]
+----
+
+Per-monitor configuration supports the same monitor patterns as <<assign-workspaces-to-monitors,workspace-to-monitor assignment>>:
+
+* `main` - Main monitor
+* `secondary` - Non-main monitor (when only two monitors)
+* `<number>` - Monitor sequence number from left to right (1-based)
+* `<regex-pattern>` - Case insensitive regex substring pattern
+
+
 [#normalization]
 === Normalization
 

@@ -52,6 +52,8 @@ struct Config: ConvenienceCopyable {
     var onFocusedMonitorChanged: [any Command] = []
 
     var gaps: Gaps = .zero
+    var singleWindowMaxWidthPercent: DynamicConfigValue<Int> = .constant(100)
+    var singleWindowExcludeAppIds: [String] = []
     var workspaceToMonitorForceAssignment: [String: [MonitorDescription]] = [:]
     var modes: [String: Mode] = [:]
     var onWindowDetected: [WindowDetectedCallback] = []

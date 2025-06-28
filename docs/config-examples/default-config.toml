@@ -58,6 +58,25 @@ automatically-unhide-macos-hidden-apps = false
     outer.top =        0
     outer.right =      0
 
+# Single-window maximum width configuration
+# When there's only one window in a workspace, limit it to this percentage of screen width
+# and center it. Set to 100 to disable (default).
+# Possible values:
+# - Constant:     single-window-max-width-percent = 70
+# - Per monitor:  single-window-max-width-percent = [{ monitor."built-in" = 100 }, { monitor."secondary" = 70 }, 80]
+#                 In this example, 80 is a default value when there is no match.
+# - Multiple monitor patterns with fallback (same syntax as workspace-to-monitor-force-assignment):
+#                 single-window-max-width-percent = [{ monitor."secondary" = 70 }, { monitor."dell" = 70 }, { monitor."built-in" = 100 }, 85]
+#                 The first matching pattern wins. Useful for handling monitor name variations.
+# single-window-max-width-percent = 100
+
+# Applications that should be excluded from single-window width limiting
+# single-window-exclude-app-ids = [
+#     'com.figma.Desktop',
+#     'com.adobe.Photoshop',
+#     'com.apple.finder'
+# ]
+
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 # 'main' binding mode must be always presented

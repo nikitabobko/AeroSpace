@@ -35,4 +35,34 @@ final class TestWindow: Window, CustomStringConvertible {
     @MainActor override func getAxRect() async throws -> Rect? { // todo change to not Optional
         _rect
     }
+
+    @MainActor override func getAxTopLeftCorner() async throws -> CGPoint? {
+        guard let rect = _rect else { return nil }
+        return CGPoint(x: rect.topLeftX, y: rect.topLeftY)
+    }
+
+    @MainActor override func getAxSize() async throws -> CGSize? {
+        guard let rect = _rect else { return nil }
+        return CGSize(width: rect.width, height: rect.height)
+    }
+
+    @MainActor override var isMacosFullscreen: Bool {
+        get async throws { false }
+    }
+
+    @MainActor override var isMacosMinimized: Bool {
+        get async throws { false }
+    }
+
+    override func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) {
+        if let topLeft, let size {
+            _rect = Rect(topLeftX: topLeft.x, topLeftY: topLeft.y, width: size.width, height: size.height)
+        }
+    }
+
+    @MainActor override func setAxFrameBlocking(_ topLeft: CGPoint?, _ size: CGSize?) async throws {
+        if let topLeft, let size {
+            _rect = Rect(topLeftX: topLeft.x, topLeftY: topLeft.y, width: size.width, height: size.height)
+        }
+    }
 }

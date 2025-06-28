@@ -68,17 +68,34 @@ struct ResolvedGaps {
         let right: Int
     }
 
-    init(gaps: Gaps, monitor: any Monitor) {
+    init(gaps: Gaps, monitor: any Monitor, singleWindowSideGap: Int = 0) {
         inner = .init(
             vertical: gaps.inner.vertical.getValue(for: monitor),
             horizontal: gaps.inner.horizontal.getValue(for: monitor),
         )
 
+        let baseOuterLeft = gaps.outer.left.getValue(for: monitor)
+        let baseOuterBottom = gaps.outer.bottom.getValue(for: monitor)
+        let baseOuterTop = gaps.outer.top.getValue(for: monitor)
+        let baseOuterRight = gaps.outer.right.getValue(for: monitor)
+
+        let finalLeft = baseOuterLeft + singleWindowSideGap
+        let finalRight = baseOuterRight + singleWindowSideGap
+
         outer = .init(
-            left: gaps.outer.left.getValue(for: monitor),
-            bottom: gaps.outer.bottom.getValue(for: monitor),
-            top: gaps.outer.top.getValue(for: monitor),
-            right: gaps.outer.right.getValue(for: monitor),
+            left: finalLeft,
+            bottom: baseOuterBottom,
+            top: baseOuterTop,
+            right: finalRight,
+        )
+    }
+
+    func applyToRect(_ baseRect: Rect) -> Rect {
+        return Rect(
+            topLeftX: baseRect.topLeftX + outer.left.toDouble(),
+            topLeftY: baseRect.topLeftY + outer.top.toDouble(),
+            width: baseRect.width - outer.left.toDouble() - outer.right.toDouble(),
+            height: baseRect.height - outer.top.toDouble() - outer.bottom.toDouble(),
         )
     }
 }

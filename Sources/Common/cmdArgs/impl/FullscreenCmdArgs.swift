@@ -7,6 +7,7 @@ public struct FullscreenCmdArgs: CmdArgs {
         help: fullscreen_help_generated,
         options: [
             "--no-outer-gaps": trueBoolFlag(\.noOuterGaps),
+            "--no-max-width": trueBoolFlag(\.noMaxWidth),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
             "--window-id": optionalWindowIdFlag(),
         ],
@@ -15,6 +16,7 @@ public struct FullscreenCmdArgs: CmdArgs {
 
     public var toggle: ToggleEnum = .toggle
     public var noOuterGaps: Bool = false
+    public var noMaxWidth: Bool = false
     public var failIfNoop: Bool = false
     /*conforms*/ public var windowId: UInt32?
     /*conforms*/ public var workspaceName: WorkspaceName?
@@ -23,5 +25,6 @@ public struct FullscreenCmdArgs: CmdArgs {
 public func parseFullscreenCmdArgs(_ args: [String]) -> ParsedCmd<FullscreenCmdArgs> {
     parseSpecificCmdArgs(FullscreenCmdArgs(rawArgs: args), args)
         .filterNot("--no-outer-gaps is incompatible with 'off' argument") { $0.toggle == .off && $0.noOuterGaps }
+        .filterNot("--no-max-width is incompatible with 'off' argument") { $0.toggle == .off && $0.noMaxWidth }
         .filter("--fail-if-noop requires 'on' or 'off' argument") { $0.failIfNoop.implies($0.toggle == .on || $0.toggle == .off) }
 }
