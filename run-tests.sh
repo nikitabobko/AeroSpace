@@ -3,7 +3,7 @@ cd "$(dirname "$0")"
 source ./script/setup.sh
 
 ./build-debug.sh
-swift test
+./run-swift-test.sh
 
 ./.debug/aerospace -h > /dev/null
 ./.debug/aerospace --help > /dev/null
@@ -11,7 +11,6 @@ swift test
 ./.debug/aerospace --version | grep -q "0.0.0-SNAPSHOT SNAPSHOT"
 
 ./format.sh
-
 ./generate.sh --all
 ./script/check-uncommitted-files.sh
 
