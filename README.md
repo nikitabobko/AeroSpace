@@ -57,7 +57,7 @@ Other installation options: https://nikitabobko.github.io/AeroSpace/guide#instal
 
 ## Community, discussions, issues
 
-Unfortunately, AeroSpace project doesn't openly accept Issues.
+AeroSpace project doesn't accept Issues directly - we ask you to create a [Discussion](https://github.com/nikitabobko/AeroSpace/discussions) first.
 Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for more details.
 
 Community discussions happen at GitHub Discussions.
@@ -120,6 +120,11 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
   Ricing issues are not a priority, and they are mostly ignored.
   The ricing stance can change only with the appearance of more maintainers.
 
+## Sponsorship
+
+AeroSpace is developed and maintained in my free time.
+If you find it useful, [consider sponsoring](https://github.com/sponsors/nikitabobko#sponsors).
+
 ## Tip of the day
 
 ```bash
@@ -131,5 +136,6 @@ Now, you can move windows by holding `ctrl`+`cmd` and dragging any part of the w
 Source: [reddit](https://www.reddit.com/r/MacOS/comments/k6hiwk/keyboard_modifier_to_simplify_click_drag_of/)
 
 ## Related projects
+
 - [Amethyst](https://github.com/ianyh/Amethyst)
 - [yabai](https://github.com/koekeishiya/yabai)
