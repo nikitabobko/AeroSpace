@@ -10,6 +10,7 @@
 --disable all
 
 # --enable docComments
+
 --enable anyObjectProtocol
 --enable blankLineAfterImports
 --enable blankLinesAtEndOfScope
@@ -43,10 +44,14 @@
 --enable redundantTypedThrows
 --enable redundantVoidReturnType
 --enable semicolons
+--enable spaceAroundBraces
+--enable spaceAroundBrackets
 --enable spaceAroundGenerics
 --enable spaceAroundOperators
 --enable spaceAroundParens
+--enable spaceInsideBraces
 --enable spaceInsideBrackets
+--enable spaceInsideGenerics
 --enable spaceInsideParens
 --enable strongOutlets
 --enable trailingClosures
