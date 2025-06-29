@@ -124,18 +124,19 @@ final class MacWindow: Window {
         macApp.closeAndUnregisterAxWindow(windowId)
     }
 
+    // todo it's part of the window layout and should be move to layoutRecursive.swift
     @MainActor
     func hideInCorner(_ corner: OptimalHideCorner) async throws {
         guard let nodeMonitor else { return }
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent
         // `hideEmulation` calls
         if !isHiddenInCorner {
-            guard let topLeftCorner = try await getAxTopLeftCorner() else { return }
-            guard let nodeWorkspace else { return } // hiding only makes sense for workspace windows
-            let workspaceRect = nodeWorkspace.workspaceMonitor.rect
-            let absolutePoint = topLeftCorner - workspaceRect.topLeftCorner
+            guard let windowRect = try await getAxRect() else { return }
+            let topLeftCorner = windowRect.topLeftCorner
+            let monitorRect = windowRect.center.monitorApproximation.rect // Similar to layoutFloatingWindow. Non idempotent
+            let absolutePoint = topLeftCorner - monitorRect.topLeftCorner
             prevUnhiddenProportionalPositionInsideWorkspaceRect =
-                CGPoint(x: absolutePoint.x / workspaceRect.width, y: absolutePoint.y / workspaceRect.height)
+                CGPoint(x: absolutePoint.x / monitorRect.width, y: absolutePoint.y / monitorRect.height)
         }
         let p: CGPoint
         switch corner {
