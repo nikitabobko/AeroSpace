@@ -21,9 +21,6 @@ public struct ArgParser<T: ConvenienceCopyable, K>: ArgParserProtocol {
         self.parse = parse
         self.argPlaceholderIfMandatory = argPlaceholderIfMandatory
     }
-
-    public static func == (lhs: ArgParser<T, K>, rhs: ArgParser<T, K>) -> Bool { lhs.keyPath == rhs.keyPath }
-    public func hash(into hasher: inout Hasher) { hasher.combine(keyPath) }
 }
 
 public func optionalWindowIdFlag<T: CmdArgs>() -> ArgParser<T, UInt32?> {
