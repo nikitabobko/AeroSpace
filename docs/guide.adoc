@@ -710,3 +710,5 @@ You can also use `on-window-detected` to force tile or force float all windows o
 == Common pitfall: keyboard keys handling
 
 If you can't make AeroSpace handle some keys in your config, please make sure that you don't have keys conflict with other software that might listen to global keys (e.g. skhd, Karabiner-Elements, Raycast)
+
+If you have KeePassXC installed and up-to-date (v2.7.10 at the time of writing), you may notice that bindings which use the `option` key will stop working after some time. This is a known issue where KeePassXC gets stuck in secure input mode (see: https://github.com/keepassxreboot/keepassxc/issues/11906[#11906]). The recommendation for now is to downgrade to v2.7.9.
