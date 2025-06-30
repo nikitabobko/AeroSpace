@@ -42,6 +42,9 @@ let focus_help_generated = """
     USAGE: focus [-h|--help] [--ignore-floating]
                  [--boundaries <boundary>] [--boundaries-action <action>]
                  (left|down|up|right)
+       OR: focus [-h|--help] [--ignore-floating]
+                 [--boundaries <boundary>] [--boundaries-action <action>]
+                 (dfs-next|dfs-prev)
        OR: focus [-h|--help] --window-id <window-id>
        OR: focus [-h|--help] --dfs-index <dfs-index>
     """
@@ -127,6 +130,10 @@ let split_help_generated = """
     """
 let summon_workspace_help_generated = """
     USAGE: summon-workspace [-h|--help] [--fail-if-noop] <workspace>
+    """
+let swap_help_generated = """
+    USAGE: swap [-h|--help] [--swap-focus] [--wrap-around]
+                (left|down|up|right|dfs-next|dfs-prev)
     """
 let trigger_binding_help_generated = """
     USAGE: trigger-binding [-h|--help] <binding> --mode <mode-id>
