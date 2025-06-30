@@ -19,13 +19,13 @@ Public Beta. AeroSpace can be used as a daily driver, but expect breaking change
 
 What stops us from 1.0 release:
 - [x] https://github.com/nikitabobko/AeroSpace/issues/131 Performance. Implement thread-per-application to circumvent macOS blocking AX API.
-- [ ] https://github.com/nikitabobko/AeroSpace/issues/1215 _Big refactoring_. Rewrite mutable double-linked core tree data structure to immutable single-linked persistent tree
+- [ ] https://github.com/nikitabobko/AeroSpace/issues/1215 _Big refactoring_. Rewrite mutable double-linked core tree data structure to immutable single-linked persistent tree.
   Important for: stability and potential performance
   - [ ] https://github.com/nikitabobko/AeroSpace/issues/1216 The big refactoring will help us to fix stability issue that windows may randomly jump to the focused workspace
   - [ ] https://github.com/nikitabobko/AeroSpace/issues/68 The big refactoring will help us to support macOS native tabs
-- [ ] https://github.com/nikitabobko/AeroSpace/issues/278 Implement shell-like combinators
+- [ ] https://github.com/nikitabobko/AeroSpace/issues/278 Implement shell-like combinators.
   Ignore a lot of crazy fuss in the issue,
-  we are mostly going with the minimal approach to only introduce common shell-combinators: `||`, `&&`, `;`
+  We are most probably going with the minimal approach to only introduce common shell-combinators: `||`, `&&`, `;` and `eval` command to send multiple commands in one go.
 - [ ] https://github.com/nikitabobko/AeroSpace/issues/1012 Investigate a possibility to use `CGEvent.tapCreate` API for global hotkeys
   - [ ] https://github.com/nikitabobko/AeroSpace/issues/28 Maybe it will allow to distinguish left and right modifiers. Maybe not
 
