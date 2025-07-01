@@ -1,9 +1,8 @@
 public protocol ConvenienceCopyable {}
 
 extension ConvenienceCopyable {
-    public func copy<T>(_ key: WritableKeyPath<Self, T>, _ value: T) -> Self {
-        var copy = self
-        copy[keyPath: key] = value
-        return copy
+    public consuming func copy<T>(_ key: WritableKeyPath<Self, T>, _ value: T) -> Self {
+        self[keyPath: key] = value
+        return self
     }
 }
