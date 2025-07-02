@@ -93,6 +93,10 @@ public func parseCardinalDirectionArg(arg: String, nextArgs: inout [String]) -> 
     parseEnum(arg, CardinalDirection.self)
 }
 
+func parseCardinalOrDfsDirection(_ arg: String, _ nextArgs: inout [String]) -> Parsed<CardinalOrDfsDirection> {
+    parseEnum(arg, CardinalOrDfsDirection.self)
+}
+
 public func parseArgWithUInt32(arg: String, nextArgs: inout [String]) -> Parsed<UInt32> {
     if let arg = nextArgs.nextNonFlagOrNil() {
         return UInt32(arg).orFailure("Can't parse '\(arg)'. It must be a positive number")
