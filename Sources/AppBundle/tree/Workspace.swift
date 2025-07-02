@@ -36,6 +36,8 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     private nonisolated let nameLogicalSegments: StringLogicalSegments
     /// `assignedMonitorPoint` must be interpreted only when the workspace is invisible
     fileprivate var assignedMonitorPoint: CGPoint? = nil
+    /// `assignedMonitorName` helps to restore workspace to the same monitor even if its coordinates change
+    fileprivate var assignedMonitorName: String? = nil
 
     @MainActor
     private init(_ name: String) {
@@ -109,10 +111,11 @@ extension Workspace {
     var isVisible: Bool { visibleWorkspaceToScreenPoint.keys.contains(self) }
     @MainActor
     var workspaceMonitor: Monitor {
-        forceAssignedMonitor
-            ?? visibleWorkspaceToScreenPoint[self]?.monitorApproximation
-            ?? assignedMonitorPoint?.monitorApproximation
-            ?? mainMonitor
+        if let forced = forceAssignedMonitor { return forced }
+        if let point = visibleWorkspaceToScreenPoint[self] { return point.monitorApproximation }
+        if let name = assignedMonitorName, let m = monitors.first(where: { $0.name == name }) { return m }
+        if let point = assignedMonitorPoint { return point.monitorApproximation }
+        return mainMonitor
     }
 }
 
@@ -161,6 +164,7 @@ extension CGPoint {
         visibleWorkspaceToScreenPoint[workspace] = self
         screenPointToVisibleWorkspace[self] = workspace
         workspace.assignedMonitorPoint = self
+        workspace.assignedMonitorName = monitors.first(where: { $0.rect.topLeftCorner == self })?.name
         return true
     }
 }
@@ -170,6 +174,10 @@ private func rearrangeWorkspacesOnMonitors() {
     var oldVisibleScreens: Set<CGPoint> = screenPointToVisibleWorkspace.keys.toSet()
 
     let newScreens = monitors.map(\.rect.topLeftCorner)
+    if newScreens.isEmpty {
+        // Keep existing assignments so that they can be restored once monitors appear again
+        return
+    }
     var newScreenToOldScreenMapping: [CGPoint: CGPoint] = [:]
     for newScreen in newScreens {
         if let oldScreen = oldVisibleScreens.minBy({ ($0 - newScreen).vectorLength }) {
