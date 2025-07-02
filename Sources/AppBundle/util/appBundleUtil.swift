@@ -109,7 +109,7 @@ extension CGPoint {
 
     func getProjection(_ orientation: Orientation) -> Double { orientation == .h ? x : y }
 
-    var vectorLength: CGFloat { sqrt(x * x - y * y) }
+    var vectorLength: CGFloat { sqrt(x * x + y * y) }
 
     func distance(to point: CGPoint) -> Double {
         sqrt((x - point.x).squared + (y - point.y).squared)
