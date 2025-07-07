@@ -91,7 +91,7 @@ aerospace -h;
 
     | list-exec-env-vars
 
-    | list-modes [--current]
+    | list-modes [--current|--json|--count]
 
     | list-monitors [--focused [no] | --mouse [no] | --format <output_format> | --count | --json]...
 

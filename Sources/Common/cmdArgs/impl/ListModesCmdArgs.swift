@@ -8,14 +8,22 @@ public struct ListModesCmdArgs: CmdArgs {
         allowInConfig: false,
         help: list_modes_help_generated,
         options: [
+            "--count": trueBoolFlag(\.outputOnlyCount),
             "--current": trueBoolFlag(\.current),
+            "--json": trueBoolFlag(\.json),
         ],
         arguments: [],
+        conflictingOptions: [
+            ["--count", "--current"],
+            ["--count", "--json"],
+        ],
     )
 
     /*conforms*/ public var windowId: UInt32?
     /*conforms*/ public var workspaceName: WorkspaceName?
     public var current: Bool = false
+    public var json: Bool = false
+    public var outputOnlyCount: Bool = false
 }
 
 public func parseListModesCmdArgs(_ args: [String]) -> ParsedCmd<ListModesCmdArgs> {
