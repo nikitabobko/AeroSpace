@@ -281,8 +281,8 @@ final class AdaptiveDebouncer {
         // Measure how well our adaptive delays matched actual system performance
         // This is a simplified efficiency calculation
         
-        let _ = calculateVariance(operations.map { $0.computedDelay })
-        let _ = calculateVariance(operations.map { $0.systemLoad })
+        _ = calculateVariance(operations.map { $0.computedDelay })
+        _ = calculateVariance(operations.map { $0.systemLoad })
         
         // Lower variance in delay when system load is stable = higher efficiency
         let stableOperations = operations.filter { abs($0.systemLoad - 0.5) < 0.2 }
