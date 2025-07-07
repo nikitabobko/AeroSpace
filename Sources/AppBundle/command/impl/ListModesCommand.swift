@@ -5,6 +5,11 @@ struct ListModesCommand: Command {
     let args: ListModesCmdArgs
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+        if args.outputOnlyCount {
+            let count = args.current ? 1 : config.modes.count
+            return io.out("\(count)")
+        }
+        
         if args.current {
             return io.out(activeMode ?? mainModeId)
         } else {
