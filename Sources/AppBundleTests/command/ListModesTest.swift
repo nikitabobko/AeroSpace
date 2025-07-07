@@ -26,7 +26,7 @@ final class ListModesTest: XCTestCase {
         
         let defaultResult = try await ListModesCommand(args: ListModesCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin)
         assertEquals(defaultResult.exitCode, 0)
-        assertEquals(defaultResult.stdout.sorted(), ["main", "resize", "service"])
+        assertEquals(defaultResult.stdout, ["main", "resize", "service"])
         assertEquals(defaultResult.stderr, [])
         
         let currentResult = try await ListModesCommand(args: ListModesCmdArgs(rawArgs: []).copy(\.current, true)).run(.defaultEnv, .emptyStdin)

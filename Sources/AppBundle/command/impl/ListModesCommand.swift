@@ -10,10 +10,17 @@ struct ListModesCommand: Command {
             return io.out("\(count)")
         }
         
+        if args.json {
+            let modeNames = args.current ? [activeMode ?? mainModeId] : config.modes.keys.sorted()
+            let modeData = modeNames.map { ["mode-id": $0] }
+            return JSONEncoder.aeroSpaceDefault.encodeToString(modeData).map(io.out)
+                ?? io.err("Failed to encode JSON")
+        }
+        
         if args.current {
             return io.out(activeMode ?? mainModeId)
         } else {
-            let modeNames: [String] = config.modes.map { $0.key }
+            let modeNames: [String] = config.modes.keys.sorted()
             return io.out(modeNames)
         }
     }
