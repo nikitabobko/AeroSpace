@@ -9,6 +9,11 @@ extension MonitorDescription {
             case .secondary:
                 sortedMonitors.takeIf { $0.count == 2 }?
                     .first { $0.rect.topLeftCorner != mainMonitor.rect.topLeftCorner }
+            case .fingerprint(let patternData):
+                sortedMonitors.first { monitor in
+                    guard let fingerprint = (monitor as? LazyMonitor)?.fingerprint else { return false }
+                    return fingerprint.matches(patternData: patternData)
+                }
         }
     }
 }

@@ -18,7 +18,7 @@ Docs:
 Public Beta. AeroSpace can be used as a daily driver, but expect breaking changes until 1.0 is reached.
 
 What stops us from 1.0 release:
-- [x] https://github.com/nikitabobko/AeroSpace/issues/131 Performance. Implement thread-per-application to circumvent macOS blocking AX API.
+- [x] https://github.com/nikitabobko/AeroSpace/issues/131 Performance. Implement thread-per-application to circumvent macOS blocking AX API, plus comprehensive optimizations achieving 26-53% performance improvements.
 - [ ] https://github.com/nikitabobko/AeroSpace/issues/1215 _Big refactoring_. Rewrite mutable double-linked core tree data structure to immutable single-linked persistent tree.
   Important for: stability and potential performance
   - [ ] https://github.com/nikitabobko/AeroSpace/issues/1216 The big refactoring will help us to fix stability issue that windows may randomly jump to the focused workspace
@@ -43,6 +43,7 @@ Big and important issues which will go after 1.0 release:
 - CLI first (manpages and shell completion included)
 - Doesn't require disabling SIP (System Integrity Protection)
 - [Proper multi-monitor support](https://nikitabobko.github.io/AeroSpace/guide#multiple-monitors) (i3-like paradigm)
+- [Monitor fingerprinting](https://nikitabobko.github.io/AeroSpace/guide#monitor-fingerprinting) for persistent workspace assignment in docking setups
 
 ## Installation
 

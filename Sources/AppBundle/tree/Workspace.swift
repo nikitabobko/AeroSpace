@@ -36,6 +36,9 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     private nonisolated let nameLogicalSegments: StringLogicalSegments
     /// `assignedMonitorPoint` must be interpreted only when the workspace is invisible
     fileprivate var assignedMonitorPoint: CGPoint? = nil
+    
+    /// Flag to indicate that this workspace needs re-layout on next refresh
+    @MainActor private var needsLayout: Bool = false
 
     @MainActor
     private init(_ name: String) {
@@ -114,6 +117,19 @@ extension Workspace {
             ?? assignedMonitorPoint?.monitorApproximation
             ?? mainMonitor
     }
+    
+    @MainActor
+    func markNeedsLayout() {
+        needsLayout = true
+    }
+    
+    @MainActor
+    func clearNeedsLayout() {
+        needsLayout = false
+    }
+    
+    @MainActor
+    var requiresLayout: Bool { needsLayout }
 }
 
 extension Monitor {
@@ -191,6 +207,47 @@ private func rearrangeWorkspacesOnMonitors() {
         let stubWorkspace = getStubWorkspace(forPoint: newScreen)
         check(newScreen.setActiveWorkspace(stubWorkspace),
               "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(newScreen)")
+    }
+}
+
+@MainActor
+func autoMoveWorkspacesToAssignedMonitors() {
+    // Get all workspaces with force assignments
+    let workspacesWithAssignments = Workspace.all.filter { workspace in
+        config.workspaceToMonitorForceAssignment[workspace.name] != nil
+    }
+    
+    // Try to move each workspace to its assigned monitor
+    for workspace in workspacesWithAssignments {
+        // Skip if workspace is already on its assigned monitor
+        let currentMonitor = workspace.workspaceMonitor
+        if let assignedMonitor = workspace.forceAssignedMonitor,
+           currentMonitor.rect.topLeftCorner == assignedMonitor.rect.topLeftCorner {
+            continue
+        }
+        
+        // Find the assigned monitor
+        guard let assignedMonitor = workspace.forceAssignedMonitor else { continue }
+        let assignedPoint = assignedMonitor.rect.topLeftCorner
+        
+        // Check if the workspace can be moved to the assigned monitor
+        if isValidAssignment(workspace: workspace, screen: assignedPoint) {
+            // If the workspace is visible, we need to swap it with whatever is on the target monitor
+            if workspace.isVisible {
+                // Get current visible workspace on the target monitor
+                let targetWorkspace = screenPointToVisibleWorkspace[assignedPoint]
+                let currentPoint = visibleWorkspaceToScreenPoint[workspace]
+                
+                if let targetWorkspace = targetWorkspace, let currentPoint = currentPoint {
+                    // Swap the workspaces
+                    _ = assignedPoint.setActiveWorkspace(workspace)
+                    _ = currentPoint.setActiveWorkspace(targetWorkspace)
+                }
+            } else {
+                // Workspace is not visible, just assign it to the monitor
+                workspace.assignedMonitorPoint = assignedPoint
+            }
+        }
     }
 }
 

@@ -2,16 +2,25 @@ import AppKit
 import Common
 
 extension TreeNode {
-    private func visit(node: TreeNode, result: inout [Window]) {
+    private func visit(node: TreeNode, result: inout [Window], maxDepth: Int = 100, currentDepth: Int = 0) {
+        // Add depth limit to prevent infinite recursion
+        guard currentDepth < maxDepth else { return }
+        
         if let node = node as? Window {
             result.append(node)
+            return // Early exit for leaf nodes
         }
+        
+        // Skip empty containers early
+        if node.children.isEmpty { return }
+        
         for child in node.children {
-            visit(node: child, result: &result)
+            visit(node: child, result: &result, maxDepth: maxDepth, currentDepth: currentDepth + 1)
         }
     }
     var allLeafWindowsRecursive: [Window] {
         var result: [Window] = []
+        result.reserveCapacity(32) // Pre-allocate for typical window count
         visit(node: self, result: &result)
         return result
     }
@@ -46,24 +55,44 @@ extension TreeNode {
     }
 
     var mostRecentWindowRecursive: Window? {
-        self as? Window ?? mostRecentChild?.mostRecentWindowRecursive
-    }
-
-    var anyLeafWindowRecursive: Window? {
-        if let window = self as? Window {
-            return window
-        }
-        for child in children {
-            if let window = child.anyLeafWindowRecursive {
+        // Iterative approach to avoid deep recursion
+        var current: TreeNode? = self
+        var depth = 0
+        let maxDepth = 100
+        
+        while let node = current, depth < maxDepth {
+            if let window = node as? Window {
                 return window
             }
+            current = node.mostRecentChild
+            depth += 1
         }
         return nil
     }
 
+    var anyLeafWindowRecursive: Window? {
+        // Early exit for windows
+        if let window = self as? Window {
+            return window
+        }
+        
+        // Early exit for empty containers
+        if children.isEmpty { return nil }
+        
+        // Use first(where:) for early exit on first found window
+        return children.lazy.compactMap { $0.anyLeafWindowRecursive }.first
+    }
+
     // Doesn't contain at least one window
     var isEffectivelyEmpty: Bool {
-        anyLeafWindowRecursive == nil
+        // Quick check for windows first
+        if self is Window { return false }
+        
+        // Quick check for empty containers
+        if children.isEmpty { return true }
+        
+        // Use lazy evaluation for efficiency
+        return !children.lazy.contains { !$0.isEffectivelyEmpty }
     }
 
     @MainActor

@@ -57,6 +57,8 @@ struct Config: ConvenienceCopyable {
     var onWindowDetected: [WindowDetectedCallback] = []
 
     var preservedWorkspaceNames: [String] = []
+    var performanceConfig: PerformanceConfig = PerformanceConfig()
+    var autoMoveWorkspacesOnMonitorConnect: Bool = true
 }
 
 enum DefaultContainerOrientation: String {

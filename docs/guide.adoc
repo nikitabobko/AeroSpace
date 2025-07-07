@@ -664,11 +664,58 @@ Supported monitor patterns:
 * `secondary` - Non-main monitor in case when there are only two monitors
 * `<number>` (e.g. `1`, `2`) - Sequence number of the monitor from left to right. 1-based indexing
 * `<regex-pattern>` (e.g. `+dell.*+`, `+built-in.*+`) - Case insensitive regex substring pattern
+* `{ fingerprint = { ... } }` - Hardware fingerprint pattern for persistent monitor identification (see below)
 
 You can specify multiple patterns as an array.
 The first matching pattern will be used
 
 xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command has no effect for workspaces that have monitor assignment
+
+[#monitor-fingerprinting]
+==== Monitor fingerprinting for docking setups
+
+Monitor fingerprinting allows you to persistently identify specific physical monitors by their hardware characteristics rather than just their position or name. This is especially useful for docking station setups where monitors may be connected and disconnected frequently.
+
+[source,toml]
+----
+auto-move-workspaces-on-monitor-connect = true  # Default: true
+
+[workspace-to-monitor-force-assignment]
+# Fingerprint by vendor and model
+1 = { fingerprint = { vendor_id = '0x10AC', model_id = 'D0C1' } }
+
+# Fingerprint by serial number (most specific)
+2 = { fingerprint = { serial_number = 'ABC123' } }
+
+# Fingerprint by vendor, model, and resolution
+3 = { fingerprint = { vendor_id = '0x1234', model_id = '0x5678', width_pixels = 3840, height_pixels = 2160 } }
+
+# Multiple patterns with fingerprint as fallback
+dev = [
+    { fingerprint = { vendor_id = 'LG', model_id = '27UK850' } },
+    'secondary',  # fallback to secondary if specific monitor not connected
+]
+----
+
+To find your monitor's fingerprint information, use:
+
+[source,bash]
+----
+aerospace list-monitors --format "%{monitor-fingerprint}"
+----
+
+When `auto-move-workspaces-on-monitor-connect` is enabled (default), AeroSpace will automatically move workspaces to their assigned monitors when monitors are connected. This ensures your workspace layout is restored when docking or connecting external displays.
+
+Fingerprint fields:
+
+* `vendor_id` - Hardware vendor ID (hex string, e.g., '0x10AC')
+* `model_id` - Hardware model ID (hex string, e.g., '0xD0C1')  
+* `serial_number` - Monitor serial number (string)
+* `display_name` - Monitor name pattern (regex)
+* `width_pixels` - Exact width in pixels
+* `height_pixels` - Exact height in pixels
+
+All fields are optional. The more fields you specify, the more specific the match.
 
 == Dialog heuristics
 

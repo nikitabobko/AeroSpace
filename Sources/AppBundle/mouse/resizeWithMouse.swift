@@ -8,6 +8,11 @@ func resizedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     let notif = notif as String
     let windowId = ax.containingWindowId()
     Task { @MainActor in
+        // Track window resize
+        if let windowId {
+            WindowChangeTracker.shared.trackResized(windowId: windowId)
+        }
+        
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
             runRefreshSession(.ax(notif), screenIsDefinitelyUnlocked: false)

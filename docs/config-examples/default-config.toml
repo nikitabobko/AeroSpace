@@ -203,4 +203,22 @@ automatically-unhide-macos-hidden-apps = false
 
     down = 'volume down'
     up = 'volume up'
+
+# Workspace to monitor assignment
+# See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
+# auto-move-workspaces-on-monitor-connect = true  # Default: true
+# [workspace-to-monitor-force-assignment]
+# 1 = 'main'                            # Primary monitor
+# 2 = 'secondary'                       # Non-primary monitor in case of 2 monitors
+# 3 = 1                                 # Monitor sequence number (from left to right, 1-based)
+# 4 = 'LG'                             # Case-insensitive regex pattern matching monitor name
+# 5 = '^built-in retina display$'      # Case-insensitive regex pattern exact match
+# 6 = ['secondary', 'dell']            # Multiple patterns - first match wins
+# 
+# # Monitor fingerprinting for persistent assignment (useful for docking setups)
+# # Run 'aerospace list-monitors --format %{monitor-fingerprint}' to get fingerprints
+# 7 = { fingerprint = { vendor_id = '0x10AC', model_id = '0xD0C1' } }
+# 8 = { fingerprint = { serial_number = 'ABC123' } }  # Most specific - matches one physical monitor
+# 9 = { fingerprint = { vendor_id = '0x1234', model_id = '0x5678', width_pixels = 3840, height_pixels = 2160 } }
+
     shift-down = ['volume set 0', 'mode main']

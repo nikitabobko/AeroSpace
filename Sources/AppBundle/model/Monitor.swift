@@ -32,6 +32,8 @@ class LazyMonitor: Monitor {
     let height: CGFloat
     private var _rect: Rect?
     private var _visibleRect: Rect?
+    private var _fingerprint: MonitorFingerprint?
+    private var _fingerprintComputed = false
 
     init(monitorAppKitNsScreenScreensId: Int, _ screen: NSScreen) {
         self.monitorAppKitNsScreenScreensId = monitorAppKitNsScreenScreensId
@@ -47,6 +49,14 @@ class LazyMonitor: Monitor {
 
     var visibleRect: Rect {
         _visibleRect ?? screen.visibleRect.also { _visibleRect = $0 }
+    }
+    
+    var fingerprint: MonitorFingerprint? {
+        if !_fingerprintComputed {
+            _fingerprint = MonitorFingerprint.fromScreen(screen)
+            _fingerprintComputed = true
+        }
+        return _fingerprint
     }
 }
 

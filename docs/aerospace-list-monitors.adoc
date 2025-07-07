@@ -56,10 +56,37 @@ The following variables can be used inside `<output-format>`:
 %{monitor-id}:: 1-based Number. Sequential number of the belonging monitor
 %{monitor-appkit-nsscreen-screens-id}:: 1-based index of the belonging monitor in `NSScreen.screens` array. Useful for integration with other tools that might be using `NSScreen.screens` ordering (like sketchybar).
 %{monitor-name}:: String. Name of the belonging monitor
+%{monitor-fingerprint}:: String. Hardware fingerprint of the monitor including vendor, model, serial, and resolution information. Useful for identifying specific physical monitors in docking setups.
+%{monitor-vendor-id}:: String. Vendor ID of the monitor in hexadecimal format (e.g., `0x10AC`). Empty if not available.
+%{monitor-model-id}:: String. Model ID of the monitor in hexadecimal format (e.g., `0xD0C1`). Empty if not available.
+%{monitor-serial-number}:: String. Serial number of the monitor. Empty if not available.
+%{monitor-width}:: Number. Width of the monitor in pixels
+%{monitor-height}:: Number. Height of the monitor in pixels
 
 %{right-padding}:: A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column
 %{newline}:: Unicode U+000A newline symbol `\n`
 %{tab}:: Unicode U+0009 tab symbol `\t`
+
+// =========================================================== Examples
+include::util/conditional-examples-header.adoc[]
+
+----
+aerospace list-monitors
+----
+
+Print all monitors with default format.
+
+----
+aerospace list-monitors --format "%{monitor-fingerprint}"
+----
+
+Print monitor fingerprints for use in `workspace-to-monitor-force-assignment` configuration.
+
+----
+aerospace list-monitors --format "%{monitor-name} [%{monitor-vendor-id}:%{monitor-model-id}] %{monitor-width}x%{monitor-height}"
+----
+
+Print monitors with vendor/model IDs and resolution.
 
 // end::body[]
 

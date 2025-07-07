@@ -52,6 +52,13 @@ class GlobalObserver {
         nc.addObserver(forName: NSWorkspace.didUnhideApplicationNotification, object: nil, queue: .main, using: onNotif)
         nc.addObserver(forName: NSWorkspace.activeSpaceDidChangeNotification, object: nil, queue: .main, using: onNotif)
         nc.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main, using: onNotif)
+        
+        // Monitor change detection
+        NotificationCenter.default.addObserver(forName: NSApplication.didChangeScreenParametersNotification, object: nil, queue: .main) { _ in
+            Task { @MainActor in
+                onMonitorConfigurationChanged()
+            }
+        }
 
         NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp) { _ in
             // todo reduce number of refreshSession in the callback
@@ -73,6 +80,27 @@ class GlobalObserver {
                     //  And trigger new window detection that could be delayed due to mouseDown event
                     default:
                         runRefreshSession(.globalObserverLeftMouseUp, screenIsDefinitelyUnlocked: true)
+                }
+            }
+        }
+    }
+    
+    @MainActor
+    private static func onMonitorConfigurationChanged() {
+        guard let token: RunSessionGuard = .isServerEnabled else { return }
+        
+        // Get current monitor configuration
+        let previousMonitorCount = monitors.count
+        let currentMonitorCount = NSScreen.screens.count
+        
+        // Run a refresh session to update monitor state
+        runRefreshSession(.globalObserver("didChangeScreenParameters"), screenIsDefinitelyUnlocked: true)
+        
+        // If auto-move is enabled and monitors changed, rearrange workspaces
+        if config.autoMoveWorkspacesOnMonitorConnect && previousMonitorCount != currentMonitorCount {
+            Task { @MainActor in
+                try await runSession(.globalObserver("autoMoveWorkspaces"), token) {
+                    autoMoveWorkspacesToAssignedMonitors()
                 }
             }
         }

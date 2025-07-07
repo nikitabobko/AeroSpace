@@ -3,6 +3,7 @@ public enum MonitorDescription: Equatable, Sendable {
     case main
     case secondary
     case pattern(String, SendableRegex<AnyRegexOutput>)
+    case fingerprint(MonitorFingerprintPatternData)
 
     public static func == (lhs: MonitorDescription, rhs: MonitorDescription) -> Bool {
         return switch (lhs, rhs) {
@@ -10,6 +11,7 @@ public enum MonitorDescription: Equatable, Sendable {
             case (.secondary, .secondary): true
             case (.sequenceNumber(let a), .sequenceNumber(let b)): a == b
             case (.pattern(let a, _), .pattern(let b, _)): a == b
+            case (.fingerprint(let a), .fingerprint(let b)): a == b
             default: false
         }
     }

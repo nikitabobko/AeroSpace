@@ -2,19 +2,42 @@ import AppKit
 import Common
 
 @MainActor
-private var activeRefreshTask: Task<(), any Error>? = nil
+var activeRefreshTask: Task<(), any Error>? = nil // Made internal for RefreshDebouncer access
+
+@MainActor
+let refreshDebouncer = RefreshDebouncer()
+
+@MainActor
+func runRefreshSessionDebounced(
+    _ event: RefreshSessionEvent,
+    screenIsDefinitelyUnlocked: Bool,
+    optimisticallyPreLayoutWorkspaces: Bool = false
+) {
+    refreshDebouncer.debounce(
+        event: event,
+        screenIsDefinitelyUnlocked: screenIsDefinitelyUnlocked,
+        optimisticallyPreLayoutWorkspaces: optimisticallyPreLayoutWorkspaces
+    )
+}
 
 @MainActor
 func runRefreshSession(
     _ event: RefreshSessionEvent,
     screenIsDefinitelyUnlocked: Bool, // todo rename
     optimisticallyPreLayoutWorkspaces: Bool = false,
+    debounce: Bool = true // New parameter to control debouncing
 ) {
-    if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
-    activeRefreshTask?.cancel()
-    activeRefreshTask = Task { @MainActor in
-        try checkCancellation()
-        try await runRefreshSessionBlocking(event, optimisticallyPreLayoutWorkspaces: optimisticallyPreLayoutWorkspaces)
+    if debounce {
+        // Use debounced refresh for most cases
+        runRefreshSessionDebounced(event, screenIsDefinitelyUnlocked: screenIsDefinitelyUnlocked, optimisticallyPreLayoutWorkspaces: optimisticallyPreLayoutWorkspaces)
+    } else {
+        // Immediate refresh for critical operations
+        if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
+        activeRefreshTask?.cancel()
+        activeRefreshTask = Task { @MainActor in
+            try checkCancellation()
+            try await runRefreshSessionBlocking(event, optimisticallyPreLayoutWorkspaces: optimisticallyPreLayoutWorkspaces)
+        }
     }
 }
 
@@ -76,7 +99,7 @@ func runSession<T>(
             if focusBefore != focusAfter {
                 focusAfter?.nativeFocus() // syncFocusToMacOs
             }
-            runRefreshSession(event, screenIsDefinitelyUnlocked: false)
+            runRefreshSession(event, screenIsDefinitelyUnlocked: false, debounce: false) // Don't debounce within critical sessions
             return result
         }
     }
@@ -104,18 +127,77 @@ func refreshModel() {
 
 @MainActor
 private func refresh() async throws {
-    // Garbage collect terminated apps and windows before working with all windows
+    // Check if we can do an incremental update
+    if WindowChangeTracker.shared.hasPendingChanges() {
+        try await refreshIncremental()
+    } else {
+        try await refreshFull()
+    }
+}
+
+@MainActor
+private func refreshIncremental() async throws {
+    let pendingChanges = WindowChangeTracker.shared.getPendingChanges()
+    
+    // Process destroyed windows first
+    for (windowId, changes) in pendingChanges where changes.contains(.destroyed) {
+        if let window = MacWindow.allWindowsMap[windowId] {
+            window.garbageCollect(skipClosedWindowsCache: false)
+        }
+    }
+    
+    // Process other changes
+    for (windowId, changes) in pendingChanges {
+        if changes.contains(.created) {
+            // New windows will be handled by refresh detection
+            continue
+        }
+        
+        // For moved/resized windows, just invalidate their layout
+        if changes.contains(.moved) || changes.contains(.resized) {
+            if let window = MacWindow.allWindowsMap[windowId] {
+                // Mark window's workspace for re-layout
+                window.nodeWorkspace?.markNeedsLayout()
+            }
+        }
+    }
+    
+    // Still need to check for new windows periodically
+    let mapping = try await MacApp.refreshAllAndGetAliveWindowIds(
+        frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier
+    )
+    
+    // Only register truly new windows
+    for (app, windowIds) in mapping {
+        for windowId in windowIds {
+            if MacWindow.allWindowsMap[windowId] == nil {
+                try await MacWindow.getOrRegister(windowId: windowId, macApp: app)
+                WindowChangeTracker.shared.trackCreated(windowId: windowId)
+            }
+        }
+    }
+    
+    Workspace.garbageCollectUnusedWorkspaces()
+}
+
+@MainActor
+private func refreshFull() async throws {
+    // Original full refresh implementation
     let mapping = try await MacApp.refreshAllAndGetAliveWindowIds(frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier)
     let aliveWindowIds = mapping.values.flatMap { $0 }
 
     for window in MacWindow.allWindows {
         if !aliveWindowIds.contains(window.windowId) {
             window.garbageCollect(skipClosedWindowsCache: false)
+            WindowChangeTracker.shared.trackDestroyed(windowId: window.windowId)
         }
     }
     for (app, windowIds) in mapping {
         for windowId in windowIds {
-            try await MacWindow.getOrRegister(windowId: windowId, macApp: app)
+            if MacWindow.allWindowsMap[windowId] == nil {
+                try await MacWindow.getOrRegister(windowId: windowId, macApp: app)
+                WindowChangeTracker.shared.trackCreated(windowId: windowId)
+            }
         }
     }
 
@@ -170,10 +252,17 @@ private func layoutWorkspaces() async throws {
     // to reduce flicker, first unhide visible workspaces, then hide invisible ones
     for monitor in monitors {
         let workspace = monitor.activeWorkspace
-        workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
-        try await workspace.layoutWorkspace()
+        // Only layout if workspace needs it or has pending changes
+        if workspace.requiresLayout || WindowChangeTracker.shared.hasPendingChanges() {
+            workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
+            try await workspace.layoutWorkspace()
+            workspace.clearNeedsLayout()
+        }
     }
     for workspace in Workspace.all where !workspace.isVisible {
+        // Skip workspaces that don't need updates
+        if !workspace.requiresLayout && workspace.isEffectivelyEmpty { continue }
+        
         let corner = monitorToOptimalHideCorner[workspace.workspaceMonitor.rect.topLeftCorner] ?? .bottomRightCorner
         for window in workspace.allLeafWindowsRecursive {
             try await (window as! MacWindow).hideInCorner(corner) // todo as!

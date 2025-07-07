@@ -15,6 +15,8 @@
 /.vscode
 # External dependencies
 /.deps
+# Xcode build products (may contain personal paths)
+/build
 
 # For whatever local files that developers might want to keep there (I personally keep a separate `generated-html` git worktree here)
 /.local
@@ -22,3 +24,5 @@
 # XCode User settings
 xcuserdata/
 xcshareddata/
+# Shell parser build artifacts
+ShellParserGenerated/build/

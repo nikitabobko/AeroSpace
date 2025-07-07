@@ -32,24 +32,24 @@ extension [AeroObj] {
         var cellTable: [[Cell<String>]] = []
         for obj in self {
             var line: [Cell<String>] = []
-            var curCell: String = ""
+            var curCellParts: [String] = [] // Use array instead of string concatenation
             var errors: [String] = []
             for token in format {
                 switch token {
                     case .interVar(PlainInterVar.rightPadding.rawValue):
-                        line.append(Cell(value: curCell, rightPadding: true))
-                        curCell = ""
+                        line.append(Cell(value: curCellParts.joined(), rightPadding: true))
+                        curCellParts = []
                     case .literal(let literal):
-                        curCell += literal
+                        curCellParts.append(literal)
                     case .interVar(let value):
                         switch value.expandFormatVar(obj: obj) {
-                            case .success(let expanded): curCell += expanded.toString()
+                            case .success(let expanded): curCellParts.append(expanded.toString())
                             case .failure(let error): errors.append(error)
                         }
                 }
             }
             if !errors.isEmpty { return .failure(errors.joinErrors()) }
-            line.append(Cell(value: curCell, rightPadding: false))
+            line.append(Cell(value: curCellParts.joined(), rightPadding: false))
             cellTable.append(line)
         }
         let result = cellTable
@@ -98,6 +98,12 @@ enum FormatVar: Equatable {
         case monitorId = "monitor-id"
         case monitorAppKitNsScreenScreensId = "monitor-appkit-nsscreen-screens-id"
         case monitorName = "monitor-name"
+        case monitorFingerprint = "monitor-fingerprint"
+        case monitorVendorId = "monitor-vendor-id"
+        case monitorModelId = "monitor-model-id"
+        case monitorSerialNumber = "monitor-serial-number"
+        case monitorWidth = "monitor-width"
+        case monitorHeight = "monitor-height"
     }
 }
 
@@ -194,6 +200,32 @@ extension String {
                     case .monitorId: .success(m.monitorId.map { .int($0 + 1) } ?? .string("NULL-MONITOR-ID"))
                     case .monitorAppKitNsScreenScreensId: .success(.int(m.monitorAppKitNsScreenScreensId))
                     case .monitorName: .success(.string(m.name))
+                    case .monitorFingerprint:
+                        if let lazyMonitor = m as? LazyMonitor, let fingerprint = lazyMonitor.fingerprint {
+                            .success(.string(fingerprint.description))
+                        } else {
+                            .success(.string(""))
+                        }
+                    case .monitorVendorId:
+                        if let lazyMonitor = m as? LazyMonitor, let fingerprint = lazyMonitor.fingerprint, let vendorId = fingerprint.vendorID {
+                            .success(.string(String(format: "0x%04X", vendorId)))
+                        } else {
+                            .success(.string(""))
+                        }
+                    case .monitorModelId:
+                        if let lazyMonitor = m as? LazyMonitor, let fingerprint = lazyMonitor.fingerprint, let modelId = fingerprint.modelID {
+                            .success(.string(String(format: "0x%04X", modelId)))
+                        } else {
+                            .success(.string(""))
+                        }
+                    case .monitorSerialNumber:
+                        if let lazyMonitor = m as? LazyMonitor, let fingerprint = lazyMonitor.fingerprint, let serial = fingerprint.serialNumber {
+                            .success(.string(serial))
+                        } else {
+                            .success(.string(""))
+                        }
+                    case .monitorWidth: .success(.int(Int(m.width)))
+                    case .monitorHeight: .success(.int(Int(m.height)))
                 }
             case (.app(let a), .app(let f)):
                 return switch f {
