@@ -5,7 +5,7 @@ public struct MonitorFingerprintPatternData: Equatable, Sendable {
     public let displayNamePattern: String?
     public let widthPixels: Int?
     public let heightPixels: Int?
-    
+
     public init(
         vendorID: UInt32? = nil,
         modelID: UInt32? = nil,

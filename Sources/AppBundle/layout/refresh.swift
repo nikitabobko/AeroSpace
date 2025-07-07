@@ -11,12 +11,12 @@ let refreshDebouncer = RefreshDebouncer()
 func runRefreshSessionDebounced(
     _ event: RefreshSessionEvent,
     screenIsDefinitelyUnlocked: Bool,
-    optimisticallyPreLayoutWorkspaces: Bool = false
+    optimisticallyPreLayoutWorkspaces: Bool = false,
 ) {
     refreshDebouncer.debounce(
         event: event,
         screenIsDefinitelyUnlocked: screenIsDefinitelyUnlocked,
-        optimisticallyPreLayoutWorkspaces: optimisticallyPreLayoutWorkspaces
+        optimisticallyPreLayoutWorkspaces: optimisticallyPreLayoutWorkspaces,
     )
 }
 
@@ -25,7 +25,7 @@ func runRefreshSession(
     _ event: RefreshSessionEvent,
     screenIsDefinitelyUnlocked: Bool, // todo rename
     optimisticallyPreLayoutWorkspaces: Bool = false,
-    debounce: Bool = true // New parameter to control debouncing
+    debounce: Bool = true, // New parameter to control debouncing
 ) {
     if debounce {
         // Use debounced refresh for most cases
@@ -138,21 +138,21 @@ private func refresh() async throws {
 @MainActor
 private func refreshIncremental() async throws {
     let pendingChanges = WindowChangeTracker.shared.getPendingChanges()
-    
+
     // Process destroyed windows first
     for (windowId, changes) in pendingChanges where changes.contains(.destroyed) {
         if let window = MacWindow.allWindowsMap[windowId] {
             window.garbageCollect(skipClosedWindowsCache: false)
         }
     }
-    
+
     // Process other changes
     for (windowId, changes) in pendingChanges {
         if changes.contains(.created) {
             // New windows will be handled by refresh detection
             continue
         }
-        
+
         // For moved/resized windows, just invalidate their layout
         if changes.contains(.moved) || changes.contains(.resized) {
             if let window = MacWindow.allWindowsMap[windowId] {
@@ -161,12 +161,12 @@ private func refreshIncremental() async throws {
             }
         }
     }
-    
+
     // Still need to check for new windows periodically
     let mapping = try await MacApp.refreshAllAndGetAliveWindowIds(
-        frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier
+        frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier,
     )
-    
+
     // Only register truly new windows
     for (app, windowIds) in mapping {
         for windowId in windowIds {
@@ -176,7 +176,7 @@ private func refreshIncremental() async throws {
             }
         }
     }
-    
+
     Workspace.garbageCollectUnusedWorkspaces()
 }
 
@@ -262,7 +262,7 @@ private func layoutWorkspaces() async throws {
     for workspace in Workspace.all where !workspace.isVisible {
         // Skip workspaces that don't need updates
         if !workspace.requiresLayout && workspace.isEffectivelyEmpty { continue }
-        
+
         let corner = monitorToOptimalHideCorner[workspace.workspaceMonitor.rect.topLeftCorner] ?? .bottomRightCorner
         for window in workspace.allLeafWindowsRecursive {
             try await (window as! MacWindow).hideInCorner(corner) // todo as!

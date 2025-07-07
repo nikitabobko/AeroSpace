@@ -32,7 +32,7 @@ func parseMonitorDescription(_ raw: TOMLValueConvertible, _ backtrace: TomlBackt
             return .failure(.semantic(backtrace, "Table monitor description must contain 'fingerprint' key"))
         }
     }
-    
+
     // Otherwise parse as string/int
     let rawString: String
     if let string = raw.string {
@@ -53,59 +53,59 @@ private func parseFingerprintPattern(_ table: TOMLTable, _ backtrace: TomlBacktr
     var displayNamePattern: String?
     var widthPixels: Int?
     var heightPixels: Int?
-    
+
     for (key, value) in table {
         let keyBacktrace = backtrace + .key(key)
         switch key {
-        case "vendor", "vendor_id", "vendorID":
-            if let int = value.int {
-                vendorID = UInt32(int)
-            } else if let string = value.string, string.hasPrefix("0x") || string.hasPrefix("0X") {
-                vendorID = UInt32(string.dropFirst(2), radix: 16)
-            } else {
-                return .failure(.semantic(keyBacktrace, "vendor_id must be an integer or hex string (e.g., '0x1234')"))
-            }
-        case "model", "model_id", "modelID":
-            if let int = value.int {
-                modelID = UInt32(int)
-            } else if let string = value.string, string.hasPrefix("0x") || string.hasPrefix("0X") {
-                modelID = UInt32(string.dropFirst(2), radix: 16)
-            } else {
-                return .failure(.semantic(keyBacktrace, "model_id must be an integer or hex string (e.g., '0x5678')"))
-            }
-        case "serial", "serial_number", "serialNumber":
-            guard let string = value.string else {
-                return .failure(expectedActualTypeError(expected: .string, actual: value.type, keyBacktrace))
-            }
-            serialNumber = string
-        case "name", "display_name", "displayName":
-            guard let string = value.string else {
-                return .failure(expectedActualTypeError(expected: .string, actual: value.type, keyBacktrace))
-            }
-            displayNamePattern = string
-        case "width", "width_pixels", "widthPixels":
-            guard let int = value.int else {
-                return .failure(expectedActualTypeError(expected: .int, actual: value.type, keyBacktrace))
-            }
-            widthPixels = int
-        case "height", "height_pixels", "heightPixels":
-            guard let int = value.int else {
-                return .failure(expectedActualTypeError(expected: .int, actual: value.type, keyBacktrace))
-            }
-            heightPixels = int
-        default:
-            return .failure(unknownKeyError(keyBacktrace))
+            case "vendor", "vendor_id", "vendorID":
+                if let int = value.int {
+                    vendorID = UInt32(int)
+                } else if let string = value.string, string.hasPrefix("0x") || string.hasPrefix("0X") {
+                    vendorID = UInt32(string.dropFirst(2), radix: 16)
+                } else {
+                    return .failure(.semantic(keyBacktrace, "vendor_id must be an integer or hex string (e.g., '0x1234')"))
+                }
+            case "model", "model_id", "modelID":
+                if let int = value.int {
+                    modelID = UInt32(int)
+                } else if let string = value.string, string.hasPrefix("0x") || string.hasPrefix("0X") {
+                    modelID = UInt32(string.dropFirst(2), radix: 16)
+                } else {
+                    return .failure(.semantic(keyBacktrace, "model_id must be an integer or hex string (e.g., '0x5678')"))
+                }
+            case "serial", "serial_number", "serialNumber":
+                guard let string = value.string else {
+                    return .failure(expectedActualTypeError(expected: .string, actual: value.type, keyBacktrace))
+                }
+                serialNumber = string
+            case "name", "display_name", "displayName":
+                guard let string = value.string else {
+                    return .failure(expectedActualTypeError(expected: .string, actual: value.type, keyBacktrace))
+                }
+                displayNamePattern = string
+            case "width", "width_pixels", "widthPixels":
+                guard let int = value.int else {
+                    return .failure(expectedActualTypeError(expected: .int, actual: value.type, keyBacktrace))
+                }
+                widthPixels = int
+            case "height", "height_pixels", "heightPixels":
+                guard let int = value.int else {
+                    return .failure(expectedActualTypeError(expected: .int, actual: value.type, keyBacktrace))
+                }
+                heightPixels = int
+            default:
+                return .failure(unknownKeyError(keyBacktrace))
         }
     }
-    
+
     let patternData = MonitorFingerprintPatternData(
         vendorID: vendorID,
         modelID: modelID,
         serialNumber: serialNumber,
         displayNamePattern: displayNamePattern,
         widthPixels: widthPixels,
-        heightPixels: heightPixels
+        heightPixels: heightPixels,
     )
-    
+
     return .success(.fingerprint(patternData))
 }

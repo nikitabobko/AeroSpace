@@ -2,7 +2,7 @@ import AppKit
 import Common
 
 // Batch fetch multiple AX properties in a single call to reduce round trips
-struct AxBatchFetcher {
+enum AxBatchFetcher {
     struct WindowProperties {
         let title: String?
         let size: CGSize?
@@ -13,7 +13,7 @@ struct AxBatchFetcher {
         let role: String?
         let subrole: String?
     }
-    
+
     static func fetchWindowProperties(
         _ window: AXUIElement,
         attributes: Set<String> = [
@@ -23,21 +23,21 @@ struct AxBatchFetcher {
             "AXFullScreen" as String,
             kAXMinimizedAttribute as String,
             kAXRoleAttribute as String,
-            kAXSubroleAttribute as String
-        ]
+            kAXSubroleAttribute as String,
+        ],
     ) -> WindowProperties {
         // Batch fetch all attributes at once
         var values: CFArray?
         let attributesArray = attributes.map { $0 as CFString } as CFArray
-        
+
         // Use AXUIElementCopyMultipleAttributeValues for batch fetching
         let result = AXUIElementCopyMultipleAttributeValues(
             window,
             attributesArray,
             .stopOnError,
-            &values
+            &values,
         )
-        
+
         guard result == .success, let values = values as? [AnyObject] else {
             // Fallback to individual fetches if batch fetch fails
             return WindowProperties(
@@ -48,10 +48,10 @@ struct AxBatchFetcher {
                 isFullscreen: window.get(Ax.isFullscreenAttr),
                 isMinimized: window.get(Ax.minimizedAttr),
                 role: window.get(Ax.roleAttr),
-                subrole: window.get(Ax.subroleAttr)
+                subrole: window.get(Ax.subroleAttr),
             )
         }
-        
+
         // Parse batch results
         let attributesList = Array(attributes)
         var results: [String: Any] = [:]
@@ -60,27 +60,28 @@ struct AxBatchFetcher {
                 results[attributesList[index]] = value
             }
         }
-        
+
         let position = results[kAXPositionAttribute as String] as? CGPoint
         let size = results[kAXSizeAttribute as String] as? CGSize
-        
+
         return WindowProperties(
             title: results[kAXTitleAttribute as String] as? String,
             size: size,
             position: position,
-            rect: (position != nil && size != nil) 
+            rect: (position != nil && size != nil)
                 ? Rect(topLeftX: position!.x, topLeftY: position!.y, width: size!.width, height: size!.height)
                 : nil,
             isFullscreen: results["AXFullScreen"] as? Bool,
             isMinimized: results[kAXMinimizedAttribute as String] as? Bool,
             role: results[kAXRoleAttribute as String] as? String,
-            subrole: results[kAXSubroleAttribute as String] as? String
+            subrole: results[kAXSubroleAttribute as String] as? String,
         )
     }
-    
+
     private static func getRect(_ window: AXUIElement) -> Rect? {
         guard let position = window.get(Ax.topLeftCornerAttr),
-              let size = window.get(Ax.sizeAttr) else {
+              let size = window.get(Ax.sizeAttr)
+        else {
             return nil
         }
         return Rect(topLeftX: position.x, topLeftY: position.y, width: size.width, height: size.height)

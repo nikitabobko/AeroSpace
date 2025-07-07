@@ -50,7 +50,7 @@ class LazyMonitor: Monitor {
     var visibleRect: Rect {
         _visibleRect ?? screen.visibleRect.also { _visibleRect = $0 }
     }
-    
+
     var fingerprint: MonitorFingerprint? {
         if !_fingerprintComputed {
             _fingerprint = MonitorFingerprint.fromScreen(screen)

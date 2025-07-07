@@ -5,15 +5,15 @@ extension TreeNode {
     private func visit(node: TreeNode, result: inout [Window], maxDepth: Int = 100, currentDepth: Int = 0) {
         // Add depth limit to prevent infinite recursion
         guard currentDepth < maxDepth else { return }
-        
+
         if let node = node as? Window {
             result.append(node)
             return // Early exit for leaf nodes
         }
-        
+
         // Skip empty containers early
         if node.children.isEmpty { return }
-        
+
         for child in node.children {
             visit(node: child, result: &result, maxDepth: maxDepth, currentDepth: currentDepth + 1)
         }
@@ -59,7 +59,7 @@ extension TreeNode {
         var current: TreeNode? = self
         var depth = 0
         let maxDepth = 100
-        
+
         while let node = current, depth < maxDepth {
             if let window = node as? Window {
                 return window
@@ -75,10 +75,10 @@ extension TreeNode {
         if let window = self as? Window {
             return window
         }
-        
+
         // Early exit for empty containers
         if children.isEmpty { return nil }
-        
+
         // Use first(where:) for early exit on first found window
         return children.lazy.compactMap { $0.anyLeafWindowRecursive }.first
     }
@@ -87,10 +87,10 @@ extension TreeNode {
     var isEffectivelyEmpty: Bool {
         // Quick check for windows first
         if self is Window { return false }
-        
+
         // Quick check for empty containers
         if children.isEmpty { return true }
-        
+
         // Use lazy evaluation for efficiency
         return !children.lazy.contains { !$0.isEffectivelyEmpty }
     }

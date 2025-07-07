@@ -11,7 +11,7 @@ struct MonitorFingerprint: Equatable, Hashable, Codable {
     let displayName: String?
     let widthPixels: Int?
     let heightPixels: Int?
-    
+
     init(
         vendorID: UInt32? = nil,
         modelID: UInt32? = nil,
@@ -27,26 +27,26 @@ struct MonitorFingerprint: Equatable, Hashable, Codable {
         self.widthPixels = widthPixels
         self.heightPixels = heightPixels
     }
-    
+
     static func fromScreen(_ screen: NSScreen) -> MonitorFingerprint? {
         guard let displayID = screen.displayID else { return nil }
-        
+
         var vendorID: UInt32?
         var modelID: UInt32?
         var serialNumber: String?
-        
+
         var servicePort: io_object_t = 0
         if CGDisplayGetDisplayIDForService(displayID, &servicePort) == CGError.success && servicePort != 0 {
             defer { IOObjectRelease(servicePort) }
-            
+
             if let vendorIDCF = IORegistryEntryCreateCFProperty(servicePort, "DisplayVendorID" as CFString, kCFAllocatorDefault, 0) {
                 vendorID = (vendorIDCF.takeRetainedValue() as? NSNumber)?.uint32Value
             }
-            
+
             if let modelIDCF = IORegistryEntryCreateCFProperty(servicePort, "DisplayProductID" as CFString, kCFAllocatorDefault, 0) {
                 modelID = (modelIDCF.takeRetainedValue() as? NSNumber)?.uint32Value
             }
-            
+
             if let serialNumberCF = IORegistryEntryCreateCFProperty(servicePort, "DisplaySerialNumber" as CFString, kCFAllocatorDefault, 0) {
                 if let serialData = serialNumberCF.takeRetainedValue() as? Data {
                     serialNumber = String(data: serialData, encoding: .utf8)?.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -55,21 +55,21 @@ struct MonitorFingerprint: Equatable, Hashable, Codable {
                 }
             }
         }
-        
+
         let displayName = screen.localizedName
         let widthPixels = Int(screen.frame.width * (screen.backingScaleFactor))
         let heightPixels = Int(screen.frame.height * (screen.backingScaleFactor))
-        
+
         return MonitorFingerprint(
             vendorID: vendorID,
             modelID: modelID,
             serialNumber: serialNumber,
             displayName: displayName,
             widthPixels: widthPixels,
-            heightPixels: heightPixels
+            heightPixels: heightPixels,
         )
     }
-    
+
     func matches(pattern: MonitorFingerprintPattern) -> Bool {
         if let patternVendorID = pattern.vendorID, vendorID != patternVendorID {
             return false
@@ -81,7 +81,7 @@ struct MonitorFingerprint: Equatable, Hashable, Codable {
             return false
         }
         if let patternDisplayName = pattern.displayNameRegex {
-            guard let displayName = displayName else { return false }
+            guard let displayName else { return false }
             return displayName.contains(patternDisplayName.val)
         }
         if let patternWidth = pattern.widthPixels, widthPixels != patternWidth {
@@ -92,7 +92,7 @@ struct MonitorFingerprint: Equatable, Hashable, Codable {
         }
         return true
     }
-    
+
     func matches(patternData: MonitorFingerprintPatternData) -> Bool {
         if let patternVendorID = patternData.vendorID, vendorID != patternVendorID {
             return false
@@ -104,7 +104,7 @@ struct MonitorFingerprint: Equatable, Hashable, Codable {
             return false
         }
         if let patternDisplayName = patternData.displayNamePattern {
-            guard let displayName = displayName else { return false }
+            guard let displayName else { return false }
             if let regex = try? SendableRegex(patternDisplayName) {
                 return displayName.contains(regex.val)
             }
@@ -118,22 +118,22 @@ struct MonitorFingerprint: Equatable, Hashable, Codable {
         }
         return true
     }
-    
+
     var description: String {
         var parts: [String] = []
-        if let vendorID = vendorID {
+        if let vendorID {
             parts.append("vendor:\(String(format: "0x%04X", vendorID))")
         }
-        if let modelID = modelID {
+        if let modelID {
             parts.append("model:\(String(format: "0x%04X", modelID))")
         }
-        if let serialNumber = serialNumber, !serialNumber.isEmpty {
+        if let serialNumber, !serialNumber.isEmpty {
             parts.append("serial:\(serialNumber)")
         }
-        if let displayName = displayName {
+        if let displayName {
             parts.append("name:\(displayName)")
         }
-        if let widthPixels = widthPixels, let heightPixels = heightPixels {
+        if let widthPixels, let heightPixels {
             parts.append("resolution:\(widthPixels)x\(heightPixels)")
         }
         return parts.joined(separator: " ")
@@ -147,7 +147,7 @@ struct MonitorFingerprintPattern: Equatable, Sendable {
     let displayNameRegex: SendableRegex<AnyRegexOutput>?
     let widthPixels: Int?
     let heightPixels: Int?
-    
+
     init(
         vendorID: UInt32? = nil,
         modelID: UInt32? = nil,
@@ -163,13 +163,13 @@ struct MonitorFingerprintPattern: Equatable, Sendable {
         self.widthPixels = widthPixels
         self.heightPixels = heightPixels
     }
-    
+
     static func == (lhs: MonitorFingerprintPattern, rhs: MonitorFingerprintPattern) -> Bool {
         return lhs.vendorID == rhs.vendorID &&
-               lhs.modelID == rhs.modelID &&
-               lhs.serialNumber == rhs.serialNumber &&
-               lhs.widthPixels == rhs.widthPixels &&
-               lhs.heightPixels == rhs.heightPixels
+            lhs.modelID == rhs.modelID &&
+            lhs.serialNumber == rhs.serialNumber &&
+            lhs.widthPixels == rhs.widthPixels &&
+            lhs.heightPixels == rhs.heightPixels
     }
 }
 
@@ -186,31 +186,32 @@ private func CGDisplayGetDisplayIDForService(_ displayID: CGDirectDisplayID, _ s
     let result = IOServiceGetMatchingServices(kIOMainPortDefault, IOServiceMatching("IODisplayConnect"), &iter)
     guard result == KERN_SUCCESS else { return CGError(rawValue: Int32(result))! }
     defer { IOObjectRelease(iter) }
-    
+
     var serviceObject: io_object_t = IOIteratorNext(iter)
     while serviceObject != 0 {
         defer { IOObjectRelease(serviceObject) }
-        
+
         let infoUnmanaged = IODisplayCreateInfoDictionary(serviceObject, IOOptionBits(kIODisplayMatchingInfo))
         guard let info = infoUnmanaged?.takeRetainedValue() as NSDictionary? else {
             serviceObject = IOIteratorNext(iter)
             continue
         }
-        
+
         if let productID = info["DisplayProductID"] as? NSNumber,
-           let vendorID = info["DisplayVendorID"] as? NSNumber {
+           let vendorID = info["DisplayVendorID"] as? NSNumber
+        {
             let testDisplayID = CGDisplayVendorNumber(displayID) << 16 | CGDisplayModelNumber(displayID)
             let dictDisplayID = vendorID.uint32Value << 16 | productID.uint32Value
-            
+
             if testDisplayID == dictDisplayID {
                 service = serviceObject
                 IOObjectRetain(serviceObject)
                 return CGError.success
             }
         }
-        
+
         serviceObject = IOIteratorNext(iter)
     }
-    
+
     return CGError(rawValue: 1)!
 }

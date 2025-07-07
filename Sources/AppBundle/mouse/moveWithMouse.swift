@@ -12,7 +12,7 @@ func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeM
         if let windowId {
             WindowChangeTracker.shared.trackMoved(windowId: windowId)
         }
-        
+
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
             runRefreshSession(.ax(notif), screenIsDefinitelyUnlocked: false)

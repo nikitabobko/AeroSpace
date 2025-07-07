@@ -8,7 +8,7 @@ extension Workspace {
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in mointors horizontal configuration. ¯\_(ツ)_/¯
-        
+
         // Try background layout calculation for complex workspaces
         if shouldUseBackgroundLayout() {
             try await layoutWorkspaceWithBackground(rect: rect)
@@ -16,28 +16,28 @@ extension Workspace {
             try await layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, LayoutContext(self))
         }
     }
-    
+
     @MainActor
     private func shouldUseBackgroundLayout() -> Bool {
         // Use background layout for complex workspaces (more than 10 windows)
         let windowCount = allLeafWindowsRecursive.count
         return windowCount > 10 && config.performanceConfig.useBackgroundLayoutCalculation
     }
-    
+
     @MainActor
     private func layoutWorkspaceWithBackground(rect: Rect) async throws {
         // For now, use standard layout to avoid actor isolation issues
         // Background layout can be re-enabled once actor isolation is properly handled
         try await layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, LayoutContext(self))
     }
-    
+
     @MainActor
     private func applyBackgroundLayout(_ layoutResult: BackgroundLayoutCalculator.LayoutResult) async throws {
         // Apply calculated layout results to actual windows
         for calculation in layoutResult.calculations {
             try await applyNodeLayout(calculation)
         }
-        
+
         // Handle floating windows separately
         let context = LayoutContext(self)
         for window in children.filterIsInstance(of: Window.self) {
@@ -46,12 +46,12 @@ extension Workspace {
             try await window.layoutFloatingWindow(context)
         }
     }
-    
+
     @MainActor
     private func applyNodeLayout(_ calculation: BackgroundLayoutCalculator.LayoutResult.NodeLayoutCalculation) async throws {
         // Find the corresponding node and apply the layout
         // This is a simplified implementation - in a real scenario, you'd need proper node identification
-        
+
         // Apply layout to children recursively
         for childCalculation in calculation.children {
             try await applyNodeLayout(childCalculation)
