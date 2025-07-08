@@ -7,10 +7,8 @@ private var activeRefreshTask: Task<(), any Error>? = nil
 @MainActor
 func runRefreshSession(
     _ event: RefreshSessionEvent,
-    screenIsDefinitelyUnlocked: Bool, // todo rename
     optimisticallyPreLayoutWorkspaces: Bool = false,
 ) {
-    if screenIsDefinitelyUnlocked { resetClosedWindowsCache() }
     activeRefreshTask?.cancel()
     activeRefreshTask = Task { @MainActor in
         try checkCancellation()
@@ -76,7 +74,7 @@ func runSession<T>(
             if focusBefore != focusAfter {
                 focusAfter?.nativeFocus() // syncFocusToMacOs
             }
-            runRefreshSession(event, screenIsDefinitelyUnlocked: false)
+            runRefreshSession(event)
             return result
         }
     }
@@ -127,7 +125,7 @@ func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     let notif = notif as String
     Task { @MainActor in
         if !TrayMenuModel.shared.isEnabled { return }
-        runRefreshSession(.ax(notif), screenIsDefinitelyUnlocked: false)
+        runRefreshSession(.ax(notif))
     }
 }
 

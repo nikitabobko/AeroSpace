@@ -10,7 +10,7 @@ func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeM
     Task { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
-            runRefreshSession(.ax(notif), screenIsDefinitelyUnlocked: false)
+            runRefreshSession(.ax(notif))
             return
         }
         moveWithMouseTask?.cancel()
