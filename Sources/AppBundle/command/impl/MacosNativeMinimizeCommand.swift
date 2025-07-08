@@ -4,6 +4,7 @@ import Common
 /// See: MacosNativeFullscreenCommand. Problem ID-B6E178F2
 struct MacosNativeMinimizeCommand: Command {
     let args: MacosNativeMinimizeCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         // resolveTargetOrReportError on already minimized windows will alwyas fail

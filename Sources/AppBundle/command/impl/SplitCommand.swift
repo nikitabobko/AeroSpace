@@ -3,6 +3,7 @@ import Common
 
 struct SplitCommand: Command {
     let args: SplitCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         if config.enableNormalizationFlattenContainers {

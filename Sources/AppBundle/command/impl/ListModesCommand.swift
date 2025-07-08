@@ -3,6 +3,7 @@ import Common
 
 struct ListModesCommand: Command {
     let args: ListModesCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         if args.current {

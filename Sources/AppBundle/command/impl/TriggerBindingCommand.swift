@@ -3,6 +3,7 @@ import Common
 
 struct TriggerBindingCommand: Command {
     let args: TriggerBindingCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         return if let mode = config.modes[args.mode] {

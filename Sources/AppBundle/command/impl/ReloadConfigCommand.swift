@@ -3,6 +3,7 @@ import Common
 
 struct ReloadConfigCommand: Command {
     let args: ReloadConfigCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         var stdout = ""

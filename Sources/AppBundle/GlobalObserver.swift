@@ -59,7 +59,6 @@ class GlobalObserver {
             //  The end of the callback calls refreshSession
             Task { @MainActor in
                 guard let token: RunSessionGuard = .isServerEnabled else { return }
-                resetClosedWindowsCache()
                 try await resetManipulatedWithMouseIfPossible()
                 let mouseLocation = mouseLocation
                 let clickedMonitor = mouseLocation.monitorApproximation
