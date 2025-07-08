@@ -79,7 +79,7 @@ private func initServerArgs() {
                 }
                 args = Array(args.dropFirst(2))
             case "-NSDocumentRevisionsDebugMode" where isDebug:
-                printStderr("Running from Xcode. Skip args parsing...")
+                printStderr("Running from Xcode. Skip args parsing... The args were: \(CommandLine.arguments.dropFirst())")
                 return
             default:
                 cliError("Unrecognized flag '\(args.first.orDie())'")
