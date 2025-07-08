@@ -10,7 +10,7 @@ func resizedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     Task { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
-            runRefreshSession(.ax(notif), screenIsDefinitelyUnlocked: false)
+            runRefreshSession(.ax(notif))
             return
         }
         resizeWithMouseTask?.cancel()
@@ -30,7 +30,7 @@ func resetManipulatedWithMouseIfPossible() async throws {
         for workspace in Workspace.all {
             workspace.resetResizeWeightBeforeResizeRecursive()
         }
-        runRefreshSession(.resetManipulatedWithMouse, screenIsDefinitelyUnlocked: true, optimisticallyPreLayoutWorkspaces: true)
+        runRefreshSession(.resetManipulatedWithMouse, optimisticallyPreLayoutWorkspaces: true)
     }
 }
 
