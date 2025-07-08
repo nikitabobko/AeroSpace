@@ -46,7 +46,7 @@ struct FocusCommand: Command {
                     case .dfsNext: currentIndex + 1
                     case .dfsPrev: currentIndex - 1
                 }
-                if targetIndex < 0 || targetIndex >= windows.count {
+                if !(0 ..< windows.count).contains(targetIndex) {
                     switch args.boundariesAction {
                         case .stop: return true
                         case .fail: return false

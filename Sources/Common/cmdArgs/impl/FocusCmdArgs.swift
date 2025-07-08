@@ -103,7 +103,7 @@ public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
             $0.dfsIndex == nil || $0 == FocusCmdArgs(rawArgs: args, dfsIndex: $0.dfsIndex.orDie())
         }
         .filter("(dfs-next|dfs-prev) only supports --boundaries workspace") {
-            !$0.target.isDfsRelative || $0.boundaries == .workspace
+            $0.target.isDfsRelative.implies($0.boundaries == .workspace)
         }
 }
 
