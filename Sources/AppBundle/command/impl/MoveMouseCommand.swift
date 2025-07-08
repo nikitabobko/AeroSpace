@@ -3,6 +3,7 @@ import Common
 
 struct MoveMouseCommand: Command {
     let args: MoveMouseCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         let mouse = mouseLocation

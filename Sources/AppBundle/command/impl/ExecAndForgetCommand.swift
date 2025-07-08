@@ -3,6 +3,7 @@ import Common
 
 struct ExecAndForgetCommand: Command {
     let args: ExecAndForgetCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         // todo shall exec-and-forget fork exec session?

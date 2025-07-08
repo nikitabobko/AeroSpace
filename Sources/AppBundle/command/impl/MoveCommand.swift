@@ -3,6 +3,7 @@ import Common
 
 struct MoveCommand: Command {
     let args: MoveCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         let direction = args.direction.val

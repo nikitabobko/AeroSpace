@@ -3,6 +3,7 @@ import Common
 
 struct ListMonitorsCommand: Command {
     let args: ListMonitorsCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         let focus = focus

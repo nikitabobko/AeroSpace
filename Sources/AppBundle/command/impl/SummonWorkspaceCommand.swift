@@ -3,6 +3,7 @@ import Common
 
 struct SummonWorkspaceCommand: Command {
     let args: SummonWorkspaceCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         let workspace = Workspace.get(byName: args.target.val.raw)

@@ -3,6 +3,7 @@ import Common
 
 struct FocusMonitorCommand: Command {
     let args: FocusMonitorCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }

@@ -3,6 +3,7 @@ import Common
 
 struct EnableCommand: Command {
     let args: EnableCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         let prevState = TrayMenuModel.shared.isEnabled

@@ -3,6 +3,7 @@ import Common
 
 struct ListAppsCommand: Command {
     let args: ListAppsCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         var result = Array(MacApp.allAppsMap.values)

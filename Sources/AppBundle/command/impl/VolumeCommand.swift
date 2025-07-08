@@ -4,6 +4,7 @@ import ISSoundAdditions
 
 struct VolumeCommand: Command {
     let args: VolumeCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         switch args.action.val {
