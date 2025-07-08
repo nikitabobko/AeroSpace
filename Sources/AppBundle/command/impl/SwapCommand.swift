@@ -51,6 +51,6 @@ struct SwapCommand: Command {
         if args.swapFocus {
             return targetWindow.focusWindow()
         }
-        return currentWindow.focusWindow()
+        return true
     }
 }
