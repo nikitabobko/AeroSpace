@@ -18,7 +18,7 @@ struct WorkspaceCommand: Command {
                     stdin: io.readStdin(),
                     target: target,
                 )
-                guard let workspace else { return false }
+                guard let workspace else { return io.err("Can't resolve next or prev workspace") }
                 workspaceName = workspace.name
             case .direct(let name):
                 workspaceName = name.raw
