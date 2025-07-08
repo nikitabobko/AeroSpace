@@ -132,7 +132,8 @@ let summon_workspace_help_generated = """
     USAGE: summon-workspace [-h|--help] [--fail-if-noop] <workspace>
     """
 let swap_help_generated = """
-    USAGE: swap [-h|--help] [--swap-focus] [--wrap-around]
+    USAGE: swap [-h|--help] [--window-id <window-id>] [--swap-focus]
+                [--wrap-around]
                 (left|down|up|right|dfs-next|dfs-prev)
     """
 let trigger_binding_help_generated = """

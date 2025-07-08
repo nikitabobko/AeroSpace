@@ -8,6 +8,7 @@ public struct SwapCmdArgs: CmdArgs {
         options: [
             "--swap-focus": trueBoolFlag(\.swapFocus),
             "--wrap-around": trueBoolFlag(\.wrapAround),
+            "--window-id": optionalWindowIdFlag(),
         ],
         arguments: [newArgParser(\.target, parseCardinalOrDfsDirection, mandatoryArgPlaceholder: CardinalOrDfsDirection.unionLiteral)],
     )

@@ -9,7 +9,8 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace swap [-h|--help] [--swap-focus] [--wrap-around]
+aerospace swap [-h|--help] [--window-id <window-id>] [--swap-focus]
+               [--wrap-around]
                (left|down|up|right|dfs-next|dfs-prev)
 
 // end::synopsis[]
@@ -24,6 +25,9 @@ aerospace swap [-h|--help] [--swap-focus] [--wrap-around]
 include::util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+
+--window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
 
 --swap-focus::
 Swap focus away from the currently focused window. By default, this command does not change the focused window.
