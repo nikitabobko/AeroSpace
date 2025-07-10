@@ -5,7 +5,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<meta name="author" content="v0.0.0-SNAPSHOT">
 <link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Guide</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -511,9 +510,6 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <body class="article toc2 toc-left">
 <div id="header">
 <h1>AeroSpace Guide</h1>
-<div class="details">
-<span id="author" class="author">v0.0.0-SNAPSHOT</span><br>
-</div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -756,7 +752,7 @@ If no custom config is found, AeroSpace will load the default config.</p>
 </div>
 <div class="paragraph">
 <p>That allows you to keep your config tidy and clean from trivial config keys for which you like the default values.
-You can bootstrap your custom config by coping the default config from the app installation</p>
+You can bootstrap your custom config by copying the default config from the app installation -</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -771,13 +767,7 @@ You can bootstrap your custom config by coping the default config from the app i
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Place a copy of this config to ~/.aerospace.toml</span>
 <span class="tok-c1"># After that, you can edit ~/.aerospace.toml to your liking</span>
 
-<span class="tok-c1"># You can use it to add commands that run after login to macOS user session.</span>
-<span class="tok-c1"># &#39;start-at-login&#39; needs to be &#39;true&#39; for &#39;after-login-command&#39; to work</span>
-<span class="tok-c1"># Available commands: <a href="https://nikitabobko.github.io/AeroSpace/commands" class="bare">https://nikitabobko.github.io/AeroSpace/commands</a></span>
-<span class="tok-n">after-login-command</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[]</span>
-
 <span class="tok-c1"># You can use it to add commands that run after AeroSpace startup.</span>
-<span class="tok-c1"># &#39;after-startup-command&#39; is run after &#39;after-login-command&#39;</span>
 <span class="tok-c1"># Available commands : <a href="https://nikitabobko.github.io/AeroSpace/commands" class="bare">https://nikitabobko.github.io/AeroSpace/commands</a></span>
 <span class="tok-n">after-startup-command</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[]</span>
 
@@ -1938,7 +1928,7 @@ The first matching pattern will be used</p>
 <p>AeroSpace uses the API to gently ask windows whether they are dialogs, but AeroSpace also applies some heuristics.</p>
 </div>
 <div class="paragraph">
-<p>For example, windows without a fullscreen button (NB! fullscreen button and maximize button are different buttons) are considered dialogs, excluding terminal apps (WezTerm, Alacritty, iTerm2).</p>
+<p>For example, windows without a fullscreen button (NB! fullscreen button and maximize button are different buttons) are generally considered dialogs, excluding terminal apps (WezTerm, Alacritty, iTerm2, etc.).</p>
 </div>
 <div class="paragraph">
 <p>Windows that are recognized as dialogs are floated by default.</p>
@@ -1988,7 +1978,7 @@ Please see <code>isDialogHeuristic</code> function in AeroSpace sources.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-04-15 17:06:00 +0200
+Last updated 2025-07-11 00:33:03 +0200
 </div>
 </div>
 </body>

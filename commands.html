@@ -5,7 +5,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.23">
-<meta name="author" content="v0.0.0-SNAPSHOT">
 <link rel="icon" type="image/png" href="./assets/icon.png">
 <title>AeroSpace Commands</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
@@ -511,9 +510,6 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <body class="article toc2 toc-left">
 <div id="header">
 <h1>AeroSpace Commands</h1>
-<div class="details">
-<span id="author" class="author">v0.0.0-SNAPSHOT</span><br>
-</div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
@@ -540,21 +536,22 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#reload-config">21. reload-config</a></li>
 <li><a href="#resize">22. resize</a></li>
 <li><a href="#split">23. split</a></li>
-<li><a href="#summon-workspace">24. summon-workspace</a></li>
-<li><a href="#trigger-binding">25. trigger-binding</a></li>
-<li><a href="#volume">26. volume</a></li>
-<li><a href="#workspace">27. workspace</a></li>
-<li><a href="#workspace-back-and-forth">28. workspace-back-and-forth</a></li>
-<li><a href="#query-commands">29. Query commands</a>
+<li><a href="#swap">24. swap</a></li>
+<li><a href="#summon-workspace">25. summon-workspace</a></li>
+<li><a href="#trigger-binding">26. trigger-binding</a></li>
+<li><a href="#volume">27. volume</a></li>
+<li><a href="#workspace">28. workspace</a></li>
+<li><a href="#workspace-back-and-forth">29. workspace-back-and-forth</a></li>
+<li><a href="#query-commands">30. Query commands</a>
 <ul class="sectlevel2">
-<li><a href="#config">29.1. config</a></li>
-<li><a href="#debug-windows">29.2. debug-windows</a></li>
-<li><a href="#list-apps">29.3. list-apps</a></li>
-<li><a href="#list-exec-env-vars">29.4. list-exec-env-vars</a></li>
-<li><a href="#list-modes">29.5. list-modes</a></li>
-<li><a href="#list-monitors">29.6. list-monitors</a></li>
-<li><a href="#list-windows">29.7. list-windows</a></li>
-<li><a href="#list-workspaces">29.8. list-workspaces</a></li>
+<li><a href="#config">30.1. config</a></li>
+<li><a href="#debug-windows">30.2. debug-windows</a></li>
+<li><a href="#list-apps">30.3. list-apps</a></li>
+<li><a href="#list-exec-env-vars">30.4. list-exec-env-vars</a></li>
+<li><a href="#list-modes">30.5. list-modes</a></li>
+<li><a href="#list-monitors">30.6. list-monitors</a></li>
+<li><a href="#list-windows">30.7. list-windows</a></li>
+<li><a href="#list-workspaces">30.8. list-workspaces</a></li>
 </ul>
 </li>
 </ul>
@@ -796,12 +793,15 @@ Stdout, stderr and exit code are ignored.</p>
 <pre class="nowrap">focus [-h|--help] [--ignore-floating]
       [--boundaries &lt;boundary&gt;] [--boundaries-action &lt;action&gt;]
       (left|down|up|right)
+focus [-h|--help] [--ignore-floating]
+      [--boundaries &lt;boundary&gt;] [--boundaries-action &lt;action&gt;]
+      (dfs-next|dfs-prev)
 focus [-h|--help] --window-id &lt;window-id&gt;
 focus [-h|--help] --dfs-index &lt;dfs-index&gt;</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Set focus to the nearest window in the given direction.</p>
+<p>Set focus to a window.</p>
 </div>
 <div class="paragraph">
 <p>Contrary to i3, <code>focus</code> command doesn&#8217;t have a separate argument to focus floating windows.
@@ -848,6 +848,22 @@ Index is 0-based.</p>
 <dd>
 <p>Don&#8217;t perceive floating windows as part of the tree.
 It may be useful for more reliable scripting.</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph lead">
+<p><strong>ARGUMENTS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">(left|down|up|right)</dt>
+<dd>
+<p>Set focus to the nearest window in the given direction.</p>
+</dd>
+<dt class="hdlist1">(dfs-next|dfs-prev)</dt>
+<dd>
+<p>Set focus to the window before or after the current window in the depth-first order (top-to-bottom and left-to-right) of windows in the current workspace tree.
+In this mode, <code>--boundaries</code> must be <code>workspace</code> (the default) and <code>--boundaries-action</code> can be set to one of <code>(stop|fail|wrap-around-the-workspace)</code>.</p>
 </dd>
 </dl>
 </div>
@@ -927,8 +943,9 @@ focus-monitor [-h|--help] &lt;monitor-pattern&gt;...</pre>
 </dd>
 <dt class="hdlist1">&lt;monitor-pattern&gt;&#8230;&#8203;</dt>
 <dd>
-<p>Find the first monitor pattern in the list that doesn&#8217;t describe the current monitor and focus it.
-Monitor pattern is the same as in <code>workspace-to-monitor-force-assignment</code> config option</p>
+<p>Find the first matching monitor and focus it.
+Multiple monitor patterns is useful for different monitor configurations.
+Monitor patterns follow the same format as in <code>workspace-to-monitor-force-assignment</code> config option</p>
 </dd>
 </dl>
 </div>
@@ -1221,7 +1238,7 @@ Toggle between the two if not specified</p>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">move [-h|--help] [--window-id &lt;window-id&gt;] (left|down|up|right)</pre>
+<pre class="nowrap">move [-h|--help] [--window-id &lt;window-id&gt;] [--boundaries &lt;boundary&gt;] [--boundaries-action &lt;boundary-action&gt;] (left|down|up|right)</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1242,6 +1259,18 @@ Toggle between the two if not specified</p>
 <dt class="hdlist1">--window-id &lt;window-id&gt;</dt>
 <dd>
 <p>Act on the specified window instead of the focused window</p>
+</dd>
+<dt class="hdlist1">--boundaries &lt;boundary&gt;</dt>
+<dd>
+<p>Defines move boundaries.<br>
+<code>&lt;boundary&gt;</code> possible values: <code>(workspace|all-monitors-outer-frame)</code>.<br>
+The default is: <code>workspace</code></p>
+</dd>
+<dt class="hdlist1">--boundaries-action &lt;boundary-action&gt;</dt>
+<dd>
+<p>Defines the behavior when requested to move across the <code>&lt;boundary&gt;</code>.<br>
+<code>&lt;boundary-action&gt;</code> possible values: <code>(stop|fail|create-implicit-container)</code>.<br>
+The default is: <code>create-implicit-container</code></p>
 </dd>
 </dl>
 </div>
@@ -1353,6 +1382,13 @@ Toggle between the two if not specified</p>
 <div class="paragraph">
 <p><code>v_tiles</code> is an implicitly created container.</p>
 </div>
+<div class="paragraph">
+<p><strong>Remark</strong>: If <code>--boundaries</code> is set to <code>all-monitors-outer-frame</code> and there is a monitor in the <code>up</code> direction,
+the implicit container isn&#8217;t be created.</p>
+</div>
+<div class="paragraph">
+<p>Instead, <code>window 2</code> would be moved to the monitor above the current.</p>
+</div>
 </li>
 </ol>
 </div>
@@ -1420,7 +1456,7 @@ Possible values:</p>
 <ul>
 <li>
 <p>Try to move mouse to the center of the window. If there is no window in focus, move mouse to the center of the monitor:<br>
-<code>aerospace move-mouse --fail-if-noop window-lazy-center || aerospace move-mouse monitor-lazy-center</code></p>
+<code>aerospace move-mouse window-lazy-center || aerospace move-mouse monitor-lazy-center</code></p>
 </li>
 </ul>
 </div>
@@ -1432,7 +1468,7 @@ Possible values:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">move-node-to-monitor [-h|--help] [--window-id &lt;window-id&gt;] [--focus-follows-window]
-                     [--fail-if-noop] [--wrap-around] (left|down|up|right|next|prev)
+                     [--wrap-around] (left|down|up|right|next|prev)
 move-node-to-monitor [-h|--help] [--window-id &lt;window-id&gt;] [--focus-follows-window]
                      [--fail-if-noop] &lt;monitor-pattern&gt;...</pre>
 </div>
@@ -1458,6 +1494,10 @@ move-node-to-monitor [-h|--help] [--window-id &lt;window-id&gt;] [--focus-follow
 <p>Make sure that the window in question receives focus after moving.
 This flag is a shortcut for manually running <code>aerospace-workspace</code>/<code>aerospace-focus</code> after <code>move-node-to-monitor</code> successful execution.</p>
 </dd>
+<dt class="hdlist1">--fail-if-noop</dt>
+<dd>
+<p>Exit with non-zero code if move window to monitor it already belongs to</p>
+</dd>
 <dt class="hdlist1">--window-id &lt;window-id&gt;</dt>
 <dd>
 <p>Act on the specified window instead of the focused window</p>
@@ -1479,8 +1519,9 @@ This flag is a shortcut for manually running <code>aerospace-workspace</code>/<c
 </dd>
 <dt class="hdlist1">&lt;monitor-pattern&gt;&#8230;&#8203;</dt>
 <dd>
-<p>Find the first monitor pattern in the list that doesn&#8217;t describe the current monitor and move the window to the appropriate monitor.
-Monitor pattern is the same as in <code>workspace-to-monitor-force-assignment</code> config option</p>
+<p>Find the first matching monitor and move the window there.
+Multiple monitor patterns is useful for different monitor configurations.
+Monitor patterns follow the same format as in <code>workspace-to-monitor-force-assignment</code> config option</p>
 </dd>
 </dl>
 </div>
@@ -1600,8 +1641,9 @@ Focus follows the focused workspace, so the workspace stays focused.</p>
 </dd>
 <dt class="hdlist1">&lt;monitor-pattern&gt;</dt>
 <dd>
-<p>Find the first monitor pattern in the list that doesn&#8217;t describe the current monitor and move the workspace to the appropriate monitor.
-Monitor pattern is the same as in <code>workspace-to-monitor-force-assignment</code> config option</p>
+<p>Find the first matching monitor and move the workspace there.
+Multiple monitor patterns is useful for different monitor configurations.
+Monitor patterns follow the same format as in <code>workspace-to-monitor-force-assignment</code> config option</p>
 </dd>
 </dl>
 </div>
@@ -1787,7 +1829,60 @@ Consider using <code>join-with</code> if you want to keep <code>enable-normaliza
 </div>
 </div>
 <div class="sect1">
-<h2 id="summon-workspace"><a class="anchor" href="#summon-workspace"></a><a class="link" href="#summon-workspace">24. summon-workspace</a></h2>
+<h2 id="swap"><a class="anchor" href="#swap"></a><a class="link" href="#swap">24. swap</a></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">swap [-h|--help] [--window-id &lt;window-id&gt;] [--swap-focus]
+     [--wrap-around]
+     (left|down|up|right|dfs-next|dfs-prev)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Swaps the focused window with another window.</p>
+</div>
+<div class="paragraph lead">
+<p><strong>OPTIONS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">-h, --help</dt>
+<dd>
+<p>Print help</p>
+</dd>
+<dt class="hdlist1">--window-id &lt;window-id&gt;</dt>
+<dd>
+<p>Act on the specified window instead of the focused window</p>
+</dd>
+<dt class="hdlist1">--swap-focus</dt>
+<dd>
+<p>Swap focus away from the currently focused window. By default, this command does not change the focused window.</p>
+</dd>
+<dt class="hdlist1">--wrap-around</dt>
+<dd>
+<p>Wrap around if the window is at the edge of the workspace (for <code>(left|down|up|right)</code>) or the start/end of the depth first order (for <code>(dfs-next|dfs-prev)</code>).</p>
+</dd>
+</dl>
+</div>
+<div class="paragraph lead">
+<p><strong>ARGUMENTS</strong></p>
+</div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">(left|down|up|right)</dt>
+<dd>
+<p>Swaps the focused window with the nearest window in the given direction.</p>
+</dd>
+<dt class="hdlist1">(dfs-next|dfs-prev)</dt>
+<dd>
+<p>Swaps the focused window with the next or previous window in the depth-first order (top-to-bottom and left-to-right) of windows in the current workspace tree.</p>
+</dd>
+</dl>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="summon-workspace"><a class="anchor" href="#summon-workspace"></a><a class="link" href="#summon-workspace">25. summon-workspace</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -1832,7 +1927,7 @@ In single monitor setup the command is identical to <code>workspace</code> comma
 </div>
 </div>
 <div class="sect1">
-<h2 id="trigger-binding"><a class="anchor" href="#trigger-binding"></a><a class="link" href="#trigger-binding">25. trigger-binding</a></h2>
+<h2 id="trigger-binding"><a class="anchor" href="#trigger-binding"></a><a class="link" href="#trigger-binding">26. trigger-binding</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -1890,7 +1985,7 @@ In single monitor setup the command is identical to <code>workspace</code> comma
 </div>
 </div>
 <div class="sect1">
-<h2 id="volume"><a class="anchor" href="#volume"></a><a class="link" href="#volume">26. volume</a></h2>
+<h2 id="volume"><a class="anchor" href="#volume"></a><a class="link" href="#volume">27. volume</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -1935,7 +2030,7 @@ volume [-h|--help] set &lt;number&gt;</pre>
 </div>
 </div>
 <div class="sect1">
-<h2 id="workspace"><a class="anchor" href="#workspace"></a><a class="link" href="#workspace">27. workspace</a></h2>
+<h2 id="workspace"><a class="anchor" href="#workspace"></a><a class="link" href="#workspace">28. workspace</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -2004,7 +2099,7 @@ Incompatible with <code>--auto-back-and-forth</code></p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="workspace-back-and-forth"><a class="anchor" href="#workspace-back-and-forth"></a><a class="link" href="#workspace-back-and-forth">28. workspace-back-and-forth</a></h2>
+<h2 id="workspace-back-and-forth"><a class="anchor" href="#workspace-back-and-forth"></a><a class="link" href="#workspace-back-and-forth">29. workspace-back-and-forth</a></h2>
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
@@ -2026,7 +2121,7 @@ They are created and destroyed on the fly.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="query-commands"><a class="anchor" href="#query-commands"></a><a class="link" href="#query-commands">29. Query commands</a></h2>
+<h2 id="query-commands"><a class="anchor" href="#query-commands"></a><a class="link" href="#query-commands">30. Query commands</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Query commands are commands that do not change the state but rather allow the examination of the current state.</p>
@@ -2043,7 +2138,7 @@ They are created and destroyed on the fly.</p>
 </ul>
 </div>
 <div class="sect2">
-<h3 id="config"><a class="anchor" href="#config"></a><a class="link" href="#config">29.1. config</a></h3>
+<h3 id="config"><a class="anchor" href="#config"></a><a class="link" href="#config">30.1. config</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">config [-h|--help] --get &lt;name&gt; [--json] [--keys]
@@ -2146,7 +2241,7 @@ alt-2
 </div>
 </div>
 <div class="sect2">
-<h3 id="debug-windows"><a class="anchor" href="#debug-windows"></a><a class="link" href="#debug-windows">29.2. debug-windows</a></h3>
+<h3 id="debug-windows"><a class="anchor" href="#debug-windows"></a><a class="link" href="#debug-windows">30.2. debug-windows</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">debug-windows [-h|--help] [--window-id &lt;window-id&gt;]</pre>
@@ -2198,7 +2293,7 @@ Usage of this flag disables interactive mode.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-apps"><a class="anchor" href="#list-apps"></a><a class="link" href="#list-apps">29.3. list-apps</a></h3>
+<h3 id="list-apps"><a class="anchor" href="#list-apps"></a><a class="link" href="#list-apps">30.3. list-apps</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-apps [-h|--help] [--macos-native-hidden [no]] [--format &lt;output-format&gt;] [--count] [--json]</pre>
@@ -2294,7 +2389,7 @@ Incompatible with <code>--count</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-exec-env-vars"><a class="anchor" href="#list-exec-env-vars"></a><a class="link" href="#list-exec-env-vars">29.4. list-exec-env-vars</a></h3>
+<h3 id="list-exec-env-vars"><a class="anchor" href="#list-exec-env-vars"></a><a class="link" href="#list-exec-env-vars">30.4. list-exec-env-vars</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-exec-env-vars [-h|--help]</pre>
@@ -2318,10 +2413,10 @@ Incompatible with <code>--count</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-modes"><a class="anchor" href="#list-modes"></a><a class="link" href="#list-modes">29.5. list-modes</a></h3>
+<h3 id="list-modes"><a class="anchor" href="#list-modes"></a><a class="link" href="#list-modes">30.5. list-modes</a></h3>
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">list-modes [-h|--help] [--current]</pre>
+<pre class="nowrap">list-modes [-h|--help] [--current] [--count] [--json]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2341,13 +2436,24 @@ Incompatible with <code>--count</code></p>
 </dd>
 <dt class="hdlist1">--current</dt>
 <dd>
-<p>Only print the currently active mode</p>
+<p>Only print the currently active mode.
+Incompatible with <code>--count</code></p>
+</dd>
+<dt class="hdlist1">--count</dt>
+<dd>
+<p>Output only the number of modes.
+Incompatible with <code>--current</code>, <code>--json</code></p>
+</dd>
+<dt class="hdlist1">--json</dt>
+<dd>
+<p>Output in JSON format.
+Incompatible with <code>--count</code></p>
 </dd>
 </dl>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-monitors"><a class="anchor" href="#list-monitors"></a><a class="link" href="#list-monitors">29.6. list-monitors</a></h3>
+<h3 id="list-monitors"><a class="anchor" href="#list-monitors"></a><a class="link" href="#list-monitors">30.6. list-monitors</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format &lt;output-format&gt;] [--count] [--json]</pre>
@@ -2437,7 +2543,7 @@ Incompatible with <code>--count</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-windows"><a class="anchor" href="#list-windows"></a><a class="link" href="#list-windows">29.7. list-windows</a></h3>
+<h3 id="list-windows"><a class="anchor" href="#list-windows"></a><a class="link" href="#list-windows">30.7. list-windows</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-windows [-h|--help] (--workspace &lt;workspace&gt;...|--monitor &lt;monitor&gt;...)
@@ -2641,7 +2747,7 @@ Incompatible with <code>--count</code></p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="list-workspaces"><a class="anchor" href="#list-workspaces"></a><a class="link" href="#list-workspaces">29.8. list-workspaces</a></h3>
+<h3 id="list-workspaces"><a class="anchor" href="#list-workspaces"></a><a class="link" href="#list-workspaces">30.8. list-workspaces</a></h3>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">list-workspaces [-h|--help] --monitor &lt;monitor&gt;... [--visible [no]] [--empty [no]] [--format &lt;output-format&gt;] [--count] [--json]
@@ -2796,7 +2902,7 @@ Incompatible with <code>--count</code></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-04-15 17:06:00 +0200
+Last updated 2025-07-11 00:33:03 +0200
 </div>
 </div>
 </body>
