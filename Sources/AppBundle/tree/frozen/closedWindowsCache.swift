@@ -47,8 +47,6 @@ struct FrozenWorkspace: Sendable {
         monitors: monitors.map(FrozenMonitor.init),
         windowIds: allWindowIds,
     )
-    // todo why is this assertion false 21336ad382539b35fdc94b4fbd55408e10b101f8?
-    // check(closedWindowsCache.windowIds.contains(window.windowId))
 }
 
 @MainActor func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) async throws -> Bool {
