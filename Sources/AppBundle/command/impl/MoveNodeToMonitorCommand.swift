@@ -20,7 +20,14 @@ struct MoveNodeToMonitorCommand: Command {
                     .map { dir in dir.isPositive && targetWs.rootTilingContainer.orientation == dir.orientation }
                     ? 0
                     : INDEX_BIND_LAST
-                return moveWindowToWorkspace(window, targetWs, io, focusFollowsWindow: true, failIfNoop: args.failIfNoop, index: index)
+                return moveWindowToWorkspace(
+                    window,
+                    targetWs,
+                    io,
+                    focusFollowsWindow: args.focusFollowsWindow,
+                    failIfNoop: args.failIfNoop,
+                    index: index,
+                )
             case .failure(let msg):
                 return io.err(msg)
         }

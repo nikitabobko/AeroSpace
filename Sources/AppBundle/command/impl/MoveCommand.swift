@@ -64,7 +64,8 @@ struct MoveCommand: Command {
             }
 
             let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(target: .direction(direction))
-                .copy(\.focusFollowsWindow, true)
+                .copy(\.windowId, window.windowId)
+                .copy(\.focusFollowsWindow, focus.windowOrNil == window)
 
             return MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
     }
