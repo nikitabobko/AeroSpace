@@ -48,26 +48,27 @@ struct MoveCommand: Command {
 ) -> Bool {
     switch args.boundaries {
         case .workspace:
-            return switch args.boundariesAction {
-                case .stop: true
-                case .fail: false
+            switch args.boundariesAction {
+                case .stop: return true
+                case .fail: return false
                 case .createImplicitContainer:
-                    (createImplicitContainerAndMoveWindow(window, workspace, direction), true).1
+                    createImplicitContainerAndMoveWindow(window, workspace, direction)
+                    return true
             }
         case .allMonitorsOuterFrame:
             guard let (monitors, index) = window.nodeMonitor?.findRelativeMonitor(inDirection: direction) else {
                 return io.err("Should never happen. Can't find the current monitor")
             }
 
-            guard monitors.getOrNil(atIndex: index) != nil else {
+            if monitors.indices.contains(index) {
+                let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(target: .direction(direction))
+                    .copy(\.windowId, window.windowId)
+                    .copy(\.focusFollowsWindow, focus.windowOrNil == window)
+
+                return MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
+            } else {
                 return hitAllMonitorsOuterFrameBoundaries(window, workspace, io, args, direction)
             }
-
-            let moveNodeToMonitorArgs = MoveNodeToMonitorCmdArgs(target: .direction(direction))
-                .copy(\.windowId, window.windowId)
-                .copy(\.focusFollowsWindow, focus.windowOrNil == window)
-
-            return MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
     }
 }
 
@@ -79,9 +80,11 @@ struct MoveCommand: Command {
     _ direction: CardinalDirection,
 ) -> Bool {
     switch args.boundariesAction {
-        case .stop: true
-        case .fail: false
-        case .createImplicitContainer: (createImplicitContainerAndMoveWindow(window, workspace, direction), true).1
+        case .stop: return true
+        case .fail: return false
+        case .createImplicitContainer:
+            createImplicitContainerAndMoveWindow(window, workspace, direction)
+            return true
     }
 }
 
