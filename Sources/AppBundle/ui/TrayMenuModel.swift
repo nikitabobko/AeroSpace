@@ -26,9 +26,9 @@ public class TrayMenuModel: ObservableObject {
     TrayMenuModel.shared.workspaces = Workspace.all.map {
         let apps = $0.allLeafWindowsRecursive.map { $0.app.name?.takeIf { !$0.isEmpty } }.filterNotNil().toSet()
         let dash = " - "
-        let suffix = switch () {
-            case _ where !apps.isEmpty: dash + apps.sorted().joinTruncating(separator: ", ", length: 25)
-            case _ where $0.isVisible: dash + $0.workspaceMonitor.name
+        let suffix = switch true {
+            case !apps.isEmpty: dash + apps.sorted().joinTruncating(separator: ", ", length: 25)
+            case $0.isVisible: dash + $0.workspaceMonitor.name
             default: ""
         }
         return WorkspaceViewModel(

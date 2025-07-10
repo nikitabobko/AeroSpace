@@ -128,9 +128,9 @@ extension CGFloat {
     }
 
     func coerceIn(_ range: ClosedRange<CGFloat>) -> CGFloat {
-        switch () {
-            case _ where self > range.upperBound: range.upperBound
-            case _ where self < range.lowerBound: range.lowerBound
+        switch true {
+            case self > range.upperBound: range.upperBound
+            case self < range.lowerBound: range.lowerBound
             default: self
         }
     }

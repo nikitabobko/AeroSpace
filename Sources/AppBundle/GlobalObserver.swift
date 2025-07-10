@@ -62,9 +62,9 @@ class GlobalObserver {
                 try await resetManipulatedWithMouseIfPossible()
                 let mouseLocation = mouseLocation
                 let clickedMonitor = mouseLocation.monitorApproximation
-                switch () {
+                switch true {
                     // Detect clicks on desktop of different monitors
-                    case _ where clickedMonitor.activeWorkspace != focus.workspace:
+                    case clickedMonitor.activeWorkspace != focus.workspace:
                         _ = try await runSession(.globalObserverLeftMouseUp, token) {
                             clickedMonitor.activeWorkspace.focusWorkspace()
                         }

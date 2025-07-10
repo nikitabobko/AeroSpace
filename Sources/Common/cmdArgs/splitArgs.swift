@@ -56,15 +56,15 @@ extension [String] {
             let containsWhitespaces = $0.rangeOfCharacter(from: .whitespacesAndNewlines) != nil
             let containsSingleQuote = $0.contains("'")
             let containsDoubleQuote = $0.contains("\"")
-            return switch () {
-                case _ where containsDoubleQuote && !containsSingleQuote:
+            return switch true {
+                case containsDoubleQuote && !containsSingleQuote:
                     $0.quoted(with: "'")
-                case _ where containsSingleQuote && !containsDoubleQuote:
+                case containsSingleQuote && !containsDoubleQuote:
                     $0.quoted(with: "\"")
-                case _ where containsSingleQuote && containsDoubleQuote:
+                case containsSingleQuote && containsDoubleQuote:
                     // Technically shouldn't be possible according to splitArgs
                     $0.replacing("'", with: "\\'").replacing("\"", with: "\\\"").quoted(with: "\"")
-                case _ where containsWhitespaces:
+                case containsWhitespaces:
                     $0.quoted(with: "'")
                 default:
                     $0

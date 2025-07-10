@@ -148,9 +148,9 @@ enum AxUiElementWindowType: String {
     case popup
 
     static func new(isWindow: Bool, isDialog: () -> Bool) -> AxUiElementWindowType {
-        switch () {
-            case _ where !isWindow: .popup
-            case _ where isDialog(): .dialog
+        switch true {
+            case !isWindow: .popup
+            case isDialog(): .dialog
             default: .window
         }
     }
