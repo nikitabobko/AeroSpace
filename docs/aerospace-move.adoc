@@ -128,7 +128,7 @@ v_tiles
 `v_tiles` is an implicitly created container.
 +
 *Remark*: If `--boundaries` is set to `all-monitors-outer-frame` and there is a monitor in the `up` direction,
-the implicit container isn't be created.
+the implicit container isn't created.
 +
 Instead, `window 2` would be moved to the monitor above the current.
 
