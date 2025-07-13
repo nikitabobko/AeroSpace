@@ -42,19 +42,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             }
         }.keyboardShortcut("E", modifiers: .command)
         getExperimentalUISettingsMenu(viewModel: viewModel)
-        let editor = getTextEditorToOpenConfig()
-        Button("Open config in '\(editor.lastPathComponent)'") {
-            let fallbackConfig: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName)
-            switch findCustomConfigUrl() {
-                case .file(let url):
-                    url.open(with: editor)
-                case .noCustomConfigExists:
-                    _ = try? FileManager.default.copyItem(atPath: defaultConfigUrl.path, toPath: fallbackConfig.path)
-                    fallbackConfig.open(with: editor)
-                case .ambiguousConfigError:
-                    fallbackConfig.open(with: editor)
-            }
-        }.keyboardShortcut(",", modifiers: .command)
+        openConfigButton.keyboardShortcut(",", modifiers: .command)
         if let token: RunSessionGuard = .isServerEnabled {
             Button("Reload config") {
                 Task {
@@ -84,6 +72,22 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             Image(systemName: "pause.circle.fill")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
+        }
+    }
+}
+
+var openConfigButton: some View {
+    let editor = getTextEditorToOpenConfig()
+    return Button("Open config in '\(editor.lastPathComponent)'") {
+        let fallbackConfig: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName)
+        switch findCustomConfigUrl() {
+            case .file(let url):
+                url.open(with: editor)
+            case .noCustomConfigExists:
+                _ = try? FileManager.default.copyItem(atPath: defaultConfigUrl.path, toPath: fallbackConfig.path)
+                fallbackConfig.open(with: editor)
+            case .ambiguousConfigError:
+                fallbackConfig.open(with: editor)
         }
     }
 }
