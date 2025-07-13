@@ -78,6 +78,10 @@ extension AxUiElementMock {
             return false
         }
 
+        if appBundleId == "com.nomachine.nxdock" && get(Ax.closeButtonAttr) == nil {
+            return false
+        }
+
         if appBundleId?.isFirefoxId() != true {
             return isWindowHeuristicOld(axApp: axApp, appBundleId: appBundleId)
         }
