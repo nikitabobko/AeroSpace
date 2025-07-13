@@ -10,6 +10,7 @@ struct FullscreenCommand: Command {
         guard let window = target.windowOrNil else {
             return io.err(noWindowIsFocused)
         }
+
         let newState: Bool = switch args.toggle {
             case .on: true
             case .off: false
@@ -20,11 +21,11 @@ struct FullscreenCommand: Command {
                 "Tip: use --fail-if-noop to exit with non-zero code")
             return !args.failIfNoop
         }
+
         window.isFullscreen = newState
         window.noOuterGapsInFullscreen = args.noOuterGaps
-
-        // Focus on its own workspace
         window.markAsMostRecentChild()
+
         return true
     }
 }
