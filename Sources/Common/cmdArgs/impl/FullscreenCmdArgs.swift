@@ -8,6 +8,7 @@ public struct FullscreenCmdArgs: CmdArgs {
         options: [
             "--no-outer-gaps": trueBoolFlag(\.noOuterGaps),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
+            "--hide-others": trueBoolFlag(\.hideOthers),
             "--window-id": optionalWindowIdFlag(),
         ],
         arguments: [ArgParser(\.toggle, parseToggleEnum)],
@@ -16,6 +17,7 @@ public struct FullscreenCmdArgs: CmdArgs {
     public var toggle: ToggleEnum = .toggle
     public var noOuterGaps: Bool = false
     public var failIfNoop: Bool = false
+    public var hideOthers: Bool = false
     /*conforms*/ public var windowId: UInt32?
     /*conforms*/ public var workspaceName: WorkspaceName?
 }
