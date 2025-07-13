@@ -6,6 +6,10 @@ extension AxUiElementMock {
     func isDialogHeuristic(appBundleId id: String?) -> Bool {
         // Note: a lot of windows don't have title on startup. So please don't rely on the title
 
+        if id == "com.apple.iphonesimulator" {
+            return true
+        }
+
         lazy var isQutebrowser = id == "org.qutebrowser.qutebrowser"
 
         // Don't tile:
