@@ -43,7 +43,6 @@ public struct MessageView: View {
                     HStack {
                         TextEditor(text: .constant(model.message?.body ?? ""))
                             .font(.system(size: 12).monospaced())
-                            .textSelection(.enabled)
                         Spacer()
                     }
                     Spacer()
@@ -61,9 +60,8 @@ public struct MessageView: View {
                             openConfigButton
                     }
                 }
-                Button("Continue") {
+                Button("Close") {
                     model.message = nil
-                    self.dismiss()
                 }
                 .keyboardShortcut(.defaultAction)
             }
@@ -75,6 +73,10 @@ public struct MessageView: View {
             if message == nil {
                 self.dismiss()
             }
+        }
+        .onDisappear {
+            // If user closes the screen with the macOS native close (x) button and then the error is still the same, this window will not appear again
+            model.message = nil
         }
     }
 }
