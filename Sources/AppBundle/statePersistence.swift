@@ -7,8 +7,11 @@ var stateFileUrl: URL {
     FileManager.default.homeDirectoryForCurrentUser.appending(path: stateFileName)
 }
 
+var shouldSaveWorldState = true
+
 @MainActor
 func saveWorldState() {
+    guard shouldSaveWorldState else { return }
     let allWs = Workspace.all
     let world = FrozenWorld(
         workspaces: allWs.map { FrozenWorkspace($0) },
