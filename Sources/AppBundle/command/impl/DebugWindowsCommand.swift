@@ -82,6 +82,7 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
     result["Aero.treeNodeParent"] = .string(String(describing: window.parent))
     result["Aero.macOS.version"] = .string(ProcessInfo().operatingSystemVersionString) // because built-in apps might behave differently depending on the OS version
     result["Aero.App.appBundleId"] = .string(window.app.bundleId.prettyDescription)
+    result["Aero.App.pid"] = .int(Int(window.app.pid))
     result["Aero.App.versionShort"] = .string((appInfoDic["CFBundleShortVersionString"] as? String).prettyDescription)
     result["Aero.App.version"] = .string((appInfoDic["CFBundleVersion"] as? String).prettyDescription)
     result["Aero.App.nsApp.activationPolicy"] = .string(window.macApp.nsApp.activationPolicy.prettyDescription)
