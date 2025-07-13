@@ -34,6 +34,7 @@ func restoreWorldState() async -> Bool {
         if isDebug { printStderr("[restore] failed to decode state file") }
         return false
     }
+    setClosedWindowsCache(world)
     if isDebug { printStderr("[restore] decoded \(world.workspaces.count) workspaces, \(world.monitors.count) monitors") }
     let currentMonitors = monitors
     let topLeftCornerToMonitor = currentMonitors.grouped { $0.rect.topLeftCorner }

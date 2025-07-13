@@ -9,6 +9,11 @@ import Common
 /// so that once the screen is unlocked, AeroSpace could restore windows to where they were
 @MainActor private var closedWindowsCache = FrozenWorld(workspaces: [], monitors: [], windowIds: [])
 
+@MainActor
+func setClosedWindowsCache(_ world: FrozenWorld) {
+    closedWindowsCache = world
+}
+
 struct FrozenMonitor: Codable, Sendable {
     let topLeftCorner: CGPoint
     let visibleWorkspace: String
