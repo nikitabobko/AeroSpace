@@ -21,29 +21,52 @@ func saveWorldState() {
 
 @MainActor
 func restoreWorldState() async -> Bool {
-    guard let data = try? Data(contentsOf: stateFileUrl) else { return false }
-    guard let world = try? JSONDecoder().decode(FrozenWorld.self, from: data) else { return false }
+    if isDebug { printStderr("[restore] reading state from \(stateFileUrl.path)") }
+    guard let data = try? Data(contentsOf: stateFileUrl) else {
+        if isDebug { printStderr("[restore] can't read state file") }
+        return false
+    }
+    if isDebug { printStderr("[restore] state file size: \(data.count) bytes") }
+    guard let world = try? JSONDecoder().decode(FrozenWorld.self, from: data) else {
+        if isDebug { printStderr("[restore] failed to decode state file") }
+        return false
+    }
+    if isDebug { printStderr("[restore] decoded \(world.workspaces.count) workspaces, \(world.monitors.count) monitors") }
     let currentMonitors = monitors
     let topLeftCornerToMonitor = currentMonitors.grouped { $0.rect.topLeftCorner }
     for frozenWorkspace in world.workspaces {
+        if isDebug { printStderr("[restore] workspace '\(frozenWorkspace.name)'") }
         let workspace = Workspace.get(byName: frozenWorkspace.name)
-        _ = topLeftCornerToMonitor[frozenWorkspace.monitor.topLeftCorner]?.singleOrNil()?.setActiveWorkspace(workspace)
+        let ok = topLeftCornerToMonitor[frozenWorkspace.monitor.topLeftCorner]?.singleOrNil()?.setActiveWorkspace(workspace) ?? false
+        if isDebug { printStderr("[restore]  assign monitor \(frozenWorkspace.monitor.topLeftCorner) -> \(ok)") }
         for frozenWindow in frozenWorkspace.floatingWindows {
-            MacWindow.get(byId: frozenWindow.id)?.bindAsFloatingWindow(to: workspace)
+            if let win = MacWindow.get(byId: frozenWindow.id) {
+                win.bindAsFloatingWindow(to: workspace)
+                if isDebug { printStderr("[restore]  bound floating window \(frozenWindow.id)") }
+            } else if isDebug {
+                printStderr("[restore]  missing floating window \(frozenWindow.id)")
+            }
         }
         for frozenWindow in frozenWorkspace.macosUnconventionalWindows {
-            MacWindow.get(byId: frozenWindow.id)?.bindAsFloatingWindow(to: workspace)
+            if let win = MacWindow.get(byId: frozenWindow.id) {
+                win.bindAsFloatingWindow(to: workspace)
+                if isDebug { printStderr("[restore]  bound macOS window \(frozenWindow.id)") }
+            } else if isDebug {
+                printStderr("[restore]  missing macOS window \(frozenWindow.id)")
+            }
         }
         let prevRoot = workspace.rootTilingContainer
         let potentialOrphans = prevRoot.allLeafWindowsRecursive
         prevRoot.unbindFromParent()
-        restoreTreeRecursive(frozenContainer: frozenWorkspace.rootTilingNode, parent: workspace, index: INDEX_BIND_LAST)
+        _ = restoreTreeRecursive(frozenContainer: frozenWorkspace.rootTilingNode, parent: workspace, index: INDEX_BIND_LAST)
         for window in (potentialOrphans - workspace.rootTilingContainer.allLeafWindowsRecursive) {
             try? await window.relayoutWindow(on: workspace, forceTile: true)
         }
     }
     for monitor in world.monitors {
-        _ = topLeftCornerToMonitor[monitor.topLeftCorner]?.singleOrNil()?.setActiveWorkspace(Workspace.get(byName: monitor.visibleWorkspace))
+        let ok = topLeftCornerToMonitor[monitor.topLeftCorner]?.singleOrNil()?.setActiveWorkspace(Workspace.get(byName: monitor.visibleWorkspace)) ?? false
+        if isDebug { printStderr("[restore] set visible workspace '\(monitor.visibleWorkspace)' for monitor \(monitor.topLeftCorner) -> \(ok)") }
     }
+    if isDebug { printStderr("[restore] done") }
     return true
 }

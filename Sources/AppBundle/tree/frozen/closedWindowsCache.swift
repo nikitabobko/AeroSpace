@@ -98,12 +98,13 @@ func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonLeafTreeN
     for (index, child) in frozenContainer.children.enumerated() {
         switch child {
             case .window(let w):
-                // Stop the loop if can't find the window, because otherwise all the subsequent windows will have incorrect index
-                guard let window = MacWindow.get(byId: w.id) else { return false }
-                window.bind(to: container, adaptiveWeight: w.weight, index: index)
+                if let window = MacWindow.get(byId: w.id) {
+                    window.bind(to: container, adaptiveWeight: w.weight, index: index)
+                } else {
+                    if isDebug { printStderr("[restore]  missing window \(w.id)") }
+                }
             case .container(let c):
-                // There is no reason to continue
-                if !restoreTreeRecursive(frozenContainer: c, parent: container, index: index) { return false }
+                _ = restoreTreeRecursive(frozenContainer: c, parent: container, index: index)
         }
     }
     return true
