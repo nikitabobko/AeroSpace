@@ -24,6 +24,7 @@ struct FullscreenCommand: Command {
 
         window.isFullscreen = newState
         window.noOuterGapsInFullscreen = args.noOuterGaps
+        window.shouldHideOthersWhileFullscreen = newState ? args.hideOthers : false
         window.markAsMostRecentChild()
 
         return true

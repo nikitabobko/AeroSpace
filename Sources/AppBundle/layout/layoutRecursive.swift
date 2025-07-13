@@ -29,12 +29,20 @@ extension TreeNode {
             case .window(let window):
                 if window.windowId != currentlyManipulatedWithMouseWindowId {
                     lastAppliedLayoutVirtualRect = virtual
-                    if window.isFullscreen && window == context.workspace.rootTilingContainer.mostRecentWindowRecursive {
+                    let mostRecentWindow = context.workspace.rootTilingContainer.mostRecentWindowRecursive
+                    let mostRecentWindowIsFullscreen = mostRecentWindow?.isFullscreen ?? false
+                    let othersShouldBeHidden = mostRecentWindow?.shouldHideOthersWhileFullscreen ?? false
+
+                    if window == mostRecentWindow && mostRecentWindowIsFullscreen {
                         lastAppliedLayoutPhysicalRect = nil
                         window.layoutFullscreen(context)
+                    } else if mostRecentWindowIsFullscreen && othersShouldBeHidden {
+                        lastAppliedLayoutPhysicalRect = nil
+                        try await (window as! MacWindow).hideInCorner(OptimalHideCorner.bottomLeftCorner)
                     } else {
                         lastAppliedLayoutPhysicalRect = physicalRect
                         window.isFullscreen = false
+                        window.shouldHideOthersWhileFullscreen = false
                         window.setAxFrame(point, CGSize(width: width, height: height))
                     }
                 }
