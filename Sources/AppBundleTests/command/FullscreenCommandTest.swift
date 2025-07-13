@@ -19,6 +19,8 @@ final class FullscreenCommandTest: XCTestCase {
                              FullscreenCmdArgs(rawArgs: []).copy(\.toggle, .off).copy(\.failIfNoop, true))
         testParseCommandSucc("fullscreen --window-id 42",
                              FullscreenCmdArgs(rawArgs: []).copy(\.windowId, 42))
+        testParseCommandSucc("fullscreen --hide-others",
+                             FullscreenCmdArgs(rawArgs: []).copy(\.hideOthers, true))
     }
 
     func testParseFullscreenCommandConflicts() {
