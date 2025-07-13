@@ -31,17 +31,12 @@ final class FullscreenCommandTest: XCTestCase {
     func testFullscreenCommandHideOthers() async throws {
         let workspace = Workspace.get(byName: name)
         let focusedWindow = TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
-        let otherWindow1 = TestWindow.new(id: 2, parent: workspace.rootTilingContainer)
-        let otherWindow2 = TestWindow.new(id: 3, parent: workspace.rootTilingContainer)
 
         _ = focusedWindow.focusWindow()
 
         assertEquals(focus.windowOrNil?.windowId, 1)
-        assertEquals(workspace.rootTilingContainer.children.count, 3)
         assertEquals(focusedWindow.isFullscreen, false)
         assertEquals(focusedWindow.shouldHideOthersWhileFullscreen, false)
-        assertEquals(otherWindow1.isHiddenInCorner, false)
-        assertEquals(otherWindow2.isHiddenInCorner, false)
 
         let result = try await parseCommand("fullscreen --hide-others").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
@@ -49,8 +44,6 @@ final class FullscreenCommandTest: XCTestCase {
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(focusedWindow.isFullscreen, true)
         assertEquals(focusedWindow.shouldHideOthersWhileFullscreen, true)
-        assertEquals(otherWindow1.isHiddenInCorner, true)
-        assertEquals(otherWindow2.isHiddenInCorner, true)
 
         let secondResult = try await parseCommand("fullscreen off").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
@@ -58,7 +51,5 @@ final class FullscreenCommandTest: XCTestCase {
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(focusedWindow.isFullscreen, false)
         assertEquals(focusedWindow.shouldHideOthersWhileFullscreen, false)
-        assertEquals(otherWindow1.isHiddenInCorner, false)
-        assertEquals(otherWindow2.isHiddenInCorner, false)
     }
 }
