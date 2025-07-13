@@ -96,6 +96,7 @@ func refreshModel() {
     Workspace.garbageCollectUnusedWorkspaces()
     checkOnFocusChangedCallbacks()
     normalizeContainers()
+    saveWorldState()
 }
 
 @MainActor
