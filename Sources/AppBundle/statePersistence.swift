@@ -7,7 +7,7 @@ var stateFileUrl: URL {
     FileManager.default.homeDirectoryForCurrentUser.appending(path: stateFileName)
 }
 
-var shouldSaveWorldState = true
+@MainActor var shouldSaveWorldState = true
 
 @MainActor
 func saveWorldState() {
