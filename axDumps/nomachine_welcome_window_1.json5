@@ -58,7 +58,7 @@
   "Aero.App.version" : "8.16.1",
   "Aero.App.versionShort" : "8.16.1",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.AxUiElementWindowType" : "dialog",
+  "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.axWindowId" : 9384,
   "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
