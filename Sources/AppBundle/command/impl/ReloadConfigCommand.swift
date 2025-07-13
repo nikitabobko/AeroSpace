@@ -33,16 +33,15 @@ struct ReloadConfigCommand: Command {
                 configUrl = url
                 activateMode(activeMode)
                 syncStartAtLogin()
+                MessageModel.shared.message = nil
             }
             return true
         case .failure(let msg):
             stdout.append(msg)
             if !args.noGui {
-                showMessageInGui(
-                    filenameIfConsoleApp: nil,
-                    title: "AeroSpace Config Error",
-                    message: msg,
-                )
+                Task { @MainActor in
+                    MessageModel.shared.message = Message(description: "AeroSpace Config Error", body: msg)
+                }
             }
             return false
     }
