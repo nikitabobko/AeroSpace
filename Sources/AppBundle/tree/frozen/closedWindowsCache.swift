@@ -93,12 +93,17 @@ struct FrozenWorkspace: Codable, Sendable {
 @discardableResult
 @MainActor
 func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonLeafTreeNodeObject, index: Int) -> Bool {
+    if isDebug {
+        printStderr(
+            "[restore]  create container orientation=\(frozenContainer.orientation)" +
+                " layout=\(frozenContainer.layout) weight=\(frozenContainer.weight)" )
+    }
     let container = TilingContainer(
         parent: parent,
         adaptiveWeight: frozenContainer.weight,
         frozenContainer.orientation,
         frozenContainer.layout,
-        index: index,
+        index: index
     )
 
     for (index, child) in frozenContainer.children.enumerated() {
@@ -106,8 +111,9 @@ func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonLeafTreeN
             case .window(let w):
                 if let window = MacWindow.get(byId: w.id) {
                     window.bind(to: container, adaptiveWeight: w.weight, index: index)
-                } else {
-                    if isDebug { printStderr("[restore]  missing window \(w.id)") }
+                    if isDebug { printStderr("[restore]  bound window \(w.id)") }
+                } else if isDebug {
+                    printStderr("[restore]  missing window \(w.id)")
                 }
             case .container(let c):
                 _ = restoreTreeRecursive(frozenContainer: c, parent: container, index: index)

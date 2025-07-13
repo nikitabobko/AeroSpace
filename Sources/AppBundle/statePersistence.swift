@@ -39,7 +39,12 @@ func restoreWorldState() async -> Bool {
     let currentMonitors = monitors
     let topLeftCornerToMonitor = currentMonitors.grouped { $0.rect.topLeftCorner }
     for frozenWorkspace in world.workspaces {
-        if isDebug { printStderr("[restore] workspace '\(frozenWorkspace.name)'") }
+        if isDebug {
+            printStderr(
+                "[restore] workspace '\(frozenWorkspace.name)' orientation=" +
+                    "\(frozenWorkspace.rootTilingNode.orientation) layout=" +
+                    "\(frozenWorkspace.rootTilingNode.layout)" )
+        }
         let workspace = Workspace.get(byName: frozenWorkspace.name)
         let ok = topLeftCornerToMonitor[frozenWorkspace.monitor.topLeftCorner]?.singleOrNil()?.setActiveWorkspace(workspace) ?? false
         if isDebug { printStderr("[restore]  assign monitor \(frozenWorkspace.monitor.topLeftCorner) -> \(ok)") }
@@ -62,6 +67,7 @@ func restoreWorldState() async -> Bool {
         let prevRoot = workspace.rootTilingContainer
         let potentialOrphans = prevRoot.allLeafWindowsRecursive
         prevRoot.unbindFromParent()
+        if isDebug { printStderr("[restore]  rebuilding root container") }
         _ = restoreTreeRecursive(frozenContainer: frozenWorkspace.rootTilingNode, parent: workspace, index: INDEX_BIND_LAST)
         for window in (potentialOrphans - workspace.rootTilingContainer.allLeafWindowsRecursive) {
             try? await window.relayoutWindow(on: workspace, forceTile: true)
