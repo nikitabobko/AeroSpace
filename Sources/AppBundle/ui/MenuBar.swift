@@ -42,14 +42,8 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             }
         }.keyboardShortcut("E", modifiers: .command)
         getExperimentalUISettingsMenu(viewModel: viewModel)
-        openConfigButton.keyboardShortcut(",", modifiers: .command)
-        if let token: RunSessionGuard = .isServerEnabled {
-            Button("Reload config") {
-                Task {
-                    try await runSession(.menuBarButton, token) { _ = reloadConfig() }
-                }
-            }.keyboardShortcut("R", modifiers: .command)
-        }
+        openConfigButton
+        reloadConfigButton
         Button("Quit \(aeroSpaceAppName)") {
             Task {
                 defer { terminateApp() }
@@ -89,6 +83,17 @@ var openConfigButton: some View {
             case .ambiguousConfigError:
                 fallbackConfig.open(with: editor)
         }
+    }.keyboardShortcut(",", modifiers: .command)
+}
+
+@MainActor @ViewBuilder
+var reloadConfigButton: some View {
+    if let token: RunSessionGuard = .isServerEnabled {
+        Button("Reload config") {
+            Task {
+                try await runSession(.menuBarButton, token) { _ = reloadConfig() }
+            }
+        }.keyboardShortcut("R", modifiers: .command)
     }
 }
 
