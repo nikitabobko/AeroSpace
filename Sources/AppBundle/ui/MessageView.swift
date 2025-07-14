@@ -57,6 +57,7 @@ public struct MessageView: View {
                 if let type = model.message?.type {
                     switch type {
                         case .config:
+                            reloadConfigButton
                             openConfigButton
                     }
                 }
