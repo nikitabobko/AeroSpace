@@ -5,6 +5,7 @@ import os
 
 let signposter = OSSignposter(subsystem: aeroSpaceAppId, category: .pointsOfInterest)
 
+let myPid = NSRunningApplication.current.processIdentifier
 let lockScreenAppBundleId = "com.apple.loginwindow"
 let AEROSPACE_WINDOW_ID = "AEROSPACE_WINDOW_ID" // env var
 let AEROSPACE_WORKSPACE = "AEROSPACE_WORKSPACE" // env var

@@ -43,6 +43,8 @@ final class MacApp: AbstractApp {
         // Otherwise, false positive ax notifications might trigger that lead to gcWindows
         if nsApp.bundleIdentifier == lockScreenAppBundleId { return nil }
         let pid = nsApp.processIdentifier
+        // AX requests crash if you send them to yourself
+        if pid == myPid { return nil }
 
         while true {
             if let existing = allAppsMap[pid] { return existing }

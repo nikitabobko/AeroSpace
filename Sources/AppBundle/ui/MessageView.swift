@@ -7,6 +7,8 @@ public func getMessageWindow(messageModel: MessageModel) -> some Scene {
     SwiftUI.Window(messageModel.message?.title ?? aeroSpaceAppName, id: messageWindowId) {
         MessageView(model: messageModel)
             .onAppear {
+                // Set activation policy; otherwise, AeroSpace windows won't be able to receive focus and accept keyborad input
+                NSApp.setActivationPolicy(.accessory)
                 NSApplication.shared.windows.forEach {
                     if $0.identifier?.rawValue == messageWindowId {
                         $0.level = .floating
@@ -23,6 +25,7 @@ public let messageWindowId = "\(aeroSpaceAppName).messageView"
 public struct MessageView: View {
     @StateObject private var model: MessageModel
     @Environment(\.dismiss) private var dismiss
+    @FocusState var focus: Bool
 
     public init(model: MessageModel) {
         self._model = .init(wrappedValue: model)
@@ -36,6 +39,7 @@ public struct MessageView: View {
                     .font(.system(size: 48))
                 Text("\(model.message?.description ?? "")")
                     .padding(.horizontal)
+                    .focusable()
             }
             .padding()
             ScrollView {
@@ -43,6 +47,12 @@ public struct MessageView: View {
                     HStack {
                         TextEditor(text: .constant(model.message?.body ?? ""))
                             .font(.system(size: 12).monospaced())
+                            .focused($focus)
+                            .onExitCommand {
+                                // Escape to remove focus from the TextEditor, and then you can hit Return to trigger the Close,
+                                // or use 'CMD + ,' for open config and 'CMD + R' for reload config (same as the menu shortcuts)
+                                focus = false
+                            }
                         Spacer()
                     }
                     Spacer()
@@ -78,6 +88,9 @@ public struct MessageView: View {
         .onDisappear {
             // If user closes the screen with the macOS native close (x) button and then the error is still the same, this window will not appear again
             model.message = nil
+        }
+        .onAppear {
+            focus = true
         }
     }
 }
