@@ -42,6 +42,10 @@ final class MacApp: AbstractApp {
         // Don't perceive any of the lock screen windows as real windows
         // Otherwise, false positive ax notifications might trigger that lead to gcWindows
         if nsApp.bundleIdentifier == lockScreenAppBundleId { return nil }
+        if nsApp.bundleIdentifier == aeroSpaceAppId { return nil }
+        #if DEBUG
+            if let bundleURL = nsApp.bundleURL, bundleURL.absoluteString.contains("AeroSpaceApp") { return nil }
+        #endif
         let pid = nsApp.processIdentifier
 
         while true {
