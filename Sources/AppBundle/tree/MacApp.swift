@@ -179,15 +179,15 @@ final class MacApp: AbstractApp {
 
     @MainActor // todo swift is stupid
     func isWindowHeuristic(_ windowId: UInt32) async throws -> Bool {
-        try await withWindow(windowId) { [axApp, bundleId] window, job in
-            window.isWindowHeuristic(axApp: axApp.threadGuarded, appBundleId: bundleId)
+        try await withWindow(windowId) { [nsApp, axApp, bundleId] window, job in
+            window.isWindowHeuristic(axApp: axApp.threadGuarded, appBundleId: bundleId, nsApp.activationPolicy)
         } == true
     }
 
     @MainActor
     func getAxUiElementWindowType(_ windowId: UInt32) async throws -> AxUiElementWindowType {
-        try await withWindow(windowId) { [axApp, bundleId] window, job in
-            window.getWindowType(axApp: axApp.threadGuarded, appBundleId: bundleId)
+        try await withWindow(windowId) { [nsApp, axApp, bundleId] window, job in
+            window.getWindowType(axApp: axApp.threadGuarded, appBundleId: bundleId, nsApp.activationPolicy)
         } ?? .window
     }
 
