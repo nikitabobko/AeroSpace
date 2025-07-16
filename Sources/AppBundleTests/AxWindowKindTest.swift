@@ -20,8 +20,9 @@ func checkAxDumpsRecursive(_ dir: URL) throws {
         let json = Json.newOrDie(rawJson).asDictOrDie
         let app = json["Aero.AXApp"]!.asDictOrDie
         let appBundleId = rawJson["Aero.App.appBundleId"] as? String
+        let activationPolicy: NSApplication.ActivationPolicy = .from(string: rawJson["Aero.App.nsApp.activationPolicy"] as! String)
         assertEquals(
-            json.getWindowType(axApp: app, appBundleId: appBundleId),
+            json.getWindowType(axApp: app, appBundleId: appBundleId, activationPolicy),
             AxUiElementWindowType(rawValue: rawJson["Aero.AxUiElementWindowType"] as? String ?? dieT()),
             additionalMsg: "\(file.path()):0:0: AxUiElementWindowType doesn't match",
         )
@@ -56,6 +57,17 @@ extension [String: Json]: AxUiElementMock {
             return UInt32.init(windowId)
         } else {
             return windowId as? UInt32 ?? dieT()
+        }
+    }
+}
+
+extension NSApplication.ActivationPolicy {
+    static func from(string: String) -> NSApplication.ActivationPolicy {
+        switch string {
+            case "regular": .regular
+            case "accessory": .accessory
+            case "prohibited": .prohibited
+            default: dieT("Unknown ActivationPolicy \(string)")
         }
     }
 }

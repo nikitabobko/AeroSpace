@@ -69,7 +69,11 @@ extension AxUiElementMock {
     /// Why do we need to filter out non-windows?
     /// - "floating by default" workflow
     /// - It's annoying that the focus command treats these popups as floating windows
-    func isWindowHeuristic(axApp: AxUiElementMock, appBundleId: String?) -> Bool {
+    func isWindowHeuristic(
+        axApp: AxUiElementMock,
+        appBundleId: String?,
+        _ activationPolicy: NSApplication.ActivationPolicy,
+    ) -> Bool {
         // Just don't do anything with "Ghostty Quick Terminal" windows.
         // Its position and size are managed by the Ghostty itself
         // https://github.com/nikitabobko/AeroSpace/issues/103
@@ -79,6 +83,10 @@ extension AxUiElementMock {
         }
 
         if appBundleId == "com.nomachine.nxdock" && get(Ax.closeButtonAttr) == nil {
+            return false
+        }
+
+        if activationPolicy == .accessory && axApp.get(Ax.titleAttr) == "choose" && get(Ax.closeButtonAttr) == nil {
             return false
         }
 
@@ -141,9 +149,13 @@ extension AxUiElementMock {
             appBundleId == "com.apple.finder" && subrole == "Quick Look" // Finder preview (hit space) is a floating window
     }
 
-    func getWindowType(axApp: AxUiElementMock, appBundleId: String?) -> AxUiElementWindowType {
+    func getWindowType(
+        axApp: AxUiElementMock,
+        appBundleId: String?,
+        _ activationPolicy: NSApplication.ActivationPolicy,
+    ) -> AxUiElementWindowType {
         .new(
-            isWindow: isWindowHeuristic(axApp: axApp, appBundleId: appBundleId),
+            isWindow: isWindowHeuristic(axApp: axApp, appBundleId: appBundleId, activationPolicy),
             isDialog: { isDialogHeuristic(appBundleId: appBundleId) },
         )
     }
