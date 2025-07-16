@@ -82,11 +82,7 @@ extension AxUiElementMock {
             return false
         }
 
-        if appBundleId == "com.nomachine.nxdock" && get(Ax.closeButtonAttr) == nil {
-            return false
-        }
-
-        if activationPolicy == .accessory && axApp.get(Ax.titleAttr) == "choose" && get(Ax.closeButtonAttr) == nil {
+        if activationPolicy == .accessory && get(Ax.closeButtonAttr) == nil {
             return false
         }
 
