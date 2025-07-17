@@ -1,0 +1,70 @@
+// NoMachine is weird. It shows one visible window, but creates 2 AX objects.
+// AeroSpace has to deliberatery ignore the redundant AX object to avoid weird focus issues
+// ./nomachine_welcome_window_1.json5 -- valid AX object
+// ./nomachine_welcome_window_2.json5 -- weird AX object
+{
+  "AXActivationPoint" : "<AXValue 0x600002fb4240> {value = x:930.000000 y:663.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 1,
+  "AXFrame" : "<AXValue 0x600003473680> {value = x:920.000000 y:649.000000 w:880.000000 h:520.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600002f4b240> {pid=64949}",
+  "AXPosition" : "<AXValue 0x600002f4b240> {value = x:920.000000 y:649.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x600002f56cd0> {pid=64949}\";\n    SectionUniqueID = AXContent;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600002fb4240> {value = w:880.000000 h:520.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "",
+  "AXTitleUIElement" : "AXUIElement(AxWindowId=9384, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=9384, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=9384, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 0,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=9384, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x600002fb4780> {pid=64949}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "NoMachine",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=9384, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(AxWindowId=9383, title=\"NoMachine\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.nomachine.nxdock",
+  "Aero.App.nsApp.activationPolicy" : "accessory",
+  "Aero.App.nsApp.execPath" : "file:///Applications/NoMachine.app/Contents/MacOS/nxplayer",
+  "Aero.App.pid" : 64949,
+  "Aero.App.version" : "8.16.1",
+  "Aero.App.versionShort" : "8.16.1",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "popup",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.axWindowId" : 9384,
+  "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
+  "Aero.workspace" : "M"
+}

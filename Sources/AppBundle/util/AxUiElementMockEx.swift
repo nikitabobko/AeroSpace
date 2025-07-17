@@ -6,6 +6,10 @@ extension AxUiElementMock {
     func isDialogHeuristic(appBundleId id: String?) -> Bool {
         // Note: a lot of windows don't have title on startup. So please don't rely on the title
 
+        if id == "com.apple.iphonesimulator" {
+            return true
+        }
+
         lazy var isQutebrowser = id == "org.qutebrowser.qutebrowser"
 
         // Don't tile:
@@ -65,12 +69,20 @@ extension AxUiElementMock {
     /// Why do we need to filter out non-windows?
     /// - "floating by default" workflow
     /// - It's annoying that the focus command treats these popups as floating windows
-    func isWindowHeuristic(axApp: AxUiElementMock, appBundleId: String?) -> Bool {
+    func isWindowHeuristic(
+        axApp: AxUiElementMock,
+        appBundleId: String?,
+        _ activationPolicy: NSApplication.ActivationPolicy,
+    ) -> Bool {
         // Just don't do anything with "Ghostty Quick Terminal" windows.
         // Its position and size are managed by the Ghostty itself
         // https://github.com/nikitabobko/AeroSpace/issues/103
         // https://github.com/ghostty-org/ghostty/discussions/3512
         if appBundleId == "com.mitchellh.ghostty" && get(Ax.identifierAttr) == "com.mitchellh.ghostty.quickTerminal" {
+            return false
+        }
+
+        if activationPolicy == .accessory && get(Ax.closeButtonAttr) == nil {
             return false
         }
 
@@ -133,9 +145,13 @@ extension AxUiElementMock {
             appBundleId == "com.apple.finder" && subrole == "Quick Look" // Finder preview (hit space) is a floating window
     }
 
-    func getWindowType(axApp: AxUiElementMock, appBundleId: String?) -> AxUiElementWindowType {
+    func getWindowType(
+        axApp: AxUiElementMock,
+        appBundleId: String?,
+        _ activationPolicy: NSApplication.ActivationPolicy,
+    ) -> AxUiElementWindowType {
         .new(
-            isWindow: isWindowHeuristic(axApp: axApp, appBundleId: appBundleId),
+            isWindow: isWindowHeuristic(axApp: axApp, appBundleId: appBundleId, activationPolicy),
             isDialog: { isDialogHeuristic(appBundleId: appBundleId) },
         )
     }

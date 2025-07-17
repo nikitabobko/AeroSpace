@@ -12,13 +12,6 @@ while test $# -gt 0; do
     esac
 done
 
-generate-git-hash() {
-cat > Sources/Common/gitHashGenerated.swift <<EOF
-public let gitHash = "$(git rev-parse HEAD)"
-public let gitShortHash = "$(git rev-parse --short HEAD)"
-EOF
-}
-
 #############
 ### BUILD ###
 #############
@@ -28,9 +21,8 @@ EOF
 
 ./generate.sh
 ./script/check-uncommitted-files.sh
-./generate.sh --build-version "$build_version" --codesign-identity "$codesign_identity"
+./generate.sh --build-version "$build_version" --codesign-identity "$codesign_identity" --generate-git-hash
 
-generate-git-hash
 swift build -c release --arch arm64 --arch x86_64 --product aerospace # CLI
 
 # todo: make xcodebuild use the same toolchain as swift

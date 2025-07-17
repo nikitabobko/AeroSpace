@@ -77,21 +77,22 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
 
     var result: [String: Json] = try await window.dumpAxInfo()
 
-    result["Aero.axWindowId"] = .newOrDie(window.windowId)
+    result["Aero.axWindowId"] = .uint32(window.windowId)
     result["Aero.workspace"] = .string(window.nodeWorkspace?.name ?? "nil")
-    result["Aero.treeNodeParent"] = .newOrDie(String(describing: window.parent))
+    result["Aero.treeNodeParent"] = .string(String(describing: window.parent))
     result["Aero.macOS.version"] = .string(ProcessInfo().operatingSystemVersionString) // because built-in apps might behave differently depending on the OS version
-    result["Aero.App.appBundleId"] = .newOrDie(window.app.bundleId)
-    result["Aero.App.versionShort"] = .newOrDie(appInfoDic["CFBundleShortVersionString"])
-    result["Aero.App.version"] = .newOrDie(appInfoDic["CFBundleVersion"])
+    result["Aero.App.appBundleId"] = .string(window.app.bundleId.prettyDescription)
+    result["Aero.App.pid"] = .int(Int(window.app.pid))
+    result["Aero.App.versionShort"] = .string((appInfoDic["CFBundleShortVersionString"] as? String).prettyDescription)
+    result["Aero.App.version"] = .string((appInfoDic["CFBundleVersion"] as? String).prettyDescription)
     result["Aero.App.nsApp.activationPolicy"] = .string(window.macApp.nsApp.activationPolicy.prettyDescription)
     result["Aero.App.nsApp.execPath"] = .string(window.macApp.nsApp.executableURL.prettyDescription)
     result["Aero.AXApp"] = .dict(try await window.macApp.dumpAppAxInfo())
 
     let isDialog = try await window.isDialogHeuristic()
     let isWindow = try await window.isWindowHeuristic()
-    result["Aero.AxUiElementWindowType"] = .newOrDie(AxUiElementWindowType.new(isWindow: isWindow, isDialog: { isDialog }).rawValue)
-    result["Aero.AxUiElementWindowType_isDialogHeuristic"] = .newOrDie(isDialog)
+    result["Aero.AxUiElementWindowType"] = .string(AxUiElementWindowType.new(isWindow: isWindow, isDialog: { isDialog }).rawValue)
+    result["Aero.AxUiElementWindowType_isDialogHeuristic"] = .bool(isDialog)
 
     var matchingCallbacks: [Json] = []
     for callback in config.onWindowDetected where try await callback.matches(window) {

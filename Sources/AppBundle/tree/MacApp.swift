@@ -43,6 +43,8 @@ final class MacApp: AbstractApp {
         // Otherwise, false positive ax notifications might trigger that lead to gcWindows
         if nsApp.bundleIdentifier == lockScreenAppBundleId { return nil }
         let pid = nsApp.processIdentifier
+        // AX requests crash if you send them to yourself
+        if pid == myPid { return nil }
 
         while true {
             if let existing = allAppsMap[pid] { return existing }
@@ -179,15 +181,15 @@ final class MacApp: AbstractApp {
 
     @MainActor // todo swift is stupid
     func isWindowHeuristic(_ windowId: UInt32) async throws -> Bool {
-        try await withWindow(windowId) { [axApp, bundleId] window, job in
-            window.isWindowHeuristic(axApp: axApp.threadGuarded, appBundleId: bundleId)
+        try await withWindow(windowId) { [nsApp, axApp, bundleId] window, job in
+            window.isWindowHeuristic(axApp: axApp.threadGuarded, appBundleId: bundleId, nsApp.activationPolicy)
         } == true
     }
 
     @MainActor
     func getAxUiElementWindowType(_ windowId: UInt32) async throws -> AxUiElementWindowType {
-        try await withWindow(windowId) { [axApp, bundleId] window, job in
-            window.getWindowType(axApp: axApp.threadGuarded, appBundleId: bundleId)
+        try await withWindow(windowId) { [nsApp, axApp, bundleId] window, job in
+            window.getWindowType(axApp: axApp.threadGuarded, appBundleId: bundleId, nsApp.activationPolicy)
         } ?? .window
     }
 
