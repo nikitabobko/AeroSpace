@@ -67,14 +67,17 @@ public struct MessageView: View {
                 if let type = model.message?.type {
                     switch type {
                         case .config:
-                            reloadConfigButton
-                            openConfigButton
+                            reloadConfigButton(showShortcutGroup: true)
+                            openConfigButton(showShortcutGroup: true)
                     }
                 }
-                Button("Close") {
+                let closeButton = Button {
                     model.message = nil
+                } label: {
+                    Text("Close")
                 }
                 .keyboardShortcut(.defaultAction)
+                shortcutGroup(label: Image(systemName: "return.left"), content: closeButton)
             }
             .padding()
         }
