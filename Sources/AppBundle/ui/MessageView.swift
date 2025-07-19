@@ -47,14 +47,17 @@ public struct MessageView: View {
             ScrollView {
                 VStack(alignment: .leading) {
                     HStack {
-                        TextEditor(text: .constant(model.message?.body ?? ""))
+                        let cancelOnEnterBinding: Binding<String> = Binding(
+                            get: { model.message?.body ?? "" },
+                            set: { newText in
+                                if let prev = model.message?.body.count(where: \.isNewline), newText.count(where: \.isNewline) > prev {
+                                    model.message = nil
+                                }
+                            },
+                        )
+                        TextEditor(text: cancelOnEnterBinding)
                             .font(.system(size: 12).monospaced())
                             .focused($focus)
-                            .onExitCommand {
-                                // Escape to remove focus from the TextEditor, and then you can hit Return to trigger the Close,
-                                // or use 'CMD + ,' for open config and 'CMD + R' for reload config (same as the menu shortcuts)
-                                focus = false
-                            }
                         Spacer()
                     }
                     Spacer()
