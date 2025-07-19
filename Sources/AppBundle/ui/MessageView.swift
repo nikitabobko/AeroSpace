@@ -12,9 +12,11 @@ public func getMessageWindow(messageModel: MessageModel) -> some Scene {
                 NSApplication.shared.windows.forEach {
                     if $0.identifier?.rawValue == messageWindowId {
                         $0.level = .floating
+                        $0.styleMask.remove(.miniaturizable) // Disable minimize button, because we don't unminimize the window on config error
                     }
                 }
             }
+        // .windowMinimizeBehavior(WindowInteractionBehavior.disabled) // SwiftUI of hiding minimize button. Available only since macOS 15
     }
     .windowResizability(.contentMinSize)
     //.windowLevel(.floating) //This might be the SwiftUI way of doing window level instead of the onAppear block above, but it's only available from macOS 15.0
