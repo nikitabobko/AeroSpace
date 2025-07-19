@@ -42,8 +42,8 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             }
         }.keyboardShortcut("E", modifiers: .command)
         getExperimentalUISettingsMenu(viewModel: viewModel)
-        openConfigButton
-        reloadConfigButton
+        openConfigButton()
+        reloadConfigButton()
         Button("Quit \(aeroSpaceAppName)") {
             Task {
                 defer { terminateApp() }
@@ -70,9 +70,10 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
     }
 }
 
-var openConfigButton: some View {
+@MainActor @ViewBuilder
+func openConfigButton(showShortcutGroup: Bool = false) -> some View {
     let editor = getTextEditorToOpenConfig()
-    return Button("Open config in '\(editor.lastPathComponent)'") {
+    let button = Button("Open config in '\(editor.lastPathComponent)'") {
         let fallbackConfig: URL = FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName)
         switch findCustomConfigUrl() {
             case .file(let url):
@@ -84,16 +85,36 @@ var openConfigButton: some View {
                 fallbackConfig.open(with: editor)
         }
     }.keyboardShortcut(",", modifiers: .command)
+    if showShortcutGroup {
+        shortcutGroup(label: Text("⌘ ,"), content: button)
+    } else {
+        button
+    }
 }
 
 @MainActor @ViewBuilder
-var reloadConfigButton: some View {
+func reloadConfigButton(showShortcutGroup: Bool = false) -> some View {
     if let token: RunSessionGuard = .isServerEnabled {
-        Button("Reload config") {
+        let button = Button("Reload config") {
             Task {
                 try await runSession(.menuBarButton, token) { _ = reloadConfig() }
             }
         }.keyboardShortcut("R", modifiers: .command)
+        if showShortcutGroup {
+            shortcutGroup(label: Text("⌘ R"), content: button)
+        } else {
+            button
+        }
+    }
+}
+
+func shortcutGroup(label: some View, content: some View) -> some View {
+    GroupBox {
+        VStack(alignment: .trailing, spacing: 6) {
+            label
+                .foregroundStyle(Color.secondary)
+            content
+        }
     }
 }
 
