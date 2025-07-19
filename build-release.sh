@@ -124,7 +124,6 @@ cd -
 for cask_name in aerospace aerospace-dev; do
     ./script/build-brew-cask.sh \
         --cask-name "$cask_name" \
-        --app-bundle-dir-name "AeroSpace.app" \
         --zip-uri ".release/AeroSpace-v$build_version.zip" \
         --build-version "$build_version"
 done
