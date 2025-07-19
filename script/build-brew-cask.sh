@@ -46,11 +46,6 @@ if ! grep -q SNAPSHOT <<< "$build_version"; then
     zip_uri=$(sed "s/$build_version/#{version}/g" <<< "$zip_uri")
 fi
 
-manpages=$(unzip -l "$zip_file" | \
-    grep --only-matching 'manpage/aerospace.*' | \
-    while read -r it; do echo "  manpage \"$zip_root_dir/$it\""; done | \
-    sort)
-
 rm -f ".release/$cask_name.rb" || true
 mkdir -p .release
 cat > ".release/$cask_name.rb" <<EOF
@@ -81,6 +76,6 @@ $conflicts_with_casks
   binary "$zip_root_dir/shell-completion/fish/aerospace.fish",
       target: "#{HOMEBREW_PREFIX}/share/fish/vendor_completions.d/aerospace.fish"
 
-$manpages
+  Dir["#{staged_path}/$zip_root_dir/manpage/*"].each { |man| manpage man }
 end
 EOF
