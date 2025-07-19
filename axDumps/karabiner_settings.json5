@@ -1,0 +1,101 @@
+{
+  "AXActivationPoint" : "<AXValue 0x600001c6f030> {value = x:970.000000 y:58.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600000616fc0> {value = x:900.000000 y:44.000000 w:1100.000000 h:1124.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600001c6f030> {pid=80569}",
+  "AXPosition" : "<AXValue 0x600001decb70> {value = x:900.000000 y:44.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x600001c6f060> {pid=80569}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionDescription = \"Content Navigator\";\n    SectionObject = \"<AXUIElement 0x600001c6d2c0> {pid=80569}\";\n    SectionUniqueID = AXContentNavigator;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600001d54330> {value = w:1100.000000 h:1124.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "Karabiner-Elements Settings",
+  "AXTitleUIElement" : "AXUIElement(AxWindowId=11571, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=11571, title=nil, role=\"AXOutline\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x600001c6e7c0> {pid=80569}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Karabiner-Elements",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=11571, title=\"Karabiner-Elements Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "org.pqrs.Karabiner-Elements.Settings",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Karabiner-Elements.app/Contents/MacOS/Karabiner-Elements",
+  "Aero.App.version" : "15.2.0",
+  "Aero.App.versionShort" : "15.2.0",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "window",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
+  "Aero.axWindowId" : 11571,
+  "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.TilingContainer)",
+  "Aero.workspace" : "M"
+}

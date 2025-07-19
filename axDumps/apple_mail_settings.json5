@@ -1,0 +1,94 @@
+{
+  "AXActivationPoint" : "<AXValue 0x600001c5afd0> {value = x:530.000000 y:278.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=11706, title=\"Composing\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11706, title=\"Composing\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11706, title=\"Composing\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 1,
+  "AXFrame" : "<AXValue 0x600000630c80> {value = x:460.000000 y:264.000000 w:772.000000 h:654.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXIdentifier" : "_NS:178",
+  "AXMain" : 1,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=11706, title=\"Composing\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11706, title=\"Composing\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11706, title=\"Composing\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600001c617d0> {pid=82561}",
+  "AXPosition" : "<AXValue 0x600001c617d0> {value = x:460.000000 y:264.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Toolbar;\n    SectionObject = \"<AXUIElement 0x600001c61920> {pid=82561}\";\n    SectionUniqueID = AXToolbar;\n}",
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x600001c61c20> {pid=82561}\";\n    SectionUniqueID = AXContent;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600001c5afd0> {value = w:772.000000 h:654.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "Composing",
+  "AXTitleUIElement" : "AXUIElement(AxWindowId=11706, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=11706, title=\"Composing\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXZoomButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11706, title=\"Composing\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11706, title=\"Composing\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=11706, title=\"Composing\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=11706, title=\"Composing\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=11706, title=\"Composing\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x600001c5afa0> {pid=82561}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Mail",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=11706, title=\"Composing\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(AxWindowId=11705, title=\"Inbox – REDACTED – 21 messages\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.apple.mail",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///System/Applications/Mail.app/Contents/MacOS/Mail",
+  "Aero.App.version" : "3826.600.51.1.1",
+  "Aero.App.versionShort" : "16.0",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "dialog",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.axWindowId" : 11706,
+  "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
+  "Aero.workspace" : "M"
+}

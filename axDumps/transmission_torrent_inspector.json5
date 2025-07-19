@@ -1,0 +1,95 @@
+// Double click any torrent
+{
+  "AXActivationPoint" : "<AXValue 0x600001c6ca50> {value = x:504.000000 y:253.500000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=11557, title=\"Files - Torrent Inspector\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11557, title=\"Files - Torrent Inspector\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11557, title=\"Files - Torrent Inspector\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 1,
+  "AXFrame" : "<AXValue 0x600000625140> {value = x:454.000000 y:244.000000 w:767.000000 h:659.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXIdentifier" : "_NS:135",
+  "AXMain" : 0,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=11557, title=\"Files - Torrent Inspector\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11557, title=\"Files - Torrent Inspector\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11557, title=\"Files - Torrent Inspector\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600001c6ca50> {pid=80282}",
+  "AXPosition" : "<AXValue 0x600001d4b030> {value = x:454.000000 y:244.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x600001c6cbd0> {pid=80282}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionDescription = Search;\n    SectionObject = \"<AXUIElement 0x600001c6d0e0> {pid=80282}\";\n    SectionUniqueID = AXSearch;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600001c6df80> {value = w:767.000000 h:659.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXFloatingWindow",
+  "AXTitle" : "Files - Torrent Inspector",
+  "AXTitleUIElement" : "AXUIElement(AxWindowId=11557, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=11557, title=\"Files - Torrent Inspector\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXZoomButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=11557, title=\"Files - Torrent Inspector\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=11557, title=\"Files - Torrent Inspector\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=11557, title=\"Files - Torrent Inspector\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=11557, title=\"Files - Torrent Inspector\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=11545, title=\"Transmission\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x600001dd1f20> {pid=80282}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Transmission",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=11557, title=\"Files - Torrent Inspector\", role=\"AXWindow\", subrole=\"AXFloatingWindow\")",
+      "AXUIElement(AxWindowId=11545, title=\"Transmission\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "org.m0k.transmission",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Transmission.app/Contents/MacOS/Transmission",
+  "Aero.App.version" : "14714.3.0",
+  "Aero.App.versionShort" : "3.00",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "dialog",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.axWindowId" : 11557,
+  "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
+  "Aero.workspace" : "B"
+}
