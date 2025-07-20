@@ -38,7 +38,7 @@ enum TomlParseError: Error, CustomStringConvertible, Equatable {
     var description: String {
         return switch self {
             // todo Make 'split' + flatten normalization prettier
-            case .semantic(let backtrace, let message): backtrace.isRoot ? message : "\(backtrace): \(message)"
+            case .semantic(let backtrace, let message): backtrace.isEmptyRoot ? message : "\(backtrace): \(message)"
             case .syntax(let message): message
         }
     }
@@ -88,7 +88,7 @@ private let modeConfigRootKey = "mode"
 // 1. Does it make sense to have different value
 // 2. Prefer commands and commands flags over toml options if possible
 private let configParser: [String: any ParserProtocol<Config>] = [
-    "after-login-command": Parser(\.afterLoginCommand) { parseCommandOrCommands($0).toParsedToml($1) },
+    "after-login-command": Parser(\.afterLoginCommand, parseAfterLoginCommand),
     "after-startup-command": Parser(\.afterStartupCommand) { parseCommandOrCommands($0).toParsedToml($1) },
 
     "on-focus-changed": Parser(\.onFocusChanged) { parseCommandOrCommands($0).toParsedToml($1) },
@@ -119,8 +119,8 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "indent-for-nested-containers-with-the-same-orientation": Parser(\._indentForNestedContainersWithTheSameOrientation, parseIndentForNestedContainersWithTheSameOrientation),
 ]
 
-private extension ParsedCmd where T == any Command {
-    func toEither() -> Parsed<T> {
+extension ParsedCmd where T == any Command {
+    fileprivate func toEither() -> Parsed<T> {
         return switch self {
             case .cmd(let a):
                 a.info.allowInConfig
@@ -132,10 +132,18 @@ private extension ParsedCmd where T == any Command {
     }
 }
 
-private extension Command {
-    var isMacOsNativeCommand: Bool { // Problem ID-B6E178F2
+extension Command {
+    fileprivate var isMacOsNativeCommand: Bool { // Problem ID-B6E178F2
         self is MacosNativeMinimizeCommand || self is MacosNativeFullscreenCommand
     }
+}
+
+func parseAfterLoginCommand(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<[any Command]> {
+    if let array = raw.array, array.count == 0 {
+        return .success([])
+    }
+    let msg = "after-login-command is deprecated since AeroSpace 0.19.0. https://github.com/nikitabobko/AeroSpace/issues/1482"
+    return .failure(.semantic(backtrace, msg))
 }
 
 func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]> {
@@ -166,7 +174,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
 
     var errors: [TomlParseError] = []
 
-    var config = rawTable.parseTable(Config(), configParser, .root, &errors)
+    var config = rawTable.parseTable(Config(), configParser, .emptyRoot, &errors)
 
     if let mapping = rawTable[keyMappingConfigRootKey].flatMap({ parseKeyMapping($0, .rootKey(keyMappingConfigRootKey), &errors) }) {
         config.keyMapping = mapping
@@ -190,7 +198,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
             .contains { $0 is SplitCommand }
         if containsSplitCommand {
             errors += [.semantic(
-                .root, // todo Make 'split' + flatten normalization prettier
+                .emptyRoot, // todo Make 'split' + flatten normalization prettier
                 """
                 The config contains:
                 1. usage of 'split' command
@@ -198,7 +206,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
                 These two settings don't play nicely together. 'split' command has no effect when enable-normalization-flatten-containers is disabled.
 
                 My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.
-                """
+                """,
             )]
         }
     }
@@ -207,7 +215,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
 
 func parseIndentForNestedContainersWithTheSameOrientation(
     _ raw: TOMLValueConvertible,
-    _ backtrace: TomlBacktrace
+    _ backtrace: TomlBacktrace,
 ) -> ParsedToml<Void> {
     let msg = "Deprecated. Please drop it from the config. See https://github.com/nikitabobko/AeroSpace/issues/96"
     return .failure(.semantic(backtrace, msg))
@@ -233,8 +241,8 @@ extension TOMLValueConvertible {
         let singleKeyError: TomlParseError = .semantic(
             backtrace,
             expectedKey != nil
-                ? "The table is expected to have a single key '\(expectedKey!)'"
-                : "The table is expected to have a single key"
+                ? "The table is expected to have a single key '\(expectedKey.orDie())'"
+                : "The table is expected to have a single key",
         )
         guard let (actualKey, value): (String, TOMLValueConvertible) = table.count == 1 ? table.first : nil else {
             return .failure(singleKeyError)
@@ -305,7 +313,7 @@ func parseBool(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Parse
 }
 
 indirect enum TomlBacktrace: CustomStringConvertible, Equatable {
-    case root
+    case emptyRoot
     case rootKey(String)
     case key(String)
     case index(Int)
@@ -313,7 +321,7 @@ indirect enum TomlBacktrace: CustomStringConvertible, Equatable {
 
     var description: String {
         return switch self {
-            case .root: dieT("Impossible")
+            case .emptyRoot: dieT("Impossible")
             case .rootKey(let value): value
             case .key(let value): "." + value
             case .index(let index): "[\(index)]"
@@ -321,15 +329,22 @@ indirect enum TomlBacktrace: CustomStringConvertible, Equatable {
         }
     }
 
-    var isRoot: Bool {
+    var isEmptyRoot: Bool {
         return switch self {
-            case .root: true
+            case .emptyRoot: true
+            default: false
+        }
+    }
+
+    var isRootKey: Bool {
+        return switch self {
+            case .rootKey: true
             default: false
         }
     }
 
     static func + (lhs: TomlBacktrace, rhs: TomlBacktrace) -> TomlBacktrace {
-        if case .root = lhs {
+        if case .emptyRoot = lhs {
             if case .key(let newRoot) = rhs {
                 return .rootKey(newRoot)
             } else {
@@ -364,7 +379,7 @@ extension TOMLTable {
 }
 
 func unknownKeyError(_ backtrace: TomlBacktrace) -> TomlParseError {
-    .semantic(backtrace, "Unknown key")
+    .semantic(backtrace, backtrace.isRootKey ? "Unknown top-level key" : "Unknown key")
 }
 
 func expectedActualTypeError(expected: TOMLType, actual: TOMLType, _ backtrace: TomlBacktrace) -> TomlParseError {

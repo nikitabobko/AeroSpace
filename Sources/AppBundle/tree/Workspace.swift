@@ -14,7 +14,7 @@ import Common
 
 @MainActor
 private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
-    if let prev = screenPointToPrevVisibleWorkspace[point]?.lets({ Workspace.get(byName: $0) }),
+    if let prev = screenPointToPrevVisibleWorkspace[point].map({ Workspace.get(byName: $0) }),
        !prev.isVisible && prev.workspaceMonitor.rect.topLeftCorner == point && prev.forceAssignedMonitor == nil
     {
         return prev
@@ -28,7 +28,7 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     return (1 ... Int.max).lazy
         .map { Workspace.get(byName: String($0)) }
         .first { $0.isEffectivelyEmpty && !$0.isVisible && !preservedNames.contains($0.name) && $0.forceAssignedMonitor == nil }
-        ?? dieT("Can't create empty workspace")
+        .orDie("Can't create empty workspace")
 }
 
 class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
@@ -142,9 +142,9 @@ func gcMonitors() {
     }
 }
 
-private extension CGPoint {
+extension CGPoint {
     @MainActor
-    func setActiveWorkspace(_ workspace: Workspace) -> Bool {
+    fileprivate func setActiveWorkspace(_ workspace: Workspace) -> Bool {
         if !isValidAssignment(workspace: workspace, screen: self) {
             return false
         }
@@ -183,7 +183,7 @@ private func rearrangeWorkspacesOnMonitors() {
     visibleWorkspaceToScreenPoint = [:]
 
     for newScreen in newScreens {
-        if let existingVisibleWorkspace = newScreenToOldScreenMapping[newScreen]?.lets({ oldScreenPointToVisibleWorkspace[$0] }),
+        if let existingVisibleWorkspace = newScreenToOldScreenMapping[newScreen].flatMap({ oldScreenPointToVisibleWorkspace[$0] }),
            newScreen.setActiveWorkspace(existingVisibleWorkspace)
         {
             continue

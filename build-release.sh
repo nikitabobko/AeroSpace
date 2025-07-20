@@ -12,25 +12,17 @@ while test $# -gt 0; do
     esac
 done
 
-generate-git-hash() {
-cat > Sources/Common/gitHashGenerated.swift <<EOF
-public let gitHash = "$(git rev-parse HEAD)"
-public let gitShortHash = "$(git rev-parse --short HEAD)"
-EOF
-}
-
 #############
 ### BUILD ###
 #############
 
-./build-docs.sh --build-version "$build_version"
+./build-docs.sh
 ./build-shell-completion.sh
 
 ./generate.sh
 ./script/check-uncommitted-files.sh
-./generate.sh --build-version "$build_version" --codesign-identity "$codesign_identity"
+./generate.sh --build-version "$build_version" --codesign-identity "$codesign_identity" --generate-git-hash
 
-generate-git-hash
 swift build -c release --arch arm64 --arch x86_64 --product aerospace # CLI
 
 # todo: make xcodebuild use the same toolchain as swift
@@ -42,9 +34,11 @@ swift build -c release --arch arm64 --arch x86_64 --product aerospace # CLI
 #       <unknown>:0: warning: legacy driver is now deprecated; consider avoiding specifying '-disallow-use-new-driver'
 #     <unknown>:0: error: unable to execute command: <unknown>
 
+rm -rf .release && mkdir .release
+
 xcode_configuration="Release"
 xcodebuild -version
-xcodebuild clean build \
+xcodebuild-pretty .release/xcodebuild.log clean build \
     -scheme AeroSpace \
     -destination "generic/platform=macOS" \
     -configuration "$xcode_configuration" \
@@ -52,7 +46,6 @@ xcodebuild clean build \
 
 git checkout .
 
-rm -rf .release && mkdir .release
 cp -r ".xcode-build/Build/Products/$xcode_configuration/AeroSpace.app" .release
 cp -r .build/apple/Products/Release/aerospace .release
 
@@ -131,7 +124,6 @@ cd -
 for cask_name in aerospace aerospace-dev; do
     ./script/build-brew-cask.sh \
         --cask-name "$cask_name" \
-        --app-bundle-dir-name "AeroSpace.app" \
         --zip-uri ".release/AeroSpace-v$build_version.zip" \
         --build-version "$build_version"
 done

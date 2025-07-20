@@ -6,7 +6,7 @@ extension Thread {
     func runInLoopAsync(
         job: RunLoopJob = RunLoopJob(),
         autoCheckCancelled: Bool = true,
-        _ body: @Sendable @escaping (RunLoopJob) -> ()
+        _ body: @Sendable @escaping (RunLoopJob) -> (),
     ) -> RunLoopJob {
         let action = RunLoopAction(job: job, autoCheckCancelled: autoCheckCancelled, body)
         // Alternative: CFRunLoopPerformBlock + CFRunLoopWakeUp

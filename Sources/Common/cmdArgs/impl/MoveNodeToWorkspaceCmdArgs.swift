@@ -10,14 +10,14 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
             "--window-id": optionalWindowIdFlag(),
             "--focus-follows-window": trueBoolFlag(\.focusFollowsWindow),
         ],
-        arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)]
+        arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)],
     )
 
     public var _wrapAround: Bool?
     public var failIfNoop: Bool = false
     public var focusFollowsWindow: Bool = false
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
     public var target: Lateinit<WorkspaceTarget> = .uninitialized
 
     public init(rawArgs: [String]) {
@@ -25,8 +25,8 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     }
 }
 
-public extension MoveNodeToWorkspaceCmdArgs {
-    var wrapAround: Bool { _wrapAround ?? false }
+extension MoveNodeToWorkspaceCmdArgs {
+    public var wrapAround: Bool { _wrapAround ?? false }
 }
 
 func implication(ifTrue: Bool, mustHold: @autoclosure () -> Bool) -> Bool { !ifTrue || mustHold() }

@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-focus
 // tag::purpose[]
-:manpurpose: Set focus to the nearest window in the given direction.
+:manpurpose: Set focus to a window.
 // end::purpose[]
 
 // =========================================================== Synopsis
@@ -12,6 +12,9 @@ include::util/man-attributes.adoc[]
 aerospace focus [-h|--help] [--ignore-floating]
                 [--boundaries <boundary>] [--boundaries-action <action>]
                 (left|down|up|right)
+aerospace focus [-h|--help] [--ignore-floating]
+                [--boundaries <boundary>] [--boundaries-action <action>]
+                (dfs-next|dfs-prev)
 aerospace focus [-h|--help] --window-id <window-id>
 aerospace focus [-h|--help] --dfs-index <dfs-index>
 
@@ -57,6 +60,16 @@ Index is 0-based.
 --ignore-floating::
 Don't perceive floating windows as part of the tree.
 It may be useful for more reliable scripting.
+
+// =========================================================== Arguments
+include::./util/conditional-arguments-header.adoc[]
+
+(left|down|up|right)::
+Set focus to the nearest window in the given direction.
+
+(dfs-next|dfs-prev)::
+Set focus to the window before or after the current window in the depth-first order (top-to-bottom and left-to-right) of windows in the current workspace tree.
+In this mode, `--boundaries` must be `workspace` (the default) and `--boundaries-action` can be set to one of `(stop|fail|wrap-around-the-workspace)`.
 
 // end::body[]
 

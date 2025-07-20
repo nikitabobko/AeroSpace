@@ -4,7 +4,7 @@ import Foundation
 let configDotfileName = isDebug ? ".aerospace-debug.toml" : ".aerospace.toml"
 func findCustomConfigUrl() -> ConfigFile {
     let fileName = isDebug ? "aerospace-debug.toml" : "aerospace.toml"
-    let xdgConfigHome = ProcessInfo.processInfo.environment["XDG_CONFIG_HOME"]?.lets { URL(filePath: $0) }
+    let xdgConfigHome = ProcessInfo.processInfo.environment["XDG_CONFIG_HOME"].map { URL(filePath: $0) }
         ?? FileManager.default.homeDirectoryForCurrentUser.appending(path: ".config/")
     let candidates: [URL] = if let configLocation = serverArgs.configLocation {
         [URL(filePath: configLocation)]
@@ -18,7 +18,7 @@ func findCustomConfigUrl() -> ConfigFile {
     let count = existingCandidates.count
     return switch count {
         case 0: .noCustomConfigExists
-        case 1: .file(existingCandidates.first!)
+        case 1: .file(existingCandidates.first.orDie())
         default: .ambiguousConfigError(existingCandidates)
     }
 }

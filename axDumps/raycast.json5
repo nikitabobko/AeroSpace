@@ -1,0 +1,63 @@
+{
+  "AXActivationPoint" : "<AXValue 0x600001de05d0> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600000663140> {value = x:525.000000 y:188.000000 w:750.000000 h:474.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600001c0ba50> {pid=50710}",
+  "AXPosition" : "<AXValue 0x600001de05d0> {value = x:525.000000 y:188.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x600001c0a7c0> {pid=50710}\";\n    SectionUniqueID = AXContent;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600001c0ba50> {value = w:750.000000 h:474.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXSystemDialog",
+  "AXTitle" : "",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=15902, title=nil, role=\"AXTextField\", subrole=\"raycast_searchField\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=15902, title=\"\", role=\"AXWindow\", subrole=\"AXSystemDialog\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=15902, title=\"\", role=\"AXWindow\", subrole=\"AXSystemDialog\")",
+    "AXMenuBar" : "<AXUIElement 0x600001de1140> {pid=50710}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Raycast",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=15902, title=\"\", role=\"AXWindow\", subrole=\"AXSystemDialog\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.raycast.macos",
+  "Aero.App.nsApp.activationPolicy" : "accessory",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Raycast.app/Contents/MacOS/Raycast",
+  "Aero.App.version" : "0",
+  "Aero.App.versionShort" : "1.95.0",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 15902,
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxUiElementWindowType" : "popup",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.MacosPopupWindowsContainer)",
+  "Aero.workspace" : "nil"
+}

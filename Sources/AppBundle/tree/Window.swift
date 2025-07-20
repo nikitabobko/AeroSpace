@@ -69,7 +69,5 @@ extension Window {
         bind(to: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
     }
 
-    var ownIndex: Int { ownIndexOrNil! }
-
     func asMacWindow() -> MacWindow { self as! MacWindow }
 }

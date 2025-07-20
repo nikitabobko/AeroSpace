@@ -2,7 +2,10 @@
 import Common
 import XCTest
 
+@MainActor
 final class ListWindowsTest: XCTestCase {
+    override func setUp() async throws { setUpWorkspacesForTests() }
+
     func testParse() {
         assertEquals(parseCommand("list-windows --pid 1").errorOrNil, "Mandatory option is not specified (--focused|--all|--monitor|--workspace)")
         assertNil(parseCommand("list-windows --workspace M --pid 1").errorOrNil)
@@ -42,6 +45,32 @@ final class ListWindowsTest: XCTestCase {
                 case .monitor:
                     assertTrue(FormatVar.MonitorFormatVar.allCases.allSatisfy { $0.rawValue.starts(with: "monitor-") })
             }
+        }
+    }
+
+    func testFormat() {
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            let windows = [
+                AeroObj.window(window: TestWindow.new(id: 2, parent: $0), title: "non-empty"),
+                AeroObj.window(window: TestWindow.new(id: 1, parent: $0), title: ""),
+            ]
+            assertEquals(windows.format([.interVar("window-title")]), .success(["non-empty", ""]))
+        }
+
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            let windows = [
+                AeroObj.window(window: TestWindow.new(id: 2, parent: $0), title: "non-empty"),
+                AeroObj.window(window: TestWindow.new(id: 10, parent: $0), title: ""),
+            ]
+            assertEquals(windows.format([.interVar("window-id"), .interVar("right-padding"), .interVar("window-title")]), .success(["2 non-empty", "10"]))
+        }
+
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            let windows = [
+                AeroObj.window(window: TestWindow.new(id: 2, parent: $0), title: "title1"),
+                AeroObj.window(window: TestWindow.new(id: 10, parent: $0), title: "title2"),
+            ]
+            assertEquals(windows.format([.interVar("window-id"), .interVar("right-padding"), .literal(" | "), .interVar("window-title")]), .success(["2  | title1", "10 | title2"]))
         }
     }
 }

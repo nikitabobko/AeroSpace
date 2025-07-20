@@ -1,0 +1,74 @@
+// Menu bar -> Ghostty -> Check for Updates...
+{
+  "AXActivationPoint" : "<AXValue 0x600000a9b630> {value = x:710.000000 y:306.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600001ffc600> {value = x:700.000000 y:292.000000 w:400.000000 h:134.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXIdentifier" : "SUStatus",
+  "AXMain" : 1,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600000a97450> {pid=70565}",
+  "AXPosition" : "<AXValue 0x600000a97450> {value = x:700.000000 y:292.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : null,
+  "AXSize" : "<AXValue 0x600000a989f0> {value = w:400.000000 h:134.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "Updating Ghostty",
+  "AXTitleUIElement" : "AXUIElement(AxWindowId=21898, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : {
+      "AXEnabled" : 1,
+      "AXIdentifier" : "_NS:8",
+      "AXParent" : "AXUIElement(AxWindowId=21898, title=\"Updating Ghostty\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXRole" : "AXButton",
+      "AXTitle" : "Cancel",
+      "AXTopLevelUIElement" : "AXUIElement(AxWindowId=21898, title=\"Updating Ghostty\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXWindow" : "AXUIElement(AxWindowId=21898, title=\"Updating Ghostty\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+    },
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=21898, title=\"Updating Ghostty\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=21898, title=\"Updating Ghostty\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x600000a94a20> {pid=70565}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Ghostty",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=21898, title=\"Updating Ghostty\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(AxWindowId=21704, title=\"ta ~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.mitchellh.ghostty",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Ghostty.app/Contents/MacOS/ghostty",
+  "Aero.App.version" : "9438",
+  "Aero.App.versionShort" : "1.1.3",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 21898,
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : false, // todo fix
+  "Aero.AxUiElementWindowType" : "window",
+  "Aero.macOS.version" : "Version 15.4.1 (Build 24E263)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.TilingContainer)",
+  "Aero.workspace" : "G"
+}

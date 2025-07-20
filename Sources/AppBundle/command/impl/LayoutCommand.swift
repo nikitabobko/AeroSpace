@@ -3,6 +3,7 @@ import Common
 
 struct LayoutCommand: Command {
     let args: LayoutCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
@@ -10,7 +11,7 @@ struct LayoutCommand: Command {
             return io.err(noWindowIsFocused)
         }
         let targetDescription = args.toggleBetween.val.first(where: { !window.matchesDescription($0) })
-            ?? args.toggleBetween.val.first!
+            ?? args.toggleBetween.val.first.orDie()
         if window.matchesDescription(targetDescription) { return false }
         switch targetDescription {
             case .h_accordion:
@@ -67,17 +68,17 @@ struct LayoutCommand: Command {
     }
 }
 
-private extension Window {
-    func matchesDescription(_ layout: LayoutCmdArgs.LayoutDescription) -> Bool {
+extension Window {
+    fileprivate func matchesDescription(_ layout: LayoutCmdArgs.LayoutDescription) -> Bool {
         return switch layout {
             case .accordion:   (parent as? TilingContainer)?.layout == .accordion
             case .tiles:       (parent as? TilingContainer)?.layout == .tiles
             case .horizontal:  (parent as? TilingContainer)?.orientation == .h
             case .vertical:    (parent as? TilingContainer)?.orientation == .v
-            case .h_accordion: (parent as? TilingContainer)?.lets { $0.layout == .accordion && $0.orientation == .h } == true
-            case .v_accordion: (parent as? TilingContainer)?.lets { $0.layout == .accordion && $0.orientation == .v } == true
-            case .h_tiles:     (parent as? TilingContainer)?.lets { $0.layout == .tiles && $0.orientation == .h } == true
-            case .v_tiles:     (parent as? TilingContainer)?.lets { $0.layout == .tiles && $0.orientation == .v } == true
+            case .h_accordion: (parent as? TilingContainer).map { $0.layout == .accordion && $0.orientation == .h } == true
+            case .v_accordion: (parent as? TilingContainer).map { $0.layout == .accordion && $0.orientation == .v } == true
+            case .h_tiles:     (parent as? TilingContainer).map { $0.layout == .tiles && $0.orientation == .h } == true
+            case .v_tiles:     (parent as? TilingContainer).map { $0.layout == .tiles && $0.orientation == .v } == true
             case .tiling:      parent is TilingContainer
             case .floating:    parent is Workspace
         }

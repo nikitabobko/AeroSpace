@@ -1,5 +1,8 @@
 import Foundation
 
+// TO EVERYONE REVERSE-ENGINEERING THE PROTOCOL
+// client-server socket API is not public yet.
+// Tracking issue for making it public: https://github.com/nikitabobko/AeroSpace/issues/1513
 public struct ServerAnswer: Codable, Sendable {
     public let exitCode: Int32
     public let stdout: String
@@ -19,8 +22,11 @@ public struct ServerAnswer: Codable, Sendable {
     }
 }
 
+// TO EVERYONE REVERSE-ENGINEERING THE PROTOCOL
+// client-server socket API is not public yet.
+// Tracking issue for making it public: https://github.com/nikitabobko/AeroSpace/issues/1513
 public struct ClientRequest: Codable, Sendable {
-    public let command: String // Unused. keep it for API compatibility with old servers for a couple of version
+    public var command: String? // Unused. keep it for API compatibility with old servers for a couple of version
     public let args: [String]
     public let stdin: String
 
@@ -35,5 +41,9 @@ public struct ClientRequest: Codable, Sendable {
         }
         self.args = args
         self.stdin = stdin
+    }
+
+    public static func decodeJson(_ data: Data) -> Result<ClientRequest, String> {
+        Result { try JSONDecoder().decode(Self.self, from: data) }.mapError { $0.localizedDescription }
     }
 }

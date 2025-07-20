@@ -1,7 +1,7 @@
 import OrderedCollections
 
-private let orkspace = "<workspace>" // todo
-private let _workspaces = "\(orkspace)..."
+private let workspace = "<workspace>"
+private let workspaces = "\(workspace)..."
 
 public struct ListWindowsCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
@@ -30,7 +30,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
             ["--all", "--focused", "--monitor"],
             ["--count", "--format"],
             ["--count", "--json"],
-        ]
+        ],
     )
 
     fileprivate var all: Bool = false // ALIAS
@@ -40,8 +40,8 @@ public struct ListWindowsCmdArgs: CmdArgs {
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
 
-    public var windowId: UInt32?               // unused
-    public var workspaceName: WorkspaceName?   // unused
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public struct FilteringOptions: ConvenienceCopyable, Equatable, Sendable {
         public var monitors: [MonitorId] = []
@@ -52,8 +52,8 @@ public struct ListWindowsCmdArgs: CmdArgs {
     }
 }
 
-public extension ListWindowsCmdArgs {
-    var format: [StringInterToken] {
+extension ListWindowsCmdArgs {
+    public var format: [StringInterToken] {
         _format.isEmpty
             ? [
                 .interVar("window-id"), .interVar("right-padding"), .literal(" | "),
@@ -95,9 +95,9 @@ func parseFormat(arg: String, nextArgs: inout [String]) -> Parsed<[StringInterTo
 
 private func parseWorkspaces(arg: String, nextArgs: inout [String]) -> Parsed<[WorkspaceFilter]> {
     let args = nextArgs.allNextNonFlagArgs()
-    let possibleValues = "\(orkspace) possible values: (<workspace-name>|focused|visible)"
+    let possibleValues = "\(workspace) possible values: (<workspace-name>|focused|visible)"
     if args.isEmpty {
-        return .failure("\(_workspaces) is mandatory. \(possibleValues)")
+        return .failure("\(workspaces) is mandatory. \(possibleValues)")
     }
     var workspaces: [WorkspaceFilter] = []
     for workspaceRaw: String in args {

@@ -8,11 +8,11 @@ public struct SummonWorkspaceCmdArgs: CmdArgs {
         options: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],
-        arguments: [newArgParser(\.target, parseWorkspaceName, mandatoryArgPlaceholder: "<workspace>")]
+        arguments: [newArgParser(\.target, parseWorkspaceName, mandatoryArgPlaceholder: "<workspace>")],
     )
 
-    public var windowId: UInt32?               // unused
-    public var workspaceName: WorkspaceName?   // unused
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public var target: Lateinit<WorkspaceName> = .uninitialized
     public var failIfNoop: Bool = false

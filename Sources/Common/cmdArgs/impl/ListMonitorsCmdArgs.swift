@@ -18,11 +18,11 @@ public struct ListMonitorsCmdArgs: CmdArgs {
         conflictingOptions: [
             ["--count", "--format"],
             ["--count", "--json"],
-        ]
+        ],
     )
 
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
     public var focused: Bool?
     public var mouse: Bool?
     public var _format: [StringInterToken] = []
@@ -30,8 +30,8 @@ public struct ListMonitorsCmdArgs: CmdArgs {
     public var json: Bool = false
 }
 
-public extension ListMonitorsCmdArgs {
-    var format: [StringInterToken] {
+extension ListMonitorsCmdArgs {
+    public var format: [StringInterToken] {
         _format.isEmpty
             ? [
                 .interVar("monitor-id"), .interVar("right-padding"), .literal(" | "),

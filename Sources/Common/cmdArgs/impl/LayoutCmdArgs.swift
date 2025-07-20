@@ -8,12 +8,12 @@ public struct LayoutCmdArgs: CmdArgs {
         options: [
             "--window-id": optionalWindowIdFlag(),
         ],
-        arguments: [newArgParser(\.toggleBetween, parseToggleBetween, mandatoryArgPlaceholder: LayoutDescription.unionLiteral)]
+        arguments: [newArgParser(\.toggleBetween, parseToggleBetween, mandatoryArgPlaceholder: LayoutDescription.unionLiteral)],
     )
 
     public var toggleBetween: Lateinit<[LayoutDescription]> = .uninitialized
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String], toggleBetween: [LayoutDescription]) {
         self.rawArgs = .init(rawArgs)
@@ -51,8 +51,8 @@ public func parseLayoutCmdArgs(_ args: [String]) -> ParsedCmd<LayoutCmdArgs> {
     }
 }
 
-private extension String {
-    func parseLayoutDescription() -> LayoutCmdArgs.LayoutDescription? {
+extension String {
+    fileprivate func parseLayoutDescription() -> LayoutCmdArgs.LayoutDescription? {
         if let parsed = LayoutCmdArgs.LayoutDescription(rawValue: self) {
             return parsed
         } else if self == "list" {

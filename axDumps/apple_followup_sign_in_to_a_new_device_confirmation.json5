@@ -1,0 +1,75 @@
+// firefox -> icloud.com -> sign in
+{
+  "AXActivationPoint" : "<AXValue 0x600001b20000> {value = x:913.000000 y:926.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : {
+    "AXEnabled" : 1,
+    "AXIdentifier" : "_NS:89",
+    "AXParent" : "AXUIElement(AxWindowId=4015, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXTitle" : "Done",
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=4015, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=4015, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXDocument" : null,
+  "AXFocused" : 1,
+  "AXFrame" : "<AXValue 0x600000e0c840> {value = x:903.000000 y:912.000000 w:490.000000 h:249.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXIdentifier" : "_NS:8",
+  "AXMain" : 1,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600001b20000> {pid=38497}",
+  "AXPosition" : "<AXValue 0x600001adf060> {value = x:903.000000 y:912.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x600001b200c0> {pid=38497}\";\n    SectionUniqueID = AXContent;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600001a758c0> {value = w:490.000000 h:249.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "",
+  "AXTitleUIElement" : "AXUIElement(AxWindowId=4015, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=4015, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=4015, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=4015, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x600001b200f0> {pid=38497}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "FollowUpUI",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=4015, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.apple.FollowUpUI",
+  "Aero.App.nsApp.activationPolicy" : "accessory",
+  "Aero.App.nsApp.execPath" : "file:///System/Library/PrivateFrameworks/CoreFollowUp.framework/Versions/A/Resources/FollowUpUI.app/Contents/MacOS/FollowUpUI",
+  "Aero.App.version" : "1",
+  "Aero.App.versionShort" : "1.0",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 4015,
+  "Aero.AxUiElementWindowType" : "popup",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
+  "Aero.workspace" : "W"
+}

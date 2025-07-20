@@ -29,14 +29,14 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
             ["--all", "--focused", "--monitor"],
             ["--count", "--format"],
             ["--count", "--json"],
-        ]
+        ],
     )
 
     fileprivate var all: Bool = false // Alias
     fileprivate var focused: Bool = false // Alias
 
-    public var windowId: UInt32?              // unused
-    public var workspaceName: WorkspaceName?  // unused
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
     public var filteringOptions = FilteringOptions()
     public var _format: [StringInterToken] = [.interVar("workspace")]
     public var outputOnlyCount: Bool = false
@@ -49,8 +49,8 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
     }
 }
 
-public extension ListWorkspacesCmdArgs {
-    var format: [StringInterToken] { _format.isEmpty ? [.interVar("workspace")] : _format }
+extension ListWorkspacesCmdArgs {
+    public var format: [StringInterToken] { _format.isEmpty ? [.interVar("workspace")] : _format }
 }
 
 public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {

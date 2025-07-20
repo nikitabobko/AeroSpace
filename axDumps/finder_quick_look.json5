@@ -1,0 +1,90 @@
+// select any file -> press space
+{
+  "AXActivationPoint" : "<AXValue 0x600001db05d0> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXIdentifier" : "close panel button",
+    "AXLayoutDirection" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=3126, title=\"Quick Look\", role=\"AXWindow\", subrole=\"Quick Look\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : "",
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=3126, title=\"Quick Look\", role=\"AXWindow\", subrole=\"Quick Look\")",
+    "AXWindow" : "AXUIElement(AxWindowId=3126, title=\"Quick Look\", role=\"AXWindow\", subrole=\"Quick Look\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x60000095b000> {value = x:1262.000000 y:316.000000 w:816.000000 h:849.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 0,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600001db05d0> {pid=1312}",
+  "AXPosition" : "<AXValue 0x600001d7a880> {value = x:1262.000000 y:316.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x600001c3c300> {pid=1312}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x600001c3fde0> {pid=1312}\";\n    SectionUniqueID = AXContainer;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600001c3f270> {value = w:816.000000 h:849.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "Quick Look",
+  "AXTitle" : "Quick Look",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 1,
+    "AXIdentifier" : "full screen window button",
+    "AXLayoutDirection" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=3126, title=\"Quick Look\", role=\"AXWindow\", subrole=\"Quick Look\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : "",
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=3126, title=\"Quick Look\", role=\"AXWindow\", subrole=\"Quick Look\")",
+    "AXWindow" : "AXUIElement(AxWindowId=3126, title=\"Quick Look\", role=\"AXWindow\", subrole=\"Quick Look\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=3126, title=nil, role=\"AXTextArea\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=3126, title=\"Quick Look\", role=\"AXWindow\", subrole=\"Quick Look\")",
+    "AXFrame" : "<AXValue 0x6000006db2c0> {value = x:0.000000 y:1169.000000 w:0.000000 h:0.000000 type = kAXValueCGRectType}",
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=15986, title=\"/opt/homebrew/Caskroom/aerospace/0.18.5-Beta/AeroSpace-v0.18.5-Beta/legal\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x600001db24f0> {pid=1312}",
+    "AXPosition" : "<AXValue 0x600001db24f0> {value = x:0.000000 y:1169.000000 type = kAXValueCGPointType}",
+    "AXRole" : "AXApplication",
+    "AXSize" : "<AXValue 0x600001db24f0> {value = w:0.000000 h:0.000000 type = kAXValueCGSizeType}",
+    "AXTitle" : "Finder",
+    "AXValue" : null,
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=3126, title=\"Quick Look\", role=\"AXWindow\", subrole=\"Quick Look\")",
+      "AXUIElement(AxWindowId=15986, title=\"/opt/homebrew/Caskroom/aerospace/0.18.5-Beta/AeroSpace-v0.18.5-Beta/legal\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "<AXUIElement 0x600001db2070> {pid=1312}"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.apple.finder",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///System/Library/CoreServices/Finder.app/Contents/MacOS/Finder",
+  "Aero.App.version" : "1732.4.3",
+  "Aero.App.versionShort" : "15.4",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 3126,
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxUiElementWindowType" : "dialog",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
+  "Aero.workspace" : "M"
+}

@@ -259,7 +259,7 @@ enum Ax {
     /// If some windows are located on not active macOS Spaces then they won't be returned
     static let windowsAttr = ReadableAttrImpl<[WindowIdAndAxUiElement]>(
         key: kAXWindowsAttribute,
-        getter: { ($0 as! NSArray).compactMap(windowOrNil).map { ($0.windowId, $0.ax.cast) } }
+        getter: { ($0 as? NSArray)?.compactMap(windowOrNil).map { ($0.windowId, $0.ax.cast) } ?? [] }
     )
     static let focusedWindowAttr = ReadableAttrImpl<WindowIdAndAxUiElementMock>(
         key: kAXFocusedWindowAttribute,
@@ -334,7 +334,9 @@ extension AXUIElement: AxUiElementMock {
         let state = signposter.beginInterval(#function, "attr: \(attr.key) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
         defer { signposter.endInterval(#function, state) }
         var raw: AnyObject?
-        return AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success ? attr.getter(raw!) : nil
+        return AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success
+            ? raw.flatMap(attr.getter)
+            : nil
     }
 
     @discardableResult func set<Attr: WritableAttr>(_ attr: Attr, _ value: Attr.T) -> Bool {

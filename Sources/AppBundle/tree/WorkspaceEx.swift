@@ -8,11 +8,11 @@ extension Workspace {
                 let orientation: Orientation = switch config.defaultRootContainerOrientation {
                     case .horizontal: .h
                     case .vertical: .v
-                    case .auto: workspaceMonitor.lets { $0.width >= $0.height } ? .h : .v
+                    case .auto: workspaceMonitor.then { $0.width >= $0.height } ? .h : .v
                 }
                 return TilingContainer(parent: self, adaptiveWeight: 1, orientation, config.defaultRootContainerLayout, index: INDEX_BIND_LAST)
             case 1:
-                return containers.singleOrNil()!
+                return containers.singleOrNil().orDie()
             default:
                 die("Workspace must contain zero or one tiling container as its child")
         }
@@ -26,7 +26,7 @@ extension Workspace {
         let containers = children.filterIsInstance(of: MacosFullscreenWindowsContainer.self)
         return switch containers.count {
             case 0: MacosFullscreenWindowsContainer(parent: self)
-            case 1: containers.singleOrNil()!
+            case 1: containers.singleOrNil().orDie()
             default: dieT("Workspace must contain zero or one MacosFullscreenWindowsContainer")
         }
     }
@@ -35,7 +35,7 @@ extension Workspace {
         let containers = children.filterIsInstance(of: MacosHiddenAppsWindowsContainer.self)
         return switch containers.count {
             case 0: MacosHiddenAppsWindowsContainer(parent: self)
-            case 1: containers.singleOrNil()!
+            case 1: containers.singleOrNil().orDie()
             default: dieT("Workspace must contain zero or one MacosHiddenAppsWindowsContainer")
         }
     }

@@ -6,7 +6,7 @@ import AppKit
 /// becomes nil, etc.) which tricks AeroSpace into thinking that all windows were closed.
 /// That's why every time a window dies AeroSpace caches the "entire world" (unless window is already presented in the cache)
 /// so that once the screen is unlocked, AeroSpace could restore windows to where they were
-@MainActor private var closedWindowsCache = FrozenWorld(workspaces: [], monitors: [])
+@MainActor private var closedWindowsCache = FrozenWorld(workspaces: [], monitors: [], windowIds: [])
 
 struct FrozenMonitor: Sendable {
     let topLeftCorner: CGPoint
@@ -36,16 +36,17 @@ struct FrozenWorkspace: Sendable {
     }
 }
 
-@MainActor func cacheClosedWindowIfNeeded(window: Window) {
-    if closedWindowsCache.windowIds.contains(window.windowId) {
+@MainActor func cacheClosedWindowIfNeeded() {
+    let allWs = Workspace.all
+    let allWindowIds = allWs.flatMap { collectAllWindowIds(workspace: $0) }.toSet()
+    if allWindowIds.isSubset(of: closedWindowsCache.windowIds) {
         return // already cached
     }
     closedWindowsCache = FrozenWorld(
-        workspaces: Workspace.all.map { FrozenWorkspace($0) },
-        monitors: monitors.map(FrozenMonitor.init)
+        workspaces: allWs.map { FrozenWorkspace($0) },
+        monitors: monitors.map(FrozenMonitor.init),
+        windowIds: allWindowIds,
     )
-    // todo why is this assertion false 21336ad382539b35fdc94b4fbd55408e10b101f8?
-    // check(closedWindowsCache.windowIds.contains(window.windowId))
 }
 
 @MainActor func restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: Window) async throws -> Bool {
@@ -91,7 +92,7 @@ private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonL
         adaptiveWeight: frozenContainer.weight,
         frozenContainer.orientation,
         frozenContainer.layout,
-        index: index
+        index: index,
     )
 
     for (index, child) in frozenContainer.children.enumerated() {
@@ -120,5 +121,5 @@ private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonL
 // That's why we have to reset the cache every time layout changes. The layout can only be changed by running commands
 // and with mouse manipulations
 @MainActor func resetClosedWindowsCache() {
-    closedWindowsCache = FrozenWorld(workspaces: [], monitors: [])
+    closedWindowsCache = FrozenWorld(workspaces: [], monitors: [], windowIds: [])
 }

@@ -1,6 +1,6 @@
- <img src="./resources/Assets.xcassets/AppIcon.appiconset/icon.png" width="40%" height="40%" align="right">
-
 # AeroSpace Beta [![Build](https://github.com/nikitabobko/AeroSpace/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/nikitabobko/AeroSpace/actions/workflows/build.yml)
+
+<img src="./resources/Assets.xcassets/AppIcon.appiconset/icon.png" width="40%" align="right">
 
 AeroSpace is an i3-like tiling window manager for macOS
 
@@ -16,6 +16,22 @@ Docs:
 ## Project status
 
 Public Beta. AeroSpace can be used as a daily driver, but expect breaking changes until 1.0 is reached.
+
+What stops us from 1.0 release:
+- [x] https://github.com/nikitabobko/AeroSpace/issues/131 Performance. Implement thread-per-application to circumvent macOS blocking AX API.
+- [ ] https://github.com/nikitabobko/AeroSpace/issues/1215 _Big refactoring_. Rewrite mutable double-linked core tree data structure to immutable single-linked persistent tree.
+  Important for: stability and potential performance
+  - [ ] https://github.com/nikitabobko/AeroSpace/issues/1216 The big refactoring will help us to fix stability issue that windows may randomly jump to the focused workspace
+  - [ ] https://github.com/nikitabobko/AeroSpace/issues/68 The big refactoring will help us to support macOS native tabs
+- [ ] https://github.com/nikitabobko/AeroSpace/issues/278 Implement shell-like combinators.
+  Ignore a lot of crazy fuss in the issue,
+  We are most probably going with the minimal approach to only introduce common shell-combinators: `||`, `&&`, `;` and `eval` command to send multiple commands in one go.
+- [ ] https://github.com/nikitabobko/AeroSpace/issues/1012 Investigate a possibility to use `CGEvent.tapCreate` API for global hotkeys
+  - [ ] https://github.com/nikitabobko/AeroSpace/issues/28 Maybe it will allow to distinguish left and right modifiers. Maybe not
+
+Big and important issues which will go after 1.0 release:
+- [ ] https://github.com/nikitabobko/AeroSpace/issues/2 sticky windows
+- [ ] https://github.com/nikitabobko/AeroSpace/issues/260 Dynamic TWM
 
 ## Key features
 
@@ -57,7 +73,7 @@ Other installation options: https://nikitabobko.github.io/AeroSpace/guide#instal
 
 ## Community, discussions, issues
 
-Unfortunately, AeroSpace project doesn't openly accept Issues.
+AeroSpace project doesn't accept Issues directly - we ask you to create a [Discussion](https://github.com/nikitabobko/AeroSpace/discussions) first.
 Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for more details.
 
 Community discussions happen at GitHub Discussions.
@@ -120,6 +136,11 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
   Ricing issues are not a priority, and they are mostly ignored.
   The ricing stance can change only with the appearance of more maintainers.
 
+## Sponsorship
+
+AeroSpace is developed and maintained in my free time.
+If you find it useful, [consider sponsoring](https://github.com/sponsors/nikitabobko#sponsors).
+
 ## Tip of the day
 
 ```bash
@@ -131,5 +152,6 @@ Now, you can move windows by holding `ctrl`+`cmd` and dragging any part of the w
 Source: [reddit](https://www.reddit.com/r/MacOS/comments/k6hiwk/keyboard_modifier_to_simplify_click_drag_of/)
 
 ## Related projects
+
 - [Amethyst](https://github.com/ianyh/Amethyst)
 - [yabai](https://github.com/koekeishiya/yabai)

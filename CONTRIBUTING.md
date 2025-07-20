@@ -2,15 +2,22 @@
 
 ## Users cannot create GitHub Issues directly
 
-Unfortunately, AeroSpace project doesn't openly accept Issues.
+AeroSpace project doesn't accept Issues directly - we ask you to create a [Discussion](https://github.com/nikitabobko/AeroSpace/discussions) first.
 
 The submitted Issues are often either obvious duplicates, environmental problems, or configuration errors by the users themselves.
 For a hobby project, I don't have enough time and energy to process every such submitted Issue.
 
-**As an alternative, you can start a Discussion on GitHub discussions forum** https://github.com/nikitabobko/AeroSpace/discussions.
+As an alternative, you can start a Discussion on [GitHub discussions](https://github.com/nikitabobko/AeroSpace/discussions) forum.
 Any Discussion which clearly identifies a problem and can be confirmed or reproduced will be converted to an Issue by maintainers.
 
-Thank you for your understanding.
+It's users' responsibility to minimize their bugs as much as possible.
+All users play a part in bugs reproduction.
+
+In general the flow is the following:
+- Discussions are here to kick-off the discussion and identify what the actionable item exactly is
+- Issues are created later. Issues are well-formed, clear and actionable tasks
+
+This pattern makes it easier for maintainers or contributors to find issues to work on since _almost every_ Issue is ready to be worked on.
 
 ## Submit bugs and feature ideas
 
@@ -89,7 +96,7 @@ A good commit message also mentions the motivation of the change (the commit des
 
 Maintainers can merge your pull request with arbitrary modifications.
 
-**Pull request merge**. It cannot be guaranteed that your pull request will be merged.
+**Pull request merge**. It cannot be guaranteed that your pull request will be merged even after the discussion.
 Be ready that your pull request might be rejected because the implementation isn't good, or the approach is incorrect.
 
 The prior discussion is here for you to minimize the risk of rejection.

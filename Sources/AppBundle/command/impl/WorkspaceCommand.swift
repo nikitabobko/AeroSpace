@@ -4,19 +4,20 @@ import Foundation
 
 struct WorkspaceCommand: Command {
     let args: WorkspaceCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool { // todo refactor
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         let focusedWs = target.workspace
         let workspaceName: String
         switch args.target.val {
-            case .relative(let isNext):
+            case .relative(let nextPrev):
                 let workspace = getNextPrevWorkspace(
                     current: focusedWs,
-                    isNext: isNext,
+                    isNext: nextPrev == .next,
                     wrapAround: args.wrapAround,
                     stdin: io.readStdin(),
-                    target: target
+                    target: target,
                 )
                 guard let workspace else { return false }
                 workspaceName = workspace.name

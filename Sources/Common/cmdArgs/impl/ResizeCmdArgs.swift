@@ -11,13 +11,13 @@ public struct ResizeCmdArgs: CmdArgs {
         arguments: [
             newArgParser(\.dimension, parseDimension, mandatoryArgPlaceholder: "(smart|smart-opposite|width|height)"),
             newArgParser(\.units, parseUnits, mandatoryArgPlaceholder: "[+|-]<number>"),
-        ]
+        ],
     )
 
     public var dimension: Lateinit<ResizeCmdArgs.Dimension> = .uninitialized
     public var units: Lateinit<ResizeCmdArgs.Units> = .uninitialized
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public init(
         rawArgs: [String],
@@ -51,9 +51,9 @@ private func parseDimension(arg: String, nextArgs: inout [String]) -> Parsed<Res
 
 private func parseUnits(arg: String, nextArgs: inout [String]) -> Parsed<ResizeCmdArgs.Units> {
     if let number = UInt(arg.removePrefix("+").removePrefix("-")) {
-        switch () {
-            case _ where arg.starts(with: "+"): .success(.add(number))
-            case _ where arg.starts(with: "-"): .success(.subtract(number))
+        switch true {
+            case arg.starts(with: "+"): .success(.add(number))
+            case arg.starts(with: "-"): .success(.subtract(number))
             default: .success(.set(number))
         }
     } else {

@@ -6,12 +6,12 @@ public struct ModeCmdArgs: CmdArgs {
         allowInConfig: true,
         help: mode_help_generated,
         options: [:],
-        arguments: [newArgParser(\.targetMode, parseTargetMode, mandatoryArgPlaceholder: "<binding-mode>")]
+        arguments: [newArgParser(\.targetMode, parseTargetMode, mandatoryArgPlaceholder: "<binding-mode>")],
     )
 
     public var targetMode: Lateinit<String> = .uninitialized
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
 private func parseTargetMode(arg: String, nextArgs: inout [String]) -> Parsed<String> {

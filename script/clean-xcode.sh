@@ -4,7 +4,6 @@ source ./script/setup.sh
 
 ./script/check-uncommitted-files.sh
 
-git clean -ffxd
 rm -rf ~/Library/Developer/Xcode/DerivedData/AeroSpace-*
 rm -rf ./.xcode-build
 

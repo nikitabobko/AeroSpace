@@ -46,7 +46,7 @@ struct Main {
 
         let socketFile = "/tmp/\(aeroSpaceAppId)-\(unixUserName).sock"
 
-        if let e: Error = Result(catching: { try socket.connect(to: socketFile) }).errorOrNil {
+        if let e: Error = Result(catching: { try socket.connect(to: socketFile) }).failureOrNil {
             if isVersion {
                 printVersionAndExit(serverVersion: nil)
             } else {
@@ -82,7 +82,7 @@ struct Main {
                     Possible fixes:
                     - Restart AeroSpace.app (server restart is required after each update)
                     - Reinstall and restart AeroSpace (corrupted installation)
-                """
+                """,
             )
         }
         exit(ans.exitCode)
@@ -94,7 +94,7 @@ func printVersionAndExit(serverVersion: String?) -> Never {
         """
         aerospace CLI client version: \(cliClientVersionAndHash)
         AeroSpace.app server version: \(serverVersion ?? "Unknown. The server is not running")
-        """
+        """,
     )
     exit(0)
 }

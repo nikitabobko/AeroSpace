@@ -3,6 +3,7 @@ import Common
 
 struct FocusMonitorCommand: Command {
     let args: FocusMonitorCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
@@ -16,9 +17,9 @@ struct FocusMonitorCommand: Command {
 extension MonitorTarget {
     func resolve(_ currentMonitor: Monitor, wrapAround: Bool) -> Result<Monitor, String> {
         switch self {
-            case .directional(let direction):
+            case .direction(let direction):
                 guard let (monitorsInDirection, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
-                    return .failure("Can't find monitors in direction \(direction)")
+                    return .failure("Should never happen. Can't find the current monitor")
                 }
                 let targetMonitor = wrapAround ? monitorsInDirection.get(wrappingIndex: index) : monitorsInDirection.getOrNil(atIndex: index)
                 guard let targetMonitor else {
@@ -39,7 +40,7 @@ extension MonitorTarget {
             case .patterns(let patterns):
                 let monitors = sortedMonitors
                 guard let targetMonitor = patterns.lazy.compactMap({ $0.resolveMonitor(sortedMonitors: monitors) }).first else {
-                    return .failure("None of the monitors match the pattern/patterns")
+                    return .failure("None of the monitors match the pattern(s)")
                 }
                 return .success(targetMonitor)
         }
@@ -48,7 +49,9 @@ extension MonitorTarget {
 
 extension Monitor {
     func relation(to monitor: Monitor) -> Orientation {
-        (rect.minY ..< rect.maxY).overlaps(monitor.rect.minY ..< monitor.rect.maxY) ? .h : .v
+        guard let otherYRange = monitor.rect.minY.until(excl: monitor.rect.maxY) else { return .h }
+        guard let myYRange = rect.minY.until(excl: rect.maxY) else { return .h }
+        return myYRange.overlaps(otherYRange) ? .h : .v
     }
 
     func findRelativeMonitor(inDirection direction: CardinalDirection) -> (monitorsInDirection: [Monitor], index: Int)? {

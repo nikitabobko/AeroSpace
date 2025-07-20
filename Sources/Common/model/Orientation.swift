@@ -7,6 +7,6 @@ public enum Orientation: Sendable {
     case v
 }
 
-public extension Orientation {
-    var opposite: Orientation { self == .h ? .v : .h }
+extension Orientation {
+    public var opposite: Orientation { self == .h ? .v : .h }
 }

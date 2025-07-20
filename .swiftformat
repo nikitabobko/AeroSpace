@@ -7,27 +7,57 @@
 # https://github.com/nicklockwood/SwiftFormat/issues/483 fix indentation for expressions nested in ternary
 --wrapternary before-operators
 
---disable andOperator
---disable blankLinesBetweenScopes
---disable consecutiveSpaces
---disable consistentSwitchCaseSpacing
---disable hoistAwait
---disable hoistTry
---disable preferKeyPath
---disable redundantInit
---disable redundantNilInit
---disable redundantParens
---disable redundantRawValues
---disable redundantReturn
---disable redundantSelf
---disable redundantStaticSelf
---disable redundantType
---disable sortImports
---disable spaceAroundComments
---disable spaceInsideComments
---disable void
---disable wrapArguments
---disable wrapMultilineConditionalAssignment
+--disable all
 
-# This rule is cool but buggy. It feels like heuristics are used instead of real code analysis
---disable unusedArguments
+# --enable docComments
+
+--enable anyObjectProtocol
+--enable blankLineAfterImports
+--enable blankLinesAtEndOfScope
+--enable blankLinesBetweenImports
+--enable conditionalAssignment
+--enable docCommentsBeforeModifiers
+--enable duplicateImports
+--enable elseOnSameLine
+--enable emptyBraces
+--enable emptyExtensions
+--enable enumNamespaces
+--enable fileMacro
+--enable genericExtensions
+--enable indent
+--enable leadingDelimiters
+--enable linebreakAtEndOfFile
+--enable linebreaks
+--enable modifierOrder
+--enable numberFormatting
+--enable preferCountWhere
+--enable redundantBackticks
+--enable redundantBreak
+--enable redundantClosure
+--enable redundantEquatable
+--enable redundantFileprivate
+--enable redundantGet
+--enable redundantLet
+--enable redundantLetError
+--enable redundantObjc
+--enable redundantOptionalBinding
+--enable redundantTypedThrows
+--enable redundantVoidReturnType
+--enable semicolons
+--enable spaceAroundBraces
+--enable spaceAroundBrackets
+--enable spaceAroundGenerics
+--enable spaceAroundOperators
+--enable spaceAroundParens
+--enable spaceInsideBraces
+--enable spaceInsideBrackets
+--enable spaceInsideGenerics
+--enable spaceInsideParens
+--enable strongOutlets
+--enable trailingClosures
+--enable trailingCommas
+--enable trailingSpace
+--enable wrapMultilineStatementBraces
+
+--enable extensionAccessControl
+--extensionacl on-declarations

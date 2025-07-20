@@ -44,7 +44,7 @@ Possible values:
 include::util/conditional-examples-header.adoc[]
 
 * Try to move mouse to the center of the window. If there is no window in focus, move mouse to the center of the monitor: +
-`aerospace move-mouse --fail-if-noop window-lazy-center || aerospace move-mouse monitor-lazy-center`
+`aerospace move-mouse window-lazy-center || aerospace move-mouse monitor-lazy-center`
 
 // end::body[]
 

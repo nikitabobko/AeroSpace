@@ -24,7 +24,7 @@ final class ConfigTest: XCTestCase {
             """
             [mode.main.binding]
                 alt-a = 'list-apps'
-            """
+            """,
         )
         XCTAssertTrue(errors.descriptions.singleOrNil()?.contains("cannot be used in config") == true)
     }
@@ -33,7 +33,7 @@ final class ConfigTest: XCTestCase {
         let (config, errors) = parseConfig(
             """
             mode.main = {}
-            """
+            """,
         )
         assertEquals(errors, [])
         XCTAssertTrue(config.modes[mainModeId]?.bindings.isEmpty == true)
@@ -44,13 +44,13 @@ final class ConfigTest: XCTestCase {
             """
             [mode.main.binding]
                 alt-h = 'focus left'
-            """
+            """,
         )
         assertEquals(errors, [])
         let binding = HotkeyBinding(.option, .h, [FocusCommand.new(direction: .left)])
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding])
+            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding]),
         )
     }
 
@@ -59,11 +59,11 @@ final class ConfigTest: XCTestCase {
             """
             [mode.foo.binding]
                 alt-h = 'focus left'
-            """
+            """,
         )
         assertEquals(
             errors.descriptions,
-            ["mode: Please specify \'main\' mode"]
+            ["mode: Please specify \'main\' mode"],
         )
         assertEquals(config.modes[mainModeId], nil)
     }
@@ -75,19 +75,19 @@ final class ConfigTest: XCTestCase {
                 alt-hh = 'focus left'
                 aalt-j = 'focus down'
                 alt-k = 'focus up'
-            """
+            """,
         )
         assertEquals(
             errors.descriptions,
             [
                 "mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
                 "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding",
-            ]
+            ],
         )
         let binding = HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding])
+            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding]),
         )
     }
 
@@ -99,22 +99,37 @@ final class ConfigTest: XCTestCase {
                 alt-2 = 'workspace 2'
                 alt-3 = ['workspace 3']
                 alt-4 = ['workspace 4', 'focus left']
-            """
+            """,
         )
         assertEquals(errors.descriptions, [])
         assertEquals(config.preservedWorkspaceNames.sorted(), ["1", "2", "3", "4"])
     }
 
-    func testUnknownKeyParseError() {
+    func testUnknownTopLevelKeyParseError() {
         let (config, errors) = parseConfig(
             """
             unknownKey = true
             enable-normalization-flatten-containers = false
-            """
+            """,
         )
         assertEquals(
             errors.descriptions,
-            ["unknownKey: Unknown key"]
+            ["unknownKey: Unknown top-level key"],
+        )
+        assertEquals(config.enableNormalizationFlattenContainers, false)
+    }
+
+    func testUnknownKeyParseError() {
+        let (config, errors) = parseConfig(
+            """
+            enable-normalization-flatten-containers = false
+            [gaps]
+                unknownKey = true
+            """,
+        )
+        assertEquals(
+            errors.descriptions,
+            ["gaps.unknownKey: Unknown key"],
         )
         assertEquals(config.enableNormalizationFlattenContainers, false)
     }
@@ -123,11 +138,11 @@ final class ConfigTest: XCTestCase {
         let (_, errors) = parseConfig(
             """
             enable-normalization-flatten-containers = 'true'
-            """
+            """,
         )
         assertEquals(
             errors.descriptions,
-            ["enable-normalization-flatten-containers: Expected type is \'bool\'. But actual type is \'string\'"]
+            ["enable-normalization-flatten-containers: Expected type is \'bool\'. But actual type is \'string\'"],
         )
     }
 
@@ -135,7 +150,7 @@ final class ConfigTest: XCTestCase {
         let (_, errors) = parseConfig("true")
         assertEquals(
             errors.descriptions,
-            ["Error while parsing key-value pair: encountered end-of-file (at line 1, column 5)"]
+            ["Error while parsing key-value pair: encountered end-of-file (at line 1, column 5)"],
         )
     }
 
@@ -162,7 +177,7 @@ final class ConfigTest: XCTestCase {
             [mode.main.binding]
             [mode.foo.binding]
                 alt-s = 'split horizontal'
-            """
+            """,
         )
         assertEquals(
             ["""
@@ -173,7 +188,7 @@ final class ConfigTest: XCTestCase {
 
                 My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.
                 """],
-            errors.descriptions
+            errors.descriptions,
         )
     }
 
@@ -191,7 +206,7 @@ final class ConfigTest: XCTestCase {
                 w7 = ['', 'main']
                 w8 = 0
                 workspace_name_x = '2'                          # Sequence number of the monitor (from left to right, 1-based indexing)
-            """
+            """,
         )
         assertEquals(
             parsed.workspaceToMonitorForceAssignment,
@@ -206,7 +221,7 @@ final class ConfigTest: XCTestCase {
                 "7": [.pattern("foo")!],
                 "w7": [.main],
                 "w8": [],
-            ]
+            ],
         )
         assertEquals([
             "workspace-to-monitor-force-assignment.w7[0]: Empty string is an illegal monitor description",
@@ -231,29 +246,29 @@ final class ConfigTest: XCTestCase {
                 run = ['move-node-to-workspace S', 'move-node-to-workspace W']
             [[on-window-detected]]
                 run = ['move-node-to-workspace S', 'layout h_tiles']
-            """
+            """,
         )
         assertEquals(parsed.onWindowDetected, [
             WindowDetectedCallback(
                 matcher: WindowDetectedCallbackMatcher(
                     appId: nil,
                     appNameRegexSubstring: nil,
-                    windowTitleRegexSubstring: nil
+                    windowTitleRegexSubstring: nil,
                 ),
                 checkFurtherCallbacks: true,
                 rawRun: [
                     LayoutCommand(args: LayoutCmdArgs(rawArgs: [], toggleBetween: [.floating])),
                     MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "W")),
-                ]
+                ],
             ),
             WindowDetectedCallback(
                 matcher: WindowDetectedCallbackMatcher(
                     appId: "com.apple.systempreferences",
                     appNameRegexSubstring: nil,
-                    windowTitleRegexSubstring: nil
+                    windowTitleRegexSubstring: nil,
                 ),
                 checkFurtherCallbacks: false,
-                rawRun: []
+                rawRun: [],
             ),
         ])
 
@@ -272,7 +287,7 @@ final class ConfigTest: XCTestCase {
             [[on-window-detected]]
                 if.app-name-regex-substring = '^system settings$'
                 run = []
-            """
+            """,
         )
         XCTAssertTrue(config.onWindowDetected.singleOrNil()!.matcher.appNameRegexSubstring != nil)
         assertEquals(errors, [])
@@ -294,7 +309,7 @@ final class ConfigTest: XCTestCase {
                 outer.bottom = 13
                 outer.top = [{ monitor."built-in" = 3 }, { monitor."secondary" = 4 }, 6]
                 outer.right = [{ monitor.2 = 7 }, 8]
-            """
+            """,
         )
         assertEquals(errors1, [])
         assertEquals(
@@ -303,9 +318,9 @@ final class ConfigTest: XCTestCase {
                 inner: .init(
                     vertical: .perMonitor(
                         [PerMonitorValue(description: .main, value: 1), PerMonitorValue(description: .secondary, value: 2)],
-                        default: 5
+                        default: 5,
                     ),
-                    horizontal: .constant(10)
+                    horizontal: .constant(10),
                 ),
                 outer: .init(
                     left: .constant(12),
@@ -315,11 +330,11 @@ final class ConfigTest: XCTestCase {
                             PerMonitorValue(description: .pattern("built-in")!, value: 3),
                             PerMonitorValue(description: .secondary, value: 4),
                         ],
-                        default: 6
+                        default: 6,
                     ),
-                    right: .perMonitor([PerMonitorValue(description: .sequenceNumber(2), value: 7)], default: 8)
-                )
-            )
+                    right: .perMonitor([PerMonitorValue(description: .sequenceNumber(2), value: 7)], default: 8),
+                ),
+            ),
         )
 
         let (_, errors2) = parseConfig(
@@ -327,7 +342,7 @@ final class ConfigTest: XCTestCase {
             [gaps]
                 inner.horizontal = [true]
                 inner.vertical = [{ foo.main = 1 }, { monitor = { foo = 2, bar = 3 } }, 1]
-            """
+            """,
         )
         assertEquals(errors2.descriptions, [
             "gaps.inner.horizontal: The last item in the array must be of type Int",
@@ -345,7 +360,7 @@ final class ConfigTest: XCTestCase {
 
             [mode.main.binding]
                 alt-unicorn = 'workspace wonderland'
-            """
+            """,
         )
         assertEquals(errors.descriptions, [])
         assertEquals(config.keyMapping, KeyMapping(preset: .qwerty, rawKeyNotationToKeyCode: [
@@ -360,7 +375,7 @@ final class ConfigTest: XCTestCase {
             [key-mapping.key-notation-to-key-code]
                 q = 'qw'
                 ' f' = 'f'
-            """
+            """,
         )
         assertEquals(errors1.descriptions, [
             "key-mapping.key-notation-to-key-code: ' f' is invalid key notation",
@@ -370,7 +385,7 @@ final class ConfigTest: XCTestCase {
         let (dvorakConfig, dvorakErrors) = parseConfig(
             """
             key-mapping.preset = 'dvorak'
-            """
+            """,
         )
         assertEquals(dvorakErrors, [])
         assertEquals(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
@@ -378,7 +393,7 @@ final class ConfigTest: XCTestCase {
         let (colemakConfig, colemakErrors) = parseConfig(
             """
             key-mapping.preset = 'colemak'
-            """
+            """,
         )
         assertEquals(colemakErrors, [])
         assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))

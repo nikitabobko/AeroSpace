@@ -1,0 +1,65 @@
+{
+  "AXActivationPoint" : "<AXValue 0x60000142c750> {value = x:-1.000000 y:1297.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 1,
+  "AXFrame" : "<AXValue 0x600000e22940> {value = x:0.000000 y:0.000000 w:2304.000000 h:1296.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 0,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x60000142c750> {pid=75417}",
+  "AXPosition" : "<AXValue 0x60000155c1e0> {value = x:0.000000 y:0.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+
+  ],
+  "AXSize" : "<AXValue 0x6000015847e0> {value = w:2304.000000 h:1296.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXDialog",
+  "AXTitle" : "Media viewer",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=4259, title=\"Media viewer\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=4259, title=\"Media viewer\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=4232, title=\"‎⁨redacted⁩ – (57469)\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x600001431620> {pid=75417}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Telegram",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=4259, title=\"Media viewer\", role=\"AXWindow\", subrole=\"AXDialog\")",
+      "AXUIElement(AxWindowId=4232, title=\"‎⁨redacted⁩ – (57469)\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.tdesktop.Telegram",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Telegram.app/Contents/MacOS/Telegram",
+  "Aero.App.version" : "5.15.4",
+  "Aero.App.versionShort" : "5.15.4",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 4259,
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxUiElementWindowType" : "dialog",
+  "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
+  "Aero.workspace" : "T"
+}

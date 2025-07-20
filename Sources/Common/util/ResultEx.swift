@@ -1,5 +1,5 @@
-public extension Result {
-    func getOrNil(appendErrorTo errors: inout [Failure]) -> Success? {
+extension Result {
+    public func getOrNil(appendErrorTo errors: inout [Failure]) -> Success? {
         switch self {
             case .success(let success):
                 return success
@@ -9,32 +9,32 @@ public extension Result {
         }
     }
 
-    func filter(_ failure: @autoclosure () -> Failure, _ predicate: (Success) -> Bool) -> Self {
+    public func filter(_ failure: @autoclosure () -> Failure, _ predicate: (Success) -> Bool) -> Self {
         flatMap { succ in predicate(succ) ? .success(succ) : .failure(failure()) }
     }
 
-    func getOrNil() -> Success? {
+    public func getOrNil() -> Success? {
         return switch self {
             case .success(let success): success
             case .failure: nil
         }
     }
 
-    func getOrNils() -> (Success?, Failure?) {
+    public func getOrNils() -> (Success?, Failure?) {
         return switch self {
             case .success(let success): (success, nil)
             case .failure(let failure): (nil, failure)
         }
     }
 
-    var errorOrNil: Failure? {
+    public var failureOrNil: Failure? {
         return switch self {
             case .success: nil
             case .failure(let f): f
         }
     }
 
-    var isSuccess: Bool {
+    public var isSuccess: Bool {
         switch self {
             case .success: true
             case .failure: false
@@ -42,14 +42,14 @@ public extension Result {
     }
 }
 
-public extension Result {
+extension Result {
     @discardableResult
-    func getOrDie(
+    public func getOrDie(
         _ msgPrefix: String = "",
         file: String = #fileID,
         line: Int = #line,
         column: Int = #column,
-        function: String = #function
+        function: String = #function,
     ) -> Success {
         switch self {
             case .success(let suc):

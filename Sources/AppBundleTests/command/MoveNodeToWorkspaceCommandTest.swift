@@ -7,7 +7,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
     override func setUp() async throws { setUpWorkspacesForTests() }
 
     func testParse() {
-        testParseCommandSucc("move-node-to-workspace next", MoveNodeToWorkspaceCmdArgs(target: .relative(true)))
+        testParseCommandSucc("move-node-to-workspace next", MoveNodeToWorkspaceCmdArgs(target: .relative(.next)))
         assertEquals(parseCommand("move-node-to-workspace --fail-if-noop next").errorOrNil, "--fail-if-noop is incompatible with (next|prev)")
     }
 

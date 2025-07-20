@@ -1,6 +1,6 @@
 public typealias StringLogicalSegments = [StringLogicalSegment]
-public extension StringLogicalSegments {
-    static func < (lhs: Self, rhs: Self) -> Bool {
+extension StringLogicalSegments {
+    public static func < (lhs: Self, rhs: Self) -> Bool {
         for (a, b) in zip(lhs, rhs) {
             if a < b {
                 return true
@@ -30,8 +30,8 @@ public enum StringLogicalSegment: Comparable, Equatable, Sendable {
     }
 }
 
-public extension String {
-    func toLogicalSegments() -> StringLogicalSegments {
+extension String {
+    public func toLogicalSegments() -> StringLogicalSegments {
         var currentSegment: String = ""
         var isPrevNumber: Bool = false // Initial value doesn't matter
         var result: [String] = []

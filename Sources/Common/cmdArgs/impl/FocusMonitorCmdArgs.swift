@@ -8,13 +8,13 @@ public struct FocusMonitorCmdArgs: CmdArgs {
         options: [
             "--wrap-around": trueBoolFlag(\.wrapAround),
         ],
-        arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)")]
+        arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs)],
     )
 
     public var wrapAround: Bool = false
     public var target: Lateinit<MonitorTarget> = .uninitialized
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
 public func parseFocusMonitorCmdArgs(_ args: [String]) -> ParsedCmd<FocusMonitorCmdArgs> {
@@ -29,33 +29,38 @@ func parseTarget(_ arg: String, _ nextArgs: inout [String]) -> Parsed<MonitorTar
         case "prev":
             return .success(.relative(.prev))
         case "left":
-            return .success(.directional(.left))
+            return .success(.direction(.left))
         case "down":
-            return .success(.directional(.down))
+            return .success(.direction(.down))
         case "up":
-            return .success(.directional(.up))
+            return .success(.direction(.up))
         case "right":
-            return .success(.directional(.right))
+            return .success(.direction(.right))
         default:
             let args: [String] = [arg] + nextArgs.allNextNonFlagArgs()
             return args.mapAllOrFailure(parseMonitorDescription).map { .patterns($0) }
     }
 }
 
-public enum NextPrev: Equatable, Sendable {
-    case next, prev
-}
-
 public enum MonitorTarget: Equatable, Sendable {
-    case directional(CardinalDirection)
+    case direction(CardinalDirection)
     case relative(NextPrev)
     case patterns([MonitorDescription])
 
     var isPatterns: Bool {
-        if case .patterns = self {
-            return true
-        } else {
-            return false
+        switch self {
+            case .patterns: true
+            default: false
+        }
+    }
+
+    static var casesExceptPatterns: [String] { CardinalDirection.cliArgsCases + NextPrev.cliArgsCases }
+    static var cases: [String] { casesExceptPatterns + ["<monitor-pattern>"] }
+
+    public var directionOrNil: CardinalDirection? {
+        switch self {
+            case .direction(let direction): direction
+            default: nil
         }
     }
 }

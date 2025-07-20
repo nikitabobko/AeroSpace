@@ -8,9 +8,9 @@ public struct BalanceSizesCmdArgs: CmdArgs {
         options: [
             "--workspace": optionalWorkspaceFlag(),
         ],
-        arguments: []
+        arguments: [],
     )
 
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 }

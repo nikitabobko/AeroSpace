@@ -44,7 +44,7 @@ class ErrorListenerCollector: BaseErrorListener {
         _ line: Int,
         _ charPositionInLine: Int,
         _ msg: String,
-        _ e: AnyObject?
+        _ e: AnyObject?,
     ) {
         let offendingToken = (offendingSymbol as? Token)?.getType()
         if offendingToken == TK.TRIPLE_QUOTE.rawValue {
@@ -73,7 +73,7 @@ extension ShellParser.CmdsContext {
                     let seq = [$0.0] + $0.1
                     return switch seq.count {
                         case 0: .failure("seq node: 0 children")
-                        case 1: .success(seq.first!)
+                        case 1: .success(seq.first.orDie())
                         default: .success(Shell.seq(seq))
                     }
                 }
@@ -184,7 +184,7 @@ extension ShellParser.DStringFragmentContext {
 private func binaryNode(
     _ op: (RawShell, RawShell) -> RawShell,
     _ a: ShellParser.CmdContext?,
-    _ b: ShellParser.CmdContext?
+    _ b: ShellParser.CmdContext?,
 ) -> Result<RawShell, String> {
     a.toTyped("binary node: nil child 0").combine { b.toTyped("binary node: nil child 1") }.map(op)
 }
@@ -206,11 +206,11 @@ extension Result where Success == ShellParser.CmdsContext, Failure == String {
     func toTyped() -> Result<RawShell, String> { flatMap { $0.toTyped() } }
 }
 
-private extension ShellParser.CmdContext? {
-    func toTyped(_ msg: String) -> Result<RawShell, String> { orFailure(msg).toTyped() }
+extension ShellParser.CmdContext? {
+    fileprivate func toTyped(_ msg: String) -> Result<RawShell, String> { orFailure(msg).toTyped() }
 }
-private extension ShellParser.CmdsContext? {
-    func toTyped(_ msg: String) -> Result<RawShell, String> { orFailure(msg).toTyped() }
+extension ShellParser.CmdsContext? {
+    fileprivate func toTyped(_ msg: String) -> Result<RawShell, String> { orFailure(msg).toTyped() }
 }
 
 struct CmdOut {
@@ -279,7 +279,7 @@ enum ShellString<T> {
     private static func _concatOptimized(
         _ fragments: [ShellString<T>],
         _ result: inout [ShellString<T>],
-        _ current: inout String
+        _ current: inout String,
     ) {
         for fragment in fragments {
             switch fragment {

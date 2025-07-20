@@ -50,7 +50,7 @@ public func dieT<T>(
                 ? "aerospace-runtime-error-recursion.txt"
                 : "aerospace-runtime-error.txt",
             title: "AeroSpace Runtime Error",
-            message: message
+            message: message,
         )
     }
     if !recursionDetectorDuringTermination {
@@ -110,7 +110,7 @@ public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(sep
     file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
-    function: String = #function
+    function: String = #function,
 ) -> Never {
     dieT(message, file: file, line: line, column: column, function: function)
 }
@@ -121,50 +121,43 @@ public func check(
     file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
-    function: String = #function
+    function: String = #function,
 ) {
     if !condition {
         die(message(), file: file, line: line, column: column, function: function)
     }
 }
 
-@inlinable public func tryCatch<T>(
-    file: String = #fileID,
-    line: Int = #line,
-    column: Int = #column,
-    function: String = #function,
-    body: () throws -> T
-) -> Result<T, Error> {
-    Result(catching: body)
-}
-
 public var isUnitTest: Bool { NSClassFromString("XCTestCase") != nil }
 
-public extension CaseIterable where Self: RawRepresentable, RawValue == String {
-    static var unionLiteral: String {
-        "(" + allCases.map(\.rawValue).joined(separator: "|") + ")"
-    }
+extension CaseIterable where Self: RawRepresentable, RawValue == String {
+    public static var cliArgsCases: [String] { allCases.map(\.rawValue) }
+    public static var unionLiteral: String { cliArgsCases.joinedCliArgs }
 }
 
-public extension Int {
-    func toDouble() -> Double { Double(self) }
+extension [String] {
+    public var joinedCliArgs: String { "(" + self.joined(separator: "|") + ")" }
+}
+
+extension Int {
+    public func toDouble() -> Double { Double(self) }
 }
 
 public func + <K, V>(lhs: [K: V], rhs: [K: V]) -> [K: V] {
     lhs.merging(rhs) { _, r in r }
 }
 
-public extension String {
-    func removePrefix(_ prefix: String) -> String {
+extension String {
+    public func removePrefix(_ prefix: String) -> String {
         hasPrefix(prefix) ? String(dropFirst(prefix.count)) : self
     }
 
-    func prependLines(_ prefix: String) -> String {
+    public func prependLines(_ prefix: String) -> String {
         split(separator: "\n").map { prefix + $0 }.joined(separator: "\n")
     }
 }
 
-public extension Bool {
+extension Bool {
     /// Implication
     /// | a     | b     | a.implies(b) |
     /// |-------|-------|--------------|
@@ -172,19 +165,19 @@ public extension Bool {
     /// | false | true  | true         |
     /// | true  | false | false        |
     /// | true  | true  | true         |
-    func implies(_ mustHold: @autoclosure () -> Bool) -> Bool { !self || mustHold() }
+    public func implies(_ mustHold: @autoclosure () -> Bool) -> Bool { !self || mustHold() }
 }
 
-public extension Double {
-    var squared: Double { self * self }
+extension Double {
+    public var squared: Double { self * self }
 }
 
-public extension Slice {
-    func toArray() -> [Base.Element] { Array(self) }
+extension Slice {
+    public func toArray() -> [Base.Element] { Array(self) }
 }
 
-public extension URL {
-    func open(with url: URL) {
+extension URL {
+    public func open(with url: URL) {
         NSWorkspace.shared.open([self], withApplicationAt: url, configuration: NSWorkspace.OpenConfiguration())
     }
 }

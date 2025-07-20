@@ -12,9 +12,9 @@ class GlobalObserver {
         Task { @MainActor in
             if !TrayMenuModel.shared.isEnabled { return }
             if notifName == NSWorkspace.didActivateApplicationNotification.rawValue {
-                runRefreshSession(.globalObserver(notifName), screenIsDefinitelyUnlocked: false, optimisticallyPreLayoutWorkspaces: true)
+                runRefreshSession(.globalObserver(notifName), optimisticallyPreLayoutWorkspaces: true)
             } else {
-                runRefreshSession(.globalObserver(notifName), screenIsDefinitelyUnlocked: false)
+                runRefreshSession(.globalObserver(notifName))
             }
         }
     }
@@ -29,7 +29,7 @@ class GlobalObserver {
                        w.macAppUnsafe.nsApp.isHidden,
                        // "Hide others" (cmd-alt-h) -> don't force focus
                        // "Hide app" (cmd-h) -> force focus
-                       MacApp.allAppsMap.values.filter({ $0.nsApp.isHidden }).count == 1
+                       MacApp.allAppsMap.values.count(where: { $0.nsApp.isHidden }) == 1
                     {
                         // Force focus
                         _ = w.focusWindow()
@@ -59,20 +59,19 @@ class GlobalObserver {
             //  The end of the callback calls refreshSession
             Task { @MainActor in
                 guard let token: RunSessionGuard = .isServerEnabled else { return }
-                resetClosedWindowsCache()
                 try await resetManipulatedWithMouseIfPossible()
                 let mouseLocation = mouseLocation
                 let clickedMonitor = mouseLocation.monitorApproximation
-                switch () {
+                switch true {
                     // Detect clicks on desktop of different monitors
-                    case _ where clickedMonitor.activeWorkspace != focus.workspace:
+                    case clickedMonitor.activeWorkspace != focus.workspace:
                         _ = try await runSession(.globalObserverLeftMouseUp, token) {
                             clickedMonitor.activeWorkspace.focusWorkspace()
                         }
                     // Detect close button clicks for unfocused windows. Yes, kAXUIElementDestroyedNotification is that unreliable
                     //  And trigger new window detection that could be delayed due to mouseDown event
                     default:
-                        runRefreshSession(.globalObserverLeftMouseUp, screenIsDefinitelyUnlocked: true)
+                        runRefreshSession(.globalObserverLeftMouseUp)
                 }
             }
         }

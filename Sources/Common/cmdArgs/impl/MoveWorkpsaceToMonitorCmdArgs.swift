@@ -10,16 +10,12 @@ public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
             "--workspace": optionalWorkspaceFlag(),
         ],
         arguments: [
-            newArgParser(
-                \.target,
-                parseTarget,
-                mandatoryArgPlaceholder: "(left|down|up|right|next|prev|<monitor-pattern>)"
-            ),
-        ]
+            newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs),
+        ],
     )
 
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
     public var wrapAround: Bool = false
     public var target: Lateinit<MonitorTarget> = .uninitialized
 }

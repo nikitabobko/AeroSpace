@@ -10,7 +10,7 @@ func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeM
     Task { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
-            runRefreshSession(.ax(notif), screenIsDefinitelyUnlocked: false)
+            runRefreshSession(.ax(notif))
             return
         }
         moveWithMouseTask?.cancel()
@@ -57,15 +57,15 @@ private func moveTilingWindow(_ window: Window) {
     if targetWorkspace != window.nodeWorkspace { // Move window to a different monitor
         let index: Int = if let swapTarget, let parent = swapTarget.parent as? TilingContainer, let targetRect = swapTarget.lastAppliedLayoutPhysicalRect {
             mouseLocation.getProjection(parent.orientation) >= targetRect.center.getProjection(parent.orientation)
-                ? swapTarget.ownIndex + 1
-                : swapTarget.ownIndex
+                ? swapTarget.ownIndex.orDie() + 1
+                : swapTarget.ownIndex.orDie()
         } else {
             0
         }
         window.bind(
             to: swapTarget?.parent ?? targetWorkspace.rootTilingContainer,
             adaptiveWeight: WEIGHT_AUTO,
-            index: index
+            index: index,
         )
     } else if let swapTarget {
         swapWindows(window, swapTarget)
@@ -75,8 +75,10 @@ private func moveTilingWindow(_ window: Window) {
 @MainActor
 func swapWindows(_ window1: Window, _ window2: Window) {
     if window1 == window2 { return }
+    guard let index1 = window1.ownIndex else { return }
+    guard let index2 = window1.ownIndex else { return }
 
-    if window1.ownIndex < window2.ownIndex {
+    if index1 < index2 {
         let binding2 = window2.unbindFromParent()
         let binding1 = window1.unbindFromParent()
 

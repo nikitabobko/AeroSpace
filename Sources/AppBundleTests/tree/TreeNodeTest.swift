@@ -56,7 +56,7 @@ final class TreeNodeTest: XCTestCase {
         workspace.normalizeContainers()
         assertEquals(
             .h_tiles([.window(0), .window(1)]),
-            workspace.rootTilingContainer.layoutDescription
+            workspace.rootTilingContainer.layoutDescription,
         )
     }
 

@@ -1,0 +1,67 @@
+// :set window.hide_decoration
+{
+  "AXActivationPoint" : "<AXValue 0x600000de1c80> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x6000016e3a40> {value = x:50.000000 y:50.000000 w:800.000000 h:600.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 0,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600000d94060> {pid=1424}",
+  "AXPosition" : "<AXValue 0x600000de1c80> {value = x:50.000000 y:50.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x600000de2880> {pid=1424}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionDescription = \"Top Level Navigator\";\n    SectionObject = \"<AXUIElement 0x600000de2cd0> {pid=1424}\";\n    SectionUniqueID = AXTopLevelNavigator;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x600000de2820> {pid=1424}\";\n    SectionUniqueID = AXContainer;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600000de0de0> {value = w:800.000000 h:600.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXDialog",
+  "AXTitle" : "qutebrowser quickstart | qutebrowser - qutebrowser",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=209, title=\"qutebrowser quickstart | qutebrowser\", role=\"AXGroup\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=209, title=\"qutebrowser quickstart | qutebrowser - qutebrowser\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : null,
+    "AXMenuBar" : "<AXUIElement 0x600000de14d0> {pid=1424}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "qutebrowser",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=209, title=\"qutebrowser quickstart | qutebrowser - qutebrowser\", role=\"AXWindow\", subrole=\"AXDialog\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "org.qutebrowser.qutebrowser",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Applications/qutebrowser.app/Contents/MacOS/qutebrowser",
+  "Aero.App.version" : "3.5.1",
+  "Aero.App.versionShort" : "3.5.1",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 209,
+  "Aero.AxUiElementWindowType" : "window",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
+  "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
+  "Aero.workspace" : "M"
+}

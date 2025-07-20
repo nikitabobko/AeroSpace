@@ -3,6 +3,7 @@ import Common
 
 struct ReloadConfigCommand: Command {
     let args: ReloadConfigCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         var stdout = ""
@@ -22,7 +23,7 @@ struct ReloadConfigCommand: Command {
 @MainActor func reloadConfig(
     args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []),
     forceConfigUrl: URL? = nil,
-    stdout: inout String
+    stdout: inout String,
 ) -> Bool {
     switch readConfig(forceConfigUrl: forceConfigUrl) {
         case .success(let (parsedConfig, url)):
@@ -32,16 +33,15 @@ struct ReloadConfigCommand: Command {
                 configUrl = url
                 activateMode(activeMode)
                 syncStartAtLogin()
+                MessageModel.shared.message = nil
             }
             return true
         case .failure(let msg):
             stdout.append(msg)
             if !args.noGui {
-                showMessageInGui(
-                    filenameIfConsoleApp: nil,
-                    title: "AeroSpace Config Error",
-                    message: msg
-                )
+                Task { @MainActor in
+                    MessageModel.shared.message = Message(description: "AeroSpace Config Error", body: msg)
+                }
             }
             return false
     }

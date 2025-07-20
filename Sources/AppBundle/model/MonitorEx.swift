@@ -7,7 +7,7 @@ extension Monitor {
             topLeftX: topLeft.x + gaps.outer.left.toDouble(),
             topLeftY: topLeft.y + gaps.outer.top.toDouble(),
             width: visibleRect.width - gaps.outer.left.toDouble() - gaps.outer.right.toDouble(),
-            height: visibleRect.height - gaps.outer.top.toDouble() - gaps.outer.bottom.toDouble()
+            height: visibleRect.height - gaps.outer.top.toDouble() - gaps.outer.bottom.toDouble(),
         )
     }
 

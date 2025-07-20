@@ -4,12 +4,20 @@ body:
   - type: markdown
     attributes:
       value: |
-        Unfortunately, AeroSpace project doesn't openly accept Issues. See: https://github.com/nikitabobko/AeroSpace/issues/947
+        AeroSpace project doesn't accept Issues directly. Please prefer GitHub Discussions. See: https://github.com/nikitabobko/AeroSpace/issues/947
   - type: checkboxes
     id: checkbox
     attributes:
-      label: '_'
+      label: 'Sanity check'
       options:
         - label: |
             I read https://github.com/nikitabobko/AeroSpace/issues/947
           required: true
+  - type: textarea
+    id: body
+    attributes:
+      label: Body
+      value: |
+        YOUR ISSUE WILL BE IMMEDIATELY CLOSED BY BOT, DON'T OPEN NEW ISSUES DIRECTLY, USE DISCUSSIONS INSTEAD
+    validations:
+      required: true

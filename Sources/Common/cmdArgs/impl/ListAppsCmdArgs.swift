@@ -17,19 +17,19 @@ public struct ListAppsCmdArgs: CmdArgs {
         conflictingOptions: [
             ["--count", "--format"],
             ["--count", "--json"],
-        ]
+        ],
     )
 
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
     public var macosHidden: Bool?
     public var _format: [StringInterToken] = []
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
 }
 
-public extension ListAppsCmdArgs {
-    var format: [StringInterToken] {
+extension ListAppsCmdArgs {
+    public var format: [StringInterToken] {
         _format.isEmpty
             ? [
                 .interVar("app-pid"), .interVar("right-padding"), .literal(" | "),

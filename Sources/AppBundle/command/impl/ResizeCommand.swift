@@ -3,6 +3,7 @@ import Common
 
 struct ResizeCommand: Command { // todo cover with tests
     let args: ResizeCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
@@ -11,32 +12,30 @@ struct ResizeCommand: Command { // todo cover with tests
             .filter { ($0.parent as? TilingContainer)?.layout == .tiles }
             ?? []
 
-        let orientation: Orientation
-        let parent: TilingContainer
-        let node: TreeNode
+        let orientation: Orientation?
+        let parent: TilingContainer?
+        let node: TreeNode?
         switch args.dimension.val {
             case .width:
                 orientation = .h
-                guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return false }
-                node = first
-                parent = first.parent as! TilingContainer
+                node = candidates.first(where: { ($0.parent as? TilingContainer)?.orientation == orientation })
+                parent = node?.parent as? TilingContainer
             case .height:
                 orientation = .v
-                guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return false }
-                node = first
-                parent = first.parent as! TilingContainer
+                node = candidates.first(where: { ($0.parent as? TilingContainer)?.orientation == orientation })
+                parent = node?.parent as? TilingContainer
             case .smart:
-                guard let first = candidates.first else { return false }
-                node = first
-                parent = first.parent as! TilingContainer
-                orientation = parent.orientation
+                node = candidates.first
+                parent = node?.parent as? TilingContainer
+                orientation = parent?.orientation
             case .smartOpposite:
-                guard let _orientation = (candidates.first?.parent as? TilingContainer)?.orientation.opposite else { return false }
-                orientation = _orientation
-                guard let first = candidates.first(where: { ($0.parent as! TilingContainer).orientation == orientation }) else { return false }
-                node = first
-                parent = first.parent as! TilingContainer
+                orientation = (candidates.first?.parent as? TilingContainer)?.orientation.opposite
+                node = candidates.first(where: { ($0.parent as? TilingContainer)?.orientation == orientation })
+                parent = node?.parent as? TilingContainer
         }
+        guard let parent else { return io.err("resize command doesn't support floating windows yet https://github.com/nikitabobko/AeroSpace/issues/9") }
+        guard let orientation else { return false }
+        guard let node else { return false }
         let diff: CGFloat = switch args.units.val {
             case .set(let unit): CGFloat(unit) - node.getWeight(orientation)
             case .add(let unit): CGFloat(unit)

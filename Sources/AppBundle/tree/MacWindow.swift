@@ -3,8 +3,7 @@ import Common
 
 final class MacWindow: Window {
     let macApp: MacApp
-    // todo take into account monitor proportions
-    private var prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect: CGPoint?
+    private var prevUnhiddenProportionalPositionInsideWorkspaceRect: CGPoint?
 
     @MainActor
     private init(_ id: UInt32, _ actor: MacApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
@@ -26,7 +25,7 @@ final class MacWindow: Window {
             isStartup
                 ? (rect?.center.monitorApproximation ?? mainMonitor).activeWorkspace
                 : focus.workspace,
-            window: nil
+            window: nil,
         )
 
         // atomic synchronous section
@@ -63,6 +62,11 @@ final class MacWindow: Window {
         try await macApp.isDialogHeuristic(windowId)
     }
 
+    @MainActor
+    func getAxUiElementWindowType() async throws -> AxUiElementWindowType {
+        try await macApp.getAxUiElementWindowType(windowId)
+    }
+
     @MainActor // todo swift is stupid
     func dumpAxInfo() async throws -> [String: Json] {
         try await macApp.dumpWindowAxInfo(windowId: windowId)
@@ -83,7 +87,7 @@ final class MacWindow: Window {
         if MacWindow.allWindowsMap.removeValue(forKey: windowId) == nil {
             return
         }
-        if !skipClosedWindowsCache { cacheClosedWindowIfNeeded(window: self) }
+        if !skipClosedWindowsCache { cacheClosedWindowIfNeeded() }
         let parent = unbindFromParent().parent
         let deadWindowWorkspace = parent.nodeWorkspace
         let focus = focus
@@ -120,16 +124,19 @@ final class MacWindow: Window {
         macApp.closeAndUnregisterAxWindow(windowId)
     }
 
+    // todo it's part of the window layout and should be moved to layoutRecursive.swift
     @MainActor
     func hideInCorner(_ corner: OptimalHideCorner) async throws {
         guard let nodeMonitor else { return }
         // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent
         // `hideEmulation` calls
         if !isHiddenInCorner {
-            guard let topLeftCorner = try await getAxTopLeftCorner() else { return }
-            guard let nodeWorkspace else { return } // hiding only makes sense for workspace windows
-            prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect =
-                topLeftCorner - nodeWorkspace.workspaceMonitor.rect.topLeftCorner
+            guard let windowRect = try await getAxRect() else { return }
+            let topLeftCorner = windowRect.topLeftCorner
+            let monitorRect = windowRect.center.monitorApproximation.rect // Similar to layoutFloatingWindow. Non idempotent
+            let absolutePoint = topLeftCorner - monitorRect.topLeftCorner
+            prevUnhiddenProportionalPositionInsideWorkspaceRect =
+                CGPoint(x: absolutePoint.x / monitorRect.width, y: absolutePoint.y / monitorRect.height)
         }
         let p: CGPoint
         switch corner {
@@ -150,7 +157,7 @@ final class MacWindow: Window {
 
     @MainActor
     func unhideFromCorner() {
-        guard let prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect else { return }
+        guard let prevUnhiddenProportionalPositionInsideWorkspaceRect else { return }
         guard let nodeWorkspace else { return } // hiding only makes sense for workspace windows
         guard let parent else { return }
 
@@ -158,16 +165,21 @@ final class MacWindow: Window {
             // Just a small optimization to avoid unnecessary AX calls for non floating windows
             // Tiling windows should be unhidden with layoutRecursive anyway
             case .floatingWindow:
-                setAxTopLeftCorner(nodeWorkspace.workspaceMonitor.rect.topLeftCorner + prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect)
+                let workspaceRect = nodeWorkspace.workspaceMonitor.rect
+                let pointInsideWorkspace = CGPoint(
+                    x: workspaceRect.width * prevUnhiddenProportionalPositionInsideWorkspaceRect.x,
+                    y: workspaceRect.height * prevUnhiddenProportionalPositionInsideWorkspaceRect.y,
+                )
+                setAxTopLeftCorner(workspaceRect.topLeftCorner + pointInsideWorkspace)
             case .macosNativeFullscreenWindow, .macosNativeHiddenAppWindow, .macosNativeMinimizedWindow,
                  .macosPopupWindow, .tiling, .rootTilingContainer, .shimContainerRelation: break
         }
 
-        self.prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect = nil
+        self.prevUnhiddenProportionalPositionInsideWorkspaceRect = nil
     }
 
     override var isHiddenInCorner: Bool {
-        prevUnhiddenEmulationPositionRelativeToWorkspaceAssignedRect != nil
+        prevUnhiddenProportionalPositionInsideWorkspaceRect != nil
     }
 
     @MainActor // todo swift is stupid
@@ -214,13 +226,11 @@ extension Window {
 // The function is private because it's unsafe. It leaves the window in unbound state
 @MainActor // todo swift is stupid
 private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace, window: Window?) async throws -> BindingData {
-    if try await !macApp.isWindowHeuristic(windowId) {
-        return BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+    switch try await macApp.getAxUiElementWindowType(windowId) {
+        case .popup: BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+        case .dialog: BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+        case .window: unbindAndGetBindingDataForNewTilingWindow(workspace, window: window)
     }
-    if try await macApp.isDialogHeuristic(windowId) {
-        return BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-    }
-    return unbindAndGetBindingDataForNewTilingWindow(workspace, window: window)
 }
 
 // The function is private because it's unsafe. It leaves the window in unbound state
@@ -232,13 +242,13 @@ private func unbindAndGetBindingDataForNewTilingWindow(_ workspace: Workspace, w
         return BindingData(
             parent: tilingParent,
             adaptiveWeight: WEIGHT_AUTO,
-            index: mruWindow.ownIndex + 1
+            index: mruWindow.ownIndex.orDie() + 1,
         )
     } else {
         return BindingData(
             parent: workspace.rootTilingContainer,
             adaptiveWeight: WEIGHT_AUTO,
-            index: INDEX_BIND_LAST
+            index: INDEX_BIND_LAST,
         )
     }
 }

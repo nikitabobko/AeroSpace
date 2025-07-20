@@ -631,7 +631,7 @@ macOS provides an accessibility API for identifying dialog windows, but many app
 
 === Heuristic rules
 
-* Windows without a fullscreen button are treated as dialogs, excluding terminal apps (e.g. WezTerm, Alacritty, iTerm2)
+* Windows without a fullscreen button (NB! fullscreen button and maximize button are different buttons) are treated as dialogs, excluding terminal apps (e.g. WezTerm, Alacritty, iTerm2)
 * Dialogs are floated by default
 
 If a window isn't recognized correctly, you're welcome to contribute a fix. Hardcoding special handling for popular apps is acceptable and what AeroSpace already does. See the `isDialogHeuristic` function in the source code.

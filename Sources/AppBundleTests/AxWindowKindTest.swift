@@ -4,22 +4,33 @@ import XCTest
 
 final class AxWindowKindTest: XCTestCase {
     func test() throws {
-        for file in try FileManager.default.contentsOfDirectory(at: projectRoot.appending(path: "./axDumps"), includingPropertiesForKeys: nil) {
-            let rawJson = try JSONSerialization.jsonObject(with: Data.init(contentsOf: file), options: [.json5Allowed]) as! [String: Any]
-            let json = Json.newOrDie(rawJson).asDictOrDie
-            let app = json["Aero.AXApp"]!.asDictOrDie
-            let appBundleId = rawJson["Aero.App.appBundleId"] as? String
-            assertEquals(
-                json.isWindowHeuristic(axApp: app, appBundleId: appBundleId),
-                rawJson["Aero.isWindowHeuristic"] as? Bool ?? dieT(),
-                additionalMsg: "isWindowHeuristic doesn't match for \(file)",
-            )
-            assertEquals(
-                json.isDialogHeuristic(appBundleId: appBundleId),
-                rawJson["Aero.isDialogHeuristic"] as? Bool ?? dieT(),
-                additionalMsg: "isDialogHeuristic doesn't match for \(file)",
-            )
+        try checkAxDumpsRecursive(projectRoot.appending(path: "./axDumps"))
+    }
+}
+
+func checkAxDumpsRecursive(_ dir: URL) throws {
+    for file in try FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil) {
+        if file.isDirectory {
+            try checkAxDumpsRecursive(file)
+            continue
         }
+        if file.pathExtension == "md" { continue }
+
+        let rawJson = try JSONSerialization.jsonObject(with: Data.init(contentsOf: file), options: [.json5Allowed]) as! [String: Any]
+        let json = Json.newOrDie(rawJson).asDictOrDie
+        let app = json["Aero.AXApp"]!.asDictOrDie
+        let appBundleId = rawJson["Aero.App.appBundleId"] as? String
+        let activationPolicy: NSApplication.ActivationPolicy = .from(string: rawJson["Aero.App.nsApp.activationPolicy"] as! String)
+        assertEquals(
+            json.getWindowType(axApp: app, appBundleId: appBundleId, activationPolicy),
+            AxUiElementWindowType(rawValue: rawJson["Aero.AxUiElementWindowType"] as? String ?? dieT()),
+            additionalMsg: "\(file.path()):0:0: AxUiElementWindowType doesn't match",
+        )
+        assertEquals(
+            json.isDialogHeuristic(appBundleId: appBundleId),
+            rawJson["Aero.AxUiElementWindowType_isDialogHeuristic"] as? Bool ?? dieT(),
+            additionalMsg: "\(file.path()):0:0: AxUiElementWindowType_isDialogHeuristic doesn't match",
+        )
     }
 }
 
@@ -47,5 +58,22 @@ extension [String: Json]: AxUiElementMock {
         } else {
             return windowId as? UInt32 ?? dieT()
         }
+    }
+}
+
+extension NSApplication.ActivationPolicy {
+    static func from(string: String) -> NSApplication.ActivationPolicy {
+        switch string {
+            case "regular": .regular
+            case "accessory": .accessory
+            case "prohibited": .prohibited
+            default: dieT("Unknown ActivationPolicy \(string)")
+        }
+    }
+}
+
+extension URL {
+    var isDirectory: Bool {
+        (try? resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory == true
     }
 }

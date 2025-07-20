@@ -1,7 +1,14 @@
 import AppKit
 import Common
 
-func dumpAx(_ ax: AXUIElement, _ kind: AxKind) -> [String: Json] {
+func dumpAxRecursive(_ ax: AXUIElement, _ kind: AxKind, recursionDepth: Int = 0) -> [String: Json] {
+    if recursionDepth > 5 {
+        return [
+            "dumpAxRecursive infinite recursion": .bool(true),
+            kAXAeroSynthetic: .bool(true),
+        ]
+    }
+    let recursionDepth = recursionDepth + 1
     var result: [String: Json] = [:]
     var ignored: [String] = []
     for key: String in ax.attrs.sortedBy({ priorityAx.contains($0) ? 0 : 1 }) {
@@ -10,7 +17,7 @@ func dumpAx(_ ax: AXUIElement, _ kind: AxKind) -> [String: Json] {
         if globalIgnore.contains(key) || kindSpecificIgnore[kind]?.contains(key) == true {
             ignored.append(key)
         } else {
-            result[key] = prettyValue(raw as Any?)
+            result[key] = prettyValue(raw as Any?, recursionDepth: recursionDepth)
         }
     }
     if !ignored.isEmpty {
@@ -25,9 +32,9 @@ enum AxKind: Hashable {
     case app
 }
 
-private func prettyValue(_ value: Any?) -> Json {
+private func prettyValue(_ value: Any?, recursionDepth: Int) -> Json {
     if let arr = value as? [Any?] {
-        return .array(arr.map(prettyValue))
+        return .array(arr.map { prettyValue($0, recursionDepth: recursionDepth) })
     }
     if let value = value as? Int {
         return .int(value)
@@ -41,7 +48,7 @@ private func prettyValue(_ value: Any?) -> Json {
     if let value {
         let ax = value as! AXUIElement
         if ax.get(Ax.roleAttr) == kAXButtonRole {
-            return .dict(dumpAx(ax, .button))
+            return .dict(dumpAxRecursive(ax, .button, recursionDepth: recursionDepth))
         }
         if let windowId = ax.containingWindowId() {
             let title = ax.get(Ax.titleAttr)?.doubleQuoted ?? "nil"
@@ -54,8 +61,8 @@ private func prettyValue(_ value: Any?) -> Json {
     return .null
 }
 
-private extension AXUIElement {
-    var attrs: [String] {
+extension AXUIElement {
+    fileprivate var attrs: [String] {
         var rawArray: CFArray?
         AXUIElementCopyAttributeNames(self, &rawArray)
         return rawArray as? [String] ?? []
@@ -65,6 +72,7 @@ private extension AXUIElement {
 private let globalIgnore: Set<String> = [
     "AXChildren", // too verbose
     "AXChildrenInNavigationOrder", // too verbose
+    "AXFocusableAncestor", // infinite recursion
     kAXHelpAttribute, // localized - not helpful
     kAXRoleDescriptionAttribute, // localized - not helpful
 ]

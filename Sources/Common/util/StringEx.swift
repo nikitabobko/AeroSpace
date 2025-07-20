@@ -2,22 +2,22 @@ public typealias Parsed<T> = Result<T, String>
 extension String: @retroactive Error {} // Make it possible to use String in Result. todo migrate to self written Result monad
 extension Array: @retroactive Error where Element: Error {} // Make it possible to use [String] in Result. todo migrate to self written Result monad
 
-public extension String {
-    func trim() -> String {
+extension String {
+    public func trim() -> String {
         self.trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
-    func prefixLines(with: String) -> String {
+    public func prefixLines(with: String) -> String {
         split(separator: "\n", omittingEmptySubsequences: false).map { with + $0 }.joined(separator: "\n")
     }
 
-    func quoted(with char: String) -> String { char + self + char }
-    var singleQuoted: String { "'" + self + "'" }
-    var doubleQuoted: String { "\"" + self + "\"" }
+    public func quoted(with char: String) -> String { char + self + char }
+    public var singleQuoted: String { "'" + self + "'" }
+    public var doubleQuoted: String { "\"" + self + "\"" }
 }
 
-public extension [String] {
-    func joinErrors() -> String { // todo reuse in config parsing?
+extension [String] {
+    public func joinErrors() -> String { // todo reuse in config parsing?
         map { (error: String) -> String in
             error.split(separator: "\n").enumerated()
                 .map { (i, line) in
@@ -29,11 +29,34 @@ public extension [String] {
         }
         .joined(separator: "\n")
     }
+
+    public func joinTruncating(separator: String, length maxLength: Int, trailing: String = "…") -> String {
+        if isEmpty {
+            return ""
+        }
+        var remainingLen = maxLength
+        let separatorCount = separator.count
+        var result: String = first.orDie()
+        for _elem in self.dropFirst() {
+            let elemCount = separatorCount + _elem.count
+            if remainingLen < elemCount / 2 {
+                return result + separator + trailing
+            }
+            let elem = separator + _elem
+            if elemCount < remainingLen {
+                result += elem
+                remainingLen -= elemCount
+            } else {
+                return result + elem.prefix(remainingLen) + trailing
+            }
+        }
+        return result
+    }
 }
 
-public extension [[String]] {
-    func toPaddingTable(columnSeparator: String = " | ") -> [String] {
-        let pads: [Int] = transposed().map { column in column.map { $0.count }.max()! }
+extension [[String]] {
+    public func toPaddingTable(columnSeparator: String = " | ") -> [String] {
+        let pads: [Int] = transposed().map { column in column.map { $0.count }.max().orDie() }
         return self.map { (row: [String]) in
             zip(row.enumerated(), pads)
                 .map { (elem: (Int, String), pad: Int) in
@@ -44,16 +67,16 @@ public extension [[String]] {
     }
 }
 
-public extension Array { // todo move to ArrayEx.swift
-    func transposed<T>() -> [[T]] where Self.Element == [T] {
+extension Array { // todo move to ArrayEx.swift
+    public func transposed<T>() -> [[T]] where Self.Element == [T] {
         if isEmpty {
             return []
         }
         let table: [[T]] = self
         var result: [[T]] = []
         for columnIndex in 0... {
-            if columnIndex < table.first!.count {
-                result += [table.map { row in row[columnIndex] }]
+            if columnIndex < table.first.orDie().count {
+                result += [table.map { row in row.getOrNil(atIndex: columnIndex).orDie() }]
             } else {
                 break
             }
@@ -62,8 +85,8 @@ public extension Array { // todo move to ArrayEx.swift
     }
 }
 
-public extension String {
-    func interpolate(with variables: [String: String], interpolationChar: Character = "$") -> Result<String, [String]> {
+extension String {
+    public func interpolate(with variables: [String: String], interpolationChar: Character = "$") -> Result<String, [String]> {
         interpolationTokens()
             .mapError { [$0] }
             .flatMap { tokens in
@@ -80,7 +103,7 @@ public extension String {
             .map { $0.joined(separator: "") }
     }
 
-    func interpolationTokens(interpolationChar: Character = "$") -> Result<[StringInterToken], String> {
+    public func interpolationTokens(interpolationChar: Character = "$") -> Result<[StringInterToken], String> {
         var mode: InterpolationParserState = .stringLiteral
         var result: [StringInterToken] = []
         var literal: String = ""

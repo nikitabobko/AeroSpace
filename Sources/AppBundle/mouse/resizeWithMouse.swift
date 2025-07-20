@@ -10,7 +10,7 @@ func resizedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     Task { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
-            runRefreshSession(.ax(notif), screenIsDefinitelyUnlocked: false)
+            runRefreshSession(.ax(notif))
             return
         }
         resizeWithMouseTask?.cancel()
@@ -30,7 +30,7 @@ func resetManipulatedWithMouseIfPossible() async throws {
         for workspace in Workspace.all {
             workspace.resetResizeWeightBeforeResizeRecursive()
         }
-        runRefreshSession(.resetManipulatedWithMouse, screenIsDefinitelyUnlocked: true, optimisticallyPreLayoutWorkspaces: true)
+        runRefreshSession(.resetManipulatedWithMouse, optimisticallyPreLayoutWorkspaces: true)
     }
 }
 
@@ -52,14 +52,14 @@ private func resizeWithMouse(_ window: Window) async throws { // todo cover with
             let (uParent, uOwnIndex) = window.closestParent(hasChildrenInDirection: .up, withLayout: .tiles) ?? (nil, nil)
             let (rParent, rOwnIndex) = window.closestParent(hasChildrenInDirection: .right, withLayout: .tiles) ?? (nil, nil)
             let table: [(CGFloat, TilingContainer?, Int?, Int?)] = [
-                (lastAppliedLayoutRect.minX - rect.minX, lParent, 0,                          lOwnIndex),               // Horizontal, to the left of the window
-                (rect.maxY - lastAppliedLayoutRect.maxY, dParent, dOwnIndex?.lets { $0 + 1 }, dParent?.children.count), // Vertical, to the down of the window
-                (lastAppliedLayoutRect.minY - rect.minY, uParent, 0,                          uOwnIndex),               // Vertical, to the up of the window
-                (rect.maxX - lastAppliedLayoutRect.maxX, rParent, rOwnIndex?.lets { $0 + 1 }, rParent?.children.count), // Horizontal, to the right of the window
+                (lastAppliedLayoutRect.minX - rect.minX, lParent, 0,                        lOwnIndex),               // Horizontal, to the left of the window
+                (rect.maxY - lastAppliedLayoutRect.maxY, dParent, dOwnIndex.map { $0 + 1 }, dParent?.children.count), // Vertical, to the down of the window
+                (lastAppliedLayoutRect.minY - rect.minY, uParent, 0,                        uOwnIndex),               // Vertical, to the up of the window
+                (rect.maxX - lastAppliedLayoutRect.maxX, rParent, rOwnIndex.map { $0 + 1 }, rParent?.children.count), // Horizontal, to the right of the window
             ]
             for (diff, parent, startIndex, pastTheEndIndex) in table {
                 if let parent, let startIndex, let pastTheEndIndex, pastTheEndIndex - startIndex > 0 && abs(diff) > 5 { // 5 pixels should be enough to fight with accumulated floating precision error
-                    let siblingDiff = diff.div(pastTheEndIndex - startIndex)!
+                    let siblingDiff = diff.div(pastTheEndIndex - startIndex).orDie()
                     let orientation = parent.orientation
 
                     window.parentsWithSelf.lazy
@@ -78,16 +78,16 @@ private func resizeWithMouse(_ window: Window) async throws { // todo cover with
     }
 }
 
-private extension TreeNode {
+extension TreeNode {
     @MainActor
-    func getWeightBeforeResize(_ orientation: Orientation) -> CGFloat {
+    fileprivate func getWeightBeforeResize(_ orientation: Orientation) -> CGFloat {
         let currentWeight = getWeight(orientation) // Check assertions
         return getUserData(key: adaptiveWeightBeforeResizeWithMouseKey)
             ?? (lastAppliedLayoutVirtualRect?.getDimension(orientation) ?? currentWeight)
             .also { putUserData(key: adaptiveWeightBeforeResizeWithMouseKey, data: $0) }
     }
 
-    func resetResizeWeightBeforeResizeRecursive() {
+    fileprivate func resetResizeWeightBeforeResizeRecursive() {
         cleanUserData(key: adaptiveWeightBeforeResizeWithMouseKey)
         for child in children {
             child.resetResizeWeightBeforeResizeRecursive()

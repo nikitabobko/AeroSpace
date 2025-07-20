@@ -3,6 +3,7 @@ import Common
 
 struct JoinWithCommand: Command {
     let args: JoinWithCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         let direction = args.direction.val
@@ -20,7 +21,7 @@ struct JoinWithCommand: Command {
             adaptiveWeight: prevBinding.adaptiveWeight,
             parent.orientation.opposite,
             .tiles,
-            index: prevBinding.index
+            index: prevBinding.index,
         )
         currentWindow.unbindFromParent()
 

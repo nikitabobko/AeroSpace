@@ -8,9 +8,9 @@ public struct DebugWindowsCmdArgs: CmdArgs {
         options: [
             "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32)),
         ],
-        arguments: []
+        arguments: [],
     )
 
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 }

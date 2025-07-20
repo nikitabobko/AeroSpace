@@ -17,26 +17,32 @@ public class TrayMenuModel: ObservableObject {
 @MainActor func updateTrayText() {
     let sortedMonitors = sortedMonitors
     let focus = focus
-    TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first?.lets { "[\($0.uppercased())] " } ?? "") +
+    TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "[\($0.uppercased())] " } ?? "") +
         sortedMonitors
         .map {
             ($0.activeWorkspace == focus.workspace && sortedMonitors.count > 1 ? "*" : "") + $0.activeWorkspace.name
         }
         .joined(separator: " │ ")
     TrayMenuModel.shared.workspaces = Workspace.all.map {
-        let monitor = $0.isVisible || !$0.isEffectivelyEmpty ? " - \($0.workspaceMonitor.name)" : ""
+        let apps = $0.allLeafWindowsRecursive.map { $0.app.name?.takeIf { !$0.isEmpty } }.filterNotNil().toSet()
+        let dash = " - "
+        let suffix = switch true {
+            case !apps.isEmpty: dash + apps.sorted().joinTruncating(separator: ", ", length: 25)
+            case $0.isVisible: dash + $0.workspaceMonitor.name
+            default: ""
+        }
         return WorkspaceViewModel(
             name: $0.name,
-            suffix: monitor,
+            suffix: suffix,
             isFocused: focus.workspace == $0,
             isEffectivelyEmpty: $0.isEffectivelyEmpty,
-            isVisible: $0.isVisible
+            isVisible: $0.isVisible,
         )
     }
     var items = sortedMonitors.map {
         TrayItem(type: .workspace, name: $0.activeWorkspace.name, isActive: $0.activeWorkspace == focus.workspace)
     }
-    let mode = activeMode?.takeIf { $0 != mainModeId }?.first?.lets { TrayItem(type: .mode, name: $0.uppercased(), isActive: true) }
+    let mode = activeMode?.takeIf { $0 != mainModeId }?.first.map { TrayItem(type: .mode, name: $0.uppercased(), isActive: true) }
     if let mode {
         items.insert(mode, at: 0)
     }

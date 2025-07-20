@@ -1,24 +1,25 @@
 import Foundation
+import AppKit
 
 public protocol AeroAny {}
 
-public extension AeroAny {
+extension AeroAny {
     @discardableResult
     @inlinable
-    func apply(_ block: (Self) -> Void) -> Self {
+    public func apply(_ block: (Self) -> Void) -> Self {
         block(self)
         return self
     }
 
     @discardableResult
     @inlinable
-    func also(_ block: (Self) -> Void) -> Self {
+    public func also(_ block: (Self) -> Void) -> Self {
         block(self)
         return self
     }
 
-    @inlinable func takeIf(_ predicate: (Self) -> Bool) -> Self? { predicate(self) ? self : nil }
-    @inlinable func lets<R>(_ body: (Self) -> R) -> R { body(self) }
+    @inlinable public func takeIf(_ predicate: (Self) -> Bool) -> Self? { predicate(self) ? self : nil }
+    @inlinable public func then<R>(_ body: (Self) -> R) -> R { body(self) }
 }
 
 extension Int: AeroAny {}
@@ -27,3 +28,6 @@ extension Character: AeroAny {}
 extension Regex: AeroAny {}
 extension Array: AeroAny {}
 extension URL: AeroAny {}
+extension CGFloat: AeroAny {}
+extension AXUIElement: AeroAny {}
+extension CGPoint: AeroAny {}

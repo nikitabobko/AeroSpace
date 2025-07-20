@@ -21,9 +21,6 @@ public struct ArgParser<T: ConvenienceCopyable, K>: ArgParserProtocol {
         self.parse = parse
         self.argPlaceholderIfMandatory = argPlaceholderIfMandatory
     }
-
-    public static func == (lhs: ArgParser<T, K>, rhs: ArgParser<T, K>) -> Bool { lhs.keyPath == rhs.keyPath }
-    public func hash(into hasher: inout Hasher) { hasher.combine(keyPath) }
 }
 
 public func optionalWindowIdFlag<T: CmdArgs>() -> ArgParser<T, UInt32?> {
@@ -56,7 +53,7 @@ public func boolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<
     ArgParser(keyPath) { _, nextArgs in
         let value: Bool
         if let nextArg = nextArgs.first, nextArg == "no" {
-            _ = nextArgs.next() // Eat the argument
+            _ = nextArgs.next() // Consume the argument
             value = false
         } else {
             value = true
@@ -94,6 +91,10 @@ public func parseEnum<T: RawRepresentable>(_ raw: String, _ _: T.Type) -> Parsed
 
 public func parseCardinalDirectionArg(arg: String, nextArgs: inout [String]) -> Parsed<CardinalDirection> {
     parseEnum(arg, CardinalDirection.self)
+}
+
+func parseCardinalOrDfsDirection(_ arg: String, _ nextArgs: inout [String]) -> Parsed<CardinalOrDfsDirection> {
+    parseEnum(arg, CardinalOrDfsDirection.self)
 }
 
 public func parseArgWithUInt32(arg: String, nextArgs: inout [String]) -> Parsed<UInt32> {

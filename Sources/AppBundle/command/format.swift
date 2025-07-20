@@ -48,14 +48,14 @@ extension [AeroObj] {
                         }
                 }
             }
-            if !curCell.isEmpty { line.append(Cell(value: curCell, rightPadding: false)) }
             if !errors.isEmpty { return .failure(errors.joinErrors()) }
+            line.append(Cell(value: curCell, rightPadding: false))
             cellTable.append(line)
         }
         let result = cellTable
             .transposed()
             .map { column in
-                let columndWidth = column.map { $0.value.count }.max()!
+                let columndWidth = column.map { $0.value.count }.max().orDie()
                 return column.map {
                     $0.rightPadding
                         ? $0.value + String(repeating: " ", count: columndWidth - $0.value.count)

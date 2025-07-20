@@ -1,0 +1,63 @@
+{
+  "AXActivationPoint" : "<AXValue 0xbc5b68090> {value = x:-1.000000 y:1233.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0xbc4ba8b00> {value = x:-6.000000 y:128.000000 w:83.000000 h:77.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 0,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0xbc5ac3c60> {pid=928}",
+  "AXPosition" : "<AXValue 0xbc5b68090> {value = x:-6.000000 y:128.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : null,
+  "AXSize" : "<AXValue 0xbc5b68090> {value = w:83.000000 h:77.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXDialog",
+  "AXTitle" : "",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=224, title=nil, role=\"AXTextArea\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=224, title=\"Untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=224, title=\"Untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0xbc5ac3a20> {pid=928}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "TextEdit",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=223, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+      "AXUIElement(AxWindowId=224, title=\"Untitled\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.apple.TextEdit",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///System/Applications/TextEdit.app/Contents/MacOS/TextEdit",
+  "Aero.App.version" : "412",
+  "Aero.App.versionShort" : "1.20",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 223,
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxUiElementWindowType" : "popup",
+  "Aero.macOS.version" : "Version 26.0 Beta (Build 25A5279m)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.MacosPopupWindowsContainer)",
+  "Aero.workspace" : "nil"
+}

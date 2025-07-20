@@ -3,6 +3,7 @@ import Common
 
 struct SplitCommand: Command {
     let args: SplitCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         if config.enableNormalizationFlattenContainers {
@@ -32,7 +33,7 @@ struct SplitCommand: Command {
                         adaptiveWeight: data.adaptiveWeight,
                         orientation,
                         .tiles,
-                        index: data.index
+                        index: data.index,
                     )
                     window.bind(to: newParent, adaptiveWeight: WEIGHT_AUTO, index: 0)
                 }

@@ -3,6 +3,7 @@ import Common
 
 struct MoveMouseCommand: Command {
     let args: MoveMouseCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         let mouse = mouseLocation
@@ -36,7 +37,7 @@ private func moveMouse(_ io: CmdIo, _ point: CGPoint) -> Bool {
         mouseEventSource: nil,
         mouseType: CGEventType.mouseMoved,
         mouseCursorPosition: point,
-        mouseButton: CGMouseButton.left
+        mouseButton: CGMouseButton.left,
     )
     if let event {
         event.post(tap: CGEventTapLocation.cghidEventTap)

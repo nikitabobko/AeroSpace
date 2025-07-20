@@ -12,10 +12,6 @@ extension Array {
         }
         return found
     }
-
-    func firstOrDie(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Element {
-        try first(where: predicate) ?? dieT("Can't find the element")
-    }
 }
 
 extension Array where Self.Element: Equatable {

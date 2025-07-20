@@ -1,0 +1,37 @@
+{
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : "<AXUIElement 0x60000337dfb0> {pid=979}",
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=307, title=nil, role=\"AXWebArea\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=307, title=\"Meet – rsf-trih-oxo\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=307, title=\"Meet – rsf-trih-oxo\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x60000339ced0> {pid=979}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Firefox",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=318, title=\"Firefox — Sharing Indicator\", role=\"AXWindow\", subrole=\"AXDialog\")",
+      "AXUIElement(AxWindowId=307, title=\"Meet – rsf-trih-oxo\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "org.mozilla.firefox",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Firefox.app/Contents/MacOS/firefox",
+  "Aero.App.version" : "13925.6.9",
+  "Aero.App.versionShort" : "139.0.4",
+  "Aero.AxUiElementWindowType" : "popup",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.axWindowId" : 13,
+  "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.TilingContainer)",
+  "Aero.workspace" : "F"
+}

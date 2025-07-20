@@ -143,8 +143,8 @@ enum MenuBarTextStyle: String {
     }
 }
 
-private extension String {
-    func containsEmoji() -> Bool {
+extension String {
+    fileprivate func containsEmoji() -> Bool {
         unicodeScalars.contains { $0.properties.isEmoji && $0.properties.isEmojiPresentation }
     }
 }

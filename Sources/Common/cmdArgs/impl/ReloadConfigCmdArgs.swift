@@ -9,11 +9,11 @@ public struct ReloadConfigCmdArgs: CmdArgs {
             "--no-gui": trueBoolFlag(\.noGui),
             "--dry-run": trueBoolFlag(\.dryRun),
         ],
-        arguments: []
+        arguments: [],
     )
 
     public var noGui: Bool = false
     public var dryRun: Bool = false
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
+    /*conforms*/ public var windowId: UInt32?
+    /*conforms*/ public var workspaceName: WorkspaceName?
 }

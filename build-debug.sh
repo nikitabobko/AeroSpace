@@ -2,7 +2,8 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-./generate.sh --ignore-xcodeproj
+# It takes 300ms for script to complete. It's too long to run in build-debug.sh
+./generate.sh --ignore-xcodeproj --ignore-cmd-help
 swift build
 swift build --target AppBundleTests # swift build doesn't build test targets by default :(
 

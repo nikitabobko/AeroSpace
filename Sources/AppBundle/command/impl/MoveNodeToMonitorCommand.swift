@@ -3,6 +3,7 @@ import Common
 
 struct MoveNodeToMonitorCommand: Command {
     let args: MoveNodeToMonitorCmdArgs
+    /*conforms*/ var shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
@@ -14,12 +15,19 @@ struct MoveNodeToMonitorCommand: Command {
         }
         switch args.target.val.resolve(currentMonitor, wrapAround: args.wrapAround) {
             case .success(let targetMonitor):
-                if let wName = WorkspaceName.parse(targetMonitor.activeWorkspace.name).getOrNil(appendErrorTo: &io.stderr) {
-                    let moveNodeToWorkspace = args.moveNodeToWorkspace.copy(\.target, .initialized(.direct(wName)))
-                    return MoveNodeToWorkspaceCommand(args: moveNodeToWorkspace).run(env, io)
-                } else {
-                    return false
-                }
+                let targetWs = targetMonitor.activeWorkspace
+                let index = true == args.target.val.directionOrNil
+                    .map { dir in dir.isPositive && targetWs.rootTilingContainer.orientation == dir.orientation }
+                    ? 0
+                    : INDEX_BIND_LAST
+                return moveWindowToWorkspace(
+                    window,
+                    targetWs,
+                    io,
+                    focusFollowsWindow: args.focusFollowsWindow,
+                    failIfNoop: args.failIfNoop,
+                    index: index,
+                )
             case .failure(let msg):
                 return io.err(msg)
         }
