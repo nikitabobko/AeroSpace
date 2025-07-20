@@ -26,25 +26,25 @@ extension TreeNode {
                     window.lastAppliedLayoutVirtualRect = nil
                     try await window.layoutFloatingWindow(context)
                 }
+                workspace.optimalHideCorner = nil
             case .window(let window):
-                if window.windowId != currentlyManipulatedWithMouseWindowId {
-                    lastAppliedLayoutVirtualRect = virtual
-                    let mostRecentWindow = context.workspace.rootTilingContainer.mostRecentWindowRecursive
-                    let mostRecentWindowIsFullscreen = mostRecentWindow?.isFullscreen ?? false
-                    let othersShouldBeHidden = mostRecentWindow?.shouldHideOthersWhileFullscreen ?? false
+                guard window.windowId != currentlyManipulatedWithMouseWindowId else { return }
 
-                    if window == mostRecentWindow && mostRecentWindowIsFullscreen {
+                lastAppliedLayoutVirtualRect = virtual
+
+                switch determineWindowLayoutMode(window, context) {
+                    case .hiddenInCorner(let corner):
+                        lastAppliedLayoutPhysicalRect = nil
+                        try await window.hideInCorner(corner, context)
+                    case .fullscreen:
                         lastAppliedLayoutPhysicalRect = nil
                         window.layoutFullscreen(context)
-                    } else if mostRecentWindowIsFullscreen && othersShouldBeHidden {
-                        lastAppliedLayoutPhysicalRect = nil
-                        try await (window as! MacWindow).hideInCorner(OptimalHideCorner.bottomLeftCorner)
-                    } else {
+                    case .visible:
                         lastAppliedLayoutPhysicalRect = physicalRect
                         window.isFullscreen = false
                         window.shouldHideOthersWhileFullscreen = false
                         window.setAxFrame(point, CGSize(width: width, height: height))
-                    }
+                        window.clearHiddenState()
                 }
             case .tilingContainer(let container):
                 lastAppliedLayoutPhysicalRect = physicalRect
@@ -71,6 +71,32 @@ private struct LayoutContext {
         self.workspace = workspace
         self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor)
     }
+}
+
+private enum WindowLayoutMode {
+    case visible
+    case fullscreen
+    case hiddenInCorner(OptimalHideCorner)
+}
+
+@MainActor
+private func determineWindowLayoutMode(_ window: Window, _ context: LayoutContext) -> WindowLayoutMode {
+    let workspaceIsHidden = !context.workspace.isVisible
+    let mostRecentWindow = context.workspace.rootTilingContainer.mostRecentWindowRecursive
+    let windowShouldBeHidden = mostRecentWindow.map {
+        window != $0 && $0.isFullscreen && $0.shouldHideOthersWhileFullscreen
+    } ?? false
+
+    if workspaceIsHidden || windowShouldBeHidden {
+        let corner = context.workspace.optimalHideCorner ?? .bottomRightCorner
+        return .hiddenInCorner(corner)
+    }
+
+    if window == mostRecentWindow && window.isFullscreen {
+        return .fullscreen
+    }
+
+    return .visible
 }
 
 extension Window {
@@ -100,6 +126,31 @@ extension Window {
             ? context.workspace.workspaceMonitor.visibleRect
             : context.workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
         setAxFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height))
+    }
+
+    @MainActor
+    fileprivate func hideInCorner(_ corner: OptimalHideCorner, _ context: LayoutContext) async throws {
+        guard let nodeMonitor else { return }
+        // Don't accidentally override hiddenState in case of subsequent
+        // `hideEmulation` calls
+        if !isHiddenInCorner {
+            guard let windowRect = try await getAxRect() else { return }
+            let topLeftCorner = windowRect.topLeftCorner
+            let monitorRect = windowRect.center.monitorApproximation.rect // Similar to layoutFloatingWindow. Non idempotent
+            let absolutePoint = topLeftCorner - monitorRect.topLeftCorner
+            let proportionalPosition = CGPoint(x: absolutePoint.x / monitorRect.width, y: absolutePoint.y / monitorRect.height)
+            setHiddenState(proportionalPosition)
+        }
+        let p: CGPoint
+        let offset = getCornerOffsetWhileHidden(corner)
+        switch corner {
+            case .bottomLeftCorner:
+                guard let s = try await getAxSize() else { fallthrough }
+                p = nodeMonitor.visibleRect.bottomLeftCorner + offset + CGPoint(x: -s.width, y: 0)
+            case .bottomRightCorner:
+                p = nodeMonitor.visibleRect.bottomRightCorner + offset
+        }
+        setAxTopLeftCorner(p)
     }
 }
 

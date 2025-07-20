@@ -3,7 +3,7 @@ import AppKit
 
 final class TestWindow: Window, CustomStringConvertible {
     private var _rect: Rect?
-    private var _prevUnhiddenProportionalPositionInsideWorkspaceRect: CGPoint?
+    var prevUnhiddenProportionalPositionInsideWorkspaceRect: CGPoint?
 
     @MainActor
     private init(_ id: UInt32, _ parent: NonLeafTreeNodeObject, _ adaptiveWeight: CGFloat, _ rect: Rect?) {
@@ -37,15 +37,18 @@ final class TestWindow: Window, CustomStringConvertible {
         _rect
     }
 
-    func hideInCorner(_ corner: OptimalHideCorner) async throws {
-        _prevUnhiddenProportionalPositionInsideWorkspaceRect = CGPoint(x: 0.5, y: 0.5)
-    }
 
-    func unhideFromCorner() {
-        _prevUnhiddenProportionalPositionInsideWorkspaceRect = nil
+
+    override func setHiddenState(_ proportionalPosition: CGPoint?) {
+        prevUnhiddenProportionalPositionInsideWorkspaceRect = proportionalPosition
     }
 
     override var isHiddenInCorner: Bool {
-        _prevUnhiddenProportionalPositionInsideWorkspaceRect != nil
+        return prevUnhiddenProportionalPositionInsideWorkspaceRect != nil
+    }
+
+    @MainActor
+    override func clearHiddenState() {
+        prevUnhiddenProportionalPositionInsideWorkspaceRect = nil
     }
 }
