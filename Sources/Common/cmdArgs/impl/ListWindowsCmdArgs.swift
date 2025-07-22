@@ -83,13 +83,19 @@ public func parseListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCm
 }
 
 func parseFormat(arg: String, nextArgs: inout [String]) -> Parsed<[StringInterToken]> {
-    return if let nextArg = nextArgs.nextNonFlagOrNil() {
+    if let nextArg = nextArgs.nextNonFlagOrNil() {
         switch nextArg.interpolationTokens(interpolationChar: "%") {
-            case .success(let tokens): .success(tokens)
-            case .failure(let err): .failure("Failed to parse <output-format>. \(err)")
+            case .success(let tokens): return .success(tokens)
+            case .failure(let err): return .failure("Failed to parse <output-format>. \(err)")
         }
     } else {
-        .failure("<output-format> is mandatory")
+        let availableVars = [
+            "window-id", "window-is-fullscreen", "window-title", "workspace", "workspace-is-focused", "workspace-is-visible",
+            "monitor-id", "monitor-appkit-nsscreen-screens-id", "monitor-name", "app-bundle-id", "app-name", "app-pid",
+            "app-exec-path", "app-bundle-path", "right-padding", "newline", "tab",
+        ]
+        let formattedVars = availableVars.map { "    \($0)" }.joined(separator: "\n")
+        return .failure("<output-format> is mandatory.\nPossible interpolation variables:\n\(formattedVars)")
     }
 }
 
