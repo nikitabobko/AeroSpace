@@ -207,8 +207,9 @@ extension String {
         }
         if self == PlainInterVar.newline.rawValue { return .success(.string("\n")) }
         if self == PlainInterVar.tab.rawValue { return .success(.string("\t")) }
-        return .failure("Unknown interpolation variable '\(self)'. " +
-            "Possible values: \(getAvailableInterVars(for: obj.kind).joined(separator: "|"))")
+        let availableVars = getAvailableInterVars(for: obj.kind)
+        let formattedVars = availableVars.map { "    \($0)" }.joined(separator: "\n")
+        return .failure("Unknown interpolation variable '\(self)'.\nPossible values:\n\(formattedVars)")
     }
 
     private func toFormatVar() -> FormatVar? {
