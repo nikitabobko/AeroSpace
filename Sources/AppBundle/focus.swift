@@ -49,6 +49,12 @@ struct FrozenFocus: AeroAny, Equatable, Sendable {
     }
 }
 
+enum FocusSource {
+    case mouseClick
+    case keyboardShortcut
+    case unknown
+}
+
 @MainActor private var _focus: FrozenFocus = {
     let monitor = mainMonitor
     return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId: monitor.monitorId ?? 0)
@@ -85,10 +91,17 @@ extension Window {
         }
     }
 
-    @MainActor func toLiveFocusOrNil() -> LiveFocus? { visualWorkspace.map { LiveFocus(windowOrNil: self, workspace: $0) } }
+    @MainActor func toLiveFocusOrNil() -> LiveFocus? {
+        visualWorkspace.map { LiveFocus(windowOrNil: self, workspace: $0) }
+    }
 }
 extension Workspace {
-    @MainActor func focusWorkspace() -> Bool { setFocus(to: toLiveFocus()) }
+    @MainActor func focusWorkspace(source: FocusSource = .unknown) -> Bool {
+        if source == .keyboardShortcut {
+            return setFocus(to: toLiveFocus())
+        }
+        return true
+    }
 
     func toLiveFocus() -> LiveFocus {
         // todo unfortunately mostRecentWindowRecursive may recursively reach empty rootTilingContainer
@@ -110,7 +123,9 @@ extension Workspace {
     }
 }
 @MainActor var prevFocusedWorkspaceDate: Date = .distantPast
-@MainActor var prevFocusedWorkspace: Workspace? { _prevFocusedWorkspaceName.map { Workspace.get(byName: $0) } }
+@MainActor var prevFocusedWorkspace: Workspace? {
+    _prevFocusedWorkspaceName.map { Workspace.get(byName: $0) }
+}
 
 // Used by focus-back-and-forth
 @MainActor var _prevFocus: FrozenFocus? = nil

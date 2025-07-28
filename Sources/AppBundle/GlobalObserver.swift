@@ -5,7 +5,9 @@ class GlobalObserver {
     private static func onNotif(_ notification: Notification) {
         // Third line of defence against lock screen window. See: closedWindowsCache
         // Second and third lines of defence are technically needed only to avoid potential flickering
-        if (notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication)?.bundleIdentifier == lockScreenAppBundleId {
+        if (notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication)?
+            .bundleIdentifier == lockScreenAppBundleId
+        {
             return
         }
         let notifName = notification.name.rawValue
@@ -62,11 +64,12 @@ class GlobalObserver {
                 try await resetManipulatedWithMouseIfPossible()
                 let mouseLocation = mouseLocation
                 let clickedMonitor = mouseLocation.monitorApproximation
+
                 switch true {
                     // Detect clicks on desktop of different monitors
                     case clickedMonitor.activeWorkspace != focus.workspace:
                         _ = try await runSession(.globalObserverLeftMouseUp, token) {
-                            clickedMonitor.activeWorkspace.focusWorkspace()
+                            clickedMonitor.activeWorkspace.focusWorkspace(source: .mouseClick)
                         }
                     // Detect close button clicks for unfocused windows. Yes, kAXUIElementDestroyedNotification is that unreliable
                     //  And trigger new window detection that could be delayed due to mouseDown event

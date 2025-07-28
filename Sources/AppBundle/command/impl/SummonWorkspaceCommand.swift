@@ -13,7 +13,7 @@ struct SummonWorkspaceCommand: Command {
             return !args.failIfNoop
         }
         if monitor.setActiveWorkspace(workspace) {
-            return workspace.focusWorkspace()
+            return workspace.focusWorkspace(source: .keyboardShortcut)
         } else {
             return io.err("Can't move workspace '\(workspace.name)' to monitor '\(monitor.name)'. workspace-to-monitor-force-assignment doesn't allow it")
         }

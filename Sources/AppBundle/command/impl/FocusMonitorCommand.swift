@@ -8,7 +8,7 @@ struct FocusMonitorCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         return switch args.target.val.resolve(target.workspace.workspaceMonitor, wrapAround: args.wrapAround) {
-            case .success(let targetMonitor): targetMonitor.activeWorkspace.focusWorkspace()
+            case .success(let targetMonitor): targetMonitor.activeWorkspace.focusWorkspace(source: .keyboardShortcut)
             case .failure(let msg): io.err(msg)
         }
     }

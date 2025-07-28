@@ -31,7 +31,7 @@ struct WorkspaceCommand: Command {
             io.err("Workspace '\(workspaceName)' is already focused. Tip: use --fail-if-noop to exit with non-zero code")
             return !args.failIfNoop
         } else {
-            return Workspace.get(byName: workspaceName).focusWorkspace()
+            return Workspace.get(byName: workspaceName).focusWorkspace(source: .keyboardShortcut)
         }
     }
 }

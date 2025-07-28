@@ -16,7 +16,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             ForEach(viewModel.workspaces, id: \.name) { workspace in
                 Button {
                     Task {
-                        try await runSession(.menuBarButton, token) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
+                        try await runSession(.menuBarButton, token) { _ = Workspace.get(byName: workspace.name).focusWorkspace(source: .keyboardShortcut) }
                     }
                 } label: {
                     Toggle(isOn: .constant(workspace.isFocused)) {
