@@ -173,6 +173,8 @@ exec-on-workspace-change = [
 ]
 ----
 
+*Adapt the port number if you changed it in the config file.*
+
 Feel free to open an issue in link:https://github.com/Jean-Tinland/simple-bar-server/issues[simple-bar-server repo] if you encounter any issue.
 
 [#open-a-new-window-with-applescript]
