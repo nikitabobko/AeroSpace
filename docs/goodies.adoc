@@ -150,6 +150,8 @@ exec-on-workspace-change = [
 ]
 ----
 
+This approach may feel a bit slow while refreshing simple-bar as it relies on the applescript implementation of Übersicht. If you want to obtain better performances, you can install simple-bar-server and use the instructions below.
+
 Feel free to open an issue in link:https://github.com/Jean-Tinland/simple-bar/issues[simple-bar repo] if you encounter any issue.
 
 If you are using link:https://github.com/Jean-Tinland/simple-bar-server[simple-bar-server], you'll need to add these lines instead:
