@@ -127,6 +127,52 @@ else
 fi
 ----
 
+[#show-aerospace-workspaces-in-simple-bar]
+== Show AeroSpace workspaces in simple-bar
+
+link:https://github.com/Jean-Tinland/simple-bar[simple-bar] can be used to display AeroSpace workspaces.
+
+If you are using _simple-bar_ *without simple-bar-server*, add these lines to your AeroSpace config file:
+
+.~/.aerospace.toml
+[source,toml]
+----
+# Notify simple-bar about window focus change
+on-focus-changed = [
+  "exec-and-forget osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\"'",
+]
+
+# Notify simple-bar about workspace change
+exec-on-workspace-change = [
+  '/bin/zsh',
+  '-c',
+  '/usr/bin/osascript -e "tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\""',
+]
+----
+
+Feel free to open an issue in link:https://github.com/Jean-Tinland/simple-bar/issues[simple-bar repo] if you encounter any issue.
+
+If you are using link:https://github.com/Jean-Tinland/simple-bar-server[simple-bar-server], you'll need to add these lines instead:
+
+.~/.aerospace.toml
+[source,toml]
+----
+# Notify simple-bar-server to trigger a simple-bar refresh on window focus change
+on-focus-changed = [
+  "exec-and-forget curl http://localhost:7776/aerospace/spaces/refresh",
+]
+
+# Notify simple-bar-server to trigger a simple-bar refresh
+# You'll speed up the process by passing the "$AEROSPACE_FOCUSED_WORKSPACE" in a "space" query param
+exec-on-workspace-change = [
+  '/bin/zsh',
+  '-c',
+  'curl "http://localhost:7776/aerospace/spaces/refresh?space=$AEROSPACE_FOCUSED_WORKSPACE"',
+]
+----
+
+Feel free to open an issue in link:https://github.com/Jean-Tinland/simple-bar-server/issues[simple-bar-server repo] if you encounter any issue.
+
 [#open-a-new-window-with-applescript]
 == Open a new window with AppleScript
 
