@@ -7,7 +7,7 @@ public func getMessageWindow(messageModel: MessageModel) -> some Scene {
     SwiftUI.Window(messageModel.message?.title ?? aeroSpaceAppName, id: messageWindowId) {
         MessageView(model: messageModel)
             .onAppear {
-                // Set activation policy; otherwise, AeroSpace windows won't be able to receive focus and accept keyborad input
+                // Set activation policy; otherwise, AeroSpace windows won't be able to receive focus and accept keyboard input
                 NSApp.setActivationPolicy(.accessory)
                 NSApplication.shared.windows.forEach {
                     if $0.identifier?.rawValue == messageWindowId {

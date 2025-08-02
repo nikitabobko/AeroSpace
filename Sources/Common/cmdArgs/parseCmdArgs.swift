@@ -12,7 +12,7 @@ public func parseCmdArgs(_ args: [String]) -> ParsedCmd<any CmdArgs> {
 
 public protocol CmdArgs: ConvenienceCopyable, Equatable, CustomStringConvertible, AeroAny, Sendable {
     static var parser: CmdParser<Self> { get }
-    var rawArgs: EquatableNoop<[String]> { get } // Non Equatable because test comparion
+    var rawArgs: EquatableNoop<[String]> { get } // Non Equatable because test comparison
 
     // Two very common flags among commands
     var windowId: UInt32? { get set }

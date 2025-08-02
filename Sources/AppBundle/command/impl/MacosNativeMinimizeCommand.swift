@@ -7,7 +7,7 @@ struct MacosNativeMinimizeCommand: Command {
     /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
-        // resolveTargetOrReportError on already minimized windows will alwyas fail
+        // resolveTargetOrReportError on already minimized windows will always fail
         // It would be easier if minimized windows were part of the workspace in tree hierarchy
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         guard let window = target.windowOrNil else {
