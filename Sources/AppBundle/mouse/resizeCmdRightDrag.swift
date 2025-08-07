@@ -17,10 +17,20 @@ private var cmdRightResizeSession: CmdRightResizeSession? = nil
 private var pendingDragRefreshTask: Task<(), Never>? = nil
 
 private func edgeToDirection(_ e: ResizeEdge) -> CardinalDirection {
-    switch e { case .left: .left; case .right: .right; case .up: .up; case .down: .down }
+    switch e {
+        case .left: .left
+        case .right: .right
+        case .up: .up
+        case .down: .down
+    }
 }
 private func oppositeEdge(_ e: ResizeEdge) -> ResizeEdge {
-    switch e { case .left: .right; case .right: .left; case .up: .down; case .down: .up }
+    switch e {
+        case .left: .right
+        case .right: .left
+        case .up: .down
+        case .down: .up
+    }
 }
 
 @MainActor
