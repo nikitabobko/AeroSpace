@@ -1,7 +1,10 @@
 import AppKit
 
 @MainActor var currentlyManipulatedWithMouseWindowId: UInt32? = nil
-var isLeftMouseButtonDown: Bool { NSEvent.pressedMouseButtons == 1 }
+private let leftMouseButtonMask = 1 << 0
+private let rightMouseButtonMask = 1 << 1
+var isLeftMouseButtonDown: Bool { (NSEvent.pressedMouseButtons & leftMouseButtonMask) != 0 }
+var isRightMouseButtonDown: Bool { (NSEvent.pressedMouseButtons & rightMouseButtonMask) != 0 }
 
 @MainActor
 func isManipulatedWithMouse(_ window: Window) async throws -> Bool {
