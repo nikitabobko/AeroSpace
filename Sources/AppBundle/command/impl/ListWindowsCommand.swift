@@ -39,6 +39,11 @@ struct ListWindowsCommand: Command {
             if let appId = args.filteringOptions.appIdFilter {
                 windows = windows.filter { $0.app.bundleId == appId }
             }
+            if let layoutFilter = args.filteringOptions.layoutFilter {
+                windows = windows.filter { window in
+                    return window.matchesLayout(layoutFilter)
+                }
+            }
         }
 
         if args.outputOnlyCount {

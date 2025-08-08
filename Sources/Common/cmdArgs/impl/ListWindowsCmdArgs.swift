@@ -18,6 +18,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--workspace": ArgParser(\.filteringOptions.workspaces, parseWorkspaces),
             "--pid": singleValueOption(\.filteringOptions.pidFilter, "<pid>", Int32.init),
             "--app-bundle-id": singleValueOption(\.filteringOptions.appIdFilter, "<app-bundle-id>") { $0 },
+            "--layout": singleValueOption(\.filteringOptions.layoutFilter, "<layout>", parseLayoutDescription),
 
             // Formatting flags
             "--format": ArgParser(\._format, parseFormat),
@@ -49,6 +50,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
         public var workspaces: [WorkspaceFilter] = []
         public var pidFilter: Int32?
         public var appIdFilter: String?
+        public var layoutFilter: LayoutDescription?
     }
 }
 
