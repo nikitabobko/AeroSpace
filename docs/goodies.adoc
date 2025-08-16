@@ -40,6 +40,13 @@ There is a third party Raycast extension for AeroSpace. https://www.raycast.com/
 
 If you struggle remembering shortcuts, it's useful to search for commands until they become muscle memory.
 
+[#alfred-workflow]
+== AeroSpace Raycast extension
+
+There is a third party Alfred workflow for AeroSpace. https://github.com/hmepas/alfred_fzf_aerospace_workflow
+
+Help searching windows and changing focus to them right from Alfred via aw command.
+
 [#disable-open-animations]
 == Disable windows opening animations
 
