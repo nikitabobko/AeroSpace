@@ -27,10 +27,7 @@ public class VolumePanel: NSPanel {
         timer?.invalidate()
         self.contentView?.subviews.removeAll()
         let hostingView = NSHostingView(rootView: VolumeView(volume: volume))
-        if let contentViewBounds = self.contentView?.bounds {
-            hostingView.frame = contentViewBounds
-        }
-        hostingView.autoresizingMask = [.width, .height]
+        hostingView.frame = NSRect(x: 0, y: 0, width: panelFrame.width, height: panelFrame.height)
         self.contentView?.addSubview(hostingView)
         panelFrame.origin.x = mainMonitor.width - panelFrame.size.width - 20
         panelFrame.origin.y = (mainMonitor.height - panelFrame.size.height) / 2
