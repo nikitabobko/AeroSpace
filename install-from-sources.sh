@@ -17,7 +17,11 @@ fi
 brew list aerospace-dev > /dev/null 2>&1 && brew uninstall aerospace-dev
 brew list aerospace > /dev/null 2>&1 && brew uninstall aerospace
 
+rm -rf /tmp/aerospace-from-sources-brew-cache
+
+cask_dir="$(brew --prefix)/Library/Taps/aerospace-dev-user/homebrew-aerospace-dev-tap/Casks/"
+mkdir -p "$cask_dir"
+cp ./.release/aerospace-dev.rb "$cask_dir"
 # Override HOMEBREW_CACHE. Otherwise, homebrew refuses to "redownload" the snapshot file
 # Maybe there is a better way, I don't know
-rm -rf /tmp/aerospace-from-sources-brew-cache
-env HOMEBREW_CACHE=/tmp/aerospace-from-sources-brew-cache brew install --cask ./.release/aerospace-dev.rb
+env HOMEBREW_CACHE=/tmp/aerospace-from-sources-brew-cache brew install --cask aerospace-dev-user/aerospace-dev-tap/aerospace-dev
