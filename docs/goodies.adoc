@@ -253,6 +253,7 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |Messages|`com.apple.MobileSMS`
 |Music|`com.apple.Music`
 |Notes|`com.apple.Notes`
+|Notion|`notion.id`
 |Obsidian|`md.obsidian`
 |Pages|`com.apple.iWork.Pages`
 |Photo Booth|`com.apple.PhotoBooth`
