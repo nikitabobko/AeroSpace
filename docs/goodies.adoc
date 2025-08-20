@@ -252,6 +252,7 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |Marta|`org.yanex.marta`
 |Messages|`com.apple.MobileSMS`
 |Music|`com.apple.Music`
+|Notion|`notion.id`
 |Notes|`com.apple.Notes`
 |Obsidian|`md.obsidian`
 |Pages|`com.apple.iWork.Pages`
