@@ -5,25 +5,12 @@ import SwiftUI
 private let iconSize = CGSize(width: 50, height: 50)
 private let textSize = CGSize(width: 440, height: 100)
 
-public class SecureInputPanel: NSPanel {
+public class SecureInputPanel: NSPanelHud {
     @MainActor public static var shared: SecureInputPanel = SecureInputPanel()
     private var hostingView = NSHostingView(rootView: SecureInputView())
 
-    private init() {
-        super.init(
-            contentRect: .zero,
-            styleMask: [.nonactivatingPanel, .borderless, .hudWindow, .utilityWindow],
-            backing: .buffered,
-            defer: false,
-        )
-        self.level = .floating
-        self.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        self.isReleasedWhenClosed = false
-        self.hidesOnDeactivate = false
-        self.isMovableByWindowBackground = false
-        self.alphaValue = 1
-        self.hasShadow = true
-        self.backgroundColor = .clear
+    override private init() {
+        super.init()
     }
 
     public func refresh() {

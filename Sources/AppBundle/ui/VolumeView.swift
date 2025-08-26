@@ -1,26 +1,13 @@
 import AppKit
 import SwiftUI
 
-public class VolumePanel: NSPanel {
+public class VolumePanel: NSPanelHud {
     @MainActor public static var shared: VolumePanel = VolumePanel()
     private var timer: Timer?
     private var panelFrame = NSRect(x: 0, y: 0, width: 50, height: 206)
 
-    private init() {
-        super.init(
-            contentRect: panelFrame,
-            styleMask: [.nonactivatingPanel, .borderless, .hudWindow, .utilityWindow],
-            backing: .buffered,
-            defer: false,
-        )
-        self.level = .floating
-        self.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        self.isReleasedWhenClosed = false
-        self.hidesOnDeactivate = false
-        self.isMovableByWindowBackground = false
-        self.alphaValue = 1
-        self.hasShadow = true
-        self.backgroundColor = .clear
+    override private init() {
+        super.init()
     }
 
     public func update(with volume: Float) {
