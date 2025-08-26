@@ -3,7 +3,7 @@ import Carbon
 import SwiftUI
 
 private let iconSize = CGSize(width: 50, height: 50)
-private let textSize = CGSize(width: 440, height: 100)
+private let textSize = CGSize(width: 440, height: 110)
 
 public class SecureInputPanel: NSPanelHud {
     @MainActor public static var shared: SecureInputPanel = SecureInputPanel()
@@ -13,9 +13,13 @@ public class SecureInputPanel: NSPanelHud {
         super.init()
     }
 
+    @MainActor
     public func refresh() {
-        self.contentView?.subviews.removeAll()
-        if IsSecureEventInputEnabled() {
+        if isVisible && !TrayMenuModel.shared.isEnabled {
+            close()
+        } else if IsSecureEventInputEnabled() {
+            if isVisible { return }
+            self.contentView?.subviews.removeAll()
             hostingView = NSHostingView(rootView: SecureInputView())
             hostingView.frame = NSRect(x: 0, y: 0, width: iconSize.width, height: iconSize.height)
             self.contentView?.addSubview(hostingView)
@@ -24,7 +28,7 @@ public class SecureInputPanel: NSPanelHud {
             self.setFrame(panelFrame, display: true)
             self.orderFrontRegardless()
         } else {
-            close()
+            if isVisible { close() }
         }
     }
 
@@ -56,8 +60,8 @@ struct SecureInputView: View {
                     .aspectRatio(contentMode: .fit)
                     .padding(6)
             } else {
-                Text("**Secure Input** is active. **Secure Input** is a macOS security feature that prevents applications from reading keyboard events.")
-                    .font(.system(.title3, design: .monospaced))
+                Text("AeroSpace cannot respond to keyboard shortcuts while **Secure Input** is active. **Secure Input** is a macOS security feature that prevents applications from reading keyboard events.")
+                    .font(.title3)
                     .padding(10)
             }
         }
