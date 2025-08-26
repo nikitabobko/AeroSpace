@@ -6,6 +6,7 @@ private struct MonitorImpl {
     let name: String
     let rect: Rect
     let visibleRect: Rect
+    let isMain: Bool
 }
 
 extension MonitorImpl: Monitor {
@@ -22,6 +23,7 @@ protocol Monitor: AeroAny {
     var visibleRect: Rect { get }
     var width: CGFloat { get }
     var height: CGFloat { get }
+    var isMain: Bool { get }
 }
 
 class LazyMonitor: Monitor {
@@ -30,15 +32,17 @@ class LazyMonitor: Monitor {
     let name: String
     let width: CGFloat
     let height: CGFloat
+    let isMain: Bool
     private var _rect: Rect?
     private var _visibleRect: Rect?
 
-    init(monitorAppKitNsScreenScreensId: Int, _ screen: NSScreen) {
+    init(monitorAppKitNsScreenScreensId: Int, isMain: Bool, _ screen: NSScreen) {
         self.monitorAppKitNsScreenScreensId = monitorAppKitNsScreenScreensId
         self.name = screen.localizedName
         self.width = screen.frame.width // Don't call rect because it would cause recursion during mainMonitor init
         self.height = screen.frame.height // Don't call rect because it would cause recursion during mainMonitor init
         self.screen = screen
+        self.isMain = isMain
     }
 
     var rect: Rect {
@@ -61,6 +65,7 @@ extension NSScreen {
             name: localizedName,
             rect: rect,
             visibleRect: visibleRect,
+            isMain: isMainScreen,
         )
     }
 
@@ -86,12 +91,13 @@ private let testMonitor = MonitorImpl(
     name: "Test Monitor",
     rect: testMonitorRect,
     visibleRect: testMonitorRect,
+    isMain: true,
 )
 
 var mainMonitor: Monitor {
     if isUnitTest { return testMonitor }
     let elem = NSScreen.screens.withIndex.singleOrNil(where: \.value.isMainScreen).orDie()
-    return LazyMonitor(monitorAppKitNsScreenScreensId: elem.index + 1, elem.value)
+    return LazyMonitor(monitorAppKitNsScreenScreensId: elem.index + 1, isMain: true, elem.value)
 }
 
 var monitors: [Monitor] {
