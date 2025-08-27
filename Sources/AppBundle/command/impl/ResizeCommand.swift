@@ -5,26 +5,38 @@ struct ResizeCommand: Command { // todo cover with tests
     let args: ResizeCmdArgs
     /*conforms*/ var shouldResetClosedWindowsCache = true
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
 
         if let window = target.windowOrNil, window.isFloating {
-            guard let size = window.getSize(), let topLeftCorner = window.getTopLeftCorner() else { return false }
+            guard let size = try await window.getAxSize(), let topLeftCorner = try await window.getAxTopLeftCorner() else { return false }
 
             let computeTopLeftCornerAndSize = { (diffSize: CGSize) -> (CGPoint, CGSize) in
-                let newX = if topLeftCorner.x + size.width + diffSize.width / 2 > target.workspace.workspaceMonitor.width {
-                    max(0, target.workspace.workspaceMonitor.width - size.width - diffSize.width)
-                } else {
-                    max(0, topLeftCorner.x - diffSize.width / 2)
-                }
-
-                let newY = if topLeftCorner.y + size.height + diffSize.height / 2 > target.workspace.workspaceMonitor.height {
-                    max(0, target.workspace.workspaceMonitor.height - size.height - diffSize.height)
-                } else {
-                    topLeftCorner.y - diffSize.height / 2
-                }
-
-                return (CGPoint(x: newX, y: newY), CGSize(width: size.width + diffSize.width, height: size.height + diffSize.height))
+                // Calculate current center of the window
+                let currentCenter = CGPoint(
+                    x: topLeftCorner.x + size.width / 2,
+                    y: topLeftCorner.y + size.height / 2
+                )
+                
+                // Calculate new size
+                let newSize = CGSize(
+                    width: size.width + diffSize.width,
+                    height: size.height + diffSize.height
+                )
+                
+                // Calculate new top-left corner to maintain the same center
+                let newTopLeftCorner = CGPoint(
+                    x: currentCenter.x - newSize.width / 2,
+                    y: currentCenter.y - newSize.height / 2
+                )
+                
+                // Ensure the window doesn't go outside the monitor bounds
+                let clampedTopLeftCorner = CGPoint(
+                    x: max(0, min(newTopLeftCorner.x, target.workspace.workspaceMonitor.width - newSize.width)),
+                    y: max(0, min(newTopLeftCorner.y, target.workspace.workspaceMonitor.height - newSize.height))
+                )
+                
+                return (clampedTopLeftCorner, newSize)
             }
 
             let isWidthDominant = size.width >= size.height
@@ -59,7 +71,8 @@ struct ResizeCommand: Command { // todo cover with tests
                     }
                     (newTopLeftCorner, newSize) = computeTopLeftCornerAndSize(diffSize)
             }
-            return window.setFrame(newTopLeftCorner, newSize)
+            window.setAxFrame(newTopLeftCorner, newSize)
+            return true
         }
 
         let candidates = target.windowOrNil?.parentsWithSelf
