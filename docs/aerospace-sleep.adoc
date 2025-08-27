@@ -1,0 +1,36 @@
+= aerospace-sleep(1)
+include::util/man-attributes.adoc[]
+// tag::purpose[]
+:manpurpose: Sleep for the specified number of milliseconds
+// end::purpose[]
+:manname: aerospace-sleep
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace sleep [-h|--help] <milliseconds>
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+This command performs a no-op operation while sleeping for the specified duration. It can be useful for adding delays in scripts or configurations.
+// end::body[]
+
+// =========================================================== Arguments
+== Arguments
+
+<milliseconds>:: The number of milliseconds to sleep for. Must be a positive integer.
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]
