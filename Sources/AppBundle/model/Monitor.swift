@@ -11,6 +11,7 @@ private struct MonitorImpl {
 extension MonitorImpl: Monitor {
     var height: CGFloat { rect.height }
     var width: CGFloat { rect.width }
+    var isMainScreen: Bool { rect.minX == 0 && rect.minY == 0 }
 }
 
 /// Use it instead of NSScreen because it can be mocked in tests
@@ -22,6 +23,7 @@ protocol Monitor: AeroAny {
     var visibleRect: Rect { get }
     var width: CGFloat { get }
     var height: CGFloat { get }
+    var isMainScreen: Bool { get }
 }
 
 class LazyMonitor: Monitor {
@@ -47,6 +49,10 @@ class LazyMonitor: Monitor {
 
     var visibleRect: Rect {
         _visibleRect ?? screen.visibleRect.also { _visibleRect = $0 }
+    }
+
+    var isMainScreen: Bool {
+        screen.isMainScreen
     }
 }
 

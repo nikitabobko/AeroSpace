@@ -9,4 +9,11 @@ final class ListMonitorsTest: XCTestCase {
         testParseCommandSucc("list-monitors --count", ListMonitorsCmdArgs(rawArgs: []).copy(\.outputOnlyCount, true))
         assertEquals(parseCommand("list-monitors --format %{monitor-id} --count").errorOrNil, "ERROR: Conflicting options: --count, --format")
     }
+
+    func testMonitorIsMainFormatVariable() {
+        testParseCommandSucc("list-monitors --format %{monitor-is-main}",
+                             ListMonitorsCmdArgs(rawArgs: []).copy(\._format, [.interVar("monitor-is-main")]))
+        testParseCommandSucc("list-monitors --format '%{monitor-name} %{monitor-is-main}'",
+                             ListMonitorsCmdArgs(rawArgs: []).copy(\._format, [.interVar("monitor-name"), .literal(" "), .interVar("monitor-is-main")]))
+    }
 }
