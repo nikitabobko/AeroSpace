@@ -1,0 +1,37 @@
+= aerospace-move-window(1)
+include::util/man-attributes.adoc[]
+// tag::purpose[]
+:manpurpose: Move the specified window to the center of the current workspace or monitor
+// end::purpose[]
+:manname: aerospace-move-window
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace move-window [-h|--help] [--window-id <window-id>] [--focused]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+This command moves the specified window (or the focused window if no window-id is provided) to the center of the current workspace or monitor. The window maintains its current size while being repositioned.
+
+If neither `--window-id` nor `--focused` is specified, the command will use the target from the command context.
+// end::body[]
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+--window-id <window-id>:: Move the specified window instead of the focused window
+
+--focused:: Move the currently focused window
+
+-h, --help:: Print help
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]
