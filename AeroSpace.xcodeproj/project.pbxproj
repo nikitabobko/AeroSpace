@@ -314,6 +314,7 @@
 				CODE_SIGN_ENTITLEMENTS = resources/AeroSpace.entitlements;
 				CODE_SIGN_IDENTITY = "aerospace-codesign-certificate";
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_LSUIElement = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -325,6 +326,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = bobko.aerospace;
 				PRODUCT_NAME = AeroSpace;
 				SDKROOT = macosx;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
 				SWIFT_VERSION = 6.0;
 			};
 			name = Release;

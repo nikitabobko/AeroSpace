@@ -41,6 +41,8 @@ targets:
         Release:
           PRODUCT_NAME: AeroSpace
           PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace
+          SWIFT_TREAT_WARNINGS_AS_ERRORS: YES
+          GCC_TREAT_WARNINGS_AS_ERRORS: YES
     entitlements:
       path: resources/AeroSpace.entitlements
       properties:
