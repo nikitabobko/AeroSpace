@@ -158,15 +158,3 @@ extension String {
         unicodeScalars.contains { $0.properties.isEmoji && $0.properties.isEmojiPresentation }
     }
 }
-
-#Preview {
-    let localworkspaces = [
-        WorkspaceViewModel(name: "1", suffix: "1", isFocused: false, isEffectivelyEmpty: false, isVisible: true),
-        WorkspaceViewModel(name: "2", suffix: "2", isFocused: false, isEffectivelyEmpty: false, isVisible: false),
-        WorkspaceViewModel(name: "3", suffix: "3", isFocused: false, isEffectivelyEmpty: false, isVisible: false),
-        WorkspaceViewModel(name: "A", suffix: "A", isFocused: true, isEffectivelyEmpty: true, isVisible: true),
-        WorkspaceViewModel(name: "B", suffix: "B", isFocused: false, isEffectivelyEmpty: true, isVisible: false),
-    ]
-    MenuBarLabel("123AB", workspaces: localworkspaces)
-        .padding()
-}
