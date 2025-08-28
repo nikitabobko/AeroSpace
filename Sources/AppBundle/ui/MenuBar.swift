@@ -62,6 +62,8 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
                     MenuBarLabel(viewModel.trayText, trayItems: viewModel.trayItems)
                 case .i3:
                     MenuBarLabel(viewModel.trayText, trayItems: viewModel.trayItems, workspaces: viewModel.workspaces)
+                case .i3Ordered:
+                    MenuBarLabel(viewModel.trayText, workspaces: viewModel.workspaces)
             }
         } else {
             Image(systemName: "pause.circle.fill")

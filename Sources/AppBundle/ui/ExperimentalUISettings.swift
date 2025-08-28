@@ -21,13 +21,15 @@ enum MenuBarStyle: String, CaseIterable, Identifiable, Equatable, Hashable {
     case systemText
     case squares
     case i3
+    case i3Ordered
     var id: String { rawValue }
     var title: String {
         switch self {
             case .monospacedText: "Monospaced font"
             case .systemText: "System font"
             case .squares: "Square images"
-            case .i3: "i3 style"
+            case .i3: "i3 style grouped"
+            case .i3Ordered: "i3 style ordered"
         }
     }
 }
@@ -71,6 +73,14 @@ func getExperimentalUISettingsMenu(viewModel: TrayMenuModel) -> some View {
             Toggle(isOn: .constant(viewModel.experimentalUISettings.displayStyle == .i3)) {
                 MenuBarLabel(viewModel.trayText, color: color, trayItems: viewModel.trayItems, workspaces: viewModel.workspaces)
                 Text(" -  " + MenuBarStyle.i3.title)
+            }
+        }
+        Button {
+            viewModel.experimentalUISettings.displayStyle = .i3Ordered
+        } label: {
+            Toggle(isOn: .constant(viewModel.experimentalUISettings.displayStyle == .i3Ordered)) {
+                MenuBarLabel(viewModel.trayText, color: color, workspaces: viewModel.workspaces)
+                Text(" -  " + MenuBarStyle.i3Ordered.title)
             }
         }
     } label: {
