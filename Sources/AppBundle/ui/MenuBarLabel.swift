@@ -168,5 +168,5 @@ extension String {
         WorkspaceViewModel(name: "B", suffix: "B", isFocused: false, isEffectivelyEmpty: true, isVisible: false),
     ]
     MenuBarLabel("123AB", workspaces: localworkspaces)
-        .frame(width: 300, height: 50)
+        .padding()
 }
