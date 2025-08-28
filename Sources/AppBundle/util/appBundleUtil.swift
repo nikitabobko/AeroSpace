@@ -33,9 +33,7 @@ func initTerminationHandler() {
 private struct AppServerTerminationHandler: TerminationHandler {
     func beforeTermination() async throws {
         try await makeAllWindowsVisibleAndRestoreSize()
-        if isDebug {
-            toggleReleaseServer(.on)
-        }
+        toggleReleaseServerIfDebug(.on)
     }
 }
 

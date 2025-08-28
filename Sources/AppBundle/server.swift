@@ -21,9 +21,9 @@ private func handleConnectionAsync(_ connection: sending Socket) {
     Task { await newConnection(connection) }
 }
 
-func toggleReleaseServer(_ state: EnableCmdArgs.State) {
+func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) {
     if serverArgs.isReadOnly { return }
-    check(isDebug)
+    if !isDebug { return }
     let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrDie()
     defer {
         socket.close()
