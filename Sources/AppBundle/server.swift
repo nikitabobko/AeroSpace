@@ -22,6 +22,7 @@ private func handleConnectionAsync(_ connection: sending Socket) {
 }
 
 func sendCommandToReleaseServer(args: [String]) {
+    if serverArgs.isReadOnly { return }
     check(isDebug)
     let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrDie()
     defer {

@@ -80,6 +80,7 @@ final class MacApp: AbstractApp {
 
     @MainActor // todo swift is stupid
     func closeAndUnregisterAxWindow(_ windowId: UInt32) {
+        if serverArgs.isReadOnly { return }
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         _ = withWindowAsync(windowId) { [windows] window, job in
             guard let closeButton = window.get(Ax.closeButtonAttr) else { return }
@@ -109,6 +110,7 @@ final class MacApp: AbstractApp {
     }
 
     @MainActor func nativeFocus(_ windowId: UInt32) {
+        if serverArgs.isReadOnly { return }
         MacApp.focusJob?.cancel()
         MacApp.focusJob = withWindowAsync(windowId) { [nsApp] window, job in
             // Raise firstly to make sure that by the time we activate the app, the window would be already on top

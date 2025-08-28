@@ -46,6 +46,7 @@ var isStartup: Bool { _isStartup ?? dieT("isStartup is not initialized") }
 
 struct ServerArgs: Sendable {
     var configLocation: String? = nil
+    var isReadOnly: Bool = false
 }
 
 private let serverHelp = """
@@ -56,6 +57,8 @@ private let serverHelp = """
       -v, --version           Print AeroSpace.app version
       --config-path <path>    Config path. It will take priority over ~/.aerospace.toml
                               and ${XDG_CONFIG_HOME}/aerospace/aerospace.toml
+      --read-only             Disable window management.
+                              Useful if you want to use only debug-windows or other query commands
     """
 
 private nonisolated(unsafe) var _serverArgs = ServerArgs()
@@ -78,6 +81,9 @@ private func initServerArgs() {
                     cliError("Missing <path> in --config-path flag")
                 }
                 args = Array(args.dropFirst(2))
+            case "--read-only":
+                _serverArgs.isReadOnly = true
+                args = Array(args.dropFirst(1))
             case "-NSDocumentRevisionsDebugMode" where isDebug:
                 printStderr("Running from Xcode. Skip args parsing... The args were: \(CommandLine.arguments.dropFirst())")
                 return
