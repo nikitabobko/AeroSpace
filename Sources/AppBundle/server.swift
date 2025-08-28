@@ -21,7 +21,7 @@ private func handleConnectionAsync(_ connection: sending Socket) {
     Task { await newConnection(connection) }
 }
 
-func sendCommandToReleaseServer(args: [String]) {
+func toggleReleaseServer(_ state: EnableCmdArgs.State) {
     if serverArgs.isReadOnly { return }
     check(isDebug)
     let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrDie()
@@ -33,7 +33,7 @@ func sendCommandToReleaseServer(args: [String]) {
         return
     }
 
-    _ = try? socket.write(from: Result { try JSONEncoder().encode(ClientRequest(args: args, stdin: "")) }.getOrDie())
+    _ = try? socket.write(from: Result { try JSONEncoder().encode(ClientRequest(args: ["enable", state.rawValue], stdin: "")) }.getOrDie())
     _ = try? Socket.wait(for: [socket], timeout: 0, waitForever: true)
     _ = try? socket.readString()
 }
