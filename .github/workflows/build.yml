@@ -38,7 +38,7 @@ jobs:
           else
             sudo xcode-select -s "$XCODE_16_DEVELOPER_DIR" # Affects macOS SDK
           fi
-      - run: brew update && brew install bash fish xcbeautify swiftly
+      - run: brew install bash fish xcbeautify swiftly
       - run: swiftly init --skip-install --assume-yes --verbose && swiftly install
       - run: ./script/install-dep.sh --all
       - run: ./build-debug.sh
