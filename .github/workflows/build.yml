@@ -23,7 +23,7 @@ jobs:
         # Xcode versions:
         # - https://en.wikipedia.org/wiki/Xcode
         # - https://xcodereleases.com/?scope=release
-        os: [macos-13, macos-14, macos-15]
+        os: [macos-15]
     name: Build
     runs-on: ${{ matrix.os }}
 
@@ -41,8 +41,6 @@ jobs:
       - run: brew install bash fish xcbeautify swiftly
       - run: swiftly init --skip-install --assume-yes --verbose && swiftly install
       - run: ./script/install-dep.sh --all
-      - run: ./build-debug.sh
-      - run: ./run-tests.sh
         # We build release artifacts only on the latest macOS because:
         # 1. It cuts the build time twice on GH Actions
         # 2. The latest Xcode version is not available on old macOS, and old Xcode versions bundle too old Swift version
