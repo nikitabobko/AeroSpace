@@ -43,8 +43,8 @@
   "Aero.App.versionShort" : "31.0.1650.57",
   "Aero.AxFailed" : "AXFrame, AXGrowArea, AXMinimizeButton, AXDocument, AXCloseButton, AXActivationPoint, AXFullScreenButton, AXProxy, AXDefaultButton, AXTitleUIElement, AXCancelButton, AXZoomButton, AXToolbarButton",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.AxUiElementWindowType" : "popup", // todo fix
-  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxUiElementWindowType" : "window",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxWritable" : "AXFullScreen, AXPosition, AXSections, AXMain, AXMinimized, AXSize",
   "Aero.axWindowId" : 1872,
   "Aero.macOS.version" : "Version 15.6.1 (Build 24G90)",
