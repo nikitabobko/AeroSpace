@@ -57,7 +57,8 @@ extension AxUiElementMock {
             id != "com.github.wez.wezterm" &&
             !isQutebrowser && // :set window.hide_decoration
             id != "com.googlecode.iterm2" &&
-            id != "org.gnu.Emacs"
+            id != "org.gnu.Emacs" &&
+            id != "com.microsoft.VSCode" && id != "com.vscodium" // "window.nativeFullScreen": false
         {
             return true
         }
