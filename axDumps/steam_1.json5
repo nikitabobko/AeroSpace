@@ -1,0 +1,56 @@
+// Steam is weird. It shows one visible window, but creates 2 AX objects.
+// AeroSpace has to deliberatery ignore the redundant AX object to avoid weird focus issues
+// ./steam_1.json5 -- valid AX object
+// ./steam_2.json5 -- weird AX object
+{
+  "AXActivationPoint" : "<AXValue 0x600001205f20> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600000973c40> {value = x:695.000000 y:186.000000 w:1370.000000 h:779.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXMain" : 1,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600001205f20> {pid=198}",
+  "AXPosition" : "<AXValue 0x60000123db00> {value = x:695.000000 y:186.000000 type = kAXValueCGPointType}",
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+
+  ],
+  "AXSize" : "<AXValue 0x60000125e190> {value = w:1370.000000 h:779.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "Steam",
+  "Aero.AXApp" : {
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=1872, title=\"Steam\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=1872, title=\"Steam\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXApplication",
+    "AXTitle" : "Steam Helper",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=1872, title=\"Steam\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxFailed" : "AXFunctionRowTopLevelElements, AXFrame, AXFocusedUIElement, AXExtrasMenuBar, AXMenuBar, AXSize, AXPosition",
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
+    "Aero.AxWritable" : "AXFrontmost"
+  },
+  "Aero.App.appBundleId" : "com.valvesoftware.steam.helper",
+  "Aero.App.nsApp.activationPolicy" : "accessory",
+  "Aero.App.nsApp.execPath" : "file:///Users/bobko/Library/Application%20Support/Steam/Steam.AppBundle/Steam/Contents/Frameworks/Steam%20Helper.app/Contents/MacOS/Steam%20Helper",
+  "Aero.App.pid" : 198,
+  "Aero.App.version" : "1650.57",
+  "Aero.App.versionShort" : "31.0.1650.57",
+  "Aero.AxFailed" : "AXFrame, AXGrowArea, AXMinimizeButton, AXDocument, AXCloseButton, AXActivationPoint, AXFullScreenButton, AXProxy, AXDefaultButton, AXTitleUIElement, AXCancelButton, AXZoomButton, AXToolbarButton",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "popup", // todo fix
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxWritable" : "AXFullScreen, AXPosition, AXSections, AXMain, AXMinimized, AXSize",
+  "Aero.axWindowId" : 1872,
+  "Aero.macOS.version" : "Version 15.6.1 (Build 24G90)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.MacosPopupWindowsContainer)",
+  "Aero.workspace" : "nil"
+}
