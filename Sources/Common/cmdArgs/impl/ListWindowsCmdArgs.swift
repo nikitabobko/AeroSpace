@@ -119,3 +119,65 @@ public enum WorkspaceFilter: Equatable, Sendable {
     case visible
     case name(WorkspaceName)
 }
+
+public enum FormatVar: Equatable {
+    case window(WindowFormatVar)
+    case workspace(WorkspaceFormatVar)
+    case app(AppFormatVar)
+    case monitor(MonitorFormatVar)
+
+    public enum WindowFormatVar: String, Equatable, CaseIterable {
+        case windowId = "window-id"
+        case windowIsFullscreen = "window-is-fullscreen"
+        case windowTitle = "window-title"
+    }
+
+    public enum WorkspaceFormatVar: String, Equatable, CaseIterable {
+        case workspaceName = "workspace"
+        case workspaceFocused = "workspace-is-focused"
+        case workspaceVisible = "workspace-is-visible"
+    }
+
+    public enum AppFormatVar: String, Equatable, CaseIterable {
+        case appBundleId = "app-bundle-id"
+        case appName = "app-name"
+        case appPid = "app-pid"
+        case appExecPath = "app-exec-path"
+        case appBundlePath = "app-bundle-path"
+    }
+
+    public enum MonitorFormatVar: String, Equatable, CaseIterable {
+        case monitorId = "monitor-id"
+        case monitorAppKitNsScreenScreensId = "monitor-appkit-nsscreen-screens-id"
+        case monitorName = "monitor-name"
+        case monitorIsMain = "monitor-is-main"
+    }
+}
+
+public enum PlainInterVar: String, CaseIterable {
+    case rightPadding = "right-padding"
+    case newline = "newline"
+    case tab = "tab"
+}
+
+public enum AeroObjKind: CaseIterable {
+    case window, workspace, app, monitor
+}
+
+public func getAvailableInterVars(for kind: AeroObjKind) -> [String] {
+    _getAvailableInterVars(for: kind) + PlainInterVar.allCases.map(\.rawValue)
+}
+
+private func _getAvailableInterVars(for kind: AeroObjKind) -> [String] {
+    switch kind {
+        case .app: FormatVar.AppFormatVar.allCases.map(\.rawValue)
+        case .monitor: FormatVar.MonitorFormatVar.allCases.map(\.rawValue)
+        case .workspace:
+            FormatVar.WorkspaceFormatVar.allCases.map(\.rawValue) +
+                _getAvailableInterVars(for: .monitor)
+        case .window:
+            FormatVar.WindowFormatVar.allCases.map(\.rawValue) +
+                _getAvailableInterVars(for: .workspace) +
+                _getAvailableInterVars(for: .app)
+    }
+}

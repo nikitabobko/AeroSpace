@@ -16,16 +16,6 @@ enum AeroObj {
     }
 }
 
-enum AeroObjKind: CaseIterable {
-    case window, workspace, app, monitor
-}
-
-enum PlainInterVar: String, CaseIterable {
-    case rightPadding = "right-padding"
-    case newline = "newline"
-    case tab = "tab"
-}
-
 extension [AeroObj] {
     @MainActor
     func format(_ format: [StringInterToken]) -> Result<[String], String> {
@@ -68,40 +58,6 @@ extension [AeroObj] {
     }
 }
 
-enum FormatVar: Equatable {
-    case window(WindowFormatVar)
-    case workspace(WorkspaceFormatVar)
-    case app(AppFormatVar)
-    case monitor(MonitorFormatVar)
-
-    enum WindowFormatVar: String, Equatable, CaseIterable {
-        case windowId = "window-id"
-        case windowIsFullscreen = "window-is-fullscreen"
-        case windowTitle = "window-title"
-    }
-
-    enum WorkspaceFormatVar: String, Equatable, CaseIterable {
-        case workspaceName = "workspace"
-        case workspaceFocused = "workspace-is-focused"
-        case workspaceVisible = "workspace-is-visible"
-    }
-
-    enum AppFormatVar: String, Equatable, CaseIterable {
-        case appBundleId = "app-bundle-id"
-        case appName = "app-name"
-        case appPid = "app-pid"
-        case appExecPath = "app-exec-path"
-        case appBundlePath = "app-bundle-path"
-    }
-
-    enum MonitorFormatVar: String, Equatable, CaseIterable {
-        case monitorId = "monitor-id"
-        case monitorAppKitNsScreenScreensId = "monitor-appkit-nsscreen-screens-id"
-        case monitorName = "monitor-name"
-        case monitorIsMain = "monitor-is-main"
-    }
-}
-
 enum Primitive: Encodable {
     case bool(Bool)
     case int(Int)
@@ -129,24 +85,6 @@ enum Primitive: Encodable {
         }
         var container = encoder.singleValueContainer()
         try container.encode(value)
-    }
-}
-
-private func getAvailableInterVars(for kind: AeroObjKind) -> [String] {
-    _getAvailableInterVars(for: kind) + PlainInterVar.allCases.map(\.rawValue)
-}
-
-private func _getAvailableInterVars(for kind: AeroObjKind) -> [String] {
-    switch kind {
-        case .app: FormatVar.AppFormatVar.allCases.map(\.rawValue)
-        case .monitor: FormatVar.MonitorFormatVar.allCases.map(\.rawValue)
-        case .workspace:
-            FormatVar.WorkspaceFormatVar.allCases.map(\.rawValue) +
-                _getAvailableInterVars(for: .monitor)
-        case .window:
-            FormatVar.WindowFormatVar.allCases.map(\.rawValue) +
-                _getAvailableInterVars(for: .workspace) +
-                _getAvailableInterVars(for: .app)
     }
 }
 
