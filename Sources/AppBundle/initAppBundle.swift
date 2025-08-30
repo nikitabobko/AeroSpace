@@ -19,11 +19,16 @@ import Foundation
     startUnixSocketServer()
     GlobalObserver.initObserver()
     Task {
+        shouldSaveWorldState = false
         Workspace.garbageCollectUnusedWorkspaces() // init workspaces
         _ = Workspace.all.first?.focusWorkspace()
         try await runRefreshSessionBlocking(.startup, layoutWorkspaces: false)
+        let restored = await restoreWorldState()
+        shouldSaveWorldState = true
         try await runSession(.startup, .checkServerIsEnabledOrDie) {
-            smartLayoutAtStartup()
+            if !restored {
+                smartLayoutAtStartup()
+            }
             _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
         }
     }
