@@ -7,7 +7,11 @@ func syncStartAtLogin() {
     cleanupPlistFromPrevVersions()
     let service = SMAppService.mainApp
     if config.startAtLogin {
-        _ = try? service.register()
+        if isDebug {
+            print("'start-at-login = true' has no effect in debug builds")
+        } else {
+            _ = try? service.register()
+        }
     } else {
         _ = try? service.unregister()
     }
