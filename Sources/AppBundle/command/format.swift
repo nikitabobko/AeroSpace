@@ -148,7 +148,7 @@ extension String {
         if self == PlainInterVar.newline.rawValue { return .success(.string("\n")) }
         if self == PlainInterVar.tab.rawValue { return .success(.string("\t")) }
         return .failure("Unknown interpolation variable '\(self)'. " +
-            "Possible values: \(getAvailableInterVars(for: obj.kind).joined(separator: "|"))")
+            "Possible values:\n\(getAvailableInterVars(for: obj.kind).joined(separator: "\n").prependLines("  "))")
     }
 
     private func toFormatVar() -> FormatVar? {

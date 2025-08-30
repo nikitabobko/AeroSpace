@@ -93,7 +93,7 @@ func formatParser<T: ConvenienceCopyable>(
                 case .failure(let err): .failure("Failed to parse <output-format>. \(err)")
             }
         } else {
-            .failure("<output-format> is mandatory.")
+            .failure("<output-format> is mandatory. Possible values:\n\(getAvailableInterVars(for: kind).joined(separator: "\n").prependLines("  "))")
         }
     }
 }
@@ -165,7 +165,7 @@ public enum PlainInterVar: String, CaseIterable {
     case tab = "tab"
 }
 
-public enum AeroObjKind: CaseIterable {
+public enum AeroObjKind: CaseIterable, Sendable {
     case window, workspace, app, monitor
 }
 
