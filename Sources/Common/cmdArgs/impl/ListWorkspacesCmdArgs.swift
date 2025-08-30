@@ -20,7 +20,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
             "--monitor": ArgParser(\.filteringOptions.onMonitors, parseMonitorIds),
 
             // Formatting flags
-            "--format": ArgParser(\._format, parseFormat),
+            "--format": formatParser(\._format, for: .workspace),
             "--count": trueBoolFlag(\.outputOnlyCount),
             "--json": trueBoolFlag(\.json),
         ],

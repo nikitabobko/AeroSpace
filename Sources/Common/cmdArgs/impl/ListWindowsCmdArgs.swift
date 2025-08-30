@@ -20,7 +20,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--app-bundle-id": singleValueOption(\.filteringOptions.appIdFilter, "<app-bundle-id>") { $0 },
 
             // Formatting flags
-            "--format": ArgParser(\._format, parseFormat),
+            "--format": formatParser(\._format, for: .window),
             "--count": trueBoolFlag(\.outputOnlyCount),
             "--json": trueBoolFlag(\.json),
         ],
@@ -82,14 +82,19 @@ public func parseListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCm
         .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
 }
 
-func parseFormat(arg: String, nextArgs: inout [String]) -> Parsed<[StringInterToken]> {
-    return if let nextArg = nextArgs.nextNonFlagOrNil() {
-        switch nextArg.interpolationTokens(interpolationChar: "%") {
-            case .success(let tokens): .success(tokens)
-            case .failure(let err): .failure("Failed to parse <output-format>. \(err)")
+func formatParser<T: ConvenienceCopyable>(
+    _ keyPath: SendableWritableKeyPath<T, [StringInterToken]>,
+    for kind: AeroObjKind,
+) -> ArgParser<T, [StringInterToken]> {
+    return ArgParser(keyPath) { arg, nextArgs in
+        return if let nextArg = nextArgs.nextNonFlagOrNil() {
+            switch nextArg.interpolationTokens(interpolationChar: "%") {
+                case .success(let tokens): .success(tokens)
+                case .failure(let err): .failure("Failed to parse <output-format>. \(err)")
+            }
+        } else {
+            .failure("<output-format> is mandatory.")
         }
-    } else {
-        .failure("<output-format> is mandatory")
     }
 }
 

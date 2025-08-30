@@ -9,7 +9,7 @@ public struct ListAppsCmdArgs: CmdArgs {
             "--macos-native-hidden": boolFlag(\.macosHidden),
 
             // Formatting flags
-            "--format": ArgParser(\._format, parseFormat),
+            "--format": formatParser(\._format, for: .app),
             "--count": trueBoolFlag(\.outputOnlyCount),
             "--json": trueBoolFlag(\.json),
         ],

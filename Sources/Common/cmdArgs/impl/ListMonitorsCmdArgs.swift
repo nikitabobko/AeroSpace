@@ -10,7 +10,7 @@ public struct ListMonitorsCmdArgs: CmdArgs {
             "--mouse": boolFlag(\.mouse),
 
             // Formatting flags
-            "--format": ArgParser(\._format, parseFormat),
+            "--format": formatParser(\._format, for: .monitor),
             "--count": trueBoolFlag(\.outputOnlyCount),
             "--json": trueBoolFlag(\.json),
         ],
