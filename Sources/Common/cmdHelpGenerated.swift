@@ -76,7 +76,7 @@ let list_windows_help_generated = """
     USAGE: list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
                         [--monitor <monitor>...] [--workspace <workspace>...]
                         [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>]
-                        [--count] [--json]
+                        [--count] [--json] [--layout (accordion|tiles|horizontal|vertical|h_accordion|v_accordion|h_tiles|v_tiles|tiling|floating)]
        OR: list-windows [-h|--help] --all [--format <output-format>] [--count] [--json]
        OR: list-windows [-h|--help] --focused [--format <output-format>] [--count] [--json]
     """
