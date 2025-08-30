@@ -7,7 +7,7 @@ import Foundation
     isCli = false
     initServerArgs()
     if isDebug {
-        toggleReleaseServerIfDebug(.off)
+        sendCommandToReleaseServer(args: ["enable", "off"])
         interceptTermination(SIGINT)
         interceptTermination(SIGKILL)
     }
@@ -18,6 +18,12 @@ import Foundation
     checkAccessibilityPermissions()
     startUnixSocketServer()
     GlobalObserver.initObserver()
+    
+    // Initialize centered workspace bar if enabled
+    if TrayMenuModel.shared.experimentalUISettings.centeredBarEnabled {
+        StatusBarManager.shared.setupCenteredBar(viewModel: TrayMenuModel.shared)
+    }
+    
     Task {
         Workspace.garbageCollectUnusedWorkspaces() // init workspaces
         _ = Workspace.all.first?.focusWorkspace()
@@ -33,11 +39,8 @@ import Foundation
 private func smartLayoutAtStartup() {
     let workspace = focus.workspace
     let root = workspace.rootTilingContainer
-    if root.children.count <= 3 {
-        root.layout = .tiles
-    } else {
-        root.layout = .accordion
-    }
+    // Honor the configured default root layout (tiles | accordion | dwindle)
+    root.layout = config.defaultRootContainerLayout
 }
 
 @TaskLocal
@@ -46,7 +49,6 @@ var isStartup: Bool { _isStartup ?? dieT("isStartup is not initialized") }
 
 struct ServerArgs: Sendable {
     var configLocation: String? = nil
-    var isReadOnly: Bool = false
 }
 
 private let serverHelp = """
@@ -57,8 +59,6 @@ private let serverHelp = """
       -v, --version           Print AeroSpace.app version
       --config-path <path>    Config path. It will take priority over ~/.aerospace.toml
                               and ${XDG_CONFIG_HOME}/aerospace/aerospace.toml
-      --read-only             Disable window management.
-                              Useful if you want to use only debug-windows or other query commands
     """
 
 private nonisolated(unsafe) var _serverArgs = ServerArgs()
@@ -81,9 +81,6 @@ private func initServerArgs() {
                     cliError("Missing <path> in --config-path flag")
                 }
                 args = Array(args.dropFirst(2))
-            case "--read-only":
-                _serverArgs.isReadOnly = true
-                args = Array(args.dropFirst(1))
             case "-NSDocumentRevisionsDebugMode" where isDebug:
                 printStderr("Running from Xcode. Skip args parsing... The args were: \(CommandLine.arguments.dropFirst())")
                 return

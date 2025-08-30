@@ -299,6 +299,9 @@ extension TreeNode {
                         container.orientation == .h
                             ? .h_accordion(container.children.map(\.layoutDescription))
                             : .v_accordion(container.children.map(\.layoutDescription))
+                    case .dwindle:
+                        // For dwindle, we'll just use h_tiles as a placeholder in tests
+                        .h_tiles(container.children.map(\.layoutDescription))
                 }
         }
     }
