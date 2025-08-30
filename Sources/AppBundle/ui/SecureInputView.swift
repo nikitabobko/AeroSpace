@@ -15,20 +15,23 @@ public class SecureInputPanel: NSPanelHud {
 
     @MainActor
     public func refresh() {
-        if isVisible && !TrayMenuModel.shared.isEnabled {
-            close()
-        } else if IsSecureEventInputEnabled() {
-            if isVisible { return }
-            self.contentView?.subviews.removeAll()
-            hostingView = NSHostingView(rootView: SecureInputView())
-            hostingView.frame = NSRect(x: 0, y: 0, width: iconSize.width, height: iconSize.height)
-            self.contentView?.addSubview(hostingView)
-            let x = mainMonitor.width - iconSize.width - 20
-            let panelFrame = NSRect(x: x, y: 20, width: iconSize.width, height: iconSize.width)
-            self.setFrame(panelFrame, display: true)
-            self.orderFrontRegardless()
-        } else {
-            if isVisible { close() }
+        lazy var isSecureInputEnabled = IsSecureEventInputEnabled()
+        switch true {
+            case isVisible && !TrayMenuModel.shared.isEnabled:
+                close()
+            case isSecureInputEnabled == isVisible:
+                break
+            case isSecureInputEnabled:
+                self.contentView?.subviews.removeAll()
+                hostingView = NSHostingView(rootView: SecureInputView())
+                hostingView.frame = NSRect(x: 0, y: 0, width: iconSize.width, height: iconSize.height)
+                self.contentView?.addSubview(hostingView)
+                let x = mainMonitor.width - iconSize.width - 20
+                let panelFrame = NSRect(x: x, y: 20, width: iconSize.width, height: iconSize.width)
+                self.setFrame(panelFrame, display: true)
+                self.orderFrontRegardless()
+            default:
+                close()
         }
     }
 

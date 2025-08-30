@@ -44,13 +44,17 @@ Several workspaces can be visible in multi-monitor setup
 Filter results to only print empty workspaces.
 `[no]` inverts the condition.
 
---format <output-format>:: Specify output format. See "Output Format" section for more details.
+--format <output-format>::
+Specify output format.
+See "Output Format" section for more details.
 Incompatible with `--count`
 
---count:: Output only the number of workspaces.
+--count::
+Output only the number of workspaces.
 Incompatible with `--format`
 
---json:: Output in JSON format.
+--json::
+Output in JSON format.
 Can be used in combination with `--format` to specify which data to include into the json.
 Incompatible with `--count`
 

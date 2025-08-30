@@ -17,5 +17,5 @@ public struct CloseAllWindowsButCurrentCmdArgs: CmdArgs {
 }
 
 public func parseCloseAllWindowsButCurrentCmdArgs(_ args: [String]) -> ParsedCmd<CloseAllWindowsButCurrentCmdArgs> {
-    parseSpecificCmdArgs(CloseAllWindowsButCurrentCmdArgs(rawArgs: .init(args)), args)
+    parseSpecificCmdArgs(CloseAllWindowsButCurrentCmdArgs(rawArgs: args), args)
 }

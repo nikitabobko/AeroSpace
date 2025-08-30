@@ -40,7 +40,7 @@ Automatic `back-and-forth` when switching to already focused workspace.
 Incompatible with `--fail-if-noop`
 
 --fail-if-noop::
-Exit with non-zero exit code if switch to the already focused workspace
+Exit with non-zero exit code if switch to the already focused workspace.
 Incompatible with `--auto-back-and-forth`
 
 --stdin::
