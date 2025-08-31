@@ -50,12 +50,12 @@
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
     "Aero.AxWritable" : "AXFrontmost"
   },
-  "Aero.App.appBundleId" : "nil",
+  "Aero.App.appBundleId" : null,
   "Aero.App.nsApp.activationPolicy" : "accessory",
   "Aero.App.nsApp.execPath" : "file:///opt/homebrew/bin/choose",
   "Aero.App.pid" : 14076,
-  "Aero.App.version" : "nil",
-  "Aero.App.versionShort" : "nil",
+  "Aero.App.version" : null,
+  "Aero.App.versionShort" : null,
   "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, get.AXMinimizeButton, get.AXDocument, get.AXCloseButton, isWritable.AXActivationPoint, get.AXFullScreenButton, get.AXProxy, get.AXDefaultButton, get.AXCancelButton, get.AXZoomButton, get.AXToolbarButton",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
   "Aero.AxUiElementWindowType" : "popup",
@@ -67,5 +67,5 @@
 
   ],
   "Aero.treeNodeParent" : "Optional(AppBundle.MacosPopupWindowsContainer)",
-  "Aero.workspace" : "nil"
+  "Aero.workspace" : null
 }

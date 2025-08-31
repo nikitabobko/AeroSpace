@@ -63,5 +63,5 @@
 
   ],
   "Aero.treeNodeParent" : "AppBundle.MacosPopupWindowsContainer",
-  "Aero.workspace" : "nil"
+  "Aero.workspace" : null
 }

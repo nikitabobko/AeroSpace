@@ -54,7 +54,7 @@
   "Aero.App.nsApp.execPath" : "file:///Users/bobko/Library/Application%20Support/Steam/Steam.AppBundle/Steam/Contents/MacOS/steam_osx",
   "Aero.App.pid" : 10129,
   "Aero.App.version" : "4.0",
-  "Aero.App.versionShort" : "nil",
+  "Aero.App.versionShort" : null,
   "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, get.AXMinimizeButton, get.AXDocument, get.AXCloseButton, isWritable.AXActivationPoint, get.AXFullScreenButton, get.AXProxy, get.AXDefaultButton, get.AXTitleUIElement, get.AXCancelButton, get.AXZoomButton, get.AXToolbarButton",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
   "Aero.AxUiElementWindowType" : "popup",
@@ -66,5 +66,5 @@
 
   ],
   "Aero.treeNodeParent" : "Optional(AppBundle.MacosPopupWindowsContainer)",
-  "Aero.workspace" : "nil"
+  "Aero.workspace" : null
 }
