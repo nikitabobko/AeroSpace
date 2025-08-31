@@ -87,8 +87,9 @@ private func initServerArgs() {
             case "--read-only": // todo rename to '--disabled' and unite with disabled feature
                 _serverArgs.isReadOnly = true
             case "-NSDocumentRevisionsDebugMode" where isDebug:
-                printStderr("Running from Xcode. Skip args parsing... The args were: \(CommandLine.arguments.dropFirst())")
-                return
+                // Skip Xcode CLI args.
+                // Usually it's '-NSDocumentRevisionsDebugMode NO'/'-NSDocumentRevisionsDebugMode YES'
+                while args.getOrNil(atIndex: index)?.starts(with: "-") == false { index += 1 }
             default:
                 cliError("Unrecognized flag '\(args.first.orDie())'")
         }
