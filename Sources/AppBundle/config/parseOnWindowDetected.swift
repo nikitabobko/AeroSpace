@@ -26,16 +26,56 @@ struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
 }
 
 struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
-    var appId: String?
+    var appIds: [String]?
     var appNameRegexSubstring: Regex<AnyRegexOutput>?
     var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
     var workspace: String?
     var duringAeroSpaceStartup: Bool?
 
+    // Backward compatibility - computed property for single appId
+    var appId: String? {
+        get { appIds?.first }
+        set { appIds = newValue.map { [$0] } }
+    }
+
+    // Default initializer with new appIds parameter
+    init(
+        appIds: [String]? = nil,
+        appNameRegexSubstring: Regex<AnyRegexOutput>? = nil,
+        windowTitleRegexSubstring: Regex<AnyRegexOutput>? = nil,
+        workspace: String? = nil,
+        duringAeroSpaceStartup: Bool? = nil
+    ) {
+        self.appIds = appIds
+        self.appNameRegexSubstring = appNameRegexSubstring
+        self.windowTitleRegexSubstring = windowTitleRegexSubstring
+        self.workspace = workspace
+        self.duringAeroSpaceStartup = duringAeroSpaceStartup
+    }
+
+    // Backward compatibility initializer with old appId parameter
+    init(
+        appId: String?,
+        appNameRegexSubstring: Regex<AnyRegexOutput>? = nil,
+        windowTitleRegexSubstring: Regex<AnyRegexOutput>? = nil,
+        workspace: String? = nil,
+        duringAeroSpaceStartup: Bool? = nil
+    ) {
+        self.appIds = appId.map { [$0] }
+        self.appNameRegexSubstring = appNameRegexSubstring
+        self.windowTitleRegexSubstring = windowTitleRegexSubstring
+        self.workspace = workspace
+        self.duringAeroSpaceStartup = duringAeroSpaceStartup
+    }
+
     var debugJson: Json {
         var resultParts: [String] = []
-        if let appId {
-            resultParts.append("appId=\"\(appId)\"")
+        if let appIds {
+            if appIds.count == 1 {
+                resultParts.append("appId=\"\(appIds[0])\"")
+            } else {
+                resultParts.append("appIds=\(appIds)")
+            }
         }
         if appNameRegexSubstring != nil {
             resultParts.append("appNameRegexSubstrin=Regex")
@@ -59,7 +99,7 @@ struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
                 rhs.appNameRegexSubstring == nil &&
                 rhs.windowTitleRegexSubstring == nil,
         )
-        return lhs.appId == rhs.appId
+        return lhs.appIds == rhs.appIds
     }
 }
 
@@ -70,7 +110,7 @@ private let windowDetectedParser: [String: any ParserProtocol<WindowDetectedCall
 ]
 
 private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMatcher>] = [
-    "app-id": Parser(\.appId, upcast(parseString)),
+    "app-id": Parser(\.appIds, upcast(parseAppIds)),
     "workspace": Parser(\.workspace, upcast(parseString)),
     "app-name-regex-substring": Parser(\.appNameRegexSubstring, upcast(parseCasInsensitiveRegex)),
     "window-title-regex-substring": Parser(\.windowTitleRegexSubstring, upcast(parseCasInsensitiveRegex)),
