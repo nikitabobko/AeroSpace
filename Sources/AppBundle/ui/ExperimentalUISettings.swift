@@ -47,7 +47,7 @@ func getExperimentalUISettingsMenu(viewModel: TrayMenuModel) -> some View {
         MenuBarStyleButton(.systemText, viewModel, color) { MenuBarLabel(viewModel.trayText, textStyle: .system, color: color) }
         MenuBarStyleButton(.squares, viewModel, color) { MenuBarLabel(viewModel.trayText, color: color, trayItems: viewModel.trayItems) }
         MenuBarStyleButton(.i3, viewModel, color) { MenuBarLabel(viewModel.trayText, color: color, trayItems: viewModel.trayItems, workspaces: viewModel.workspaces) }
-        MenuBarStyleButton(.i3Ordered, viewModel, color) { MenuBarLabel(viewModel.trayText, color: color, workspaces: viewModel.workspaces) }
+        MenuBarStyleButton(.i3Ordered, viewModel, color) { MenuBarLabel(viewModel.trayText, color: color, trayItems: viewModel.trayItems, workspaces: viewModel.workspaces, ordered: true) }
     } label: {
         Text("Experimental UI Settings (No stability guarantees)")
     }

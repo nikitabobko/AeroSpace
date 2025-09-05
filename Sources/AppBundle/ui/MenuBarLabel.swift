@@ -10,6 +10,7 @@ struct MenuBarLabel: View {
     var color: Color?
     var trayItems: [TrayItem]?
     var workspaces: [WorkspaceViewModel]?
+    var ordered: Bool
 
     let hStackSpacing = CGFloat(6)
     let itemSize = CGFloat(40)
@@ -21,12 +22,13 @@ struct MenuBarLabel: View {
         return color ?? (menuColorScheme == .dark ? Color.white : Color.black)
     }
 
-    init(_ text: String, textStyle: MenuBarTextStyle = .monospaced, color: Color? = nil, trayItems: [TrayItem]? = nil, workspaces: [WorkspaceViewModel]? = nil) {
+    init(_ text: String, textStyle: MenuBarTextStyle = .monospaced, color: Color? = nil, trayItems: [TrayItem]? = nil, workspaces: [WorkspaceViewModel]? = nil, ordered: Bool = false) {
         self.text = text
         self.textStyle = textStyle
         self.color = color
         self.trayItems = trayItems
         self.workspaces = workspaces
+        self.ordered = ordered
     }
 
     var body: some View {
@@ -45,16 +47,24 @@ struct MenuBarLabel: View {
     }
 
     var menuBarContent: some View {
-        return ZStack {
+        return HStack(spacing: hStackSpacing) {
             if let trayItems {
-                HStack(spacing: hStackSpacing) {
+                if ordered, let workspaces {
+                    let orderedWorkspaces = workspaces.filter { !$0.isEffectivelyEmpty || $0.isVisible }
+                    let modeItem = trayItems.first { $0.type == .mode }
+                    if let modeItem {
+                        itemView(for: modeItem)
+                        modeSeparator
+                    }
+                    ForEach(orderedWorkspaces, id: \.name) { item in
+                        itemView(for: TrayItem(type: .workspace, name: item.name, isActive: item.isFocused))
+                            .opacity(item.isVisible ? 1 : 0.5)
+                    }
+                } else {
                     ForEach(trayItems, id: \.id) { item in
                         itemView(for: item)
                         if item.type == .mode {
-                            Text(":")
-                                .font(.system(.largeTitle, design: textStyle.design))
-                                .foregroundStyle(finalColor)
-                                .bold()
+                            modeSeparator
                         }
                     }
                     if let workspaces {
@@ -74,25 +84,19 @@ struct MenuBarLabel: View {
                         }
                     }
                 }
-                .frame(height: itemSize)
-            } else if let workspaces {
-                let orderedWorkspaces = workspaces.filter { !$0.isEffectivelyEmpty || $0.isVisible }
-                if !orderedWorkspaces.isEmpty {
-                    HStack(spacing: hStackSpacing) {
-                        ForEach(orderedWorkspaces, id: \.name) { item in
-                            itemView(for: TrayItem(type: .workspace, name: item.name, isActive: item.isFocused))
-                                .opacity(item.isVisible ? 1 : 0.5)
-                        }
-                    }
-                }
             } else {
-                HStack(spacing: hStackSpacing) {
-                    Text(text)
-                        .font(.system(.largeTitle, design: textStyle.design))
-                        .foregroundStyle(finalColor)
-                }
+                Text(text)
+                    .font(.system(.largeTitle, design: textStyle.design))
+                    .foregroundStyle(finalColor)
             }
         }
+    }
+
+    private var modeSeparator: some View {
+        Text(":")
+            .font(.system(.largeTitle, design: textStyle.design))
+            .foregroundStyle(finalColor)
+            .bold()
     }
 
     @ViewBuilder
