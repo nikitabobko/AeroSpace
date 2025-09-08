@@ -141,6 +141,13 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
 AeroSpace is developed and maintained in my free time.
 If you find it useful, [consider sponsoring](https://github.com/sponsors/nikitabobko#sponsors).
 
+## People who have write access
+
+In alphabetical order:
+
+- [@mobile-ar](https://github.com/mobile-ar/)
+- [@nikitabobko](https://github.com/nikitabobko/)
+
 ## Tip of the day
 
 ```bash
