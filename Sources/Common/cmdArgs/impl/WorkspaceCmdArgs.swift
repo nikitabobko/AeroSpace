@@ -10,8 +10,12 @@ public struct WorkspaceCmdArgs: CmdArgs {
             "--wrap-around": optionalTrueBoolFlag(\._wrapAround),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
             "--stdin": trueBoolFlag(\.stdin),
+            "--no-stdin": optionalTrueBoolFlag(\._noStdin),
         ],
         arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)],
+        conflictingOptions: [
+            ["--stdin", "--no-stdin"],
+        ],
     )
 
     /*conforms*/ public var windowId: UInt32?
@@ -21,6 +25,7 @@ public struct WorkspaceCmdArgs: CmdArgs {
     public var failIfNoop: Bool = false
     public var _wrapAround: Bool?
     public var stdin: Bool = false
+    public var _noStdin: Bool?
 }
 
 public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
@@ -30,6 +35,7 @@ public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArg
         .filterNot("--fail-if-noop is incompatible with \(NextPrev.unionLiteral)") { $0.failIfNoop && $0.target.val.isRelatve }
         .filterNot("--fail-if-noop is incompatible with --auto-back-and-forth") { $0.autoBackAndForth && $0.failIfNoop }
         .filterNot("--stdin requires using \(NextPrev.unionLiteral) argument") { $0.stdin && !$0.target.val.isRelatve }
+        .filterNot("--no-stdin requires using \(NextPrev.unionLiteral) argument") { $0._noStdin != nil && !$0.target.val.isRelatve }
 }
 
 extension WorkspaceCmdArgs {

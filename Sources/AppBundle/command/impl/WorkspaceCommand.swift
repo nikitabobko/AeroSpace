@@ -13,16 +13,16 @@ struct WorkspaceCommand: Command {
         switch args.target.val {
             case .relative(let nextPrev):
                 let stdin = io.readStdin()
-                let useStdin = args.stdin
-                if !stdin.isEmpty && !useStdin {
-                    return io.err("ERROR: Implicit stdin is detected (stdin is not TTY). Implicit stdin was forbidden in AeroSpace v0.20.0.\nPlease supply '--stdin' flag to make stdin explicit and preserve old AeroSpace behavior.\nBreaking change issue: https://github.com/nikitabobko/AeroSpace/issues/1683")
+                let hasImplicitStdin = !stdin.isEmpty && args._noStdin == nil && !args.stdin
+                if hasImplicitStdin {
+                    return io.err("ERROR: Implicit stdin is detected (stdin is not TTY). Implicit stdin was forbidden in AeroSpace v0.20.0.\n1. Please supply '--stdin' flag to make stdin explicit and preserve old AeroSpace behavior\n2. You can also use '--no-stdin' flag to behave as if no stdin was supplied\nBreaking change issue: https://github.com/nikitabobko/AeroSpace/issues/1683")
                 }
                 let workspace = getNextPrevWorkspace(
                     current: focusedWs,
                     isNext: nextPrev == .next,
                     wrapAround: args.wrapAround,
                     stdin: stdin,
-                    useStdin: useStdin,
+                    useStdin: args._noStdin.map { !$0 } ?? args.stdin,
                     target: target,
                 )
                 guard let workspace else { return false }

@@ -10,7 +10,7 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace workspace [-h|--help] [--auto-back-and-forth] [--fail-if-noop] <workspace-name>
-aerospace workspace [-h|--help] [--wrap-around] [--stdin] (next|prev)
+aerospace workspace [-h|--help] [--wrap-around] [--stdin] [--no-stdin] (next|prev)
 
 // end::synopsis[]
 
@@ -45,6 +45,11 @@ Incompatible with `--auto-back-and-forth`
 
 --stdin::
 Read the list of workspaces from stdin
+Incompatible with `--no-stdin`
+
+--no-stdin::
+Ignore the list of workspaces from stdin, even if provided
+Incompatible with `--stdin`
 
 // =========================================================== Examples
 include::util/conditional-examples-header.adoc[]
