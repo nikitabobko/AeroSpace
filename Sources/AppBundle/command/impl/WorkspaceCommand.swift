@@ -12,11 +12,17 @@ struct WorkspaceCommand: Command {
         let workspaceName: String
         switch args.target.val {
             case .relative(let nextPrev):
+                let stdin = io.readStdin()
+                let useStdin = args.stdin
+                if !stdin.isEmpty && !useStdin {
+                    return io.err("ERROR: Implicit stdin is detected (stdin is not TTY). Implicit stdin was forbidden in AeroSpace v0.20.0.\nPlease supply '--stdin' flag to make stdin explicit and preserve old AeroSpace behavior.\nBreaking change issue: https://github.com/nikitabobko/AeroSpace/issues/1683")
+                }
                 let workspace = getNextPrevWorkspace(
                     current: focusedWs,
                     isNext: nextPrev == .next,
                     wrapAround: args.wrapAround,
-                    stdin: io.readStdin(),
+                    stdin: stdin,
+                    useStdin: useStdin,
                     target: target,
                 )
                 guard let workspace else { return false }
@@ -36,15 +42,15 @@ struct WorkspaceCommand: Command {
     }
 }
 
-@MainActor func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String, target: LiveFocus) -> Workspace? {
+@MainActor func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String, useStdin: Bool, target: LiveFocus) -> Workspace? {
     let stdinWorkspaces: [String] = stdin.split(separator: "\n").map { String($0).trim() }.filter { !$0.isEmpty }
     let currentMonitor = current.workspaceMonitor
-    let workspaces: [Workspace] = stdinWorkspaces.isEmpty
-        ? Workspace.all.filter { $0.workspaceMonitor.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }
+    let workspaces: [Workspace] = useStdin
+        ? stdinWorkspaces.map { Workspace.get(byName: $0) }
+        : Workspace.all.filter { $0.workspaceMonitor.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }
             .toSet()
             .union([current])
             .sorted()
-        : stdinWorkspaces.map { Workspace.get(byName: $0) }
     let index = workspaces.firstIndex(where: { $0 == target.workspace }) ?? 0
     let workspace: Workspace? = if wrapAround {
         workspaces.get(wrappingIndex: isNext ? index + 1 : index - 1)
