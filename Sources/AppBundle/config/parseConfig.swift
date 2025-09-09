@@ -233,6 +233,27 @@ func parseSimpleType<T>(_ raw: TOMLValueConvertible) -> T? {
     (raw.int as? T) ?? (raw.string as? T) ?? (raw.bool as? T)
 }
 
+func parseAppIds(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<[String]> {
+    if let rawString = raw.string {
+        return .success([rawString])
+    } else if let rawArray = raw.array {
+        var appIds: [String] = []
+        for (index, item) in rawArray.enumerated() {
+            if let str = item.string {
+                appIds.append(str)
+            } else {
+                return .failure(.semantic(backtrace + .index(index), expectedActualTypeError(expected: .string, actual: item.type)))
+            }
+        }
+        if appIds.isEmpty {
+            return .failure(.semantic(backtrace, "The array must not be empty"))
+        }
+        return .success(appIds)
+    } else {
+        return .failure(.semantic(backtrace, expectedActualTypeError(expected: [.string, .array], actual: raw.type)))
+    }
+}
+
 extension TOMLValueConvertible {
     func unwrapTableWithSingleKey(expectedKey: String? = nil, _ backtrace: inout TomlBacktrace) -> ParsedToml<(key: String, value: TOMLValueConvertible)> {
         guard let table else {
