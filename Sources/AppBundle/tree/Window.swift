@@ -71,3 +71,38 @@ extension Window {
 
     func asMacWindow() -> MacWindow { self as! MacWindow }
 }
+
+extension Window {
+    func matchesLayout(_ layoutDescription: LayoutDescription) -> Bool {
+        switch layoutDescription {
+            case .floating:
+                return isFloating
+            case .tiling:
+                return !isFloating
+            case .tiles:
+                guard let tilingContainer = parent as? TilingContainer else { return false }
+                return tilingContainer.layout == .tiles
+            case .accordion:
+                guard let tilingContainer = parent as? TilingContainer else { return false }
+                return tilingContainer.layout == .accordion
+            case .horizontal:
+                guard let tilingContainer = parent as? TilingContainer else { return false }
+                return tilingContainer.orientation == .h
+            case .vertical:
+                guard let tilingContainer = parent as? TilingContainer else { return false }
+                return tilingContainer.orientation == .v
+            case .h_tiles:
+                guard let tilingContainer = parent as? TilingContainer else { return false }
+                return tilingContainer.layout == .tiles && tilingContainer.orientation == .h
+            case .v_tiles:
+                guard let tilingContainer = parent as? TilingContainer else { return false }
+                return tilingContainer.layout == .tiles && tilingContainer.orientation == .v
+            case .h_accordion:
+                guard let tilingContainer = parent as? TilingContainer else { return false }
+                return tilingContainer.layout == .accordion && tilingContainer.orientation == .h
+            case .v_accordion:
+                guard let tilingContainer = parent as? TilingContainer else { return false }
+                return tilingContainer.layout == .accordion && tilingContainer.orientation == .v
+        }
+    }
+}
