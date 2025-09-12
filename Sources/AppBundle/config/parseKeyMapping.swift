@@ -9,7 +9,7 @@ private let keyMappingParser: [String: any ParserProtocol<KeyMapping>] = [
 
 struct KeyMapping: ConvenienceCopyable, Equatable, Sendable {
     enum Preset: String, CaseIterable, Sendable {
-        case qwerty, dvorak, colemak
+        case automatic, qwerty, dvorak, colemak
     }
 
     init(
@@ -20,7 +20,7 @@ struct KeyMapping: ConvenienceCopyable, Equatable, Sendable {
         self.rawKeyNotationToKeyCode = rawKeyNotationToKeyCode
     }
 
-    fileprivate var preset: Preset = .qwerty
+    var preset: Preset = .qwerty
     fileprivate var rawKeyNotationToKeyCode: [String: Key] = [:]
 
     func resolve() -> [String: Key] {
