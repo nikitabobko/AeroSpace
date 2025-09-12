@@ -121,12 +121,19 @@ extension String {
                     case .windowId: .success(.uint32(w.windowId))
                     case .windowIsFullscreen: .success(.bool(w.isFullscreen))
                     case .windowTitle: .success(.string(title))
+                    case .windowLayout,
+                         .windowParentContainerLayout:
+                        switch w.parent?.nodeCases {
+                            case .tilingContainer(let tc): .success(.string(self.toLayoutString(tc: tc)))
+                            default: .success(.string("floating"))
+                        }
                 }
             case (.workspace(let w), .workspace(let f)):
                 return switch f {
                     case .workspaceName: .success(.string(w.name))
                     case .workspaceVisible: .success(.bool(w.isVisible))
                     case .workspaceFocused: .success(.bool(focus.workspace == w))
+                    case .workspaceRootContainerLayout: .success(.string(self.toLayoutString(tc: w.rootTilingContainer)))
                 }
             case (.monitor(let m), .monitor(let f)):
                 return switch f {
@@ -156,5 +163,14 @@ extension String {
             ?? FormatVar.WorkspaceFormatVar(rawValue: self).flatMap(FormatVar.workspace)
             ?? FormatVar.AppFormatVar(rawValue: self).flatMap(FormatVar.app)
             ?? FormatVar.MonitorFormatVar(rawValue: self).flatMap(FormatVar.monitor)
+    }
+
+    private func toLayoutString(tc: TilingContainer) -> String {
+        switch (tc.layout, tc.orientation) {
+            case (.tiles, .h): return "h_tiles"
+            case (.tiles, .v): return "v_tiles"
+            case (.accordion, .h): return "h_accordion"
+            case (.accordion, .v): return "v_accordion"
+        }
     }
 }
