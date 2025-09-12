@@ -9,8 +9,8 @@ public struct WorkspaceCmdArgs: CmdArgs {
             "--auto-back-and-forth": optionalTrueBoolFlag(\._autoBackAndForth),
             "--wrap-around": optionalTrueBoolFlag(\._wrapAround),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
-            "--stdin": trueBoolFlag(\.stdin),
-            "--no-stdin": optionalTrueBoolFlag(\._noStdin),
+            "--stdin": optionalTrueBoolFlag(\._stdin),
+            "--no-stdin": optionalFalseBoolFlag(\._stdin),
         ],
         arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)],
         conflictingOptions: [
@@ -24,8 +24,7 @@ public struct WorkspaceCmdArgs: CmdArgs {
     public var _autoBackAndForth: Bool?
     public var failIfNoop: Bool = false
     public var _wrapAround: Bool?
-    public var stdin: Bool = false
-    public var _noStdin: Bool?
+    public var _stdin: Bool? = nil
 }
 
 public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArgs> {
@@ -34,13 +33,13 @@ public func parseWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<WorkspaceCmdArg
         .filterNot("--auto-back-and-forth is incompatible with \(NextPrev.unionLiteral)") { $0._autoBackAndForth != nil && $0.target.val.isRelatve }
         .filterNot("--fail-if-noop is incompatible with \(NextPrev.unionLiteral)") { $0.failIfNoop && $0.target.val.isRelatve }
         .filterNot("--fail-if-noop is incompatible with --auto-back-and-forth") { $0.autoBackAndForth && $0.failIfNoop }
-        .filterNot("--stdin requires using \(NextPrev.unionLiteral) argument") { $0.stdin && !$0.target.val.isRelatve }
-        .filterNot("--no-stdin requires using \(NextPrev.unionLiteral) argument") { $0._noStdin != nil && !$0.target.val.isRelatve }
+        .filterNot("--stdin and --no-stdin require using \(NextPrev.unionLiteral) argument") { $0._stdin != nil && !$0.target.val.isRelatve }
 }
 
 extension WorkspaceCmdArgs {
     public var wrapAround: Bool { _wrapAround ?? false }
     public var autoBackAndForth: Bool { _autoBackAndForth ?? false }
+    public var stdin: Bool { _stdin ?? false }
 }
 
 public enum WorkspaceTarget: Equatable, Sendable {

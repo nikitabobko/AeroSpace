@@ -84,6 +84,10 @@ public func optionalTrueBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWrit
     ArgParser(keyPath) { _, _ in .success(true) }
 }
 
+public func optionalFalseBoolFlag<T: ConvenienceCopyable>(_ KeyPath: SendableWritableKeyPath<T, Bool?>) -> ArgParser<T, Bool?> {
+    ArgParser(KeyPath) { _, _ in .success(false) }
+}
+
 // todo reuse in config
 public func parseEnum<T: RawRepresentable>(_ raw: String, _ _: T.Type) -> Parsed<T> where T.RawValue == String, T: CaseIterable {
     T(rawValue: raw).orFailure("Can't parse '\(raw)'.\nPossible values: \(T.unionLiteral)")
