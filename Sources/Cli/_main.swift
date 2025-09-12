@@ -26,11 +26,11 @@ struct Main {
         }
 
         let isVersion: Bool = args.first == "--version" || args.first == "-v"
-
+        var parsedArgs: (any CmdArgs)! = nil
         if !isVersion {
             switch parseCmdArgs(args) {
-                case .cmd:
-                    break
+                case .cmd(let _parsedArgs):
+                    parsedArgs = _parsedArgs
                 case .help(let help):
                     print(help)
                     exit(0)
@@ -55,7 +55,17 @@ struct Main {
         }
 
         var stdin = ""
-        if hasStdin() {
+        if let workspaceCmdArgs = parsedArgs as? WorkspaceCmdArgs, hasStdin() {
+            if workspaceCmdArgs._stdin == nil {
+                cliError(
+                    """
+                    ERROR: Implicit stdin is detected (stdin is not TTY). Implicit stdin was forbidden in AeroSpace v0.20.0.
+                    1. Please supply '--stdin' flag to make stdin explicit and preserve old AeroSpace behavior
+                    2. You can also use '--no-stdin' flag to behave as if no stdin was supplied
+                    Breaking change issue: https://github.com/nikitabobko/AeroSpace/issues/1683
+                    """,
+                )
+            }
             var index = 0
             while let line = readLine(strippingNewline: false) {
                 stdin += line
