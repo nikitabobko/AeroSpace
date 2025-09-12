@@ -45,6 +45,7 @@ private let slash = "slash"
 
 func getKeysPreset(_ layout: KeyMapping.Preset) -> [String: Key] {
     return switch layout {
+        case .automatic: automaticMap()
         case .qwerty: keyNotationToKeyCode
         case .dvorak: dvorakMap
         case .colemak: colemakMap
@@ -163,6 +164,20 @@ let keyNotationToKeyCode: [String: Key] = [
     "up": .upArrow,
     "right": .rightArrow,
 ]
+
+private func automaticMap() -> [String: Key] {
+    var map = [String: Key]()
+
+    for keyCode in 0 ..< 128 {
+        if let str = keycodeToString(UInt16(keyCode)),
+           let key = Key(carbonKeyCode: UInt32(keyCode))
+        {
+            map[str.lowercased()] = key
+        }
+    }
+
+    return map
+}
 
 private let dvorakMap: [String: Key] = keyNotationToKeyCode + [
     leftSquareBracket: .minus,

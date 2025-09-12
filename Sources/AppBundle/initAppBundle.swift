@@ -1,6 +1,7 @@
 import AppKit
 import Common
 import Foundation
+import Carbon
 
 @MainActor public func initAppBundle() {
     initTerminationHandler()
@@ -25,6 +26,19 @@ import Foundation
         try await runSession(.startup, .checkServerIsEnabledOrDie) {
             smartLayoutAtStartup()
             _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+        }
+    }
+
+    DistributedNotificationCenter.default.addObserver(
+        forName: .init(kTISNotifySelectedKeyboardInputSourceChanged as String),
+        object: nil,
+        queue: .main,
+    ) { _ in
+        Task { @MainActor in
+            guard config.keyMapping.preset == .automatic else {
+                return
+            }
+            _ = reloadConfig()
         }
     }
 }
