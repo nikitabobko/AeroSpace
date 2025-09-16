@@ -52,12 +52,10 @@ final class MacWindow: Window {
     //     return "Window(\(description))"
     // }
 
-    @MainActor // todo swift is stupid
     func isWindowHeuristic() async throws -> Bool { // todo cache
         try await macApp.isWindowHeuristic(windowId)
     }
 
-    @MainActor // todo swift is stupid
     func isDialogHeuristic() async throws -> Bool { // todo cache
         try await macApp.isDialogHeuristic(windowId)
     }
@@ -67,7 +65,6 @@ final class MacWindow: Window {
         try await macApp.getAxUiElementWindowType(windowId)
     }
 
-    @MainActor // todo swift is stupid
     func dumpAxInfo() async throws -> [String: Json] {
         try await macApp.dumpWindowAxInfo(windowId: windowId)
     }
@@ -182,7 +179,6 @@ final class MacWindow: Window {
         prevUnhiddenProportionalPositionInsideWorkspaceRect != nil
     }
 
-    @MainActor // todo swift is stupid
     override func getAxSize() async throws -> CGSize? {
         try await macApp.getAxSize(windowId)
     }
@@ -195,7 +191,6 @@ final class MacWindow: Window {
         macApp.setAxFrame(windowId, topLeft, size)
     }
 
-    @MainActor // todo swift is stupid
     override func setAxFrameBlocking(_ topLeft: CGPoint?, _ size: CGSize?) async throws {
         try await macApp.setAxFrameBlocking(windowId, topLeft, size)
     }
@@ -214,7 +209,7 @@ final class MacWindow: Window {
 }
 
 extension Window {
-    @MainActor // todo swift is stupid
+    @MainActor
     func relayoutWindow(on workspace: Workspace, forceTile: Bool = false) async throws {
         let data = forceTile
             ? unbindAndGetBindingDataForNewTilingWindow(workspace, window: self)
@@ -224,7 +219,7 @@ extension Window {
 }
 
 // The function is private because it's unsafe. It leaves the window in unbound state
-@MainActor // todo swift is stupid
+@MainActor
 private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace, window: Window?) async throws -> BindingData {
     switch try await macApp.getAxUiElementWindowType(windowId) {
         case .popup: BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)

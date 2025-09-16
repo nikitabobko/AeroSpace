@@ -51,6 +51,9 @@ let package = Package(
                 .target(name: "Common"),
                 .target(name: "PrivateApi"),
             ],
+            swiftSettings: [
+                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+            ],
         ),
         .executableTarget(
             name: "AeroSpaceApp",
