@@ -19,11 +19,12 @@ jobs:
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-14-arm64-Readme.md
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md
+        # https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md
         #
         # Xcode versions:
         # - https://en.wikipedia.org/wiki/Xcode
         # - https://xcodereleases.com/?scope=release
-        os: [macos-13, macos-14, macos-15]
+        os: [macos-13, macos-14, macos-15, macos-26]
     name: Build
     runs-on: ${{ matrix.os }}
 
@@ -49,10 +50,10 @@ jobs:
         # We build release artifacts only on the latest macOS because:
         # 1. It cuts the build time twice on GH Actions
         # 2. The latest Xcode version is not available on old macOS, and old Xcode versions bundle too old Swift version
-      - name: './build-release.sh # on macos-15'
+      - name: './build-release.sh # on macos-15, macos-26'
         run: |
           sw_vers -productVersion
-          if sw_vers -productVersion | grep -q "^15"; then
+          if sw_vers -productVersion | grep -E -q "^(15|26)"; then
             # "-" means "Sign to run locally". There is no aerospace-codesign-certificate on GH Actions
             ./build-release.sh --codesign-identity -
             ./install-from-sources.sh --dont-rebuild
