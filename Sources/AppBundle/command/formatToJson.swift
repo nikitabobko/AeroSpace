@@ -17,9 +17,9 @@ extension [AeroObj] {
                 returnAllVars
                 ? getAvailableInterVars(for: richObj.kind)
                     .filter {
-                        $0 != "right-padding"
-                        && $0 != "newline"
-                        && $0 != "tab"
+                        $0 != PlainInterVar.rightPadding.rawValue
+                        && $0 != PlainInterVar.newline.rawValue
+                        && $0 != PlainInterVar.tab.rawValue
                     } // Exclude non-data vars
                     .map { StringInterToken.interVar($0) }
                 : format
