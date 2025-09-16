@@ -3,11 +3,29 @@ import Foundation
 
 extension [AeroObj] {
     @MainActor
-    func formatToJson(_ format: [StringInterToken], ignoreRightPaddingVar: Bool) -> Result<String, String> {
+    func formatToJson(_ format: [StringInterToken], ignoreRightPaddingVar: Bool) -> Result<
+        String, String
+    > {
         var list: [[String: Primitive]] = []
         for richObj in self {
             var rawObj: [String: Primitive] = [:]
-            for token in format {
+
+            // Check if %{all} is in the format
+            let returnAllVars = format.contains { $0 == .interVar("all") }
+
+            let expandedFormat =
+                returnAllVars
+                ? getAvailableInterVars(for: richObj.kind)
+                    .filter {
+                        $0 != "right-padding"
+                        && $0 != "newline"
+                        && $0 != "tab"
+                    } // Exclude non-data vars
+                    .map { StringInterToken.interVar($0) }
+                : format
+
+            // Process format normally
+            for token in expandedFormat {
                 switch token {
                     case .interVar(PlainInterVar.rightPadding.rawValue) where ignoreRightPaddingVar:
                         break
@@ -19,6 +37,7 @@ extension [AeroObj] {
                             case .failure(let error): return .failure(error)
                         }
                 }
+
             }
             list.append(rawObj)
         }
