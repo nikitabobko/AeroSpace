@@ -15,7 +15,7 @@ jobs:
     strategy:
       # fail-fast: false # Disable fail-fast in matrix
       matrix:
-        # https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories
+        # https://docs.github.com/en/actions/reference/runners/github-hosted-runners#standard-github-hosted-runners-for-public-repositories
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-14-arm64-Readme.md
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md
