@@ -147,7 +147,7 @@ extension String {
         }
         if self == PlainInterVar.newline.rawValue { return .success(.string("\n")) }
         if self == PlainInterVar.tab.rawValue { return .success(.string("\t")) }
-        if self == "all" { 
+        if self == "all" {
             // %{all} is a special format variable handled by formatToJson
             // When used in non-JSON context, it should error
             return .failure("'%{all}' format option requires --json flag")

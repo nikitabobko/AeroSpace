@@ -15,14 +15,14 @@ extension [AeroObj] {
 
             let expandedFormat =
                 returnAllVars
-                ? getAvailableInterVars(for: richObj.kind)
-                    .filter {
-                        $0 != PlainInterVar.rightPadding.rawValue
-                        && $0 != PlainInterVar.newline.rawValue
-                        && $0 != PlainInterVar.tab.rawValue
-                    } // Exclude non-data vars
-                    .map { StringInterToken.interVar($0) }
-                : format
+                    ? getAvailableInterVars(for: richObj.kind)
+                        .filter {
+                            $0 != PlainInterVar.rightPadding.rawValue
+                                && $0 != PlainInterVar.newline.rawValue
+                                && $0 != PlainInterVar.tab.rawValue
+                        } // Exclude non-data vars
+                        .map { StringInterToken.interVar($0) }
+                    : format
 
             // Process format normally
             for token in expandedFormat {
@@ -37,7 +37,6 @@ extension [AeroObj] {
                             case .failure(let error): return .failure(error)
                         }
                 }
-
             }
             list.append(rawObj)
         }
