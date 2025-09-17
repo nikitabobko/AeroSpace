@@ -477,7 +477,7 @@ Here is a showcase example that uses all the possible configurations:
 [source,toml]
 ----
 [[on-window-detected]]
-    if.app-id = 'com.apple.systempreferences'
+    if.app-id = 'com.apple.systempreferences'  # Can also be an array: ['app1.id', 'app2.id']
     if.app-name-regex-substring = 'settings'
     if.window-title-regex-substring = 'substring'
     if.workspace = 'workspace-name'
@@ -554,6 +554,11 @@ Examples of automations:
 [[on-window-detected]]
     if.app-id = 'com.jetbrains.intellij'
     run = 'move-node-to-workspace I' # mnemonics I - IDE
+
+# You can also use an array to match multiple app IDs with a single rule
+[[on-window-detected]]
+    if.app-id = ['org.mozilla.firefox', 'com.google.Chrome', 'com.brave.Browser']
+    run = 'move-node-to-workspace W' # All web browsers to workspace W
 ----
 * Make all windows float by default
 +
