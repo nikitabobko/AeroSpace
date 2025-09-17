@@ -55,8 +55,10 @@ struct Main {
         }
 
         var stdin = ""
-        if let workspaceCmdArgs = parsedArgs as? WorkspaceCmdArgs, hasStdin() {
-            if workspaceCmdArgs._stdin == nil {
+        if (parsedArgs is WorkspaceCmdArgs || parsedArgs is MoveNodeToWorkspaceCmdArgs) && hasStdin() {
+            if parsedArgs is WorkspaceCmdArgs && (parsedArgs as! WorkspaceCmdArgs).explicitStdinFlag == nil ||
+                parsedArgs is MoveNodeToWorkspaceCmdArgs && (parsedArgs as! MoveNodeToWorkspaceCmdArgs).explicitStdinFlag == nil
+            {
                 cliError(
                     """
                     ERROR: Implicit stdin is detected (stdin is not TTY). Implicit stdin was forbidden in AeroSpace v0.20.0.

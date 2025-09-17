@@ -70,12 +70,11 @@ func testParseCommandFail(_ command: String, msg expected: String) {
 }
 
 extension WorkspaceCmdArgs {
-    init(target: WorkspaceTarget, autoBackAndForth: Bool? = nil, wrapAround: Bool? = nil, stdin: Bool? = nil) {
+    init(target: WorkspaceTarget, autoBackAndForth: Bool? = nil, wrapAround: Bool? = nil) {
         self = WorkspaceCmdArgs(rawArgs: [])
         self.target = .initialized(target)
         self._autoBackAndForth = autoBackAndForth
         self._wrapAround = wrapAround
-        self._stdin = stdin
     }
 }
 

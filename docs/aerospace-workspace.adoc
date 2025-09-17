@@ -10,7 +10,7 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace workspace [-h|--help] [--auto-back-and-forth] [--fail-if-noop] <workspace-name>
-aerospace workspace [-h|--help] [--wrap-around] [--stdin] [--no-stdin] (next|prev)
+aerospace workspace [-h|--help] [--wrap-around] [--stdin|--no-stdin] (next|prev)
 
 // end::synopsis[]
 
@@ -26,7 +26,7 @@ aerospace workspace [-h|--help] [--wrap-around] [--stdin] [--no-stdin] (next|pre
 
 Focuses next or previous workspace in *the list*.
 
-* If `--stdin` is specified then *the list* is taken from stdin
+* If `--stdin` is specified, then *the list* is taken from stdin
 * Otherwise, *the list* is defined as all workspaces on focused monitor in alphabetical order
 
 // =========================================================== Options
@@ -44,11 +44,11 @@ Exit with non-zero exit code if switch to the already focused workspace
 Incompatible with `--auto-back-and-forth`
 
 --stdin::
-Read the list of workspaces from stdin
+Read the list of workspaces from stdin.
 Incompatible with `--no-stdin`
 
 --no-stdin::
-Ignore the list of workspaces from stdin, even if provided
+Ignore the list of workspaces from stdin, even if provided.
 Incompatible with `--stdin`
 
 // =========================================================== Examples

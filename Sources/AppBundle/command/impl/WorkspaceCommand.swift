@@ -16,8 +16,7 @@ struct WorkspaceCommand: Command {
                     current: focusedWs,
                     isNext: nextPrev == .next,
                     wrapAround: args.wrapAround,
-                    stdin: io.readStdin(),
-                    useStdin: args.stdin,
+                    stdin: args.useStdin ? io.readStdin() : nil,
                     target: target,
                 )
                 guard let workspace else { return false }
@@ -37,10 +36,10 @@ struct WorkspaceCommand: Command {
     }
 }
 
-@MainActor func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String, useStdin: Bool, target: LiveFocus) -> Workspace? {
-    let stdinWorkspaces: [String] = stdin.split(separator: "\n").map { String($0).trim() }.filter { !$0.isEmpty }
+@MainActor func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String?, target: LiveFocus) -> Workspace? {
+    let stdinWorkspaces: [String] = stdin?.split(separator: "\n").map { String($0).trim() }.filter { !$0.isEmpty } ?? []
     let currentMonitor = current.workspaceMonitor
-    let workspaces: [Workspace] = useStdin
+    let workspaces: [Workspace] = stdin != nil
         ? stdinWorkspaces.map { Workspace.get(byName: $0) }
         : Workspace.all.filter { $0.workspaceMonitor.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }
             .toSet()
