@@ -42,6 +42,7 @@ swift() {
         swiftly run swift "$@"
     else
         echo "warning: swiftly is not installed. Fallback to plain swift. Swift compilation might not be reproducible" > /dev/stderr
+        /usr/bin/env swift --version
         /usr/bin/env swift "$@"
     fi
 }
