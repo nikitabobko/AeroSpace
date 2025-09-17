@@ -43,29 +43,29 @@ func getExperimentalUISettingsMenu(viewModel: TrayMenuModel) -> some View {
     let color = AppearanceTheme.current == .dark ? Color.white : Color.black
     return Menu {
         Text("Menu bar style (macOS 14 or later):")
-        MenuBarStyleButton(.monospacedText, viewModel, color) { MenuBarLabel(viewModel.trayText, color: color) }
-        MenuBarStyleButton(.systemText, viewModel, color) { MenuBarLabel(viewModel.trayText, textStyle: .system, color: color) }
-        MenuBarStyleButton(.squares, viewModel, color) { MenuBarLabel(viewModel.trayText, color: color, trayItems: viewModel.trayItems) }
-        MenuBarStyleButton(.i3, viewModel, color) { MenuBarLabel(viewModel.trayText, color: color, trayItems: viewModel.trayItems, workspaces: viewModel.workspaces) }
-        MenuBarStyleButton(.i3Ordered, viewModel, color) { MenuBarLabel(viewModel.trayText, color: color, workspaces: viewModel.workspaces) }
+        ForEach(MenuBarStyle.allCases, id: \.id) { style in
+            MenuBarStyleButton(style: style, color: color).environmentObject(viewModel)
+        }
     } label: {
         Text("Experimental UI Settings (No stability guarantees)")
     }
 }
 
 @MainActor
-func MenuBarStyleButton(
-    _ style: MenuBarStyle,
-    _ viewModel: TrayMenuModel,
-    _ color: Color,
-    _ menuBarLabel: () -> some View,
-) -> some View {
-    Button {
-        viewModel.experimentalUISettings.displayStyle = style
-    } label: {
-        Toggle(isOn: .constant(viewModel.experimentalUISettings.displayStyle == style)) {
-            menuBarLabel()
-            Text(" -  " + style.title)
+struct MenuBarStyleButton: View {
+    @EnvironmentObject var viewModel: TrayMenuModel
+    let style: MenuBarStyle
+    let color: Color
+
+    var body: some View {
+        Button {
+            viewModel.experimentalUISettings.displayStyle = style
+        } label: {
+            Toggle(isOn: .constant(viewModel.experimentalUISettings.displayStyle == style)) {
+                MenuBarLabel(style: style, color: color)
+                    .environmentObject(viewModel)
+                Text(" -  " + style.title)
+            }
         }
     }
 }

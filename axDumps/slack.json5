@@ -1,0 +1,112 @@
+{
+  "AXActivationPoint" : "<AXValue 0x60000264ef10> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxFailed" : "get.AXTitle",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : "",
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600003d5a440> {value = x:0.000000 y:44.000000 w:1800.000000 h:1124.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxFailed" : "get.AXTitle",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxFailed" : "get.AXTitle",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600002619260> {pid=80239}",
+  "AXPosition" : "<AXValue 0x60000264e9d0> {value = x:0.000000 y:44.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x6000026d17d0> {pid=80239}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x6000026d1620> {pid=80239}\";\n    SectionUniqueID = AXContainer;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600002635680> {value = w:1800.000000 h:1124.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "general (Channel) - redacted - Slack",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxFailed" : "get.AXTitle",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : null,
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXManualAccessibility" : 0,
+    "AXMenuBar" : "<AXUIElement 0x6000026d1680> {pid=80239}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Slack",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=5018, title=\"general (Channel) - redacted - Slack\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXFocusedUIElement, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
+    "Aero.AxWritable" : "AXManualAccessibility, AXFrontmost"
+  },
+  "Aero.App.appBundleId" : "com.tinyspeck.slackmacgap",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.appBundlePath" : "file:///Applications/Slack.app/",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Slack.app/Contents/MacOS/Slack",
+  "Aero.App.pid" : 80239,
+  "Aero.App.version" : "445000069",
+  "Aero.App.versionShort" : "4.45.69",
+  "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, isWritable.AXActivationPoint, get.AXProxy, get.AXDefaultButton, get.AXTitleUIElement, get.AXCancelButton, get.AXToolbarButton",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "window",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
+  "Aero.AxWritable" : "AXFullScreen, AXPosition, AXSections, AXMain, AXMinimized, AXSize",
+  "Aero.axWindowId" : 5018,
+  "Aero.macOS.version" : "Version 15.6.1 (Build 24G90)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.TilingContainer)",
+  "Aero.workspace" : "1"
+}

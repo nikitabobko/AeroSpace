@@ -53,18 +53,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
         if viewModel.isEnabled {
-            switch viewModel.experimentalUISettings.displayStyle {
-                case .monospacedText:
-                    MenuBarLabel(viewModel.trayText)
-                case .systemText:
-                    MenuBarLabel(viewModel.trayText, textStyle: .system)
-                case .squares:
-                    MenuBarLabel(viewModel.trayText, trayItems: viewModel.trayItems)
-                case .i3:
-                    MenuBarLabel(viewModel.trayText, trayItems: viewModel.trayItems, workspaces: viewModel.workspaces)
-                case .i3Ordered:
-                    MenuBarLabel(viewModel.trayText, workspaces: viewModel.workspaces)
-            }
+            MenuBarLabel().environmentObject(viewModel)
         } else {
             Image(systemName: "pause.circle.fill")
                 .resizable()

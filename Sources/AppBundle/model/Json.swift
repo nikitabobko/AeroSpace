@@ -45,6 +45,8 @@ enum Json: Encodable, Equatable {
         }
     }
 
+    static func stringOrNull(_ str: String?) -> Json { str.map(Json.string) ?? .null }
+
     var rawValue: Any? {
         switch self {
             case .null: nil

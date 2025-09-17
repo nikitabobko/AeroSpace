@@ -78,15 +78,16 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
     var result: [String: Json] = try await window.dumpAxInfo()
 
     result["Aero.axWindowId"] = .uint32(window.windowId)
-    result["Aero.workspace"] = .string(window.nodeWorkspace?.name ?? "nil")
+    result["Aero.workspace"] = .stringOrNull(window.nodeWorkspace?.name)
     result["Aero.treeNodeParent"] = .string(String(describing: window.parent))
     result["Aero.macOS.version"] = .string(ProcessInfo().operatingSystemVersionString) // because built-in apps might behave differently depending on the OS version
-    result["Aero.App.appBundleId"] = .string(window.app.bundleId.prettyDescription)
+    result["Aero.App.appBundleId"] = .stringOrNull(window.app.bundleId)
     result["Aero.App.pid"] = .int(Int(window.app.pid))
-    result["Aero.App.versionShort"] = .string((appInfoDic["CFBundleShortVersionString"] as? String).prettyDescription)
-    result["Aero.App.version"] = .string((appInfoDic["CFBundleVersion"] as? String).prettyDescription)
+    result["Aero.App.versionShort"] = .stringOrNull(appInfoDic["CFBundleShortVersionString"] as? String)
+    result["Aero.App.version"] = .stringOrNull(appInfoDic["CFBundleVersion"] as? String)
     result["Aero.App.nsApp.activationPolicy"] = .string(window.macApp.nsApp.activationPolicy.prettyDescription)
-    result["Aero.App.nsApp.execPath"] = .string(window.macApp.nsApp.executableURL.prettyDescription)
+    result["Aero.App.nsApp.execPath"] = .stringOrNull(window.macApp.nsApp.executableURL?.description)
+    result["Aero.App.nsApp.appBundlePath"] = .stringOrNull(window.macApp.nsApp.bundleURL?.description)
     result["Aero.AXApp"] = .dict(try await window.macApp.dumpAppAxInfo())
 
     let isDialog = try await window.isDialogHeuristic()

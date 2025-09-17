@@ -5,11 +5,9 @@ import SwiftUI
 @MainActor
 struct MenuBarLabel: View {
     @Environment(\.colorScheme) var menuColorScheme: ColorScheme
-    var text: String
-    var textStyle: MenuBarTextStyle
-    var color: Color?
-    var trayItems: [TrayItem]?
-    var workspaces: [WorkspaceViewModel]?
+    @EnvironmentObject var viewModel: TrayMenuModel
+    let color: Color?
+    let style: MenuBarStyle?
 
     let hStackSpacing = CGFloat(6)
     let itemSize = CGFloat(40)
@@ -21,12 +19,9 @@ struct MenuBarLabel: View {
         return color ?? (menuColorScheme == .dark ? Color.white : Color.black)
     }
 
-    init(_ text: String, textStyle: MenuBarTextStyle = .monospaced, color: Color? = nil, trayItems: [TrayItem]? = nil, workspaces: [WorkspaceViewModel]? = nil) {
-        self.text = text
-        self.textStyle = textStyle
+    init(style: MenuBarStyle? = nil, color: Color? = nil) {
+        self.style = style
         self.color = color
-        self.trayItems = trayItems
-        self.workspaces = workspaces
     }
 
     var body: some View {
@@ -34,65 +29,78 @@ struct MenuBarLabel: View {
             let renderer = ImageRenderer(content: menuBarContent)
             if let cgImage = renderer.cgImage {
                 // Using scale: 1 results in a blurry image for unknown reasons
-                Image(cgImage, scale: 2, label: Text(text))
+                Image(cgImage, scale: 2, label: Text(viewModel.trayText))
             } else {
                 // In case image can't be rendered fallback to plain text
-                Text(text)
+                Text(viewModel.trayText)
             }
         } else { // macOS 13 and lower
-            Text(text)
+            Text(viewModel.trayText)
         }
     }
 
     var menuBarContent: some View {
-        return ZStack {
-            if let trayItems {
-                HStack(spacing: hStackSpacing) {
-                    ForEach(trayItems, id: \.id) { item in
-                        itemView(for: item)
-                        if item.type == .mode {
-                            Text(":")
-                                .font(.system(.largeTitle, design: textStyle.design))
-                                .foregroundStyle(finalColor)
-                                .bold()
-                        }
+        return HStack(spacing: hStackSpacing) {
+            let style = style ?? viewModel.experimentalUISettings.displayStyle
+            switch style {
+                case .monospacedText: getText(for: .monospaced)
+                case .systemText: getText(for: .default)
+                case .squares: squares
+                case .i3:
+                    squares
+                    let workspaces = viewModel.workspaces.filter { !$0.isEffectivelyEmpty && !$0.isVisible }
+                    if !workspaces.isEmpty {
+                        otherWorkspaces(with: workspaces)
                     }
-                    if let workspaces {
-                        let otherWorkspaces = workspaces.filter { !$0.isEffectivelyEmpty && !$0.isVisible }
-                        if !otherWorkspaces.isEmpty {
-                            Group {
-                                Text("|")
-                                    .font(.system(.largeTitle))
-                                    .foregroundStyle(finalColor)
-                                    .bold()
-                                    .padding(.bottom, 6)
-                                ForEach(otherWorkspaces, id: \.name) { item in
-                                    itemView(for: TrayItem(type: .workspace, name: item.name, isActive: false))
-                                }
-                            }
-                            .opacity(0.6)
-                        }
+                case .i3Ordered:
+                    let modeItem = viewModel.trayItems.first { $0.type == .mode }
+                    if let modeItem {
+                        itemView(for: modeItem)
+                        modeSeparator(with: .monospaced)
                     }
-                }
-                .frame(height: itemSize)
-            } else if let workspaces {
-                let orderedWorkspaces = workspaces.filter { !$0.isEffectivelyEmpty || $0.isVisible }
-                if !orderedWorkspaces.isEmpty {
-                    HStack(spacing: hStackSpacing) {
-                        ForEach(orderedWorkspaces, id: \.name) { item in
-                            itemView(for: TrayItem(type: .workspace, name: item.name, isActive: item.isFocused))
-                                .opacity(item.isVisible ? 1 : 0.5)
-                        }
+                    let orderedWorkspaces = viewModel.workspaces.filter { !$0.isEffectivelyEmpty || $0.isVisible }
+                    ForEach(orderedWorkspaces, id: \.name) { item in
+                        itemView(for: TrayItem(type: .workspace, name: item.name, isActive: item.isFocused))
+                            .opacity(item.isVisible ? 1 : 0.5)
                     }
-                }
-            } else {
-                HStack(spacing: hStackSpacing) {
-                    Text(text)
-                        .font(.system(.largeTitle, design: textStyle.design))
-                        .foregroundStyle(finalColor)
-                }
             }
         }
+    }
+
+    private func getText(for design: Font.Design) -> some View {
+        Text(viewModel.trayText)
+            .font(.system(.largeTitle, design: design))
+            .foregroundStyle(finalColor)
+    }
+
+    private var squares: some View {
+        ForEach(viewModel.trayItems, id: \.id) { item in
+            itemView(for: item)
+            if item.type == .mode {
+                modeSeparator(with: .monospaced)
+            }
+        }
+    }
+
+    private func otherWorkspaces(with otherWorkspaces: [WorkspaceViewModel]) -> some View {
+        Group {
+            Text("|")
+                .font(.system(.largeTitle))
+                .foregroundStyle(finalColor)
+                .bold()
+                .padding(.bottom, 6)
+            ForEach(otherWorkspaces, id: \.name) { item in
+                itemView(for: TrayItem(type: .workspace, name: item.name, isActive: false))
+            }
+        }
+        .opacity(0.6)
+    }
+
+    private func modeSeparator(with design: Font.Design) -> some View {
+        Text(":")
+            .font(.system(.largeTitle, design: design))
+            .foregroundStyle(finalColor)
+            .bold()
     }
 
     @ViewBuilder
@@ -136,19 +144,6 @@ struct MenuBarLabel: View {
                     .frame(height: itemSize)
                 }
             }
-        }
-    }
-}
-
-enum MenuBarTextStyle: String {
-    case monospaced
-    case system
-    var design: Font.Design {
-        switch self {
-            case .monospaced:
-                return .monospaced
-            case .system:
-                return .default
         }
     }
 }

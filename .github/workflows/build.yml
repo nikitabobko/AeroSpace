@@ -15,15 +15,16 @@ jobs:
     strategy:
       # fail-fast: false # Disable fail-fast in matrix
       matrix:
-        # https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories
+        # https://docs.github.com/en/actions/reference/runners/github-hosted-runners#standard-github-hosted-runners-for-public-repositories
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-14-arm64-Readme.md
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md
+        # https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md
         #
         # Xcode versions:
         # - https://en.wikipedia.org/wiki/Xcode
         # - https://xcodereleases.com/?scope=release
-        os: [macos-13, macos-14, macos-15]
+        os: [macos-13, macos-14, macos-15, macos-26]
     name: Build
     runs-on: ${{ matrix.os }}
 
@@ -33,10 +34,13 @@ jobs:
       - name: xcode-select
         run: |
           sw_vers -productVersion
+          # Xcode version affects the target macOS SDK that we compile against + different Xcode bundle different Swift verions
           if sw_vers -productVersion | grep -q "^13"; then # macOS 13
             true # Xcode 16 is not supported on macOS 13 :(
+          elif sw_vers -productVersion | grep -q "^14"; then # macOS 14
+            sudo xcode-select -s "$XCODE_16_DEVELOPER_DIR"
           else
-            sudo xcode-select -s "$XCODE_16_DEVELOPER_DIR" # Affects macOS SDK
+            sudo xcode-select -s "$XCODE_26_DEVELOPER_DIR"
           fi
       - run: brew install bash fish xcbeautify swiftly
       - run: swiftly init --skip-install --assume-yes --verbose && swiftly install
@@ -46,10 +50,10 @@ jobs:
         # We build release artifacts only on the latest macOS because:
         # 1. It cuts the build time twice on GH Actions
         # 2. The latest Xcode version is not available on old macOS, and old Xcode versions bundle too old Swift version
-      - name: './build-release.sh # on macos-15'
+      - name: './build-release.sh # on macos-15, macos-26'
         run: |
           sw_vers -productVersion
-          if sw_vers -productVersion | grep -q "^15"; then
+          if sw_vers -productVersion | grep -E -q "^(15|26)"; then
             # "-" means "Sign to run locally". There is no aerospace-codesign-certificate on GH Actions
             ./build-release.sh --codesign-identity -
             ./install-from-sources.sh --dont-rebuild
