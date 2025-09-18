@@ -47,10 +47,13 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(errors, [])
-        let binding = HotkeyBinding(.option, .h, [FocusCommand.new(direction: .left)])
+        let binding = HotkeyBinding(
+            hotkey: Hotkey(modifiers: .maskAlternate, key: "h"),
+            commands: [FocusCommand.new(direction: .left)],
+        )
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding]),
+            Mode(name: nil, bindings: [binding.hotkey: binding]),
         )
     }
 
@@ -84,10 +87,13 @@ final class ConfigTest: XCTestCase {
                 "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding",
             ],
         )
-        let binding = HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])
+        let binding = HotkeyBinding(
+            hotkey: Hotkey(modifiers: .maskAlternate, key: "k"),
+            commands: [FocusCommand.new(direction: .up)],
+        )
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding]),
+            Mode(name: nil, bindings: [binding.hotkey: binding]),
         )
     }
 
@@ -349,54 +355,5 @@ final class ConfigTest: XCTestCase {
             "gaps.inner.vertical[0]: The table is expected to have a single key \'monitor\'",
             "gaps.inner.vertical[1].monitor: The table is expected to have a single key",
         ])
-    }
-
-    func testParseKeyMapping() {
-        let (config, errors) = parseConfig(
-            """
-            [key-mapping.key-notation-to-key-code]
-                q = 'q'
-                unicorn = 'u'
-
-            [mode.main.binding]
-                alt-unicorn = 'workspace wonderland'
-            """,
-        )
-        assertEquals(errors.descriptions, [])
-        assertEquals(config.keyMapping, KeyMapping(preset: .qwerty, rawKeyNotationToKeyCode: [
-            "q": .q,
-            "unicorn": .u,
-        ]))
-        let binding = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrDie())))])
-        assertEquals(config.modes[mainModeId]?.bindings, [binding.descriptionWithKeyCode: binding])
-
-        let (_, errors1) = parseConfig(
-            """
-            [key-mapping.key-notation-to-key-code]
-                q = 'qw'
-                ' f' = 'f'
-            """,
-        )
-        assertEquals(errors1.descriptions, [
-            "key-mapping.key-notation-to-key-code: ' f' is invalid key notation",
-            "key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code",
-        ])
-
-        let (dvorakConfig, dvorakErrors) = parseConfig(
-            """
-            key-mapping.preset = 'dvorak'
-            """,
-        )
-        assertEquals(dvorakErrors, [])
-        assertEquals(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(dvorakConfig.keyMapping.resolve()["quote"], .q)
-        let (colemakConfig, colemakErrors) = parseConfig(
-            """
-            key-mapping.preset = 'colemak'
-            """,
-        )
-        assertEquals(colemakErrors, [])
-        assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(colemakConfig.keyMapping.resolve()["f"], .e)
     }
 }

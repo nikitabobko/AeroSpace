@@ -1,6 +1,5 @@
 import AppKit
 import Common
-import HotKey
 
 func getDefaultConfigUrlFromProject() -> URL {
     var url = URL(filePath: #filePath)
@@ -44,7 +43,7 @@ struct Config: ConvenienceCopyable {
     var accordionPadding: Int = 30
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
     var execOnWorkspaceChange: [String] = [] // todo deprecate
-    var keyMapping = KeyMapping()
+    var _keyMapping: Void = ()
     var execConfig: ExecConfig = ExecConfig()
 
     var onFocusChanged: [any Command] = []

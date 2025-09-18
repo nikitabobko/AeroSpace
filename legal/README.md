@@ -11,11 +11,6 @@ AeroSpace bundles the following dependencies and uses the following materials:
 [BlueSocket Apache 2.0 license](./third-party-license/LICENSE-BlueSocket.txt).
 BlueSocket is used as a more convenient Swift wrapper around UNIX C socket API.
 
-**HotKey**.
-[HotKey GitHub link](https://github.com/soffes/HotKey).
-[HotKey MIT license](./third-party-license/LICENSE-HotKey.txt).
-HotKey is used as a more convenient wrapper around macOS Carbon API to listen for global shortcuts.
-
 **TOMLKIT**.
 [TOMLKIT GitHub link](https://github.com/LebJe/TOMLKit).
 [TOMLKIT MIT license](./third-party-license/LICENSE-TOMLKIT.txt).
