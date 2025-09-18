@@ -9,8 +9,8 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace fullscreen [-h|--help]     [--window-id <window-id>] [--no-outer-gaps]
-aerospace fullscreen [-h|--help] on  [--window-id <window-id>] [--no-outer-gaps] [--fail-if-noop]
+aerospace fullscreen [-h|--help]     [--window-id <window-id>] [--no-outer-gaps] [--hide-others]
+aerospace fullscreen [-h|--help] on  [--window-id <window-id>] [--no-outer-gaps] [--hide-others] [--fail-if-noop]
 aerospace fullscreen [-h|--help] off [--window-id <window-id>] [--fail-if-noop]
 
 // end::synopsis[]
@@ -28,6 +28,7 @@ include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 --no-outer-gaps:: Remove the outer gaps when in fullscreen mode
+--hide-others:: The flag is useful when the window you're about to fullscreen is transparent. All other non-fullscreen windows of the workspace will be hidden in the corner.
 --fail-if-noop:: Exit with non-zero exit code if already fullscreen or already not fullscreen
 
 --window-id <window-id>::
