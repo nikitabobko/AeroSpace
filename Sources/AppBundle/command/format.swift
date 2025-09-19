@@ -9,6 +9,21 @@ private func toLayoutString(tc: TilingContainer) -> String {
     }
 }
 
+@MainActor
+private func toLayoutResult(w: Window) -> Result<Primitive, String> {
+    guard let parent = w.parent else { die("Window must have a parent") }
+    return switch getChildParentRelation(child: w, parent: parent) {
+        case .tiling(let tc): .success(.string(toLayoutString(tc: tc)))
+        case .rootTilingContainer: .success(.string(toLayoutString(tc: w.nodeWorkspace!.rootTilingContainer)))
+        case .floatingWindow: .success(.string("floating"))
+        case .macosNativeFullscreenWindow: .success(.string("macos_native_fullscreen"))
+        case .macosNativeHiddenAppWindow: .success(.string("macos_native_window_of_hidden_app"))
+        case .macosNativeMinimizedWindow: .success(.string("macos_native_minimized"))
+        case .macosPopupWindow: .success(.string("NULL-WINDOW-LAYOUT"))
+        case .shimContainerRelation: .failure("Window cannot have a shim container relation")
+    }
+}
+
 enum AeroObj {
     case window(window: Window, title: String)
     case workspace(Workspace)
@@ -130,12 +145,7 @@ extension String {
                     case .windowId: .success(.uint32(w.windowId))
                     case .windowIsFullscreen: .success(.bool(w.isFullscreen))
                     case .windowTitle: .success(.string(title))
-                    case .windowLayout,
-                         .windowParentContainerLayout:
-                        switch w.parent?.nodeCases {
-                            case .tilingContainer(let tc): .success(.string(toLayoutString(tc: tc)))
-                            default: .success(.string("floating"))
-                        }
+                    case .windowLayout, .windowParentContainerLayout: toLayoutResult(w: w)
                 }
             case (.workspace(let w), .workspace(let f)):
                 return switch f {
