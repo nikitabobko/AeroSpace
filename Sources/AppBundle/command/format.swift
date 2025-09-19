@@ -1,5 +1,14 @@
 import Common
 
+private func toLayoutString(tc: TilingContainer) -> String {
+    switch (tc.layout, tc.orientation) {
+        case (.tiles, .h): return LayoutCmdArgs.LayoutDescription.h_tiles.rawValue
+        case (.tiles, .v): return LayoutCmdArgs.LayoutDescription.v_tiles.rawValue
+        case (.accordion, .h): return LayoutCmdArgs.LayoutDescription.h_accordion.rawValue
+        case (.accordion, .v): return LayoutCmdArgs.LayoutDescription.v_accordion.rawValue
+    }
+}
+
 enum AeroObj {
     case window(window: Window, title: String)
     case workspace(Workspace)
@@ -124,7 +133,7 @@ extension String {
                     case .windowLayout,
                          .windowParentContainerLayout:
                         switch w.parent?.nodeCases {
-                            case .tilingContainer(let tc): .success(.string(self.toLayoutString(tc: tc)))
+                            case .tilingContainer(let tc): .success(.string(toLayoutString(tc: tc)))
                             default: .success(.string("floating"))
                         }
                 }
@@ -133,7 +142,7 @@ extension String {
                     case .workspaceName: .success(.string(w.name))
                     case .workspaceVisible: .success(.bool(w.isVisible))
                     case .workspaceFocused: .success(.bool(focus.workspace == w))
-                    case .workspaceRootContainerLayout: .success(.string(self.toLayoutString(tc: w.rootTilingContainer)))
+                    case .workspaceRootContainerLayout: .success(.string(toLayoutString(tc: w.rootTilingContainer)))
                 }
             case (.monitor(let m), .monitor(let f)):
                 return switch f {
@@ -163,14 +172,5 @@ extension String {
             ?? FormatVar.WorkspaceFormatVar(rawValue: self).flatMap(FormatVar.workspace)
             ?? FormatVar.AppFormatVar(rawValue: self).flatMap(FormatVar.app)
             ?? FormatVar.MonitorFormatVar(rawValue: self).flatMap(FormatVar.monitor)
-    }
-
-    private func toLayoutString(tc: TilingContainer) -> String {
-        switch (tc.layout, tc.orientation) {
-            case (.tiles, .h): return "h_tiles"
-            case (.tiles, .v): return "v_tiles"
-            case (.accordion, .h): return "h_accordion"
-            case (.accordion, .v): return "v_accordion"
-        }
     }
 }
