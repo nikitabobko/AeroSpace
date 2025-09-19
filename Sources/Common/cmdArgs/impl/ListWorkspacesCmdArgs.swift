@@ -48,7 +48,15 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
 }
 
 extension ListWorkspacesCmdArgs {
-    public var format: [StringInterToken] { _format.isEmpty ? [.interVar("workspace")] : _format }
+    public var format: [StringInterToken] {
+        if _format.isEmpty {
+            return [.interVar(FormatVar.WorkspaceFormatVar.workspaceName.rawValue)]
+        }
+        if _format.contains(.interVar(PlainInterVar.all.rawValue)) {
+            return AeroObjKind.workspace.getFormatWithAllVariable()
+        }
+        return _format
+    }
 }
 
 public func parseListWorkspacesCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWorkspacesCmdArgs> {
@@ -72,7 +80,15 @@ public func parseListWorkspacesCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWor
                     .copy(\.focused, false)
                 : raw
         }
-        .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
+        .flatMap { parsed in
+            if parsed.json, let msg = getErrorIfFormatIsIncompatibleWithJson(parsed._format) {
+                return .failure(msg)
+            }
+            if let msg = getErrorIfAllFormatVariableIsInvalid(json: parsed.json, format: parsed._format) {
+                return .failure(msg)
+            }
+            return .cmd(parsed)
+        }
 }
 
 func parseMonitorIds(input: SubArgParserInput) -> ParsedCliArgs<[MonitorId]> {

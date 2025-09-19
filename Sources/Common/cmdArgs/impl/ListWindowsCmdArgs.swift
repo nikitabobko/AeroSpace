@@ -51,13 +51,17 @@ public struct ListWindowsCmdArgs: CmdArgs {
 
 extension ListWindowsCmdArgs {
     public var format: [StringInterToken] {
-        _format.isEmpty
-            ? [
+        if _format.isEmpty {
+            return [
                 .interVar("window-id"), .interVar("right-padding"), .literal(" | "),
                 .interVar("app-name"), .interVar("right-padding"), .literal(" | "),
                 .interVar("window-title"),
             ]
-            : _format
+        }
+        if _format.contains(.interVar(PlainInterVar.all.rawValue)) {
+            return AeroObjKind.window.getFormatWithAllVariable()
+        }
+        return _format
     }
 }
 
@@ -76,7 +80,42 @@ public func parseListWindowsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWindow
         .map { raw in
             raw.all ? raw.copy(\.filteringOptions.monitors, [.all]).copy(\.all, false) : raw // Normalize alias
         }
-        .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
+        .flatMap { parsed in
+            if parsed.json, let msg = getErrorIfFormatIsIncompatibleWithJson(parsed._format) {
+                return .failure(msg)
+            }
+            if let msg = getErrorIfAllFormatVariableIsInvalid(json: parsed.json, format: parsed._format) {
+                return .failure(msg)
+            }
+            return .cmd(parsed)
+        }
+}
+
+func getErrorIfAllFormatVariableIsInvalid(json: Bool, format: [StringInterToken]) -> String? {
+    let hasAllVariable = format.contains(.interVar(PlainInterVar.all.rawValue))
+
+    if hasAllVariable {
+        // Check if %{all} is mixed with other variables (excluding spaces) first
+        let nonSpaceTokens = format.filter { token in
+            switch token {
+                case .literal(let literal):
+                    return literal.contains(where: { $0 != " " })
+                case .interVar:
+                    return true
+            }
+        }
+
+        if nonSpaceTokens.count > 1 {
+            return "'%{all}' format option must be used alone and cannot be combined with other variables"
+        }
+
+        // Then check if %{all} is used without --json flag
+        if !json {
+            return "'%{all}' format option requires --json flag"
+        }
+    }
+
+    return nil
 }
 
 func formatParser<T: ConvenienceCopyable>(
@@ -166,10 +205,24 @@ public enum PlainInterVar: String, CaseIterable {
     case rightPadding = "right-padding"
     case newline = "newline"
     case tab = "tab"
+    case all = "all"
 }
 
 public enum AeroObjKind: CaseIterable, Sendable {
     case window, workspace, app, monitor
+
+    public func getFormatWithAllVariable() -> [StringInterToken] {
+
+
+        return getAvailableInterVars(for: self)
+            .map(StringInterToken.interVar)
+            .filter {
+                ![.interVar(PlainInterVar.rightPadding.rawValue),
+                  .interVar(PlainInterVar.newline.rawValue),
+                  .interVar(PlainInterVar.tab.rawValue),
+                  .interVar(PlainInterVar.all.rawValue)].contains($0)
+            }
+    }
 }
 
 public func getAvailableInterVars(for kind: AeroObjKind) -> [String] {
