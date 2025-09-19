@@ -32,16 +32,28 @@ public struct ListMonitorsCmdArgs: CmdArgs {
 
 extension ListMonitorsCmdArgs {
     public var format: [StringInterToken] {
-        _format.isEmpty
-            ? [
+        if _format.isEmpty {
+            return [
                 .interVar("monitor-id"), .interVar("right-padding"), .literal(" | "),
                 .interVar("monitor-name"),
             ]
-            : _format
+        }
+        if _format.contains(.interVar(PlainInterVar.all.rawValue)) {
+            return AeroObjKind.monitor.getFormatWithAllVariable()
+        }
+        return _format
     }
 }
 
 public func parseListMonitorsCmdArgs(_ args: [String]) -> ParsedCmd<ListMonitorsCmdArgs> {
     parseSpecificCmdArgs(ListMonitorsCmdArgs(rawArgs: args), args)
-        .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
+        .flatMap { parsed in
+            if parsed.json, let msg = getErrorIfFormatIsIncompatibleWithJson(parsed._format) {
+                return .failure(msg)
+            }
+            if let msg = getErrorIfAllFormatVariableIsInvalid(json: parsed.json, format: parsed._format) {
+                return .failure(msg)
+            }
+            return .cmd(parsed)
+        }
 }

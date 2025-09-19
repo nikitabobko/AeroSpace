@@ -77,6 +77,7 @@ The following variables can be used inside `<output-format>`:
 %{right-padding}:: A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column
 %{newline}:: Unicode U+000A newline symbol `\n`
 %{tab}:: Unicode U+0009 tab symbol `\t`
+%{all}:: Includes all available variables. Can only be used with `--json` flag
 
 // end::body[]
 
