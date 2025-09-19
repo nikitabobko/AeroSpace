@@ -12,5 +12,6 @@ final class ListMonitorsTest: XCTestCase {
         assertNil(parseCommand("list-monitors --format '%{all}' --json").errorOrNil)
         assertEquals(parseCommand("list-monitors --format '%{all} %{monitor-id}'").errorOrNil, "'%{all}' format option must be used alone and cannot be combined with other variables")
         assertEquals(parseCommand("list-monitors --format '%{monitor-name} %{all}'").errorOrNil, "'%{all}' format option must be used alone and cannot be combined with other variables")
-        assertNil(parseCommand("list-monitors --format ' %{all} ' --json").errorOrNil) }
+        assertNil(parseCommand("list-monitors --format ' %{all} ' --json").errorOrNil)
+    }
 }
