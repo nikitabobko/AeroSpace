@@ -279,7 +279,7 @@ extension WindowDetectedCallback {
         if let regex = matcher.windowTitleRegexSubstring, !(try await window.title).contains(regex) {
             return false
         }
-        if let appId = matcher.appId, appId != window.app.bundleId {
+        if let appIds = matcher.appIds, !appIds.contains(window.app.bundleId ?? "") {
             return false
         }
         if let regex = matcher.appNameRegexSubstring, !(window.app.name ?? "").contains(regex) {
