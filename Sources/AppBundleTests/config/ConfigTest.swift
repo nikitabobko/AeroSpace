@@ -44,16 +44,28 @@ final class ConfigTest: XCTestCase {
             """
             [mode.main.binding]
                 alt-h = 'focus left'
+                lalt-l = 'focus right'
+                ralt-l = 'focus up'
             """,
         )
         assertEquals(errors, [])
-        let binding = HotkeyBinding(
-            hotkey: Hotkey(modifiers: .maskAlternate, key: "h"),
-            commands: [FocusCommand.new(direction: .left)],
-        )
+        let bindings = [
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternate, key: "h"),
+                commands: [FocusCommand.new(direction: .left)],
+            ),
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternateL, key: "l"),
+                commands: [FocusCommand.new(direction: .right)],
+            ),
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternateR, key: "l"),
+                commands: [FocusCommand.new(direction: .up)],
+            ),
+        ]
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding]),
+            Mode(name: nil, bindings: bindings),
         )
     }
 
@@ -78,6 +90,7 @@ final class ConfigTest: XCTestCase {
                 alt-hh = 'focus left'
                 aalt-j = 'focus down'
                 alt-k = 'focus up'
+                lalt-k = 'focus down'
             """,
         )
         assertEquals(
@@ -85,15 +98,22 @@ final class ConfigTest: XCTestCase {
             [
                 "mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
                 "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding",
+                "mode.main.binding.lalt-k: \'lalt-k\' Binding redeclaration",
             ],
         )
-        let binding = HotkeyBinding(
-            hotkey: Hotkey(modifiers: .maskAlternate, key: "k"),
-            commands: [FocusCommand.new(direction: .up)],
-        )
+        let bindings = [
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternate, key: "k"),
+                commands: [FocusCommand.new(direction: .up)],
+            ),
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternateL, key: "k"),
+                commands: [FocusCommand.new(direction: .down)],
+            ),
+        ]
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding]),
+            Mode(name: nil, bindings: bindings),
         )
     }
 
