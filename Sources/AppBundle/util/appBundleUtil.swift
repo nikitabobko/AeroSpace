@@ -31,7 +31,9 @@ func initTerminationHandler() {
 }
 
 private struct AppServerTerminationHandler: TerminationHandler {
+    @MainActor
     func beforeTermination() async throws {
+        shouldSaveWorldState = false
         try await makeAllWindowsVisibleAndRestoreSize()
         toggleReleaseServerIfDebug(.on)
     }
