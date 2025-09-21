@@ -114,7 +114,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     // Deprecated
     "non-empty-workspaces-root-containers-layout-on-startup": Parser(\._nonEmptyWorkspacesRootContainersLayoutOnStartup, parseStartupRootContainerLayout),
     "indent-for-nested-containers-with-the-same-orientation": Parser(\._indentForNestedContainersWithTheSameOrientation, parseIndentForNestedContainersWithTheSameOrientation),
-    "key-mapping": Parser(\._keyMapping, parseKeyMapping)
+    "key-mapping": Parser(\._keyMapping, parseKeyMapping),
 ]
 
 extension ParsedCmd where T == any Command {
@@ -179,7 +179,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
     }
 
     config.preservedWorkspaceNames = config.modes.values.lazy
-        .flatMap { (mode: Mode) -> [HotkeyBinding] in Array(mode.bindings.values) }
+        .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
         .flatMap { (binding: HotkeyBinding) -> [String] in
             binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw } +
                 binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw }
@@ -187,7 +187,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
         + (config.workspaceToMonitorForceAssignment).keys
 
     if config.enableNormalizationFlattenContainers {
-        let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings.values }
+        let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings }
             .flatMap { $0.commands }
             .contains { $0 is SplitCommand }
         if containsSplitCommand {

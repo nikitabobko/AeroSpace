@@ -145,7 +145,7 @@ extension [Command] {
 @MainActor func buildConfigMap() -> ConfigMapValue {
     let mode = config.modes.mapValues { (mode: Mode) -> ConfigMapValue in
         var keyNotationToScript: [String: ConfigMapValue] = [:]
-        for binding in mode.bindings.values {
+        for binding in mode.bindings {
             keyNotationToScript[binding.hotkey.description] =
                 .scalar(.string(binding.commands.prettyDescription))
         }

@@ -58,13 +58,13 @@ let baseKeyCodeMap = [
     kVK_ANSI_KeypadEquals: "keypadEqual",
 ]
 
-@MainActor var currentKeyCodeMap = [UInt32 : String]()
+@MainActor var currentKeyCodeMap = [UInt32: String]()
 
 private func keyCodeToString(_ keyCode: UInt16) -> String? {
     if let s = baseKeyCodeMap[Int(keyCode)] {
         return s
     }
-    
+
     var currentKeyboard = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
     var rawLayoutData = TISGetInputSourceProperty(currentKeyboard, kTISPropertyUnicodeKeyLayoutData)
 
@@ -102,7 +102,7 @@ private func keyCodeToString(_ keyCode: UInt16) -> String? {
 
 private func computeCurrentKeyCodeMap() -> [UInt32: String] {
     var map = [UInt32: String]()
-    for keyCode in 0..<128 {
+    for keyCode in 0 ..< 128 {
         if let str = keyCodeToString(UInt16(keyCode)) {
             map[UInt32(keyCode)] = str
         }

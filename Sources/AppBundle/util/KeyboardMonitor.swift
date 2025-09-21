@@ -1,12 +1,6 @@
 import AppKit
 
-extension CGEventFlags: @retroactive Hashable {
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(self.rawValue)
-    }
-}
-
-struct KeyboardEvent: Hashable {
+struct KeyboardEvent {
     let flags: CGEventFlags
     let keyCode: UInt32
 }
@@ -30,10 +24,10 @@ final class KeyboardMonitor {
             eventsOfInterest: mask,
             callback: { (proxy, type, event, refcon) in
                 // We have to use a week reference to self to avoid retain cycles
+
                 if let refcon {
                     let this = Unmanaged<KeyboardMonitor>.fromOpaque(refcon).takeUnretainedValue()
-                    let flagsMask = CGEventFlags([.maskShift, .maskControl, .maskAlternate, .maskCommand])
-                    let flags = event.flags.intersection(flagsMask)
+                    let flags = event.flags
                     let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
                     let keyboardEvent = KeyboardEvent(flags: flags, keyCode: UInt32(keyCode))
                     if this.handler(keyboardEvent) {
