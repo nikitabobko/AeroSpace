@@ -53,7 +53,7 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.hotkey: binding]),
+            Mode(name: nil, bindings: [binding]),
         )
     }
 
@@ -93,7 +93,7 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.hotkey: binding]),
+            Mode(name: nil, bindings: [binding]),
         )
     }
 
