@@ -37,11 +37,6 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app
 automatically-unhide-macos-hidden-apps = false
 
-# Possible values: (qwerty|dvorak|colemak)
-# See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
-[key-mapping]
-    preset = 'qwerty'
-
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
 # - Constant:     gaps.outer.top = 8
@@ -76,8 +71,11 @@ automatically-unhide-macos-hidden-apps = false
     # - Keypad special. keypadClear, keypadDecimalMark, keypadDivide, keypadEnter, keypadEqual,
     #                   keypadMinus, keypadMultiply, keypadPlus
     # - Arrows.         left, down, up, right
+    # - Others.         Any other printable characters presend in your keyboard layout,
+    #                   for example: ä, α, ø, א
 
-    # All possible modifiers: cmd, alt, ctrl, shift
+    # All possible modifiers: cmd, alt, ctrl, shift, fn,
+    #                         lcmd, rcmd, lalt, ralt, lctrl, rctrl, lshift, rshift
 
     # All possible commands: https://nikitabobko.github.io/AeroSpace/commands
 
