@@ -36,6 +36,8 @@ class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     private nonisolated let nameLogicalSegments: StringLogicalSegments
     /// `assignedMonitorPoint` must be interpreted only when the workspace is invisible
     fileprivate var assignedMonitorPoint: CGPoint? = nil
+    /// `optimalHideCorner` is set by the refresh system and used by the layout system
+    var optimalHideCorner: OptimalHideCorner? = nil
 
     @MainActor
     private init(_ name: String) {
