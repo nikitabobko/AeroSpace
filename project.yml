@@ -36,7 +36,7 @@ targets:
         CODE_SIGN_IDENTITY: ${XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY}
       configs:
         Debug:
-          PRODUCT_NAME: AeroSpace-Debug
+          PRODUCT_NAME: AeroSpace
           PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace.debug
         Release:
           PRODUCT_NAME: AeroSpace
