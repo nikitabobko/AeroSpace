@@ -76,7 +76,7 @@ struct HotkeyBinding: Equatable, Sendable {
     }
 }
 
-func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError], _ mapping: [String: Key]) -> [String: HotkeyBinding] {
+func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError], _ mapping: [String: KeyOrModifier]) -> [String: HotkeyBinding] {
     guard let rawTable = raw.table else {
         errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
         return [:]
@@ -101,15 +101,33 @@ func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ er
     return result
 }
 
-func parseBinding(_ raw: String, _ backtrace: TomlBacktrace, _ mapping: [String: Key]) -> ParsedToml<(NSEvent.ModifierFlags, Key)> {
+func parseBinding(_ raw: String, _ backtrace: TomlBacktrace, _ mapping: [String: KeyOrModifier]) -> ParsedToml<(NSEvent.ModifierFlags, Key)> {
     let rawKeys = raw.split(separator: "-")
     let modifiers: ParsedToml<NSEvent.ModifierFlags> = rawKeys.dropLast()
-        .mapAllOrFailure {
-            modifiersMap[String($0)].orFailure(.semantic(backtrace, "Can't parse modifiers in '\(raw)' binding"))
+        .mapAllOrFailure { modifierSlice in
+            let modifier = String(modifierSlice)
+            if let keyOrModifier = mapping[modifier],
+               case .modifiers(let flags) = keyOrModifier
+            {
+                return .success(flags)
+            }
+            return modifiersMap[modifier].orFailure(
+                .semantic(backtrace, "Can't parse modifiers in '\(raw)' binding"),
+            )
         }
         .map { NSEvent.ModifierFlags($0) }
-    let key: ParsedToml<Key> = rawKeys.last.flatMap { mapping[String($0)] }
-        .orFailure(.semantic(backtrace, "Can't parse the key in '\(raw)' binding"))
+
+    let key: ParsedToml<Key> = rawKeys.last.flatMap { keySlice in
+        let key = String(keySlice)
+        if let keyOrModifier = mapping[key],
+           case .key(let mappedKey) = keyOrModifier
+        {
+            return mappedKey
+        }
+        return keyNotationToKeyCode[key]
+    }
+    .orFailure(.semantic(backtrace, "Can't parse the key in '\(raw)' binding"))
+
     return modifiers.flatMap { modifiers -> ParsedToml<(NSEvent.ModifierFlags, Key)> in
         key.flatMap { key -> ParsedToml<(NSEvent.ModifierFlags, Key)> in
             .success((modifiers, key))
