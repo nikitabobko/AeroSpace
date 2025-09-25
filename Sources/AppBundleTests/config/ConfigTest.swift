@@ -363,9 +363,9 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(errors.descriptions, [])
-        assertEquals(config.keyMapping, KeyMapping(preset: .qwerty, rawKeyNotationToKeyCode: [
-            "q": .q,
-            "unicorn": .u,
+        assertEquals(config.keyMapping, KeyMapping(preset: .qwerty, rawKeyNotationToKeyOrModifier: [
+            "q": .key(.q),
+            "unicorn": .key(.u),
         ]))
         let binding = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrDie())))])
         assertEquals(config.modes[mainModeId]?.bindings, [binding.descriptionWithKeyCode: binding])
@@ -388,15 +388,69 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(dvorakErrors, [])
-        assertEquals(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(dvorakConfig.keyMapping.resolve()["quote"], .q)
+        assertEquals(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyOrModifier: [:]))
+        assertEquals(dvorakConfig.keyMapping.resolve()["quote"], .key(.q))
         let (colemakConfig, colemakErrors) = parseConfig(
             """
             key-mapping.preset = 'colemak'
             """,
         )
         assertEquals(colemakErrors, [])
-        assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(colemakConfig.keyMapping.resolve()["f"], .e)
+        assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyOrModifier: [:]))
+        assertEquals(colemakConfig.keyMapping.resolve()["f"], .key(.e))
+    }
+
+    func testParseKeyModifierAlias() {
+        let (config, errors) = parseConfig(
+            """
+            [key-mapping.key-notation-to-key-code]
+                hyper = 'ctrl-alt-shift-cmd'
+
+            [mode.main.binding]
+                hyper-h = 'focus left'
+            """,
+        )
+        assertEquals(errors.descriptions, [])
+
+        // Verify that the modifier aliases are correctly resolved
+        let hyperFlags: NSEvent.ModifierFlags = [.control, .option, .shift, .command]
+        assertEquals(config.keyMapping.resolve()["hyper"], .modifiers(hyperFlags))
+
+        // Verify that the hyper bindings are correctly parsed with expanded modifiers
+        let hyperHBinding = HotkeyBinding(hyperFlags, .h, [FocusCommand.new(direction: .left)])
+        assertEquals(config.modes[mainModeId]?.bindings[hyperHBinding.descriptionWithKeyCode], hyperHBinding)
+    }
+
+    func testKeyValidationValidCombinations() {
+        let (config, errors) = parseConfig(
+            """
+            [key-mapping.key-notation-to-key-code]
+                mykey = 'a'
+                mymod = 'ctrl-alt'
+
+            [mode.main.binding]
+                shift-mykey = 'focus left'
+                mymod-c = 'focus right'
+            """,
+        )
+        assertEquals(errors.descriptions, [])
+        assertEquals(config.keyMapping.resolve()["mykey"], .key(.a))
+        assertEquals(config.keyMapping.resolve()["mymod"], .modifiers([.control, .option]))
+    }
+
+    func testKeyValidationInvalidCombinations() {
+        let (_, errors) = parseConfig(
+            """
+            [key-mapping.key-notation-to-key-code]
+                badkey = 'ctrl-a'
+                multikey = 'a-b'
+                unknown = 'badkey'
+            """,
+        )
+        assertEquals(errors.descriptions.sorted(), [
+            "key-mapping.key-notation-to-key-code.badkey: 'ctrl-a' contains both keys and modifiers, which is not supported. Use either a single key (e.g., 'a') or modifier combination (e.g., 'ctrl-alt-shift-cmd')",
+            "key-mapping.key-notation-to-key-code.multikey: 'a-b' contains multiple keys, only one key is allowed",
+            "key-mapping.key-notation-to-key-code.unknown: 'badkey' is invalid key code",
+        ])
     }
 }
