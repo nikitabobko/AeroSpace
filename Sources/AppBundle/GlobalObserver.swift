@@ -86,41 +86,40 @@ enum GlobalObserver {
                 (1 << CGEventType.mouseMoved.rawValue) |
                 (1 << CGEventType.flagsChanged.rawValue),
         )
-        if cmdRightTap == nil,
-           let tap = CGEvent.tapCreate(
-               tap: .cgSessionEventTap,
-               place: .headInsertEventTap,
-               options: .defaultTap,
-               eventsOfInterest: CGEventMask(mask),
-               callback: { _, type, event, _ in
-                   if !TrayMenuModel.shared.isEnabled { return Unmanaged.passUnretained(event) }
-                   let flags = event.flags
-                   let isCmd = flags.contains(.maskCommand)
-                   guard isCmd else { return Unmanaged.passUnretained(event) }
-                   switch type {
-                       case .rightMouseDown:
-                           Task { @MainActor in await onCmdRightMouseDown() }
-                           return nil
-                       case .rightMouseDragged:
-                           Task { @MainActor in await onCmdRightMouseDragged() }
-                           return Unmanaged.passUnretained(event)
-                       case .mouseMoved:
-                           Task { @MainActor in await onCmdRightMouseDragged() }
-                           return Unmanaged.passUnretained(event)
-                       case .rightMouseUp:
-                           Task { @MainActor in await onCmdRightMouseUp() }
-                           return nil
-                       case .flagsChanged:
-                           if !isCmd {
-                               Task { @MainActor in await onCmdRightMouseUp() }
-                           }
-                           return Unmanaged.passUnretained(event)
-                       default:
-                           return Unmanaged.passUnretained(event)
-                   }
-               },
-               userInfo: nil,
-           )
+        if let tap = CGEvent.tapCreate(
+            tap: .cgSessionEventTap,
+            place: .headInsertEventTap,
+            options: .defaultTap,
+            eventsOfInterest: CGEventMask(mask),
+            callback: { _, type, event, _ in
+                if !TrayMenuModel.shared.isEnabled { return Unmanaged.passUnretained(event) }
+                let flags = event.flags
+                let isModifier = flags.contains(config.mouseResizeModifier.cgEventFlag)
+                guard isModifier else { return Unmanaged.passUnretained(event) }
+                switch type {
+                    case .rightMouseDown:
+                        Task { @MainActor in await onCmdRightMouseDown() }
+                        return nil
+                    case .rightMouseDragged:
+                        Task { @MainActor in await onCmdRightMouseDragged() }
+                        return Unmanaged.passUnretained(event)
+                    case .mouseMoved:
+                        Task { @MainActor in await onCmdRightMouseDragged() }
+                        return Unmanaged.passUnretained(event)
+                    case .rightMouseUp:
+                        Task { @MainActor in await onCmdRightMouseUp() }
+                        return nil
+                    case .flagsChanged:
+                        if !isModifier {
+                            Task { @MainActor in await onCmdRightMouseUp() }
+                        }
+                        return Unmanaged.passUnretained(event)
+                    default:
+                        return Unmanaged.passUnretained(event)
+                }
+            },
+            userInfo: nil,
+        )
         {
             cmdRightTap = tap
             let src = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, tap, 0)
