@@ -7,6 +7,7 @@ class Window: TreeNode, Hashable {
     var lastFloatingSize: CGSize?
     var isFullscreen: Bool = false
     var noOuterGapsInFullscreen: Bool = false
+    var shouldHideOthersWhileFullscreen: Bool = false
     var layoutReason: LayoutReason = .standard
 
     @MainActor
@@ -37,6 +38,8 @@ class Window: TreeNode, Hashable {
     var isMacosMinimized: Bool { get async throws { false } } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
     var isHiddenInCorner: Bool { die("Not implemented") }
     @MainActor
+    func clearHiddenState() { die("Not implemented") }
+    @MainActor
     func nativeFocus() { die("Not implemented") }
     func getAxRect() async throws -> Rect? { die("Not implemented") }
     func getCenter() async throws -> CGPoint? { try await getAxRect()?.center }
@@ -45,6 +48,13 @@ class Window: TreeNode, Hashable {
     func setAxFrameBlocking(_ topLeft: CGPoint?, _ size: CGSize?) async throws { die("Not implemented") }
     func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) { die("Not implemented") }
     func setSizeAsync(_ size: CGSize) { die("Not implemented") }
+
+    func getCornerOffsetWhileHidden(_ corner: OptimalHideCorner) -> CGPoint {
+        return .zero
+    }
+
+    /// Sets the proportional position for when the window is unhidden
+    func setHiddenState(_ proportionalPosition: CGPoint?) { die("Not implemented") }
 }
 
 enum LayoutReason: Equatable {
