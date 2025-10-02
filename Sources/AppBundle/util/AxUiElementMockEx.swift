@@ -82,6 +82,10 @@ extension AxUiElementMock {
         _ activationPolicy: NSApplication.ActivationPolicy,
         _ windowLevel: MacOsWindowLevel?,
     ) -> Bool {
+        if windowLevel != .normalWindow && id == .slack {
+            return false
+        }
+
         if windowLevel == .alwaysOnTopWindow {
             return false
         }

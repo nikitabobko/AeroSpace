@@ -12,6 +12,7 @@ enum KnownBundleId: String, Equatable {
     case kitty = "net.kovidgoyal.kitty"
     case photoBooth = "com.apple.PhotoBooth"
     case qutebrowser = "org.qutebrowser.qutebrowser"
+    case slack = "com.tinyspeck.slackmacgap"
     case steam = "com.valvesoftware.steam.helper"
     case wezterm = "com.github.wez.wezterm"
     case zoom = "us.zoom.xos"
