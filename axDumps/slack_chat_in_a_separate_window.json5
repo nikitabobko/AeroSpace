@@ -109,5 +109,6 @@
 
   ],
   "Aero.treeNodeParent" : "Optional(AppBundle.TilingContainer)",
+  "Aero.windowLevel" : "{\"normalWindow\":{}}",
   "Aero.workspace" : "1"
 }
