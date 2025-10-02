@@ -30,19 +30,31 @@ public struct ListAppsCmdArgs: CmdArgs {
 
 extension ListAppsCmdArgs {
     public var format: [StringInterToken] {
-        _format.isEmpty
-            ? [
+        if _format.isEmpty {
+            return [
                 .interVar("app-pid"), .interVar("right-padding"), .literal(" | "),
                 .interVar("app-bundle-id"), .interVar("right-padding"), .literal(" | "),
                 .interVar("app-name"),
             ]
-            : _format
+        }
+        if _format.contains(.interVar(PlainInterVar.all.rawValue)) {
+            return AeroObjKind.app.getFormatWithAllVariable()
+        }
+        return _format
     }
 }
 
 public func parseListAppsCmdArgs(_ args: [String]) -> ParsedCmd<ListAppsCmdArgs> {
     parseSpecificCmdArgs(ListAppsCmdArgs(rawArgs: args), args)
-        .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
+        .flatMap { parsed in
+            if parsed.json, let msg = getErrorIfFormatIsIncompatibleWithJson(parsed._format) {
+                return .failure(msg)
+            }
+            if let msg = getErrorIfAllFormatVariableIsInvalid(json: parsed.json, format: parsed._format) {
+                return .failure(msg)
+            }
+            return .cmd(parsed)
+        }
 }
 
 func getErrorIfFormatIsIncompatibleWithJson(_ format: [StringInterToken]) -> String? {
