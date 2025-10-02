@@ -1,37 +1,19 @@
 import AppKit
 import Common
 
-
-private enum ResizeEdge { case left, right, up, down }
-
 @MainActor
 private struct CmdRightResizeSession {
     let windowId: UInt32
     let startPoint: CGPoint
-    let edge: ResizeEdge
+    let edge: CardinalDirection
 }
 
 @MainActor
 private var cmdRightResizeSession: CmdRightResizeSession? = nil
 @MainActor
-private var pendingDragRefreshTask: Task<(), Never>? = nil
+private var cmdRightDragRefreshTask: Task<(), any Error>? = nil
 
-private func edgeToDirection(_ e: ResizeEdge) -> CardinalDirection {
-    switch e {
-        case .left: .left
-        case .right: .right
-        case .up: .up
-        case .down: .down
-    }
-}
-private func oppositeEdge(_ e: ResizeEdge) -> ResizeEdge {
-    switch e {
-        case .left: .right
-        case .right: .left
-        case .up: .down
-        case .down: .up
-    }
-}
+
 
 @MainActor
 private func resolveParentAndNeighbor(_ window: Window, _ direction: CardinalDirection) -> (parent: TilingContainer, ownIndex: Int, neighborIndex: Int, orientation: Orientation)? {
@@ -49,7 +31,7 @@ func onCmdRightMouseDown() async {
     guard let window = point.findIn(tree: targetWorkspace.rootTilingContainer, virtual: false) else { return }
     guard let rect = window.lastAppliedLayoutPhysicalRect else { return }
 
-    let distances: [(ResizeEdge, CGFloat)] = [
+    let distances: [(CardinalDirection, CGFloat)] = [
         (.left, abs(point.x - rect.minX)),
         (.right, abs(point.x - rect.maxX)),
         (.up, abs(point.y - rect.minY)),
@@ -57,8 +39,8 @@ func onCmdRightMouseDown() async {
     ]
     var edge = distances.min(by: { $0.1 < $1.1 })!.0
 
-    func hasNeighbor(_ e: ResizeEdge) -> Bool { resolveParentAndNeighbor(window, edgeToDirection(e)) != nil }
-    if !hasNeighbor(edge), hasNeighbor(oppositeEdge(edge)) { edge = oppositeEdge(edge) }
+    func hasNeighbor(_ e: CardinalDirection) -> Bool { resolveParentAndNeighbor(window, e) != nil }
+    if !hasNeighbor(edge), hasNeighbor(edge.opposite) { edge = edge.opposite }
     if !hasNeighbor(edge) { return }
 
     currentlyManipulatedWithMouseWindowId = window.windowId
@@ -71,7 +53,7 @@ func onCmdRightMouseDragged() async {
     guard let window = Window.get(byId: session.windowId) else { return }
 
     let point = mouseLocation
-    let direction = edgeToDirection(session.edge)
+    let direction = session.edge
     let delta: CGFloat = (direction.orientation == .h) ? (point.x - session.startPoint.x) : (point.y - session.startPoint.y)
     let diff: CGFloat = direction.isPositive ? delta : -delta
 
@@ -90,31 +72,17 @@ func onCmdRightMouseDragged() async {
     sibling.setWeight(orientation, sibling.getWeightBeforeResize(orientation) - diff)
 
     currentlyManipulatedWithMouseWindowId = window.windowId
-    scheduleThrottledRefresh()
+    cmdRightDragRefreshTask?.cancel()
+    cmdRightDragRefreshTask = Task {
+        try checkCancellation()
+        runRefreshSession(.globalObserver("cmdRightMouseDragged"), optimisticallyPreLayoutWorkspaces: true)
+    }
 }
 
 @MainActor
 func onCmdRightMouseUp() async {
     cmdRightResizeSession = nil
-    pendingDragRefreshTask?.cancel()
-    pendingDragRefreshTask = nil
+    cmdRightDragRefreshTask?.cancel()
+    cmdRightDragRefreshTask = nil
     try? await resetManipulatedWithMouseIfPossible()
-}
-
-@MainActor
-private func scheduleThrottledRefresh() {
-    if pendingDragRefreshTask != nil { return }
-    pendingDragRefreshTask = Task { @MainActor in
-        try? await Task.sleep(for: preferredFrameDuration())
-        runRefreshSession(.globalObserver("cmdRightMouseDragged"), optimisticallyPreLayoutWorkspaces: true)
-        pendingDragRefreshTask = nil
-    }
-}
-
-@MainActor
-private func preferredFrameDuration() -> Duration {
-    let maxFps = NSScreen.screens.map { $0.maximumFramesPerSecond }.max() ?? 60
-    let fps = max(maxFps, 1)
-    let nanosPerFrame = 1_000_000_000 / fps
-    return .nanoseconds(nanosPerFrame)
 }
