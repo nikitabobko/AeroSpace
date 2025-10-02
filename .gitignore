@@ -22,6 +22,3 @@
 # XCode User settings
 xcuserdata/
 xcshareddata/
-
-# macOS 13
-Sources/Common/macOs13Compatibility.swift
