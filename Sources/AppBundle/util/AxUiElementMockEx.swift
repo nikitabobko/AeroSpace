@@ -77,6 +77,10 @@ extension AxUiElementMock {
         _ activationPolicy: NSApplication.ActivationPolicy,
         _ windowLevel: MacOsWindowLevel?,
     ) -> Bool {
+        if windowLevel != .normalWindow && appBundleId == "com.tinyspeck.slackmacgap" {
+            return false
+        }
+
         if windowLevel == .alwaysOnTopWindow {
             return false
         }
