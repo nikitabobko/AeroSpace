@@ -175,15 +175,16 @@ final class MacApp: AbstractApp {
     }
 
     func isWindowHeuristic(_ windowId: UInt32) async throws -> Bool {
-        try await withWindow(windowId) { [nsApp, axApp, bundleId] window, job in
-            window.isWindowHeuristic(axApp: axApp.threadGuarded, appBundleId: bundleId, nsApp.activationPolicy)
+        let windowLevel = await getWindowLevel(for: windowId)
+        return try await withWindow(windowId) { [nsApp, axApp, bundleId] window, job in
+            window.isWindowHeuristic(axApp: axApp.threadGuarded, appBundleId: bundleId, nsApp.activationPolicy, windowLevel)
         } == true
     }
 
-    @MainActor
     func getAxUiElementWindowType(_ windowId: UInt32) async throws -> AxUiElementWindowType {
-        try await withWindow(windowId) { [nsApp, axApp, bundleId] window, job in
-            window.getWindowType(axApp: axApp.threadGuarded, appBundleId: bundleId, nsApp.activationPolicy)
+        let windowLevel = await getWindowLevel(for: windowId)
+        return try await withWindow(windowId) { [nsApp, axApp, bundleId] window, job in
+            window.getWindowType(axApp: axApp.threadGuarded, appBundleId: bundleId, nsApp.activationPolicy, windowLevel)
         } ?? .window
     }
 

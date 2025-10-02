@@ -20,9 +20,12 @@ func checkAxDumpsRecursive(_ dir: URL) throws {
         let json = Json.newOrDie(rawJson).asDictOrDie
         let app = json["Aero.AXApp"]!.asDictOrDie
         let appBundleId = rawJson["Aero.App.appBundleId"] as? String
+        let windowLevel = (rawJson["Aero.windowLevel"] as? String)?.data(using: .utf8)
+            .map { (try? JSONDecoder().decode(MacOsWindowLevel.self, from: $0)) ?? dieT() }?
+            .normalize
         let activationPolicy: NSApplication.ActivationPolicy = .from(string: rawJson["Aero.App.nsApp.activationPolicy"] as! String)
         assertEquals(
-            json.getWindowType(axApp: app, appBundleId: appBundleId, activationPolicy),
+            json.getWindowType(axApp: app, appBundleId: appBundleId, activationPolicy, windowLevel),
             AxUiElementWindowType(rawValue: rawJson["Aero.AxUiElementWindowType"] as? String ?? dieT()),
             additionalMsg: "\(file.path()):0:0: AxUiElementWindowType doesn't match",
         )
