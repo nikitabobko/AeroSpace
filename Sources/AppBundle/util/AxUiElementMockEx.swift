@@ -80,7 +80,12 @@ extension AxUiElementMock {
         axApp: AxUiElementMock,
         _ id: KnownBundleId?,
         _ activationPolicy: NSApplication.ActivationPolicy,
+        _ windowLevel: MacOsWindowLevel?,
     ) -> Bool {
+        if windowLevel == .alwaysOnTopWindow {
+            return false
+        }
+
         // Just don't do anything with "Ghostty Quick Terminal" windows.
         // Its position and size are managed by the Ghostty itself
         // https://github.com/nikitabobko/AeroSpace/issues/103
@@ -156,9 +161,10 @@ extension AxUiElementMock {
         axApp: AxUiElementMock,
         _ id: KnownBundleId?,
         _ activationPolicy: NSApplication.ActivationPolicy,
+        _ windowLevel: MacOsWindowLevel?,
     ) -> AxUiElementWindowType {
         .new(
-            isWindow: isWindowHeuristic(axApp: axApp, id, activationPolicy),
+            isWindow: isWindowHeuristic(axApp: axApp, id, activationPolicy, windowLevel),
             isDialog: { isDialogHeuristic(id) },
         )
     }
