@@ -9,7 +9,7 @@ var isRightMouseButtonDown: Bool { (NSEvent.pressedMouseButtons & rightMouseButt
 @MainActor
 func isManipulatedWithMouse(_ window: Window) async throws -> Bool {
     try await (!window.isHiddenInCorner && // Don't allow to resize/move windows of hidden workspaces
-        isLeftMouseButtonDown &&
+        (isLeftMouseButtonDown || isRightMouseButtonDown) &&
         (currentlyManipulatedWithMouseWindowId == nil || window.windowId == currentlyManipulatedWithMouseWindowId))
         .andAsync { @Sendable @MainActor in try await getNativeFocusedWindow() == window }
 }

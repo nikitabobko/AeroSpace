@@ -37,6 +37,38 @@ func resetManipulatedWithMouseIfPossible() async throws {
 private let adaptiveWeightBeforeResizeWithMouseKey = TreeNodeUserDataKey<CGFloat>(key: "adaptiveWeightBeforeResizeWithMouseKey")
 
 @MainActor
+func adjustWeightsForResize(window: Window, currentRect: Rect, lastAppliedLayoutRect: Rect) {
+    let (lParent, lOwnIndex) = window.closestParent(hasChildrenInDirection: .left, withLayout: .tiles) ?? (nil, nil)
+    let (dParent, dOwnIndex) = window.closestParent(hasChildrenInDirection: .down, withLayout: .tiles) ?? (nil, nil)
+    let (uParent, uOwnIndex) = window.closestParent(hasChildrenInDirection: .up, withLayout: .tiles) ?? (nil, nil)
+    let (rParent, rOwnIndex) = window.closestParent(hasChildrenInDirection: .right, withLayout: .tiles) ?? (nil, nil)
+    let table: [(CGFloat, TilingContainer?, Int?, Int?)] = [
+        (lastAppliedLayoutRect.minX - currentRect.minX, lParent, 0, lOwnIndex),
+        (currentRect.maxY - lastAppliedLayoutRect.maxY, dParent, dOwnIndex.map { $0 + 1 }, dParent?.children.count),
+        (lastAppliedLayoutRect.minY - currentRect.minY, uParent, 0, uOwnIndex),
+        (currentRect.maxX - lastAppliedLayoutRect.maxX, rParent, rOwnIndex.map { $0 + 1 }, rParent?.children.count),
+    ]
+    for (diff, parent, startIndex, pastTheEndIndex) in table {
+        if let parent, let startIndex, let pastTheEndIndex, pastTheEndIndex - startIndex > 0 && abs(diff) > 5 {
+            let siblingDiff = diff.div(pastTheEndIndex - startIndex).orDie()
+            let orientation = parent.orientation
+
+            window.parentsWithSelf.lazy
+                .prefix(while: { $0 != parent })
+                .filter {
+                    let parent = $0.parent as? TilingContainer
+                    return parent?.orientation == orientation && parent?.layout == .tiles
+                }
+                .forEach { $0.setWeight(orientation, $0.getWeightBeforeResize(orientation) + diff) }
+            for sibling in parent.children[startIndex ..< pastTheEndIndex] {
+                sibling.setWeight(orientation, sibling.getWeightBeforeResize(orientation) - siblingDiff)
+            }
+        }
+    }
+    currentlyManipulatedWithMouseWindowId = window.windowId
+}
+
+@MainActor
 private func resizeWithMouse(_ window: Window) async throws { // todo cover with tests
     resetClosedWindowsCache()
     guard let parent = window.parent else { return }
@@ -47,34 +79,7 @@ private func resizeWithMouse(_ window: Window) async throws { // todo cover with
         case .tilingContainer:
             guard let rect = try await window.getAxRect() else { return }
             guard let lastAppliedLayoutRect = window.lastAppliedLayoutPhysicalRect else { return }
-            let (lParent, lOwnIndex) = window.closestParent(hasChildrenInDirection: .left, withLayout: .tiles) ?? (nil, nil)
-            let (dParent, dOwnIndex) = window.closestParent(hasChildrenInDirection: .down, withLayout: .tiles) ?? (nil, nil)
-            let (uParent, uOwnIndex) = window.closestParent(hasChildrenInDirection: .up, withLayout: .tiles) ?? (nil, nil)
-            let (rParent, rOwnIndex) = window.closestParent(hasChildrenInDirection: .right, withLayout: .tiles) ?? (nil, nil)
-            let table: [(CGFloat, TilingContainer?, Int?, Int?)] = [
-                (lastAppliedLayoutRect.minX - rect.minX, lParent, 0,                        lOwnIndex),               // Horizontal, to the left of the window
-                (rect.maxY - lastAppliedLayoutRect.maxY, dParent, dOwnIndex.map { $0 + 1 }, dParent?.children.count), // Vertical, to the down of the window
-                (lastAppliedLayoutRect.minY - rect.minY, uParent, 0,                        uOwnIndex),               // Vertical, to the up of the window
-                (rect.maxX - lastAppliedLayoutRect.maxX, rParent, rOwnIndex.map { $0 + 1 }, rParent?.children.count), // Horizontal, to the right of the window
-            ]
-            for (diff, parent, startIndex, pastTheEndIndex) in table {
-                if let parent, let startIndex, let pastTheEndIndex, pastTheEndIndex - startIndex > 0 && abs(diff) > 5 { // 5 pixels should be enough to fight with accumulated floating precision error
-                    let siblingDiff = diff.div(pastTheEndIndex - startIndex).orDie()
-                    let orientation = parent.orientation
-
-                    window.parentsWithSelf.lazy
-                        .prefix(while: { $0 != parent })
-                        .filter {
-                            let parent = $0.parent as? TilingContainer
-                            return parent?.orientation == orientation && parent?.layout == .tiles
-                        }
-                        .forEach { $0.setWeight(orientation, $0.getWeightBeforeResize(orientation) + diff) }
-                    for sibling in parent.children[startIndex ..< pastTheEndIndex] {
-                        sibling.setWeight(orientation, sibling.getWeightBeforeResize(orientation) - siblingDiff)
-                    }
-                }
-            }
-            currentlyManipulatedWithMouseWindowId = window.windowId
+            adjustWeightsForResize(window: window, currentRect: rect, lastAppliedLayoutRect: lastAppliedLayoutRect)
     }
 }
 
