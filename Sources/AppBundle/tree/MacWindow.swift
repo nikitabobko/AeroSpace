@@ -141,12 +141,12 @@ final class MacWindow: Window {
                 guard let s = try await getAxSize() else { fallthrough }
                 // Zoom will jump off if you do one pixel offset https://github.com/nikitabobko/AeroSpace/issues/527
                 // todo this ad hoc won't be necessary once I implement optimization suggested by Zalim
-                let onePixelOffset = macApp.isZoom ? .zero : CGPoint(x: 1, y: -1)
+                let onePixelOffset = macApp.appId == .zoom ? .zero : CGPoint(x: 1, y: -1)
                 p = nodeMonitor.visibleRect.bottomLeftCorner + onePixelOffset + CGPoint(x: -s.width, y: 0)
             case .bottomRightCorner:
                 // Zoom will jump off if you do one pixel offset https://github.com/nikitabobko/AeroSpace/issues/527
                 // todo this ad hoc won't be necessary once I implement optimization suggested by Zalim
-                let onePixelOffset = macApp.isZoom ? .zero : CGPoint(x: 1, y: 1)
+                let onePixelOffset = macApp.appId == .zoom ? .zero : CGPoint(x: 1, y: 1)
                 p = nodeMonitor.visibleRect.bottomRightCorner - onePixelOffset
         }
         setAxTopLeftCorner(p)
@@ -279,7 +279,7 @@ extension WindowDetectedCallback {
         if let regex = matcher.windowTitleRegexSubstring, !(try await window.title).contains(regex) {
             return false
         }
-        if let appId = matcher.appId, appId != window.app.bundleId {
+        if let appId = matcher.appId, appId != window.app.rawAppBundleId {
             return false
         }
         if let regex = matcher.appNameRegexSubstring, !(window.app.name ?? "").contains(regex) {

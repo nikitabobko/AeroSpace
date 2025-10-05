@@ -6,9 +6,9 @@ import Common
 // (only available since macOS 14)
 final class MacApp: AbstractApp {
     /*conforms*/ let pid: Int32
-    /*conforms*/ let bundleId: String?
+    /*conforms*/ let rawAppBundleId: String?
+    let appId: KnownBundleId?
     let nsApp: NSRunningApplication
-    let isZoom: Bool
     private let axApp: ThreadGuardedValue<AXUIElement>
     private let appAxSubscriptions: ThreadGuardedValue<[AxSubscription]> // keep subscriptions in memory
     private let windows: ThreadGuardedValue<[UInt32: AxWindow]> = .init([:])
@@ -28,9 +28,9 @@ final class MacApp: AbstractApp {
     private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement, _ axSubscriptions: [AxSubscription], _ thread: Thread) {
         self.nsApp = nsApp
         self.axApp = .init(axApp)
-        self.isZoom = nsApp.bundleIdentifier == "us.zoom.xos"
         self.pid = nsApp.processIdentifier
-        self.bundleId = nsApp.bundleIdentifier
+        self.rawAppBundleId = nsApp.bundleIdentifier
+        self.appId = nsApp.bundleIdentifier.flatMap { KnownBundleId.init(rawValue: $0) }
         assert(!axSubscriptions.isEmpty)
         self.appAxSubscriptions = .init(axSubscriptions)
         self.thread = thread
@@ -175,21 +175,21 @@ final class MacApp: AbstractApp {
     }
 
     func isWindowHeuristic(_ windowId: UInt32) async throws -> Bool {
-        try await withWindow(windowId) { [nsApp, axApp, bundleId] window, job in
-            window.isWindowHeuristic(axApp: axApp.threadGuarded, appBundleId: bundleId, nsApp.activationPolicy)
+        try await withWindow(windowId) { [nsApp, axApp, appId] window, job in
+            window.isWindowHeuristic(axApp: axApp.threadGuarded, appId, nsApp.activationPolicy)
         } == true
     }
 
     @MainActor
     func getAxUiElementWindowType(_ windowId: UInt32) async throws -> AxUiElementWindowType {
-        try await withWindow(windowId) { [nsApp, axApp, bundleId] window, job in
-            window.getWindowType(axApp: axApp.threadGuarded, appBundleId: bundleId, nsApp.activationPolicy)
+        try await withWindow(windowId) { [nsApp, axApp, appId] window, job in
+            window.getWindowType(axApp: axApp.threadGuarded, appId, nsApp.activationPolicy)
         } ?? .window
     }
 
     func isDialogHeuristic(_ windowId: UInt32) async throws -> Bool {
-        try await withWindow(windowId) { [nsApp] window, job in
-            window.isDialogHeuristic(appBundleId: nsApp.bundleIdentifier)
+        try await withWindow(windowId) { [appId] window, job in
+            window.isDialogHeuristic(appId)
         } == true
     }
 

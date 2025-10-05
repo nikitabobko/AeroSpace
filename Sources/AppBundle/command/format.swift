@@ -139,7 +139,7 @@ extension String {
                 }
             case (.app(let a), .app(let f)):
                 return switch f {
-                    case .appBundleId: .success(.string(a.bundleId ?? "NULL-APP-BUNDLE-ID"))
+                    case .appBundleId: .success(.string(a.rawAppBundleId ?? "NULL-APP-BUNDLE-ID"))
                     case .appName: .success(.string(a.name ?? "NULL-APP-NAME"))
                     case .appPid: .success(.int32(a.pid))
                     case .appExecPath: .success(.string(a.execPath ?? "NULL-APP-EXEC-PATH"))
