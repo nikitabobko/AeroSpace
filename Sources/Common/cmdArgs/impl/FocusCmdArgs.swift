@@ -9,6 +9,7 @@ public struct FocusCmdArgs: CmdArgs {
             "--ignore-floating": falseBoolFlag(\.floatingAsTiling),
             "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
             "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
+            "--wrap-around": trueBoolFlag(\.wrapAround),
             "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32)),
             "--dfs-index": ArgParser(\.dfsIndex, upcastArgParserFun(parseArgWithUInt32)),
         ],
@@ -17,6 +18,7 @@ public struct FocusCmdArgs: CmdArgs {
 
     public var rawBoundaries: Boundaries? = nil // todo cover boundaries wrapping with tests
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
+    public var wrapAround: Bool = false
     public var dfsIndex: UInt32? = nil
     public var cardinalOrDfsDirection: CardinalOrDfsDirection? = nil
     public var floatingAsTiling: Bool = true
@@ -83,7 +85,12 @@ extension FocusCmdArgs {
     }
 
     public var boundaries: Boundaries { rawBoundaries ?? .workspace }
-    public var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .stop }
+    public var boundariesAction: WhenBoundariesCrossed {
+        if wrapAround {
+            return .wrapAroundTheWorkspace
+        }
+        return rawBoundariesAction ?? .stop
+    }
 }
 
 public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
@@ -104,6 +111,12 @@ public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
         }
         .filter("(dfs-next|dfs-prev) only supports --boundaries workspace") {
             $0.target.isDfsRelative.implies($0.boundaries == .workspace)
+        }
+        .filter("--wrap-around cannot be used with --boundaries") {
+            !($0.wrapAround && $0.rawBoundaries != nil)
+        }
+        .filter("--wrap-around cannot be used with --boundaries-action") {
+            !($0.wrapAround && $0.rawBoundariesAction != nil)
         }
 }
 
