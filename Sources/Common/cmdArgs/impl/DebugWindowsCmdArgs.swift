@@ -1,6 +1,6 @@
 public struct DebugWindowsCmdArgs: CmdArgs {
     public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: EquatableNoop<[String]>) { self.rawArgs = rawArgs }
+    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .debugWindows,
         allowInConfig: false,

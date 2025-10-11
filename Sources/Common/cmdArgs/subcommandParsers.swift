@@ -18,10 +18,6 @@ struct SubCommandParser<T: CmdArgs>: SubCommandParserProtocol, Sendable {
         _parse = parser
     }
 
-    init(_ raw: @escaping @Sendable (EquatableNoop<[String]>) -> T) {
-        _parse = { args in parseSpecificCmdArgs(raw(.init(args)), args) }
-    }
-
     init(_ raw: @escaping @Sendable ([String]) -> T) {
         _parse = { args in parseSpecificCmdArgs(raw(args), args) }
     }
