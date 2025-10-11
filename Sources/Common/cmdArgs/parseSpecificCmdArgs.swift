@@ -1,13 +1,13 @@
-public func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: [String]) -> ParsedCmd<T> {
-    var args = args
+public func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCmd<T> {
     var raw = raw
     var errors: [String] = []
 
-    var argumentIndex = 0
+    var posArgumentParserIndex = 0
     var options: Set<String> = Set()
+    var index = 0
 
-    while !args.isEmpty {
-        let arg = args.next()
+    while index < args.count {
+        let arg = args[index]
         if arg == "-h" || arg == "--help" {
             return .help(T.info.help)
         } else if arg.starts(with: "-") && !isResizeNegativeUnitsArg(raw, arg: arg) {
@@ -15,21 +15,22 @@ public func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: [String]) -> Pars
                 if !options.insert(arg).inserted {
                     errors.append("Duplicated option \(arg.singleQuoted)")
                 }
-                raw = optionParser.transformRaw(raw, arg, &args, &errors)
+                // raw = optionParser.transformRaw(raw, arg, &args, &errors) // todo
             } else {
                 errors.append("Unknown flag \(arg.singleQuoted)")
                 break
             }
-        } else if let parser = T.parser.positionalArgs.getOrNil(atIndex: argumentIndex) {
-            raw = parser.transformRaw(raw, arg, &args, &errors)
-            argumentIndex += 1
+        } else if let parser = T.parser.positionalArgs.getOrNil(atIndex: posArgumentParserIndex) {
+            // raw = parser.transformRaw(raw, arg, &args, &errors) // todo
+            posArgumentParserIndex += 1
         } else {
             errors.append("Unknown argument \(arg.singleQuoted)")
             break
         }
+        index += 1
     }
 
-    for arg in T.parser.positionalArgs[argumentIndex...] {
+    for arg in T.parser.positionalArgs[posArgumentParserIndex...] {
         if let placeholder = arg.argPlaceholderIfMandatory {
             errors.append("Argument \(placeholder.singleQuoted) is mandatory")
         }

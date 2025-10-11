@@ -1,5 +1,5 @@
 public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveNodeToWorkspace,
         allowInConfig: true,
@@ -27,7 +27,7 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     /*conforms*/ public var workspaceName: WorkspaceName?
     public var target: Lateinit<WorkspaceTarget> = .uninitialized
 
-    public init(rawArgs: [String]) {
+    public init(rawArgs: StrArrSlice) {
         self.rawArgsForStrRepr = .init(rawArgs)
     }
 }
@@ -39,7 +39,7 @@ extension MoveNodeToWorkspaceCmdArgs {
 
 func implication(ifTrue: Bool, mustHold: @autoclosure () -> Bool) -> Bool { !ifTrue || mustHold() }
 
-public func parseMoveNodeToWorkspaceCmdArgs(_ args: [String]) -> ParsedCmd<MoveNodeToWorkspaceCmdArgs> {
+public func parseMoveNodeToWorkspaceCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveNodeToWorkspaceCmdArgs> {
     parseSpecificCmdArgs(MoveNodeToWorkspaceCmdArgs(rawArgs: args), args)
         .filter("--wrapAround requires using (prev|next) argument") { ($0._wrapAround != nil).implies($0.target.val.isRelatve) }
         .filterNot("--fail-if-noop is incompatible with (next|prev)") { $0.failIfNoop && $0.target.val.isRelatve }

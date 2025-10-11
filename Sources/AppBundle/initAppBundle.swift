@@ -64,7 +64,7 @@ private let serverHelp = """
 private nonisolated(unsafe) var _serverArgs = ServerArgs()
 var serverArgs: ServerArgs { _serverArgs }
 private func initServerArgs() {
-    let args: [String] = Array(CommandLine.arguments.dropFirst())
+    let args = CommandLine.arguments.slice(1...) ?? []
     if args.contains(where: { $0 == "-h" || $0 == "--help" }) {
         print(serverHelp)
         exit(0)

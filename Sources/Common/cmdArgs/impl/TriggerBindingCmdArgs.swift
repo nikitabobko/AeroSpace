@@ -1,5 +1,5 @@
 public struct TriggerBindingCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .triggerBinding,
         allowInConfig: true,
@@ -20,7 +20,7 @@ extension TriggerBindingCmdArgs {
     public var mode: String { _mode.orDie() }
 }
 
-public func parseTriggerBindingCmdArgs(_ args: [String]) -> ParsedCmd<TriggerBindingCmdArgs> {
+public func parseTriggerBindingCmdArgs(_ args: StrArrSlice) -> ParsedCmd<TriggerBindingCmdArgs> {
     parseSpecificCmdArgs(TriggerBindingCmdArgs(rawArgsForStrRepr: .init(args)), args)
         .filter("--mode flag is mandatory") { $0._mode != nil }
 }

@@ -91,7 +91,7 @@ extension String {
 }
 
 extension ConfigMapValue {
-    func find(keyPath: ArrSlice<String>) -> Result<ConfigMapValue, String> {
+    func find(keyPath: StrArrSlice) -> Result<ConfigMapValue, String> {
         if let key = keyPath.first {
             switch self {
                 case .scalar(let scalar):

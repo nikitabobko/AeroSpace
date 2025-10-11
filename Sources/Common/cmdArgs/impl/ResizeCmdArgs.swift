@@ -1,6 +1,6 @@
 public struct ResizeCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    fileprivate init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .resize,
         allowInConfig: true,
@@ -24,7 +24,7 @@ public struct ResizeCmdArgs: CmdArgs {
         dimension: Dimension,
         units: Units
     ) {
-        self.rawArgsForStrRepr = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs.slice)
         self.dimension = .initialized(dimension)
         self.units = .initialized(units)
     }
@@ -41,7 +41,7 @@ public struct ResizeCmdArgs: CmdArgs {
     }
 }
 
-public func parseResizeCmdArgs(_ args: [String]) -> ParsedCmd<ResizeCmdArgs> {
+public func parseResizeCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ResizeCmdArgs> {
     parseSpecificCmdArgs(ResizeCmdArgs(rawArgs: args), args)
 }
 

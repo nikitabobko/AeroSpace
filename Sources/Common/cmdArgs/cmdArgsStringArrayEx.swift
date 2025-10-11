@@ -1,4 +1,4 @@
-extension [String] {
+extension [String] { // todo drop
     mutating func next() -> String {
         nextOrNil() ?? dieT("args is empty")
     }

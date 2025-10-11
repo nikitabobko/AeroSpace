@@ -1,6 +1,6 @@
 public struct MacosNativeFullscreenCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    public init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .macosNativeFullscreen,
         allowInConfig: true,
@@ -18,7 +18,7 @@ public struct MacosNativeFullscreenCmdArgs: CmdArgs {
     /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
-public func parseMacosNativeFullscreenCmdArgs(_ args: [String]) -> ParsedCmd<MacosNativeFullscreenCmdArgs> {
+public func parseMacosNativeFullscreenCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MacosNativeFullscreenCmdArgs> {
     parseSpecificCmdArgs(MacosNativeFullscreenCmdArgs(rawArgs: args), args)
         .filter("--fail-if-noop requires 'on' or 'off' argument") { $0.failIfNoop.implies($0.toggle == .on || $0.toggle == .off) }
 }

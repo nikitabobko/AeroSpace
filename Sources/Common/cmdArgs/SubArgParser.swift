@@ -1,5 +1,5 @@
 public typealias SubArgParserFun<K> = @Sendable (/*arg*/ String, /*nextArgs*/ inout [String]) -> Parsed<K>
-public protocol SubArgParserProtocol<T>: Sendable {
+public protocol SubArgParserProtocol<T>: Sendable, AeroAny {
     associatedtype K
     associatedtype T where T: ConvenienceCopyable
     var keyPath: SendableWritableKeyPath<T, K> { get }

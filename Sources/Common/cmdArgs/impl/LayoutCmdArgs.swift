@@ -1,6 +1,6 @@
 public struct LayoutCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    fileprivate init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .layout,
         allowInConfig: true,
@@ -16,7 +16,7 @@ public struct LayoutCmdArgs: CmdArgs {
     /*conforms*/ public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String], toggleBetween: [LayoutDescription]) {
-        self.rawArgsForStrRepr = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs.slice)
         self.toggleBetween = .initialized(toggleBetween)
     }
 
@@ -44,7 +44,7 @@ private func parseToggleBetween(arg: String, _ nextArgs: inout [String]) -> Pars
     return .success(result)
 }
 
-public func parseLayoutCmdArgs(_ args: [String]) -> ParsedCmd<LayoutCmdArgs> {
+public func parseLayoutCmdArgs(_ args: StrArrSlice) -> ParsedCmd<LayoutCmdArgs> {
     parseSpecificCmdArgs(LayoutCmdArgs(rawArgs: args), args).map {
         check(!$0.toggleBetween.val.isEmpty)
         return $0

@@ -1,6 +1,6 @@
 public struct MoveCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    fileprivate init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .move,
         allowInConfig: true,
@@ -20,7 +20,7 @@ public struct MoveCmdArgs: CmdArgs {
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
 
     public init(rawArgs: [String], _ direction: CardinalDirection) {
-        self.rawArgsForStrRepr = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs.slice)
         self.direction = .initialized(direction)
     }
 
@@ -41,7 +41,7 @@ extension MoveCmdArgs {
     public var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .createImplicitContainer }
 }
 
-public func parseMoveCmdArgs(_ args: [String]) -> ParsedCmd<MoveCmdArgs> {
+public func parseMoveCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveCmdArgs> {
     parseSpecificCmdArgs(MoveCmdArgs(rawArgs: args), args)
 }
 

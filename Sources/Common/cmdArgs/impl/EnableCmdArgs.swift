@@ -1,6 +1,6 @@
 public struct EnableCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    fileprivate init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .enable,
         allowInConfig: true,
@@ -16,7 +16,7 @@ public struct EnableCmdArgs: CmdArgs {
     public var failIfNoop: Bool = false
 
     public init(rawArgs: [String], targetState: State) {
-        self.rawArgsForStrRepr = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs.slice)
         self.targetState = .initialized(targetState)
     }
 
@@ -25,7 +25,7 @@ public struct EnableCmdArgs: CmdArgs {
     }
 }
 
-public func parseEnableCmdArgs(_ args: [String]) -> ParsedCmd<EnableCmdArgs> {
+public func parseEnableCmdArgs(_ args: StrArrSlice) -> ParsedCmd<EnableCmdArgs> {
     return parseSpecificCmdArgs(EnableCmdArgs(rawArgs: args), args)
         .filterNot("--fail-if-noop is incompatible with 'toggle' argument") { $0.targetState.val == .toggle && $0.failIfNoop }
 }

@@ -1,6 +1,6 @@
 public struct SwapCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    public init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .swap,
         allowInConfig: true,
@@ -20,11 +20,11 @@ public struct SwapCmdArgs: CmdArgs {
     public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String], target: CardinalOrDfsDirection) {
-        self.rawArgsForStrRepr = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs.slice)
         self.target = .initialized(target)
     }
 }
 
-public func parseSwapCmdArgs(_ args: [String]) -> ParsedCmd<SwapCmdArgs> {
+public func parseSwapCmdArgs(_ args: StrArrSlice) -> ParsedCmd<SwapCmdArgs> {
     return parseSpecificCmdArgs(SwapCmdArgs(rawArgs: args), args)
 }

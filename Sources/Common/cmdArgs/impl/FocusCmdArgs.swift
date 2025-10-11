@@ -1,6 +1,6 @@
 public struct FocusCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    fileprivate init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .focus,
         allowInConfig: true,
@@ -23,17 +23,17 @@ public struct FocusCmdArgs: CmdArgs {
     /*conforms*/ public var windowId: UInt32?
     /*conforms*/ public var workspaceName: WorkspaceName?
 
-    public init(rawArgs: [String], cardinalOrDfsDirection: CardinalOrDfsDirection) {
+    public init(rawArgs: StrArrSlice, cardinalOrDfsDirection: CardinalOrDfsDirection) {
         self.rawArgsForStrRepr = .init(rawArgs)
         self.cardinalOrDfsDirection = cardinalOrDfsDirection
     }
 
-    public init(rawArgs: [String], windowId: UInt32) {
+    public init(rawArgs: StrArrSlice, windowId: UInt32) {
         self.rawArgsForStrRepr = .init(rawArgs)
         self.windowId = windowId
     }
 
-    public init(rawArgs: [String], dfsIndex: UInt32) {
+    public init(rawArgs: StrArrSlice, dfsIndex: UInt32) {
         self.rawArgsForStrRepr = .init(rawArgs)
         self.dfsIndex = dfsIndex
     }
@@ -86,7 +86,7 @@ extension FocusCmdArgs {
     public var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .stop }
 }
 
-public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
+public func parseFocusCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusCmdArgs> {
     return parseSpecificCmdArgs(FocusCmdArgs(rawArgs: args), args)
         .flatMap { (raw: FocusCmdArgs) -> ParsedCmd<FocusCmdArgs> in
             raw.boundaries == .workspace && raw.boundariesAction == .wrapAroundAllMonitors

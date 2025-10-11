@@ -1,6 +1,6 @@
 public struct JoinWithCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
-    init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .joinWith,
         allowInConfig: true,
@@ -16,11 +16,11 @@ public struct JoinWithCmdArgs: CmdArgs {
     /*conforms*/ public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String], direction: CardinalDirection) {
-        self.rawArgsForStrRepr = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs.slice)
         self.direction = .initialized(direction)
     }
 }
 
-public func parseJoinWithCmdArgs(_ args: [String]) -> ParsedCmd<JoinWithCmdArgs> {
+public func parseJoinWithCmdArgs(_ args: StrArrSlice) -> ParsedCmd<JoinWithCmdArgs> {
     parseSpecificCmdArgs(JoinWithCmdArgs(rawArgs: args), args)
 }

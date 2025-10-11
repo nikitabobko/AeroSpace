@@ -4,7 +4,7 @@ private let workspace = "<workspace>"
 private let workspaces = "\(workspace)..."
 
 public struct ListWindowsCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listWindows,
         allowInConfig: false,
@@ -64,8 +64,8 @@ extension ListWindowsCmdArgs {
     }
 }
 
-public func parseListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCmdArgs> {
-    let args = args.map { $0 == "--app-id" ? "--app-bundle-id" : $0 } // Compatibility
+public func parseListWindowsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWindowsCmdArgs> {
+    let args = args.map { $0 == "--app-id" ? "--app-bundle-id" : $0 }.slice // Compatibility
     return parseSpecificCmdArgs(ListWindowsCmdArgs(rawArgsForStrRepr: .init(args)), args)
         .filter("Mandatory option is not specified (--focused|--all|--monitor|--workspace)") { raw in
             raw.filteringOptions.focused || raw.all || !raw.filteringOptions.monitors.isEmpty || !raw.filteringOptions.workspaces.isEmpty

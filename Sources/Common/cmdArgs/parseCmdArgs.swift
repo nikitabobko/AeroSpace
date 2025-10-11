@@ -1,10 +1,10 @@
-public func parseCmdArgs(_ args: [String]) -> ParsedCmd<any CmdArgs> {
+public func parseCmdArgs(_ args: StrArrSlice) -> ParsedCmd<any CmdArgs> {
     let subcommand = String(args.first ?? "")
     if subcommand.isEmpty {
         return .failure("Can't parse empty string command")
     }
     if let subcommandParser: any SubCommandParserProtocol = subcommandParsers[subcommand] {
-        return subcommandParser.parse(args: Array(args.dropFirst()))
+        return subcommandParser.parse(args: args.slice(1...).orDie())
     } else {
         return .failure("Unrecognized subcommand '\(subcommand)'")
     }
@@ -12,7 +12,7 @@ public func parseCmdArgs(_ args: [String]) -> ParsedCmd<any CmdArgs> {
 
 public protocol CmdArgs: ConvenienceCopyable, Equatable, CustomStringConvertible, AeroAny, Sendable {
     static var parser: CmdParser<Self> { get }
-    var rawArgsForStrRepr: EquatableNoop<[String]> { get }
+    var rawArgsForStrRepr: EquatableNoop<StrArrSlice> { get }
 
     // Two very common flags among commands
     var windowId: UInt32? { get set }
@@ -31,7 +31,7 @@ extension CmdArgs {
             case .execAndForget:
                 CmdKind.execAndForget.rawValue + " " + (self as! ExecAndForgetCmdArgs).bashScript
             default:
-                ([Self.info.kind.rawValue] + rawArgsForStrRepr.value).joinArgs()
+                ([Self.info.kind.rawValue] + rawArgsForStrRepr.value.toArray()).joinArgs()
         }
     }
 }

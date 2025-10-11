@@ -14,7 +14,7 @@ let usage =
 @main
 struct Main {
     static func main() {
-        let args: [String] = Array(CommandLine.arguments.dropFirst())
+        let args = CommandLine.arguments.slice(1...) ?? []
 
         if args.isEmpty {
             printStderr(usage)
@@ -111,8 +111,8 @@ func printVersionAndExit(serverVersion: String?) -> Never {
     exit(0)
 }
 
-func run(_ socket: Socket, _ args: [String], stdin: String) -> ServerAnswer {
-    let request = Result { try JSONEncoder().encode(ClientRequest(args: args, stdin: stdin)) }.getOrDie()
+func run(_ socket: Socket, _ args: StrArrSlice, stdin: String) -> ServerAnswer {
+    let request = Result { try JSONEncoder().encode(ClientRequest(args: args.toArray(), stdin: stdin)) }.getOrDie()
     Result { try socket.write(from: request) }.getOrDie()
     Result { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrDie()
 

@@ -1,5 +1,5 @@
 public struct ConfigCmdArgs: CmdArgs, Equatable {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .config,
         allowInConfig: false,
@@ -39,7 +39,7 @@ extension ConfigCmdArgs {
     }
 }
 
-public func parseConfigCmdArgs(_ args: [String]) -> ParsedCmd<ConfigCmdArgs> {
+public func parseConfigCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ConfigCmdArgs> {
     parseSpecificCmdArgs(ConfigCmdArgs(rawArgsForStrRepr: .init(args)), args)
         .flatMap { raw in
             var conflicting: Set<String> = []

@@ -1,5 +1,5 @@
 public struct ExecAndForgetCmdArgs: CmdArgs {
-    public var rawArgsForStrRepr: EquatableNoop<[String]> { .init([bashScript]) }
+    public var rawArgsForStrRepr: EquatableNoop<StrArrSlice> { .init([bashScript]) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .execAndForget,
         allowInConfig: true,

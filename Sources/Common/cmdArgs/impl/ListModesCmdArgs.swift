@@ -1,6 +1,6 @@
 public struct ListModesCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
-    public init(rawArgs: [String]) {
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    public init(rawArgs: StrArrSlice) {
         self.rawArgsForStrRepr = .init(rawArgs)
     }
     public static let parser: CmdParser<Self> = cmdParser(
@@ -26,6 +26,6 @@ public struct ListModesCmdArgs: CmdArgs {
     public var outputOnlyCount: Bool = false
 }
 
-public func parseListModesCmdArgs(_ args: [String]) -> ParsedCmd<ListModesCmdArgs> {
+public func parseListModesCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListModesCmdArgs> {
     parseSpecificCmdArgs(ListModesCmdArgs(rawArgs: args), args)
 }

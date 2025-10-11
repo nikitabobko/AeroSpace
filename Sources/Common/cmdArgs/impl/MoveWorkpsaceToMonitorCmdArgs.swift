@@ -1,6 +1,6 @@
 public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    public init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveWorkspaceToMonitor,
         allowInConfig: true,
@@ -20,7 +20,7 @@ public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
     public var target: Lateinit<MonitorTarget> = .uninitialized
 }
 
-public func parseWorkspaceToMonitorCmdArgs(_ args: [String]) -> ParsedCmd<MoveWorkspaceToMonitorCmdArgs> {
+public func parseWorkspaceToMonitorCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveWorkspaceToMonitorCmdArgs> {
     parseSpecificCmdArgs(MoveWorkspaceToMonitorCmdArgs(rawArgs: args), args)
         .filter("--wrap-around is incompatible with <monitor-pattern> argument") {
             $0.wrapAround.implies(!$0.target.val.isPatterns)

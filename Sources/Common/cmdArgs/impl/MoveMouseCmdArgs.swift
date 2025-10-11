@@ -1,6 +1,6 @@
 public struct MoveMouseCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<[String]>
-    init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveMouse,
         allowInConfig: true,
@@ -21,7 +21,7 @@ func parseMouseTarget(arg: String, nextArgs: inout [String]) -> Parsed<MouseTarg
     parseEnum(arg, MouseTarget.self)
 }
 
-public func parseMoveMouseCmdArgs(_ args: [String]) -> ParsedCmd<MoveMouseCmdArgs> {
+public func parseMoveMouseCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveMouseCmdArgs> {
     parseSpecificCmdArgs(MoveMouseCmdArgs(rawArgs: args), args)
         .filter("--fail-if-noop is only compatible with window-lazy-center or monitor-lazy-center") {
             $0.failIfNoop.implies($0.mouseTarget.val == .windowLazyCenter || $0.mouseTarget.val == .monitorLazyCenter)
