@@ -29,6 +29,6 @@ public func parseSplitCmdArgs(_ args: StrArrSlice) -> ParsedCmd<SplitCmdArgs> {
     parseSpecificCmdArgs(SplitCmdArgs(rawArgs: args), args)
 }
 
-private func parseSplitArg(arg: String, nextArgs: inout [String]) -> Parsed<SplitCmdArgs.SplitArg> {
-    parseEnum(arg, SplitCmdArgs.SplitArg.self)
+private func parseSplitArg(i: ArgParserInput) -> ParsedCliArgs<SplitCmdArgs.SplitArg> {
+    .init(parseEnum(i.arg, SplitCmdArgs.SplitArg.self), advanceBy: 1)
 }

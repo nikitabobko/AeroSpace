@@ -45,18 +45,18 @@ public func parseResizeCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ResizeCmdArgs> 
     parseSpecificCmdArgs(ResizeCmdArgs(rawArgs: args), args)
 }
 
-private func parseDimension(arg: String, nextArgs: inout [String]) -> Parsed<ResizeCmdArgs.Dimension> {
-    parseEnum(arg, ResizeCmdArgs.Dimension.self)
+private func parseDimension(i: ArgParserInput) -> ParsedCliArgs<ResizeCmdArgs.Dimension> {
+    .init(parseEnum(i.arg, ResizeCmdArgs.Dimension.self), advanceBy: 1)
 }
 
-private func parseUnits(arg: String, nextArgs: inout [String]) -> Parsed<ResizeCmdArgs.Units> {
-    if let number = UInt(arg.removePrefix("+").removePrefix("-")) {
+private func parseUnits(i: ArgParserInput) -> ParsedCliArgs<ResizeCmdArgs.Units> {
+    if let number = UInt(i.arg.removePrefix("+").removePrefix("-")) {
         switch true {
-            case arg.starts(with: "+"): .success(.add(number))
-            case arg.starts(with: "-"): .success(.subtract(number))
-            default: .success(.set(number))
+            case i.arg.starts(with: "+"): .succ(.add(number), advanceBy: 1)
+            case i.arg.starts(with: "-"): .succ(.subtract(number), advanceBy: 1)
+            default: .succ(.set(number), advanceBy: 1)
         }
     } else {
-        .failure("<number> argument must be a number")
+        .fail("<number> argument must be a number", advanceBy: 1)
     }
 }

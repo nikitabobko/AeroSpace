@@ -65,10 +65,10 @@ public enum WorkspaceTarget: Equatable, Sendable {
 
 let workspaceTargetPlaceholder = "(<workspace-name>|next|prev)"
 
-func parseWorkspaceTarget(arg: String, nextArgs: inout [String]) -> Parsed<WorkspaceTarget> {
-    return switch arg {
-        case "next": .success(.relative(.next))
-        case "prev": .success(.relative(.prev))
-        default: WorkspaceName.parse(arg).map(WorkspaceTarget.direct)
+func parseWorkspaceTarget(i: ArgParserInput) -> ParsedCliArgs<WorkspaceTarget> {
+    switch i.arg {
+        case "next": .succ(.relative(.next), advanceBy: 1)
+        case "prev": .succ(.relative(.prev), advanceBy: 1)
+        default: .init(WorkspaceName.parse(i.arg).map(WorkspaceTarget.direct), advanceBy: 1)
     }
 }

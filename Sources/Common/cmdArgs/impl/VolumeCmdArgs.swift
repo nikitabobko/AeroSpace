@@ -22,19 +22,19 @@ public enum VolumeAction: Equatable, Sendable {
     static let argsUnion: String = "(up|down|mute-toggle|mute-on|mute-off|set)"
 }
 
-func parseVolumeAction(arg: String, nextArgs: inout [String]) -> Parsed<VolumeAction> {
-    switch arg {
-        case "up": return .success(.up)
-        case "down": return .success(.down)
-        case "mute-toggle": return .success(.muteToggle)
-        case "mute-off": return .success(.muteOff)
-        case "mute-on": return .success(.muteOn)
+func parseVolumeAction(i: ArgParserInput) -> ParsedCliArgs<VolumeAction> {
+    switch i.arg {
+        case "up": return .succ(.up, advanceBy: 1)
+        case "down": return .succ(.down, advanceBy: 1)
+        case "mute-toggle": return .succ(.muteToggle, advanceBy: 1)
+        case "mute-off": return .succ(.muteOff, advanceBy: 1)
+        case "mute-on": return .succ(.muteOn, advanceBy: 1)
         case "set":
-            guard let arg = nextArgs.nextNonFlagOrNil() else { return .failure("set argument must be followed by <number>") }
-            guard let int = Int(arg) else { return .failure("Can't parse number '\(arg)'") }
-            if !(0 ... 100).contains(int) { return .failure("\(int) must be in range from 0 to 100") }
-            return .success(.set(int))
+            guard let arg = i.getOrNil(relativeIndex: 1) else { return .fail("set argument must be followed by <number>", advanceBy: 1) }
+            guard let int = Int(arg) else { return .fail("Can't parse number '\(arg)'", advanceBy: 2) }
+            if !(0 ... 100).contains(int) { return .fail("\(int) must be in range from 0 to 100", advanceBy: 2) }
+            return .succ(.set(int), advanceBy: 2)
         default:
-            return .failure("Unknown argument '\(arg)'. Possible values: \(VolumeAction.argsUnion)")
+            return .fail("Unknown argument '\(i.arg)'. Possible values: \(VolumeAction.argsUnion)", advanceBy: 1)
     }
 }

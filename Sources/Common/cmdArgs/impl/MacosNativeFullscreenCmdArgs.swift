@@ -27,10 +27,10 @@ public enum ToggleEnum: Sendable {
     case on, off, toggle
 }
 
-func parseToggleEnum(arg: String, nextArgs: inout [String]) -> Parsed<ToggleEnum> {
-    return switch arg {
-        case "on": .success(.on)
-        case "off": .success(.off)
-        default: .failure("Can't parse '\(arg)'. Possible values: on|off")
+func parseToggleEnum(i: ArgParserInput) -> ParsedCliArgs<ToggleEnum> {
+    switch i.arg {
+        case "on": .succ(.on, advanceBy: 1)
+        case "off": .succ(.off, advanceBy: 1)
+        default: .fail("Can't parse '\(i.arg)'. Possible values: on|off", advanceBy: 1)
     }
 }

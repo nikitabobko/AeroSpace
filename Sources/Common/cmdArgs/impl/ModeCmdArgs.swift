@@ -6,7 +6,7 @@ public struct ModeCmdArgs: CmdArgs {
         allowInConfig: true,
         help: mode_help_generated,
         flags: [:],
-        posArgs: [newArgParser(\.targetMode, parseTargetMode, mandatoryArgPlaceholder: "<binding-mode>")],
+        posArgs: [newArgParser(\.targetMode, consumeStrCliArg, mandatoryArgPlaceholder: "<binding-mode>")],
     )
 
     public var targetMode: Lateinit<String> = .uninitialized
@@ -14,6 +14,4 @@ public struct ModeCmdArgs: CmdArgs {
     /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
-private func parseTargetMode(arg: String, nextArgs: inout [String]) -> Parsed<String> {
-    .success(arg)
-}
+func consumeStrCliArg(i: ArgParserInput) -> ParsedCliArgs<String> { .succ(i.arg, advanceBy: 1) }

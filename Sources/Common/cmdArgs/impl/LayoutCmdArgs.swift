@@ -28,20 +28,22 @@ public struct LayoutCmdArgs: CmdArgs {
     }
 }
 
-private func parseToggleBetween(arg: String, _ nextArgs: inout [String]) -> Parsed<[LayoutCmdArgs.LayoutDescription]> {
-    var args: [String] = nextArgs.allNextNonFlagArgs()
-    args.insert(arg, at: 0)
+private func parseToggleBetween(input: ArgParserInput) -> ParsedCliArgs<[LayoutCmdArgs.LayoutDescription]> {
+    let args = input.nonFlagArgs()
 
     var result: [LayoutCmdArgs.LayoutDescription] = []
-    for arg in args {
+    for (i, arg) in args.enumerated() {
         if let layout = arg.parseLayoutDescription() {
             result.append(layout)
         } else {
-            return .failure("Can't parse '\(arg)'\nPossible values: \(LayoutCmdArgs.LayoutDescription.unionLiteral)")
+            return .fail(
+                "Can't parse '\(arg)'\nPossible values: \(LayoutCmdArgs.LayoutDescription.unionLiteral)",
+                advanceBy: i + 1,
+            )
         }
     }
 
-    return .success(result)
+    return .succ(result, advanceBy: args.count)
 }
 
 public func parseLayoutCmdArgs(_ args: StrArrSlice) -> ParsedCmd<LayoutCmdArgs> {

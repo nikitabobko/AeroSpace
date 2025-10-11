@@ -18,6 +18,6 @@ public struct SummonWorkspaceCmdArgs: CmdArgs {
     public var failIfNoop: Bool = false
 }
 
-private func parseWorkspaceName(arg: String, nextArgs: inout [String]) -> Parsed<WorkspaceName> {
-    WorkspaceName.parse(arg)
+private func parseWorkspaceName(i: ArgParserInput) -> ParsedCliArgs<WorkspaceName> {
+    .init(WorkspaceName.parse(i.arg), advanceBy: 1)
 }
