@@ -38,7 +38,7 @@ extension CmdArgs {
 
 public struct CmdParser<T: ConvenienceCopyable>: Sendable {
     let info: CmdStaticInfo
-    let options: [String: any ArgParserProtocol<T>]
+    let options: [String: any SubArgParserProtocol<T>]
     let arguments: [any ArgParserProtocol<T>]
     let conflictingOptions: [Set<String>]
 }
@@ -47,7 +47,7 @@ public func cmdParser<T>(
     kind: CmdKind,
     allowInConfig: Bool,
     help: String,
-    options: [String: any ArgParserProtocol<T>],
+    options: [String: any SubArgParserProtocol<T>],
     arguments: [any ArgParserProtocol<T>],
     conflictingOptions: [Set<String>] = []
 ) -> CmdParser<T> {

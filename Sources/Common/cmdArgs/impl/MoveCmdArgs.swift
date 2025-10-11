@@ -7,8 +7,8 @@ public struct MoveCmdArgs: CmdArgs {
         help: move_help_generated,
         options: [
             "--window-id": optionalWindowIdFlag(),
-            "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
-            "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
+            "--boundaries": SubArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
+            "--boundaries-action": SubArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
         ],
         arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)],
     )

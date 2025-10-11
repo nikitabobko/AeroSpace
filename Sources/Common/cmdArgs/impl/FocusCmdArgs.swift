@@ -7,10 +7,10 @@ public struct FocusCmdArgs: CmdArgs {
         help: focus_help_generated,
         options: [
             "--ignore-floating": falseBoolFlag(\.floatingAsTiling),
-            "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
-            "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
-            "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32)),
-            "--dfs-index": ArgParser(\.dfsIndex, upcastArgParserFun(parseArgWithUInt32)),
+            "--boundaries": SubArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
+            "--boundaries-action": SubArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
+            "--window-id": SubArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32)),
+            "--dfs-index": SubArgParser(\.dfsIndex, upcastArgParserFun(parseArgWithUInt32)),
         ],
         arguments: [ArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
     )

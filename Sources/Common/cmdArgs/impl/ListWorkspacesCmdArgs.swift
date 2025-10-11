@@ -17,7 +17,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
             // Filtering flags
             "--visible": boolFlag(\.filteringOptions.visible),
             "--empty": boolFlag(\.filteringOptions.empty),
-            "--monitor": ArgParser(\.filteringOptions.onMonitors, parseMonitorIds),
+            "--monitor": SubArgParser(\.filteringOptions.onMonitors, parseMonitorIds),
 
             // Formatting flags
             "--format": formatParser(\._format, for: .workspace),

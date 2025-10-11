@@ -23,11 +23,11 @@ public struct ArgParser<T: ConvenienceCopyable, K>: ArgParserProtocol {
     }
 }
 
-public func optionalWindowIdFlag<T: CmdArgs>() -> ArgParser<T, UInt32?> {
-    ArgParser(\T.windowId, upcastArgParserFun(parseArgWithUInt32))
+public func optionalWindowIdFlag<T: CmdArgs>() -> SubArgParser<T, UInt32?> {
+    SubArgParser(\T.windowId, upcastSubArgParserFun(parseArgWithUInt32))
 }
-public func optionalWorkspaceFlag<T: CmdArgs>() -> ArgParser<T, WorkspaceName?> {
-    ArgParser(\T.workspaceName, upcastArgParserFun(parseArgWithWorkspaceName))
+public func optionalWorkspaceFlag<T: CmdArgs>() -> SubArgParser<T, WorkspaceName?> {
+    SubArgParser(\T.workspaceName, upcastSubArgParserFun(parseArgWithWorkspaceName))
 }
 
 func newArgParser<T: ConvenienceCopyable, K>(
@@ -41,16 +41,16 @@ func newArgParser<T: ConvenienceCopyable, K>(
     return ArgParser(keyPath, parseWrapper, argPlaceholderIfMandatory: mandatoryArgPlaceholder)
 }
 
-public func trueBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> ArgParser<T, Bool> {
-    ArgParser(keyPath) { _, _ in .success(true) }
+public func trueBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
+    SubArgParser(keyPath) { _, _ in .success(true) }
 }
 
-public func falseBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> ArgParser<T, Bool> {
-    ArgParser(keyPath) { _, _ in .success(false) }
+public func falseBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
+    SubArgParser(keyPath) { _, _ in .success(false) }
 }
 
-public func boolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> ArgParser<T, Bool?> {
-    ArgParser(keyPath) { _, nextArgs in
+public func boolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
+    SubArgParser(keyPath) { _, nextArgs in
         let value: Bool
         if let nextArg = nextArgs.first, nextArg == "no" {
             _ = nextArgs.next() // Consume the argument
@@ -66,8 +66,8 @@ public func singleValueOption<T: ConvenienceCopyable, V>(
     _ keyPath: SendableWritableKeyPath<T, V?>,
     _ placeholder: String,
     _ mapper: @escaping @Sendable (String) -> V?
-) -> ArgParser<T, V?> {
-    ArgParser(keyPath) { arg, nextArgs in
+) -> SubArgParser<T, V?> {
+    SubArgParser(keyPath) { arg, nextArgs in
         if let arg = nextArgs.nextNonFlagOrNil() {
             if let value: V = mapper(arg) {
                 return .success(value)
@@ -80,12 +80,12 @@ public func singleValueOption<T: ConvenienceCopyable, V>(
     }
 }
 
-public func optionalTrueBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> ArgParser<T, Bool?> {
-    ArgParser(keyPath) { _, _ in .success(true) }
+public func optionalTrueBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
+    SubArgParser(keyPath) { _, _ in .success(true) }
 }
 
-public func optionalFalseBoolFlag<T: ConvenienceCopyable>(_ KeyPath: SendableWritableKeyPath<T, Bool?>) -> ArgParser<T, Bool?> {
-    ArgParser(KeyPath) { _, _ in .success(false) }
+public func optionalFalseBoolFlag<T: ConvenienceCopyable>(_ KeyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
+    SubArgParser(KeyPath) { _, _ in .success(false) }
 }
 
 // todo reuse in config

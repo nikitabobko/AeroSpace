@@ -11,7 +11,7 @@ public func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: [String]) -> Pars
         if arg == "-h" || arg == "--help" {
             return .help(T.info.help)
         } else if arg.starts(with: "-") && !isResizeNegativeUnitsArg(raw, arg: arg) {
-            if let optionParser: any ArgParserProtocol<T> = T.parser.options[arg] {
+            if let optionParser: any SubArgParserProtocol<T> = T.parser.options[arg] {
                 if !options.insert(arg).inserted {
                     errors.append("Duplicated option \(arg.singleQuoted)")
                 }
@@ -91,6 +91,16 @@ public enum ParsedCmd<T: Sendable>: Sendable {
                 error = _error
         }
         return (command, help, error)
+    }
+}
+
+extension SubArgParserProtocol {
+    fileprivate func transformRaw(_ raw: T, _ arg: String, _ args: inout [String], _ errors: inout [String]) -> T {
+        if let value = parse(arg, &args).getOrNil(appendErrorTo: &errors) {
+            return raw.copy(keyPath, value)
+        } else {
+            return raw
+        }
     }
 }
 
