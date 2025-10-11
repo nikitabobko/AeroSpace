@@ -1,18 +1,18 @@
 public struct ListModesCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
     public init(rawArgs: [String]) {
-        self.rawArgs = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs)
     }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listModes,
         allowInConfig: false,
         help: list_modes_help_generated,
-        options: [
+        flags: [
             "--count": trueBoolFlag(\.outputOnlyCount),
             "--current": trueBoolFlag(\.current),
             "--json": trueBoolFlag(\.json),
         ],
-        arguments: [],
+        posArgs: [],
         conflictingOptions: [
             ["--count", "--current"],
             ["--count", "--json"],

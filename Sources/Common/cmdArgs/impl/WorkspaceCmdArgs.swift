@@ -1,11 +1,11 @@
 public struct WorkspaceCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    public init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .workspace,
         allowInConfig: true,
         help: workspace_help_generated,
-        options: [
+        flags: [
             "--auto-back-and-forth": optionalTrueBoolFlag(\._autoBackAndForth),
             "--wrap-around": optionalTrueBoolFlag(\._wrapAround),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
@@ -13,7 +13,7 @@ public struct WorkspaceCmdArgs: CmdArgs {
             "--stdin": optionalTrueBoolFlag(\.explicitStdinFlag),
             "--no-stdin": optionalFalseBoolFlag(\.explicitStdinFlag),
         ],
-        arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)],
+        posArgs: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)],
         conflictingOptions: [
             ["--stdin", "--no-stdin"],
         ],

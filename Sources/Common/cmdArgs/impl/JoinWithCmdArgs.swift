@@ -1,14 +1,14 @@
 public struct JoinWithCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .joinWith,
         allowInConfig: true,
         help: join_with_help_generated,
-        options: [
+        flags: [
             "--window-id": optionalWindowIdFlag(),
         ],
-        arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)],
+        posArgs: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)],
     )
 
     public var direction: Lateinit<CardinalDirection> = .uninitialized
@@ -16,7 +16,7 @@ public struct JoinWithCmdArgs: CmdArgs {
     /*conforms*/ public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String], direction: CardinalDirection) {
-        self.rawArgs = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs)
         self.direction = .initialized(direction)
     }
 }

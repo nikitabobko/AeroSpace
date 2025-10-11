@@ -1,16 +1,16 @@
 public struct MoveCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .move,
         allowInConfig: true,
         help: move_help_generated,
-        options: [
+        flags: [
             "--window-id": optionalWindowIdFlag(),
             "--boundaries": SubArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
             "--boundaries-action": SubArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
         ],
-        arguments: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)],
+        posArgs: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)],
     )
 
     public var direction: Lateinit<CardinalDirection> = .uninitialized
@@ -20,7 +20,7 @@ public struct MoveCmdArgs: CmdArgs {
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
 
     public init(rawArgs: [String], _ direction: CardinalDirection) {
-        self.rawArgs = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs)
         self.direction = .initialized(direction)
     }
 

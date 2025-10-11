@@ -1,14 +1,14 @@
 public struct MoveMouseCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveMouse,
         allowInConfig: true,
         help: move_mouse_help_generated,
-        options: [
+        flags: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],
-        arguments: [newArgParser(\.mouseTarget, parseMouseTarget, mandatoryArgPlaceholder: "<mouse-position>")],
+        posArgs: [newArgParser(\.mouseTarget, parseMouseTarget, mandatoryArgPlaceholder: "<mouse-position>")],
     )
 
     public var failIfNoop: Bool = false

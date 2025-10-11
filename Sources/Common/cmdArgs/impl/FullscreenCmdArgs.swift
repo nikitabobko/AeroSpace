@@ -1,16 +1,16 @@
 public struct FullscreenCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .fullscreen,
         allowInConfig: true,
         help: fullscreen_help_generated,
-        options: [
+        flags: [
             "--no-outer-gaps": trueBoolFlag(\.noOuterGaps),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
             "--window-id": optionalWindowIdFlag(),
         ],
-        arguments: [ArgParser(\.toggle, parseToggleEnum)],
+        posArgs: [ArgParser(\.toggle, parseToggleEnum)],
     )
 
     public var toggle: ToggleEnum = .toggle

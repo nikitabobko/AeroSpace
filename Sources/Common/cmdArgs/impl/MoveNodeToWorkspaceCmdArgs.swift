@@ -1,10 +1,10 @@
 public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveNodeToWorkspace,
         allowInConfig: true,
         help: move_node_to_workspace_help_generated,
-        options: [
+        flags: [
             "--wrap-around": optionalTrueBoolFlag(\._wrapAround),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
             "--window-id": optionalWindowIdFlag(),
@@ -13,7 +13,7 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
             "--stdin": optionalTrueBoolFlag(\.explicitStdinFlag),
             "--no-stdin": optionalFalseBoolFlag(\.explicitStdinFlag),
         ],
-        arguments: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)],
+        posArgs: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)],
         conflictingOptions: [
             ["--stdin", "--no-stdin"],
         ],
@@ -28,7 +28,7 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     public var target: Lateinit<WorkspaceTarget> = .uninitialized
 
     public init(rawArgs: [String]) {
-        self.rawArgs = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs)
     }
 }
 

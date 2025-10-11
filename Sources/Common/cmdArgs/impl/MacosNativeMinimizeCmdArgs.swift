@@ -1,14 +1,14 @@
 public struct MacosNativeMinimizeCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    public init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .macosNativeMinimize,
         allowInConfig: true,
         help: macos_native_minimize_help_generated,
-        options: [
+        flags: [
             "--window-id": optionalWindowIdFlag(),
         ],
-        arguments: [],
+        posArgs: [],
     )
 
     /*conforms*/ public var windowId: UInt32?

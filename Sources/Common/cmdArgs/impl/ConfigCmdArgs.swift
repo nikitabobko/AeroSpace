@@ -1,10 +1,10 @@
 public struct ConfigCmdArgs: CmdArgs, Equatable {
-    public let rawArgs: EquatableNoop<[String]>
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .config,
         allowInConfig: false,
         help: config_help_generated,
-        options: [
+        flags: [
             "--json": trueBoolFlag(\.json),
             "--keys": trueBoolFlag(\.keys),
             "--major-keys": trueBoolFlag(\.majorKeys),
@@ -12,7 +12,7 @@ public struct ConfigCmdArgs: CmdArgs, Equatable {
             "--config-path": trueBoolFlag(\.configPath),
             "--get": singleValueOption(\.keyNameToGet, "<name>") { $0 },
         ],
-        arguments: [],
+        posArgs: [],
     )
 
     public var json: Bool = false
@@ -40,7 +40,7 @@ extension ConfigCmdArgs {
 }
 
 public func parseConfigCmdArgs(_ args: [String]) -> ParsedCmd<ConfigCmdArgs> {
-    parseSpecificCmdArgs(ConfigCmdArgs(rawArgs: .init(args)), args)
+    parseSpecificCmdArgs(ConfigCmdArgs(rawArgsForStrRepr: .init(args)), args)
         .flatMap { raw in
             var conflicting: Set<String> = []
             if raw.keyNameToGet != nil { conflicting.insert("--get") }

@@ -1,14 +1,14 @@
 public struct FlattenWorkspaceTreeCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    public init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .flattenWorkspaceTree,
         allowInConfig: true,
         help: flatten_workspace_tree_help_generated,
-        options: [
+        flags: [
             "--workspace": optionalWorkspaceFlag(),
         ],
-        arguments: [],
+        posArgs: [],
     )
 
     /*conforms*/ public var windowId: UInt32?

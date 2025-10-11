@@ -1,11 +1,11 @@
 public struct ListAppsCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    public init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listApps,
         allowInConfig: false,
         help: list_apps_help_generated,
-        options: [
+        flags: [
             "--macos-native-hidden": boolFlag(\.macosHidden),
 
             // Formatting flags
@@ -13,7 +13,7 @@ public struct ListAppsCmdArgs: CmdArgs {
             "--count": trueBoolFlag(\.outputOnlyCount),
             "--json": trueBoolFlag(\.json),
         ],
-        arguments: [],
+        posArgs: [],
         conflictingOptions: [
             ["--count", "--format"],
             ["--count", "--json"],

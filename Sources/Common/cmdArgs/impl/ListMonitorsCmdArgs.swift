@@ -1,11 +1,11 @@
 public struct ListMonitorsCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    public init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listMonitors,
         allowInConfig: false,
         help: list_monitors_help_generated,
-        options: [
+        flags: [
             "--focused": boolFlag(\.focused),
             "--mouse": boolFlag(\.mouse),
 
@@ -14,7 +14,7 @@ public struct ListMonitorsCmdArgs: CmdArgs {
             "--count": trueBoolFlag(\.outputOnlyCount),
             "--json": trueBoolFlag(\.json),
         ],
-        arguments: [],
+        posArgs: [],
         conflictingOptions: [
             ["--count", "--format"],
             ["--count", "--json"],

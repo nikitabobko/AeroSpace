@@ -12,7 +12,7 @@ public func parseCmdArgs(_ args: [String]) -> ParsedCmd<any CmdArgs> {
 
 public protocol CmdArgs: ConvenienceCopyable, Equatable, CustomStringConvertible, AeroAny, Sendable {
     static var parser: CmdParser<Self> { get }
-    var rawArgs: EquatableNoop<[String]> { get } // Non Equatable because test comparison
+    var rawArgsForStrRepr: EquatableNoop<[String]> { get }
 
     // Two very common flags among commands
     var windowId: UInt32? { get set }
@@ -31,15 +31,15 @@ extension CmdArgs {
             case .execAndForget:
                 CmdKind.execAndForget.rawValue + " " + (self as! ExecAndForgetCmdArgs).bashScript
             default:
-                ([Self.info.kind.rawValue] + rawArgs.value).joinArgs()
+                ([Self.info.kind.rawValue] + rawArgsForStrRepr.value).joinArgs()
         }
     }
 }
 
 public struct CmdParser<T: ConvenienceCopyable>: Sendable {
     let info: CmdStaticInfo
-    let options: [String: any SubArgParserProtocol<T>]
-    let arguments: [any ArgParserProtocol<T>]
+    let flags: [String: any SubArgParserProtocol<T>]
+    let positionalArgs: [any ArgParserProtocol<T>]
     let conflictingOptions: [Set<String>]
 }
 
@@ -47,14 +47,14 @@ public func cmdParser<T>(
     kind: CmdKind,
     allowInConfig: Bool,
     help: String,
-    options: [String: any SubArgParserProtocol<T>],
-    arguments: [any ArgParserProtocol<T>],
+    flags: [String: any SubArgParserProtocol<T>],
+    posArgs: [any ArgParserProtocol<T>],
     conflictingOptions: [Set<String>] = []
 ) -> CmdParser<T> {
     CmdParser(
         info: CmdStaticInfo(help: help, kind: kind, allowInConfig: allowInConfig),
-        options: options,
-        arguments: arguments,
+        flags: flags,
+        positionalArgs: posArgs,
         conflictingOptions: conflictingOptions,
     )
 }

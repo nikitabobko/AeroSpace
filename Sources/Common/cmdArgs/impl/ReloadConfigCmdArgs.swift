@@ -1,15 +1,15 @@
 public struct ReloadConfigCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    public init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .reloadConfig,
         allowInConfig: true,
         help: reload_config_help_generated,
-        options: [
+        flags: [
             "--no-gui": trueBoolFlag(\.noGui),
             "--dry-run": trueBoolFlag(\.dryRun),
         ],
-        arguments: [],
+        posArgs: [],
     )
 
     public var noGui: Bool = false

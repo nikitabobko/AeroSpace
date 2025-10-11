@@ -4,12 +4,12 @@ let onitor = "<monitor>"
 let _monitors = "\(onitor)..."
 
 public struct ListWorkspacesCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listWorkspaces,
         allowInConfig: false,
         help: list_workspaces_help_generated,
-        options: [
+        flags: [
             // Aliases
             "--focused": trueBoolFlag(\.focused),
             "--all": trueBoolFlag(\.all),
@@ -24,7 +24,7 @@ public struct ListWorkspacesCmdArgs: CmdArgs {
             "--count": trueBoolFlag(\.outputOnlyCount),
             "--json": trueBoolFlag(\.json),
         ],
-        arguments: [],
+        posArgs: [],
         conflictingOptions: [
             ["--all", "--focused", "--monitor"],
             ["--count", "--format"],
@@ -54,7 +54,7 @@ extension ListWorkspacesCmdArgs {
 }
 
 public func parseListWorkspacesCmdArgs(_ args: [String]) -> ParsedCmd<ListWorkspacesCmdArgs> {
-    parseSpecificCmdArgs(ListWorkspacesCmdArgs(rawArgs: .init(args)), args)
+    parseSpecificCmdArgs(ListWorkspacesCmdArgs(rawArgsForStrRepr: .init(args)), args)
         .filter("Mandatory option is not specified (--all|--focused|--monitor)") { raw in
             raw.all || raw.focused || !raw.filteringOptions.onMonitors.isEmpty
         }

@@ -1,14 +1,14 @@
 public struct ResizeCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .resize,
         allowInConfig: true,
         help: resize_help_generated,
-        options: [
+        flags: [
             "--window-id": optionalWindowIdFlag(),
         ],
-        arguments: [
+        posArgs: [
             newArgParser(\.dimension, parseDimension, mandatoryArgPlaceholder: "(smart|smart-opposite|width|height)"),
             newArgParser(\.units, parseUnits, mandatoryArgPlaceholder: "[+|-]<number>"),
         ],
@@ -24,7 +24,7 @@ public struct ResizeCmdArgs: CmdArgs {
         dimension: Dimension,
         units: Units
     ) {
-        self.rawArgs = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs)
         self.dimension = .initialized(dimension)
         self.units = .initialized(units)
     }

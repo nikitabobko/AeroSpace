@@ -4,12 +4,12 @@ private let workspace = "<workspace>"
 private let workspaces = "\(workspace)..."
 
 public struct ListWindowsCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listWindows,
         allowInConfig: false,
         help: list_windows_help_generated,
-        options: [
+        flags: [
             "--all": trueBoolFlag(\.all),
 
             // Filtering flags
@@ -24,7 +24,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--count": trueBoolFlag(\.outputOnlyCount),
             "--json": trueBoolFlag(\.json),
         ],
-        arguments: [],
+        posArgs: [],
         conflictingOptions: [
             ["--all", "--focused", "--workspace"],
             ["--all", "--focused", "--monitor"],
@@ -66,7 +66,7 @@ extension ListWindowsCmdArgs {
 
 public func parseListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCmdArgs> {
     let args = args.map { $0 == "--app-id" ? "--app-bundle-id" : $0 } // Compatibility
-    return parseSpecificCmdArgs(ListWindowsCmdArgs(rawArgs: .init(args)), args)
+    return parseSpecificCmdArgs(ListWindowsCmdArgs(rawArgsForStrRepr: .init(args)), args)
         .filter("Mandatory option is not specified (--focused|--all|--monitor|--workspace)") { raw in
             raw.filteringOptions.focused || raw.all || !raw.filteringOptions.monitors.isEmpty || !raw.filteringOptions.workspaces.isEmpty
         }

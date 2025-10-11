@@ -1,12 +1,12 @@
 public struct VolumeCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    public init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .volume,
         allowInConfig: true,
         help: volume_help_generated,
-        options: [:],
-        arguments: [newArgParser(\.action, parseVolumeAction, mandatoryArgPlaceholder: VolumeAction.argsUnion)],
+        flags: [:],
+        posArgs: [newArgParser(\.action, parseVolumeAction, mandatoryArgPlaceholder: VolumeAction.argsUnion)],
     )
 
     /*conforms*/ public var windowId: UInt32?

@@ -1,18 +1,18 @@
 public struct FocusCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .focus,
         allowInConfig: true,
         help: focus_help_generated,
-        options: [
+        flags: [
             "--ignore-floating": falseBoolFlag(\.floatingAsTiling),
             "--boundaries": SubArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
             "--boundaries-action": SubArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
             "--window-id": SubArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32)),
             "--dfs-index": SubArgParser(\.dfsIndex, upcastArgParserFun(parseArgWithUInt32)),
         ],
-        arguments: [ArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
+        posArgs: [ArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
     )
 
     public var rawBoundaries: Boundaries? = nil // todo cover boundaries wrapping with tests
@@ -24,17 +24,17 @@ public struct FocusCmdArgs: CmdArgs {
     /*conforms*/ public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String], cardinalOrDfsDirection: CardinalOrDfsDirection) {
-        self.rawArgs = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs)
         self.cardinalOrDfsDirection = cardinalOrDfsDirection
     }
 
     public init(rawArgs: [String], windowId: UInt32) {
-        self.rawArgs = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs)
         self.windowId = windowId
     }
 
     public init(rawArgs: [String], dfsIndex: UInt32) {
-        self.rawArgs = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs)
         self.dfsIndex = dfsIndex
     }
 

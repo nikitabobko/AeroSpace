@@ -1,15 +1,15 @@
 public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    public init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveWorkspaceToMonitor,
         allowInConfig: true,
         help: move_workspace_to_monitor_help_generated,
-        options: [
+        flags: [
             "--wrap-around": trueBoolFlag(\.wrapAround),
             "--workspace": optionalWorkspaceFlag(),
         ],
-        arguments: [
+        posArgs: [
             newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs),
         ],
     )

@@ -1,14 +1,14 @@
 public struct EnableCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .enable,
         allowInConfig: true,
         help: enable_help_generated,
-        options: [
+        flags: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],
-        arguments: [newArgParser(\.targetState, parseState, mandatoryArgPlaceholder: EnableCmdArgs.State.unionLiteral)],
+        posArgs: [newArgParser(\.targetState, parseState, mandatoryArgPlaceholder: EnableCmdArgs.State.unionLiteral)],
     )
     /*conforms*/ public var windowId: UInt32?
     /*conforms*/ public var workspaceName: WorkspaceName?
@@ -16,7 +16,7 @@ public struct EnableCmdArgs: CmdArgs {
     public var failIfNoop: Bool = false
 
     public init(rawArgs: [String], targetState: State) {
-        self.rawArgs = .init(rawArgs)
+        self.rawArgsForStrRepr = .init(rawArgs)
         self.targetState = .initialized(targetState)
     }
 

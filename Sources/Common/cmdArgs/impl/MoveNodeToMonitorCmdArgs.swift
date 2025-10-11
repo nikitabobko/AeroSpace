@@ -1,11 +1,11 @@
 public struct MoveNodeToMonitorCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveNodeToMonitor,
         allowInConfig: true,
         help: move_node_to_monitor_help_generated,
-        options: [
+        flags: [
             // "Own" option
             "--wrap-around": trueBoolFlag(\.wrapAround),
 
@@ -13,11 +13,11 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
             "--focus-follows-window": trueBoolFlag(\.focusFollowsWindow),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],
-        arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs)],
+        posArgs: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs)],
     )
 
     public init(target: MonitorTarget) {
-        self.rawArgs = .init([])
+        self.rawArgsForStrRepr = .init([])
         self.target = .initialized(target)
     }
 

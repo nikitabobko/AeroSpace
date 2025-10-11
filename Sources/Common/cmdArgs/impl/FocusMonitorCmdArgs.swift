@@ -1,14 +1,14 @@
 public struct FocusMonitorCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<[String]>
+    fileprivate init(rawArgs: [String]) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .focusMonitor,
         allowInConfig: true,
         help: focus_monitor_help_generated,
-        options: [
+        flags: [
             "--wrap-around": trueBoolFlag(\.wrapAround),
         ],
-        arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs)],
+        posArgs: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs)],
     )
 
     public var wrapAround: Bool = false

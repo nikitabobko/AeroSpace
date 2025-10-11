@@ -11,7 +11,7 @@ public func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: [String]) -> Pars
         if arg == "-h" || arg == "--help" {
             return .help(T.info.help)
         } else if arg.starts(with: "-") && !isResizeNegativeUnitsArg(raw, arg: arg) {
-            if let optionParser: any SubArgParserProtocol<T> = T.parser.options[arg] {
+            if let optionParser: any SubArgParserProtocol<T> = T.parser.flags[arg] {
                 if !options.insert(arg).inserted {
                     errors.append("Duplicated option \(arg.singleQuoted)")
                 }
@@ -20,7 +20,7 @@ public func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: [String]) -> Pars
                 errors.append("Unknown flag \(arg.singleQuoted)")
                 break
             }
-        } else if let parser = T.parser.arguments.getOrNil(atIndex: argumentIndex) {
+        } else if let parser = T.parser.positionalArgs.getOrNil(atIndex: argumentIndex) {
             raw = parser.transformRaw(raw, arg, &args, &errors)
             argumentIndex += 1
         } else {
@@ -29,7 +29,7 @@ public func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: [String]) -> Pars
         }
     }
 
-    for arg in T.parser.arguments[argumentIndex...] {
+    for arg in T.parser.positionalArgs[argumentIndex...] {
         if let placeholder = arg.argPlaceholderIfMandatory {
             errors.append("Argument \(placeholder.singleQuoted) is mandatory")
         }
