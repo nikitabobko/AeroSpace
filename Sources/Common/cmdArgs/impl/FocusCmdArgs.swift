@@ -9,8 +9,8 @@ public struct FocusCmdArgs: CmdArgs {
             "--ignore-floating": falseBoolFlag(\.floatingAsTiling),
             "--boundaries": SubArgParser(\.rawBoundaries, upcastSubArgParserFun(parseBoundaries)),
             "--boundaries-action": SubArgParser(\.rawBoundariesAction, upcastSubArgParserFun(parseBoundariesAction)),
-            "--window-id": SubArgParser(\.windowId, upcastSubArgParserFun(parseArgWithUInt32)),
-            "--dfs-index": SubArgParser(\.dfsIndex, upcastSubArgParserFun(parseArgWithUInt32)),
+            "--window-id": SubArgParser(\.windowId, upcastSubArgParserFun(parseUInt32SubArg)),
+            "--dfs-index": SubArgParser(\.dfsIndex, upcastSubArgParserFun(parseUInt32SubArg)),
         ],
         posArgs: [ArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
     )
@@ -107,18 +107,18 @@ public func parseFocusCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusCmdArgs> {
         }
 }
 
-private func parseBoundariesAction(arg: String, nextArgs: inout [String]) -> Parsed<FocusCmdArgs.WhenBoundariesCrossed> {
-    if let arg = nextArgs.nextNonFlagOrNil() {
-        return parseEnum(arg, FocusCmdArgs.WhenBoundariesCrossed.self)
+private func parseBoundariesAction(i: SubArgParserInput) -> ParsedCliArgs<FocusCmdArgs.WhenBoundariesCrossed> {
+    if let arg = i.nonFlagArgOrNil() {
+        return .init(parseEnum(arg, FocusCmdArgs.WhenBoundariesCrossed.self), advanceBy: 1)
     } else {
-        return .failure("<action> is mandatory")
+        return .fail("<action> is mandatory", advanceBy: 0)
     }
 }
 
-private func parseBoundaries(arg: String, nextArgs: inout [String]) -> Parsed<FocusCmdArgs.Boundaries> {
-    if let arg = nextArgs.nextNonFlagOrNil() {
-        return parseEnum(arg, FocusCmdArgs.Boundaries.self)
+private func parseBoundaries(i: SubArgParserInput) -> ParsedCliArgs<FocusCmdArgs.Boundaries> {
+    if let arg = i.nonFlagArgOrNil() {
+        return .init(parseEnum(arg, FocusCmdArgs.Boundaries.self), advanceBy: 1)
     } else {
-        return .failure("<boundary> is mandatory")
+        return .fail("<boundary> is mandatory", advanceBy: 0)
     }
 }

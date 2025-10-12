@@ -77,27 +77,28 @@ public func parseListWorkspacesCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWor
         .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
 }
 
-func parseMonitorIds(arg: String, nextArgs: inout [String]) -> Parsed<[MonitorId]> {
-    let args = nextArgs.allNextNonFlagArgs()
+func parseMonitorIds(input: SubArgParserInput) -> ParsedCliArgs<[MonitorId]> {
+    let args = input.nonFlagArgs()
     let possibleValues = "\(onitor) possible values: (<monitor-id>|focused|mouse|all)"
     if args.isEmpty {
-        return .failure("\(_monitors) is mandatory. \(possibleValues)")
+        return .fail("\(_monitors) is mandatory. \(possibleValues)", advanceBy: args.count)
     }
     var monitors: [MonitorId] = []
-    for monitor: String in args {
-        if let unwrapped = Int(monitor) {
-            monitors.append(.index(unwrapped - 1))
-        } else if monitor == "mouse" {
-            monitors.append(.mouse)
-        } else if monitor == "all" {
-            monitors.append(.all)
-        } else if monitor == "focused" {
-            monitors.append(.focused)
-        } else {
-            return .failure("Can't parse monitor ID '\(monitor)'. \(possibleValues)")
+    for (i, monitor) in args.enumerated() {
+        switch Int.init(monitor) {
+            case .some(let unwrapped):
+                monitors.append(.index(unwrapped - 1))
+            case _ where monitor == "mouse":
+                monitors.append(.mouse)
+            case _ where monitor == "all":
+                monitors.append(.all)
+            case _ where monitor == "focused":
+                monitors.append(.focused)
+            default:
+                return .fail("Can't parse monitor ID '\(monitor)'. \(possibleValues)", advanceBy: i + 1)
         }
     }
-    return .success(monitors)
+    return .succ(monitors, advanceBy: monitors.count)
 }
 
 public enum MonitorId: Equatable, Sendable {

@@ -10,7 +10,7 @@ public struct ConfigCmdArgs: CmdArgs, Equatable {
             "--major-keys": trueBoolFlag(\.majorKeys),
             "--all-keys": trueBoolFlag(\.allKeys),
             "--config-path": trueBoolFlag(\.configPath),
-            "--get": singleValueOption(\.keyNameToGet, "<name>") { $0 },
+            "--get": singleValueSubArgParser(\.keyNameToGet, "<name>") { $0 },
         ],
         posArgs: [],
     )

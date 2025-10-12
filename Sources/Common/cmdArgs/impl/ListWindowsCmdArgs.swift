@@ -16,8 +16,8 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--focused": trueBoolFlag(\.filteringOptions.focused),
             "--monitor": SubArgParser(\.filteringOptions.monitors, parseMonitorIds),
             "--workspace": SubArgParser(\.filteringOptions.workspaces, parseWorkspaces),
-            "--pid": singleValueOption(\.filteringOptions.pidFilter, "<pid>", Int32.init),
-            "--app-bundle-id": singleValueOption(\.filteringOptions.appIdFilter, "<app-bundle-id>") { $0 },
+            "--pid": singleValueSubArgParser(\.filteringOptions.pidFilter, "<pid>", Int32.init),
+            "--app-bundle-id": singleValueSubArgParser(\.filteringOptions.appIdFilter, "<app-bundle-id>") { $0 },
 
             // Formatting flags
             "--format": formatParser(\._format, for: .window),
@@ -86,37 +86,38 @@ func formatParser<T: ConvenienceCopyable>(
     _ keyPath: SendableWritableKeyPath<T, [StringInterToken]>,
     for kind: AeroObjKind,
 ) -> SubArgParser<T, [StringInterToken]> {
-    return SubArgParser(keyPath) { arg, nextArgs in
-        return if let nextArg = nextArgs.nextNonFlagOrNil() {
-            switch nextArg.interpolationTokens(interpolationChar: "%") {
-                case .success(let tokens): .success(tokens)
-                case .failure(let err): .failure("Failed to parse <output-format>. \(err)")
+    return SubArgParser(keyPath) { input in
+        if let arg = input.nonFlagArgOrNil() {
+            return switch arg.interpolationTokens(interpolationChar: "%") {
+                case .success(let tokens): .succ(tokens, advanceBy: 1)
+                case .failure(let err): .fail("Failed to parse <output-format>. \(err)", advanceBy: 1)
             }
         } else {
-            .failure("<output-format> is mandatory. Possible values:\n\(getAvailableInterVars(for: kind).joined(separator: "\n").prependLines("  "))")
+            let values = getAvailableInterVars(for: kind).joined(separator: "\n").prependLines("  ")
+            return .fail("<output-format> is mandatory. Possible values:\n\(values)", advanceBy: 0)
         }
     }
 }
 
-private func parseWorkspaces(arg: String, nextArgs: inout [String]) -> Parsed<[WorkspaceFilter]> {
-    let args = nextArgs.allNextNonFlagArgs()
+private func parseWorkspaces(input: SubArgParserInput) -> ParsedCliArgs<[WorkspaceFilter]> {
+    let args = input.nonFlagArgs()
     let possibleValues = "\(workspace) possible values: (<workspace-name>|focused|visible)"
     if args.isEmpty {
-        return .failure("\(workspaces) is mandatory. \(possibleValues)")
+        return .fail("\(workspaces) is mandatory. \(possibleValues)", advanceBy: args.count)
     }
     var workspaces: [WorkspaceFilter] = []
-    for workspaceRaw: String in args {
+    for (i, workspaceRaw) in args.enumerated() {
         switch workspaceRaw {
             case "visible": workspaces.append(.visible)
             case "focused": workspaces.append(.focused)
             default:
                 switch WorkspaceName.parse(workspaceRaw) {
                     case .success(let unwrapped): workspaces.append(.name(unwrapped))
-                    case .failure(let msg): return .failure(msg)
+                    case .failure(let msg): return .fail(msg, advanceBy: i + 1)
                 }
         }
     }
-    return .success(workspaces)
+    return .succ(workspaces, advanceBy: workspaces.count)
 }
 
 public enum WorkspaceFilter: Equatable, Sendable {

@@ -12,10 +12,11 @@ public func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> P
             return .help(T.info.help)
         } else if arg.starts(with: "-") && !isResizeNegativeUnitsArg(raw, arg: arg) {
             if let optionParser: any SubArgParserProtocol<T> = T.parser.flags[arg] {
+                index += 1
                 if !options.insert(arg).inserted {
                     errors.append("Duplicated option \(arg.singleQuoted)")
                 }
-                // raw = optionParser.transformRaw(raw, arg, &args, &errors) // todo
+                raw = optionParser.transformRaw(raw, superArg: arg, &index, args, &errors)
             } else {
                 errors.append("Unknown flag \(arg.singleQuoted)")
                 break
@@ -27,7 +28,6 @@ public func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> P
             errors.append("Unknown argument \(arg.singleQuoted)")
             break
         }
-        index += 1
     }
 
     for arg in T.parser.positionalArgs[posArgumentParserIndex...] {
@@ -96,8 +96,11 @@ public enum ParsedCmd<T: Sendable>: Sendable {
 }
 
 extension SubArgParserProtocol {
-    fileprivate func transformRaw(_ raw: T, _ arg: String, _ args: inout [String], _ errors: inout [String]) -> T {
-        if let value = parse(arg, &args).getOrNil(appendErrorTo: &errors) {
+    fileprivate func transformRaw(_ raw: T, superArg: String, _ index: inout Int, _ args: StrArrSlice, _ errors: inout [String]) -> T {
+        let input = SubArgParserInput(superArg: superArg, index: index, args: args)
+        let parsedCliArgs = parse(input)
+        index += parsedCliArgs.advanceBy
+        if let value = parsedCliArgs.value.getOrNil(appendErrorTo: &errors) {
             return raw.copy(keyPath, value)
         } else {
             return raw

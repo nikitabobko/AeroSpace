@@ -23,29 +23,6 @@ public struct ArgParser<T: ConvenienceCopyable, K>: ArgParserProtocol {
     }
 }
 
-public func optionalWindowIdFlag<T: CmdArgs>() -> SubArgParser<T, UInt32?> {
-    SubArgParser(\T.windowId, upcastSubArgParserFun(parseArgWithUInt32))
-}
-public func optionalWorkspaceFlag<T: CmdArgs>() -> SubArgParser<T, WorkspaceName?> {
-    SubArgParser(\T.workspaceName, upcastSubArgParserFun(parseArgWithWorkspaceName))
-}
-
-public struct ArgParserInput {
-    let index: Int
-    let args: StrArrSlice
-
-    var arg: String { args[index] }
-    func getOrNil(relativeIndex i: Int) -> String? { args.getOrNil(atIndex: index + i) }
-
-    func nonFlagArgs() -> ArrSlice<String> {
-        var i = index
-        while args.indices.contains(i) && !args[i].starts(with: "-") {
-            i += 1
-        }
-        return args.slice(index ..< i).orDie()
-    }
-}
-
 public struct ParsedCliArgs<T> {
     var value: Parsed<T>
     var advanceBy: Int
@@ -86,53 +63,6 @@ func newArgParser<T: ConvenienceCopyable, K>(
     return ArgParser(keyPath, parseWrapper, argPlaceholderIfMandatory: mandatoryArgPlaceholder)
 }
 
-public func trueBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
-    SubArgParser(keyPath) { _, _ in .success(true) }
-}
-
-public func falseBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
-    SubArgParser(keyPath) { _, _ in .success(false) }
-}
-
-public func boolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
-    SubArgParser(keyPath) { _, nextArgs in
-        let value: Bool
-        if let nextArg = nextArgs.first, nextArg == "no" {
-            _ = nextArgs.next() // Consume the argument
-            value = false
-        } else {
-            value = true
-        }
-        return .success(value)
-    }
-}
-
-public func singleValueOption<T: ConvenienceCopyable, V>(
-    _ keyPath: SendableWritableKeyPath<T, V?>,
-    _ placeholder: String,
-    _ mapper: @escaping @Sendable (String) -> V?
-) -> SubArgParser<T, V?> {
-    SubArgParser(keyPath) { arg, nextArgs in
-        if let arg = nextArgs.nextNonFlagOrNil() {
-            if let value: V = mapper(arg) {
-                return .success(value)
-            } else {
-                return .failure("Failed to convert '\(arg)' to '\(V.self)'")
-            }
-        } else {
-            return .failure("'\(placeholder)' is mandatory")
-        }
-    }
-}
-
-public func optionalTrueBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
-    SubArgParser(keyPath) { _, _ in .success(true) }
-}
-
-public func optionalFalseBoolFlag<T: ConvenienceCopyable>(_ KeyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
-    SubArgParser(KeyPath) { _, _ in .success(false) }
-}
-
 // todo reuse in config
 public func parseEnum<T: RawRepresentable>(_ raw: String, _ _: T.Type) -> Parsed<T> where T.RawValue == String, T: CaseIterable {
     T(rawValue: raw).orFailure("Can't parse '\(raw)'.\nPossible values: \(T.unionLiteral)")
@@ -144,22 +74,6 @@ public func parseCardinalDirectionArg(i: ArgParserInput) -> ParsedCliArgs<Cardin
 
 func parseCardinalOrDfsDirection(i: ArgParserInput) -> ParsedCliArgs<CardinalOrDfsDirection> {
     .init(parseEnum(i.arg, CardinalOrDfsDirection.self), advanceBy: 1)
-}
-
-public func parseArgWithUInt32(arg: String, nextArgs: inout [String]) -> Parsed<UInt32> {
-    if let arg = nextArgs.nextNonFlagOrNil() {
-        return UInt32(arg).orFailure("Can't parse '\(arg)'. It must be a positive number")
-    } else {
-        return .failure("'\(arg)' must be followed by mandatory UInt32")
-    }
-}
-
-public func parseArgWithWorkspaceName(arg: String, nextArgs: inout [String]) -> Parsed<WorkspaceName> {
-    if let arg = nextArgs.nextNonFlagOrNil() {
-        WorkspaceName.parse(arg)
-    } else {
-        .failure("'\(arg)' must be followed by mandatory workspace name")
-    }
 }
 
 func upcastArgParserFun<T>(_ fun: @escaping ArgParserFun<T>) -> ArgParserFun<T?> { { fun($0).map { $0 } } }
