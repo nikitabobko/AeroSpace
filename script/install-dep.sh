@@ -86,11 +86,11 @@ lazy-download-zip-and-link-bin() {
 
 if test $all == 1 || test $swiftlint == 1; then
     # https://github.com/realm/SwiftLint/releases
-    swiftlint_version=0.59.1
+    swiftlint_version=0.61.0
     lazy-download-zip-and-link-bin \
         swiftlint \
         https://github.com/realm/SwiftLint/releases/download/$swiftlint_version/SwiftLintBinary.artifactbundle.zip \
-        'b9f915a58a818afcc66846740d272d5e73f37baf874e7809ff6f246ea98ad8a2  .deps/swiftlint/dist/zip.zip' \
+        'b765105fa5c5083fbcd35260f037b9f0d70e33992d0a41ba26f5f78a17dc65e7  .deps/swiftlint/dist/zip.zip' \
         SwiftLintBinary.artifactbundle/swiftlint-$swiftlint_version-macos/bin/swiftlint
 fi
 
