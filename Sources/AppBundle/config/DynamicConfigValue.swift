@@ -37,7 +37,7 @@ func parseDynamicValue<T>(
     _ valueType: T.Type,
     _ fallback: T,
     _ backtrace: TomlBacktrace,
-    _ errors: inout [TomlParseError]
+    _ errors: inout [TomlParseError],
 ) -> DynamicConfigValue<T> {
     if let simpleValue = parseSimpleType(raw) as T? {
         return .constant(simpleValue)

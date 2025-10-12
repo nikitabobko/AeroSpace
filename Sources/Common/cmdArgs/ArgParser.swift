@@ -15,7 +15,7 @@ public struct ArgParser<T: ConvenienceCopyable, K>: ArgParserProtocol {
     public init(
         _ keyPath: SendableWritableKeyPath<T, K>,
         _ parse: @escaping ArgParserFun<K>,
-        argPlaceholderIfMandatory: String? = nil
+        argPlaceholderIfMandatory: String? = nil,
     ) {
         self.keyPath = keyPath
         self.parse = parse
@@ -55,7 +55,7 @@ public struct ParsedCliArgs<T> {
 func newArgParser<T: ConvenienceCopyable, K>(
     _ keyPath: SendableWritableKeyPath<T, Lateinit<K>> & Sendable,
     _ parse: @escaping @Sendable (ArgParserInput) -> ParsedCliArgs<K>,
-    mandatoryArgPlaceholder: String
+    mandatoryArgPlaceholder: String,
 ) -> ArgParser<T, Lateinit<K>> {
     let parseWrapper: @Sendable (ArgParserInput) -> ParsedCliArgs<Lateinit<K>> = {
         parse($0).map { .initialized($0) }

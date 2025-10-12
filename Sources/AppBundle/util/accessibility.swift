@@ -179,39 +179,39 @@ enum Ax {
     static let titleAttr = WritableAttrImpl<String>(
         key: kAXTitleAttribute,
         getter: { $0 as? String },
-        setter: { $0 as CFTypeRef }
+        setter: { $0 as CFTypeRef },
     )
     static let roleAttr = WritableAttrImpl<String>(
         key: kAXRoleAttribute,
         getter: { $0 as? String },
-        setter: { $0 as CFTypeRef }
+        setter: { $0 as CFTypeRef },
     )
     static let subroleAttr = WritableAttrImpl<String>(
         key: kAXSubroleAttribute,
         getter: { $0 as? String },
-        setter: { $0 as CFTypeRef }
+        setter: { $0 as CFTypeRef },
     )
     static let identifierAttr = ReadableAttrImpl<String>(
         key: kAXIdentifierAttribute,
-        getter: { $0 as? String }
+        getter: { $0 as? String },
     )
     static let modalAttr = ReadableAttrImpl<Bool>(
         key: kAXModalAttribute,
-        getter: { $0 as? Bool }
+        getter: { $0 as? Bool },
     )
     static let enabledAttr = ReadableAttrImpl<Bool>(
         key: kAXEnabledAttribute,
-        getter: { $0 as? Bool }
+        getter: { $0 as? Bool },
     )
     static let enhancedUserInterfaceAttr = WritableAttrImpl<Bool>(
         key: "AXEnhancedUserInterface",
         getter: { $0 as? Bool },
-        setter: { $0 as CFTypeRef }
+        setter: { $0 as CFTypeRef },
     )
     static let minimizedAttr = WritableAttrImpl<Bool>(
         key: kAXMinimizedAttribute,
         getter: { $0 as? Bool },
-        setter: { $0 as CFTypeRef }
+        setter: { $0 as CFTypeRef },
     )
     //static let minimizedAttr = ReadableAttrImpl<Bool>(
     //    key: kAXMinimizedAttribute,
@@ -220,16 +220,16 @@ enum Ax {
     static let isFullscreenAttr = WritableAttrImpl<Bool>(
         key: "AXFullScreen",
         getter: { $0 as? Bool },
-        setter: { $0 as CFTypeRef }
+        setter: { $0 as CFTypeRef },
     )
     static let isFocused = ReadableAttrImpl<Bool>(
         key: kAXFocusedAttribute,
-        getter: { $0 as? Bool }
+        getter: { $0 as? Bool },
     )
     static let isMainAttr = WritableAttrImpl<Bool>(
         key: kAXMainAttribute,
         getter: { $0 as? Bool },
-        setter: { $0 as CFTypeRef }
+        setter: { $0 as CFTypeRef },
     )
     static let sizeAttr = WritableAttrImpl<CGSize>(
         key: kAXSizeAttribute,
@@ -241,7 +241,7 @@ enum Ax {
         setter: {
             var size = $0
             return AXValueCreate(.cgSize, &size) as CFTypeRef
-        }
+        },
     )
     static let topLeftCornerAttr = WritableAttrImpl<CGPoint>(
         key: kAXPositionAttribute,
@@ -253,17 +253,17 @@ enum Ax {
         setter: {
             var size = $0
             return AXValueCreate(.cgPoint, &size) as CFTypeRef
-        }
+        },
     )
     /// Returns windows visible on all monitors
     /// If some windows are located on not active macOS Spaces then they won't be returned
     static let windowsAttr = ReadableAttrImpl<[WindowIdAndAxUiElement]>(
         key: kAXWindowsAttribute,
-        getter: { ($0 as? NSArray)?.compactMap(windowOrNil).map { ($0.windowId, $0.ax.cast) } ?? [] }
+        getter: { ($0 as? NSArray)?.compactMap(windowOrNil).map { ($0.windowId, $0.ax.cast) } ?? [] },
     )
     static let focusedWindowAttr = ReadableAttrImpl<WindowIdAndAxUiElementMock>(
         key: kAXFocusedWindowAttribute,
-        getter: windowOrNil
+        getter: windowOrNil,
     )
     //static let mainWindowAttr = ReadableAttrImpl<AXUIElement>(
     //    key: kAXMainWindowAttribute,
@@ -271,21 +271,21 @@ enum Ax {
     //)
     static let closeButtonAttr = ReadableAttrImpl<any AxUiElementMock>(
         key: kAXCloseButtonAttribute,
-        getter: castToAxUiElementMock
+        getter: castToAxUiElementMock,
     )
     // Note! fullscreen is not the same as "zoom" (green plus)
     static let fullscreenButtonAttr = ReadableAttrImpl<any AxUiElementMock>(
         key: kAXFullScreenButtonAttribute,
-        getter: castToAxUiElementMock
+        getter: castToAxUiElementMock,
     )
     // green plus
     static let zoomButtonAttr = ReadableAttrImpl<any AxUiElementMock>(
         key: kAXZoomButtonAttribute,
-        getter: castToAxUiElementMock
+        getter: castToAxUiElementMock,
     )
     static let minimizeButtonAttr = ReadableAttrImpl<any AxUiElementMock>(
         key: kAXMinimizeButtonAttribute,
-        getter: castToAxUiElementMock
+        getter: castToAxUiElementMock,
     )
     //static let growAreaAttr = ReadableAttrImpl<AXUIElement>(
     //    key: kAXGrowAreaAttribute,

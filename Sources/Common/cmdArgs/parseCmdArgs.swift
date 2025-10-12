@@ -49,7 +49,7 @@ public func cmdParser<T>(
     help: String,
     flags: [String: any SubArgParserProtocol<T>],
     posArgs: [any ArgParserProtocol<T>],
-    conflictingOptions: [Set<String>] = []
+    conflictingOptions: [Set<String>] = [],
 ) -> CmdParser<T> {
     CmdParser(
         info: CmdStaticInfo(help: help, kind: kind, allowInConfig: allowInConfig),
@@ -67,7 +67,7 @@ public struct CmdStaticInfo: Equatable, Sendable {
     public init(
         help: String,
         kind: CmdKind,
-        allowInConfig: Bool
+        allowInConfig: Bool,
     ) {
         self.help = help
         self.kind = kind

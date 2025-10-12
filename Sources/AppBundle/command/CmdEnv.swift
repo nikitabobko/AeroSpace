@@ -9,7 +9,7 @@ struct CmdEnv: ConvenienceCopyable { // todo forward env from cli to server
     init(
         windowId: UInt32?,
         workspaceName: String?,
-        pwd: String?
+        pwd: String?,
     ) {
         self.windowId = windowId
         self.workspaceName = workspaceName

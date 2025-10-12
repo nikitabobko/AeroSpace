@@ -49,7 +49,7 @@ func runRefreshSessionBlocking(
 func runSession<T>(
     _ event: RefreshSessionEvent,
     _ token: RunSessionGuard,
-    body: @MainActor () async throws -> T
+    body: @MainActor () async throws -> T,
 ) async throws -> T {
     let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
     defer { signposter.endInterval(#function, state) }

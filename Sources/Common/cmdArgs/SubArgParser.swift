@@ -58,7 +58,7 @@ public func boolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<
 public func singleValueSubArgParser<T: ConvenienceCopyable, V>(
     _ keyPath: SendableWritableKeyPath<T, V?>,
     _ placeholder: String,
-    _ mapper: @escaping @Sendable (String) -> V?
+    _ mapper: @escaping @Sendable (String) -> V?,
 ) -> SubArgParser<T, V?> {
     SubArgParser(keyPath) { input in
         if let arg = input.nonFlagArgOrNil() {

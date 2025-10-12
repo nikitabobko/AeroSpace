@@ -22,7 +22,7 @@ public struct ResizeCmdArgs: CmdArgs {
     public init(
         rawArgs: [String],
         dimension: Dimension,
-        units: Units
+        units: Units,
     ) {
         self.rawArgsForStrRepr = .init(rawArgs.slice)
         self.dimension = .initialized(dimension)

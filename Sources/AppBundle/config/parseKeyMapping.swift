@@ -14,7 +14,7 @@ struct KeyMapping: ConvenienceCopyable, Equatable, Sendable {
 
     init(
         preset: Preset = .qwerty,
-        rawKeyNotationToKeyCode: [String: Key] = [:]
+        rawKeyNotationToKeyCode: [String: Key] = [:],
     ) {
         self.preset = preset
         self.rawKeyNotationToKeyCode = rawKeyNotationToKeyCode
