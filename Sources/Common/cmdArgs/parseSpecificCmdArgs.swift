@@ -96,7 +96,7 @@ public enum ParsedCmd<T: Sendable>: Sendable {
 }
 
 extension SubArgParserProtocol {
-    fileprivate func transformRaw(_ raw: T, superArg: String, _ index: inout Int, _ args: StrArrSlice, _ errors: inout [String]) -> T {
+    fileprivate func transformRaw(_ raw: consuming T, superArg: String, _ index: inout Int, _ args: StrArrSlice, _ errors: inout [String]) -> T {
         let input = SubArgParserInput(superArg: superArg, index: index, args: args)
         let parsedCliArgs = parse(input)
         index += parsedCliArgs.advanceBy
@@ -109,7 +109,7 @@ extension SubArgParserProtocol {
 }
 
 extension ArgParserProtocol {
-    fileprivate func transformRaw(_ raw: T, _ index: inout Int, _ args: StrArrSlice, _ errors: inout [String]) -> T {
+    fileprivate func transformRaw(_ raw: consuming T, _ index: inout Int, _ args: StrArrSlice, _ errors: inout [String]) -> T {
         let input = ArgParserInput(index: index, args: args)
         let parsedCliArgs = parse(input)
         index += parsedCliArgs.advanceBy
