@@ -51,14 +51,14 @@ class ConfigFileWatcher {
             let paths = unsafeBitCast(eventPaths, to: NSArray.self) as? [String] ?? []
             guard let watchedPath = watcher.watchedFileUrl?.path else { return }
 
-            for i in 0..<numEvents {
+            for i in 0 ..< numEvents {
                 let flags = eventFlags[i]
                 let isFile = (flags & FSEventStreamEventFlags(kFSEventStreamEventFlagItemIsFile)) != 0
                 let isRelevant = (flags & FSEventStreamEventFlags(
                     kFSEventStreamEventFlagItemModified |
-                    kFSEventStreamEventFlagItemRenamed |
-                    kFSEventStreamEventFlagItemCreated |
-                    kFSEventStreamEventFlagItemChangeOwner
+                        kFSEventStreamEventFlagItemRenamed |
+                        kFSEventStreamEventFlagItemCreated |
+                        kFSEventStreamEventFlagItemChangeOwner,
                 )) != 0
 
                 if isFile && isRelevant && paths[i] == watchedPath {
