@@ -1,4 +1,5 @@
 import AppKit
+import Common
 
 extension Workspace {
     @MainActor
@@ -46,6 +47,8 @@ extension TreeNode {
                         try await container.layoutTiles(point, width: width, height: height, virtual: virtual, context)
                     case .accordion:
                         try await container.layoutAccordion(point, width: width, height: height, virtual: virtual, context)
+                    case .dwindle:
+                        try await container.layoutDwindle(point, width: width, height: height, virtual: virtual, context)
                 }
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
                  .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
@@ -162,6 +165,96 @@ extension TilingContainer {
                         context,
                     )
             }
+        }
+    }
+
+    @MainActor
+    fileprivate func layoutDwindle(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
+        // Dwindle layout uses a binary tree approach, respecting container orientation and node weights
+        guard !children.isEmpty else { return }
+
+        if children.count == 1 {
+            // Single child takes full space
+            try await children[0].layoutRecursive(point, width: width, height: height, virtual: virtual, context)
+            return
+        }
+
+        // For multiple children, we need to create a binary tree structure
+        // We'll split the container and assign children to left/right or top/bottom
+        try await layoutDwindleRecursive(children, orientation: orientation, point: point, width: width, height: height, virtual: virtual, context: context)
+    }
+
+    @MainActor
+    private func layoutDwindleRecursive(_ nodes: [TreeNode], orientation: Orientation, point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, context: LayoutContext) async throws {
+        guard !nodes.isEmpty else { return }
+
+        if nodes.count == 1 {
+            // Single node takes full space
+            try await nodes[0].layoutRecursive(point, width: width, height: height, virtual: virtual, context)
+            return
+        }
+
+        // Determine split direction based on the container's orientation
+        let splitVertically = orientation == .h
+
+        // Get gap size for the split direction
+        let gapSize = splitVertically
+            ? context.resolvedGaps.inner.horizontal.toDouble()
+            : context.resolvedGaps.inner.vertical.toDouble()
+
+        // Calculate midpoint for splitting (binary tree structure)
+        let midIndex = nodes.count / 2
+        let leftNodes = Array(nodes[0 ..< midIndex])
+        let rightNodes = Array(nodes[midIndex...])
+
+        // Calculate split ratio based on node weights
+        let totalWeight = CGFloat(nodes.sumOfDouble { $0.getWeight(orientation) })
+        let leftWeight = CGFloat(leftNodes.sumOfDouble { $0.getWeight(orientation) })
+
+        // Guard against zero weight - fall back to even split
+        let splitRatio: CGFloat = totalWeight > 0 ? leftWeight / totalWeight : 0.5
+
+        // Alternate orientation for recursive splits (creates the dwindle pattern)
+        let nextOrientation = orientation.opposite
+
+        if splitVertically {
+            // Split left/right with gap
+            let totalWidth = width - gapSize
+            let leftWidth = totalWidth * splitRatio
+            let rightWidth = totalWidth - leftWidth
+
+            // Layout left side
+            try await layoutDwindleRecursive(leftNodes, orientation: nextOrientation, point: point, width: leftWidth, height: height,
+                                             virtual: Rect(topLeftX: virtual.topLeftX, topLeftY: virtual.topLeftY,
+                                                           width: virtual.width * splitRatio, height: virtual.height),
+                                             context: context)
+
+            // Layout right side (with gap offset)
+            try await layoutDwindleRecursive(rightNodes, orientation: nextOrientation, point: CGPoint(x: point.x + leftWidth + gapSize, y: point.y),
+                                             width: rightWidth, height: height,
+                                             virtual: Rect(topLeftX: virtual.topLeftX + virtual.width * splitRatio,
+                                                           topLeftY: virtual.topLeftY,
+                                                           width: virtual.width * (1 - splitRatio), height: virtual.height),
+                                             context: context)
+        } else {
+            // Split top/bottom with gap
+            let totalHeight = height - gapSize
+            let topHeight = totalHeight * splitRatio
+            let bottomHeight = totalHeight - topHeight
+
+            // Layout top side
+            try await layoutDwindleRecursive(leftNodes, orientation: nextOrientation, point: point, width: width, height: topHeight,
+                                             virtual: Rect(topLeftX: virtual.topLeftX, topLeftY: virtual.topLeftY,
+                                                           width: virtual.width, height: virtual.height * splitRatio),
+                                             context: context)
+
+            // Layout bottom side (with gap offset)
+            try await layoutDwindleRecursive(rightNodes, orientation: nextOrientation, point: CGPoint(x: point.x, y: point.y + topHeight + gapSize),
+                                             width: width, height: bottomHeight,
+                                             virtual: Rect(topLeftX: virtual.topLeftX,
+                                                           topLeftY: virtual.topLeftY + virtual.height * splitRatio,
+                                                           width: virtual.width, height: virtual.height * (1 - splitRatio)),
+                                             context: context)
         }
     }
 }

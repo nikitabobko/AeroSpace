@@ -10,7 +10,7 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace layout [-h|--help] [--window-id <window-id>]
-                 (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
+                 (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|dwindle|horizontal|vertical|tiling|floating)...
 
 // end::synopsis[]
 
@@ -23,9 +23,11 @@ aerospace layout [-h|--help] [--window-id <window-id>]
 If several arguments are supplied then finds the first argument that doesn't describe the currently active layout, and applies the layout.
 
 * Change both tiling layout and orientation in one go: `h_tiles|v_tiles|h_accordion|v_accordion`
-* Change tiling layout but preserve orientation: `tiles|accordion`
+* Change tiling layout but preserve orientation: `tiles|accordion|dwindle`
 * Change orientation but preserve layout: `horizontal|vertical`
 * Toggle floating/tiling mode: `tiling|floating`
+
+The `dwindle` layout is a binary tree-based tiling layout inspired by Hyprland. It splits windows based on the container's orientation (horizontal orientation splits vertically, vertical orientation splits horizontally) and respects node weights. This means `resize`, `balance-sizes`, and `horizontal`/`vertical` commands all work with dwindle layout. The orientation alternates at each level of recursion, creating the characteristic dwindle pattern.
 
 // =========================================================== Options
 include::./util/conditional-options-header.adoc[]

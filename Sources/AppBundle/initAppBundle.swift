@@ -33,6 +33,10 @@ import Foundation
 private func smartLayoutAtStartup() {
     let workspace = focus.workspace
     let root = workspace.rootTilingContainer
+    // Respect user's configured default layout - don't override it with heuristic
+    if root.layout == config.defaultRootContainerLayout {
+        return
+    }
     if root.children.count <= 3 {
         root.layout = .tiles
     } else {

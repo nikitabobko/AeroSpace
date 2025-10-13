@@ -21,7 +21,7 @@ public struct LayoutCmdArgs: CmdArgs {
     }
 
     public enum LayoutDescription: String, CaseIterable, Equatable, Sendable {
-        case accordion, tiles
+        case accordion, tiles, dwindle
         case horizontal, vertical
         case h_accordion, v_accordion, h_tiles, v_tiles
         case tiling, floating

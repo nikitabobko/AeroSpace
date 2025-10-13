@@ -170,6 +170,17 @@ final class ConfigTest: XCTestCase {
         }
     }
 
+    func testParseDwindle() {
+        let command = parseCommand("layout dwindle horizontal vertical").cmdOrNil
+        XCTAssertTrue(command is LayoutCommand)
+        assertEquals((command as! LayoutCommand).args.toggleBetween.val, [.dwindle, .horizontal, .vertical])
+
+        guard case .help = parseCommand("layout dwindle -h") else {
+            XCTFail()
+            return
+        }
+    }
+
     func testSplitCommandAndFlattenContainersNormalization() {
         let (_, errors) = parseConfig(
             """

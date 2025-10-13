@@ -17,7 +17,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # You can set 0 to disable the padding feature
 accordion-padding = 30
 
-# Possible values: tiles|accordion
+# Possible values: tiles|accordion|dwindle
 default-root-container-layout = 'tiles'
 
 # Possible values: horizontal|vertical|auto
