@@ -14,6 +14,7 @@ import Foundation
     if !reloadConfig() {
         check(reloadConfig(forceConfigUrl: defaultConfigUrl))
     }
+    startConfigFileWatcher()
 
     checkAccessibilityPermissions()
     startUnixSocketServer()
