@@ -37,6 +37,11 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app
 automatically-unhide-macos-hidden-apps = false
 
+# Modifier key for resizing windows with mouse right-click + drag
+# Possible values: cmd, alt, ctrl, shift
+# Fallback value (if you omit the key): mouse-resize-modifier = 'alt'
+mouse-resize-modifier = 'alt'
+
 # Possible values: (qwerty|dvorak|colemak)
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
 [key-mapping]

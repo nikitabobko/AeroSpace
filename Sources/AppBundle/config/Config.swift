@@ -46,6 +46,7 @@ struct Config: ConvenienceCopyable {
     var execOnWorkspaceChange: [String] = [] // todo deprecate
     var keyMapping = KeyMapping()
     var execConfig: ExecConfig = ExecConfig()
+    var mouseResizeModifier: MouseResizeModifier = .alt
 
     var onFocusChanged: [any Command] = []
     // var onFocusedWorkspaceChanged: [any Command] = []
@@ -57,6 +58,19 @@ struct Config: ConvenienceCopyable {
     var onWindowDetected: [WindowDetectedCallback] = []
 
     var preservedWorkspaceNames: [String] = []
+}
+
+enum MouseResizeModifier: String {
+    case cmd, alt, ctrl, shift
+
+    var cgEventFlag: CGEventFlags {
+        switch self {
+            case .cmd: .maskCommand
+            case .alt: .maskAlternate
+            case .ctrl: .maskControl
+            case .shift: .maskShift
+        }
+    }
 }
 
 enum DefaultContainerOrientation: String {
