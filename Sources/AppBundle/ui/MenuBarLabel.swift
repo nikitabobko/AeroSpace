@@ -11,7 +11,7 @@ struct MenuBarLabel: View {
 
     let hStackSpacing = CGFloat(6)
     let itemSize = CGFloat(40)
-    let itemBorderSize = CGFloat(4)
+    let itemBorderSize = CGFloat(3)
     let itemPadding = CGFloat(8)
     let itemCornerRadius = CGFloat(6)
 
@@ -60,7 +60,13 @@ struct MenuBarLabel: View {
                     }
                     let orderedWorkspaces = viewModel.workspaces.filter { !$0.isEffectivelyEmpty || $0.isVisible }
                     ForEach(orderedWorkspaces, id: \.name) { item in
-                        itemView(for: TrayItem(type: .workspace, name: item.name, isActive: item.isFocused))
+                        let trayItem = TrayItem(
+                            type: .workspace,
+                            name: item.name,
+                            isActive: item.isFocused,
+                            hasFullscreenWindows: item.hasFullscreenWindows,
+                        )
+                        itemView(for: trayItem)
                             .opacity(item.isVisible ? 1 : 0.5)
                     }
             }
@@ -90,7 +96,7 @@ struct MenuBarLabel: View {
                 .bold()
                 .padding(.bottom, 6)
             ForEach(otherWorkspaces, id: \.name) { item in
-                itemView(for: TrayItem(type: .workspace, name: item.name, isActive: false))
+                itemView(for: TrayItem(type: .workspace, name: item.name, isActive: false, hasFullscreenWindows: item.hasFullscreenWindows))
             }
         }
         .opacity(0.6)
@@ -105,6 +111,22 @@ struct MenuBarLabel: View {
 
     @ViewBuilder
     fileprivate func itemView(for item: TrayItem) -> some View {
+        let view = itemSubView(for: item)
+        if item.hasFullscreenWindows {
+            let strokeStyle = StrokeStyle(lineWidth: 2, lineCap: .square, lineJoin: .miter, miterLimit: 10, dash: [10, 5], dashPhase: 3)
+            view
+                .padding(4)
+                .overlay {
+                    RoundedRectangle(cornerRadius: itemCornerRadius, style: .continuous)
+                        .strokeBorder(finalColor, style: strokeStyle)
+                }
+        } else {
+            view
+        }
+    }
+
+    @ViewBuilder
+    fileprivate func itemSubView(for item: TrayItem) -> some View {
         // If workspace name contains emojis we use the plain emoji in text to avoid visibility issues scaling the emoji to fit the squares
         if item.name.containsEmoji() {
             Text(item.name)
@@ -137,7 +159,7 @@ struct MenuBarLabel: View {
                     .frame(height: itemSize)
                 } else {
                     text.background {
-                        RoundedRectangle(cornerRadius: itemCornerRadius, style: .circular)
+                        RoundedRectangle(cornerRadius: itemCornerRadius, style: .continuous)
                             .strokeBorder(lineWidth: itemBorderSize)
                     }
                     .foregroundStyle(finalColor)
