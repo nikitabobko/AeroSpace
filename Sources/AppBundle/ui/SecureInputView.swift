@@ -80,8 +80,3 @@ struct SecureInputView: View {
         )
     }
 }
-
-#Preview {
-    SecureInputView()
-        .frame(width: 500, height: 120)
-}
