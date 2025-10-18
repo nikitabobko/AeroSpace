@@ -94,5 +94,6 @@
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
   "Aero.AxUiElementWindowType" : "window",
   "Aero.treeNodeParent" : "AppBundle.TilingContainer",
+  "Aero.windowLevel" : "{\"normalWindow\":{}}",
   "Aero.workspace" : "M"
 }

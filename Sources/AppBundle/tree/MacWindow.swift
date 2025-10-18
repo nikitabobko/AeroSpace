@@ -52,17 +52,17 @@ final class MacWindow: Window {
     //     return "Window(\(description))"
     // }
 
-    func isWindowHeuristic() async throws -> Bool { // todo cache
-        try await macApp.isWindowHeuristic(windowId)
+    func isWindowHeuristic(_ windowLevel: MacOsWindowLevel?) async throws -> Bool { // todo cache
+        try await macApp.isWindowHeuristic(windowId, windowLevel)
     }
 
-    func isDialogHeuristic() async throws -> Bool { // todo cache
-        try await macApp.isDialogHeuristic(windowId)
+    func isDialogHeuristic(_ windowLevel: MacOsWindowLevel?) async throws -> Bool { // todo cache
+        try await macApp.isDialogHeuristic(windowId, windowLevel)
     }
 
     @MainActor
-    func getAxUiElementWindowType() async throws -> AxUiElementWindowType {
-        try await macApp.getAxUiElementWindowType(windowId)
+    func getAxUiElementWindowType(_ windowLevel: MacOsWindowLevel?) async throws -> AxUiElementWindowType {
+        try await macApp.getAxUiElementWindowType(windowId, windowLevel)
     }
 
     func dumpAxInfo() async throws -> [String: Json] {
@@ -221,7 +221,8 @@ extension Window {
 // The function is private because it's unsafe. It leaves the window in unbound state
 @MainActor
 private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace, window: Window?) async throws -> BindingData {
-    switch try await macApp.getAxUiElementWindowType(windowId) {
+    let windowLevel = getWindowLevel(for: windowId)
+    return switch try await macApp.getAxUiElementWindowType(windowId, windowLevel) {
         case .popup: BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         case .dialog: BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         case .window: unbindAndGetBindingDataForNewTilingWindow(workspace, window: window)

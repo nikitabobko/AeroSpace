@@ -1,7 +1,9 @@
 enum KnownBundleId: String, Equatable {
 
+    case _1password = "com.1password.1password"
     case activityMonitor = "com.apple.ActivityMonitor"
     case alacritty = "org.alacritty"
+    case braveBrowser = "com.brave.Browser"
     case chrome = "com.google.Chrome"
     case emacs = "org.gnu.Emacs"
     case finder = "com.apple.finder"
@@ -15,6 +17,7 @@ enum KnownBundleId: String, Equatable {
     case slack = "com.tinyspeck.slackmacgap"
     case steam = "com.valvesoftware.steam.helper"
     case wezterm = "com.github.wez.wezterm"
+    case zenBrowser = "app.zen-browser.zen"
     case zoom = "us.zoom.xos"
 
     case mozillaFirefox = "org.mozilla.firefox"
@@ -25,7 +28,10 @@ enum KnownBundleId: String, Equatable {
     case vscodium = "com.vscodium"
 
     var isFirefox: Bool {
-        self == .mozillaFirefox || self == .mozillaFirefoxDeveloperEdition || self == .mozillaFirefoxNightly
+        self == .mozillaFirefox
+            || self == .mozillaFirefoxDeveloperEdition
+            || self == .mozillaFirefoxNightly
+            || self == .zenBrowser
     }
 
     var isVscode: Bool {

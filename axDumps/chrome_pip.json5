@@ -1,3 +1,4 @@
+// Share you screen in GMeet
 {
   "AXActivationPoint" : "<AXValue 0x6000018cf060> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
   "AXCancelButton" : null,
@@ -55,8 +56,8 @@
   "Aero.App.versionShort" : "135.0.7049.116",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
   "Aero.axWindowId" : 14413,
-  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
-  "Aero.AxUiElementWindowType" : "dialog",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
+  "Aero.AxUiElementWindowType" : "popup",
   "Aero.on-window-detected" : [
     {
       "commands" : "move-node-to-workspace F",
@@ -64,5 +65,6 @@
     }
   ],
   "Aero.treeNodeParent" : "AppBundle.Workspace",
+  "Aero.windowLevel" : "{\"alwaysOnTopWindow\":{}}",
   "Aero.workspace" : "F"
 }

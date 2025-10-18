@@ -174,23 +174,21 @@ final class MacApp: AbstractApp {
         }
     }
 
-    func isWindowHeuristic(_ windowId: UInt32) async throws -> Bool {
-        let windowLevel = await getWindowLevel(for: windowId)
+    func isWindowHeuristic(_ windowId: UInt32, _ windowLevel: MacOsWindowLevel?) async throws -> Bool {
         return try await withWindow(windowId) { [nsApp, axApp, appId] window, job in
             window.isWindowHeuristic(axApp: axApp.threadGuarded, appId, nsApp.activationPolicy, windowLevel)
         } == true
     }
 
-    func getAxUiElementWindowType(_ windowId: UInt32) async throws -> AxUiElementWindowType {
-        let windowLevel = await getWindowLevel(for: windowId)
+    func getAxUiElementWindowType(_ windowId: UInt32, _ windowLevel: MacOsWindowLevel?) async throws -> AxUiElementWindowType {
         return try await withWindow(windowId) { [nsApp, axApp, appId] window, job in
             window.getWindowType(axApp: axApp.threadGuarded, appId, nsApp.activationPolicy, windowLevel)
         } ?? .window
     }
 
-    func isDialogHeuristic(_ windowId: UInt32) async throws -> Bool {
+    func isDialogHeuristic(_ windowId: UInt32, _ windowLevel: MacOsWindowLevel?) async throws -> Bool {
         try await withWindow(windowId) { [appId] window, job in
-            window.isDialogHeuristic(appId)
+            window.isDialogHeuristic(appId, windowLevel)
         } == true
     }
 

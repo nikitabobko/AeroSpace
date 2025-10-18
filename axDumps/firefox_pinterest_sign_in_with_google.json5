@@ -98,5 +98,6 @@
 
   ],
   "Aero.treeNodeParent" : "AppBundle.Workspace",
+  "Aero.windowLevel" : "{\"normalWindow\":{}}",
   "Aero.workspace" : "W"
 }

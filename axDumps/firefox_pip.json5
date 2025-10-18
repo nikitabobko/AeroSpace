@@ -93,10 +93,11 @@
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
   "Aero.axWindowId" : 14336,
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
-  "Aero.AxUiElementWindowType" : "dialog",
+  "Aero.AxUiElementWindowType" : "popup",
   "Aero.on-window-detected" : [
 
   ],
   "Aero.treeNodeParent" : "AppBundle.Workspace",
+  "Aero.windowLevel" : "{\"alwaysOnTopWindow\":{}}",
   "Aero.workspace" : "F"
 }

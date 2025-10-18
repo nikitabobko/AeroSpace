@@ -3,8 +3,15 @@ import AppKit
 // Covered by tests in ./axDumps in the repor root
 extension AxUiElementMock {
     // 'isDialogHeuristic' function name is referenced in the guide
-    func isDialogHeuristic(_ id: KnownBundleId?) -> Bool {
+    func isDialogHeuristic(
+        _ id: KnownBundleId?,
+        _ windowLevel: MacOsWindowLevel?,
+    ) -> Bool {
         // Note: a lot of windows don't have title on startup. So please don't rely on the title
+
+        if id == ._1password && windowLevel != .normalWindow {
+            return true
+        }
 
         if id == .iphonesimulator {
             return true
@@ -82,11 +89,10 @@ extension AxUiElementMock {
         _ activationPolicy: NSApplication.ActivationPolicy,
         _ windowLevel: MacOsWindowLevel?,
     ) -> Bool {
-        if windowLevel != .normalWindow && id == .slack {
-            return false
-        }
-
-        if windowLevel == .alwaysOnTopWindow {
+        if windowLevel != .normalWindow &&
+            // Slowly roll out windowLevel for applications for which we have the appropriate dumps
+            (id == .slack || id == .chrome || id?.isFirefox == true || id == .braveBrowser)
+        {
             return false
         }
 
@@ -169,7 +175,7 @@ extension AxUiElementMock {
     ) -> AxUiElementWindowType {
         .new(
             isWindow: isWindowHeuristic(axApp: axApp, id, activationPolicy, windowLevel),
-            isDialog: { isDialogHeuristic(id) },
+            isDialog: { isDialogHeuristic(id, windowLevel) },
         )
     }
 }

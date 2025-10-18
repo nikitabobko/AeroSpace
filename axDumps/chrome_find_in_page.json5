@@ -65,5 +65,6 @@
     }
   ],
   "Aero.treeNodeParent" : "AppBundle.MacosPopupWindowsContainer",
+  "Aero.windowLevel" : "{\"normalWindow\":{}}",
   "Aero.workspace" : null
 }

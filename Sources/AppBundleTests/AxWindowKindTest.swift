@@ -30,7 +30,7 @@ func checkAxDumpsRecursive(_ dir: URL) throws {
             additionalMsg: "\(file.path()):0:0: AxUiElementWindowType doesn't match",
         )
         assertEquals(
-            json.isDialogHeuristic(appBundleId),
+            json.isDialogHeuristic(appBundleId, windowLevel),
             rawJson["Aero.AxUiElementWindowType_isDialogHeuristic"] as? Bool ?? dieT(),
             additionalMsg: "\(file.path()):0:0: AxUiElementWindowType_isDialogHeuristic doesn't match",
         )
