@@ -84,7 +84,8 @@ func parseMonitorIds(input: SubArgParserInput) -> ParsedCliArgs<[MonitorId]> {
         return .fail("\(_monitors) is mandatory. \(possibleValues)", advanceBy: args.count)
     }
     var monitors: [MonitorId] = []
-    for (i, monitor) in args.enumerated() {
+    var i = 0
+    for monitor in args {
         switch Int.init(monitor) {
             case .some(let unwrapped):
                 monitors.append(.index(unwrapped - 1))
@@ -97,6 +98,7 @@ func parseMonitorIds(input: SubArgParserInput) -> ParsedCliArgs<[MonitorId]> {
             default:
                 return .fail("Can't parse monitor ID '\(monitor)'. \(possibleValues)", advanceBy: i + 1)
         }
+        i += 1
     }
     return .succ(monitors, advanceBy: monitors.count)
 }

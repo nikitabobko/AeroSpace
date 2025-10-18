@@ -32,7 +32,8 @@ private func parseToggleBetween(input: ArgParserInput) -> ParsedCliArgs<[LayoutC
     let args = input.nonFlagArgs()
 
     var result: [LayoutCmdArgs.LayoutDescription] = []
-    for (i, arg) in args.enumerated() {
+    var i = 0
+    for arg in args {
         if let layout = arg.parseLayoutDescription() {
             result.append(layout)
         } else {
@@ -41,6 +42,7 @@ private func parseToggleBetween(input: ArgParserInput) -> ParsedCliArgs<[LayoutC
                 advanceBy: i + 1,
             )
         }
+        i += 1
     }
 
     return .succ(result, advanceBy: args.count)
