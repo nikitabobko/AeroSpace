@@ -5,7 +5,7 @@ import SwiftUI
 private let iconSize = CGSize(width: 50, height: 50)
 private let textSize = CGSize(width: 440, height: 110)
 
-public class SecureInputPanel: NSPanelHud {
+public final class SecureInputPanel: NSPanelHud {
     @MainActor public static var shared: SecureInputPanel = SecureInputPanel()
     private var hostingView = NSHostingView(rootView: SecureInputView())
 

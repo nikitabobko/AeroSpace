@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 
-public class VolumePanel: NSPanelHud {
+public final class VolumePanel: NSPanelHud {
     @MainActor public static var shared: VolumePanel = VolumePanel()
     private var timer: Timer?
     private var panelFrame = NSRect(x: 0, y: 0, width: 50, height: 206)

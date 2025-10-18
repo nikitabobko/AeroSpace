@@ -1,6 +1,6 @@
 import AppKit
 
-public class NSPanelHud: NSPanel {
+open class NSPanelHud: NSPanel {
     init() {
         super.init(
             contentRect: .zero,

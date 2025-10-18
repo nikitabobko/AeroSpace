@@ -26,7 +26,7 @@ protocol Monitor: AeroAny {
     var isMain: Bool { get }
 }
 
-class LazyMonitor: Monitor {
+final class LazyMonitor: Monitor {
     private let screen: NSScreen
     let monitorAppKitNsScreenScreensId: Int
     let name: String

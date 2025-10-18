@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider renaming to GenericContainer
+final class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider renaming to GenericContainer
     fileprivate var _orientation: Orientation
     var orientation: Orientation { _orientation }
     var layout: Layout

@@ -2,7 +2,7 @@ import AppKit
 import Common
 
 /// The subscription is active as long as you keep this class in memory
-class AxSubscription {
+final class AxSubscription {
     let obs: AXObserver
     let ax: AXUIElement
     let axThreadToken: AxAppThreadToken = axTaskLocalAppThreadToken ?? dieT("axTaskLocalAppThreadToken is not initialized")

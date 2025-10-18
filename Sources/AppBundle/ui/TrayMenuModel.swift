@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-public class TrayMenuModel: ObservableObject {
+public final class TrayMenuModel: ObservableObject {
     @MainActor public static let shared = TrayMenuModel()
 
     private init() {}

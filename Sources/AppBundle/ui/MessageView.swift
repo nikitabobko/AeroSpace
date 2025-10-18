@@ -99,7 +99,7 @@ public struct MessageView: View {
     }
 }
 
-public class MessageModel: ObservableObject {
+public final class MessageModel: ObservableObject {
     @MainActor public static let shared = MessageModel()
     @Published public var message: Message? = nil
 

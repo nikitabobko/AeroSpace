@@ -337,7 +337,7 @@ final class MacApp: AbstractApp {
     }
 }
 
-private class AxWindow {
+private final class AxWindow {
     let windowId: UInt32
     let ax: AXUIElement
     private let axSubscriptions: [AxSubscription] // keep subscriptions in memory

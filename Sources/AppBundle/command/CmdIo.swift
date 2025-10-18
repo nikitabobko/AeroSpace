@@ -1,4 +1,4 @@
-class CmdStdin {
+final class CmdStdin {
     private var input: String = ""
     init(_ input: String) {
         self.input = input
@@ -12,7 +12,7 @@ class CmdStdin {
     }
 }
 
-class CmdIo {
+final class CmdIo {
     private var stdin: CmdStdin
     var stdout: [String] = []
     var stderr: [String] = []
