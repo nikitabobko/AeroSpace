@@ -37,7 +37,7 @@ func runRefreshSessionBlocking(
             try await refresh()
             gcMonitors()
 
-            await updateTrayText()
+            updateTrayText()
             SecureInputPanel.shared.refresh()
             try await normalizeLayoutReason()
             if shouldLayoutWorkspaces { try await layoutWorkspaces() }
@@ -68,7 +68,7 @@ func runSession<T>(
 
             let focusAfter = focus.windowOrNil
 
-            await updateTrayText()
+            updateTrayText()
             SecureInputPanel.shared.refresh()
             try await layoutWorkspaces()
             if focusBefore != focusAfter {
