@@ -13,7 +13,7 @@ public struct ServerAnswer: Codable, Sendable {
         exitCode: Int32,
         stdout: String = "",
         stderr: String = "",
-        serverVersionAndHash: String
+        serverVersionAndHash: String,
     ) {
         self.exitCode = exitCode
         self.stdout = stdout
@@ -32,7 +32,7 @@ public struct ClientRequest: Codable, Sendable {
 
     public init(
         args: [String],
-        stdin: String
+        stdin: String,
     ) {
         if args.contains(where: { $0.rangeOfCharacter(from: .whitespacesAndNewlines) != nil || $0.contains("\"") || $0.contains("\'") }) {
             self.command = "" // Old server won't understand it anyway

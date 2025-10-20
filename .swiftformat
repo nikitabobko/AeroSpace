@@ -31,6 +31,8 @@
 --enable modifierOrder
 --enable numberFormatting
 --enable preferCountWhere
+--enable preferFinalClasses
+--enable redundantAsync
 --enable redundantBackticks
 --enable redundantBreak
 --enable redundantClosure
@@ -39,8 +41,10 @@
 --enable redundantGet
 --enable redundantLet
 --enable redundantLetError
+--enable redundantMemberwiseInit
 --enable redundantObjc
 --enable redundantOptionalBinding
+--enable redundantThrows
 --enable redundantTypedThrows
 --enable redundantVoidReturnType
 --enable semicolons
@@ -57,6 +61,7 @@
 --enable trailingClosures
 --enable trailingCommas
 --enable trailingSpace
+--enable urlMacro
 --enable wrapMultilineStatementBraces
 
 --enable extensionAccessControl

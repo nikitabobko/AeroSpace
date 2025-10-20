@@ -21,6 +21,8 @@ aerospace swap [-h|--help] [--window-id <window-id>] [--swap-focus]
 // tag::body[]
 {manpurpose}
 
+The operation is equivalent to dragging a window with the mouse.
+
 // =========================================================== Options
 include::util/conditional-options-header.adoc[]
 
@@ -30,7 +32,8 @@ include::util/conditional-options-header.adoc[]
 include::./util/window-id-flag-desc.adoc[]
 
 --swap-focus::
-Swap focus away from the currently focused window. By default, this command does not change the focused window.
+Swap focus away from the currently focused window.
+By default, this command does not change the focused window.
 
 --wrap-around::
 Wrap around if the window is at the edge of the workspace (for `(left|down|up|right)`) or the start/end of the depth first order (for `(dfs-next|dfs-prev)`).

@@ -1,14 +1,14 @@
 public struct CloseAllWindowsButCurrentCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    public init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .closeAllWindowsButCurrent,
         allowInConfig: true,
         help: close_all_windows_but_current_help_generated,
-        options: [
+        flags: [
             "--quit-if-last-window": trueBoolFlag(\.closeArgs.quitIfLastWindow),
         ],
-        arguments: [],
+        posArgs: [],
     )
 
     public var closeArgs = CloseCmdArgs(rawArgs: [])
@@ -16,6 +16,6 @@ public struct CloseAllWindowsButCurrentCmdArgs: CmdArgs {
     /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
-public func parseCloseAllWindowsButCurrentCmdArgs(_ args: [String]) -> ParsedCmd<CloseAllWindowsButCurrentCmdArgs> {
-    parseSpecificCmdArgs(CloseAllWindowsButCurrentCmdArgs(rawArgs: .init(args)), args)
+public func parseCloseAllWindowsButCurrentCmdArgs(_ args: StrArrSlice) -> ParsedCmd<CloseAllWindowsButCurrentCmdArgs> {
+    parseSpecificCmdArgs(CloseAllWindowsButCurrentCmdArgs(rawArgs: args), args)
 }

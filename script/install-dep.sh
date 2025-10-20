@@ -86,30 +86,30 @@ lazy-download-zip-and-link-bin() {
 
 if test $all == 1 || test $swiftlint == 1; then
     # https://github.com/realm/SwiftLint/releases
-    swiftlint_version=0.59.1
+    swiftlint_version=0.61.0
     lazy-download-zip-and-link-bin \
         swiftlint \
         https://github.com/realm/SwiftLint/releases/download/$swiftlint_version/SwiftLintBinary.artifactbundle.zip \
-        'b9f915a58a818afcc66846740d272d5e73f37baf874e7809ff6f246ea98ad8a2  .deps/swiftlint/dist/zip.zip' \
+        'b765105fa5c5083fbcd35260f037b9f0d70e33992d0a41ba26f5f78a17dc65e7  .deps/swiftlint/dist/zip.zip' \
         SwiftLintBinary.artifactbundle/swiftlint-$swiftlint_version-macos/bin/swiftlint
 fi
 
 if test $all == 1 || test $xcodegen == 1; then
     # https://github.com/yonaskolb/XcodeGen/releases
-    xcodegen_version=2.43.0
+    xcodegen_version=2.44.1
     lazy-download-zip-and-link-bin \
         xcodegen \
         https://github.com/yonaskolb/XcodeGen/releases/download/$xcodegen_version/xcodegen.artifactbundle.zip \
-        'b08135558e9e061440c148a91cc07142a534e99dd8a17bc050a3d30a5b5d340d  .deps/xcodegen/dist/zip.zip' \
+        'cfa4e1ee82fc4c95bf7bd8f7db1fda6bd073605c76a8d5cbce50c54a81867eb2  .deps/xcodegen/dist/zip.zip' \
         xcodegen.artifactbundle/xcodegen-$xcodegen_version-macosx/bin/xcodegen
 fi
 
 if test $all == 1 || test $swiftformat == 1; then
     # https://github.com/nicklockwood/SwiftFormat/releases
-    swiftformat_version=0.56.4
+    swiftformat_version=0.58.3
     lazy-download-zip-and-link-bin \
         swiftformat \
         https://github.com/nicklockwood/SwiftFormat/releases/download/$swiftformat_version/swiftformat.artifactbundle.zip \
-        '8b9c5ce7e3172b7d6f3d5c450495e8fbc5f60e2b80e03dff215cfff36f35425b  .deps/swiftformat/dist/zip.zip' \
+        '349130edf42691b1e94f0a5f9a7914bbd38a817d462a63e41a88178908ec6479  .deps/swiftformat/dist/zip.zip' \
         swiftformat.artifactbundle/swiftformat-$swiftformat_version-macos/bin/swiftformat
 fi

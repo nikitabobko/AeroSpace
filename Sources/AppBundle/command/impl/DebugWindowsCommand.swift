@@ -81,7 +81,7 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
     result["Aero.workspace"] = .stringOrNull(window.nodeWorkspace?.name)
     result["Aero.treeNodeParent"] = .string(String(describing: window.parent))
     result["Aero.macOS.version"] = .string(ProcessInfo().operatingSystemVersionString) // because built-in apps might behave differently depending on the OS version
-    result["Aero.App.appBundleId"] = .stringOrNull(window.app.bundleId)
+    result["Aero.App.appBundleId"] = .stringOrNull(window.app.rawAppBundleId)
     result["Aero.App.pid"] = .int(Int(window.app.pid))
     result["Aero.App.versionShort"] = .stringOrNull(appInfoDic["CFBundleShortVersionString"] as? String)
     result["Aero.App.version"] = .stringOrNull(appInfoDic["CFBundleVersion"] as? String)
@@ -102,7 +102,7 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
     result["Aero.on-window-detected"] = .array(matchingCallbacks)
 
     return JSONEncoder.aeroSpaceDefault.encodeToString(result).prettyDescription
-        .prefixLines(with: "\(window.app.bundleId ?? "nil-bundle-id").\(window.windowId) ||| ")
+        .prefixLines(with: "\(window.app.rawAppBundleId ?? "nil-bundle-id").\(window.windowId) ||| ")
 }
 
 @MainActor

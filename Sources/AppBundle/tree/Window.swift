@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-class Window: TreeNode, Hashable {
+open class Window: TreeNode, Hashable {
     nonisolated let windowId: UInt32 // todo nonisolated keyword is no longer necessary?
     let app: any AbstractApp
     var lastFloatingSize: CGSize?
@@ -26,26 +26,19 @@ class Window: TreeNode, Hashable {
     @MainActor
     func closeAxWindow() { die("Not implemented") }
 
-    nonisolated func hash(into hasher: inout Hasher) {
+    public nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(windowId)
     }
 
-    @MainActor // todo can be dropped in future Swift versions?
     func getAxTopLeftCorner() async throws -> CGPoint? { die("Not implemented") }
-    @MainActor // todo swift is stupid
     func getAxSize() async throws -> CGSize? { die("Not implemented") }
-    @MainActor // todo swift is stupid
     var title: String { get async throws { die("Not implemented") } }
-    @MainActor // todo swift is stupid
     var isMacosFullscreen: Bool { get async throws { false } }
-    @MainActor // todo swift is stupid
     var isMacosMinimized: Bool { get async throws { false } } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
     var isHiddenInCorner: Bool { die("Not implemented") }
     @MainActor
     func nativeFocus() { die("Not implemented") }
-    @MainActor // todo can be dropped in future Swift versions
     func getAxRect() async throws -> Rect? { die("Not implemented") }
-    @MainActor // todo can be dropped in future Swift versions
     func getCenter() async throws -> CGPoint? { try await getAxRect()?.center }
 
     func setAxTopLeftCorner(_ point: CGPoint) { die("Not implemented") }

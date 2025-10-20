@@ -1,11 +1,11 @@
 public struct ListAppsCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    public init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    public init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listApps,
         allowInConfig: false,
         help: list_apps_help_generated,
-        options: [
+        flags: [
             "--macos-native-hidden": boolFlag(\.macosHidden),
 
             // Formatting flags
@@ -13,7 +13,7 @@ public struct ListAppsCmdArgs: CmdArgs {
             "--count": trueBoolFlag(\.outputOnlyCount),
             "--json": trueBoolFlag(\.json),
         ],
-        arguments: [],
+        posArgs: [],
         conflictingOptions: [
             ["--count", "--format"],
             ["--count", "--json"],
@@ -40,7 +40,7 @@ extension ListAppsCmdArgs {
     }
 }
 
-public func parseListAppsCmdArgs(_ args: [String]) -> ParsedCmd<ListAppsCmdArgs> {
+public func parseListAppsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListAppsCmdArgs> {
     parseSpecificCmdArgs(ListAppsCmdArgs(rawArgs: args), args)
         .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
 }

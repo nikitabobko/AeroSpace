@@ -78,7 +78,7 @@ extension TreeNode {
         set { setWeight(.v, newValue) }
     }
 
-    /// Returns closest parent that has children in specified direction relative to `self`
+    /// Returns closest parent that has children in the specified direction relative to `self`
     func closestParent(
         hasChildrenInDirection direction: CardinalDirection,
         withLayout layout: Layout?,

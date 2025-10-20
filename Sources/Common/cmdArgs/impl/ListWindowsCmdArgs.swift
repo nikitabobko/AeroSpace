@@ -4,27 +4,27 @@ private let workspace = "<workspace>"
 private let workspaces = "\(workspace)..."
 
 public struct ListWindowsCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listWindows,
         allowInConfig: false,
         help: list_windows_help_generated,
-        options: [
+        flags: [
             "--all": trueBoolFlag(\.all),
 
             // Filtering flags
             "--focused": trueBoolFlag(\.filteringOptions.focused),
-            "--monitor": ArgParser(\.filteringOptions.monitors, parseMonitorIds),
-            "--workspace": ArgParser(\.filteringOptions.workspaces, parseWorkspaces),
-            "--pid": singleValueOption(\.filteringOptions.pidFilter, "<pid>", Int32.init),
-            "--app-bundle-id": singleValueOption(\.filteringOptions.appIdFilter, "<app-bundle-id>") { $0 },
+            "--monitor": SubArgParser(\.filteringOptions.monitors, parseMonitorIds),
+            "--workspace": SubArgParser(\.filteringOptions.workspaces, parseWorkspaces),
+            "--pid": singleValueSubArgParser(\.filteringOptions.pidFilter, "<pid>", Int32.init),
+            "--app-bundle-id": singleValueSubArgParser(\.filteringOptions.appIdFilter, "<app-bundle-id>") { $0 },
 
             // Formatting flags
             "--format": formatParser(\._format, for: .window),
             "--count": trueBoolFlag(\.outputOnlyCount),
             "--json": trueBoolFlag(\.json),
         ],
-        arguments: [],
+        posArgs: [],
         conflictingOptions: [
             ["--all", "--focused", "--workspace"],
             ["--all", "--focused", "--monitor"],
@@ -64,9 +64,9 @@ extension ListWindowsCmdArgs {
     }
 }
 
-public func parseListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCmdArgs> {
-    let args = args.map { $0 == "--app-id" ? "--app-bundle-id" : $0 } // Compatibility
-    return parseSpecificCmdArgs(ListWindowsCmdArgs(rawArgs: .init(args)), args)
+public func parseListWindowsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWindowsCmdArgs> {
+    let args = args.map { $0 == "--app-id" ? "--app-bundle-id" : $0 }.slice // Compatibility
+    return parseSpecificCmdArgs(ListWindowsCmdArgs(rawArgsForStrRepr: .init(args)), args)
         .filter("Mandatory option is not specified (--focused|--all|--monitor|--workspace)") { raw in
             raw.filteringOptions.focused || raw.all || !raw.filteringOptions.monitors.isEmpty || !raw.filteringOptions.workspaces.isEmpty
         }
@@ -85,38 +85,41 @@ public func parseListWindowsCmdArgs(_ args: [String]) -> ParsedCmd<ListWindowsCm
 func formatParser<T: ConvenienceCopyable>(
     _ keyPath: SendableWritableKeyPath<T, [StringInterToken]>,
     for kind: AeroObjKind,
-) -> ArgParser<T, [StringInterToken]> {
-    return ArgParser(keyPath) { arg, nextArgs in
-        return if let nextArg = nextArgs.nextNonFlagOrNil() {
-            switch nextArg.interpolationTokens(interpolationChar: "%") {
-                case .success(let tokens): .success(tokens)
-                case .failure(let err): .failure("Failed to parse <output-format>. \(err)")
+) -> SubArgParser<T, [StringInterToken]> {
+    return SubArgParser(keyPath) { input in
+        if let arg = input.nonFlagArgOrNil() {
+            return switch arg.interpolationTokens(interpolationChar: "%") {
+                case .success(let tokens): .succ(tokens, advanceBy: 1)
+                case .failure(let err): .fail("Failed to parse <output-format>. \(err)", advanceBy: 1)
             }
         } else {
-            .failure("<output-format> is mandatory. Possible values:\n\(getAvailableInterVars(for: kind).joined(separator: "\n").prependLines("  "))")
+            let values = getAvailableInterVars(for: kind).joined(separator: "\n").prependLines("  ")
+            return .fail("<output-format> is mandatory. Possible values:\n\(values)", advanceBy: 0)
         }
     }
 }
 
-private func parseWorkspaces(arg: String, nextArgs: inout [String]) -> Parsed<[WorkspaceFilter]> {
-    let args = nextArgs.allNextNonFlagArgs()
+private func parseWorkspaces(input: SubArgParserInput) -> ParsedCliArgs<[WorkspaceFilter]> {
+    let args = input.nonFlagArgs()
     let possibleValues = "\(workspace) possible values: (<workspace-name>|focused|visible)"
     if args.isEmpty {
-        return .failure("\(workspaces) is mandatory. \(possibleValues)")
+        return .fail("\(workspaces) is mandatory. \(possibleValues)", advanceBy: args.count)
     }
     var workspaces: [WorkspaceFilter] = []
-    for workspaceRaw: String in args {
+    var i = 0
+    for workspaceRaw in args {
         switch workspaceRaw {
             case "visible": workspaces.append(.visible)
             case "focused": workspaces.append(.focused)
             default:
                 switch WorkspaceName.parse(workspaceRaw) {
                     case .success(let unwrapped): workspaces.append(.name(unwrapped))
-                    case .failure(let msg): return .failure(msg)
+                    case .failure(let msg): return .fail(msg, advanceBy: i + 1)
                 }
         }
+        i += 1
     }
-    return .success(workspaces)
+    return .succ(workspaces, advanceBy: workspaces.count)
 }
 
 public enum WorkspaceFilter: Equatable, Sendable {
@@ -135,12 +138,15 @@ public enum FormatVar: Equatable {
         case windowId = "window-id"
         case windowIsFullscreen = "window-is-fullscreen"
         case windowTitle = "window-title"
+        case windowLayout = "window-layout" // An alias for windowParentContainerLayout
+        case windowParentContainerLayout = "window-parent-container-layout"
     }
 
     public enum WorkspaceFormatVar: String, Equatable, CaseIterable {
         case workspaceName = "workspace"
         case workspaceFocused = "workspace-is-focused"
         case workspaceVisible = "workspace-is-visible"
+        case workspaceRootContainerLayout = "workspace-root-container-layout"
     }
 
     public enum AppFormatVar: String, Equatable, CaseIterable {

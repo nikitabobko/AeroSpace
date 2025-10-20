@@ -1,14 +1,14 @@
 public struct FocusMonitorCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    fileprivate init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .focusMonitor,
         allowInConfig: true,
         help: focus_monitor_help_generated,
-        options: [
+        flags: [
             "--wrap-around": trueBoolFlag(\.wrapAround),
         ],
-        arguments: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs)],
+        posArgs: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs)],
     )
 
     public var wrapAround: Bool = false
@@ -17,28 +17,28 @@ public struct FocusMonitorCmdArgs: CmdArgs {
     /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
-public func parseFocusMonitorCmdArgs(_ args: [String]) -> ParsedCmd<FocusMonitorCmdArgs> {
+public func parseFocusMonitorCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusMonitorCmdArgs> {
     parseSpecificCmdArgs(FocusMonitorCmdArgs(rawArgs: args), args)
         .filter("--wrap-around is incompatible with <monitor-pattern> argument") { !$0.wrapAround || !$0.target.val.isPatterns }
 }
 
-func parseTarget(_ arg: String, _ nextArgs: inout [String]) -> Parsed<MonitorTarget> {
-    switch arg {
+func parseTarget(i: ArgParserInput) -> ParsedCliArgs<MonitorTarget> {
+    switch i.arg {
         case "next":
-            return .success(.relative(.next))
+            return .succ(.relative(.next), advanceBy: 1)
         case "prev":
-            return .success(.relative(.prev))
+            return .succ(.relative(.prev), advanceBy: 1)
         case "left":
-            return .success(.direction(.left))
+            return .succ(.direction(.left), advanceBy: 1)
         case "down":
-            return .success(.direction(.down))
+            return .succ(.direction(.down), advanceBy: 1)
         case "up":
-            return .success(.direction(.up))
+            return .succ(.direction(.up), advanceBy: 1)
         case "right":
-            return .success(.direction(.right))
+            return .succ(.direction(.right), advanceBy: 1)
         default:
-            let args: [String] = [arg] + nextArgs.allNextNonFlagArgs()
-            return args.mapAllOrFailure(parseMonitorDescription).map { .patterns($0) }
+            let args = i.nonFlagArgs()
+            return .init(args.mapAllOrFailure(parseMonitorDescription).map { .patterns($0) }, advanceBy: args.count)
     }
 }
 

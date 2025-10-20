@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-class GlobalObserver {
+enum GlobalObserver {
     private static func onNotif(_ notification: Notification) {
         // Third line of defence against lock screen window. See: closedWindowsCache
         // Second and third lines of defence are technically needed only to avoid potential flickering

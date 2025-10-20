@@ -1,5 +1,5 @@
 /// Stack with most recently element on top
-class MruStack<T: Equatable>: Sequence {
+final class MruStack<T: Equatable>: Sequence {
     typealias Element = T
 
     private var mruNode: Node<T>? = nil
@@ -61,7 +61,7 @@ struct MruStackIterator<T: Equatable>: IteratorProtocol {
     }
 }
 
-private class Node<T: Equatable> {
+private final class Node<T: Equatable> {
     var next: Node<T>? = nil
     let value: T
 

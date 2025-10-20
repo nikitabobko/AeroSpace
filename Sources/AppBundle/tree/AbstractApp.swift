@@ -2,7 +2,7 @@ import Common
 
 protocol AbstractApp: AnyObject, Hashable, AeroAny {
     var pid: Int32 { get }
-    var bundleId: String? { get }
+    var rawAppBundleId: String? { get }
 
     @MainActor func getFocusedWindow() async throws -> Window?
     var name: String? { get }

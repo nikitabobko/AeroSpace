@@ -12,7 +12,7 @@ func parseCommand(_ raw: String) -> ParsedCmd<any Command> {
 }
 
 func parseCommand(_ args: [String]) -> ParsedCmd<any Command> {
-    parseCmdArgs(args).map { $0.toCommand() }
+    parseCmdArgs(args.slice).map { $0.toCommand() }
 }
 
 func expectedActualTypeError(expected: TOMLType, actual: TOMLType) -> String {

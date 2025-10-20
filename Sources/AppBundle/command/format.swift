@@ -121,12 +121,14 @@ extension String {
                     case .windowId: .success(.uint32(w.windowId))
                     case .windowIsFullscreen: .success(.bool(w.isFullscreen))
                     case .windowTitle: .success(.string(title))
+                    case .windowLayout, .windowParentContainerLayout: toLayoutResult(w: w)
                 }
             case (.workspace(let w), .workspace(let f)):
                 return switch f {
                     case .workspaceName: .success(.string(w.name))
                     case .workspaceVisible: .success(.bool(w.isVisible))
                     case .workspaceFocused: .success(.bool(focus.workspace == w))
+                    case .workspaceRootContainerLayout: .success(.string(toLayoutString(tc: w.rootTilingContainer)))
                 }
             case (.monitor(let m), .monitor(let f)):
                 return switch f {
@@ -137,7 +139,7 @@ extension String {
                 }
             case (.app(let a), .app(let f)):
                 return switch f {
-                    case .appBundleId: .success(.string(a.bundleId ?? "NULL-APP-BUNDLE-ID"))
+                    case .appBundleId: .success(.string(a.rawAppBundleId ?? "NULL-APP-BUNDLE-ID"))
                     case .appName: .success(.string(a.name ?? "NULL-APP-NAME"))
                     case .appPid: .success(.int32(a.pid))
                     case .appExecPath: .success(.string(a.execPath ?? "NULL-APP-EXEC-PATH"))
@@ -156,5 +158,29 @@ extension String {
             ?? FormatVar.WorkspaceFormatVar(rawValue: self).flatMap(FormatVar.workspace)
             ?? FormatVar.AppFormatVar(rawValue: self).flatMap(FormatVar.app)
             ?? FormatVar.MonitorFormatVar(rawValue: self).flatMap(FormatVar.monitor)
+    }
+}
+
+private func toLayoutString(tc: TilingContainer) -> String {
+    switch (tc.layout, tc.orientation) {
+        case (.tiles, .h): return LayoutCmdArgs.LayoutDescription.h_tiles.rawValue
+        case (.tiles, .v): return LayoutCmdArgs.LayoutDescription.v_tiles.rawValue
+        case (.accordion, .h): return LayoutCmdArgs.LayoutDescription.h_accordion.rawValue
+        case (.accordion, .v): return LayoutCmdArgs.LayoutDescription.v_accordion.rawValue
+    }
+}
+
+private func toLayoutResult(w: Window) -> Result<Primitive, String> {
+    guard let parent = w.parent else { return .failure("NULL-PARENT") }
+    return switch getChildParentRelation(child: w, parent: parent) {
+        case .tiling(let tc): .success(.string(toLayoutString(tc: tc)))
+        case .floatingWindow: .success(.string(LayoutCmdArgs.LayoutDescription.floating.rawValue))
+        case .macosNativeFullscreenWindow: .success(.string("macos_native_fullscreen"))
+        case .macosNativeHiddenAppWindow: .success(.string("macos_native_window_of_hidden_app"))
+        case .macosNativeMinimizedWindow: .success(.string("macos_native_minimized"))
+        case .macosPopupWindow: .success(.string("NULL-WINDOW-LAYOUT"))
+
+        case .rootTilingContainer: .failure("Not possible")
+        case .shimContainerRelation: .failure("Window cannot have a shim container relation")
     }
 }

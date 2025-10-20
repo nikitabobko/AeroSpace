@@ -30,7 +30,11 @@ final class TestWindow: Window, CustomStringConvertible {
         unbindFromParent()
     }
 
-    override var title: String { description }
+    override var title: String {
+        get async { // redundant async. todo create bug report to Swift
+            description
+        }
+    }
 
     @MainActor override func getAxRect() async throws -> Rect? { // todo change to not Optional
         _rect

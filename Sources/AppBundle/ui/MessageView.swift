@@ -26,7 +26,7 @@ public let messageWindowId = "\(aeroSpaceAppName).messageView"
 
 public struct MessageView: View {
     @StateObject private var model: MessageModel
-    @Environment(\.dismiss) private var dismiss
+    @Environment(\.dismiss) private var dismiss: DismissAction
     @FocusState var focus: Bool
 
     public init(model: MessageModel) {
@@ -58,6 +58,7 @@ public struct MessageView: View {
                         TextEditor(text: cancelOnEnterBinding)
                             .font(.system(size: 12).monospaced())
                             .focused($focus)
+                        //  .onKeyPress(.return) { return .handled } // enter handling alternative. Only available since macOS 14
                         Spacer()
                     }
                     Spacer()
@@ -98,7 +99,7 @@ public struct MessageView: View {
     }
 }
 
-public class MessageModel: ObservableObject {
+public final class MessageModel: ObservableObject {
     @MainActor public static let shared = MessageModel()
     @Published public var message: Message? = nil
 
