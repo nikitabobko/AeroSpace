@@ -21,7 +21,7 @@ public final class TrayMenuModel: ObservableObject {
     TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "[\($0.uppercased())] " } ?? "") +
         sortedMonitors
         .map {
-            let hasFullscreenWindows = $0.activeWorkspace.allLeafWindowsRecursive.map { $0.isFullscreen }.filterNotNil().first { $0 } ?? false
+            let hasFullscreenWindows = $0.activeWorkspace.allLeafWindowsRecursive.contains { $0.isFullscreen }
             let activeWorkspaceName = hasFullscreenWindows ? "(\($0.activeWorkspace.name))" : $0.activeWorkspace.name
             return ($0.activeWorkspace == focus.workspace && sortedMonitors.count > 1 ? "*" : "") + activeWorkspaceName
         }
@@ -34,7 +34,7 @@ public final class TrayMenuModel: ObservableObject {
             case $0.isVisible: dash + $0.workspaceMonitor.name
             default: ""
         }
-        let hasFullscreenWindows = $0.allLeafWindowsRecursive.map { $0.isFullscreen }.filterNotNil().first { $0 } ?? false
+        let hasFullscreenWindows = $0.allLeafWindowsRecursive.contains { $0.isFullscreen }
         return WorkspaceViewModel(
             name: $0.name,
             suffix: suffix,
@@ -45,7 +45,7 @@ public final class TrayMenuModel: ObservableObject {
         )
     }
     var items = sortedMonitors.map {
-        let hasFullscreenWindows = $0.activeWorkspace.allLeafWindowsRecursive.map { $0.isFullscreen }.filterNotNil().first { $0 } ?? false
+        let hasFullscreenWindows = $0.activeWorkspace.allLeafWindowsRecursive.contains { $0.isFullscreen }
         return TrayItem(
             type: .workspace,
             name: $0.activeWorkspace.name,
