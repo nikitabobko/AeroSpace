@@ -6,6 +6,7 @@ import Foundation
     initTerminationHandler()
     isCli = false
     initServerArgs()
+    keepCurrentKeyCodeMapUpToDate()
     if isDebug {
         toggleReleaseServerIfDebug(.off)
         interceptTermination(SIGINT)
