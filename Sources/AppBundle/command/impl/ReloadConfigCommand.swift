@@ -33,6 +33,7 @@ struct ReloadConfigCommand: Command {
                 configUrl = url
                 activateMode(activeMode)
                 syncStartAtLogin()
+                startConfigFileWatcher()
                 MessageModel.shared.message = nil
             }
             return true
