@@ -47,6 +47,13 @@ extension AxUiElementMock {
         // - Drata Agent https://github.com/nikitabobko/AeroSpace/issues/134
         if get(Ax.fullscreenButtonAttr)?.get(Ax.enabledAttr) != true &&
             id != .gimp && // Gimp doesn't show fullscreen button
+
+            // "Drag out" a tab out of Chrome window. Technically, it shouldn't be necessary, but
+            // apparently there is some sort of race condition between users releasing mouse up and
+            // Chrome reactivating the fullscreen button
+            // todo: consider checking for fullscreen cirteria periodically (downside: will affect performance)
+            id != .chrome &&
+
             id != .activityMonitor && // Activity Monitor doesn't show fullscreen button
 
             // Terminal apps and Emacs have an option to hide their title bars

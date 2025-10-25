@@ -2,6 +2,7 @@ enum KnownBundleId: String, Equatable {
 
     case activityMonitor = "com.apple.ActivityMonitor"
     case alacritty = "org.alacritty"
+    case chrome = "com.google.Chrome"
     case emacs = "org.gnu.Emacs"
     case finder = "com.apple.finder"
     case ghostty = "com.mitchellh.ghostty"
