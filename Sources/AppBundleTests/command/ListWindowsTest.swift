@@ -73,4 +73,77 @@ final class ListWindowsTest: XCTestCase {
             assertEquals(windows.format([.interVar("window-id"), .interVar("right-padding"), .literal(" | "), .interVar("window-title")]), .success(["2  | title1", "10 | title2"]))
         }
     }
+
+    func testOrientationInterpolationVariables() {
+        // Test window parent container orientation with horizontal container
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            $0._orientation = .h
+            let window = TestWindow.new(id: 1, parent: $0)
+            let windows = [AeroObj.window(window: window, title: "test")]
+            assertEquals(
+                windows.format([.interVar("window-parent-container-orientation")]),
+                .success(["horizontal"])
+            )
+        }
+
+        // Test window parent container orientation with vertical container
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            $0._orientation = .v
+            let window = TestWindow.new(id: 2, parent: $0)
+            let windows = [AeroObj.window(window: window, title: "test")]
+            assertEquals(
+                windows.format([.interVar("window-parent-container-orientation")]),
+                .success(["vertical"])
+            )
+        }
+
+        // Test workspace root container orientation
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            $0._orientation = .h
+            let workspace = Workspace.get(byName: name)
+            let workspaces = [AeroObj.workspace(workspace)]
+            assertEquals(
+                workspaces.format([.interVar("workspace-root-container-orientation")]),
+                .success(["horizontal"])
+            )
+        }
+
+        // Test workspace root container orientation (vertical)
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            $0._orientation = .v
+            let workspace = Workspace.get(byName: name)
+            let workspaces = [AeroObj.workspace(workspace)]
+            assertEquals(
+                workspaces.format([.interVar("workspace-root-container-orientation")]),
+                .success(["vertical"])
+            )
+        }
+
+        // Test nested containers with different orientations
+        Workspace.get(byName: name).rootTilingContainer.apply { root in
+            root._orientation = .h
+            let nestedContainer = TilingContainer.newVTiles(parent: root, adaptiveWeight: 1, index: 0)
+            let window = TestWindow.new(id: 3, parent: nestedContainer)
+            let windows = [AeroObj.window(window: window, title: "nested")]
+            assertEquals(
+                windows.format([.interVar("window-parent-container-orientation")]),
+                .success(["vertical"])
+            )
+        }
+
+        // Test combined format with orientation and layout
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            $0._orientation = .h
+            let window = TestWindow.new(id: 4, parent: $0)
+            let windows = [AeroObj.window(window: window, title: "combined")]
+            assertEquals(
+                windows.format([
+                    .interVar("window-parent-container-orientation"),
+                    .literal(" | "),
+                    .interVar("window-parent-container-layout")
+                ]),
+                .success(["horizontal | h_tiles"])
+            )
+        }
+    }
 }
