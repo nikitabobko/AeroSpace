@@ -22,7 +22,6 @@ final class ListWorkspacesTest: XCTestCase {
     }
 
     func testWorkspaceRootOrientationVariable() {
-        // Test horizontal workspace root orientation
         Workspace.get(byName: name).rootTilingContainer.apply {
             $0.changeOrientation(.h)
             let workspace = Workspace.get(byName: name)
@@ -33,7 +32,6 @@ final class ListWorkspacesTest: XCTestCase {
             )
         }
 
-        // Test vertical workspace root orientation
         Workspace.get(byName: name).rootTilingContainer.apply {
             $0.changeOrientation(.v)
             let workspace = Workspace.get(byName: name)
@@ -44,7 +42,6 @@ final class ListWorkspacesTest: XCTestCase {
             )
         }
 
-        // Test combined format with orientation and layout
         Workspace.get(byName: name).rootTilingContainer.apply {
             $0.changeOrientation(.h)
             let workspace = Workspace.get(byName: name)

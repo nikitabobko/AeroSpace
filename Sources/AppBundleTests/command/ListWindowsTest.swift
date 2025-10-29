@@ -75,7 +75,6 @@ final class ListWindowsTest: XCTestCase {
     }
 
     func testOrientationInterpolationVariables() {
-        // Test window parent container orientation with horizontal container
         Workspace.get(byName: name).rootTilingContainer.apply {
             $0.changeOrientation(.h)
             let window = TestWindow.new(id: 1, parent: $0)
@@ -86,7 +85,6 @@ final class ListWindowsTest: XCTestCase {
             )
         }
 
-        // Test window parent container orientation with vertical container
         Workspace.get(byName: name).rootTilingContainer.apply {
             $0.changeOrientation(.v)
             let window = TestWindow.new(id: 2, parent: $0)
@@ -97,7 +95,6 @@ final class ListWindowsTest: XCTestCase {
             )
         }
 
-        // Test workspace root container orientation
         Workspace.get(byName: name).rootTilingContainer.apply {
             $0.changeOrientation(.h)
             let workspace = Workspace.get(byName: name)
@@ -108,7 +105,6 @@ final class ListWindowsTest: XCTestCase {
             )
         }
 
-        // Test workspace root container orientation (vertical)
         Workspace.get(byName: name).rootTilingContainer.apply {
             $0.changeOrientation(.v)
             let workspace = Workspace.get(byName: name)
@@ -119,7 +115,6 @@ final class ListWindowsTest: XCTestCase {
             )
         }
 
-        // Test nested containers with different orientations
         Workspace.get(byName: name).rootTilingContainer.apply { root in
             root.changeOrientation(.h)
             let nestedContainer = TilingContainer.newVTiles(parent: root, adaptiveWeight: 1, index: 0)
@@ -131,7 +126,6 @@ final class ListWindowsTest: XCTestCase {
             )
         }
 
-        // Test combined format with orientation and layout
         Workspace.get(byName: name).rootTilingContainer.apply {
             $0.changeOrientation(.h)
             let window = TestWindow.new(id: 4, parent: $0)
