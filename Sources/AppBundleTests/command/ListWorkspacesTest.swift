@@ -29,7 +29,7 @@ final class ListWorkspacesTest: XCTestCase {
             let workspaces = [AeroObj.workspace(workspace)]
             assertEquals(
                 workspaces.format([.interVar("workspace-root-container-orientation")]),
-                .success(["horizontal"])
+                .success(["horizontal"]),
             )
         }
 
@@ -40,7 +40,7 @@ final class ListWorkspacesTest: XCTestCase {
             let workspaces = [AeroObj.workspace(workspace)]
             assertEquals(
                 workspaces.format([.interVar("workspace-root-container-orientation")]),
-                .success(["vertical"])
+                .success(["vertical"]),
             )
         }
 
@@ -55,9 +55,9 @@ final class ListWorkspacesTest: XCTestCase {
                     .literal(" | "),
                     .interVar("workspace-root-container-orientation"),
                     .literal(" | "),
-                    .interVar("workspace-root-container-layout")
+                    .interVar("workspace-root-container-layout"),
                 ]),
-                .success(["\(name) | horizontal | h_tiles"])
+                .success(["\(name) | horizontal | h_tiles"]),
             )
         }
     }

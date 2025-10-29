@@ -82,7 +82,7 @@ final class ListWindowsTest: XCTestCase {
             let windows = [AeroObj.window(window: window, title: "test")]
             assertEquals(
                 windows.format([.interVar("window-parent-container-orientation")]),
-                .success(["horizontal"])
+                .success(["horizontal"]),
             )
         }
 
@@ -93,7 +93,7 @@ final class ListWindowsTest: XCTestCase {
             let windows = [AeroObj.window(window: window, title: "test")]
             assertEquals(
                 windows.format([.interVar("window-parent-container-orientation")]),
-                .success(["vertical"])
+                .success(["vertical"]),
             )
         }
 
@@ -104,7 +104,7 @@ final class ListWindowsTest: XCTestCase {
             let workspaces = [AeroObj.workspace(workspace)]
             assertEquals(
                 workspaces.format([.interVar("workspace-root-container-orientation")]),
-                .success(["horizontal"])
+                .success(["horizontal"]),
             )
         }
 
@@ -115,7 +115,7 @@ final class ListWindowsTest: XCTestCase {
             let workspaces = [AeroObj.workspace(workspace)]
             assertEquals(
                 workspaces.format([.interVar("workspace-root-container-orientation")]),
-                .success(["vertical"])
+                .success(["vertical"]),
             )
         }
 
@@ -127,7 +127,7 @@ final class ListWindowsTest: XCTestCase {
             let windows = [AeroObj.window(window: window, title: "nested")]
             assertEquals(
                 windows.format([.interVar("window-parent-container-orientation")]),
-                .success(["vertical"])
+                .success(["vertical"]),
             )
         }
 
@@ -140,9 +140,9 @@ final class ListWindowsTest: XCTestCase {
                 windows.format([
                     .interVar("window-parent-container-orientation"),
                     .literal(" | "),
-                    .interVar("window-parent-container-layout")
+                    .interVar("window-parent-container-layout"),
                 ]),
-                .success(["horizontal | h_tiles"])
+                .success(["horizontal | h_tiles"]),
             )
         }
     }
