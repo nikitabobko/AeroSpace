@@ -1,18 +1,18 @@
 public struct FocusCmdArgs: CmdArgs {
-    public let rawArgs: EquatableNoop<[String]>
-    fileprivate init(rawArgs: [String]) { self.rawArgs = .init(rawArgs) }
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    fileprivate init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .focus,
         allowInConfig: true,
         help: focus_help_generated,
-        options: [
+        flags: [
             "--ignore-floating": falseBoolFlag(\.floatingAsTiling),
-            "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
-            "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
-            "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseArgWithUInt32)),
-            "--dfs-index": ArgParser(\.dfsIndex, upcastArgParserFun(parseArgWithUInt32)),
+            "--boundaries": SubArgParser(\.rawBoundaries, upcastSubArgParserFun(parseBoundaries)),
+            "--boundaries-action": SubArgParser(\.rawBoundariesAction, upcastSubArgParserFun(parseBoundariesAction)),
+            "--window-id": SubArgParser(\.windowId, upcastSubArgParserFun(parseUInt32SubArg)),
+            "--dfs-index": SubArgParser(\.dfsIndex, upcastSubArgParserFun(parseUInt32SubArg)),
         ],
-        arguments: [ArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
+        posArgs: [ArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
     )
 
     public var rawBoundaries: Boundaries? = nil // todo cover boundaries wrapping with tests
@@ -23,18 +23,18 @@ public struct FocusCmdArgs: CmdArgs {
     /*conforms*/ public var windowId: UInt32?
     /*conforms*/ public var workspaceName: WorkspaceName?
 
-    public init(rawArgs: [String], cardinalOrDfsDirection: CardinalOrDfsDirection) {
-        self.rawArgs = .init(rawArgs)
+    public init(rawArgs: StrArrSlice, cardinalOrDfsDirection: CardinalOrDfsDirection) {
+        self.rawArgsForStrRepr = .init(rawArgs)
         self.cardinalOrDfsDirection = cardinalOrDfsDirection
     }
 
-    public init(rawArgs: [String], windowId: UInt32) {
-        self.rawArgs = .init(rawArgs)
+    public init(rawArgs: StrArrSlice, windowId: UInt32) {
+        self.rawArgsForStrRepr = .init(rawArgs)
         self.windowId = windowId
     }
 
-    public init(rawArgs: [String], dfsIndex: UInt32) {
-        self.rawArgs = .init(rawArgs)
+    public init(rawArgs: StrArrSlice, dfsIndex: UInt32) {
+        self.rawArgsForStrRepr = .init(rawArgs)
         self.dfsIndex = dfsIndex
     }
 
@@ -86,7 +86,7 @@ extension FocusCmdArgs {
     public var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .stop }
 }
 
-public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
+public func parseFocusCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusCmdArgs> {
     return parseSpecificCmdArgs(FocusCmdArgs(rawArgs: args), args)
         .flatMap { (raw: FocusCmdArgs) -> ParsedCmd<FocusCmdArgs> in
             raw.boundaries == .workspace && raw.boundariesAction == .wrapAroundAllMonitors
@@ -107,18 +107,18 @@ public func parseFocusCmdArgs(_ args: [String]) -> ParsedCmd<FocusCmdArgs> {
         }
 }
 
-private func parseBoundariesAction(arg: String, nextArgs: inout [String]) -> Parsed<FocusCmdArgs.WhenBoundariesCrossed> {
-    if let arg = nextArgs.nextNonFlagOrNil() {
-        return parseEnum(arg, FocusCmdArgs.WhenBoundariesCrossed.self)
+private func parseBoundariesAction(i: SubArgParserInput) -> ParsedCliArgs<FocusCmdArgs.WhenBoundariesCrossed> {
+    if let arg = i.nonFlagArgOrNil() {
+        return .init(parseEnum(arg, FocusCmdArgs.WhenBoundariesCrossed.self), advanceBy: 1)
     } else {
-        return .failure("<action> is mandatory")
+        return .fail("<action> is mandatory", advanceBy: 0)
     }
 }
 
-private func parseBoundaries(arg: String, nextArgs: inout [String]) -> Parsed<FocusCmdArgs.Boundaries> {
-    if let arg = nextArgs.nextNonFlagOrNil() {
-        return parseEnum(arg, FocusCmdArgs.Boundaries.self)
+private func parseBoundaries(i: SubArgParserInput) -> ParsedCliArgs<FocusCmdArgs.Boundaries> {
+    if let arg = i.nonFlagArgOrNil() {
+        return .init(parseEnum(arg, FocusCmdArgs.Boundaries.self), advanceBy: 1)
     } else {
-        return .failure("<boundary> is mandatory")
+        return .fail("<boundary> is mandatory", advanceBy: 0)
     }
 }

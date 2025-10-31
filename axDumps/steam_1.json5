@@ -1,0 +1,73 @@
+// Steam is weird. It shows one visible window, but creates 2 AX objects.
+// AeroSpace has to deliberatery ignore the redundant AX object to avoid weird focus issues
+// ./steam_1.json5 -- valid AX object
+// ./steam_2.json5 -- weird AX object
+{
+  "AXActivationPoint" : "<AXValue 0x6000026ef030> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x600003d182c0> {value = x:386.000000 y:131.000000 w:1028.000000 h:864.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x6000026ef030> {pid=10146}",
+  "AXPosition" : "<AXValue 0x6000026184e0> {value = x:386.000000 y:131.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+
+  ],
+  "AXSize" : "<AXValue 0x6000026ef030> {value = w:1028.000000 h:864.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "Steam",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : null,
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=2170, title=\"Steam\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=2170, title=\"Steam\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : null,
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Steam Helper",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=2170, title=\"Steam\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXFocusedUIElement, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
+    "Aero.AxWritable" : "AXFrontmost"
+  },
+  "Aero.App.appBundleId" : "com.valvesoftware.steam.helper",
+  "Aero.App.nsApp.activationPolicy" : "accessory",
+  "Aero.App.nsApp.execPath" : "file:///Users/bobko/Library/Application%20Support/Steam/Steam.AppBundle/Steam/Contents/Frameworks/Steam%20Helper.app/Contents/MacOS/Steam%20Helper",
+  "Aero.App.pid" : 10146,
+  "Aero.App.version" : "1650.57",
+  "Aero.App.versionShort" : "31.0.1650.57",
+  "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, get.AXMinimizeButton, get.AXDocument, get.AXCloseButton, isWritable.AXActivationPoint, get.AXFullScreenButton, get.AXProxy, get.AXDefaultButton, get.AXTitleUIElement, get.AXCancelButton, get.AXZoomButton, get.AXToolbarButton",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "window",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
+  "Aero.AxWritable" : "AXFullScreen, AXPosition, AXSections, AXMain, AXMinimized, AXSize",
+  "Aero.axWindowId" : 2170,
+  "Aero.macOS.version" : "Version 15.6.1 (Build 24G90)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.TilingContainer)",
+  "Aero.workspace" : "1"
+}

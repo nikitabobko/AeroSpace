@@ -16,7 +16,7 @@ public func dieT<T>(
     file: String = #fileID,
     line: Int = #line,
     column: Int = #column,
-    function: String = #function
+    function: String = #function,
 ) -> T {
     let _message = __message.contains("\n") ? "\n" + __message.prefixLines(with: "    ") : __message
     let thread = Thread.current

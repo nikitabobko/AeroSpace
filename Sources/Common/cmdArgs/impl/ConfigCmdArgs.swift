@@ -1,18 +1,18 @@
 public struct ConfigCmdArgs: CmdArgs, Equatable {
-    public let rawArgs: EquatableNoop<[String]>
+    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .config,
         allowInConfig: false,
         help: config_help_generated,
-        options: [
+        flags: [
             "--json": trueBoolFlag(\.json),
             "--keys": trueBoolFlag(\.keys),
             "--major-keys": trueBoolFlag(\.majorKeys),
             "--all-keys": trueBoolFlag(\.allKeys),
             "--config-path": trueBoolFlag(\.configPath),
-            "--get": singleValueOption(\.keyNameToGet, "<name>") { $0 },
+            "--get": singleValueSubArgParser(\.keyNameToGet, "<name>") { $0 },
         ],
-        arguments: [],
+        posArgs: [],
     )
 
     public var json: Bool = false
@@ -39,8 +39,8 @@ extension ConfigCmdArgs {
     }
 }
 
-public func parseConfigCmdArgs(_ args: [String]) -> ParsedCmd<ConfigCmdArgs> {
-    parseSpecificCmdArgs(ConfigCmdArgs(rawArgs: .init(args)), args)
+public func parseConfigCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ConfigCmdArgs> {
+    parseSpecificCmdArgs(ConfigCmdArgs(rawArgsForStrRepr: .init(args)), args)
         .flatMap { raw in
             var conflicting: Set<String> = []
             if raw.keyNameToGet != nil { conflicting.insert("--get") }

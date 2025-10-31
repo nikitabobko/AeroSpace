@@ -14,7 +14,7 @@ let usage =
 @main
 struct Main {
     static func main() {
-        let args: [String] = Array(CommandLine.arguments.dropFirst())
+        let args = CommandLine.arguments.slice(1...) ?? []
 
         if args.isEmpty {
             printStderr(usage)
@@ -26,11 +26,11 @@ struct Main {
         }
 
         let isVersion: Bool = args.first == "--version" || args.first == "-v"
-
+        var parsedArgs: (any CmdArgs)! = nil
         if !isVersion {
             switch parseCmdArgs(args) {
-                case .cmd:
-                    break
+                case .cmd(let _parsedArgs):
+                    parsedArgs = _parsedArgs
                 case .help(let help):
                     print(help)
                     exit(0)
@@ -55,7 +55,19 @@ struct Main {
         }
 
         var stdin = ""
-        if hasStdin() {
+        if (parsedArgs is WorkspaceCmdArgs || parsedArgs is MoveNodeToWorkspaceCmdArgs) && hasStdin() {
+            if parsedArgs is WorkspaceCmdArgs && (parsedArgs as! WorkspaceCmdArgs).explicitStdinFlag == nil ||
+                parsedArgs is MoveNodeToWorkspaceCmdArgs && (parsedArgs as! MoveNodeToWorkspaceCmdArgs).explicitStdinFlag == nil
+            {
+                cliError(
+                    """
+                    ERROR: Implicit stdin is detected (stdin is not TTY). Implicit stdin was forbidden in AeroSpace v0.20.0.
+                    1. Please supply '--stdin' flag to make stdin explicit and preserve old AeroSpace behavior
+                    2. You can also use '--no-stdin' flag to behave as if no stdin was supplied
+                    Breaking change issue: https://github.com/nikitabobko/AeroSpace/issues/1683
+                    """,
+                )
+            }
             var index = 0
             while let line = readLine(strippingNewline: false) {
                 stdin += line
@@ -99,8 +111,8 @@ func printVersionAndExit(serverVersion: String?) -> Never {
     exit(0)
 }
 
-func run(_ socket: Socket, _ args: [String], stdin: String) -> ServerAnswer {
-    let request = Result { try JSONEncoder().encode(ClientRequest(args: args, stdin: stdin)) }.getOrDie()
+func run(_ socket: Socket, _ args: StrArrSlice, stdin: String) -> ServerAnswer {
+    let request = Result { try JSONEncoder().encode(ClientRequest(args: args.toArray(), stdin: stdin)) }.getOrDie()
     Result { try socket.write(from: request) }.getOrDie()
     Result { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrDie()
 

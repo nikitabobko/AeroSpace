@@ -477,17 +477,13 @@ Available window conditions are:
 
 |===
 
-IMPORTANT: Some windows set their title after the window appears, causing match issues for `window-title-regex-substring`
-
-[NOTE]
-====
 * If no conditions are specified, the `run` commands will execute for every new window
 * To find an application's `app-id`:
-** Refer to our xref:./goodies.adoc#popular-apps-ids[list of popular application IDs]
+** Refer to our xref:./goodies.adoc#popular-apps-ids[list of Apple application IDs]
 ** Use the xref:commands.adoc#list-apps[`aerospace list-apps`] CLI command to list running application IDs
 ** Run `mdls -name kMDItemCFBundleIdentifier -r /Applications/<App>.app` for the ID of a specific app
-====
 
+IMPORTANT: Some windows set their title after the window appears, causing match issues for `window-title-regex-substring`
 
 ==== Example automations
 

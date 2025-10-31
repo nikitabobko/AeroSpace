@@ -136,10 +136,25 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
   Ricing issues are not a priority, and they are mostly ignored.
   The ricing stance can change only with the appearance of more maintainers.
 
+## macOS compatibility table
+
+|                                                                                | macOS 13 (Ventura) | macOS 14 (Sonoma) | macOS 15 (Sequoia) | macOS 26 (Tahoe) |
+| ------------------------------------------------------------------------------ | ------------------ | ----------------- | ------------------ | ---------------- |
+| AeroSpace binary runs on ...                                                   | +                  | +                 | +                  | +                |
+| AeroSpace debug build from sources is supported on ...                         |                    | +                 | +                  | +                |
+| AeroSpace release build from sources is supported on ... (Requires Xcode 26+)  |                    |                   | +                  | +                |
+
 ## Sponsorship
 
 AeroSpace is developed and maintained in my free time.
 If you find it useful, [consider sponsoring](https://github.com/sponsors/nikitabobko#sponsors).
+
+## People who have write access
+
+In alphabetical order:
+
+- [@mobile-ar](https://github.com/mobile-ar/)
+- [@nikitabobko](https://github.com/nikitabobko/)
 
 ## Tip of the day
 

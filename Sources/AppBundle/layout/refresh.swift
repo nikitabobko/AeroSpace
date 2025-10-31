@@ -38,6 +38,7 @@ func runRefreshSessionBlocking(
             gcMonitors()
 
             updateTrayText()
+            SecureInputPanel.shared.refresh()
             try await normalizeLayoutReason()
             if shouldLayoutWorkspaces { try await layoutWorkspaces() }
         }
@@ -48,7 +49,7 @@ func runRefreshSessionBlocking(
 func runSession<T>(
     _ event: RefreshSessionEvent,
     _ token: RunSessionGuard,
-    body: @MainActor () async throws -> T
+    body: @MainActor () async throws -> T,
 ) async throws -> T {
     let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
     defer { signposter.endInterval(#function, state) }
@@ -68,6 +69,7 @@ func runSession<T>(
             let focusAfter = focus.windowOrNil
 
             updateTrayText()
+            SecureInputPanel.shared.refresh()
             try await layoutWorkspaces()
             if focusBefore != focusAfter {
                 focusAfter?.nativeFocus() // syncFocusToMacOs

@@ -1,12 +1,12 @@
 // Top right corner -> Extensions
 {
-  "AXActivationPoint" : "<AXValue 0x6000018d0bd0> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXActivationPoint" : "<AXValue 0x600003c95140> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
   "AXCancelButton" : null,
   "AXCloseButton" : null,
   "AXDefaultButton" : null,
   "AXDocument" : null,
   "AXFocused" : 0,
-  "AXFrame" : "<AXValue 0x6000002b1fc0> {value = x:1227.000000 y:124.000000 w:379.000000 h:868.000000 type = kAXValueCGRectType}",
+  "AXFrame" : "<AXValue 0x600002708600> {value = x:1257.000000 y:125.000000 w:379.000000 h:1045.000000 type = kAXValueCGRectType}",
   "AXFullScreen" : 0,
   "AXFullScreenButton" : null,
   "AXGrowArea" : null,
@@ -14,14 +14,15 @@
   "AXMinimizeButton" : null,
   "AXMinimized" : 0,
   "AXModal" : 0,
-  "AXParent" : "<AXUIElement Application 0x60000194ff90> {pid=1405}",
-  "AXPosition" : "<AXValue 0x60000194fe40> {value = x:1227.000000 y:124.000000 type = kAXValueCGPointType}",
+  "AXParent" : "<AXUIElement Application 0x600003cac870> {pid=15478}",
+  "AXPosition" : "<AXValue 0x600003c95140> {value = x:1257.000000 y:125.000000 type = kAXValueCGPointType}",
   "AXProxy" : null,
   "AXRole" : "AXWindow",
   "AXSections" : [
-
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x600003cacc00> {pid=15478}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x600003cacd80> {pid=15478}\";\n    SectionUniqueID = AXContainer;\n}"
   ],
-  "AXSize" : "<AXValue 0x6000018d0bd0> {value = w:379.000000 h:868.000000 type = kAXValueCGSizeType}",
+  "AXSize" : "<AXValue 0x600003ccf8d0> {value = w:379.000000 h:1045.000000 type = kAXValueCGSizeType}",
   "AXSubrole" : "AXUnknown",
   "AXTitle" : "",
   "AXTitleUIElement" : null,
@@ -29,37 +30,43 @@
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=13054, title=nil, role=\"AXWebArea\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=13054, title=\"The small float tips in firefox will be trated as a window in v0.17.0-Beta · nikitabobko/AeroSpace · Discussion #1115\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=1499, title=\"\", role=\"AXWebArea\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=1499, title=\"REDACTED\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=13054, title=\"The small float tips in firefox will be trated as a window in v0.17.0-Beta · nikitabobko/AeroSpace · Discussion #1115\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXMenuBar" : "<AXUIElement 0x6000018cef10> {pid=1405}",
+    "AXMainWindow" : "AXUIElement(AxWindowId=1499, title=\"REDACTED\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x600003c424f0> {pid=15478}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Firefox",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=14433, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-      "AXUIElement(AxWindowId=13054, title=\"The small float tips in firefox will be trated as a window in v0.17.0-Beta · nikitabobko/AeroSpace · Discussion #1115\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(AxWindowId=2198, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(AxWindowId=1499, title=\"REDACTED\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     ],
-    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+    "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
+    "Aero.AxWritable" : "AXFrontmost"
   },
   "Aero.App.appBundleId" : "org.mozilla.firefox",
   "Aero.App.nsApp.activationPolicy" : "regular",
   "Aero.App.nsApp.execPath" : "file:///Applications/Firefox.app/Contents/MacOS/firefox",
-  "Aero.App.version" : "13725.4.14",
-  "Aero.App.versionShort" : "137.0.2",
+  "Aero.App.pid" : 15478,
+  "Aero.App.version" : "14225.8.11",
+  "Aero.App.versionShort" : "142.0",
+  "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, get.AXMinimizeButton, get.AXDocument, get.AXCloseButton, isWritable.AXActivationPoint, get.AXFullScreenButton, get.AXProxy, get.AXDefaultButton, get.AXTitleUIElement, get.AXCancelButton, get.AXZoomButton, get.AXToolbarButton",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 14433,
-  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxUiElementWindowType" : "popup",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxWritable" : "AXPosition, AXSections",
+  "Aero.axWindowId" : 2198,
+  "Aero.macOS.version" : "Version 15.6.1 (Build 24G90)",
   "Aero.on-window-detected" : [
 
   ],
-  "Aero.treeNodeParent" : "AppBundle.MacosPopupWindowsContainer",
-  "Aero.workspace" : "nil"
+  "Aero.treeNodeParent" : "Optional(AppBundle.MacosPopupWindowsContainer)",
+  "Aero.workspace" : null
 }

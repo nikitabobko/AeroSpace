@@ -79,6 +79,8 @@ The following variables can be used inside `<output-format>`:
 %{window-id}:: Number. Window unique ID
 %{window-title}:: String. Window title
 %{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aerospace fullscreen` command
+%{window-layout}:: String. Alias for `%{window-parent-container-layout}`
+%{window-parent-container-layout}:: String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`, `floating`) of the window's parent container.
 
 %{app-bundle-id}:: String. Application unique identifier. https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
 %{app-name}:: String. Application name
@@ -89,10 +91,12 @@ The following variables can be used inside `<output-format>`:
 %{workspace}:: String. Name of the belonging workspace
 %{workspace-is-focused}:: Boolean. True if the workspace has focus
 %{workspace-is-visible}:: Boolean. True if the workspace is visible. A workspace can be visible but not focused in a multi-monitor setup
+%{workspace-root-container-layout}:: String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`) of the workspace the window belongs to.
 
 %{monitor-id}:: 1-based Number. Sequential number of the belonging monitor.
 %{monitor-appkit-nsscreen-screens-id}:: 1-based index of the belonging monitor in `NSScreen.screens` array. Useful for integration with other tools that might be using `NSScreen.screens` ordering (like sketchybar).
 %{monitor-name}:: String. Name of the belonging monitor
+%{monitor-is-main}:: Boolean. True if the monitor is main.
 
 %{right-padding}:: A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column
 %{newline}:: Unicode U+000A newline symbol `\n`

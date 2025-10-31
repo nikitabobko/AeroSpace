@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-public class TrayMenuModel: ObservableObject {
+public final class TrayMenuModel: ObservableObject {
     @MainActor public static let shared = TrayMenuModel()
 
     private init() {}
@@ -12,6 +12,7 @@ public class TrayMenuModel: ObservableObject {
     @Published var isEnabled: Bool = true
     @Published var workspaces: [WorkspaceViewModel] = []
     @Published var experimentalUISettings: ExperimentalUISettings = ExperimentalUISettings()
+    @Published var sponsorshipMessage: String = sponsorshipPrompts.randomElement().orDie()
 }
 
 @MainActor func updateTrayText() {
@@ -20,7 +21,9 @@ public class TrayMenuModel: ObservableObject {
     TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "[\($0.uppercased())] " } ?? "") +
         sortedMonitors
         .map {
-            ($0.activeWorkspace == focus.workspace && sortedMonitors.count > 1 ? "*" : "") + $0.activeWorkspace.name
+            let hasFullscreenWindows = $0.activeWorkspace.allLeafWindowsRecursive.contains { $0.isFullscreen }
+            let activeWorkspaceName = hasFullscreenWindows ? "(\($0.activeWorkspace.name))" : $0.activeWorkspace.name
+            return ($0.activeWorkspace == focus.workspace && sortedMonitors.count > 1 ? "*" : "") + activeWorkspaceName
         }
         .joined(separator: " │ ")
     TrayMenuModel.shared.workspaces = Workspace.all.map {
@@ -31,18 +34,28 @@ public class TrayMenuModel: ObservableObject {
             case $0.isVisible: dash + $0.workspaceMonitor.name
             default: ""
         }
+        let hasFullscreenWindows = $0.allLeafWindowsRecursive.contains { $0.isFullscreen }
         return WorkspaceViewModel(
             name: $0.name,
             suffix: suffix,
             isFocused: focus.workspace == $0,
             isEffectivelyEmpty: $0.isEffectivelyEmpty,
             isVisible: $0.isVisible,
+            hasFullscreenWindows: hasFullscreenWindows,
         )
     }
     var items = sortedMonitors.map {
-        TrayItem(type: .workspace, name: $0.activeWorkspace.name, isActive: $0.activeWorkspace == focus.workspace)
+        let hasFullscreenWindows = $0.activeWorkspace.allLeafWindowsRecursive.contains { $0.isFullscreen }
+        return TrayItem(
+            type: .workspace,
+            name: $0.activeWorkspace.name,
+            isActive: $0.activeWorkspace == focus.workspace,
+            hasFullscreenWindows: hasFullscreenWindows,
+        )
     }
-    let mode = activeMode?.takeIf { $0 != mainModeId }?.first.map { TrayItem(type: .mode, name: $0.uppercased(), isActive: true) }
+    let mode = activeMode?.takeIf { $0 != mainModeId }?.first.map {
+        TrayItem(type: .mode, name: $0.uppercased(), isActive: true, hasFullscreenWindows: false)
+    }
     if let mode {
         items.insert(mode, at: 0)
     }
@@ -55,6 +68,7 @@ struct WorkspaceViewModel: Hashable {
     let isFocused: Bool
     let isEffectivelyEmpty: Bool
     let isVisible: Bool
+    let hasFullscreenWindows: Bool
 }
 
 enum TrayItemType: String, Hashable {
@@ -68,6 +82,7 @@ struct TrayItem: Hashable, Identifiable {
     let type: TrayItemType
     let name: String
     let isActive: Bool
+    let hasFullscreenWindows: Bool
     var systemImageName: String? {
         // System image type is only valid for numbers 0 to 50 and single capital char workspace name
         if let number = Int(name) {

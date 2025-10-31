@@ -1,54 +1,114 @@
 // https://www.pinterest.com -> Sign in with Google
 {
-  "AXContents" : [
-    "AXUIElement(AxWindowId=14676, title=nil, role=\"AXTable\", subrole=nil)"
-  ],
+  "AXActivationPoint" : "<AXValue 0x6000018badc0> {value = x:720.000000 y:323.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxFailed" : "get.AXTitle",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
   "AXFocused" : 0,
-  "AXFrame" : "<AXValue 0x6000002e3dc0> {value = x:669.000000 y:664.000000 w:182.000000 h:53.000000 type = kAXValueCGRectType}",
-  "AXHorizontalScrollBar" : null,
-  "AXMakeScreenRectVisible" : null,
-  "AXParent" : "<AXUIElement Application 0x600001924000> {pid=45941}",
-  "AXPosition" : "<AXValue 0x6000019278d0> {value = x:669.000000 y:664.000000 type = kAXValueCGPointType}",
-  "AXRole" : "AXScrollArea",
-  "AXSize" : "<AXValue 0x600001924000> {value = w:182.000000 h:53.000000 type = kAXValueCGSizeType}",
-  "AXTopLevelUIElement" : null,
-  "AXVerticalScrollBar" : null,
-  "AXWindow" : null,
+  "AXFrame" : "<AXValue 0x60000033cbc0> {value = x:650.000000 y:309.000000 w:500.000000 h:550.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : {
+    "AXEnabled" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxFailed" : "get.AXTitle",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXGrowArea" : null,
+  "AXIdentifier" : "SafariWindow?IsSecure=true&UUID=5741B7F9-21AF-426C-B8AA-6DE263C3792B",
+  "AXMain" : 1,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxFailed" : "get.AXTitle",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x6000018bc330> {pid=16736}",
+  "AXPosition" : "<AXValue 0x6000018badc0> {value = x:650.000000 y:309.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x6000018bd200> {pid=16736}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionDescription = \"Top Level Navigator\";\n    SectionObject = \"<AXUIElement 0x6000018bd1a0> {pid=16736}\";\n    SectionUniqueID = AXTopLevelNavigator;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600001812730> {value = w:500.000000 h:550.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "Sign in - Google Accounts",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXFullScreenButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxFailed" : "get.AXTitle",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "<AXUIElement 0x60000193ad60> {pid=46016}",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=14671, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "<AXUIElement 0x6000018121f0> {pid=16759}",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
     "AXIsScribbleActive" : 0,
-    "AXMainWindow" : "AXUIElement(AxWindowId=14671, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXMenuBar" : "<AXUIElement 0x6000018e3690> {pid=45941}",
+    "AXMainWindow" : "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x6000018bd170> {pid=16736}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "Safari",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=14676, title=nil, role=\"AXScrollArea\", subrole=nil)",
-      "AXUIElement(AxWindowId=14671, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-      "AXUIElement(AxWindowId=14665, title=\"Pinterest\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(AxWindowId=2210, title=\"Sign in - Google Accounts\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(AxWindowId=2204, title=\"Pinterest\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
-    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+    "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, isWritable.AXIsScribbleActive, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
+    "Aero.AxWritable" : "AXFrontmost"
   },
   "Aero.App.appBundleId" : "com.apple.Safari",
   "Aero.App.nsApp.activationPolicy" : "regular",
   "Aero.App.nsApp.execPath" : "file:///System/Volumes/Preboot/Cryptexes/App/System/Applications/Safari.app/Contents/MacOS/Safari",
-  "Aero.App.version" : "20621.1.15.11.10",
-  "Aero.App.versionShort" : "18.4",
-  "Aero.AxIgnored" : "AXChildren, AXHelp, AXChildrenInNavigationOrder, AXRoleDescription",
-  "Aero.axWindowId" : 14676,
+  "Aero.App.pid" : 16736,
+  "Aero.App.version" : "20621.3.11.11.3",
+  "Aero.App.versionShort" : "18.6",
+  "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, get.AXDocument, isWritable.AXActivationPoint, get.AXProxy, get.AXDefaultButton, get.AXTitleUIElement, get.AXCancelButton, get.AXToolbarButton",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "dialog",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
-  "Aero.AxUiElementWindowType" : "popup",
+  "Aero.AxWritable" : "AXFullScreen, AXPosition, AXSections, AXMain, AXMinimized, AXSize",
+  "Aero.axWindowId" : 2210,
+  "Aero.macOS.version" : "Version 15.6.1 (Build 24G90)",
   "Aero.on-window-detected" : [
 
   ],
-  "Aero.treeNodeParent" : "AppBundle.MacosPopupWindowsContainer",
-  "Aero.workspace" : "nil"
+  "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
+  "Aero.workspace" : "1"
 }

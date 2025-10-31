@@ -1,4 +1,4 @@
-name: Build
+name: build
 
 on:
   push:
@@ -11,49 +11,52 @@ on:
     - cron: '0 0 * * *' # every day at 00:00
 
 jobs:
-  build:
+
+  build-debug:
     strategy:
       # fail-fast: false # Disable fail-fast in matrix
       matrix:
-        # https://docs.github.com/en/actions/using-github-hosted-runners/using-github-hosted-runners/about-github-hosted-runners#standard-github-hosted-runners-for-public-repositories
-        # https://github.com/actions/runner-images/blob/main/images/macos/macos-13-Readme.md
+        # https://docs.github.com/en/actions/reference/runners/github-hosted-runners#standard-github-hosted-runners-for-public-repositories
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-14-arm64-Readme.md
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-15-arm64-Readme.md
+        # https://github.com/actions/runner-images/blob/main/images/macos/macos-26-arm64-Readme.md
         #
         # Xcode versions:
         # - https://en.wikipedia.org/wiki/Xcode
         # - https://xcodereleases.com/?scope=release
-        os: [macos-13, macos-14, macos-15]
-    name: Build
+        os: [macos-14, macos-15, macos-26]
+    name: build-debug
     runs-on: ${{ matrix.os }}
-
     steps:
       - run: env # Debug
       - uses: actions/checkout@v3
-      - name: xcode-select
-        run: |
-          sw_vers -productVersion
-          if sw_vers -productVersion | grep -q "^13"; then # macOS 13
-            true # Xcode 16 is not supported on macOS 13 :(
-          else
-            sudo xcode-select -s "$XCODE_16_DEVELOPER_DIR" # Affects macOS SDK
-          fi
-      - run: brew update && brew install bash fish xcbeautify swiftly
+      - run: ./.github/gh-actions-runner-xcode-select.sh
+      - run: brew install swiftly
       - run: swiftly init --skip-install --assume-yes --verbose && swiftly install
-      - run: ./script/install-dep.sh --all
       - run: ./build-debug.sh
       - run: ./run-tests.sh
-        # We build release artifacts only on the latest macOS because:
-        # 1. It cuts the build time twice on GH Actions
-        # 2. The latest Xcode version is not available on old macOS, and old Xcode versions bundle too old Swift version
-      - name: './build-release.sh # on macos-15'
+
+  # We build release artifacts only on the latest macOS versions because:
+  # 1. It cuts the build time twice on GH Actions
+  # 2. The latest Xcode version is not available on old macOS, and old Xcode versions bundle too old Swift version
+  build-release:
+    strategy:
+      # fail-fast: false # Disable fail-fast in matrix
+      matrix:
+        os: [macos-15, macos-26]
+    name: build-release
+    runs-on: ${{ matrix.os }}
+    steps:
+      - run: env # Debug
+      - uses: actions/checkout@v3
+      - run: ./.github/gh-actions-runner-xcode-select.sh
+      - run: brew install bash fish xcbeautify swiftly
+      - run: swiftly init --skip-install --assume-yes --verbose && swiftly install
+      - name: './build-release.sh'
         run: |
-          sw_vers -productVersion
-          if sw_vers -productVersion | grep -q "^15"; then
-            # "-" means "Sign to run locally". There is no aerospace-codesign-certificate on GH Actions
-            ./build-release.sh --codesign-identity -
-            ./install-from-sources.sh --dont-rebuild
-          fi
+          # "-" means "Sign to run locally". There is no aerospace-codesign-certificate on GH Actions
+          ./build-release.sh --codesign-identity -
+          ./install-from-sources.sh --dont-rebuild
       - name: cat ./.release/xcodebuild.log
         if: ${{ always() }}
         run: 'if test -f ./.release/xcodebuild.log; then cat ./.release/xcodebuild.log; fi'

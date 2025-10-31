@@ -127,6 +127,29 @@ else
 fi
 ----
 
+[#show-aerospace-workspaces-in-simple-bar]
+== Show AeroSpace workspaces in simple-bar
+
+link:https://github.com/Jean-Tinland/simple-bar[simple-bar] can be used to display AeroSpace workspaces.
+
+In order to sync simple-bar with AeroSpace, add these lines to your AeroSpace config file:
+
+.~/.aerospace.toml
+[source,toml]
+----
+# Notify simple-bar about window focus change
+on-focus-changed = [
+  "exec-and-forget osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\"'",
+]
+
+# Notify simple-bar about workspace change
+exec-on-workspace-change = [
+  '/bin/zsh',
+  '-c',
+  '/usr/bin/osascript -e "tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\""',
+]
+----
+
 [#open-a-new-window-with-applescript]
 == Open a new window with AppleScript
 
@@ -194,7 +217,7 @@ include::config-examples/i3-like-config-example.toml[]
 ----
 
 [#popular-apps-ids]
-== List of popular and built-in applications IDs
+== List of Apple application IDs
 
 The list is useful to compose custom xref:guide.adoc#on-window-detected-callback[on-window-detected callback].
 
@@ -202,92 +225,53 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |===
 |Application name|Application ID
 
-|1Password|`com.1password.1password`
 |Activity Monitor|`com.apple.ActivityMonitor`
 |AirPort Utility|`com.apple.airport.airportutility`
-|Alacritty|`org.alacritty`
-|Android Studio|`com.google.android.studio`
 |App Store|`com.apple.AppStore`
-|AppCode|`com.jetbrains.AppCode`
-|Arc Browser|`company.thebrowser.Browser`
 |Audio MIDI Setup|`com.apple.audio.AudioMIDISetup`
 |Automator|`com.apple.Automator`
-|Battle.net|`net.battle.app`
 |Books|`com.apple.iBooksX`
-|Brave|`com.brave.Browser`
 |Calculator|`com.apple.calculator`
 |Calendar|`com.apple.iCal`
 |Chess|`com.apple.Chess`
-|CLion|`com.jetbrains.CLion`
 |Clock|`com.apple.clock`
 |ColorSync Utility|`com.apple.ColorSyncUtility`
 |Console|`com.apple.Console`
 |Contacts|`com.apple.AddressBook`
 |Dictionary|`com.apple.Dictionary`
 |Disk Utility|`com.apple.DiskUtility`
-|Docker|`com.docker.docker`
 |FaceTime|`com.apple.FaceTime`
-|Figma|`com.figma.Desktop`
 |Find My|`com.apple.findmy`
 |Finder|`com.apple.finder`
-|Firefox|`org.mozilla.firefox`
 |Freeform|`com.apple.freeform`
-|Ghostty|`com.mitchellh.ghostty`
-|GIMP|`org.gimp.gimp-2.10`
-|Google Chrome|`com.google.Chrome`
 |Grapher|`com.apple.grapher`
 |Home|`com.apple.Home`
 |iMovie|`com.apple.iMovieApp`
-|Inkscape|`org.inkscape.Inkscape`
-|IntelliJ IDEA Community|`com.jetbrains.intellij.ce`
-|IntelliJ IDEA Ultimate|`com.jetbrains.intellij`
-|iTerm2|`com.googlecode.iterm2`
-|Karabiner-Elements|`org.pqrs.Karabiner-Elements.Settings`
-|kdenlive|`org.kde.Kdenlive`
 |Keychain Access|`com.apple.keychainaccess`
 |Keynote|`com.apple.iWork.Keynote`
-|Kitty|`net.kovidgoyal.kitty`
 |Mail|`com.apple.mail`
 |Maps|`com.apple.Maps`
-|Marta|`org.yanex.marta`
 |Messages|`com.apple.MobileSMS`
 |Music|`com.apple.Music`
 |Notes|`com.apple.Notes`
-|Obsidian|`md.obsidian`
 |Pages|`com.apple.iWork.Pages`
 |Photo Booth|`com.apple.PhotoBooth`
 |Photos|`com.apple.Photos`
 |Podcasts|`com.apple.podcasts`
 |Preview|`com.apple.Preview`
-|PyCharm Community|`com.jetbrains.pycharm.ce`
-|PyCharm Professional|`com.jetbrains.pycharm`
 |QuickTime Player|`com.apple.QuickTimePlayerX`
 |Reminders|`com.apple.reminders`
 |Safari|`com.apple.Safari`
 |Shortcuts|`com.apple.shortcuts`
-|Slack|`com.tinyspeck.slackmacgap`
-|Spotify|`com.spotify.client`
-|Steam|`com.valvesoftware.steam`
 |Stocks|`com.apple.stocks`
-|Sublime Merge|`com.sublimemerge`
-|Sublime Text|`com.sublimetext.4`
 |System Settings|`com.apple.systempreferences`
-|Telegram|`com.tdesktop.Telegram`
 |Terminal|`com.apple.Terminal`
 |TextEdit|`com.apple.TextEdit`
-|Thunderbird|`org.mozilla.thunderbird`
 |Time Machine|`com.apple.backup.launcher`
-|Todoist|`com.todoist.mac.Todoist`
-|Tor Browser|`org.torproject.torbrowser`
-|Transmission|`org.m0k.transmission`
 |TV|`com.apple.TV`
-|Visual Studio Code|`com.microsoft.VSCode`
-|VLC|`org.videolan.vlc`
 |VoiceMemos|`com.apple.VoiceMemos`
 |VoiceOver Utility|`com.apple.VoiceOverUtility`
 |Weather|`com.apple.weather`
-|WezTerm|`com.github.wez.wezterm`
 |Xcode|`com.apple.dt.Xcode`
-|Zen Browser|`app.zen-browser.zen`
 
 |===

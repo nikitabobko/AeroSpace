@@ -10,6 +10,7 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace move-node-to-workspace [-h|--help] [--focus-follows-window] [--wrap-around]
+                                 [--stdin|--no-stdin]
                                  (next|prev)
 aerospace move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-if-noop]
                                  [--window-id <window-id>] <workspace-name>
@@ -37,6 +38,14 @@ This flag is a shortcut for manually running `aerospace-workspace`/`aerospace-fo
 
 --window-id <window-id>::
 include::./util/window-id-flag-desc.adoc[]
+
+--stdin::
+Read the list of workspaces from stdin.
+Incompatible with `--no-stdin`
+
+--no-stdin::
+Ignore the list of workspaces from stdin, even if provided.
+Incompatible with `--stdin`
 
 // =========================================================== Arguments
 include::./util/conditional-arguments-header.adoc[]

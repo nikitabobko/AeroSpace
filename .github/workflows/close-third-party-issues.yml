@@ -25,7 +25,7 @@ jobs:
           gh issue lock "$ISSUE"
         }
 
-        test "$author" = nikitabobko || close
+        test "$author" = nikitabobko || test "$author" = mobile-ar || close
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GH_REPO: ${{ github.repository }}

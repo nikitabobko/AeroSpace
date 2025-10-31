@@ -51,9 +51,6 @@ If you only plan to build the debug version of AeroSpace, you can run it from th
 -   `generate.sh` - Regenerate generated project files. `AeroSpace.xcodeproj` is generated, and some of the source files
     (the source files have `Generated` suffix in their names).
 
-> [!IMPORTANT]
-> Debug build uses `~/.aerospace-debug.toml` instead of `~/.aerospace.toml`
-
 **Release build**
 -   `build-release.sh` - Build release build to `.release` dir by using Xcode.
 -   `install-from-sources.sh` - Build release build from sources and install it as `aerospace-dev` brew cask.

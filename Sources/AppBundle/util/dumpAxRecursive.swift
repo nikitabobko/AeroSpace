@@ -11,18 +11,28 @@ func dumpAxRecursive(_ ax: AXUIElement, _ kind: AxKind, recursionDepth: Int = 0)
     let recursionDepth = recursionDepth + 1
     var result: [String: Json] = [:]
     var ignored: [String] = []
-    for key: String in ax.attrs.sortedBy({ priorityAx.contains($0) ? 0 : 1 }) {
-        var raw: AnyObject?
-        AXUIElementCopyAttributeValue(ax, key as CFString, &raw)
+    var writable: [String] = []
+    var failedAxRequest: [String] = []
+    for key: String in ax.attrs(failedAxRequest: &failedAxRequest).sortedBy({ priorityAx.contains($0) ? 0 : 1 }) {
         if globalIgnore.contains(key) || kindSpecificIgnore[kind]?.contains(key) == true {
             ignored.append(key)
         } else {
+            var raw: AnyObject?
+            if AXUIElementCopyAttributeValue(ax, key as CFString, &raw) != .success {
+                failedAxRequest.append("get.\(key)")
+            }
             result[key] = prettyValue(raw as Any?, recursionDepth: recursionDepth)
+
+            var isWritable: DarwinBoolean = false
+            if AXUIElementIsAttributeSettable(ax, key as CFString, &isWritable) != .success {
+                failedAxRequest.append("isWritable.\(key)")
+            }
+            if isWritable.boolValue { writable.append(key) }
         }
     }
-    if !ignored.isEmpty {
-        result["Aero.AxIgnored"] = .string(ignored.joined(separator: ", "))
-    }
+    if !writable.isEmpty { result["Aero.AxWritable"] = .string(writable.joined(separator: ", ")) }
+    if !failedAxRequest.isEmpty { result["Aero.AxFailed"] = .string(failedAxRequest.joined(separator: ", ")) }
+    if !ignored.isEmpty { result["Aero.AxIgnored"] = .string(ignored.joined(separator: ", ")) }
     return result
 }
 
@@ -62,9 +72,11 @@ private func prettyValue(_ value: Any?, recursionDepth: Int) -> Json {
 }
 
 extension AXUIElement {
-    fileprivate var attrs: [String] {
+    fileprivate func attrs(failedAxRequest: inout [String]) -> [String] {
         var rawArray: CFArray?
-        AXUIElementCopyAttributeNames(self, &rawArray)
+        if AXUIElementCopyAttributeNames(self, &rawArray) != .success {
+            failedAxRequest.append("AXUIElementCopyAttributeNames")
+        }
         return rawArray as? [String] ?? []
     }
 }

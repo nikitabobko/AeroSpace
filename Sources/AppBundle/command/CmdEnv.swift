@@ -6,16 +6,6 @@ struct CmdEnv: ConvenienceCopyable { // todo forward env from cli to server
     var pwd: String?
 
     static var defaultEnv: CmdEnv { CmdEnv(windowId: nil, workspaceName: nil, pwd: nil) }
-    init(
-        windowId: UInt32?,
-        workspaceName: String?,
-        pwd: String?
-    ) {
-        self.windowId = windowId
-        self.workspaceName = workspaceName
-        self.pwd = pwd
-    }
-
     func withFocus(_ focus: LiveFocus) -> CmdEnv {
         switch focus.asLeaf {
             case .window(let wd): .defaultEnv.copy(\.windowId, wd.windowId)

@@ -25,7 +25,7 @@ Submit bugs to https://github.com/nikitabobko/AeroSpace/discussions/categories/p
 Submit feature ideas to https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas
 
 Rules:
-* Search for duplicates (in GitHub Issues and Discusssions) before creating a new discussion
+* Search for duplicates (in GitHub Issues and Discussions) before creating a new discussion
 * Upvote for issues/discussions that you find useful
 
 **Consider including in bug reports**

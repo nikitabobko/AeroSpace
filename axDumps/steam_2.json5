@@ -1,0 +1,70 @@
+// Weird AX popup
+{
+  "AXActivationPoint" : "<AXValue 0x6000026f0ff0> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 1,
+  "AXFrame" : "<AXValue 0x600003d8f9c0> {value = x:-15000.000000 y:16168.000000 w:1.000000 h:1.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x6000026f0ff0> {pid=10129}",
+  "AXPosition" : "<AXValue 0x6000026583c0> {value = x:-15000.000000 y:16168.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+
+  ],
+  "AXSize" : "<AXValue 0x6000026f4570> {value = w:1.000000 h:1.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXUnknown",
+  "AXTitle" : "",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=2169, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=2169, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=2169, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXMenuBar" : "<AXUIElement 0x600002652d00> {pid=10129}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Steam",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=2169, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")"
+    ],
+    "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
+    "Aero.AxWritable" : "AXFrontmost"
+  },
+  "Aero.App.appBundleId" : "com.valvesoftware.steam",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Users/bobko/Library/Application%20Support/Steam/Steam.AppBundle/Steam/Contents/MacOS/steam_osx",
+  "Aero.App.pid" : 10129,
+  "Aero.App.version" : "4.0",
+  "Aero.App.versionShort" : null,
+  "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, get.AXMinimizeButton, get.AXDocument, get.AXCloseButton, isWritable.AXActivationPoint, get.AXFullScreenButton, get.AXProxy, get.AXDefaultButton, get.AXTitleUIElement, get.AXCancelButton, get.AXZoomButton, get.AXToolbarButton",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "popup",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxWritable" : "AXPosition, AXSections, AXMain",
+  "Aero.axWindowId" : 2169,
+  "Aero.macOS.version" : "Version 15.6.1 (Build 24G90)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.MacosPopupWindowsContainer)",
+  "Aero.workspace" : null
+}

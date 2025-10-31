@@ -2,7 +2,7 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-./build-debug.sh
+./build-debug.sh -Xswiftc -warnings-as-errors
 ./run-swift-test.sh
 
 ./.debug/aerospace -h > /dev/null

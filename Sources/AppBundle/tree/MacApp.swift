@@ -6,9 +6,9 @@ import Common
 // (only available since macOS 14)
 final class MacApp: AbstractApp {
     /*conforms*/ let pid: Int32
-    /*conforms*/ let bundleId: String?
+    /*conforms*/ let rawAppBundleId: String?
+    let appId: KnownBundleId?
     let nsApp: NSRunningApplication
-    let isZoom: Bool
     private let axApp: ThreadGuardedValue<AXUIElement>
     private let appAxSubscriptions: ThreadGuardedValue<[AxSubscription]> // keep subscriptions in memory
     private let windows: ThreadGuardedValue<[UInt32: AxWindow]> = .init([:])
@@ -28,9 +28,9 @@ final class MacApp: AbstractApp {
     private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement, _ axSubscriptions: [AxSubscription], _ thread: Thread) {
         self.nsApp = nsApp
         self.axApp = .init(axApp)
-        self.isZoom = nsApp.bundleIdentifier == "us.zoom.xos"
         self.pid = nsApp.processIdentifier
-        self.bundleId = nsApp.bundleIdentifier
+        self.rawAppBundleId = nsApp.bundleIdentifier
+        self.appId = nsApp.bundleIdentifier.flatMap { KnownBundleId.init(rawValue: $0) }
         assert(!axSubscriptions.isEmpty)
         self.appAxSubscriptions = .init(axSubscriptions)
         self.thread = thread
@@ -78,8 +78,8 @@ final class MacApp: AbstractApp {
         }
     }
 
-    @MainActor // todo swift is stupid
     func closeAndUnregisterAxWindow(_ windowId: UInt32) {
+        if serverArgs.isReadOnly { return }
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         _ = withWindowAsync(windowId) { [windows] window, job in
             guard let closeButton = window.get(Ax.closeButtonAttr) else { return }
@@ -89,7 +89,6 @@ final class MacApp: AbstractApp {
         }
     }
 
-    @MainActor // todo swift is stupid
     func getAxSize(_ windowId: UInt32) async throws -> CGSize? {
         try await withWindow(windowId) { window, job in
             window.get(Ax.sizeAttr)
@@ -97,7 +96,6 @@ final class MacApp: AbstractApp {
     }
 
     // todo merge together with detectNewWindows
-    @MainActor // todo swift is stupid
     func getFocusedWindow() async throws -> Window? {
         let windowId = try await thread?.runInLoop { [nsApp, axApp, windows] job in
             try axApp.threadGuarded.get(Ax.focusedWindowAttr)
@@ -109,6 +107,7 @@ final class MacApp: AbstractApp {
     }
 
     @MainActor func nativeFocus(_ windowId: UInt32) {
+        if serverArgs.isReadOnly { return }
         MacApp.focusJob?.cancel()
         MacApp.focusJob = withWindowAsync(windowId) { [nsApp] window, job in
             // Raise firstly to make sure that by the time we activate the app, the window would be already on top
@@ -127,7 +126,6 @@ final class MacApp: AbstractApp {
         }
     }
 
-    @MainActor // todo swift is stupid
     func setAxFrameBlocking(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) async throws {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = nil
@@ -156,21 +154,18 @@ final class MacApp: AbstractApp {
         }
     }
 
-    @MainActor // todo swift is stupid
     func getAxWindowsCount() async throws -> Int? {
         try await thread?.runInLoop { [axApp] job in
             axApp.threadGuarded.get(Ax.windowsAttr)?.count
         }
     }
 
-    @MainActor // todo swift is stupid
     func getAxTopLeftCorner(_ windowId: UInt32) async throws -> CGPoint? {
         try await withWindow(windowId) { window, job in
             window.get(Ax.topLeftCornerAttr)
         }
     }
 
-    @MainActor // todo swift is stupid
     func getAxRect(_ windowId: UInt32) async throws -> Rect? {
         try await withWindow(windowId) { window, job in
             guard let topLeftCorner = window.get(Ax.topLeftCornerAttr) else { return nil }
@@ -179,24 +174,22 @@ final class MacApp: AbstractApp {
         }
     }
 
-    @MainActor // todo swift is stupid
     func isWindowHeuristic(_ windowId: UInt32) async throws -> Bool {
-        try await withWindow(windowId) { [nsApp, axApp, bundleId] window, job in
-            window.isWindowHeuristic(axApp: axApp.threadGuarded, appBundleId: bundleId, nsApp.activationPolicy)
+        try await withWindow(windowId) { [nsApp, axApp, appId] window, job in
+            window.isWindowHeuristic(axApp: axApp.threadGuarded, appId, nsApp.activationPolicy)
         } == true
     }
 
     @MainActor
     func getAxUiElementWindowType(_ windowId: UInt32) async throws -> AxUiElementWindowType {
-        try await withWindow(windowId) { [nsApp, axApp, bundleId] window, job in
-            window.getWindowType(axApp: axApp.threadGuarded, appBundleId: bundleId, nsApp.activationPolicy)
+        try await withWindow(windowId) { [nsApp, axApp, appId] window, job in
+            window.getWindowType(axApp: axApp.threadGuarded, appId, nsApp.activationPolicy)
         } ?? .window
     }
 
-    @MainActor // todo swift is stupid
     func isDialogHeuristic(_ windowId: UInt32) async throws -> Bool {
-        try await withWindow(windowId) { [nsApp] window, job in
-            window.isDialogHeuristic(appBundleId: nsApp.bundleIdentifier)
+        try await withWindow(windowId) { [appId] window, job in
+            window.isDialogHeuristic(appId)
         } == true
     }
 
@@ -214,35 +207,30 @@ final class MacApp: AbstractApp {
         }
     }
 
-    @MainActor // todo swift is stupid
     func dumpWindowAxInfo(windowId: UInt32) async throws -> [String: Json] {
         try await withWindow(windowId) { window, job in
             dumpAxRecursive(window, .window)
         } ?? [:]
     }
 
-    @MainActor // todo swift is stupid
     func dumpAppAxInfo() async throws -> [String: Json] {
         try await thread?.runInLoop { [axApp] job in
             dumpAxRecursive(axApp.threadGuarded, .app)
         } ?? [:]
     }
 
-    @MainActor // todo swift is stupid
     func getAxTitle(_ windowId: UInt32) async throws -> String? {
         try await withWindow(windowId) { window, job in
             window.get(Ax.titleAttr)
         }
     }
 
-    @MainActor // todo swift is stupid
     func isMacosNativeFullscreen(_ windowId: UInt32) async throws -> Bool? {
         try await withWindow(windowId) { window, job in
             window.get(Ax.isFullscreenAttr)
         }
     }
 
-    @MainActor // todo swift is stupid
     func isMacosNativeMinimized(_ windowId: UInt32) async throws -> Bool? {
         try await withWindow(windowId) { window, job in
             window.get(Ax.minimizedAttr)
@@ -334,7 +322,6 @@ final class MacApp: AbstractApp {
         thread = nil // Disallow all future job submissions
     }
 
-    @MainActor // todo swift is stupid
     private func withWindow<T>(_ windowId: UInt32, _ body: @Sendable @escaping (AXUIElement, RunLoopJob) throws -> T?) async throws -> T? {
         try await thread?.runInLoop { [windows] job in
             guard let window = windows.threadGuarded[windowId] else { return nil }
@@ -350,7 +337,7 @@ final class MacApp: AbstractApp {
     }
 }
 
-private class AxWindow {
+private final class AxWindow {
     let windowId: UInt32
     let ax: AXUIElement
     private let axSubscriptions: [AxSubscription] // keep subscriptions in memory
