@@ -399,4 +399,78 @@ final class ConfigTest: XCTestCase {
         assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
         assertEquals(colemakConfig.keyMapping.resolve()["f"], .e)
     }
+
+    func testParseDefaultHideCorner() {
+        let (config1, errors1) = parseConfig(
+            """
+            default-hide-corner = 'bottom-left'
+            """,
+        )
+        assertEquals(errors1, [])
+        assertEquals(config1.defaultOptimalHideCorner, .bottomLeftCorner)
+
+        let (config2, errors2) = parseConfig(
+            """
+            default-hide-corner = 'bottom-right'
+            """,
+        )
+        assertEquals(errors2, [])
+        assertEquals(config2.defaultOptimalHideCorner, .bottomRightCorner)
+
+        // Test default value
+        let (config3, errors3) = parseConfig("")
+        assertEquals(errors3, [])
+        assertEquals(config3.defaultOptimalHideCorner, .bottomRightCorner)
+
+        // Test invalid value
+        let (config4, errors4) = parseConfig(
+            """
+            default-hide-corner = 'invalid-value'
+            """,
+        )
+        assertEquals(
+            errors4.descriptions,
+            ["default-hide-corner: Can't parse default hide corner 'invalid-value'. Possible values: bottom-left, bottom-right"],
+        )
+        assertEquals(config4.defaultOptimalHideCorner, .bottomRightCorner) // Should fallback to default
+
+        // Test type mismatch
+        let (config5, errors5) = parseConfig(
+            """
+            default-hide-corner = true
+            """,
+        )
+        assertEquals(
+            errors5.descriptions,
+            ["default-hide-corner: Expected type is 'string'. But actual type is 'bool'"],
+        )
+        assertEquals(config5.defaultOptimalHideCorner, .bottomRightCorner) // Should fallback to default
+    }
+
+    func testDefaultHideCornerInFullConfig() {
+        // Test that default-hide-corner works correctly in a realistic config scenario
+        let (config, errors) = parseConfig(
+            """
+            default-hide-corner = 'bottom-left'
+            accordion-padding = 30
+            start-at-login = false
+
+            [mode.main.binding]
+                alt-1 = 'workspace 1'
+            """,
+        )
+        assertEquals(errors, [])
+        assertEquals(config.defaultOptimalHideCorner, .bottomLeftCorner)
+        assertEquals(config.accordionPadding, 30)
+        assertEquals(config.startAtLogin, false)
+
+        // Verify it can be changed
+        let (config2, errors2) = parseConfig(
+            """
+            default-hide-corner = 'bottom-right'
+            """,
+        )
+        assertEquals(errors2, [])
+        assertEquals(config2.defaultOptimalHideCorner, .bottomRightCorner)
+    }
 }

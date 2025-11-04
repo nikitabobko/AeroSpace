@@ -113,6 +113,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "gaps": Parser(\.gaps, parseGaps),
     "workspace-to-monitor-force-assignment": Parser(\.workspaceToMonitorForceAssignment, parseWorkspaceToMonitorAssignment),
     "on-window-detected": Parser(\.onWindowDetected, parseOnWindowDetectedArray),
+    "default-hide-corner": Parser(\.defaultOptimalHideCorner, parseOptimalHideCorner),
 
     // Deprecated
     "non-empty-workspaces-root-containers-layout-on-startup": Parser(\._nonEmptyWorkspacesRootContainersLayoutOnStartup, parseStartupRootContainerLayout),
@@ -299,6 +300,13 @@ private func parseDefaultContainerOrientation(_ raw: TOMLValueConvertible, _ bac
     parseString(raw, backtrace).flatMap {
         DefaultContainerOrientation(rawValue: $0)
             .orFailure(.semantic(backtrace, "Can't parse default container orientation '\($0)'"))
+    }
+}
+
+private func parseOptimalHideCorner(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<OptimalHideCorner> {
+    parseString(raw, backtrace).flatMap {
+        OptimalHideCorner(rawValue: $0)
+            .orFailure(.semantic(backtrace, "Can't parse default hide corner '\($0)'. Possible values: bottom-left, bottom-right"))
     }
 }
 

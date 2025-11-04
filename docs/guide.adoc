@@ -369,8 +369,12 @@ Native macOS Spaces have a lot of problems
 * Apple doesn't provide public API to communicate with Spaces (create/delete/reorder/switch Space and move windows between Spaces)
 
 Since Spaces are so hard to deal with, AeroSpace reimplements Spaces and calls them "Workspaces".
-The idea is that if the workspace isn’t active then all of its windows are placed outside the visible area of the screen, in the bottom right or left corner.
+The idea is that if the workspace isn't active then all of its windows are placed outside the visible area of the screen, in the bottom right or left corner.
 Once you switch back to the workspace, (e.g. by the means of xref:commands.adoc#workspace[workspace] command, or `cmd + tab`) windows are placed back to the visible area of the screen.
+
+You can configure which corner is used by default for hiding windows using the `default-hide-corner` configuration option.
+Possible values are `bottom-left` and `bottom-right`. The default is `bottom-right`.
+AeroSpace automatically selects the optimal corner for each monitor based on monitor arrangement, but falls back to the configured default when the optimal corner cannot be determined.
 
 When you quit the AeroSpace or when the AeroSpace detects that it's about to crash, AeroSpace will place all windows back to the visible area of the screen.
 
