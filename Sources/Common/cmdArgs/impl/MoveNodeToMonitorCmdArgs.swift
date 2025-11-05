@@ -1,6 +1,6 @@
 public struct MoveNodeToMonitorCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
-    fileprivate init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
+    /*conforms*/ public var commonState: CmdArgsCommonState
+    fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveNodeToMonitor,
         allowInConfig: true,
@@ -17,12 +17,9 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
     )
 
     public init(target: MonitorTarget) {
-        self.rawArgsForStrRepr = .init([])
+        self.commonState = .init([])
         self.target = .initialized(target)
     }
-
-    /*conforms*/ public var windowId: UInt32?
-    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public var failIfNoop: Bool = false
     public var focusFollowsWindow: Bool = false

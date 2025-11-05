@@ -1,6 +1,6 @@
 public struct FocusCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
-    fileprivate init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
+    /*conforms*/ public var commonState: CmdArgsCommonState
+    fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .focus,
         allowInConfig: true,
@@ -20,21 +20,19 @@ public struct FocusCmdArgs: CmdArgs {
     public var dfsIndex: UInt32? = nil
     public var cardinalOrDfsDirection: CardinalOrDfsDirection? = nil
     public var floatingAsTiling: Bool = true
-    /*conforms*/ public var windowId: UInt32?
-    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public init(rawArgs: StrArrSlice, cardinalOrDfsDirection: CardinalOrDfsDirection) {
-        self.rawArgsForStrRepr = .init(rawArgs)
+        self.commonState = .init(rawArgs)
         self.cardinalOrDfsDirection = cardinalOrDfsDirection
     }
 
     public init(rawArgs: StrArrSlice, windowId: UInt32) {
-        self.rawArgsForStrRepr = .init(rawArgs)
+        self.commonState = .init(rawArgs)
         self.windowId = windowId
     }
 
     public init(rawArgs: StrArrSlice, dfsIndex: UInt32) {
-        self.rawArgsForStrRepr = .init(rawArgs)
+        self.commonState = .init(rawArgs)
         self.dfsIndex = dfsIndex
     }
 
