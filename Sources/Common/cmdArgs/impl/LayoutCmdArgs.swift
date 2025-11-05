@@ -1,6 +1,6 @@
 public struct LayoutCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
-    fileprivate init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
+    /*conforms*/ public var commonState: CmdArgsCommonState
+    fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .layout,
         allowInConfig: true,
@@ -12,11 +12,9 @@ public struct LayoutCmdArgs: CmdArgs {
     )
 
     public var toggleBetween: Lateinit<[LayoutDescription]> = .uninitialized
-    /*conforms*/ public var windowId: UInt32?
-    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String], toggleBetween: [LayoutDescription]) {
-        self.rawArgsForStrRepr = .init(rawArgs.slice)
+        self.commonState = .init(rawArgs.slice)
         self.toggleBetween = .initialized(toggleBetween)
     }
 

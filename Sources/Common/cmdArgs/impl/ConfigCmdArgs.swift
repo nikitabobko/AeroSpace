@@ -1,5 +1,5 @@
 public struct ConfigCmdArgs: CmdArgs, Equatable {
-    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    /*conforms*/ public var commonState: CmdArgsCommonState
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .config,
         allowInConfig: false,
@@ -21,8 +21,6 @@ public struct ConfigCmdArgs: CmdArgs, Equatable {
     public var allKeys: Bool = false
     public var configPath: Bool = false
     public var keyNameToGet: String? = nil
-    /*conforms*/ public var windowId: UInt32?
-    /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
 extension ConfigCmdArgs {
@@ -40,7 +38,7 @@ extension ConfigCmdArgs {
 }
 
 public func parseConfigCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ConfigCmdArgs> {
-    parseSpecificCmdArgs(ConfigCmdArgs(rawArgsForStrRepr: .init(args)), args)
+    parseSpecificCmdArgs(ConfigCmdArgs(commonState: .init(args)), args)
         .flatMap { raw in
             var conflicting: Set<String> = []
             if raw.keyNameToGet != nil { conflicting.insert("--get") }

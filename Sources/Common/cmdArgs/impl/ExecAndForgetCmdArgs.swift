@@ -1,5 +1,5 @@
 public struct ExecAndForgetCmdArgs: CmdArgs {
-    public var rawArgsForStrRepr: EquatableNoop<StrArrSlice> { .init([bashScript]) }
+    /*conforms*/ public var commonState: CmdArgsCommonState
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .execAndForget,
         allowInConfig: true,
@@ -9,10 +9,9 @@ public struct ExecAndForgetCmdArgs: CmdArgs {
     )
 
     public init(bashScript: String) {
+        self.commonState = .init([bashScript])
         self.bashScript = bashScript
     }
 
     public let bashScript: String
-    /*conforms*/ public var windowId: UInt32?
-    /*conforms*/ public var workspaceName: WorkspaceName?
 }

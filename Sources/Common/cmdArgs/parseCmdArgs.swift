@@ -12,15 +12,29 @@ public func parseCmdArgs(_ args: StrArrSlice) -> ParsedCmd<any CmdArgs> {
 
 public protocol CmdArgs: ConvenienceCopyable, Equatable, CustomStringConvertible, AeroAny, Sendable {
     static var parser: CmdParser<Self> { get }
-    var rawArgsForStrRepr: EquatableNoop<StrArrSlice> { get }
+    var commonState: CmdArgsCommonState { get set }
+}
 
-    // Two very common flags among commands
-    var windowId: UInt32? { get set }
-    var workspaceName: WorkspaceName? { get set }
+public struct CmdArgsCommonState: ConvenienceCopyable, Equatable, Sendable {
+    let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    var windowId: UInt32? = nil
+    var workspaceName: WorkspaceName? = nil
+
+    public init(_ raw: StrArrSlice) { rawArgsForStrRepr = .init(raw) }
 }
 
 extension CmdArgs {
     public static var info: CmdStaticInfo { Self.parser.info }
+
+    public var windowId: UInt32? {
+        get { commonState.windowId }
+        set(value) { commonState.windowId = value }
+    }
+
+    public var workspaceName: WorkspaceName? {
+        get { commonState.workspaceName }
+        set(value) { commonState.workspaceName = value }
+    }
 
     public func equals(_ other: any CmdArgs) -> Bool { // My brain is cursed with Java
         (other as? Self).flatMap { self == $0 } ?? false
@@ -31,7 +45,7 @@ extension CmdArgs {
             case .execAndForget:
                 CmdKind.execAndForget.rawValue + " " + (self as! ExecAndForgetCmdArgs).bashScript
             default:
-                ([Self.info.kind.rawValue] + rawArgsForStrRepr.value.toArray()).joinArgs()
+                ([Self.info.kind.rawValue] + commonState.rawArgsForStrRepr.value.toArray()).joinArgs()
         }
     }
 }

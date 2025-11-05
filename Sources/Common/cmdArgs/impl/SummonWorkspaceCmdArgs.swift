@@ -1,6 +1,6 @@
 public struct SummonWorkspaceCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
-    public init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
+    /*conforms*/ public var commonState: CmdArgsCommonState
+    public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .summonWorkspace,
         allowInConfig: true,
@@ -10,9 +10,6 @@ public struct SummonWorkspaceCmdArgs: CmdArgs {
         ],
         posArgs: [newArgParser(\.target, parseWorkspaceName, mandatoryArgPlaceholder: "<workspace>")],
     )
-
-    /*conforms*/ public var windowId: UInt32?
-    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public var target: Lateinit<WorkspaceName> = .uninitialized
     public var failIfNoop: Bool = false

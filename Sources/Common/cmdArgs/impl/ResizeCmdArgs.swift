@@ -1,6 +1,6 @@
 public struct ResizeCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
-    fileprivate init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
+    /*conforms*/ public var commonState: CmdArgsCommonState
+    fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .resize,
         allowInConfig: true,
@@ -16,15 +16,13 @@ public struct ResizeCmdArgs: CmdArgs {
 
     public var dimension: Lateinit<ResizeCmdArgs.Dimension> = .uninitialized
     public var units: Lateinit<ResizeCmdArgs.Units> = .uninitialized
-    /*conforms*/ public var windowId: UInt32?
-    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public init(
         rawArgs: [String],
         dimension: Dimension,
         units: Units,
     ) {
-        self.rawArgsForStrRepr = .init(rawArgs.slice)
+        self.commonState = .init(rawArgs.slice)
         self.dimension = .initialized(dimension)
         self.units = .initialized(units)
     }

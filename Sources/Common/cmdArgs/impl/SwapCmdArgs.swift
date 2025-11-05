@@ -1,6 +1,6 @@
 public struct SwapCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
-    public init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
+    /*conforms*/ public var commonState: CmdArgsCommonState
+    public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .swap,
         allowInConfig: true,
@@ -16,11 +16,9 @@ public struct SwapCmdArgs: CmdArgs {
     public var target: Lateinit<CardinalOrDfsDirection> = .uninitialized
     public var swapFocus: Bool = false
     public var wrapAround: Bool = false
-    public var windowId: UInt32?
-    public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String], target: CardinalOrDfsDirection) {
-        self.rawArgsForStrRepr = .init(rawArgs.slice)
+        self.commonState = .init(rawArgs.slice)
         self.target = .initialized(target)
     }
 }

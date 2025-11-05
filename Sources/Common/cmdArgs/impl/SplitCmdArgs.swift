@@ -1,6 +1,6 @@
 public struct SplitCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
-    fileprivate init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
+    /*conforms*/ public var commonState: CmdArgsCommonState
+    fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .split,
         allowInConfig: true,
@@ -12,11 +12,9 @@ public struct SplitCmdArgs: CmdArgs {
     )
 
     public var arg: Lateinit<SplitArg> = .uninitialized
-    /*conforms*/ public var windowId: UInt32?
-    /*conforms*/ public var workspaceName: WorkspaceName?
 
     public init(rawArgs: [String], _ arg: SplitArg) {
-        self.rawArgsForStrRepr = .init(rawArgs.slice)
+        self.commonState = .init(rawArgs.slice)
         self.arg = .initialized(arg)
     }
 

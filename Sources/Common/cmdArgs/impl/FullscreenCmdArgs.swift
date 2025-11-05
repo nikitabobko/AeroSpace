@@ -1,6 +1,6 @@
 public struct FullscreenCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
-    fileprivate init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
+    /*conforms*/ public var commonState: CmdArgsCommonState
+    fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .fullscreen,
         allowInConfig: true,
@@ -16,8 +16,6 @@ public struct FullscreenCmdArgs: CmdArgs {
     public var toggle: ToggleEnum = .toggle
     public var noOuterGaps: Bool = false
     public var failIfNoop: Bool = false
-    /*conforms*/ public var windowId: UInt32?
-    /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
 public func parseFullscreenCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FullscreenCmdArgs> {
