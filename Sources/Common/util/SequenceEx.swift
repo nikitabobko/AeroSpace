@@ -85,6 +85,14 @@ extension Sequence {
         return result
     }
 
+    public func sumOfInt(_ selector: (Self.Element) -> Int) -> Int {
+        var result: Int = 0
+        for elem in self {
+            result += selector(elem)
+        }
+        return result
+    }
+
     public func grouped<Group>(by criterion: (_ transforming: Element) -> Group) -> [Group: [Element]] {
         Dictionary(grouping: self, by: criterion)
     }
