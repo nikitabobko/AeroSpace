@@ -96,8 +96,16 @@ private let testMonitor = MonitorImpl(
 
 var mainMonitor: Monitor {
     if isUnitTest { return testMonitor }
-    let elem = NSScreen.screens.withIndex.singleOrNil(where: \.value.isMainScreen).orDie()
-    return LazyMonitor(monitorAppKitNsScreenScreensId: elem.index + 1, isMain: true, elem.value)
+    // Try to find the main screen (at origin 0,0)
+    if let elem = NSScreen.screens.withIndex.singleOrNil(where: \.value.isMainScreen) {
+        return LazyMonitor(monitorAppKitNsScreenScreensId: elem.index + 1, isMain: true, elem.value)
+    }
+    // Fallback: If main screen can't be uniquely identified (e.g., during display reconfiguration),
+    // use the first available screen to avoid crashing
+    guard let firstScreen = NSScreen.screens.first else {
+        return dieT("No screens available at all")
+    }
+    return LazyMonitor(monitorAppKitNsScreenScreensId: 1, isMain: true, firstScreen)
 }
 
 var monitors: [Monitor] {
