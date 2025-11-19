@@ -33,7 +33,7 @@ Make sure that the window in question receives focus after moving.
 This flag is a shortcut for manually running `aerospace-workspace`/`aerospace-focus` after `move-node-to-monitor` successful execution.
 
 --fail-if-noop::
-Exit with non-zero code if move window to monitor it already belongs to
+Exit with non-zero code if moving window to monitor it already belongs to
 
 --window-id <window-id>::
 include::./util/window-id-flag-desc.adoc[]
