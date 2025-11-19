@@ -90,13 +90,13 @@ Please read the default config!
 Non-trivial configuration options are mentioned further in this guide.
 If no custom config is found, AeroSpace will load the default config.
 
-If the key is omitted in the custom config, it fallbacks to the value in the default config, unless it's stated otherwise for the specific keys. Namely:
+If the key is omitted in the custom config, it falls back to the value in the default config, unless it's stated otherwise for the specific keys. Namely:
 
-* `mode.*.binding`. It fallbacks to the empty TOML table. Your config is the source of truth for keyboard bindings. You must explicitly mention all the keyboard bindings and <<binding-modes,binding modes>> in your config.
-* `on-focused-monitor-changed`. It fallbacks to the empty TOML array.
+* `mode.*.binding`. It falls back to the empty TOML table. Your config is the source of truth for keyboard bindings. You must explicitly mention all the keyboard bindings and <<binding-modes,binding modes>> in your config.
+* `on-focused-monitor-changed`. It falls back to the empty TOML array.
 * `exec` TOML table. See: <<exec-env-vars>> (It's so boring and verbose, I don't even want to mention it in the `default-config.toml`)
 
-Rule of thumb: all the "scalar like" values always fallback to the default config. All the "vector like" values fallback to the empty TOML array or table.
+Rule of thumb: all the "scalar like" values always fall back to the default config. All the "vector like" values fall back to the empty TOML array or table.
 
 That allows you to keep your config tidy and clean from trivial config keys for which you like the default values.
 You can bootstrap your custom config by copying the default config from the app installation -
@@ -139,7 +139,7 @@ Working with binding modes consists of two parts:
 [#commands]
 === Commands
 
-Commands is the thing that you use to manipulate AeroSpace and query its state.
+Commands are the thing you use to manipulate AeroSpace and query its state.
 
 There are two ways on how you can use commands:
 
@@ -204,7 +204,7 @@ You can configure environment variables of `exec-*` commands and callbacks (such
 Environment variable substitution is supported in form of `+${ENV_VAR}+`
 * You can inspect what is the end result of environment variables using xref:commands.adoc#list-exec-env-vars[`list-exec-env-vars` command]
 * GUI apps on macOS don’t have Homebrew’s prefix in their `PATH` by default (https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities[docs.brew.sh]).
-That's why unless you override `exec` section in your config, AeroSpace fallbacks to the following `exec` configuration:
+That's why unless you override `exec` section in your config, AeroSpace falls back to the following `exec` configuration:
 +
 [source,toml]
 ----
@@ -410,7 +410,7 @@ image::./assets/monitor-arrangement-2-good.svg[,,align="center"]
 === A note on mission control
 
 For some reason, mission control doesn't like that AeroSpace puts a lot of windows in the bottom right corner of the screen.
-Mission control shows windows too small even there is enough space to show them bigger.
+Mission control shows windows too small even when there is enough space to show them bigger.
 
 There is a workaround. You can enable `Group windows by application` setting:
 [source,bash]
@@ -425,7 +425,7 @@ defaults write com.apple.dock expose-group-apps -bool true && killall Dock
 There is an observation that macOS works better and more stable if you disable `Displays have separate Spaces`. (It's enabled by default)
 People report all sorts of weird issues related to focus and performance when this setting is enabled:
 
-* Wrong window may receive focus in multi monitor setup: https://github.com/nikitabobko/AeroSpace/issues/101[#101] (Bug in Apple API)
+* Wrong window may receive focus in multi-monitor setup: https://github.com/nikitabobko/AeroSpace/issues/101[#101] (Bug in Apple API)
 * Wrong borderless Alacritty window may receive focus in *single monitor* setup: https://github.com/nikitabobko/AeroSpace/issues/247[#247] (Bug in Apple API)
 * Performance issues: https://github.com/nikitabobko/AeroSpace/issues/333[#333]
 * macOS randomly switches focus back: https://github.com/nikitabobko/AeroSpace/issues/289[#289]
@@ -455,7 +455,7 @@ Spaces are just cursed in macOS. The less Spaces you have, the better macOS beha
 |... is displayed only on main monitor
 |===
 
-If you don't care about macOS native fullscreen in multi monitor setup (which is itself clunky anyway, since it creates a separate Space instance),
+If you don't care about macOS native fullscreen in multi-monitor setup (which is itself clunky anyway, since it creates a separate Space instance),
 I recommend disabling `Displays have separate Spaces`.
 
 You can disable the setting by running:
@@ -580,7 +580,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center'] # Mouse lazily f
 on-focus-changed = ['move-mouse window-lazy-center'] # Mouse lazily follows any focus (window or workspace)
 ----
 
-You shouldn't rely on the order callback are called, since it's an implementation detail and can change from version to version.
+You shouldn't rely on the order callbacks are called, since it's an implementation detail and can change from version to version.
 
 The callbacks are "recursion resistant", which means that any focus change within the callback won't retrigger the callback.
 Changing the focus within these callbacks is a bad idea anyway, and the way it's handled will probably change in future versions.
@@ -612,7 +612,7 @@ xref:./goodies.adoc#show-aerospace-workspaces-in-sketchybar[]
 
 * The pool of workspaces is shared between monitors
 * Each monitor shows its own workspace.
-The showed workspaces are called"visible" workspaces
+The showed workspaces are called "visible" workspaces
 * Different monitors can’t show the same workspace at the same time
 * Each workspace (even invisible, even empty) has a monitor assigned to it
 * By default, all workspaces are assigned to the "main" monitor ("main" as in `System -> Displays -> Use as`)
@@ -626,7 +626,7 @@ You can move workspace to a different monitor with xref:commands.adoc#move-works
 
 The idea of making pool of workspaces shared is based on [#observation]*the observation* that most users have a limited set of workspaces on their secondary monitors.
 Secondary monitors are frequently dedicated to specific tasks (browser, shell), or for monitoring various activities such as logs and dashboards.
-Thus, using one workspace per each secondary monitors and "the rest" on the main monitor often makes sense.
+Thus, using one workspace per secondary monitor and "the rest" on the main monitor often makes sense.
 
 [NOTE]
 ====

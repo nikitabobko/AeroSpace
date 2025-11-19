@@ -38,7 +38,7 @@ See "Output Format" section for more details.
 Incompatible with `--count`
 
 --count::
-Output only the number of workspaces.
+Output only the number of monitors.
 Incompatible with `--format`
 
 --json::
