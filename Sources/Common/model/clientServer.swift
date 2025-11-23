@@ -26,7 +26,8 @@ public struct ServerAnswer: Codable, Sendable {
 // client-server socket API is not public yet.
 // Tracking issue for making it public: https://github.com/nikitabobko/AeroSpace/issues/1513
 public struct ClientRequest: Codable, Sendable {
-    public var command: String? // Unused. keep it for API compatibility with old servers for a couple of version
+    public var command: String? = nil // Unused. keep it for API compatibility with old servers for a couple of version
+
     public let args: [String]
     public let stdin: String
     public let windowId: UInt32?  // Please forward AEROSPACE_WINDOW_ID env variable here
@@ -36,13 +37,8 @@ public struct ClientRequest: Codable, Sendable {
         args: [String],
         stdin: String,
         windowId: UInt32?,
-        workspace: String?
+        workspace: String?,
     ) {
-        if args.contains(where: { $0.rangeOfCharacter(from: .whitespacesAndNewlines) != nil || $0.contains("\"") || $0.contains("\'") }) {
-            self.command = "" // Old server won't understand it anyway
-        } else {
-            self.command = args.joined(separator: " ")
-        }
         self.args = args
         self.stdin = stdin
         self.windowId = windowId

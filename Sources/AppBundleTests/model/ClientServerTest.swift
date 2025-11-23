@@ -30,7 +30,7 @@ final class ClientServerTest: XCTestCase {
         let data = try! encoder.encode(ClientRequest(args: ["args"], stdin: "stdin", windowId: 0, workspace: "foo"))
         let str = String.init(data: data, encoding: .utf8)!
         assertEquals(str, """
-            {"args":["args"],"command":"args","stdin":"stdin","windowId":0,"workspace":"foo"}
+            {"args":["args"],"stdin":"stdin","windowId":0,"workspace":"foo"}
             """)
     }
 }
