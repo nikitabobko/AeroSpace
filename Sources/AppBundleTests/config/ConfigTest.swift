@@ -317,22 +317,22 @@ final class ConfigTest: XCTestCase {
             Gaps(
                 inner: .init(
                     vertical: .perMonitor(
-                        [PerMonitorValue(description: .main, value: 1), PerMonitorValue(description: .secondary, value: 2)],
-                        default: 5,
+                        [PerMonitorValue(description: .main, value: .pixels(1)), PerMonitorValue(description: .secondary, value: .pixels(2))],
+                        default: .pixels(5),
                     ),
-                    horizontal: .constant(10),
+                    horizontal: .constant(.pixels(10)),
                 ),
                 outer: .init(
-                    left: .constant(12),
-                    bottom: .constant(13),
+                    left: .constant(.pixels(12)),
+                    bottom: .constant(.pixels(13)),
                     top: .perMonitor(
                         [
-                            PerMonitorValue(description: .pattern("built-in")!, value: 3),
-                            PerMonitorValue(description: .secondary, value: 4),
+                            PerMonitorValue(description: .pattern("built-in")!, value: .pixels(3)),
+                            PerMonitorValue(description: .secondary, value: .pixels(4)),
                         ],
-                        default: 6,
+                        default: .pixels(6),
                     ),
-                    right: .perMonitor([PerMonitorValue(description: .sequenceNumber(2), value: 7)], default: 8),
+                    right: .perMonitor([PerMonitorValue(description: .sequenceNumber(2), value: .pixels(7))], default: .pixels(8)),
                 ),
             ),
         )
@@ -345,9 +345,90 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(errors2.descriptions, [
-            "gaps.inner.horizontal: The last item in the array must be of type Int",
+            "gaps.inner.horizontal: The last item in the array must be a valid dimension value",
             "gaps.inner.vertical[0]: The table is expected to have a single key \'monitor\'",
             "gaps.inner.vertical[1].monitor: The table is expected to have a single key",
+        ])
+    }
+
+    func testParseGapsWithPercentages() {
+        let (config, errors1) = parseConfig(
+            """
+            [gaps]
+                inner.horizontal = "5%"
+                inner.vertical = [{ monitor."main" = "10%" }, { monitor."secondary" = 20 }, "3%"]
+                outer.left = "2%"
+                outer.bottom = 15
+                outer.top = [{ monitor."built-in" = "1%" }, 10]
+                outer.right = "8%"
+            """
+        )
+        assertEquals(errors1, [])
+        assertEquals(
+            config.gaps,
+            Gaps(
+                inner: .init(
+                    vertical: .perMonitor(
+                        [PerMonitorValue(description: .main, value: .percentage(10)), PerMonitorValue(description: .secondary, value: .pixels(20))],
+                        default: .percentage(3)
+                    ),
+                    horizontal: .constant(.percentage(5))
+                ),
+                outer: .init(
+                    left: .constant(.percentage(2)),
+                    bottom: .constant(.pixels(15)),
+                    top: .perMonitor(
+                        [PerMonitorValue(description: .pattern("built-in")!, value: .percentage(1))],
+                        default: .pixels(10)
+                    ),
+                    right: .constant(.percentage(8))
+                )
+            )
+        )
+
+        // Test invalid percentage values
+        let (_, errors2) = parseConfig(
+            """
+            [gaps]
+                inner.horizontal = "150%"
+                inner.vertical = "10.5%"
+                outer.left = "%"
+                outer.right = "abc%"
+            """
+        )
+        assertEquals(errors2.descriptions, [
+            "gaps.inner.horizontal: Invalid dimension value: '150%'. Expected integer or percentage (e.g., '10' or '10%')",
+            "gaps.inner.vertical: Invalid dimension value: '10.5%'. Expected integer or percentage (e.g., '10' or '10%')",
+            "gaps.outer.left: Invalid dimension value: '%'. Expected integer or percentage (e.g., '10' or '10%')",
+            "gaps.outer.right: Invalid dimension value: 'abc%'. Expected integer or percentage (e.g., '10' or '10%')",
+        ])
+    }
+
+    func testParseAccordionPaddingWithPercentage() {
+        let (config1, errors1) = parseConfig(
+            """
+            accordion-padding = "5%"
+            """
+        )
+        assertEquals(errors1, [])
+        assertEquals(config1.accordionPadding, .percentage(5))
+
+        let (config2, errors2) = parseConfig(
+            """
+            accordion-padding = 40
+            """
+        )
+        assertEquals(errors2, [])
+        assertEquals(config2.accordionPadding, .pixels(40))
+
+        // Test invalid values
+        let (_, errors3) = parseConfig(
+            """
+            accordion-padding = "120%"
+            """
+        )
+        assertEquals(errors3.descriptions, [
+            "accordion-padding: Invalid dimension value: '120%'. Expected integer or percentage (e.g., '30' or '5%')",
         ])
     }
 
