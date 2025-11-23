@@ -14,7 +14,7 @@ public enum MonitorDescription: Equatable, Sendable {
         }
     }
 
-    public static func pattern(_ raw: String) -> MonitorDescription? {
+    public static func caseSensitivePattern(_ raw: String) -> MonitorDescription? {
         (try? SendableRegex(raw)).flatMap { .pattern(raw, $0) }
     }
 }
