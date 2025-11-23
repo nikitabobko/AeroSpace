@@ -5,7 +5,7 @@ import Common
 private var activeRefreshTask: Task<(), any Error>? = nil
 
 @MainActor
-func runRefreshSession(
+func scheduleRefreshSession(
     _ event: RefreshSessionEvent,
     optimisticallyPreLayoutWorkspaces: Bool = false,
 ) {
@@ -74,7 +74,7 @@ func runSession<T>(
             if focusBefore != focusAfter {
                 focusAfter?.nativeFocus() // syncFocusToMacOs
             }
-            runRefreshSession(event)
+            scheduleRefreshSession(event)
             return result
         }
     }
@@ -125,7 +125,7 @@ func refreshObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: Unsaf
     let notif = notif as String
     Task { @MainActor in
         if !TrayMenuModel.shared.isEnabled { return }
-        runRefreshSession(.ax(notif))
+        scheduleRefreshSession(.ax(notif))
     }
 }
 
