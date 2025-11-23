@@ -27,10 +27,18 @@ final class ClientServerTest: XCTestCase {
     func testClientRequestJsonCompatibility_encoding() {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys]
-        let data = try! encoder.encode(ClientRequest(args: ["args"], stdin: "stdin", windowId: 0, workspace: "foo"))
-        let str = String.init(data: data, encoding: .utf8)!
-        assertEquals(str, """
-            {"args":["args"],"stdin":"stdin","windowId":0,"workspace":"foo"}
-            """)
+        let testData = [
+            (ClientRequest(args: ["args"], stdin: "stdin", windowId: 0, workspace: "foo"), """
+                {"args":["args"],"stdin":"stdin","windowId":0,"workspace":"foo"}
+                """),
+            (ClientRequest(args: ["args"], stdin: "stdin", windowId: nil, workspace: "foo"), """
+                {"args":["args"],"stdin":"stdin","workspace":"foo"}
+                """),
+        ]
+        for (req, expectedJson) in testData {
+            let data = try! encoder.encode(req)
+            let str = String.init(data: data, encoding: .utf8)!
+            assertEquals(str, expectedJson)
+        }
     }
 }
