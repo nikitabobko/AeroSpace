@@ -1,4 +1,5 @@
 import AppKit
+import Common
 
 /// First line of defence against lock screen
 ///
@@ -8,7 +9,12 @@ import AppKit
 /// so that once the screen is unlocked, AeroSpace could restore windows to where they were
 @MainActor private var closedWindowsCache = FrozenWorld(workspaces: [], monitors: [], windowIds: [])
 
-struct FrozenMonitor: Sendable {
+@MainActor
+func setClosedWindowsCache(_ world: FrozenWorld) {
+    closedWindowsCache = world
+}
+
+struct FrozenMonitor: Codable, Sendable {
     let topLeftCorner: CGPoint
     let visibleWorkspace: String
 
@@ -18,7 +24,7 @@ struct FrozenMonitor: Sendable {
     }
 }
 
-struct FrozenWorkspace: Sendable {
+struct FrozenWorkspace: Codable, Sendable {
     let name: String
     let monitor: FrozenMonitor // todo drop this property, once monitor to workspace assignment migrates to TreeNode
     let rootTilingNode: FrozenContainer
@@ -86,24 +92,34 @@ struct FrozenWorkspace: Sendable {
 
 @discardableResult
 @MainActor
-private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonLeafTreeNodeObject, index: Int) -> Bool {
+func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonLeafTreeNodeObject, index: Int) -> Bool {
+    if isDebug {
+        printStderr(
+            "[restore]  create container orientation=\(frozenContainer.orientation)" +
+                " layout=\(frozenContainer.layout) weight=\(frozenContainer.weight)" )
+    }
     let container = TilingContainer(
         parent: parent,
         adaptiveWeight: frozenContainer.weight,
         frozenContainer.orientation,
         frozenContainer.layout,
-        index: index,
+        index: index
     )
 
-    for (index, child) in frozenContainer.children.enumerated() {
+    var childIndex = 0
+    for child in frozenContainer.children {
         switch child {
             case .window(let w):
-                // Stop the loop if can't find the window, because otherwise all the subsequent windows will have incorrect index
-                guard let window = MacWindow.get(byId: w.id) else { return false }
-                window.bind(to: container, adaptiveWeight: w.weight, index: index)
+                if let window = MacWindow.get(byId: w.id) {
+                    window.bind(to: container, adaptiveWeight: w.weight, index: childIndex)
+                    if isDebug { printStderr("[restore]  bound window \(w.id)") }
+                    childIndex += 1
+                } else if isDebug {
+                    printStderr("[restore]  missing window \(w.id)")
+                }
             case .container(let c):
-                // There is no reason to continue
-                if !restoreTreeRecursive(frozenContainer: c, parent: container, index: index) { return false }
+                _ = restoreTreeRecursive(frozenContainer: c, parent: container, index: childIndex)
+                childIndex += 1
         }
     }
     return true

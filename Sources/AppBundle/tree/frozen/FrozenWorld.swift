@@ -1,4 +1,4 @@
-struct FrozenWorld {
+struct FrozenWorld: Codable {
     let workspaces: [FrozenWorkspace]
     let monitors: [FrozenMonitor]
     let windowIds: Set<UInt32>

@@ -1,12 +1,12 @@
 import AppKit
 import Common
 
-enum FrozenTreeNode: Sendable {
+enum FrozenTreeNode: Codable, Sendable {
     case container(FrozenContainer)
     case window(FrozenWindow)
 }
 
-struct FrozenContainer: Sendable {
+struct FrozenContainer: Codable, Sendable {
     let children: [FrozenTreeNode]
     let layout: Layout
     let orientation: Orientation
@@ -31,7 +31,7 @@ struct FrozenContainer: Sendable {
     }
 }
 
-struct FrozenWindow: Sendable {
+struct FrozenWindow: Codable, Sendable {
     let id: UInt32
     let weight: CGFloat
 
