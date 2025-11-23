@@ -133,7 +133,6 @@ final class MacApp: AbstractApp {
 
     func setAxFrameBlocking(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) async throws {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
-        setFrameJobs[windowId] = nil
         try await withWindow(windowId) { [axApp] window, job in
             disableAnimations(app: axApp.threadGuarded) {
                 setFrame(window, topLeft, size)
