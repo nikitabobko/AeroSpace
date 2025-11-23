@@ -1,0 +1,69 @@
+{
+  "AXActivationPoint" : "<AXValue 0x7a6602550> {value = x:-1.000000 y:1441.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x7a6e20580> {value = x:1151.000000 y:40.000000 w:3600.000000 h:80.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x7a6602550> {pid=5114}",
+  "AXPosition" : "<AXValue 0x7a6602550> {value = x:1151.000000 y:40.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x7a6602550> {pid=5114}\";\n    SectionUniqueID = AXContent;\n}"
+  ],
+  "AXSize" : "<AXValue 0x7a6602550> {value = w:3600.000000 h:80.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "Zebar - glzr-io.starter / vanilla",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : "<AXUIElement 0x7a6601b30> {pid=5114}",
+    "AXFocusedUIElement" : "<AXUIElement 0x7a6601b30> {pid=5122}",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=10742, title=\"Zebar - glzr-io.starter / vanilla\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=10742, title=\"Zebar - glzr-io.starter / vanilla\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x7a6602550> {pid=5114}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Zebar",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=10742, title=\"Zebar - glzr-io.starter / vanilla\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(AxWindowId=10743, title=\"Zebar - glzr-io.starter / vanilla\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.glzr.zebar",
+  "Aero.App.nsApp.activationPolicy" : "accessory",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Zebar.app/Contents/MacOS/zebar",
+  "Aero.App.version" : "20250618.170017",
+  "Aero.App.versionShort" : "3.1.1",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "popup",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.axWindowId" : 10742,
+  "Aero.macOS.version" : "Version 26.0 (Build 25A354)",
+  "Aero.on-window-detected" : [
+    {
+      "commands" : "layout tiling",
+      "matcher" : ""
+    }
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.TilingContainer)",
+  "Aero.windowLevel" : "{\"normalWindow\":{}}",
+  "Aero.workspace" : "1"
+}
