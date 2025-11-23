@@ -1,5 +1,20 @@
 import AppKit
 
+enum AxUiElementWindowType: String {
+    case window
+    case dialog
+    /// Not even a real window
+    case popup
+
+    static func new(isWindow: Bool, isDialog: () -> Bool) -> AxUiElementWindowType {
+        switch true {
+            case !isWindow: .popup
+            case isDialog(): .dialog
+            default: .window
+        }
+    }
+}
+
 // Covered by tests in ./axDumps in the repor root
 extension AxUiElementMock {
     // 'isDialogHeuristic' function name is referenced in the guide
@@ -177,20 +192,5 @@ extension AxUiElementMock {
             isWindow: isWindowHeuristic(axApp: axApp, id, activationPolicy, windowLevel),
             isDialog: { isDialogHeuristic(id, windowLevel) },
         )
-    }
-}
-
-enum AxUiElementWindowType: String {
-    case window
-    case dialog
-    /// Not even a real window
-    case popup
-
-    static func new(isWindow: Bool, isDialog: () -> Bool) -> AxUiElementWindowType {
-        switch true {
-            case !isWindow: .popup
-            case isDialog(): .dialog
-            default: .window
-        }
     }
 }
