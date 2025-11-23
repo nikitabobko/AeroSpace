@@ -33,7 +33,7 @@ func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) {
         return
     }
 
-    _ = try? socket.write(from: Result { try JSONEncoder().encode(ClientRequest(args: ["enable", state.rawValue], stdin: "")) }.getOrDie())
+    _ = try? socket.write(from: Result { try JSONEncoder().encode(ClientRequest(args: ["enable", state.rawValue], stdin: "", windowId: nil, workspace: nil)) }.getOrDie())
     _ = try? Socket.wait(for: [socket], timeout: 0, waitForever: true)
     _ = try? socket.readString()
 }

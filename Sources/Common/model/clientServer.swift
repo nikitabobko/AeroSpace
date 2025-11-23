@@ -29,10 +29,14 @@ public struct ClientRequest: Codable, Sendable {
     public var command: String? // Unused. keep it for API compatibility with old servers for a couple of version
     public let args: [String]
     public let stdin: String
+    public let windowId: UInt32?  // Please forward AEROSPACE_WINDOW_ID env variable here
+    public let workspace: String? // Please forward AEROSPACE_WORKSPACE env variable here
 
     public init(
         args: [String],
         stdin: String,
+        windowId: UInt32?,
+        workspace: String?
     ) {
         if args.contains(where: { $0.rangeOfCharacter(from: .whitespacesAndNewlines) != nil || $0.contains("\"") || $0.contains("\'") }) {
             self.command = "" // Old server won't understand it anyway
@@ -41,6 +45,8 @@ public struct ClientRequest: Codable, Sendable {
         }
         self.args = args
         self.stdin = stdin
+        self.windowId = windowId
+        self.workspace = workspace
     }
 
     public static func decodeJson(_ data: Data) -> Result<ClientRequest, String> {
