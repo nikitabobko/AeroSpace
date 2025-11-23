@@ -75,10 +75,10 @@ extension Window {
             let yProportion = (windowTopLeftCorner.y - currentMonitor.visibleRect.topLeftY) / currentMonitor.visibleRect.height
 
             let moveTo = workspace.workspaceMonitor
-            setAxTopLeftCorner(CGPoint(
+            setAxFrame(CGPoint(
                 x: moveTo.visibleRect.topLeftX + xProportion * moveTo.visibleRect.width,
                 y: moveTo.visibleRect.topLeftY + yProportion * moveTo.visibleRect.height,
-            ))
+            ), nil)
         }
         if isFullscreen {
             layoutFullscreen(context)

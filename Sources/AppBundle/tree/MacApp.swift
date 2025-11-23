@@ -140,24 +140,6 @@ final class MacApp: AbstractApp {
         }
     }
 
-    func setAxSize(_ windowId: UInt32, _ size: CGSize) {
-        setFrameJobs.removeValue(forKey: windowId)?.cancel()
-        setFrameJobs[windowId] = withWindowAsync(windowId) { [axApp] window, job in
-            try disableAnimations(app: axApp.threadGuarded, job) {
-                _ = window.set(Ax.sizeAttr, size)
-            }
-        }
-    }
-
-    func setAxTopLeftCorner(_ windowId: UInt32, _ point: CGPoint) {
-        setFrameJobs.removeValue(forKey: windowId)?.cancel()
-        setFrameJobs[windowId] = withWindowAsync(windowId) { [axApp] window, job in
-            try disableAnimations(app: axApp.threadGuarded, job) {
-                _ = window.set(Ax.topLeftCornerAttr, point)
-            }
-        }
-    }
-
     func getAxWindowsCount() async throws -> Int? {
         try await thread?.runInLoop { [axApp] job in
             axApp.threadGuarded.get(Ax.windowsAttr)?.count
