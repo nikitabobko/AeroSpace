@@ -58,7 +58,7 @@ final class RunLoopJob: Sendable, AeroAny {
     // Alternative 1. In macOS 15, it's possible to use `Atomic<Bool>` from `Synchronization` module
     // Alternative 2. https://github.com/apple/swift-atomics/tree/main but I don't want to add one more dependency just for
     //                AtomicBool
-    private nonisolated(unsafe) var _isCancelled: Int32 = 0
+    nonisolated(unsafe) private var _isCancelled: Int32 = 0
     var isCancelled: Bool { _isCancelled == 1 }
     func cancel() {
         while !isCancelled {

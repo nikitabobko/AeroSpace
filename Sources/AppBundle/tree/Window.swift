@@ -26,7 +26,7 @@ open class Window: TreeNode, Hashable {
     @MainActor
     func closeAxWindow() { die("Not implemented") }
 
-    public nonisolated func hash(into hasher: inout Hasher) {
+    nonisolated public func hash(into hasher: inout Hasher) {
         hasher.combine(windowId)
     }
 

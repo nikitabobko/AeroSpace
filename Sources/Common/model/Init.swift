@@ -1,7 +1,7 @@
-public nonisolated(unsafe) var isCli = true
+nonisolated(unsafe) public var isCli = true
 public var isServer: Bool { !isCli }
 
-public nonisolated(unsafe) var terminationHandler: TerminationHandler = EmptyTerminationHandler()
+nonisolated(unsafe) public var terminationHandler: TerminationHandler = EmptyTerminationHandler()
 
 struct EmptyTerminationHandler: TerminationHandler {
     func beforeTermination() {}

@@ -33,7 +33,7 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
 
 final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     let name: String
-    private nonisolated let nameLogicalSegments: StringLogicalSegments
+    nonisolated private let nameLogicalSegments: StringLogicalSegments
     /// `assignedMonitorPoint` must be interpreted only when the workspace is invisible
     fileprivate var assignedMonitorPoint: CGPoint? = nil
 
