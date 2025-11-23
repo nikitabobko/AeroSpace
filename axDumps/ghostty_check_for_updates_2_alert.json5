@@ -1,0 +1,83 @@
+{
+  "AXActivationPoint" : "<AXValue 0x7dd7098f0> {value = x:780.000000 y:276.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : {
+    "AXEnabled" : 1,
+    "AXIdentifier" : "action-button-1",
+    "AXParent" : "AXUIElement(AxWindowId=2866, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXRole" : "AXButton",
+    "AXTitle" : "OK",
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=2866, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXWindow" : "AXUIElement(AxWindowId=2866, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXDescription" : "alert",
+  "AXDocument" : null,
+  "AXFocused" : 1,
+  "AXFrame" : "<AXValue 0x7dc819740> {value = x:770.000000 y:260.000000 w:260.000000 h:252.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXIdentifier" : "_NS:87",
+  "AXMain" : 0,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 1,
+  "AXParent" : "<AXUIElement Application 0x7dcc2eb20> {pid=18587}",
+  "AXPosition" : "<AXValue 0x7dd7098f0> {value = x:770.000000 y:260.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x7dcc2edc0> {pid=18587}\";\n    SectionUniqueID = AXContent;\n}"
+  ],
+  "AXSize" : "<AXValue 0x7dd7098f0> {value = w:260.000000 h:252.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXDialog",
+  "AXTitle" : "",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=2866, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=2866, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=2854, title=\"~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x7dcc2eb20> {pid=18587}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Ghostty",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=2866, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
+      "AXUIElement(AxWindowId=2854, title=\"~\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
+    "Aero.AxWritable" : "AXFrontmost"
+  },
+  "Aero.App.appBundleId" : "com.mitchellh.ghostty",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.appBundlePath" : "file:///Applications/Ghostty.app/",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Ghostty.app/Contents/MacOS/ghostty",
+  "Aero.App.pid" : 18587,
+  "Aero.App.version" : "12214",
+  "Aero.App.versionShort" : "1.2.3",
+  "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, get.AXMinimizeButton, get.AXDocument, get.AXCloseButton, isWritable.AXActivationPoint, get.AXFullScreenButton, get.AXProxy, get.AXTitleUIElement, get.AXCancelButton, isWritable.AXDescription, get.AXZoomButton, get.AXToolbarButton",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "dialog",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxWritable" : "AXPosition, AXSections",
+  "Aero.axWindowId" : 2866,
+  "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
+  "Aero.windowLevel" : "{\"unknown\":{\"layerNumber\":8}}",
+  "Aero.workspace" : "M"
+}
