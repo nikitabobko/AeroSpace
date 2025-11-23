@@ -119,6 +119,10 @@ extension AxUiElementMock {
             return false
         }
 
+        if id == .iterm2 && get(Ax.fullscreenButtonAttr) == nil {
+            return false
+        }
+
         if activationPolicy == .accessory && get(Ax.closeButtonAttr) == nil && id != .steam {
             return false
         }
