@@ -233,23 +233,23 @@ final class ConfigTest: XCTestCase {
     func testParseOnWindowDetected() {
         let (parsed, errors) = parseConfig(
             """
-            [[on-window-detected]]
+            [[on-window-detected]] # 0
                 check-further-callbacks = true
                 run = ['layout floating', 'move-node-to-workspace W']
-            [[on-window-detected]]
+            [[on-window-detected]] # 1
                 if.app-id = 'com.apple.systempreferences'
                 run = []
-            [[on-window-detected]]
-            [[on-window-detected]]
+            [[on-window-detected]] # 2
+            [[on-window-detected]] # 3
                 run = ['move-node-to-workspace S', 'layout tiling']
-            [[on-window-detected]]
+            [[on-window-detected]] # 4
                 run = ['move-node-to-workspace S', 'move-node-to-workspace W']
-            [[on-window-detected]]
+            [[on-window-detected]] # 5
                 run = ['move-node-to-workspace S', 'layout h_tiles']
             """,
         )
         assertEquals(parsed.onWindowDetected, [
-            WindowDetectedCallback(
+            WindowDetectedCallback( // 0
                 matcher: WindowDetectedCallbackMatcher(
                     appId: nil,
                     appNameRegexSubstring: nil,
@@ -261,23 +261,36 @@ final class ConfigTest: XCTestCase {
                     MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "W")),
                 ],
             ),
-            WindowDetectedCallback(
+            WindowDetectedCallback( // 1
                 matcher: WindowDetectedCallbackMatcher(
                     appId: "com.apple.systempreferences",
                     appNameRegexSubstring: nil,
                     windowTitleRegexSubstring: nil,
                 ),
-                checkFurtherCallbacks: false,
                 rawRun: [],
+            ),
+            WindowDetectedCallback( // 3
+                rawRun: [
+                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "S")),
+                    LayoutCommand(args: LayoutCmdArgs(rawArgs: [], toggleBetween: [.tiling])),
+                ],
+            ),
+            WindowDetectedCallback( // 4
+                rawRun: [
+                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "S")),
+                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "W")),
+                ],
+            ),
+            WindowDetectedCallback( // 5
+                rawRun: [
+                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "S")),
+                    LayoutCommand(args: LayoutCmdArgs(rawArgs: [], toggleBetween: [.h_tiles])),
+                ],
             ),
         ])
 
         assertEquals(errors.descriptions, [
             "on-window-detected[2]: \'run\' is mandatory key",
-            "on-window-detected[3]: For now, \'move-node-to-workspace\' must be the latest instruction in the callback (otherwise it\'s error-prone). Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
-            "on-window-detected[4]: For now, \'move-node-to-workspace\' can be mentioned only once in \'run\' callback. Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
-            "on-window-detected[5]: For now, \'layout floating\', \'layout tiling\' and \'move-node-to-workspace\' are the only commands that are supported in \'on-window-detected\'. Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
-            "on-window-detected[5]: For now, \'move-node-to-workspace\' must be the latest instruction in the callback (otherwise it\'s error-prone). Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
         ])
     }
 

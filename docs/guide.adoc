@@ -494,9 +494,6 @@ The callbacks are processed in the order they are declared.
 By default, the first callback that matches the criteria is run, and further callbacks are not considered.
 (The behavior can be overridden with `check-further-callbacks` option)
 
-For now, only xref:commands.adoc#move-node-to-workspace[move-node-to-workspace] and xref:commands.adoc#layout[layout] commands are supported in the `run` callback.
-Please post your use cases to https://github.com/nikitabobko/AeroSpace/issues/20[the issue] if you want other commands to get supported.
-
 Available window conditions are:
 
 [cols="1,2"]
