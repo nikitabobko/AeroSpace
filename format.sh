@@ -6,4 +6,4 @@ source ./script/setup.sh
 ./.deps/swiftformat/swiftformat .
 
 ./script/install-dep.sh --swiftlint
-./.deps/swiftlint/swiftlint lint --quiet
+./.deps/swiftlint/swiftlint lint --quiet --fix
