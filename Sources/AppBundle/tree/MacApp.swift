@@ -125,8 +125,8 @@ final class MacApp: AbstractApp {
     func setAxFrame(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = withWindowAsync(windowId) { [axApp] window, job in
-            disableAnimations(app: axApp.threadGuarded) {
-                setFrame(window, topLeft, size)
+            try disableAnimations(app: axApp.threadGuarded, job) {
+                try setFrame(window, topLeft, size, job)
             }
         }
     }
@@ -134,8 +134,8 @@ final class MacApp: AbstractApp {
     func setAxFrameBlocking(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) async throws {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         try await withWindow(windowId) { [axApp] window, job in
-            disableAnimations(app: axApp.threadGuarded) {
-                setFrame(window, topLeft, size)
+            try disableAnimations(app: axApp.threadGuarded, job) {
+                try setFrame(window, topLeft, size, job)
             }
         }
     }
@@ -143,7 +143,7 @@ final class MacApp: AbstractApp {
     func setAxSize(_ windowId: UInt32, _ size: CGSize) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = withWindowAsync(windowId) { [axApp] window, job in
-            disableAnimations(app: axApp.threadGuarded) {
+            try disableAnimations(app: axApp.threadGuarded, job) {
                 _ = window.set(Ax.sizeAttr, size)
             }
         }
@@ -152,7 +152,7 @@ final class MacApp: AbstractApp {
     func setAxTopLeftCorner(_ windowId: UInt32, _ point: CGPoint) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = withWindowAsync(windowId) { [axApp] window, job in
-            disableAnimations(app: axApp.threadGuarded) {
+            try disableAnimations(app: axApp.threadGuarded, job) {
                 _ = window.set(Ax.topLeftCornerAttr, point)
             }
         }
@@ -332,10 +332,10 @@ final class MacApp: AbstractApp {
         }
     }
 
-    private func withWindowAsync(_ windowId: UInt32, _ body: @Sendable @escaping (AXUIElement, RunLoopJob) -> ()) -> RunLoopJob {
+    private func withWindowAsync(_ windowId: UInt32, _ body: @Sendable @escaping (AXUIElement, RunLoopJob) throws -> ()) -> RunLoopJob {
         thread?.runInLoopAsync { [windows] job in
             guard let window = windows.threadGuarded[windowId] else { return }
-            body(window.ax, job)
+            try? body(window.ax, job)
         } ?? .cancelled
     }
 }
@@ -381,18 +381,20 @@ extension [UInt32: AxWindow] {
     }
 }
 
-private func setFrame(_ window: AXUIElement, _ topLeft: CGPoint?, _ size: CGSize?) {
+private func setFrame(_ window: AXUIElement, _ topLeft: CGPoint?, _ size: CGSize?, _ job: RunLoopJob) throws {
     // Set size and then the position. The order is important https://github.com/nikitabobko/AeroSpace/issues/143
     //                                                        https://github.com/nikitabobko/AeroSpace/issues/335
     if let size { window.set(Ax.sizeAttr, size) }
+    try job.checkCancellation()
     if let topLeft { window.set(Ax.topLeftCornerAttr, topLeft) } else { return }
+    try job.checkCancellation()
     if let size { window.set(Ax.sizeAttr, size) }
 }
 
 // Some undocumented magic
 // References: https://github.com/koekeishiya/yabai/commit/3fe4c77b001e1a4f613c26f01ea68c0f09327f3a
 //             https://github.com/rxhanson/Rectangle/pull/285
-private func disableAnimations<T>(app: AXUIElement, _ body: () -> T) -> T {
+private func disableAnimations<T>(app: AXUIElement, _ job: RunLoopJob, _ body: () throws -> T) throws -> T {
     let wasEnabled = app.get(Ax.enhancedUserInterfaceAttr) == true
     if wasEnabled {
         app.set(Ax.enhancedUserInterfaceAttr, false)
@@ -402,7 +404,8 @@ private func disableAnimations<T>(app: AXUIElement, _ body: () -> T) -> T {
             app.set(Ax.enhancedUserInterfaceAttr, true)
         }
     }
-    return body()
+    try job.checkCancellation()
+    return try body()
 }
 
 typealias Continuation<T> = CheckedContinuation<T, Never>
