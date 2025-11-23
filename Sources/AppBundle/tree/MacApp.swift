@@ -227,13 +227,13 @@ final class MacApp: AbstractApp {
         for (_, app) in MacApp.allAppsMap { // gc dead apps
             try checkCancellation()
             if app.nsApp.isTerminated {
-                app.destroy()
+                await app.destroy()
             }
         }
         return try await withThrowingTaskGroup(of: (pid_t, [UInt32]).self, returning: [MacApp: [UInt32]].self) { group in
             func refreshTheApp(_ nsApp: NSRunningApplication) {
                 group.addTask { @Sendable @MainActor in
-                    guard let app = try await getOrRegister(nsApp) else { return (nsApp.processIdentifier, []) }
+                    guard let app = try await MacApp.getOrRegister(nsApp) else { return (nsApp.processIdentifier, []) }
                     return (nsApp.processIdentifier, try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
                 }
             }
@@ -255,7 +255,7 @@ final class MacApp: AbstractApp {
             }
             var result: [MacApp: [UInt32]] = [:]
             for try await (pid, windowIds) in group {
-                if let app = allAppsMap[pid] {
+                if let app = MacApp.allAppsMap[pid] {
                     result[app] = windowIds
                 }
             }
@@ -263,19 +263,19 @@ final class MacApp: AbstractApp {
         }
     }
 
-    @MainActor
     private func refreshAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [UInt32] {
         if nsApp.isTerminated {
-            destroy()
+            await destroy()
             return []
         }
         guard let thread else { return [] }
-        return try await thread.runInLoop { [nsApp, windows, axApp] (job) -> [UInt32] in
-            var result: [UInt32: AxWindow] = windows.threadGuarded
+        let (alive, dead) = try await thread.runInLoop { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32: AxWindow]) in
+            var alive: [UInt32: AxWindow] = windows.threadGuarded
+            var dead = [UInt32: AxWindow]()
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
             // Second and third lines of defence are technically needed only to avoid potential flickering
             if frontmostAppBundleId != lockScreenAppBundleId {
-                result = try result.filter {
+                (alive, dead) = try alive.partition {
                     try job.checkCancellation()
                     return $0.value.ax.containingWindowId() != nil
                 }
@@ -283,17 +283,20 @@ final class MacApp: AbstractApp {
 
             for (id, window) in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
                 try job.checkCancellation()
-                try result.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
+                try alive.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
             }
 
-            windows.threadGuarded = result
-            return Array(result.keys)
+            windows.threadGuarded = alive
+            return (Array(alive.keys), dead)
         }
+        for (windowId, _) in dead {
+            setFrameJobs.removeValue(forKey: windowId)?.cancel()
+        }
+        return alive
     }
 
-    @MainActor
-    private func destroy() {
-        MacApp.allAppsMap.removeValue(forKey: pid)
+    private func destroy() async {
+        _ = await Task { @MainActor [pid] in _ = MacApp.allAppsMap.removeValue(forKey: pid) }.result
         for (_, job) in setFrameJobs {
             job.cancel()
         }
