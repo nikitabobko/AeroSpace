@@ -23,7 +23,7 @@ enum GlobalObserver {
         let notifName = notification.name.rawValue
         Task { @MainActor in
             guard let token: RunSessionGuard = .isServerEnabled else { return }
-            try await runSession(.globalObserver(notifName), token) {
+            try await runLightSession(.globalObserver(notifName), token) {
                 if config.automaticallyUnhideMacosHiddenApps {
                     if let w = prevFocus?.windowOrNil,
                        w.macAppUnsafe.nsApp.isHidden,
@@ -65,7 +65,7 @@ enum GlobalObserver {
                 switch true {
                     // Detect clicks on desktop of different monitors
                     case clickedMonitor.activeWorkspace != focus.workspace:
-                        _ = try await runSession(.globalObserverLeftMouseUp, token) {
+                        _ = try await runLightSession(.globalObserverLeftMouseUp, token) {
                             clickedMonitor.activeWorkspace.focusWorkspace()
                         }
                     // Detect close button clicks for unfocused windows. Yes, kAXUIElementDestroyedNotification is that unreliable

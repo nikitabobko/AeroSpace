@@ -16,7 +16,7 @@ func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeM
         moveWithMouseTask?.cancel()
         moveWithMouseTask = Task {
             try checkCancellation()
-            try await runSession(.ax(notif), token) {
+            try await runLightSession(.ax(notif), token) {
                 try await moveWithMouse(window)
             }
         }

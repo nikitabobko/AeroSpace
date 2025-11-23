@@ -46,7 +46,7 @@ func runRefreshSessionBlocking(
 }
 
 @MainActor
-func runSession<T>(
+func runLightSession<T>(
     _ event: RefreshSessionEvent,
     _ token: RunSessionGuard,
     body: @MainActor () async throws -> T,
