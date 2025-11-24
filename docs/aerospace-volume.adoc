@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace volume [-h|--help] (up|down)
-aerospace volume [-h|--help] (mute-toggle|mute-off|mute-on)
-aerospace volume [-h|--help] set <number>
+aerospace volume [-h|--help] (up|down) [--no-gui]
+aerospace volume [-h|--help] (mute-toggle|mute-off|mute-on) [--no-gui]
+aerospace volume [-h|--help] set <number> [--no-gui]
 
 // end::synopsis[]
 
@@ -25,6 +25,7 @@ aerospace volume [-h|--help] set <number>
 include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
+--no-gui:: Don't show volume GUI indicator
 
 // =========================================================== Arguments
 include::./util/conditional-arguments-header.adoc[]

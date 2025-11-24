@@ -5,10 +5,13 @@ public struct VolumeCmdArgs: CmdArgs {
         kind: .volume,
         allowInConfig: true,
         help: volume_help_generated,
-        flags: [:],
+        flags: [
+            "--no-gui": falseBoolFlag(\.gui),
+        ],
         posArgs: [newArgParser(\.action, parseVolumeAction, mandatoryArgPlaceholder: VolumeAction.argsUnion)],
     )
 
+    public var gui: Bool = true
     /*conforms*/ public var windowId: UInt32?
     /*conforms*/ public var workspaceName: WorkspaceName?
 
