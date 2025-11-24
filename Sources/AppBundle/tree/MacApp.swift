@@ -269,7 +269,7 @@ final class MacApp: AbstractApp {
             return []
         }
         guard let thread else { return [] }
-        let (alive, dead) = try await thread.runInLoop { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32: AxWindow]) in
+        let (alive, dead) = try await thread.runInLoop { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32]) in
             var alive: [UInt32: AxWindow] = windows.threadGuarded
             var dead = [UInt32: AxWindow]()
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
@@ -287,9 +287,9 @@ final class MacApp: AbstractApp {
             }
 
             windows.threadGuarded = alive
-            return (Array(alive.keys), dead)
+            return (Array(alive.keys), Array(dead.keys))
         }
-        for (windowId, _) in dead {
+        for windowId in dead {
             setFrameJobs.removeValue(forKey: windowId)?.cancel()
         }
         return alive
