@@ -732,15 +732,15 @@ Non-trivial configuration options are mentioned further in this guide.
 If no custom config is found, AeroSpace will load the default config.</p>
 </div>
 <div class="paragraph">
-<p>If the key is omitted in the custom config, it fallbacks to the value in the default config, unless it&#8217;s stated otherwise for the specific keys. Namely:</p>
+<p>If the key is omitted in the custom config, it falls back to the value in the default config, unless it&#8217;s stated otherwise for the specific keys. Namely:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>mode.*.binding</code>. It fallbacks to the empty TOML table. Your config is the source of truth for keyboard bindings. You must explicitly mention all the keyboard bindings and <a href="#binding-modes">binding modes</a> in your config.</p>
+<p><code>mode.*.binding</code>. It falls back to the empty TOML table. Your config is the source of truth for keyboard bindings. You must explicitly mention all the keyboard bindings and <a href="#binding-modes">binding modes</a> in your config.</p>
 </li>
 <li>
-<p><code>on-focused-monitor-changed</code>. It fallbacks to the empty TOML array.</p>
+<p><code>on-focused-monitor-changed</code>. It falls back to the empty TOML array.</p>
 </li>
 <li>
 <p><code>exec</code> TOML table. See: <a href="#exec-env-vars">exec-* Environment Variables</a> (It&#8217;s so boring and verbose, I don&#8217;t even want to mention it in the <code>default-config.toml</code>)</p>
@@ -748,7 +748,7 @@ If no custom config is found, AeroSpace will load the default config.</p>
 </ul>
 </div>
 <div class="paragraph">
-<p>Rule of thumb: all the "scalar like" values always fallback to the default config. All the "vector like" values fallback to the empty TOML array or table.</p>
+<p>Rule of thumb: all the "scalar like" values always fall back to the default config. All the "vector like" values fall back to the empty TOML array or table.</p>
 </div>
 <div class="paragraph">
 <p>That allows you to keep your config tidy and clean from trivial config keys for which you like the default values.
@@ -766,6 +766,10 @@ You can bootstrap your custom config by copying the default config from the app 
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Place a copy of this config to ~/.aerospace.toml</span>
 <span class="tok-c1"># After that, you can edit ~/.aerospace.toml to your liking</span>
+
+<span class="tok-c1"># Config version for compatibility and deprecations</span>
+<span class="tok-c1"># Fallback value (if you omit the key): config-version = 1</span>
+<span class="tok-n">config-version</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">2</span>
 
 <span class="tok-c1"># You can use it to add commands that run after AeroSpace startup.</span>
 <span class="tok-c1"># Available commands : <a href="https://nikitabobko.github.io/AeroSpace/commands" class="bare">https://nikitabobko.github.io/AeroSpace/commands</a></span>
@@ -802,6 +806,19 @@ You can bootstrap your custom config by copying the default config from the app 
 <span class="tok-c1"># Useful if you don&#39;t use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key</span>
 <span class="tok-c1"># Also see: <a href="https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app" class="bare">https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app</a></span>
 <span class="tok-n">automatically-unhide-macos-hidden-apps</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-kc">false</span>
+
+<span class="tok-c1"># List of workspaces that should stay alive even when they contain no windows,</span>
+<span class="tok-c1"># even when they are invisible.</span>
+<span class="tok-c1"># This config version is only available since &#39;config-version = 2&#39;</span>
+<span class="tok-c1"># Fallback value (if you omit the key): persistent-workspaces = []</span>
+<span class="tok-n">persistent-workspaces</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s2">&quot;1&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;2&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;3&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;4&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;5&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;6&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;7&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;8&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;9&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;A&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;B&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;C&quot;</span><span class="tok-p">,</span>
+<span class="tok-w">                         </span><span class="tok-s2">&quot;D&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;E&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;F&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;G&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;H&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;I&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;J&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;K&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;L&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;M&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;N&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;O&quot;</span><span class="tok-p">,</span>
+<span class="tok-w">                         </span><span class="tok-s2">&quot;P&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;Q&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;R&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;S&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;T&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;U&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;V&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;W&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;X&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;Y&quot;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s2">&quot;Z&quot;</span><span class="tok-p">]</span>
+
+<span class="tok-c1"># A callback that runs every time binding mode changes</span>
+<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/guide#binding-modes" class="bare">https://nikitabobko.github.io/AeroSpace/guide#binding-modes</a></span>
+<span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#mode" class="bare">https://nikitabobko.github.io/AeroSpace/commands#mode</a></span>
+<span class="tok-n">on-mode-changed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[]</span>
 
 <span class="tok-c1"># Possible values: (qwerty|dvorak|colemak)</span>
 <span class="tok-c1"># See <a href="https://nikitabobko.github.io/AeroSpace/guide#key-mapping" class="bare">https://nikitabobko.github.io/AeroSpace/guide#key-mapping</a></span>
@@ -965,11 +982,7 @@ You can bootstrap your custom config by copying the default config from the app 
 <span class="tok-w">    </span><span class="tok-n">alt-shift-h</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with left&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
 <span class="tok-w">    </span><span class="tok-n">alt-shift-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with down&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
 <span class="tok-w">    </span><span class="tok-n">alt-shift-k</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with up&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
-<span class="tok-w">    </span><span class="tok-n">alt-shift-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with right&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span>
-
-<span class="tok-w">    </span><span class="tok-n">down</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;volume down&#39;</span>
-<span class="tok-w">    </span><span class="tok-n">up</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;volume up&#39;</span>
-<span class="tok-w">    </span><span class="tok-n">shift-down</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;volume set 0&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span></code></pre>
+<span class="tok-w">    </span><span class="tok-n">alt-shift-l</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;join-with right&#39;</span><span class="tok-p">,</span><span class="tok-w"> </span><span class="tok-s1">&#39;mode main&#39;</span><span class="tok-p">]</span></code></pre>
 </div>
 </div>
 </div>
@@ -1002,7 +1015,7 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 <div class="sect2">
 <h3 id="commands"><a class="anchor" href="#commands"></a><a class="link" href="#commands">2.5. Commands</a></h3>
 <div class="paragraph">
-<p>Commands is the thing that you use to manipulate AeroSpace and query its state.</p>
+<p>Commands are the thing you use to manipulate AeroSpace and query its state.</p>
 </div>
 <div class="paragraph">
 <p>There are two ways on how you can use commands:</p>
@@ -1094,7 +1107,7 @@ The initial binding mode that AeroSpace starts out with is "main".</p>
 </li>
 <li>
 <p>GUI apps on macOS don’t have Homebrew’s prefix in their <code>PATH</code> by default (<a href="https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities">docs.brew.sh</a>).
-That&#8217;s why unless you override <code>exec</code> section in your config, AeroSpace fallbacks to the following <code>exec</code> configuration:</p>
+That&#8217;s why unless you override <code>exec</code> section in your config, AeroSpace falls back to the following <code>exec</code> configuration:</p>
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-k">[exec]</span>
@@ -1456,7 +1469,7 @@ please make sure to arrange monitors in a way where <strong>every monitor has fr
 <h3 id="a-note-on-mission-control"><a class="anchor" href="#a-note-on-mission-control"></a><a class="link" href="#a-note-on-mission-control">4.2. A note on mission control</a></h3>
 <div class="paragraph">
 <p>For some reason, mission control doesn&#8217;t like that AeroSpace puts a lot of windows in the bottom right corner of the screen.
-Mission control shows windows too small even there is enough space to show them bigger.</p>
+Mission control shows windows too small even when there is enough space to show them bigger.</p>
 </div>
 <div class="paragraph">
 <p>There is a workaround. You can enable <code>Group windows by application</code> setting:</p>
@@ -1479,7 +1492,7 @@ People report all sorts of weird issues related to focus and performance when th
 <div class="ulist">
 <ul>
 <li>
-<p>Wrong window may receive focus in multi monitor setup: <a href="https://github.com/nikitabobko/AeroSpace/issues/101">#101</a> (Bug in Apple API)</p>
+<p>Wrong window may receive focus in multi-monitor setup: <a href="https://github.com/nikitabobko/AeroSpace/issues/101">#101</a> (Bug in Apple API)</p>
 </li>
 <li>
 <p>Wrong borderless Alacritty window may receive focus in <strong>single monitor</strong> setup: <a href="https://github.com/nikitabobko/AeroSpace/issues/247">#247</a> (Bug in Apple API)</p>
@@ -1535,7 +1548,7 @@ Spaces are just cursed in macOS. The less Spaces you have, the better macOS beha
 </tbody>
 </table>
 <div class="paragraph">
-<p>If you don&#8217;t care about macOS native fullscreen in multi monitor setup (which is itself clunky anyway, since it creates a separate Space instance),
+<p>If you don&#8217;t care about macOS native fullscreen in multi-monitor setup (which is itself clunky anyway, since it creates a separate Space instance),
 I recommend disabling <code>Displays have separate Spaces</code>.</p>
 </div>
 <div class="paragraph">
@@ -1584,10 +1597,6 @@ If no conditions are specified then <code>run</code> is run every time a new win
 The callbacks are processed in the order they are declared.
 By default, the first callback that matches the criteria is run, and further callbacks are not considered.
 (The behavior can be overridden with <code>check-further-callbacks</code> option)</p>
-</div>
-<div class="paragraph">
-<p>For now, only <a href="commands#move-node-to-workspace">move-node-to-workspace</a> and <a href="commands#layout">layout</a> commands are supported in the <code>run</code> callback.
-Please post your use cases to <a href="https://github.com/nikitabobko/AeroSpace/issues/20">the issue</a> if you want other commands to get supported.</p>
 </div>
 <div class="paragraph">
 <p>Available window conditions are:</p>
@@ -1655,7 +1664,7 @@ Please post your use cases to <a href="https://github.com/nikitabobko/AeroSpace/
 <div class="ulist">
 <ul>
 <li>
-<p>Take a look at precomposed <a href="./goodies#popular-apps-ids">list of popular application IDs</a></p>
+<p>Take a look at precompiled <a href="./goodies#popular-apps-ids">list of Apple application IDs</a></p>
 </li>
 <li>
 <p>You can use <a href="commands#list-apps"><code>aerospace list-apps</code></a> CLI command to get IDs of running applications</p>
@@ -1740,7 +1749,7 @@ Some windows initialize their title after the window appears.
 </div>
 </div>
 <div class="paragraph">
-<p>You shouldn&#8217;t rely on the order callback are called, since it&#8217;s an implementation detail and can change from version to version.</p>
+<p>You shouldn&#8217;t rely on the order callbacks are called, since it&#8217;s an implementation detail and can change from version to version.</p>
 </div>
 <div class="paragraph">
 <p>The callbacks are "recursion resistant", which means that any focus change within the callback won&#8217;t retrigger the callback.
@@ -1791,7 +1800,7 @@ It may be useful for integrating with bars.</p>
 </li>
 <li>
 <p>Each monitor shows its own workspace.
-The showed workspaces are called"visible" workspaces</p>
+The showed workspaces are called "visible" workspaces</p>
 </li>
 <li>
 <p>Different monitors can’t show the same workspace at the same time</p>
@@ -1823,7 +1832,7 @@ The showed workspaces are called"visible" workspaces</p>
 <div class="paragraph">
 <p>The idea of making pool of workspaces shared is based on <strong id="observation">the observation</strong> that most users have a limited set of workspaces on their secondary monitors.
 Secondary monitors are frequently dedicated to specific tasks (browser, shell), or for monitoring various activities such as logs and dashboards.
-Thus, using one workspace per each secondary monitors and "the rest" on the main monitor often makes sense.</p>
+Thus, using one workspace per secondary monitor and "the rest" on the main monitor often makes sense.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1978,7 +1987,7 @@ Please see <code>isDialogHeuristic</code> function in AeroSpace sources.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-07-11 00:33:03 +0200
+Last updated 2025-11-24 22:56:17 +0100
 </div>
 </div>
 </body>

@@ -832,7 +832,7 @@ The default is: <code>workspace</code></p>
 <dt class="hdlist1">--boundaries-action &lt;action&gt;</dt>
 <dd>
 <p>Defines the behavior when requested to cross the <code>&lt;boundary&gt;</code>.<br>
-<code>&lt;action&gt;</code> possible values: <code>(stop|fail|wrap-around-the-workspace|wrap-around-all-monitors)</code><br>
+<code>&lt;action&gt;</code> possible values: <code>(stop|fail|wrap-around-the-workspace|wrap-around-all-monitors)</code>.<br>
 The default is: <code>stop</code></p>
 </dd>
 <dt class="hdlist1">--window-id &lt;window-id&gt;</dt>
@@ -1384,7 +1384,7 @@ The default is: <code>create-implicit-container</code></p>
 </div>
 <div class="paragraph">
 <p><strong>Remark</strong>: If <code>--boundaries</code> is set to <code>all-monitors-outer-frame</code> and there is a monitor in the <code>up</code> direction,
-the implicit container isn&#8217;t be created.</p>
+the implicit container isn&#8217;t created.</p>
 </div>
 <div class="paragraph">
 <p>Instead, <code>window 2</code> would be moved to the monitor above the current.</p>
@@ -1496,7 +1496,7 @@ This flag is a shortcut for manually running <code>aerospace-workspace</code>/<c
 </dd>
 <dt class="hdlist1">--fail-if-noop</dt>
 <dd>
-<p>Exit with non-zero code if move window to monitor it already belongs to</p>
+<p>Exit with non-zero code if moving window to monitor it already belongs to</p>
 </dd>
 <dt class="hdlist1">--window-id &lt;window-id&gt;</dt>
 <dd>
@@ -1533,6 +1533,7 @@ Monitor patterns follow the same format as in <code>workspace-to-monitor-force-a
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">move-node-to-workspace [-h|--help] [--focus-follows-window] [--wrap-around]
+                       [--stdin|--no-stdin]
                        (next|prev)
 move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-if-noop]
                        [--window-id &lt;window-id&gt;] &lt;workspace-name&gt;</pre>
@@ -1569,6 +1570,16 @@ This flag is a shortcut for manually running <code>aerospace-workspace</code>/<c
 <dt class="hdlist1">--window-id &lt;window-id&gt;</dt>
 <dd>
 <p>Act on the specified window instead of the focused window</p>
+</dd>
+<dt class="hdlist1">--stdin</dt>
+<dd>
+<p>Read the list of workspaces from stdin.
+Incompatible with <code>--no-stdin</code></p>
+</dd>
+<dt class="hdlist1">--no-stdin</dt>
+<dd>
+<p>Ignore the list of workspaces from stdin, even if provided.
+Incompatible with <code>--stdin</code></p>
 </dd>
 </dl>
 </div>
@@ -1726,7 +1737,7 @@ Monitor patterns follow the same format as in <code>workspace-to-monitor-force-a
 it changes height if the parent has vertical orientation</p>
 </li>
 <li>
-<p><code>smart-opposite</code> does resizes the opposite axis of smart</p>
+<p><code>smart-opposite</code> resizes the opposite axis of smart</p>
 </li>
 </ul>
 </div>
@@ -1772,7 +1783,7 @@ it changes height if the parent has vertical orientation</p>
 </div>
 </div>
 <div class="paragraph">
-<p><code>split</code> command exist solely for compatibility with i3.
+<p><code>split</code> command exists solely for compatibility with i3.
 Unless you&#8217;re hardcore i3 user who knows what they are doing, it&#8217;s recommended to use <code>join-with</code></p>
 </div>
 <div class="paragraph">
@@ -1787,7 +1798,7 @@ Unless you&#8217;re hardcore i3 user who knows what they are doing, it&#8217;s r
 <p>Replaces the focused window with the container</p>
 </li>
 <li>
-<p>Puts the focused window into the container as its the only child</p>
+<p>Puts the focused window into the container as its only child</p>
 </li>
 </ol>
 </div>
@@ -1841,6 +1852,9 @@ Consider using <code>join-with</code> if you want to keep <code>enable-normaliza
 <div class="paragraph">
 <p>Swaps the focused window with another window.</p>
 </div>
+<div class="paragraph">
+<p>The operation is equivalent to dragging a window with the mouse.</p>
+</div>
 <div class="paragraph lead">
 <p><strong>OPTIONS</strong></p>
 </div>
@@ -1856,7 +1870,8 @@ Consider using <code>join-with</code> if you want to keep <code>enable-normaliza
 </dd>
 <dt class="hdlist1">--swap-focus</dt>
 <dd>
-<p>Swap focus away from the currently focused window. By default, this command does not change the focused window.</p>
+<p>Swap focus away from the currently focused window.
+By default, this command does not change the focused window.</p>
 </dd>
 <dt class="hdlist1">--wrap-around</dt>
 <dd>
@@ -1909,7 +1924,7 @@ In single monitor setup the command is identical to <code>workspace</code> comma
 </dd>
 <dt class="hdlist1">--fail-if-noop</dt>
 <dd>
-<p>Exit with non-zero exit code if the workspace already visible on the focused monitor.</p>
+<p>Exit with non-zero exit code if the workspace is already visible on the focused monitor.</p>
 </dd>
 </dl>
 </div>
@@ -1989,9 +2004,9 @@ In single monitor setup the command is identical to <code>workspace</code> comma
 <div class="sectionbody">
 <div class="listingblock">
 <div class="content">
-<pre class="nowrap">volume [-h|--help] (up|down)
-volume [-h|--help] (mute-toggle|mute-off|mute-on)
-volume [-h|--help] set &lt;number&gt;</pre>
+<pre class="nowrap">volume [-h|--help] (up|down) [--no-gui]
+volume [-h|--help] (mute-toggle|mute-off|mute-on) [--no-gui]
+volume [-h|--help] set &lt;number&gt; [--no-gui]</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2005,6 +2020,10 @@ volume [-h|--help] set &lt;number&gt;</pre>
 <dt class="hdlist1">-h, --help</dt>
 <dd>
 <p>Print help</p>
+</dd>
+<dt class="hdlist1">--no-gui</dt>
+<dd>
+<p>Don&#8217;t show volume GUI indicator</p>
 </dd>
 </dl>
 </div>
@@ -2035,7 +2054,7 @@ volume [-h|--help] set &lt;number&gt;</pre>
 <div class="listingblock">
 <div class="content">
 <pre class="nowrap">workspace [-h|--help] [--auto-back-and-forth] [--fail-if-noop] &lt;workspace-name&gt;
-workspace [-h|--help] [--wrap-around] (next|prev)</pre>
+workspace [-h|--help] [--wrap-around] [--stdin|--no-stdin] (next|prev)</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2053,7 +2072,7 @@ workspace [-h|--help] [--wrap-around] (next|prev)</pre>
 <div class="ulist">
 <ul>
 <li>
-<p>If stdin is not TTY and stdin contains non whitespace characters then <strong>the list</strong> is taken from stdin</p>
+<p>If <code>--stdin</code> is specified, then <strong>the list</strong> is taken from stdin</p>
 </li>
 <li>
 <p>Otherwise, <strong>the list</strong> is defined as all workspaces on focused monitor in alphabetical order</p>
@@ -2080,8 +2099,18 @@ Incompatible with <code>--fail-if-noop</code></p>
 </dd>
 <dt class="hdlist1">--fail-if-noop</dt>
 <dd>
-<p>Exit with non-zero exit code if switch to the already focused workspace
+<p>Exit with non-zero exit code if switch to the already focused workspace.
 Incompatible with <code>--auto-back-and-forth</code></p>
+</dd>
+<dt class="hdlist1">--stdin</dt>
+<dd>
+<p>Read the list of workspaces from stdin.
+Incompatible with <code>--no-stdin</code></p>
+</dd>
+<dt class="hdlist1">--no-stdin</dt>
+<dd>
+<p>Ignore the list of workspaces from stdin, even if provided.
+Incompatible with <code>--stdin</code></p>
 </dd>
 </dl>
 </div>
@@ -2483,12 +2512,13 @@ Incompatible with <code>--count</code></p>
 </dd>
 <dt class="hdlist1">--format &lt;output-format&gt;</dt>
 <dd>
-<p>Specify output format. See "Output Format" section for more details.
+<p>Specify output format.
+See "Output Format" section for more details.
 Incompatible with <code>--count</code></p>
 </dd>
 <dt class="hdlist1">--count</dt>
 <dd>
-<p>Output only the number of workspaces.
+<p>Output only the number of monitors.
 Incompatible with <code>--format</code></p>
 </dd>
 <dt class="hdlist1">--json</dt>
@@ -2526,6 +2556,10 @@ Incompatible with <code>--count</code></p>
 <dt class="hdlist1">%{monitor-name}</dt>
 <dd>
 <p>String. Name of the belonging monitor</p>
+</dd>
+<dt class="hdlist1">%{monitor-is-main}</dt>
+<dd>
+<p>Boolean. True if the monitor is main.</p>
 </dd>
 <dt class="hdlist1">%{right-padding}</dt>
 <dd>
@@ -2569,7 +2603,7 @@ list-windows [-h|--help] --focused [--format &lt;output-format&gt;] [--count] [-
 <dt class="hdlist1">--all</dt>
 <dd>
 <p>Alias for <code>--monitor all</code>.
-Please use this option <strong>with cautious</strong>.
+Please use this option <strong>with caution</strong>.
 Use it when you really need to get workspaces/windows from <strong>all monitors</strong>.</p>
 <div class="paragraph">
 <p>For multi-monitor setup <code>--monitor focused</code> is almost always a preferred option.
@@ -2687,6 +2721,14 @@ Incompatible with <code>--count</code></p>
 <dd>
 <p>Boolean. Is window in fullscreen by <code>aerospace fullscreen</code> command</p>
 </dd>
+<dt class="hdlist1">%{window-layout}</dt>
+<dd>
+<p>String. Alias for <code>%{window-parent-container-layout}</code></p>
+</dd>
+<dt class="hdlist1">%{window-parent-container-layout}</dt>
+<dd>
+<p>String. The layout (<code>v_tiles</code>, <code>h_tiles</code>, <code>v_accordion</code>, <code>h_accordion</code>, <code>floating</code>) of the window&#8217;s parent container.</p>
+</dd>
 <dt class="hdlist1">%{app-bundle-id}</dt>
 <dd>
 <p>String. Application unique identifier. <a href="https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids">Bundle ID</a></p>
@@ -2719,6 +2761,10 @@ Incompatible with <code>--count</code></p>
 <dd>
 <p>Boolean. True if the workspace is visible. A workspace can be visible but not focused in a multi-monitor setup</p>
 </dd>
+<dt class="hdlist1">%{workspace-root-container-layout}</dt>
+<dd>
+<p>String. The layout (<code>v_tiles</code>, <code>h_tiles</code>, <code>v_accordion</code>, <code>h_accordion</code>) of the workspace the window belongs to.</p>
+</dd>
 <dt class="hdlist1">%{monitor-id}</dt>
 <dd>
 <p>1-based Number. Sequential number of the belonging monitor.</p>
@@ -2730,6 +2776,10 @@ Incompatible with <code>--count</code></p>
 <dt class="hdlist1">%{monitor-name}</dt>
 <dd>
 <p>String. Name of the belonging monitor</p>
+</dd>
+<dt class="hdlist1">%{monitor-is-main}</dt>
+<dd>
+<p>Boolean. True if the monitor is main.</p>
 </dd>
 <dt class="hdlist1">%{right-padding}</dt>
 <dd>
@@ -2774,7 +2824,7 @@ list-workspaces [-h|--help] --focused [--format &lt;output-format&gt;] [--count]
 <dt class="hdlist1">--all</dt>
 <dd>
 <p>Alias for <code>--monitor all</code>.
-Please use this option <strong>with cautious</strong>.
+Please use this option <strong>with caution</strong>.
 Use it when you really need to get workspaces/windows from <strong>all monitors</strong>.</p>
 <div class="paragraph">
 <p>For multi-monitor setup <code>--monitor focused</code> is almost always a preferred option.
@@ -2826,7 +2876,8 @@ Several workspaces can be visible in multi-monitor setup</p>
 </dd>
 <dt class="hdlist1">--format &lt;output-format&gt;</dt>
 <dd>
-<p>Specify output format. See "Output Format" section for more details.
+<p>Specify output format.
+See "Output Format" section for more details.
 Incompatible with <code>--count</code></p>
 </dd>
 <dt class="hdlist1">--count</dt>
@@ -2870,6 +2921,10 @@ Incompatible with <code>--count</code></p>
 <dd>
 <p>Boolean. True if the workspace is visible. A workspace can be visible but not focused in a multi-monitor setup</p>
 </dd>
+<dt class="hdlist1">%{workspace-root-container-layout}</dt>
+<dd>
+<p>String. The layout (<code>v_tiles</code>, <code>h_tiles</code>, <code>v_accordion</code>, <code>h_accordion</code>) of the workspace&#8217;s root container</p>
+</dd>
 <dt class="hdlist1">%{monitor-id}</dt>
 <dd>
 <p>1-based Number. Sequential number of the belonging monitor</p>
@@ -2881,6 +2936,10 @@ Incompatible with <code>--count</code></p>
 <dt class="hdlist1">%{monitor-name}</dt>
 <dd>
 <p>String. Name of the belonging monitor</p>
+</dd>
+<dt class="hdlist1">%{monitor-is-main}</dt>
+<dd>
+<p>Boolean. True if the monitor is main.</p>
 </dd>
 <dt class="hdlist1">%{right-padding}</dt>
 <dd>
@@ -2902,7 +2961,7 @@ Incompatible with <code>--count</code></p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-07-11 00:33:03 +0200
+Last updated 2025-11-24 22:56:17 +0100
 </div>
 </div>
 </body>

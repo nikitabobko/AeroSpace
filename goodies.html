@@ -519,11 +519,12 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <li><a href="#disable-open-animations">4. Disable windows opening animations</a></li>
 <li><a href="#use-trackpad-gestures-to-switch-workspaces">5. Use trackpad gestures to switch workspaces</a></li>
 <li><a href="#show-aerospace-workspaces-in-sketchybar">6. Show AeroSpace workspaces in Sketchybar</a></li>
-<li><a href="#open-a-new-window-with-applescript">7. Open a new window with AppleScript</a></li>
-<li><a href="#disable-hide-app">8. Disable annoying and useless "hide application" shortcut</a></li>
-<li><a href="#screenshoot-shortcut">9. Take screenshots to clipboard using keyboard shortcut</a></li>
-<li><a href="#i3-like-config">10. i3 like config</a></li>
-<li><a href="#popular-apps-ids">11. List of popular and built-in applications IDs</a></li>
+<li><a href="#show-aerospace-workspaces-in-simple-bar">7. Show AeroSpace workspaces in simple-bar</a></li>
+<li><a href="#open-a-new-window-with-applescript">8. Open a new window with AppleScript</a></li>
+<li><a href="#disable-hide-app">9. Disable annoying and useless "hide application" shortcut</a></li>
+<li><a href="#screenshoot-shortcut">10. Take screenshots to clipboard using keyboard shortcut</a></li>
+<li><a href="#i3-like-config">11. i3 like config</a></li>
+<li><a href="#popular-apps-ids">12. List of Apple application IDs</a></li>
 </ul>
 </div>
 </div>
@@ -677,7 +678,7 @@ Use these snippets as a starting point.</p>
 <div class="title">~/.aerospace.toml</div>
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Run Sketchybar together with AeroSpace</span>
-<span class="tok-c1"># sketchbar has a built-in detection of already running process,</span>
+<span class="tok-c1"># sketchybar has a built-in detection of already running process,</span>
 <span class="tok-c1"># so it won&#39;t be run twice on AeroSpace restart</span>
 <span class="tok-n">after-startup-command</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span><span class="tok-s1">&#39;exec-and-forget sketchybar&#39;</span><span class="tok-p">]</span>
 
@@ -724,14 +725,41 @@ Use these snippets as a starting point.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="open-a-new-window-with-applescript"><a class="anchor" href="#open-a-new-window-with-applescript"></a><a class="link" href="#open-a-new-window-with-applescript">7. Open a new window with AppleScript</a></h2>
+<h2 id="show-aerospace-workspaces-in-simple-bar"><a class="anchor" href="#show-aerospace-workspaces-in-simple-bar"></a><a class="link" href="#show-aerospace-workspaces-in-simple-bar">7. Show AeroSpace workspaces in simple-bar</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><a href="https://github.com/Jean-Tinland/simple-bar">simple-bar</a> can be used to display AeroSpace workspaces.</p>
+</div>
+<div class="paragraph">
+<p>In order to sync simple-bar with AeroSpace, add these lines to your AeroSpace config file:</p>
+</div>
+<div class="listingblock">
+<div class="title">~/.aerospace.toml</div>
+<div class="content">
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Notify simple-bar about window focus change</span>
+<span class="tok-n">on-focus-changed</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span>
+<span class="tok-w">  </span><span class="tok-s2">&quot;exec-and-forget osascript -e &#39;tell application id </span><span class="tok-se">\&quot;</span><span class="tok-s2">tracesOf.Uebersicht</span><span class="tok-se">\&quot;</span><span class="tok-s2"> to refresh widget id </span><span class="tok-se">\&quot;</span><span class="tok-s2">simple-bar-index-jsx</span><span class="tok-se">\&quot;</span><span class="tok-s2">&#39;&quot;</span><span class="tok-p">,</span>
+<span class="tok-p">]</span>
+
+<span class="tok-c1"># Notify simple-bar about workspace change</span>
+<span class="tok-n">exec-on-workspace-change</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[</span>
+<span class="tok-w">  </span><span class="tok-s1">&#39;/bin/zsh&#39;</span><span class="tok-p">,</span>
+<span class="tok-w">  </span><span class="tok-s1">&#39;-c&#39;</span><span class="tok-p">,</span>
+<span class="tok-w">  </span><span class="tok-s1">&#39;/usr/bin/osascript -e &quot;tell application id \&quot;tracesOf.Uebersicht\&quot; to refresh widget id \&quot;simple-bar-index-jsx\&quot;&quot;&#39;</span><span class="tok-p">,</span>
+<span class="tok-p">]</span></code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="open-a-new-window-with-applescript"><a class="anchor" href="#open-a-new-window-with-applescript"></a><a class="link" href="#open-a-new-window-with-applescript">8. Open a new window with AppleScript</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Invoking Safari/Terminal with a command the obvious way (<code>exec-and-forget open -a Safari</code>) results in an outcome that is probably not the intended one.
 Namely, that any workspace already containing an instance of Safari/Terminal is brought in focus.</p>
 </div>
 <div class="paragraph">
-<p>Opening <strong>a new window</strong> of a program that can supports multiple windows (such as Safari or Terminal.app) can be accomplished with an AppleScript inlined in <code>aerospace.toml</code> as follows:</p>
+<p>Opening <strong>a new window</strong> of a program that can support multiple windows (such as Safari or Terminal.app) can be accomplished with an AppleScript inlined in <code>aerospace.toml</code> as follows:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -766,7 +794,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 </div>
 <div class="sect1">
-<h2 id="disable-hide-app"><a class="anchor" href="#disable-hide-app"></a><a class="link" href="#disable-hide-app">8. Disable annoying and useless "hide application" shortcut</a></h2>
+<h2 id="disable-hide-app"><a class="anchor" href="#disable-hide-app"></a><a class="link" href="#disable-hide-app">9. Disable annoying and useless "hide application" shortcut</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>If <code>automatically-unhide-macos-hidden-apps</code> isn&#8217;t enough, you can disable <code>cmd-h</code> altogether (which will make this hotkey unavailable for apps that might use it for other purposes)</p>
@@ -782,10 +810,10 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 </div>
 <div class="sect1">
-<h2 id="screenshoot-shortcut"><a class="anchor" href="#screenshoot-shortcut"></a><a class="link" href="#screenshoot-shortcut">9. Take screenshots to clipboard using keyboard shortcut</a></h2>
+<h2 id="screenshoot-shortcut"><a class="anchor" href="#screenshoot-shortcut"></a><a class="link" href="#screenshoot-shortcut">10. Take screenshots to clipboard using keyboard shortcut</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>You can configure a custom shortcut take a screenshot.
+<p>You can configure a custom shortcut to take a screenshot.
 <code>screencapture</code> is a built-in macOS command.</p>
 </div>
 <div class="listingblock">
@@ -797,7 +825,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 </div>
 <div class="sect1">
-<h2 id="i3-like-config"><a class="anchor" href="#i3-like-config"></a><a class="link" href="#i3-like-config">10. i3 like config</a></h2>
+<h2 id="i3-like-config"><a class="anchor" href="#i3-like-config"></a><a class="link" href="#i3-like-config">11. i3 like config</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="config-examples/i3-like-config-example.toml">Download i3-like-config.toml</a></p>
@@ -805,6 +833,11 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <div class="listingblock">
 <div class="content">
 <pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-c1"># Reference: <a href="https://github.com/i3/i3/blob/next/etc/config" class="bare">https://github.com/i3/i3/blob/next/etc/config</a></span>
+
+<span class="tok-n">config-version</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-mi">2</span>
+
+<span class="tok-c1"># In i3, all workspaces are phantom</span>
+<span class="tok-n">persistent-workspaces</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-p">[]</span>
 
 <span class="tok-c1"># i3 doesn&#39;t have &quot;normalizations&quot; feature that why we disable them here.</span>
 <span class="tok-c1"># But the feature is very helpful.</span>
@@ -895,7 +928,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 </div>
 <div class="sect1">
-<h2 id="popular-apps-ids"><a class="anchor" href="#popular-apps-ids"></a><a class="link" href="#popular-apps-ids">11. List of popular and built-in applications IDs</a></h2>
+<h2 id="popular-apps-ids"><a class="anchor" href="#popular-apps-ids"></a><a class="link" href="#popular-apps-ids">12. List of Apple application IDs</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The list is useful to compose custom <a href="guide#on-window-detected-callback">on-window-detected callback</a>.</p>
@@ -913,10 +946,6 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </thead>
 <tbody>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">1Password</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.1password.1password</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Activity Monitor</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.ActivityMonitor</code></p></td>
 </tr>
@@ -925,24 +954,8 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.airport.airportutility</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Alacritty</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.alacritty</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Android Studio</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.google.android.studio</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">App Store</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.AppStore</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">AppCode</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.jetbrains.AppCode</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Arc Browser</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>company.thebrowser.Browser</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Audio MIDI Setup</p></td>
@@ -953,16 +966,8 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.Automator</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Battle.net</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>net.battle.app</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Books</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.iBooksX</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Brave</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.brave.Browser</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Calculator</p></td>
@@ -975,10 +980,6 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Chess</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.Chess</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CLion</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.jetbrains.CLion</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Clock</p></td>
@@ -1005,16 +1006,8 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.DiskUtility</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Docker</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.docker.docker</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">FaceTime</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.FaceTime</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Figma</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.figma.Desktop</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Find My</p></td>
@@ -1025,24 +1018,8 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.finder</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Firefox</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.mozilla.firefox</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Freeform</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.freeform</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ghostty</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.mitchellh.ghostty</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">GIMP</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.gimp.gimp-2.10</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Google Chrome</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.google.Chrome</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Grapher</p></td>
@@ -1057,30 +1034,6 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.iMovieApp</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Inkscape</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.inkscape.Inkscape</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">IntelliJ IDEA Community</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.jetbrains.intellij.ce</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">IntelliJ IDEA Ultimate</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.jetbrains.intellij</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">iTerm2</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.googlecode.iterm2</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Karabiner-Elements</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.pqrs.Karabiner-Elements.Settings</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">kdenlive</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.kde.Kdenlive</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Keychain Access</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.keychainaccess</code></p></td>
 </tr>
@@ -1089,20 +1042,12 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.iWork.Keynote</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Kitty</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>net.kovidgoyal.kitty</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Mail</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.mail</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Maps</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.Maps</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Marta</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.yanex.marta</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Messages</p></td>
@@ -1115,10 +1060,6 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Notes</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.Notes</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Obsidian</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>md.obsidian</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Pages</p></td>
@@ -1141,14 +1082,6 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.Preview</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">PyCharm Community</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.jetbrains.pycharm.ce</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">PyCharm Professional</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.jetbrains.pycharm</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">QuickTime Player</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.QuickTimePlayerX</code></p></td>
 </tr>
@@ -1165,36 +1098,12 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.shortcuts</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Slack</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.tinyspeck.slackmacgap</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Spotify</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.spotify.client</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Steam</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.valvesoftware.steam</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Stocks</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.stocks</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sublime Merge</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sublimemerge</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Sublime Text</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.sublimetext.4</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">System Settings</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.systempreferences</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Telegram</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.tdesktop.Telegram</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Terminal</p></td>
@@ -1205,36 +1114,12 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.TextEdit</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Thunderbird</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.mozilla.thunderbird</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Time Machine</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.backup.launcher</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Todoist</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.todoist.mac.Todoist</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Tor Browser</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.torproject.torbrowser</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Transmission</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.m0k.transmission</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TV</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.TV</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Visual Studio Code</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.microsoft.VSCode</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">VLC</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.videolan.vlc</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">VoiceMemos</p></td>
@@ -1249,16 +1134,8 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.weather</code></p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">WezTerm</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.github.wez.wezterm</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Xcode</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>com.apple.dt.Xcode</code></p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Zen Browser</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>app.zen-browser.zen</code></p></td>
 </tr>
 </tbody>
 </table>
@@ -1267,7 +1144,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-07-11 00:33:03 +0200
+Last updated 2025-11-24 22:56:17 +0100
 </div>
 </div>
 </body>
