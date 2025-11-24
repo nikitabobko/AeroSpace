@@ -183,6 +183,7 @@ extension Workspace {
         var environment = config.execConfig.envVariables
         environment["AEROSPACE_FOCUSED_WORKSPACE"] = newWorkspace
         environment["AEROSPACE_PREV_WORKSPACE"] = oldWorkspace
+        environment[AEROSPACE_WORKSPACE] = newWorkspace
         process.environment = environment
         _ = Result { try process.run() }
     }
