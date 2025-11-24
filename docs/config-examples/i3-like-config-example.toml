@@ -1,5 +1,10 @@
 # Reference: https://github.com/i3/i3/blob/next/etc/config
 
+config-version = 2
+
+# In i3, all workspaces are phantom
+persistent-workspaces = []
+
 # i3 doesn't have "normalizations" feature that why we disable them here.
 # But the feature is very helpful.
 # Normalizations eliminate all sorts of weird tree configurations that don't make sense.

@@ -19,6 +19,15 @@ final class ConfigTest: XCTestCase {
         assertEquals(errors, [])
     }
 
+    func testConfigVersionOutOfBounds() {
+        let (_, errors) = parseConfig(
+            """
+            config-version = 0
+            """,
+        )
+        assertEquals(errors.descriptions, ["config-version: Must be in [1, 2] range"])
+    }
+
     func testExecOnWorkspaceChangeDifferentTypesError() {
         let (_, errors) = parseConfig(
             """
@@ -26,6 +35,25 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(errors.descriptions, ["exec-on-workspace-change[1]: Expected type is \'string\'. But actual type is \'integer\'"])
+    }
+
+    func testDuplicatedPersistentWorkspaces() {
+        let (_, errors) = parseConfig(
+            """
+            config-version = 2
+            persistent-workspaces = ['a', 'a']
+            """,
+        )
+        assertEquals(errors.descriptions, ["persistent-workspaces: Contains duplicated workspace names"])
+    }
+
+    func testPersistentWorkspacesAreAvailableOnlySinceVersion2() {
+        let (_, errors) = parseConfig(
+            """
+            persistent-workspaces = ['a']
+            """,
+        )
+        assertEquals(errors.descriptions, ["persistent-workspaces: This config option is only available since \'config-version = 2\'"])
     }
 
     func testQueryCantBeUsedInConfig() {
@@ -111,7 +139,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(errors.descriptions, [])
-        assertEquals(config.preservedWorkspaceNames.sorted(), ["1", "2", "3", "4"])
+        assertEquals(config.persistentWorkspaces.sorted(), ["1", "2", "3", "4"])
     }
 
     func testUnknownTopLevelKeyParseError() {

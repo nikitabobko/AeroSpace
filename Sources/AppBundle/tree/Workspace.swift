@@ -24,10 +24,9 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     {
         return candidate
     }
-    let preservedNames = config.preservedWorkspaceNames.toSet()
     return (1 ... Int.max).lazy
         .map { Workspace.get(byName: String($0)) }
-        .first { $0.isEffectivelyEmpty && !$0.isVisible && !preservedNames.contains($0.name) && $0.forceAssignedMonitor == nil }
+        .first { $0.isEffectivelyEmpty && !$0.isVisible && !config.persistentWorkspaces.contains($0.name) && $0.forceAssignedMonitor == nil }
         .orDie("Can't create empty workspace")
 }
 
@@ -72,24 +71,22 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
 
     @MainActor
     var description: String {
-        let preservedNames = config.preservedWorkspaceNames.toSet()
         let description = [
             ("name", name),
             ("isVisible", String(isVisible)),
             ("isEffectivelyEmpty", String(isEffectivelyEmpty)),
-            ("doKeepAlive", String(preservedNames.contains(name))),
+            ("doKeepAlive", String(config.persistentWorkspaces.contains(name))),
         ].map { "\($0.0): '\(String(describing: $0.1))'" }.joined(separator: ", ")
         return "Workspace(\(description))"
     }
 
     @MainActor
     static func garbageCollectUnusedWorkspaces() {
-        let preservedNames = config.preservedWorkspaceNames.toSet()
-        for name in preservedNames {
-            _ = get(byName: name) // Make sure that all preserved workspaces are "cached"
+        for name in config.persistentWorkspaces {
+            _ = get(byName: name) // Make sure that all persistent workspaces are "cached"
         }
         workspaceNameToWorkspace = workspaceNameToWorkspace.filter { (_, workspace: Workspace) in
-            preservedNames.contains(workspace.name) ||
+            config.persistentWorkspaces.contains(workspace.name) ||
                 !workspace.isEffectivelyEmpty ||
                 workspace.isVisible ||
                 workspace.name == focus.workspace.name

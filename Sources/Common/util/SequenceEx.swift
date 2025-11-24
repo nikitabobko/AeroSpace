@@ -1,4 +1,5 @@
 import AppKit
+import OrderedCollections
 
 extension Sequence {
     public func filterNotNil<Unwrapped>() -> [Unwrapped] where Element == Unwrapped? {
@@ -118,4 +119,5 @@ extension Sequence where Self.Element: Comparable {
 
 extension Sequence where Element: Hashable {
     public func toSet() -> Set<Element> { Set(self) }
+    public func toOrderedSet() -> OrderedSet<Element> { OrderedSet(self) }
 }
