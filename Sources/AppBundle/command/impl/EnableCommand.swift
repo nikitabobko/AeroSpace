@@ -25,9 +25,9 @@ struct EnableCommand: Command {
                     window.lastFloatingSize = try await window.getAxSize() ?? window.lastFloatingSize
                 }
             }
-            activateMode(mainModeId)
+            try await activateMode(mainModeId)
         } else {
-            activateMode(nil)
+            try await activateMode(nil)
         }
         return true
     }

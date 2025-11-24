@@ -89,7 +89,7 @@ func reloadConfigButton(showShortcutGroup: Bool = false) -> some View {
     if let token: RunSessionGuard = .isServerEnabled {
         let button = Button("Reload config") {
             Task {
-                try await runLightSession(.menuBarButton, token) { _ = reloadConfig() }
+                try await runLightSession(.menuBarButton, token) { _ = try await reloadConfig() }
             }
         }.keyboardShortcut("R", modifiers: .command)
         if showShortcutGroup {

@@ -11,14 +11,14 @@ import Foundation
         interceptTermination(SIGINT)
         interceptTermination(SIGKILL)
     }
-    if !reloadConfig() {
-        check(reloadConfig(forceConfigUrl: defaultConfigUrl))
-    }
-
-    checkAccessibilityPermissions()
-    startUnixSocketServer()
-    GlobalObserver.initObserver()
     Task {
+        if try await !reloadConfig() {
+            check(try await reloadConfig(forceConfigUrl: defaultConfigUrl))
+        }
+
+        checkAccessibilityPermissions()
+        startUnixSocketServer()
+        GlobalObserver.initObserver()
         Workspace.garbageCollectUnusedWorkspaces() // init workspaces
         _ = Workspace.all.first?.focusWorkspace()
         try await runRefreshSessionBlocking(.startup, layoutWorkspaces: false)
