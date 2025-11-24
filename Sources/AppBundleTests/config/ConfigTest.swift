@@ -19,6 +19,15 @@ final class ConfigTest: XCTestCase {
         assertEquals(errors, [])
     }
 
+    func testExecOnWorkspaceChangeDifferentTypesError() {
+        let (_, errors) = parseConfig(
+            """
+            exec-on-workspace-change = ['', 1]
+            """,
+        )
+        assertEquals(errors.descriptions, ["exec-on-workspace-change[1]: Expected type is \'string\'. But actual type is \'integer\'"])
+    }
+
     func testQueryCantBeUsedInConfig() {
         let (_, errors) = parseConfig(
             """
