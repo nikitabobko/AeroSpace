@@ -28,7 +28,9 @@ struct WorkspaceCommand: Command {
                 }
         }
         if focusedWs.name == workspaceName {
-            io.err("Workspace '\(workspaceName)' is already focused. Tip: use --fail-if-noop to exit with non-zero code")
+            if !args.failIfNoop {
+                io.err("Workspace '\(workspaceName)' is already focused. Tip: use --fail-if-noop to exit with non-zero code")
+            }
             return !args.failIfNoop
         } else {
             return Workspace.get(byName: workspaceName).focusWorkspace()
