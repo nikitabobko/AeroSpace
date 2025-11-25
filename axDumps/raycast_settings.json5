@@ -1,0 +1,101 @@
+{
+  "AXActivationPoint" : "<AXValue 0x600002fcb240> {value = x:470.000000 y:167.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : {
+    "AXEnabled" : 1,
+    "AXParent" : "AXUIElement(AxWindowId=28386, title=\"Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXCloseButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=28386, title=\"Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=28386, title=\"Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxFailed" : "get.AXTitle",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription, AXEdited"
+  },
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 1,
+  "AXFrame" : "<AXValue 0x600003415740> {value = x:400.000000 y:153.000000 w:1000.000000 h:604.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : {
+    "AXEnabled" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=28386, title=\"Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXMinimizeButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=28386, title=\"Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=28386, title=\"Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxFailed" : "get.AXTitle",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x600002fcb9c0> {pid=76823}",
+  "AXPosition" : "<AXValue 0x600002fec300> {value = x:400.000000 y:153.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x600002fc9380> {pid=76823}\";\n    SectionUniqueID = AXContent;\n}"
+  ],
+  "AXSize" : "<AXValue 0x600002fcb9c0> {value = w:1000.000000 h:604.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXStandardWindow",
+  "AXTitle" : "Settings",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : {
+    "AXEnabled" : 0,
+    "AXParent" : "AXUIElement(AxWindowId=28386, title=\"Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXRole" : "AXButton",
+    "AXSubrole" : "AXZoomButton",
+    "AXTitle" : null,
+    "AXTopLevelUIElement" : "AXUIElement(AxWindowId=28386, title=\"Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXWindow" : "AXUIElement(AxWindowId=28386, title=\"Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "Aero.AxFailed" : "get.AXTitle",
+    "Aero.AxIgnored" : "AXFrame, AXSize, AXFocused, AXChildren, AXHelp, AXPosition, AXRoleDescription"
+  },
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=28386, title=\"Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=28386, title=\"Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=28386, title=\"Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x600002fc8f60> {pid=76823}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Raycast",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=28386, title=\"Settings\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
+    "Aero.AxWritable" : "AXFrontmost"
+  },
+  "Aero.App.appBundleId" : "com.raycast.macos",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.appBundlePath" : "file:///Applications/Raycast.app/",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Raycast.app/Contents/MacOS/Raycast",
+  "Aero.App.pid" : 76823,
+  "Aero.App.version" : "0",
+  "Aero.App.versionShort" : "1.103.7",
+  "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, get.AXDocument, isWritable.AXActivationPoint, get.AXFullScreenButton, get.AXProxy, get.AXDefaultButton, get.AXTitleUIElement, get.AXCancelButton, get.AXToolbarButton",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "dialog",
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxWritable" : "AXPosition, AXSections, AXMain",
+  "Aero.axWindowId" : 28386,
+  "Aero.macOS.version" : "Version 15.7.1 (Build 24G231)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
+  "Aero.windowLevel" : "{\"normalWindow\":{}}",
+  "Aero.workspace" : "M"
+}
