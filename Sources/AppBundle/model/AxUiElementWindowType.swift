@@ -119,7 +119,13 @@ extension AxUiElementMock {
             return false
         }
 
-        if id == .iterm2 && get(Ax.fullscreenButtonAttr) == nil {
+        lazy var fullscreenButton = get(Ax.fullscreenButtonAttr)
+
+        if id == .xcode && get(Ax.identifierAttr) == "open_quickly" {
+            return false
+        }
+
+        if id == .iterm2 && fullscreenButton == nil {
             return false
         }
 
@@ -145,7 +151,7 @@ extension AxUiElementMock {
         // - Finder preview (hit space) (subrole == "Quick Look")
         // - Firefox non-native video fullscreen (about:config -> full-screen-api.macos-native-full-screen -> false, subrole == AXUnknown)
         return get(Ax.closeButtonAttr) != nil ||
-            get(Ax.fullscreenButtonAttr) != nil ||
+            fullscreenButton != nil ||
             get(Ax.zoomButtonAttr) != nil ||
             get(Ax.minimizeButtonAttr) != nil ||
 

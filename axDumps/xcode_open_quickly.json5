@@ -91,7 +91,7 @@
   "Aero.App.versionShort" : "26.1.1",
   "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, get.AXDocument, isWritable.AXActivationPoint, get.AXFullScreenButton, get.AXProxy, get.AXDefaultButton, get.AXTitleUIElement, get.AXCancelButton, get.AXToolbarButton",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.AxUiElementWindowType" : "dialog", // todo fix
+  "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXSize",
   "Aero.axWindowId" : 28188,
