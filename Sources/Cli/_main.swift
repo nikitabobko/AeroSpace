@@ -1,7 +1,7 @@
 import Common
 import Darwin
 import Foundation
-import Socket
+import Network
 
 let usage =
     """
@@ -13,7 +13,7 @@ let usage =
 
 @main
 struct Main {
-    static func main() {
+    static func main() async {
         let args = CommandLine.arguments.slice(1...) ?? []
 
         if args.isEmpty {
@@ -39,14 +39,10 @@ struct Main {
             }
         }
 
-        let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrDie()
-        defer {
-            socket.close()
-        }
-
         let socketFile = "/tmp/\(aeroSpaceAppId)-\(unixUserName).sock"
+        let connection = NWConnection(to: NWEndpoint.unix(path: socketFile), using: .tcp)
 
-        if let e: Error = Result(catching: { try socket.connect(to: socketFile) }).failureOrNil {
+        if let e = await connection.startBlocking() {
             if isVersion {
                 printVersionAndExit(serverVersion: nil)
             } else {
@@ -84,8 +80,8 @@ struct Main {
         let windowId = ProcessInfo.processInfo.environment[AEROSPACE_WINDOW_ID].flatMap(UInt32.init)
         let workspace = ProcessInfo.processInfo.environment[AEROSPACE_WORKSPACE]
         let ans = isVersion
-            ? run(socket, [], stdin: stdin, windowId: windowId, workspace: workspace)
-            : run(socket, args, stdin: stdin, windowId: windowId, workspace: workspace)
+            ? await run(connection, [], stdin: stdin, windowId: windowId, workspace: workspace)
+            : await run(connection, args, stdin: stdin, windowId: windowId, workspace: workspace)
         if isVersion {
             printVersionAndExit(serverVersion: ans.serverVersionAndHash)
         }
@@ -118,12 +114,17 @@ func printVersionAndExit(serverVersion: String?) -> Never {
     exit(0)
 }
 
-func run(_ socket: Socket, _ args: StrArrSlice, stdin: String, windowId: UInt32?, workspace: String?) -> ServerAnswer {
-    let request = Result { try JSONEncoder().encode(ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)) }.getOrDie()
-    Result { try socket.write(from: request) }.getOrDie()
-    Result { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrDie()
+func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowId: UInt32?, workspace: String?) async -> ServerAnswer {
+    let req = ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)
+    let requestData = Result { try JSONEncoder().encode(req) }.getOrDie()
+    if let e = await connection.write(requestData) {
+        cliError("Failed to write to server socket: \(e)")
+    }
 
-    var answer = Data()
-    Result { try socket.read(into: &answer) }.getOrDie()
-    return Result { try JSONDecoder().decode(ServerAnswer.self, from: answer) }.getOrDie()
+    switch await connection.read() {
+        case .success(let answer):
+            return (try? JSONDecoder().decode(ServerAnswer.self, from: answer)) ?? cliErrorT("Failed to parse server response")
+        case .failure(let error):
+            cliError("Failed to read from server socket: \(error)")
+    }
 }
