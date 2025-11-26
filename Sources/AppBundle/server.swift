@@ -9,9 +9,9 @@ func startUnixSocketServer() {
     let listener = Result { try NWListener(using: params) }.getOrDie()
     listener.newConnectionHandler = { connection in
         Task {
+            defer { connection.cancel() }
             connection.start(queue: .global())
             await newConnection(connection)
-            connection.cancel()
         }
     }
     listener.start(queue: .global())
