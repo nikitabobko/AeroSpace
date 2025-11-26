@@ -1,0 +1,68 @@
+// Cmd+Shift+F -> "Find in Files" dialog
+// This dialog has AXSubrole="AXUnknown" and no buttons, but AXMain=true
+// Our fix treats JetBrains windows with AXMain=true as proper windows
+{
+  "AXActivationPoint" : "<AXValue 0x6000013576c0> {value = x:-1.000000 y:1118.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0x6000007d0540> {value = x:568.000000 y:236.000000 w:1160.000000 h:881.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXMain" : 1,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0x6000013c49f0> {pid=14482}",
+  "AXPosition" : "<AXValue 0x600001316bb0> {value = x:568.000000 y:236.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x6000013167c0> {pid=14482}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x600001316a90> {pid=14482}\";\n    SectionUniqueID = AXContainer;\n}"
+  ],
+  "AXSize" : "<AXValue 0x60000131a3a0> {value = w:1160.000000 h:881.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXUnknown",
+  "AXTitle" : "",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "<AXUIElement 0x600001357090> {pid=14482}",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=25696, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : "AXUIElement(AxWindowId=25696, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXMenuBar" : "<AXUIElement 0x600001318db0> {pid=14482}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Android Studio",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=25696, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+      "AXUIElement(AxWindowId=24873, title=\"my-project – ~/projects/my-project/src/main.kt\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+    ],
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+  },
+  "Aero.App.appBundleId" : "com.google.android.studio",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Android%20Studio.app/Contents/MacOS/studio",
+  "Aero.App.version" : "AI-252.27397.103.2523.14473358",
+  "Aero.App.versionShort" : "2025.2",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.axWindowId" : 25696,
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxUiElementWindowType" : "dialog",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "AppBundle.Workspace",
+  "Aero.workspace" : "3"
+}

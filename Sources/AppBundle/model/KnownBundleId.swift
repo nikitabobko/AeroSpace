@@ -23,6 +23,10 @@ enum KnownBundleId: String, Equatable {
     case zenBrowser = "app.zen-browser.zen"
     case zoom = "us.zoom.xos"
 
+    case androidStudio = "com.google.android.studio"
+    case intellijIdea = "com.jetbrains.intellij"
+    case intellijIdeaCE = "com.jetbrains.intellij.ce"
+
     case mozillaFirefox = "org.mozilla.firefox"
     case mozillaFirefoxDeveloperEdition = "org.mozilla.firefoxdeveloperedition"
     case mozillaFirefoxNightly = "org.mozilla.nightly"
@@ -39,5 +43,9 @@ enum KnownBundleId: String, Equatable {
 
     var isVscode: Bool {
         self == .vscode || self == .vscodium
+    }
+
+    var isJetBrains: Bool {
+        self == .androidStudio || self == .intellijIdea || self == .intellijIdeaCE
     }
 }

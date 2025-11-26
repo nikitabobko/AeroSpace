@@ -186,6 +186,13 @@ extension AxUiElementMock {
         {
             return false
         }
+        // JetBrains apps (Android Studio, IntelliJ) create dialogs like "Find in Files" with
+        // AXSubrole="AXUnknown" and no buttons. Treat them as windows if AXMain=true.
+        // Small popups like "Background Tasks" or "Quick Doc" have AXMain=false.
+        if id?.isJetBrains == true && get(Ax.isMainAttr) == true {
+            return true
+        }
+
         return subrole == kAXStandardWindowSubrole ||
             subrole == kAXDialogSubrole || // macOS native file picker ("Open..." menu) (kAXDialogSubrole value)
             subrole == kAXFloatingWindowSubrole || // telegram image viewer
