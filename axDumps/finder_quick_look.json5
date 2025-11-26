@@ -86,6 +86,6 @@
 
   ],
   "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
-  "Aero.windowLevel" : "{\"alwaysOnTopWindow\":{}}",
+  "Aero.windowLevel" : "alwaysOnTopWindow",
   "Aero.workspace" : "M"
 }

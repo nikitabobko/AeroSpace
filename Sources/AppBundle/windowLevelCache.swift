@@ -20,29 +20,39 @@ func getWindowLevel(for windowId: UInt32) -> MacOsWindowLevel? {
         guard let _windowId = dict[kCGWindowNumber] else { continue }
         let windowId = ((_windowId as! CFNumber) as NSNumber).uint32Value
 
-        result[windowId] = .new(layerNumber: windowLayer)
+        result[windowId] = .new(windowLevel: windowLayer)
     }
     cache = result
     return result[windowId]
 }
 
-enum MacOsWindowLevel: Sendable, Codable, Equatable {
+enum MacOsWindowLevel: Sendable, Equatable {
     case normalWindow
     case alwaysOnTopWindow
-    case unknown(layerNumber: Int)
+    case unknown(windowLevel: Int)
 
-    static func new(layerNumber: Int) -> MacOsWindowLevel {
-        switch layerNumber {
+    static func new(windowLevel: Int) -> MacOsWindowLevel {
+        switch windowLevel {
             case 0: .normalWindow
             case 3: .alwaysOnTopWindow
-            default: .unknown(layerNumber: layerNumber)
+            default: .unknown(windowLevel: windowLevel)
         }
     }
 
-    var normalize: MacOsWindowLevel {
+    static func fromJson(_ json: Json) -> MacOsWindowLevel? {
+        switch json {
+            case .string(let str) where str == "normalWindow": .normalWindow
+            case .string(let str) where str == "alwaysOnTopWindow": .alwaysOnTopWindow
+            case .int(let int): .new(windowLevel: int)
+            default: nil
+        }
+    }
+
+    func toJson() -> Json {
         switch self {
-            case .unknown(let layerNumber): .new(layerNumber: layerNumber)
-            default: self
+            case .normalWindow: .string("normalWindow")
+            case .alwaysOnTopWindow: .string("alwaysOnTopWindow")
+            case .unknown(let layerNumber): .int(layerNumber)
         }
     }
 }
