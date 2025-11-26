@@ -9,9 +9,9 @@ func startUnixSocketServer() {
     let listener = Result { try NWListener(using: params) }.getOrDie()
     listener.newConnectionHandler = { connection in
         Task {
+            defer { connection.cancel() }
             connection.start(queue: .global())
             await newConnection(connection)
-            connection.cancel()
         }
     }
     listener.start(queue: .global())
@@ -82,7 +82,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
             continue
         }
         if let command {
-            let _answer: Result<ServerAnswer, Error> = await Task { @MainActor in
+            let _answer: Result<ServerAnswer, Error> = await Result {
                 try await runLightSession(.socketServer, token) { () throws in
                     let env = CmdEnv.init(
                         windowId: request.windowId.flatMap { $0 },
@@ -96,7 +96,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
                         serverVersionAndHash: serverVersionAndHash,
                     )
                 }
-            }.result
+            }
             var answer = _answer.getOrNil() ??
                 ServerAnswer(
                     exitCode: 1,

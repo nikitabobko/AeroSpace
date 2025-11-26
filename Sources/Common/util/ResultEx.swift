@@ -1,4 +1,12 @@
 extension Result {
+    public init(catching body: () async throws(Failure) -> Success) async {
+        do {
+            self = .success(try await body())
+        } catch {
+            self = .failure(error)
+        }
+    }
+
     public func getOrNil(appendErrorTo errors: inout [Failure]) -> Success? {
         switch self {
             case .success(let success):
