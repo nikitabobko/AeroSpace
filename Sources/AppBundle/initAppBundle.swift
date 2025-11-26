@@ -3,15 +3,15 @@ import Common
 import Foundation
 
 @MainActor public func initAppBundle() {
-    initTerminationHandler()
-    isCli = false
-    initServerArgs()
-    if isDebug {
-        toggleReleaseServerIfDebug(.off)
-        interceptTermination(SIGINT)
-        interceptTermination(SIGKILL)
-    }
     Task {
+        initTerminationHandler()
+        isCli = false
+        initServerArgs()
+        if isDebug {
+            await toggleReleaseServerIfDebug(.off)
+            interceptTermination(SIGINT)
+            interceptTermination(SIGKILL)
+        }
         if try await !reloadConfig() {
             var out = ""
             check(
