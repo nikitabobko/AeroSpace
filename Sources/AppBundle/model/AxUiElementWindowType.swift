@@ -15,7 +15,7 @@ enum AxUiElementWindowType: String {
     }
 }
 
-// Covered by tests in ./axDumps in the repor root
+// Covered by tests in ./axDumps in the repo root
 extension AxUiElementMock {
     // 'isDialogHeuristic' function name is referenced in the guide
     func isDialogHeuristic(
