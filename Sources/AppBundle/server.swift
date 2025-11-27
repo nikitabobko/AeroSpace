@@ -3,10 +3,9 @@ import Common
 import Network
 
 func startUnixSocketServer() {
-    let socketFile = "/tmp/\(aeroSpaceAppId)-\(unixUserName).sock"
-    try? FileManager.default.removeItem(atPath: socketFile)
+    try? FileManager.default.removeItem(atPath: socketPath)
     let params = NWParameters.tcp
-    params.requiredLocalEndpoint = .unix(path: socketFile)
+    params.requiredLocalEndpoint = .unix(path: socketPath)
     let listener = Result { try NWListener(using: params) }.getOrDie()
     listener.newConnectionHandler = { connection in
         Task {
