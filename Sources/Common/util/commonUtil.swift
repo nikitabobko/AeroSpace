@@ -2,6 +2,7 @@ import AppKit
 import Darwin
 import Foundation
 
+public let socketPath = "/tmp/\(aeroSpaceAppId)-\(unixUserName).sock"
 public let unixUserName = NSUserName()
 public let mainModeId = "main"
 

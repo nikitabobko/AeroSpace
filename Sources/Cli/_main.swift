@@ -25,29 +25,39 @@ struct Main {
             exit(0)
         }
 
-        let isVersion: Bool = args.first == "--version" || args.first == "-v"
-        var parsedArgs: (any CmdArgs)! = nil
-        if !isVersion {
-            switch parseCmdArgs(args) {
-                case .cmd(let _parsedArgs):
-                    parsedArgs = _parsedArgs
-                case .help(let help):
-                    print(help)
-                    exit(0)
-                case .failure(let e):
-                    cliError(e)
+        if args.first == "--version" || args.first == "-v" {
+            let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
+            let serverVersion: String?
+            if await connection.startBlocking() == nil {
+                let ans = await run(connection, [], stdin: "", windowId: nil, workspace: nil)
+                serverVersion = ans.serverVersionAndHash
+            } else {
+                serverVersion = nil
             }
+            print(
+                """
+                aerospace CLI client version: \(cliClientVersionAndHash)
+                AeroSpace.app server version: \(serverVersion ?? "Unknown. The server is not running")
+                """,
+            )
+            exit(0)
         }
 
-        let socketFile = "/tmp/\(aeroSpaceAppId)-\(unixUserName).sock"
-        let connection = NWConnection(to: NWEndpoint.unix(path: socketFile), using: .tcp)
+        var parsedArgs: (any CmdArgs)! = nil
+        switch parseCmdArgs(args) {
+            case .cmd(let _parsedArgs):
+                parsedArgs = _parsedArgs
+            case .help(let help):
+                print(help)
+                exit(0)
+            case .failure(let e):
+                cliError(e)
+        }
+
+        let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
 
         if let e = await connection.startBlocking() {
-            if isVersion {
-                printVersionAndExit(serverVersion: nil)
-            } else {
-                cliError("Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
-            }
+            cliError("Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
         }
 
         var stdin = ""
@@ -79,12 +89,7 @@ struct Main {
 
         let windowId = ProcessInfo.processInfo.environment[AEROSPACE_WINDOW_ID].flatMap(UInt32.init)
         let workspace = ProcessInfo.processInfo.environment[AEROSPACE_WORKSPACE]
-        let ans = isVersion
-            ? await run(connection, [], stdin: stdin, windowId: windowId, workspace: workspace)
-            : await run(connection, args, stdin: stdin, windowId: windowId, workspace: workspace)
-        if isVersion {
-            printVersionAndExit(serverVersion: ans.serverVersionAndHash)
-        }
+        let ans = await run(connection, args, stdin: stdin, windowId: windowId, workspace: workspace)
 
         if !ans.stdout.isEmpty { print(ans.stdout) }
         if !ans.stderr.isEmpty { printStderr(ans.stderr) }
@@ -102,16 +107,6 @@ struct Main {
         }
         exit(ans.exitCode)
     }
-}
-
-func printVersionAndExit(serverVersion: String?) -> Never {
-    print(
-        """
-        aerospace CLI client version: \(cliClientVersionAndHash)
-        AeroSpace.app server version: \(serverVersion ?? "Unknown. The server is not running")
-        """,
-    )
-    exit(0)
 }
 
 func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowId: UInt32?, workspace: String?) async -> ServerAnswer {
