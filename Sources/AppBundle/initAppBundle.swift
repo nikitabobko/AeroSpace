@@ -13,7 +13,16 @@ import Foundation
     }
     Task {
         if try await !reloadConfig() {
-            check(try await reloadConfig(forceConfigUrl: defaultConfigUrl))
+            var out = ""
+            check(
+                try await !reloadConfig(forceConfigUrl: defaultConfigUrl, stdout: &out),
+                """
+                Can't load default config. Your installation is probably corrupted.
+                Please don't change default-config.toml
+
+                \(out)
+                """,
+            )
         }
 
         checkAccessibilityPermissions()
