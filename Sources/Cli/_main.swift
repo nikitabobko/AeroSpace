@@ -17,7 +17,7 @@ struct Main {
         let args = CommandLine.arguments.slice(1...) ?? []
 
         if args.isEmpty {
-            printStderr(usage)
+            eprint(usage)
             exit(1)
         }
         if args.first == "--help" || args.first == "-h" {
@@ -51,13 +51,13 @@ struct Main {
                 print(help)
                 exit(0)
             case .failure(let e):
-                cliError(e)
+                exit(stderrMsg: e)
         }
 
         let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
 
         if let e = await connection.startBlocking() {
-            cliError("Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
+            exit(stderrMsg: "Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
         }
 
         var stdin = ""
@@ -68,13 +68,13 @@ struct Main {
             if parsedArgs is WorkspaceCmdArgs && (parsedArgs as! WorkspaceCmdArgs).explicitStdinFlag == nil ||
                 parsedArgs is MoveNodeToWorkspaceCmdArgs && (parsedArgs as! MoveNodeToWorkspaceCmdArgs).explicitStdinFlag == nil
             {
-                cliError(
-                    """
-                    ERROR: Implicit stdin is detected (stdin is not TTY). Implicit stdin was forbidden in AeroSpace v0.20.0.
-                    1. Please supply '--stdin' flag to make stdin explicit and preserve old AeroSpace behavior
-                    2. You can also use '--no-stdin' flag to behave as if no stdin was supplied
-                    Breaking change issue: https://github.com/nikitabobko/AeroSpace/issues/1683
-                    """,
+                exit(
+                    stderrMsg: """
+                        ERROR: Implicit stdin is detected (stdin is not TTY). Implicit stdin was forbidden in AeroSpace v0.20.0.
+                        1. Please supply '--stdin' flag to make stdin explicit and preserve old AeroSpace behavior
+                        2. You can also use '--no-stdin' flag to behave as if no stdin was supplied
+                        Breaking change issue: https://github.com/nikitabobko/AeroSpace/issues/1683
+                        """,
                 )
             }
             var index = 0
@@ -82,7 +82,7 @@ struct Main {
                 stdin += line
                 index += 1
                 if index > 1000 {
-                    cliError("stdin number of lines limit is exceeded")
+                    exit(stderrMsg: "stdin number of lines limit is exceeded")
                 }
             }
         }
@@ -92,9 +92,9 @@ struct Main {
         let ans = await run(connection, args, stdin: stdin, windowId: windowId, workspace: workspace)
 
         if !ans.stdout.isEmpty { print(ans.stdout) }
-        if !ans.stderr.isEmpty { printStderr(ans.stderr) }
+        if !ans.stderr.isEmpty { eprint(ans.stderr) }
         if ans.exitCode != 0 && ans.serverVersionAndHash != cliClientVersionAndHash {
-            printStderr(
+            eprint(
                 """
                 Warning: AeroSpace client/server versions don't match
                     - aerospace CLI client version: \(cliClientVersionAndHash)
@@ -113,13 +113,13 @@ func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowI
     let req = ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)
     let requestData = Result { try JSONEncoder().encode(req) }.getOrDie()
     if let e = await connection.write(requestData) {
-        cliError("Failed to write to server socket: \(e)")
+        exit(stderrMsg: "Failed to write to server socket: \(e)")
     }
 
     switch await connection.read() {
         case .success(let answer):
-            return (try? JSONDecoder().decode(ServerAnswer.self, from: answer)) ?? cliErrorT("Failed to parse server response")
+            return (try? JSONDecoder().decode(ServerAnswer.self, from: answer)) ?? exitT(stderrMsg: "Failed to parse server response")
         case .failure(let error):
-            cliError("Failed to read from server socket: \(error)")
+            exit(stderrMsg: "Failed to read from server socket: \(error)")
     }
 }
