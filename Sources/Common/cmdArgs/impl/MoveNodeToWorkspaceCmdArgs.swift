@@ -35,8 +35,6 @@ extension MoveNodeToWorkspaceCmdArgs {
     public var useStdin: Bool { explicitStdinFlag ?? false }
 }
 
-func implication(ifTrue: Bool, mustHold: @autoclosure () -> Bool) -> Bool { !ifTrue || mustHold() }
-
 public func parseMoveNodeToWorkspaceCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveNodeToWorkspaceCmdArgs> {
     parseSpecificCmdArgs(MoveNodeToWorkspaceCmdArgs(rawArgs: args), args)
         .filter("--wrapAround requires using (prev|next) argument") { ($0._wrapAround != nil).implies($0.target.val.isRelatve) }
