@@ -9,7 +9,9 @@ struct SummonWorkspaceCommand: Command {
         let workspace = Workspace.get(byName: args.target.val.raw)
         let monitor = focus.workspace.workspaceMonitor
         if monitor.activeWorkspace == workspace {
-            io.err("Workspace '\(workspace.name)' is already visible on the focused monitor. Tip: use --fail-if-noop to exit with non-zero code")
+            if !args.failIfNoop {
+                io.err("Workspace '\(workspace.name)' is already visible on the focused monitor. Tip: use --fail-if-noop to exit with non-zero code")
+            }
             return !args.failIfNoop
         }
         if monitor.setActiveWorkspace(workspace) {
