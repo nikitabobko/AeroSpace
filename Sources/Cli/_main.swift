@@ -27,19 +27,28 @@ struct Main {
 
         if args.first == "--version" || args.first == "-v" {
             let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
-            let serverVersion: String?
+            let serverVersionAndHash: String?
             if await connection.startBlocking() == nil {
                 let ans = await run(connection, [], stdin: "", windowId: nil, workspace: nil)
-                serverVersion = ans.serverVersionAndHash
+                serverVersionAndHash = ans.serverVersionAndHash
             } else {
-                serverVersion = nil
+                serverVersionAndHash = nil
             }
             print(
                 """
                 aerospace CLI client version: \(cliClientVersionAndHash)
-                AeroSpace.app server version: \(serverVersion ?? "Unknown. The server is not running")
+                AeroSpace.app server version: \(serverVersionAndHash ?? "Unknown. The server is not running")
                 """,
             )
+            if serverVersionAndHash != nil && cliClientVersionAndHash != serverVersionAndHash {
+                eprint(
+                    """
+                    Warning: AeroSpace client/server versions don't match. Possible fixes:
+                      - Restart AeroSpace.app (server restart is required after each update)
+                      - Reinstall and restart AeroSpace (corrupted installation)
+                    """,
+                )
+            }
             exit(0)
         }
 
@@ -97,11 +106,11 @@ struct Main {
             eprint(
                 """
                 Warning: AeroSpace client/server versions don't match
-                    - aerospace CLI client version: \(cliClientVersionAndHash)
-                    - AeroSpace.app server version: \(ans.serverVersionAndHash)
-                    Possible fixes:
-                    - Restart AeroSpace.app (server restart is required after each update)
-                    - Reinstall and restart AeroSpace (corrupted installation)
+                  - aerospace CLI client version: \(cliClientVersionAndHash)
+                  - AeroSpace.app server version: \(ans.serverVersionAndHash)
+                  Possible fixes:
+                  - Restart AeroSpace.app (server restart is required after each update)
+                  - Reinstall and restart AeroSpace (corrupted installation)
                 """,
             )
         }
