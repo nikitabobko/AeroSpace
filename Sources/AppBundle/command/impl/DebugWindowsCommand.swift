@@ -78,9 +78,8 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
     var result: [String: Json] = try await window.dumpAxInfo()
 
     let windowLevel = getWindowLevel(for: window.windowId)
-    let windowLevelJson = (try? JSONEncoder().encode(windowLevel))
-        .flatMap { String(data: $0, encoding: .utf8) }
-    result["Aero.windowLevel"] = .stringOrNull(windowLevelJson)
+    let windowLevelJson = windowLevel?.toJson() ?? .null
+    result["Aero.windowLevel"] = windowLevelJson
     result["Aero.axWindowId"] = .uint32(window.windowId)
     result["Aero.workspace"] = .stringOrNull(window.nodeWorkspace?.name)
     result["Aero.treeNodeParent"] = .string(String(describing: window.parent))
