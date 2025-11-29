@@ -5,7 +5,7 @@ import XCTest
 @MainActor
 final class ConfigTest: XCTestCase {
     func testParseI3Config() {
-        let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/i3-like-config-example.toml"))
+        let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/i3-like-config-example.toml"), encoding: .utf8)
         let (i3Config, errors) = parseConfig(toml)
         assertEquals(errors, [])
         assertEquals(i3Config.execConfig, defaultConfig.execConfig)
@@ -14,7 +14,7 @@ final class ConfigTest: XCTestCase {
     }
 
     func testParseDefaultConfig() {
-        let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/default-config.toml"))
+        let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/default-config.toml"), encoding: .utf8)
         let (_, errors) = parseConfig(toml)
         assertEquals(errors, [])
     }

@@ -18,7 +18,7 @@ func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
             return .failure(msg)
     }
     let configUrl: URL = forceConfigUrl ?? customConfigUrl
-    let (parsedConfig, errors) = (try? String(contentsOf: configUrl)).map { parseConfig($0) } ?? (defaultConfig, [])
+    let (parsedConfig, errors) = (try? String(contentsOf: configUrl, encoding: .utf8)).map { parseConfig($0) } ?? (defaultConfig, [])
 
     if errors.isEmpty {
         return .success((parsedConfig, configUrl))
