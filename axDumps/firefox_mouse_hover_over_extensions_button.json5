@@ -60,6 +60,6 @@
 
   ],
   "Aero.treeNodeParent" : "AppBundle.MacosPopupWindowsContainer",
-  "Aero.windowLevel" : "{\"unknown\":{\"layerNumber\":101}}",
+  "Aero.windowLevel" : 101,
   "Aero.workspace" : null
 }
