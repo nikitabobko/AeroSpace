@@ -5,7 +5,7 @@ import Common
 enum GlobalObserver {
     private static var cmdRightTap: CFMachPort? = nil
     private static var cmdRightTapSource: CFRunLoopSource? = nil
-    private nonisolated static func onNotif(_ notification: Notification) {
+    nonisolated private static func onNotif(_ notification: Notification) {
         // Third line of defence against lock screen window. See: closedWindowsCache
         // Second and third lines of defence are technically needed only to avoid potential flickering
         if (notification.userInfo?[NSWorkspace.applicationUserInfoKey] as? NSRunningApplication)?.bundleIdentifier == lockScreenAppBundleId {
@@ -22,7 +22,7 @@ enum GlobalObserver {
         }
     }
 
-    private nonisolated static func onHideApp(_ notification: Notification) {
+    nonisolated private static func onHideApp(_ notification: Notification) {
         let notifName = notification.name.rawValue
         Task { @MainActor in
             guard let token: RunSessionGuard = .isServerEnabled else { return }
