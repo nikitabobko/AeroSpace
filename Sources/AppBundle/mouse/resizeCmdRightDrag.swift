@@ -63,7 +63,7 @@ func onCmdRightMouseDragged() async {
 
     let newRect = Rect(topLeftX: newTopLeft.x, topLeftY: newTopLeft.y, width: newSize.width, height: newSize.height)
     adjustWeightsForResize(window: window, currentRect: newRect, lastAppliedLayoutRect: lastAppliedLayoutRect)
-    runRefreshSession(.globalObserver("cmdRightMouseDragged"), optimisticallyPreLayoutWorkspaces: true)
+    scheduleRefreshSession(.globalObserver("cmdRightMouseDragged"), optimisticallyPreLayoutWorkspaces: true)
 }
 
 @MainActor
