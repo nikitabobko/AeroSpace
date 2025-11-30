@@ -6,7 +6,20 @@ private struct CmdRightResizeSession {
     let windowId: UInt32
     let startPoint: CGPoint
     let startRect: Rect
-    let edge: CardinalDirection
+    let edges: EdgeSet
+    let engageX: Bool
+    let engageY: Bool
+}
+
+@MainActor
+private struct EdgeSet {
+    let left: Bool
+    let right: Bool
+    let up: Bool
+    let down: Bool
+
+    var isHorizontal: Bool { left || right }
+    var isVertical: Bool { up || down }
 }
 
 @MainActor
@@ -21,16 +34,22 @@ func onCmdRightMouseDown() async {
     guard let rect = window.lastAppliedLayoutPhysicalRect else { return }
     guard let axRect = try? await window.getAxRect() else { return }
 
-    let distances: [(CardinalDirection, CGFloat)] = [
-        (.left, abs(point.x - rect.minX)),
-        (.right, abs(point.x - rect.maxX)),
-        (.up, abs(point.y - rect.minY)),
-        (.down, abs(point.y - rect.maxY)),
-    ]
-    let edge = distances.min(by: { $0.1 < $1.1 })!.0
+    let tolerance: CGFloat = 10
+    let nearLeft = abs(point.x - rect.minX) <= tolerance
+    let nearRight = abs(point.x - rect.maxX) <= tolerance
+    let nearUp = abs(point.y - rect.minY) <= tolerance
+    let nearDown = abs(point.y - rect.maxY) <= tolerance
+
+    let horizClosestIsLeft = abs(point.x - rect.minX) <= abs(point.x - rect.maxX)
+    let vertClosestIsUp = abs(point.y - rect.minY) <= abs(point.y - rect.maxY)
+    let edges = EdgeSet(left: horizClosestIsLeft, right: !horizClosestIsLeft, up: vertClosestIsUp, down: !vertClosestIsUp)
+
+    let engageXInitial = nearLeft || nearRight
+    let engageYInitial = nearUp || nearDown
+
 
     currentlyManipulatedWithMouseWindowId = window.windowId
-    cmdRightResizeSession = CmdRightResizeSession(windowId: window.windowId, startPoint: point, startRect: axRect, edge: edge)
+    cmdRightResizeSession = CmdRightResizeSession(windowId: window.windowId, startPoint: point, startRect: axRect, edges: edges, engageX: engageXInitial, engageY: engageYInitial)
 }
 
 @MainActor
@@ -40,29 +59,49 @@ func onCmdRightMouseDragged() async {
     guard let lastAppliedLayoutRect = window.lastAppliedLayoutPhysicalRect else { return }
 
     let point = mouseLocation
-    let edge = session.edge
-    let delta: CGFloat = (edge.orientation == .h) ? (point.x - session.startPoint.x) : (point.y - session.startPoint.y)
+    let dx = point.x - session.startPoint.x
+    let dy = point.y - session.startPoint.y
 
     var newTopLeft = session.startRect.topLeftCorner
     var newSize = session.startRect.size
 
-    switch edge {
-        case .left:
-            newTopLeft.x += delta
-            newSize.width -= delta
-        case .right:
-            newSize.width += delta
-        case .up:
-            newTopLeft.y += delta
-            newSize.height -= delta
-        case .down:
-            newSize.height += delta
+    var engageX = session.engageX
+    var engageY = session.engageY
+    let expandThreshold: CGFloat = 8
+    if !engageX && abs(dx) > expandThreshold { engageX = true }
+    if !engageY && abs(dy) > expandThreshold { engageY = true }
+
+
+    if engageX {
+        if session.edges.left {
+            newTopLeft.x += dx
+            newSize.width -= dx
+        }
+        if session.edges.right {
+            newSize.width += dx
+        }
+    }
+
+    if engageY {
+        if session.edges.up {
+            newTopLeft.y += dy
+            newSize.height -= dy
+        }
+        if session.edges.down {
+            newSize.height += dy
+        }
     }
 
     if newSize.width < 100 || newSize.height < 100 { return }
 
-    let newRect = Rect(topLeftX: newTopLeft.x, topLeftY: newTopLeft.y, width: newSize.width, height: newSize.height)
-    adjustWeightsForResize(window: window, currentRect: newRect, lastAppliedLayoutRect: lastAppliedLayoutRect)
+    if engageX {
+        let rectX = Rect(topLeftX: newTopLeft.x, topLeftY: lastAppliedLayoutRect.topLeftCorner.y, width: newSize.width, height: lastAppliedLayoutRect.size.height)
+        adjustWeightsForResize(window: window, currentRect: rectX, lastAppliedLayoutRect: lastAppliedLayoutRect)
+    }
+    if engageY {
+        let rectY = Rect(topLeftX: lastAppliedLayoutRect.topLeftCorner.x, topLeftY: newTopLeft.y, width: lastAppliedLayoutRect.size.width, height: newSize.height)
+        adjustWeightsForResize(window: window, currentRect: rectY, lastAppliedLayoutRect: lastAppliedLayoutRect)
+    }
     scheduleRefreshSession(.globalObserver("cmdRightMouseDragged"), optimisticallyPreLayoutWorkspaces: true)
 }
 
