@@ -49,7 +49,14 @@ struct ListWindowsCommand: Command {
                 _list.append((window, try await window.title))
             }
             _list = _list.filter { $0.window.isBound }
-            _list = _list.sortedBy([{ $0.window.app.name ?? "" }, \.title])
+
+            // Sort based on --sort flag (default: tree-order)
+            switch args.sortOrder {
+                case .appName:
+                    _list = _list.sortedBy([{ $0.window.app.name ?? "" }, \.title])
+                case .treeOrder:
+                    break // Already in tree order from allLeafWindowsRecursive
+            }
 
             let list = _list.map { AeroObj.window(window: $0.window, title: $0.title) }
             if args.json {
