@@ -7,6 +7,7 @@ AeroSpace is an i3-like tiling window manager for macOS
 Videos:
 - [YouTube 91 sec Demo](https://www.youtube.com/watch?v=UOl7ErqWbrk)
 - [YouTube Guide by Josean Martinez](https://www.youtube.com/watch?v=-FoWClVHG5g)
+- [YouTube Review by Matt Birchler](https://www.youtube.com/watch?v=Th6P52IAyKI)
 
 Docs:
 - [AeroSpace Guide](https://nikitabobko.github.io/AeroSpace/guide)
