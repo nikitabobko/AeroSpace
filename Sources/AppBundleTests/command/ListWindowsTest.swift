@@ -73,4 +73,20 @@ final class ListWindowsTest: XCTestCase {
             assertEquals(windows.format([.interVar("window-id"), .interVar("right-padding"), .literal(" | "), .interVar("window-title")]), .success(["2  | title1", "10 | title2"]))
         }
     }
+
+    func testAllFormatVariable() {
+        // Test that %{all} without --json fails at parsing level
+        assertEquals(parseCommand("list-windows --all --format '%{all}'").errorOrNil, "'%{all}' format option requires --json flag")
+
+        // Test that %{all} with JSON succeeds at parsing level
+        assertNil(parseCommand("list-windows --all --format '%{all}' --json").errorOrNil)
+
+        // Test that %{all} mixed with other variables fails
+        assertEquals(parseCommand("list-windows --all --json --format '%{all} %{window-id}'").errorOrNil, "'%{all}' format option must be used alone and cannot be combined with other variables")
+        assertEquals(parseCommand("list-windows --all --json --format '%{window-title} %{all}'").errorOrNil, "'%{all}' format option must be used alone and cannot be combined with other variables")
+        assertEquals(parseCommand("list-windows --all --json --format '%{all}     %{window-title}'").errorOrNil, "'%{all}' format option must be used alone and cannot be combined with other variables")
+
+        // Test that %{all} with only spaces is allowed
+        assertNil(parseCommand("list-windows --all --format ' %{all} ' --json").errorOrNil)
+    }
 }
