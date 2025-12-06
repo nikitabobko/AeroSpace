@@ -119,9 +119,7 @@ struct Main {
 }
 
 func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowId: UInt32?, workspace: String?) async -> ServerAnswer {
-    let req = ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)
-    let requestData = Result { try JSONEncoder().encode(req) }.getOrDie()
-    if let e = await connection.write(requestData) {
+    if let e = await connection.write(ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)) {
         exit(stderrMsg: "Failed to write to server socket: \(e)")
     }
 
