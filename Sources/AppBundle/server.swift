@@ -28,7 +28,7 @@ func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) async {
     }
 
     let req = ClientRequest(args: ["enable", state.rawValue], stdin: "", windowId: nil, workspace: nil)
-    _ = await connection.write(Result { try JSONEncoder().encode(req) }.getOrDie())
+    _ = await connection.write(req)
     _ = await connection.read()
 }
 
@@ -40,7 +40,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
         await answerToClient(ans)
     }
     func answerToClient(_ ans: ServerAnswer) async {
-        _ = await connection.write(Result { try JSONEncoder().encode(ans) }.getOrDie())
+        _ = await connection.write(ans)
     }
     while true {
         let (rawRequest, error) = await connection.read().getOrNils()
