@@ -25,7 +25,7 @@ final class MacApp: AbstractApp {
     // todo think if it's possible to integrate this global mutable state to https://github.com/nikitabobko/AeroSpace/issues/1215
     //      and make deinitialization automatic in deinit
     @MainActor static var allAppsMap: [pid_t: MacApp] = [:]
-    @MainActor private static var wipPids: Set<pid_t> = []
+    @MainActor private static var wipPids: [pid_t: AwaitableOneTimeBroadcastLatch] = [:]
 
     private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement, _ axSubscriptions: [AxSubscription], _ thread: Thread) {
         self.nsApp = nsApp
@@ -51,10 +51,12 @@ final class MacApp: AbstractApp {
         while true {
             if let existing = allAppsMap[pid] { return existing }
             try checkCancellation()
-            if !wipPids.insert(pid).inserted {
-                try await Task.sleep(for: .milliseconds(100)) // busy waiting
+            if let wip = wipPids[pid] {
+                try await wip.await()
                 continue
             }
+            let wip = AwaitableOneTimeBroadcastLatch()
+            wipPids[pid] = wip
 
             let thread = Thread {
                 $axTaskLocalAppThreadToken.withValue(AxAppThreadToken(pid: pid, idForDebug: nsApp.idForDebug)) {
@@ -68,7 +70,8 @@ final class MacApp: AbstractApp {
                     let app = isGood ? MacApp(nsApp, axApp, subscriptions, Thread.current) : nil
                     Task { @MainActor in
                         allAppsMap[pid] = app
-                        wipPids.remove(pid)
+                        await wip.signal()
+                        wipPids[pid] = nil
                     }
                     if isGood {
                         CFRunLoopRun()
