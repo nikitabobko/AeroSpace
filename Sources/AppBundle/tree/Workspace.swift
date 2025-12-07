@@ -24,6 +24,15 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     {
         return candidate
     }
+    if !config.persistentWorkspaces.isEmpty {
+        if let persistentCandidate = Workspace.all.first(where: { workspace in
+            config.persistentWorkspaces.contains(workspace.name)
+                && !workspace.isVisible
+                && workspace.forceAssignedMonitor == nil
+        }) {
+            return persistentCandidate
+        }
+    }
     return (1 ... Int.max).lazy
         .map { Workspace.get(byName: String($0)) }
         .first { $0.isEffectivelyEmpty && !$0.isVisible && !config.persistentWorkspaces.contains($0.name) && $0.forceAssignedMonitor == nil }
