@@ -123,10 +123,3 @@ public struct Message: Hashable, Equatable {
         self.body = body
     }
 }
-
-#Preview {
-    MessageView(model: MessageModel.shared)
-        .onAppear {
-            MessageModel.shared.message = Message(type: .config, description: "Description", body: "Body")
-        }
-}

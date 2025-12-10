@@ -1,10 +1,32 @@
 import AppKit
 
-// Covered by tests in ./axDumps in the repor root
+enum AxUiElementWindowType: String {
+    case window
+    case dialog
+    /// Not even a real window
+    case popup
+
+    static func new(isWindow: Bool, isDialog: () -> Bool) -> AxUiElementWindowType {
+        switch true {
+            case !isWindow: .popup
+            case isDialog(): .dialog
+            default: .window
+        }
+    }
+}
+
+// Covered by tests in ./axDumps in the repo root
 extension AxUiElementMock {
     // 'isDialogHeuristic' function name is referenced in the guide
-    func isDialogHeuristic(_ id: KnownBundleId?) -> Bool {
+    func isDialogHeuristic(
+        _ id: KnownBundleId?,
+        _ windowLevel: MacOsWindowLevel?,
+    ) -> Bool {
         // Note: a lot of windows don't have title on startup. So please don't rely on the title
+
+        if id == ._1password && windowLevel != .normalWindow {
+            return true
+        }
 
         if id == .iphonesimulator {
             return true
@@ -47,6 +69,13 @@ extension AxUiElementMock {
         // - Drata Agent https://github.com/nikitabobko/AeroSpace/issues/134
         if get(Ax.fullscreenButtonAttr)?.get(Ax.enabledAttr) != true &&
             id != .gimp && // Gimp doesn't show fullscreen button
+
+            // "Drag out" a tab out of Chrome window. Technically, it shouldn't be necessary, but
+            // apparently there is some sort of race condition between users releasing mouse up and
+            // Chrome reactivating the fullscreen button
+            // todo: consider checking for fullscreen cirteria periodically (downside: will affect performance)
+            id != .chrome &&
+
             id != .activityMonitor && // Activity Monitor doesn't show fullscreen button
 
             // Terminal apps and Emacs have an option to hide their title bars
@@ -73,12 +102,30 @@ extension AxUiElementMock {
         axApp: AxUiElementMock,
         _ id: KnownBundleId?,
         _ activationPolicy: NSApplication.ActivationPolicy,
+        _ windowLevel: MacOsWindowLevel?,
     ) -> Bool {
+        if windowLevel != .normalWindow &&
+            // Slowly roll out windowLevel for applications for which we have the appropriate dumps
+            (id == .slack || id == .chrome || id?.isFirefox == true || id == .braveBrowser || id == .screenstudio || id == .cleanshotx || id == .iterm2)
+        {
+            return false
+        }
+
         // Just don't do anything with "Ghostty Quick Terminal" windows.
         // Its position and size are managed by the Ghostty itself
         // https://github.com/nikitabobko/AeroSpace/issues/103
         // https://github.com/ghostty-org/ghostty/discussions/3512
         if id == .ghostty && get(Ax.identifierAttr) == "com.mitchellh.ghostty.quickTerminal" {
+            return false
+        }
+
+        lazy var fullscreenButton = get(Ax.fullscreenButtonAttr)
+
+        if id == .xcode && get(Ax.identifierAttr) == "open_quickly" {
+            return false
+        }
+
+        if id == .iterm2 && fullscreenButton == nil {
             return false
         }
 
@@ -104,7 +151,7 @@ extension AxUiElementMock {
         // - Finder preview (hit space) (subrole == "Quick Look")
         // - Firefox non-native video fullscreen (about:config -> full-screen-api.macos-native-full-screen -> false, subrole == AXUnknown)
         return get(Ax.closeButtonAttr) != nil ||
-            get(Ax.fullscreenButtonAttr) != nil ||
+            fullscreenButton != nil ||
             get(Ax.zoomButtonAttr) != nil ||
             get(Ax.minimizeButtonAttr) != nil ||
 
@@ -149,25 +196,11 @@ extension AxUiElementMock {
         axApp: AxUiElementMock,
         _ id: KnownBundleId?,
         _ activationPolicy: NSApplication.ActivationPolicy,
+        _ windowLevel: MacOsWindowLevel?,
     ) -> AxUiElementWindowType {
         .new(
-            isWindow: isWindowHeuristic(axApp: axApp, id, activationPolicy),
-            isDialog: { isDialogHeuristic(id) },
+            isWindow: isWindowHeuristic(axApp: axApp, id, activationPolicy, windowLevel),
+            isDialog: { isDialogHeuristic(id, windowLevel) },
         )
-    }
-}
-
-enum AxUiElementWindowType: String {
-    case window
-    case dialog
-    /// Not even a real window
-    case popup
-
-    static func new(isWindow: Bool, isDialog: () -> Bool) -> AxUiElementWindowType {
-        switch true {
-            case !isWindow: .popup
-            case isDialog(): .dialog
-            default: .window
-        }
     }
 }

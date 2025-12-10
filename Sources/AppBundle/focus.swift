@@ -159,7 +159,7 @@ extension Workspace {
     guard let token: RunSessionGuard = .isServerEnabled else { return }
     // todo potential optimization: don't run runSession if we are already in runSession
     Task {
-        try await runSession(.onFocusedMonitorChanged, token) {
+        try await runLightSession(.onFocusedMonitorChanged, token) {
             _ = try await config.onFocusedMonitorChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
         }
     }
@@ -169,7 +169,7 @@ extension Workspace {
     guard let token: RunSessionGuard = .isServerEnabled else { return }
     // todo potential optimization: don't run runSession if we are already in runSession
     Task {
-        try await runSession(.onFocusChanged, token) {
+        try await runLightSession(.onFocusChanged, token) {
             _ = try await config.onFocusChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
         }
     }
@@ -183,6 +183,7 @@ extension Workspace {
         var environment = config.execConfig.envVariables
         environment["AEROSPACE_FOCUSED_WORKSPACE"] = newWorkspace
         environment["AEROSPACE_PREV_WORKSPACE"] = oldWorkspace
+        environment[AEROSPACE_WORKSPACE] = newWorkspace
         process.environment = environment
         _ = Result { try process.run() }
     }

@@ -1,6 +1,6 @@
 --all::
 Alias for `--monitor all`.
-Please use this option *with cautious*.
+Please use this option *with caution*.
 Use it when you really need to get workspaces/windows from *all monitors*.
 +
 For multi-monitor setup `--monitor focused` is almost always a preferred option.

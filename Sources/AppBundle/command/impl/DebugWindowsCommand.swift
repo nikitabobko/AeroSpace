@@ -77,6 +77,9 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
 
     var result: [String: Json] = try await window.dumpAxInfo()
 
+    let windowLevel = getWindowLevel(for: window.windowId)
+    let windowLevelJson = windowLevel?.toJson() ?? .null
+    result["Aero.windowLevel"] = windowLevelJson
     result["Aero.axWindowId"] = .uint32(window.windowId)
     result["Aero.workspace"] = .stringOrNull(window.nodeWorkspace?.name)
     result["Aero.treeNodeParent"] = .string(String(describing: window.parent))
@@ -90,8 +93,8 @@ private func dumpWindowDebugInfo(_ window: Window) async throws -> String {
     result["Aero.App.nsApp.appBundlePath"] = .stringOrNull(window.macApp.nsApp.bundleURL?.description)
     result["Aero.AXApp"] = .dict(try await window.macApp.dumpAppAxInfo())
 
-    let isDialog = try await window.isDialogHeuristic()
-    let isWindow = try await window.isWindowHeuristic()
+    let isDialog = try await window.isDialogHeuristic(windowLevel)
+    let isWindow = try await window.isWindowHeuristic(windowLevel)
     result["Aero.AxUiElementWindowType"] = .string(AxUiElementWindowType.new(isWindow: isWindow, isDialog: { isDialog }).rawValue)
     result["Aero.AxUiElementWindowType_isDialogHeuristic"] = .bool(isDialog)
 

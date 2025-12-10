@@ -7,8 +7,6 @@ let signposter = OSSignposter(subsystem: aeroSpaceAppId, category: .pointsOfInte
 
 let myPid = NSRunningApplication.current.processIdentifier
 let lockScreenAppBundleId = "com.apple.loginwindow"
-let AEROSPACE_WINDOW_ID = "AEROSPACE_WINDOW_ID" // env var
-let AEROSPACE_WORKSPACE = "AEROSPACE_WORKSPACE" // env var
 
 func stringType(of some: Any) -> String {
     let string = (some is Any.Type) ? String(describing: some) : String(describing: type(of: some))
@@ -33,7 +31,7 @@ func initTerminationHandler() {
 private struct AppServerTerminationHandler: TerminationHandler {
     func beforeTermination() async throws {
         try await makeAllWindowsVisibleAndRestoreSize()
-        toggleReleaseServerIfDebug(.on)
+        await toggleReleaseServerIfDebug(.on)
     }
 }
 

@@ -92,7 +92,7 @@
   "Aero.App.versionShort" : "4.45.69",
   "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, isWritable.AXActivationPoint, get.AXFullScreenButton, get.AXProxy, get.AXDefaultButton, get.AXTitleUIElement, get.AXCancelButton, get.AXToolbarButton",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.AxUiElementWindowType" : "dialog", // todo fix https://github.com/nikitabobko/AeroSpace/issues/1617
+  "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain, AXMinimized",
   "Aero.axWindowId" : 22405,
@@ -101,5 +101,6 @@
 
   ],
   "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
+  "Aero.windowLevel" : 1000,
   "Aero.workspace" : "1"
 }

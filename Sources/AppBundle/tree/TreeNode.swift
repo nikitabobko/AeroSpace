@@ -122,7 +122,7 @@ open class TreeNode: Equatable, AeroAny {
         unbindIfBound() ?? dieT("\(self) is already unbound. The stacktrace where it was unbound:\n\(unboundStacktrace ?? "nil")")
     }
 
-    public nonisolated static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {
+    nonisolated public static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {
         lhs === rhs
     }
 

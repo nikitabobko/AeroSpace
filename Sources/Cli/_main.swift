@@ -1,7 +1,7 @@
 import Common
 import Darwin
 import Foundation
-import Socket
+import Network
 
 let usage =
     """
@@ -13,11 +13,11 @@ let usage =
 
 @main
 struct Main {
-    static func main() {
+    static func main() async {
         let args = CommandLine.arguments.slice(1...) ?? []
 
         if args.isEmpty {
-            printStderr(usage)
+            eprint(usage)
             exit(1)
         }
         if args.first == "--help" || args.first == "-h" {
@@ -25,47 +25,65 @@ struct Main {
             exit(0)
         }
 
-        let isVersion: Bool = args.first == "--version" || args.first == "-v"
-        var parsedArgs: (any CmdArgs)! = nil
-        if !isVersion {
-            switch parseCmdArgs(args) {
-                case .cmd(let _parsedArgs):
-                    parsedArgs = _parsedArgs
-                case .help(let help):
-                    print(help)
-                    exit(0)
-                case .failure(let e):
-                    cliError(e)
-            }
-        }
-
-        let socket = Result { try Socket.create(family: .unix, type: .stream, proto: .unix) }.getOrDie()
-        defer {
-            socket.close()
-        }
-
-        let socketFile = "/tmp/\(aeroSpaceAppId)-\(unixUserName).sock"
-
-        if let e: Error = Result(catching: { try socket.connect(to: socketFile) }).failureOrNil {
-            if isVersion {
-                printVersionAndExit(serverVersion: nil)
+        if args.first == "--version" || args.first == "-v" {
+            let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
+            let serverVersionAndHash: String?
+            if await connection.startBlocking() == nil {
+                let ans = await run(connection, [], stdin: "", windowId: nil, workspace: nil)
+                serverVersionAndHash = ans.serverVersionAndHash
             } else {
-                cliError("Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
+                serverVersionAndHash = nil
             }
+            print(
+                """
+                aerospace CLI client version: \(cliClientVersionAndHash)
+                AeroSpace.app server version: \(serverVersionAndHash ?? "Unknown. The server is not running")
+                """,
+            )
+            if serverVersionAndHash != nil && cliClientVersionAndHash != serverVersionAndHash {
+                eprint(
+                    """
+                    Warning: AeroSpace client/server versions don't match. Possible fixes:
+                      - Restart AeroSpace.app (server restart is required after each update)
+                      - Reinstall and restart AeroSpace (corrupted installation)
+                    """,
+                )
+            }
+            exit(0)
+        }
+
+        var parsedArgs: (any CmdArgs)! = nil
+        switch parseCmdArgs(args) {
+            case .cmd(let _parsedArgs):
+                parsedArgs = _parsedArgs
+            case .help(let help):
+                print(help)
+                exit(0)
+            case .failure(let e):
+                exit(stderrMsg: e)
+        }
+
+        let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
+
+        if let e = await connection.startBlocking() {
+            exit(stderrMsg: "Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
         }
 
         var stdin = ""
-        if (parsedArgs is WorkspaceCmdArgs || parsedArgs is MoveNodeToWorkspaceCmdArgs) && hasStdin() {
+        if (parsedArgs is WorkspaceCmdArgs && (parsedArgs as! WorkspaceCmdArgs).target.val.isRelatve
+            || parsedArgs is MoveNodeToWorkspaceCmdArgs && (parsedArgs as! MoveNodeToWorkspaceCmdArgs).target.val.isRelatve)
+            && hasStdin()
+        {
             if parsedArgs is WorkspaceCmdArgs && (parsedArgs as! WorkspaceCmdArgs).explicitStdinFlag == nil ||
                 parsedArgs is MoveNodeToWorkspaceCmdArgs && (parsedArgs as! MoveNodeToWorkspaceCmdArgs).explicitStdinFlag == nil
             {
-                cliError(
-                    """
-                    ERROR: Implicit stdin is detected (stdin is not TTY). Implicit stdin was forbidden in AeroSpace v0.20.0.
-                    1. Please supply '--stdin' flag to make stdin explicit and preserve old AeroSpace behavior
-                    2. You can also use '--no-stdin' flag to behave as if no stdin was supplied
-                    Breaking change issue: https://github.com/nikitabobko/AeroSpace/issues/1683
-                    """,
+                exit(
+                    stderrMsg: """
+                        ERROR: Implicit stdin is detected (stdin is not TTY). Implicit stdin was forbidden in AeroSpace v0.20.0.
+                        1. Please supply '--stdin' flag to make stdin explicit and preserve old AeroSpace behavior
+                        2. You can also use '--no-stdin' flag to behave as if no stdin was supplied
+                        Breaking change issue: https://github.com/nikitabobko/AeroSpace/issues/1683
+                        """,
                 )
             }
             var index = 0
@@ -73,27 +91,26 @@ struct Main {
                 stdin += line
                 index += 1
                 if index > 1000 {
-                    cliError("stdin number of lines limit is exceeded")
+                    exit(stderrMsg: "stdin number of lines limit is exceeded")
                 }
             }
         }
 
-        let ans = isVersion ? run(socket, [], stdin: stdin) : run(socket, args, stdin: stdin)
-        if isVersion {
-            printVersionAndExit(serverVersion: ans.serverVersionAndHash)
-        }
+        let windowId = ProcessInfo.processInfo.environment[AEROSPACE_WINDOW_ID].flatMap(UInt32.init)
+        let workspace = ProcessInfo.processInfo.environment[AEROSPACE_WORKSPACE]
+        let ans = await run(connection, args, stdin: stdin, windowId: windowId, workspace: workspace)
 
         if !ans.stdout.isEmpty { print(ans.stdout) }
-        if !ans.stderr.isEmpty { printStderr(ans.stderr) }
+        if !ans.stderr.isEmpty { eprint(ans.stderr) }
         if ans.exitCode != 0 && ans.serverVersionAndHash != cliClientVersionAndHash {
-            printStderr(
+            eprint(
                 """
                 Warning: AeroSpace client/server versions don't match
-                    - aerospace CLI client version: \(cliClientVersionAndHash)
-                    - AeroSpace.app server version: \(ans.serverVersionAndHash)
-                    Possible fixes:
-                    - Restart AeroSpace.app (server restart is required after each update)
-                    - Reinstall and restart AeroSpace (corrupted installation)
+                  - aerospace CLI client version: \(cliClientVersionAndHash)
+                  - AeroSpace.app server version: \(ans.serverVersionAndHash)
+                  Possible fixes:
+                  - Restart AeroSpace.app (server restart is required after each update)
+                  - Reinstall and restart AeroSpace (corrupted installation)
                 """,
             )
         }
@@ -101,22 +118,17 @@ struct Main {
     }
 }
 
-func printVersionAndExit(serverVersion: String?) -> Never {
-    print(
-        """
-        aerospace CLI client version: \(cliClientVersionAndHash)
-        AeroSpace.app server version: \(serverVersion ?? "Unknown. The server is not running")
-        """,
-    )
-    exit(0)
-}
+func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowId: UInt32?, workspace: String?) async -> ServerAnswer {
+    let req = ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)
+    let requestData = Result { try JSONEncoder().encode(req) }.getOrDie()
+    if let e = await connection.write(requestData) {
+        exit(stderrMsg: "Failed to write to server socket: \(e)")
+    }
 
-func run(_ socket: Socket, _ args: StrArrSlice, stdin: String) -> ServerAnswer {
-    let request = Result { try JSONEncoder().encode(ClientRequest(args: args.toArray(), stdin: stdin)) }.getOrDie()
-    Result { try socket.write(from: request) }.getOrDie()
-    Result { try Socket.wait(for: [socket], timeout: 0, waitForever: true) }.getOrDie()
-
-    var answer = Data()
-    Result { try socket.read(into: &answer) }.getOrDie()
-    return Result { try JSONDecoder().decode(ServerAnswer.self, from: answer) }.getOrDie()
+    switch await connection.read() {
+        case .success(let answer):
+            return (try? JSONDecoder().decode(ServerAnswer.self, from: answer)) ?? exitT(stderrMsg: "Failed to parse server response")
+        case .failure(let error):
+            exit(stderrMsg: "Failed to read from server socket: \(error)")
+    }
 }

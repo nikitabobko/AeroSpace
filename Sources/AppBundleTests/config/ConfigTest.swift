@@ -5,7 +5,7 @@ import XCTest
 @MainActor
 final class ConfigTest: XCTestCase {
     func testParseI3Config() {
-        let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/i3-like-config-example.toml"))
+        let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/i3-like-config-example.toml"), encoding: .utf8)
         let (i3Config, errors) = parseConfig(toml)
         assertEquals(errors, [])
         assertEquals(i3Config.execConfig, defaultConfig.execConfig)
@@ -14,9 +14,46 @@ final class ConfigTest: XCTestCase {
     }
 
     func testParseDefaultConfig() {
-        let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/default-config.toml"))
+        let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/default-config.toml"), encoding: .utf8)
         let (_, errors) = parseConfig(toml)
         assertEquals(errors, [])
+    }
+
+    func testConfigVersionOutOfBounds() {
+        let (_, errors) = parseConfig(
+            """
+            config-version = 0
+            """,
+        )
+        assertEquals(errors.descriptions, ["config-version: Must be in [1, 2] range"])
+    }
+
+    func testExecOnWorkspaceChangeDifferentTypesError() {
+        let (_, errors) = parseConfig(
+            """
+            exec-on-workspace-change = ['', 1]
+            """,
+        )
+        assertEquals(errors.descriptions, ["exec-on-workspace-change[1]: Expected type is \'string\'. But actual type is \'integer\'"])
+    }
+
+    func testDuplicatedPersistentWorkspaces() {
+        let (_, errors) = parseConfig(
+            """
+            config-version = 2
+            persistent-workspaces = ['a', 'a']
+            """,
+        )
+        assertEquals(errors.descriptions, ["persistent-workspaces: Contains duplicated workspace names"])
+    }
+
+    func testPersistentWorkspacesAreAvailableOnlySinceVersion2() {
+        let (_, errors) = parseConfig(
+            """
+            persistent-workspaces = ['a']
+            """,
+        )
+        assertEquals(errors.descriptions, ["persistent-workspaces: This config option is only available since \'config-version = 2\'"])
     }
 
     func testQueryCantBeUsedInConfig() {
@@ -128,7 +165,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(errors.descriptions, [])
-        assertEquals(config.preservedWorkspaceNames.sorted(), ["1", "2", "3", "4"])
+        assertEquals(config.persistentWorkspaces.sorted(), ["1", "2", "3", "4"])
     }
 
     func testUnknownTopLevelKeyParseError() {
@@ -240,11 +277,11 @@ final class ConfigTest: XCTestCase {
                 "workspace_name_1": [.sequenceNumber(1)],
                 "workspace_name_2": [.main],
                 "workspace_name_3": [.secondary],
-                "workspace_name_4": [.pattern("built-in")!],
-                "workspace_name_5": [.pattern("^built-in retina display$")!],
+                "workspace_name_4": [.caseSensitivePattern("built-in")!],
+                "workspace_name_5": [.caseSensitivePattern("^built-in retina display$")!],
                 "workspace_name_6": [.secondary, .sequenceNumber(1)],
                 "workspace_name_x": [.sequenceNumber(2)],
-                "7": [.pattern("foo")!],
+                "7": [.caseSensitivePattern("foo")!],
                 "w7": [.main],
                 "w8": [],
             ],
@@ -259,23 +296,23 @@ final class ConfigTest: XCTestCase {
     func testParseOnWindowDetected() {
         let (parsed, errors) = parseConfig(
             """
-            [[on-window-detected]]
+            [[on-window-detected]] # 0
                 check-further-callbacks = true
                 run = ['layout floating', 'move-node-to-workspace W']
-            [[on-window-detected]]
+            [[on-window-detected]] # 1
                 if.app-id = 'com.apple.systempreferences'
                 run = []
-            [[on-window-detected]]
-            [[on-window-detected]]
+            [[on-window-detected]] # 2
+            [[on-window-detected]] # 3
                 run = ['move-node-to-workspace S', 'layout tiling']
-            [[on-window-detected]]
+            [[on-window-detected]] # 4
                 run = ['move-node-to-workspace S', 'move-node-to-workspace W']
-            [[on-window-detected]]
+            [[on-window-detected]] # 5
                 run = ['move-node-to-workspace S', 'layout h_tiles']
             """,
         )
         assertEquals(parsed.onWindowDetected, [
-            WindowDetectedCallback(
+            WindowDetectedCallback( // 0
                 matcher: WindowDetectedCallbackMatcher(
                     appId: nil,
                     appNameRegexSubstring: nil,
@@ -287,23 +324,36 @@ final class ConfigTest: XCTestCase {
                     MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "W")),
                 ],
             ),
-            WindowDetectedCallback(
+            WindowDetectedCallback( // 1
                 matcher: WindowDetectedCallbackMatcher(
                     appId: "com.apple.systempreferences",
                     appNameRegexSubstring: nil,
                     windowTitleRegexSubstring: nil,
                 ),
-                checkFurtherCallbacks: false,
                 rawRun: [],
+            ),
+            WindowDetectedCallback( // 3
+                rawRun: [
+                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "S")),
+                    LayoutCommand(args: LayoutCmdArgs(rawArgs: [], toggleBetween: [.tiling])),
+                ],
+            ),
+            WindowDetectedCallback( // 4
+                rawRun: [
+                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "S")),
+                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "W")),
+                ],
+            ),
+            WindowDetectedCallback( // 5
+                rawRun: [
+                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "S")),
+                    LayoutCommand(args: LayoutCmdArgs(rawArgs: [], toggleBetween: [.h_tiles])),
+                ],
             ),
         ])
 
         assertEquals(errors.descriptions, [
             "on-window-detected[2]: \'run\' is mandatory key",
-            "on-window-detected[3]: For now, \'move-node-to-workspace\' must be the latest instruction in the callback (otherwise it\'s error-prone). Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
-            "on-window-detected[4]: For now, \'move-node-to-workspace\' can be mentioned only once in \'run\' callback. Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
-            "on-window-detected[5]: For now, \'layout floating\', \'layout tiling\' and \'move-node-to-workspace\' are the only commands that are supported in \'on-window-detected\'. Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
-            "on-window-detected[5]: For now, \'move-node-to-workspace\' must be the latest instruction in the callback (otherwise it\'s error-prone). Please report your use cases to https://github.com/nikitabobko/AeroSpace/issues/20",
         ])
     }
 
@@ -353,7 +403,7 @@ final class ConfigTest: XCTestCase {
                     bottom: .constant(13),
                     top: .perMonitor(
                         [
-                            PerMonitorValue(description: .pattern("built-in")!, value: 3),
+                            PerMonitorValue(description: .caseSensitivePattern("built-in")!, value: 3),
                             PerMonitorValue(description: .secondary, value: 4),
                         ],
                         default: 6,

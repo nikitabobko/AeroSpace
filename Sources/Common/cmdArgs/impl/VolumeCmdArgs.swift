@@ -1,17 +1,17 @@
 public struct VolumeCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
-    public init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
+    /*conforms*/ public var commonState: CmdArgsCommonState
+    public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .volume,
         allowInConfig: true,
         help: volume_help_generated,
-        flags: [:],
+        flags: [
+            "--no-gui": falseBoolFlag(\.gui),
+        ],
         posArgs: [newArgParser(\.action, parseVolumeAction, mandatoryArgPlaceholder: VolumeAction.argsUnion)],
     )
 
-    /*conforms*/ public var windowId: UInt32?
-    /*conforms*/ public var workspaceName: WorkspaceName?
-
+    public var gui: Bool = true
     public var action: Lateinit<VolumeAction> = .uninitialized
 }
 

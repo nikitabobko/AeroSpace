@@ -1,6 +1,7 @@
 import AppKit
 import Common
 import TOMLKit
+import OrderedCollections
 
 @MainActor
 func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
@@ -16,7 +17,7 @@ func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
             return .failure(msg)
     }
     let configUrl: URL = forceConfigUrl ?? customConfigUrl
-    let (parsedConfig, errors) = (try? String(contentsOf: configUrl)).map { parseConfig($0) } ?? (defaultConfig, [])
+    let (parsedConfig, errors) = (try? String(contentsOf: configUrl, encoding: .utf8)).map { parseConfig($0) } ?? (defaultConfig, [])
 
     if errors.isEmpty {
         return .success((parsedConfig, configUrl))
@@ -81,15 +82,19 @@ struct Parser<S: ConvenienceCopyable, T>: ParserProtocol {
 }
 
 private let modeConfigRootKey = "mode"
+private let persistentWorkspacesKey = "persistent-workspaces"
 
 // For every new config option you add, think:
 // 1. Does it make sense to have different value
 // 2. Prefer commands and commands flags over toml options if possible
 private let configParser: [String: any ParserProtocol<Config>] = [
+    "config-version": Parser(\.configVersion, parseConfigVersion),
+
     "after-login-command": Parser(\.afterLoginCommand, parseAfterLoginCommand),
     "after-startup-command": Parser(\.afterStartupCommand) { parseCommandOrCommands($0).toParsedToml($1) },
 
     "on-focus-changed": Parser(\.onFocusChanged) { parseCommandOrCommands($0).toParsedToml($1) },
+    "on-mode-changed": Parser(\.onModeChanged) { parseCommandOrCommands($0).toParsedToml($1) },
     "on-focused-monitor-changed": Parser(\.onFocusedMonitorChanged) { parseCommandOrCommands($0).toParsedToml($1) },
     // "on-focused-workspace-changed": Parser(\.onFocusedWorkspaceChanged, { parseCommandOrCommands($0).toParsedToml($1) }),
 
@@ -102,7 +107,8 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "start-at-login": Parser(\.startAtLogin, parseBool),
     "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
     "accordion-padding": Parser(\.accordionPadding, parseInt),
-    "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseExecOnWorkspaceChange),
+    persistentWorkspacesKey: Parser(\.persistentWorkspaces, parsePersistentWorkspaces),
+    "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseArrayOfStrings),
     "exec": Parser(\.execConfig, parseExecConfig),
 
     modeConfigRootKey: Parser(\.modes, skipParsing(Config().modes)), // Parsed manually
@@ -178,13 +184,19 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
         config.modes = modes
     }
 
-    config.preservedWorkspaceNames = config.modes.values.lazy
-        .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
-        .flatMap { (binding: HotkeyBinding) -> [String] in
-            binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw } +
-                binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw }
+    if config.configVersion <= 1 {
+        if rawTable.contains(key: persistentWorkspacesKey) {
+            errors += [.semantic(.rootKey(persistentWorkspacesKey), "This config option is only available since 'config-version = 2'")]
         }
-        + (config.workspaceToMonitorForceAssignment).keys
+        config.persistentWorkspaces = (config.modes.values.lazy
+            .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
+            .flatMap { (binding: HotkeyBinding) -> [String] in
+                binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw } +
+                    binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw }
+            }
+            + (config.workspaceToMonitorForceAssignment).keys)
+            .toOrderedSet()
+    }
 
     if config.enableNormalizationFlattenContainers {
         let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings }
@@ -213,6 +225,13 @@ func parseIndentForNestedContainersWithTheSameOrientation(
 ) -> ParsedToml<Void> {
     let msg = "Deprecated. Please drop it from the config. See https://github.com/nikitabobko/AeroSpace/issues/96"
     return .failure(.semantic(backtrace, msg))
+}
+
+func parseConfigVersion(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Int> {
+    let min = 1
+    let max = 2
+    return parseInt(raw, backtrace)
+        .filter(.semantic(backtrace, "Must be in [\(min), \(max)] range")) { (min ... max).contains($0) }
 }
 
 func parseKeyMapping(
@@ -290,10 +309,20 @@ private func skipParsing<T: Sendable>(_ value: T) -> @Sendable (_ raw: TOMLValue
     { _, _ in .success(value) }
 }
 
-private func parseExecOnWorkspaceChange(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<[String]> {
+private func parsePersistentWorkspaces(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<OrderedSet<String>> {
+    parseArrayOfStrings(raw, backtrace)
+        .flatMap { arr in
+            let set = arr.toOrderedSet()
+            return set.count == arr.count ? .success(set) : .failure(.semantic(backtrace, "Contains duplicated workspace names"))
+        }
+}
+
+private func parseArrayOfStrings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<[String]> {
     parseTomlArray(raw, backtrace)
         .flatMap { arr in
-            arr.mapAllOrFailure { elem in parseString(elem, backtrace) }
+            arr.enumerated().mapAllOrFailure { (index, elem) in
+                parseString(elem, backtrace + .index(index))
+            }
         }
 }
 

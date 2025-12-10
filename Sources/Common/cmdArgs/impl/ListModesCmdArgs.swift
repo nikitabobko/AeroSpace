@@ -1,7 +1,7 @@
 public struct ListModesCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
+    /*conforms*/ public var commonState: CmdArgsCommonState
     public init(rawArgs: StrArrSlice) {
-        self.rawArgsForStrRepr = .init(rawArgs)
+        self.commonState = .init(rawArgs)
     }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .listModes,
@@ -19,8 +19,6 @@ public struct ListModesCmdArgs: CmdArgs {
         ],
     )
 
-    /*conforms*/ public var windowId: UInt32?
-    /*conforms*/ public var workspaceName: WorkspaceName?
     public var current: Bool = false
     public var json: Bool = false
     public var outputOnlyCount: Bool = false

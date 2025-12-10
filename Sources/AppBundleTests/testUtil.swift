@@ -22,7 +22,7 @@ func setUpWorkspacesForTests() {
 
     // Don't create any bindings and workspaces for tests
     config.modes = [mainModeId: Mode(name: nil, bindings: [])]
-    config.preservedWorkspaceNames = []
+    config.persistentWorkspaces = []
 
     for workspace in Workspace.all {
         for child in workspace.children {

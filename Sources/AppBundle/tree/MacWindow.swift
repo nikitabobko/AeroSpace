@@ -52,17 +52,17 @@ final class MacWindow: Window {
     //     return "Window(\(description))"
     // }
 
-    func isWindowHeuristic() async throws -> Bool { // todo cache
-        try await macApp.isWindowHeuristic(windowId)
+    func isWindowHeuristic(_ windowLevel: MacOsWindowLevel?) async throws -> Bool { // todo cache
+        try await macApp.isWindowHeuristic(windowId, windowLevel)
     }
 
-    func isDialogHeuristic() async throws -> Bool { // todo cache
-        try await macApp.isDialogHeuristic(windowId)
+    func isDialogHeuristic(_ windowLevel: MacOsWindowLevel?) async throws -> Bool { // todo cache
+        try await macApp.isDialogHeuristic(windowId, windowLevel)
     }
 
     @MainActor
-    func getAxUiElementWindowType() async throws -> AxUiElementWindowType {
-        try await macApp.getAxUiElementWindowType(windowId)
+    func getAxUiElementWindowType(_ windowLevel: MacOsWindowLevel?) async throws -> AxUiElementWindowType {
+        try await macApp.getAxUiElementWindowType(windowId, windowLevel)
     }
 
     func dumpAxInfo() async throws -> [String: Json] {
@@ -149,7 +149,7 @@ final class MacWindow: Window {
                 let onePixelOffset = macApp.appId == .zoom ? .zero : CGPoint(x: 1, y: 1)
                 p = nodeMonitor.visibleRect.bottomRightCorner - onePixelOffset
         }
-        setAxTopLeftCorner(p)
+        setAxFrame(p, nil)
     }
 
     @MainActor
@@ -167,7 +167,7 @@ final class MacWindow: Window {
                     x: workspaceRect.width * prevUnhiddenProportionalPositionInsideWorkspaceRect.x,
                     y: workspaceRect.height * prevUnhiddenProportionalPositionInsideWorkspaceRect.y,
                 )
-                setAxTopLeftCorner(workspaceRect.topLeftCorner + pointInsideWorkspace)
+                setAxFrame(workspaceRect.topLeftCorner + pointInsideWorkspace, nil)
             case .macosNativeFullscreenWindow, .macosNativeHiddenAppWindow, .macosNativeMinimizedWindow,
                  .macosPopupWindow, .tiling, .rootTilingContainer, .shimContainerRelation: break
         }
@@ -183,20 +183,12 @@ final class MacWindow: Window {
         try await macApp.getAxSize(windowId)
     }
 
-    override func setAxTopLeftCorner(_ point: CGPoint) {
-        macApp.setAxTopLeftCorner(windowId, point)
-    }
-
     override func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) {
         macApp.setAxFrame(windowId, topLeft, size)
     }
 
     override func setAxFrameBlocking(_ topLeft: CGPoint?, _ size: CGSize?) async throws {
         try await macApp.setAxFrameBlocking(windowId, topLeft, size)
-    }
-
-    override func setSizeAsync(_ size: CGSize) {
-        macApp.setAxSize(windowId, size)
     }
 
     override func getAxTopLeftCorner() async throws -> CGPoint? {
@@ -221,7 +213,8 @@ extension Window {
 // The function is private because it's unsafe. It leaves the window in unbound state
 @MainActor
 private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace, window: Window?) async throws -> BindingData {
-    switch try await macApp.getAxUiElementWindowType(windowId) {
+    let windowLevel = getWindowLevel(for: windowId)
+    return switch try await macApp.getAxUiElementWindowType(windowId, windowLevel) {
         case .popup: BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         case .dialog: BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         case .window: unbindAndGetBindingDataForNewTilingWindow(workspace, window: window)

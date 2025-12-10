@@ -5,9 +5,9 @@ struct ReloadConfigCommand: Command {
     let args: ReloadConfigCmdArgs
     /*conforms*/ var shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         var stdout = ""
-        let isOk = reloadConfig(args: args, stdout: &stdout)
+        let isOk = try await reloadConfig(args: args, stdout: &stdout)
         if !stdout.isEmpty {
             io.out(stdout)
         }
@@ -15,23 +15,23 @@ struct ReloadConfigCommand: Command {
     }
 }
 
-@MainActor func reloadConfig(forceConfigUrl: URL? = nil) -> Bool {
+@MainActor func reloadConfig(forceConfigUrl: URL? = nil) async throws -> Bool {
     var devNull = ""
-    return reloadConfig(forceConfigUrl: forceConfigUrl, stdout: &devNull)
+    return try await reloadConfig(forceConfigUrl: forceConfigUrl, stdout: &devNull)
 }
 
 @MainActor func reloadConfig(
     args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []),
     forceConfigUrl: URL? = nil,
     stdout: inout String,
-) -> Bool {
+) async throws -> Bool {
     switch readConfig(forceConfigUrl: forceConfigUrl) {
         case .success(let (parsedConfig, url)):
             if !args.dryRun {
                 resetHotKeys()
                 config = parsedConfig
                 configUrl = url
-                activateMode(activeMode)
+                try await activateMode(activeMode)
                 syncStartAtLogin()
                 MessageModel.shared.message = nil
             }

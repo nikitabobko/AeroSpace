@@ -71,9 +71,9 @@ aerospace -h;
     | trigger-binding <binding> --mode <mode_id>
     | trigger-binding --mode <mode_id> <binding>
 
-    | volume (up|down)
-    | volume (mute-toggle|mute-on|mute-off)
-    | volume set <number>
+    | volume [--no-gui] (up|down) [--no-gui]
+    | volume [--no-gui] (mute-toggle|mute-on|mute-off) [--no-gui]
+    | volume [--no-gui] set <number> [--no-gui]
 
     | workspace [--auto-back-and-forth|--fail-if-noop]... <workspace> [--auto-back-and-forth|--fail-if-noop]...
     | workspace [--wrap-around|--stdin|--no-stdin] (next|prev) [--wrap-around|--stdin|--no-stdin]

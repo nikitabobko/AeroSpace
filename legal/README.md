@@ -6,11 +6,6 @@ The AeroSpace itself is licensed under MIT. See [LICENSE](./LICENSE.txt) for the
 
 AeroSpace bundles the following dependencies and uses the following materials:
 
-**BlueSocket**.
-[BlueSocket GitHub link](https://github.com/Kitura/BlueSocket).
-[BlueSocket Apache 2.0 license](./third-party-license/LICENSE-BlueSocket.txt).
-BlueSocket is used as a more convenient Swift wrapper around UNIX C socket API.
-
 **TOMLKIT**.
 [TOMLKIT GitHub link](https://github.com/LebJe/TOMLKit).
 [TOMLKIT MIT license](./third-party-license/LICENSE-TOMLKIT.txt).

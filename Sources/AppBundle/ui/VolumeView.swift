@@ -76,7 +76,3 @@ struct VolumeView: View {
         .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
     }
 }
-
-#Preview {
-    VolumeView(volume: 0.5).padding()
-}

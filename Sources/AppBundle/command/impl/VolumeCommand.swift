@@ -21,7 +21,7 @@ struct VolumeCommand: Command {
             case .set(let int):
                 Sound.output.setVolume(Float(int) / 100, autoMuteUnmute: true)
         }
-        if let volume = try? Sound.output.readVolume() {
+        if args.gui, let volume = try? Sound.output.readVolume() {
             VolumePanel.shared.update(with: Sound.output.isMuted ? 0 : volume)
         }
         return true

@@ -1,5 +1,5 @@
 {
-  "originHash" : "be8936663b60a0da579f7e5b3cf86e3db459629661c33edc8d140d2e656daafe",
+  "originHash" : "120ba1d30192b339dc5c9d1461d2b3d1e329a17a4867b471290c07c6b3c0cb73",
   "pins" : [
     {
       "identity" : "antlr4",
@@ -8,15 +8,6 @@
       "state" : {
         "revision" : "7ed420ff2c78d62883875c442d75f32e73bc86c8",
         "version" : "4.13.1"
-      }
-    },
-    {
-      "identity" : "bluesocket",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Kitura/BlueSocket.git",
-      "state" : {
-        "revision" : "7b23a867008e0027bfd6f4d398d44720707bc8ca",
-        "version" : "2.0.4"
       }
     },
     {
@@ -33,8 +24,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/apple/swift-collections",
       "state" : {
-        "revision" : "671108c96644956dddcd89dd59c203dcdb36cec7",
-        "version" : "1.1.4"
+        "revision" : "7b847a3b7008b2dc2f47ca3110d8c782fb2e5c7e",
+        "version" : "1.3.0"
       }
     },
     {

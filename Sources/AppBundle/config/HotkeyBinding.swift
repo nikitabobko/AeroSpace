@@ -33,14 +33,14 @@ import TOMLKit
 }
 
 @MainActor var activeMode: String? = mainModeId
-@MainActor func activateMode(_ targetMode: String?) {
+@MainActor func activateMode(_ targetMode: String?) async throws {
     let targetBindings = targetMode.flatMap { config.modes[$0] }?.bindings ?? []
     hotkeys.removeAll(keepingCapacity: true)
 
     for binding in targetBindings {
         let action: () -> Void = {
             Task {
-                try await runSession(.hotkeyBinding, .checkServerIsEnabledOrDie) { () throws in
+                try await runLightSession(.hotkeyBinding, .checkServerIsEnabledOrDie) { () throws in
                     _ = try await binding.commands
                         .runCmdSeq(.defaultEnv, .emptyStdin)
                 }
@@ -51,8 +51,14 @@ import TOMLKit
             hotkeys[hotkey] = action
         }
     }
-
+    let oldMode = activeMode
     activeMode = targetMode
+    if oldMode != targetMode && !config.onModeChanged.isEmpty {
+        guard let token: RunSessionGuard = .isServerEnabled else { return }
+        try await runLightSession(.onModeChanged, token) {
+            _ = try await config.onModeChanged.runCmdSeq(.defaultEnv, .emptyStdin)
+        }
+    }
 }
 
 extension CGEventFlags {

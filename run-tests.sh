@@ -15,4 +15,4 @@ source ./script/setup.sh
 ./script/check-uncommitted-files.sh
 
 echo
-echo "All tests have passed successfully"
+echo "✅ All tests have passed successfully"

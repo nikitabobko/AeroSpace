@@ -1,6 +1,6 @@
 public struct MoveMouseCmdArgs: CmdArgs {
-    public let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
-    init(rawArgs: StrArrSlice) { self.rawArgsForStrRepr = .init(rawArgs) }
+    /*conforms*/ public var commonState: CmdArgsCommonState
+    init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = cmdParser(
         kind: .moveMouse,
         allowInConfig: true,
@@ -13,8 +13,6 @@ public struct MoveMouseCmdArgs: CmdArgs {
 
     public var failIfNoop: Bool = false
     public var mouseTarget: Lateinit<MouseTarget> = .uninitialized
-    /*conforms*/ public var windowId: UInt32?
-    /*conforms*/ public var workspaceName: WorkspaceName?
 }
 
 func parseMouseTarget(i: ArgParserInput) -> ParsedCliArgs<MouseTarget> {
