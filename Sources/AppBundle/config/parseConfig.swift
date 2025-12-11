@@ -1,6 +1,5 @@
 import AppKit
 import Common
-import HotKey
 import TOMLKit
 import OrderedCollections
 
@@ -82,7 +81,6 @@ struct Parser<S: ConvenienceCopyable, T>: ParserProtocol {
     }
 }
 
-private let keyMappingConfigRootKey = "key-mapping"
 private let modeConfigRootKey = "mode"
 private let persistentWorkspacesKey = "persistent-workspaces"
 
@@ -113,7 +111,6 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseArrayOfStrings),
     "exec": Parser(\.execConfig, parseExecConfig),
 
-    keyMappingConfigRootKey: Parser(\.keyMapping, skipParsing(Config().keyMapping)), // Parsed manually
     modeConfigRootKey: Parser(\.modes, skipParsing(Config().modes)), // Parsed manually
 
     "gaps": Parser(\.gaps, parseGaps),
@@ -123,6 +120,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     // Deprecated
     "non-empty-workspaces-root-containers-layout-on-startup": Parser(\._nonEmptyWorkspacesRootContainersLayoutOnStartup, parseStartupRootContainerLayout),
     "indent-for-nested-containers-with-the-same-orientation": Parser(\._indentForNestedContainersWithTheSameOrientation, parseIndentForNestedContainersWithTheSameOrientation),
+    "key-mapping": Parser(\._keyMapping, parseKeyMapping),
 ]
 
 extension ParsedCmd where T == any Command {
@@ -182,12 +180,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
 
     var config = rawTable.parseTable(Config(), configParser, .emptyRoot, &errors)
 
-    if let mapping = rawTable[keyMappingConfigRootKey].flatMap({ parseKeyMapping($0, .rootKey(keyMappingConfigRootKey), &errors) }) {
-        config.keyMapping = mapping
-    }
-
-    // Parse modeConfigRootKey after keyMappingConfigRootKey
-    if let modes = rawTable[modeConfigRootKey].flatMap({ parseModes($0, .rootKey(modeConfigRootKey), &errors, config.keyMapping.resolve()) }) {
+    if let modes = rawTable[modeConfigRootKey].flatMap({ parseModes($0, .rootKey(modeConfigRootKey), &errors) }) {
         config.modes = modes
     }
 
@@ -196,7 +189,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
             errors += [.semantic(.rootKey(persistentWorkspacesKey), "This config option is only available since 'config-version = 2'")]
         }
         config.persistentWorkspaces = (config.modes.values.lazy
-            .flatMap { (mode: Mode) -> [HotkeyBinding] in Array(mode.bindings.values) }
+            .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
             .flatMap { (binding: HotkeyBinding) -> [String] in
                 binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw } +
                     binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw }
@@ -206,7 +199,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
     }
 
     if config.enableNormalizationFlattenContainers {
-        let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings.values }
+        let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings }
             .flatMap { $0.commands }
             .contains { $0 is SplitCommand }
         if containsSplitCommand {
@@ -239,6 +232,14 @@ func parseConfigVersion(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace)
     let max = 2
     return parseInt(raw, backtrace)
         .filter(.semantic(backtrace, "Must be in [\(min), \(max)] range")) { (min ... max).contains($0) }
+}
+
+func parseKeyMapping(
+    _ raw: TOMLValueConvertible,
+    _ backtrace: TomlBacktrace,
+) -> ParsedToml<Void> {
+    let msg = "Deprecated. Please drop it from the config. AeroSpace now automatically uses your selected keyboard layout."
+    return .failure(.semantic(backtrace, msg))
 }
 
 func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Int> {

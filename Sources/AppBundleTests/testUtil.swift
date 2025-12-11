@@ -1,7 +1,6 @@
 @testable import AppBundle
 import Common
 import Foundation
-import HotKey
 import XCTest
 
 let projectRoot: URL = {
@@ -22,7 +21,7 @@ func setUpWorkspacesForTests() {
     config.defaultRootContainerOrientation = .horizontal // Make default layout predictable
 
     // Don't create any bindings and workspaces for tests
-    config.modes = [mainModeId: Mode(name: nil, bindings: [:])]
+    config.modes = [mainModeId: Mode(name: nil, bindings: [])]
     config.persistentWorkspaces = []
 
     for workspace in Workspace.all {
@@ -88,14 +87,5 @@ extension MoveNodeToWorkspaceCmdArgs {
     init(workspace: String) {
         self = MoveNodeToWorkspaceCmdArgs(rawArgs: [])
         self.target = .initialized(.direct(.parse(workspace).getOrDie()))
-    }
-}
-
-extension HotkeyBinding {
-    init(_ modifiers: NSEvent.ModifierFlags, _ keyCode: Key, _ commands: [any Command]) {
-        let descriptionWithKeyNotation = modifiers.isEmpty
-            ? keyCode.toString()
-            : modifiers.toString() + "-" + keyCode.toString()
-        self.init(modifiers, keyCode, commands, descriptionWithKeyNotation: descriptionWithKeyNotation)
     }
 }

@@ -1,6 +1,5 @@
 import AppKit
 import Common
-import HotKey
 import OrderedCollections
 
 func getDefaultConfigUrlFromProject() -> URL {
@@ -47,7 +46,7 @@ struct Config: ConvenienceCopyable {
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
     var persistentWorkspaces: OrderedSet<String> = []
     var execOnWorkspaceChange: [String] = [] // todo deprecate
-    var keyMapping = KeyMapping()
+    var _keyMapping: Void = ()
     var execConfig: ExecConfig = ExecConfig()
 
     var onFocusChanged: [any Command] = []

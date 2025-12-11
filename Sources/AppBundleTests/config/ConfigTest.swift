@@ -81,13 +81,28 @@ final class ConfigTest: XCTestCase {
             """
             [mode.main.binding]
                 alt-h = 'focus left'
+                lalt-l = 'focus right'
+                ralt-l = 'focus up'
             """,
         )
         assertEquals(errors, [])
-        let binding = HotkeyBinding(.option, .h, [FocusCommand.new(direction: .left)])
+        let bindings = [
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternate, key: "h"),
+                commands: [FocusCommand.new(direction: .left)],
+            ),
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternateL, key: "l"),
+                commands: [FocusCommand.new(direction: .right)],
+            ),
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternateR, key: "l"),
+                commands: [FocusCommand.new(direction: .up)],
+            ),
+        ]
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding]),
+            Mode(name: nil, bindings: bindings),
         )
     }
 
@@ -112,6 +127,7 @@ final class ConfigTest: XCTestCase {
                 alt-hh = 'focus left'
                 aalt-j = 'focus down'
                 alt-k = 'focus up'
+                lalt-k = 'focus down'
             """,
         )
         assertEquals(
@@ -119,12 +135,22 @@ final class ConfigTest: XCTestCase {
             [
                 "mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
                 "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding",
+                "mode.main.binding.lalt-k: \'lalt-k\' Binding redeclaration",
             ],
         )
-        let binding = HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])
+        let bindings = [
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternate, key: "k"),
+                commands: [FocusCommand.new(direction: .up)],
+            ),
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternateL, key: "k"),
+                commands: [FocusCommand.new(direction: .down)],
+            ),
+        ]
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding]),
+            Mode(name: nil, bindings: bindings),
         )
     }
 
@@ -399,54 +425,5 @@ final class ConfigTest: XCTestCase {
             "gaps.inner.vertical[0]: The table is expected to have a single key \'monitor\'",
             "gaps.inner.vertical[1].monitor: The table is expected to have a single key",
         ])
-    }
-
-    func testParseKeyMapping() {
-        let (config, errors) = parseConfig(
-            """
-            [key-mapping.key-notation-to-key-code]
-                q = 'q'
-                unicorn = 'u'
-
-            [mode.main.binding]
-                alt-unicorn = 'workspace wonderland'
-            """,
-        )
-        assertEquals(errors.descriptions, [])
-        assertEquals(config.keyMapping, KeyMapping(preset: .qwerty, rawKeyNotationToKeyCode: [
-            "q": .q,
-            "unicorn": .u,
-        ]))
-        let binding = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrDie())))])
-        assertEquals(config.modes[mainModeId]?.bindings, [binding.descriptionWithKeyCode: binding])
-
-        let (_, errors1) = parseConfig(
-            """
-            [key-mapping.key-notation-to-key-code]
-                q = 'qw'
-                ' f' = 'f'
-            """,
-        )
-        assertEquals(errors1.descriptions, [
-            "key-mapping.key-notation-to-key-code: ' f' is invalid key notation",
-            "key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code",
-        ])
-
-        let (dvorakConfig, dvorakErrors) = parseConfig(
-            """
-            key-mapping.preset = 'dvorak'
-            """,
-        )
-        assertEquals(dvorakErrors, [])
-        assertEquals(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(dvorakConfig.keyMapping.resolve()["quote"], .q)
-        let (colemakConfig, colemakErrors) = parseConfig(
-            """
-            key-mapping.preset = 'colemak'
-            """,
-        )
-        assertEquals(colemakErrors, [])
-        assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(colemakConfig.keyMapping.resolve()["f"], .e)
     }
 }

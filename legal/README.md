@@ -6,11 +6,6 @@ The AeroSpace itself is licensed under MIT. See [LICENSE](./LICENSE.txt) for the
 
 AeroSpace bundles the following dependencies and uses the following materials:
 
-**HotKey**.
-[HotKey GitHub link](https://github.com/soffes/HotKey).
-[HotKey MIT license](./third-party-license/LICENSE-HotKey.txt).
-HotKey is used as a more convenient wrapper around macOS Carbon API to listen for global shortcuts.
-
 **TOMLKIT**.
 [TOMLKIT GitHub link](https://github.com/LebJe/TOMLKit).
 [TOMLKIT MIT license](./third-party-license/LICENSE-TOMLKIT.txt).
