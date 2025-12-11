@@ -104,7 +104,7 @@ func refreshModel() {
 private func refresh() async throws {
     // Garbage collect terminated apps and windows before working with all windows
     let mapping = try await MacApp.refreshAllAndGetAliveWindowIds(frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier)
-    let aliveWindowIds = mapping.values.flatMap { $0 }
+    let aliveWindowIds = mapping.values.flatMap { $0 }.toSet()
 
     for window in MacWindow.allWindows {
         if !aliveWindowIds.contains(window.windowId) {
