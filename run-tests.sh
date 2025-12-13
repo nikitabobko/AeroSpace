@@ -2,6 +2,13 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
+remote="$(git remote -v | grep nikitabobko/AeroSpace | head -1 | awk '{ print $1 }')"
+merge_commits="$(git rev-list --merges "$remote/main..HEAD" -- .)"
+if ! test -z "$merge_commits"; then
+    echo "Merge commits detected. Please prefer rebase"
+    exit 1
+fi
+
 ./build-debug.sh -Xswiftc -warnings-as-errors
 ./run-swift-test.sh
 
