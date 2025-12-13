@@ -5,5 +5,6 @@
 - [ ] Don't forget to link the appropriate issues/discussions in commit messages (if applicable).
 - [ ] Each commit must be an atomic change (a PR may contain several commits). Don't introduce new functional changes together with refactorings in the same commit.
 - [ ] `./run-tests.sh` exits with non-zero exit code.
+- [ ] Avoid merge commits, always rebase and force push.
 
 Failure to follow the checklist with no apparent reasons will result in silent PR rejection.
