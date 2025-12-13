@@ -17,6 +17,22 @@ defaults write -g NSWindowShouldDragOnGesture -bool true
 
 Now, you can move windows by holding `ctrl + cmd` and dragging any part of the window (not necessarily the window title)
 
+[#non-native-fullscreen-in-firefox]
+== Non-native fullscreen in Firefox
+
+Change the following settings in `about:config`:
+
+----
+// Disable macOS native fullscreen in Firefox
+full-screen-api.macos-native-full-screen = false
+
+// Disable fullscreen transition animations
+full-screen-api.transition-duration.enter = 0 0
+full-screen-api.transition-duration.leave = 0 0
+----
+
+`full-screen-api.ignore-widgets` is also an interesting config knob that might be of your preference.
+
 [#highlight-focused-windows-with-colored-borders]
 == Highlight focused windows with colored borders
 
