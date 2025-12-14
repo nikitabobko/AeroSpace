@@ -19,6 +19,9 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--pid": singleValueSubArgParser(\.filteringOptions.pidFilter, "<pid>", Int32.init),
             "--app-bundle-id": singleValueSubArgParser(\.filteringOptions.appIdFilter, "<app-bundle-id>") { $0 },
 
+            // Sorting flag
+            "--sort": singleValueSubArgParser(\._sortOrder, "<sort-order>") { SortOrder(rawValue: $0) },
+
             // Formatting flags
             "--format": formatParser(\._format, for: .window),
             "--count": trueBoolFlag(\.outputOnlyCount),
@@ -36,6 +39,8 @@ public struct ListWindowsCmdArgs: CmdArgs {
     fileprivate var all: Bool = false // ALIAS
 
     public var filteringOptions = FilteringOptions()
+    public var _sortOrder: SortOrder? = nil
+    public var sortOrder: SortOrder { _sortOrder ?? .treeOrder }
     public var _format: [StringInterToken] = []
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
@@ -46,6 +51,11 @@ public struct ListWindowsCmdArgs: CmdArgs {
         public var workspaces: [WorkspaceFilter] = []
         public var pidFilter: Int32?
         public var appIdFilter: String?
+    }
+
+    public enum SortOrder: String, Sendable {
+        case treeOrder = "tree-order"
+        case appName = "app-name"
     }
 }
 
