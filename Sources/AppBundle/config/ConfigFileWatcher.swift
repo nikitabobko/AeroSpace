@@ -56,7 +56,7 @@ final class ConfigFileWatcher: @unchecked Sendable {
         let source = DispatchSource.makeFileSystemObjectSource(
             fileDescriptor: fd,
             eventMask: [.write, .delete, .rename, .revoke],
-            queue: queue
+            queue: queue,
         )
 
         source.setEventHandler { [weak self] in
@@ -128,6 +128,7 @@ final class ConfigFileWatcher: @unchecked Sendable {
     private func triggerReload() {
         Task { @MainActor in
             _ = try? await reloadConfig()
+            scheduleRefreshSession(.configAutoReload)
         }
     }
 }
