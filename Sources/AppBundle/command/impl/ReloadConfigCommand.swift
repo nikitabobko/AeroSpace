@@ -25,6 +25,7 @@ struct ReloadConfigCommand: Command {
     forceConfigUrl: URL? = nil,
     stdout: inout String,
 ) async throws -> Bool {
+    let result: Bool
     switch readConfig(forceConfigUrl: forceConfigUrl) {
         case .success(let (parsedConfig, url)):
             if !args.dryRun {
@@ -35,7 +36,7 @@ struct ReloadConfigCommand: Command {
                 syncStartAtLogin()
                 MessageModel.shared.message = nil
             }
-            return true
+            result = true
         case .failure(let msg):
             stdout.append(msg)
             if !args.noGui {
@@ -43,6 +44,10 @@ struct ReloadConfigCommand: Command {
                     MessageModel.shared.message = Message(description: "AeroSpace Config Error", body: msg)
                 }
             }
-            return false
+            result = false
     }
+    if !args.dryRun {
+        syncConfigFileWatcher()
+    }
+    return result
 }
