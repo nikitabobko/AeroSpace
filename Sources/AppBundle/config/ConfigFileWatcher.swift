@@ -1,143 +1,74 @@
 import Common
 import Foundation
 
-final class ConfigFileWatcher: @unchecked Sendable {
-    @MainActor static let shared = ConfigFileWatcher()
+final class ConfigFileWatcher {
+    private let source: DispatchSourceFileSystemObject
+    private let fd: Int32
 
-    private var dispatchSource: DispatchSourceFileSystemObject?
-    private var watchedUrl: URL?
-    private var debounceWorkItem: DispatchWorkItem?
-    private let queue = DispatchQueue(label: "aerospace.config-watcher", qos: .utility)
-
-    private let debounceDelay: TimeInterval = 0.2
-
-    private init() {}
-
-    @MainActor
-    func startWatching(url: URL) {
+    init?(url: URL, onChange: @escaping () -> Void) {
         let resolvedUrl = url.resolvingSymlinksInPath()
-
-        queue.async { [self, resolvedUrl] in
-            if self.watchedUrl == resolvedUrl && self.dispatchSource != nil {
-                return
-            }
-
-            self.stopWatchingInternal()
-
-            let fd = open(resolvedUrl.path, O_EVTONLY)
-            if fd < 0 {
-                return
-            }
-
-            self.watchedUrl = resolvedUrl
-            self.createWatcher(fd: fd)
+        let fd = open(resolvedUrl.path, O_EVTONLY)
+        if fd < 0 {
+            return nil
         }
-    }
+        self.fd = fd
 
-    @MainActor
-    func stopWatching() {
-        queue.async { [self] in
-            self.stopWatchingInternal()
-        }
-    }
-
-    private func stopWatchingInternal() {
-        debounceWorkItem?.cancel()
-        debounceWorkItem = nil
-
-        if let source = dispatchSource {
-            source.cancel()
-            dispatchSource = nil
-        }
-        watchedUrl = nil
-    }
-
-    private func createWatcher(fd: Int32) {
         let source = DispatchSource.makeFileSystemObjectSource(
             fileDescriptor: fd,
             eventMask: [.write, .delete, .rename, .revoke],
-            queue: queue,
+            queue: .main,
         )
+        self.source = source
 
-        source.setEventHandler { [weak self] in
-            guard let self else {
-                return
-            }
-            let flags = source.data
-            self.handleFileEvent(flags: flags)
+        source.setEventHandler {
+            onChange()
         }
 
-        source.setCancelHandler { [weak self] in
-            guard let self else {
-                return
-            }
+        source.setCancelHandler {
             close(fd)
-            if self.dispatchSource === source {
-                self.dispatchSource = nil
-            }
         }
 
-        dispatchSource = source
         source.activate()
     }
 
-    private func handleFileEvent(flags: DispatchSource.FileSystemEvent) {
-        if flags.contains(.delete) || flags.contains(.rename) || flags.contains(.revoke) {
-            handleFileReplacement()
-        } else if flags.contains(.write) {
-            scheduleReload()
-        }
+    func cancel() {
+        source.cancel()
     }
 
-    private func handleFileReplacement() {
-        guard let url = watchedUrl else { return }
-
-        dispatchSource?.cancel()
-        dispatchSource = nil
-
-        debounceWorkItem?.cancel()
-        debounceWorkItem = nil
-
-        let workItem = DispatchWorkItem { [weak self] in
-            guard let self, self.watchedUrl == url else { return }
-
-            let fd = open(url.path, O_EVTONLY)
-            if fd < 0 {
-                self.watchedUrl = nil
-                return
-            }
-
-            self.createWatcher(fd: fd)
-            self.triggerReload()
-        }
-
-        queue.asyncAfter(deadline: .now() + debounceDelay, execute: workItem)
+    deinit {
+        source.cancel()
     }
+}
 
-    private func scheduleReload() {
-        debounceWorkItem?.cancel()
+@MainActor private var currentWatcher: ConfigFileWatcher?
+@MainActor private var debounceTask: Task<Void, Never>?
 
-        let workItem = DispatchWorkItem { [weak self] in
-            self?.triggerReload()
-        }
+private let debounceDelay: Duration = .milliseconds(200)
 
-        debounceWorkItem = workItem
-        queue.asyncAfter(deadline: .now() + debounceDelay, execute: workItem)
-    }
+@MainActor func syncConfigFileWatcher() {
+    currentWatcher?.cancel()
+    currentWatcher = nil
 
-    private func triggerReload() {
+    guard config.autoReloadConfig else { return }
+
+    currentWatcher = ConfigFileWatcher(url: configUrl) {
         Task { @MainActor in
-            if let token: RunSessionGuard = .isServerEnabled {
-                try await runLightSession(.configAutoReload, token) { _ = try await reloadConfig() }
-            }
+            scheduleConfigReload()
         }
     }
 }
 
-@MainActor func syncConfigFileWatcher() {
-    if config.autoReloadConfig {
-        ConfigFileWatcher.shared.startWatching(url: configUrl)
-    } else {
-        ConfigFileWatcher.shared.stopWatching()
+@MainActor private func scheduleConfigReload() {
+    debounceTask?.cancel()
+
+    debounceTask = Task {
+        try? await Task.sleep(for: debounceDelay)
+        guard !Task.isCancelled else { return }
+
+        if let token: RunSessionGuard = .isServerEnabled {
+            try? await runLightSession(.configAutoReload, token) {
+                _ = try await reloadConfig()
+            }
+        }
     }
 }
