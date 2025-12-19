@@ -27,6 +27,7 @@ struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
 
 struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
     var appId: String?
+    var appIdRegexSubstring: Regex<AnyRegexOutput>?
     var appNameRegexSubstring: Regex<AnyRegexOutput>?
     var windowTitleRegexSubstring: Regex<AnyRegexOutput>?
     var workspace: String?
@@ -36,6 +37,9 @@ struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
         var resultParts: [String] = []
         if let appId {
             resultParts.append("appId=\"\(appId)\"")
+        }
+        if appIdRegexSubstring != nil {
+            resultParts.append("appIdRegexSubstring=Regex")
         }
         if appNameRegexSubstring != nil {
             resultParts.append("appNameRegexSubstrin=Regex")
@@ -54,8 +58,10 @@ struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
 
     static func == (lhs: WindowDetectedCallbackMatcher, rhs: WindowDetectedCallbackMatcher) -> Bool {
         check(
-            lhs.appNameRegexSubstring == nil &&
+            lhs.appIdRegexSubstring == nil &&
+                lhs.appNameRegexSubstring == nil &&
                 lhs.windowTitleRegexSubstring == nil &&
+                rhs.appIdRegexSubstring == nil &&
                 rhs.appNameRegexSubstring == nil &&
                 rhs.windowTitleRegexSubstring == nil,
         )
@@ -71,6 +77,7 @@ private let windowDetectedParser: [String: any ParserProtocol<WindowDetectedCall
 
 private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMatcher>] = [
     "app-id": Parser(\.appId, upcast(parseString)),
+    "app-id-regex-substring": Parser(\.appIdRegexSubstring, upcast(parseCasInsensitiveRegex)),
     "workspace": Parser(\.workspace, upcast(parseString)),
     "app-name-regex-substring": Parser(\.appNameRegexSubstring, upcast(parseCasInsensitiveRegex)),
     "window-title-regex-substring": Parser(\.windowTitleRegexSubstring, upcast(parseCasInsensitiveRegex)),
