@@ -68,6 +68,7 @@ public func dieT<T>(
 }
 
 public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
+    case configAutoReload
     case globalObserver(String)
     case globalObserverLeftMouseUp
     case menuBarButton
@@ -87,6 +88,7 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
     public var description: String {
         switch self {
             case .ax(let str): "ax(\(str))"
+            case .configAutoReload: "configAutoReload"
             case .globalObserver(let str): "globalObserver(\(str))"
             case .globalObserverLeftMouseUp: "globalObserverLeftMouseUp"
             case .hotkeyBinding: "hotkeyBinding"
