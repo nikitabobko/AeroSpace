@@ -25,7 +25,7 @@ final class ConfigFileWatcher: @unchecked Sendable {
             self.stopWatchingInternal()
 
             let fd = open(resolvedUrl.path, O_EVTONLY)
-            if fd == -1 {
+            if fd < 0 {
                 return
             }
 
@@ -78,7 +78,7 @@ final class ConfigFileWatcher: @unchecked Sendable {
         }
 
         dispatchSource = source
-        source.resume()
+        source.activate()
     }
 
     private func handleFileEvent(flags: DispatchSource.FileSystemEvent) {
@@ -102,7 +102,7 @@ final class ConfigFileWatcher: @unchecked Sendable {
             guard let self, self.watchedUrl == url else { return }
 
             let fd = open(url.path, O_EVTONLY)
-            if fd == -1 {
+            if fd < 0 {
                 self.watchedUrl = nil
                 return
             }
@@ -111,7 +111,7 @@ final class ConfigFileWatcher: @unchecked Sendable {
             self.triggerReload()
         }
 
-        queue.asyncAfter(deadline: .now() + 0.05, execute: workItem)
+        queue.asyncAfter(deadline: .now() + debounceDelay, execute: workItem)
     }
 
     private func scheduleReload() {
@@ -127,8 +127,9 @@ final class ConfigFileWatcher: @unchecked Sendable {
 
     private func triggerReload() {
         Task { @MainActor in
-            _ = try? await reloadConfig()
-            scheduleRefreshSession(.configAutoReload)
+            if let token: RunSessionGuard = .isServerEnabled {
+                try await runLightSession(.configAutoReload, token) { _ = try await reloadConfig() }
+            }
         }
     }
 }
