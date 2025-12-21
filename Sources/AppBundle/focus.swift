@@ -116,6 +116,18 @@ extension Workspace {
 @MainActor var _prevFocus: FrozenFocus? = nil
 @MainActor var prevFocus: LiveFocus? { _prevFocus?.live.takeIf { $0 != focus } }
 
+// Focus history stack (for focus back/forward)
+@MainActor private var _focusHistory: [FrozenFocus] = []
+@MainActor private var _focusHistoryPosition: Int = -1
+@MainActor private var _pendingHistoryNavigation: FrozenFocus? = nil  // Skip recording if focus matches this
+private let maxFocusHistorySize = 100
+
+@MainActor func resetFocusHistoryForTests() {
+    _focusHistory = []
+    _focusHistoryPosition = -1
+    _pendingHistoryNavigation = nil
+}
+
 @MainActor private var onFocusChangedRecursionGuard = false
 // Should be called in refreshSession
 @MainActor func checkOnFocusChangedCallbacks() {
@@ -130,6 +142,16 @@ extension Workspace {
     if frozenFocus != _lastKnownFocus {
         _prevFocus = _lastKnownFocus
         hasFocusChanged = true
+
+        // Record to focus history (only if not navigating via back/forward)
+        // Compare windowId and workspaceName to handle cases where monitorId might differ
+        if let pending = _pendingHistoryNavigation,
+           pending.windowId == frozenFocus.windowId && pending.workspaceName == frozenFocus.workspaceName
+        {
+            _pendingHistoryNavigation = nil  // Clear the pending navigation
+        } else {
+            recordFocusHistory(frozenFocus)
+        }
     }
     if frozenFocus.workspaceName != _lastKnownFocus.workspaceName {
         _prevFocusedWorkspaceName = _lastKnownFocus.workspaceName
@@ -187,4 +209,68 @@ extension Workspace {
         process.environment = environment
         _ = Result { try process.run() }
     }
+}
+
+// MARK: - Focus History (for focus back/forward)
+
+/// Record a new focus to the history stack. Truncates forward history if not at end.
+@MainActor private func recordFocusHistory(_ newFocus: FrozenFocus) {
+    // Don't add consecutive duplicates
+    if _focusHistory.last == newFocus {
+        return
+    }
+
+    // If we're not at the end, truncate forward history
+    if _focusHistoryPosition >= 0 && _focusHistoryPosition < _focusHistory.count - 1 {
+        _focusHistory = Array(_focusHistory.prefix(_focusHistoryPosition + 1))
+    }
+
+    _focusHistory.append(newFocus)
+
+    // Trim if too large
+    if _focusHistory.count > maxFocusHistorySize {
+        _focusHistory.removeFirst()
+    }
+
+    _focusHistoryPosition = _focusHistory.count - 1
+}
+
+/// Navigate back in focus history. Returns the element to focus, or nil if at beginning.
+/// Automatically skips closed windows.
+@MainActor func focusHistoryBack() -> LiveFocus? {
+    while _focusHistoryPosition > 0 {
+        _focusHistoryPosition -= 1
+        let frozen = _focusHistory[_focusHistoryPosition]
+        // Skip if window was closed
+        if let windowId = frozen.windowId, Window.get(byId: windowId) == nil {
+            continue
+        }
+        let live = frozen.live
+        // Skip if it's the same as current focus
+        if live != focus {
+            _pendingHistoryNavigation = frozen
+            return live
+        }
+    }
+    return nil
+}
+
+/// Navigate forward in focus history. Returns the element to focus, or nil if at end.
+/// Automatically skips closed windows.
+@MainActor func focusHistoryForward() -> LiveFocus? {
+    while _focusHistoryPosition < _focusHistory.count - 1 {
+        _focusHistoryPosition += 1
+        let frozen = _focusHistory[_focusHistoryPosition]
+        // Skip if window was closed
+        if let windowId = frozen.windowId, Window.get(byId: windowId) == nil {
+            continue
+        }
+        let live = frozen.live
+        // Skip if it's the same as current focus
+        if live != focus {
+            _pendingHistoryNavigation = frozen
+            return live
+        }
+    }
+    return nil
 }
