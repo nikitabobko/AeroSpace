@@ -113,8 +113,16 @@ extension Workspace {
 @MainActor var prevFocusedWorkspace: Workspace? { _prevFocusedWorkspaceName.map { Workspace.get(byName: $0) } }
 
 // Used by focus-back-and-forth
-@MainActor var _prevFocus: FrozenFocus? = nil
-@MainActor var prevFocus: LiveFocus? { _prevFocus?.live.takeIf { $0 != focus } }
+@MainActor var prevFocus: LiveFocus? {
+    // Walk back from END of history to find valid previous window
+    for i in stride(from: _focusHistory.count - 2, through: 0, by: -1) {
+        let frozen = _focusHistory[i]
+        if let windowId = frozen.windowId, Window.get(byId: windowId) == nil { continue }
+        let live = frozen.live
+        if live != focus { return live }
+    }
+    return nil
+}
 
 // Focus history stack (for focus back/forward)
 @MainActor private var _focusHistory: [FrozenFocus] = []
@@ -140,7 +148,6 @@ private let maxFocusHistorySize = 100
     var hasFocusedWorkspaceChanged = false
     var hasFocusedMonitorChanged = false
     if frozenFocus != _lastKnownFocus {
-        _prevFocus = _lastKnownFocus
         hasFocusChanged = true
 
         // Record to focus history (only if not navigating via back/forward)
@@ -150,6 +157,10 @@ private let maxFocusHistorySize = 100
         {
             _pendingHistoryNavigation = nil  // Clear the pending navigation
         } else {
+            // Seed history with initial focus if empty (first focus change after startup)
+            if _focusHistory.isEmpty {
+                recordFocusHistory(_lastKnownFocus)
+            }
             recordFocusHistory(frozenFocus)
         }
     }

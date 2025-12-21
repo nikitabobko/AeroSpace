@@ -383,6 +383,68 @@ final class FocusCommandTest: XCTestCase {
         XCTAssertTrue(parseCommand("focus --ignore-floating back").errorOrNil?.contains("incompatible") == true)
         XCTAssertTrue(parseCommand("focus --boundaries workspace back").errorOrNil?.contains("incompatible") == true)
     }
+
+    func testFocusBackAndForth() async throws {
+        let workspace = Workspace.get(byName: name)
+        var w1: Window!
+        var w2: Window!
+        var w3: Window!
+        workspace.rootTilingContainer.apply {
+            w1 = TestWindow.new(id: 1, parent: $0)
+            w2 = TestWindow.new(id: 2, parent: $0)
+            w3 = TestWindow.new(id: 3, parent: $0)
+        }
+
+        // Build focus history: w1 -> w2 -> w3
+        assertEquals(w1.focusWindow(), true)
+        checkOnFocusChangedCallbacks()
+        assertEquals(w2.focusWindow(), true)
+        checkOnFocusChangedCallbacks()
+        assertEquals(w3.focusWindow(), true)
+        checkOnFocusChangedCallbacks()
+
+        assertEquals(focus.windowOrNil?.windowId, 3)
+
+        // Back-and-forth should go to w2
+        assertEquals(try await FocusBackAndForthCommand(args: FocusBackAndForthCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        checkOnFocusChangedCallbacks()
+        assertEquals(focus.windowOrNil?.windowId, 2)
+
+        // Back-and-forth again should go back to w3
+        assertEquals(try await FocusBackAndForthCommand(args: FocusBackAndForthCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        checkOnFocusChangedCallbacks()
+        assertEquals(focus.windowOrNil?.windowId, 3)
+    }
+
+    func testFocusBackAndForthSkipsClosedWindows() async throws {
+        let workspace = Workspace.get(byName: name)
+        var w1: Window!
+        var w2: Window!
+        var w3: Window!
+        workspace.rootTilingContainer.apply {
+            w1 = TestWindow.new(id: 1, parent: $0)
+            w2 = TestWindow.new(id: 2, parent: $0)
+            w3 = TestWindow.new(id: 3, parent: $0)
+        }
+
+        // Build focus history: w1 -> w2 -> w3
+        assertEquals(w1.focusWindow(), true)
+        checkOnFocusChangedCallbacks()
+        assertEquals(w2.focusWindow(), true)
+        checkOnFocusChangedCallbacks()
+        assertEquals(w3.focusWindow(), true)
+        checkOnFocusChangedCallbacks()
+
+        assertEquals(focus.windowOrNil?.windowId, 3)
+
+        // Close w2 (the previous window)
+        w2.closeAxWindow()
+
+        // Back-and-forth should skip w2 and go to w1
+        assertEquals(try await FocusBackAndForthCommand(args: FocusBackAndForthCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        checkOnFocusChangedCallbacks()
+        assertEquals(focus.windowOrNil?.windowId, 1)
+    }
 }
 
 extension FocusCommand {
