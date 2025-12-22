@@ -47,6 +47,7 @@ let focus_help_generated = """
                  (dfs-next|dfs-prev)
        OR: focus [-h|--help] --window-id <window-id>
        OR: focus [-h|--help] --dfs-index <dfs-index>
+       OR: focus [-h|--help] (back|forward)
     """
 let fullscreen_help_generated = """
     USAGE: fullscreen [-h|--help]     [--window-id <window-id>] [--no-outer-gaps]
