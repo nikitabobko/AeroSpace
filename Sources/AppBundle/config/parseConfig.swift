@@ -187,8 +187,10 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
     }
 
     // Parse modeConfigRootKey after keyMappingConfigRootKey
-    if let modes = rawTable[modeConfigRootKey].flatMap({ parseModes($0, .rootKey(modeConfigRootKey), &errors, config.keyMapping.resolve()) }) {
+    if let rawModes = rawTable[modeConfigRootKey] {
+        let (modes, appModes) = parseModes(rawModes, .rootKey(modeConfigRootKey), &errors, config.keyMapping.resolve())
         config.modes = modes
+        config.appModes = appModes
     }
 
     if config.configVersion <= 1 {
