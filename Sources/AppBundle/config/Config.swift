@@ -57,6 +57,7 @@ struct Config: ConvenienceCopyable {
     var gaps: Gaps = .zero
     var workspaceToMonitorForceAssignment: [String: [MonitorDescription]] = [:]
     var modes: [String: Mode] = [:]
+    var appModes: [String: String] = [:] // bundleId -> modeName mapping for app-specific modes
     var onWindowDetected: [WindowDetectedCallback] = []
     var onModeChanged: [any Command] = []
 }
