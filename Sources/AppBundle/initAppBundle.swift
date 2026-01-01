@@ -18,7 +18,7 @@ import Foundation
                 try await reloadConfig(forceConfigUrl: defaultConfigUrl, stdout: &out),
                 """
                 Can't load default config. Your installation is probably corrupted.
-                Please don't change default-config.toml
+                Please don't modify '\(defaultConfigUrl)'
 
                 \(out)
                 """,
