@@ -53,7 +53,7 @@ extension HotKey {
     if oldMode != targetMode && !config.onModeChanged.isEmpty {
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         try await runLightSession(.onModeChanged, token) {
-            _ = try await config.onModeChanged.runCmdSeq(.defaultEnv, .emptyStdin)
+            _ = try await config.onModeChanged.runCmdSeq(.defaultEnv.withMode(targetMode), .emptyStdin)
         }
     }
 }

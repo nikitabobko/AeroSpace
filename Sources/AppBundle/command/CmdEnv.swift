@@ -3,6 +3,7 @@ import Common
 struct CmdEnv: ConvenienceCopyable {
     var windowId: UInt32?
     var workspaceName: String?
+    var mode: String?
 
     static let defaultEnv: CmdEnv = .init()
     func withFocus(_ focus: LiveFocus) -> CmdEnv {
@@ -10,6 +11,10 @@ struct CmdEnv: ConvenienceCopyable {
             case .window(let wd): .defaultEnv.copy(\.windowId, wd.windowId)
             case .emptyWorkspace(let ws): .defaultEnv.copy(\.workspaceName, ws.name)
         }
+    }
+    
+    func withMode(_ currentMode: String?) -> CmdEnv {
+        copy(\.mode, currentMode)
     }
 
     @MainActor
@@ -20,6 +25,9 @@ struct CmdEnv: ConvenienceCopyable {
         }
         if let workspaceName {
             result[AEROSPACE_WORKSPACE] = workspaceName.description
+        }
+        if let mode {
+            result["AEROSPACE_MODE"] = mode
         }
         return result
     }
