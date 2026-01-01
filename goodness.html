@@ -514,17 +514,18 @@ pre.pygments .tok-il { color: #666666 } /* Literal.Number.Integer.Long */
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
 <li><a href="#move-by-dragging-any-part-of-the-window">1. Move windows by dragging any part of the window</a></li>
-<li><a href="#highlight-focused-windows-with-colored-borders">2. Highlight focused windows with colored borders</a></li>
-<li><a href="#raycast-extension">3. AeroSpace Raycast extension</a></li>
-<li><a href="#disable-open-animations">4. Disable windows opening animations</a></li>
-<li><a href="#use-trackpad-gestures-to-switch-workspaces">5. Use trackpad gestures to switch workspaces</a></li>
-<li><a href="#show-aerospace-workspaces-in-sketchybar">6. Show AeroSpace workspaces in Sketchybar</a></li>
-<li><a href="#show-aerospace-workspaces-in-simple-bar">7. Show AeroSpace workspaces in simple-bar</a></li>
-<li><a href="#open-a-new-window-with-applescript">8. Open a new window with AppleScript</a></li>
-<li><a href="#disable-hide-app">9. Disable annoying and useless "hide application" shortcut</a></li>
-<li><a href="#screenshoot-shortcut">10. Take screenshots to clipboard using keyboard shortcut</a></li>
-<li><a href="#i3-like-config">11. i3 like config</a></li>
-<li><a href="#popular-apps-ids">12. List of Apple application IDs</a></li>
+<li><a href="#non-native-fullscreen-in-firefox">2. Non-native fullscreen in Firefox</a></li>
+<li><a href="#highlight-focused-windows-with-colored-borders">3. Highlight focused windows with colored borders</a></li>
+<li><a href="#raycast-extension">4. AeroSpace Raycast extension</a></li>
+<li><a href="#disable-open-animations">5. Disable windows opening animations</a></li>
+<li><a href="#use-trackpad-gestures-to-switch-workspaces">6. Use trackpad gestures to switch workspaces</a></li>
+<li><a href="#show-aerospace-workspaces-in-sketchybar">7. Show AeroSpace workspaces in Sketchybar</a></li>
+<li><a href="#show-aerospace-workspaces-in-simple-bar">8. Show AeroSpace workspaces in simple-bar</a></li>
+<li><a href="#open-a-new-window-with-applescript">9. Open a new window with AppleScript</a></li>
+<li><a href="#disable-hide-app">10. Disable annoying and useless "hide application" shortcut</a></li>
+<li><a href="#screenshoot-shortcut">11. Take screenshots to clipboard using keyboard shortcut</a></li>
+<li><a href="#i3-like-config">12. i3 like config</a></li>
+<li><a href="#popular-apps-ids">13. List of Apple application IDs</a></li>
 </ul>
 </div>
 </div>
@@ -578,7 +579,28 @@ The source code of the page can be found in the <code>./docs</code> directory.</
 </div>
 </div>
 <div class="sect1">
-<h2 id="highlight-focused-windows-with-colored-borders"><a class="anchor" href="#highlight-focused-windows-with-colored-borders"></a><a class="link" href="#highlight-focused-windows-with-colored-borders">2. Highlight focused windows with colored borders</a></h2>
+<h2 id="non-native-fullscreen-in-firefox"><a class="anchor" href="#non-native-fullscreen-in-firefox"></a><a class="link" href="#non-native-fullscreen-in-firefox">2. Non-native fullscreen in Firefox</a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Change the following settings in <code>about:config</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="nowrap">// Disable macOS native fullscreen in Firefox
+full-screen-api.macos-native-full-screen = false
+
+// Disable fullscreen transition animations
+full-screen-api.transition-duration.enter = 0 0
+full-screen-api.transition-duration.leave = 0 0</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>full-screen-api.ignore-widgets</code> is also an interesting config knob that might be of your preference.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="highlight-focused-windows-with-colored-borders"><a class="anchor" href="#highlight-focused-windows-with-colored-borders"></a><a class="link" href="#highlight-focused-windows-with-colored-borders">3. Highlight focused windows with colored borders</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>To highlight the focused window with colored border you can use <a href="https://github.com/FelixKratz/JankyBorders">JankyBorders</a>.</p>
@@ -598,7 +620,7 @@ The source code of the page can be found in the <code>./docs</code> directory.</
 </div>
 </div>
 <div class="sect1">
-<h2 id="raycast-extension"><a class="anchor" href="#raycast-extension"></a><a class="link" href="#raycast-extension">3. AeroSpace Raycast extension</a></h2>
+<h2 id="raycast-extension"><a class="anchor" href="#raycast-extension"></a><a class="link" href="#raycast-extension">4. AeroSpace Raycast extension</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>There is a third party Raycast extension for AeroSpace. <a href="https://www.raycast.com/limonkufu/aerospace" class="bare">https://www.raycast.com/limonkufu/aerospace</a></p>
@@ -609,7 +631,7 @@ The source code of the page can be found in the <code>./docs</code> directory.</
 </div>
 </div>
 <div class="sect1">
-<h2 id="disable-open-animations"><a class="anchor" href="#disable-open-animations"></a><a class="link" href="#disable-open-animations">4. Disable windows opening animations</a></h2>
+<h2 id="disable-open-animations"><a class="anchor" href="#disable-open-animations"></a><a class="link" href="#disable-open-animations">5. Disable windows opening animations</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Observable in Google Chrome</p>
@@ -622,7 +644,7 @@ The source code of the page can be found in the <code>./docs</code> directory.</
 </div>
 </div>
 <div class="sect1">
-<h2 id="use-trackpad-gestures-to-switch-workspaces"><a class="anchor" href="#use-trackpad-gestures-to-switch-workspaces"></a><a class="link" href="#use-trackpad-gestures-to-switch-workspaces">5. Use trackpad gestures to switch workspaces</a></h2>
+<h2 id="use-trackpad-gestures-to-switch-workspaces"><a class="anchor" href="#use-trackpad-gestures-to-switch-workspaces"></a><a class="link" href="#use-trackpad-gestures-to-switch-workspaces">6. Use trackpad gestures to switch workspaces</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The following commands focus next or previous workspaces on monitors where the mouse is located</p>
@@ -668,7 +690,7 @@ Alternatively, inspect the source code, and build it yourself.
 </div>
 </div>
 <div class="sect1">
-<h2 id="show-aerospace-workspaces-in-sketchybar"><a class="anchor" href="#show-aerospace-workspaces-in-sketchybar"></a><a class="link" href="#show-aerospace-workspaces-in-sketchybar">6. Show AeroSpace workspaces in Sketchybar</a></h2>
+<h2 id="show-aerospace-workspaces-in-sketchybar"><a class="anchor" href="#show-aerospace-workspaces-in-sketchybar"></a><a class="link" href="#show-aerospace-workspaces-in-sketchybar">7. Show AeroSpace workspaces in Sketchybar</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>You can integrate AeroSpace workspace indicators with <a href="https://github.com/FelixKratz/SketchyBar">Sketchybar</a>.
@@ -725,7 +747,7 @@ Use these snippets as a starting point.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="show-aerospace-workspaces-in-simple-bar"><a class="anchor" href="#show-aerospace-workspaces-in-simple-bar"></a><a class="link" href="#show-aerospace-workspaces-in-simple-bar">7. Show AeroSpace workspaces in simple-bar</a></h2>
+<h2 id="show-aerospace-workspaces-in-simple-bar"><a class="anchor" href="#show-aerospace-workspaces-in-simple-bar"></a><a class="link" href="#show-aerospace-workspaces-in-simple-bar">8. Show AeroSpace workspaces in simple-bar</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="https://github.com/Jean-Tinland/simple-bar">simple-bar</a> can be used to display AeroSpace workspaces.</p>
@@ -752,7 +774,7 @@ Use these snippets as a starting point.</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="open-a-new-window-with-applescript"><a class="anchor" href="#open-a-new-window-with-applescript"></a><a class="link" href="#open-a-new-window-with-applescript">8. Open a new window with AppleScript</a></h2>
+<h2 id="open-a-new-window-with-applescript"><a class="anchor" href="#open-a-new-window-with-applescript"></a><a class="link" href="#open-a-new-window-with-applescript">9. Open a new window with AppleScript</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>Invoking Safari/Terminal with a command the obvious way (<code>exec-and-forget open -a Safari</code>) results in an outcome that is probably not the intended one.
@@ -794,7 +816,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 </div>
 <div class="sect1">
-<h2 id="disable-hide-app"><a class="anchor" href="#disable-hide-app"></a><a class="link" href="#disable-hide-app">9. Disable annoying and useless "hide application" shortcut</a></h2>
+<h2 id="disable-hide-app"><a class="anchor" href="#disable-hide-app"></a><a class="link" href="#disable-hide-app">10. Disable annoying and useless "hide application" shortcut</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>If <code>automatically-unhide-macos-hidden-apps</code> isn&#8217;t enough, you can disable <code>cmd-h</code> altogether (which will make this hotkey unavailable for apps that might use it for other purposes)</p>
@@ -810,7 +832,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 </div>
 <div class="sect1">
-<h2 id="screenshoot-shortcut"><a class="anchor" href="#screenshoot-shortcut"></a><a class="link" href="#screenshoot-shortcut">10. Take screenshots to clipboard using keyboard shortcut</a></h2>
+<h2 id="screenshoot-shortcut"><a class="anchor" href="#screenshoot-shortcut"></a><a class="link" href="#screenshoot-shortcut">11. Take screenshots to clipboard using keyboard shortcut</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>You can configure a custom shortcut to take a screenshot.
@@ -825,7 +847,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 </div>
 <div class="sect1">
-<h2 id="i3-like-config"><a class="anchor" href="#i3-like-config"></a><a class="link" href="#i3-like-config">11. i3 like config</a></h2>
+<h2 id="i3-like-config"><a class="anchor" href="#i3-like-config"></a><a class="link" href="#i3-like-config">12. i3 like config</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="config-examples/i3-like-config-example.toml">Download i3-like-config.toml</a></p>
@@ -928,7 +950,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 </div>
 <div class="sect1">
-<h2 id="popular-apps-ids"><a class="anchor" href="#popular-apps-ids"></a><a class="link" href="#popular-apps-ids">12. List of Apple application IDs</a></h2>
+<h2 id="popular-apps-ids"><a class="anchor" href="#popular-apps-ids"></a><a class="link" href="#popular-apps-ids">13. List of Apple application IDs</a></h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The list is useful to compose custom <a href="guide#on-window-detected-callback">on-window-detected callback</a>.</p>
@@ -1144,7 +1166,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2025-11-24 22:56:17 +0100
+Last updated 2026-01-02 00:00:11 +0100
 </div>
 </div>
 </body>
