@@ -12,9 +12,8 @@ struct CmdEnv: ConvenienceCopyable {
         }
     }
 
-    @MainActor
     var asMap: [String: String] {
-        var result = config.execConfig.envVariables
+        var result = [String: String]()
         if let windowId {
             result[AEROSPACE_WINDOW_ID] = windowId.description
         }
