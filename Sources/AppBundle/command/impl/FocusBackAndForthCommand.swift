@@ -9,7 +9,7 @@ struct FocusBackAndForthCommand: Command {
         if let prevFocus {
             return setFocus(to: prevFocus)
         } else {
-            return io.err("Prev window has been closed")
+            return io.err("No previous window in focus history")
         }
     }
 }
