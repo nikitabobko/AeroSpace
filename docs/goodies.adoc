@@ -232,6 +232,11 @@ link:config-examples/i3-like-config-example.toml[Download i3-like-config.toml]
 include::config-examples/i3-like-config-example.toml[]
 ----
 
+[#spacelist]
+== Spacelist
+
+link:https://github.com/magicmark/spacelist[Spacelist] is a terminal UI application that provides a searchable interface to view all open windows organized by workspace. You can hit enter on a selected application to switch to that workspace.
+
 [#popular-apps-ids]
 == List of Apple application IDs
 
