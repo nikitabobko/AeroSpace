@@ -291,3 +291,8 @@ The list is useful to compose custom xref:guide.adoc#on-window-detected-callback
 |Xcode|`com.apple.dt.Xcode`
 
 |===
+
+[#spacelist]
+== Spacelist
+
+link:https://github.com/magicmark/spacelist[Spacelist] is a terminal UI application that provides a searchable interface to view all open windows organized by workspace. You can hit enter on a selected application to switch to that workspace.
