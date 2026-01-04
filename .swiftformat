@@ -28,7 +28,6 @@
 --enable leadingDelimiters
 --enable linebreakAtEndOfFile
 --enable linebreaks
---enable modifierOrder
 --enable numberFormatting
 --enable preferCountWhere
 --enable preferFinalClasses

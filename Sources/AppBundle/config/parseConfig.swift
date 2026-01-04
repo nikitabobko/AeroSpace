@@ -6,18 +6,21 @@ import OrderedCollections
 
 @MainActor
 func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
-    let customConfigUrl: URL
-    switch findCustomConfigUrl() {
-        case .file(let url): customConfigUrl = url
-        case .noCustomConfigExists: customConfigUrl = defaultConfigUrl
-        case .ambiguousConfigError(let candidates):
-            let msg = """
-                Ambiguous config error. Several configs found:
-                \(candidates.map(\.path).joined(separator: "\n"))
-                """
-            return .failure(msg)
+    let configUrl: URL
+    if let forceConfigUrl {
+        configUrl = forceConfigUrl
+    } else {
+        switch findCustomConfigUrl() {
+            case .file(let url): configUrl = url
+            case .noCustomConfigExists: configUrl = defaultConfigUrl
+            case .ambiguousConfigError(let candidates):
+                let msg = """
+                    Ambiguous config error. Several configs found:
+                    \(candidates.map(\.path).joined(separator: "\n"))
+                    """
+                return .failure(msg)
+        }
     }
-    let configUrl: URL = forceConfigUrl ?? customConfigUrl
     let (parsedConfig, errors) = (try? String(contentsOf: configUrl, encoding: .utf8)).map { parseConfig($0) } ?? (defaultConfig, [])
 
     if errors.isEmpty {
@@ -107,6 +110,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, parseDefaultContainerOrientation),
 
     "start-at-login": Parser(\.startAtLogin, parseBool),
+    "auto-reload-config": Parser(\.autoReloadConfig, parseBool),
     "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
     "accordion-padding": Parser(\.accordionPadding, parseInt),
     persistentWorkspacesKey: Parser(\.persistentWorkspaces, parsePersistentWorkspaces),

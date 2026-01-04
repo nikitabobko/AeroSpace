@@ -15,10 +15,10 @@ import Foundation
         if try await !reloadConfig() {
             var out = ""
             check(
-                try await !reloadConfig(forceConfigUrl: defaultConfigUrl, stdout: &out),
+                try await reloadConfig(forceConfigUrl: defaultConfigUrl, stdout: &out),
                 """
                 Can't load default config. Your installation is probably corrupted.
-                Please don't change default-config.toml
+                Please don't modify '\(defaultConfigUrl)'
 
                 \(out)
                 """,
@@ -31,7 +31,7 @@ import Foundation
         Workspace.garbageCollectUnusedWorkspaces() // init workspaces
         _ = Workspace.all.first?.focusWorkspace()
         try await runRefreshSessionBlocking(.startup, layoutWorkspaces: false)
-        try await runLightSession(.startup, .checkServerIsEnabledOrDie) {
+        try await runLightSession(.startup, .forceRun) {
             smartLayoutAtStartup()
             _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
         }

@@ -1,12 +1,12 @@
 // :set window.hide_decoration
 {
-  "AXActivationPoint" : "<AXValue 0x600000de1c80> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXActivationPoint" : "<AXValue 0x978037c30> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
   "AXCancelButton" : null,
   "AXCloseButton" : null,
   "AXDefaultButton" : null,
   "AXDocument" : null,
   "AXFocused" : 0,
-  "AXFrame" : "<AXValue 0x6000016e3a40> {value = x:50.000000 y:50.000000 w:800.000000 h:600.000000 type = kAXValueCGRectType}",
+  "AXFrame" : "<AXValue 0x97812b480> {value = x:900.000000 y:40.000000 w:900.000000 h:1128.000000 type = kAXValueCGRectType}",
   "AXFullScreen" : 0,
   "AXFullScreenButton" : null,
   "AXGrowArea" : null,
@@ -14,54 +14,61 @@
   "AXMinimizeButton" : null,
   "AXMinimized" : 0,
   "AXModal" : 0,
-  "AXParent" : "<AXUIElement Application 0x600000d94060> {pid=1424}",
-  "AXPosition" : "<AXValue 0x600000de1c80> {value = x:50.000000 y:50.000000 type = kAXValueCGPointType}",
+  "AXParent" : "<AXUIElement Application 0x97809da10> {pid=96739}",
+  "AXPosition" : "<AXValue 0x978036700> {value = x:900.000000 y:40.000000 type = kAXValueCGPointType}",
   "AXProxy" : null,
   "AXRole" : "AXWindow",
   "AXSections" : [
-    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x600000de2880> {pid=1424}\";\n    SectionUniqueID = AXContent;\n}",
-    "{\n    SectionDescription = \"Top Level Navigator\";\n    SectionObject = \"<AXUIElement 0x600000de2cd0> {pid=1424}\";\n    SectionUniqueID = AXTopLevelNavigator;\n}",
-    "{\n    SectionObject = \"<AXUIElement 0x600000de2820> {pid=1424}\";\n    SectionUniqueID = AXContainer;\n}"
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x97809d6e0> {pid=96739}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionDescription = \"Top Level Navigator\";\n    SectionObject = \"<AXUIElement 0x97809d410> {pid=96739}\";\n    SectionUniqueID = AXTopLevelNavigator;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x97809da10> {pid=96739}\";\n    SectionUniqueID = AXContainer;\n}"
   ],
-  "AXSize" : "<AXValue 0x600000de0de0> {value = w:800.000000 h:600.000000 type = kAXValueCGSizeType}",
+  "AXSize" : "<AXValue 0x978037c30> {value = w:900.000000 h:1128.000000 type = kAXValueCGSizeType}",
   "AXSubrole" : "AXDialog",
-  "AXTitle" : "qutebrowser quickstart | qutebrowser - qutebrowser",
+  "AXTitle" : "Change Log - qutebrowser",
   "AXTitleUIElement" : null,
   "AXToolbarButton" : null,
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=209, title=\"qutebrowser quickstart | qutebrowser\", role=\"AXGroup\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=209, title=\"qutebrowser quickstart | qutebrowser - qutebrowser\", role=\"AXWindow\", subrole=\"AXDialog\")",
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=4799, title=\"Change Log\", role=\"AXGroup\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=4799, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXDialog\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
     "AXMainWindow" : null,
-    "AXMenuBar" : "<AXUIElement 0x600000de14d0> {pid=1424}",
+    "AXMenuBar" : "<AXUIElement 0x97809e2e0> {pid=96739}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "qutebrowser",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=209, title=\"qutebrowser quickstart | qutebrowser - qutebrowser\", role=\"AXWindow\", subrole=\"AXDialog\")"
+      "AXUIElement(AxWindowId=4799, title=\"Change Log - qutebrowser\", role=\"AXWindow\", subrole=\"AXDialog\")"
     ],
-    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+    "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXMainWindow, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
+    "Aero.AxWritable" : "AXFrontmost"
   },
   "Aero.App.appBundleId" : "org.qutebrowser.qutebrowser",
   "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.appBundlePath" : "file:///Applications/qutebrowser.app/",
   "Aero.App.nsApp.execPath" : "file:///Applications/qutebrowser.app/Contents/MacOS/qutebrowser",
-  "Aero.App.version" : "3.5.1",
-  "Aero.App.versionShort" : "3.5.1",
+  "Aero.App.pid" : 96739,
+  "Aero.App.version" : "3.6.1",
+  "Aero.App.versionShort" : "3.6.1",
+  "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, get.AXMinimizeButton, get.AXDocument, get.AXCloseButton, isWritable.AXActivationPoint, get.AXFullScreenButton, get.AXProxy, get.AXDefaultButton, get.AXTitleUIElement, get.AXCancelButton, get.AXZoomButton, get.AXToolbarButton",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 209,
   "Aero.AxUiElementWindowType" : "window",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : false,
-  "Aero.macOS.version" : "Version 15.5 (Build 24F74)",
+  "Aero.AxWritable" : "AXPosition, AXSections, AXMinimized, AXSize",
+  "Aero.axWindowId" : 4799,
+  "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
   "Aero.on-window-detected" : [
 
   ],
-  "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
+  "Aero.treeNodeParent" : "Optional(AppBundle.TilingContainer)",
+  "Aero.windowLevel" : "normalWindow",
   "Aero.workspace" : "M"
 }

@@ -7,16 +7,23 @@ public struct FocusCmdArgs: CmdArgs {
         help: focus_help_generated,
         flags: [
             "--ignore-floating": falseBoolFlag(\.floatingAsTiling),
-            "--boundaries": SubArgParser(\.rawBoundaries, upcastSubArgParserFun(parseBoundaries)),
-            "--boundaries-action": SubArgParser(\.rawBoundariesAction, upcastSubArgParserFun(parseBoundariesAction)),
             "--window-id": SubArgParser(\.windowId, upcastSubArgParserFun(parseUInt32SubArg)),
             "--dfs-index": SubArgParser(\.dfsIndex, upcastSubArgParserFun(parseUInt32SubArg)),
+
+            "--boundaries": SubArgParser(\.rawBoundaries, upcastSubArgParserFun(parseBoundaries)),
+            "--boundaries-action": SubArgParser(\.rawBoundariesAction, upcastSubArgParserFun(parseBoundariesAction)),
+            "--wrap-around": trueBoolFlag(\.wrapAroundAlias),
         ],
         posArgs: [ArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
+        conflictingOptions: [
+            ["--wrap-around", "--boundaries-action"],
+            ["--wrap-around", "--boundaries"],
+        ],
     )
 
     public var rawBoundaries: Boundaries? = nil // todo cover boundaries wrapping with tests
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
+    fileprivate var wrapAroundAlias: Bool = false
     public var dfsIndex: UInt32? = nil
     public var cardinalOrDfsDirection: CardinalOrDfsDirection? = nil
     public var floatingAsTiling: Bool = true
@@ -81,7 +88,9 @@ extension FocusCmdArgs {
     }
 
     public var boundaries: Boundaries { rawBoundaries ?? .workspace }
-    public var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .stop }
+    public var boundariesAction: WhenBoundariesCrossed {
+        wrapAroundAlias ? .wrapAroundTheWorkspace : (rawBoundariesAction ?? .stop)
+    }
 }
 
 public func parseFocusCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusCmdArgs> {

@@ -1,12 +1,12 @@
 // choose -v # => 1.5.0
 {
-  "AXActivationPoint" : "<AXValue 0x600003e10d20> {value = x:510.000000 y:243.000000 type = kAXValueCGPointType}",
+  "AXActivationPoint" : "<AXValue 0x9788d4750> {value = x:510.000000 y:240.000000 type = kAXValueCGPointType}",
   "AXCancelButton" : null,
   "AXCloseButton" : null,
   "AXDefaultButton" : null,
   "AXDocument" : null,
   "AXFocused" : 0,
-  "AXFrame" : "<AXValue 0x6000025f2cc0> {value = x:500.000000 y:229.000000 w:800.000000 h:387.000000 type = kAXValueCGRectType}",
+  "AXFrame" : "<AXValue 0x9780b0640> {value = x:500.000000 y:226.000000 w:800.000000 h:387.000000 type = kAXValueCGRectType}",
   "AXFullScreen" : 0,
   "AXFullScreenButton" : null,
   "AXGrowArea" : null,
@@ -14,37 +14,37 @@
   "AXMinimizeButton" : null,
   "AXMinimized" : 0,
   "AXModal" : 0,
-  "AXParent" : "<AXUIElement Application 0x600003e10d20> {pid=14076}",
-  "AXPosition" : "<AXValue 0x600003e1f1b0> {value = x:500.000000 y:229.000000 type = kAXValueCGPointType}",
+  "AXParent" : "<AXUIElement Application 0x978098e40> {pid=93987}",
+  "AXPosition" : "<AXValue 0x9788d44b0> {value = x:500.000000 y:226.000000 type = kAXValueCGPointType}",
   "AXProxy" : null,
   "AXRole" : "AXWindow",
   "AXSections" : [
-    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x600003e10f30> {pid=14076}\";\n    SectionUniqueID = AXContent;\n}",
-    "{\n    SectionObject = \"<AXUIElement 0x600003e10fc0> {pid=14076}\";\n    SectionUniqueID = AXContainer;\n}"
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0x9780983c0> {pid=93987}\";\n    SectionUniqueID = AXContent;\n}",
+    "{\n    SectionObject = \"<AXUIElement 0x978098e40> {pid=93987}\";\n    SectionUniqueID = AXContainer;\n}"
   ],
-  "AXSize" : "<AXValue 0x600003e10d20> {value = w:800.000000 h:387.000000 type = kAXValueCGSizeType}",
+  "AXSize" : "<AXValue 0x9780372d0> {value = w:800.000000 h:387.000000 type = kAXValueCGSizeType}",
   "AXSubrole" : "AXStandardWindow",
   "AXTitle" : "",
-  "AXTitleUIElement" : "AXUIElement(AxWindowId=2195, title=nil, role=\"AXStaticText\", subrole=nil)",
+  "AXTitleUIElement" : "AXUIElement(AxWindowId=4753, title=nil, role=\"AXStaticText\", subrole=nil)",
   "AXToolbarButton" : null,
   "AXZoomButton" : null,
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=2195, title=nil, role=\"AXTextField\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=2195, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=4753, title=nil, role=\"AXTextField\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=4753, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=2195, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
-    "AXMenuBar" : "<AXUIElement 0x600003e10f90> {pid=14076}",
+    "AXMainWindow" : "AXUIElement(AxWindowId=4753, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMenuBar" : "<AXUIElement 0x97809cbd0> {pid=93987}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "choose",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=2195, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(AxWindowId=4753, title=\"\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
@@ -52,8 +52,9 @@
   },
   "Aero.App.appBundleId" : null,
   "Aero.App.nsApp.activationPolicy" : "accessory",
+  "Aero.App.nsApp.appBundlePath" : "file:///opt/homebrew/Cellar/choose-gui/1.5.0/bin/choose/",
   "Aero.App.nsApp.execPath" : "file:///opt/homebrew/bin/choose",
-  "Aero.App.pid" : 14076,
+  "Aero.App.pid" : 93987,
   "Aero.App.version" : null,
   "Aero.App.versionShort" : null,
   "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, get.AXMinimizeButton, get.AXDocument, get.AXCloseButton, isWritable.AXActivationPoint, get.AXFullScreenButton, get.AXProxy, get.AXDefaultButton, get.AXCancelButton, get.AXZoomButton, get.AXToolbarButton",
@@ -61,11 +62,12 @@
   "Aero.AxUiElementWindowType" : "popup",
   "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxWritable" : "AXPosition, AXSections, AXMain",
-  "Aero.axWindowId" : 2195,
-  "Aero.macOS.version" : "Version 15.6.1 (Build 24G90)",
+  "Aero.axWindowId" : 4753,
+  "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
   "Aero.on-window-detected" : [
 
   ],
   "Aero.treeNodeParent" : "Optional(AppBundle.MacosPopupWindowsContainer)",
+  "Aero.windowLevel" : "normalWindow",
   "Aero.workspace" : null
 }

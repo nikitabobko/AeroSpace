@@ -88,7 +88,14 @@ struct RunSessionGuard: Sendable {
         command is EnableCommand ? .forceRun : .isServerEnabled
     }
     @MainActor
-    static var checkServerIsEnabledOrDie: RunSessionGuard { .isServerEnabled ?? dieT("server is disabled") }
+    static func checkServerIsEnabledOrDie(
+        file: String = #fileID,
+        line: Int = #line,
+        column: Int = #column,
+        function: String = #function,
+    ) -> RunSessionGuard {
+        .isServerEnabled ?? dieT("server is disabled", file: file, line: line, column: column, function: function)
+    }
     static let forceRun = RunSessionGuard()
     private init() {}
 }
