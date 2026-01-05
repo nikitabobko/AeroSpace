@@ -81,13 +81,28 @@ final class ConfigTest: XCTestCase {
             """
             [mode.main.binding]
                 alt-h = 'focus left'
+                lalt-l = 'focus right'
+                ralt-l = 'focus up'
             """,
         )
         assertEquals(errors, [])
-        let binding = HotkeyBinding(.maskAlternate, keyNotationToKeyCode["h"]!, [FocusCommand.new(direction: .left)], descriptionWithKeyNotation: "alt-h")
+        let bindings = [
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["h"]!, keyDescription: "h"),
+                commands: [FocusCommand.new(direction: .left)],
+            ),
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternateL, keyCode: keyNotationToKeyCode["l"]!, keyDescription: "l"),
+                commands: [FocusCommand.new(direction: .right)],
+            ),
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternateR, keyCode: keyNotationToKeyCode["l"]!, keyDescription: "l"),
+                commands: [FocusCommand.new(direction: .up)],
+            ),
+        ]
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding]),
+            Mode(name: nil, bindings: bindings),
         )
     }
 
@@ -112,6 +127,7 @@ final class ConfigTest: XCTestCase {
                 alt-hh = 'focus left'
                 aalt-j = 'focus down'
                 alt-k = 'focus up'
+                lalt-k = 'focus down'
             """,
         )
         assertEquals(
@@ -119,12 +135,22 @@ final class ConfigTest: XCTestCase {
             [
                 "mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
                 "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding",
+                "mode.main.binding.lalt-k: \'lalt-k\' Binding redeclaration",
             ],
         )
-        let binding = HotkeyBinding(.maskAlternate, keyNotationToKeyCode["k"]!, [FocusCommand.new(direction: .up)], descriptionWithKeyNotation: "alt-k")
+        let bindings = [
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["k"]!, keyDescription: "k"),
+                commands: [FocusCommand.new(direction: .up)],
+            ),
+            HotkeyBinding(
+                hotkey: Hotkey(modifiers: .maskAlternateL, keyCode: keyNotationToKeyCode["k"]!, keyDescription: "k"),
+                commands: [FocusCommand.new(direction: .down)],
+            ),
+        ]
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding]),
+            Mode(name: nil, bindings: bindings),
         )
     }
 
@@ -417,8 +443,11 @@ final class ConfigTest: XCTestCase {
             "q": keyNotationToKeyCode["q"]!,
             "unicorn": keyNotationToKeyCode["u"]!,
         ]))
-        let binding = HotkeyBinding(.maskAlternate, keyNotationToKeyCode["u"]!, [WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrDie())))], descriptionWithKeyNotation: "alt-unicorn")
-        assertEquals(config.modes[mainModeId]?.bindings, [binding.descriptionWithKeyCode: binding])
+        let binding = HotkeyBinding(
+            hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["u"]!, keyDescription: "unicorn"),
+            commands: [WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrDie())))],
+        )
+        assertEquals(config.modes[mainModeId]?.bindings, [binding])
 
         let (_, errors1) = parseConfig(
             """

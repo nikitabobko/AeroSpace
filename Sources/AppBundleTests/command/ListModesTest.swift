@@ -19,9 +19,9 @@ final class ListModesTest: XCTestCase {
     @MainActor
     func testListModesOutput() async throws {
         config.modes = [
-            "main": Mode(name: nil, bindings: [:]),
-            "service": Mode(name: nil, bindings: [:]),
-            "resize": Mode(name: nil, bindings: [:]),
+            "main": Mode(name: nil, bindings: []),
+            "service": Mode(name: nil, bindings: []),
+            "resize": Mode(name: nil, bindings: []),
         ]
 
         let defaultResult = try await ListModesCommand(args: ListModesCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin)

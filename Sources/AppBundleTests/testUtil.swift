@@ -21,7 +21,7 @@ func setUpWorkspacesForTests() {
     config.defaultRootContainerOrientation = .horizontal // Make default layout predictable
 
     // Don't create any bindings and workspaces for tests
-    config.modes = [mainModeId: Mode(name: nil, bindings: [:])]
+    config.modes = [mainModeId: Mode(name: nil, bindings: [])]
     config.persistentWorkspaces = []
 
     for workspace in Workspace.all {
