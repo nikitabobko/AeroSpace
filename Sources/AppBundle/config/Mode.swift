@@ -1,9 +1,9 @@
 import Common
 
 struct Mode: ConvenienceCopyable, Equatable, Sendable {
-    var bindings: [String: HotkeyBinding]
+    var bindings: [HotkeyBinding]
 
-    static let zero = Mode(bindings: [:])
+    static let zero = Mode(bindings: [])
 }
 
 func parseModes(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError], _ mapping: [String: UInt32]) -> [String: Mode] {

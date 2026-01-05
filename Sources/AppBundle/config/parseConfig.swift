@@ -235,7 +235,7 @@ func tomlAnyToParsedConfigRecursive(any: Any, _ backtrace: ConfigBacktrace) -> P
             errors += [.semantic(.rootKey(persistentWorkspacesKey), "This config option is only available since 'config-version = 2'")]
         }
         config.persistentWorkspaces = (config.modes.values.lazy
-            .flatMap { (mode: Mode) -> [HotkeyBinding] in Array(mode.bindings.values) }
+            .flatMap { (mode: Mode) -> [HotkeyBinding] in Array(mode.bindings) }
             .flatMap { (binding: HotkeyBinding) -> [String] in
                 binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw } +
                     binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw }
@@ -245,7 +245,7 @@ func tomlAnyToParsedConfigRecursive(any: Any, _ backtrace: ConfigBacktrace) -> P
     }
 
     if config.enableNormalizationFlattenContainers {
-        let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings.values }
+        let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings }
             .flatMap { $0.commands }
             .contains { $0 is SplitCommand }
         if containsSplitCommand {
