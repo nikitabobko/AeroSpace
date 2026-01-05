@@ -1,7 +1,6 @@
 @testable import AppBundle
 import Common
 import Foundation
-import HotKey
 import XCTest
 
 let projectRoot: URL = {
@@ -82,12 +81,11 @@ extension MoveNodeToWorkspaceCmdArgs {
         self.target = .initialized(.direct(.parse(workspace).getOrDie()))
     }
 }
-
 extension HotkeyBinding {
-    init(_ modifiers: NSEvent.ModifierFlags, _ keyCode: Key, _ commands: Shell<any Command>) {
+    init(_ modifiers: CGEventFlags, _ keyCode: UInt32, _ commands: Shell<any Command>) {
         let descriptionWithKeyNotation = modifiers.isEmpty
-            ? keyCode.toString()
-            : modifiers.toString() + "-" + keyCode.toString()
+            ? keyCode.keyCodeToString()
+            : modifiers.toString() + "-" + keyCode.keyCodeToString()
         self.init(modifiers, keyCode, commands, descriptionWithKeyNotation: descriptionWithKeyNotation)
     }
 }
