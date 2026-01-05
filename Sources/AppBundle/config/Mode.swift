@@ -6,7 +6,7 @@ struct Mode: ConvenienceCopyable, Equatable, Sendable {
     static let zero = Mode(bindings: [])
 }
 
-func parseModes(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError], _ mapping: [String: UInt32]) -> [String: Mode] {
+func parseModes(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError], _ mapping: KeyMapping) -> [String: Mode] {
     guard let rawTable = raw.asDictOrNil else {
         errors += [expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace)]
         return [:]
@@ -21,7 +21,7 @@ func parseModes(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [Conf
     return result
 }
 
-func parseMode(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError], _ mapping: [String: UInt32]) -> Mode {
+func parseMode(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError], _ mapping: KeyMapping) -> Mode {
     guard let rawTable: Json.JsonDict = raw.asDictOrNil else {
         errors += [expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace)]
         return .zero

@@ -16,11 +16,22 @@ import Foundation
             .maskSecondaryFn,
         ])
         let modifiers = event.flags.intersection(modifiersMask)
-        let hotkey = ExpandedHotkey(modifiers: modifiers, keyCode: UInt32(event.keyCode))
+
+        let hotkey: ExpandedHotkey
+        switch config.keyMapping.matchKeyEventBy {
+            case .keyCode:
+                hotkey = ExpandedHotkey(modifiers: modifiers, key: .keyCode(event.keyCode, symbol: nil))
+            case .keySymbol:
+                guard let symbol = currentKeyCodeMap[event.keyCode] else {
+                    return false
+                }
+                hotkey = ExpandedHotkey(modifiers: modifiers, key: .symbol(symbol))
+        }
 
         guard let handler = hotkeys[hotkey] else {
             return false
         }
+
         handler()
         return true
     }
@@ -142,31 +153,87 @@ private let modifiersMap: [String: CGEventFlags] = [
     "fn": .maskSecondaryFn,
 ]
 
+private let keyNames: [String: String] = [
+    "period": ".",
+    "comma": ",",
+    "leftSquareBracket": "[",
+    "rightSquareBracket": "]",
+    "slash": "/",
+    "backslash": "\\",
+    "minus": "-",
+    "equal": "=",
+    "quote": "'",
+    "backtick": "`",
+    "semicolon": ";",
+    "sectionSign": "§",
+]
+
+enum KeyMatch: Equatable, Hashable {
+    case keyCode(UInt32, symbol: String?)
+    case symbol(String)
+
+    var symbol: String {
+        switch self {
+            case .keyCode(let keyCode, let symbol):
+                if let symbol {
+                    return symbol
+                }
+                return "<\(keyCode)>"
+            case .symbol(let symbol):
+                return symbol
+        }
+    }
+
+    static func == (lhs: KeyMatch, rhs: KeyMatch) -> Bool {
+        switch (lhs, rhs) {
+            case (.keyCode(let lhsCode, _), .keyCode(let rhsCode, _)):
+                lhsCode == rhsCode
+            case (.symbol(let lhsSymbol), .symbol(let rhsSymbol)):
+                lhsSymbol == rhsSymbol
+            default:
+                false
+        }
+    }
+
+    func hash(into hasher: inout Hasher) {
+        switch self {
+            case .keyCode(let code, _):
+                hasher.combine(0)
+                hasher.combine(code)
+            case .symbol(let symbol):
+                hasher.combine(1)
+                hasher.combine(symbol)
+        }
+    }
+}
+
 struct Hotkey: Equatable, Sendable {
     let modifiers: CGEventFlags
-    let keyCode: UInt32
+    let key: KeyMatch
     let description: String
     let expanded: [ExpandedHotkey]
 
-    init(modifiers: CGEventFlags, keyCode: UInt32, keyDescription: String) {
+    init(modifiers: CGEventFlags, key: KeyMatch) {
         self.modifiers = modifiers
-        self.keyCode = keyCode
-        self.description = modifiers.isEmpty
-            ? keyDescription
-            : modifiers.toString() + "-" + keyDescription
-        self.expanded = modifiers.expandVariants().map {
-            ExpandedHotkey(modifiers: $0, keyCode: keyCode)
+        self.key = key
+        self.description = self.modifiers.isEmpty
+            ? self.key.symbol
+            : self.modifiers.toString() + "-" + self.key.symbol
+
+        let expandedModifiers = self.modifiers.expandVariants()
+        self.expanded = expandedModifiers.map {
+            ExpandedHotkey(modifiers: $0, key: key)
         }
     }
 }
 
 struct ExpandedHotkey: Hashable, Sendable {
     let modifiers: CGEventFlags
-    let keyCode: UInt32
+    let key: KeyMatch
 
     func hash(into hasher: inout Hasher) {
         hasher.combine(modifiers.rawValue)
-        hasher.combine(keyCode)
+        hasher.combine(key)
     }
 }
 
@@ -180,7 +247,7 @@ struct HotkeyBinding: Equatable, Sendable {
     }
 }
 
-func parseBindings(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError], _ mapping: [String: UInt32]) -> [HotkeyBinding] {
+func parseBindings(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError], _ mapping: KeyMapping) -> [HotkeyBinding] {
     guard let rawTable = raw.asDictOrNil else {
         errors += [expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace)]
         return []
@@ -211,19 +278,47 @@ func parseBindings(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [C
     return result
 }
 
-func parseBinding(_ raw: String, _ backtrace: ConfigBacktrace, _ mapping: [String: UInt32]) -> ParsedConfig<Hotkey> {
+func parseBinding(_ raw: String, _ backtrace: ConfigBacktrace, _ mapping: KeyMapping) -> ParsedConfig<Hotkey> {
     let rawKeys = raw.split(separator: "-")
     let modifiers: ParsedConfig<CGEventFlags> = rawKeys.dropLast()
         .mapAllOrFailure {
             modifiersMap[String($0)].orFailure(.semantic(backtrace, "Can't parse modifiers in '\(raw)' binding"))
         }
         .map { CGEventFlags($0) }
-    let keyRaw = String(rawKeys.last ?? "")
-    let key: ParsedConfig<UInt32> = rawKeys.last.flatMap { mapping[String($0)] }
-        .orFailure(.semantic(backtrace, "Can't parse the key in '\(raw)' binding"))
+
+    let key: KeyMatch? = switch mapping.matchKeyEventBy {
+        case .keyCode:
+            rawKeys.last
+                .flatMap { symbol in
+                    let symbol = String(symbol)
+                    if let keyCode = mapping.resolve(symbol) {
+                        return KeyMatch.keyCode(keyCode, symbol: symbol)
+                    }
+                    return nil
+                }
+        case .keySymbol:
+            rawKeys.last
+                .flatMap { symbol in
+                    let symbol = String(symbol)
+                    if baseKeyCodeMap.values.contains(symbol) {
+                        return .symbol(symbol)
+                    }
+                    if let symbol = keyNames[symbol] {
+                        return .symbol(symbol)
+                    }
+                    if symbol.count == 1 {
+                        return .symbol(symbol)
+                    }
+
+                    return nil
+                }
+    }
+
     return modifiers.flatMap { modifiers -> ParsedConfig<Hotkey> in
-        key.flatMap { key -> ParsedConfig<Hotkey> in
-            .success(Hotkey(modifiers: modifiers, keyCode: key, keyDescription: keyRaw))
-        }
+        key
+            .orFailure(.semantic(backtrace, "Can't parse the key in '\(raw)' binding"))
+            .flatMap { key -> ParsedConfig<Hotkey> in
+                .success(Hotkey(modifiers: modifiers, key: key))
+            }
     }
 }

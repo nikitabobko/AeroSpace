@@ -3,6 +3,7 @@ import Common
 private let keyMappingParser: [String: any ParserProtocol<KeyMapping>] = [
     "preset": Parser(\.preset, parsePreset),
     "key-notation-to-key-code": Parser(\.rawKeyNotationToKeyCode, parseKeyNotationToKeyCode),
+    "match-key-event-by": Parser(\.matchKeyEventBy, parseMatchKeyEventBy),
 ]
 
 struct KeyMapping: ConvenienceCopyable, Equatable, Sendable {
@@ -10,19 +11,30 @@ struct KeyMapping: ConvenienceCopyable, Equatable, Sendable {
         case qwerty, dvorak, colemak
     }
 
+    enum MatchKeyEventBy: String, CaseIterable, Sendable {
+        case keyCode = "key-code"
+        case keySymbol = "key-symbol"
+    }
+
     init(
         preset: Preset = .qwerty,
         rawKeyNotationToKeyCode: [String: UInt32] = [:],
+        matchKeyEventBy: MatchKeyEventBy = .keyCode,
     ) {
         self.preset = preset
         self.rawKeyNotationToKeyCode = rawKeyNotationToKeyCode
+        self.matchKeyEventBy = matchKeyEventBy
     }
 
     fileprivate var preset: Preset = .qwerty
     fileprivate var rawKeyNotationToKeyCode: [String: UInt32] = [:]
+    fileprivate(set) var matchKeyEventBy: MatchKeyEventBy = .keyCode
 
-    func resolve() -> [String: UInt32] {
-        getKeysPreset(preset) + rawKeyNotationToKeyCode
+    func resolve(_ symbol: String) -> UInt32? {
+        if let keyCode = rawKeyNotationToKeyCode[symbol] {
+            return keyCode
+        }
+        return getKeyMapPreset(preset)[symbol]
     }
 }
 
@@ -58,4 +70,8 @@ private func parseKeyNotationToKeyCode(_ raw: Json, _ backtrace: ConfigBacktrace
 
 private func isValidKeyNotation(_ str: String) -> Bool {
     str.rangeOfCharacter(from: .whitespacesAndNewlines) == nil && !str.contains("-")
+}
+
+private func parseMatchKeyEventBy(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<KeyMapping.MatchKeyEventBy> {
+    parseString(raw, backtrace).flatMap { parseEnum($0, KeyMapping.MatchKeyEventBy.self).toParsedConfig(backtrace) }
 }
