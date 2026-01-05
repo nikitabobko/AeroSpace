@@ -125,15 +125,15 @@ final class ConfigTest: XCTestCase {
         assertEquals(result.errors, [])
         let bindings = [
             HotkeyBinding(
-                hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["h"]!, keyDescription: "h"),
+                hotkey: Hotkey(modifiers: .maskAlternate, key: .keyCode(keyNotationToKeyCode["h"]!, symbol: "h")),
                 commands: .cmd(FocusCommand.new(direction: .left)),
             ),
             HotkeyBinding(
-                hotkey: Hotkey(modifiers: .maskAlternateL, keyCode: keyNotationToKeyCode["l"]!, keyDescription: "l"),
+                hotkey: Hotkey(modifiers: .maskAlternateL, key: .keyCode(keyNotationToKeyCode["l"]!, symbol: "l")),
                 commands: .cmd(FocusCommand.new(direction: .right)),
             ),
             HotkeyBinding(
-                hotkey: Hotkey(modifiers: .maskAlternateR, keyCode: keyNotationToKeyCode["l"]!, keyDescription: "l"),
+                hotkey: Hotkey(modifiers: .maskAlternateR, key: .keyCode(keyNotationToKeyCode["l"]!, symbol: "l")),
                 commands: .cmd(FocusCommand.new(direction: .up)),
             ),
         ]
@@ -177,11 +177,11 @@ final class ConfigTest: XCTestCase {
         )
         let bindings = [
             HotkeyBinding(
-                hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["k"]!, keyDescription: "k"),
+                hotkey: Hotkey(modifiers: .maskAlternate, key: .keyCode(keyNotationToKeyCode["k"]!, symbol: "k")),
                 commands: .cmd(FocusCommand.new(direction: .up)),
             ),
             HotkeyBinding(
-                hotkey: Hotkey(modifiers: .maskAlternateL, keyCode: keyNotationToKeyCode["k"]!, keyDescription: "k"),
+                hotkey: Hotkey(modifiers: .maskAlternateL, key: .keyCode(keyNotationToKeyCode["k"]!, symbol: "k")),
                 commands: .cmd(FocusCommand.new(direction: .down)),
             ),
         ]
@@ -728,8 +728,8 @@ final class ConfigTest: XCTestCase {
             "unicorn": keyNotationToKeyCode["u"]!,
         ]))
         let binding = HotkeyBinding(
-            hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["u"]!, keyDescription: "unicorn"),
-            commands: .cmd(WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrDie())))),
+            hotkey: Hotkey(modifiers: .maskAlternate, key: .keyCode(keyNotationToKeyCode["u"]!, symbol: "unicorn")),
+            commands: .cmd(WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("wonderland").getOrDie())))),
         )
         assertEquals(result.config.modes[mainModeId]?.bindings, [binding])
 
@@ -752,7 +752,7 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(dvorakResult.errors, [])
         assertEquals(dvorakResult.config.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(dvorakResult.config.keyMapping.resolve()["quote"], keyNotationToKeyCode["q"]!)
+        assertEquals(dvorakResult.config.keyMapping.resolve("quote"), keyNotationToKeyCode["q"]!)
         let colemakResult = parseConfig(
             """
             key-mapping.preset = 'colemak'
@@ -760,7 +760,24 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(colemakResult.errors, [])
         assertEquals(colemakResult.config.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(colemakResult.config.keyMapping.resolve()["f"], keyNotationToKeyCode["e"]!)
+        assertEquals(colemakResult.config.keyMapping.resolve("f"), keyNotationToKeyCode["e"]!)
+
+        let symbolResult = parseConfig(
+            """
+            [key-mapping]
+                match-key-event-by = 'key-symbol'
+
+            [mode.main.binding]
+                'alt-ä' = 'workspace 1'
+            """,
+        )
+        assertEquals(symbolResult.errors, [])
+        assertEquals(symbolResult.config.keyMapping, KeyMapping(matchKeyEventBy: .keySymbol))
+        let symbolBinding = HotkeyBinding(
+            hotkey: Hotkey(modifiers: .maskAlternate, key: .symbol("ä")),
+            commands: .cmd(WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("1").getOrDie())))),
+        )
+        assertEquals(symbolResult.config.modes[mainModeId]?.bindings, [symbolBinding])
     }
 }
 

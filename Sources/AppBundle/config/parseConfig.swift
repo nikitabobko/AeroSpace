@@ -268,7 +268,7 @@ struct ParseConfigResult {
     }
 
     // Parse modeConfigRootKey after keyMappingConfigRootKey
-    if let modes = rawTable[modeConfigRootKey].flatMap({ parseModes($0, .rootKey(modeConfigRootKey), &c, config.keyMapping.resolve()) }) {
+    if let modes = rawTable[modeConfigRootKey].flatMap({ parseModes($0, .rootKey(modeConfigRootKey), &c, config.keyMapping) }) {
         config.modes = modes
     }
 
@@ -277,7 +277,7 @@ struct ParseConfigResult {
             c.errors += [.init(.rootKey(persistentWorkspacesKey), "This config option is only available since 'config-version = 2'")]
         }
         config.persistentWorkspaces = (config.modes.values.lazy
-            .flatMap { (mode: Mode) -> [HotkeyBinding] in Array(mode.bindings) }
+            .flatMap { (mode: Mode) -> [HotkeyBinding] in mode.bindings }
             .flatMap { (binding: HotkeyBinding) -> [String] in
                 let commands = binding.commands.flatten()
                 return commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw } +

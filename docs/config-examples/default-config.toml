@@ -61,8 +61,10 @@ on-mode-changed = []
 
 focus-follows-mouse.enabled = false
 
-# Possible values: (qwerty|dvorak|colemak)
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
+# Possible values: (key-code|key-symbol)
+key-mapping.match-key-event-by = 'key-code'
+# Possible values: (qwerty|dvorak|colemak)
 key-mapping.preset = 'qwerty'
 
 # Gaps between windows (inner-*) and between monitor edges (outer-*).

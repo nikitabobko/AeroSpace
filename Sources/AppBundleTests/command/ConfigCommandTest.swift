@@ -64,7 +64,7 @@ final class ConfigCommandTest: XCTestCase {
     func testAllKeys() async {
         let command = parseCommand("focus left").cmdOrDie
         let binding = HotkeyBinding(
-            hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["h"]!, keyDescription: "h"),
+            hotkey: Hotkey(modifiers: .maskAlternate, key: .keyCode(keyNotationToKeyCode["h"]!, symbol: "h")),
             commands: command,
         )
         config.modes = ["main": Mode(bindings: [binding])]
@@ -136,7 +136,7 @@ final class ConfigCommandTest: XCTestCase {
     func testGetScalar() async {
         let command = parseCommand("focus left").cmdOrDie
         let binding = HotkeyBinding(
-            hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["h"]!, keyDescription: "h"),
+            hotkey: Hotkey(modifiers: .maskAlternate, key: .keyCode(keyNotationToKeyCode["h"]!, symbol: "h")),
             commands: command,
         )
         config.modes = ["main": Mode(bindings: [binding])]
@@ -150,7 +150,7 @@ final class ConfigCommandTest: XCTestCase {
     func testGetScalar_keys_fails() async {
         let command = parseCommand("focus left").cmdOrDie
         let binding = HotkeyBinding(
-            hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["h"]!, keyDescription: "h"),
+            hotkey: Hotkey(modifiers: .maskAlternate, key: .keyCode(keyNotationToKeyCode["h"]!, symbol: "h")),
             commands: command,
         )
         config.modes = ["main": Mode(bindings: [binding])]
@@ -165,7 +165,7 @@ final class ConfigCommandTest: XCTestCase {
     func testGetScalar_dereference_fails() async {
         let command = parseCommand("focus left").cmdOrDie
         let binding = HotkeyBinding(
-            hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["h"]!, keyDescription: "h"),
+            hotkey: Hotkey(modifiers: .maskAlternate, key: .keyCode(keyNotationToKeyCode["h"]!, symbol: "h")),
             commands: command,
         )
         config.modes = ["main": Mode(bindings: [binding])]
