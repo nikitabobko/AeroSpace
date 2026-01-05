@@ -84,7 +84,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(errors, [])
-        let binding = HotkeyBinding(.option, .h, [FocusCommand.new(direction: .left)])
+        let binding = HotkeyBinding(.maskAlternate, keyNotationToKeyCode["h"]!, [FocusCommand.new(direction: .left)], descriptionWithKeyNotation: "alt-h")
         assertEquals(
             config.modes[mainModeId],
             Mode(bindings: [binding.descriptionWithKeyCode: binding]),
@@ -121,7 +121,7 @@ final class ConfigTest: XCTestCase {
                 "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding",
             ],
         )
-        let binding = HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])
+        let binding = HotkeyBinding(.maskAlternate, keyNotationToKeyCode["k"]!, [FocusCommand.new(direction: .up)], descriptionWithKeyNotation: "alt-k")
         assertEquals(
             config.modes[mainModeId],
             Mode(bindings: [binding.descriptionWithKeyCode: binding]),
@@ -467,10 +467,10 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(errors, [])
         assertEquals(config.keyMapping, KeyMapping(preset: .qwerty, rawKeyNotationToKeyCode: [
-            "q": .q,
-            "unicorn": .u,
+            "q": keyNotationToKeyCode["q"]!,
+            "unicorn": keyNotationToKeyCode["u"]!,
         ]))
-        let binding = HotkeyBinding(.option, .u, [WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrDie())))])
+        let binding = HotkeyBinding(.maskAlternate, keyNotationToKeyCode["u"]!, [WorkspaceCommand(args: WorkspaceCmdArgs(target: .direct(.parse("unicorn").getOrDie())))], descriptionWithKeyNotation: "alt-unicorn")
         assertEquals(config.modes[mainModeId]?.bindings, [binding.descriptionWithKeyCode: binding])
 
         let (_, errors1) = parseConfig(
@@ -492,7 +492,7 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(dvorakErrors, [])
         assertEquals(dvorakConfig.keyMapping, KeyMapping(preset: .dvorak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(dvorakConfig.keyMapping.resolve()["quote"], .q)
+        assertEquals(dvorakConfig.keyMapping.resolve()["quote"], keyNotationToKeyCode["q"]!)
         let (colemakConfig, colemakErrors) = parseConfig(
             """
             key-mapping.preset = 'colemak'
@@ -500,6 +500,6 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(colemakErrors, [])
         assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
-        assertEquals(colemakConfig.keyMapping.resolve()["f"], .e)
+        assertEquals(colemakConfig.keyMapping.resolve()["f"], keyNotationToKeyCode["e"]!)
     }
 }
