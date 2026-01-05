@@ -1,5 +1,4 @@
 import Common
-import HotKey
 import TOMLKit
 
 private let keyMappingParser: [String: any ParserProtocol<KeyMapping>] = [
@@ -14,16 +13,16 @@ struct KeyMapping: ConvenienceCopyable, Equatable, Sendable {
 
     init(
         preset: Preset = .qwerty,
-        rawKeyNotationToKeyCode: [String: Key] = [:],
+        rawKeyNotationToKeyCode: [String: UInt32] = [:],
     ) {
         self.preset = preset
         self.rawKeyNotationToKeyCode = rawKeyNotationToKeyCode
     }
 
     fileprivate var preset: Preset = .qwerty
-    fileprivate var rawKeyNotationToKeyCode: [String: Key] = [:]
+    fileprivate var rawKeyNotationToKeyCode: [String: UInt32] = [:]
 
-    func resolve() -> [String: Key] {
+    func resolve() -> [String: UInt32] {
         getKeysPreset(preset) + rawKeyNotationToKeyCode
     }
 }
@@ -36,8 +35,8 @@ private func parsePreset(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace
     parseString(raw, backtrace).flatMap { parseEnum($0, KeyMapping.Preset.self).toParsedToml(backtrace) }
 }
 
-private func parseKeyNotationToKeyCode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: Key] {
-    var result: [String: Key] = [:]
+private func parseKeyNotationToKeyCode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: UInt32] {
+    var result: [String: UInt32] = [:]
     guard let table = raw.table else {
         errors.append(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))
         return result

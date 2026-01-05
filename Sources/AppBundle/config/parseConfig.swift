@@ -1,6 +1,5 @@
 import AppKit
 import Common
-import HotKey
 import TOMLKit
 import OrderedCollections
 
