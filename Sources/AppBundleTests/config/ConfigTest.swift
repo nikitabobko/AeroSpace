@@ -87,8 +87,168 @@ final class ConfigTest: XCTestCase {
         let binding = HotkeyBinding(.option, .h, [FocusCommand.new(direction: .left)])
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding]),
+            Mode(bindings: [binding.descriptionWithKeyCode: binding]),
         )
+    }
+
+    func testParseModeInheritance() {
+        let (config, errors) = parseConfig(
+            """
+            [mode.main.binding]
+                alt-h = 'focus left'
+            [mode.resize]
+                inherits = 'main'
+            [mode.resize.binding]
+                h = 'resize width -50'
+            """,
+        )
+        assertEquals(errors, [])
+        assertEquals(config.modes["resize"]?.inherits, "main")
+        // After flattening, resize should have both bindings
+        // Debug: print binding keys to understand format
+        let resizeBindingKeys = config.modes["resize"]?.bindings.keys.sorted() ?? []
+        let mainBindingKeys = config.modes[mainModeId]?.bindings.keys.sorted() ?? []
+        // The binding keys should contain inherited bindings from main
+        XCTAssertEqual(resizeBindingKeys.count, 2, "Expected 2 bindings, got \(resizeBindingKeys)")
+        XCTAssertEqual(mainBindingKeys.count, 1, "Expected 1 main binding, got \(mainBindingKeys)")
+    }
+
+    func testCircularInheritanceError() {
+        let (_, errors) = parseConfig(
+            """
+            [mode.main.binding]
+            [mode.a]
+                inherits = 'b'
+            [mode.a.binding]
+            [mode.b]
+                inherits = 'a'
+            [mode.b.binding]
+            """,
+        )
+        XCTAssertTrue(errors.descriptions.contains { $0.contains("Circular inheritance") })
+    }
+
+    func testUndefinedParentModeError() {
+        let (_, errors) = parseConfig(
+            """
+            [mode.main.binding]
+            [mode.resize]
+                inherits = 'nonexistent'
+            [mode.resize.binding]
+            """,
+        )
+        XCTAssertTrue(errors.descriptions.contains { $0.contains("undefined mode") })
+    }
+
+    func testParseAppModes() {
+        let (config, errors) = parseConfig(
+            """
+            [mode.main.binding]
+                alt-h = 'focus left'
+            [mode.firefox]
+                app = 'org.mozilla.firefox'
+                inherits = 'main'
+            [mode.firefox.binding]
+                ctrl-t = 'exec-and-forget echo test'
+            """,
+        )
+        assertEquals(errors, [])
+        assertEquals(config.appModes["org.mozilla.firefox"], "firefox")
+        XCTAssertNotNil(config.modes["firefox"])
+        assertEquals(config.modes["firefox"]?.app, "org.mozilla.firefox")
+        // Should have 2 bindings: inherited alt-h from main + its own ctrl-t
+        XCTAssertEqual(config.modes["firefox"]?.bindings.count, 2)
+    }
+
+    func testInheritanceBindingOverride() {
+        let (config, errors) = parseConfig(
+            """
+            [mode.main.binding]
+                alt-h = 'focus left'
+            [mode.vim]
+                inherits = 'main'
+            [mode.vim.binding]
+                alt-h = 'focus right'
+            """,
+        )
+        assertEquals(errors, [])
+        // vim should have exactly 1 binding (alt-h overrides parent's alt-h)
+        XCTAssertEqual(config.modes["vim"]?.bindings.count, 1)
+        // Get the binding (using the key from main's binding which should be the same)
+        let mainBinding = config.modes[mainModeId]?.bindings.values.first
+        let vimBindingKey = mainBinding?.descriptionWithKeyCode ?? ""
+        let binding = config.modes["vim"]?.bindings[vimBindingKey]
+        // Should have child's command (focus right), not parent's (focus left)
+        XCTAssertNotNil(binding)
+        XCTAssertTrue(binding?.commands.first is FocusCommand)
+        let focusCmd = binding?.commands.first as? FocusCommand
+        // Verify it's focus right (child) not focus left (parent)
+        assertEquals(focusCmd?.args.cardinalOrDfsDirection, .direction(.right))
+    }
+
+    func testDeepInheritanceChain() {
+        let (config, errors) = parseConfig(
+            """
+            [mode.main.binding]
+                alt-h = 'focus left'
+            [mode.base]
+                inherits = 'main'
+            [mode.base.binding]
+                alt-j = 'focus down'
+            [mode.child]
+                inherits = 'base'
+            [mode.child.binding]
+                alt-k = 'focus up'
+            """,
+        )
+        assertEquals(errors, [])
+        // child should have all three bindings
+        XCTAssertEqual(config.modes["child"]?.bindings.count, 3)
+        // base should have 2 bindings (main's + its own)
+        XCTAssertEqual(config.modes["base"]?.bindings.count, 2)
+    }
+
+    func testUnbindRemovesInheritedBindings() {
+        let (config, errors) = parseConfig(
+            """
+            [mode.main.binding]
+                alt-h = 'focus left'
+                alt-j = 'focus down'
+                alt-k = 'focus up'
+                alt-l = 'focus right'
+            [mode.emacs]
+                inherits = 'main'
+                unbind = ['alt-h', 'alt-j', 'alt-k', 'alt-l']
+            [mode.emacs.binding]
+                ctrl-x = 'exec-and-forget echo test'
+            """,
+        )
+        assertEquals(errors, [])
+        // main should have 4 bindings
+        XCTAssertEqual(config.modes[mainModeId]?.bindings.count, 4)
+        // emacs should have only 1 binding (ctrl-x), all alt-* removed
+        XCTAssertEqual(config.modes["emacs"]?.bindings.count, 1)
+        // Verify the remaining binding is ctrl-x, not any of the unbound ones
+        let bindingKeys = config.modes["emacs"]?.bindings.keys.map { $0 } ?? []
+        XCTAssertTrue(bindingKeys.allSatisfy { !$0.contains("alt") })
+    }
+
+    func testUnbindPartialRemoval() {
+        let (config, errors) = parseConfig(
+            """
+            [mode.main.binding]
+                alt-h = 'focus left'
+                alt-j = 'focus down'
+                alt-k = 'focus up'
+            [mode.vim]
+                inherits = 'main'
+                unbind = ['alt-h']
+            [mode.vim.binding]
+            """,
+        )
+        assertEquals(errors, [])
+        // vim should have 2 bindings (alt-j and alt-k, but not alt-h)
+        XCTAssertEqual(config.modes["vim"]?.bindings.count, 2)
     }
 
     func testModesMustContainDefaultModeError() {
@@ -124,7 +284,7 @@ final class ConfigTest: XCTestCase {
         let binding = HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])
         assertEquals(
             config.modes[mainModeId],
-            Mode(name: nil, bindings: [binding.descriptionWithKeyCode: binding]),
+            Mode(bindings: [binding.descriptionWithKeyCode: binding]),
         )
     }
 

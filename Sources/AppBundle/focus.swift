@@ -165,12 +165,33 @@ extension Workspace {
     }
 }
 @MainActor private func onFocusChanged(_ focus: LiveFocus) {
+    // Check for app-specific mode auto-switching
+    updateAutoModeForFocusedApp(focus)
+
     if config.onFocusChanged.isEmpty { return }
     guard let token: RunSessionGuard = .isServerEnabled else { return }
     // todo potential optimization: don't run runSession if we are already in runSession
     Task {
         try await runLightSession(.onFocusChanged, token) {
             _ = try await config.onFocusChanged.runCmdSeq(.defaultEnv.withFocus(focus), .emptyStdin)
+        }
+    }
+}
+
+@MainActor private func updateAutoModeForFocusedApp(_ focus: LiveFocus) {
+    let bundleId = focus.windowOrNil?.app.rawAppBundleId
+
+    // Determine what the auto-mode should be for this app
+    let targetAutoMode: String? = bundleId.flatMap { config.appModes[$0] }
+    lastAutoAppMode = targetAutoMode
+
+    // Only switch if not in manual override
+    if !isManualModeOverride {
+        let effectiveMode = targetAutoMode ?? mainModeId
+        if activeMode != effectiveMode {
+            Task {
+                try? await activateMode(effectiveMode)
+            }
         }
     }
 }
