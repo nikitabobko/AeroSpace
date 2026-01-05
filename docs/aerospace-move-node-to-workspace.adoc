@@ -50,7 +50,11 @@ Incompatible with `--stdin`
 // =========================================================== Arguments
 include::./util/conditional-arguments-header.adoc[]
 
-(next|prev):: Move window to next or prev workspace
+(next|prev):: Move window to next or prev workspace in *the list* -
+
+* If stdin is not TTY and stdin contains non whitespace characters then *the list* is taken from stdin
+* Otherwise, *the list* is defined as all workspaces on focused monitor in alphabetical order
+
 <workspace-name>:: Specifies workspace name where to move window to
 
 // end::body[]
