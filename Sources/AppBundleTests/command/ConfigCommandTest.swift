@@ -49,8 +49,8 @@ final class ConfigCommandTest: XCTestCase {
 
     func testMajorKeys() async {
         config.modes = [
-            "main": Mode(bindings: [:]),
-            "service": Mode(bindings: [:]),
+            "main": Mode(bindings: []),
+            "service": Mode(bindings: []),
         ]
         let result = await parseCommand("config --major-keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
@@ -63,8 +63,11 @@ final class ConfigCommandTest: XCTestCase {
 
     func testAllKeys() async {
         let command = parseCommand("focus left").cmdOrDie
-        let binding = HotkeyBinding(.maskAlternate, keyNotationToKeyCode["h"]!, command)
-        config.modes = ["main": Mode(bindings: [binding.descriptionWithKeyCode: binding])]
+        let binding = HotkeyBinding(
+            hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["h"]!, keyDescription: "h"),
+            commands: command,
+        )
+        config.modes = ["main": Mode(bindings: [binding])]
 
         let result = await parseCommand("config --all-keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
@@ -87,7 +90,7 @@ final class ConfigCommandTest: XCTestCase {
     }
 
     func testGetRoot_keys() async {
-        config.modes = ["main": Mode(bindings: [:])]
+        config.modes = ["main": Mode(bindings: [])]
         let result = await parseCommand("config --get . --keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
@@ -95,7 +98,7 @@ final class ConfigCommandTest: XCTestCase {
     }
 
     func testGetRoot_json() async {
-        config.modes = ["main": Mode(bindings: [:])]
+        config.modes = ["main": Mode(bindings: [])]
         let expectedMap: ConfigMapValue = .map(["mode": .map(["main": .map(["binding": .map([:])])])])
         let expectedJson = JSONEncoder.aeroSpaceDefault.encodeToString(expectedMap)
 
@@ -106,7 +109,7 @@ final class ConfigCommandTest: XCTestCase {
     }
 
     func testGetRoot_keysJson() async {
-        config.modes = ["main": Mode(bindings: [:])]
+        config.modes = ["main": Mode(bindings: [])]
         // --keys converts the map into an array of string-scalar keys, which is then JSON-encoded.
         let expected = JSONEncoder.aeroSpaceDefault.encodeToString(
             ConfigMapValue.array([.scalar(.string("mode"))]),
@@ -120,8 +123,8 @@ final class ConfigCommandTest: XCTestCase {
 
     func testGetMode_keys_sortedOutput() async {
         config.modes = [
-            "main": Mode(bindings: [:]),
-            "service": Mode(bindings: [:]),
+            "main": Mode(bindings: []),
+            "service": Mode(bindings: []),
         ]
         let result = await parseCommand("config --get mode --keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
@@ -132,8 +135,11 @@ final class ConfigCommandTest: XCTestCase {
 
     func testGetScalar() async {
         let command = parseCommand("focus left").cmdOrDie
-        let binding = HotkeyBinding(.maskAlternate, keyNotationToKeyCode["h"]!, command)
-        config.modes = ["main": Mode(bindings: [binding.descriptionWithKeyCode: binding])]
+        let binding = HotkeyBinding(
+            hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["h"]!, keyDescription: "h"),
+            commands: command,
+        )
+        config.modes = ["main": Mode(bindings: [binding])]
 
         let result = await parseCommand("config --get mode.main.binding.alt-h").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
@@ -143,8 +149,11 @@ final class ConfigCommandTest: XCTestCase {
 
     func testGetScalar_keys_fails() async {
         let command = parseCommand("focus left").cmdOrDie
-        let binding = HotkeyBinding(.maskAlternate, keyNotationToKeyCode["h"]!, command)
-        config.modes = ["main": Mode(bindings: [binding.descriptionWithKeyCode: binding])]
+        let binding = HotkeyBinding(
+            hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["h"]!, keyDescription: "h"),
+            commands: command,
+        )
+        config.modes = ["main": Mode(bindings: [binding])]
 
         let result = await parseCommand("config --get mode.main.binding.alt-h --keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
@@ -155,8 +164,11 @@ final class ConfigCommandTest: XCTestCase {
 
     func testGetScalar_dereference_fails() async {
         let command = parseCommand("focus left").cmdOrDie
-        let binding = HotkeyBinding(.maskAlternate, keyNotationToKeyCode["h"]!, command)
-        config.modes = ["main": Mode(bindings: [binding.descriptionWithKeyCode: binding])]
+        let binding = HotkeyBinding(
+            hotkey: Hotkey(modifiers: .maskAlternate, keyCode: keyNotationToKeyCode["h"]!, keyDescription: "h"),
+            commands: command,
+        )
+        config.modes = ["main": Mode(bindings: [binding])]
 
         let result = await parseCommand("config --get mode.main.binding.alt-h.foo").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
