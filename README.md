@@ -96,8 +96,8 @@ What stops us from 1.0 release:
 - [ ] https://github.com/nikitabobko/AeroSpace/issues/278 Implement shell-like combinators.
   Ignore a lot of crazy fuss in the issue,
   We are most probably going with the minimal approach to only introduce common shell-combinators: `||`, `&&`, `;` and `eval` command to send multiple commands in one go.
-- [ ] https://github.com/nikitabobko/AeroSpace/issues/1012 Investigate a possibility to use `CGEvent.tapCreate` API for global hotkeys
-  - [ ] https://github.com/nikitabobko/AeroSpace/issues/28 Maybe it will allow to distinguish left and right modifiers. Maybe not
+- [x] https://github.com/nikitabobko/AeroSpace/issues/1012 Investigate a possibility to use `CGEvent.tapCreate` API for global hotkeys
+  - [x] https://github.com/nikitabobko/AeroSpace/issues/28 Maybe it will allow to distinguish left and right modifiers. Maybe not
 
 Big and important issues which will go after 1.0 release:
 - [ ] https://github.com/nikitabobko/AeroSpace/issues/2 sticky windows
