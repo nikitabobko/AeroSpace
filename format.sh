@@ -19,3 +19,6 @@ if test $check_uncommitted_files -eq 1; then ./script/check-uncommitted-files.sh
 
 ./script/install-dep.sh --swiftlint
 ./.deps/swiftlint/swiftlint lint --quiet --fix
+
+./script/install-dep.sh --periphery
+./.deps/periphery/periphery scan --quiet --strict --exclude-targets ShellParserGenerated

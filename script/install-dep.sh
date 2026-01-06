@@ -9,6 +9,7 @@ swiftlint=0
 swiftformat=0
 xcodegen=0
 bundler=0
+periphery=0
 while test $# -gt 0; do
     case $1 in
         --antlr) antlr=1; shift ;;
@@ -17,6 +18,7 @@ while test $# -gt 0; do
         --xcodegen) xcodegen=1; shift ;;
         --swiftformat) swiftformat=1; shift ;;
         --bundler) bundler=1; shift ;;
+        --periphery) periphery=1; shift ;;
         --all) all=1; shift ;;
         *) echo "Unknown option $1"; exit 1 ;;
     esac
@@ -112,4 +114,14 @@ if test $all == 1 || test $swiftformat == 1; then
         https://github.com/nicklockwood/SwiftFormat/releases/download/$swiftformat_version/swiftformat.artifactbundle.zip \
         'd2ee571b3f15c173b1789b82b9fcf1e799cff66de0ae9f6839bd35aa8e9b9608  .deps/swiftformat/dist/zip.zip' \
         swiftformat.artifactbundle/swiftformat-$swiftformat_version-macos/bin/swiftformat
+fi
+
+if test $all == 1 || test $periphery == 1; then
+    # https://github.com/peripheryapp/periphery/releases
+    periphery_version=3.4.0
+    lazy-download-zip-and-link-bin \
+        periphery \
+        https://github.com/peripheryapp/periphery/releases/download/$periphery_version/periphery-$periphery_version.zip \
+        '7b356c45e2a7c24629d9e22d0d807d9335d3998f9cc6c4b0362e77fe4f5d816d  .deps/periphery/dist/zip.zip' \
+        periphery
 fi
