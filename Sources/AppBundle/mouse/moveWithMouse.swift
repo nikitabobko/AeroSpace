@@ -4,7 +4,7 @@ import Common
 @MainActor
 private var moveWithMouseTask: Task<(), any Error>? = nil
 
-func movedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
+func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableRawPointer?) {
     let windowId = ax.containingWindowId()
     let notif = notif as String
     Task { @MainActor in

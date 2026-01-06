@@ -60,11 +60,6 @@ final class MacWindow: Window {
         try await macApp.isDialogHeuristic(windowId, windowLevel)
     }
 
-    @MainActor
-    func getAxUiElementWindowType(_ windowLevel: MacOsWindowLevel?) async throws -> AxUiElementWindowType {
-        try await macApp.getAxUiElementWindowType(windowId, windowLevel)
-    }
-
     func dumpAxInfo() async throws -> [String: Json] {
         try await macApp.dumpWindowAxInfo(windowId: windowId)
     }
@@ -187,7 +182,7 @@ final class MacWindow: Window {
         macApp.setAxFrame(windowId, topLeft, size)
     }
 
-    override func setAxFrameBlocking(_ topLeft: CGPoint?, _ size: CGSize?) async throws {
+    func setAxFrameBlocking(_ topLeft: CGPoint?, _ size: CGSize?) async throws {
         try await macApp.setAxFrameBlocking(windowId, topLeft, size)
     }
 

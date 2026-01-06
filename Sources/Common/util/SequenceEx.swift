@@ -1,6 +1,7 @@
 import AppKit
 import OrderedCollections
 
+// periphery:ignore
 extension Sequence {
     public func filterNotNil<Unwrapped>() -> [Unwrapped] where Element == Unwrapped? {
         compactMap { $0 }
@@ -107,6 +108,7 @@ extension Sequence {
     }
 }
 
+// periphery:ignore
 extension Sequence where Self.Element: Comparable {
     public func minOrDie() -> Self.Element {
         self.min() ?? dieT("Empty sequence")

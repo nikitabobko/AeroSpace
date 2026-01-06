@@ -7,12 +7,12 @@ public protocol ArgParserProtocol<T>: Sendable {
     var keyPath: SendableWritableKeyPath<T, K> { get }
     var parse: ArgParserFun<K> { get }
 }
-public struct ArgParser<T: ConvenienceCopyable, K>: ArgParserProtocol {
-    public let keyPath: SendableWritableKeyPath<T, K>
-    public let parse: ArgParserFun<K>
-    public let argPlaceholderIfMandatory: String?
+struct ArgParser<T: ConvenienceCopyable, K>: ArgParserProtocol {
+    let keyPath: SendableWritableKeyPath<T, K>
+    let parse: ArgParserFun<K>
+    let argPlaceholderIfMandatory: String?
 
-    public init(
+    init(
         _ keyPath: SendableWritableKeyPath<T, K>,
         _ parse: @escaping ArgParserFun<K>,
         argPlaceholderIfMandatory: String? = nil,
@@ -68,7 +68,7 @@ public func parseEnum<T: RawRepresentable>(_ raw: String, _ _: T.Type) -> Parsed
     T(rawValue: raw).orFailure("Can't parse '\(raw)'.\nPossible values: \(T.unionLiteral)")
 }
 
-public func parseCardinalDirectionArg(i: ArgParserInput) -> ParsedCliArgs<CardinalDirection> {
+func parseCardinalDirectionArg(i: ArgParserInput) -> ParsedCliArgs<CardinalDirection> {
     .init(parseEnum(i.arg, CardinalDirection.self), advanceBy: 1)
 }
 

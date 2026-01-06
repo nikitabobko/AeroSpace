@@ -12,7 +12,6 @@ struct MenuBarLabel: View {
     let hStackSpacing = CGFloat(6)
     let itemSize = CGFloat(40)
     let itemBorderSize = CGFloat(3)
-    let itemPadding = CGFloat(8)
     let itemCornerRadius = CGFloat(6)
 
     private var finalColor: Color {

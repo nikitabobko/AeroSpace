@@ -27,7 +27,7 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
     public var target: Lateinit<MonitorTarget> = .uninitialized
 }
 
-public func parseMoveNodeToMonitorCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveNodeToMonitorCmdArgs> {
+func parseMoveNodeToMonitorCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveNodeToMonitorCmdArgs> {
     parseSpecificCmdArgs(MoveNodeToMonitorCmdArgs(rawArgs: args), args)
         .filter("--wrap-around is incompatible with <monitor-pattern> argument") { $0.wrapAround.implies(!$0.target.val.isPatterns) }
         .filter("--fail-if-noop is incompatible with \(MonitorTarget.casesExceptPatterns.joinedCliArgs)") { $0.failIfNoop.implies($0.target.val.isPatterns) }

@@ -107,7 +107,6 @@ public func throwT<T>(_ error: Error) throws -> T {
     throw error
 }
 
-public func printStacktrace() { print(getStringStacktrace()) }
 public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(separator: "\n") }
 
 @inlinable public func die(
@@ -177,10 +176,6 @@ extension Double {
     public var squared: Double { self * self }
 }
 
-extension Slice {
-    public func toArray() -> [Base.Element] { Array(self) }
-}
-
 extension URL {
     public func open(with url: URL) {
         NSWorkspace.shared.open([self], withApplicationAt: url, configuration: NSWorkspace.OpenConfiguration())
@@ -201,7 +196,7 @@ public func exitT<T>(stderrMsg message: String = "") -> T {
 }
 
 @inlinable
-public func allowOnlyCancellationError<T>(isolation: isolated (any Actor)? = #isolation, _ block: () async throws -> sending T) async throws -> sending T {
+public func allowOnlyCancellationError<T>(_ block: () async throws -> sending T) async throws -> sending T {
     do {
         return try await block()
     } catch let e as CancellationError {

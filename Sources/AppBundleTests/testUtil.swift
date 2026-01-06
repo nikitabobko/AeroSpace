@@ -22,7 +22,7 @@ func setUpWorkspacesForTests() {
     config.defaultRootContainerOrientation = .horizontal // Make default layout predictable
 
     // Don't create any bindings and workspaces for tests
-    config.modes = [mainModeId: Mode(name: nil, bindings: [:])]
+    config.modes = [mainModeId: Mode(bindings: [:])]
     config.persistentWorkspaces = []
 
     for workspace in Workspace.all {
@@ -50,14 +50,6 @@ extension ParsedCmd {
     }
 
     var cmdOrDie: T { cmdOrNil ?? dieT() }
-
-    var isHelp: Bool {
-        if case .help = self {
-            return true
-        } else {
-            return false
-        }
-    }
 }
 
 func testParseCommandFail(_ command: String, msg expected: String) {

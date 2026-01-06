@@ -18,7 +18,7 @@ public struct FullscreenCmdArgs: CmdArgs {
     public var failIfNoop: Bool = false
 }
 
-public func parseFullscreenCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FullscreenCmdArgs> {
+func parseFullscreenCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FullscreenCmdArgs> {
     parseSpecificCmdArgs(FullscreenCmdArgs(rawArgs: args), args)
         .filterNot("--no-outer-gaps is incompatible with 'off' argument") { $0.toggle == .off && $0.noOuterGaps }
         .filter("--fail-if-noop requires 'on' or 'off' argument") { $0.failIfNoop.implies($0.toggle == .on || $0.toggle == .off) }

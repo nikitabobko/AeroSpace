@@ -18,7 +18,7 @@ public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
     public var target: Lateinit<MonitorTarget> = .uninitialized
 }
 
-public func parseWorkspaceToMonitorCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveWorkspaceToMonitorCmdArgs> {
+func parseWorkspaceToMonitorCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveWorkspaceToMonitorCmdArgs> {
     parseSpecificCmdArgs(MoveWorkspaceToMonitorCmdArgs(rawArgs: args), args)
         .filter("--wrap-around is incompatible with <monitor-pattern> argument") {
             $0.wrapAround.implies(!$0.target.val.isPatterns)

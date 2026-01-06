@@ -112,10 +112,7 @@ open class TreeNode: Equatable, AeroAny {
         _parent.markAsMostRecentChild()
     }
 
-    var mostRecentChild: TreeNode? {
-        var iterator = _mruChildren.makeIterator()
-        return iterator.next() ?? children.last
-    }
+    var mostRecentChild: TreeNode? { _mruChildren.mostRecent ?? children.last }
 
     @discardableResult
     func unbindFromParent() -> BindingData {
@@ -135,6 +132,7 @@ open class TreeNode: Equatable, AeroAny {
     func cleanUserData<T>(key: TreeNodeUserDataKey<T>) -> T? { userData.removeValue(forKey: key.key) as! T? }
 }
 
+// periphery:ignore - Generic T is used
 struct TreeNodeUserDataKey<T> {
     let key: String
 }

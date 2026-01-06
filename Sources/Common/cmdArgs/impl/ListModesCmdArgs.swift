@@ -24,6 +24,6 @@ public struct ListModesCmdArgs: CmdArgs {
     public var outputOnlyCount: Bool = false
 }
 
-public func parseListModesCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListModesCmdArgs> {
+func parseListModesCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListModesCmdArgs> {
     parseSpecificCmdArgs(ListModesCmdArgs(rawArgs: args), args)
 }

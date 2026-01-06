@@ -1,6 +1,4 @@
 extension Optional {
-    public func orElse(_ other: () -> Wrapped) -> Wrapped { self ?? other() }
-
     public func orDie(
         _ message: String = "",
         file: String = #fileID,
@@ -19,35 +17,7 @@ extension Optional {
         }
     }
 
-    public func mapAsync<E, U>(_ transform: (Wrapped) async throws(E) -> U) async throws(E) -> U? where E: Error, U: ~Copyable {
-        if let ok = self {
-            return try await transform(ok)
-        } else {
-            return nil
-        }
-    }
-
-    // todo cleanup in future Swift versions
-    @MainActor
-    public func mapAsyncMainActor<E, U>(_ transform: @MainActor (Wrapped) async throws(E) -> U) async throws(E) -> U? where E: Error, U: ~Copyable {
-        if let ok = self {
-            return try await transform(ok)
-        } else {
-            return nil
-        }
-    }
-
-    public func flatMapAsync<E, U>(_ transform: (Wrapped) async throws(E) -> U?) async throws(E) -> U? where E: Error, U: ~Copyable {
-        if let ok = self {
-            return try await transform(ok)
-        } else {
-            return nil
-        }
-    }
-
-    // todo cleanup in future Swift versions
-    @MainActor
-    public func flatMapAsyncMainActor<E, U>(_ transform: @MainActor (Wrapped) async throws(E) -> U?) async throws(E) -> U? where E: Error, U: ~Copyable {
+    public func flatMapAsync<U>(_ transform: (Wrapped) async throws -> U?) async rethrows -> U? {
         if let ok = self {
             return try await transform(ok)
         } else {

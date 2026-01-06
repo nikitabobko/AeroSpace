@@ -26,9 +26,6 @@ final class TestApp: AbstractApp {
             _windows = newValue
         }
     }
-    @MainActor func detectNewWindowsAndGetIds() async throws -> [UInt32] {
-        return windows.map { $0.windowId }
-    }
 
     private var _focusedWindow: Window? = nil
     var focusedWindow: Window? {

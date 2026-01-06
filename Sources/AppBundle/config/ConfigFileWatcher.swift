@@ -23,6 +23,7 @@ private final class ConfigFileWatcher {
     }
 }
 
+// periphery:ignore - Suppres 'is assigned, but never used'. The object creation/destruction has side effects
 @MainActor private var currentWatcher: ConfigFileWatcher? = nil
 @MainActor private var debounceTask: Task<Void, any Error>? = nil
 

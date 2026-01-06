@@ -37,7 +37,7 @@ extension ConfigCmdArgs {
     }
 }
 
-public func parseConfigCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ConfigCmdArgs> {
+func parseConfigCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ConfigCmdArgs> {
     parseSpecificCmdArgs(ConfigCmdArgs(commonState: .init(args)), args)
         .flatMap { raw in
             var conflicting: Set<String> = []

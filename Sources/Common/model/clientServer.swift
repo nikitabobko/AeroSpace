@@ -26,7 +26,8 @@ public struct ServerAnswer: Codable, Sendable {
 // client-server socket API is not public yet.
 // Tracking issue for making it public: https://github.com/nikitabobko/AeroSpace/issues/1513
 public struct ClientRequest: Codable, Sendable, ConvenienceCopyable, Equatable {
-    public var command: String? = nil // Unused. keep it for API compatibility with old servers for a couple of version
+    // periphery:ignore - Unused. keep it for API compatibility with old servers for a couple of version
+    public var command: String? = nil
 
     public let args: [String]
     public let stdin: String
@@ -74,8 +75,8 @@ public struct ClientRequest: Codable, Sendable, ConvenienceCopyable, Equatable {
 }
 
 private struct ClientRequestData: Codable, Sendable {
-    public var args: [String]
-    public var stdin: String
-    public var windowId: UInt32??
-    public var workspace: String??
+    var args: [String]
+    var stdin: String
+    var windowId: UInt32??
+    var workspace: String??
 }

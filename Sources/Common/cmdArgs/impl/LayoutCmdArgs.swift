@@ -46,7 +46,7 @@ private func parseToggleBetween(input: ArgParserInput) -> ParsedCliArgs<[LayoutC
     return .succ(result, advanceBy: args.count)
 }
 
-public func parseLayoutCmdArgs(_ args: StrArrSlice) -> ParsedCmd<LayoutCmdArgs> {
+func parseLayoutCmdArgs(_ args: StrArrSlice) -> ParsedCmd<LayoutCmdArgs> {
     parseSpecificCmdArgs(LayoutCmdArgs(rawArgs: args), args).map {
         check(!$0.toggleBetween.val.isEmpty)
         return $0

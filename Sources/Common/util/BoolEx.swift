@@ -12,6 +12,7 @@ extension Bool {
         return false
     }
 
+    // periphery:ignore
     @inlinable
     public func orAsync(_ rhs: () async throws -> Bool) async rethrows -> Bool {
         if self {

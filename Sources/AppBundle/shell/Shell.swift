@@ -1,3 +1,4 @@
+// periphery:ignore:all - This is WIP file
 import Antlr4
 import Common
 import ShellParserGenerated
@@ -211,14 +212,6 @@ extension ShellParser.CmdContext? {
 }
 extension ShellParser.CmdsContext? {
     fileprivate func toTyped(_ msg: String) -> Result<RawShell, String> { orFailure(msg).toTyped() }
-}
-
-struct CmdOut {
-    let stdout: [String]
-    let exitCode: Int
-
-    static func succ(_ stdout: [String]) -> CmdOut { CmdOut(stdout: stdout, exitCode: 0) }
-    static func fail(_ stdout: [String]) -> CmdOut { CmdOut(stdout: stdout, exitCode: 1) }
 }
 
 // protocol AeroShell {
