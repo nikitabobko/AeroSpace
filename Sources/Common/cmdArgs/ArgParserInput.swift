@@ -1,4 +1,4 @@
-public struct ArgParserInput: ArgParserInputProtocol {
+struct ArgParserInput: ArgParserInputProtocol {
     /*conforms*/ let index: Int
     /*conforms*/ let args: StrArrSlice
 

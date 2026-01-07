@@ -1,6 +1,6 @@
-typealias SubArgParser<T: ConvenienceCopyable, K> = ArgParser<SubArgParserInput, T, K>
+typealias SubArgParser<Root: ConvenienceCopyable, Value> = ArgParser<SubArgParserInput, Root, Value>
 
-public struct SubArgParserInput: ArgParserInputProtocol, ConvenienceCopyable {
+struct SubArgParserInput: ArgParserInputProtocol, ConvenienceCopyable {
     let superArg: String
     /*conforms*/ let index: Int
     /*conforms*/ let args: StrArrSlice
@@ -35,17 +35,17 @@ func boolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool
     ArgParser(keyPath) { input in input.argOrNil == "no" ? .succ(false, advanceBy: 1) : .succ(true, advanceBy: 0) }
 }
 
-func singleValueSubArgParser<T: ConvenienceCopyable, V>(
-    _ keyPath: SendableWritableKeyPath<T, V?>,
+func singleValueSubArgParser<Root: ConvenienceCopyable, Value>(
+    _ keyPath: SendableWritableKeyPath<Root, Value?>,
     _ placeholder: String,
-    _ mapper: @escaping @Sendable (String) -> V?,
-) -> SubArgParser<T, V?> {
+    _ mapper: @escaping @Sendable (String) -> Value?,
+) -> SubArgParser<Root, Value?> {
     ArgParser(keyPath) { input in
         if let arg = input.nonFlagArgOrNil() {
-            if let value: V = mapper(arg) {
+            if let value: Value = mapper(arg) {
                 .succ(value, advanceBy: 1)
             } else {
-                .fail("Failed to convert '\(arg)' to '\(V.self)'", advanceBy: 1)
+                .fail("Failed to convert '\(arg)' to '\(Value.self)'", advanceBy: 1)
             }
         } else {
             .fail("'\(placeholder)' is mandatory", advanceBy: 0)

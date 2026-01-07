@@ -1,21 +1,21 @@
-public typealias SendableWritableKeyPath<A, B> = Sendable & WritableKeyPath<A, B>
-public typealias ArgParserFun<Input, K> = @Sendable (Input) -> ParsedCliArgs<K>
-public protocol ArgParserProtocol<Input, T>: Sendable {
+public typealias SendableWritableKeyPath<Root, Value> = Sendable & WritableKeyPath<Root, Value>
+public typealias ArgParserFun<Input, Value> = @Sendable (Input) -> ParsedCliArgs<Value>
+protocol ArgParserProtocol<Input, Root>: Sendable {
     associatedtype Input
-    associatedtype K
-    associatedtype T where T: ConvenienceCopyable
+    associatedtype Value
+    associatedtype Root: ConvenienceCopyable
     var argPlaceholderIfMandatory: String? { get }
-    var keyPath: SendableWritableKeyPath<T, K> { get }
-    var parse: ArgParserFun<Input, K> { get }
+    var keyPath: SendableWritableKeyPath<Root, Value> { get }
+    var parse: ArgParserFun<Input, Value> { get }
 }
-struct ArgParser<Input, T: ConvenienceCopyable, K>: ArgParserProtocol {
-    let keyPath: SendableWritableKeyPath<T, K>
-    let parse: ArgParserFun<Input, K>
+struct ArgParser<Input, Root: ConvenienceCopyable, Value>: ArgParserProtocol {
+    let keyPath: SendableWritableKeyPath<Root, Value>
+    let parse: ArgParserFun<Input, Value>
     let argPlaceholderIfMandatory: String?
 
     init(
-        _ keyPath: SendableWritableKeyPath<T, K>,
-        _ parse: @escaping ArgParserFun<Input, K>,
+        _ keyPath: SendableWritableKeyPath<Root, Value>,
+        _ parse: @escaping ArgParserFun<Input, Value>,
         argPlaceholderIfMandatory: String? = nil,
     ) {
         self.keyPath = keyPath
@@ -53,12 +53,12 @@ public struct ParsedCliArgs<T> {
     }
 }
 
-func newArgParser<T: ConvenienceCopyable, K>(
-    _ keyPath: SendableWritableKeyPath<T, Lateinit<K>> & Sendable,
-    _ parse: @escaping @Sendable (ArgParserInput) -> ParsedCliArgs<K>,
+func newArgParser<Root: ConvenienceCopyable, Value>(
+    _ keyPath: SendableWritableKeyPath<Root, Lateinit<Value>> & Sendable,
+    _ parse: @escaping @Sendable (ArgParserInput) -> ParsedCliArgs<Value>,
     mandatoryArgPlaceholder: String,
-) -> ArgParser<ArgParserInput, T, Lateinit<K>> {
-    let parseWrapper: @Sendable (ArgParserInput) -> ParsedCliArgs<Lateinit<K>> = {
+) -> ArgParser<ArgParserInput, Root, Lateinit<Value>> {
+    let parseWrapper: @Sendable (ArgParserInput) -> ParsedCliArgs<Lateinit<Value>> = {
         parse($0).map { .initialized($0) }
     }
     return ArgParser(keyPath, parseWrapper, argPlaceholderIfMandatory: mandatoryArgPlaceholder)

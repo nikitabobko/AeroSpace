@@ -50,18 +50,18 @@ extension CmdArgs {
     }
 }
 
-public struct CmdParser<T: ConvenienceCopyable>: Sendable {
+public struct CmdParser<Root: ConvenienceCopyable>: Sendable {
     let info: CmdStaticInfo
-    let flags: [String: any ArgParserProtocol<SubArgParserInput, T>]
-    let positionalArgs: [any ArgParserProtocol<ArgParserInput, T>]
+    let flags: [String: any ArgParserProtocol<SubArgParserInput, Root>]
+    let positionalArgs: [any ArgParserProtocol<ArgParserInput, Root>]
     let conflictingOptions: [Set<String>]
 
     init(
         kind: CmdKind,
         allowInConfig: Bool,
         help: String,
-        flags: [String: any ArgParserProtocol<SubArgParserInput, T>],
-        posArgs: [any ArgParserProtocol<ArgParserInput, T>],
+        flags: [String: any ArgParserProtocol<SubArgParserInput, Root>],
+        posArgs: [any ArgParserProtocol<ArgParserInput, Root>],
         conflictingOptions: [Set<String>] = [],
     ) {
         self.info = CmdStaticInfo(help: help, kind: kind, allowInConfig: allowInConfig)

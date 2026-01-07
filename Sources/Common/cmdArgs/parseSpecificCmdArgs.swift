@@ -89,7 +89,7 @@ public enum ParsedCmd<T: Sendable>: Sendable {
 }
 
 extension ArgParserProtocol {
-    fileprivate func transformRaw(_ raw: consuming T, _ index: inout Int, _ input: Input, _ errors: inout [String]) -> T {
+    fileprivate func transformRaw(_ raw: consuming Root, _ index: inout Int, _ input: Input, _ errors: inout [String]) -> Root {
         let parsedCliArgs = parse(input)
         index += parsedCliArgs.advanceBy
         if let value = parsedCliArgs.value.getOrNil(appendErrorTo: &errors) {
