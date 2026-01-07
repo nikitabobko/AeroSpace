@@ -1,4 +1,4 @@
-typealias SubArgParser<Root: ConvenienceCopyable, Value> = ArgParser<SubArgParserInput, Root, Value, ()>
+typealias SubArgParser<Root, Value> = ArgParser<SubArgParserInput, Root, Value, ()>
 
 func parseUInt32SubArg(i: SubArgParserInput) -> ParsedCliArgs<UInt32> {
     if let arg = i.nonFlagArgOrNil() {
@@ -15,19 +15,19 @@ func optionalWorkspaceFlag<T: CmdArgs>() -> SubArgParser<T, WorkspaceName?> {
     SubArgParser(\T.workspaceName, upcastArgParserFun(parseWorkspaceNameSubArg))
 }
 
-func trueBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
+func trueBoolFlag<T>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
     SubArgParser(keyPath) { _ in .succ(true, advanceBy: 0) }
 }
 
-func falseBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
+func falseBoolFlag<T>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
     SubArgParser(keyPath) { _ in .succ(false, advanceBy: 0) }
 }
 
-func boolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
+func boolFlag<T>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
     SubArgParser(keyPath) { input in input.argOrNil == "no" ? .succ(false, advanceBy: 1) : .succ(true, advanceBy: 0) }
 }
 
-func singleValueSubArgParser<Root: ConvenienceCopyable, Value>(
+func singleValueSubArgParser<Root, Value>(
     _ keyPath: SendableWritableKeyPath<Root, Value?>,
     _ placeholder: String,
     _ mapper: @escaping @Sendable (String) -> Value?,
@@ -45,11 +45,11 @@ func singleValueSubArgParser<Root: ConvenienceCopyable, Value>(
     }
 }
 
-func optionalTrueBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
+func optionalTrueBoolFlag<T>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
     SubArgParser(keyPath) { _ in .succ(true, advanceBy: 0) }
 }
 
-func optionalFalseBoolFlag<T: ConvenienceCopyable>(_ KeyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
+func optionalFalseBoolFlag<T>(_ KeyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
     SubArgParser(KeyPath) { _ in .succ(false, advanceBy: 0) }
 }
 

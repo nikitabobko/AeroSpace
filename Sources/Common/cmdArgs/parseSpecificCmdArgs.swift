@@ -11,7 +11,7 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
         if arg == "-h" || arg == "--help" {
             return .help(T.info.help)
         } else if arg.starts(with: "-") && !isResizeNegativeUnitsArg(raw, arg: arg) {
-            if let optionParser: any ArgParserProtocol<SubArgParserInput, T, ()> = T.parser.flags[arg] {
+            if let optionParser = T.parser.flags[arg] {
                 index += 1
                 if !options.insert(arg).inserted {
                     errors.append("Duplicated option \(arg.singleQuoted)")
@@ -88,7 +88,7 @@ public enum ParsedCmd<T: Sendable>: Sendable {
     }
 }
 
-extension ArgParserProtocol {
+extension ArgParserProtocol where Root: ConvenienceCopyable {
     fileprivate func transformRaw(_ raw: consuming Root, _ index: inout Int, _ input: Input, _ errors: inout [String]) -> Root {
         let parsedCliArgs = parse(input)
         index += parsedCliArgs.advanceBy

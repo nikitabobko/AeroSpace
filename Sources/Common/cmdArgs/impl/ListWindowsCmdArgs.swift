@@ -79,10 +79,10 @@ func parseListWindowsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWindowsCmdArg
         .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
 }
 
-func formatParser<T: ConvenienceCopyable>(
-    _ keyPath: SendableWritableKeyPath<T, [StringInterToken]>,
+func formatParser<Root>(
+    _ keyPath: SendableWritableKeyPath<Root, [StringInterToken]>,
     for kind: AeroObjKind,
-) -> SubArgParser<T, [StringInterToken]> {
+) -> SubArgParser<Root, [StringInterToken]> {
     return SubArgParser(keyPath) { input in
         if let arg = input.nonFlagArgOrNil() {
             return switch arg.interpolationTokens(interpolationChar: "%") {

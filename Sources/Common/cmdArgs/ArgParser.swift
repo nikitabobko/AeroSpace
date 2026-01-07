@@ -3,13 +3,13 @@ typealias ArgParserFun<Input, Value> = @Sendable (Input) -> ParsedCliArgs<Value>
 protocol ArgParserProtocol<Input, Root, Context>: Sendable {
     associatedtype Input
     associatedtype Value
-    associatedtype Root: ConvenienceCopyable
+    associatedtype Root
     associatedtype Context
     var context: Context { get }
     var keyPath: SendableWritableKeyPath<Root, Value> { get }
     var parse: ArgParserFun<Input, Value> { get }
 }
-struct ArgParser<Input, Root: ConvenienceCopyable, Value, Context: Sendable>: ArgParserProtocol {
+struct ArgParser<Input, Root, Value, Context: Sendable>: ArgParserProtocol {
     let keyPath: SendableWritableKeyPath<Root, Value>
     let parse: ArgParserFun<Input, Value>
     let context: Context
@@ -26,21 +26,21 @@ struct ArgParser<Input, Root: ConvenienceCopyable, Value, Context: Sendable>: Ar
 
     init(
         _ keyPath: SendableWritableKeyPath<Root, Value>,
-        _ parse: @escaping ArgParserFun<Input, Value>,
-    ) where Context == () {
+        _ parse: @escaping ArgParserFun<SubArgParserInput, Value>,
+    ) where Context == (), Input == SubArgParserInput {
         self.init(keyPath, parse, context: ())
     }
 
     init(
         _ keyPath: SendableWritableKeyPath<Root, Value>,
-        _ parse: @escaping ArgParserFun<Input, Value>,
+        _ parse: @escaping ArgParserFun<PosArgParserInput, Value>,
         argPlaceholderIfMandatory: String? = nil,
-    ) where Context == PosArgParserContext {
+    ) where Context == PosArgParserContext, Input == PosArgParserInput {
         self.init(keyPath, parse, context: PosArgParserContext(argPlaceholderIfMandatory: argPlaceholderIfMandatory))
     }
 }
 
-typealias PosArgParser<Root: ConvenienceCopyable, Value> = ArgParser<PosArgParserInput, Root, Value, PosArgParserContext>
+typealias PosArgParser<Root, Value> = ArgParser<PosArgParserInput, Root, Value, PosArgParserContext>
 
 struct PosArgParserContext {
     let argPlaceholderIfMandatory: String?
@@ -75,8 +75,8 @@ public struct ParsedCliArgs<T> {
     }
 }
 
-func newMandatoryPosArgParser<Root: ConvenienceCopyable, Value>(
-    _ keyPath: SendableWritableKeyPath<Root, Lateinit<Value>> & Sendable,
+func newMandatoryPosArgParser<Root, Value>(
+    _ keyPath: SendableWritableKeyPath<Root, Lateinit<Value>>,
     _ parse: @escaping @Sendable (PosArgParserInput) -> ParsedCliArgs<Value>,
     placeholder: String,
 ) -> PosArgParser<Root, Lateinit<Value>> {
