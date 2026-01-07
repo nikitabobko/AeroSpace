@@ -9,7 +9,7 @@ public struct MacosNativeFullscreenCmdArgs: CmdArgs {
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
             "--window-id": optionalWindowIdFlag(),
         ],
-        posArgs: [PosArgParser(\.toggle, parseToggleEnum)],
+        posArgs: [ArgParser(\.toggle, parseToggleEnum)],
     )
 
     public var toggle: ToggleEnum = .toggle

@@ -14,8 +14,8 @@ public struct ListWindowsCmdArgs: CmdArgs {
 
             // Filtering flags
             "--focused": trueBoolFlag(\.filteringOptions.focused),
-            "--monitor": SubArgParser(\.filteringOptions.monitors, parseMonitorIds),
-            "--workspace": SubArgParser(\.filteringOptions.workspaces, parseWorkspaces),
+            "--monitor": ArgParser(\.filteringOptions.monitors, parseMonitorIds),
+            "--workspace": ArgParser(\.filteringOptions.workspaces, parseWorkspaces),
             "--pid": singleValueSubArgParser(\.filteringOptions.pidFilter, "<pid>", Int32.init),
             "--app-bundle-id": singleValueSubArgParser(\.filteringOptions.appIdFilter, "<app-bundle-id>") { $0 },
 
@@ -83,7 +83,7 @@ func formatParser<Root>(
     _ keyPath: SendableWritableKeyPath<Root, [StringInterToken]>,
     for kind: AeroObjKind,
 ) -> SubArgParser<Root, [StringInterToken]> {
-    return SubArgParser(keyPath) { input in
+    return ArgParser(keyPath) { input in
         if let arg = input.nonFlagArgOrNil() {
             return switch arg.interpolationTokens(interpolationChar: "%") {
                 case .success(let tokens): .succ(tokens, advanceBy: 1)

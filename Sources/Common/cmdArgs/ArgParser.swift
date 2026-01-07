@@ -83,7 +83,7 @@ func newMandatoryPosArgParser<Root, Value>(
     let parseWrapper: @Sendable (PosArgParserInput) -> ParsedCliArgs<Lateinit<Value>> = {
         parse($0).map { .initialized($0) }
     }
-    return PosArgParser(
+    return ArgParser(
         keyPath,
         parseWrapper,
         context: PosArgParserContext(argPlaceholderIfMandatory: placeholder),

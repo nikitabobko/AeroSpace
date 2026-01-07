@@ -7,14 +7,14 @@ public struct FocusCmdArgs: CmdArgs {
         help: focus_help_generated,
         flags: [
             "--ignore-floating": falseBoolFlag(\.floatingAsTiling),
-            "--window-id": SubArgParser(\.windowId, upcastArgParserFun(parseUInt32SubArg)),
-            "--dfs-index": SubArgParser(\.dfsIndex, upcastArgParserFun(parseUInt32SubArg)),
+            "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseUInt32SubArg)),
+            "--dfs-index": ArgParser(\.dfsIndex, upcastArgParserFun(parseUInt32SubArg)),
 
-            "--boundaries": SubArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
-            "--boundaries-action": SubArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
+            "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
+            "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
             "--wrap-around": trueBoolFlag(\.wrapAroundAlias),
         ],
-        posArgs: [PosArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
+        posArgs: [ArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
         conflictingOptions: [
             ["--wrap-around", "--boundaries-action"],
             ["--wrap-around", "--boundaries"],
