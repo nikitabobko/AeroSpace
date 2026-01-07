@@ -22,8 +22,8 @@ func upcastSubArgParserFun<T>(_ fun: @escaping SubArgParserFun<T>) -> SubArgPars
 
 public struct SubArgParserInput: ArgParserInputProtocol {
     let superArg: String
-    let index: Int
-    let args: StrArrSlice
+    /*conforms*/ let index: Int
+    /*conforms*/ let args: StrArrSlice
 
     var argOrNil: String? { args.getOrNil(atIndex: index) }
 }

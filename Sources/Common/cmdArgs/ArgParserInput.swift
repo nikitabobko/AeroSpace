@@ -1,6 +1,6 @@
 public struct ArgParserInput: ArgParserInputProtocol {
-    let index: Int
-    let args: StrArrSlice
+    /*conforms*/ let index: Int
+    /*conforms*/ let args: StrArrSlice
 
     var arg: String { args[index] }
 }
