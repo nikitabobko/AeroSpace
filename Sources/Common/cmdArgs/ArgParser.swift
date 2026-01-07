@@ -75,10 +75,10 @@ public struct ParsedCliArgs<T> {
     }
 }
 
-func newArgParser<Root: ConvenienceCopyable, Value>(
+func newMandatoryPosArgParser<Root: ConvenienceCopyable, Value>(
     _ keyPath: SendableWritableKeyPath<Root, Lateinit<Value>> & Sendable,
     _ parse: @escaping @Sendable (PosArgParserInput) -> ParsedCliArgs<Value>,
-    mandatoryArgPlaceholder: String,
+    placeholder: String,
 ) -> PosArgParser<Root, Lateinit<Value>> {
     let parseWrapper: @Sendable (PosArgParserInput) -> ParsedCliArgs<Lateinit<Value>> = {
         parse($0).map { .initialized($0) }
@@ -86,7 +86,7 @@ func newArgParser<Root: ConvenienceCopyable, Value>(
     return PosArgParser(
         keyPath,
         parseWrapper,
-        context: PosArgParserContext(argPlaceholderIfMandatory: mandatoryArgPlaceholder),
+        context: PosArgParserContext(argPlaceholderIfMandatory: placeholder),
     )
 }
 

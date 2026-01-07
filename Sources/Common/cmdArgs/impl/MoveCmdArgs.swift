@@ -10,7 +10,7 @@ public struct MoveCmdArgs: CmdArgs {
             "--boundaries": SubArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
             "--boundaries-action": SubArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
         ],
-        posArgs: [newArgParser(\.direction, parseCardinalDirectionArg, mandatoryArgPlaceholder: CardinalDirection.unionLiteral)],
+        posArgs: [newMandatoryPosArgParser(\.direction, parseCardinalDirectionArg, placeholder: CardinalDirection.unionLiteral)],
     )
 
     public var direction: Lateinit<CardinalDirection> = .uninitialized

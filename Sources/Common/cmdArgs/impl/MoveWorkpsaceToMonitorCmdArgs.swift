@@ -10,7 +10,7 @@ public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
             "--workspace": optionalWorkspaceFlag(),
         ],
         posArgs: [
-            newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs),
+            newMandatoryPosArgParser(\.target, parseTarget, placeholder: MonitorTarget.cases.joinedCliArgs),
         ],
     )
 

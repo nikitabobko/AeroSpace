@@ -8,7 +8,7 @@ public struct FocusMonitorCmdArgs: CmdArgs {
         flags: [
             "--wrap-around": trueBoolFlag(\.wrapAround),
         ],
-        posArgs: [newArgParser(\.target, parseTarget, mandatoryArgPlaceholder: MonitorTarget.cases.joinedCliArgs)],
+        posArgs: [newMandatoryPosArgParser(\.target, parseTarget, placeholder: MonitorTarget.cases.joinedCliArgs)],
     )
 
     public var wrapAround: Bool = false

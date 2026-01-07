@@ -8,7 +8,7 @@ public struct LayoutCmdArgs: CmdArgs {
         flags: [
             "--window-id": optionalWindowIdFlag(),
         ],
-        posArgs: [newArgParser(\.toggleBetween, parseToggleBetween, mandatoryArgPlaceholder: LayoutDescription.unionLiteral)],
+        posArgs: [newMandatoryPosArgParser(\.toggleBetween, parseToggleBetween, placeholder: LayoutDescription.unionLiteral)],
     )
 
     public var toggleBetween: Lateinit<[LayoutDescription]> = .uninitialized

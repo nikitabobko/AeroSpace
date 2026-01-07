@@ -8,7 +8,7 @@ public struct SplitCmdArgs: CmdArgs {
         flags: [
             "--window-id": optionalWindowIdFlag(),
         ],
-        posArgs: [newArgParser(\.arg, parseSplitArg, mandatoryArgPlaceholder: SplitArg.unionLiteral)],
+        posArgs: [newMandatoryPosArgParser(\.arg, parseSplitArg, placeholder: SplitArg.unionLiteral)],
     )
 
     public var arg: Lateinit<SplitArg> = .uninitialized

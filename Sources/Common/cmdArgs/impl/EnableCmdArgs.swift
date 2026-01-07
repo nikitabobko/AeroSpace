@@ -8,7 +8,7 @@ public struct EnableCmdArgs: CmdArgs {
         flags: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],
-        posArgs: [newArgParser(\.targetState, parseState, mandatoryArgPlaceholder: EnableCmdArgs.State.unionLiteral)],
+        posArgs: [newMandatoryPosArgParser(\.targetState, parseState, placeholder: EnableCmdArgs.State.unionLiteral)],
     )
     public var targetState: Lateinit<State> = .uninitialized
     public var failIfNoop: Bool = false

@@ -8,7 +8,7 @@ public struct VolumeCmdArgs: CmdArgs {
         flags: [
             "--no-gui": falseBoolFlag(\.gui),
         ],
-        posArgs: [newArgParser(\.action, parseVolumeAction, mandatoryArgPlaceholder: VolumeAction.argsUnion)],
+        posArgs: [newMandatoryPosArgParser(\.action, parseVolumeAction, placeholder: VolumeAction.argsUnion)],
     )
 
     public var gui: Bool = true
