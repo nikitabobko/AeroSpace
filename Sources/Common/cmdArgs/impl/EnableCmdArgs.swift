@@ -28,6 +28,6 @@ func parseEnableCmdArgs(_ args: StrArrSlice) -> ParsedCmd<EnableCmdArgs> {
         .filterNot("--fail-if-noop is incompatible with 'toggle' argument") { $0.targetState.val == .toggle && $0.failIfNoop }
 }
 
-private func parseState(i: ArgParserInput) -> ParsedCliArgs<EnableCmdArgs.State> {
+private func parseState(i: PosArgParserInput) -> ParsedCliArgs<EnableCmdArgs.State> {
     .init(parseEnum(i.arg, EnableCmdArgs.State.self), advanceBy: 1)
 }

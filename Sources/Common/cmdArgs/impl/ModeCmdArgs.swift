@@ -12,4 +12,4 @@ public struct ModeCmdArgs: CmdArgs {
     public var targetMode: Lateinit<String> = .uninitialized
 }
 
-func consumeStrCliArg(i: ArgParserInput) -> ParsedCliArgs<String> { .succ(i.arg, advanceBy: 1) }
+func consumeStrCliArg(i: PosArgParserInput) -> ParsedCliArgs<String> { .succ(i.arg, advanceBy: 1) }

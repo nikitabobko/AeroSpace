@@ -10,7 +10,7 @@ public struct FullscreenCmdArgs: CmdArgs {
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
             "--window-id": optionalWindowIdFlag(),
         ],
-        posArgs: [ArgParser(\.toggle, parseToggleEnum)],
+        posArgs: [PosArgParser(\.toggle, parseToggleEnum)],
     )
 
     public var toggle: ToggleEnum = .toggle

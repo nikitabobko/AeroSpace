@@ -1,27 +1,49 @@
 public typealias SendableWritableKeyPath<Root, Value> = Sendable & WritableKeyPath<Root, Value>
-public typealias ArgParserFun<Input, Value> = @Sendable (Input) -> ParsedCliArgs<Value>
-protocol ArgParserProtocol<Input, Root>: Sendable {
+typealias ArgParserFun<Input, Value> = @Sendable (Input) -> ParsedCliArgs<Value>
+protocol ArgParserProtocol<Input, Root, Context>: Sendable {
     associatedtype Input
     associatedtype Value
     associatedtype Root: ConvenienceCopyable
-    var argPlaceholderIfMandatory: String? { get }
+    associatedtype Context
+    var context: Context { get }
     var keyPath: SendableWritableKeyPath<Root, Value> { get }
     var parse: ArgParserFun<Input, Value> { get }
 }
-struct ArgParser<Input, Root: ConvenienceCopyable, Value>: ArgParserProtocol {
+struct ArgParser<Input, Root: ConvenienceCopyable, Value, Context: Sendable>: ArgParserProtocol {
     let keyPath: SendableWritableKeyPath<Root, Value>
     let parse: ArgParserFun<Input, Value>
-    let argPlaceholderIfMandatory: String?
+    let context: Context
+
+    init(
+        _ keyPath: SendableWritableKeyPath<Root, Value>,
+        _ parse: @escaping ArgParserFun<Input, Value>,
+        context: Context,
+    ) {
+        self.keyPath = keyPath
+        self.parse = parse
+        self.context = context
+    }
+
+    init(
+        _ keyPath: SendableWritableKeyPath<Root, Value>,
+        _ parse: @escaping ArgParserFun<Input, Value>,
+    ) where Context == () {
+        self.init(keyPath, parse, context: ())
+    }
 
     init(
         _ keyPath: SendableWritableKeyPath<Root, Value>,
         _ parse: @escaping ArgParserFun<Input, Value>,
         argPlaceholderIfMandatory: String? = nil,
-    ) {
-        self.keyPath = keyPath
-        self.parse = parse
-        self.argPlaceholderIfMandatory = argPlaceholderIfMandatory
+    ) where Context == PosArgParserContext {
+        self.init(keyPath, parse, context: PosArgParserContext(argPlaceholderIfMandatory: argPlaceholderIfMandatory))
     }
+}
+
+typealias PosArgParser<Root: ConvenienceCopyable, Value> = ArgParser<PosArgParserInput, Root, Value, PosArgParserContext>
+
+struct PosArgParserContext {
+    let argPlaceholderIfMandatory: String?
 }
 
 public struct ParsedCliArgs<T> {
@@ -55,13 +77,17 @@ public struct ParsedCliArgs<T> {
 
 func newArgParser<Root: ConvenienceCopyable, Value>(
     _ keyPath: SendableWritableKeyPath<Root, Lateinit<Value>> & Sendable,
-    _ parse: @escaping @Sendable (ArgParserInput) -> ParsedCliArgs<Value>,
+    _ parse: @escaping @Sendable (PosArgParserInput) -> ParsedCliArgs<Value>,
     mandatoryArgPlaceholder: String,
-) -> ArgParser<ArgParserInput, Root, Lateinit<Value>> {
-    let parseWrapper: @Sendable (ArgParserInput) -> ParsedCliArgs<Lateinit<Value>> = {
+) -> PosArgParser<Root, Lateinit<Value>> {
+    let parseWrapper: @Sendable (PosArgParserInput) -> ParsedCliArgs<Lateinit<Value>> = {
         parse($0).map { .initialized($0) }
     }
-    return ArgParser(keyPath, parseWrapper, argPlaceholderIfMandatory: mandatoryArgPlaceholder)
+    return PosArgParser(
+        keyPath,
+        parseWrapper,
+        context: PosArgParserContext(argPlaceholderIfMandatory: mandatoryArgPlaceholder),
+    )
 }
 
 // todo reuse in config
@@ -69,11 +95,11 @@ public func parseEnum<T: RawRepresentable>(_ raw: String, _ _: T.Type) -> Parsed
     T(rawValue: raw).orFailure("Can't parse '\(raw)'.\nPossible values: \(T.unionLiteral)")
 }
 
-func parseCardinalDirectionArg(i: ArgParserInput) -> ParsedCliArgs<CardinalDirection> {
+func parseCardinalDirectionArg(i: PosArgParserInput) -> ParsedCliArgs<CardinalDirection> {
     .init(parseEnum(i.arg, CardinalDirection.self), advanceBy: 1)
 }
 
-func parseCardinalOrDfsDirection(i: ArgParserInput) -> ParsedCliArgs<CardinalOrDfsDirection> {
+func parseCardinalOrDfsDirection(i: PosArgParserInput) -> ParsedCliArgs<CardinalOrDfsDirection> {
     .init(parseEnum(i.arg, CardinalOrDfsDirection.self), advanceBy: 1)
 }
 

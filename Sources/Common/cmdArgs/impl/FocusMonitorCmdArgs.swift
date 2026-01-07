@@ -20,7 +20,7 @@ func parseFocusMonitorCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusMonitorCmdA
         .filter("--wrap-around is incompatible with <monitor-pattern> argument") { !$0.wrapAround || !$0.target.val.isPatterns }
 }
 
-func parseTarget(i: ArgParserInput) -> ParsedCliArgs<MonitorTarget> {
+func parseTarget(i: PosArgParserInput) -> ParsedCliArgs<MonitorTarget> {
     switch i.arg {
         case "next":
             return .succ(.relative(.next), advanceBy: 1)

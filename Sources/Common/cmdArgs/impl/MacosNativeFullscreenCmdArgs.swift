@@ -9,7 +9,7 @@ public struct MacosNativeFullscreenCmdArgs: CmdArgs {
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
             "--window-id": optionalWindowIdFlag(),
         ],
-        posArgs: [ArgParser(\.toggle, parseToggleEnum)],
+        posArgs: [PosArgParser(\.toggle, parseToggleEnum)],
     )
 
     public var toggle: ToggleEnum = .toggle
@@ -25,7 +25,7 @@ public enum ToggleEnum: Sendable {
     case on, off, toggle
 }
 
-func parseToggleEnum(i: ArgParserInput) -> ParsedCliArgs<ToggleEnum> {
+func parseToggleEnum(i: PosArgParserInput) -> ParsedCliArgs<ToggleEnum> {
     switch i.arg {
         case "on": .succ(.on, advanceBy: 1)
         case "off": .succ(.off, advanceBy: 1)

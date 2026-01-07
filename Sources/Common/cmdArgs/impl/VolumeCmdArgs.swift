@@ -22,7 +22,7 @@ public enum VolumeAction: Equatable, Sendable {
     static let argsUnion: String = "(up|down|mute-toggle|mute-on|mute-off|set)"
 }
 
-func parseVolumeAction(i: ArgParserInput) -> ParsedCliArgs<VolumeAction> {
+func parseVolumeAction(i: PosArgParserInput) -> ParsedCliArgs<VolumeAction> {
     switch i.arg {
         case "up": return .succ(.up, advanceBy: 1)
         case "down": return .succ(.down, advanceBy: 1)
