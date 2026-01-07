@@ -1,7 +1,7 @@
 public struct MacosNativeFullscreenCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .macosNativeFullscreen,
         allowInConfig: true,
         help: macos_native_fullscreen_help_generated,

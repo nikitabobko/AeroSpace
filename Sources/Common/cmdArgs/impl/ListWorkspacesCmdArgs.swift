@@ -5,7 +5,7 @@ let _monitors = "\(onitor)..."
 
 public struct ListWorkspacesCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .listWorkspaces,
         allowInConfig: false,
         help: list_workspaces_help_generated,
