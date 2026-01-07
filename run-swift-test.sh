@@ -2,7 +2,8 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-if swift test; then
+# Avoid date with file coordinates misinterpretation by vim via sed
+if swift test | sed -E '/ [[:digit:]]+(:[[:digit:]]+)+/s/:/;/g'; then
     echo "✅ Swift tests have passed successfully"
 else
     echo "❌ Swift tests have failed"
