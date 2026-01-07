@@ -9,6 +9,12 @@ extension Workspace {
 
 extension TilingContainer {
     @MainActor fileprivate func unbindEmptyAndAutoFlatten() {
+        // Don't flatten if the only child is a window in native fullscreen - preserve tree structure
+        if let child = children.singleOrNil(),
+           let window = child as? Window,
+           window.isInMacosNativeFullscreen {
+            return
+        }
         if let child = children.singleOrNil(), config.enableNormalizationFlattenContainers && (child is TilingContainer || !isRootContainer) {
             child.unbindFromParent()
             let mru = parent?.mostRecentChild

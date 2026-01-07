@@ -8,6 +8,9 @@ open class Window: TreeNode, Hashable {
     var isFullscreen: Bool = false
     var noOuterGapsInFullscreen: Bool = false
     var layoutReason: LayoutReason = .standard
+    /// When true, the window is in macOS native fullscreen and should be skipped during layout.
+    /// The window stays in the tree to preserve its position.
+    var isInMacosNativeFullscreen: Bool = false
 
     @MainActor
     init(id: UInt32, _ app: any AbstractApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {

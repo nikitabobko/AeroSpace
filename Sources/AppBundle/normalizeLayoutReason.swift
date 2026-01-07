@@ -31,8 +31,8 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) asy
             case .standard:
                 guard let parent = window.parent else { continue }
                 if isMacosFullscreen {
-                    window.layoutReason = .macos(prevParentKind: parent.kind)
-                    window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
+                    // Keep window in tree, just mark it as fullscreen so layout skips it
+                    window.isInMacosNativeFullscreen = true
                 } else if isMacosMinimized {
                     window.layoutReason = .macos(prevParentKind: parent.kind)
                     window.bind(to: macosMinimizedWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
@@ -44,6 +44,10 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) asy
                 if !isMacosFullscreen && !isMacosMinimized && !isMacosWindowOfHiddenApp {
                     try await exitMacOsNativeUnconventionalState(window: window, prevParentKind: prevParentKind, workspace: workspace)
                 }
+        }
+        // Handle fullscreen flag separately - clear it when window is no longer in fullscreen
+        if window.isInMacosNativeFullscreen && !isMacosFullscreen {
+            window.isInMacosNativeFullscreen = false
         }
     }
 }

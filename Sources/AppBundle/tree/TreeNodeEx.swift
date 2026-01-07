@@ -46,7 +46,11 @@ extension TreeNode {
     }
 
     var mostRecentWindowRecursive: Window? {
-        self as? Window ?? mostRecentChild?.mostRecentWindowRecursive
+        if let window = self as? Window {
+            // Skip windows in native fullscreen - they're not visible in the tiling layout
+            return window.isInMacosNativeFullscreen ? nil : window
+        }
+        return mostRecentChild?.mostRecentWindowRecursive
     }
 
     var anyLeafWindowRecursive: Window? {
