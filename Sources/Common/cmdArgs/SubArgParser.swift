@@ -1,26 +1,6 @@
-public typealias SubArgParserFun<K> = @Sendable (SubArgParserInput) -> ParsedCliArgs<K>
-public protocol SubArgParserProtocol<T>: Sendable, AeroAny {
-    associatedtype K
-    associatedtype T where T: ConvenienceCopyable
-    var keyPath: SendableWritableKeyPath<T, K> { get }
-    var parse: SubArgParserFun<K> { get }
-}
-struct SubArgParser<T: ConvenienceCopyable, K>: SubArgParserProtocol {
-    let keyPath: SendableWritableKeyPath<T, K>
-    let parse: SubArgParserFun<K>
+typealias SubArgParser<T: ConvenienceCopyable, K> = ArgParser<SubArgParserInput, T, K>
 
-    init(
-        _ keyPath: SendableWritableKeyPath<T, K>,
-        _ parse: @escaping SubArgParserFun<K>,
-    ) {
-        self.keyPath = keyPath
-        self.parse = parse
-    }
-}
-
-func upcastSubArgParserFun<T>(_ fun: @escaping SubArgParserFun<T>) -> SubArgParserFun<T?> { { fun($0).map { $0 } } }
-
-public struct SubArgParserInput: ArgParserInputProtocol {
+public struct SubArgParserInput: ArgParserInputProtocol, ConvenienceCopyable {
     let superArg: String
     /*conforms*/ let index: Int
     /*conforms*/ let args: StrArrSlice
@@ -37,22 +17,22 @@ func parseUInt32SubArg(i: SubArgParserInput) -> ParsedCliArgs<UInt32> {
 }
 
 func optionalWindowIdFlag<T: CmdArgs>() -> SubArgParser<T, UInt32?> {
-    SubArgParser(\T.windowId, upcastSubArgParserFun(parseUInt32SubArg))
+    ArgParser(\T.windowId, upcastArgParserFun(parseUInt32SubArg))
 }
 func optionalWorkspaceFlag<T: CmdArgs>() -> SubArgParser<T, WorkspaceName?> {
-    SubArgParser(\T.workspaceName, upcastSubArgParserFun(parseWorkspaceNameSubArg))
+    ArgParser(\T.workspaceName, upcastArgParserFun(parseWorkspaceNameSubArg))
 }
 
 func trueBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
-    SubArgParser(keyPath) { _ in .succ(true, advanceBy: 0) }
+    ArgParser(keyPath) { _ in .succ(true, advanceBy: 0) }
 }
 
 func falseBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
-    SubArgParser(keyPath) { _ in .succ(false, advanceBy: 0) }
+    ArgParser(keyPath) { _ in .succ(false, advanceBy: 0) }
 }
 
 func boolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
-    SubArgParser(keyPath) { input in input.argOrNil == "no" ? .succ(false, advanceBy: 1) : .succ(true, advanceBy: 0) }
+    ArgParser(keyPath) { input in input.argOrNil == "no" ? .succ(false, advanceBy: 1) : .succ(true, advanceBy: 0) }
 }
 
 func singleValueSubArgParser<T: ConvenienceCopyable, V>(
@@ -60,7 +40,7 @@ func singleValueSubArgParser<T: ConvenienceCopyable, V>(
     _ placeholder: String,
     _ mapper: @escaping @Sendable (String) -> V?,
 ) -> SubArgParser<T, V?> {
-    SubArgParser(keyPath) { input in
+    ArgParser(keyPath) { input in
         if let arg = input.nonFlagArgOrNil() {
             if let value: V = mapper(arg) {
                 .succ(value, advanceBy: 1)
@@ -74,11 +54,11 @@ func singleValueSubArgParser<T: ConvenienceCopyable, V>(
 }
 
 func optionalTrueBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
-    SubArgParser(keyPath) { _ in .succ(true, advanceBy: 0) }
+    ArgParser(keyPath) { _ in .succ(true, advanceBy: 0) }
 }
 
 func optionalFalseBoolFlag<T: ConvenienceCopyable>(_ KeyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
-    SubArgParser(KeyPath) { _ in .succ(false, advanceBy: 0) }
+    ArgParser(KeyPath) { _ in .succ(false, advanceBy: 0) }
 }
 
 func parseWorkspaceNameSubArg(i: SubArgParserInput) -> ParsedCliArgs<WorkspaceName> {

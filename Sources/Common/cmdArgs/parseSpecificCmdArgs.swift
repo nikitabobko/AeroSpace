@@ -11,18 +11,18 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
         if arg == "-h" || arg == "--help" {
             return .help(T.info.help)
         } else if arg.starts(with: "-") && !isResizeNegativeUnitsArg(raw, arg: arg) {
-            if let optionParser: any SubArgParserProtocol<T> = T.parser.flags[arg] {
+            if let optionParser: any ArgParserProtocol<SubArgParserInput, T> = T.parser.flags[arg] {
                 index += 1
                 if !options.insert(arg).inserted {
                     errors.append("Duplicated option \(arg.singleQuoted)")
                 }
-                raw = optionParser.transformRaw(raw, superArg: arg, &index, args, &errors)
+                raw = optionParser.transformRaw(raw, &index, SubArgParserInput(superArg: arg, index: index, args: args), &errors)
             } else {
                 errors.append("Unknown flag \(arg.singleQuoted)")
                 break
             }
         } else if let parser = T.parser.positionalArgs.getOrNil(atIndex: posArgumentParserIndex) {
-            raw = parser.transformRaw(raw, &index, args, &errors)
+            raw = parser.transformRaw(raw, &index, ArgParserInput(index: index, args: args), &errors)
             posArgumentParserIndex += 1
         } else {
             errors.append("Unknown argument \(arg.singleQuoted)")
@@ -88,22 +88,8 @@ public enum ParsedCmd<T: Sendable>: Sendable {
     }
 }
 
-extension SubArgParserProtocol {
-    fileprivate func transformRaw(_ raw: consuming T, superArg: String, _ index: inout Int, _ args: StrArrSlice, _ errors: inout [String]) -> T {
-        let input = SubArgParserInput(superArg: superArg, index: index, args: args)
-        let parsedCliArgs = parse(input)
-        index += parsedCliArgs.advanceBy
-        if let value = parsedCliArgs.value.getOrNil(appendErrorTo: &errors) {
-            return raw.copy(keyPath, value)
-        } else {
-            return raw
-        }
-    }
-}
-
 extension ArgParserProtocol {
-    fileprivate func transformRaw(_ raw: consuming T, _ index: inout Int, _ args: StrArrSlice, _ errors: inout [String]) -> T {
-        let input = ArgParserInput(index: index, args: args)
+    fileprivate func transformRaw(_ raw: consuming T, _ index: inout Int, _ input: Input, _ errors: inout [String]) -> T {
         let parsedCliArgs = parse(input)
         index += parsedCliArgs.advanceBy
         if let value = parsedCliArgs.value.getOrNil(appendErrorTo: &errors) {

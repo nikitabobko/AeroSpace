@@ -52,22 +52,26 @@ extension CmdArgs {
 
 public struct CmdParser<T: ConvenienceCopyable>: Sendable {
     let info: CmdStaticInfo
-    let flags: [String: any SubArgParserProtocol<T>]
-    let positionalArgs: [any ArgParserProtocol<T>]
+    let flags: [String: any ArgParserProtocol<SubArgParserInput, T>]
+    let positionalArgs: [any ArgParserProtocol<ArgParserInput, T>]
     let conflictingOptions: [Set<String>]
 
     init(
         kind: CmdKind,
         allowInConfig: Bool,
         help: String,
-        flags: [String: any SubArgParserProtocol<T>],
-        posArgs: [any ArgParserProtocol<T>],
+        flags: [String: any ArgParserProtocol<SubArgParserInput, T>],
+        posArgs: [any ArgParserProtocol<ArgParserInput, T>],
         conflictingOptions: [Set<String>] = [],
     ) {
         self.info = CmdStaticInfo(help: help, kind: kind, allowInConfig: allowInConfig)
         self.flags = flags
         self.positionalArgs = posArgs
         self.conflictingOptions = conflictingOptions
+
+        for subParser in flags.values {
+            check(subParser.argPlaceholderIfMandatory == nil, "argPlaceholderIfMandatory of '\(subParser)' must be nil")
+        }
     }
 }
 

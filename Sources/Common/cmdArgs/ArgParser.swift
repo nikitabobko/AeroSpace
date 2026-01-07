@@ -1,20 +1,21 @@
 public typealias SendableWritableKeyPath<A, B> = Sendable & WritableKeyPath<A, B>
-public typealias ArgParserFun<K> = @Sendable (ArgParserInput) -> ParsedCliArgs<K>
-public protocol ArgParserProtocol<T>: Sendable {
+public typealias ArgParserFun<Input, K> = @Sendable (Input) -> ParsedCliArgs<K>
+public protocol ArgParserProtocol<Input, T>: Sendable {
+    associatedtype Input
     associatedtype K
     associatedtype T where T: ConvenienceCopyable
     var argPlaceholderIfMandatory: String? { get }
     var keyPath: SendableWritableKeyPath<T, K> { get }
-    var parse: ArgParserFun<K> { get }
+    var parse: ArgParserFun<Input, K> { get }
 }
-struct ArgParser<T: ConvenienceCopyable, K>: ArgParserProtocol {
+struct ArgParser<Input, T: ConvenienceCopyable, K>: ArgParserProtocol {
     let keyPath: SendableWritableKeyPath<T, K>
-    let parse: ArgParserFun<K>
+    let parse: ArgParserFun<Input, K>
     let argPlaceholderIfMandatory: String?
 
     init(
         _ keyPath: SendableWritableKeyPath<T, K>,
-        _ parse: @escaping ArgParserFun<K>,
+        _ parse: @escaping ArgParserFun<Input, K>,
         argPlaceholderIfMandatory: String? = nil,
     ) {
         self.keyPath = keyPath
@@ -56,7 +57,7 @@ func newArgParser<T: ConvenienceCopyable, K>(
     _ keyPath: SendableWritableKeyPath<T, Lateinit<K>> & Sendable,
     _ parse: @escaping @Sendable (ArgParserInput) -> ParsedCliArgs<K>,
     mandatoryArgPlaceholder: String,
-) -> ArgParser<T, Lateinit<K>> {
+) -> ArgParser<ArgParserInput, T, Lateinit<K>> {
     let parseWrapper: @Sendable (ArgParserInput) -> ParsedCliArgs<Lateinit<K>> = {
         parse($0).map { .initialized($0) }
     }
@@ -76,4 +77,4 @@ func parseCardinalOrDfsDirection(i: ArgParserInput) -> ParsedCliArgs<CardinalOrD
     .init(parseEnum(i.arg, CardinalOrDfsDirection.self), advanceBy: 1)
 }
 
-func upcastArgParserFun<T>(_ fun: @escaping ArgParserFun<T>) -> ArgParserFun<T?> { { fun($0).map { $0 } } }
+func upcastArgParserFun<Input, T>(_ fun: @escaping ArgParserFun<Input, T>) -> ArgParserFun<Input, T?> { { fun($0).map { $0 } } }
