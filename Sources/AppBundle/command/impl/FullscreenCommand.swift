@@ -22,6 +22,7 @@ struct FullscreenCommand: Command {
         }
         window.isFullscreen = newState
         window.noOuterGapsInFullscreen = args.noOuterGaps
+        window.persistentFullscreen = args.persistent && newState
 
         // Focus on its own workspace
         window.markAsMostRecentChild()
