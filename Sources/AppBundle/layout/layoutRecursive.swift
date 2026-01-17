@@ -29,7 +29,8 @@ extension TreeNode {
             case .window(let window):
                 if window.windowId != currentlyManipulatedWithMouseWindowId {
                     lastAppliedLayoutVirtualRect = virtual
-                    if window.isFullscreen && window == context.workspace.rootTilingContainer.mostRecentWindowRecursive {
+                    // If persistentFullscreen is set, keep fullscreen regardless of focus
+                    if window.isFullscreen && (window.persistentFullscreen || window == context.workspace.rootTilingContainer.mostRecentWindowRecursive) {
                         lastAppliedLayoutPhysicalRect = nil
                         window.layoutFullscreen(context)
                     } else {
