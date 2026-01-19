@@ -13,7 +13,7 @@ func dumpAxRecursive(_ ax: AXUIElement, _ kind: AxKind, recursionDepth: Int = 0)
     var ignored: [String] = []
     var writable: [String] = []
     var failedAxRequest: [String] = []
-    for key: String in ax.attrs(failedAxRequest: &failedAxRequest).sortedBy({ priorityAx.contains($0) ? 0 : 1 }) {
+    for key: String in ax.attrs(failedAxRequest: &failedAxRequest) {
         if globalIgnore.contains(key) || kindSpecificIgnore[kind]?.contains(key) == true {
             ignored.append(key)
         } else {
@@ -102,11 +102,4 @@ private let kindSpecificIgnore: [AxKind: Set<String>] = [
         "AXPreferredLanguage",
         kAXHiddenAttribute,
     ],
-]
-
-private let priorityAx: Set<String> = [
-    Ax.titleAttr.key,
-    Ax.roleAttr.key,
-    Ax.subroleAttr.key,
-    Ax.identifierAttr.key,
 ]
