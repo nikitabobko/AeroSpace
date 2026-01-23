@@ -290,7 +290,17 @@ final class MacApp: AbstractApp {
                 }
             }
 
-            for (id, window) in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
+            let allWindows = axApp.threadGuarded.get(Ax.windowsAttr) ?? []
+            let currentWindowIds = Set(allWindows.map { $0.0 })
+
+            // Remove windows that are no longer in the AX windows list
+            // This handles macOS native tabs where the window ID changes when tabs are created/switched
+            for (id, window) in alive where !currentWindowIds.contains(id) {
+                dead[id] = window
+            }
+            alive = alive.filter { currentWindowIds.contains($0.key) }
+
+            for (id, window) in allWindows {
                 try job.checkCancellation()
                 try alive.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
             }
