@@ -76,9 +76,9 @@ let list_windows_help_generated = """
     USAGE: list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
                         [--monitor <monitor>...] [--workspace <workspace>...]
                         [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>]
-                        [--count] [--json]
-       OR: list-windows [-h|--help] --all [--format <output-format>] [--count] [--json]
-       OR: list-windows [-h|--help] --focused [--format <output-format>] [--count] [--json]
+                        [--sort-by <sort-field>] [--count] [--json]
+       OR: list-windows [-h|--help] --all [--format <output-format>] [--sort-by <sort-field>] [--count] [--json]
+       OR: list-windows [-h|--help] --focused [--format <output-format>] [--sort-by <sort-field>] [--count] [--json]
     """
 let list_workspaces_help_generated = """
     USAGE: list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]] [--format <output-format>] [--count] [--json]

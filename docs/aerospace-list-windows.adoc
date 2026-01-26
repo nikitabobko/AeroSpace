@@ -12,9 +12,11 @@ include::util/man-attributes.adoc[]
 aerospace list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
                        [--monitor <monitor>...] [--workspace <workspace>...]
                        [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>]
+                       [--sort-by <sort-field>] [--count] [--json]
+aerospace list-windows [-h|--help] --all [--format <output-format>] [--sort-by <sort-field>]
                        [--count] [--json]
-aerospace list-windows [-h|--help] --all [--format <output-format>] [--count] [--json]
-aerospace list-windows [-h|--help] --focused [--format <output-format>] [--count] [--json]
+aerospace list-windows [-h|--help] --focused [--format <output-format>] [--sort-by <sort-field>]
+                       [--count] [--json]
 
 // end::synopsis[]
 
@@ -54,6 +56,21 @@ include::util/monitor-option.adoc[]
 Filter results to only print windows that belong to the Application with specified https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
 +
 Deprecated (but still supported) flag name: `--app-id`
+
+--sort-by <sort-field>::
+Sort windows by the specified field. +
++
+Possible values: +
++
+. `dfs-index` - Preserve depth-first search traversal order in the window tree (maintains tiling structure order)
+. `window-id` - Sort by window ID numerically
+. `window-title` - Sort by window title alphabetically
+. `app-name` - Sort by application name only
+. `app-bundle-id` - Sort by application bundle identifier
+. `app-pid` - Sort by application process ID
++
+If not specified, windows are sorted by application name first, then by window title (default behavior). +
+Incompatible with `--count`
 
 --format <output-format>:: Specify output format. See "Output Format" section for more details.
 Incompatible with `--count`

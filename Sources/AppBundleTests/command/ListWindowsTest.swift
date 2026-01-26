@@ -31,6 +31,11 @@ final class ListWindowsTest: XCTestCase {
         assertEquals(parseCommand("list-windows --all --format '%{right-padding}' --json").errorOrNil, "%{right-padding} interpolation variable is not allowed when --json is used")
         assertEquals(parseCommand("list-windows --all --format '%{window-title} |' --json").errorOrNil, "Only interpolation variables and spaces are allowed in \'--format\' when \'--json\' is used")
         assertNil(parseCommand("list-windows --all --format '%{window-title}' --json").errorOrNil)
+        
+        // --sort-by
+        assertEquals(parseCommand("list-windows --all --sort-by invalid").errorOrNil, "ERROR: Failed to convert 'invalid' to 'WindowSortField'")
+        assertNil(parseCommand("list-windows --all --sort-by dfs-index").errorOrNil)
+        assertEquals(parseCommand("list-windows --all --count --sort-by dfs-index").errorOrNil, "ERROR: Conflicting options: --count, --sort-by")
     }
 
     func testInterpolationVariablesConsistency() {

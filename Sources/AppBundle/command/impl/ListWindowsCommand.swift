@@ -49,7 +49,13 @@ struct ListWindowsCommand: Command {
                 _list.append((window, try await window.title))
             }
             _list = _list.filter { $0.window.isBound }
-            _list = _list.sortedBy([{ $0.window.app.name ?? "" }, \.title])
+            
+            switch args.sortBy {
+            case .none:
+                _list = _list.sortedBy([{ $0.window.app.name ?? "" }, \.title])
+            case .dfsIndex:
+                break
+            }
 
             let list = _list.map { AeroObj.window(window: $0.window, title: $0.title) }
             if args.json {
