@@ -53,8 +53,8 @@ struct ListWindowsCommand: Command {
             switch args.sortBy {
             case .none:
                 _list = _list.sortedBy([{ $0.window.app.name ?? "" }, \.title])
-            case .dfsIndex:
-                break
+            case .some(.dfsIndex):
+                break // Keep DFS order (natural tree traversal)
             }
 
             let list = _list.map { AeroObj.window(window: $0.window, title: $0.title) }

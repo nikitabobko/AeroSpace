@@ -63,11 +63,6 @@ Sort windows by the specified field. +
 Possible values: +
 +
 . `dfs-index` - Preserve depth-first search traversal order in the window tree (maintains tiling structure order)
-. `window-id` - Sort by window ID numerically
-. `window-title` - Sort by window title alphabetically
-. `app-name` - Sort by application name only
-. `app-bundle-id` - Sort by application bundle identifier
-. `app-pid` - Sort by application process ID
 +
 If not specified, windows are sorted by application name first, then by window title (default behavior). +
 Incompatible with `--count`

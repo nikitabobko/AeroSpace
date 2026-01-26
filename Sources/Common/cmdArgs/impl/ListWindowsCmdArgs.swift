@@ -134,11 +134,6 @@ public enum WorkspaceFilter: Equatable, Sendable {
 
 public enum WindowSortField: String, Equatable, Sendable {
     case dfsIndex = "dfs-index"
-    case windowId = "window-id"
-    case windowTitle = "window-title"
-    case appName = "app-name"
-    case appBundleId = "app-bundle-id"
-    case appPid = "app-pid"
 }
 
 public enum FormatVar: Equatable {
