@@ -23,6 +23,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--format": formatParser(\._format, for: .window),
             "--count": trueBoolFlag(\.outputOnlyCount),
             "--json": trueBoolFlag(\.json),
+            "--sort-by": singleValueSubArgParser(\.sortBy, "<sort-field>", parseWindowSortField),
         ],
         posArgs: [],
         conflictingOptions: [
@@ -30,6 +31,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
             ["--all", "--focused", "--monitor"],
             ["--count", "--format"],
             ["--count", "--json"],
+            ["--count", "--sort-by"],
         ],
     )
 
@@ -39,6 +41,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
     public var _format: [StringInterToken] = []
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
+    public var sortBy: WindowSortField? = nil
 
     public struct FilteringOptions: ConvenienceCopyable, Equatable, Sendable {
         public var monitors: [MonitorId] = []
@@ -77,6 +80,10 @@ public func parseListWindowsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWindow
             raw.all ? raw.copy(\.filteringOptions.monitors, [.all]).copy(\.all, false) : raw // Normalize alias
         }
         .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
+}
+
+private func parseWindowSortField(_ input: String) -> WindowSortField? {
+    WindowSortField(rawValue: input)
 }
 
 func formatParser<T: ConvenienceCopyable>(
@@ -123,6 +130,10 @@ public enum WorkspaceFilter: Equatable, Sendable {
     case focused
     case visible
     case name(WorkspaceName)
+}
+
+public enum WindowSortField: String, Equatable, Sendable {
+    case dfsIndex = "dfs-index"
 }
 
 public enum FormatVar: Equatable {

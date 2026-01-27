@@ -585,7 +585,11 @@ Changing the focus within these callbacks is a bad idea anyway, and the way it's
 [#exec-on-workspace-change-callback]
 === 'exec-on-workspace-change' callback
 
-`exec-on-workspace-change` callback allows to run arbitrary process when focused workspace changes.
+`exec-on-workspace-change` callback allows to run arbitrary process when:
+
+1. The focused workspace changes (user switches to a different workspace), or
+2. The window tree structure (depth-first search order) changes within any workspace
+
 It may be useful for integrating with bars.
 
 [source,toml]
