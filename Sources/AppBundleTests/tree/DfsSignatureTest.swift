@@ -50,7 +50,7 @@ final class DfsSignatureTest: XCTestCase {
         TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
         let verticalContainer = TilingContainer.newVTiles(
             parent: workspace.rootTilingContainer,
-            adaptiveWeight: 1
+            adaptiveWeight: 1,
         )
         TestWindow.new(id: 2, parent: verticalContainer)
         TestWindow.new(id: 3, parent: verticalContainer)
@@ -63,10 +63,10 @@ final class DfsSignatureTest: XCTestCase {
     func testDfsSignature_changesWhenWindowAdded() {
         let workspace = Workspace.get(byName: "test")
         TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
-        
+
         let signatureBefore = workspace.getDfsSignature()
         XCTAssertEqual(signatureBefore, "C[h](W:1)")
-        
+
         TestWindow.new(id: 2, parent: workspace.rootTilingContainer)
 
         let signatureAfter = workspace.getDfsSignature()
@@ -78,10 +78,10 @@ final class DfsSignatureTest: XCTestCase {
         let workspace = Workspace.get(byName: "test")
         TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
         let window2 = TestWindow.new(id: 2, parent: workspace.rootTilingContainer)
-        
+
         let signatureBefore = workspace.getDfsSignature()
         XCTAssertEqual(signatureBefore, "C[h](W:1,W:2)")
-        
+
         window2.unbindFromParent()
         let signatureAfter = workspace.getDfsSignature()
         XCTAssertEqual(signatureAfter, "C[h](W:1)")
@@ -92,10 +92,10 @@ final class DfsSignatureTest: XCTestCase {
         let workspace = Workspace.get(byName: "test")
         let window1 = TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
         TestWindow.new(id: 2, parent: workspace.rootTilingContainer)
-        
+
         let signatureBefore = workspace.getDfsSignature()
         XCTAssertEqual(signatureBefore, "C[h](W:1,W:2)")
-        
+
         window1.unbindFromParent()
         window1.bind(to: workspace.rootTilingContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
         let signatureAfter = workspace.getDfsSignature()
@@ -108,9 +108,9 @@ final class DfsSignatureTest: XCTestCase {
         TestWindow.new(id: 100, parent: workspace.rootTilingContainer)
         TestWindow.new(id: 200, parent: workspace.rootTilingContainer)
         TestWindow.new(id: 300, parent: workspace.rootTilingContainer)
-        
+
         let signature = workspace.getDfsSignature()
-        
+
         XCTAssertEqual(signature, "C[h](W:100,W:200,W:300)")
     }
 
@@ -119,18 +119,18 @@ final class DfsSignatureTest: XCTestCase {
         TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
         let verticalContainer = TilingContainer.newVTiles(
             parent: workspace.rootTilingContainer,
-            adaptiveWeight: 1
+            adaptiveWeight: 1,
         )
         TestWindow.new(id: 2, parent: verticalContainer)
         let horizontalContainer = TilingContainer.newHTiles(
             parent: verticalContainer,
-            adaptiveWeight: 1
+            adaptiveWeight: 1,
         )
         TestWindow.new(id: 3, parent: horizontalContainer)
         TestWindow.new(id: 4, parent: horizontalContainer)
-        
+
         let signature = workspace.getDfsSignature()
-        
+
         XCTAssertEqual(signature, "C[h](W:1,C[v](W:2,C[h](W:3,W:4)))")
     }
 
@@ -138,10 +138,10 @@ final class DfsSignatureTest: XCTestCase {
         let workspace = Workspace.get(byName: "test")
         TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
         TestWindow.new(id: 2, parent: workspace.rootTilingContainer)
-        
+
         let signatureBefore = workspace.getDfsSignature()
         XCTAssertEqual(signatureBefore, "C[h](W:1,W:2)")
-        
+
         workspace.rootTilingContainer.changeOrientation(.v)
         let signatureAfter = workspace.getDfsSignature()
         XCTAssertEqual(signatureAfter, "C[v](W:1,W:2)")

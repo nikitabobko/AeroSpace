@@ -102,7 +102,7 @@ extension Workspace {
 }
 
 @MainActor private var _lastKnownFocus: FrozenFocus = _focus
-@MainActor private var _lastKnownWorkspaceDfsSignatures: [String: String] = [:] 
+@MainActor private var _lastKnownWorkspaceDfsSignatures: [String: String] = [:]
 
 // Used by workspace-back-and-forth
 @MainActor var _prevFocusedWorkspaceName: String? = nil {
