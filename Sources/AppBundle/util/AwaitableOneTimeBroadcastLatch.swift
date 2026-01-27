@@ -36,6 +36,7 @@ actor AwaitableOneTimeBroadcastLatch {
     }
 
     func signal() {
+        check(!done)
         done = true
         for (_, awaiter) in awaiters {
             awaiter.valueOrNil?.resume()
