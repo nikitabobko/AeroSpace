@@ -19,7 +19,7 @@ actor AwaitableOneTimeBroadcastLatch {
                 } else if done {
                     cont.resume()
                 } else {
-                    awaiters[id] = .some(cont)
+                    awaiters[id] = .just(cont)
                 }
             }
         } onCancel: {
