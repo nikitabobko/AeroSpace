@@ -13,7 +13,27 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         Divider()
         if let token: RunSessionGuard = .isServerEnabled {
             Text("Workspaces:")
-            ForEach(viewModel.workspaces, id: \.name) { workspace in
+
+            // Sort Workspaces, generate a lut by persistent WS first
+            let persistentOrderIndex: [String: Int] =
+                Dictionary(uniqueKeysWithValues: config.persistentWorkspaces.enumerated().map { ($0.element, $0.offset) })
+
+            let sortedWorkspaces = viewModel.workspaces.sorted { a, b in
+                let ia = persistentOrderIndex[a.name]
+                let ib = persistentOrderIndex[b.name]
+
+                if let ia, let ib {
+                    return ia < ib                // both are in persistent list
+                } else if ia != nil {
+                    return true                   // only a is in persistent list
+                } else if ib != nil {
+                    return false                  // only b is in persistent list
+                } else {
+                    return a.name < b.name        // neither is in persistent list
+                }
+            }
+
+            ForEach(sortedWorkspaces, id: \.name) { workspace in
                 Button {
                     Task {
                         try await runLightSession(.menuBarButton, token) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
