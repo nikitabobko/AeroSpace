@@ -49,7 +49,25 @@ struct ListWindowsCommand: Command {
                 _list.append((window, try await window.title))
             }
             _list = _list.filter { $0.window.isBound }
-            _list = _list.sortedBy([{ $0.window.app.name ?? "" }, \.title])
+            _list = _list.sorted { lhs, rhs in
+                for criterion in args.sort {
+                    switch criterion {
+                        case .recent:
+                            // Sort by lastFocusedAt descending (most recent first)
+                            if lhs.window.lastFocusedAt > rhs.window.lastFocusedAt { return true }
+                            if lhs.window.lastFocusedAt < rhs.window.lastFocusedAt { return false }
+                        case .appName:
+                            let lhsName = lhs.window.app.name ?? ""
+                            let rhsName = rhs.window.app.name ?? ""
+                            if lhsName < rhsName { return true }
+                            if lhsName > rhsName { return false }
+                        case .windowTitle:
+                            if lhs.title < rhs.title { return true }
+                            if lhs.title > rhs.title { return false }
+                    }
+                }
+                return false
+            }
 
             let list = _list.map { AeroObj.window(window: $0.window, title: $0.title) }
             if args.json {
