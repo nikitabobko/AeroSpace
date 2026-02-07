@@ -4,13 +4,40 @@ import Foundation
 @MainActor
 private var cache: [UInt32: MacOsWindowLevel] = [:]
 
+/// Set of window IDs that are currently on-screen. Populated from
+/// CGWindowList with optionOnScreenOnly. Refreshed alongside the
+/// window level cache.
+@MainActor
+private var onScreenWindowIds: Set<UInt32> = []
+
 @MainActor
 func getWindowLevel(for windowId: UInt32) -> MacOsWindowLevel? {
     if let existing = cache[windowId] { return existing }
+    refreshCGWindowListCache()
+    return cache[windowId]
+}
 
-    var result: [UInt32: MacOsWindowLevel] = [:]
+/// Returns true if the window is currently visible on-screen.
+/// Background tabs in native macOS tab groups are not on-screen
+/// and will return false.
+@MainActor
+func isWindowOnScreen(_ windowId: UInt32) -> Bool {
+    return onScreenWindowIds.contains(windowId)
+}
+
+/// Refresh the on-screen window cache. Call this once at the start
+/// of a refresh session to get a consistent snapshot.
+@MainActor
+func refreshOnScreenWindowCache() {
+    refreshCGWindowListCache()
+}
+
+@MainActor
+private func refreshCGWindowListCache() {
+    var levelResult: [UInt32: MacOsWindowLevel] = [:]
+    var onScreenResult: Set<UInt32> = []
     let options = CGWindowListOption(arrayLiteral: .excludeDesktopElements, .optionOnScreenOnly)
-    guard let cfArray = CGWindowListCopyWindowInfo(options, CGWindowID(0)) as? [CFDictionary] else { return nil }
+    guard let cfArray = CGWindowListCopyWindowInfo(options, CGWindowID(0)) as? [CFDictionary] else { return }
     for elem in cfArray {
         let dict = elem as NSDictionary
 
@@ -20,10 +47,11 @@ func getWindowLevel(for windowId: UInt32) -> MacOsWindowLevel? {
         guard let _windowId = dict[kCGWindowNumber] else { continue }
         let windowId = ((_windowId as! CFNumber) as NSNumber).uint32Value
 
-        result[windowId] = .new(windowLevel: windowLayer)
+        levelResult[windowId] = .new(windowLevel: windowLayer)
+        onScreenResult.insert(windowId)
     }
-    cache = result
-    return result[windowId]
+    cache = levelResult
+    onScreenWindowIds = onScreenResult
 }
 
 enum MacOsWindowLevel: Sendable, Equatable {

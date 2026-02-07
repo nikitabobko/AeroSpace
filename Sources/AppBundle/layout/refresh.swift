@@ -109,6 +109,11 @@ func refreshModel() {
 
 @MainActor
 private func refresh() async throws {
+    // Refresh the on-screen window snapshot before processing
+    // windows. This is used to detect background tabs in native
+    // macOS tab groups which should not be tiled.
+    refreshOnScreenWindowCache()
+
     // Garbage collect terminated apps and windows before working with all windows
     let mapping = try await MacApp.refreshAllAndGetAliveWindowIds(frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier)
     let aliveWindowIds = mapping.values.flatMap { $0 }.toSet()

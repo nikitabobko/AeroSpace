@@ -214,6 +214,25 @@ extension Window {
 @MainActor
 private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace, window: Window?) async throws -> BindingData {
     let windowLevel = getWindowLevel(for: windowId)
+
+    // Background tabs in native macOS tab groups are not visible
+    // on-screen. Skip tiling them to avoid disrupting the layout.
+    // When the user switches tabs, the previously-active tab goes
+    // off-screen and the new one comes on-screen; both will be
+    // re-evaluated during the next refresh cycle.
+    //
+    // We only apply this for windows that are not minimized,
+    // not fullscreen, and whose app is not hidden, because those
+    // states also make windows not-on-screen but should be handled
+    // by normalizeLayoutReason instead.
+    if !isWindowOnScreen(windowId),
+       try await macApp.isMacosNativeMinimized(windowId) != true,
+       try await macApp.isMacosNativeFullscreen(windowId) != true,
+       !macApp.nsApp.isHidden
+    {
+        return BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+    }
+
     return switch try await macApp.getAxUiElementWindowType(windowId, windowLevel) {
         case .popup: BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         case .dialog: BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
