@@ -1,11 +1,18 @@
+// Stores the tiling position of a demoted background tab so the
+// newly-active tab from the same app can take the exact same slot.
+@MainActor
+private var demotedTabSlots: [Int32: BindingData] = [:]
+
 @MainActor
 func normalizeLayoutReason() async throws {
+    demotedTabSlots = [:]
     for workspace in Workspace.all {
         let windows: [Window] = workspace.allLeafWindowsRecursive
         try await _normalizeLayoutReason(workspace: workspace, windows: windows)
     }
     try await _normalizeLayoutReason(workspace: focus.workspace, windows: macosMinimizedWindowsContainer.children.filterIsInstance(of: Window.self))
     try await validateStillPopups()
+    demotedTabSlots = [:]
 }
 
 @MainActor
@@ -19,7 +26,12 @@ private func validateStillPopups() async throws {
         if !isWindowOnScreen(popup.windowId) { continue }
         let windowLevel = getWindowLevel(for: popup.windowId)
         if try await popup.isWindowHeuristic(windowLevel) {
-            try await popup.relayoutWindow(on: focus.workspace)
+            if let slot = demotedTabSlots.removeValue(forKey: popup.macApp.pid) {
+                popup.unbindFromParent()
+                popup.bind(to: slot.parent, adaptiveWeight: slot.adaptiveWeight, index: slot.index)
+            } else {
+                try await popup.relayoutWindow(on: focus.workspace)
+            }
             try await tryOnWindowDetected(popup)
         }
     }
@@ -51,8 +63,10 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) asy
                     window.layoutReason = .macos(prevParentKind: parent.kind)
                     window.bind(to: workspace.macOsNativeHiddenAppsWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
                 } else if isBackgroundTab {
-                    // Move background tabs to the popup container
-                    // so they don't occupy tiling space.
+                    // Save tiling position so the newly-active tab
+                    // from the same app can take this exact slot.
+                    let bindingData = window.unbindFromParent()
+                    demotedTabSlots[macWindow.macApp.pid] = bindingData
                     window.bind(to: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
                 }
             case .macos(let prevParentKind):
