@@ -63,6 +63,8 @@ Incompatible with `--format`
 
 --json:: Output in JSON format.
 Can be used in combination with `--format` to specify which data to include into the json.
+When `--json` is used, only interpolation variables and spaces are allowed in `--format`.
+`%{right-padding}` is not allowed with `--json`.
 Incompatible with `--count`
 
 // =========================================================== Output Format
