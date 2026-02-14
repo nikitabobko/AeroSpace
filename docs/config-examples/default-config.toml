@@ -23,6 +23,19 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
 # The 'accordion-padding' specifies the size of accordion padding
 # You can set 0 to disable the padding feature
+# Possible values:
+# - Constant (uniform):  accordion-padding = 30
+# - Per-axis:
+#   [accordion-padding]
+#       horizontal = 300
+#       vertical = 100
+# - With percentages:
+#   [accordion-padding]
+#       horizontal = "15%"
+#       vertical = 50
+# - Per monitor (same as gaps):
+#   [accordion-padding]
+#       horizontal = [{ monitor."main" = 300 }, 200]
 accordion-padding = 30
 
 # Possible values: tiles|accordion

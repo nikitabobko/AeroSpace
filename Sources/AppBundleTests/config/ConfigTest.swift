@@ -449,4 +449,94 @@ final class ConfigTest: XCTestCase {
         assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
         assertEquals(colemakConfig.keyMapping.resolve()["f"], .e)
     }
+
+    // MARK: - Accordion Padding Tests
+
+    func testAccordionPaddingBackwardCompatInt() {
+        let (config, errors) = parseConfig(
+            """
+            accordion-padding = 50
+            """,
+        )
+        assertEquals(errors, [])
+        assertEquals(
+            config.accordionPadding,
+            AccordionPadding(
+                horizontal: .constant(.absolute(50)),
+                vertical: .constant(.absolute(50))
+            )
+        )
+    }
+
+    func testAccordionPaddingPerAxis() {
+        let (config, errors) = parseConfig(
+            """
+            [accordion-padding]
+                horizontal = 300
+                vertical = 100
+            """,
+        )
+        assertEquals(errors, [])
+        assertEquals(
+            config.accordionPadding,
+            AccordionPadding(
+                horizontal: .constant(.absolute(300)),
+                vertical: .constant(.absolute(100))
+            )
+        )
+    }
+
+    func testAccordionPaddingPercentage() {
+        let (config, errors) = parseConfig(
+            """
+            [accordion-padding]
+                horizontal = "15%"
+                vertical = 50
+            """,
+        )
+        assertEquals(errors, [])
+        assertEquals(
+            config.accordionPadding,
+            AccordionPadding(
+                horizontal: .constant(.percent(15.0)),
+                vertical: .constant(.absolute(50))
+            )
+        )
+    }
+
+    func testAccordionPaddingUniformPercent() {
+        let (config, errors) = parseConfig(
+            """
+            accordion-padding = "10%"
+            """,
+        )
+        assertEquals(errors, [])
+        assertEquals(
+            config.accordionPadding,
+            AccordionPadding(
+                horizontal: .constant(.percent(10.0)),
+                vertical: .constant(.percent(10.0))
+            )
+        )
+    }
+
+    func testAccordionPaddingInvalidString() {
+        let (_, errors) = parseConfig(
+            """
+            accordion-padding = "abc"
+            """,
+        )
+        XCTAssertFalse(errors.isEmpty)
+        XCTAssertTrue(errors.descriptions.first?.contains("Can't parse accordion-padding") == true)
+    }
+
+    func testAccordionPaddingResolveAbsolute() {
+        let unit = AccordionPaddingUnit.absolute(30)
+        assertEquals(unit.resolve(containerDimension: 1000), 30.0)
+    }
+
+    func testAccordionPaddingResolvePercent() {
+        let unit = AccordionPaddingUnit.percent(15.0)
+        assertEquals(unit.resolve(containerDimension: 1000), 150.0)
+    }
 }

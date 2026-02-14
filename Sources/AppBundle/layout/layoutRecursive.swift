@@ -57,11 +57,13 @@ extension TreeNode {
 private struct LayoutContext {
     let workspace: Workspace
     let resolvedGaps: ResolvedGaps
+    let resolvedAccordionPadding: ResolvedAccordionPadding
 
     @MainActor
     init(_ workspace: Workspace) {
         self.workspace = workspace
         self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor)
+        self.resolvedAccordionPadding = ResolvedAccordionPadding(padding: config.accordionPadding, monitor: workspace.workspaceMonitor)
     }
 }
 
@@ -135,7 +137,8 @@ extension TilingContainer {
     fileprivate func layoutAccordion(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
         guard let mruIndex: Int = mostRecentChild?.ownIndex else { return }
         for (index, child) in children.enumerated() {
-            let padding = CGFloat(config.accordionPadding)
+            let containerDimension: CGFloat = orientation == .h ? width : height
+            let padding = context.resolvedAccordionPadding.resolve(orientation, containerDimension: containerDimension)
             let (lPadding, rPadding): (CGFloat, CGFloat) = switch index {
                 case 0 where children.count == 1: (0, 0)
                 case 0:                           (0, padding)
