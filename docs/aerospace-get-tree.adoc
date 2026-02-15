@@ -1,0 +1,52 @@
+= aerospace-get-tree(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-get-tree
+// tag::purpose[]
+:manpurpose: Print the tree of the focused workspace as JSON
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace get-tree [-h|--help] [--workspace <workspace>]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The command outputs the workspace container hierarchy as JSON, including containers with their layout and orientation, and windows with their IDs and application bundle IDs.
+
+The output can be piped to `aerospace append-layout` to restore a saved layout.
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--workspace <workspace>::
+include::./util/workspace-flag-desc.adoc[]
+
+// =========================================================== Examples
+include::util/conditional-examples-header.adoc[]
+
+* Save the current layout of workspace 1:
++
+----
+$ aerospace get-tree --workspace 1 > layout.json
+----
+* Round-trip save and restore:
++
+----
+$ aerospace get-tree --workspace 1 > layout.json
+$ cat layout.json | aerospace append-layout --workspace 1
+----
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

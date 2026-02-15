@@ -1,0 +1,54 @@
+= aerospace-append-layout(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-append-layout
+// tag::purpose[]
+:manpurpose: Construct workspace tree from a JSON layout spec read from stdin
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace append-layout [-h|--help] [--workspace <workspace>]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The command reads a JSON layout specification from stdin, flattens the target workspace, matches existing windows to layout slots by `app-bundle-id`, and rebuilds the container hierarchy.
+
+Unmatched windows (those present in the workspace but not in the layout spec) are re-bound to the root container.
+
+The JSON format accepted is either the full output of `aerospace get-tree` (with `"type": "workspace"` wrapper) or a bare container spec.
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--workspace <workspace>::
+include::./util/workspace-flag-desc.adoc[]
+
+// =========================================================== Examples
+include::util/conditional-examples-header.adoc[]
+
+* Restore a saved layout:
++
+----
+$ cat layout.json | aerospace append-layout --workspace 1
+----
+* Round-trip with get-tree:
++
+----
+$ aerospace get-tree --workspace 1 > layout.json
+$ cat layout.json | aerospace append-layout --workspace 1
+----
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]
