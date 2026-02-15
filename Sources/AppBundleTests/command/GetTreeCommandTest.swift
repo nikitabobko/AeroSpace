@@ -31,6 +31,8 @@ final class GetTreeCommandTest: XCTestCase {
         assertEquals(children[0]["type"] as? String, "window")
         assertEquals(children[0]["window-id"] as? UInt32, 1)
         assertEquals(children[0]["app-bundle-id"] as? String, "bobko.AeroSpace.test-app")
+        // Verify weight is included
+        XCTAssertNotNil(children[0]["weight"])
         assertEquals(children[1]["type"] as? String, "window")
         assertEquals(children[1]["window-id"] as? UInt32, 2)
 

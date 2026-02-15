@@ -34,11 +34,12 @@ struct GetTreeCommand: Command {
 @MainActor
 private func serializeContainer(_ container: TilingContainer) -> Json {
     let children: [Json] = container.children.map { child in
+        var json: Json
         switch child.nodeCases {
             case .window(let w):
-                return serializeWindow(w)
+                json = serializeWindow(w)
             case .tilingContainer(let c):
-                return serializeContainer(c)
+                json = serializeContainer(c)
             case .workspace,
                  .macosMinimizedWindowsContainer,
                  .macosHiddenAppsWindowsContainer,
@@ -46,6 +47,12 @@ private func serializeContainer(_ container: TilingContainer) -> Json {
                  .macosPopupWindowsContainer:
                 die("Unexpected child type in tiling container")
         }
+        // Add weight relative to parent's orientation
+        if case .dict(var dict) = json {
+            dict["weight"] = .double(child.getWeight(container.orientation))
+            json = .dict(dict)
+        }
+        return json
     }
 
     let layoutStr: String = container.layout.rawValue
