@@ -119,6 +119,10 @@ private enum LayoutSpec: Decodable {
                 self = .container(try ContainerSpec(from: decoder))
             case "window":
                 self = .window(try WindowSpec(from: decoder))
+            case "workspace":
+                // Unwrap get-tree workspace output: use the "tiling" field
+                let ws = try WorkspaceSpec(from: decoder)
+                self = .container(ws.tiling)
             default:
                 throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Unknown type: \(type)")
         }
@@ -129,6 +133,10 @@ private struct ContainerSpec: Decodable {
     let layout: String
     let orientation: String
     let children: [LayoutSpec]
+}
+
+private struct WorkspaceSpec: Decodable {
+    let tiling: ContainerSpec
 }
 
 private struct WindowSpec: Decodable {
