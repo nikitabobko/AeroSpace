@@ -53,22 +53,9 @@ struct MenuBarLabel: View {
                         otherWorkspaces(with: workspaces)
                     }
                 case .i3Ordered:
-                    let modeItem = viewModel.trayItems.first { $0.type == .mode }
-                    if let modeItem {
-                        itemView(for: modeItem)
-                        modeSeparator(with: .monospaced)
-                    }
-                    let orderedWorkspaces = viewModel.workspaces.filter { !$0.isEffectivelyEmpty || $0.isVisible }
-                    ForEach(orderedWorkspaces, id: \.name) { item in
-                        let trayItem = TrayItem(
-                            type: .workspace,
-                            name: item.name,
-                            isActive: item.isFocused,
-                            hasFullscreenWindows: item.hasFullscreenWindows,
-                        )
-                        itemView(for: trayItem)
-                            .opacity(item.isVisible ? 1 : 0.5)
-                    }
+                    orderedWorkspacesView(showApps: false)
+                case .i3OrderedWithAppIcons:
+                    orderedWorkspacesView(showApps: true)
             }
         }
     }
@@ -166,6 +153,51 @@ struct MenuBarLabel: View {
                     .frame(height: itemSize)
                 }
             }
+        }
+    }
+
+    private func orderedWorkspacesView(showApps: Bool) -> some View {
+        let modeItem = viewModel.trayItems.first { $0.type == .mode }
+        let orderedWorkspaces = viewModel.workspaces.filter { !$0.isEffectivelyEmpty || $0.isVisible }
+        return Group {
+            if let modeItem {
+                itemView(for: modeItem)
+                modeSeparator(with: .monospaced)
+            }
+            ForEach(orderedWorkspaces, id: \.name) { ws in
+                let trayItem = TrayItem(
+                    type: .workspace,
+                    name: ws.name,
+                    isActive: ws.isFocused,
+                    hasFullscreenWindows: ws.hasFullscreenWindows,
+                )
+                itemView(for: trayItem)
+                    .opacity(ws.isVisible ? 1 : 0.5)
+                if showApps {
+                    let limit = style != nil ? (ws.isFocused ? 1 : 0) : ws.apps.count
+                    ForEach(ws.apps.prefix(limit)) { app in
+                        appIconView(for: app)
+                            .opacity(ws.isFocused && app.isFocused ? 1 : 0.5)
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func appIconView(for app: AppViewModel) -> some View {
+        let icon = Image(nsImage: app.icon)
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: itemSize, height: itemSize)
+        if app.isFocused {
+            icon.clipShape(RoundedRectangle(cornerRadius: itemCornerRadius, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: itemCornerRadius, style: .continuous)
+                        .strokeBorder(finalColor, lineWidth: 1)
+                }
+        } else {
+            icon
         }
     }
 }

@@ -35,6 +35,20 @@ public final class TrayMenuModel: ObservableObject {
             default: ""
         }
         let hasFullscreenWindows = $0.allLeafWindowsRecursive.contains { $0.isFullscreen }
+        let appViewModels: [AppViewModel]
+        if TrayMenuModel.shared.experimentalUISettings.displayStyle == .i3OrderedWithAppIcons {
+            let focusedWindowId = focus.windowOrNil?.windowId
+            appViewModels = $0.allLeafWindowsRecursive.map { window in
+                AppViewModel(
+                    windowId: window.windowId,
+                    name: window.app.name ?? "Unknown",
+                    icon: resolveAppIcon(for: window),
+                    isFocused: window.windowId == focusedWindowId,
+                )
+            }
+        } else {
+            appViewModels = []
+        }
         return WorkspaceViewModel(
             name: $0.name,
             suffix: suffix,
@@ -42,6 +56,7 @@ public final class TrayMenuModel: ObservableObject {
             isEffectivelyEmpty: $0.isEffectivelyEmpty,
             isVisible: $0.isVisible,
             hasFullscreenWindows: hasFullscreenWindows,
+            apps: appViewModels,
         )
     }
     var items = sortedMonitors.map {
@@ -69,6 +84,23 @@ struct WorkspaceViewModel: Hashable {
     let isEffectivelyEmpty: Bool
     let isVisible: Bool
     let hasFullscreenWindows: Bool
+    let apps: [AppViewModel]
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+    }
+}
+
+struct AppViewModel: Identifiable, Equatable {
+    let windowId: UInt32
+    let name: String
+    let icon: NSImage
+    let isFocused: Bool
+    var id: UInt32 { windowId }
+
+    static func == (lhs: AppViewModel, rhs: AppViewModel) -> Bool {
+        lhs.windowId == rhs.windowId && lhs.isFocused == rhs.isFocused
+    }
 }
 
 enum TrayItemType: String, Hashable {
@@ -107,4 +139,22 @@ struct TrayItem: Hashable, Identifiable {
     var id: String {
         return type.rawValue + name
     }
+}
+
+@MainActor
+private func resolveAppIcon(for window: Window) -> NSImage {
+    if let macApp = window.app as? MacApp {
+        if let icon = macApp.nsApp.icon {
+            return icon
+        }
+        if let bundlePath = macApp.bundlePath {
+            return NSWorkspace.shared.icon(forFile: bundlePath)
+        }
+        if let bundleId = macApp.rawAppBundleId,
+           let url = NSWorkspace.shared.urlForApplication(withBundleIdentifier: bundleId)
+        {
+            return NSWorkspace.shared.icon(forFile: url.path)
+        }
+    }
+    return NSImage(named: NSImage.applicationIconName) ?? NSImage()
 }
