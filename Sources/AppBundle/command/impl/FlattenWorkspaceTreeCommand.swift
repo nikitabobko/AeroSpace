@@ -12,6 +12,7 @@ struct FlattenWorkspaceTreeCommand: Command {
         for window in windows {
             window.bind(to: workspace.rootTilingContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
         }
+        workspace.normalizeContainers()
         return true
     }
 }
