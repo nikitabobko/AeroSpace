@@ -138,7 +138,8 @@ extension TilingContainer {
         guard let mruIndex: Int = mostRecentChild?.ownIndex else { return }
         for (index, child) in children.enumerated() {
             let containerDimension: CGFloat = orientation == .h ? width : height
-            let padding = context.resolvedAccordionPadding.resolve(orientation, containerDimension: containerDimension)
+            let paddingOffset = self.getUserData(key: accordionPaddingOffsetKey) ?? 0.0
+            let padding = max(0, context.resolvedAccordionPadding.resolve(orientation, containerDimension: containerDimension) + paddingOffset)
             let lastIndex = children.indices.last
             let uniform = config.accordionUniformSize
             let (lPadding, rPadding): (CGFloat, CGFloat) = switch index {

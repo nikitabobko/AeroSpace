@@ -150,6 +150,11 @@ on-mode-changed = []
     alt-minus = 'resize smart -50'
     alt-equal = 'resize smart +50'
 
+    # See: https://nikitabobko.github.io/AeroSpace/commands#adjust-accordion-padding
+    # Adjust accordion padding on the fly (uncomment to enable)
+    # alt-minus = 'adjust-accordion-padding -50'
+    # alt-equal = 'adjust-accordion-padding +50'
+
     # See: https://nikitabobko.github.io/AeroSpace/commands#workspace
     alt-1 = 'workspace 1'
     alt-2 = 'workspace 2'

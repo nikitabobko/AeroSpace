@@ -1,6 +1,7 @@
 public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     // Sorted
 
+    case adjustAccordionPadding = "adjust-accordion-padding"
     case balanceSizes = "balance-sizes"
     case close
     case closeAllWindowsButCurrent = "close-all-windows-but-current"
@@ -44,6 +45,8 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
     var result: [String: any SubCommandParserProtocol] = [:]
     for kind in CmdKind.allCases {
         switch kind {
+            case .adjustAccordionPadding:
+                result[kind.rawValue] = SubCommandParser(parseAdjustAccordionPaddingCmdArgs)
             case .balanceSizes:
                 result[kind.rawValue] = SubCommandParser(BalanceSizesCmdArgs.init)
             case .close:
