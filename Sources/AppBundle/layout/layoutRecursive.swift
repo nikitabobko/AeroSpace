@@ -139,13 +139,18 @@ extension TilingContainer {
         for (index, child) in children.enumerated() {
             let containerDimension: CGFloat = orientation == .h ? width : height
             let padding = context.resolvedAccordionPadding.resolve(orientation, containerDimension: containerDimension)
+            let lastIndex = children.indices.last
+            let uniform = config.accordionUniformSize
             let (lPadding, rPadding): (CGFloat, CGFloat) = switch index {
-                case 0 where children.count == 1: (0, 0)
-                case 0:                           (0, padding)
-                case children.indices.last:       (padding, 0)
-                case mruIndex - 1:                (0, 2 * padding)
-                case mruIndex + 1:                (2 * padding, 0)
-                default:                          (padding, padding)
+                case 0 where children.count == 1:                        (0, 0)
+                case mruIndex where uniform && mruIndex == 0:            (0, padding)
+                case mruIndex where uniform && mruIndex == lastIndex:    (padding, 0)
+                case mruIndex where uniform:                             (padding / 2, padding / 2)
+                case 0:                                                  (0, padding)
+                case lastIndex:                                          (padding, 0)
+                case mruIndex - 1:                                       (0, 2 * padding)
+                case mruIndex + 1:                                       (2 * padding, 0)
+                default:                                                 (padding, padding)
             }
             switch orientation {
                 case .h:

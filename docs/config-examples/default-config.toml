@@ -38,6 +38,11 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 #       horizontal = [{ monitor."main" = 300 }, 200]
 accordion-padding = 30
 
+# When true, every focused accordion window has the same size regardless of position.
+# When false (default), edge windows use the full padding on one side and are larger.
+# Fallback value (if you omit the key): accordion-uniform-size = false
+accordion-uniform-size = false
+
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
 
