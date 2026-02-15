@@ -12,7 +12,7 @@ struct LayoutCommand: Command {
         }
         let targetDescription = args.toggleBetween.val.first(where: { !window.matchesDescription($0) })
             ?? args.toggleBetween.val.first.orDie()
-        if window.matchesDescription(targetDescription) { return false }
+        if window.matchesDescription(targetDescription) { return true }
         switch targetDescription {
             case .h_accordion:
                 return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: .h, window: window)
