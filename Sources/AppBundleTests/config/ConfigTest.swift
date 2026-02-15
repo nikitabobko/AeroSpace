@@ -463,8 +463,8 @@ final class ConfigTest: XCTestCase {
             config.accordionPadding,
             AccordionPadding(
                 horizontal: .constant(.absolute(50)),
-                vertical: .constant(.absolute(50))
-            )
+                vertical: .constant(.absolute(50)),
+            ),
         )
     }
 
@@ -481,8 +481,8 @@ final class ConfigTest: XCTestCase {
             config.accordionPadding,
             AccordionPadding(
                 horizontal: .constant(.absolute(300)),
-                vertical: .constant(.absolute(100))
-            )
+                vertical: .constant(.absolute(100)),
+            ),
         )
     }
 
@@ -499,8 +499,8 @@ final class ConfigTest: XCTestCase {
             config.accordionPadding,
             AccordionPadding(
                 horizontal: .constant(.percent(15.0)),
-                vertical: .constant(.absolute(50))
-            )
+                vertical: .constant(.absolute(50)),
+            ),
         )
     }
 
@@ -515,8 +515,8 @@ final class ConfigTest: XCTestCase {
             config.accordionPadding,
             AccordionPadding(
                 horizontal: .constant(.percent(10.0)),
-                vertical: .constant(.percent(10.0))
-            )
+                vertical: .constant(.percent(10.0)),
+            ),
         )
     }
 

@@ -24,13 +24,8 @@ struct AccordionPadding: ConvenienceCopyable, Equatable, Sendable {
 
     static let `default` = AccordionPadding(
         horizontal: .constant(.absolute(30)),
-        vertical: .constant(.absolute(30))
+        vertical: .constant(.absolute(30)),
     )
-
-    init(horizontal: DynamicConfigValue<AccordionPaddingUnit>, vertical: DynamicConfigValue<AccordionPaddingUnit>) {
-        self.horizontal = horizontal
-        self.vertical = vertical
-    }
 }
 
 // MARK: - ResolvedAccordionPadding
@@ -113,7 +108,7 @@ func parseDynamicValue(
     _ fallback: AccordionPaddingUnit,
     _ backtrace: TomlBacktrace,
     _ errors: inout [TomlParseError],
-    _ parseUnit: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> AccordionPaddingUnit?
+    _ parseUnit: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> AccordionPaddingUnit?,
 ) -> DynamicConfigValue<AccordionPaddingUnit> {
     // Simple value (int or string)
     if let unit = parseUnit(raw, backtrace, &errors) {
@@ -127,7 +122,8 @@ func parseDynamicValue(
     // The parseUnit call above would have added an error for the array type
     if let lastError = errors.last,
        case .semantic(_, let msg) = lastError,
-       msg.contains("Expected type is") {
+       msg.contains("Expected type is")
+    {
         errors.removeLast()
     }
 
@@ -150,7 +146,7 @@ func parseDynamicValue(
     }
 
     let rules: [PerMonitorValue<AccordionPaddingUnit>] = parsePerMonitorAccordionValues(
-        TOMLArray(array.dropLast()), backtrace, &errors, parseUnit
+        TOMLArray(array.dropLast()), backtrace, &errors, parseUnit,
     )
 
     return .perMonitor(rules, default: defaultValue)
@@ -160,7 +156,7 @@ private func parsePerMonitorAccordionValues(
     _ array: TOMLArray,
     _ backtrace: TomlBacktrace,
     _ errors: inout [TomlParseError],
-    _ parseUnit: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> AccordionPaddingUnit?
+    _ parseUnit: (TOMLValueConvertible, TomlBacktrace, inout [TomlParseError]) -> AccordionPaddingUnit?,
 ) -> [PerMonitorValue<AccordionPaddingUnit>] {
     array.enumerated().compactMap { (index: Int, raw: TOMLValueConvertible) -> PerMonitorValue<AccordionPaddingUnit>? in
         var backtrace = backtrace + .index(index)
