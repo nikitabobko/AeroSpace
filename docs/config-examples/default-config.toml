@@ -17,10 +17,8 @@ start-at-login = false
 auto-reload-config = false
 
 # Override which editor should be used when opening the config file via the menu bar
-# By default, the system's default text editor for the config file is used (excluding Xcode due to its size)
-# with TextEdit as a fallback. Set this to the full path of your preferred editor application.
-# Example: config-editor-app-path = '/Applications/Visual Studio Code.app'
-# Fallback value (if you omit the key): config-editor-app-path = <nil>
+# By default, macOS will decide which editor to open with TextEdit as the fallback
+# Set this to the full path of your preferred editor application.
 # config-editor-app-path = '/Applications/Visual Studio Code.app'
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
