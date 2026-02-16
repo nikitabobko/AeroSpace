@@ -449,4 +449,25 @@ final class ConfigTest: XCTestCase {
         assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
         assertEquals(colemakConfig.keyMapping.resolve()["f"], .e)
     }
+
+    func testConfigEditorAppPath() {
+        let (config1, errors1) = parseConfig(
+            """
+            config-editor-app-path = '/Applications/Visual Studio Code.app'
+            """,
+        )
+        assertEquals(errors1, [])
+        assertEquals(config1.configEditorAppPath, "/Applications/Visual Studio Code.app")
+
+        let (config2, errors2) = parseConfig("")
+        assertEquals(errors2, [])
+        assertEquals(config2.configEditorAppPath, nil)
+
+        let (_, errors3) = parseConfig(
+            """
+            config-editor-app-path = 123
+            """,
+        )
+        assertEquals(errors3.descriptions, ["config-editor-app-path: Expected type is \'string\'. But actual type is \'integer\'"])
+    }
 }

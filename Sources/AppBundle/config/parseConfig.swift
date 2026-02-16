@@ -112,6 +112,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "start-at-login": Parser(\.startAtLogin, parseBool),
     "auto-reload-config": Parser(\.autoReloadConfig, parseBool),
     "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
+    "config-editor-app-path": Parser(\.configEditorAppPath, parseOptionalString),
     "accordion-padding": Parser(\.accordionPadding, parseInt),
     persistentWorkspacesKey: Parser(\.persistentWorkspaces, parsePersistentWorkspaces),
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseArrayOfStrings),
@@ -251,6 +252,10 @@ func parseInt(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> Parsed
 
 func parseString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<String> {
     raw.string.orFailure(expectedActualTypeError(expected: .string, actual: raw.type, backtrace))
+}
+
+func parseOptionalString(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<String?> {
+    parseString(raw, backtrace).map { Optional($0) }
 }
 
 func parseSimpleType<T>(_ raw: TOMLValueConvertible) -> T? {

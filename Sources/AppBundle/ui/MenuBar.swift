@@ -110,8 +110,16 @@ func shortcutGroup(label: some View, content: some View) -> some View {
     }
 }
 
-func getTextEditorToOpenConfig() -> URL {
-    NSWorkspace.shared.urlForApplication(toOpen: findCustomConfigUrl().urlOrNil ?? defaultConfigUrl)?
+@MainActor func getTextEditorToOpenConfig() -> URL {
+    if let configEditorAppPath = config.configEditorAppPath {
+        let customEditorUrl = URL(filePath: configEditorAppPath)
+        if FileManager.default.fileExists(atPath: customEditorUrl.path),
+           customEditorUrl.pathExtension == "app" || customEditorUrl.lastPathComponent.hasSuffix(".app")
+        {
+            return customEditorUrl
+        }
+    }
+    return NSWorkspace.shared.urlForApplication(toOpen: findCustomConfigUrl().urlOrNil ?? defaultConfigUrl)?
         .takeIf { $0.lastPathComponent != "Xcode.app" } // Blacklist Xcode. It is too heavy to open plain text files
         ?? URL(filePath: "/System/Applications/TextEdit.app")
 }
