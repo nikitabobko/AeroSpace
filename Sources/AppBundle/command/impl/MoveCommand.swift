@@ -5,7 +5,7 @@ struct MoveCommand: Command {
     let args: MoveCmdArgs
     /*conforms*/ var shouldResetClosedWindowsCache = true
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         let direction = args.direction.val
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }
         guard let currentWindow = target.windowOrNil else {
@@ -29,7 +29,8 @@ struct MoveCommand: Command {
                     return moveOut(window: currentWindow, direction: direction, io, args, env)
                 }
             case .workspace: // floating window
-                return io.err("moving floating windows isn't yet supported") // todo
+                let pixels = args.floatingPixels ?? calculateDefaultPixels(direction: direction, window: currentWindow)
+                return await moveFloatingWindow(window: currentWindow, direction: direction, pixels: pixels)
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
                 return io.err(moveOutMacosUnconventionalWindow)
             case .macosPopupWindowsContainer:
@@ -151,6 +152,23 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
                 index: deepTarget.ownIndex.orDie() + 1,
             )
     }
+    return true
+}
+
+@MainActor private func calculateDefaultPixels(direction: CardinalDirection, window: Window) -> Int {
+    guard let monitor = window.nodeMonitor else { return 50 }
+    return direction.orientation == .h
+        ? Int(Double(monitor.width) * 0.1)
+        : Int(Double(monitor.height) * 0.1)
+}
+
+@MainActor private func moveFloatingWindow(window: Window, direction: CardinalDirection, pixels: Int) async -> Bool {
+    guard let currentRect = try? await window.getAxRect() else { return false }
+    let newTopLeft = CGPoint(
+        x: currentRect.topLeftX + Double(direction.xOffset * pixels),
+        y: currentRect.topLeftY + Double(direction.yOffset * pixels)
+    )
+    window.setAxFrame(newTopLeft, nil)
     return true
 }
 

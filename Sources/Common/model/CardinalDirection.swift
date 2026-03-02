@@ -13,4 +13,6 @@ public enum CardinalDirection: String, CaseIterable, Equatable, Sendable {
     }
     public var focusOffset: Int { isPositive ? 1 : -1 }
     public var insertionOffset: Int { isPositive ? 1 : 0 }
+    public var xOffset: Int { self == .left ? -1 : (self == .right ? 1 : 0) }
+    public var yOffset: Int { self == .down ? -1 : (self == .up ? 1 : 0) }
 }
