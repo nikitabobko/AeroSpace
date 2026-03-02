@@ -163,11 +163,16 @@ final class MacWindow: Window {
             // Tiling windows should be unhidden with layoutRecursive anyway
             case .floatingWindow:
                 let workspaceRect = nodeWorkspace.workspaceMonitor.rect
-                let pointInsideWorkspace = CGPoint(
-                    x: workspaceRect.width * prevUnhiddenProportionalPositionInsideWorkspaceRect.x,
-                    y: workspaceRect.height * prevUnhiddenProportionalPositionInsideWorkspaceRect.y,
-                )
-                setAxFrame(workspaceRect.topLeftCorner + pointInsideWorkspace, nil)
+                var newX = workspaceRect.topLeftX + workspaceRect.width * prevUnhiddenProportionalPositionInsideWorkspaceRect.x
+                var newY = workspaceRect.topLeftY + workspaceRect.height * prevUnhiddenProportionalPositionInsideWorkspaceRect.y
+                // todo we probably should replace lastFloatingSize with proper floating window sizing
+                // https://github.com/nikitabobko/AeroSpace/issues/1519
+                let windowWidth = lastFloatingSize?.width ?? 0
+                let windowHeight = lastFloatingSize?.height ?? 0
+                newX = newX.coerceIn(workspaceRect.minX ... max(workspaceRect.minX, workspaceRect.maxX - windowWidth))
+                newY = newY.coerceIn(workspaceRect.minY ... max(workspaceRect.minY, workspaceRect.maxY - windowHeight))
+
+                setAxFrame(CGPoint(x: newX, y: newY), nil)
             case .macosNativeFullscreenWindow, .macosNativeHiddenAppWindow, .macosNativeMinimizedWindow,
                  .macosPopupWindow, .tiling, .rootTilingContainer, .shimContainerRelation: break
         }
