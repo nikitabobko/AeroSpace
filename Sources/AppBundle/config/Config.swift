@@ -46,6 +46,7 @@ struct Config: ConvenienceCopyable {
     var automaticallyUnhideMacosHiddenApps: Bool = false
     var accordionPadding: Int = 30
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
+    var autoTile: Bool = false
     var persistentWorkspaces: OrderedSet<String> = []
     var execOnWorkspaceChange: [String] = [] // todo deprecate
     var keyMapping = KeyMapping()

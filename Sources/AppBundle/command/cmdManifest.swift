@@ -44,6 +44,8 @@ extension CmdArgs {
                 command = ListWindowsCommand(args: self as! ListWindowsCmdArgs)
             case .listWorkspaces:
                 command = ListWorkspacesCommand(args: self as! ListWorkspacesCmdArgs)
+            case .masterStack:
+                command = MasterStackCommand(args: self as! MasterStackCmdArgs)
             case .macosNativeFullscreen:
                 command = MacosNativeFullscreenCommand(args: self as! MacosNativeFullscreenCmdArgs)
             case .macosNativeMinimize:

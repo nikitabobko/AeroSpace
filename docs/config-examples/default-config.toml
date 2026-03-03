@@ -20,6 +20,12 @@ auto-reload-config = false
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
 
+# i3-like auto-tiling (spiral/dwindle layout).
+# When enabled, new windows automatically alternate between horizontal and vertical
+# splits based on the focused window's dimensions, creating a spiral layout.
+# Fallback value (if you omit the key): auto-tile = false
+auto-tile = false
+
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
 # The 'accordion-padding' specifies the size of accordion padding
 # You can set 0 to disable the padding feature

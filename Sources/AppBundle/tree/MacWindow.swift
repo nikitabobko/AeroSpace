@@ -227,6 +227,25 @@ private func unbindAndGetBindingDataForNewTilingWindow(_ workspace: Workspace, w
     window?.unbindFromParent() // It's important to unbind to get correct data from below
     let mruWindow = workspace.mostRecentWindowRecursive
     if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
+        if config.autoTile, let mruRect = mruWindow.lastAppliedLayoutVirtualRect {
+            let desiredOrientation: Orientation = mruRect.width >= mruRect.height ? .h : .v
+            if desiredOrientation != tilingParent.orientation {
+                let mruBinding = mruWindow.unbindFromParent()
+                let subContainer = TilingContainer(
+                    parent: tilingParent,
+                    adaptiveWeight: mruBinding.adaptiveWeight,
+                    desiredOrientation,
+                    .tiles,
+                    index: mruBinding.index,
+                )
+                mruWindow.bind(to: subContainer, adaptiveWeight: WEIGHT_AUTO, index: 0)
+                return BindingData(
+                    parent: subContainer,
+                    adaptiveWeight: WEIGHT_AUTO,
+                    index: 1,
+                )
+            }
+        }
         return BindingData(
             parent: tilingParent,
             adaptiveWeight: WEIGHT_AUTO,
