@@ -1,0 +1,40 @@
+= aerospace-master-stack(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-master-stack
+// tag::purpose[]
+:manpurpose: Arrange windows in a master-stack layout
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace master-stack [-h|--help] [--workspace <workspace>]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The focused window becomes the master window, taking 70% of the screen width.
+Remaining windows are stacked in a spiral layout on the right side.
+
+Use `--cycle` to rotate windows through the master position.
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--workspace <workspace>::
+include::./util/workspace-flag-desc.adoc[]
+
+--cycle:: Cycle the next window (by window ID order) into the master position
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

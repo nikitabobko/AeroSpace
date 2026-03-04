@@ -85,9 +85,6 @@ let list_workspaces_help_generated = """
        OR: list-workspaces [-h|--help] --all [--format <output-format>] [--count] [--json]
        OR: list-workspaces [-h|--help] --focused [--format <output-format>] [--count] [--json]
     """
-let master_stack_help_generated = """
-    USAGE: master-stack [-h|--help] [--workspace <workspace>]
-    """
 let macos_native_fullscreen_help_generated = """
     USAGE: macos-native-fullscreen [-h|--help] [--window-id <window-id>]
        OR: macos-native-fullscreen [-h|--help] [--window-id <window-id>] [--fail-if-noop] on
@@ -95,6 +92,9 @@ let macos_native_fullscreen_help_generated = """
     """
 let macos_native_minimize_help_generated = """
     USAGE: macos-native-minimize [-h|--help] [--window-id <window-id>]
+    """
+let master_stack_help_generated = """
+    USAGE: master-stack [-h|--help] [--workspace <workspace>]
     """
 let mode_help_generated = """
     USAGE: mode [-h|--help] <binding-mode>
