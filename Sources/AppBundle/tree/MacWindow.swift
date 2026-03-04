@@ -131,9 +131,16 @@ final class MacWindow: Window {
             guard let windowRect = try await getAxRect() else { return }
             let topLeftCorner = windowRect.topLeftCorner
             let monitorRect = windowRect.center.monitorApproximation.rect // Similar to layoutFloatingWindow. Non idempotent
-            let absolutePoint = topLeftCorner - monitorRect.topLeftCorner
-            prevUnhiddenProportionalPositionInsideWorkspaceRect =
-                CGPoint(x: absolutePoint.x / monitorRect.width, y: absolutePoint.y / monitorRect.height)
+            // Only record the window's position if it is actually inside the visible monitor
+            // area. If the window is already outside (i.e. stuck at a corner from a previous
+            // broken hide/unhide cycle), skipping the save prevents permanently anchoring the
+            // window to the corner on the next unhideFromCorner() call.
+            // See: https://github.com/nikitabobko/AeroSpace/discussions/1875
+            if nodeMonitor.visibleRect.contains(topLeftCorner) {
+                let absolutePoint = topLeftCorner - monitorRect.topLeftCorner
+                prevUnhiddenProportionalPositionInsideWorkspaceRect =
+                    CGPoint(x: absolutePoint.x / monitorRect.width, y: absolutePoint.y / monitorRect.height)
+            }
         }
         let p: CGPoint
         switch corner {
