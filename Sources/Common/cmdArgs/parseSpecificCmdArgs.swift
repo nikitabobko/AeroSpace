@@ -124,5 +124,5 @@ extension ArgParserProtocol {
 // Hack to preserve backwards compatibility
 private func isResizeNegativeUnitsArg(_ raw: any CmdArgs, arg: String) -> Bool {
     var iter = arg.makeIterator()
-    return raw is ResizeCmdArgs && iter.next() == "-" && iter.next()?.isNumber == true
+    return (raw is ResizeCmdArgs || raw is AdjustAccordionPaddingCmdArgs) && iter.next() == "-" && iter.next()?.isNumber == true
 }
