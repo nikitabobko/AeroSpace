@@ -1,10 +1,10 @@
 import Common
-import HotKey
 import TOMLKit
 
 private let keyMappingParser: [String: any ParserProtocol<KeyMapping>] = [
     "preset": Parser(\.preset, parsePreset),
     "key-notation-to-key-code": Parser(\.rawKeyNotationToKeyCode, parseKeyNotationToKeyCode),
+    "match-key-event-by": Parser(\.matchKeyEventBy, parseMatchKeyEventBy),
 ]
 
 struct KeyMapping: ConvenienceCopyable, Equatable, Sendable {
@@ -12,19 +12,30 @@ struct KeyMapping: ConvenienceCopyable, Equatable, Sendable {
         case qwerty, dvorak, colemak
     }
 
+    enum MatchKeyEventBy: String, CaseIterable, Sendable {
+        case keyCode = "key-code"
+        case keySymbol = "key-symbol"
+    }
+
     init(
         preset: Preset = .qwerty,
-        rawKeyNotationToKeyCode: [String: Key] = [:],
+        rawKeyNotationToKeyCode: [String: UInt32] = [:],
+        matchKeyEventBy: MatchKeyEventBy = .keyCode,
     ) {
         self.preset = preset
         self.rawKeyNotationToKeyCode = rawKeyNotationToKeyCode
+        self.matchKeyEventBy = matchKeyEventBy
     }
 
     fileprivate var preset: Preset = .qwerty
-    fileprivate var rawKeyNotationToKeyCode: [String: Key] = [:]
+    fileprivate var rawKeyNotationToKeyCode: [String: UInt32] = [:]
+    fileprivate(set) var matchKeyEventBy: MatchKeyEventBy = .keyCode
 
-    func resolve() -> [String: Key] {
-        getKeysPreset(preset) + rawKeyNotationToKeyCode
+    func resolve(_ symbol: String) -> UInt32? {
+        if let keyCode = rawKeyNotationToKeyCode[symbol] {
+            return keyCode
+        }
+        return getKeyMapPreset(preset)[symbol]
     }
 }
 
@@ -36,8 +47,8 @@ private func parsePreset(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace
     parseString(raw, backtrace).flatMap { parseEnum($0, KeyMapping.Preset.self).toParsedToml(backtrace) }
 }
 
-private func parseKeyNotationToKeyCode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: Key] {
-    var result: [String: Key] = [:]
+private func parseKeyNotationToKeyCode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: UInt32] {
+    var result: [String: UInt32] = [:]
     guard let table = raw.table else {
         errors.append(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))
         return result
@@ -61,4 +72,8 @@ private func parseKeyNotationToKeyCode(_ raw: TOMLValueConvertible, _ backtrace:
 
 private func isValidKeyNotation(_ str: String) -> Bool {
     str.rangeOfCharacter(from: .whitespacesAndNewlines) == nil && !str.contains("-")
+}
+
+private func parseMatchKeyEventBy(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<KeyMapping.MatchKeyEventBy> {
+    parseString(raw, backtrace).flatMap { parseEnum($0, KeyMapping.MatchKeyEventBy.self).toParsedToml(backtrace) }
 }
