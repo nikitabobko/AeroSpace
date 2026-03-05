@@ -93,6 +93,17 @@ final class MacWindow: Window {
         {
             switch parent.cases {
                 case .tilingContainer, .workspace, .macosHiddenAppsWindowsContainer, .macosFullscreenWindowsContainer:
+                    // Skip focus recalculation if the destroyed window is a dialog/floating window
+                    // belonging to the same app as the currently focused window.
+                    // This prevents focus from jumping away when child frames (e.g., Emacs posframes,
+                    // completion popups) are destroyed.
+                    // https://github.com/nikitabobko/AeroSpace/issues/776
+                    if focus.windowOrNil?.app.pid == app.pid && parent is Workspace {
+                        // The destroyed window was a floating window (dialog) from the same app.
+                        // Don't recalculate focus - let the app handle it internally.
+                        break
+                    }
+
                     let deadWindowFocus = deadWindowWorkspace.toLiveFocus()
                     _ = setFocus(to: deadWindowFocus)
                     // Guard against "Apple Reminders popup" bug: https://github.com/nikitabobko/AeroSpace/issues/201
