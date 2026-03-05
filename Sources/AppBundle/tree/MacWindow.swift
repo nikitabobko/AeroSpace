@@ -125,15 +125,17 @@ final class MacWindow: Window {
     @MainActor
     func hideInCorner(_ corner: OptimalHideCorner) async throws {
         guard let nodeMonitor else { return }
-        // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent
-        // `hideEmulation` calls
+        // Don't accidentally override prevUnhiddenEmulationPosition in case of subsequent `hideInCorner` calls
         if !isHiddenInCorner {
             guard let windowRect = try await getAxRect() else { return }
-            let topLeftCorner = windowRect.topLeftCorner
-            let monitorRect = windowRect.center.monitorApproximation.rect // Similar to layoutFloatingWindow. Non idempotent
-            let absolutePoint = topLeftCorner - monitorRect.topLeftCorner
-            prevUnhiddenProportionalPositionInsideWorkspaceRect =
-                CGPoint(x: absolutePoint.x / monitorRect.width, y: absolutePoint.y / monitorRect.height)
+            // Check for isHiddenInCorner for the second time because of the suspension point above
+            if !isHiddenInCorner {
+                let topLeftCorner = windowRect.topLeftCorner
+                let monitorRect = windowRect.center.monitorApproximation.rect // Similar to layoutFloatingWindow. Non idempotent
+                let absolutePoint = topLeftCorner - monitorRect.topLeftCorner
+                prevUnhiddenProportionalPositionInsideWorkspaceRect =
+                    CGPoint(x: absolutePoint.x / monitorRect.width, y: absolutePoint.y / monitorRect.height)
+            }
         }
         let p: CGPoint
         switch corner {
