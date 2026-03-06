@@ -49,8 +49,8 @@ let focus_help_generated = """
        OR: focus [-h|--help] --dfs-index <dfs-index>
     """
 let fullscreen_help_generated = """
-    USAGE: fullscreen [-h|--help]     [--window-id <window-id>] [--no-outer-gaps]
-       OR: fullscreen [-h|--help] on  [--window-id <window-id>] [--no-outer-gaps] [--fail-if-noop]
+    USAGE: fullscreen [-h|--help]     [--window-id <window-id>] [--no-outer-gaps] [--persistent]
+       OR: fullscreen [-h|--help] on  [--window-id <window-id>] [--no-outer-gaps] [--fail-if-noop] [--persistent]
        OR: fullscreen [-h|--help] off [--window-id <window-id>] [--fail-if-noop]
     """
 let join_with_help_generated = """

@@ -9,6 +9,7 @@ public struct FullscreenCmdArgs: CmdArgs {
             "--no-outer-gaps": trueBoolFlag(\.noOuterGaps),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
             "--window-id": optionalWindowIdFlag(),
+            "--persistent": trueBoolFlag(\.persistent),
         ],
         posArgs: [ArgParser(\.toggle, parseToggleEnum)],
     )
@@ -16,6 +17,7 @@ public struct FullscreenCmdArgs: CmdArgs {
     public var toggle: ToggleEnum = .toggle
     public var noOuterGaps: Bool = false
     public var failIfNoop: Bool = false
+    public var persistent: Bool = false
 }
 
 public func parseFullscreenCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FullscreenCmdArgs> {
