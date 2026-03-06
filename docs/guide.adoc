@@ -478,6 +478,7 @@ Here is a showcase example that uses all the possible configurations:
 ----
 [[on-window-detected]]
     if.app-id = 'com.apple.systempreferences'
+    if.app-id-regex-substring = '^com\.apple\.'
     if.app-name-regex-substring = 'settings'
     if.window-title-regex-substring = 'substring'
     if.workspace = 'workspace-name'
@@ -502,6 +503,9 @@ Available window conditions are:
 
 |`if.app-id`
 |Application ID exact match of the detected window
+
+|`if.app-id-regex-substring`
+|Application ID case insensitive regex substring of the detected window
 
 |`if.app-name-regex-substring`
 |Application name case insensitive regex substring of the detected window
