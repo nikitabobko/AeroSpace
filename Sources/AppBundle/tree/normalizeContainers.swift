@@ -5,6 +5,10 @@ extension Workspace {
             rootTilingContainer.normalizeOppositeOrientationForNestedContainers()
         }
     }
+
+    @MainActor func getDfsSignature() -> String {
+        return rootTilingContainer.getDfsSignatureRecursive()
+    }
 }
 
 extension TilingContainer {
@@ -28,5 +32,19 @@ extension TilingContainer {
                 unbindFromParent()
             }
         }
+    }
+
+    @MainActor fileprivate func getDfsSignatureRecursive() -> String {
+        let childrenSig = children.map { child in
+            if let window = child as? Window {
+                return "W:\(window.windowId)"
+            } else if let container = child as? TilingContainer {
+                return container.getDfsSignatureRecursive()
+            } else {
+                return "?"
+            }
+        }.joined(separator: ",")
+        let orientation = orientation == .h ? "h" : "v"
+        return "C[\(orientation)](\(childrenSig))"
     }
 }

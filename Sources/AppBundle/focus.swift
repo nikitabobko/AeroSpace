@@ -102,6 +102,7 @@ extension Workspace {
 }
 
 @MainActor private var _lastKnownFocus: FrozenFocus = _focus
+@MainActor private var _lastKnownWorkspaceDfsSignatures: [String: String] = [:]
 
 // Used by workspace-back-and-forth
 @MainActor var _prevFocusedWorkspaceName: String? = nil {
@@ -151,6 +152,16 @@ extension Workspace {
     }
     if hasFocusedMonitorChanged {
         onFocusedMonitorChanged(focus)
+    }
+
+    for workspace in Workspace.all {
+        let currentSignature = workspace.getDfsSignature()
+        let lastSignature = _lastKnownWorkspaceDfsSignatures[workspace.name]
+        if currentSignature != lastSignature {
+            _lastKnownWorkspaceDfsSignatures[workspace.name] = currentSignature
+            onWorkspaceChanged(workspace.name, workspace.name)
+            break
+        }
     }
 }
 
