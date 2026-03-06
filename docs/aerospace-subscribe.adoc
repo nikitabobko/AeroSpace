@@ -1,0 +1,66 @@
+= aerospace-subscribe(1)
+include::util/man-attributes.adoc[]
+// tag::purpose[]
+:manpurpose: Subscribe to AeroSpace events and receive notifications via socket
+// end::purpose[]
+:manname: aerospace-subscribe
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace subscribe [-h|--help] [--all] [<event>...]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+This command connects to the AeroSpace server and receives real-time event notifications as JSON lines.
+The connection remains open until terminated (e.g., via Ctrl+C).
+
+On connect, the current state is sent immediately (focus-changed with current window/workspace, mode-changed with current mode).
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--all:: Subscribe to all event types
+
+// =========================================================== Arguments
+include::./util/conditional-arguments-header.adoc[]
+
+The following events can be subscribed to:
+
+focus-changed:: Fired when window focus changes. Includes `windowId`, `workspace`, `monitorId`.
+
+focused-monitor-changed:: Fired when the focused monitor changes. Includes `workspace`, `monitorId`.
+
+focused-workspace-changed:: Fired when the focused workspace changes. Includes `workspace`, `prevWorkspace`.
+
+mode-changed:: Fired when the binding mode changes. Includes `mode`.
+
+window-detected:: Fired when a new window is detected. Includes `windowId`, `workspace`, `appBundleId`, `appName`, `windowTitle`.
+
+binding-triggered:: Fired when a keyboard binding is triggered. Includes `binding`, `mode`.
+
+// =========================================================== Output Format
+== Output Format
+
+Events are output as JSON lines (one JSON object per line):
+
+----
+{"event":"focus-changed","windowId":1234,"workspace":"1","monitorId":0}
+{"event":"focused-workspace-changed","workspace":"2","prevWorkspace":"1"}
+{"event":"mode-changed","mode":"resize"}
+{"event":"binding-triggered","binding":"alt-1","mode":"main"}
+----
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

@@ -98,6 +98,13 @@ struct Main {
 
         let windowId = ProcessInfo.processInfo.environment[AEROSPACE_WINDOW_ID].flatMap(UInt32.init)
         let workspace = ProcessInfo.processInfo.environment[AEROSPACE_WORKSPACE]
+
+        // Handle subscribe command specially
+        if parsedArgs is SubscribeCmdArgs {
+            await runSubscribe(connection, args, windowId: windowId, workspace: workspace)
+            exit(0) // Should not reach here
+        }
+
         let ans = await run(connection, args, stdin: stdin, windowId: windowId, workspace: workspace)
 
         if !ans.stdout.isEmpty { print(ans.stdout) }
@@ -115,6 +122,25 @@ struct Main {
             )
         }
         exit(ans.exitCode)
+    }
+}
+
+func runSubscribe(_ connection: NWConnection, _ args: StrArrSlice, windowId: UInt32?, workspace: String?) async {
+    // Send subscribe request
+    if let e = await connection.write(ClientRequest(args: args.toArray(), stdin: "", windowId: windowId, workspace: workspace)) {
+        exit(stderrMsg: "Failed to write to server socket: \(e)")
+    }
+
+    while true {
+        switch await connection.read() {
+            case .success(let data):
+                if let str = String(data: data, encoding: .utf8) {
+                    print(str)
+                    fflush(stdout)
+                }
+            case .failure:
+                exit(0)
+        }
     }
 }
 

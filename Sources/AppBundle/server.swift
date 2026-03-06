@@ -9,9 +9,11 @@ func startUnixSocketServer() {
     let listener = Result { try NWListener(using: params) }.getOrDie()
     listener.newConnectionHandler = { connection in
         Task {
-            defer { connection.cancel() }
             connection.start(queue: .global())
-            await newConnection(connection)
+            let shouldCancel = await newConnection(connection)
+            if shouldCancel {
+                connection.cancel()
+            }
         }
     }
     listener.start(queue: .global())
@@ -34,7 +36,7 @@ func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) async {
 
 private let serverVersionAndHash = "\(aeroSpaceAppVersion) \(gitHash)"
 
-private func newConnection(_ connection: NWConnection) async { // todo add exit codes
+private func newConnection(_ connection: NWConnection) async -> Bool { // Returns true if connection should be cancelled
     func answerToClient(exitCode: Int32, stdout: String = "", stderr: String = "") async {
         let ans = ServerAnswer(exitCode: exitCode, stdout: stdout, stderr: stderr, serverVersionAndHash: serverVersionAndHash)
         await answerToClient(ans)
@@ -46,7 +48,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
         let (rawRequest, error) = await connection.read().getOrNils()
         if let error {
             await answerToClient(exitCode: 1, stderr: "Error: \(error)")
-            return
+            return true
         }
         guard let rawRequest else { die() }
         let _request = ClientRequest.decodeJson(rawRequest)
@@ -59,6 +61,20 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
                     """,
             )
             continue
+        }
+        // Handle subscribe before parseCommand (subscribe doesn't have a Command impl)
+        if request.args.first == "subscribe" {
+            switch parseSubscribeCmdArgs(request.args.slice(1...).orDie()) {
+                case .cmd(let subscribeArgs):
+                    await handleSubscribe(connection, subscribeArgs)
+                    return false // Connection stays open, managed by subscription system
+                case .help(let help):
+                    await answerToClient(exitCode: 0, stdout: help)
+                    continue
+                case .failure(let err):
+                    await answerToClient(exitCode: 1, stderr: err)
+                    continue
+            }
         }
         let (command, help, err) = parseCommand(request.args).unwrap()
         guard let token: RunSessionGuard = await .isServerEnabled(orIsEnableCommand: command) else {
@@ -110,5 +126,55 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
             continue
         }
         die("Unreachable")
+    }
+}
+
+private func handleSubscribe(_ connection: NWConnection, _ args: SubscribeCmdArgs) async {
+    let initialEvents = await MainActor.run { () -> [ServerEvent] in
+        addSubscriber(connection, events: args.events)
+        let f = focus
+        var events: [ServerEvent] = []
+        for eventType in args.events {
+            switch eventType {
+                case .focusChanged:
+                    events.append(.focusChanged(
+                        windowId: f.windowOrNil?.windowId,
+                        workspace: f.workspace.name,
+                        monitorId: f.workspace.workspaceMonitor.monitorId.map { $0 + 1 } ?? 0,
+                    ))
+                case .focusedMonitorChanged:
+                    events.append(.focusedMonitorChanged(
+                        workspace: f.workspace.name,
+                        monitorId: f.workspace.workspaceMonitor.monitorId.map { $0 + 1 } ?? 0,
+                    ))
+                case .workspaceChanged:
+                    events.append(.workspaceChanged(
+                        workspace: f.workspace.name,
+                        prevWorkspace: f.workspace.name,
+                    ))
+                case .modeChanged:
+                    events.append(.modeChanged(mode: activeMode))
+                case .windowDetected, .bindingTriggered:
+                    break
+            }
+        }
+        return events
+    }
+    for event in initialEvents {
+        _ = await connection.write(event)
+    }
+
+    // Keep connection alive - wait for client to disconnect
+    // The connection will be cleaned up when write fails in broadcastEvent
+    while true {
+        let result = await connection.read()
+        if case .failure = result {
+            await MainActor.run {
+                removeSubscriber(connection)
+            }
+            connection.cancel()
+            return
+        }
+        // Client sent unexpected data, ignore it
     }
 }

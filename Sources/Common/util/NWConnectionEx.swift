@@ -3,12 +3,11 @@ import Foundation
 
 extension NWConnection {
     public func write(_ msg: Codable) async -> NWError? {
-        let mainMsg = Result { try JSONEncoder().encode(msg) }.getOrDie()
-        let header = withUnsafeBytes(of: UInt32(mainMsg.count)) { Data($0) }
-        check(header.count == 4)
-        if let err = await write(header) { return err }
-        if let err = await write(mainMsg) { return err }
-        return nil
+        let payload = Result { try JSONEncoder().encode(msg) }.getOrDie()
+        var data = withUnsafeBytes(of: UInt32(payload.count)) { Data($0) }
+        check(data.count == 4)
+        data.append(payload)
+        return await write(data)
     }
 
     private func write(_ data: Data) async -> NWError? {

@@ -1,5 +1,75 @@
 import Foundation
 
+public enum ServerEventType: String, Codable, CaseIterable, Sendable {
+    case focusChanged = "focus-changed"
+    case focusedMonitorChanged = "focused-monitor-changed"
+    case workspaceChanged = "focused-workspace-changed"
+    case modeChanged = "mode-changed"
+    case windowDetected = "window-detected"
+    case bindingTriggered = "binding-triggered"
+}
+
+public struct ServerEvent: Codable, Sendable {
+    public let event: ServerEventType
+    public var windowId: UInt32?
+    public var workspace: String?
+    public var prevWorkspace: String?
+    public var monitorId: Int?
+    public var mode: String?
+    public var appBundleId: String?
+    public var appName: String?
+    public var windowTitle: String?
+    public var binding: String?
+
+    private init(
+        event: ServerEventType,
+        windowId: UInt32? = nil,
+        workspace: String? = nil,
+        prevWorkspace: String? = nil,
+        monitorId: Int? = nil,
+        mode: String? = nil,
+        appBundleId: String? = nil,
+        appName: String? = nil,
+        windowTitle: String? = nil,
+        binding: String? = nil,
+    ) {
+        self.event = event
+        self.windowId = windowId
+        self.workspace = workspace
+        self.prevWorkspace = prevWorkspace
+        self.monitorId = monitorId
+        self.mode = mode
+        self.appBundleId = appBundleId
+        self.appName = appName
+        self.windowTitle = windowTitle
+        self.binding = binding
+    }
+
+    public static func focusChanged(windowId: UInt32?, workspace: String, monitorId: Int) -> ServerEvent {
+        ServerEvent(event: .focusChanged, windowId: windowId, workspace: workspace, monitorId: monitorId)
+    }
+
+    public static func focusedMonitorChanged(workspace: String, monitorId: Int) -> ServerEvent {
+        ServerEvent(event: .focusedMonitorChanged, workspace: workspace, monitorId: monitorId)
+    }
+
+    public static func workspaceChanged(workspace: String, prevWorkspace: String) -> ServerEvent {
+        ServerEvent(event: .workspaceChanged, workspace: workspace, prevWorkspace: prevWorkspace)
+    }
+
+    public static func modeChanged(mode: String?) -> ServerEvent {
+        ServerEvent(event: .modeChanged, mode: mode)
+    }
+
+    public static func windowDetected(windowId: UInt32, workspace: String?, appBundleId: String?, appName: String?, windowTitle: String?) -> ServerEvent {
+        ServerEvent(event: .windowDetected, windowId: windowId, workspace: workspace, appBundleId: appBundleId, appName: appName, windowTitle: windowTitle)
+    }
+
+    public static func bindingTriggered(mode: String, binding: String) -> ServerEvent {
+        ServerEvent(event: .bindingTriggered, mode: mode, binding: binding)
+    }
+}
+
 // TO EVERYONE REVERSE-ENGINEERING THE PROTOCOL
 // client-server socket API is not public yet.
 // Tracking issue for making it public: https://github.com/nikitabobko/AeroSpace/issues/1513

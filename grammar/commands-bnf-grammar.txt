@@ -100,6 +100,8 @@ aerospace -h;
 
     | list-workspaces [<list_workspaces1_flag>]... --monitor <monitor_id>... [<list_workspaces1_flag>]...
     | list-workspaces [--format <output_format>|--count|--json] (--all|--focused) [--format <output_format>|--count|--json]
+
+    | subscribe [--all] <event>...
     ;
 
 <window_id> ::= {{{ aerospace list-windows --all --format '%{window-id}%{tab}%{app-name} - %{window-title}' }}};
@@ -132,3 +134,5 @@ aerospace -h;
 <app_bundle_id> ::= {{{ aerospace list-apps --format '%{app-bundle-id}%{tab}%{app-name}' }}};
 <pid> ::= {{{ aerospace list-apps --format '%{app-pid}%{tab}%{app-name}' }}};
 <monitor_id> ::= all | mouse | focused | {{{ aerospace list-monitors --format '%{monitor-id}%{tab}%{monitor-name}' }}};
+
+<event> ::= focus-changed | focused-monitor-changed | focused-workspace-changed | mode-changed | window-detected | binding-triggered;

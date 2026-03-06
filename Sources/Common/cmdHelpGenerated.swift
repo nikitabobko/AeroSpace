@@ -129,6 +129,9 @@ let resize_help_generated = """
 let split_help_generated = """
     USAGE: split [-h|--help] [--window-id <window-id>] (horizontal|vertical|opposite)
     """
+let subscribe_help_generated = """
+    USAGE: subscribe [-h|--help] [--all] [<event>...]
+    """
 let summon_workspace_help_generated = """
     USAGE: summon-workspace [-h|--help] [--fail-if-noop] <workspace>
     """

@@ -21,7 +21,7 @@ struct LiveFocus: AeroAny, Equatable {
         return FrozenFocus(
             windowId: windowOrNil?.windowId,
             workspaceName: workspace.name,
-            monitorId: workspace.workspaceMonitor.monitorId ?? 0,
+            monitorId: workspace.workspaceMonitor.monitorId.map { $0 + 1 } ?? 0,
         )
     }
 }
@@ -34,7 +34,7 @@ struct FrozenFocus: AeroAny, Equatable, Sendable {
     let windowId: UInt32?
     let workspaceName: String
     // monitorId is not part of the focus. We keep it here only for 'on-monitor-changed' to work
-    let monitorId: Int // 0-based
+    let monitorId: Int // 1-based (0 means unknown)
 
     @MainActor var live: LiveFocus { // Important: don't access focus.monitorId here. monitorId is not part of the focus. Always prefer workspace
         let window: Window? = windowId.flatMap { Window.get(byId: $0) }
@@ -51,7 +51,7 @@ struct FrozenFocus: AeroAny, Equatable, Sendable {
 
 @MainActor private var _focus: FrozenFocus = {
     let monitor = mainMonitor
-    return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId: monitor.monitorId ?? 0)
+    return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId: monitor.monitorId.map { $0 + 1 } ?? 0)
 }()
 
 /// Global focus.
@@ -155,6 +155,10 @@ extension Workspace {
 }
 
 @MainActor private func onFocusedMonitorChanged(_ focus: LiveFocus) {
+    broadcastEvent(.focusedMonitorChanged(
+        workspace: focus.workspace.name,
+        monitorId: focus.workspace.workspaceMonitor.monitorId.map { $0 + 1 } ?? 0,
+    ))
     if config.onFocusedMonitorChanged.isEmpty { return }
     guard let token: RunSessionGuard = .isServerEnabled else { return }
     // todo potential optimization: don't run runSession if we are already in runSession
@@ -165,6 +169,11 @@ extension Workspace {
     }
 }
 @MainActor private func onFocusChanged(_ focus: LiveFocus) {
+    broadcastEvent(.focusChanged(
+        windowId: focus.windowOrNil?.windowId,
+        workspace: focus.workspace.name,
+        monitorId: focus.workspace.workspaceMonitor.monitorId.map { $0 + 1 } ?? 0,
+    ))
     if config.onFocusChanged.isEmpty { return }
     guard let token: RunSessionGuard = .isServerEnabled else { return }
     // todo potential optimization: don't run runSession if we are already in runSession
@@ -176,6 +185,10 @@ extension Workspace {
 }
 
 @MainActor private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String) {
+    broadcastEvent(.workspaceChanged(
+        workspace: newWorkspace,
+        prevWorkspace: oldWorkspace,
+    ))
     if let exec = config.execOnWorkspaceChange.first {
         let process = Process()
         process.executableURL = URL(filePath: exec)
