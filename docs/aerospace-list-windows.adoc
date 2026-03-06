@@ -12,9 +12,9 @@ include::util/man-attributes.adoc[]
 aerospace list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
                        [--monitor <monitor>...] [--workspace <workspace>...]
                        [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>]
-                       [--count] [--json]
-aerospace list-windows [-h|--help] --all [--format <output-format>] [--count] [--json]
-aerospace list-windows [-h|--help] --focused [--format <output-format>] [--count] [--json]
+                       [--count] [--json] [--sort <sort-option>...]
+aerospace list-windows [-h|--help] --all [--format <output-format>] [--count] [--json] [--sort <sort-option>...]
+aerospace list-windows [-h|--help] --focused [--format <output-format>] [--count] [--json] [--sort <sort-option>...]
 
 // end::synopsis[]
 
@@ -54,6 +54,18 @@ include::util/monitor-option.adoc[]
 Filter results to only print windows that belong to the Application with specified https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
 +
 Deprecated (but still supported) flag name: `--app-id`
+
+--sort <sort-option>...::
+Sort the output by the specified criteria.
+`<sort-option>...` is a space-separated list of sort options.
++
+Possible values: +
++
+. `recent` - Sort by most recently focused
+. `app-name` - Sort by application name
+. `window-title` - Sort by window title
++
+If not specified, the default sort order is: `app-name window-title`
 
 --format <output-format>:: Specify output format. See "Output Format" section for more details.
 Incompatible with `--count`
