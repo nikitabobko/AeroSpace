@@ -40,6 +40,11 @@ default-root-container-orientation = 'auto'
 # Fallback value (if you omit the key): on-focused-monitor-changed = []
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
+# Focus follows mouse: automatically focus the window under the mouse cursor
+# Possible values: (true|false)
+# Fallback value (if you omit the key): focus-follows-mouse = false
+# focus-follows-mouse = true
+
 # You can effectively turn off macOS "Hide application" (cmd-h) feature by toggling this flag
 # Useful if you don't use this macOS feature, but accidentally hit cmd-h or cmd-alt-h key
 # Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app

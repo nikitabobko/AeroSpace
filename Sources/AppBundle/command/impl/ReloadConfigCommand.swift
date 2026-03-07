@@ -34,6 +34,7 @@ struct ReloadConfigCommand: Command {
                 configUrl = url
                 try await activateMode(activeMode)
                 syncStartAtLogin()
+                installFocusFollowsMouseMonitor()
                 MessageModel.shared.message = nil
             }
             result = true
