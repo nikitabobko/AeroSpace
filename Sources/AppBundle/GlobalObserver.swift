@@ -75,5 +75,7 @@ enum GlobalObserver {
                 }
             }
         }
+
+        installFocusFollowsMouseMonitor()
     }
 }
