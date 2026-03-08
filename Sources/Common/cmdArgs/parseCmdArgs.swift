@@ -55,22 +55,20 @@ public struct CmdParser<T: ConvenienceCopyable>: Sendable {
     let flags: [String: any SubArgParserProtocol<T>]
     let positionalArgs: [any ArgParserProtocol<T>]
     let conflictingOptions: [Set<String>]
-}
 
-public func cmdParser<T>(
-    kind: CmdKind,
-    allowInConfig: Bool,
-    help: String,
-    flags: [String: any SubArgParserProtocol<T>],
-    posArgs: [any ArgParserProtocol<T>],
-    conflictingOptions: [Set<String>] = [],
-) -> CmdParser<T> {
-    CmdParser(
-        info: CmdStaticInfo(help: help, kind: kind, allowInConfig: allowInConfig),
-        flags: flags,
-        positionalArgs: posArgs,
-        conflictingOptions: conflictingOptions,
-    )
+    init(
+        kind: CmdKind,
+        allowInConfig: Bool,
+        help: String,
+        flags: [String: any SubArgParserProtocol<T>],
+        posArgs: [any ArgParserProtocol<T>],
+        conflictingOptions: [Set<String>] = [],
+    ) {
+        self.info = CmdStaticInfo(help: help, kind: kind, allowInConfig: allowInConfig)
+        self.flags = flags
+        self.positionalArgs = posArgs
+        self.conflictingOptions = conflictingOptions
+    }
 }
 
 public struct CmdStaticInfo: Equatable, Sendable {

@@ -3,7 +3,7 @@ public struct SubscribeCmdArgs: CmdArgs {
     fileprivate init(rawArgs: StrArrSlice) {
         self.commonState = .init(rawArgs)
     }
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .subscribe,
         allowInConfig: false,
         help: subscribe_help_generated,

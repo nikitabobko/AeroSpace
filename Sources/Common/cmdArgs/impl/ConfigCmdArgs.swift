@@ -1,6 +1,6 @@
 public struct ConfigCmdArgs: CmdArgs, Equatable {
     /*conforms*/ public var commonState: CmdArgsCommonState
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .config,
         allowInConfig: false,
         help: config_help_generated,

@@ -1,7 +1,7 @@
 public struct FullscreenCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
     fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .fullscreen,
         allowInConfig: true,
         help: fullscreen_help_generated,

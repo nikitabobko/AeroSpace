@@ -1,6 +1,6 @@
 public struct TriggerBindingCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .triggerBinding,
         allowInConfig: true,
         help: trigger_binding_help_generated,
