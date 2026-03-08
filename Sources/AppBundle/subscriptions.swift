@@ -32,7 +32,9 @@ func handleSubscribeAndWaitTillError(_ connection: NWConnection, _ args: Subscri
                     )
                 case .windowDetected, .bindingTriggered: continue
             }
-            _ = await connection.writeAtomic(event, jsonEncoder)
+            if await connection.writeAtomic(event, jsonEncoder).error != nil {
+                return
+            }
         }
     }
 
@@ -50,7 +52,7 @@ func broadcastEvent(_ event: ServerEvent) {
     Task { @MainActor in
         for (id, subscriber) in subscribers {
             guard subscriber.events.contains(event.eventType) else { continue }
-            if await subscriber.connection.writeAtomic(event, jsonEncoder) != nil {
+            if await subscriber.connection.writeAtomic(event, jsonEncoder).error != nil {
                 _ = subscribers.removeValue(forKey: id)
             }
         }

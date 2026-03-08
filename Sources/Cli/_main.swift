@@ -28,7 +28,7 @@ struct Main {
         if args.first == "--version" || args.first == "-v" {
             let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
             let serverVersionAndHash: String?
-            if await connection.startBlocking() == nil {
+            if await connection.startBlocking().error == nil {
                 let ans = await run(connection, [], stdin: "", windowId: nil, workspace: nil)
                 serverVersionAndHash = ans.serverVersionAndHash
             } else {
@@ -65,7 +65,7 @@ struct Main {
 
         let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
 
-        if let e = await connection.startBlocking() {
+        if let e = await connection.startBlocking().error {
             exit(stderrMsg: "Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
         }
 
@@ -126,7 +126,7 @@ struct Main {
 }
 
 func runSubscribe(_ connection: NWConnection, _ args: StrArrSlice, windowId: UInt32?, workspace: String?) async {
-    if let e = await connection.writeAtomic(ClientRequest(args: args.toArray(), stdin: "", windowId: windowId, workspace: workspace)) {
+    if let e = await connection.writeAtomic(ClientRequest(args: args.toArray(), stdin: "", windowId: windowId, workspace: workspace)).error {
         exit(stderrMsg: "Failed to write to server socket: \(e)")
     }
 
@@ -146,7 +146,7 @@ func runSubscribe(_ connection: NWConnection, _ args: StrArrSlice, windowId: UIn
 }
 
 func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowId: UInt32?, workspace: String?) async -> ServerAnswer {
-    if let e = await connection.writeAtomic(ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)) {
+    if let e = await connection.writeAtomic(ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)).error {
         exit(stderrMsg: "Failed to write to server socket: \(e)")
     }
 

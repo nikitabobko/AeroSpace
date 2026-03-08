@@ -2,7 +2,7 @@ import Network
 import Foundation
 
 extension NWConnection {
-    public func writeAtomic(_ msg: Codable, _ encoder: JSONEncoder = JSONEncoder()) async -> NWError? {
+    public func writeAtomic(_ msg: Codable, _ encoder: JSONEncoder = JSONEncoder()) async -> ((), error: NWError?) {
         let payload = Result { try encoder.encode(msg) }.getOrDie()
         var data = withUnsafeBytes(of: UInt32(payload.count)) { Data($0) }
         check(data.count == 4)
@@ -10,25 +10,25 @@ extension NWConnection {
         return await withCheckedContinuation { cont in
             send(content: data, completion: .contentProcessed { error in
                 if let error {
-                    cont.resume(returning: error)
+                    cont.resume(returning: ((), error))
                 } else {
-                    cont.resume(returning: nil)
+                    cont.resume(returning: ((), nil))
                 }
             })
         }
     }
 
-    public func startBlocking() async -> NWError? {
+    public func startBlocking() async -> ((), error: NWError?) {
         await withCheckedContinuation { cont in
             stateUpdateHandler = { state in
                 switch state {
                     case .cancelled, .preparing, .setup: break
                     case .ready:
                         self.stateUpdateHandler = nil
-                        cont.resume(returning: nil)
+                        cont.resume(returning: ((), nil))
                     case .failed(let error), .waiting(let error):
                         self.stateUpdateHandler = nil
-                        cont.resume(returning: error)
+                        cont.resume(returning: ((), error))
                     @unknown default: break
                 }
             }

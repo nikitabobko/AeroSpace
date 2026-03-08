@@ -23,7 +23,7 @@ func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) async {
     let socketFile = "/tmp/\(stableAeroSpaceAppId)-\(unixUserName).sock"
     let connection = NWConnection(to: NWEndpoint.unix(path: socketFile), using: .tcp)
     defer { connection.cancel() }
-    if await connection.startBlocking() != nil { // Can't connect, AeroSpace.app is not running
+    if await connection.startBlocking().error != nil { // Can't connect, AeroSpace.app is not running
         return
     }
 
