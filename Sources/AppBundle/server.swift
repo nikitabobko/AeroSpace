@@ -60,6 +60,15 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
             )
             continue
         }
+        // Handle subscribe before parseCommand (subscribe doesn't have a Command impl)
+        if request.args.first == "subscribe" {
+            switch parseSubscribeCmdArgs(request.args.slice(1...).orDie()) {
+                case .cmd(let subscribeArgs): await handleSubscribeAndWaitTillError(connection, subscribeArgs)
+                case .help(let help): await answerToClient(exitCode: 0, stdout: help)
+                case .failure(let err): await answerToClient(exitCode: 1, stderr: err)
+            }
+            continue
+        }
         let (command, help, err) = parseCommand(request.args).unwrap()
         guard let token: RunSessionGuard = await .isServerEnabled(orIsEnableCommand: command) else {
             await answerToClient(
