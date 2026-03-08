@@ -12,7 +12,7 @@ source ./script/setup.sh
 ./.debug/aerospace -v | grep -q "0.0.0-SNAPSHOT SNAPSHOT"
 ./.debug/aerospace --version | grep -q "0.0.0-SNAPSHOT SNAPSHOT"
 
-./format.sh --check-uncommitted-files
+./lint.sh --check-uncommitted-files
 ./generate.sh
 ./script/check-uncommitted-files.sh
 

@@ -12,3 +12,6 @@ swift-test:
 
 format:
 	./format.sh
+
+lint:
+	./lint.sh
