@@ -110,20 +110,20 @@ extension String {
         for char: Character? in (Array(self) + [nil]) {
             switch (mode, char) { // State machine
                 case (.stringLiteral, interpolationChar):
-                    mode = .dollarEncountered
+                    mode = .interpolationCharEncountered
                 case (.stringLiteral, _):
                     if let char {
                         literal.append(char)
                     } else {
                         result.append(.literal(literal))
                     }
-                case (.dollarEncountered, "{"):
+                case (.interpolationCharEncountered, "{"):
                     mode = .interpolatedValue("")
                     result.append(.literal(literal))
                     literal = ""
-                case (.dollarEncountered, interpolationChar):
+                case (.interpolationCharEncountered, interpolationChar):
                     literal.append(interpolationChar)
-                case (.dollarEncountered, _):
+                case (.interpolationCharEncountered, _):
                     literal.append(interpolationChar)
                     if let char {
                         literal.append(char)
@@ -156,6 +156,6 @@ public enum StringInterToken: Equatable, Sendable {
 }
 
 private enum InterpolationParserState {
-    case stringLiteral, dollarEncountered
+    case stringLiteral, interpolationCharEncountered
     case interpolatedValue(String)
 }
