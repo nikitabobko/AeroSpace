@@ -11,11 +11,9 @@ extension Monitor {
         )
     }
 
-    /// todo make 1-based
-    /// 0-based index
-    var monitorId: Int? {
+    var monitorId_oneBased: Int? {
         let sorted = sortedMonitors
         let origin = self.rect.topLeftCorner
-        return sorted.firstIndex { $0.rect.topLeftCorner == origin }
+        return sorted.firstIndex { $0.rect.topLeftCorner == origin }.map { $0 + 1 }
     }
 }
