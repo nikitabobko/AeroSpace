@@ -10,7 +10,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
         allowInConfig: false,
         help: list_windows_help_generated,
         flags: [
-            "--all": trueBoolFlag(\.all),
+            "--all": trueBoolFlag(\.allAlias),
 
             // Filtering flags
             "--focused": trueBoolFlag(\.filteringOptions.focused),
@@ -33,7 +33,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
         ],
     )
 
-    fileprivate var all: Bool = false // ALIAS
+    fileprivate var allAlias: Bool = false
 
     public var filteringOptions = FilteringOptions()
     public var _format: [StringInterToken] = []
@@ -65,16 +65,16 @@ public func parseListWindowsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWindow
     let args = args.map { $0 == "--app-id" ? "--app-bundle-id" : $0 }.slice // Compatibility
     return parseSpecificCmdArgs(ListWindowsCmdArgs(commonState: .init(args)), args)
         .filter("Mandatory option is not specified (--focused|--all|--monitor|--workspace)") { raw in
-            raw.filteringOptions.focused || raw.all || !raw.filteringOptions.monitors.isEmpty || !raw.filteringOptions.workspaces.isEmpty
+            raw.filteringOptions.focused || raw.allAlias || !raw.filteringOptions.monitors.isEmpty || !raw.filteringOptions.workspaces.isEmpty
         }
         .filter("--all conflicts with \"filtering\" flags. Please use '--monitor all' instead of '--all' alias") { raw in
-            raw.all.implies(raw.filteringOptions == ListWindowsCmdArgs.FilteringOptions())
+            raw.allAlias.implies(raw.filteringOptions == ListWindowsCmdArgs.FilteringOptions())
         }
         .filter("--focused conflicts with other \"filtering\" flags") { raw in
             raw.filteringOptions.focused.implies(raw.filteringOptions.copy(\.focused, false) == ListWindowsCmdArgs.FilteringOptions())
         }
         .map { raw in
-            raw.all ? raw.copy(\.filteringOptions.monitors, [.all]).copy(\.all, false) : raw // Normalize alias
+            raw.allAlias ? raw.copy(\.filteringOptions.monitors, [.all]).copy(\.allAlias, false) : raw // Normalize alias
         }
         .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
 }

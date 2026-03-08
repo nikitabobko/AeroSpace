@@ -54,7 +54,7 @@ extension Result {
     @discardableResult
     public func getOrDie(
         _ msgPrefix: String = "",
-        file: String = #fileID,
+        file: StaticString = #fileID,
         line: Int = #line,
         column: Int = #column,
         function: String = #function,

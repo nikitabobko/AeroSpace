@@ -86,9 +86,9 @@ struct TrayItem: Hashable, Identifiable {
     var systemImageName: String? {
         // System image type is only valid for numbers 0 to 50 and single capital char workspace name
         if let number = Int(name) {
-            guard number >= 0 && number <= 50 else { return nil }
+            if !(0 ... 50).contains(number) { return nil }
         } else if name.count == 1 {
-            guard validLetters.contains(name) else { return nil }
+            if !validLetters.contains(name) { return nil }
         } else {
             return nil
         }

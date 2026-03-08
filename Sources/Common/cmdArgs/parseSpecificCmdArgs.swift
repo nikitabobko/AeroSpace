@@ -80,18 +80,11 @@ public enum ParsedCmd<T: Sendable>: Sendable {
     }
 
     public func unwrap() -> (T?, String?, String?) {
-        var command: T? = nil
-        var error: String? = nil
-        var help: String? = nil
         switch self {
-            case .cmd(let _command):
-                command = _command
-            case .help(let _help):
-                help = _help
-            case .failure(let _error):
-                error = _error
+            case .cmd(let command):   (command, nil, nil)
+            case .help(let help):     (nil, help, nil)
+            case .failure(let error): (nil, nil, error)
         }
-        return (command, help, error)
     }
 }
 

@@ -19,7 +19,7 @@ actor AwaitableOneTimeBroadcastLatch {
                 } else if done {
                     cont.resume()
                 } else {
-                    awaiters[id] = .some(cont)
+                    awaiters[id] = .just(cont)
                 }
             }
         } onCancel: {
@@ -31,11 +31,11 @@ actor AwaitableOneTimeBroadcastLatch {
         if let awaiter = awaiters.removeValue(forKey: id) {
             awaiter.valueOrNil.orDie().resume(throwing: CancellationError())
         } else if !done {
-            awaiters[id] = .null
+            awaiters[id] = .null // Indicate to 'await' that the client should be cancelled right away when it suspends
         }
     }
 
-    func signal() {
+    func signalToAll() {
         done = true
         for (_, awaiter) in awaiters {
             awaiter.valueOrNil?.resume()

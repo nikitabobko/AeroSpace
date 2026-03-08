@@ -107,7 +107,7 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
     }) as? TilingContainer
     guard let innerMostChild else { return false }
     guard let parent = innerMostChild.parent else { return false }
-    switch parent.nodeCases {
+    switch parent.cases {
         case .tilingContainer(let parent):
             check(parent.orientation == direction.orientation)
             guard let ownIndex = innerMostChild.ownIndex else { return false }
@@ -119,8 +119,6 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
             return io.err(moveOutMacosUnconventionalWindow)
         case .macosPopupWindowsContainer:
             return false // Impossible
-        case .window:
-            die("Window can't contain children nodes")
     }
 }
 

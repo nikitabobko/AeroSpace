@@ -52,7 +52,7 @@ struct Main {
             exit(0)
         }
 
-        var parsedArgs: (any CmdArgs)! = nil
+        let parsedArgs: any CmdArgs
         switch parseCmdArgs(args) {
             case .cmd(let _parsedArgs):
                 parsedArgs = _parsedArgs
@@ -125,7 +125,7 @@ func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowI
 
     switch await connection.read() {
         case .success(let answer):
-            return (try? JSONDecoder().decode(ServerAnswer.self, from: answer)) ?? exitT(stderrMsg: "Failed to parse server response")
+            return (try? JSONDecoder().decode(ServerAnswer.self, from: answer)) ?? exitT(stderrMsg: "Failed to parse server response: \(String(data: answer, encoding: .utf8).prettyDescription)")
         case .failure(let error):
             exit(stderrMsg: "Failed to read from server socket: \(error)")
     }

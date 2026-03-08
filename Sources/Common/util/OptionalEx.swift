@@ -3,7 +3,7 @@ extension Optional {
 
     public func orDie(
         _ message: String = "",
-        file: String = #fileID,
+        file: StaticString = #fileID,
         line: Int = #line,
         column: Int = #column,
         function: String = #function,

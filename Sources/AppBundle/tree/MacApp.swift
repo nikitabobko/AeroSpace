@@ -70,7 +70,7 @@ final class MacApp: AbstractApp {
                     let app = isGood ? MacApp(nsApp, axApp, subscriptions, Thread.current) : nil
                     Task { @MainActor in
                         allAppsMap[pid] = app
-                        await wip.signal()
+                        await wip.signalToAll()
                         wipPids[pid] = nil
                     }
                     if isGood {

@@ -89,7 +89,7 @@ struct RunSessionGuard: Sendable {
     }
     @MainActor
     static func checkServerIsEnabledOrDie(
-        file: String = #fileID,
+        file: StaticString = #fileID,
         line: Int = #line,
         column: Int = #column,
         function: String = #function,

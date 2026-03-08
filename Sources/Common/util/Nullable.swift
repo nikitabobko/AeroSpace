@@ -1,11 +1,11 @@
 /// Like Swift's built-in Optional but avoids implicit nil coercions
 public enum Nullable<T> {
-    case some(T)
+    case just(T)
     case null
 
     public var valueOrNil: T? {
         switch self {
-            case .some(let value): value
+            case .just(let value): value
             case .null: nil
         }
     }

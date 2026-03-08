@@ -2,7 +2,7 @@ import AppKit
 import Common
 
 open class Window: TreeNode, Hashable {
-    nonisolated let windowId: UInt32 // todo nonisolated keyword is no longer necessary?
+    let windowId: UInt32
     let app: any AbstractApp
     var lastFloatingSize: CGSize?
     var isFullscreen: Bool = false
@@ -26,7 +26,7 @@ open class Window: TreeNode, Hashable {
     @MainActor
     func closeAxWindow() { die("Not implemented") }
 
-    nonisolated public func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(windowId)
     }
 

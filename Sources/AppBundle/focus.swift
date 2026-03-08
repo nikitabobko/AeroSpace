@@ -29,7 +29,7 @@ struct LiveFocus: AeroAny, Equatable {
 /// "old", "captured", "frozen in time" Focus
 /// It's safe to keep a hard reference to this object.
 /// Unlike in LiveFocus, information inside FrozenFocus isn't guaranteed to be self-consistent.
-/// window - workspace - monitor relation could change since the object is created
+/// window - workspace - monitor relation could change since the moment object was created
 struct FrozenFocus: AeroAny, Equatable, Sendable {
     let windowId: UInt32?
     let workspaceName: String

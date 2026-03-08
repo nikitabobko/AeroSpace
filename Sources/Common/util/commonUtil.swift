@@ -14,7 +14,7 @@ private var recursionDetectorDuringTermination = false
 
 public func dieT<T>(
     _ __message: String = "",
-    file: String = #fileID,
+    file: StaticString = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,
@@ -112,7 +112,7 @@ public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(sep
 
 @inlinable public func die(
     _ message: String = "",
-    file: String = #fileID,
+    file: StaticString = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,
@@ -123,7 +123,7 @@ public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(sep
 public func check(
     _ condition: Bool,
     _ message: @autoclosure () -> String = "",
-    file: String = #fileID,
+    file: StaticString = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,
