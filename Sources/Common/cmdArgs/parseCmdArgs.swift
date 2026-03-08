@@ -50,7 +50,7 @@ extension CmdArgs {
     }
 }
 
-public struct CmdParser<Root: ConvenienceCopyable>: Sendable {
+public struct CmdParser<Root>: Sendable {
     let info: CmdStaticInfo
     let flags: [String: any ArgParserProtocol<SubArgParserInput, Root, ()>]
     let positionalArgs: [any ArgParserProtocol<PosArgParserInput, Root, PosArgParserContext>]
