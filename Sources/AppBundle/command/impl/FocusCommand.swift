@@ -127,7 +127,7 @@ struct FocusCommand: Command {
 
         let tilingParent: TilingContainer
         let index: Int
-        if let target = center.coerceIn(rect: workspace.workspaceMonitor.visibleRectPaddedByOuterGaps)?
+        if let target = center.coerce(in: workspace.workspaceMonitor.visibleRectPaddedByOuterGaps)?
             .findIn(tree: workspace.rootTilingContainer, virtual: true)
         {
             guard let targetCenter = try await target.getCenter() else { continue }

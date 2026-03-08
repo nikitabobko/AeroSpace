@@ -172,10 +172,6 @@ extension Bool {
     public func implies(_ mustHold: @autoclosure () -> Bool) -> Bool { !self || mustHold() }
 }
 
-extension Double {
-    public var squared: Double { self * self }
-}
-
 extension URL {
     public func open(with url: URL) {
         NSWorkspace.shared.open([self], withApplicationAt: url, configuration: NSWorkspace.OpenConfiguration())

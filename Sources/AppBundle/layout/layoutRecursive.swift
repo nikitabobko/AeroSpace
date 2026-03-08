@@ -82,8 +82,8 @@ extension Window {
 
             let windowWidth = windowRect.width
             let windowHeight = windowRect.height
-            newX = newX.coerceIn(workspaceRect.minX ... max(workspaceRect.minX, workspaceRect.maxX - windowWidth))
-            newY = newY.coerceIn(workspaceRect.minY ... max(workspaceRect.minY, workspaceRect.maxY - windowHeight))
+            newX = newX.coerce(in: workspaceRect.minX ... max(workspaceRect.minX, workspaceRect.maxX - windowWidth))
+            newY = newY.coerce(in: workspaceRect.minY ... max(workspaceRect.minY, workspaceRect.maxY - windowHeight))
 
             setAxFrame(CGPoint(x: newX, y: newY), nil)
         }

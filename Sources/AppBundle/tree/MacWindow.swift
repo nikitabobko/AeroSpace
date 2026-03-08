@@ -166,8 +166,8 @@ final class MacWindow: Window {
                 // https://github.com/nikitabobko/AeroSpace/issues/1519
                 let windowWidth = lastFloatingSize?.width ?? 0
                 let windowHeight = lastFloatingSize?.height ?? 0
-                newX = newX.coerceIn(workspaceRect.minX ... max(workspaceRect.minX, workspaceRect.maxX - windowWidth))
-                newY = newY.coerceIn(workspaceRect.minY ... max(workspaceRect.minY, workspaceRect.maxY - windowHeight))
+                newX = newX.coerce(in: workspaceRect.minX ... max(workspaceRect.minX, workspaceRect.maxX - windowWidth))
+                newY = newY.coerce(in: workspaceRect.minY ... max(workspaceRect.minY, workspaceRect.maxY - windowHeight))
 
                 setAxFrame(CGPoint(x: newX, y: newY), nil)
             case .macosNativeFullscreenWindow, .macosNativeHiddenAppWindow, .macosNativeMinimizedWindow,
