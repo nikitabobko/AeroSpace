@@ -20,16 +20,22 @@ extension NWConnection {
 
     public func startBlocking() async -> ((), error: NWError?) {
         await withCheckedContinuation { cont in
+            let isDone = IsDone()
             stateUpdateHandler = { state in
-                switch state {
-                    case .cancelled, .preparing, .setup: break
-                    case .ready:
-                        self.stateUpdateHandler = nil
-                        cont.resume(returning: ((), nil))
-                    case .failed(let error), .waiting(let error):
-                        self.stateUpdateHandler = nil
-                        cont.resume(returning: ((), error))
-                    @unknown default: break
+                Task {
+                    let error: NWError?
+                    switch state {
+                        case .cancelled, .preparing, .setup: return
+                        case .ready: error = nil
+                        case .failed(let e), .waiting(let e): error = e
+                        @unknown default: die("Unknown NWConnection.State: \(state)")
+                    }
+                    // Make sure to resume continuation only once
+                    if await isDone.markAsDone().wasAlreadyDone {
+                        return
+                    }
+                    self.stateUpdateHandler = nil
+                    cont.resume(returning: ((), error))
                 }
             }
             start(queue: .global())
@@ -76,5 +82,15 @@ extension NWConnection {
             case .failure(let e):
                 return .failure(e)
         }
+    }
+}
+
+private actor IsDone {
+    private var isDone: Bool = false
+
+    func markAsDone() -> (wasAlreadyDone: Bool, ()) {
+        let old = isDone
+        isDone = true
+        return (old, ())
     }
 }
