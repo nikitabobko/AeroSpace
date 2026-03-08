@@ -41,11 +41,12 @@ extension NWConnection {
         }
     }
 
-    private func read(bytes size: UInt32) async -> Result<Data, NWError> {
-        var data = Data(capacity: Int(size))
+    private func read(bytes size: Int) async -> Result<Data, NWError> {
+        var data = Data(capacity: size)
         while data.count < size {
+            let remaining = size - data.count
             let chunk: Result<Data, NWError> = await withCheckedContinuation { cont in
-                receive(minimumIncompleteLength: Int(size), maximumLength: Int(size)) { data, context, isComplete, error in
+                receive(minimumIncompleteLength: remaining, maximumLength: remaining) { data, context, isComplete, error in
                     if let error {
                         cont.resume(returning: .failure(error))
                     } else {
@@ -65,7 +66,7 @@ extension NWConnection {
         switch await read(bytes: 4) {
             case .success(let header):
                 let count = header.withUnsafeBytes { $0.load(as: UInt32.self) }
-                return await read(bytes: count)
+                return await read(bytes: Int(count))
             case .failure(let e):
                 return .failure(e)
         }
