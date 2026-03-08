@@ -217,6 +217,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(
+            errors.descriptions,
             ["""
                 The config contains:
                 1. usage of 'split' command
@@ -225,7 +226,6 @@ final class ConfigTest: XCTestCase {
 
                 My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.
                 """],
-            errors.descriptions,
         )
     }
 
