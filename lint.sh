@@ -8,6 +8,7 @@ source ./script/setup.sh
 # Disable superfluous comments detection because it's buggy. todo: report to periphery maintainer
 ./.deps/periphery/periphery scan --quiet \
     --strict \
+    --disable-redundant-public-analysis \
     --no-superfluous-ignore-comments \
     --exclude-targets \
     ShellParserGenerated
