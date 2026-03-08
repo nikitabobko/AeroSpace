@@ -1,3 +1,4 @@
+// periphery:ignore:all - Those are utils that can become useful any moment
 @testable import AppBundle
 import Common
 import XCTest
@@ -7,6 +8,7 @@ func assertTrue(_ actual: Bool, file: String = #filePath, line: Int = #line) {
 }
 
 // Because assertEquals default messages are unreadable!
+// periphery:ignore
 func assertNotEquals<T>(_ actual: T, _ expected: T, file: String = #filePath, line: Int = #line) where T: Equatable {
     if actual == expected {
         failExpectedActual("not \(expected)", actual, file: file, line: line)

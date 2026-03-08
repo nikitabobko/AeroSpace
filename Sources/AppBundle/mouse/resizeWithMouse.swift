@@ -4,7 +4,7 @@ import Common
 @MainActor
 private var resizeWithMouseTask: Task<(), any Error>? = nil
 
-func resizedObs(_ obs: AXObserver, ax: AXUIElement, notif: CFString, data: UnsafeMutableRawPointer?) {
+func resizedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableRawPointer?) {
     let notif = notif as String
     let windowId = ax.containingWindowId()
     Task { @MainActor in

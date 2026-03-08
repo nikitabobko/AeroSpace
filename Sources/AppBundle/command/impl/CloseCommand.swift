@@ -6,7 +6,7 @@ struct CloseCommand: Command {
     /*conforms*/ var shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
-        try await allowOnlyCancellationError {
+        try await allowOnlyCancellationError { @MainActor @Sendable in
             guard let target = args.resolveTargetOrReportError(env, io) else { return false }
             guard let window = target.windowOrNil else {
                 return io.err("Empty workspace")

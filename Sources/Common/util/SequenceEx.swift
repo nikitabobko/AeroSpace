@@ -1,3 +1,4 @@
+// periphery:ignore:all
 import AppKit
 import OrderedCollections
 

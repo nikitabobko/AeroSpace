@@ -18,7 +18,7 @@ extension TriggerBindingCmdArgs {
     public var mode: String { _mode.orDie() }
 }
 
-public func parseTriggerBindingCmdArgs(_ args: StrArrSlice) -> ParsedCmd<TriggerBindingCmdArgs> {
+func parseTriggerBindingCmdArgs(_ args: StrArrSlice) -> ParsedCmd<TriggerBindingCmdArgs> {
     parseSpecificCmdArgs(TriggerBindingCmdArgs(commonState: .init(args)), args)
         .filter("--mode flag is mandatory") { $0._mode != nil }
 }

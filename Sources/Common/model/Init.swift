@@ -1,5 +1,5 @@
 nonisolated(unsafe) public var isCli = true
-public var isServer: Bool { !isCli }
+var isServer: Bool { !isCli }
 
 nonisolated(unsafe) public var terminationHandler: TerminationHandler = EmptyTerminationHandler()
 

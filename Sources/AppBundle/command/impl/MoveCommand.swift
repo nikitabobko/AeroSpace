@@ -67,7 +67,7 @@ struct MoveCommand: Command {
 
                 return MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
             } else {
-                return hitAllMonitorsOuterFrameBoundaries(window, workspace, io, args, direction)
+                return hitAllMonitorsOuterFrameBoundaries(window, workspace, args, direction)
             }
     }
 }
@@ -75,7 +75,6 @@ struct MoveCommand: Command {
 @MainActor private func hitAllMonitorsOuterFrameBoundaries(
     _ window: Window,
     _ workspace: Workspace,
-    _ io: CmdIo,
     _ args: MoveCmdArgs,
     _ direction: CardinalDirection,
 ) -> Bool {

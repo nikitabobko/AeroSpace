@@ -16,7 +16,7 @@ public struct MacosNativeFullscreenCmdArgs: CmdArgs {
     public var failIfNoop: Bool = false
 }
 
-public func parseMacosNativeFullscreenCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MacosNativeFullscreenCmdArgs> {
+func parseMacosNativeFullscreenCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MacosNativeFullscreenCmdArgs> {
     parseSpecificCmdArgs(MacosNativeFullscreenCmdArgs(rawArgs: args), args)
         .filter("--fail-if-noop requires 'on' or 'off' argument") { $0.failIfNoop.implies($0.toggle == .on || $0.toggle == .off) }
 }

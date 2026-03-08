@@ -38,7 +38,7 @@ extension ListAppsCmdArgs {
     }
 }
 
-public func parseListAppsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListAppsCmdArgs> {
+func parseListAppsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListAppsCmdArgs> {
     parseSpecificCmdArgs(ListAppsCmdArgs(rawArgs: args), args)
         .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
 }

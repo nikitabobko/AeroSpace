@@ -26,7 +26,7 @@ public struct WorkspaceCmdArgs: CmdArgs {
     public var explicitStdinFlag: Bool? = nil
 }
 
-public func parseWorkspaceCmdArgs(_ args: StrArrSlice) -> ParsedCmd<WorkspaceCmdArgs> {
+func parseWorkspaceCmdArgs(_ args: StrArrSlice) -> ParsedCmd<WorkspaceCmdArgs> {
     parseSpecificCmdArgs(WorkspaceCmdArgs(rawArgs: args), args)
         .filter("--wrapAround requires using \(NextPrev.unionLiteral) argument") { ($0._wrapAround != nil).implies($0.target.val.isRelatve) }
         .filterNot("--auto-back-and-forth is incompatible with \(NextPrev.unionLiteral)") { $0._autoBackAndForth != nil && $0.target.val.isRelatve }
@@ -45,7 +45,6 @@ public enum WorkspaceTarget: Equatable, Sendable {
     case relative(NextPrev)
     case direct(WorkspaceName)
 
-    var isDirect: Bool { !isRelatve }
     public var isRelatve: Bool {
         switch self {
             case .relative: true

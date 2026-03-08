@@ -3,11 +3,9 @@ import HotKey
 import TOMLKit
 
 struct Mode: ConvenienceCopyable, Equatable, Sendable {
-    /// User visible name. Optional. todo drop it?
-    var name: String?
     var bindings: [String: HotkeyBinding]
 
-    static let zero = Mode(name: nil, bindings: [:])
+    static let zero = Mode(bindings: [:])
 }
 
 func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError], _ mapping: [String: Key]) -> [String: Mode] {

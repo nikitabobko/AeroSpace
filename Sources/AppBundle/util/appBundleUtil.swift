@@ -8,11 +8,6 @@ let signposter = OSSignposter(subsystem: aeroSpaceAppId, category: .pointsOfInte
 let myPid = NSRunningApplication.current.processIdentifier
 let lockScreenAppBundleId = "com.apple.loginwindow"
 
-func stringType(of some: Any) -> String {
-    let string = (some is Any.Type) ? String(describing: some) : String(describing: type(of: some))
-    return string
-}
-
 func interceptTermination(_ _signal: Int32) {
     signal(_signal, { signal in
         check(Thread.current.isMainThread)
@@ -50,10 +45,6 @@ private func makeAllWindowsVisibleAndRestoreSize() async throws {
         )
         try await window.setAxFrameBlocking(point, windowSize)
     }
-}
-
-extension String? {
-    var isNilOrEmpty: Bool { self == nil || self?.isEmpty == true }
 }
 
 @MainActor
@@ -133,12 +124,6 @@ extension CGFloat {
     }
 }
 
-extension CGSize {
-    func copy(width: Double? = nil, height: Double? = nil) -> CGSize {
-        CGSize(width: width ?? self.width, height: height ?? self.height)
-    }
-}
-
 extension CGPoint: @retroactive Hashable { // todo migrate to self written Point
     public func hash(into hasher: inout Hasher) {
         hasher.combine(x)
@@ -153,7 +138,7 @@ extension CGPoint: @retroactive Hashable { // todo migrate to self written Point
 #endif
 
 @inlinable
-public func checkCancellation() throws(CancellationError) {
+func checkCancellation() throws(CancellationError) {
     if Task.isCancelled {
         throw CancellationError()
     }

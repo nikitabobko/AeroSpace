@@ -18,7 +18,3 @@ public struct JoinWithCmdArgs: CmdArgs {
         self.direction = .initialized(direction)
     }
 }
-
-public func parseJoinWithCmdArgs(_ args: StrArrSlice) -> ParsedCmd<JoinWithCmdArgs> {
-    parseSpecificCmdArgs(JoinWithCmdArgs(rawArgs: args), args)
-}

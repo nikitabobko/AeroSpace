@@ -1,3 +1,4 @@
+// periphery:ignore
 extension Set {
     func toArray() -> [Element] { Array(self) }
 

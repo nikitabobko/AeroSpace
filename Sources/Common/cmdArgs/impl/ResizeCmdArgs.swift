@@ -39,7 +39,7 @@ public struct ResizeCmdArgs: CmdArgs {
     }
 }
 
-public func parseResizeCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ResizeCmdArgs> {
+func parseResizeCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ResizeCmdArgs> {
     parseSpecificCmdArgs(ResizeCmdArgs(rawArgs: args), args)
 }
 

@@ -23,6 +23,6 @@ public struct SwapCmdArgs: CmdArgs {
     }
 }
 
-public func parseSwapCmdArgs(_ args: StrArrSlice) -> ParsedCmd<SwapCmdArgs> {
+func parseSwapCmdArgs(_ args: StrArrSlice) -> ParsedCmd<SwapCmdArgs> {
     return parseSpecificCmdArgs(SwapCmdArgs(rawArgs: args), args)
 }

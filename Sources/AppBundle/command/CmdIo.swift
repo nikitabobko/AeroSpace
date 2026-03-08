@@ -22,6 +22,7 @@ final class CmdIo {
     @discardableResult func out(_ msg: String) -> Bool { stdout.append(msg); return true }
     @discardableResult func err(_ msg: String) -> Bool { stderr.append(msg); return false }
     @discardableResult func out(_ msg: [String]) -> Bool { stdout += msg; return true }
+    // periphery:ignore
     @discardableResult func err(_ msg: [String]) -> Bool { stderr += msg; return false }
 
     func readStdin() -> String { stdin.readAll() }

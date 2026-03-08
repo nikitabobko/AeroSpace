@@ -15,7 +15,7 @@ public struct FocusMonitorCmdArgs: CmdArgs {
     public var target: Lateinit<MonitorTarget> = .uninitialized
 }
 
-public func parseFocusMonitorCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusMonitorCmdArgs> {
+func parseFocusMonitorCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusMonitorCmdArgs> {
     parseSpecificCmdArgs(FocusMonitorCmdArgs(rawArgs: args), args)
         .filter("--wrap-around is incompatible with <monitor-pattern> argument") { !$0.wrapAround || !$0.target.val.isPatterns }
 }

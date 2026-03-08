@@ -36,16 +36,6 @@ final class MruStack<T: Equatable>: Sequence {
     }
 }
 
-extension MruStack where T: Hashable {
-    var mruIndexMap: [T: Int] {
-        var result: [T: Int] = [:]
-        for (index, value) in enumerated() {
-            result[value] = index
-        }
-        return result
-    }
-}
-
 struct MruStackIterator<T: Equatable>: IteratorProtocol {
     typealias Element = T
     private var current: Node<T>?

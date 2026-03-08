@@ -93,7 +93,7 @@ extension FocusCmdArgs {
     }
 }
 
-public func parseFocusCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusCmdArgs> {
+func parseFocusCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusCmdArgs> {
     return parseSpecificCmdArgs(FocusCmdArgs(rawArgs: args), args)
         .flatMap { (raw: FocusCmdArgs) -> ParsedCmd<FocusCmdArgs> in
             raw.boundaries == .workspace && raw.boundariesAction == .wrapAroundAllMonitors
