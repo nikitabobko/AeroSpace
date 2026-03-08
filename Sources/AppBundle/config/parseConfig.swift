@@ -42,7 +42,8 @@ enum TomlParseError: Error, CustomStringConvertible, Equatable {
     var description: String {
         return switch self {
             // todo Make 'split' + flatten normalization prettier
-            case .semantic(let backtrace, let message): backtrace.isEmptyRoot ? message : "\(backtrace): \(message)"
+            case .semantic(let backtrace, let message) where backtrace.description.isEmpty: message
+            case .semantic(let backtrace, let message): "\(backtrace): \(message)"
             case .syntax(let message): message
         }
     }
@@ -360,13 +361,6 @@ indirect enum TomlBacktrace: CustomStringConvertible, Equatable {
             case .key(let value): "." + value
             case .index(let index): "[\(index)]"
             case .pair(let first, let second): first.description + second.description
-        }
-    }
-
-    var isEmptyRoot: Bool {
-        return switch self {
-            case .emptyRoot: true
-            default: false
         }
     }
 
