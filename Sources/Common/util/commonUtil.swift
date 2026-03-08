@@ -74,7 +74,7 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
     case menuBarButton
     case hotkeyBinding
     case startup
-    case socketServer
+    case socketServer(any CmdArgs)
     case resetManipulatedWithMouse
     case ax(String)
     case onFocusedMonitorChanged
@@ -94,7 +94,7 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
             case .hotkeyBinding: "hotkeyBinding"
             case .menuBarButton: "menuBarButton"
             case .resetManipulatedWithMouse: "resetManipulatedWithMouse"
-            case .socketServer: " socketServer"
+            case .socketServer(let args): "socketServer: \(args)"
             case .startup: "startup"
             case .onFocusedMonitorChanged: "onFocusedMonitorChanged"
             case .onFocusChanged: "onFocusChanged"
