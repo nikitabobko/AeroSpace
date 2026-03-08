@@ -1,4 +1,4 @@
-typealias SubArgParser<Root: ConvenienceCopyable, Value> = ArgParser<SubArgParserInput, Root, Value>
+typealias SubArgParser<Root: ConvenienceCopyable, Value> = ArgParser<SubArgParserInput, Root, Value, ()>
 
 func parseUInt32SubArg(i: SubArgParserInput) -> ParsedCliArgs<UInt32> {
     if let arg = i.nonFlagArgOrNil() {

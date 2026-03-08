@@ -11,7 +11,7 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
         if arg == "-h" || arg == "--help" {
             return .help(T.info.help)
         } else if arg.starts(with: "-") && !isResizeNegativeUnitsArg(raw, arg: arg) {
-            if let optionParser: any ArgParserProtocol<SubArgParserInput, T> = T.parser.flags[arg] {
+            if let optionParser: any ArgParserProtocol<SubArgParserInput, T, ()> = T.parser.flags[arg] {
                 index += 1
                 if !options.insert(arg).inserted {
                     errors.append("Duplicated option \(arg.singleQuoted)")
@@ -22,7 +22,7 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
                 break
             }
         } else if let parser = T.parser.positionalArgs.getOrNil(atIndex: posArgumentParserIndex) {
-            raw = parser.transformRaw(raw, &index, ArgParserInput(index: index, args: args), &errors)
+            raw = parser.transformRaw(raw, &index, PosArgParserInput(index: index, args: args), &errors)
             posArgumentParserIndex += 1
         } else {
             errors.append("Unknown argument \(arg.singleQuoted)")
@@ -31,7 +31,7 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
     }
 
     for arg in T.parser.positionalArgs[posArgumentParserIndex...] {
-        if let placeholder = arg.argPlaceholderIfMandatory {
+        if let placeholder = arg.context.argPlaceholderIfMandatory {
             errors.append("Argument \(placeholder.singleQuoted) is mandatory")
         }
     }

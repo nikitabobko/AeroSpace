@@ -26,7 +26,7 @@ public struct LayoutCmdArgs: CmdArgs {
     }
 }
 
-private func parseToggleBetween(input: ArgParserInput) -> ParsedCliArgs<[LayoutCmdArgs.LayoutDescription]> {
+private func parseToggleBetween(input: PosArgParserInput) -> ParsedCliArgs<[LayoutCmdArgs.LayoutDescription]> {
     let args = input.nonFlagArgs()
 
     var result: [LayoutCmdArgs.LayoutDescription] = []

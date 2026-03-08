@@ -15,7 +15,7 @@ public struct MoveMouseCmdArgs: CmdArgs {
     public var mouseTarget: Lateinit<MouseTarget> = .uninitialized
 }
 
-func parseMouseTarget(i: ArgParserInput) -> ParsedCliArgs<MouseTarget> {
+func parseMouseTarget(i: PosArgParserInput) -> ParsedCliArgs<MouseTarget> {
     .init(parseEnum(i.arg, MouseTarget.self), advanceBy: 1)
 }
 
