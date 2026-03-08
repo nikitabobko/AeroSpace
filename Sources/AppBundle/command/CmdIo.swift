@@ -1,11 +1,11 @@
-final class CmdStdin {
+struct CmdStdin: ~Copyable {
     private var input: String = ""
     init(_ input: String) {
         self.input = input
     }
     static var emptyStdin: CmdStdin { .init("") }
 
-    func readAll() -> String {
+    mutating func readAll() -> String {
         let result = input
         input = ""
         return result
@@ -17,7 +17,7 @@ final class CmdIo {
     var stdout: [String] = []
     var stderr: [String] = []
 
-    init(stdin: CmdStdin) { self.stdin = stdin }
+    init(stdin: consuming CmdStdin) { self.stdin = stdin }
 
     @discardableResult func out(_ msg: String) -> Bool { stdout.append(msg); return true }
     @discardableResult func err(_ msg: String) -> Bool { stderr.append(msg); return false }

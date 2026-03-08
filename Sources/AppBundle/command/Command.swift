@@ -28,7 +28,7 @@ extension Command {
 extension Command {
     @MainActor
     @discardableResult
-    func run(_ env: CmdEnv, _ stdin: CmdStdin) async throws -> CmdResult {
+    func run(_ env: CmdEnv, _ stdin: consuming CmdStdin) async throws -> CmdResult {
         return try await [self].runCmdSeq(env, stdin)
     }
 
@@ -53,7 +53,7 @@ extension [Command] {
     }
 
     @MainActor
-    func runCmdSeq(_ env: CmdEnv, _ stdin: CmdStdin) async throws -> CmdResult {
+    func runCmdSeq(_ env: CmdEnv, _ stdin: consuming CmdStdin) async throws -> CmdResult {
         let io: CmdIo = CmdIo(stdin: stdin)
         let isSucc = try await runCmdSeq(env, io)
         return CmdResult(stdout: io.stdout, stderr: io.stderr, exitCode: isSucc ? 0 : 1)
