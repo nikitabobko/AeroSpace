@@ -1,13 +1,5 @@
 typealias SubArgParser<Root: ConvenienceCopyable, Value> = ArgParser<SubArgParserInput, Root, Value>
 
-struct SubArgParserInput: ArgParserInputProtocol, ConvenienceCopyable {
-    let superArg: String
-    /*conforms*/ let index: Int
-    /*conforms*/ let args: StrArrSlice
-
-    var argOrNil: String? { args.getOrNil(atIndex: index) }
-}
-
 func parseUInt32SubArg(i: SubArgParserInput) -> ParsedCliArgs<UInt32> {
     if let arg = i.nonFlagArgOrNil() {
         return .init(UInt32(arg).orFailure("Can't parse '\(arg)'. It must be a positive number"), advanceBy: 1)

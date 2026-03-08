@@ -5,6 +5,14 @@ struct ArgParserInput: ArgParserInputProtocol {
     var arg: String { args[index] }
 }
 
+struct SubArgParserInput: ArgParserInputProtocol {
+    let superArg: String
+    /*conforms*/ let index: Int
+    /*conforms*/ let args: StrArrSlice
+
+    var argOrNil: String? { args.getOrNil(atIndex: index) }
+}
+
 protocol ArgParserInputProtocol {
     var index: Int { get }
     var args: StrArrSlice { get }
