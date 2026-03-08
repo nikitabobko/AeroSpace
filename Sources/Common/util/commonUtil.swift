@@ -186,13 +186,14 @@ public func eprint(_ msg: String) {
     fputs(msg + "\n", stderr)
 }
 
-public func exit(stderrMsg message: String = "") -> Never {
-    exitT(stderrMsg: message)
+public func exit(_ exitCode: Int32, out: String? = nil, err: String? = nil) -> Never {
+    exitT(exitCode, out: out, err: err)
 }
 
-public func exitT<T>(stderrMsg message: String = "") -> T {
-    eprint(message)
-    exit(1)
+public func exitT<T>(_ exitCode: Int32, out: String? = nil, err: String? = nil) -> T {
+    if let out { print(out) }
+    if let err { eprint(err) }
+    exit(exitCode)
 }
 
 @inlinable
