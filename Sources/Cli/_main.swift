@@ -119,11 +119,11 @@ struct Main {
 }
 
 func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowId: UInt32?, workspace: String?) async -> ServerAnswer {
-    if let e = await connection.write(ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)) {
+    if let e = await connection.writeAtomic(ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)) {
         exit(stderrMsg: "Failed to write to server socket: \(e)")
     }
 
-    switch await connection.read() {
+    switch await connection.readNonAtomic() {
         case .success(let answer):
             return (try? JSONDecoder().decode(ServerAnswer.self, from: answer)) ?? exitT(stderrMsg: "Failed to parse server response: \(String(data: answer, encoding: .utf8).prettyDescription)")
         case .failure(let error):

@@ -2,17 +2,12 @@ import Network
 import Foundation
 
 extension NWConnection {
-    public func write(_ msg: Codable) async -> NWError? {
-        let mainMsg = Result { try JSONEncoder().encode(msg) }.getOrDie()
-        let header = withUnsafeBytes(of: UInt32(mainMsg.count)) { Data($0) }
-        check(header.count == 4)
-        if let err = await write(header) { return err }
-        if let err = await write(mainMsg) { return err }
-        return nil
-    }
-
-    private func write(_ data: Data) async -> NWError? {
-        await withCheckedContinuation { cont in
+    public func writeAtomic(_ msg: Codable) async -> NWError? {
+        let payload = Result { try JSONEncoder().encode(msg) }.getOrDie()
+        var data = withUnsafeBytes(of: UInt32(payload.count)) { Data($0) }
+        check(data.count == 4)
+        data.append(payload)
+        return await withCheckedContinuation { cont in
             send(content: data, completion: .contentProcessed { error in
                 if let error {
                     cont.resume(returning: error)
@@ -62,7 +57,7 @@ extension NWConnection {
         return .success(data)
     }
 
-    public func read() async -> Result<Data, NWError> {
+    public func readNonAtomic() async -> Result<Data, NWError> {
         switch await read(bytes: 4) {
             case .success(let header):
                 let count = header.withUnsafeBytes { $0.load(as: UInt32.self) }

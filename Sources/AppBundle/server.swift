@@ -28,8 +28,8 @@ func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) async {
     }
 
     let req = ClientRequest(args: ["enable", state.rawValue], stdin: "", windowId: nil, workspace: nil)
-    _ = await connection.write(req)
-    _ = await connection.read()
+    _ = await connection.writeAtomic(req)
+    _ = await connection.readNonAtomic()
 }
 
 private let serverVersionAndHash = "\(aeroSpaceAppVersion) \(gitHash)"
@@ -40,10 +40,10 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
         await answerToClient(ans)
     }
     func answerToClient(_ ans: ServerAnswer) async {
-        _ = await connection.write(ans)
+        _ = await connection.writeAtomic(ans)
     }
     while true {
-        let (rawRequest, error) = await connection.read().getOrNils()
+        let (rawRequest, error) = await connection.readNonAtomic().getOrNils()
         if let error {
             await answerToClient(exitCode: 1, stderr: "Error: \(error)")
             return
