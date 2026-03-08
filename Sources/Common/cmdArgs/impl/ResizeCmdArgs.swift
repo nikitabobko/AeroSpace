@@ -9,8 +9,8 @@ public struct ResizeCmdArgs: CmdArgs {
             "--window-id": optionalWindowIdFlag(),
         ],
         posArgs: [
-            newArgParser(\.dimension, parseDimension, mandatoryArgPlaceholder: "(smart|smart-opposite|width|height)"),
-            newArgParser(\.units, parseUnits, mandatoryArgPlaceholder: "[+|-]<number>"),
+            newMandatoryPosArgParser(\.dimension, parseDimension, placeholder: "(smart|smart-opposite|width|height)"),
+            newMandatoryPosArgParser(\.units, parseUnits, placeholder: "[+|-]<number>"),
         ],
     )
 
