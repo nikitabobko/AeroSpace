@@ -3,7 +3,7 @@ import Common
 
 struct LayoutCommand: Command {
     let args: LayoutCmdArgs
-    /*conforms*/ var shouldResetClosedWindowsCache = true
+    /*conforms*/ let shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
         guard let target = args.resolveTargetOrReportError(env, io) else { return false }

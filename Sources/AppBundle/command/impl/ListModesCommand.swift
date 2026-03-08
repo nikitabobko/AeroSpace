@@ -3,7 +3,7 @@ import Common
 
 struct ListModesCommand: Command {
     let args: ListModesCmdArgs
-    /*conforms*/ var shouldResetClosedWindowsCache = false
+    /*conforms*/ let shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
         let modes: [String] = args.current ? [activeMode ?? mainModeId] : config.modes.keys.sorted()
