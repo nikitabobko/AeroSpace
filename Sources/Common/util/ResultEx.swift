@@ -28,13 +28,6 @@ extension Result {
         }
     }
 
-    public func getOrNils() -> (Success?, Failure?) {
-        return switch self {
-            case .success(let success): (success, nil)
-            case .failure(let failure): (nil, failure)
-        }
-    }
-
     public var failureOrNil: Failure? {
         return switch self {
             case .success: nil

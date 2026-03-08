@@ -69,16 +69,16 @@ func testParseCommandSucc(_ command: String, _ expected: any CmdArgs) {
     }
 }
 
-private func failExpectedActual(_ expected: Any, _ actual: Any, additionalMsg: String? = nil, file: String = #filePath, line: Int = #line) {
+func failExpectedActual(_ expected: Any?, _ actual: Any?, additionalMsg: String? = nil, file: String = #filePath, line: Int = #line) {
     let additionalMsg = additionalMsg.map { "\n    Additional Message:\n        \($0)" } ?? ""
     XCTFail(
         """
 
         \(file):\(line): Assertion failed\(additionalMsg)
             Expected:
-                \(expected)
+                \(expected.prettyDescription)
             Actual:
-                \(actual)
+                \(actual.prettyDescription)
         """,
     )
 }

@@ -43,22 +43,25 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
         _ = await connection.writeAtomic(ans)
     }
     while true {
-        let (rawRequest, error) = await connection.readNonAtomic().getOrNils()
-        if let error {
-            await answerToClient(exitCode: 1, stderr: "Error: \(error)")
-            return
+        let rawRequest: Data
+        switch await connection.readNonAtomic() {
+            case .success(let _rawRequest): rawRequest = _rawRequest
+            case .failure(let error):
+                await answerToClient(exitCode: 1, stderr: "Error: \(error)")
+                return
         }
-        guard let rawRequest else { die() }
-        let _request = ClientRequest.decodeJson(rawRequest)
-        guard let request: ClientRequest = _request.getOrNil() else {
-            await answerToClient(
-                exitCode: 1,
-                stderr: """
-                    Can't parse request '\(String(describing: String(data: rawRequest, encoding: .utf8)).singleQuoted)'.
-                    Error: \(_request.failureOrNil.prettyDescription)
-                    """,
-            )
-            continue
+        let request: ClientRequest
+        switch ClientRequest.decodeJson(rawRequest) {
+            case .success(let _request): request = _request
+            case .failure(let error):
+                await answerToClient(
+                    exitCode: 1,
+                    stderr: """
+                        Can't parse request '\(String(describing: String(data: rawRequest, encoding: .utf8)).singleQuoted)'.
+                        Error: \(error)
+                        """,
+                )
+                continue
         }
         // Handle subscribe before parseCommand (subscribe doesn't have a Command impl)
         if request.args.first == "subscribe" {

@@ -64,12 +64,15 @@ final class ParseEnvVariablesTest: XCTestCase {
 }
 
 private func testSucInterpolation(_ str: String, _ vars: [String: String] = [:], expected: String) {
-    let (result, errors) = str.interpolate(with: vars).getOrNils()
-    assertEquals(result, expected)
-    assertEquals(errors ?? [], [])
+    switch str.interpolate(with: vars) {
+        case .success(let actual): assertEquals(actual, expected)
+        case .failure(let actual): assertEquals(actual, [])
+    }
 }
 
 private func testFailInterpolation(_ str: String, _ vars: [String: String] = [:]) {
-    let (_, errors) = str.interpolate(with: vars).getOrNils()
-    XCTAssertNotEqual(errors ?? [], [])
+    switch str.interpolate(with: vars) {
+        case .success(let actual): failExpectedActual(nil, actual)
+        case .failure: break
+    }
 }
