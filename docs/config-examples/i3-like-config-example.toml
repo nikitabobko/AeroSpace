@@ -56,6 +56,14 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     # should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
     # alt-a = 'focus parent'
 
+    # In AeroSpace, switching to an empty workspace puts it on an assigned monitor;
+    # this is different from i3, which puts it on the currently active monitor.
+    # For i3-like behavior, use a command like:
+    # alt-1 = '''exec-and-forget
+    # if aerospace list-workspaces --monitor all --empty no | grep 1; then
+    #   aerospace workspace 1
+    # else aerospace summon-workspace 1; fi
+    # '''
     alt-1 = 'workspace 1'
     alt-2 = 'workspace 2'
     alt-3 = 'workspace 3'
