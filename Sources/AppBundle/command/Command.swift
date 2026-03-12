@@ -1,13 +1,34 @@
 import AppKit
 import Common
 
+/// A unit of executable behaviour in AeroSpace.
+///
+/// Each user-facing command (e.g. `focus`, `move`, `workspace`) conforms to
+/// this protocol. Commands are parsed from config keybindings, CLI requests,
+/// `on-window-detected` callbacks, and tray icon buttons.
+///
+/// To add a new command:
+/// 1. Create a `CmdArgs` struct that describes its parsed arguments.
+/// 2. Conform your command type to `Command` and implement `run(_:_:)`.
+/// 3. Register it in `cmdManifest.swift`.
 protocol Command: AeroAny, Equatable, Sendable {
     associatedtype T where T: CmdArgs
+    /// The parsed arguments supplied to this command invocation.
     var args: T { get }
+    /// Executes the command and returns `true` on success.
+    ///
+    /// - Parameters:
+    ///   - env: The ambient environment (focused window, workspace, etc.)
+    ///   - io: I/O streams for stdout/stderr output.
+    /// - Returns: `true` if the command completed successfully.
     @MainActor
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool
 
-    /// We should reset closedWindowsCache when the command can potentiall change the tree
+    /// Whether running this command should invalidate the closed-windows cache.
+    ///
+    /// Set to `true` for any command that may modify the window tree
+    /// (e.g. moving windows, changing layouts). The cache is cleared
+    /// automatically after the command completes when this is `true`.
     var shouldResetClosedWindowsCache: Bool { get }
 }
 
