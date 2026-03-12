@@ -55,7 +55,7 @@ Incompatible with `--stdin`
 include::util/conditional-examples-header.adoc[]
 
 * Go to the next non empty workspace on the focused monitor: +
-`aerospace list-workspaces --monitor focused --empty no | aerospace workspace next`
+`aerospace list-workspaces --monitor focused --empty no | aerospace workspace --stdin next`
 
 // end::body[]
 
