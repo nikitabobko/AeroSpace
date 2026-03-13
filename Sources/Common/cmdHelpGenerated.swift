@@ -133,7 +133,7 @@ let subscribe_help_generated = """
     USAGE: subscribe [-h|--help] [--all] [--no-send-initial] [<event>...]
     """
 let summon_workspace_help_generated = """
-    USAGE: summon-workspace [-h|--help] [--fail-if-noop] <workspace>
+    USAGE: summon-workspace [-h|--help] [--fail-if-noop] [--when-visible (focus|swap)] <workspace>
     """
 let swap_help_generated = """
     USAGE: swap [-h|--help] [--window-id <window-id>] [--swap-focus]
