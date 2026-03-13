@@ -8,6 +8,7 @@ public struct MoveCmdArgs: CmdArgs {
         flags: [
             "--window-id": optionalWindowIdFlag(),
             "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
+            "--floating-pixels": ArgParser(\.rawFloatingPixels, upcastArgParserFun(parseFloatingPixels)),
             "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
         ],
         posArgs: [newMandatoryPosArgParser(\.direction, parseCardinalDirectionArg, placeholder: CardinalDirection.unionLiteral)],
@@ -15,6 +16,7 @@ public struct MoveCmdArgs: CmdArgs {
 
     public var direction: Lateinit<CardinalDirection> = .uninitialized
     public var rawBoundaries: Boundaries? = nil
+    public var rawFloatingPixels: Int? = nil
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
 
     public init(rawArgs: [String], _ direction: CardinalDirection) {
@@ -35,6 +37,7 @@ public struct MoveCmdArgs: CmdArgs {
 }
 
 extension MoveCmdArgs {
+    public var floatingPixels: Int? { rawFloatingPixels }
     public var boundaries: Boundaries { rawBoundaries ?? .workspace }
     public var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .createImplicitContainer }
 }
@@ -56,5 +59,17 @@ private func parseBoundariesAction(i: SubArgParserInput) -> ParsedCliArgs<MoveCm
         return .init(parseEnum(arg, MoveCmdArgs.WhenBoundariesCrossed.self), advanceBy: 1)
     } else {
         return .fail("<action> is mandatory", advanceBy: 0)
+    }
+}
+
+private func parseFloatingPixels(i: SubArgParserInput) -> ParsedCliArgs<Int> {
+    if let arg = i.nonFlagArgOrNil() {
+        if let value = Int(arg) {
+            return .succ(value, advanceBy: 1)
+        } else {
+            return .fail("'\(arg)' must be an integer", advanceBy: 1)
+        }
+    } else {
+        return .fail("<pixels> is mandatory", advanceBy: 0)
     }
 }
