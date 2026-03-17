@@ -196,6 +196,16 @@ tell application "Terminal"
 end tell'
 '''
 ----
+- Ghostty
++
+[source,toml]
+----
+ctrl-g = '''exec-and-forget osascript -e '
+tell application "Ghostty"
+    new window
+end tell'
+'''
+----
 
 [#disable-hide-app]
 == Disable annoying and useless "hide application" shortcut
