@@ -14,6 +14,10 @@ final class ThreadGuardedValue<Value>: Sendable {
             _threadGuarded = newValue
         }
     }
+    var threadGuardedOrNil: Value? {
+        threadToken.checkEquals(axTaskLocalAppThreadToken)
+        return _threadGuarded
+    }
     func destroy() {
         threadToken.checkEquals(axTaskLocalAppThreadToken)
         _threadGuarded = nil
