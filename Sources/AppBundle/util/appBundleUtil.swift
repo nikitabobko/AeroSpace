@@ -73,19 +73,11 @@ extension CGPoint: ConvenienceCopyable {}
 
 extension CGPoint {
     func distance(toOuterFrame rect: Rect) -> CGFloat {
-        if rect.contains(self) {
-            return 0
-        }
-        let list: [CGFloat] =
-            (rect.minY.until(excl: rect.maxY)?.contains(y) == true ? [abs(rect.minX - x), abs(rect.maxX - x)] : []) +
-            (rect.minX.until(excl: rect.maxX)?.contains(x) == true ? [abs(rect.minY - y), abs(rect.maxY - y)] : []) +
-            [
-                distance(to: rect.topLeftCorner),
-                distance(to: rect.bottomRightCorner),
-                distance(to: rect.topRightCorner),
-                distance(to: rect.bottomLeftCorner),
-            ]
-        return list.minOrDie()
+        // Subtract 1 from maxX/maxY because the right/bottom bounds are
+        // exclusive.
+        let dx = max(rect.minX - x, 0, x - (rect.maxX - 1))
+        let dy = max(rect.minY - y, 0, y - (rect.maxY - 1))
+        return CGPoint(x: dx, y: dy).vectorLength
     }
 
     func coerce(in rect: Rect) -> CGPoint? {
@@ -101,8 +93,6 @@ extension CGPoint {
     func getProjection(_ orientation: Orientation) -> Double { orientation == .h ? x : y }
 
     var vectorLength: CGFloat { sqrt(x * x + y * y) }
-
-    func distance(to point: CGPoint) -> Double { (self - point).vectorLength }
 
     var monitorApproximation: Monitor { monitors.minByOrDie { distance(toOuterFrame: $0.rect) } }
 }
