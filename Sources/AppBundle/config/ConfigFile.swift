@@ -5,13 +5,13 @@ let configDotfileName = ".aerospace.toml"
 func findCustomConfigUrl() -> ConfigFile {
     let xdgConfigHome = ProcessInfo.processInfo.environment["XDG_CONFIG_HOME"].map { URL(filePath: $0) }
         ?? FileManager.default.homeDirectoryForCurrentUser.appending(path: ".config/")
-    let candidates: [URL] = if let configLocation = serverArgs.configLocation {
-        [URL(filePath: configLocation)]
-    } else {
-        [
-            FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName),
-            xdgConfigHome.appending(path: "aerospace").appending(path: "aerospace.toml"),
-        ]
+    let candidates: [URL] = switch serverArgs.configLocation {
+        case .some(let configLocation): [URL(filePath: configLocation)]
+        case nil:
+            [
+                FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName),
+                xdgConfigHome.appending(path: "aerospace").appending(path: "aerospace.toml"),
+            ]
     }
     let existingCandidates: [URL] = candidates.filter { (candidate: URL) in FileManager.default.fileExists(atPath: candidate.path) }
     let count = existingCandidates.count

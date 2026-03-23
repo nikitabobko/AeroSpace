@@ -16,6 +16,5 @@ else
         --strict \
         --disable-redundant-public-analysis \
         --no-superfluous-ignore-comments \
-        --exclude-targets \
-        ShellParserGenerated
+        --exclude-targets ShellParserGenerated
 fi

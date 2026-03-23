@@ -42,10 +42,9 @@ func setUpWorkspacesForTests() {
 
 extension ParsedCmd {
     var errorOrNil: String? {
-        if case .failure(let e) = self {
-            return e
-        } else {
-            return nil
+        return switch self {
+            case .failure(let e): e
+            case .cmd, .help: nil
         }
     }
 
