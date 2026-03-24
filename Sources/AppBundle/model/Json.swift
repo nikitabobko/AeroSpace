@@ -11,6 +11,7 @@ enum Json: Encodable, Equatable {
     case string(String)
     case int(Int)
     case uint32(UInt32)
+    case double(Double)
     case bool(Bool)
 
     func encode(to encoder: any Encoder) throws {
@@ -20,6 +21,7 @@ enum Json: Encodable, Equatable {
             case .string(let value): try value.encode(to: encoder)
             case .int(let value): try value.encode(to: encoder)
             case .uint32(let value): try value.encode(to: encoder)
+            case .double(let value): try value.encode(to: encoder)
             case .bool(let value): try value.encode(to: encoder)
             case .null: try (nil as String?).encode(to: encoder)
         }
@@ -34,6 +36,8 @@ enum Json: Encodable, Equatable {
             return .int(value)
         } else if let value = value as? UInt32 {
             return .uint32(value)
+        } else if let value = value as? Double {
+            return .double(value)
         } else if let value = value as? Bool {
             return .bool(value)
         } else if let value = value as? String {
@@ -56,6 +60,7 @@ enum Json: Encodable, Equatable {
 
             case .bool(let x): x
             case .int(let x): x
+            case .double(let x): x
             case .string(let x): x
             case .uint32(let x): x
         }
