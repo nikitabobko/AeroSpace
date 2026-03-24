@@ -26,7 +26,6 @@ final class MacApp: AbstractApp {
     //      and make deinitialization automatic in deinit
     @MainActor static var allAppsMap: [pid_t: MacApp] = [:]
     @MainActor private static var wipPids: [pid_t: AwaitableOneTimeBroadcastLatch] = [:]
-
     private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement, _ axSubscriptions: [AxSubscription], _ thread: Thread) {
         self.nsApp = nsApp
         self.axApp = .init(axApp)
@@ -44,6 +43,8 @@ final class MacApp: AbstractApp {
         // Don't perceive any of the lock screen windows as real windows
         // Otherwise, false positive ax notifications might trigger that lead to gcWindows
         if nsApp.bundleIdentifier == lockScreenAppBundleId { return nil }
+        // Skip system processes that don't support the accessibility server
+        if let bundleId = nsApp.bundleIdentifier, axExcludedBundleIds.contains(bundleId) { return nil }
         let pid = nsApp.processIdentifier
         // AX requests crash if you send them to yourself
         if pid == myPid { return nil }

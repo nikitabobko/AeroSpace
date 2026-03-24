@@ -8,6 +8,14 @@ let signposter = OSSignposter(subsystem: aeroSpaceAppId, category: .pointsOfInte
 let myPid = NSRunningApplication.current.processIdentifier
 let lockScreenAppBundleId = "com.apple.loginwindow"
 
+/// Bundle IDs of system processes that should never be queried via the Accessibility API.
+/// These processes don't expose an axserver endpoint, and repeated AX queries against them
+/// generate aggressive Mach IPC traffic that can destabilize the process.
+/// For example, querying UniversalControl disrupts its connection to paired devices.
+let axExcludedBundleIds: Set<String> = [
+    "com.apple.universalcontrol",
+]
+
 func interceptTermination(_ _signal: Int32) {
     signal(_signal, { signal in
         check(Thread.current.isMainThread)
