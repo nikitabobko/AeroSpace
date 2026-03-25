@@ -22,11 +22,13 @@ extension TreeNode {
                 lastAppliedLayoutVirtualRect = virtual
                 try await workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, virtual: virtual, context)
                 for window in workspace.children.filterIsInstance(of: Window.self) {
+                    if window.isAwaitingOnWindowDetected { continue }
                     window.lastAppliedLayoutPhysicalRect = nil
                     window.lastAppliedLayoutVirtualRect = nil
                     try await window.layoutFloatingWindow(context)
                 }
             case .window(let window):
+                if window.isAwaitingOnWindowDetected { break }
                 if window.windowId != currentlyManipulatedWithMouseWindowId {
                     lastAppliedLayoutVirtualRect = virtual
                     if window.isFullscreen && window == context.workspace.rootTilingContainer.mostRecentWindowRecursive {
