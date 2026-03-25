@@ -22,11 +22,13 @@ extension TreeNode {
                 lastAppliedLayoutVirtualRect = virtual
                 try await workspace.rootTilingContainer.layoutRecursive(point, width: width, height: height, virtual: virtual, context)
                 for window in workspace.children.filterIsInstance(of: Window.self) {
+                    if window.isAwaitingOnWindowDetected { continue }
                     window.lastAppliedLayoutPhysicalRect = nil
                     window.lastAppliedLayoutVirtualRect = nil
                     try await window.layoutFloatingWindow(context)
                 }
             case .window(let window):
+                if window.isAwaitingOnWindowDetected { break }
                 if window.windowId != currentlyManipulatedWithMouseWindowId {
                     lastAppliedLayoutVirtualRect = virtual
                     if window.isFullscreen && window == context.workspace.rootTilingContainer.mostRecentWindowRecursive {
@@ -108,11 +110,15 @@ extension TilingContainer {
         var point = point
         var virtualPoint = virtual.topLeftCorner
 
-        guard let delta = ((orientation == .h ? width : height) - CGFloat(children.sumOfDouble { $0.getWeight(orientation) }))
-            .div(children.count) else { return }
+        // Exclude windows awaiting on-window-detected from space allocation --
+        // their slot would otherwise shrink siblings while they sit invisible.
+        let effectiveChildren = children.filter { ($0 as? Window)?.isAwaitingOnWindowDetected != true }
 
-        let lastIndex = children.indices.last
-        for (i, child) in children.enumerated() {
+        guard let delta = ((orientation == .h ? width : height) - CGFloat(effectiveChildren.sumOfDouble { $0.getWeight(orientation) }))
+            .div(effectiveChildren.count) else { return }
+
+        let lastIndex = effectiveChildren.indices.last
+        for (i, child) in effectiveChildren.enumerated() {
             child.setWeight(orientation, child.getWeight(orientation) + delta)
             let rawGap = context.resolvedGaps.inner.get(orientation).toDouble()
             // Gaps. Consider 4 cases:
