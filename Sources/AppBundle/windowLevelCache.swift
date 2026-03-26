@@ -54,21 +54,38 @@ func getWindowLevel(for windowId: UInt32) -> MacOsWindowLevel? {
     return levelCache[windowId]
 }
 
+/// Refresh the CG cache once, then use isLikelyNativeTab for consistent results within a single pass.
+@MainActor
+func refreshNativeTabDetection() {
+    refreshCgWindowInfoCache()
+}
+
+/// Count how many windows AeroSpace knows about for a given app PID.
+/// Includes tiled, floating, and popup windows.
+@MainActor
+func windowCountForApp(pid: pid_t) -> Int {
+    MacWindow.allWindows.count(where: { $0.macApp.pid == pid })
+}
+
 /// Detect macOS native tabs: the AX API reports tabs as separate windows, but only the active
 /// tab appears in CGWindowListCopyWindowInfo(.optionOnScreenOnly). If a window is NOT on screen
 /// but another window from the same app IS on screen, it's likely an inactive native tab.
 /// https://github.com/nikitabobko/AeroSpace/issues/68
+///
+/// Additional safety: only consider a window as a tab if the same app has at least one OTHER
+/// window on-screen with the same PID. This prevents false positives when CG is slow to update.
 @MainActor
-func isLikelyNativeTab(windowId: UInt32, appPid: pid_t) -> Bool {
-    refreshCgWindowInfoCache()
+func isLikelyNativeTab(windowId: UInt32, appPid: pid_t, appWindowCount: Int) -> Bool {
+    // If the app only has 1 window known to AeroSpace, it can't be a tab
+    if appWindowCount <= 1 { return false }
 
     // If this window IS on screen, it's either a real window or the active tab — tile it normally.
     if cgWindowInfoCache[windowId] != nil { return false }
 
     // This window is NOT on screen. Check if the same app has at least one normal window on screen.
     // If so, this off-screen window is likely an inactive native tab.
-    for (_, info) in cgWindowInfoCache {
-        if info.ownerPid == appPid && info.level == .normalWindow {
+    for (otherId, info) in cgWindowInfoCache {
+        if otherId != windowId && info.ownerPid == appPid && info.level == .normalWindow {
             return true
         }
     }

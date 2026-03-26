@@ -5,38 +5,39 @@ func normalizeLayoutReason() async throws {
         try await _normalizeLayoutReason(workspace: workspace, windows: windows)
     }
     try await _normalizeLayoutReason(workspace: focus.workspace, windows: macosMinimizedWindowsContainer.children.filterIsInstance(of: Window.self))
-    try await demoteNativeTabsToPopup()
-    try await validateStillPopups()
+    try await validatePopups()
+    demoteInactiveTabs()
 }
 
-/// Move tiled windows that have become inactive native tabs to the popup container.
-/// This handles the case where a tiled window becomes a background tab after the user opens a new tab.
+/// Promote popup windows that are actually real windows (or newly active tabs).
 /// https://github.com/nikitabobko/AeroSpace/issues/68
 @MainActor
-private func demoteNativeTabsToPopup() async throws {
-    for workspace in Workspace.all {
-        for window in workspace.allLeafWindowsRecursive {
-            guard let macWindow = window as? MacWindow else { continue }
-            if isLikelyNativeTab(windowId: macWindow.windowId, appPid: macWindow.macApp.pid) {
-                macWindow.bind(to: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-            }
-        }
-    }
-}
-
-@MainActor
-private func validateStillPopups() async throws {
-    for node in macosPopupWindowsContainer.children {
-        let popup = (node as! MacWindow)
-        // Don't promote native tabs back to tiling — they were intentionally placed in popup container
-        // https://github.com/nikitabobko/AeroSpace/issues/68
-        if isLikelyNativeTab(windowId: popup.windowId, appPid: popup.macApp.pid) {
-            continue
-        }
+private func validatePopups() async throws {
+    refreshNativeTabDetection()
+    for node in Array(macosPopupWindowsContainer.children) {
+        guard let popup = node as? MacWindow else { continue }
+        // Don't promote inactive native tabs
+        if isLikelyNativeTab(windowId: popup.windowId, appPid: popup.macApp.pid, appWindowCount: windowCountForApp(pid: popup.macApp.pid)) { continue }
+        // This window is on-screen and should be promoted to tiling
         let windowLevel = getWindowLevel(for: popup.windowId)
         if try await popup.isWindowHeuristic(windowLevel) {
             try await popup.relayoutWindow(on: focus.workspace)
             try await tryOnWindowDetected(popup)
+        }
+    }
+}
+
+/// Demote tiled windows that have become inactive native tabs to popup container.
+/// https://github.com/nikitabobko/AeroSpace/issues/68
+@MainActor
+private func demoteInactiveTabs() {
+    refreshNativeTabDetection()
+    for workspace in Workspace.all {
+        for window in Array(workspace.allLeafWindowsRecursive) {
+            guard let macWindow = window as? MacWindow else { continue }
+            if isLikelyNativeTab(windowId: macWindow.windowId, appPid: macWindow.macApp.pid, appWindowCount: windowCountForApp(pid: macWindow.macApp.pid)) {
+                macWindow.bind(to: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+            }
         }
     }
 }
