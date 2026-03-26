@@ -3,6 +3,6 @@ import Common
 import Foundation
 import TOMLKit
 
-extension [TomlParseError] {
+extension [ConfigParseError] {
     var descriptions: [String] { map(\.description) }
 }

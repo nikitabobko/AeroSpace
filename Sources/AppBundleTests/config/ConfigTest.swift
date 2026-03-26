@@ -183,7 +183,7 @@ final class ConfigTest: XCTestCase {
         )
     }
 
-    func testTomlParseError() {
+    func testConfigParseError() {
         let (_, errors) = parseConfig("true")
         assertEquals(
             errors.descriptions,

@@ -1,7 +1,7 @@
 import Common
 import TOMLKit
 
-func parseWorkspaceToMonitorAssignment(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: [MonitorDescription]] {
+func parseWorkspaceToMonitorAssignment(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [String: [MonitorDescription]] {
     guard let rawTable = raw.table else {
         errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
         return [:]
@@ -13,7 +13,7 @@ func parseWorkspaceToMonitorAssignment(_ raw: TOMLValueConvertible, _ backtrace:
     return result
 }
 
-func parseMonitorDescriptions(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [MonitorDescription] {
+func parseMonitorDescriptions(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [MonitorDescription] {
     if let array = raw.array {
         return array.enumerated()
             .map { (index, rawDesc) in parseMonitorDescription(rawDesc, backtrace + .index(index)).getOrNil(appendErrorTo: &errors) }
@@ -23,7 +23,7 @@ func parseMonitorDescriptions(_ raw: TOMLValueConvertible, _ backtrace: TomlBack
     }
 }
 
-func parseMonitorDescription(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<MonitorDescription> {
+func parseMonitorDescription(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<MonitorDescription> {
     let rawString: String
     if let string = raw.string {
         rawString = string
@@ -33,5 +33,5 @@ func parseMonitorDescription(_ raw: TOMLValueConvertible, _ backtrace: TomlBackt
         return .failure(expectedActualTypeError(expected: [.string, .int], actual: raw.type, backtrace))
     }
 
-    return parseMonitorDescription(rawString).toParsedToml(backtrace)
+    return parseMonitorDescription(rawString).toParsedConfig(backtrace)
 }

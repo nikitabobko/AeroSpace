@@ -36,8 +36,8 @@ func parseDynamicValue<T>(
     _ raw: TOMLValueConvertible,
     _ valueType: T.Type,
     _ fallback: T,
-    _ backtrace: TomlBacktrace,
-    _ errors: inout [TomlParseError],
+    _ backtrace: ConfigBacktrace,
+    _ errors: inout [ConfigParseError],
 ) -> DynamicConfigValue<T> {
     if let simpleValue = parseSimpleType(raw) as T? {
         return .constant(simpleValue)
@@ -66,7 +66,7 @@ func parseDynamicValue<T>(
     }
 }
 
-func parsePerMonitorValues<T>(_ array: TOMLArray, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [PerMonitorValue<T>] {
+func parsePerMonitorValues<T>(_ array: TOMLArray, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [PerMonitorValue<T>] {
     array.enumerated().compactMap { (index: Int, raw: TOMLValueConvertible) -> PerMonitorValue<T>? in
         var backtrace = backtrace + .index(index)
 

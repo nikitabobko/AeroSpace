@@ -28,15 +28,15 @@ struct KeyMapping: ConvenienceCopyable, Equatable, Sendable {
     }
 }
 
-func parseKeyMapping(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> KeyMapping {
+func parseKeyMapping(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> KeyMapping {
     parseTable(raw, KeyMapping(), keyMappingParser, backtrace, &errors)
 }
 
-private func parsePreset(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<KeyMapping.Preset> {
-    parseString(raw, backtrace).flatMap { parseEnum($0, KeyMapping.Preset.self).toParsedToml(backtrace) }
+private func parsePreset(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<KeyMapping.Preset> {
+    parseString(raw, backtrace).flatMap { parseEnum($0, KeyMapping.Preset.self).toParsedConfig(backtrace) }
 }
 
-private func parseKeyNotationToKeyCode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: Key] {
+private func parseKeyNotationToKeyCode(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [String: Key] {
     var result: [String: Key] = [:]
     guard let table = raw.table else {
         errors.append(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))

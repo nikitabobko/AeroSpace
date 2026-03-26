@@ -29,11 +29,11 @@ struct RawExecConfig: ConvenienceCopyable, Equatable {
     }
 }
 
-func parseExecConfig(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> ExecConfig {
+func parseExecConfig(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> ExecConfig {
     parseTable(raw, RawExecConfig(), rawExecConfigParser, backtrace, &errors).expand()
 }
 
-private func parseEnvVariables(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: String] {
+private func parseEnvVariables(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [String: String] {
     guard let table = raw.table else {
         errors.append(expectedActualTypeError(expected: .array, actual: raw.type, backtrace))
         return [:]
