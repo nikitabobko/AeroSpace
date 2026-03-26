@@ -175,7 +175,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
 
 @MainActor func parseConfig(_ rawToml: String) -> (config: Config, errors: [String]) { // todo change return value to Result
     let result = _parseConfig(rawToml)
-    return (result.config, result.errors.map(\.description))
+    return (result.config, result.errors.map(\.description).sorted())
 }
 
 @MainActor private func _parseConfig(_ rawToml: String) -> (config: Config, errors: [ConfigParseError]) { // todo change return value to Result
