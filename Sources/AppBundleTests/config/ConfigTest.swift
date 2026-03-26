@@ -25,7 +25,7 @@ final class ConfigTest: XCTestCase {
             config-version = 0
             """,
         )
-        assertEquals(errors.descriptions, ["config-version: Must be in [1, 2] range"])
+        assertEquals(errors, ["config-version: Must be in [1, 2] range"])
     }
 
     func testExecOnWorkspaceChangeDifferentTypesError() {
@@ -34,7 +34,7 @@ final class ConfigTest: XCTestCase {
             exec-on-workspace-change = ['', 1]
             """,
         )
-        assertEquals(errors.descriptions, ["exec-on-workspace-change[1]: Expected type is \'string\'. But actual type is \'integer\'"])
+        assertEquals(errors, ["exec-on-workspace-change[1]: Expected type is \'string\'. But actual type is \'integer\'"])
     }
 
     func testDuplicatedPersistentWorkspaces() {
@@ -44,7 +44,7 @@ final class ConfigTest: XCTestCase {
             persistent-workspaces = ['a', 'a']
             """,
         )
-        assertEquals(errors.descriptions, ["persistent-workspaces: Contains duplicated workspace names"])
+        assertEquals(errors, ["persistent-workspaces: Contains duplicated workspace names"])
     }
 
     func testPersistentWorkspacesAreAvailableOnlySinceVersion2() {
@@ -53,7 +53,7 @@ final class ConfigTest: XCTestCase {
             persistent-workspaces = ['a']
             """,
         )
-        assertEquals(errors.descriptions, ["persistent-workspaces: This config option is only available since \'config-version = 2\'"])
+        assertEquals(errors, ["persistent-workspaces: This config option is only available since \'config-version = 2\'"])
     }
 
     func testQueryCantBeUsedInConfig() {
@@ -63,7 +63,7 @@ final class ConfigTest: XCTestCase {
                 alt-a = 'list-apps'
             """,
         )
-        XCTAssertTrue(errors.descriptions.singleOrNil()?.contains("cannot be used in config") == true)
+        XCTAssertTrue(errors.singleOrNil()?.contains("cannot be used in config") == true)
     }
 
     func testDropBindings() {
@@ -99,7 +99,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(
-            errors.descriptions,
+            errors,
             ["mode: Please specify \'main\' mode"],
         )
         assertEquals(config.modes[mainModeId], nil)
@@ -115,7 +115,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(
-            errors.descriptions,
+            errors,
             [
                 "mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
                 "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding",
@@ -138,7 +138,7 @@ final class ConfigTest: XCTestCase {
                 alt-4 = ['workspace 4', 'focus left']
             """,
         )
-        assertEquals(errors.descriptions, [])
+        assertEquals(errors, [])
         assertEquals(config.persistentWorkspaces.sorted(), ["1", "2", "3", "4"])
     }
 
@@ -150,7 +150,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(
-            errors.descriptions,
+            errors,
             ["unknownKey: Unknown top-level key"],
         )
         assertEquals(config.enableNormalizationFlattenContainers, false)
@@ -165,7 +165,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(
-            errors.descriptions,
+            errors,
             ["gaps.unknownKey: Unknown key"],
         )
         assertEquals(config.enableNormalizationFlattenContainers, false)
@@ -178,7 +178,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(
-            errors.descriptions,
+            errors,
             ["enable-normalization-flatten-containers: Expected type is \'bool\'. But actual type is \'string\'"],
         )
     }
@@ -186,7 +186,7 @@ final class ConfigTest: XCTestCase {
     func testConfigParseError() {
         let (_, errors) = parseConfig("true")
         assertEquals(
-            errors.descriptions,
+            errors,
             ["Error while parsing key-value pair: encountered end-of-file (at line 1, column 5)"],
         )
     }
@@ -217,7 +217,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(
-            errors.descriptions,
+            errors,
             ["""
                 The config contains:
                 1. usage of 'split' command
@@ -263,7 +263,7 @@ final class ConfigTest: XCTestCase {
         assertEquals([
             "workspace-to-monitor-force-assignment.w7[0]: Empty string is an illegal monitor description",
             "workspace-to-monitor-force-assignment.w8: Monitor sequence numbers uses 1-based indexing. Values less than 1 are illegal",
-        ], errors.descriptions)
+        ], errors)
         assertEquals([:], defaultConfig.workspaceToMonitorForceAssignment)
     }
 
@@ -326,7 +326,7 @@ final class ConfigTest: XCTestCase {
             ),
         ])
 
-        assertEquals(errors.descriptions, [
+        assertEquals(errors, [
             "on-window-detected[2]: \'run\' is mandatory key",
         ])
     }
@@ -394,7 +394,7 @@ final class ConfigTest: XCTestCase {
                 inner.vertical = [{ foo.main = 1 }, { monitor = { foo = 2, bar = 3 } }, 1]
             """,
         )
-        assertEquals(errors2.descriptions, [
+        assertEquals(errors2, [
             "gaps.inner.horizontal: The last item in the array must be of type Int",
             "gaps.inner.vertical[0]: The table is expected to have a single key \'monitor\'",
             "gaps.inner.vertical[1].monitor: The table is expected to have a single key",
@@ -412,7 +412,7 @@ final class ConfigTest: XCTestCase {
                 alt-unicorn = 'workspace wonderland'
             """,
         )
-        assertEquals(errors.descriptions, [])
+        assertEquals(errors, [])
         assertEquals(config.keyMapping, KeyMapping(preset: .qwerty, rawKeyNotationToKeyCode: [
             "q": .q,
             "unicorn": .u,
@@ -427,7 +427,7 @@ final class ConfigTest: XCTestCase {
                 ' f' = 'f'
             """,
         )
-        assertEquals(errors1.descriptions, [
+        assertEquals(errors1, [
             "key-mapping.key-notation-to-key-code: ' f' is invalid key notation",
             "key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code",
         ])
