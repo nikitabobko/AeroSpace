@@ -2,28 +2,77 @@ import CoreGraphics
 import Foundation
 
 @MainActor
-private var cache: [UInt32: MacOsWindowLevel] = [:]
+private var levelCache: [UInt32: MacOsWindowLevel] = [:]
 
 @MainActor
-func getWindowLevel(for windowId: UInt32) -> MacOsWindowLevel? {
-    if let existing = cache[windowId] { return existing }
+private struct CgWindowInfo {
+    let level: MacOsWindowLevel
+    let bounds: CGRect
+    let ownerPid: pid_t
+}
 
-    var result: [UInt32: MacOsWindowLevel] = [:]
+@MainActor
+private var cgWindowInfoCache: [UInt32: CgWindowInfo] = [:]
+
+@MainActor
+private func refreshCgWindowInfoCache() {
     let options = CGWindowListOption(arrayLiteral: .excludeDesktopElements, .optionOnScreenOnly)
-    guard let cfArray = CGWindowListCopyWindowInfo(options, CGWindowID(0)) as? [CFDictionary] else { return nil }
+    guard let cfArray = CGWindowListCopyWindowInfo(options, CGWindowID(0)) as? [CFDictionary] else { return }
+
+    var levels: [UInt32: MacOsWindowLevel] = [:]
+    var infos: [UInt32: CgWindowInfo] = [:]
+
     for elem in cfArray {
         let dict = elem as NSDictionary
-
-        guard let _windowLayer = dict[kCGWindowLayer] else { continue }
-        let windowLayer = ((_windowLayer as! CFNumber) as NSNumber).intValue
 
         guard let _windowId = dict[kCGWindowNumber] else { continue }
         let windowId = ((_windowId as! CFNumber) as NSNumber).uint32Value
 
-        result[windowId] = .new(windowLevel: windowLayer)
+        guard let _windowLayer = dict[kCGWindowLayer] else { continue }
+        let windowLayer = ((_windowLayer as! CFNumber) as NSNumber).intValue
+
+        guard let _pid = dict[kCGWindowOwnerPID] else { continue }
+        let pid = ((_pid as! CFNumber) as NSNumber).int32Value
+
+        var bounds = CGRect.zero
+        if let boundsDict = dict[kCGWindowBounds] {
+            CGRectMakeWithDictionaryRepresentation(boundsDict as! CFDictionary, &bounds)
+        }
+
+        let level = MacOsWindowLevel.new(windowLevel: windowLayer)
+        levels[windowId] = level
+        infos[windowId] = CgWindowInfo(level: level, bounds: bounds, ownerPid: pid)
     }
-    cache = result
-    return result[windowId]
+    levelCache = levels
+    cgWindowInfoCache = infos
+}
+
+@MainActor
+func getWindowLevel(for windowId: UInt32) -> MacOsWindowLevel? {
+    if let existing = levelCache[windowId] { return existing }
+    refreshCgWindowInfoCache()
+    return levelCache[windowId]
+}
+
+/// Detect macOS native tabs: the AX API reports tabs as separate windows, but only the active
+/// tab appears in CGWindowListCopyWindowInfo(.optionOnScreenOnly). If a window is NOT on screen
+/// but another window from the same app IS on screen, it's likely an inactive native tab.
+/// https://github.com/nikitabobko/AeroSpace/issues/68
+@MainActor
+func isLikelyNativeTab(windowId: UInt32, appPid: pid_t) -> Bool {
+    refreshCgWindowInfoCache()
+
+    // If this window IS on screen, it's either a real window or the active tab — tile it normally.
+    if cgWindowInfoCache[windowId] != nil { return false }
+
+    // This window is NOT on screen. Check if the same app has at least one normal window on screen.
+    // If so, this off-screen window is likely an inactive native tab.
+    for (_, info) in cgWindowInfoCache {
+        if info.ownerPid == appPid && info.level == .normalWindow {
+            return true
+        }
+    }
+    return false
 }
 
 enum MacOsWindowLevel: Sendable, Equatable {

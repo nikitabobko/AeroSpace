@@ -212,6 +212,14 @@ extension Window {
 @MainActor
 private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace, window: Window?) async throws -> BindingData {
     let windowLevel = getWindowLevel(for: windowId)
+
+    // Tab detection heuristic: if a window is not on screen but the same app has an
+    // on-screen window, it's likely an inactive macOS native tab.
+    // https://github.com/nikitabobko/AeroSpace/issues/68
+    if isLikelyNativeTab(windowId: windowId, appPid: macApp.pid) {
+        return BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+    }
+
     return switch try await macApp.getAxUiElementWindowType(windowId, windowLevel) {
         case .popup: BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         case .dialog: BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
