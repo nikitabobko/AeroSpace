@@ -1,5 +1,4 @@
 import Common
-import TOMLKit
 
 struct PerMonitorValue<Value: Equatable>: Equatable {
     let description: MonitorDescription
@@ -33,7 +32,7 @@ extension DynamicConfigValue {
 }
 
 func parseDynamicValue<T>(
-    _ raw: TOMLValueConvertible,
+    _ raw: Json,
     _ valueType: T.Type,
     _ fallback: T,
     _ backtrace: ConfigBacktrace,
@@ -41,7 +40,7 @@ func parseDynamicValue<T>(
 ) -> DynamicConfigValue<T> {
     if let simpleValue = parseSimpleType(raw) as T? {
         return .constant(simpleValue)
-    } else if let array = raw.array {
+    } else if let array = raw.asArrayOrNil {
         if array.isEmpty {
             errors.append(.semantic(backtrace, "The array must not be empty"))
             return .constant(fallback)
@@ -57,17 +56,17 @@ func parseDynamicValue<T>(
             return .constant(fallback)
         }
 
-        let rules: [PerMonitorValue<T>] = parsePerMonitorValues(TOMLArray(array.dropLast()), backtrace, &errors)
+        let rules: [PerMonitorValue<T>] = parsePerMonitorValues(array.dropLast(), backtrace, &errors)
 
         return .perMonitor(rules, default: defaultValue)
     } else {
-        errors.append(.semantic(backtrace, "Unsupported type: \(raw.type), expected: \(valueType) or array"))
+        errors.append(.semantic(backtrace, "Unsupported type: \(raw.tomlType), expected: \(valueType) or array"))
         return .constant(fallback)
     }
 }
 
-func parsePerMonitorValues<T>(_ array: TOMLArray, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [PerMonitorValue<T>] {
-    array.enumerated().compactMap { (index: Int, raw: TOMLValueConvertible) -> PerMonitorValue<T>? in
+func parsePerMonitorValues<T>(_ array: Json.JsonArray, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [PerMonitorValue<T>] {
+    array.enumerated().compactMap { (index: Int, raw: Json) -> PerMonitorValue<T>? in
         var backtrace = backtrace + .index(index)
 
         guard let (key, value) = raw.unwrapTableWithSingleKey(expectedKey: "monitor", &backtrace)
@@ -77,12 +76,12 @@ func parsePerMonitorValues<T>(_ array: TOMLArray, _ backtrace: ConfigBacktrace, 
             return nil
         }
 
-        let monitorDescriptionResult = parseMonitorDescription(key, backtrace)
+        let monitorDescriptionResult = parseMonitorDescription(.string(key), backtrace)
 
         guard let monitorDescription = monitorDescriptionResult.getOrNil(appendErrorTo: &errors) else { return nil }
 
         guard let value = parseSimpleType(value) as T? else {
-            errors.append(.semantic(backtrace, "Expected type is '\(T.self)'. But actual type is '\(value.type)'"))
+            errors.append(.semantic(backtrace, "Expected type is '\(T.self)'. But actual type is '\(value.tomlType)'"))
             return nil
         }
 

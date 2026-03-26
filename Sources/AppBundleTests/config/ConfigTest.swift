@@ -34,7 +34,7 @@ final class ConfigTest: XCTestCase {
             exec-on-workspace-change = ['', 1]
             """,
         )
-        assertEquals(errors, ["exec-on-workspace-change[1]: Expected type is \'string\'. But actual type is \'integer\'"])
+        assertEquals(errors, ["exec-on-workspace-change[1]: Expected type is \'string\'. But actual type is \'int\'"])
     }
 
     func testDuplicatedPersistentWorkspaces() {

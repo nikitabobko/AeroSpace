@@ -53,7 +53,7 @@ typealias ParsedConfig<T> = Result<T, ConfigParseError>
 
 extension ParserProtocol {
     func transformRawConfig(_ raw: S,
-                            _ value: TOMLValueConvertible,
+                            _ value: Json,
                             _ backtrace: ConfigBacktrace,
                             _ errors: inout [ConfigParseError]) -> S
     {
@@ -68,19 +68,19 @@ protocol ParserProtocol<S>: Sendable {
     associatedtype T
     associatedtype S where S: ConvenienceCopyable
     var keyPath: SendableWritableKeyPath<S, T> { get }
-    var parse: @Sendable (TOMLValueConvertible, ConfigBacktrace, inout [ConfigParseError]) -> ParsedConfig<T> { get }
+    var parse: @Sendable (Json, ConfigBacktrace, inout [ConfigParseError]) -> ParsedConfig<T> { get }
 }
 
 struct Parser<S: ConvenienceCopyable, T>: ParserProtocol {
     let keyPath: SendableWritableKeyPath<S, T>
-    let parse: @Sendable (TOMLValueConvertible, ConfigBacktrace, inout [ConfigParseError]) -> ParsedConfig<T>
+    let parse: @Sendable (Json, ConfigBacktrace, inout [ConfigParseError]) -> ParsedConfig<T>
 
-    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (TOMLValueConvertible, ConfigBacktrace, inout [ConfigParseError]) -> T) {
+    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (Json, ConfigBacktrace, inout [ConfigParseError]) -> T) {
         self.keyPath = keyPath
         self.parse = { raw, backtrace, errors -> ParsedConfig<T> in .success(parse(raw, backtrace, &errors)) }
     }
 
-    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (TOMLValueConvertible, ConfigBacktrace) -> ParsedConfig<T>) {
+    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (Json, ConfigBacktrace) -> ParsedConfig<T>) {
         self.keyPath = keyPath
         self.parse = { raw, backtrace, _ -> ParsedConfig<T> in parse(raw, backtrace) }
     }
@@ -149,27 +149,72 @@ extension Command {
     }
 }
 
-func parseAfterLoginCommand(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<[any Command]> {
-    if let array = raw.array, array.count == 0 {
+func parseAfterLoginCommand(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<[any Command]> {
+    if let array = raw.asArrayOrNil, array.count == 0 {
         return .success([])
     }
     let msg = "after-login-command is deprecated since AeroSpace 0.19.0. https://github.com/nikitabobko/AeroSpace/issues/1482"
     return .failure(.semantic(backtrace, msg))
 }
 
-func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]> {
-    if let rawString = raw.string {
+func parseCommandOrCommands(_ raw: Json) -> Parsed<[any Command]> {
+    if let rawString = raw.asStringOrNil {
         return parseCommand(rawString).toEither().map { [$0] }
-    } else if let rawArray = raw.array {
+    } else if let rawArray = raw.asArrayOrNil {
         let commands: Parsed<[any Command]> = (0 ..< rawArray.count).mapAllOrFailure { index in
-            let rawString: String = rawArray[index].string ?? expectedActualTypeError(expected: .string, actual: rawArray[index].type)
+            let rawString: String = rawArray[index].asStringOrNil ?? expectedActualTypeError(expected: .string, actual: rawArray[index].tomlType)
             return parseCommand(rawString).toEither()
         }
         return commands.filter("macos-native-* commands are only allowed to be the last commands in the list") {
             !$0.dropLast().contains(where: { $0.isMacOsNativeCommand })
         }
     } else {
-        return .failure(expectedActualTypeError(expected: [.string, .array], actual: raw.type))
+        return .failure(expectedActualTypeError(expected: [.string, .array], actual: raw.tomlType))
+    }
+}
+
+extension TOMLValueConvertible {
+    func toJsonRecursive(_ backtrace: ConfigBacktrace) -> ParsedConfig<Json> {
+        switch self.type {
+            // Vector
+            case .table: return table.orDie().tomlTableToJsonRecursive(backtrace).map(Json.dict)
+            case .array:
+                let array = array.orDie()
+                var json = Json.JsonArray()
+                for (index, tomlValue) in array.enumerated() {
+                    let jsonResultValue = tomlValue.toJsonRecursive(backtrace + .index(index))
+                    switch jsonResultValue {
+                        case .success(let jsonValue): json.append(jsonValue)
+                        case .failure(let fail): return .failure(fail)
+                    }
+                }
+                return .success(.array(json))
+
+            // Scalar
+            case .string: return .success(.string(string.orDie()))
+            case .int: return .success(.int(int.orDie()))
+            case .bool: return .success(.bool(bool.orDie()))
+
+            // Unsupported
+            case .double: return .failure(.semantic(backtrace, "TOML Double type is not supported"))
+            case .date: return .failure(.semantic(backtrace, "TOML Date type is not supported"))
+            case .time: return .failure(.semantic(backtrace, "TOML Time type is not supported"))
+            case .dateTime: return .failure(.semantic(backtrace, "TOML DateTime type is not supported"))
+        }
+    }
+}
+
+extension TOMLTable {
+    func tomlTableToJsonRecursive(_ backtrace: ConfigBacktrace) -> ParsedConfig<Json.JsonDict> {
+        var json = Json.JsonDict()
+        for (key, tomlValue) in self {
+            let jsonResultValue = tomlValue.toJsonRecursive(backtrace + .key(key))
+            switch jsonResultValue {
+                case .success(let jsonValue): json[key] = jsonValue
+                case .failure(let fail): return .failure(fail)
+            }
+        }
+        return .success(json)
     }
 }
 
@@ -179,9 +224,12 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
 }
 
 @MainActor private func _parseConfig(_ rawToml: String) -> (config: Config, errors: [ConfigParseError]) { // todo change return value to Result
-    let rawTable: TOMLTable
+    let rawTable: Json.JsonDict
     do {
-        rawTable = try TOMLTable(string: rawToml)
+        switch (try TOMLTable(string: rawToml)).tomlTableToJsonRecursive(.emptyRoot) {
+            case .success(let _rawTable): rawTable = _rawTable
+            case .failure(let fail): return (defaultConfig, [fail])
+        }
     } catch let e as TOMLParseError {
         return (defaultConfig, [.syntax(e.debugDescription)])
     } catch let e {
@@ -202,7 +250,7 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
     }
 
     if config.configVersion <= 1 {
-        if rawTable.contains(key: persistentWorkspacesKey) {
+        if rawTable.keys.contains(persistentWorkspacesKey) {
             errors += [.semantic(.rootKey(persistentWorkspacesKey), "This config option is only available since 'config-version = 2'")]
         }
         config.persistentWorkspaces = (config.modes.values.lazy
@@ -237,36 +285,36 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
 }
 
 func parseIndentForNestedContainersWithTheSameOrientation(
-    _ _: TOMLValueConvertible,
+    _ _: Json,
     _ backtrace: ConfigBacktrace,
 ) -> ParsedConfig<Void> {
     let msg = "Deprecated. Please drop it from the config. See https://github.com/nikitabobko/AeroSpace/issues/96"
     return .failure(.semantic(backtrace, msg))
 }
 
-func parseConfigVersion(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<Int> {
+func parseConfigVersion(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Int> {
     let min = 1
     let max = 2
     return parseInt(raw, backtrace)
         .filter(.semantic(backtrace, "Must be in [\(min), \(max)] range")) { (min ... max).contains($0) }
 }
 
-func parseInt(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<Int> {
-    raw.int.orFailure(expectedActualTypeError(expected: .int, actual: raw.type, backtrace))
+func parseInt(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Int> {
+    raw.asIntOrNil.orFailure(expectedActualTypeError(expected: .int, actual: raw.tomlType, backtrace))
 }
 
-func parseString(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<String> {
-    raw.string.orFailure(expectedActualTypeError(expected: .string, actual: raw.type, backtrace))
+func parseString(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<String> {
+    raw.asStringOrNil.orFailure(expectedActualTypeError(expected: .string, actual: raw.tomlType, backtrace))
 }
 
-func parseSimpleType<T>(_ raw: TOMLValueConvertible) -> T? {
-    (raw.int as? T) ?? (raw.string as? T) ?? (raw.bool as? T)
+func parseSimpleType<T>(_ raw: Json) -> T? {
+    (raw.asIntOrNil as? T) ?? (raw.asStringOrNil as? T) ?? (raw.asBoolOrNil as? T)
 }
 
-extension TOMLValueConvertible {
-    func unwrapTableWithSingleKey(expectedKey: String? = nil, _ backtrace: inout ConfigBacktrace) -> ParsedConfig<(key: String, value: TOMLValueConvertible)> {
-        guard let table else {
-            return .failure(expectedActualTypeError(expected: .table, actual: type, backtrace))
+extension Json {
+    func unwrapTableWithSingleKey(expectedKey: String? = nil, _ backtrace: inout ConfigBacktrace) -> ParsedConfig<(key: String, value: Json)> {
+        guard let asDictOrNil else {
+            return .failure(expectedActualTypeError(expected: .table, actual: tomlType, backtrace))
         }
         let singleKeyError: ConfigParseError = .semantic(
             backtrace,
@@ -274,7 +322,7 @@ extension TOMLValueConvertible {
                 ? "The table is expected to have a single key '\(expectedKey.orDie())'"
                 : "The table is expected to have a single key",
         )
-        guard let (actualKey, value): (String, TOMLValueConvertible) = table.count == 1 ? table.first : nil else {
+        guard let (actualKey, value): (String, Json) = asDictOrNil.count == 1 ? asDictOrNil.first : nil else {
             return .failure(singleKeyError)
         }
         if expectedKey != nil && expectedKey != actualKey {
@@ -285,40 +333,40 @@ extension TOMLValueConvertible {
     }
 }
 
-func parseTomlArray(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<TOMLArray> {
-    raw.array.orFailure(expectedActualTypeError(expected: .array, actual: raw.type, backtrace))
+func parseTomlArray(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Json.JsonArray> {
+    raw.asArrayOrNil.orFailure(expectedActualTypeError(expected: .array, actual: raw.tomlType, backtrace))
 }
 
 func parseTable<T: ConvenienceCopyable>(
-    _ raw: TOMLValueConvertible,
+    _ raw: Json,
     _ initial: T,
     _ fieldsParser: [String: any ParserProtocol<T>],
     _ backtrace: ConfigBacktrace,
     _ errors: inout [ConfigParseError],
 ) -> T {
-    guard let table = raw.table else {
-        errors.append(expectedActualTypeError(expected: .table, actual: raw.type, backtrace))
+    guard let table = raw.asDictOrNil else {
+        errors.append(expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace))
         return initial
     }
     return table.parseTable(initial, fieldsParser, backtrace, &errors)
 }
 
-private func parseStartupRootContainerLayout(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<Void> {
+private func parseStartupRootContainerLayout(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Void> {
     parseString(raw, backtrace)
         .filter(.semantic(backtrace, "'non-empty-workspaces-root-containers-layout-on-startup' is deprecated. Please drop it from your config")) { raw in raw == "smart" }
         .map { _ in () }
 }
 
-private func parseLayout(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<Layout> {
+private func parseLayout(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Layout> {
     parseString(raw, backtrace)
         .flatMap { $0.parseLayout().orFailure(.semantic(backtrace, "Can't parse layout '\($0)'")) }
 }
 
-private func skipParsing<T: Sendable>(_ value: T) -> @Sendable (_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<T> {
+private func skipParsing<T: Sendable>(_ value: T) -> @Sendable (_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<T> {
     { _, _ in .success(value) }
 }
 
-private func parsePersistentWorkspaces(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<OrderedSet<String>> {
+private func parsePersistentWorkspaces(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<OrderedSet<String>> {
     parseArrayOfStrings(raw, backtrace)
         .flatMap { arr in
             let set = arr.toOrderedSet()
@@ -326,7 +374,7 @@ private func parsePersistentWorkspaces(_ raw: TOMLValueConvertible, _ backtrace:
         }
 }
 
-private func parseArrayOfStrings(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<[String]> {
+private func parseArrayOfStrings(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<[String]> {
     parseTomlArray(raw, backtrace)
         .flatMap { arr in
             arr.enumerated().mapAllOrFailure { (index, elem) in
@@ -335,7 +383,7 @@ private func parseArrayOfStrings(_ raw: TOMLValueConvertible, _ backtrace: Confi
         }
 }
 
-private func parseDefaultContainerOrientation(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<DefaultContainerOrientation> {
+private func parseDefaultContainerOrientation(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<DefaultContainerOrientation> {
     parseString(raw, backtrace).flatMap {
         DefaultContainerOrientation(rawValue: $0)
             .orFailure(.semantic(backtrace, "Can't parse default container orientation '\($0)'"))
@@ -348,8 +396,8 @@ extension Parsed where Failure == String {
     }
 }
 
-func parseBool(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace) -> ParsedConfig<Bool> {
-    raw.bool.orFailure(expectedActualTypeError(expected: .bool, actual: raw.type, backtrace))
+func parseBool(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Bool> {
+    raw.asBoolOrNil.orFailure(expectedActualTypeError(expected: .bool, actual: raw.tomlType, backtrace))
 }
 
 struct ConfigBacktrace: CustomStringConvertible, Equatable {
@@ -395,7 +443,7 @@ enum TomlBacktraceItem: Equatable {
     }
 }
 
-extension TOMLTable {
+extension Json.JsonDict {
     func parseTable<T: ConvenienceCopyable>(
         _ initial: T,
         _ fieldsParser: [String: any ParserProtocol<T>],
@@ -421,10 +469,10 @@ func unknownKeyError(_ backtrace: ConfigBacktrace) -> ConfigParseError {
     .semantic(backtrace, backtrace.isRootKey ? "Unknown top-level key" : "Unknown key")
 }
 
-func expectedActualTypeError(expected: TOMLType, actual: TOMLType, _ backtrace: ConfigBacktrace) -> ConfigParseError {
+func expectedActualTypeError(expected: TomlType, actual: TomlType, _ backtrace: ConfigBacktrace) -> ConfigParseError {
     .semantic(backtrace, expectedActualTypeError(expected: expected, actual: actual))
 }
 
-func expectedActualTypeError(expected: [TOMLType], actual: TOMLType, _ backtrace: ConfigBacktrace) -> ConfigParseError {
+func expectedActualTypeError(expected: [TomlType], actual: TomlType, _ backtrace: ConfigBacktrace) -> ConfigParseError {
     .semantic(backtrace, expectedActualTypeError(expected: expected, actual: actual))
 }

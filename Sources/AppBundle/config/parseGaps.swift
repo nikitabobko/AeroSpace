@@ -1,5 +1,4 @@
 import Common
-import TOMLKit
 
 struct Gaps: ConvenienceCopyable, Equatable, Sendable {
     var inner: Inner
@@ -100,14 +99,14 @@ private let outerParser: [String: any ParserProtocol<Gaps.Outer>] = [
     "right": Parser(\.right) { value, backtrace, errors in parseDynamicValue(value, Int.self, 0, backtrace, &errors) },
 ]
 
-func parseGaps(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> Gaps {
+func parseGaps(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> Gaps {
     parseTable(raw, .zero, gapsParser, backtrace, &errors)
 }
 
-func parseInner(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> Gaps.Inner {
+func parseInner(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> Gaps.Inner {
     parseTable(raw, Gaps.Inner.zero, innerParser, backtrace, &errors)
 }
 
-func parseOuter(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> Gaps.Outer {
+func parseOuter(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> Gaps.Outer {
     parseTable(raw, Gaps.Outer.zero, outerParser, backtrace, &errors)
 }

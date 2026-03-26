@@ -2,7 +2,6 @@ import AppKit
 import Common
 import Foundation
 import HotKey
-import TOMLKit
 
 @MainActor private var hotkeys: [String: HotKey] = [:]
 
@@ -90,13 +89,13 @@ struct HotkeyBinding: Equatable, Sendable {
     }
 }
 
-func parseBindings(_ raw: TOMLValueConvertible, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError], _ mapping: [String: Key]) -> [String: HotkeyBinding] {
-    guard let rawTable = raw.table else {
-        errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
+func parseBindings(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError], _ mapping: [String: Key]) -> [String: HotkeyBinding] {
+    guard let rawTable = raw.asDictOrNil else {
+        errors += [expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace)]
         return [:]
     }
     var result: [String: HotkeyBinding] = [:]
-    for (binding, rawCommand): (String, TOMLValueConvertible) in rawTable {
+    for (binding, rawCommand): (String, Json) in rawTable {
         let backtrace = backtrace + .key(binding)
         let binding = parseBinding(binding, backtrace, mapping)
             .flatMap { modifiers, key -> ParsedConfig<HotkeyBinding> in
