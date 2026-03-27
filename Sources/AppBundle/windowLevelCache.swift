@@ -43,7 +43,7 @@ enum MacOsWindowLevel: Sendable, Equatable {
         switch json {
             case .string("normalWindow"): .normalWindow
             case .string("alwaysOnTopWindow"): .alwaysOnTopWindow
-            case .int(let int): .new(windowLevel: int)
+            case .int(let int): .new(windowLevel: Int(exactly: int).orDie())
             default: nil
         }
     }

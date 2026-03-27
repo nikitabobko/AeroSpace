@@ -53,12 +53,8 @@ extension [String: Json]: AxUiElementMock {
     public func containingWindowId() -> CGWindowID? { _containingWindowId() }
 
     private func _containingWindowId() -> CGWindowID {
-        let windowId = self["Aero.axWindowId"]?.rawValue ?? dieT()
-        if let windowId = windowId as? Int {
-            return UInt32.init(windowId)
-        } else {
-            return windowId as? UInt32 ?? dieT()
-        }
+        let windowId = self["Aero.axWindowId"]?.asInt64OrNil ?? dieT()
+        return UInt32.init(exactly: windowId).orDie()
     }
 }
 

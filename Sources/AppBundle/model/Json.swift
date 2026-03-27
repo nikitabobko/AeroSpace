@@ -9,8 +9,7 @@ enum Json: Encodable, Equatable {
     // scalar
     case null
     case string(String)
-    case int(Int)
-    case uint32(UInt32)
+    case int(Int64)
     case bool(Bool)
 
     typealias JsonDict = [String: Json]
@@ -22,7 +21,6 @@ enum Json: Encodable, Equatable {
             case .dict(let value): try value.encode(to: encoder)
             case .string(let value): try value.encode(to: encoder)
             case .int(let value): try value.encode(to: encoder)
-            case .uint32(let value): try value.encode(to: encoder)
             case .bool(let value): try value.encode(to: encoder)
             case .null: try (nil as String?).encode(to: encoder)
         }
@@ -40,9 +38,10 @@ enum Json: Encodable, Equatable {
 
     static func newScalarOrNil(_ value: Any?) -> Json? {
         switch value {
-            case let value as Int: .int(value)
-            case let value as Int64: Int(exactly: value).map(Json.int)
-            case let value as UInt32: .uint32(value)
+            case let value as Int64: .int(value)
+            case let value as Int: .int(Int64(value))
+            case let value as UInt32: .int(Int64(value))
+            case let value as UInt: .int(Int64(value))
             case let value as Bool: .bool(value)
             case let value as String: .string(value)
             case nil, is NSNull: .null
@@ -51,6 +50,9 @@ enum Json: Encodable, Equatable {
     }
 
     static func stringOrNull(_ str: String?) -> Json { str.map(Json.string) ?? .null }
+
+    static func int(_ int: Int) -> Json { .int(Int64(exactly: int).orDie()) }
+    static func int(_ int: UInt32) -> Json { .int(Int64(exactly: int).orDie()) }
 
     var rawValue: Any? {
         switch self {
@@ -62,14 +64,17 @@ enum Json: Encodable, Equatable {
             case .bool(let x): x
             case .int(let x): x
             case .string(let x): x
-            case .uint32(let x): x
         }
     }
 
     var asDictOrDie: [String: Json] { asDictOrNil.orDie("\(self) is not a dict") }
 
-    var asIntOrNil: Int? {
+    var asInt64OrNil: Int64? {
         if case .int(let value) = self { value } else { nil }
+    }
+
+    var asIntOrNil: Int? {
+        asInt64OrNil.flatMap { Int.init(exactly: $0) }
     }
 
     var asStringOrNil: String? {
@@ -95,7 +100,6 @@ enum Json: Encodable, Equatable {
             case .null: return .null
             case .string: return .string
             case .int: return .int
-            case .uint32: return .uint32
             case .bool: return .bool
         }
     }
@@ -108,6 +112,5 @@ enum TomlType: String {
     case null
     case string
     case int
-    case uint32
     case bool
 }

@@ -50,7 +50,7 @@ private func prettyValue(_ value: Any?, recursionDepth: Int) -> Json {
         return .int(value)
     }
     if let value = value as? UInt32 {
-        return .uint32(value)
+        return .int(value)
     }
     if let value = value as? Bool {
         return .bool(value)
