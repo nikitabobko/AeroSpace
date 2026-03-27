@@ -88,16 +88,20 @@ private let gapsParser: [String: any ParserProtocol<Gaps>] = [
 ]
 
 private let innerParser: [String: any ParserProtocol<Gaps.Inner>] = [
-    "vertical": Parser(\.vertical) { value, backtrace, errors in parseDynamicValue(value, Int.self, 0, backtrace, &errors) },
-    "horizontal": Parser(\.horizontal) { value, backtrace, errors in parseDynamicValue(value, Int.self, 0, backtrace, &errors) },
+    "vertical": Parser(\.vertical, parseIntDynamicValue),
+    "horizontal": Parser(\.horizontal, parseIntDynamicValue),
 ]
 
 private let outerParser: [String: any ParserProtocol<Gaps.Outer>] = [
-    "left": Parser(\.left) { value, backtrace, errors in parseDynamicValue(value, Int.self, 0, backtrace, &errors) },
-    "bottom": Parser(\.bottom) { value, backtrace, errors in parseDynamicValue(value, Int.self, 0, backtrace, &errors) },
-    "top": Parser(\.top) { value, backtrace, errors in parseDynamicValue(value, Int.self, 0, backtrace, &errors) },
-    "right": Parser(\.right) { value, backtrace, errors in parseDynamicValue(value, Int.self, 0, backtrace, &errors) },
+    "left": Parser(\.left, parseIntDynamicValue),
+    "bottom": Parser(\.bottom, parseIntDynamicValue),
+    "top": Parser(\.top, parseIntDynamicValue),
+    "right": Parser(\.right, parseIntDynamicValue),
 ]
+
+private func parseIntDynamicValue(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> DynamicConfigValue<Int> {
+    parseDynamicValue(raw, ofType: Int.self, 0, backtrace, &errors)
+}
 
 func parseGaps(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> Gaps {
     parseTable(raw, .zero, gapsParser, backtrace, &errors)
