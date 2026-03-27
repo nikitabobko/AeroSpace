@@ -1,7 +1,7 @@
 import AppKit
 import Common
 import HotKey
-import TOMLKit
+import TOMLDecoder
 import OrderedCollections
 
 @MainActor
@@ -173,48 +173,31 @@ func parseCommandOrCommands(_ raw: Json) -> Parsed<[any Command]> {
     }
 }
 
-extension TOMLValueConvertible {
-    func toJsonRecursive(_ backtrace: ConfigBacktrace) -> ParsedConfig<Json> {
-        switch self.type {
-            // Vector
-            case .table: return table.orDie().tomlTableToJsonRecursive(backtrace).map(Json.dict)
-            case .array:
-                let array = array.orDie()
-                var json = Json.JsonArray()
-                for (index, tomlValue) in array.enumerated() {
-                    let jsonResultValue = tomlValue.toJsonRecursive(backtrace + .index(index))
-                    switch jsonResultValue {
-                        case .success(let jsonValue): json.append(jsonValue)
-                        case .failure(let fail): return .failure(fail)
-                    }
+func tomlAnyToParsedConfigRecursive(any: Any, _ backtrace: ConfigBacktrace) -> ParsedConfig<Json> {
+    switch any {
+        case let dict as [String: Any]:
+            var json = Json.JsonDict()
+            for (key, tomlValue) in dict {
+                let jsonResultValue = tomlAnyToParsedConfigRecursive(any: tomlValue, backtrace + .key(key))
+                switch jsonResultValue {
+                    case .success(let jsonValue): json[key] = jsonValue
+                    case .failure(let fail): return .failure(fail)
                 }
-                return .success(.array(json))
-
-            // Scalar
-            case .string: return .success(.string(string.orDie()))
-            case .int: return .success(.int(int.orDie()))
-            case .bool: return .success(.bool(bool.orDie()))
-
-            // Unsupported
-            case .double: return .failure(.semantic(backtrace, "TOML Double type is not supported"))
-            case .date: return .failure(.semantic(backtrace, "TOML Date type is not supported"))
-            case .time: return .failure(.semantic(backtrace, "TOML Time type is not supported"))
-            case .dateTime: return .failure(.semantic(backtrace, "TOML DateTime type is not supported"))
-        }
-    }
-}
-
-extension TOMLTable {
-    func tomlTableToJsonRecursive(_ backtrace: ConfigBacktrace) -> ParsedConfig<Json.JsonDict> {
-        var json = Json.JsonDict()
-        for (key, tomlValue) in self {
-            let jsonResultValue = tomlValue.toJsonRecursive(backtrace + .key(key))
-            switch jsonResultValue {
-                case .success(let jsonValue): json[key] = jsonValue
-                case .failure(let fail): return .failure(fail)
             }
-        }
-        return .success(json)
+            return .success(.dict(json))
+        case let array as [Any]:
+            var json = Json.JsonArray()
+            for (index, tomlValue) in array.enumerated() {
+                let jsonResultValue = tomlAnyToParsedConfigRecursive(any: tomlValue, backtrace + .index(index))
+                switch jsonResultValue {
+                    case .success(let jsonValue): json.append(jsonValue)
+                    case .failure(let fail): return .failure(fail)
+                }
+            }
+            return .success(.array(json))
+        default:
+            return Json.newScalarOrNil(any).map(Result.success)
+                ?? .failure(.semantic(backtrace, "Unsupported TOML type: \(type(of: any))"))
     }
 }
 
@@ -226,14 +209,14 @@ extension TOMLTable {
 @MainActor private func _parseConfig(_ rawToml: String) -> (config: Config, errors: [ConfigParseError]) { // todo change return value to Result
     let rawTable: Json.JsonDict
     do {
-        switch (try TOMLTable(string: rawToml)).tomlTableToJsonRecursive(.emptyRoot) {
-            case .success(let _rawTable): rawTable = _rawTable
+        let dict: [String: Any] = try .init(try TOMLTable(source: rawToml))
+        switch tomlAnyToParsedConfigRecursive(any: dict, .emptyRoot) {
+            case .success(.dict(let dict)): rawTable = dict
+            case .success: return (defaultConfig, [.syntax("Config parsing error: the top level type must be a TOML Table")])
             case .failure(let fail): return (defaultConfig, [fail])
         }
-    } catch let e as TOMLParseError {
-        return (defaultConfig, [.syntax(e.debugDescription)])
-    } catch let e {
-        return (defaultConfig, [.syntax(e.localizedDescription)])
+    } catch {
+        return (defaultConfig, [.syntax(error.description)])
     }
 
     var errors: [ConfigParseError] = []

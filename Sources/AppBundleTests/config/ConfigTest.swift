@@ -184,10 +184,29 @@ final class ConfigTest: XCTestCase {
     }
 
     func testConfigParseError() {
-        let (_, errors) = parseConfig("true")
         assertEquals(
-            errors,
-            ["Error while parsing key-value pair: encountered end-of-file (at line 1, column 5)"],
+            parseConfig("true").errors,
+            ["(Line 1) Syntax error: missing =."],
+        )
+
+        assertEquals(
+            parseConfig("\n1").errors,
+            ["(Line 2) Syntax error: missing =."],
+        )
+
+        assertEquals(
+            parseConfig("foo: 1").errors,
+            ["(Line 1) Syntax error: missing =."],
+        )
+
+        assertEquals(
+            parseConfig("foo = 1.0").errors,
+            ["foo: Unsupported TOML type: Double"],
+        )
+
+        assertEquals(
+            parseConfig("foo.bar = 1979-05-27").errors,
+            ["foo.bar: Unsupported TOML type: LocalDate"],
         )
     }
 
@@ -329,6 +348,40 @@ final class ConfigTest: XCTestCase {
         assertEquals(errors, [
             "on-window-detected[2]: \'run\' is mandatory key",
         ])
+    }
+
+    func testParseInlineTables() {
+        let errors = parseConfig(
+            """
+            on-window-detected = [
+                {
+                    check-further-callbacks = true,
+                    run = ['layout floating', 'move-node-to-workspace W'],
+                },
+                {
+                    if.app-id = 'com.apple.systempreferences',
+                    run = [],
+                }
+            ]
+            """,
+        ).errors
+        assertEquals(errors, [])
+    }
+
+    func testTomlParser() {
+        // https://github.com/nikitabobko/AeroSpace/issues/1064
+        let errors = parseConfig(
+            """
+            [[[on-window-detected]]
+            if.app-id = 'com.apple.findmy'
+            run = 'layout floating'
+
+            [on-window-detected]]
+            if.app-id = 'com.openai.chat'
+            run = 'layout floating'
+            """,
+        ).errors
+        assertEquals(errors, ["(Line 1) Syntax error: invalid or missing key."])
     }
 
     func testParseOnWindowDetectedRegex() {
