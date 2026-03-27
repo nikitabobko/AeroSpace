@@ -33,12 +33,12 @@ extension DynamicConfigValue {
 
 func parseDynamicValue<T>(
     _ raw: Json,
-    _ valueType: T.Type,
+    ofType valueType: T.Type,
     _ fallback: T,
     _ backtrace: ConfigBacktrace,
     _ errors: inout [ConfigParseError],
 ) -> DynamicConfigValue<T> {
-    if let simpleValue = parseSimpleType(raw) as T? {
+    if let simpleValue = parseSimpleType(raw, ofType: T.self) {
         return .constant(simpleValue)
     } else if let array = raw.asArrayOrNil {
         if array.isEmpty {
@@ -46,7 +46,7 @@ func parseDynamicValue<T>(
             return .constant(fallback)
         }
 
-        guard let defaultValue = array.last.flatMap({ parseSimpleType($0) as T? }) else {
+        guard let defaultValue = array.last.flatMap({ parseSimpleType($0, ofType: T.self) }) else {
             errors.append(.semantic(backtrace, "The last item in the array must be of type \(T.self)"))
             return .constant(fallback)
         }
@@ -80,7 +80,7 @@ func parsePerMonitorValues<T>(_ array: Json.JsonArray, _ backtrace: ConfigBacktr
 
         guard let monitorDescription = monitorDescriptionResult.getOrNil(appendErrorTo: &errors) else { return nil }
 
-        guard let value = parseSimpleType(value) as T? else {
+        guard let value = parseSimpleType(value, ofType: T.self) else {
             errors.append(.semantic(backtrace, "Expected type is '\(T.self)'. But actual type is '\(value.tomlType)'"))
             return nil
         }
