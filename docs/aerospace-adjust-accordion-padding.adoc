@@ -1,0 +1,41 @@
+= aerospace-adjust-accordion-padding(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-adjust-accordion-padding
+// tag::purpose[]
+:manpurpose: Adjust accordion padding of the focused window's container
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace adjust-accordion-padding [-h|--help] [--window-id <window-id>] [+|-]<number>
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The argument controls how much the padding changes
+
+* If the `<number>` is prefixed with `+` then the padding is increased
+* If the `<number>` is prefixed with `-` then the padding is decreased
+
+The adjustment is applied to the nearest ancestor accordion container of the focused window.
+The adjustment is not persisted and resets when the container is destroyed or AeroSpace restarts.
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

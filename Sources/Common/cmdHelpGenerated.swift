@@ -1,6 +1,9 @@
 // FILE IS GENERATED FROM docs/aerospace-*.adoc files
 // TO REGENERATE THE FILE RUN generate.sh
 
+let adjust_accordion_padding_help_generated = """
+    USAGE: adjust-accordion-padding [-h|--help] [--window-id <window-id>] [+|-]<number>
+    """
 let balance_sizes_help_generated = """
     USAGE: balance-sizes [-h|--help] [--workspace <workspace>]
     """

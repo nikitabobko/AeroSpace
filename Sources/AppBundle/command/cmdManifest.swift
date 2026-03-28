@@ -4,6 +4,8 @@ extension CmdArgs {
     func toCommand() -> any Command {
         let command: any Command
         switch Self.info.kind {
+            case .adjustAccordionPadding:
+                command = AdjustAccordionPaddingCommand(args: self as! AdjustAccordionPaddingCmdArgs)
             case .balanceSizes:
                 command = BalanceSizesCommand(args: self as! BalanceSizesCmdArgs)
             case .close:
