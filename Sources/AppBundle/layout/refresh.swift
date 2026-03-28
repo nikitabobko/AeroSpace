@@ -5,19 +5,19 @@ import Common
 private var activeRefreshTask: Task<(), any Error>? = nil
 
 @MainActor
-func scheduleRefreshSession(
+func scheduleCancellableCompleteRefreshSession(
     _ event: RefreshSessionEvent,
     optimisticallyPreLayoutWorkspaces: Bool = false,
 ) {
     activeRefreshTask?.cancel()
     activeRefreshTask = Task { @MainActor in
         try checkCancellation()
-        try await runRefreshSessionBlocking(event, optimisticallyPreLayoutWorkspaces: optimisticallyPreLayoutWorkspaces)
+        try await runHeavyCompleteRefreshSession(event, optimisticallyPreLayoutWorkspaces: optimisticallyPreLayoutWorkspaces)
     }
 }
 
 @MainActor
-func runRefreshSessionBlocking(
+func runHeavyCompleteRefreshSession(
     _ event: RefreshSessionEvent,
     layoutWorkspaces shouldLayoutWorkspaces: Bool = true,
     optimisticallyPreLayoutWorkspaces: Bool = false,
@@ -74,7 +74,7 @@ func runLightSession<T>(
             if focusBefore != focusAfter {
                 focusAfter?.nativeFocus() // syncFocusToMacOs
             }
-            scheduleRefreshSession(event)
+            scheduleCancellableCompleteRefreshSession(event)
             return result
         }
     }
@@ -132,7 +132,7 @@ func refreshObs(_: AXObserver, _: AXUIElement, notif: CFString, _: UnsafeMutable
     let notif = notif as String
     Task { @MainActor in
         if !TrayMenuModel.shared.isEnabled { return }
-        scheduleRefreshSession(.ax(notif))
+        scheduleCancellableCompleteRefreshSession(.ax(notif))
     }
 }
 

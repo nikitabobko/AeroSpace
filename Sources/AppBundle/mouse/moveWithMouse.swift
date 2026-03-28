@@ -10,7 +10,7 @@ func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableR
     Task { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
-            scheduleRefreshSession(.ax(notif))
+            scheduleCancellableCompleteRefreshSession(.ax(notif))
             return
         }
         moveWithMouseTask?.cancel()
