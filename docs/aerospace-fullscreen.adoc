@@ -9,8 +9,8 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace fullscreen [-h|--help]     [--window-id <window-id>] [--no-outer-gaps]
-aerospace fullscreen [-h|--help] on  [--window-id <window-id>] [--no-outer-gaps] [--fail-if-noop]
+aerospace fullscreen [-h|--help]     [--window-id <window-id>] [--no-outer-gaps] [--persistent]
+aerospace fullscreen [-h|--help] on  [--window-id <window-id>] [--no-outer-gaps] [--fail-if-noop] [--persistent]
 aerospace fullscreen [-h|--help] off [--window-id <window-id>] [--fail-if-noop]
 
 // end::synopsis[]
@@ -29,6 +29,7 @@ include::./util/conditional-options-header.adoc[]
 -h, --help:: Print help
 --no-outer-gaps:: Remove the outer gaps when in fullscreen mode
 --fail-if-noop:: Exit with non-zero exit code if already fullscreen or already not fullscreen
+--persistent:: Keep the window in fullscreen mode even when it loses focus within the same workspace
 
 --window-id <window-id>::
 include::./util/window-id-flag-desc.adoc[]
