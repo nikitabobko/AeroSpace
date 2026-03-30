@@ -133,9 +133,30 @@ extension Monitor {
 }
 
 @MainActor
+var _previousMonitorCount: Int = NSScreen.screens.count
+
+@MainActor
 func gcMonitors() {
     if screenPointToVisibleWorkspace.count != monitors.count {
         rearrangeWorkspacesOnMonitors()
+    }
+}
+
+/// Check if the monitor count changed since last check and fire the callback.
+/// Must be called AFTER layoutWorkspaces() so that external tools see the final state.
+@MainActor
+func checkOnMonitorChangedCallback() {
+    let current = monitors.count
+    if current != _previousMonitorCount {
+        _previousMonitorCount = current
+        broadcastEvent(.monitorChanged(monitorCount: current))
+        if config.onMonitorChanged.isEmpty { return }
+        guard let token: RunSessionGuard = .isServerEnabled else { return }
+        Task {
+            try await runLightSession(.onMonitorChanged, token) {
+                _ = try await config.onMonitorChanged.runCmdSeq(.defaultEnv, .emptyStdin)
+            }
+        }
     }
 }
 

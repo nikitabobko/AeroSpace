@@ -45,4 +45,8 @@ public struct ServerEvent: Codable, Sendable {
     public static func bindingTriggered(mode: String, binding: String) -> ServerEvent {
         ServerEvent(_event: .bindingTriggered, mode: mode, binding: binding)
     }
+
+    public static func monitorChanged(monitorCount: Int) -> ServerEvent {
+        ServerEvent(_event: .monitorChanged, monitorId: monitorCount)
+    }
 }
