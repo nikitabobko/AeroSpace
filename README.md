@@ -4,10 +4,6 @@
 
 Airlock is an i3-like tiling window manager for macOS
 
-Videos:
-- [YouTube 91 sec Demo](https://www.youtube.com/watch?v=UOl7ErqWbrk)
-- [YouTube Guide by Josean Martinez](https://www.youtube.com/watch?v=-FoWClVHG5g)
-
 Docs:
 - [Airlock Guide](https://nikitabobko.github.io/Airlock/guide)
 - [Airlock Commands](https://nikitabobko.github.io/Airlock/commands)
