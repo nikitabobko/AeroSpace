@@ -21,7 +21,7 @@ jobs:
 
         close() {
           gh issue edit "$ISSUE" --add-label bin
-          gh issue close "$ISSUE" --comment "Please don't open issues directly, use GitHub Discussions instead. See: https://github.com/nikitabobko/AeroSpace/issues/947"
+          gh issue close "$ISSUE" --comment "Please don't open issues directly, use GitHub Discussions instead. See: https://github.com/nikitabobko/Airlock/issues/947"
           gh issue lock "$ISSUE"
         }
 

@@ -89,6 +89,7 @@ struct Parser<S: ConvenienceCopyable, T>: ParserProtocol {
 private let keyMappingConfigRootKey = "key-mapping"
 private let modeConfigRootKey = "mode"
 private let persistentWorkspacesKey = "persistent-workspaces"
+private let workspacesShorthandKey = "workspaces"
 
 // For every new config option you add, think:
 // 1. Does it make sense to have different value
@@ -113,6 +114,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "start-at-login": Parser(\.startAtLogin, parseBool),
     "auto-reload-config": Parser(\.autoReloadConfig, parseBool),
     "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
+    "prevent-focus-stealing": Parser(\.preventFocusStealing, parsePreventFocusStealing),
     "accordion-padding": Parser(\.accordionPadding, parseInt),
     persistentWorkspacesKey: Parser(\.persistentWorkspaces, parsePersistentWorkspaces),
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseArrayOfStrings),
@@ -120,6 +122,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
 
     keyMappingConfigRootKey: Parser(\.keyMapping, skipParsing(Config().keyMapping)), // Parsed manually
     modeConfigRootKey: Parser(\.modes, skipParsing(Config().modes)), // Parsed manually
+    workspacesShorthandKey: Parser(\.persistentWorkspaces, skipParsing(Config().persistentWorkspaces)), // Parsed manually
 
     "gaps": Parser(\.gaps, parseGaps),
     "workspace-to-monitor-force-assignment": Parser(\.workspaceToMonitorForceAssignment, parseWorkspaceToMonitorAssignment),
@@ -153,7 +156,7 @@ func parseAfterLoginCommand(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktr
     if let array = raw.array, array.count == 0 {
         return .success([])
     }
-    let msg = "after-login-command is deprecated since AeroSpace 0.19.0. https://github.com/nikitabobko/AeroSpace/issues/1482"
+    let msg = "after-login-command is deprecated since Airlock 0.19.0. https://github.com/nikitabobko/Airlock/issues/1482"
     return .failure(.semantic(backtrace, msg))
 }
 
@@ -189,6 +192,11 @@ func parseCommandOrCommands(_ raw: TOMLValueConvertible) -> Parsed<[any Command]
 
     if let mapping = rawTable[keyMappingConfigRootKey].flatMap({ parseKeyMapping($0, .rootKey(keyMappingConfigRootKey), &errors) }) {
         config.keyMapping = mapping
+    }
+
+    // Expand [workspaces] shorthand into persistent-workspaces and mode bindings
+    if let workspacesRaw = rawTable[workspacesShorthandKey] {
+        expandWorkspacesShorthand(workspacesRaw, rawTable, &config, &errors)
     }
 
     // Parse modeConfigRootKey after keyMappingConfigRootKey
@@ -235,7 +243,7 @@ func parseIndentForNestedContainersWithTheSameOrientation(
     _ _: TOMLValueConvertible,
     _ backtrace: TomlBacktrace,
 ) -> ParsedToml<Void> {
-    let msg = "Deprecated. Please drop it from the config. See https://github.com/nikitabobko/AeroSpace/issues/96"
+    let msg = "Deprecated. Please drop it from the config. See https://github.com/nikitabobko/Airlock/issues/96"
     return .failure(.semantic(backtrace, msg))
 }
 
@@ -321,6 +329,90 @@ private func parsePersistentWorkspaces(_ raw: TOMLValueConvertible, _ backtrace:
         }
 }
 
+/// Expands the `[workspaces]` shorthand table into persistent-workspaces and auto-generated
+/// keybindings in the main mode.
+///
+/// Config format:
+/// ```toml
+/// [workspaces]
+/// focus-modifier = "alt"           # optional, default "alt"
+/// move-modifier = "alt-shift"      # optional, default "alt-shift"
+///
+/// [workspaces.names]
+/// 1 = "1"        # workspace name = key to bind
+/// 2 = "2"
+/// A = "a"
+/// B = "b"
+/// Mail = "m"     # workspace "Mail" bound to key "m"
+/// ```
+private func expandWorkspacesShorthand(
+    _ raw: TOMLValueConvertible,
+    _ rawTable: TOMLTable,
+    _ config: inout Config,
+    _ errors: inout [TomlParseError]
+) {
+    let backtrace = TomlBacktrace.rootKey(workspacesShorthandKey)
+    guard let table = raw.table else {
+        errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
+        return
+    }
+
+    let focusModifier = table["focus-modifier"]?.string ?? "alt"
+    let moveModifier = table["move-modifier"]?.string ?? "alt-shift"
+
+    guard let namesRaw = table["names"] else {
+        errors += [.semantic(backtrace, "'names' subtable is required in [workspaces]")]
+        return
+    }
+    guard let namesTable = namesRaw.table else {
+        errors += [expectedActualTypeError(expected: .table, actual: namesRaw.type, backtrace + .key("names"))]
+        return
+    }
+
+    var workspaceNames: OrderedSet<String> = []
+
+    // Get or create the mode.main.binding table in the raw TOML
+    let modeTable = rawTable[modeConfigRootKey]?.table ?? TOMLTable()
+    let mainModeTable = modeTable[mainModeId]?.table ?? TOMLTable()
+    let bindingTable = mainModeTable["binding"]?.table ?? TOMLTable()
+
+    for (workspaceName, keyRaw) in namesTable {
+        let entryBacktrace = backtrace + .key("names") + .key(workspaceName)
+        guard let key = keyRaw.string else {
+            errors += [expectedActualTypeError(expected: .string, actual: keyRaw.type, entryBacktrace)]
+            continue
+        }
+
+        workspaceNames.append(workspaceName)
+
+        // Generate focus binding: e.g. "alt-a" = "workspace A"
+        let focusBinding = "\(focusModifier)-\(key)"
+        if bindingTable[focusBinding] == nil {
+            bindingTable[focusBinding] = "workspace \(workspaceName)"
+        }
+
+        // Generate move binding: e.g. "alt-shift-a" = "move-node-to-workspace A"
+        let moveBinding = "\(moveModifier)-\(key)"
+        if bindingTable[moveBinding] == nil {
+            bindingTable[moveBinding] = "move-node-to-workspace \(workspaceName)"
+        }
+    }
+
+    // Write the bindings back into the raw TOML table so parseModes picks them up
+    mainModeTable["binding"] = bindingTable
+    modeTable[mainModeId] = mainModeTable
+    rawTable[modeConfigRootKey] = modeTable
+
+    // Merge into persistent workspaces
+    config.persistentWorkspaces = config.persistentWorkspaces.union(workspaceNames)
+
+    // Validate no unknown keys in [workspaces]
+    let knownKeys: Set<String> = ["focus-modifier", "move-modifier", "names"]
+    for (key, _) in table where !knownKeys.contains(key) {
+        errors += [unknownKeyError(backtrace + .key(key))]
+    }
+}
+
 private func parseArrayOfStrings(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<[String]> {
     parseTomlArray(raw, backtrace)
         .flatMap { arr in
@@ -345,6 +437,13 @@ extension Parsed where Failure == String {
 
 func parseBool(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<Bool> {
     raw.bool.orFailure(expectedActualTypeError(expected: .bool, actual: raw.type, backtrace))
+}
+
+private func parsePreventFocusStealing(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<PreventFocusStealingMode> {
+    parseString(raw, backtrace).flatMap {
+        PreventFocusStealingMode(rawValue: $0)
+            .orFailure(.semantic(backtrace, "Can't parse prevent-focus-stealing '\($0)'. Expected: off|cross-workspace|always"))
+    }
 }
 
 struct TomlBacktrace: CustomStringConvertible, Equatable {

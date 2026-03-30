@@ -60,9 +60,18 @@ public enum FocusCmdTarget {
     case windowId(UInt32)
     case dfsIndex(UInt32)
     case dfsRelative(DfsNextPrev)
+    case appCycle(AppCycleDirection)
 
     var isDfsRelative: Bool {
         if case .dfsRelative = self {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    var isAppCycle: Bool {
+        if case .appCycle = self {
             return true
         } else {
             return false
@@ -76,6 +85,7 @@ extension FocusCmdArgs {
             return switch cardinalOrDfsDirection {
                 case .direction(let dir): .direction(dir)
                 case .dfsRelative(let nextPrev): .dfsRelative(nextPrev)
+                case .appCycle(let appDir): .appCycle(appDir)
             }
         }
         if let windowId {
@@ -111,6 +121,9 @@ func parseFocusCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusCmdArgs> {
         }
         .filter("(dfs-next|dfs-prev) only supports --boundaries workspace") {
             $0.target.isDfsRelative.implies($0.boundaries == .workspace)
+        }
+        .filter("(app-next|app-prev|same-app-next|same-app-prev) is incompatible with --boundaries and --boundaries-action") {
+            $0.target.isAppCycle.implies($0.rawBoundaries == nil && $0.rawBoundariesAction == nil && !$0.wrapAroundAlias)
         }
 }
 

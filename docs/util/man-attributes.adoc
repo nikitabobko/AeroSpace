@@ -1,5 +1,5 @@
 ifndef::env-site[]
 :doctype: manpage
-:manmanual: AeroSpace Manual
-:mansource: AeroSpace
+:manmanual: Airlock Manual
+:mansource: Airlock
 endif::[]

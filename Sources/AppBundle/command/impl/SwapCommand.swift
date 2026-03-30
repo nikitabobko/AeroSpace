@@ -40,6 +40,8 @@ struct SwapCommand: Command {
                     targetIndex = (targetIndex + windows.count) % windows.count
                 }
                 targetWindow = windows[targetIndex]
+            case .appCycle:
+                return io.err("swap doesn't support app-next/app-prev/same-app-next/same-app-prev")
         }
 
         guard let targetWindow else {

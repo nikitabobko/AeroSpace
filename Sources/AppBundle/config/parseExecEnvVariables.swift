@@ -2,7 +2,7 @@ import AppKit
 import Common
 import TOMLKit
 
-let testEnv = ["PATH": "AEROSPACE_TEST_PATH", "AEROSPACE_INHERITED_TEST_ENV": "inherited"]
+let testEnv = ["PATH": "AIRLOCK_TEST_PATH", "AIRLOCK_INHERITED_TEST_ENV": "inherited"]
 private var env: [String: String] {
     isUnitTest ? testEnv : ProcessInfo.processInfo.environment
 }

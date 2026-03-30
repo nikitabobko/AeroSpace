@@ -1,10 +1,10 @@
-# EBNF-like grammar of aerospace CLI args to generate shell completion. Managed by https://github.com/adaszko/complgen
+# EBNF-like grammar of airlock CLI args to generate shell completion. Managed by https://github.com/adaszko/complgen
 # Run ./build-shell-completion.sh to generate shell completion
-aerospace <subcommand>;
-aerospace -v;
-aerospace --version;
-aerospace --help;
-aerospace -h;
+airlock <subcommand>;
+airlock -v;
+airlock --version;
+airlock --help;
+airlock -h;
 
 <subcommand> ::=
 
@@ -80,7 +80,7 @@ aerospace -h;
 
     | workspace-back-and-forth
 
-    | config [--json | --keys]... --get {{{ aerospace config --major-keys }}} [--json | --keys]...
+    | config [--json | --keys]... --get {{{ airlock config --major-keys }}} [--json | --keys]...
     | config --major-keys
     | config --all-keys
     | config --config-path
@@ -104,10 +104,10 @@ aerospace -h;
     | subscribe [--all|--no-send-initial] <event>... [--all|--no-send-initial]
     ;
 
-<window_id> ::= {{{ aerospace list-windows --all --format '%{window-id}%{tab}%{app-name} - %{window-title}' }}};
-<binding> ::= {{{ aerospace config --get mode --keys | xargs -I{} aerospace config --get mode.{}.binding --keys }}};
-<mode_id> ::= {{{ aerospace config --get mode --keys }}};
-<workspace> ::= {{{ aerospace list-workspaces --monitor all --empty no }}};
+<window_id> ::= {{{ airlock list-windows --all --format '%{window-id}%{tab}%{app-name} - %{window-title}' }}};
+<binding> ::= {{{ airlock config --get mode --keys | xargs -I{} airlock config --get mode.{}.binding --keys }}};
+<mode_id> ::= {{{ airlock config --get mode --keys }}};
+<workspace> ::= {{{ airlock list-workspaces --monitor all --empty no }}};
 <number> ::= {{{ true }}};
 <monitor_pattern> ::= {{{ true }}};
 
@@ -131,8 +131,8 @@ aerospace -h;
     ;
 <output_format> ::= {{{ true }}};
 
-<app_bundle_id> ::= {{{ aerospace list-apps --format '%{app-bundle-id}%{tab}%{app-name}' }}};
-<pid> ::= {{{ aerospace list-apps --format '%{app-pid}%{tab}%{app-name}' }}};
-<monitor_id> ::= all | mouse | focused | {{{ aerospace list-monitors --format '%{monitor-id}%{tab}%{monitor-name}' }}};
+<app_bundle_id> ::= {{{ airlock list-apps --format '%{app-bundle-id}%{tab}%{app-name}' }}};
+<pid> ::= {{{ airlock list-apps --format '%{app-pid}%{tab}%{app-name}' }}};
+<monitor_id> ::= all | mouse | focused | {{{ airlock list-monitors --format '%{monitor-id}%{tab}%{monitor-name}' }}};
 
 <event> ::= focus-changed | focused-monitor-changed | focused-workspace-changed | mode-changed | window-detected | binding-triggered;

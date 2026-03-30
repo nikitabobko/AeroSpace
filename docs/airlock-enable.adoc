@@ -1,0 +1,37 @@
+= airlock-enable(1)
+include::util/man-attributes.adoc[]
+:manname: airlock-enable
+// tag::purpose[]
+:manpurpose: Temporarily disable window management
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+airlock enable [-h|--help] toggle
+airlock enable [-h|--help] on [--fail-if-noop]
+airlock enable [-h|--help] off [--fail-if-noop]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+When you disable Airlock, windows from currently invisible workspaces will be placed to the visible area of the screen
+
+Key events are not intercepted when Airlock is disabled
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+--fail-if-noop:: Exit with non-zero exit code if already in the requested mode
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

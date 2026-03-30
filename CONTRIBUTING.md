@@ -2,12 +2,12 @@
 
 ## Users cannot create GitHub Issues directly
 
-AeroSpace project doesn't accept Issues directly - we ask you to create a [Discussion](https://github.com/nikitabobko/AeroSpace/discussions) first.
+Airlock project doesn't accept Issues directly - we ask you to create a [Discussion](https://github.com/nikitabobko/Airlock/discussions) first.
 
 The submitted Issues are often either obvious duplicates, environmental problems, or configuration errors by the users themselves.
 For a hobby project, I don't have enough time and energy to process every such submitted Issue.
 
-As an alternative, you can start a Discussion on [GitHub discussions](https://github.com/nikitabobko/AeroSpace/discussions) forum.
+As an alternative, you can start a Discussion on [GitHub discussions](https://github.com/nikitabobko/Airlock/discussions) forum.
 Any Discussion which clearly identifies a problem and can be confirmed or reproduced will be converted to an Issue by maintainers.
 
 It's users' responsibility to minimize their bugs as much as possible.
@@ -21,8 +21,8 @@ This pattern makes it easier for maintainers or contributors to find issues to w
 
 ## Submit bugs and feature ideas
 
-Submit bugs to https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs
-Submit feature ideas to https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas
+Submit bugs to https://github.com/nikitabobko/Airlock/discussions/categories/potential-bugs
+Submit feature ideas to https://github.com/nikitabobko/Airlock/discussions/categories/feature-ideas
 
 Rules:
 * Search for duplicates (in GitHub Issues and Discussions) before creating a new discussion
@@ -30,12 +30,12 @@ Rules:
 
 **Consider including in bug reports**
 
-* `aerospace debug-windows` output, if the problem is about handling some windows
+* `airlock debug-windows` output, if the problem is about handling some windows
 * Screenshots of problematic windows
 * Videos of problematic windows
 * What did you try to resolve the issue?
 * Your config
-* AeroSpace version
+* Airlock version
 * macOS version
 
 **Consider including in feature request**
@@ -62,9 +62,9 @@ Please keep the conversation to the point. Discuss one issue at a time, crossref
 
 You can take a look at the following issues:
 
-* Most voted issues: https://github.com/nikitabobko/AeroSpace/issues?q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc
-* Sometimes conversations happen on old issues that aren’t yet closed. See https://github.com/nikitabobko/AeroSpace/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc
-* Issues that are unclear on how to fix, or issues that require design of the interface (CLI or config interface) are tagged with `design-needed` tag https://github.com/nikitabobko/AeroSpace/issues?q=is%3Aissue+is%3Aopen+label%3Adesign-needed
+* Most voted issues: https://github.com/nikitabobko/Airlock/issues?q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc
+* Sometimes conversations happen on old issues that aren’t yet closed. See https://github.com/nikitabobko/Airlock/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc
+* Issues that are unclear on how to fix, or issues that require design of the interface (CLI or config interface) are tagged with `design-needed` tag https://github.com/nikitabobko/Airlock/issues?q=is%3Aissue+is%3Aopen+label%3Adesign-needed
 
 ## Submit Pull Requests
 
@@ -103,16 +103,16 @@ The prior discussion is here for you to minimize the risk of rejection.
 
 ## Spread the word
 
-Do you like the project? Does AeroSpace finally fix your problems with windows management on macOS? Good to hear it!
+Do you like the project? Does Airlock finally fix your problems with windows management on macOS? Good to hear it!
 
 * Spread the word in social networks! (Don't forget to share the link :) )
-* Talk about AeroSpace to your colleagues and friends
+* Talk about Airlock to your colleagues and friends
 * Write a blogpost about your workflows
 * Record a YouTube video
 
 ## Share your workflow and tips
 
-Submit your tips to [the Goodies page](https://nikitabobko.github.io/AeroSpace/goodies). The source code of the page can be found in `./docs` directory
+Submit your tips to [the Goodies page](https://nikitabobko.github.io/Airlock/goodies). The source code of the page can be found in `./docs` directory
 
 ## Support the project financially
 

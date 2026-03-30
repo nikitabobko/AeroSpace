@@ -1,10 +1,10 @@
 # Xcode project configuration. Managed by https://github.com/yonaskolb/XcodeGen
 # Xcode is only used to build the release App Bundle. Debug builds only use Swift Package Manager
 
-name: AeroSpace
+name: Airlock
 
 packages:
-  AeroSpacePackage:
+  AirlockPackage:
     path: .
 
 configs:
@@ -12,39 +12,39 @@ configs:
   Release: release
 
 targets:
-  AeroSpace:
+  Airlock:
     type: application
     platform: macOS
     deploymentTarget: "13.0"
     sources:
-      - "Sources/AeroSpaceApp"
+      - "Sources/AirlockApp"
       - "resources"
       - "docs/config-examples/default-config.toml"
     dependencies:
-      - package: AeroSpacePackage
+      - package: AirlockPackage
         product: AppBundle
     # https://developer.apple.com/documentation/xcode/build-settings-reference
     settings:
       base:
         SWIFT_VERSION: 6.2 # Swift Language Version
         GENERATE_INFOPLIST_FILE: YES
-        MARKETING_VERSION: ${XCODEGEN_AEROSPACE_VERSION}
+        MARKETING_VERSION: ${XCODEGEN_AIRLOCK_VERSION}
         # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
         # Specifies whether the app runs as an agent app. If this key is set to YES, Launch Services runs the app as an agent app.
         # Agent apps do not appear in the Dock or in the Force Quit window (cmd-opt-esc)
         INFOPLIST_KEY_LSUIElement: YES
-        CODE_SIGN_IDENTITY: ${XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY}
+        CODE_SIGN_IDENTITY: ${XCODEGEN_AIRLOCK_CODE_SIGN_IDENTITY}
       configs:
         Debug:
-          PRODUCT_NAME: AeroSpace-Debug
-          PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace.debug
+          PRODUCT_NAME: Airlock-Debug
+          PRODUCT_BUNDLE_IDENTIFIER: dev.airlock.debug
         Release:
-          PRODUCT_NAME: AeroSpace
-          PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace
+          PRODUCT_NAME: Airlock
+          PRODUCT_BUNDLE_IDENTIFIER: dev.airlock
           SWIFT_TREAT_WARNINGS_AS_ERRORS: YES
           GCC_TREAT_WARNINGS_AS_ERRORS: YES
     entitlements:
-      path: resources/AeroSpace.entitlements
+      path: resources/Airlock.entitlements
       properties:
         # Accessibility API doesn't work in sandboxed apps
         com.apple.security.app-sandbox: false

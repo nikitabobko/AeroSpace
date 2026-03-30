@@ -1,6 +1,6 @@
-= AeroSpace Guide
+= Airlock Guide
 include::util/site-attributes.adoc[]
-:url-search-for-config: https://github.com/search?q=path%3A*aerospace.toml&type=code
+:url-search-for-config: https://github.com/search?q=path%3A*airlock.toml&type=code
 
 include::util/header.adoc[]
 
@@ -17,55 +17,55 @@ https://brew.sh/[Homebrew] is a package manager for macOS
 
 [source,bash]
 ----
-brew install --cask nikitabobko/tap/aerospace
+brew install --cask nikitabobko/tap/airlock
 ----
 
 *(Optional)* You might need to configure your shell to enable completion provided by homebrew packages: https://docs.brew.sh/Shell-Completion
-AeroSpace provides bash, fish and zsh completions.
+Airlock provides bash, fish and zsh completions.
 
 You can also install specific previous https://github.com/nikitabobko/homebrew-tap/tree/main/Casks[pinned homebrew Casks versions]:
 [source,bash]
 ----
-brew install --cask nikitabobko/tap/aerospace@0.12.0
+brew install --cask nikitabobko/tap/airlock@0.12.0
 ----
 
 [#manual-installation]
 === Manual installation
 
-. Download the latest available zip from https://github.com/nikitabobko/AeroSpace/releases[releases page]
+. Download the latest available zip from https://github.com/nikitabobko/Airlock/releases[releases page]
 . Unpack zip
-. Put unpacked `AeroSpace-v$VERSION/AeroSpace.app` to `/Applications`
-. Put unpacked `AeroSpace-v$VERSION/bin/aerospace` anywhere to `$PATH`
-(The step is optional. It is only needed if you want to be able to interact with AeroSpace from CLI)
+. Put unpacked `Airlock-v$VERSION/Airlock.app` to `/Applications`
+. Put unpacked `Airlock-v$VERSION/bin/airlock` anywhere to `$PATH`
+(The step is optional. It is only needed if you want to be able to interact with Airlock from CLI)
 
 If you see this message
 
 ----
-"AeroSpace.app" can't be opened because Apple cannot check it for malicious software.
+"Airlock.app" can't be opened because Apple cannot check it for malicious software.
 ----
 
 **Option 1** to resolve the problem
 
 ```
-xattr -d com.apple.quarantine /Applications/AeroSpace.app
+xattr -d com.apple.quarantine /Applications/Airlock.app
 ```
 
 **Option 2** to resolve the problem
 
-. navigate in Finder to `/Applications/AeroSpace.app`
+. navigate in Finder to `/Applications/Airlock.app`
 . Right mouse click
 . Open (yes, it's that stupid)
 
-[#configuring-aerospace]
-== Configuring AeroSpace
+[#configuring-airlock]
+== Configuring Airlock
 
 [#config-location]
 === Custom config location
 
-AeroSpace tries to find the custom config in two locations:
+Airlock tries to find the custom config in two locations:
 
-. `~/.aerospace.toml`
-. `+${XDG_CONFIG_HOME}/aerospace/aerospace.toml+`
+. `~/.airlock.toml`
+. `+${XDG_CONFIG_HOME}/airlock/airlock.toml+`
 (environment variable `XDG_CONFIG_HOME` fallbacks to `~/.config` if the variable is not presented)
 
 If the config is found in more than one location then the ambiguity is reported.
@@ -78,7 +78,7 @@ Please see the following config samples:
 * xref:./goodies.adoc#i3-like-config[i3 like config]
 * {url-search-for-config}[Search for configs by other users on GitHub] for inspiration
 
-AeroSpace uses TOML format for the config.
+Airlock uses TOML format for the config.
 TOML is easy to read, and it supports comments.
 See https://toml.io/en/v1.0.0[TOML spec for more info]
 
@@ -88,7 +88,7 @@ See https://toml.io/en/v1.0.0[TOML spec for more info]
 The default config is part of the documentation, it contains all trivial configuration keys with comments.
 Please read the default config!
 Non-trivial configuration options are mentioned further in this guide.
-If no custom config is found, AeroSpace will load the default config.
+If no custom config is found, Airlock will load the default config.
 
 If the key is omitted in the custom config, it falls back to the value in the default config, unless it's stated otherwise for the specific keys. Namely:
 
@@ -103,7 +103,7 @@ You can bootstrap your custom config by copying the default config from the app 
 
 [source,shell]
 ----
-cp /Applications/AeroSpace.app/Contents/Resources/default-config.toml ~/.aerospace.toml
+cp /Applications/Airlock.app/Contents/Resources/default-config.toml ~/.airlock.toml
 ----
 
 link:config-examples/default-config.toml[Download default-config.toml]
@@ -118,7 +118,7 @@ include::config-examples/default-config.toml[]
 
 You can create multiple sets of bindings by creating different binding modes.
 When you switch to a different binding mode, all the bindings from the current mode are deactivated, and only the bindings specified in the new mode become active.
-The initial binding mode that AeroSpace starts out with is "main".
+The initial binding mode that Airlock starts out with is "main".
 
 This feature is absolutely identical to the one
 https://i3wm.org/docs/userguide.html#binding_modes[in i3]
@@ -139,11 +139,11 @@ Working with binding modes consists of two parts:
 [#commands]
 === Commands
 
-Commands are the thing you use to manipulate AeroSpace and query its state.
+Commands are the thing you use to manipulate Airlock and query its state.
 
 There are two ways on how you can use commands:
 
-. Bind keys to run AeroSpace commands. Example:
+. Bind keys to run Airlock commands. Example:
 +
 [source,toml]
 ----
@@ -157,7 +157,7 @@ There are two ways on how you can use commands:
 +
 [source,bash]
 ----
-aerospace workspace 1
+airlock workspace 1
 ----
 
 For the list of available commands see: xref:commands.adoc[]
@@ -179,7 +179,7 @@ If you use different layout, different alphabet, or you just want to have a fanc
     alt-unicorn = 'workspace wonderland' # (⁀ᗢ⁀)
 ----
 
-* For `dvorak` and `colemak` users, AeroSpace offers preconfigured presets.
+* For `dvorak` and `colemak` users, Airlock offers preconfigured presets.
 +
 [source,toml]
 ----
@@ -192,7 +192,7 @@ If you use different layout, different alphabet, or you just want to have a fanc
 
 You can configure environment variables of `exec-*` commands and callbacks (such as xref:commands.adoc#exec-and-forget[exec-and-forget], <<exec-on-workspace-change-callback>>)
 
-* `exec.inherit-env-vars = true` configures whether inherit environment variables of `AeroSpace.app` or not. (The default is `true`)
+* `exec.inherit-env-vars = true` configures whether inherit environment variables of `Airlock.app` or not. (The default is `true`)
 * You can override env variables with the following syntax:
 +
 [source,toml]
@@ -204,7 +204,7 @@ You can configure environment variables of `exec-*` commands and callbacks (such
 Environment variable substitution is supported in form of `+${ENV_VAR}+`
 * You can inspect what is the end result of environment variables using xref:commands.adoc#list-exec-env-vars[`list-exec-env-vars` command]
 * GUI apps on macOS don’t have Homebrew’s prefix in their `PATH` by default (https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities[docs.brew.sh]).
-That's why unless you override `exec` section in your config, AeroSpace falls back to the following `exec` configuration:
+That's why unless you override `exec` section in your config, Airlock falls back to the following `exec` configuration:
 +
 [source,toml]
 ----
@@ -217,13 +217,13 @@ That's why unless you override `exec` section in your config, AeroSpace falls ba
 [#tree]
 == Tree
 
-AeroSpace stores all windows and containers in a tree.
-AeroSpace tree tiling model is https://i3wm.org/docs/userguide.html#tree[inspired by i3].
+Airlock stores all windows and containers in a tree.
+Airlock tree tiling model is https://i3wm.org/docs/userguide.html#tree[inspired by i3].
 
 *Definition.* Each non-leaf node is called a "Container"
 
 WARNING: i3 has a different terminology.
-"container" in i3 is the same as "node" in AeroSpace.
+"container" in i3 is the same as "node" in Airlock.
 
 * Each workspace contains its own single root node
 * Each container can contain arbitrary number of children nodes
@@ -256,7 +256,7 @@ The tree structure can be changed with three commands:
 [#layouts]
 === Layouts
 
-In total, AeroSpace provides 4 possible layouts:
+In total, Airlock provides 4 possible layouts:
 
 - `h_tiles` horizontal tiles (in i3, it’s called "horizontal split")
 - `v_tiles` vertical tiles (in i3, it’s called "vertical split")
@@ -286,7 +286,7 @@ Accordion padding is configurable via `accordion-padding` option.
 [#normalization]
 === Normalization
 
-By default, AeroSpace does two types of tree normalizations:
+By default, Airlock does two types of tree normalizations:
 
 . Containers that have only one child are "flattened".
 The root container is an exception, it is allowed to have a single window child.
@@ -368,28 +368,28 @@ Native macOS Spaces have a lot of problems
 * You can’t create/delete/reorder Space and move windows between Spaces with hotkeys (you can only switch between Spaces with hotkeys)
 * Apple doesn't provide public API to communicate with Spaces (create/delete/reorder/switch Space and move windows between Spaces)
 
-Since Spaces are so hard to deal with, AeroSpace reimplements Spaces and calls them "Workspaces".
+Since Spaces are so hard to deal with, Airlock reimplements Spaces and calls them "Workspaces".
 The idea is that if the workspace isn’t active then all of its windows are placed outside the visible area of the screen, in the bottom right or left corner.
 Once you switch back to the workspace, (e.g. by the means of xref:commands.adoc#workspace[workspace] command, or `cmd + tab`) windows are placed back to the visible area of the screen.
 
-When you quit the AeroSpace or when the AeroSpace detects that it's about to crash, AeroSpace will place all windows back to the visible area of the screen.
+When you quit the Airlock or when the Airlock detects that it's about to crash, Airlock will place all windows back to the visible area of the screen.
 
-AeroSpace shows the name of currently active workspace in its tray icon (top right corner), to give users a visual feedback on what workspace is currently active.
+Airlock shows the name of currently active workspace in its tray icon (top right corner), to give users a visual feedback on what workspace is currently active.
 
-The intended workflow of using AeroSpace workspaces is to only have one macOS Space (or as many monitors you have, if `Displays have separate Spaces` is enabled) and don’t interact with macOS Spaces anymore.
+The intended workflow of using Airlock workspaces is to only have one macOS Space (or as many monitors you have, if `Displays have separate Spaces` is enabled) and don’t interact with macOS Spaces anymore.
 
 [NOTE]
 ====
 For better or worse, macOS doesn’t allow to place windows outside the visible area entirely.
 You will still be able to see a 1 pixel vertical line of "hidden" windows in the bottom right or left corner of your screen.
-That means, that if AeroSpace crashes badly you will still be able to manually "unhide" the windows by dragging these few pixels to the center of the screen.
+That means, that if Airlock crashes badly you will still be able to manually "unhide" the windows by dragging these few pixels to the center of the screen.
 
 If you want to minimize the visibility of hidden windows, it's recommended to place Dock in the bottom (and additionally turn automatic hiding on)
 ====
 
 === Proper monitor arrangement
 
-Since AeroSpace needs a free space to hide windows in,
+Since Airlock needs a free space to hide windows in,
 please make sure to arrange monitors in a way where *every monitor has free space in the bottom right or left corner.* (`System Settings -> Displays -> Arrange...`)
 
 If you fail to arrange your monitors properly, you will see parts of hidden windows on other monitors.
@@ -409,7 +409,7 @@ image::./assets/monitor-arrangement-2-good.svg[,,align="center"]
 [#a-note-on-mission-control]
 === A note on mission control
 
-For some reason, mission control doesn't like that AeroSpace puts a lot of windows in the bottom right corner of the screen.
+For some reason, mission control doesn't like that Airlock puts a lot of windows in the bottom right corner of the screen.
 Mission control shows windows too small even when there is enough space to show them bigger.
 
 There is a workaround. You can enable `Group windows by application` setting:
@@ -425,13 +425,13 @@ defaults write com.apple.dock expose-group-apps -bool true && killall Dock
 There is an observation that macOS works better and more stable if you disable `Displays have separate Spaces`. (It's enabled by default)
 People report all sorts of weird issues related to focus and performance when this setting is enabled:
 
-* Wrong window may receive focus in multi-monitor setup: https://github.com/nikitabobko/AeroSpace/issues/101[#101] (Bug in Apple API)
-* Wrong borderless Alacritty window may receive focus in *single monitor* setup: https://github.com/nikitabobko/AeroSpace/issues/247[#247] (Bug in Apple API)
-* Performance issues: https://github.com/nikitabobko/AeroSpace/issues/333[#333]
-* macOS randomly switches focus back: https://github.com/nikitabobko/AeroSpace/issues/289[#289]
+* Wrong window may receive focus in multi-monitor setup: https://github.com/nikitabobko/Airlock/issues/101[#101] (Bug in Apple API)
+* Wrong borderless Alacritty window may receive focus in *single monitor* setup: https://github.com/nikitabobko/Airlock/issues/247[#247] (Bug in Apple API)
+* Performance issues: https://github.com/nikitabobko/Airlock/issues/333[#333]
+* macOS randomly switches focus back: https://github.com/nikitabobko/Airlock/issues/289[#289]
 
 When `Displays have separate Spaces` is enabled,
-moving windows between monitors causes windows to move between different Spaces which is not correctly handled by the public APIs AeroSpace uses,
+moving windows between monitors causes windows to move between different Spaces which is not correctly handled by the public APIs Airlock uses,
 apparently, these APIs are not aware about Spaces existence.
 Spaces are just cursed in macOS. The less Spaces you have, the better macOS behaves.
 
@@ -444,7 +444,7 @@ Spaces are just cursed in macOS. The less Spaces you have, the better macOS beha
 
 |Overall stability and performance
 |❌ Weird focus and performance issues may happen (see the list above)
-|👍 Public Apple API are more stable (which in turn affects AeroSpace stability)
+|👍 Public Apple API are more stable (which in turn affects Airlock stability)
 
 |When the first monitor is in fullscreen
 |👍 Second monitor operates independently
@@ -481,7 +481,7 @@ Here is a showcase example that uses all the possible configurations:
     if.app-name-regex-substring = 'settings'
     if.window-title-regex-substring = 'substring'
     if.workspace = 'workspace-name'
-    if.during-aerospace-startup = true
+    if.during-airlock-startup = true
     check-further-callbacks = true
     run = ['layout floating', 'move-node-to-workspace S']  # The callback itself
 ----
@@ -509,10 +509,10 @@ Available window conditions are:
 |`if.window-title-regex-substring`
 |Window title case insensitive regex substring of the detected window
 
-|`if.during-aerospace-startup`
+|`if.during-airlock-startup`
 a|
-* If `true` then run the callback only during AeroSpace startup.
-* If `false` then run callback only *NOT* during AeroSpace startup.
+* If `true` then run the callback only during Airlock startup.
+* If `false` then run callback only *NOT* during Airlock startup.
 * If not specified then the condition isn’t checked
 
 |`if.workspace`
@@ -520,15 +520,15 @@ a|
 
 |===
 
-* `if.during-aerospace-startup = true` is useful if you want to do the initial app arrangement only on startup.
+* `if.during-airlock-startup = true` is useful if you want to do the initial app arrangement only on startup.
 
-* `if.during-aerospace-startup = false` is useful if you want to relaunch AeroSpace, but the callback has side effects that you don’t want to run on every relaunch.
+* `if.during-airlock-startup = false` is useful if you want to relaunch Airlock, but the callback has side effects that you don’t want to run on every relaunch.
 (e.g. the callback opens new windows)
 
 There are several ways to know `app-id`:
 
 * Take a look at precompiled xref:./goodies.adoc#popular-apps-ids[list of Apple application IDs]
-* You can use xref:commands.adoc#list-apps[`aerospace list-apps`] CLI command to get IDs of running applications
+* You can use xref:commands.adoc#list-apps[`airlock list-apps`] CLI command to get IDs of running applications
 * `mdls -name kMDItemCFBundleIdentifier -r /Applications/App.app`
 
 IMPORTANT: Some windows initialize their title after the window appears.
@@ -592,17 +592,17 @@ It may be useful for integrating with bars.
 ----
 # Notify Sketchybar about workspace change
 exec-on-workspace-change = ['/bin/bash', '-c',
-    'sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE'
+    'sketchybar --trigger airlock_workspace_change FOCUSED=$AIRLOCK_FOCUSED_WORKSPACE'
 ]
 ----
 
 Besides the <<exec-env-vars,`exec.env-vars`>>, the process has access to the following environment variables:
 
-* `AEROSPACE_FOCUSED_WORKSPACE` - the workspace user switched to
-* `AEROSPACE_PREV_WORKSPACE` - the workspace user switched from
+* `AIRLOCK_FOCUSED_WORKSPACE` - the workspace user switched to
+* `AIRLOCK_PREV_WORKSPACE` - the workspace user switched from
 
 For a more elaborate example on how to integrate with Sketchybar see
-xref:./goodies.adoc#show-aerospace-workspaces-in-sketchybar[]
+xref:./goodies.adoc#show-airlock-workspaces-in-sketchybar[]
 
 [#multiple-monitors]
 == Multiple monitors
@@ -616,8 +616,8 @@ The showed workspaces are called "visible" workspaces
 
 When you switch to a workspace:
 
-. AeroSpace takes the assigned monitor of the workspace and makes the workspace visible on the monitor
-. AeroSpace focuses the workspace
+. Airlock takes the assigned monitor of the workspace and makes the workspace visible on the monitor
+. Airlock focuses the workspace
 
 You can move workspace to a different monitor with xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command.
 
@@ -627,11 +627,11 @@ Thus, using one workspace per secondary monitor and "the rest" on the main monit
 
 [NOTE]
 ====
-The only difference between AeroSpace and i3 is switching to empty workspaces.
-When you switch to an empty workspace, AeroSpace puts the workspace on an assigned monitor; i3 puts the workspace on currently active monitor.
+The only difference between Airlock and i3 is switching to empty workspaces.
+When you switch to an empty workspace, Airlock puts the workspace on an assigned monitor; i3 puts the workspace on currently active monitor.
 
-* I find that AeroSpace model works better with <<observation,_the observation_>> listed above.
-* AeroSpace model is more consistent (it works the same for empty workspaces and non-empty workspaces)
+* I find that Airlock model works better with <<observation,_the observation_>> listed above.
+* Airlock model is more consistent (it works the same for empty workspaces and non-empty workspaces)
 ====
 
 [#assign-workspaces-to-monitors]
@@ -675,15 +675,15 @@ xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command 
 Even some Apple dialogs don't implement the API properly.
 (E.g. Finder "Copy" progress window doesn't let others know that it's a dialog)
 
-AeroSpace uses the API to gently ask windows whether they are dialogs, but AeroSpace also applies some heuristics.
+Airlock uses the API to gently ask windows whether they are dialogs, but Airlock also applies some heuristics.
 
 For example, windows without a fullscreen button (NB! fullscreen button and maximize button are different buttons) are generally considered dialogs, excluding terminal apps (WezTerm, Alacritty, iTerm2, etc.).
 
 Windows that are recognized as dialogs are floated by default.
 
 If you find that some windows are not handled properly, you're welcome to create a PR that improves the heuristic.
-It's fine to hardcode special handling for popular applications, AeroSpace already does it.
-Please see `isDialogHeuristic` function in AeroSpace sources.
+It's fine to hardcode special handling for popular applications, Airlock already does it.
+Please see `isDialogHeuristic` function in Airlock sources.
 
 You can also use `on-window-detected` to force tile or force float all windows of a particular application:
 
@@ -706,4 +706,4 @@ You can also use `on-window-detected` to force tile or force float all windows o
 
 == Common pitfall: keyboard keys handling
 
-If you can't make AeroSpace handle some keys in your config, please make sure that you don't have keys conflict with other software that might listen to global keys (e.g. skhd, Karabiner-Elements, Raycast)
+If you can't make Airlock handle some keys in your config, please make sure that you don't have keys conflict with other software that might listen to global keys (e.g. skhd, Karabiner-Elements, Raycast)

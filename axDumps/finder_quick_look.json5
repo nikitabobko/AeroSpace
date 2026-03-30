@@ -59,7 +59,7 @@
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=15986, title=\"/opt/homebrew/Caskroom/aerospace/0.18.5-Beta/AeroSpace-v0.18.5-Beta/legal\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(AxWindowId=15986, title=\"/opt/homebrew/Caskroom/airlock/0.18.5-Beta/Airlock-v0.18.5-Beta/legal\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x600001db24f0> {pid=1312}",
     "AXPosition" : "<AXValue 0x600001db24f0> {value = x:0.000000 y:1169.000000 type = kAXValueCGPointType}",
     "AXRole" : "AXApplication",
@@ -68,7 +68,7 @@
     "AXValue" : null,
     "AXWindows" : [
       "AXUIElement(AxWindowId=3126, title=\"Quick Look\", role=\"AXWindow\", subrole=\"Quick Look\")",
-      "AXUIElement(AxWindowId=15986, title=\"/opt/homebrew/Caskroom/aerospace/0.18.5-Beta/AeroSpace-v0.18.5-Beta/legal\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+      "AXUIElement(AxWindowId=15986, title=\"/opt/homebrew/Caskroom/airlock/0.18.5-Beta/Airlock-v0.18.5-Beta/legal\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
       "<AXUIElement 0x600001db2070> {pid=1312}"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"

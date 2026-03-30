@@ -22,7 +22,7 @@ extension [AeroObj] {
             }
             list.append(rawObj)
         }
-        return JSONEncoder.aeroSpaceDefault.encodeToString(list).map(Result.success)
+        return JSONEncoder.airlockDefault.encodeToString(list).map(Result.success)
             ?? .failure("Can't encode '\(list)' to JSON")
     }
 }

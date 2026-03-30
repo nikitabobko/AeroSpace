@@ -90,10 +90,10 @@ final class MacWindow: Window {
                 case .tilingContainer, .workspace, .macosHiddenAppsWindowsContainer, .macosFullscreenWindowsContainer:
                     let deadWindowFocus = deadWindowWorkspace.toLiveFocus()
                     _ = setFocus(to: deadWindowFocus)
-                    // Guard against "Apple Reminders popup" bug: https://github.com/nikitabobko/AeroSpace/issues/201
+                    // Guard against "Apple Reminders popup" bug: https://github.com/nikitabobko/Airlock/issues/201
                     if focus.windowOrNil?.app.pid != app.pid {
                         // Force focus to fix macOS annoyance with focused apps without windows.
-                        //   https://github.com/nikitabobko/AeroSpace/issues/65
+                        //   https://github.com/nikitabobko/Airlock/issues/65
                         deadWindowFocus.windowOrNil?.nativeFocus()
                     }
                 case .macosPopupWindowsContainer, .macosMinimizedWindowsContainer:
@@ -136,12 +136,12 @@ final class MacWindow: Window {
         switch corner {
             case .bottomLeftCorner:
                 guard let s = try await getAxSize() else { fallthrough }
-                // Zoom will jump off if you do one pixel offset https://github.com/nikitabobko/AeroSpace/issues/527
+                // Zoom will jump off if you do one pixel offset https://github.com/nikitabobko/Airlock/issues/527
                 // todo this ad hoc won't be necessary once I implement optimization suggested by Zalim
                 let onePixelOffset = macApp.appId == .zoom ? .zero : CGPoint(x: 1, y: -1)
                 p = nodeMonitor.visibleRect.bottomLeftCorner + onePixelOffset + CGPoint(x: -s.width, y: 0)
             case .bottomRightCorner:
-                // Zoom will jump off if you do one pixel offset https://github.com/nikitabobko/AeroSpace/issues/527
+                // Zoom will jump off if you do one pixel offset https://github.com/nikitabobko/Airlock/issues/527
                 // todo this ad hoc won't be necessary once I implement optimization suggested by Zalim
                 let onePixelOffset = macApp.appId == .zoom ? .zero : CGPoint(x: 1, y: 1)
                 p = nodeMonitor.visibleRect.bottomRightCorner - onePixelOffset
@@ -163,7 +163,7 @@ final class MacWindow: Window {
                 var newX = workspaceRect.topLeftX + workspaceRect.width * prevUnhiddenProportionalPositionInsideWorkspaceRect.x
                 var newY = workspaceRect.topLeftY + workspaceRect.height * prevUnhiddenProportionalPositionInsideWorkspaceRect.y
                 // todo we probably should replace lastFloatingSize with proper floating window sizing
-                // https://github.com/nikitabobko/AeroSpace/issues/1519
+                // https://github.com/nikitabobko/Airlock/issues/1519
                 let windowWidth = lastFloatingSize?.width ?? 0
                 let windowHeight = lastFloatingSize?.height ?? 0
                 newX = newX.coerce(in: workspaceRect.minX ... max(workspaceRect.minX, workspaceRect.maxX - windowWidth))
@@ -270,7 +270,7 @@ private func onWindowDetected(_ window: Window) async throws {
 extension WindowDetectedCallback {
     @MainActor
     func matches(_ window: Window) async throws -> Bool {
-        if let startupMatcher = matcher.duringAeroSpaceStartup, startupMatcher != isStartup {
+        if let startupMatcher = matcher.duringAirlockStartup, startupMatcher != isStartup {
             return false
         }
         if let regex = matcher.windowTitleRegexSubstring, !(try await window.title).contains(regex) {

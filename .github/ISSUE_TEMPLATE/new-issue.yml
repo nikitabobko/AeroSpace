@@ -4,14 +4,14 @@ body:
   - type: markdown
     attributes:
       value: |
-        AeroSpace project doesn't accept Issues directly. Please prefer GitHub Discussions. See: https://github.com/nikitabobko/AeroSpace/issues/947
+        Airlock project doesn't accept Issues directly. Please prefer GitHub Discussions. See: https://github.com/nikitabobko/Airlock/issues/947
   - type: checkboxes
     id: checkbox
     attributes:
       label: 'Sanity check'
       options:
         - label: |
-            I read https://github.com/nikitabobko/AeroSpace/issues/947
+            I read https://github.com/nikitabobko/Airlock/issues/947
           required: true
   - type: textarea
     id: body

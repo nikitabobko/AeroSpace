@@ -1,4 +1,4 @@
-// FILE IS GENERATED FROM docs/aerospace-*.adoc files
+// FILE IS GENERATED FROM docs/airlock-*.adoc files
 // TO REGENERATE THE FILE RUN generate.sh
 
 let balance_sizes_help_generated = """
@@ -45,6 +45,8 @@ let focus_help_generated = """
        OR: focus [-h|--help] [--ignore-floating] [--wrap-around]
                  [--boundaries <boundary>] [--boundaries-action <action>]
                  (dfs-next|dfs-prev)
+       OR: focus [-h|--help] [--ignore-floating]
+                 (app-next|app-prev|same-app-next|same-app-prev)
        OR: focus [-h|--help] --window-id <window-id>
        OR: focus [-h|--help] --dfs-index <dfs-index>
     """

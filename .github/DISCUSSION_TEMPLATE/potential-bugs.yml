@@ -15,7 +15,7 @@ body:
         ### Additional info
 
         ```shell
-        $ aerospace -v
+        $ airlock -v
         ```
     validations:
       required: true

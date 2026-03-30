@@ -44,6 +44,7 @@ struct Config: ConvenienceCopyable {
     var startAtLogin: Bool = false
     var autoReloadConfig: Bool = false
     var automaticallyUnhideMacosHiddenApps: Bool = false
+    var preventFocusStealing: PreventFocusStealingMode = .off
     var accordionPadding: Int = 30
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
     var persistentWorkspaces: OrderedSet<String> = []
@@ -64,4 +65,13 @@ struct Config: ConvenienceCopyable {
 
 enum DefaultContainerOrientation: String {
     case horizontal, vertical, auto
+}
+
+enum PreventFocusStealingMode: String {
+    /// Don't prevent focus stealing (default, original behavior)
+    case off
+    /// Prevent apps from stealing focus to a different workspace
+    case crossWorkspace = "cross-workspace"
+    /// Prevent all uninitiated focus changes (aggressive)
+    case always
 }

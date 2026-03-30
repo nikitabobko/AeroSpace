@@ -1,8 +1,8 @@
-public let stableAeroSpaceAppId: String = "bobko.aerospace"
+public let stableAirlockAppId: String = "dev.airlock"
 #if DEBUG
-    public let aeroSpaceAppId: String = "bobko.aerospace.debug"
-    public let aeroSpaceAppName: String = "AeroSpace-Debug"
+    public let airlockAppId: String = "dev.airlock.debug"
+    public let airlockAppName: String = "Airlock-Debug"
 #else
-    public let aeroSpaceAppId: String = stableAeroSpaceAppId
-    public let aeroSpaceAppName: String = "AeroSpace"
+    public let airlockAppId: String = stableAirlockAppId
+    public let airlockAppName: String = "Airlock"
 #endif

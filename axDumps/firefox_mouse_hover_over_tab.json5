@@ -29,13 +29,13 @@
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
     "AXFocusedUIElement" : "AXUIElement(AxWindowId=13054, title=nil, role=\"AXWebArea\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=13054, title=\"Chrome extensions popup is mistakenly being detected a window. 0.18.0 regression · Issue #1324 · nikitabobko/AeroSpace\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=13054, title=\"Chrome extensions popup is mistakenly being detected a window. 0.18.0 regression · Issue #1324 · nikitabobko/Airlock\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=13054, title=\"Chrome extensions popup is mistakenly being detected a window. 0.18.0 regression · Issue #1324 · nikitabobko/AeroSpace\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(AxWindowId=13054, title=\"Chrome extensions popup is mistakenly being detected a window. 0.18.0 regression · Issue #1324 · nikitabobko/Airlock\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x60000193b330> {pid=1405}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
@@ -43,7 +43,7 @@
     "AXTitle" : "Firefox",
     "AXWindows" : [
       "AXUIElement(AxWindowId=12431, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-      "AXUIElement(AxWindowId=13054, title=\"Chrome extensions popup is mistakenly being detected a window. 0.18.0 regression · Issue #1324 · nikitabobko/AeroSpace\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(AxWindowId=13054, title=\"Chrome extensions popup is mistakenly being detected a window. 0.18.0 regression · Issue #1324 · nikitabobko/Airlock\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },

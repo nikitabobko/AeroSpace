@@ -1,0 +1,52 @@
+= airlock-move-mouse(1)
+include::./util/man-attributes.adoc[]
+// tag::purpose[]
+:manpurpose: Move mouse to the requested position
+// end::purpose[]
+:manname: airlock-move-mouse
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+airlock move-mouse [-h|--help] [--fail-if-noop] <mouse-position>
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--fail-if-noop::
+Exit with non-zero exit code if mouse is already at the requested position.
+The flag is compatible only with `window-lazy-center` and `monitor-lazy-center` arguments.
+
+// =========================================================== Arguments
+include::./util/conditional-arguments-header.adoc[]
+
+<mouse-position>::
+Position to move mouse to.
+Possible values:
++
+* `monitor-lazy-center`. Move mouse to the center of the focused monitor, *unless* it is already within the monitor boundaries.
+* `monitor-force-center`. Move mouse to the center of the focused monitor.
+* `window-lazy-center`. Move mouse to the center of the focused window, *unless* it is already within the window boundaries. Exit with non-zero code if no window is focused.
+* `window-force-center`. Move mouse to the center of the focused window. Exit with non-zero code if no window is focused.
+
+// =========================================================== Examples
+include::util/conditional-examples-header.adoc[]
+
+* Try to move mouse to the center of the window. If there is no window in focus, move mouse to the center of the monitor: +
+`airlock move-mouse window-lazy-center || airlock move-mouse monitor-lazy-center`
+
+// end::body[]
+
+// =========================================================== Footer
+include::./util/man-footer.adoc[]

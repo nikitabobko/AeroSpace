@@ -18,7 +18,7 @@ open class TreeNode: Equatable, AeroAny {
     // - move-mouse command
     var lastAppliedLayoutPhysicalRect: Rect? = nil // with real inner gaps
     final var unboundStacktrace: String? = nil
-    var isBound: Bool { parent != nil } // todo drop, once https://github.com/nikitabobko/AeroSpace/issues/1215 is fixed
+    var isBound: Bool { parent != nil } // todo drop, once https://github.com/nikitabobko/Airlock/issues/1215 is fixed
 
     @MainActor
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
@@ -89,7 +89,7 @@ open class TreeNode: Equatable, AeroAny {
         unboundStacktrace = nil
         // todo consider disabling automatic mru propogation
         // 1. "floating windows" in FocusCommand break the MRU because of that :(
-        // 2. Misbehaved apps that abuse real window as popups https://github.com/nikitabobko/AeroSpace/issues/106 (the
+        // 2. Misbehaved apps that abuse real window as popups https://github.com/nikitabobko/Airlock/issues/106 (the
         //    last appeared window, is not necessarily the one that has the focus)
         markAsMostRecentChild()
         return result

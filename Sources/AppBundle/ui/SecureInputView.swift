@@ -60,7 +60,7 @@ struct SecureInputView: View {
                     .aspectRatio(contentMode: .fit)
                     .padding(6)
             } else {
-                Text("AeroSpace cannot respond to keyboard shortcuts while **Secure Input** is active. **Secure Input** is a macOS security feature that prevents applications from reading keyboard events.")
+                Text("Airlock cannot respond to keyboard shortcuts while **Secure Input** is active. **Secure Input** is a macOS security feature that prevents applications from reading keyboard events.")
                     .font(.title3)
                     .padding(10)
             }

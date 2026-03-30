@@ -16,7 +16,7 @@ enable-normalization-opposite-orientation-for-nested-containers = false
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [mode.main.binding]
-    # See: https://nikitabobko.github.io/AeroSpace/goodies#open-a-new-window-with-applescript
+    # See: https://nikitabobko.github.io/Airlock/goodies#open-a-new-window-with-applescript
     alt-enter = '''exec-and-forget osascript -e '
     tell application "Terminal"
         do script
@@ -48,12 +48,12 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
     alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
 
-    # Not supported, because this command is redundant in AeroSpace mental model.
-    # See: https://nikitabobko.github.io/AeroSpace/guide#floating-windows
+    # Not supported, because this command is redundant in Airlock mental model.
+    # See: https://nikitabobko.github.io/Airlock/guide#floating-windows
     #alt-space = 'focus toggle_tiling_floating'
 
     # `focus parent`/`focus child` are not yet supported, and it's not clear whether they
-    # should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
+    # should be supported at all https://github.com/nikitabobko/Airlock/issues/5
     # alt-a = 'focus parent'
 
     alt-1 = 'workspace 1'

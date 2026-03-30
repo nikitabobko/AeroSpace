@@ -1,9 +1,9 @@
-= AeroSpace Goodies
+= Airlock Goodies
 include::util/site-attributes.adoc[]
 
 include::util/header.adoc[]
 
-Do you have a cool automatization, AeroSpace integration, or workflow?
+Do you have a cool automatization, Airlock integration, or workflow?
 Feel free to open an issue or pull request to add it to this list!
 The source code of the page can be found in the `./docs` directory.
 
@@ -38,21 +38,21 @@ full-screen-api.transition-duration.leave = 0 0
 
 To highlight the focused window with colored border you can use link:https://github.com/FelixKratz/JankyBorders[JankyBorders].
 
-You can also use `after-startup-command` to start JankyBorders together with AeroSpace
+You can also use `after-startup-command` to start JankyBorders together with Airlock
 
 [source,toml]
 ----
 after-startup-command = [
     # JankyBorders has a built-in detection of already running process,
-    # so it won't be run twice on AeroSpace restart
+    # so it won't be run twice on Airlock restart
     'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0'
 ]
 ----
 
 [#raycast-extension]
-== AeroSpace Raycast extension
+== Airlock Raycast extension
 
-There is a third party Raycast extension for AeroSpace. https://www.raycast.com/limonkufu/aerospace
+There is a third party Raycast extension for Airlock. https://www.raycast.com/limonkufu/airlock
 
 If you struggle remembering shortcuts, it's useful to search for commands until they become muscle memory.
 
@@ -73,68 +73,68 @@ The following commands focus next or previous workspaces on monitors where the m
 
 [source,bash]
 ----
-aerospace workspace "$(aerospace list-workspaces --monitor mouse --visible)" && aerospace workspace next
+airlock workspace "$(airlock list-workspaces --monitor mouse --visible)" && airlock workspace next
 
-aerospace workspace "$(aerospace list-workspaces --monitor mouse --visible)" && aerospace workspace prev
+airlock workspace "$(airlock list-workspaces --monitor mouse --visible)" && airlock workspace prev
 ----
 
 Use the software of your choice to assign trackpad gestures to the respective commands.
 Here are a few third party options in alphabetical order:
 
-* https://github.com/acsandmann/aerospace-swipe
+* https://github.com/acsandmann/airlock-swipe
 * link:https://folivora.ai/[BetterTouchTool] can assign arbitrary commands to trackpad gestures.
-Beware that you might need to specify full path to aerospace executable https://community.folivora.ai/t/how-to-execute-terminal-command-to-switch-workspaces-with-aerospace/35914
-* https://github.com/MediosZ/SwipeAeroSpace
+Beware that you might need to specify full path to airlock executable https://community.folivora.ai/t/how-to-execute-terminal-command-to-switch-workspaces-with-airlock/35914
+* https://github.com/MediosZ/SwipeAirlock
 
 CAUTION: Make sure that you trust project authors before running the distributed binaries.
 Alternatively, inspect the source code, and build it yourself.
 
-[#show-aerospace-workspaces-in-sketchybar]
-== Show AeroSpace workspaces in Sketchybar
+[#show-airlock-workspaces-in-sketchybar]
+== Show Airlock workspaces in Sketchybar
 
-You can integrate AeroSpace workspace indicators with link:https://github.com/FelixKratz/SketchyBar[Sketchybar].
+You can integrate Airlock workspace indicators with link:https://github.com/FelixKratz/SketchyBar[Sketchybar].
 Use these snippets as a starting point.
 
-.~/.aerospace.toml
+.~/.airlock.toml
 [source,toml]
 ----
-# Run Sketchybar together with AeroSpace
+# Run Sketchybar together with Airlock
 # sketchybar has a built-in detection of already running process,
-# so it won't be run twice on AeroSpace restart
+# so it won't be run twice on Airlock restart
 after-startup-command = ['exec-and-forget sketchybar']
 
 # Notify Sketchybar about workspace change
 exec-on-workspace-change = ['/bin/bash', '-c',
-    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+    'sketchybar --trigger airlock_workspace_change FOCUSED_WORKSPACE=$AIRLOCK_FOCUSED_WORKSPACE'
 ]
 ----
 
 .~/.config/sketchybar/sketchybarrc
 [source,bash]
 ----
-sketchybar --add event aerospace_workspace_change
+sketchybar --add event airlock_workspace_change
 
-for sid in $(aerospace list-workspaces --all); do
+for sid in $(airlock list-workspaces --all); do
     sketchybar --add item space.$sid left \
-        --subscribe space.$sid aerospace_workspace_change \
+        --subscribe space.$sid airlock_workspace_change \
         --set space.$sid \
         background.color=0x44ffffff \
         background.corner_radius=5 \
         background.height=20 \
         background.drawing=off \
         label="$sid" \
-        click_script="aerospace workspace $sid" \
-        script="$CONFIG_DIR/plugins/aerospace.sh $sid"
+        click_script="airlock workspace $sid" \
+        script="$CONFIG_DIR/plugins/airlock.sh $sid"
 done
 ----
 
-.~/.config/sketchybar/plugins/aerospace.sh
+.~/.config/sketchybar/plugins/airlock.sh
 [source,bash]
 ----
 #!/usr/bin/env bash
 
 # make sure it's executable with:
-# chmod +x ~/.config/sketchybar/plugins/aerospace.sh
+# chmod +x ~/.config/sketchybar/plugins/airlock.sh
 
 if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
     sketchybar --set $NAME background.drawing=on
@@ -143,14 +143,14 @@ else
 fi
 ----
 
-[#show-aerospace-workspaces-in-simple-bar]
-== Show AeroSpace workspaces in simple-bar
+[#show-airlock-workspaces-in-simple-bar]
+== Show Airlock workspaces in simple-bar
 
-link:https://github.com/Jean-Tinland/simple-bar[simple-bar] can be used to display AeroSpace workspaces.
+link:https://github.com/Jean-Tinland/simple-bar[simple-bar] can be used to display Airlock workspaces.
 
-In order to sync simple-bar with AeroSpace, add these lines to your AeroSpace config file:
+In order to sync simple-bar with Airlock, add these lines to your Airlock config file:
 
-.~/.aerospace.toml
+.~/.airlock.toml
 [source,toml]
 ----
 # Notify simple-bar about window focus change
@@ -172,7 +172,7 @@ exec-on-workspace-change = [
 Invoking Safari/Terminal with a command the obvious way (`exec-and-forget open -a Safari`) results in an outcome that is probably not the intended one.
 Namely, that any workspace already containing an instance of Safari/Terminal is brought in focus.
 
-Opening *a new window* of a program that can support multiple windows (such as Safari or Terminal.app) can be accomplished with an AppleScript inlined in `aerospace.toml` as follows:
+Opening *a new window* of a program that can support multiple windows (such as Safari or Terminal.app) can be accomplished with an AppleScript inlined in `airlock.toml` as follows:
 
 - Safari
 +
@@ -202,7 +202,7 @@ end tell'
 
 If `automatically-unhide-macos-hidden-apps` isn't enough, you can disable `cmd-h` altogether (which will make this hotkey unavailable for apps that might use it for other purposes)
 
-.~/.aerospace.toml
+.~/.airlock.toml
 [source,toml]
 ----
 [mode.main.binding]
@@ -216,7 +216,7 @@ If `automatically-unhide-macos-hidden-apps` isn't enough, you can disable `cmd-h
 You can configure a custom shortcut to take a screenshot.
 `screencapture` is a built-in macOS command.
 
-.~/.aerospace.toml
+.~/.airlock.toml
 [source,toml]
 ----
 alt-shift-s = 'exec-and-forget screencapture -i -c'

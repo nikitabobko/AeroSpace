@@ -1,4 +1,4 @@
-// Share purple "pill" indicator in the window's top left corner - https://github.com/nikitabobko/AeroSpace/issues/1101
+// Share purple "pill" indicator in the window's top left corner - https://github.com/nikitabobko/Airlock/issues/1101
 {
   "AXActivationPoint" : "<AXValue 0x6000024333c0> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
   "AXCancelButton" : null,

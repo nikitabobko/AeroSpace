@@ -8,8 +8,16 @@
         return
     }
     if nativeFocused?.windowId != lastKnownNativeFocusedWindowId {
-        _ = nativeFocused?.focusWindow()
-        lastKnownNativeFocusedWindowId = nativeFocused?.windowId
+        if shouldAllowFocusChange(to: nativeFocused) {
+            _ = nativeFocused?.focusWindow()
+            lastKnownNativeFocusedWindowId = nativeFocused?.windowId
+        } else {
+            // Refocus the previously focused window to resist the steal
+            if let currentWindow = focus.windowOrNil {
+                currentWindow.nativeFocus()
+            }
+            return
+        }
     }
     nativeFocused?.macAppUnsafe.lastNativeFocusedWindowId = nativeFocused?.windowId
 }

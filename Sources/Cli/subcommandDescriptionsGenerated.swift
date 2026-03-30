@@ -1,11 +1,11 @@
-// FILE IS GENERATED FROM docs/aerospace-*.adoc files
+// FILE IS GENERATED FROM docs/airlock-*.adoc files
 // TO REGENERATE THE FILE RUN generate.sh
 
 let subcommandDescriptions = [
     ["  balance-sizes", "Balance sizes of all windows in the current workspace"],
     ["  close-all-windows-but-current", "On the focused workspace, close all windows but current"],
     ["  close", "Close the focused window"],
-    ["  config", "Query AeroSpace config options"],
+    ["  config", "Query Airlock config options"],
     ["  debug-windows", "Interactive command to record Accessibility API debug information to create bug reports"],
     ["  enable", "Temporarily disable window management"],
     ["  flatten-workspace-tree", "Flatten the tree of the focused workspace"],
@@ -32,10 +32,10 @@ let subcommandDescriptions = [
     ["  reload-config", "Reload currently active config"],
     ["  resize", "Resize the focused window"],
     ["  split", "Split focused window"],
-    ["  subscribe", "Subscribe to AeroSpace events and receive notifications via socket"],
+    ["  subscribe", "Subscribe to Airlock events and receive notifications via socket"],
     ["  summon-workspace", "Move the requested workspace to the focused monitor."],
     ["  swap", "Swaps the focused window with another window."],
-    ["  trigger-binding", "Trigger AeroSpace binding as if it was pressed by user"],
+    ["  trigger-binding", "Trigger Airlock binding as if it was pressed by user"],
     ["  volume", "Manipulate volume"],
     ["  workspace-back-and-forth", "Switch between the focused workspace and previously focused workspace back and forth"],
     ["  workspace", "Focus the specified workspace"],

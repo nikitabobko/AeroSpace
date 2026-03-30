@@ -1,10 +1,10 @@
 # LICENSE
 
-The AeroSpace itself is licensed under MIT. See [LICENSE](./LICENSE.txt) for the full license text.
+The Airlock itself is licensed under MIT. See [LICENSE](./LICENSE.txt) for the full license text.
 
 ## Bundled dependencies and materials
 
-AeroSpace bundles the following dependencies and uses the following materials:
+Airlock bundles the following dependencies and uses the following materials:
 
 **HotKey**.
 [HotKey GitHub link](https://github.com/soffes/HotKey).
@@ -24,7 +24,7 @@ tomlplusplus is used as TOML parser. tomlplusplus is used indirectly through TOM
 **ANTLR v4**.
 [ANTLR v4 GitHub link](https://github.com/antlr/antlr4).
 [ANTLR BSD-3 license](./third-party-license/LICENSE-antlr.txt).
-ANTLR is used to parse AeroSpace built-in shell like language.
+ANTLR is used to parse Airlock built-in shell like language.
 
 **swift-collections**.
 [swift-collections GitHub link](https://github.com/apple/swift-collections).

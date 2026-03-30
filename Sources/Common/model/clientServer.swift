@@ -2,7 +2,7 @@ import Foundation
 
 // TO EVERYONE REVERSE-ENGINEERING THE PROTOCOL
 // client-server socket API is not public yet.
-// Tracking issue for making it public: https://github.com/nikitabobko/AeroSpace/issues/1513
+// Tracking issue for making it public: https://github.com/nikitabobko/Airlock/issues/1513
 public struct ServerAnswer: Codable, Sendable {
     public let exitCode: Int32
     public let stdout: String
@@ -24,7 +24,7 @@ public struct ServerAnswer: Codable, Sendable {
 
 // TO EVERYONE REVERSE-ENGINEERING THE PROTOCOL
 // client-server socket API is not public yet.
-// Tracking issue for making it public: https://github.com/nikitabobko/AeroSpace/issues/1513
+// Tracking issue for making it public: https://github.com/nikitabobko/Airlock/issues/1513
 public struct ClientRequest: Codable, Sendable, ConvenienceCopyable, Equatable {
     // periphery:ignore - Unused. keep it for API compatibility with old servers for a couple of version
     public var command: String? = nil
@@ -33,8 +33,8 @@ public struct ClientRequest: Codable, Sendable, ConvenienceCopyable, Equatable {
     public let stdin: String
 
     // Double Optional to encode explicit null into JSON
-    public var windowId: UInt32??  // Please forward AEROSPACE_WINDOW_ID env variable here
-    public var workspace: String?? // Please forward AEROSPACE_WORKSPACE env variable here
+    public var windowId: UInt32??  // Please forward AIRLOCK_WINDOW_ID env variable here
+    public var workspace: String?? // Please forward AIRLOCK_WORKSPACE env variable here
 
     public init(
         args: [String],
