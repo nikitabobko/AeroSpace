@@ -53,6 +53,16 @@ enum GlobalObserver {
         nc.addObserver(forName: NSWorkspace.activeSpaceDidChangeNotification, object: nil, queue: .main, using: onNotif)
         nc.addObserver(forName: NSWorkspace.didTerminateApplicationNotification, object: nil, queue: .main, using: onNotif)
 
+        // Detect monitor connect/disconnect via CoreGraphics callback.
+        CGDisplayRegisterReconfigurationCallback({ _, flags, _ in
+            // Only act on completion of a reconfiguration, not the begin phase
+            guard flags.contains(.beginConfigurationFlag) == false else { return }
+            Task { @MainActor in
+                if !TrayMenuModel.shared.isEnabled { return }
+                scheduleRefreshSession(.globalObserver("displayReconfiguration"))
+            }
+        }, nil)
+
         NSEvent.addGlobalMonitorForEvents(matching: .leftMouseUp) { _ in
             // todo reduce number of refreshSession in the callback
             //  resetManipulatedWithMouseIfPossible might call its own refreshSession
