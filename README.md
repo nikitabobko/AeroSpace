@@ -47,57 +47,9 @@ Other installation options: https://nikitabobko.github.io/Airlock/guide#installa
 > automatically delete `com.apple.quarantine` attribute, that's why the app should work out of the box, without any warnings that
 > "Apple cannot check Airlock for malicious software"
 
-## Community, discussions, issues
-
-Airlock project doesn't accept Issues directly - we ask you to create a [Discussion](https://github.com/nikitabobko/Airlock/discussions) first.
-Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for more details.
-
-Community discussions happen at GitHub Discussions.
-There you can discuss bugs, propose new features, ask your questions, show off your setup, or just chat.
-
-There are 7 channels:
--   [#all](https://github.com/nikitabobko/Airlock/discussions).
-    [RSS](https://github.com/nikitabobko/Airlock/discussions.atom?discussions_q=sort%3Adate_created).
-    Feed with all discussions.
--   [#announcements](https://github.com/nikitabobko/Airlock/discussions/categories/announcements).
-    [RSS](https://github.com/nikitabobko/Airlock/discussions/categories/announcements.atom?discussions_q=category%3Aannouncements+sort%3Adate_created).
-    Only maintainers can post here.
-    Highly moderated traffic.
--   [#announcements-releases](https://github.com/nikitabobko/Airlock/discussions/categories/announcements-releases).
-    [RSS](https://github.com/nikitabobko/Airlock/discussions/categories/announcements-releases.atom?discussions_q=category%3Aannouncements-releases+sort%3Adate_created).
-    Announcements about non-patch releases.
-    Only maintainers can post here.
--   [#feature-ideas](https://github.com/nikitabobko/Airlock/discussions/categories/feature-ideas).
-    [RSS](https://github.com/nikitabobko/Airlock/discussions/categories/feature-ideas.atom?discussions_q=category%3Afeature-ideas+sort%3Adate_created).
--   [#general](https://github.com/nikitabobko/Airlock/discussions/categories/general).
-    [RSS](https://github.com/nikitabobko/Airlock/discussions/categories/general.atom?discussions_q=sort%3Adate_created+category%3Ageneral).
--   [#potential-bugs](https://github.com/nikitabobko/Airlock/discussions/categories/potential-bugs).
-    [RSS](https://github.com/nikitabobko/Airlock/discussions/categories/potential-bugs.atom?discussions_q=category%3Apotential-bugs+sort%3Adate_created).
-    If you think that you have encountered a bug, you can discuss your bugs here.
--   [#questions-and-answers](https://github.com/nikitabobko/Airlock/discussions/categories/questions-and-answers).
-    [RSS](https://github.com/nikitabobko/Airlock/discussions/categories/questions-and-answers.atom?discussions_q=category%3Aquestions-and-answers+sort%3Adate_created).
-    Everyone is welcome to ask questions.
-    Everyone is encouraged to answer other people's questions.
-
 ## Project status
 
-Public Beta. Airlock can be used as a daily driver, but expect breaking changes until 1.0 is reached.
-
-What stops us from 1.0 release:
-- [x] https://github.com/nikitabobko/Airlock/issues/131 Performance. Implement thread-per-application to circumvent macOS blocking AX API.
-- [ ] https://github.com/nikitabobko/Airlock/issues/1215 _Big refactoring_. Rewrite mutable double-linked core tree data structure to immutable single-linked persistent tree.
-  Important for: stability and potential performance
-  - [ ] https://github.com/nikitabobko/Airlock/issues/1216 The big refactoring will help us to fix stability issue that windows may randomly jump to the focused workspace
-  - [ ] https://github.com/nikitabobko/Airlock/issues/68 The big refactoring will help us to support macOS native tabs
-- [ ] https://github.com/nikitabobko/Airlock/issues/278 Implement shell-like combinators.
-  Ignore a lot of crazy fuss in the issue,
-  We are most probably going with the minimal approach to only introduce common shell-combinators: `||`, `&&`, `;` and `eval` command to send multiple commands in one go.
-- [ ] https://github.com/nikitabobko/Airlock/issues/1012 Investigate a possibility to use `CGEvent.tapCreate` API for global hotkeys
-  - [ ] https://github.com/nikitabobko/Airlock/issues/28 Maybe it will allow to distinguish left and right modifiers. Maybe not
-
-Big and important issues which will go after 1.0 release:
-- [ ] https://github.com/nikitabobko/Airlock/issues/2 sticky windows
-- [ ] https://github.com/nikitabobko/Airlock/issues/260 Dynamic TWM
+Very rough
 
 ## Development
 
@@ -140,18 +92,6 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
 | Airlock debug build from sources is supported on ...                         |                    | +                 | +                  | +                |
 | Airlock release build from sources is supported on ... (Requires Xcode 26+)  |                    |                   | +                  | +                |
 
-## Sponsorship
-
-Airlock is developed and maintained in my free time.
-If you find it useful, [consider sponsoring](https://github.com/sponsors/nikitabobko#sponsors).
-
-## People who have write access
-
-In alphabetical order:
-
-- [@mobile-ar](https://github.com/mobile-ar)
-- [@nikitabobko](https://github.com/nikitabobko)
-- [@rickyz](https://github.com/rickyz)
 
 ## Tip of the day
 
@@ -165,5 +105,6 @@ Source: [reddit](https://www.reddit.com/r/MacOS/comments/k6hiwk/keyboard_modifie
 
 ## Related projects
 
+- AeroSpace
 - [Amethyst](https://github.com/ianyh/Amethyst)
 - [yabai](https://github.com/koekeishiya/yabai)
