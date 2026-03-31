@@ -1,7 +1,5 @@
 # Airlock Beta [![Build](https://github.com/nikitabobko/Airlock/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/nikitabobko/Airlock/actions/workflows/build.yml)
 
-<img src="./resources/Assets.xcassets/AppIcon.appiconset/icon.png" width="40%" align="right">
-
 Airlock is an i3-like tiling window manager for macOS
 
 Docs:
