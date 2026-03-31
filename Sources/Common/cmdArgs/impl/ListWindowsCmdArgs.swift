@@ -23,6 +23,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--format": formatParser(\._format, for: .window),
             "--count": trueBoolFlag(\.outputOnlyCount),
             "--json": trueBoolFlag(\.json),
+            "--sort": SubArgParser(\.sort, parseSortOptions),
         ],
         posArgs: [],
         conflictingOptions: [
@@ -36,6 +37,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
     fileprivate var allAlias: Bool = false
 
     public var filteringOptions = FilteringOptions()
+    public var sort: [SortOption] = [.appName, .windowTitle]
     public var _format: [StringInterToken] = []
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
@@ -119,10 +121,35 @@ private func parseWorkspaces(input: SubArgParserInput) -> ParsedCliArgs<[Workspa
     return .succ(workspaces, advanceBy: workspaces.count)
 }
 
+private func parseSortOptions(input: SubArgParserInput) -> ParsedCliArgs<[SortOption]> {
+    if let arg = input.nonFlagArgOrNil() {
+        let sortStrings = arg.split(separator: ",")
+        var sortOptions: [SortOption] = []
+        for (index, sortStr) in sortStrings.enumerated() {
+            if let option = SortOption(rawValue: String(sortStr)) {
+                sortOptions.append(option)
+            } else {
+                let validValues = SortOption.allCases.map { $0.rawValue }.joined(separator: ", ")
+                return .fail("Invalid sort option '\(sortStr)'. Valid options: \(validValues)", advanceBy: index + 1)
+            }
+        }
+        return .succ(sortOptions, advanceBy: 1)
+    } else {
+        let validValues = SortOption.allCases.map { $0.rawValue }.joined(separator: ", ")
+        return .fail("'--sort' requires a value. Valid options: \(validValues)", advanceBy: 0)
+    }
+}
+
 public enum WorkspaceFilter: Equatable, Sendable {
     case focused
     case visible
     case name(WorkspaceName)
+}
+
+public enum SortOption: String, Equatable, Sendable, CaseIterable {
+    case recent = "recent"
+    case appName = "app-name"
+    case windowTitle = "window-title"
 }
 
 public enum FormatVar: Equatable {
