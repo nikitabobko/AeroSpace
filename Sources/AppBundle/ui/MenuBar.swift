@@ -25,7 +25,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
                         Task {
                             if let newName = showRenameDialog(currentName: workspace.name) {
                                 try await runLightSession(.menuBarButton, token) {
-                                    _ = Workspace.rename(Workspace.get(byName: workspace.name), to: newName)
+                                    _ = try await Workspace.rename(Workspace.get(byName: workspace.name), to: newName)
                                 }
                             }
                         }

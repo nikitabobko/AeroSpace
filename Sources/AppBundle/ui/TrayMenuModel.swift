@@ -26,7 +26,18 @@ public final class TrayMenuModel: ObservableObject {
             return ($0.activeWorkspace == focus.workspace && sortedMonitors.count > 1 ? "*" : "") + activeWorkspaceName
         }
         .joined(separator: " │ ")
-    TrayMenuModel.shared.workspaces = Workspace.all.map {
+    let persistentOrder = config.persistentWorkspaces
+    let orderedWorkspaces = Workspace.all.sorted { a, b in
+        let aIndex = persistentOrder.firstIndex(of: a.name)
+        let bIndex = persistentOrder.firstIndex(of: b.name)
+        switch (aIndex, bIndex) {
+            case (.some(let ai), .some(let bi)): return ai < bi
+            case (.some, .none): return true
+            case (.none, .some): return false
+            case (.none, .none): return a < b
+        }
+    }
+    TrayMenuModel.shared.workspaces = orderedWorkspaces.map {
         let apps = $0.allLeafWindowsRecursive.map { $0.app.name?.takeIf { !$0.isEmpty } }.filterNotNil().toSet()
         let dash = " - "
         let suffix = switch true {

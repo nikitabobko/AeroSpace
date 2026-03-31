@@ -81,10 +81,21 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     }
 
     @MainActor
-    static func rename(_ workspace: Workspace, to newName: String) -> Bool {
+    static func rename(_ workspace: Workspace, to newName: String) async throws -> Bool {
         guard case .success = WorkspaceName.parse(newName) else { return false }
         guard workspaceNameToWorkspace[newName] == nil else { return false }
         let oldName = workspace.name
+
+        // Update the config file on disk first
+        updateConfigFile(oldWorkspaceName: oldName, newWorkspaceName: newName)
+
+        // Reload config so keybindings and persistent workspaces pick up the new name
+        _ = try await reloadConfig()
+
+        // Now update the in-memory workspace object.
+        // After config reload, a new workspace with newName may have been created by
+        // garbageCollectUnusedWorkspaces. Remove it so we can re-key the original.
+        workspaceNameToWorkspace.removeValue(forKey: newName)
 
         // Remove from hash-keyed collections before changing name (hash depends on name)
         let screenPoint = visibleWorkspaceToScreenPoint.removeValue(forKey: workspace)
@@ -107,18 +118,6 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
 
         // Update focus tracking
         updateFocusWorkspaceName(from: oldName, to: newName)
-
-        // Update config so garbage collection doesn't re-create the old workspace
-        if config.persistentWorkspaces.contains(oldName) {
-            config.persistentWorkspaces.remove(oldName)
-            config.persistentWorkspaces.append(newName)
-        }
-        if let monitorAssignment = config.workspaceToMonitorForceAssignment.removeValue(forKey: oldName) {
-            config.workspaceToMonitorForceAssignment[newName] = monitorAssignment
-        }
-
-        // Update the config file on disk
-        updateConfigFile(oldWorkspaceName: oldName, newWorkspaceName: newName)
 
         return true
     }
