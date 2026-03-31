@@ -4,7 +4,7 @@ source ./script/setup.sh
 
 zip_uri='' # mandatory
 cask_name='' # mandatory
-build_version="0.0.0-SNAPSHOT"
+build_version="$(cat VERSION)"
 while test $# -gt 0; do
     case $1 in
         --build-version) build_version="$2"; shift 2;;

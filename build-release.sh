@@ -2,7 +2,7 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-build_version="0.0.0-SNAPSHOT"
+build_version="$(cat VERSION)"
 codesign_identity="airlock-codesign-certificate"
 while test $# -gt 0; do
     case $1 in

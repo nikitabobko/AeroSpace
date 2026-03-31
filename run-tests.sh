@@ -9,8 +9,9 @@ source ./script/setup.sh
 
 ./.debug/airlock -h > /dev/null
 ./.debug/airlock --help > /dev/null
-./.debug/airlock -v | grep -q "0.0.0-SNAPSHOT SNAPSHOT"
-./.debug/airlock --version | grep -q "0.0.0-SNAPSHOT SNAPSHOT"
+expected_version="$(cat VERSION) SNAPSHOT"
+./.debug/airlock -v | grep -qF "$expected_version"
+./.debug/airlock --version | grep -qF "$expected_version"
 
 ./lint.sh --check-uncommitted-files
 ./generate.sh

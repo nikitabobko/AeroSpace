@@ -242,7 +242,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = "0.0.0-SNAPSHOT";
+				MARKETING_VERSION = "0.1.0";
 				PRODUCT_BUNDLE_IDENTIFIER = dev.airlock.debug;
 				PRODUCT_NAME = "Airlock-Debug";
 				SDKROOT = macosx;
@@ -320,7 +320,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = "0.0.0-SNAPSHOT";
+				MARKETING_VERSION = "0.1.0";
 				PRODUCT_BUNDLE_IDENTIFIER = dev.airlock;
 				PRODUCT_NAME = Airlock;
 				SDKROOT = macosx;

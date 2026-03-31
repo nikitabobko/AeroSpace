@@ -3,7 +3,7 @@ cd "$(dirname "$0")"
 source ./script/setup.sh
 
 export XCODEGEN_AIRLOCK_CODE_SIGN_IDENTITY="airlock-codesign-certificate"
-build_version="0.0.0-SNAPSHOT"
+build_version="$(cat VERSION)"
 generate_xcodeproj=1
 generate_cmd_help=1
 generate_shell_parser=1
