@@ -1,3 +1,4 @@
+import AppKit
 import Common
 import Foundation
 import SwiftUI
@@ -14,9 +15,20 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         if let token: RunSessionGuard = .isServerEnabled {
             Text("Workspaces:")
             ForEach(viewModel.workspaces, id: \.name) { workspace in
-                Button {
-                    Task {
-                        try await runLightSession(.menuBarButton, token) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
+                Menu {
+                    Button("Focus") {
+                        Task {
+                            try await runLightSession(.menuBarButton, token) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
+                        }
+                    }
+                    Button("Rename...") {
+                        Task {
+                            if let newName = showRenameDialog(currentName: workspace.name) {
+                                try await runLightSession(.menuBarButton, token) {
+                                    _ = Workspace.rename(Workspace.get(byName: workspace.name), to: newName)
+                                }
+                            }
+                        }
                     }
                 } label: {
                     Toggle(isOn: .constant(workspace.isFocused)) {
@@ -108,6 +120,24 @@ func shortcutGroup(label: some View, content: some View) -> some View {
             content
         }
     }
+}
+
+@MainActor
+func showRenameDialog(currentName: String) -> String? {
+    let alert = NSAlert()
+    alert.messageText = "Rename Workspace"
+    alert.informativeText = "Enter a new name for workspace '\(currentName)':"
+    alert.addButton(withTitle: "Rename")
+    alert.addButton(withTitle: "Cancel")
+    let textField = NSTextField(frame: NSRect(x: 0, y: 0, width: 200, height: 24))
+    textField.stringValue = currentName
+    alert.accessoryView = textField
+    alert.window.initialFirstResponder = textField
+    let response = alert.runModal()
+    guard response == .alertFirstButtonReturn else { return nil }
+    let newName = textField.stringValue.trimmingCharacters(in: .whitespaces)
+    guard !newName.isEmpty, newName != currentName else { return nil }
+    return newName
 }
 
 func getTextEditorToOpenConfig() -> URL {

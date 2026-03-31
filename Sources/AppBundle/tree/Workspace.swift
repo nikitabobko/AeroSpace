@@ -31,8 +31,8 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
 }
 
 final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
-    let name: String
-    nonisolated private let nameLogicalSegments: StringLogicalSegments
+    private(set) var name: String
+    nonisolated private var nameLogicalSegments: StringLogicalSegments
     /// `assignedMonitorPoint` must be interpreted only when the workspace is invisible
     fileprivate var assignedMonitorPoint: CGPoint? = nil
 
@@ -78,6 +78,65 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
             ("doKeepAlive", String(config.persistentWorkspaces.contains(name))),
         ].map { "\($0.0): '\(String(describing: $0.1))'" }.joined(separator: ", ")
         return "Workspace(\(description))"
+    }
+
+    @MainActor
+    static func rename(_ workspace: Workspace, to newName: String) -> Bool {
+        guard case .success = WorkspaceName.parse(newName) else { return false }
+        guard workspaceNameToWorkspace[newName] == nil else { return false }
+        let oldName = workspace.name
+
+        // Remove from hash-keyed collections before changing name (hash depends on name)
+        let screenPoint = visibleWorkspaceToScreenPoint.removeValue(forKey: workspace)
+
+        // Update the workspace name
+        workspaceNameToWorkspace.removeValue(forKey: oldName)
+        workspace.name = newName
+        workspace.nameLogicalSegments = newName.toLogicalSegments()
+        workspaceNameToWorkspace[newName] = workspace
+
+        // Re-insert into hash-keyed collections
+        if let screenPoint {
+            visibleWorkspaceToScreenPoint[workspace] = screenPoint
+        }
+
+        // Update string-based workspace name references
+        for (point, name) in screenPointToPrevVisibleWorkspace where name == oldName {
+            screenPointToPrevVisibleWorkspace[point] = newName
+        }
+
+        // Update focus tracking
+        updateFocusWorkspaceName(from: oldName, to: newName)
+
+        // Update config so garbage collection doesn't re-create the old workspace
+        if config.persistentWorkspaces.contains(oldName) {
+            config.persistentWorkspaces.remove(oldName)
+            config.persistentWorkspaces.append(newName)
+        }
+        if let monitorAssignment = config.workspaceToMonitorForceAssignment.removeValue(forKey: oldName) {
+            config.workspaceToMonitorForceAssignment[newName] = monitorAssignment
+        }
+
+        // Update the config file on disk
+        updateConfigFile(oldWorkspaceName: oldName, newWorkspaceName: newName)
+
+        return true
+    }
+
+    private static func updateConfigFile(oldWorkspaceName: String, newWorkspaceName: String) {
+        guard case .file(let url) = findCustomConfigUrl() else { return }
+        guard let contents = try? String(contentsOf: url, encoding: .utf8) else { return }
+        // Replace workspace name references:
+        // - In quotes: 'W1' or "W1"
+        // - As a bare argument: workspace W1, move-node-to-workspace W1
+        let updated = contents
+            .replacingOccurrences(of: "'\(oldWorkspaceName)'", with: "'\(newWorkspaceName)'")
+            .replacingOccurrences(of: "\"\(oldWorkspaceName)\"", with: "\"\(newWorkspaceName)\"")
+            .replacingOccurrences(of: "workspace \(oldWorkspaceName)'", with: "workspace \(newWorkspaceName)'")
+            .replacingOccurrences(of: "move-node-to-workspace \(oldWorkspaceName)'", with: "move-node-to-workspace \(newWorkspaceName)'")
+        if updated != contents {
+            try? updated.write(to: url, atomically: true, encoding: .utf8)
+        }
     }
 
     @MainActor

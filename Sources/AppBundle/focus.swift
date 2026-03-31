@@ -101,6 +101,21 @@ extension Workspace {
     }
 }
 
+@MainActor func updateFocusWorkspaceName(from oldName: String, to newName: String) {
+    if _focus.workspaceName == oldName {
+        _focus = FrozenFocus(windowId: _focus.windowId, workspaceName: newName, monitorId_oneBased: _focus.monitorId_oneBased)
+    }
+    if _lastKnownFocus.workspaceName == oldName {
+        _lastKnownFocus = FrozenFocus(windowId: _lastKnownFocus.windowId, workspaceName: newName, monitorId_oneBased: _lastKnownFocus.monitorId_oneBased)
+    }
+    if _prevFocus?.workspaceName == oldName {
+        _prevFocus = FrozenFocus(windowId: _prevFocus!.windowId, workspaceName: newName, monitorId_oneBased: _prevFocus!.monitorId_oneBased)
+    }
+    if _prevFocusedWorkspaceName == oldName {
+        _prevFocusedWorkspaceName = newName
+    }
+}
+
 @MainActor private var _lastKnownFocus: FrozenFocus = _focus
 
 // Used by workspace-back-and-forth

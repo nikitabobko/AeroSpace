@@ -75,7 +75,6 @@ private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMa
     "app-name-regex-substring": Parser(\.appNameRegexSubstring, upcast(parseCasInsensitiveRegex)),
     "window-title-regex-substring": Parser(\.windowTitleRegexSubstring, upcast(parseCasInsensitiveRegex)),
     "during-airlock-startup": Parser(\.duringAirlockStartup, upcast(parseBool)),
-    "during-airlock-startup": Parser(\.duringAirlockStartup, upcast(parseBool)), // backwards compat
 ]
 
 private func upcast<T>(_ fun: @escaping @Sendable (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T>) -> @Sendable (TOMLValueConvertible, TomlBacktrace) -> ParsedToml<T?> {
