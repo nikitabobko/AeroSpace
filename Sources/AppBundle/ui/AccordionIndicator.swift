@@ -53,16 +53,15 @@ final class AccordionIndicatorManager {
         let mruWindow = container.mostRecentChild as? Window
 
         let entries: [AccordionIndicatorEntry] = windows.map { window in
-            let icon: NSImage
-            if let macWindow = window as? MacWindow {
-                icon = macWindow.macApp.nsApp.icon ?? NSImage(named: NSImage.applicationIconName)!
+            let icon: NSImage = if let macWindow = window as? MacWindow {
+                macWindow.macApp.nsApp.icon ?? NSImage(named: NSImage.applicationIconName)!
             } else {
-                icon = NSImage(named: NSImage.applicationIconName)!
+                NSImage(named: NSImage.applicationIconName)!
             }
             return AccordionIndicatorEntry(
                 windowId: window.windowId,
                 icon: icon,
-                isFocused: window === mruWindow
+                isFocused: window === mruWindow,
             )
         }
 
@@ -91,22 +90,22 @@ final class AccordionIndicatorManager {
         let margin: CGFloat = 4 // gap between indicator and window edge
 
         switch position {
-        case .left, .right:
-            isVerticalBar = true
-            panelWidth = iconSize + panelPadding * 2
-            panelHeight = totalIcons * (iconSize + iconPadding) - iconPadding + panelPadding * 2
-            panelY = screenFlipY(rect.topLeftY, height: panelHeight)
-            panelX = position == .left
-                ? rect.topLeftX - panelWidth - margin
-                : rect.topLeftX + rect.width + margin
-        case .top, .bottom:
-            isVerticalBar = false
-            panelWidth = totalIcons * (iconSize + iconPadding) - iconPadding + panelPadding * 2
-            panelHeight = iconSize + panelPadding * 2
-            panelX = rect.topLeftX
-            panelY = position == .top
-                ? screenFlipY(rect.topLeftY - panelHeight - margin, height: panelHeight)
-                : screenFlipY(rect.topLeftY + rect.height + margin, height: panelHeight)
+            case .left, .right:
+                isVerticalBar = true
+                panelWidth = iconSize + panelPadding * 2
+                panelHeight = totalIcons * (iconSize + iconPadding) - iconPadding + panelPadding * 2
+                panelY = screenFlipY(rect.topLeftY, height: panelHeight)
+                panelX = position == .left
+                    ? rect.topLeftX - panelWidth - margin
+                    : rect.topLeftX + rect.width + margin
+            case .top, .bottom:
+                isVerticalBar = false
+                panelWidth = totalIcons * (iconSize + iconPadding) - iconPadding + panelPadding * 2
+                panelHeight = iconSize + panelPadding * 2
+                panelX = rect.topLeftX
+                panelY = position == .top
+                    ? screenFlipY(rect.topLeftY - panelHeight - margin, height: panelHeight)
+                    : screenFlipY(rect.topLeftY + rect.height + margin, height: panelHeight)
         }
 
         let model = AccordionIndicatorModel(
@@ -123,7 +122,7 @@ final class AccordionIndicatorManager {
                         scheduleRefreshSession(.menuBarButton)
                     }
                 }
-            }
+            },
         )
         let hostingView = NSHostingView(rootView: AccordionIndicatorView(model: model))
         hostingView.frame = NSRect(x: 0, y: 0, width: panelWidth, height: panelHeight)
@@ -217,7 +216,7 @@ struct AccordionIndicatorView: View {
                 .opacity(entry.isFocused ? 1.0 : 0.4)
                 .overlay(
                     RoundedRectangle(cornerRadius: 4)
-                        .stroke(entry.isFocused ? Color.accentColor : Color.clear, lineWidth: 2)
+                        .stroke(entry.isFocused ? Color.accentColor : Color.clear, lineWidth: 2),
                 )
                 .onTapGesture {
                     model.onIconClick(entry.windowId)
