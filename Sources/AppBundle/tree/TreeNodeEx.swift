@@ -79,6 +79,7 @@ extension TreeNode {
     }
 
     /// Returns closest parent that has children in the specified direction relative to `self`
+    @MainActor
     func closestParent(
         hasChildrenInDirection direction: CardinalDirection,
         withLayout layout: Layout?,
@@ -91,14 +92,13 @@ extension TreeNode {
                     true
                 case .tilingContainer(let parent):
                     (layout == nil || parent.layout == layout) &&
-                        parent.orientation == direction.orientation &&
-                        (node.ownIndex.map { parent.children.indices.contains($0 + direction.focusOffset) } ?? true)
+                        parent.matchesDirection(direction) &&
+                        (node.ownIndex.map { parent.children.indices.contains($0 + direction.accordionFocusOffset(parent)) } ?? true)
             }
         })
         guard let innermostChild else { return nil }
         switch innermostChild.parent?.cases {
             case .tilingContainer(let parent):
-                check(parent.orientation == direction.orientation)
                 return innermostChild.ownIndex.map { (parent, $0) }
             case .workspace, nil, .macosMinimizedWindowsContainer,
                  .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer, .macosPopupWindowsContainer:

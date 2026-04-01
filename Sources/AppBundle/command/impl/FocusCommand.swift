@@ -19,7 +19,7 @@ struct FocusCommand: Command {
             case .direction(let direction):
                 let window = target.windowOrNil
                 if let (parent, ownIndex) = window?.closestParent(hasChildrenInDirection: direction, withLayout: nil) {
-                    guard let windowToFocus = parent.children[ownIndex + direction.focusOffset]
+                    guard let windowToFocus = parent.children[ownIndex + direction.accordionFocusOffset(parent)]
                         .findLeafWindowRecursive(snappedTo: direction.opposite) else { return false }
                     return windowToFocus.focusWindow()
                 } else {
