@@ -21,7 +21,7 @@ while test $# -gt 0; do
 done
 
 if test $generate_shell_parser = 1; then
-    ./generate-shell-parser.sh
+    ./script/generate-shell-parser.sh
 fi
 
 if test $generate_cmd_help = 1; then
