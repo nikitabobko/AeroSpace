@@ -17,14 +17,6 @@ extension Optional {
         }
     }
 
-    public func flatMapAsync<U>(_ transform: (Wrapped) async throws -> U?) async rethrows -> U? {
-        if let ok = self {
-            return try await transform(ok)
-        } else {
-            return nil
-        }
-    }
-
     public func asList() -> [Wrapped] {
         if let ok = self {
             return [ok]
