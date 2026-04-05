@@ -104,19 +104,30 @@ extension Sequence {
             return (index, $0)
         }
     }
-}
 
-extension Sequence where Self.Element: Comparable {
-    public func minOrDie() -> Self.Element {
+    public func minOrDie() -> Self.Element where Self.Element: Comparable {
         self.min() ?? dieT("Empty sequence")
     }
 
-    public func maxOrDie() -> Self.Element {
+    public func maxOrDie() -> Self.Element where Self.Element: Comparable {
         self.max() ?? dieT("Empty sequence")
+    }
+
+    public func toSet() -> Set<Element> where Element: Hashable { Set(self) }
+    public func toOrderedSet() -> OrderedSet<Element> where Element: Hashable { OrderedSet(self) }
+
+    public var sequencePattern: SequencePattern<Self> {
+        var iterator = makeIterator()
+        guard let first = iterator.next() else { return .empty }
+        guard let second = iterator.next() else { return .one(first) }
+        guard let _ = iterator.next() else { return .two(first, second) }
+        return .many(self)
     }
 }
 
-extension Sequence where Element: Hashable {
-    public func toSet() -> Set<Element> { Set(self) }
-    public func toOrderedSet() -> OrderedSet<Element> { OrderedSet(self) }
+public enum SequencePattern<Seq: Sequence> {
+    case empty
+    case one(Seq.Element)
+    case two(Seq.Element, Seq.Element)
+    case many(Seq)
 }

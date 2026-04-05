@@ -63,6 +63,20 @@ enum Primitive: Encodable {
     case int(Int64)
     case string(String)
 
+    enum Kind: String {
+        case bool
+        case int
+        case string
+    }
+
+    var kind: Kind {
+        switch self {
+            case .bool: .bool
+            case .int: .int
+            case .string: .string
+        }
+    }
+
     func toString() -> String {
         switch self {
             case .bool(let x): x.description
@@ -91,13 +105,9 @@ private struct Cell<T> {
     let rightPadding: Bool
 }
 
-extension String {
-    @MainActor
-    func expandFormatVar(obj: AeroObj) -> Result<Primitive, String> {
-        let formatVar = self.toFormatVar()
-        switch (obj, formatVar) {
-            case (_, .none): break
-
+extension FormatVar {
+    @MainActor func expandFormatVar(obj: AeroObj) -> Result<Primitive, String> {
+        switch (obj, self) {
             case (.window(let w, _), .workspace):
                 return w.nodeWorkspace.flatMap(AeroObj.workspace).map(expandFormatVar) ?? .success(.string("NULL-WOKRSPACE"))
             case (.window(let w, _), .monitor):
@@ -113,7 +123,8 @@ extension String {
             case (.app(_), _): break
             case (.monitor(_), _): break
         }
-        switch (obj, formatVar) {
+
+        switch (obj, self) {
             case (.window(let w, let title), .window(let f)):
                 return switch f {
                     case .windowId: .success(.int(w.windowId))
@@ -145,18 +156,36 @@ extension String {
                 }
             default: break
         }
-        if self == PlainInterVar.newline.rawValue { return .success(.string("\n")) }
-        if self == PlainInterVar.tab.rawValue { return .success(.string("\t")) }
-        return .failure("Unknown interpolation variable '\(self)'. " +
-            "Possible values:\n\(getAvailableInterVars(for: obj.kind).joined(separator: "\n").prependLines("  "))")
+        return .failure(unknownInterpolationVariable(variable: rawValue, obj))
     }
+}
 
-    private func toFormatVar() -> FormatVar? {
-        FormatVar.WindowFormatVar(rawValue: self).flatMap(FormatVar.window)
-            ?? FormatVar.WorkspaceFormatVar(rawValue: self).flatMap(FormatVar.workspace)
-            ?? FormatVar.AppFormatVar(rawValue: self).flatMap(FormatVar.app)
-            ?? FormatVar.MonitorFormatVar(rawValue: self).flatMap(FormatVar.monitor)
+extension PlainInterVar {
+    @MainActor func expandFormatVar() -> Result<Primitive, String> {
+        switch self {
+            case .newline: .success(.string("\n"))
+            case .tab: .success(.string("\t"))
+            case .rightPadding:
+                .failure("\(PlainInterVar.rightPadding.rawValue.singleQuoted) interpolation variable cannot be expanded")
+        }
     }
+}
+
+extension String {
+    @MainActor func expandFormatVar(obj: AeroObj) -> Result<Primitive, String> {
+        if let it = FormatVar(rawValue: self)?.expandFormatVar(obj: obj) {
+            return it
+        }
+        if let it = PlainInterVar(rawValue: self)?.expandFormatVar() {
+            return it
+        }
+        return .failure(unknownInterpolationVariable(variable: self, obj))
+    }
+}
+
+func unknownInterpolationVariable(variable: String, _ obj: AeroObj) -> String {
+    "Unknown interpolation variable '\(variable)'. " +
+        "Possible values:\n\(getAvailableInterVars(for: obj.kind).joined(separator: "\n").prependLines("  "))"
 }
 
 private func toLayoutString(tc: TilingContainer) -> String {

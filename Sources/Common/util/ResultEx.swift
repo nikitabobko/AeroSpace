@@ -12,7 +12,7 @@ extension Result {
             case .success(let success):
                 return success
             case .failure(let error):
-                errors += [error]
+                errors.append(error)
                 return nil
         }
     }

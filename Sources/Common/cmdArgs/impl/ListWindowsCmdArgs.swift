@@ -125,13 +125,49 @@ public enum WorkspaceFilter: Equatable, Sendable {
     case name(WorkspaceName)
 }
 
-public enum FormatVar: Equatable {
+public enum FormatVar: RawRepresentable, Equatable, CaseIterable, Sendable {
     case window(WindowFormatVar)
     case workspace(WorkspaceFormatVar)
     case app(AppFormatVar)
     case monitor(MonitorFormatVar)
 
-    public enum WindowFormatVar: String, Equatable, CaseIterable {
+    public static var allCases: [FormatVar] {
+        AeroObjKind.allCases.flatMap {
+            switch $0 {
+                case .app: AppFormatVar.allCases.map(FormatVar.app)
+                case .monitor: MonitorFormatVar.allCases.map(FormatVar.monitor)
+                case .window: WindowFormatVar.allCases.map(FormatVar.window)
+                case .workspace: WorkspaceFormatVar.allCases.map(FormatVar.workspace)
+            }
+        }
+    }
+
+    public init?(rawValue: String) {
+        let value = AeroObjKind.allCases.map { kind in
+            switch kind {
+                case .app: AppFormatVar(rawValue: rawValue).map(FormatVar.app)
+                case .monitor: MonitorFormatVar(rawValue: rawValue).map(FormatVar.monitor)
+                case .window: WindowFormatVar(rawValue: rawValue).map(FormatVar.window)
+                case .workspace: WorkspaceFormatVar(rawValue: rawValue).map(FormatVar.workspace)
+            }
+        }.filterNotNil()
+        switch value.sequencePattern {
+            case .empty: return nil
+            case .one(let it): self = it
+            default: die("FormatVar clash: \(value)")
+        }
+    }
+
+    public var rawValue: String {
+        switch self {
+            case .app(let it): it.rawValue
+            case .monitor(let it): it.rawValue
+            case .window(let it): it.rawValue
+            case .workspace(let it): it.rawValue
+        }
+    }
+
+    public enum WindowFormatVar: String, Equatable, CaseIterable, Sendable {
         case windowId = "window-id"
         case windowIsFullscreen = "window-is-fullscreen"
         case windowTitle = "window-title"
@@ -139,14 +175,14 @@ public enum FormatVar: Equatable {
         case windowParentContainerLayout = "window-parent-container-layout"
     }
 
-    public enum WorkspaceFormatVar: String, Equatable, CaseIterable {
+    public enum WorkspaceFormatVar: String, Equatable, CaseIterable, Sendable {
         case workspaceName = "workspace"
         case workspaceFocused = "workspace-is-focused"
         case workspaceVisible = "workspace-is-visible"
         case workspaceRootContainerLayout = "workspace-root-container-layout"
     }
 
-    public enum AppFormatVar: String, Equatable, CaseIterable {
+    public enum AppFormatVar: String, Equatable, CaseIterable, Sendable {
         case appBundleId = "app-bundle-id"
         case appName = "app-name"
         case appPid = "app-pid"
@@ -154,7 +190,7 @@ public enum FormatVar: Equatable {
         case appBundlePath = "app-bundle-path"
     }
 
-    public enum MonitorFormatVar: String, Equatable, CaseIterable {
+    public enum MonitorFormatVar: String, Equatable, CaseIterable, Sendable {
         case monitorId_oneBased = "monitor-id"
         case monitorAppKitNsScreenScreensId = "monitor-appkit-nsscreen-screens-id"
         case monitorName = "monitor-name"
@@ -162,7 +198,7 @@ public enum FormatVar: Equatable {
     }
 }
 
-public enum PlainInterVar: String, CaseIterable {
+public enum PlainInterVar: String, CaseIterable, Sendable, Equatable {
     case rightPadding = "right-padding"
     case newline = "newline"
     case tab = "tab"
@@ -170,6 +206,16 @@ public enum PlainInterVar: String, CaseIterable {
 
 public enum AeroObjKind: CaseIterable, Sendable {
     case window, workspace, app, monitor
+
+    // periphery:ignore
+    private static func unused(_ it: FormatVar) -> Self {
+        switch it {
+            case .app: .app
+            case .monitor: .monitor
+            case .window: .window
+            case .workspace: .workspace
+        }
+    }
 }
 
 public func getAvailableInterVars(for kind: AeroObjKind) -> [String] {

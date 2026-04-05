@@ -1,8 +1,8 @@
 ifndef::env-site[]
-== Exit Codes
+== Interpolation Variables
 endif::[]
 
 ifdef::env-site[]
 [.lead]
-**EXIT CODES**
+**INTERPOLATION VARIABLES**
 endif::[]

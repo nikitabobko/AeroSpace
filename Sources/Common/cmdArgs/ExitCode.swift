@@ -7,6 +7,8 @@ extension ExitCode {
 }
 
 public let EXIT_CODE_ZERO: Int32 = 0
+public let EXIT_CODE_ONE: Int32 = 1
+public let EXIT_CODE_TWO: Int32 = 2
 
 // Some big enough number which is not occupied by any other ExitCode
 // The only exit code which is guaranteed to denote a error
