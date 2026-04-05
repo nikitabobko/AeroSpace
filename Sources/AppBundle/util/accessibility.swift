@@ -235,24 +235,24 @@ enum Ax {
         key: kAXSizeAttribute,
         getter: {
             var raw: CGSize = .zero
-            check(AXValueGetValue($0 as! AXValue, .cgSize, &raw))
+            check(unsafe AXValueGetValue($0 as! AXValue, .cgSize, &raw))
             return raw
         },
         setter: {
             var size = $0
-            return AXValueCreate(.cgSize, &size) as CFTypeRef
+            return unsafe AXValueCreate(.cgSize, &size) as CFTypeRef
         },
     )
     static let topLeftCornerAttr = WritableAttrImpl<CGPoint>(
         key: kAXPositionAttribute,
         getter: {
             var raw: CGPoint = .zero
-            AXValueGetValue($0 as! AXValue, .cgPoint, &raw)
+            check(unsafe AXValueGetValue($0 as! AXValue, .cgPoint, &raw))
             return raw
         },
         setter: {
             var size = $0
-            return AXValueCreate(.cgPoint, &size) as CFTypeRef
+            return unsafe AXValueCreate(.cgPoint, &size) as CFTypeRef
         },
     )
     /// Returns windows visible on all monitors
@@ -334,7 +334,7 @@ extension AXUIElement: AxUiElementMock {
         let state = signposter.beginInterval(#function, "attr: \(attr.key) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
         defer { signposter.endInterval(#function, state) }
         var raw: AnyObject?
-        return AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success
+        return unsafe AXUIElementCopyAttributeValue(self, attr.key as CFString, &raw) == .success
             ? raw.flatMap(attr.getter)
             : nil
     }
@@ -351,13 +351,13 @@ extension AXUIElement: AxUiElementMock {
         let state = signposter.beginInterval(#function, "axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
         defer { signposter.endInterval(#function, state) }
         var cgWindowId = CGWindowID()
-        return _AXUIElementGetWindow(self, &cgWindowId) == .success ? cgWindowId : nil
+        return unsafe _AXUIElementGetWindow(self, &cgWindowId) == .success ? cgWindowId : nil
     }
 }
 
 extension AXObserver {
     static func new(_ pid: pid_t, _ handler: AXObserverCallback) -> AXObserver? {
         var observer: AXObserver? = nil
-        return AXObserverCreate(pid, handler, &observer) == .success ? observer : nil
+        return unsafe AXObserverCreate(pid, handler, &observer) == .success ? observer : nil
     }
 }

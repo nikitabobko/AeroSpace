@@ -6,7 +6,7 @@ private struct ConfigFileWatcher: ~Copyable {
     private let fd: Int32
 
     init?(url: URL, onChange: @escaping @MainActor () -> Void) {
-        fd = open(url.path, O_EVTONLY)
+        fd = unsafe open(url.path, O_EVTONLY)
         if fd < 0 { return nil }
         source = DispatchSource.makeFileSystemObjectSource(
             fileDescriptor: fd,

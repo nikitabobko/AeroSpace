@@ -59,10 +59,10 @@ final class RunLoopJob: Sendable, AeroAny {
     // Alternative 2. https://github.com/apple/swift-atomics/tree/main but I don't want to add one more dependency just for
     //                AtomicBool
     nonisolated(unsafe) private var _isCancelled: Int32 = 0
-    var isCancelled: Bool { _isCancelled == 1 }
+    var isCancelled: Bool { unsafe _isCancelled == 1 }
     func cancel() {
         while !isCancelled {
-            OSAtomicCompareAndSwapInt(0, 1, &_isCancelled)
+            unsafe OSAtomicCompareAndSwapInt(0, 1, &_isCancelled)
         }
     }
 

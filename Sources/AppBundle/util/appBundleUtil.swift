@@ -20,7 +20,7 @@ func interceptTermination(_ _signal: Int32) {
 
 @MainActor
 func initTerminationHandler() {
-    terminationHandler = AppServerTerminationHandler()
+    unsafe _terminationHandler = AppServerTerminationHandler()
 }
 
 private struct AppServerTerminationHandler: TerminationHandler {

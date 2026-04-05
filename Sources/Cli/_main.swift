@@ -133,7 +133,7 @@ func runSubscribe(_ connection: NWConnection, _ args: StrArrSlice, windowId: UIn
             case .success(let data):
                 if let str = String(data: data, encoding: .utf8) {
                     print(str)
-                    fflush(stdout)
+                    unsafe fflush(stdout)
                 } else {
                     exit(1, err: "Can't convert bytes to utf8 String")
                 }

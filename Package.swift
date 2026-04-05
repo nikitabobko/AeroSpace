@@ -3,6 +3,10 @@
 
 import PackageDescription
 
+let swiftSettings: [SwiftSetting] = [
+    .strictMemorySafety(),
+]
+
 let package = Package(
     name: "AeroSpacePackage",
     // Runtime support for parameterized protocol types is only available in macOS 13.0.0 or newer
@@ -37,6 +41,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Collections", package: "swift-collections"),
             ],
+            swiftSettings: swiftSettings,
         ),
         .target(
             name: "AppBundle",
@@ -49,7 +54,7 @@ let package = Package(
                 .target(name: "Common"),
                 .target(name: "PrivateApi"),
             ],
-            swiftSettings: [
+            swiftSettings: swiftSettings + [
                 .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
             ],
         ),
@@ -64,12 +69,14 @@ let package = Package(
             dependencies: [
                 .target(name: "Common"),
             ],
+            swiftSettings: swiftSettings,
         ),
         .testTarget(
             name: "AppBundleTests",
             dependencies: [
                 .target(name: "AppBundle"),
             ],
+            swiftSettings: swiftSettings,
         ),
     ],
 )

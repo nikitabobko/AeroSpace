@@ -46,7 +46,7 @@ public func parseCaseInsensitiveRegex(_ raw: String) -> Parsed<Regex<AnyRegexOut
 /// Circumvent Regex not being Sendable by default
 public struct SendableRegex<Output>: Sendable {
     nonisolated(unsafe) public let val: Regex<Output>
-    init(_ regex: Regex<Output>) { self.val = regex }
+    init(_ regex: Regex<Output>) { unsafe self.val = regex }
     // init(_ str: String) { self.regex = regex }
 }
 

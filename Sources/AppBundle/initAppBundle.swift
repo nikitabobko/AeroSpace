@@ -5,7 +5,7 @@ import Foundation
 @MainActor public func initAppBundle() {
     Task {
         initTerminationHandler()
-        isCli = false
+        unsafe _isCli = false
         initServerArgs()
         if isDebug {
             await toggleReleaseServerIfDebug(.off)
@@ -71,7 +71,7 @@ private let serverHelp = """
     """
 
 nonisolated(unsafe) private var _serverArgs = ServerArgs()
-var serverArgs: ServerArgs { _serverArgs }
+var serverArgs: ServerArgs { unsafe _serverArgs }
 private func initServerArgs() {
     let args = CommandLine.arguments.slice(1...) ?? []
     if args.contains(where: { $0 == "-h" || $0 == "--help" }) {
@@ -86,13 +86,13 @@ private func initServerArgs() {
                 exit(0, out: "\(aeroSpaceAppVersion) \(gitHash)")
             case "--config-path":
                 if let arg = args.getOrNil(atIndex: index) {
-                    _serverArgs.configLocation = arg
+                    unsafe _serverArgs.configLocation = arg
                 } else {
                     exit(1, err: "Missing <path> in --config-path flag")
                 }
                 index += 1
             case "--read-only": // todo rename to '--disabled' and unite with disabled feature
-                _serverArgs.isReadOnly = true
+                unsafe _serverArgs.isReadOnly = true
             case "-NSDocumentRevisionsDebugMode" where isDebug:
                 // Skip Xcode CLI args.
                 // Usually it's '-NSDocumentRevisionsDebugMode NO'/'-NSDocumentRevisionsDebugMode YES'

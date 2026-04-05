@@ -179,7 +179,7 @@ extension URL {
 }
 
 public func eprint(_ msg: String) {
-    fputs(msg + "\n", stderr)
+    unsafe fputs(msg + "\n", stderr)
 }
 
 public func exit(_ exitCode: Int32, out: String? = nil, err: String? = nil) -> Never {
