@@ -11,8 +11,9 @@ private var focusedApp: (any AbstractApp)? {
             return appForTests
         } else {
             check(appForTests == nil)
-            return try await NSWorkspace.shared.frontmostApplication.flatMapAsync { @MainActor @Sendable in
-                try await MacApp.getOrRegister($0)
+            return switch NSWorkspace.shared.frontmostApplication {
+                case let frontmostApplication?: try await MacApp.getOrRegister(frontmostApplication)
+                case nil: nil
             }
         }
     }

@@ -4,6 +4,7 @@
 import PackageDescription
 
 let swiftSettings: [SwiftSetting] = [
+    .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
     .strictMemorySafety(),
 ]
 
@@ -54,9 +55,7 @@ let package = Package(
                 .target(name: "Common"),
                 .target(name: "PrivateApi"),
             ],
-            swiftSettings: swiftSettings + [
-                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-            ],
+            swiftSettings: swiftSettings,
         ),
         .executableTarget(
             name: "AeroSpaceApp",
