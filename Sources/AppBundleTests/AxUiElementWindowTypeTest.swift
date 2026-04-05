@@ -17,7 +17,7 @@ func checkAxDumpsRecursive(_ dir: URL) throws {
         if file.pathExtension == "md" { continue }
 
         let rawJson = try JSONSerialization.jsonObject(with: Data.init(contentsOf: file), options: [.json5Allowed]) as! [String: Any]
-        let json = Json.newOrDie(rawJson).asDictOrDie
+        let json = Json.newOrDieRecursive(rawJson).asDictOrDie
         let app = json["Aero.AXApp"]!.asDictOrDie
         let appBundleId = (rawJson["Aero.App.appBundleId"] as? String).flatMap { KnownBundleId.init(rawValue: $0) }
         let windowLevel = json["Aero.windowLevel"].map { MacOsWindowLevel.fromJson($0) ?? dieT() }

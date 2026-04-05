@@ -26,10 +26,10 @@ enum Json: Encodable, Equatable {
         }
     }
 
-    static func newOrDie(_ value: Any?) -> Json {
+    static func newOrDieRecursive(_ value: Any?) -> Json {
         switch value {
-            case let value as [String: Any?]: .dict(value.mapValues(newOrDie))
-            case let value as [Any?]: .array(value.map(newOrDie))
+            case let value as [String: Any?]: .dict(value.mapValues(newOrDieRecursive))
+            case let value as [Any?]: .array(value.map(newOrDieRecursive))
             default:
                 newScalarOrNil(value)
                     ?? dieT("Can't parse \(String(describing: value)) (\(Swift.type(of: value))) to JSON")
