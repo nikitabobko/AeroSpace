@@ -64,8 +64,8 @@ public struct ClientRequest: Codable, Sendable, ConvenienceCopyable, Equatable {
         var raw = ClientRequest(
             args: data.args,
             stdin: data.stdin,
-            windowId: data.windowId.flatMap { $0 },
-            workspace: data.workspace.flatMap { $0 },
+            windowId: data.windowId.flattenOptional(),
+            workspace: data.workspace.flattenOptional(),
         )
         let container = try decoder.container(keyedBy: CodingKeys.self)
         if !container.contains(.windowId) { raw.windowId = nil }

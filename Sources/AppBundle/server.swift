@@ -97,8 +97,8 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
             let _answer: Result<ServerAnswer, Error> = await Result {
                 try await runLightSession(.socketServer(command.args), token) { () throws in
                     let env = CmdEnv.init(
-                        windowId: request.windowId.flatMap { $0 },
-                        workspaceName: request.workspace.flatMap { $0 },
+                        windowId: request.windowId.flattenOptional(),
+                        workspaceName: request.workspace.flattenOptional(),
                     )
                     let cmdResult = try await command.run(env, CmdStdin(request.stdin))
                     return ServerAnswer(

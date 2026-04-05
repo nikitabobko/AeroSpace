@@ -33,6 +33,13 @@ extension Optional {
         }
     }
 
+    public func flattenOptional<T>() -> T? where Wrapped == T? {
+        switch self {
+            case let x?: x
+            case nil: nil
+        }
+    }
+
     public var prettyDescription: String {
         if let unwrapped = self {
             return String(describing: unwrapped)

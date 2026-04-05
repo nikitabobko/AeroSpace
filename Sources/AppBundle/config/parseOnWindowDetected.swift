@@ -77,7 +77,7 @@ private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMa
 ]
 
 private func upcast<T>(_ fun: @escaping @Sendable (Json, ConfigBacktrace) -> ParsedConfig<T>) -> @Sendable (Json, ConfigBacktrace) -> ParsedConfig<T?> {
-    { fun($0, $1).map { $0 } }
+    { fun($0, $1).map(Optional.init) }
 }
 
 func parseOnWindowDetectedArray(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [WindowDetectedCallback] {

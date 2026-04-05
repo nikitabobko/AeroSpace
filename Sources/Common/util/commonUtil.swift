@@ -192,6 +192,9 @@ public func exitT<T>(_ exitCode: Int32, out: String? = nil, err: String? = nil) 
     exit(exitCode)
 }
 
+/// 'id' stands for 'identity'. It's a common name in functional programming
+public func id<T>(_ t: T) -> T { t }
+
 @inlinable
 public func allowOnlyCancellationError<T>(_ block: () async throws -> sending T) async throws -> sending T {
     do {

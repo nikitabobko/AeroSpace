@@ -17,7 +17,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--monitor": ArgParser(\.filteringOptions.monitors, parseMonitorIds),
             "--workspace": ArgParser(\.filteringOptions.workspaces, parseWorkspaces),
             "--pid": singleValueSubArgParser(\.filteringOptions.pidFilter, "<pid>", Int32.init),
-            "--app-bundle-id": singleValueSubArgParser(\.filteringOptions.appIdFilter, "<app-bundle-id>") { $0 },
+            "--app-bundle-id": singleValueSubArgParser(\.filteringOptions.appIdFilter, "<app-bundle-id>", id),
 
             // Formatting flags
             "--format": formatParser(\._format, for: .window),

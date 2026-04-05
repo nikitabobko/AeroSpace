@@ -6,9 +6,7 @@ protocol SubCommandParserProtocol<T>: Sendable {
 }
 
 extension SubCommandParserProtocol {
-    func parse(args: StrArrSlice) -> ParsedCmd<any CmdArgs> {
-        _parse(args).map { $0 }
-    }
+    func parse(args: StrArrSlice) -> ParsedCmd<any CmdArgs> { _parse(args).map(id) }
 }
 
 struct SubCommandParser<T: CmdArgs>: SubCommandParserProtocol, Sendable {

@@ -3,9 +3,7 @@ import AppKit
 import OrderedCollections
 
 extension Sequence {
-    public func filterNotNil<Unwrapped>() -> [Unwrapped] where Element == Unwrapped? {
-        compactMap { $0 }
-    }
+    public func filterNotNil<Unwrapped>() -> [Unwrapped] where Element == Unwrapped? { compactMap(id) }
 
     public func filterIsInstance<R>(of _: R.Type) -> [R] {
         var result: [R] = []
