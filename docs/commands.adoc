@@ -280,3 +280,10 @@ include::aerospace-subscribe.adoc[tags=synopsis]
 ----
 include::aerospace-subscribe.adoc[tags=purpose]
 include::aerospace-subscribe.adoc[tags=body]
+
+=== test
+----
+include::aerospace-test.adoc[tags=synopsis]
+----
+include::aerospace-test.adoc[tags=purpose]
+include::aerospace-test.adoc[tags=body]

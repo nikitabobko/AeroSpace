@@ -140,6 +140,9 @@ let swap_help_generated = """
                 [--wrap-around]
                 (left|down|up|right|dfs-next|dfs-prev)
     """
+let test_help_generated = """
+    USAGE: test [-h|--help] [options]
+    """
 let trigger_binding_help_generated = """
     USAGE: trigger-binding [-h|--help] <binding> --mode <mode-id>
     """

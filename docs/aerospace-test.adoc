@@ -1,0 +1,60 @@
+= aerospace-test(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-test
+// tag::purpose[]
+:manpurpose: Condition evaluation utility
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace test [-h|--help] [options]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The `test` utility evaluates the expression and, if it evaluates to true, returns a zero (true) exit status; otherwise it returns 1 (false).
+The utility accepts different conditions and checks if all of them evaluate to true.
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+--act-on-window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
+
+--act-on-workspace <workspace>::
+include::./util/workspace-flag-desc.adoc[]
+
+--app-id <app-bundle-id>:: Check if the app bundle id matches with the specified value.
+--app-name-regex-substring <case-insensitive-regex>:: Check if the application name title contains the specified regex (regex is interpreted case insensitively).
+--window-title-regex-substring <case-insensitive-regex>:: Check if the window title contains the specified regex (regex is interpreted case insensitively).
+--workspace-matches <workspace>:: Check if the workspace name matches with the specified value.
+--window-id-matches <window-id>:: Check if the window id matches with the specified value.
+
+--is-during-aerospace-startup [no]::
+Check if the command was invoked during aerospace startup in one of the aerospace callbacks.
+Use cases: arrange windows in `on-window-detected` only on startup.
++
+`[no]` inverts the condition.
+
+// =========================================================== Exit codes
+include::./util/conditional-exit-code-header.adoc[]
+
+0:: All the supplied conditions have evaluated to true.
+1:: One of the supplied conditions has evaluated to false.
+
+>1::
+An error occurred.
+For instance, using conditions that check for windows/app properties on an empty workspace would yield an error.
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]
