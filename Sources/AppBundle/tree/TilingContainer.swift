@@ -62,12 +62,10 @@ enum Layout: String {
 
 extension String {
     func parseLayout() -> Layout? {
-        if let parsed = Layout(rawValue: self) {
-            return parsed
-        } else if self == "list" {
-            return .tiles
-        } else {
-            return nil
+        switch Layout(rawValue: self) {
+            case let parsed?: parsed
+            case nil where self == "list": .tiles
+            case nil: nil
         }
     }
 }

@@ -48,10 +48,9 @@ struct WorkspaceCommand: Command {
             .union([current])
             .sorted()
     let index = workspaces.firstIndex(where: { $0 == target.workspace }) ?? 0
-    let workspace: Workspace? = if wrapAround {
-        workspaces.get(wrappingIndex: isNext ? index + 1 : index - 1)
-    } else {
-        workspaces.getOrNil(atIndex: isNext ? index + 1 : index - 1)
+    let workspace: Workspace? = switch wrapAround {
+        case true: workspaces.get(wrappingIndex: isNext ? index + 1 : index - 1)
+        case false: workspaces.getOrNil(atIndex: isNext ? index + 1 : index - 1)
     }
     return workspace
 }

@@ -10,18 +10,13 @@ extension Optional {
     }
 
     public func orFailure<F: Error>(_ or: @autoclosure () -> F) -> Result<Wrapped, F> {
-        if let ok = self {
-            return .success(ok)
-        } else {
-            return .failure(or())
-        }
+        self.map(Result.success) ?? .failure(or())
     }
 
     public func asList() -> [Wrapped] {
-        if let ok = self {
-            return [ok]
-        } else {
-            return []
+        switch self {
+            case let ok?: [ok]
+            case nil: []
         }
     }
 
@@ -33,9 +28,9 @@ extension Optional {
     }
 
     public var prettyDescription: String {
-        if let unwrapped = self {
-            return String(describing: unwrapped)
+        switch self {
+            case let ok?: String(describing: ok)
+            case nil: "nil"
         }
-        return "nil"
     }
 }

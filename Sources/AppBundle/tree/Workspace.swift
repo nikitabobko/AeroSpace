@@ -195,9 +195,8 @@ private func rearrangeWorkspacesOnMonitors() {
 
 @MainActor
 private func isValidAssignment(workspace: Workspace, screen: CGPoint) -> Bool {
-    if let forceAssigned = workspace.forceAssignedMonitor, forceAssigned.rect.topLeftCorner != screen {
-        return false
-    } else {
-        return true
+    switch workspace.forceAssignedMonitor {
+        case let forceAssigned? where forceAssigned.rect.topLeftCorner != screen: false
+        default: true
     }
 }

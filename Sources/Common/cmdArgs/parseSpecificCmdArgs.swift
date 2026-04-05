@@ -92,10 +92,9 @@ extension ArgParserProtocol where Root: ConvenienceCopyable {
     fileprivate func transformRaw(_ raw: consuming Root, _ index: inout Int, _ input: Input, _ errors: inout [String]) -> Root {
         let parsedCliArgs = parse(input)
         index += parsedCliArgs.advanceBy
-        if let value = parsedCliArgs.value.getOrNil(appendErrorTo: &errors) {
-            return raw.copy(keyPath, value)
-        } else {
-            return raw
+        return switch parsedCliArgs.value.getOrNil(appendErrorTo: &errors) {
+            case let value?: raw.copy(keyPath, value)
+            case nil: raw
         }
     }
 }

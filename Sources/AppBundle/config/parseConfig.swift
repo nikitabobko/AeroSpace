@@ -434,10 +434,9 @@ extension Json.JsonDict {
 
         for (key, value) in self {
             let backtrace: ConfigBacktrace = backtrace + .key(key)
-            if let parser = fieldsParser[key] {
-                raw = parser.transformRawConfig(raw, value, backtrace, &errors)
-            } else {
-                errors.append(unknownKeyError(backtrace))
+            switch fieldsParser[key] {
+                case let parser?: raw = parser.transformRawConfig(raw, value, backtrace, &errors)
+                case nil: errors.append(unknownKeyError(backtrace))
             }
         }
 

@@ -62,10 +62,9 @@ public enum FocusCmdTarget {
     case dfsRelative(DfsNextPrev)
 
     var isDfsRelative: Bool {
-        if case .dfsRelative = self {
-            return true
-        } else {
-            return false
+        switch self {
+            case .dfsRelative: true
+            default: false
         }
     }
 }

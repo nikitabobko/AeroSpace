@@ -153,17 +153,15 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
 
 extension TilingTreeNodeCases {
     @MainActor fileprivate func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TilingTreeNodeCases {
-        return switch self {
+        switch self {
             case .window:
                 self
+            case .tilingContainer(let container) where container.orientation == orientation:
+                .tilingContainer(container)
             case .tilingContainer(let container):
-                if container.orientation == orientation {
-                    .tilingContainer(container)
-                } else {
-                    container.mostRecentChild.orDie("Empty containers must be detached during normalization")
-                        .tilingTreeNodeCasesOrDie()
-                        .findDeepMoveInTargetRecursive(orientation)
-                }
+                container.mostRecentChild.orDie("Empty containers must be detached during normalization")
+                    .tilingTreeNodeCasesOrDie()
+                    .findDeepMoveInTargetRecursive(orientation)
         }
     }
 }

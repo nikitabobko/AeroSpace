@@ -16,21 +16,20 @@ struct ListMonitorsCommand: Command {
             result = result.filter { (monitor) in (monitor.activeWorkspace == mouseWorkspace) == mouse }
         }
 
-        if args.outputOnlyCount {
-            return io.out("\(result.count)")
-        } else {
-            let list = result.map { AeroObj.monitor($0) }
-            if args.json {
-                return switch list.formatToJson(args.format, ignoreRightPaddingVar: args._format.isEmpty) {
+        lazy var list = result.map(AeroObj.monitor)
+        return switch true {
+            case args.outputOnlyCount:
+                io.out("\(result.count)")
+            case args.json:
+                switch list.formatToJson(args.format, ignoreRightPaddingVar: args._format.isEmpty) {
                     case .success(let json): io.out(json)
                     case .failure(let msg): io.err(msg)
                 }
-            } else {
-                return switch list.format(args.format) {
+            default:
+                switch list.format(args.format) {
                     case .success(let lines): io.out(lines)
                     case .failure(let msg): io.err(msg)
                 }
-            }
         }
     }
 }

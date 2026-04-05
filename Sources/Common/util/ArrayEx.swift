@@ -5,11 +5,10 @@ extension Array {
         }
         let table: [[T]] = self
         var result: [[T]] = []
-        for columnIndex in 0... {
-            if columnIndex < table.first.orDie().count {
-                result += [table.map { row in row.getOrNil(atIndex: columnIndex).orDie() }]
-            } else {
-                break
+        loop: for columnIndex in 0... {
+            switch columnIndex < table.first.orDie().count {
+                case true: result += [table.map { row in row.getOrNil(atIndex: columnIndex).orDie() }]
+                case false: break loop
             }
         }
         return result
