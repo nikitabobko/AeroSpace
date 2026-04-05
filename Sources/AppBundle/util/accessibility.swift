@@ -321,11 +321,9 @@ private func windowOrNil(_ any: Any?) -> WindowIdAndAxUiElementMock? {
     guard let any else { return nil }
     let potentialWindow = castToAxUiElementMock(any as AnyObject)
     // Filter out non-window objects (e.g. Finder's desktop)
-    let windowId = potentialWindow.containingWindowId()
-    if let windowId {
-        return (windowId, potentialWindow)
-    } else {
-        return nil
+    return switch potentialWindow.containingWindowId() {
+        case let windowId?: (windowId, potentialWindow)
+        case nil: nil
     }
 }
 

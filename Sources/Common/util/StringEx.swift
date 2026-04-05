@@ -87,46 +87,36 @@ extension String {
     }
 
     public func interpolationTokens(interpolationChar: Character) -> Result<[StringInterToken], String> {
-        var mode: InterpolationParserState = .stringLiteral
+        var mode: InterpolationParserState = .stringLiteral(currLiteral: "")
         var result: [StringInterToken] = []
-        var literal: String = ""
         for char: Character? in (Array(self) + [nil]) {
             switch (mode, char) { // State machine
-                case (.stringLiteral, interpolationChar):
-                    mode = .interpolationCharEncountered
-                case (.stringLiteral, _):
-                    if let char {
-                        literal.append(char)
-                    } else {
-                        result.append(.literal(literal))
-                    }
-                case (.interpolationCharEncountered, "{"):
-                    mode = .interpolatedValue("")
+                case (.stringLiteral(let literal), interpolationChar):
+                    mode = .interpolationCharEncountered(prevLiteral: literal)
+                case (.stringLiteral(let literal), let char?):
+                    mode = .stringLiteral(currLiteral: literal + String(char))
+                case (.stringLiteral(let literal), nil):
                     result.append(.literal(literal))
-                    literal = ""
-                case (.interpolationCharEncountered, interpolationChar):
-                    literal.append(interpolationChar)
-                case (.interpolationCharEncountered, _):
-                    literal.append(interpolationChar)
-                    if let char {
-                        literal.append(char)
-                    } else {
-                        result.append(.literal(literal))
-                    }
-                    mode = .stringLiteral
-                case (.interpolatedValue(let value), "}"):
+                case (.interpolationCharEncountered(let literal), "{"):
+                    mode = .interpolationVariable(currVariable: "")
+                    result.append(.literal(literal))
+                case (.interpolationCharEncountered(let literal), interpolationChar):
+                    mode = .interpolationCharEncountered(prevLiteral: literal + String(interpolationChar))
+                case (.interpolationCharEncountered(let literal), let char?):
+                    mode = .stringLiteral(currLiteral: literal + String(interpolationChar) + String(char))
+                case (.interpolationCharEncountered(let literal), nil):
+                    result.append(.literal(literal + String(interpolationChar)))
+                case (.interpolationVariable(let value), "}"):
                     result.append(.interVar(value))
-                    mode = .stringLiteral
-                case (.interpolatedValue(let value), "{"):
+                    mode = .stringLiteral(currLiteral: "")
+                case (.interpolationVariable(let value), "{"):
                     return .failure("Can't parse '\(value + "{")' inside interpolation (Open curly brace is invalid character)")
-                case (.interpolatedValue(let value), interpolationChar):
+                case (.interpolationVariable(let value), interpolationChar):
                     return .failure("Can't parse '\(value + .init(interpolationChar))' inside interpolation ('\(interpolationChar)' is disallowed character)")
-                case (.interpolatedValue(let value), _):
-                    if let char {
-                        mode = .interpolatedValue(value + .init(char))
-                    } else {
-                        return .failure("Unbalanced curly braces")
-                    }
+                case (.interpolationVariable(let value), let char?):
+                    mode = .interpolationVariable(currVariable: value + .init(char))
+                case (.interpolationVariable, nil):
+                    return .failure("Unbalanced curly braces")
             }
         }
         return .success(result.filter { $0 != .literal("") })
@@ -139,6 +129,7 @@ public enum StringInterToken: Equatable, Sendable {
 }
 
 private enum InterpolationParserState {
-    case stringLiteral, interpolationCharEncountered
-    case interpolatedValue(String)
+    case stringLiteral(currLiteral: String)
+    case interpolationCharEncountered(prevLiteral: String)
+    case interpolationVariable(currVariable: String)
 }

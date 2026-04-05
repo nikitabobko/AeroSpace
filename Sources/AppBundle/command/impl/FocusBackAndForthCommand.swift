@@ -6,10 +6,9 @@ struct FocusBackAndForthCommand: Command {
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        if let prevFocus {
-            return setFocus(to: prevFocus)
-        } else {
-            return io.err("Prev window has been closed")
+        switch prevFocus {
+            case let prevFocus?: setFocus(to: prevFocus)
+            case nil: io.err("Prev window has been closed")
         }
     }
 }

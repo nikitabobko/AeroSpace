@@ -43,11 +43,11 @@ private func moveMouse(_ io: CmdIo, _ point: CGPoint) -> Bool {
         mouseCursorPosition: point,
         mouseButton: CGMouseButton.left,
     )
-    if let event {
-        event.post(tap: CGEventTapLocation.cghidEventTap)
-        return true
-    } else {
-        return io.err("Failed to move mouse")
+    switch event {
+        case nil: return io.err("Failed to move mouse")
+        case let event?:
+            event.post(tap: CGEventTapLocation.cghidEventTap)
+            return true
     }
 }
 

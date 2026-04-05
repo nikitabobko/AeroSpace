@@ -85,16 +85,11 @@ func parseMonitorIds(input: SubArgParserInput) -> ParsedCliArgs<[MonitorId]> {
     var i = 0
     for monitor in args {
         switch Int.init(monitor) {
-            case .some(let unwrapped):
-                monitors.append(.index(unwrapped - 1))
-            case _ where monitor == "mouse":
-                monitors.append(.mouse)
-            case _ where monitor == "all":
-                monitors.append(.all)
-            case _ where monitor == "focused":
-                monitors.append(.focused)
-            default:
-                return .fail("Can't parse monitor ID '\(monitor)'. \(possibleValues)", advanceBy: i + 1)
+            case let unwrapped?: monitors.append(.index(unwrapped - 1))
+            case _ where monitor == "mouse": monitors.append(.mouse)
+            case _ where monitor == "all": monitors.append(.all)
+            case _ where monitor == "focused": monitors.append(.focused)
+            default: return .fail("Can't parse monitor ID '\(monitor)'. \(possibleValues)", advanceBy: i + 1)
         }
         i += 1
     }

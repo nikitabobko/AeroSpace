@@ -21,10 +21,9 @@ final class MruStack<T: Equatable>: Sequence {
         var current = mruNode
         while let cur = current {
             if cur.value == value {
-                if let prev {
-                    prev.next = cur.next
-                } else {
-                    mruNode = current?.next
+                switch prev {
+                    case let prev?: prev.next = cur.next
+                    case nil: mruNode = current?.next
                 }
                 cur.next = nil
                 return true

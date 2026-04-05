@@ -10,10 +10,9 @@ struct ListWindowsCommand: Command {
         var windows: [Window] = []
 
         if args.filteringOptions.focused {
-            if let window = focus.windowOrNil {
-                windows = [window]
-            } else {
-                return io.err(noWindowIsFocused)
+            switch focus.windowOrNil {
+                case let window?: windows = [window]
+                case nil: return io.err(noWindowIsFocused)
             }
         } else {
             var workspaces: Set<Workspace> = args.filteringOptions.workspaces.isEmpty

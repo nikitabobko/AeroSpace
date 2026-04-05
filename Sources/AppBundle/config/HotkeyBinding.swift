@@ -45,11 +45,7 @@ extension HotKey {
         })
     }
     for (binding, key) in hotkeys {
-        if targetBindings.keys.contains(binding) {
-            key.isEnabled = true
-        } else {
-            key.isEnabled = false
-        }
+        key.isEnabled = targetBindings.keys.contains(binding)
     }
     let oldMode = activeMode
     activeMode = targetMode

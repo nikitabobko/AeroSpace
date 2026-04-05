@@ -45,10 +45,9 @@ private func parseKeyNotationToKeyCode(_ raw: Json, _ backtrace: ConfigBacktrace
         if isValidKeyNotation(key) {
             let backtrace = backtrace + .key(key)
             if let value = parseString(value, backtrace).getOrNil(appendErrorTo: &errors) {
-                if let value = keyNotationToKeyCode[value] {
-                    result[key] = value
-                } else {
-                    errors.append(.semantic(backtrace, "'\(value)' is invalid key code"))
+                switch keyNotationToKeyCode[value] {
+                    case let value?: result[key] = value
+                    case nil: errors.append(.semantic(backtrace, "'\(value)' is invalid key code"))
                 }
             }
         } else {

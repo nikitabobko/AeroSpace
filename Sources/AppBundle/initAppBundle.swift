@@ -42,10 +42,9 @@ import Foundation
 private func smartLayoutAtStartup() {
     let workspace = focus.workspace
     let root = workspace.rootTilingContainer
-    if root.children.count <= 3 {
-        root.layout = .tiles
-    } else {
-        root.layout = .accordion
+    switch root.children.count <= 3 {
+        case true: root.layout = .tiles
+        case false: root.layout = .accordion
     }
 }
 
@@ -85,10 +84,9 @@ private func initServerArgs() {
             case "--version", "-v":
                 exit(0, out: "\(aeroSpaceAppVersion) \(gitHash)")
             case "--config-path":
-                if let arg = args.getOrNil(atIndex: index) {
-                    unsafe _serverArgs.configLocation = arg
-                } else {
-                    exit(1, err: "Missing <path> in --config-path flag")
+                switch args.getOrNil(atIndex: index) {
+                    case let arg?: unsafe _serverArgs.configLocation = arg
+                    case nil: exit(1, err: "Missing <path> in --config-path flag")
                 }
                 index += 1
             case "--read-only": // todo rename to '--disabled' and unite with disabled feature

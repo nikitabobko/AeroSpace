@@ -26,12 +26,12 @@ struct MenuBarLabel: View {
     var body: some View {
         if #available(macOS 14, *) { // https://github.com/nikitabobko/AeroSpace/issues/1122
             let renderer = ImageRenderer(content: menuBarContent)
-            if let cgImage = renderer.cgImage {
+            switch renderer.cgImage {
                 // Using scale: 1 results in a blurry image for unknown reasons
-                Image(cgImage, scale: 2, label: Text(viewModel.trayText))
-            } else {
+                case let cgImage?: Image(cgImage, scale: 2, label: Text(viewModel.trayText))
+
                 // In case image can't be rendered fallback to plain text
-                Text(viewModel.trayText)
+                case nil: Text(viewModel.trayText)
             }
         } else { // macOS 13 and lower
             Text(viewModel.trayText)

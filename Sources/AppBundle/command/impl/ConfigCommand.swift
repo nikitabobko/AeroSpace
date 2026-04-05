@@ -62,10 +62,9 @@ extension String {
         }
     }
     if args.json {
-        if let json = JSONEncoder.aeroSpaceDefault.encodeToString(configMap) {
-            return io.out(json)
-        } else {
-            return io.err("Can't convert json Data to String")
+        return switch JSONEncoder.aeroSpaceDefault.encodeToString(configMap) {
+            case let json?: io.out(json)
+            case nil: io.err("Can't convert json Data to String")
         }
     } else {
         switch configMap {
@@ -97,17 +96,15 @@ extension ConfigMapValue {
                 case .scalar(let scalar):
                     return .failure("Can't dereference scalar value '\(scalar.describe)'")
                 case .map(let map):
-                    if let child = map[key] {
-                        return child.find(keyPath: keyPath.slice(1...).orDie())
-                    } else {
-                        return .failure("No value at key token '\(key)'")
+                    return switch map[key] {
+                        case let child?: child.find(keyPath: keyPath.slice(1...).orDie())
+                        case nil: .failure("No value at key token '\(key)'")
                     }
                 case .array(let array):
                     if let key = Int(key) {
-                        if let child = array.getOrNil(atIndex: key) {
-                            return child.find(keyPath: keyPath.slice(1...).orDie())
-                        } else {
-                            return .failure("Index out of bounds. Index: \(key), Size: \(array.count)")
+                        return switch array.getOrNil(atIndex: key) {
+                            case let child?: child.find(keyPath: keyPath.slice(1...).orDie())
+                            case nil: .failure("Index out of bounds. Index: \(key), Size: \(array.count)")
                         }
                     } else {
                         return .failure("Can't convert key token '\(key)' to Int")

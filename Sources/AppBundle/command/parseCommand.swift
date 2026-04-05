@@ -19,9 +19,8 @@ func expectedActualTypeError(expected: TomlType, actual: TomlType) -> String {
 }
 
 func expectedActualTypeError(expected: [TomlType], actual: TomlType) -> String {
-    if let single = expected.singleOrNil() {
-        return expectedActualTypeError(expected: single, actual: actual)
-    } else {
-        return "Expected types are \(expected.map { "'\($0)'" }.joined(separator: " or ")). But actual type is '\(actual)'"
+    switch expected.singleOrNil() {
+        case let single?: expectedActualTypeError(expected: single, actual: actual)
+        case nil: "Expected types are \(expected.map { "'\($0)'" }.joined(separator: " or ")). But actual type is '\(actual)'"
     }
 }

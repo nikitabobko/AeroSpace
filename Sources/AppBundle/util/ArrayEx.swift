@@ -4,10 +4,9 @@ extension Array {
     func singleOrNil(where predicate: (Self.Element) throws -> Bool) rethrows -> Self.Element? {
         var found: Self.Element? = nil
         for elem in self where try predicate(elem) {
-            if found == nil {
-                found = elem
-            } else {
-                return nil
+            switch found == nil {
+                case true: found = elem
+                case false: return nil
             }
         }
         return found
@@ -17,11 +16,11 @@ extension Array {
 extension Array where Self.Element: Equatable {
     @discardableResult
     mutating func remove(element: Self.Element) -> Int? {
-        if let index = firstIndex(of: element) {
-            remove(at: index)
-            return index
-        } else {
-            return nil
+        switch firstIndex(of: element) {
+            case nil: return nil
+            case let index?:
+                remove(at: index)
+                return index
         }
     }
 }
