@@ -39,7 +39,7 @@ aerospace -h;
 
     | join-with [--window-id <window_id>] (left|down|up|right)
 
-    | layout [--window-id <window_id>] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
+    | layout [--window-id <window_id>] (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|scrolling|horizontal|vertical|tiling|floating)...
 
     | macos-native-fullscreen [--fail-if-noop|--window-id <window_id>]... [on|off] [--fail-if-noop|--window-id <window_id>]...
 
@@ -63,6 +63,8 @@ aerospace -h;
     | reload-config [--no-gui | --dry-run]...
 
     | resize [--window-id <window_id>] (smart|smart-opposite|width|height) [+|-]<number> [--window-id <window_id>]
+
+    | scroll (left|right)
 
     | split [--window-id <window_id>] (horizontal|vertical|opposite) [--window-id <window_id>]
 

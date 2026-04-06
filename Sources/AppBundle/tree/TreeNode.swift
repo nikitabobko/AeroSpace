@@ -87,6 +87,7 @@ open class TreeNode: Equatable, AeroAny {
         newParent._children.insert(self, at: index != INDEX_BIND_LAST ? index : newParent._children.count)
         _parent = newParent
         unboundStacktrace = nil
+        (newParent as? TilingContainer)?.clampScrollingIndex()
         // todo consider disabling automatic mru propogation
         // 1. "floating windows" in FocusCommand break the MRU because of that :(
         // 2. Misbehaved apps that abuse real window as popups https://github.com/nikitabobko/AeroSpace/issues/106 (the
@@ -102,6 +103,7 @@ open class TreeNode: Equatable, AeroAny {
         check(_parent._mruChildren.remove(self))
         self._parent = nil
         unboundStacktrace = getStringStacktrace()
+        (_parent as? TilingContainer)?.clampScrollingIndex()
 
         return BindingData(parent: _parent, adaptiveWeight: adaptiveWeight, index: index)
     }
