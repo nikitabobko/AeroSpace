@@ -94,6 +94,10 @@ extension CGPoint {
                 })
             case .accordion:
                 tree.mostRecentChild
+            case .scrolling:
+                tree.children.first(where: {
+                    (virtual ? $0.lastAppliedLayoutVirtualRect : $0.lastAppliedLayoutPhysicalRect)?.contains(point) == true
+                })
         }
         guard let target else { return nil }
         return switch target.tilingTreeNodeCasesOrDie() {
