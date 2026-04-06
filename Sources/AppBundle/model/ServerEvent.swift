@@ -42,6 +42,14 @@ public struct ServerEvent: Codable, Sendable {
         ServerEvent(_event: .windowDetected, windowId: windowId, workspace: workspace, appBundleId: appBundleId, appName: appName)
     }
 
+    public static func windowDestroyed(windowId: UInt32, workspace: String?, appBundleId: String?, appName: String?) -> ServerEvent {
+        ServerEvent(_event: .windowDestroyed, windowId: windowId, workspace: workspace, appBundleId: appBundleId, appName: appName)
+    }
+
+    public static func windowMoved(windowId: UInt32, workspace: String, prevWorkspace: String?, appBundleId: String?, appName: String?) -> ServerEvent {
+        ServerEvent(_event: .windowMoved, windowId: windowId, workspace: workspace, prevWorkspace: prevWorkspace, appBundleId: appBundleId, appName: appName)
+    }
+
     public static func bindingTriggered(mode: String, binding: String) -> ServerEvent {
         ServerEvent(_event: .bindingTriggered, mode: mode, binding: binding)
     }

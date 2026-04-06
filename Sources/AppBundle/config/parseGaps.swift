@@ -114,3 +114,15 @@ func parseInner(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [Conf
 func parseOuter(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> Gaps.Outer {
     parseTable(raw, Gaps.Outer.zero, outerParser, backtrace, &errors)
 }
+
+func parseWorkspaceGaps(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [String: Gaps] {
+    guard let rawTable = raw.asDictOrNil else {
+        errors += [expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace)]
+        return [:]
+    }
+    var result: [String: Gaps] = [:]
+    for (workspaceName, rawGaps) in rawTable {
+        result[workspaceName] = parseGaps(rawGaps, backtrace + .key(workspaceName), &errors)
+    }
+    return result
+}

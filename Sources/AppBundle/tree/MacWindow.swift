@@ -80,6 +80,13 @@ final class MacWindow: Window {
             return
         }
         if !skipClosedWindowsCache { cacheClosedWindowIfNeeded() }
+        let destroyedWorkspaceName = nodeWorkspace?.name
+        broadcastEvent(.windowDestroyed(
+            windowId: windowId,
+            workspace: destroyedWorkspaceName,
+            appBundleId: app.rawAppBundleId,
+            appName: app.name,
+        ))
         let parent = unbindFromParent().parent
         let deadWindowWorkspace = parent.nodeWorkspace
         let focus = focus

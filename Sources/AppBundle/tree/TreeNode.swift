@@ -66,6 +66,7 @@ open class TreeNode: Equatable, AeroAny {
     @MainActor
     @discardableResult
     func bind(to newParent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) -> BindingData? {
+        let prevWorkspace = nodeWorkspace
         let result = unbindIfBound()
 
         if newParent === NilTreeNode.instance {
@@ -92,6 +93,19 @@ open class TreeNode: Equatable, AeroAny {
         // 2. Misbehaved apps that abuse real window as popups https://github.com/nikitabobko/AeroSpace/issues/106 (the
         //    last appeared window, is not necessarily the one that has the focus)
         markAsMostRecentChild()
+        // Broadcast window-moved when a Window's workspace changes
+        if let window = self as? Window {
+            let newWorkspace = nodeWorkspace
+            if let newWorkspace, prevWorkspace !== newWorkspace {
+                broadcastEvent(.windowMoved(
+                    windowId: window.windowId,
+                    workspace: newWorkspace.name,
+                    prevWorkspace: prevWorkspace?.name,
+                    appBundleId: window.app.rawAppBundleId,
+                    appName: window.app.name,
+                ))
+            }
+        }
         return result
     }
 
