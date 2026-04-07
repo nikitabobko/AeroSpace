@@ -19,6 +19,8 @@ public struct ServerEvent: Codable, Sendable {
     private var mode: String?
     // periphery:ignore - false positive unused warning. The var properties are serialized to JSON
     private var binding: String?
+    // periphery:ignore - false positive unused warning. The var properties are serialized to JSON
+    private var tiledWindowCount: Int?
 
     public var eventType: ServerEventType { _event }
 
@@ -38,16 +40,16 @@ public struct ServerEvent: Codable, Sendable {
         ServerEvent(_event: .modeChanged, mode: mode)
     }
 
-    public static func windowDetected(windowId: UInt32, workspace: String?, appBundleId: String?, appName: String?) -> ServerEvent {
-        ServerEvent(_event: .windowDetected, windowId: windowId, workspace: workspace, appBundleId: appBundleId, appName: appName)
+    public static func windowDetected(windowId: UInt32, workspace: String?, appBundleId: String?, appName: String?, tiledWindowCount: Int?) -> ServerEvent {
+        ServerEvent(_event: .windowDetected, windowId: windowId, workspace: workspace, appBundleId: appBundleId, appName: appName, tiledWindowCount: tiledWindowCount)
     }
 
-    public static func windowDestroyed(windowId: UInt32, workspace: String?, appBundleId: String?, appName: String?) -> ServerEvent {
-        ServerEvent(_event: .windowDestroyed, windowId: windowId, workspace: workspace, appBundleId: appBundleId, appName: appName)
+    public static func windowDestroyed(windowId: UInt32, workspace: String?, appBundleId: String?, appName: String?, tiledWindowCount: Int?) -> ServerEvent {
+        ServerEvent(_event: .windowDestroyed, windowId: windowId, workspace: workspace, appBundleId: appBundleId, appName: appName, tiledWindowCount: tiledWindowCount)
     }
 
-    public static func windowMoved(windowId: UInt32, workspace: String, prevWorkspace: String?, appBundleId: String?, appName: String?) -> ServerEvent {
-        ServerEvent(_event: .windowMoved, windowId: windowId, workspace: workspace, prevWorkspace: prevWorkspace, appBundleId: appBundleId, appName: appName)
+    public static func windowMoved(windowId: UInt32, workspace: String, prevWorkspace: String?, appBundleId: String?, appName: String?, tiledWindowCount: Int?) -> ServerEvent {
+        ServerEvent(_event: .windowMoved, windowId: windowId, workspace: workspace, prevWorkspace: prevWorkspace, appBundleId: appBundleId, appName: appName, tiledWindowCount: tiledWindowCount)
     }
 
     public static func bindingTriggered(mode: String, binding: String) -> ServerEvent {

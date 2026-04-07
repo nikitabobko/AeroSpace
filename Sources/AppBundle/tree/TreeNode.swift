@@ -103,6 +103,7 @@ open class TreeNode: Equatable, AeroAny {
                     prevWorkspace: prevWorkspace?.name,
                     appBundleId: window.app.rawAppBundleId,
                     appName: window.app.name,
+                    tiledWindowCount: newWorkspace.rootTilingContainer.allLeafWindowsRecursive.count,
                 ))
             }
         }
