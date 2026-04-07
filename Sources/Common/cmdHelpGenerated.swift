@@ -128,6 +128,7 @@ let resize_help_generated = """
     """
 let set_gaps_help_generated = """
     USAGE: set-gaps [-h|--help] [--workspace <workspace>] [--outer <size>] [--inner <size>]
+       OR: set-gaps [-h|--help] --stdin
     """
 let split_help_generated = """
     USAGE: split [-h|--help] [--window-id <window-id>] (horizontal|vertical|opposite)
