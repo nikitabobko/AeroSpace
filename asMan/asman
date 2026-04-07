@@ -1,0 +1,99 @@
+#!/bin/zsh
+# save/restore windows through an aerospace restart
+# - won't work for app restarts or OS reboots where window IDs are reset
+#   (window IDs are ephemeral; see https://github.com/nikitabobko/AeroSpace/issues/57)
+# - window-layout (tiling vs floating) and pixel size are also saved and restored
+# - floating window POSITION cannot be restored without Accessibility permission;
+#   only workspace assignment and the floating layout flag are restored for those windows
+
+STATEFILE=~/.aerospace-windows.json
+
+# Resolve the directory this script lives in so we can find the companion binary.
+SCRIPT_DIR="${0:A:h}"
+BOUNDS_BIN="${SCRIPT_DIR}/asman-get-bounds"
+
+save()
+{
+  if [[ ! -x "${BOUNDS_BIN}" ]]; then
+    echo "warning: ${BOUNDS_BIN} not found; run asman-build to compile it" >&2
+    echo "         saving workspace assignments only (no size/position data)" >&2
+    aerospace list-windows --all --json --format '%{window-id}%{workspace}%{app-name}%{window-layout}' > "$STATEFILE"
+    echo "wrote ${STATEFILE}" >&2
+    return
+  fi
+
+  echo "writing current window state to ${STATEFILE}" >&2
+
+  # Capture window metadata from AeroSpace (workspace, layout) and pixel bounds
+  # from CGWindowListCopyWindowInfo, then merge them by window-id.
+  local aerospace_json bounds_json merged
+  aerospace_json="$(aerospace list-windows --all --json --format '%{window-id}%{workspace}%{app-name}%{window-layout}')"
+  bounds_json="$("${BOUNDS_BIN}")"
+
+  # jq merge: for each AeroSpace window entry look up its bounds by window-id key.
+  merged="$(
+    jq -n \
+      --argjson aero "${aerospace_json}" \
+      --argjson bounds "${bounds_json}" \
+      '$aero | map(
+         . as $w |
+         ($bounds[(.["window-id"] | tostring)] // {}) as $b |
+         $w + { "x": ($b.x // null),
+                "y": ($b.y // null),
+                "width":  ($b.width  // null),
+                "height": ($b.height // null) }
+       )'
+  )"
+
+  echo "${merged}" > "$STATEFILE"
+  echo "wrote ${STATEFILE}" >&2
+  # Print a human-readable summary to stdout for easy inspection.
+  jq -r '.[] | "\(."app-name") (\(."window-id")) ws=\(."workspace") layout=\(."window-layout") \(."width")x\(."height")+\(."x")+\(."y")"' <<< "${merged}"
+}
+
+restore()
+{
+  if [[ ! -f "${STATEFILE}" ]]; then
+    echo "error: ${STATEFILE} not found; run 'asman save' first" >&2
+    return 1
+  fi
+  echo "restoring window state from ${STATEFILE}" >&2
+
+  # Pass 1 — move every window to its saved workspace.
+  # aerospace can (and will) consume stdin from the read loop; redirect to /dev/null.
+  jq -r '.[] | [."window-id", ."workspace", ."app-name"] | @tsv' < "$STATEFILE" |
+    while IFS="$(printf '\t')" read -r windowid workspace appname; do
+      echo "  workspace: ${appname} (${windowid}) -> ${workspace}"
+      aerospace move-node-to-workspace --window-id "${windowid}" "${workspace}" \
+        </dev/null >/dev/null 2>&1
+    done
+
+  # Pass 2 — restore layout and size.
+  # Floating windows: restore the floating layout flag only (pixel position requires
+  # Accessibility permission which is not assumed here).
+  # Tiled windows: restore absolute width and height via 'aerospace resize'.
+  jq -r '.[] | [
+      ."window-id",
+      ."window-layout",
+      (."width"  // ""),
+      (."height" // "")
+    ] | @tsv' < "$STATEFILE" |
+    while IFS="$(printf '\t')" read -r windowid layout width height; do
+      if [[ "${layout}" == "floating" ]]; then
+        echo "  layout:    (${windowid}) -> floating  (position not restored; Accessibility not required)"
+        aerospace layout floating --window-id "${windowid}" </dev/null >/dev/null 2>&1
+      elif [[ -n "${width}" && "${width}" != "null" && -n "${height}" && "${height}" != "null" ]]; then
+        echo "  resize:    (${windowid}) ${width}x${height}"
+        aerospace resize width  "${width}"  --window-id "${windowid}" </dev/null >/dev/null 2>&1
+        aerospace resize height "${height}" --window-id "${windowid}" </dev/null >/dev/null 2>&1
+      fi
+    done
+}
+
+case "$1" in
+  save)    save    ;;
+  restore) restore ;;
+  *)
+    echo "Usage: $0 (save|restore)" >&2
+    ;;
+esac
