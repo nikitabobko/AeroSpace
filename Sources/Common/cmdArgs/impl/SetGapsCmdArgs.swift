@@ -7,21 +7,23 @@ public struct SetGapsCmdArgs: CmdArgs {
         help: set_gaps_help_generated,
         flags: [
             "--workspace": optionalWorkspaceFlag(),
-            "--outer": singleValueSubArgParser(\.outer, "<size>", { UInt($0) }),
+            "--outer-left-right": singleValueSubArgParser(\.outerLeftRight, "<size>", { UInt($0) }),
+            "--outer-top-bottom": singleValueSubArgParser(\.outerTopBottom, "<size>", { UInt($0) }),
             "--inner": singleValueSubArgParser(\.inner, "<size>", { UInt($0) }),
             "--stdin": trueBoolFlag(\.useStdin),
         ],
         posArgs: [],
     )
 
-    public var outer: UInt? = nil
+    public var outerLeftRight: UInt? = nil
+    public var outerTopBottom: UInt? = nil
     public var inner: UInt? = nil
     public var useStdin: Bool = false
 }
 
 func parseSetGapsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<SetGapsCmdArgs> {
     parseSpecificCmdArgs(SetGapsCmdArgs(rawArgs: args), args)
-        .filter("At least one of --outer, --inner, or --stdin must be specified") { cmd in
-            cmd.outer != nil || cmd.inner != nil || cmd.useStdin
+        .filter("At least one gap flag or --stdin must be specified") { cmd in
+            cmd.outerLeftRight != nil || cmd.outerTopBottom != nil || cmd.inner != nil || cmd.useStdin
         }
 }

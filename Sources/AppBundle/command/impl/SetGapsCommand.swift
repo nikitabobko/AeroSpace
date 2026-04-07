@@ -13,7 +13,7 @@ struct SetGapsCommand: Command {
         return runSingle(args.workspaceName?.raw, io)
     }
 
-    /// Single workspace: `set-gaps [--workspace ws] --outer N --inner N`
+    /// Single workspace: `set-gaps [--workspace ws] --outer-left-right N --outer-top-bottom N --inner N`
     @MainActor private func runSingle(_ wsName: String?, _ io: CmdIo) -> Bool {
         let currentGaps: Gaps
         if let wsName {
@@ -23,9 +23,19 @@ struct SetGapsCommand: Command {
         }
 
         var newGaps = currentGaps
-        if let outer = args.outer {
-            let v = Int(outer)
-            newGaps.outer = Gaps.Outer(left: v, bottom: v, top: v, right: v)
+        if let lr = args.outerLeftRight {
+            let v = Int(lr)
+            newGaps.outer = Gaps.Outer(
+                left: .constant(v), bottom: newGaps.outer.bottom,
+                top: newGaps.outer.top, right: .constant(v)
+            )
+        }
+        if let tb = args.outerTopBottom {
+            let v = Int(tb)
+            newGaps.outer = Gaps.Outer(
+                left: newGaps.outer.left, bottom: .constant(v),
+                top: .constant(v), right: newGaps.outer.right
+            )
         }
         if let inner = args.inner {
             let v = Int(inner)
@@ -41,23 +51,30 @@ struct SetGapsCommand: Command {
     }
 
     /// Batch: `set-gaps --stdin` with JSON on stdin
-    /// Format: {"workspace": {"inner": N, "outer": N}, ...}
+    /// Format: {"workspace": {"inner": N, "outerLeftRight": N, "outerTopBottom": N}, ...}
     @MainActor private func runBatch(_ io: CmdIo) -> Bool {
         let raw = io.readStdin()
         guard let data = raw.data(using: .utf8),
               let dict = try? JSONSerialization.jsonObject(with: data) as? [String: [String: Int]] else {
-            return io.err("Invalid JSON on stdin. Expected: {\"workspace\": {\"inner\": N, \"outer\": N}, ...}")
+            return io.err("Invalid JSON on stdin. Expected: {\"workspace\": {\"inner\": N, \"outerLeftRight\": N, \"outerTopBottom\": N}, ...}")
         }
 
         for (wsName, gaps) in dict {
-            let inner = gaps["inner"]
-            let outer = gaps["outer"]
             let currentGaps = config.workspaceGaps[wsName] ?? config.gaps
             var newGaps = currentGaps
-            if let outer {
-                newGaps.outer = Gaps.Outer(left: outer, bottom: outer, top: outer, right: outer)
+            if let lr = gaps["outerLeftRight"] {
+                newGaps.outer = Gaps.Outer(
+                    left: .constant(lr), bottom: newGaps.outer.bottom,
+                    top: newGaps.outer.top, right: .constant(lr)
+                )
             }
-            if let inner {
+            if let tb = gaps["outerTopBottom"] {
+                newGaps.outer = Gaps.Outer(
+                    left: newGaps.outer.left, bottom: .constant(tb),
+                    top: .constant(tb), right: newGaps.outer.right
+                )
+            }
+            if let inner = gaps["inner"] {
                 newGaps.inner = Gaps.Inner(vertical: inner, horizontal: inner)
             }
             config.workspaceGaps[wsName] = newGaps
