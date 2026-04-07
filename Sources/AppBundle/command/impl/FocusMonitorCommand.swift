@@ -15,7 +15,7 @@ struct FocusMonitorCommand: Command {
 }
 
 extension MonitorTarget {
-    func resolve(_ currentMonitor: Monitor, wrapAround: Bool) -> Result<Monitor, String> {
+    @MainActor func resolve(_ currentMonitor: Monitor, wrapAround: Bool) -> Result<Monitor, String> {
         switch self {
             case .direction(let direction):
                 guard let (monitorsInDirection, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
