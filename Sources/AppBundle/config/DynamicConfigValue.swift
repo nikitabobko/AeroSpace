@@ -13,10 +13,9 @@ enum DynamicConfigValue<Value: Equatable>: Equatable {
 extension DynamicConfigValue: Sendable where Value: Sendable {}
 
 extension DynamicConfigValue {
-    func getValue(for monitor: any Monitor) -> Value {
+    @MainActor func getValue(for monitor: any Monitor) -> Value {
         switch self {
-            case .constant(let value):
-                return value
+            case .constant(let value): return value
             case .perMonitor(let array, let defaultValue):
                 let sortedMonitors = sortedMonitors
                 return array
