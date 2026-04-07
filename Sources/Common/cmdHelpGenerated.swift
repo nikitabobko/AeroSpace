@@ -126,6 +126,9 @@ let reload_config_help_generated = """
 let resize_help_generated = """
     USAGE: resize [-h|--help] [--window-id <window-id>] (smart|smart-opposite|width|height) [+|-]<number>
     """
+let set_gaps_help_generated = """
+    USAGE: set-gaps [-h|--help] [--workspace <workspace>] [--outer <size>] [--inner <size>]
+    """
 let split_help_generated = """
     USAGE: split [-h|--help] [--window-id <window-id>] (horizontal|vertical|opposite)
     """
