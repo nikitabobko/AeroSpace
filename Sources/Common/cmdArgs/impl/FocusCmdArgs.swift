@@ -7,8 +7,8 @@ public struct FocusCmdArgs: CmdArgs {
         help: focus_help_generated,
         flags: [
             "--ignore-floating": falseBoolFlag(\.floatingAsTiling),
-            "--window-id": ArgParser(\.windowId, upcastArgParserFun(parseUInt32SubArg)),
-            "--dfs-index": ArgParser(\.dfsIndex, upcastArgParserFun(parseUInt32SubArg)),
+            "--window-id": optionalWindowIdFlag(),
+            "--dfs-index": singleValueSubArgParser(\.dfsIndex, "<dfs-index>") { UInt32($0).orFailure("Can't convert '\($0)' to UInt32") },
 
             "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
             "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),

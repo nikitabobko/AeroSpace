@@ -1,26 +1,18 @@
 typealias SubArgParser<Root, Value> = ArgParser<SubArgParserInput, Root, Value, ()>
 
-func parseUInt32SubArg(i: SubArgParserInput) -> ParsedCliArgs<UInt32> {
-    if let arg = i.nonFlagArgOrNil() {
-        return .init(UInt32(arg).orFailure("Can't parse '\(arg)'. It must be a positive number"), advanceBy: 1)
-    } else {
-        return .fail("'\(i.superArg)' must be followed by mandatory UInt32", advanceBy: 0)
-    }
-}
-
 func optionalWindowIdFlag<T: CmdArgs>() -> SubArgParser<T, UInt32?> {
-    ArgParser(\T.windowId, upcastArgParserFun(parseUInt32SubArg))
+    singleValueSubArgParser(\T.windowId, "<window-id>") { UInt32($0).orFailure("Can't convert '\($0)' to UInt32") }
 }
 func optionalWorkspaceFlag<T: CmdArgs>() -> SubArgParser<T, WorkspaceName?> {
-    ArgParser(\T.workspaceName, upcastArgParserFun(parseWorkspaceNameSubArg))
+    singleValueSubArgParser(\T.workspaceName, "<workspace>", WorkspaceName.parse)
 }
 
 func trueBoolFlag<T>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
-    ArgParser(keyPath) { _ in .succ(true, advanceBy: 0) }
+    ArgParser(keyPath, constSubArgParserFun(true))
 }
 
 func falseBoolFlag<T>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
-    ArgParser(keyPath) { _ in .succ(false, advanceBy: 0) }
+    ArgParser(keyPath, constSubArgParserFun(false))
 }
 
 func boolFlag<T>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
@@ -44,18 +36,6 @@ func singleValueSubArgParser<Root, Value>(
     }
 }
 
-func optionalTrueBoolFlag<T>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
-    ArgParser(keyPath) { _ in .succ(true, advanceBy: 0) }
-}
-
-func optionalFalseBoolFlag<T>(_ KeyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
-    ArgParser(KeyPath) { _ in .succ(false, advanceBy: 0) }
-}
-
-func parseWorkspaceNameSubArg(i: SubArgParserInput) -> ParsedCliArgs<WorkspaceName> {
-    if let arg = i.nonFlagArgOrNil() {
-        .init(WorkspaceName.parse(arg), advanceBy: 1)
-    } else {
-        .fail("'\(i.superArg)' must be followed by mandatory workspace name", advanceBy: 0)
-    }
+func constSubArgParserFun<Value: Sendable>(_ const: Value) -> ArgParserFun<SubArgParserInput, Value> {
+    return { _ in .succ(const, advanceBy: 0) }
 }
