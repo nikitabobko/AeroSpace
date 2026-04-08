@@ -196,8 +196,7 @@ func tomlAnyToParsedConfigRecursive(any: Any, _ backtrace: ConfigBacktrace) -> P
             }
             return .success(.array(json))
         default:
-            return Json.newScalarOrNil(any).map(Result.success)
-                ?? .failure(.semantic(backtrace, "Unsupported TOML type: \(type(of: any))"))
+            return Json.newScalarOrNil(any).orFailure(.semantic(backtrace, "Unsupported TOML type: \(type(of: any))"))
     }
 }
 

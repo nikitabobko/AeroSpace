@@ -77,9 +77,8 @@ extension String {
                     switch token {
                         case .literal(let literal): .success(literal)
                         case .interVar(let value):
-                            variables[value].flatMap(Result.success)
-                                ?? .failure("Env variable '\(value)' isn't presented in AeroSpace.app env vars, " +
-                                    "or not available for interpolation (because it's mutated)")
+                            variables[value].orFailure("Env variable '\(value)' isn't presented in AeroSpace.app env vars, "
+                                + "or not available for interpolation (because it's mutated)")
                     }
                 }
             }
