@@ -66,7 +66,9 @@ private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMa
     "during-aerospace-startup": Parser(\.duringAeroSpaceStartup, upcast(parseBool)),
 ]
 
-private func upcast<T>(_ fun: @escaping @Sendable (Json, ConfigBacktrace) -> ParsedConfig<T>) -> @Sendable (Json, ConfigBacktrace) -> ParsedConfig<T?> {
+private func upcast<T>(
+    _ fun: @escaping @Sendable (Json, ConfigBacktrace) -> ParsedConfig<T>,
+) -> @Sendable (Json, ConfigBacktrace) -> ParsedConfig<T?> {
     { fun($0, $1).map(Optional.init) }
 }
 

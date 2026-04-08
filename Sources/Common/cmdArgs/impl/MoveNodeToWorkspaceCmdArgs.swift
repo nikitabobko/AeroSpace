@@ -5,13 +5,13 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
         allowInConfig: true,
         help: move_node_to_workspace_help_generated,
         flags: [
-            "--wrap-around": optionalTrueBoolFlag(\._wrapAround),
+            "--wrap-around": ArgParser(\._wrapAround, constSubArgParserFun(true)),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
             "--window-id": optionalWindowIdFlag(),
             "--focus-follows-window": trueBoolFlag(\.focusFollowsWindow),
 
-            "--stdin": optionalTrueBoolFlag(\.explicitStdinFlag),
-            "--no-stdin": optionalFalseBoolFlag(\.explicitStdinFlag),
+            "--stdin": ArgParser(\.explicitStdinFlag, constSubArgParserFun(true)),
+            "--no-stdin": ArgParser(\.explicitStdinFlag, constSubArgParserFun(false)),
         ],
         posArgs: [newMandatoryPosArgParser(\.target, parseWorkspaceTarget, placeholder: workspaceTargetPlaceholder)],
         conflictingOptions: [

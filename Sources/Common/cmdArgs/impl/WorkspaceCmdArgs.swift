@@ -6,12 +6,12 @@ public struct WorkspaceCmdArgs: CmdArgs {
         allowInConfig: true,
         help: workspace_help_generated,
         flags: [
-            "--auto-back-and-forth": optionalTrueBoolFlag(\._autoBackAndForth),
-            "--wrap-around": optionalTrueBoolFlag(\._wrapAround),
+            "--auto-back-and-forth": ArgParser(\._autoBackAndForth, constSubArgParserFun(true)),
+            "--wrap-around": ArgParser(\._wrapAround, constSubArgParserFun(true)),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
 
-            "--stdin": optionalTrueBoolFlag(\.explicitStdinFlag),
-            "--no-stdin": optionalFalseBoolFlag(\.explicitStdinFlag),
+            "--stdin": ArgParser(\.explicitStdinFlag, constSubArgParserFun(true)),
+            "--no-stdin": ArgParser(\.explicitStdinFlag, constSubArgParserFun(false)),
         ],
         posArgs: [newMandatoryPosArgParser(\.target, parseWorkspaceTarget, placeholder: workspaceTargetPlaceholder)],
         conflictingOptions: [
