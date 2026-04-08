@@ -5,7 +5,7 @@ public struct TriggerBindingCmdArgs: CmdArgs {
         allowInConfig: true,
         help: trigger_binding_help_generated,
         flags: [
-            "--mode": singleValueSubArgParser(\._mode, "<mode-id>", id),
+            "--mode": singleValueSubArgParser(\._mode, "<mode-id>", Result.success),
         ],
         posArgs: [newMandatoryPosArgParser(\.binding, consumeStrCliArg, placeholder: "<binding>")],
     )

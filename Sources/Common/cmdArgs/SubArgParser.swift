@@ -30,17 +30,16 @@ func boolFlag<T>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T
 func singleValueSubArgParser<Root, Value>(
     _ keyPath: SendableWritableKeyPath<Root, Value?>,
     _ placeholder: String,
-    _ mapper: @escaping @Sendable (String) -> Value?,
+    _ mapper: @escaping @Sendable (String) -> Parsed<Value>,
 ) -> SubArgParser<Root, Value?> {
     ArgParser(keyPath) { input in
-        if let arg = input.nonFlagArgOrNil() {
-            if let value: Value = mapper(arg) {
-                .succ(value, advanceBy: 1)
-            } else {
-                .fail("Failed to convert '\(arg)' to '\(Value.self)'", advanceBy: 1)
-            }
-        } else {
-            .fail("'\(placeholder)' is mandatory", advanceBy: 0)
+        switch input.nonFlagArgOrNil() {
+            case nil: .fail("'\(input.superArg)' must be followed by '\(placeholder)'", advanceBy: 0)
+            case let arg?:
+                switch mapper(arg) {
+                    case .success(let value): .succ(value, advanceBy: 1)
+                    case .failure(let error): .fail("Failed to parse '\(arg)' CLI argument: \(error)", advanceBy: 1)
+                }
         }
     }
 }
