@@ -16,8 +16,8 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--focused": trueBoolFlag(\.filteringOptions.focused),
             "--monitor": ArgParser(\.filteringOptions.monitors, parseMonitorIds),
             "--workspace": ArgParser(\.filteringOptions.workspaces, parseWorkspaces),
-            "--pid": singleValueSubArgParser(\.filteringOptions.pidFilter, "<pid>", Int32.init),
-            "--app-bundle-id": singleValueSubArgParser(\.filteringOptions.appIdFilter, "<app-bundle-id>", id),
+            "--pid": singleValueSubArgParser(\.filteringOptions.pidFilter, "<pid>") { Int32($0).orFailure("Can't convert to Int32") },
+            "--app-bundle-id": singleValueSubArgParser(\.filteringOptions.appIdFilter, "<app-bundle-id>", Result.success),
 
             // Formatting flags
             "--format": formatParser(\._format, for: .window),
