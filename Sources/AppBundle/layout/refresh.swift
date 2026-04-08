@@ -12,36 +12,48 @@ func scheduleCancellableCompleteRefreshSession(
     activeRefreshTask?.cancel()
     activeRefreshTask = Task { @MainActor in
         try checkCancellation()
-        try await runHeavyCompleteRefreshSession(event, optimisticallyPreLayoutWorkspaces: optimisticallyPreLayoutWorkspaces)
+        await runHeavyCompleteRefreshSession(
+            event,
+            cancellable: true,
+            optimisticallyPreLayoutWorkspaces: optimisticallyPreLayoutWorkspaces,
+        )
     }
 }
 
 @MainActor
 func runHeavyCompleteRefreshSession(
     _ event: RefreshSessionEvent,
+    cancellable: Bool,
     layoutWorkspaces shouldLayoutWorkspaces: Bool = true,
     optimisticallyPreLayoutWorkspaces: Bool = false,
-) async throws {
+) async {
     let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
     defer { signposter.endInterval(#function, state) }
     if !TrayMenuModel.shared.isEnabled { return }
-    try await $refreshSessionEvent.withValue(event) {
-        try await $_isStartup.withValue(event.isStartup) {
-            let nativeFocused = try await getNativeFocusedWindow()
-            if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
-            updateFocusCache(nativeFocused)
+    let res = await Result {
+        try await $refreshSessionEvent.withValue(event) {
+            try await $_isStartup.withValue(event.isStartup) {
+                let nativeFocused = try await getNativeFocusedWindow()
+                if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
+                updateFocusCache(nativeFocused)
 
-            if shouldLayoutWorkspaces && optimisticallyPreLayoutWorkspaces { try await layoutWorkspaces() }
+                if shouldLayoutWorkspaces && optimisticallyPreLayoutWorkspaces { try await layoutWorkspaces() }
 
-            refreshModel()
-            try await refresh()
-            gcMonitors()
+                refreshModel()
+                try await refresh()
+                gcMonitors()
 
-            updateTrayText()
-            SecureInputPanel.shared.refresh()
-            try await normalizeLayoutReason()
-            if shouldLayoutWorkspaces { try await layoutWorkspaces() }
+                updateTrayText()
+                SecureInputPanel.shared.refresh()
+                try await normalizeLayoutReason()
+                if shouldLayoutWorkspaces { try await layoutWorkspaces() }
+            }
         }
+    }
+    switch res {
+        case .success(()): break
+        case .failure(let err as CancellationError): check(cancellable, "Non cancellable refresh session was canceled: \(err) (\(type(of: err)))")
+        case .failure(let err): die("Illegal error: \(err)")
     }
 }
 

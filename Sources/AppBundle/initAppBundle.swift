@@ -30,7 +30,13 @@ import Foundation
         GlobalObserver.initObserver()
         Workspace.garbageCollectUnusedWorkspaces() // init workspaces
         _ = Workspace.all.first?.focusWorkspace()
-        try await runHeavyCompleteRefreshSession(.startup, layoutWorkspaces: false)
+        await runHeavyCompleteRefreshSession(
+            .startup,
+            // It's important for the first initialization to be non cancellable
+            // to make sure that isStartup propagates // to all places
+            cancellable: false,
+            layoutWorkspaces: false,
+        )
         try await runLightSession(.startup, .forceRun) {
             smartLayoutAtStartup()
             _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
