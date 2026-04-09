@@ -5,7 +5,7 @@ struct ConfigCommand: Command {
     let args: ConfigCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         switch args.mode {
             case .getKey(let key):
                 return getKey(io, args: args, key: key)
@@ -37,7 +37,7 @@ extension String {
     }
 }
 
-@MainActor private func getKey(_ io: CmdIo, args: ConfigCmdArgs, key: String) -> Bool {
+@MainActor private func getKey(_ io: CmdIo, args: ConfigCmdArgs, key: String) -> BinaryExitCode {
     let keyPath: [String]
     switch key.toKeyPath() {
         case .success(let _keyPath): keyPath = _keyPath

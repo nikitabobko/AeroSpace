@@ -4,8 +4,8 @@ struct MoveNodeToWorkspaceCommand: Command {
     let args: MoveNodeToWorkspaceCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache: Bool = true
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let window = target.windowOrNil else { return io.err(noWindowIsFocused) }
         let subjectWs = window.nodeWorkspace
         let targetWorkspace: Workspace
@@ -29,14 +29,14 @@ struct MoveNodeToWorkspaceCommand: Command {
 }
 
 @MainActor
-func moveWindowToWorkspace(_ window: Window, _ targetWorkspace: Workspace, _ io: CmdIo, focusFollowsWindow: Bool, failIfNoop: Bool, index: Int = INDEX_BIND_LAST) -> Bool {
+func moveWindowToWorkspace(_ window: Window, _ targetWorkspace: Workspace, _ io: CmdIo, focusFollowsWindow: Bool, failIfNoop: Bool, index: Int = INDEX_BIND_LAST) -> BinaryExitCode {
     if window.nodeWorkspace == targetWorkspace {
         if !failIfNoop {
             io.err("Window '\(window.windowId)' already belongs to workspace '\(targetWorkspace.name)'. Tip: use --fail-if-noop to exit with non-zero code")
         }
-        return !failIfNoop
+        return .from(bool: !failIfNoop)
     }
     let targetContainer: NonLeafTreeNodeObject = window.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer
     window.bind(to: targetContainer, adaptiveWeight: WEIGHT_AUTO, index: index)
-    return focusFollowsWindow ? window.focusWindow() : true
+    return .from(bool: focusFollowsWindow ? window.focusWindow() : true)
 }

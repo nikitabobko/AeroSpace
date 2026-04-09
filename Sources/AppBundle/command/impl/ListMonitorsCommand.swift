@@ -5,7 +5,7 @@ struct ListMonitorsCommand: Command {
     let args: ListMonitorsCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         let focus = focus
         var result = sortedMonitors
         if let focused = args.focused {

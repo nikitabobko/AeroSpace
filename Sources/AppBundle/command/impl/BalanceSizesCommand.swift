@@ -6,10 +6,10 @@ struct BalanceSizesCommand: Command {
     let args: BalanceSizesCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         balance(target.workspace.rootTilingContainer)
-        return true
+        return .succ
     }
 }
 

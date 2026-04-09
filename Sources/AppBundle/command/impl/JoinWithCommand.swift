@@ -5,9 +5,9 @@ struct JoinWithCommand: Command {
     let args: JoinWithCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = true
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         let direction = args.direction.val
-        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+        guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let currentWindow = target.windowOrNil else {
             return io.err(noWindowIsFocused)
         }
@@ -27,6 +27,6 @@ struct JoinWithCommand: Command {
 
         joinWithTarget.bind(to: newParent, adaptiveWeight: WEIGHT_AUTO, index: 0)
         currentWindow.bind(to: newParent, adaptiveWeight: WEIGHT_AUTO, index: direction.isPositive ? 0 : INDEX_BIND_LAST)
-        return true
+        return .succ
     }
 }

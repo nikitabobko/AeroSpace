@@ -5,10 +5,10 @@ struct ListExecEnvVarsCommand: Command {
     let args: ListExecEnvVarsCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         for (key, value) in config.execConfig.envVariables {
             io.out("\(key)=\(value)")
         }
-        return true
+        return .succ
     }
 }

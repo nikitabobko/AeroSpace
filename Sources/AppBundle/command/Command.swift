@@ -2,10 +2,11 @@ import AppKit
 import Common
 
 protocol Command: AeroAny, Equatable, Sendable {
-    associatedtype T where T: CmdArgs
+    associatedtype T: CmdArgs
+
     var args: T { get }
     @MainActor
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> T.ExitCodeType
 
     /// We should reset closedWindowsCache when the command can potentiall change the tree
     var shouldResetClosedWindowsCache: Bool { get }
@@ -42,20 +43,20 @@ extension Command {
 // 4. Tray icon buttons
 extension [Command] {
     @MainActor
-    func runCmdSeq(_ env: CmdEnv, _ io: sending CmdIo) async throws -> Bool {
-        var isSucc = true
+    func runCmdSeq(_ env: CmdEnv, _ io: sending CmdIo) async throws -> Int32ExitCode {
+        var exitCode = Int32ExitCode(rawValue: 0)
         for command in self {
-            isSucc = try await command.run(env, io)
+            exitCode = Int32ExitCode(rawValue: (try await command.run(env, io)).rawValue)
             if command.shouldResetClosedWindowsCache { resetClosedWindowsCache() }
             refreshModel()
         }
-        return isSucc
+        return exitCode
     }
 
     @MainActor
     func runCmdSeq(_ env: CmdEnv, _ stdin: consuming CmdStdin) async throws -> CmdResult {
         let io: CmdIo = CmdIo(stdin: stdin)
-        let isSucc = try await runCmdSeq(env, io)
-        return CmdResult(stdout: io.stdout, stderr: io.stderr, exitCode: isSucc ? 0 : 1)
+        let exitCode = try await runCmdSeq(env, io)
+        return CmdResult(stdout: io.stdout, stderr: io.stderr, exitCode: exitCode)
     }
 }
