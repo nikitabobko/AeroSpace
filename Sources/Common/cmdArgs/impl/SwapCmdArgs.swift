@@ -8,7 +8,7 @@ public struct SwapCmdArgs: CmdArgs {
         flags: [
             "--swap-focus": trueBoolFlag(\.swapFocus),
             "--wrap-around": trueBoolFlag(\.wrapAround),
-            "--window-id": optionalWindowIdFlag(),
+            "--window-id": windowIdSubArgParser(),
         ],
         posArgs: [newMandatoryPosArgParser(\.target, parseCardinalOrDfsDirection, placeholder: CardinalOrDfsDirection.unionLiteral)],
     )

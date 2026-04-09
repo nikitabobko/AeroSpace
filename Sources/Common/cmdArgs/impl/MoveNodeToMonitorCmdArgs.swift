@@ -9,7 +9,7 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
             // "Own" option
             "--wrap-around": trueBoolFlag(\.wrapAround),
 
-            "--window-id": optionalWindowIdFlag(),
+            "--window-id": windowIdSubArgParser(),
             "--focus-follows-window": trueBoolFlag(\.focusFollowsWindow),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],
