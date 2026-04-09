@@ -16,9 +16,12 @@ struct FullscreenCommand: Command {
             case .toggle: !window.isFullscreen
         }
         if newState == window.isFullscreen {
-            io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
-                "Tip: use --fail-if-noop to exit with non-zero code")
-            return .from(bool: !args.failIfNoop)
+            return switch args.failIfNoop {
+                case true: .fail
+                case false:
+                    io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
+                        "Tip: use --fail-if-noop to exit with non-zero code", .succ)
+            }
         }
         window.isFullscreen = newState
         window.noOuterGapsInFullscreen = args.noOuterGaps

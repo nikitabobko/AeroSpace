@@ -22,11 +22,12 @@ struct MacosNativeFullscreenCommand: Command {
             case .toggle: !prevState
         }
         if newState == prevState {
-            if !args.failIfNoop {
-                io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
-                    "Tip: use --fail-if-noop to exit with non-zero exit code")
+            return switch args.failIfNoop {
+                case true: .fail
+                case false:
+                    io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
+                        "Tip: use --fail-if-noop to exit with non-zero exit code", .succ)
             }
-            return .from(bool: !args.failIfNoop)
         }
         window.asMacWindow().setNativeFullscreen(newState)
         guard let workspace = window.visualWorkspace else {

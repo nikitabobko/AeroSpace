@@ -12,10 +12,11 @@ struct MoveMouseCommand: Command {
             case .windowLazyCenter:
                 guard let rect = try await windowSubjectRectOrReportError(target, io) else { return .fail }
                 if rect.contains(mouse) {
-                    if !args.failIfNoop {
-                        io.err("The mouse already belongs to the window. Tip: use --fail-if-noop to exit with non-zero code")
+                    return switch args.failIfNoop {
+                        case true: .fail
+                        case false:
+                            io.err("The mouse already belongs to the window. Tip: use --fail-if-noop to exit with non-zero code", .succ)
                     }
-                    return .from(bool: !args.failIfNoop)
                 }
                 return moveMouse(io, rect.center)
             case .windowForceCenter:
@@ -24,10 +25,11 @@ struct MoveMouseCommand: Command {
             case .monitorLazyCenter:
                 let rect = target.workspace.workspaceMonitor.rect
                 if rect.contains(mouse) {
-                    if !args.failIfNoop {
-                        io.err("The mouse already belongs to the monitor. Tip: use --fail-if-noop to exit with non-zero code")
+                    return switch args.failIfNoop {
+                        case true: .fail
+                        case false:
+                            io.err("The mouse already belongs to the monitor. Tip: use --fail-if-noop to exit with non-zero code", .succ)
                     }
-                    return .from(bool: !args.failIfNoop)
                 }
                 return moveMouse(io, rect.center)
             case .monitorForceCenter:
