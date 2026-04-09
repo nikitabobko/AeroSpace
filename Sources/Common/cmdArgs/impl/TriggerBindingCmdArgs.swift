@@ -9,6 +9,7 @@ public struct TriggerBindingCmdArgs: CmdArgs {
         ],
         posArgs: [newMandatoryPosArgParser(\.binding, consumeStrCliArg, placeholder: "<binding>")],
     )
+    public typealias ExitCodeType = Int32ExitCode
 
     public var _mode: String? = nil
     public var binding: Lateinit<String> = .uninitialized

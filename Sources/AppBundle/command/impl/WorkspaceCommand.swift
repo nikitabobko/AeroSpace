@@ -6,8 +6,8 @@ struct WorkspaceCommand: Command {
     let args: WorkspaceCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool { // todo refactor
-        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode { // todo refactor
+        guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         let focusedWs = target.workspace
         let workspaceName: String
         switch args.target.val {
@@ -19,7 +19,7 @@ struct WorkspaceCommand: Command {
                     stdin: args.useStdin ? io.readStdin() : nil,
                     target: target,
                 )
-                guard let workspace else { return false }
+                guard let workspace else { return .fail }
                 workspaceName = workspace.name
             case .direct(let name):
                 workspaceName = name.raw
@@ -31,9 +31,9 @@ struct WorkspaceCommand: Command {
             if !args.failIfNoop {
                 io.err("Workspace '\(workspaceName)' is already focused. Tip: use --fail-if-noop to exit with non-zero code")
             }
-            return !args.failIfNoop
+            return .from(bool: !args.failIfNoop)
         } else {
-            return Workspace.get(byName: workspaceName).focusWorkspace()
+            return .from(bool: Workspace.get(byName: workspaceName).focusWorkspace())
         }
     }
 }

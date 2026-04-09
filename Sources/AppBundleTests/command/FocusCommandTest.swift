@@ -223,29 +223,29 @@ final class FocusCommandTest: XCTestCase {
         var args = FocusCmdArgs(rawArgs: [], cardinalOrDfsDirection: .dfsRelative(.dfsPrev))
 
         args.rawBoundariesAction = .stop
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
         assertEquals(focus.windowOrNil?.windowId, 1)
 
         args.rawBoundariesAction = .fail
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 1)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 1)
         assertEquals(focus.windowOrNil?.windowId, 1)
 
         args.rawBoundariesAction = .wrapAroundTheWorkspace
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
         assertEquals(focus.windowOrNil?.windowId, 2)
 
         args.cardinalOrDfsDirection = .dfsRelative(.dfsNext)
 
         args.rawBoundariesAction = .stop
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
         assertEquals(focus.windowOrNil?.windowId, 2)
 
         args.rawBoundariesAction = .fail
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 1)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 1)
         assertEquals(focus.windowOrNil?.windowId, 2)
 
         args.rawBoundariesAction = .wrapAroundTheWorkspace
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 }

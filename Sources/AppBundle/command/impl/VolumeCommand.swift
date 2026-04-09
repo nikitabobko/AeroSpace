@@ -6,7 +6,7 @@ struct VolumeCommand: Command {
     let args: VolumeCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         switch args.action.val {
             case .up:
                 Sound.output.increaseVolume(by: 0.0625, autoMuteUnmute: true)
@@ -24,6 +24,6 @@ struct VolumeCommand: Command {
         if args.gui, let volume = try? Sound.output.readVolume() {
             VolumePanel.shared.update(with: Sound.output.isMuted ? 0 : volume)
         }
-        return true
+        return .succ
     }
 }

@@ -5,9 +5,9 @@ struct CloseCommand: Command {
     let args: CloseCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
         try await allowOnlyCancellationError { @MainActor @Sendable in
-            guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+            guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
             guard let window = target.windowOrNil else {
                 return io.err("Empty workspace")
             }
@@ -20,13 +20,13 @@ struct CloseCommand: Command {
                             (window as! MacWindow).garbageCollect(skipClosedWindowsCache: true)
                         }
                     }
-                    return true
+                    return .succ
                 } else {
                     return io.err("Failed to quit '\(window.app.name ?? "Unknown app")'")
                 }
             } else {
                 window.closeAxWindow()
-                return true
+                return .succ
             }
         }
     }

@@ -5,14 +5,14 @@ struct ListWorkspacesCommand: Command {
     let args: ListWorkspacesCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         var result: [Workspace] = Workspace.all
         if let visible = args.filteringOptions.visible {
             result = result.filter { $0.isVisible == visible }
         }
         if !args.filteringOptions.onMonitors.isEmpty {
             let monitors: Set<CGPoint> = args.filteringOptions.onMonitors.resolveMonitors(io)
-            if monitors.isEmpty { return false }
+            if monitors.isEmpty { return .fail }
             result = result.filter { monitors.contains($0.workspaceMonitor.rect.topLeftCorner) }
         }
         if let empty = args.filteringOptions.empty {

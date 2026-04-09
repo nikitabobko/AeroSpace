@@ -5,7 +5,7 @@ struct ListWindowsCommand: Command {
     let args: ListWindowsCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
         let focus = focus
         var windows: [Window] = []
 
@@ -28,7 +28,7 @@ struct ListWindowsCommand: Command {
                     .toSet()
             if !args.filteringOptions.monitors.isEmpty {
                 let monitors: Set<CGPoint> = args.filteringOptions.monitors.resolveMonitors(io)
-                if monitors.isEmpty { return false }
+                if monitors.isEmpty { return .fail }
                 workspaces = workspaces.filter { monitors.contains($0.workspaceMonitor.rect.topLeftCorner) }
             }
             windows = workspaces.flatMap(\.allLeafWindowsRecursive)

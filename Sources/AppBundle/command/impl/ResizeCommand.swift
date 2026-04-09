@@ -5,8 +5,8 @@ struct ResizeCommand: Command { // todo cover with tests
     let args: ResizeCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = true
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
 
         let candidates = target.windowOrNil?.parentsWithSelf
             .filter { ($0.parent as? TilingContainer)?.layout == .tiles }
@@ -34,20 +34,20 @@ struct ResizeCommand: Command { // todo cover with tests
                 parent = node?.parent as? TilingContainer
         }
         guard let parent else { return io.err("resize command doesn't support floating windows yet https://github.com/nikitabobko/AeroSpace/issues/9") }
-        guard let orientation else { return false }
-        guard let node else { return false }
+        guard let orientation else { return .fail }
+        guard let node else { return .fail }
         let diff: CGFloat = switch args.units.val {
             case .set(let unit): CGFloat(unit) - node.getWeight(orientation)
             case .add(let unit): CGFloat(unit)
             case .subtract(let unit): -CGFloat(unit)
         }
 
-        guard let childDiff = diff.div(parent.children.count - 1) else { return false }
+        guard let childDiff = diff.div(parent.children.count - 1) else { return .fail }
         parent.children.lazy
             .filter { $0 != node }
             .forEach { $0.setWeight(parent.orientation, $0.getWeight(parent.orientation) - childDiff) }
 
         node.setWeight(orientation, node.getWeight(orientation) + diff)
-        return true
+        return .succ
     }
 }

@@ -5,9 +5,9 @@ struct SwapCommand: Command {
     let args: SwapCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache: Bool = true
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else {
-            return false
+            return .fail
         }
 
         guard let currentWindow = target.windowOrNil else {
@@ -23,12 +23,12 @@ struct SwapCommand: Command {
                     case nil where args.wrapAround:
                         targetWindow = target.workspace.findLeafWindowRecursive(snappedTo: direction.opposite)
                     case nil:
-                        return false
+                        return .fail
                 }
             case .dfsRelative(let nextPrev):
                 let windows = target.workspace.rootTilingContainer.allLeafWindowsRecursive
                 guard let currentIndex = windows.firstIndex(where: { $0 == target.windowOrNil }) else {
-                    return false
+                    return .fail
                 }
                 var targetIndex = switch nextPrev {
                     case .dfsNext: currentIndex + 1
@@ -36,7 +36,7 @@ struct SwapCommand: Command {
                 }
                 if !(0 ..< windows.count).contains(targetIndex) {
                     if !args.wrapAround {
-                        return false
+                        return .fail
                     }
                     targetIndex = (targetIndex + windows.count) % windows.count
                 }
@@ -44,14 +44,14 @@ struct SwapCommand: Command {
         }
 
         guard let targetWindow else {
-            return false
+            return .fail
         }
 
         swapWindows(currentWindow, targetWindow)
 
         if args.swapFocus {
-            return targetWindow.focusWindow()
+            return .from(bool: targetWindow.focusWindow())
         }
-        return true
+        return .succ
     }
 }

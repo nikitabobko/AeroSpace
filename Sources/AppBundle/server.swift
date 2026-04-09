@@ -102,7 +102,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
                     )
                     let cmdResult = try await command.run(env, CmdStdin(request.stdin))
                     return ServerAnswer(
-                        exitCode: cmdResult.exitCode,
+                        exitCode: cmdResult.exitCode.rawValue,
                         stdout: cmdResult.stdout.joined(separator: "\n"),
                         stderr: cmdResult.stderr.joined(separator: "\n"),
                         serverVersionAndHash: serverVersionAndHash,

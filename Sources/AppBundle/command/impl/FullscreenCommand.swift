@@ -5,8 +5,8 @@ struct FullscreenCommand: Command {
     let args: FullscreenCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let window = target.windowOrNil else {
             return io.err(noWindowIsFocused)
         }
@@ -18,14 +18,14 @@ struct FullscreenCommand: Command {
         if newState == window.isFullscreen {
             io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
                 "Tip: use --fail-if-noop to exit with non-zero code")
-            return !args.failIfNoop
+            return .from(bool: !args.failIfNoop)
         }
         window.isFullscreen = newState
         window.noOuterGapsInFullscreen = args.noOuterGaps
 
         // Focus on its own workspace
         window.markAsMostRecentChild()
-        return true
+        return .succ
     }
 }
 

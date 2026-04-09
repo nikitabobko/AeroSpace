@@ -11,6 +11,7 @@ public func parseCmdArgs(_ args: StrArrSlice) -> ParsedCmd<any CmdArgs> {
 }
 
 public protocol CmdArgs: ConvenienceCopyable, Equatable, CustomStringConvertible, AeroAny, Sendable {
+    associatedtype ExitCodeType: ExitCode = BinaryExitCode
     static var parser: CmdParser<Self> { get }
     var commonState: CmdArgsCommonState { get set }
 }

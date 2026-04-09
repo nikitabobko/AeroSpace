@@ -10,8 +10,8 @@ struct MacosNativeFullscreenCommand: Command {
     let args: MacosNativeFullscreenCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
-        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let window = target.windowOrNil else {
             return io.err(noWindowIsFocused)
         }
@@ -26,7 +26,7 @@ struct MacosNativeFullscreenCommand: Command {
                 io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
                     "Tip: use --fail-if-noop to exit with non-zero exit code")
             }
-            return !args.failIfNoop
+            return .from(bool: !args.failIfNoop)
         }
         window.asMacWindow().setNativeFullscreen(newState)
         guard let workspace = window.visualWorkspace else {
@@ -42,6 +42,6 @@ struct MacosNativeFullscreenCommand: Command {
                     try await window.relayoutWindow(on: workspace)
             }
         }
-        return true
+        return .succ
     }
 }
