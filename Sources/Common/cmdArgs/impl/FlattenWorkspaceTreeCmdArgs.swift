@@ -6,7 +6,7 @@ public struct FlattenWorkspaceTreeCmdArgs: CmdArgs {
         allowInConfig: true,
         help: flatten_workspace_tree_help_generated,
         flags: [
-            "--workspace": optionalWorkspaceFlag(),
+            "--workspace": workspaceSubArgParser(),
         ],
         posArgs: [],
     )

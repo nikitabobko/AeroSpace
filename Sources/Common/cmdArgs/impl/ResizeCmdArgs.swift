@@ -6,7 +6,7 @@ public struct ResizeCmdArgs: CmdArgs {
         allowInConfig: true,
         help: resize_help_generated,
         flags: [
-            "--window-id": optionalWindowIdFlag(),
+            "--window-id": windowIdSubArgParser(),
         ],
         posArgs: [
             newMandatoryPosArgParser(\.dimension, parseDimension, placeholder: "(smart|smart-opposite|width|height)"),

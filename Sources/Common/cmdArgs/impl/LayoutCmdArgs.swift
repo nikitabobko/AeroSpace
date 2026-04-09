@@ -6,7 +6,7 @@ public struct LayoutCmdArgs: CmdArgs {
         allowInConfig: true,
         help: layout_help_generated,
         flags: [
-            "--window-id": optionalWindowIdFlag(),
+            "--window-id": windowIdSubArgParser(),
         ],
         posArgs: [newMandatoryPosArgParser(\.toggleBetween, parseToggleBetween, placeholder: LayoutDescription.unionLiteral)],
     )

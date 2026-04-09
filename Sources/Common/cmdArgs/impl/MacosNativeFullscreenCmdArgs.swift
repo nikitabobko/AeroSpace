@@ -7,7 +7,7 @@ public struct MacosNativeFullscreenCmdArgs: CmdArgs {
         help: macos_native_fullscreen_help_generated,
         flags: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
-            "--window-id": optionalWindowIdFlag(),
+            "--window-id": windowIdSubArgParser(),
         ],
         posArgs: [ArgParser(\.toggle, parseToggleEnum)],
     )

@@ -7,7 +7,7 @@ public struct CloseCmdArgs: CmdArgs {
         help: close_help_generated,
         flags: [
             "--quit-if-last-window": trueBoolFlag(\.quitIfLastWindow),
-            "--window-id": optionalWindowIdFlag(),
+            "--window-id": windowIdSubArgParser(),
         ],
         posArgs: [],
     )

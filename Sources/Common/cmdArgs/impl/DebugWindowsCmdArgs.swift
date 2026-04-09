@@ -6,7 +6,7 @@ public struct DebugWindowsCmdArgs: CmdArgs {
         allowInConfig: false,
         help: debug_windows_help_generated,
         flags: [
-            "--window-id": optionalWindowIdFlag(),
+            "--window-id": windowIdSubArgParser(),
         ],
         posArgs: [],
     )
