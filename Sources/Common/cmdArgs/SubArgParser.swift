@@ -1,7 +1,7 @@
 typealias SubArgParser<Root, Value> = ArgParser<SubArgParserInput, Root, Value, ()>
 
 func windowIdSubArgParser<T: CmdArgs>() -> SubArgParser<T, UInt32?> {
-    singleValueSubArgParser(\T.windowId, "<window-id>") { UInt32($0).orFailure("Can't convert '\($0)' to UInt32") }
+    singleValueSubArgParser(\T.windowId, "<window-id>", parseUInt32)
 }
 func workspaceSubArgParser<T: CmdArgs>() -> SubArgParser<T, WorkspaceName?> {
     singleValueSubArgParser(\T.workspaceName, "<workspace>", WorkspaceName.parse)
