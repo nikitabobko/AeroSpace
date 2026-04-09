@@ -45,7 +45,7 @@ extension [Command] {
     func runCmdSeq(_ env: CmdEnv, _ io: sending CmdIo) async throws -> Bool {
         var isSucc = true
         for command in self {
-            isSucc = try await command.run(env, io) && isSucc
+            isSucc = try await command.run(env, io)
             if command.shouldResetClosedWindowsCache { resetClosedWindowsCache() }
             refreshModel()
         }
