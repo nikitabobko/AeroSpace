@@ -53,6 +53,7 @@ include::./util/conditional-exit-code-header.adoc[]
 >1::
 An error occurred.
 For instance, using conditions that check for windows/app properties on an empty workspace would yield an error.
+Or if the `test` subcommand couldn't be parsed.
 
 // end::body[]
 

@@ -1,12 +1,12 @@
 public func parseCmdArgs(_ args: StrArrSlice) -> ParsedCmd<any CmdArgs> {
     let subcommand = String(args.first ?? "")
     if subcommand.isEmpty {
-        return .failure("Can't parse empty string command")
+        return .failure("Can't parse empty string command", GENERIC_FAIL_EXIT_CODE)
     }
     if let subcommandParser: any SubCommandParserProtocol = subcommandParsers[subcommand] {
         return subcommandParser.parse(args: args.slice(1...).orDie())
     } else {
-        return .failure("Unrecognized subcommand '\(subcommand)'")
+        return .failure("Unrecognized subcommand '\(subcommand)'", GENERIC_FAIL_EXIT_CODE)
     }
 }
 

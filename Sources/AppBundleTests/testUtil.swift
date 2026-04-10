@@ -43,7 +43,7 @@ func setUpWorkspacesForTests() {
 extension ParsedCmd {
     var errorOrNil: String? {
         return switch self {
-            case .failure(let e): e
+            case .failure(let e): e.msg
             case .cmd, .help: nil
         }
     }
@@ -51,12 +51,13 @@ extension ParsedCmd {
     var cmdOrDie: T { cmdOrNil ?? dieT() }
 }
 
-func testParseCommandFail(_ command: String, msg expected: String) {
+func testParseCommandFail(_ command: String, msg expectedMsg: String, exitCode expectedExitCode: Int32, file: String = #filePath, line: Int = #line) {
     let parsed = parseCommand(command)
     switch parsed {
         case .cmd(let command): XCTFail("\(command) isn't supposed to be parcelable")
-        case .failure(let msg): assertEquals(msg, expected)
         case .help: die() // todo test help
+        case .failure(let failure):
+            assertEquals(failure, .init(expectedMsg, expectedExitCode), file: file, line: line)
     }
 }
 

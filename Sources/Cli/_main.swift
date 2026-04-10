@@ -57,7 +57,7 @@ struct Main {
             case .help(let help):
                 exit(0, out: help)
             case .failure(let e):
-                exit(1, err: e)
+                exit(e.exitCode, err: e.msg)
         }
 
         let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)

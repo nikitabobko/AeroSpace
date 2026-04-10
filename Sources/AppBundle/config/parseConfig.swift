@@ -138,7 +138,7 @@ extension ParsedCmd where T == any Command {
                     ? .success(a)
                     : .failure("Command '\(a.info.kind.rawValue)' cannot be used in config")
             case .help(let a): .failure(a)
-            case .failure(let a): .failure(a)
+            case .failure(let a): .failure(a.msg)
         }
     }
 }

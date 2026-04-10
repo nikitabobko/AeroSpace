@@ -68,7 +68,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
             switch parseSubscribeCmdArgs(request.args.slice(1...).orDie()) {
                 case .cmd(let subscribeArgs): await handleSubscribeAndWaitTillError(connection, subscribeArgs)
                 case .help(let help): await answerToClient(exitCode: 0, stdout: help)
-                case .failure(let err): await answerToClient(exitCode: 1, stderr: err)
+                case .failure(let err): await answerToClient(exitCode: err.exitCode, stderr: err.msg)
             }
             continue
         }
@@ -86,7 +86,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
             continue
         }
         if let err {
-            await answerToClient(exitCode: 1, stderr: err)
+            await answerToClient(exitCode: err.exitCode, stderr: err.msg)
             continue
         }
         if command?.isExec == true {
