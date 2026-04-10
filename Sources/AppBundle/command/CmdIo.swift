@@ -30,7 +30,7 @@ final class CmdIo {
     func readStdin() -> String { stdin.readAll() }
 }
 
-struct CmdResult {
+struct CmdResult: Equatable {
     let stdout: [String]
     let stderr: [String]
     let exitCode: Int32ExitCode

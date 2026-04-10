@@ -47,21 +47,25 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
     return errors.isEmpty ? .cmd(raw) : .failure(errors.joinErrors())
 }
 
-public enum ParsedCmd<T: Sendable>: Sendable {
+public struct CmdParsingFailure: Sendable, Equatable {
+    public let msg: String
+    public let exitCode: Int32
+
+    public init(_ msg: String, _ exitCode: Int32) {
+        self.msg = msg
+        self.exitCode = exitCode
+    }
+}
+
+public enum ParsedCmd<T: Sendable>: Sendable where T: Sendable {
     case cmd(T)
     case help(String)
-    case failure(String)
+    case failure(CmdParsingFailure)
+
+    public static func failure(_ msg: String, _ exitCode: Int32) -> Self { .failure(CmdParsingFailure(msg, exitCode)) }
 
     public func map<R>(_ mapper: (T) -> R) -> ParsedCmd<R> {
         flatMap { .cmd(mapper($0)) }
-    }
-
-    public func filter(_ msg: @autoclosure () -> String, _ predicate: (T) -> Bool) -> ParsedCmd<T> {
-        flatMap { this in predicate(this) ? .cmd(this) : .failure(msg()) }
-    }
-
-    public func filterNot(_ msg: @autoclosure () -> String, _ predicate: (T) -> Bool) -> ParsedCmd<T> {
-        flatMap { this in !predicate(this) ? .cmd(this) : .failure(msg()) }
     }
 
     public func flatMap<R>(_ mapper: (T) -> ParsedCmd<R>) -> ParsedCmd<R> {
@@ -79,13 +83,25 @@ public enum ParsedCmd<T: Sendable>: Sendable {
         }
     }
 
-    public func unwrap() -> (T?, String?, String?) {
+    public func unwrap() -> (T?, String?, CmdParsingFailure?) {
         switch self {
             case .cmd(let command):   (command, nil, nil)
             case .help(let help):     (nil, help, nil)
-            case .failure(let error): (nil, nil, error)
+            case .failure(let failure): (nil, nil, failure)
         }
     }
+}
+
+extension ParsedCmd where T: CmdArgs {
+    public func filter(_ msg: @autoclosure () -> String, _ predicate: (T) -> Bool) -> ParsedCmd<T> {
+        flatMap { this in predicate(this) ? .cmd(this) : .failure(msg()) }
+    }
+
+    public func filterNot(_ msg: @autoclosure () -> String, _ predicate: (T) -> Bool) -> ParsedCmd<T> {
+        flatMap { this in !predicate(this) ? .cmd(this) : .failure(msg()) }
+    }
+
+    public static func failure(_ msg: String) -> Self { .failure(CmdParsingFailure(msg, T.ExitCodeType.fail.rawValue)) }
 }
 
 extension ArgParserProtocol where Root: ConvenienceCopyable {

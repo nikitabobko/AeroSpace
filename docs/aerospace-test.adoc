@@ -87,7 +87,7 @@ include::./util/conditional-exit-code-header.adoc[]
 
 >1::
 An error occurred.
-For instance, when `<rhs>` type doesn't match `<lhs>` type.
+For instance, when `<rhs>` type doesn't match `<lhs>` type, or if the `test` subcommand couldn't be parsed.
 
 // end::body[]
 

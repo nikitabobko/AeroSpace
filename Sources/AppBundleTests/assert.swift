@@ -65,7 +65,7 @@ func testParseCommandSucc(_ command: String, _ expected: any CmdArgs) {
                 failExpectedActual(expected, command.args)
             }
         case .help: die() // todo test help
-        case .failure(let msg): XCTFail(msg)
+        case .failure(let msg): XCTFail(msg.msg)
     }
 }
 
