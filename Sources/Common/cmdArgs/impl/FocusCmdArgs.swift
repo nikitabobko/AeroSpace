@@ -14,7 +14,7 @@ public struct FocusCmdArgs: CmdArgs {
             "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
             "--wrap-around": trueBoolFlag(\.wrapAroundAlias),
         ],
-        posArgs: [ArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
+        posArgs: [ArgParser(\.target, upcastArgParserFun(parseFocusTarget))],
         conflictingOptions: [
             ["--wrap-around", "--boundaries-action"],
             ["--wrap-around", "--boundaries"],
@@ -25,12 +25,12 @@ public struct FocusCmdArgs: CmdArgs {
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
     fileprivate var wrapAroundAlias: Bool = false
     public var dfsIndex: UInt32? = nil
-    public var cardinalOrDfsDirection: CardinalOrDfsDirection? = nil
+    public var target: FocusCmdTarget? = nil
     public var floatingAsTiling: Bool = true
 
-    public init(rawArgs: StrArrSlice, cardinalOrDfsDirection: CardinalOrDfsDirection) {
+    public init(rawArgs: StrArrSlice, target: FocusCmdTarget) {
         self.commonState = .init(rawArgs)
-        self.cardinalOrDfsDirection = cardinalOrDfsDirection
+        self.target = target
     }
 
     public init(rawArgs: StrArrSlice, windowId: UInt32) {
@@ -55,11 +55,12 @@ public struct FocusCmdArgs: CmdArgs {
     }
 }
 
-public enum FocusCmdTarget {
+public enum FocusCmdTarget: Equatable, Sendable {
     case direction(CardinalDirection)
     case windowId(UInt32)
     case dfsIndex(UInt32)
     case dfsRelative(DfsNextPrev)
+    case containerRelative(ContainerFocusNextPrev)
 
     var isDfsRelative: Bool {
         if case .dfsRelative = self {
@@ -68,16 +69,30 @@ public enum FocusCmdTarget {
             return false
         }
     }
+
+    var isContainerRelative: Bool {
+        if case .containerRelative = self {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    static var cliArgsCases: [String] {
+        CardinalDirection.cliArgsCases + DfsNextPrev.cliArgsCases + ContainerFocusNextPrev.cliArgsCases
+    }
+
+    static var unionLiteral: String { cliArgsCases.joinedCliArgs }
+}
+
+public enum ContainerFocusNextPrev: String, CaseIterable, Equatable, Sendable {
+    case containerNext = "container-next"
+    case containerPrev = "container-prev"
 }
 
 extension FocusCmdArgs {
-    public var target: FocusCmdTarget {
-        if let cardinalOrDfsDirection {
-            return switch cardinalOrDfsDirection {
-                case .direction(let dir): .direction(dir)
-                case .dfsRelative(let nextPrev): .dfsRelative(nextPrev)
-            }
-        }
+    public var resolvedTarget: FocusCmdTarget {
+        if let target { return target }
         if let windowId {
             return .windowId(windowId)
         }
@@ -100,8 +115,8 @@ func parseFocusCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusCmdArgs> {
                 ? .failure("\(raw.boundaries.rawValue) and \(raw.boundariesAction.rawValue) is an invalid combination of values")
                 : .cmd(raw)
         }
-        .filter("Mandatory argument is missing. \(CardinalOrDfsDirection.unionLiteral), --window-id or --dfs-index is required") {
-            $0.cardinalOrDfsDirection != nil || $0.windowId != nil || $0.dfsIndex != nil
+        .filter("Mandatory argument is missing. \(FocusCmdTarget.unionLiteral), --window-id or --dfs-index is required") {
+            $0.target != nil || $0.windowId != nil || $0.dfsIndex != nil
         }
         .filter("--window-id is incompatible with other options") {
             $0.windowId == nil || $0 == FocusCmdArgs(rawArgs: args, windowId: $0.windowId.orDie())
@@ -109,9 +124,29 @@ func parseFocusCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusCmdArgs> {
         .filter("--dfs-index is incompatible with other options") {
             $0.dfsIndex == nil || $0 == FocusCmdArgs(rawArgs: args, dfsIndex: $0.dfsIndex.orDie())
         }
-        .filter("(dfs-next|dfs-prev) only supports --boundaries workspace") {
-            $0.target.isDfsRelative.implies($0.boundaries == .workspace)
+        .filter("(container-next|container-prev) only supports --ignore-floating") {
+            !($0.target?.isContainerRelative == true) || ($0.rawBoundaries == nil && $0.rawBoundariesAction == nil && !$0.wrapAroundAlias)
         }
+        .filter("(dfs-next|dfs-prev) only supports --boundaries workspace") {
+            ($0.target?.isDfsRelative == true).implies($0.boundaries == .workspace)
+        }
+}
+
+private func parseFocusTarget(i: PosArgParserInput) -> ParsedCliArgs<FocusCmdTarget> {
+    switch i.arg {
+        case ContainerFocusNextPrev.containerNext.rawValue:
+            return .succ(.containerRelative(.containerNext), advanceBy: 1)
+        case ContainerFocusNextPrev.containerPrev.rawValue:
+            return .succ(.containerRelative(.containerPrev), advanceBy: 1)
+        default:
+            if let direction = CardinalDirection(rawValue: i.arg) {
+                return .succ(.direction(direction), advanceBy: 1)
+            } else if let nextPrev = DfsNextPrev(rawValue: i.arg) {
+                return .succ(.dfsRelative(nextPrev), advanceBy: 1)
+            } else {
+                return .fail("Can't parse '\(i.arg)'.\nPossible values: \(FocusCmdTarget.unionLiteral)", advanceBy: 1)
+            }
+    }
 }
 
 private func parseBoundariesAction(i: SubArgParserInput) -> ParsedCliArgs<FocusCmdArgs.WhenBoundariesCrossed> {

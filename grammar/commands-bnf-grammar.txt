@@ -24,6 +24,7 @@ aerospace -h;
     | focus --window-id <window_id>
     | focus --dfs-index <number>
     | focus [<focus_dfs_relative_flag>]... (dfs-next|dfs-prev) [<focus_dfs_relative_flag>]...
+    | focus [<focus_container_relative_flag>]... (container-next|container-prev) [<focus_container_relative_flag>]...
 
     | focus-back-and-forth
 
@@ -121,6 +122,7 @@ aerospace -h;
 
 <focus_direction_flag> ::= --boundaries <boundary>|--boundaries-action <boundaries_action>|--ignore-floating|--wrap-around;
 <focus_dfs_relative_flag> ::= --boundaries-action <boundaries_action>|--ignore-floating|--wrap-around;
+<focus_container_relative_flag> ::= --ignore-floating;
 <boundaries_action> ::= stop|fail|wrap-around-the-workspace|wrap-around-all-monitors;
 <boundary> ::= workspace|all-monitors-outer-frame;
 
