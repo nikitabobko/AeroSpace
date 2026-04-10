@@ -52,9 +52,9 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     # See: https://nikitabobko.github.io/AeroSpace/guide#floating-windows
     #alt-space = 'focus toggle_tiling_floating'
 
-    # `focus parent`/`focus child` are not yet supported, and it's not clear whether they
-    # should be supported at all https://github.com/nikitabobko/AeroSpace/issues/5
-    # alt-a = 'focus parent'
+    # Cycle only inside the current container, which is useful for accordion groups.
+    ctrl-tab = 'focus container-next'
+    ctrl-shift-tab = 'focus container-prev'
 
     alt-1 = 'workspace 1'
     alt-2 = 'workspace 2'
