@@ -13,15 +13,13 @@ struct EnableCommand: Command {
             case .toggle: !TrayMenuModel.shared.isEnabled
         }
         if newState == prevState {
-            return switch args.failIfNoop {
-                case true: .fail
+            switch args.failIfNoop {
+                case true: return .fail
                 case false:
-                    io.err(
-                        newState
-                            ? "Already enabled. Tip: use --fail-if-noop to exit with non-zero code"
-                            : "Already disabled. Tip: use --fail-if-noop to exit with non-zero code",
-                        .succ
-                    )
+                    let msg = newState
+                        ? "Already enabled. Tip: use --fail-if-noop to exit with non-zero code"
+                        : "Already disabled. Tip: use --fail-if-noop to exit with non-zero code"
+                    return .succ(io.err(msg))
             }
         }
 

@@ -8,7 +8,7 @@ struct LayoutCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let window = target.windowOrNil else {
-            return io.err(noWindowIsFocused)
+            return .fail(io.err(noWindowIsFocused))
         }
         let targetDescription = args.toggleBetween.val.first(where: { !window.matchesDescription($0) })
             ?? args.toggleBetween.val.first.orDie()
@@ -36,7 +36,7 @@ struct LayoutCommand: Command {
                     case .macosPopupWindowsContainer:
                         return .fail // Impossible
                     case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-                        return io.err("Can't change layout for macOS minimized, fullscreen windows or windows or hidden apps. This behavior is subject to change")
+                        return .fail(io.err("Can't change layout for macOS minimized, fullscreen windows or windows or hidden apps. This behavior is subject to change"))
                     case .tilingContainer:
                         return .succ // Nothing to do
                     case .workspace(let workspace):
@@ -64,7 +64,7 @@ struct LayoutCommand: Command {
             return .succ
         case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
              .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
-            return io.err("The window is non-tiling")
+            return .fail(io.err("The window is non-tiling"))
     }
 }
 

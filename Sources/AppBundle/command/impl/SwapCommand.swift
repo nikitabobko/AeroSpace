@@ -11,7 +11,7 @@ struct SwapCommand: Command {
         }
 
         guard let currentWindow = target.windowOrNil else {
-            return io.err(noWindowIsFocused)
+            return .fail(io.err(noWindowIsFocused))
         }
 
         let targetWindow: Window?

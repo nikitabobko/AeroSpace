@@ -8,10 +8,10 @@ struct MoveNodeToMonitorCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let window = target.windowOrNil else {
-            return io.err(noWindowIsFocused)
+            return .fail(io.err(noWindowIsFocused))
         }
         guard let currentMonitor = window.nodeMonitor else {
-            return io.err(windowIsntPartOfTree(window))
+            return .fail(io.err(windowIsntPartOfTree(window)))
         }
         switch args.target.val.resolve(currentMonitor, wrapAround: args.wrapAround) {
             case .success(let targetMonitor):
@@ -29,7 +29,7 @@ struct MoveNodeToMonitorCommand: Command {
                     index: index,
                 )
             case .failure(let msg):
-                return io.err(msg)
+                return .fail(io.err(msg))
         }
     }
 }

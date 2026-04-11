@@ -9,7 +9,7 @@ struct FocusMonitorCommand: Command {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         return switch args.target.val.resolve(target.workspace.workspaceMonitor, wrapAround: args.wrapAround) {
             case .success(let targetMonitor): .from(bool: targetMonitor.activeWorkspace.focusWorkspace())
-            case .failure(let msg): io.err(msg)
+            case .failure(let msg): .fail(io.err(msg))
         }
     }
 }

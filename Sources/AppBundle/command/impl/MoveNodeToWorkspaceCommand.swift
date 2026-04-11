@@ -6,12 +6,12 @@ struct MoveNodeToWorkspaceCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
-        guard let window = target.windowOrNil else { return io.err(noWindowIsFocused) }
+        guard let window = target.windowOrNil else { return .fail(io.err(noWindowIsFocused)) }
         let subjectWs = window.nodeWorkspace
         let targetWorkspace: Workspace
         switch args.target.val {
             case .relative(let nextPrev):
-                guard let subjectWs else { return io.err("Window \(window.windowId) doesn't belong to any workspace") }
+                guard let subjectWs else { return .fail(io.err("Window \(window.windowId) doesn't belong to any workspace")) }
                 let ws = getNextPrevWorkspace(
                     current: subjectWs,
                     isNext: nextPrev == .next,
@@ -19,7 +19,7 @@ struct MoveNodeToWorkspaceCommand: Command {
                     stdin: args.useStdin ? io.readStdin() : nil,
                     target: target,
                 )
-                guard let ws else { return io.err("Can't resolve next or prev workspace") }
+                guard let ws else { return .fail(io.err("Can't resolve next or prev workspace")) }
                 targetWorkspace = ws
             case .direct(let name):
                 targetWorkspace = Workspace.get(byName: name.raw)
@@ -34,7 +34,7 @@ func moveWindowToWorkspace(_ window: Window, _ targetWorkspace: Workspace, _ io:
         return switch failIfNoop {
             case true: .fail
             case false:
-                io.err("Window '\(window.windowId)' already belongs to workspace '\(targetWorkspace.name)'. Tip: use --fail-if-noop to exit with non-zero code", .succ)
+                .succ(io.err("Window '\(window.windowId)' already belongs to workspace '\(targetWorkspace.name)'. Tip: use --fail-if-noop to exit with non-zero code"))
         }
     }
     let targetContainer: NonLeafTreeNodeObject = window.isFloating ? targetWorkspace : targetWorkspace.rootTilingContainer

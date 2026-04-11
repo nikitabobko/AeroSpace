@@ -23,12 +23,12 @@ struct MoveWorkspaceToMonitorCommand: Command {
                     )
                     return .succ
                 } else {
-                    return io.err(
+                    return .fail(io.err(
                         "Can't move workspace '\(focusedWorkspace.name)' to monitor '\(targetMonitor.name)'. workspace-to-monitor-force-assignment doesn't allow it",
-                    )
+                    ))
                 }
             case .failure(let msg):
-                return io.err(msg)
+                return .fail(io.err(msg))
         }
     }
 }

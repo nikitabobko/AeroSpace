@@ -26,7 +26,7 @@ struct DebugWindowsCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
         if let windowId = args.windowId {
             guard let window = Window.get(byId: windowId) else {
-                return io.err("Can't find window with the specified window-id: \(windowId)")
+                return .fail(io.err("Can't find window with the specified window-id: \(windowId)"))
             }
             io.out(try await dumpWindowDebugInfo(window) + "\n")
             io.out(disclaimer)

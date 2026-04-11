@@ -13,7 +13,7 @@ struct MacosNativeFullscreenCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let window = target.windowOrNil else {
-            return io.err(noWindowIsFocused)
+            return .fail(io.err(noWindowIsFocused))
         }
         let prevState = try await window.isMacosFullscreen
         let newState: Bool = switch args.toggle {
@@ -25,13 +25,13 @@ struct MacosNativeFullscreenCommand: Command {
             return switch args.failIfNoop {
                 case true: .fail
                 case false:
-                    io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
-                        "Tip: use --fail-if-noop to exit with non-zero exit code", .succ)
+                    .succ(io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
+                            "Tip: use --fail-if-noop to exit with non-zero exit code"))
             }
         }
         window.asMacWindow().setNativeFullscreen(newState)
         guard let workspace = window.visualWorkspace else {
-            return io.err(windowIsntPartOfTree(window))
+            return .fail(io.err(windowIsntPartOfTree(window)))
         }
         if newState { // Enter fullscreen
             window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)

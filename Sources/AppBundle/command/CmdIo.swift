@@ -21,11 +21,11 @@ final class CmdIo {
 
     init(stdin: consuming CmdStdin) { self.stdin = stdin }
 
-    @discardableResult func out<T>(_ msg: String, _ ret: T = BinaryExitCode.succ) -> T { stdout.append(msg); return ret }
-    @discardableResult func err<T>(_ msg: String, _ ret: T = BinaryExitCode.fail) -> T { stderr.append(msg); return ret }
-    @discardableResult func out<T>(_ msg: [String], _ ret: T = BinaryExitCode.succ) -> T { stdout += msg; return ret }
+    @discardableResult func out(_ msg: String) -> IoSideEffect { stdout.append(msg); return .instance }
+    @discardableResult func err(_ msg: String) -> IoSideEffect { stderr.append(msg); return .instance }
+    @discardableResult func out(_ msg: [String]) -> IoSideEffect { stdout += msg; return .instance }
     // periphery:ignore
-    @discardableResult func err<T>(_ msg: [String], _ ret: T = BinaryExitCode.fail) -> T { stderr += msg; return ret }
+    @discardableResult func err(_ msg: [String]) -> IoSideEffect { stderr += msg; return .instance }
 
     func readStdin() -> String { stdin.readAll() }
 }

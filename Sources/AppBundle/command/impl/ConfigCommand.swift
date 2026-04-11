@@ -15,14 +15,14 @@ struct ConfigCommand: Command {
                     mode
                     \(config.modes.keys.map { "mode.\($0).binding" }.joined(separator: "\n"))
                     """
-                return io.out(out)
+                return .succ(io.out(out))
             case .allKeys:
                 let configMap = buildConfigMap()
                 var allKeys: [String] = []
                 configMap.dumpAllKeysRecursive(path: ".", result: &allKeys)
-                return io.out(allKeys.joined(separator: "\n"))
+                return .succ(io.out(allKeys.joined(separator: "\n")))
             case .configPath:
-                return io.out(configUrl.absoluteURL.path)
+                return .succ(io.out(configUrl.absoluteURL.path))
         }
     }
 }
@@ -41,20 +41,17 @@ extension String {
     let keyPath: [String]
     switch key.toKeyPath() {
         case .success(let _keyPath): keyPath = _keyPath
-        case .failure(let error):
-            return io.err(error)
+        case .failure(let error): return .fail(io.err(error))
     }
     var configMap: ConfigMapValue
     switch buildConfigMap().find(keyPath: keyPath.slice) {
-        case .success(let value):
-            configMap = value
-        case .failure(let error):
-            return io.err(error)
+        case .success(let value): configMap = value
+        case .failure(let error): return .fail(io.err(error))
     }
     if args.keys {
         switch configMap {
             case .scalar(let scalar):
-                return io.err("--keys flag cannot be applied to scalar object '\(scalar)'")
+                return .fail(io.err("--keys flag cannot be applied to scalar object '\(scalar)'"))
             case .map(let map):
                 configMap = .array(map.keys.map { .scalar(.string($0)) })
             case .array(let array):
@@ -63,16 +60,16 @@ extension String {
     }
     if args.json {
         return switch JSONEncoder.aeroSpaceDefault.encodeToString(configMap) {
-            case let json?: io.out(json)
-            case nil: io.err("Can't convert json Data to String")
+            case let json?: .succ(io.out(json))
+            case nil: .fail(io.err("Can't convert json Data to String"))
         }
     } else {
         switch configMap {
             case .scalar(let scalar):
-                return io.out(scalar.describe)
+                return .succ(io.out(scalar.describe))
             case .map:
-                return io.err("Complicated objects can be printed only with --json flag. " +
-                    "Alternatively, you can try to inspect keys of the object with --keys flag")
+                let msg = "Complicated objects can be printed only with --json flag. Alternatively, you can try to inspect keys of the object with --keys flag"
+                return .fail(io.err(msg))
             case .array(let array):
                 let plainArray: Result<[String], String> = array.mapAllOrFailure {
                     switch $0 {
@@ -82,8 +79,8 @@ extension String {
                     }
                 }
                 return switch plainArray {
-                    case .success(let array): io.out(array.sorted().joined(separator: "\n"))
-                    case .failure(let error): io.err(error)
+                    case .success(let array): .succ(io.out(array.sorted().joined(separator: "\n")))
+                    case .failure(let error): .fail(io.err(error))
                 }
         }
     }

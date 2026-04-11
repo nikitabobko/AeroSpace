@@ -9,7 +9,7 @@ struct MoveCommand: Command {
         let direction = args.direction.val
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let currentWindow = target.windowOrNil else {
-            return io.err(noWindowIsFocused)
+            return .fail(io.err(noWindowIsFocused))
         }
         guard let parent = currentWindow.parent else { return .fail }
         switch parent.cases {
@@ -29,9 +29,9 @@ struct MoveCommand: Command {
                     return moveOut(window: currentWindow, direction: direction, io, args, env)
                 }
             case .workspace: // floating window
-                return io.err("moving floating windows isn't yet supported") // todo
+                return .fail(io.err("moving floating windows isn't yet supported")) // todo
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-                return io.err(moveOutMacosUnconventionalWindow)
+                return .fail(io.err(moveOutMacosUnconventionalWindow))
             case .macosPopupWindowsContainer:
                 return .fail // Impossible
         }
@@ -57,7 +57,7 @@ struct MoveCommand: Command {
             }
         case .allMonitorsOuterFrame:
             guard let (monitors, index) = window.nodeMonitor?.findRelativeMonitor(inDirection: direction) else {
-                return io.err("Should never happen. Can't find the current monitor")
+                return .fail(io.err("Should never happen. Can't find the current monitor"))
             }
 
             if monitors.indices.contains(index) {
@@ -115,7 +115,7 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
         case .workspace(let parent):
             return hitWorkspaceBoundaries(window, parent, io, args, direction, env)
         case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-            return io.err(moveOutMacosUnconventionalWindow)
+            return .fail(io.err(moveOutMacosUnconventionalWindow))
         case .macosPopupWindowsContainer:
             return .fail // Impossible
     }

@@ -2,6 +2,10 @@ public protocol ExitCode: RawRepresentable<Int32>, AeroAny, Sendable {
     static var fail: Self { get }
 }
 
+extension ExitCode {
+    public static func fail(_ _: IoSideEffect) -> Self { .fail }
+}
+
 public let EXIT_CODE_ZERO: Int32 = 0
 
 // Some big enough number which is not occupied by any other ExitCode
@@ -19,6 +23,8 @@ public enum BinaryExitCode: Int32, ExitCode {
     case fail = 1
     public static func from(bool: Bool) -> Self { bool ? .succ : .fail }
 
+    public static func succ(_ _: IoSideEffect) -> Self { .succ }
+
     public func and(_ other: @autoclosure () -> Self) -> Self {
         switch rawValue {
             case EXIT_CODE_ZERO: other()
@@ -33,4 +39,8 @@ public enum BinaryExitCode: Int32, ExitCode {
             default: other()
         }
     }
+}
+
+public enum IoSideEffect {
+    case instance
 }
