@@ -1,17 +1,22 @@
 # makefile is used to make :make command in vim work out of the box
-.PHONY: build test format swift-test
+.PHONY: \
+	build-debug.sh \
+	test.sh \
+	swift-test.sh \
+	format.sh \
+	lint.sh
 
-build:
+build-debug.sh:
 	./build-debug.sh
 
-test:
-	./run-tests.sh
+test.sh:
+	./test.sh
 
-swift-test:
-	./run-swift-test.sh
+swift-test.sh:
+	./swift-test.sh
 
-format:
+format.sh:
 	./format.sh
 
-lint:
+lint.sh:
 	./lint.sh

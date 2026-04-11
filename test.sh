@@ -5,7 +5,7 @@ source ./script/setup.sh
 ./script/check-uncommitted-files.sh
 
 ./build-debug.sh -Xswiftc -warnings-as-errors
-./run-swift-test.sh
+./swift-test.sh
 
 ./.debug/aerospace -h > /dev/null
 ./.debug/aerospace --help > /dev/null
