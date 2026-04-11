@@ -82,14 +82,6 @@ public enum ParsedCmd<T: Sendable>: Sendable where T: Sendable {
             default: nil
         }
     }
-
-    public func unwrap() -> (T?, String?, CmdParsingFailure?) {
-        switch self {
-            case .cmd(let command):   (command, nil, nil)
-            case .help(let help):     (nil, help, nil)
-            case .failure(let failure): (nil, nil, failure)
-        }
-    }
 }
 
 extension ParsedCmd where T: CmdArgs {
