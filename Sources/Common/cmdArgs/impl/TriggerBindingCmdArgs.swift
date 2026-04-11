@@ -1,5 +1,6 @@
 public struct TriggerBindingCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
+    public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .triggerBinding,
         allowInConfig: true,
@@ -20,6 +21,6 @@ extension TriggerBindingCmdArgs {
 }
 
 func parseTriggerBindingCmdArgs(_ args: StrArrSlice) -> ParsedCmd<TriggerBindingCmdArgs> {
-    parseSpecificCmdArgs(TriggerBindingCmdArgs(commonState: .init(args)), args)
+    parseSpecificCmdArgs(TriggerBindingCmdArgs(rawArgs: args), args)
         .filter("--mode flag is mandatory") { $0._mode != nil }
 }
