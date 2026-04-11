@@ -9,7 +9,7 @@ struct CloseCommand: Command {
         try await allowOnlyCancellationError { @MainActor @Sendable in
             guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
             guard let window = target.windowOrNil else {
-                return io.err("Empty workspace")
+                return .fail(io.err("Empty workspace"))
             }
             // Access ax directly. Not cool :(
             if try await args.quitIfLastWindow.andAsync({ @MainActor @Sendable in try await window.macAppUnsafe.getAxWindowsCount() == 1 }) {
@@ -22,7 +22,7 @@ struct CloseCommand: Command {
                     }
                     return .succ
                 } else {
-                    return io.err("Failed to quit '\(window.app.name ?? "Unknown app")'")
+                    return .fail(io.err("Failed to quit '\(window.app.name ?? "Unknown app")'"))
                 }
             } else {
                 window.closeAxWindow()

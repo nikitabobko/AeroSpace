@@ -8,7 +8,7 @@ struct FullscreenCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let window = target.windowOrNil else {
-            return io.err(noWindowIsFocused)
+            return .fail(io.err(noWindowIsFocused))
         }
         let newState: Bool = switch args.toggle {
             case .on: true
@@ -19,8 +19,8 @@ struct FullscreenCommand: Command {
             return switch args.failIfNoop {
                 case true: .fail
                 case false:
-                    io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
-                        "Tip: use --fail-if-noop to exit with non-zero code", .succ)
+                    .succ(io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
+                            "Tip: use --fail-if-noop to exit with non-zero code"))
             }
         }
         window.isFullscreen = newState

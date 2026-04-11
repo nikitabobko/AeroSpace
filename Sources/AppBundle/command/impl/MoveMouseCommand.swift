@@ -15,7 +15,7 @@ struct MoveMouseCommand: Command {
                     return switch args.failIfNoop {
                         case true: .fail
                         case false:
-                            io.err("The mouse already belongs to the window. Tip: use --fail-if-noop to exit with non-zero code", .succ)
+                            .succ(io.err("The mouse already belongs to the window. Tip: use --fail-if-noop to exit with non-zero code"))
                     }
                 }
                 return moveMouse(io, rect.center)
@@ -28,7 +28,7 @@ struct MoveMouseCommand: Command {
                     return switch args.failIfNoop {
                         case true: .fail
                         case false:
-                            io.err("The mouse already belongs to the monitor. Tip: use --fail-if-noop to exit with non-zero code", .succ)
+                            .succ(io.err("The mouse already belongs to the monitor. Tip: use --fail-if-noop to exit with non-zero code"))
                     }
                 }
                 return moveMouse(io, rect.center)
@@ -46,7 +46,7 @@ private func moveMouse(_ io: CmdIo, _ point: CGPoint) -> BinaryExitCode {
         mouseButton: CGMouseButton.left,
     )
     switch event {
-        case nil: return io.err("Failed to move mouse")
+        case nil: return .fail(io.err("Failed to move mouse"))
         case let event?:
             event.post(tap: CGEventTapLocation.cghidEventTap)
             return .succ

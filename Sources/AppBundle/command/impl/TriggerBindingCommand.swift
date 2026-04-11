@@ -11,11 +11,11 @@ struct TriggerBindingCommand: Command {
                 // refreshSession is not needed since commands are already run in refreshSession
                 try await binding.commands.runCmdSeq(env, io)
             } else {
-                io.err("Binding '\(args.binding.val)' is not presented in mode '\(args.mode)'", .fail)
+                .fail(io.err("Binding '\(args.binding.val)' is not presented in mode '\(args.mode)'"))
             }
         } else {
-            io.err("Mode '\(args.mode)' doesn't exist. " +
-                "Available modes: \(config.modes.keys.joined(separator: ","))", .fail)
+            .fail(io.err("Mode '\(args.mode)' doesn't exist. " +
+                    "Available modes: \(config.modes.keys.joined(separator: ","))"))
         }
     }
 }

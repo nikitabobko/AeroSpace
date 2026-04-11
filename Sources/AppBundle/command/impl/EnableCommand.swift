@@ -16,12 +16,11 @@ struct EnableCommand: Command {
             return switch args.failIfNoop {
                 case true: .fail
                 case false:
-                    io.err(
+                    .succ(io.err(
                         newState
                             ? "Already enabled. Tip: use --fail-if-noop to exit with non-zero code"
                             : "Already disabled. Tip: use --fail-if-noop to exit with non-zero code",
-                        .succ
-                    )
+                    ))
             }
         }
 

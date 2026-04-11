@@ -12,7 +12,7 @@ struct ListWindowsCommand: Command {
         if args.filteringOptions.focused {
             switch focus.windowOrNil {
                 case let window?: windows = [window]
-                case nil: return io.err(noWindowIsFocused)
+                case nil: return .fail(io.err(noWindowIsFocused))
             }
         } else {
             var workspaces: Set<Workspace> = args.filteringOptions.workspaces.isEmpty
@@ -41,7 +41,7 @@ struct ListWindowsCommand: Command {
         }
 
         if args.outputOnlyCount {
-            return io.out("\(windows.count)")
+            return .succ(io.out("\(windows.count)"))
         } else {
             var _list: [(window: Window, title: String)] = [] // todo cleanup
             for window in windows {
@@ -53,13 +53,13 @@ struct ListWindowsCommand: Command {
             let list = _list.map { AeroObj.window(window: $0.window, title: $0.title) }
             if args.json {
                 return switch list.formatToJson(args.format, ignoreRightPaddingVar: args._format.isEmpty) {
-                    case .success(let json): io.out(json)
-                    case .failure(let msg): io.err(msg)
+                    case .success(let json): .succ(io.out(json))
+                    case .failure(let msg): .fail(io.err(msg))
                 }
             } else {
                 return switch list.format(args.format) {
-                    case .success(let lines): io.out(lines)
-                    case .failure(let msg): io.err(msg)
+                    case .success(let lines): .succ(io.out(lines))
+                    case .failure(let msg): .fail(io.err(msg))
                 }
             }
         }

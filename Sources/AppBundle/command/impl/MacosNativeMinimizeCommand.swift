@@ -11,7 +11,7 @@ struct MacosNativeMinimizeCommand: Command {
         // It would be easier if minimized windows were part of the workspace in tree hierarchy
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let window = target.windowOrNil else {
-            return io.err(noWindowIsFocused)
+            return .fail(io.err(noWindowIsFocused))
         }
         let newState: Bool = try await !window.isMacosMinimized
         window.asMacWindow().setNativeMinimized(newState)
@@ -19,7 +19,7 @@ struct MacosNativeMinimizeCommand: Command {
             window.bind(to: macosMinimizedWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
             return .succ
         } else { // unminimize
-            return io.err("The command is uncapable of unminimizing windows yet. Sorry") // dead code. should never be possible, see the comment above
+            return .fail(io.err("The command is uncapable of unminimizing windows yet. Sorry")) // dead code. should never be possible, see the comment above
         }
     }
 }

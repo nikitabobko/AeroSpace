@@ -12,7 +12,7 @@ struct SummonWorkspaceCommand: Command {
             return switch args.failIfNoop {
                 case true: .fail
                 case false:
-                    io.err("Workspace '\(workspace.name)' is already visible on the focused monitor. Tip: use --fail-if-noop to exit with non-zero code", .succ)
+                    .succ(io.err("Workspace '\(workspace.name)' is already visible on the focused monitor. Tip: use --fail-if-noop to exit with non-zero code"))
             }
         }
         let prevMonitor = workspace.isVisible ? workspace.workspaceMonitor : nil
@@ -26,7 +26,7 @@ struct SummonWorkspaceCommand: Command {
             }
             return .from(bool: workspace.focusWorkspace())
         } else {
-            return io.err("Can't move workspace '\(workspace.name)' to monitor '\(monitor.name)'. workspace-to-monitor-force-assignment doesn't allow it")
+            return .fail(io.err("Can't move workspace '\(workspace.name)' to monitor '\(monitor.name)'. workspace-to-monitor-force-assignment doesn't allow it"))
         }
     }
 }

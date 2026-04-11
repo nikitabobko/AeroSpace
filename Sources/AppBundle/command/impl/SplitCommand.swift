@@ -7,17 +7,17 @@ struct SplitCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         if config.enableNormalizationFlattenContainers {
-            return io.err("'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled. My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.")
+            return .fail(io.err("'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled. My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'."))
         }
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let window = target.windowOrNil else {
-            return io.err(noWindowIsFocused)
+            return .fail(io.err(noWindowIsFocused))
         }
         guard let parent = window.parent else { return .fail }
         switch parent.cases {
             case .workspace:
                 // Nothing to do for floating and macOS native fullscreen windows
-                return io.err("Can't split floating windows")
+                return .fail(io.err("Can't split floating windows"))
             case .tilingContainer(let parent):
                 let orientation: Orientation = switch args.arg.val {
                     case .vertical: .v
@@ -39,7 +39,7 @@ struct SplitCommand: Command {
                 }
                 return .succ
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-                return io.err("Can't split macos fullscreen, minimized windows and windows of hidden apps. This behavior may change in the future")
+                return .fail(io.err("Can't split macos fullscreen, minimized windows and windows of hidden apps. This behavior may change in the future"))
             case .macosPopupWindowsContainer:
                 return .fail // Impossible
         }

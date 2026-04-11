@@ -29,13 +29,13 @@ struct FocusCommand: Command {
                 if let windowToFocus = Window.get(byId: windowId) {
                     return .from(bool: windowToFocus.focusWindow())
                 } else {
-                    return io.err("Can't find window with ID \(windowId)")
+                    return .fail(io.err("Can't find window with ID \(windowId)"))
                 }
             case .dfsIndex(let dfsIndex):
                 if let windowToFocus = target.workspace.rootTilingContainer.allLeafWindowsRecursive.getOrNil(atIndex: Int(dfsIndex)) {
                     return .from(bool: windowToFocus.focusWindow())
                 } else {
-                    return io.err("Can't find window with DFS index \(dfsIndex)")
+                    return .fail(io.err("Can't find window with DFS index \(dfsIndex)"))
                 }
             case .dfsRelative(let nextPrev):
                 let windows = target.workspace.rootTilingContainer.allLeafWindowsRecursive
@@ -76,7 +76,7 @@ struct FocusCommand: Command {
         case .allMonitorsOuterFrame:
             let currentMonitor = target.workspace.workspaceMonitor
             guard let (monitors, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
-                return io.err("Should never happen. Can't find the current monitor")
+                return .fail(io.err("Should never happen. Can't find the current monitor"))
             }
 
             if let targetMonitor = monitors.getOrNil(atIndex: index) {
@@ -110,7 +110,7 @@ struct FocusCommand: Command {
 
 @MainActor private func wrapAroundTheWorkspace(_ target: LiveFocus, _ io: CmdIo, _ direction: CardinalDirection) -> BinaryExitCode {
     guard let windowToFocus = target.workspace.findLeafWindowRecursive(snappedTo: direction.opposite) else {
-        return io.err(noWindowIsFocused)
+        return .fail(io.err(noWindowIsFocused))
     }
     return .from(bool: windowToFocus.focusWindow())
 }
