@@ -17,7 +17,7 @@ struct Main {
         let args = CommandLine.arguments.slice(1...) ?? []
 
         if args.isEmpty {
-            exit(EXIT_CODE_ONE, err: usage)
+            exit(EXIT_CODE_TWO, err: usage)
         }
         if args.first == "--help" || args.first == "-h" {
             exit(EXIT_CODE_ZERO, out: usage)
@@ -27,7 +27,7 @@ struct Main {
             let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
             let serverVersionAndHash: String?
             if await connection.startBlocking().error == nil {
-                let ans = await run(connection, [], stdin: "", windowId: nil, workspace: nil, failExitCode: EXIT_CODE_ONE)
+                let ans = await run(connection, [], stdin: "", windowId: nil, workspace: nil, failExitCode: EXIT_CODE_TWO)
                 serverVersionAndHash = ans.serverVersionAndHash
             } else {
                 serverVersionAndHash = nil
@@ -152,7 +152,7 @@ func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowI
 
     switch await connection.readNonAtomic() {
         case .success(let answer):
-            return (try? JSONDecoder().decode(ServerAnswer.self, from: answer)) ?? exitT(EXIT_CODE_ONE, err: "Failed to parse server response: \(String(data: answer, encoding: .utf8).prettyDescription)")
+            return (try? JSONDecoder().decode(ServerAnswer.self, from: answer)) ?? exitT(EXIT_CODE_TWO, err: "Failed to parse server response: \(String(data: answer, encoding: .utf8).prettyDescription)")
         case .failure(let error):
             exit(failExitCode, err: "Failed to read from server socket: \(error)")
     }

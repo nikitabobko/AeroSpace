@@ -92,7 +92,7 @@ private func initServerArgs() {
             case "--config-path":
                 switch args.getOrNil(atIndex: index) {
                     case let arg?: unsafe _serverArgs.configLocation = arg
-                    case nil: exit(EXIT_CODE_ONE, err: "Missing <path> in --config-path flag")
+                    case nil: exit(EXIT_CODE_TWO, err: "Missing <path> in --config-path flag")
                 }
                 index += 1
             case "--read-only": // todo rename to '--disabled' and unite with disabled feature
@@ -102,10 +102,10 @@ private func initServerArgs() {
                 // Usually it's '-NSDocumentRevisionsDebugMode NO'/'-NSDocumentRevisionsDebugMode YES'
                 while args.getOrNil(atIndex: index)?.starts(with: "-") == false { index += 1 }
             default:
-                exit(EXIT_CODE_ONE, err: "Unrecognized flag '\(args.first.orDie())'")
+                exit(EXIT_CODE_TWO, err: "Unrecognized flag '\(args.first.orDie())'")
         }
     }
     if let path = serverArgs.configLocation, !FileManager.default.fileExists(atPath: path) {
-        exit(EXIT_CODE_ONE, err: "\(path) doesn't exist")
+        exit(EXIT_CODE_TWO, err: "\(path) doesn't exist")
     }
 }

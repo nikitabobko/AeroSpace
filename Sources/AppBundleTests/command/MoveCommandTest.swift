@@ -214,7 +214,7 @@ final class MoveCommandTest: XCTestCase {
                 .h_tiles([.window(1), .window(2), .window(3)]),
             ]),
         )
-        assertEquals(result.exitCode.rawValue, 1)
+        assertEquals(result.exitCode.rawValue, 2)
     }
 
     func testMoveOut() async throws {

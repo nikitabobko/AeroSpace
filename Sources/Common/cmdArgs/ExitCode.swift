@@ -10,19 +10,15 @@ public let EXIT_CODE_ZERO: Int32 = 0
 public let EXIT_CODE_ONE: Int32 = 1
 public let EXIT_CODE_TWO: Int32 = 2
 
-// Some big enough number which is not occupied by any other ExitCode
-// The only exit code which is guaranteed to denote a error
-public let EXIT_CODE_UNCLASSIFIED_ERROR: Int32 = 10
-
 public struct Int32ExitCode: ExitCode, Equatable {
     public var rawValue: Int32
     public init(rawValue: Int32) { self.rawValue = rawValue }
-    public static let fail = Int32ExitCode(rawValue: EXIT_CODE_UNCLASSIFIED_ERROR)
+    public static let fail = Int32ExitCode(rawValue: EXIT_CODE_TWO)
 }
 
 public enum BinaryExitCode: Int32, ExitCode {
     case succ = 0
-    case fail = 1
+    case fail = 2
     public static func from(bool: Bool) -> Self { bool ? .succ : .fail }
 
     public static func succ(_ _: IoSideEffect) -> Self { .succ }

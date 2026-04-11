@@ -47,7 +47,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
         switch await connection.readNonAtomic() {
             case .success(let _rawRequest): rawRequest = _rawRequest
             case .failure(let error):
-                await answerToClient(exitCode: EXIT_CODE_UNCLASSIFIED_ERROR, stderr: "Error: \(error)")
+                await answerToClient(exitCode: EXIT_CODE_TWO, stderr: "Error: \(error)")
                 return
         }
         let request: ClientRequest
@@ -55,7 +55,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
             case .success(let _request): request = _request
             case .failure(let error):
                 await answerToClient(
-                    exitCode: EXIT_CODE_UNCLASSIFIED_ERROR,
+                    exitCode: EXIT_CODE_TWO,
                     stderr: """
                         Can't parse request '\(String(describing: String(data: rawRequest, encoding: .utf8)).singleQuoted)'.
                         Error: \(error)
@@ -77,7 +77,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
             await answerToClient(
                 exitCode: parsedCmd.cmdOrNil?.args.failExitCode
                     ?? parsedCmd.failureOrNil?.exitCode
-                    ?? EXIT_CODE_UNCLASSIFIED_ERROR,
+                    ?? EXIT_CODE_TWO,
                 stderr: "\(aeroSpaceAppName) server is disabled and doesn't accept commands. " +
                     "You can use 'aerospace enable on' to enable the server",
             )
@@ -91,7 +91,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
                 await answerToClient(exitCode: err.exitCode, stderr: err.msg)
                 continue
             case .cmd(let command) where command.isExec:
-                await answerToClient(exitCode: EXIT_CODE_ONE, stderr: "exec-and-forget is prohibited in CLI")
+                await answerToClient(exitCode: EXIT_CODE_TWO, stderr: "exec-and-forget is prohibited in CLI")
                 continue
             case .cmd(let command):
                 let _answer: Result<ServerAnswer, Error> = await Result {
