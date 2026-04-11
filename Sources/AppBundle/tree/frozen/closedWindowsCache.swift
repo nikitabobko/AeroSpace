@@ -1,4 +1,5 @@
 import AppKit
+import Common
 
 /// First line of defence against lock screen
 ///
