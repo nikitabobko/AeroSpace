@@ -11,7 +11,7 @@ public struct CaseInsensitiveRegex: Equatable, Sendable {
 
     public static func new(_ str: String) -> Parsed<CaseInsensitiveRegex> {
         Result { try Regex(str) }
-            .mapError { e in "Can't parse '\(str)' regex: \(e.localizedDescription)" }
+            .mapError { e in "Can't parse \(str.singleQuoted) regex: \(e.localizedDescription)" }
             .map { CaseInsensitiveRegex(str, $0.ignoresCase()) }
     }
 

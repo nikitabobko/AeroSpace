@@ -18,7 +18,7 @@ import Foundation
                 try await reloadConfig(forceConfigUrl: defaultConfigUrl, stdout: &out),
                 """
                 Can't load default config. Your installation is probably corrupted.
-                Please don't modify '\(defaultConfigUrl)'
+                Please don't modify \(defaultConfigUrl.description.singleQuoted)
 
                 \(out)
                 """,
@@ -102,7 +102,7 @@ private func initServerArgs() {
                 // Usually it's '-NSDocumentRevisionsDebugMode NO'/'-NSDocumentRevisionsDebugMode YES'
                 while args.getOrNil(atIndex: index)?.starts(with: "-") == false { index += 1 }
             default:
-                exit(EXIT_CODE_TWO, err: "Unrecognized flag '\(args.first.orDie())'")
+                exit(EXIT_CODE_TWO, err: "Unrecognized flag \(args.first.orDie().singleQuoted)")
         }
     }
     if let path = serverArgs.configLocation, !FileManager.default.fileExists(atPath: path) {

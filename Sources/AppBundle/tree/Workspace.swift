@@ -76,7 +76,7 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
             ("isVisible", String(isVisible)),
             ("isEffectivelyEmpty", String(isEffectivelyEmpty)),
             ("doKeepAlive", String(config.persistentWorkspaces.contains(name))),
-        ].map { "\($0.0): '\(String(describing: $0.1))'" }.joined(separator: ", ")
+        ].map { "\($0.0): \(String(describing: $0.1).singleQuoted)" }.joined(separator: ", ")
         return "Workspace(\(description))"
     }
 

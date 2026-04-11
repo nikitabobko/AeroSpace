@@ -15,7 +15,7 @@ func parseCommand(_ args: [String]) -> ParsedCmd<any Command> {
 }
 
 func expectedActualTypeError(expected: TomlType, actual: TomlType) -> String {
-    "Expected type is '\(expected)'. But actual type is '\(actual)'"
+    "Expected type is \(expected.rawValue.singleQuoted). But actual type is \(actual.rawValue.singleQuoted)"
 }
 
 func expectedActualTypeError(expected: [TomlType], actual: TomlType) -> String {

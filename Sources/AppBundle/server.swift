@@ -57,7 +57,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
                 await answerToClient(
                     exitCode: EXIT_CODE_TWO,
                     stderr: """
-                        Can't parse request '\(String(describing: String(data: rawRequest, encoding: .utf8)).singleQuoted)'.
+                        Can't parse request \(String(describing: String(data: rawRequest, encoding: .utf8)).singleQuoted).
                         Error: \(error)
                         """,
                 )
