@@ -47,7 +47,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
         switch await connection.readNonAtomic() {
             case .success(let _rawRequest): rawRequest = _rawRequest
             case .failure(let error):
-                await answerToClient(exitCode: 1, stderr: "Error: \(error)")
+                await answerToClient(exitCode: EXIT_CODE_UNCLASSIFIED_ERROR, stderr: "Error: \(error)")
                 return
         }
         let request: ClientRequest
@@ -55,7 +55,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
             case .success(let _request): request = _request
             case .failure(let error):
                 await answerToClient(
-                    exitCode: 1,
+                    exitCode: EXIT_CODE_UNCLASSIFIED_ERROR,
                     stderr: """
                         Can't parse request '\(String(describing: String(data: rawRequest, encoding: .utf8)).singleQuoted)'.
                         Error: \(error)
@@ -67,7 +67,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
         if request.args.first == "subscribe" {
             switch parseSubscribeCmdArgs(request.args.slice(1...).orDie()) {
                 case .cmd(let subscribeArgs): await handleSubscribeAndWaitTillError(connection, subscribeArgs)
-                case .help(let help): await answerToClient(exitCode: 0, stdout: help)
+                case .help(let help): await answerToClient(exitCode: EXIT_CODE_ZERO, stdout: help)
                 case .failure(let err): await answerToClient(exitCode: err.exitCode, stderr: err.msg)
             }
             continue
@@ -75,14 +75,14 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
         let (command, help, err) = parseCommand(request.args).unwrap()
         guard let token: RunSessionGuard = await .isServerEnabled(orIsEnableCommand: command) else {
             await answerToClient(
-                exitCode: 1,
+                exitCode: command?.args.failExitCode ?? err?.exitCode ?? EXIT_CODE_UNCLASSIFIED_ERROR,
                 stderr: "\(aeroSpaceAppName) server is disabled and doesn't accept commands. " +
                     "You can use 'aerospace enable on' to enable the server",
             )
             continue
         }
         if let help {
-            await answerToClient(exitCode: 0, stdout: help)
+            await answerToClient(exitCode: EXIT_CODE_ZERO, stdout: help)
             continue
         }
         if let err {
@@ -90,7 +90,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
             continue
         }
         if command?.isExec == true {
-            await answerToClient(exitCode: 1, stderr: "exec-and-forget is prohibited in CLI")
+            await answerToClient(exitCode: EXIT_CODE_ONE, stderr: "exec-and-forget is prohibited in CLI")
             continue
         }
         if let command {
@@ -111,7 +111,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
             }
             var answer = _answer.getOrNil() ??
                 ServerAnswer(
-                    exitCode: 1,
+                    exitCode: command.args.failExitCode,
                     stderr: "Fail to await main thread. \(_answer.failureOrNil?.localizedDescription ?? "")",
                     serverVersionAndHash: serverVersionAndHash,
                 )

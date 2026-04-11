@@ -33,7 +33,7 @@ final class SubscribeCmdArgsTest: XCTestCase {
                     ERROR: Can't parse 'unknown-event'.
                            Possible values: (focus-changed|focused-monitor-changed|focused-workspace-changed|mode-changed|window-detected|binding-triggered)
                     """
-                assertEquals(err, .init(expectedMsg, GENERIC_FAIL_EXIT_CODE))
+                assertEquals(err, .init(expectedMsg, 1))
         }
     }
 
@@ -43,7 +43,7 @@ final class SubscribeCmdArgsTest: XCTestCase {
             case .cmd, .help:
                 XCTFail("Expected failure")
             case .failure(let err):
-                assertEquals(err, .init("ERROR: Duplicate event 'focus-changed'", GENERIC_FAIL_EXIT_CODE))
+                assertEquals(err, .init("ERROR: Duplicate event 'focus-changed'", 1))
         }
     }
 
@@ -53,7 +53,7 @@ final class SubscribeCmdArgsTest: XCTestCase {
             case .cmd, .help:
                 XCTFail("Expected failure")
             case .failure(let err):
-                assertEquals(err, .init("Either --all or at least one <event> must be specified", GENERIC_FAIL_EXIT_CODE))
+                assertEquals(err, .init("Either --all or at least one <event> must be specified", 1))
         }
     }
 
@@ -63,7 +63,7 @@ final class SubscribeCmdArgsTest: XCTestCase {
             case .cmd, .help:
                 XCTFail("Expected failure")
             case .failure(let err):
-                assertEquals(err, .init("--all conflicts with specifying individual events", GENERIC_FAIL_EXIT_CODE))
+                assertEquals(err, .init("--all conflicts with specifying individual events", 1))
         }
     }
 }

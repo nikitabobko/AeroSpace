@@ -44,7 +44,7 @@ extension Command {
 extension [Command] {
     @MainActor
     func runCmdSeq(_ env: CmdEnv, _ io: sending CmdIo) async throws -> Int32ExitCode {
-        var exitCode = Int32ExitCode(rawValue: 0)
+        var exitCode = Int32ExitCode(rawValue: EXIT_CODE_ZERO)
         for command in self {
             exitCode = Int32ExitCode(rawValue: (try await command.run(env, io)).rawValue)
             if command.shouldResetClosedWindowsCache { resetClosedWindowsCache() }

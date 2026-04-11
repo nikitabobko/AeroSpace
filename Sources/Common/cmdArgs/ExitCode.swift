@@ -2,8 +2,6 @@ public protocol ExitCode: RawRepresentable<Int32>, AeroAny, Sendable {
     static var fail: Self { get }
 }
 
-public let GENERIC_FAIL_EXIT_CODE: Int32 = 1
-
 extension ExitCode {
     public static func fail(_ _: IoSideEffect) -> Self { .fail }
 }

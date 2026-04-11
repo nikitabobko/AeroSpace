@@ -1,12 +1,12 @@
 public func parseCmdArgs(_ args: StrArrSlice) -> ParsedCmd<any CmdArgs> {
     let subcommand = String(args.first ?? "")
     if subcommand.isEmpty {
-        return .failure("Can't parse empty string command", GENERIC_FAIL_EXIT_CODE)
+        return .failure("Can't parse empty string command", EXIT_CODE_ONE)
     }
     if let subcommandParser: any SubCommandParserProtocol = subcommandParsers[subcommand] {
         return subcommandParser.parse(args: args.slice(1...).orDie())
     } else {
-        return .failure("Unrecognized subcommand '\(subcommand)'", GENERIC_FAIL_EXIT_CODE)
+        return .failure("Unrecognized subcommand '\(subcommand)'", EXIT_CODE_ONE)
     }
 }
 
@@ -42,6 +42,8 @@ extension CmdArgs {
         get { commonState.workspaceName }
         set(value) { commonState.workspaceName = value }
     }
+
+    public var failExitCode: Int32 { ExitCodeType.fail.rawValue }
 
     public func equals(_ other: any CmdArgs) -> Bool { // My brain is cursed with Java
         (other as? Self).flatMap { self == $0 } ?? false

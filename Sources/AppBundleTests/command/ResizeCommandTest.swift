@@ -18,7 +18,7 @@ final class ResizeCommandTest: XCTestCase {
         testParseCommandFail("resize s 10", msg: """
             ERROR: Can't parse 's'.
                    Possible values: (width|height|smart|smart-opposite)
-            """, exitCode: GENERIC_FAIL_EXIT_CODE)
-        testParseCommandFail("resize smart foo", msg: "ERROR: <number> argument must be a number", exitCode: GENERIC_FAIL_EXIT_CODE)
+            """, exitCode: 1)
+        testParseCommandFail("resize smart foo", msg: "ERROR: <number> argument must be a number", exitCode: 1)
     }
 }

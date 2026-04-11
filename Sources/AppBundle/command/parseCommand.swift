@@ -6,7 +6,7 @@ func parseCommand(_ raw: String) -> ParsedCmd<any Command> {
     }
     return switch raw.splitArgs() {
         case .success(let args): parseCommand(args)
-        case .failure(let fail): .failure(fail, GENERIC_FAIL_EXIT_CODE)
+        case .failure(let fail): .failure(fail, EXIT_CODE_ONE)
     }
 }
 
