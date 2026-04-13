@@ -102,10 +102,16 @@ final class MacApp: AbstractApp {
 
     // todo merge together with detectNewWindows
     func getFocusedWindow() async throws -> Window? {
-        let windowId = try await thread?.runInLoop { [nsApp, axApp, windows] job in
-            try axApp.threadGuarded.get(Ax.focusedWindowAttr)
-                .flatMap { try windows.threadGuarded.getOrRegisterAxWindow(windowId: $0.windowId, $0.ax.cast, nsApp, job) }?
-                .windowId
+        let windowId: UInt32? = try await thread?.runInLoop { [nsApp, axApp, windows] job -> UInt32? in
+            guard let focused = axApp.threadGuarded.get(Ax.focusedWindowAttr) else {
+                return nil
+            }
+            let listedWindows = axApp.threadGuarded.get(Ax.windowsAttr) ?? []
+            let isListedInWindows = listedWindows.contains(where: { $0.windowId == focused.windowId })
+            if !isListedInWindows && windows.threadGuarded[focused.windowId] == nil {
+                return nil
+            }
+            return try windows.threadGuarded.getOrRegisterAxWindow(windowId: focused.windowId, focused.ax.cast, nsApp, job)?.windowId
         }
         guard let windowId else { return nil }
         return try await MacWindow.getOrRegister(windowId: windowId, macApp: self)
@@ -273,18 +279,39 @@ final class MacApp: AbstractApp {
         }
         guard let thread else { return [] }
         let (alive, dead) = try await thread.runInLoop { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32]) in
-            var alive: [UInt32: AxWindow] = windows.threadGuarded
+            var alive: [UInt32: AxWindow] = [:]
             var dead = [UInt32: AxWindow]()
+            let currentWindows = axApp.threadGuarded.get(Ax.windowsAttr) ?? []
+            let currentWindowIds = Set(currentWindows.map(\.windowId))
+
+            func shouldKeepOmittedWindowAlive(_ window: AxWindow) -> Bool {
+                if nsApp.isHidden { return true }
+                if window.ax.get(Ax.minimizedAttr) == true { return true }
+                if window.ax.get(Ax.isFullscreenAttr) == true { return true }
+                return false
+            }
+
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
             // Second and third lines of defence are technically needed only to avoid potential flickering
             if frontmostAppBundleId != lockScreenAppBundleId {
-                (alive, dead) = try alive.partition {
+                (_, dead) = try windows.threadGuarded.partition {
                     try job.checkCancellation()
-                    return $0.value.ax.containingWindowId() != nil
+                    guard $0.value.ax.containingWindowId() != nil else {
+                        return false
+                    }
+                    if currentWindowIds.contains($0.key) {
+                        return true
+                    }
+                    return shouldKeepOmittedWindowAlive($0.value)
                 }
+                for (id, window) in windows.threadGuarded where currentWindowIds.contains(id) || shouldKeepOmittedWindowAlive(window) {
+                    alive[id] = window
+                }
+            } else {
+                alive = windows.threadGuarded
             }
 
-            for (id, window) in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
+            for (id, window) in currentWindows {
                 try job.checkCancellation()
                 try alive.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
             }
