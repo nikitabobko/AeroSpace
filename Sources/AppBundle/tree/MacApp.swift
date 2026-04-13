@@ -277,8 +277,16 @@ final class MacApp: AbstractApp {
             await destroy()
             return []
         }
+        let pid = self.pid
+        let visibleWorkspaceWindowIds = await MainActor.run { () -> Set<UInt32> in
+            Set(
+                MacWindow.allWindows.lazy
+                    .filter { $0.macApp.pid == pid && $0.nodeWorkspace?.isVisible == true }
+                    .map(\.windowId),
+            )
+        }
         guard let thread else { return [] }
-        let (alive, dead) = try await thread.runInLoop { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32]) in
+        let (alive, dead) = try await thread.runInLoop { [nsApp, windows, axApp, visibleWorkspaceWindowIds] (job) -> ([UInt32], [UInt32]) in
             var alive: [UInt32: AxWindow] = [:]
             var dead = [UInt32: AxWindow]()
             let currentWindows = axApp.threadGuarded.get(Ax.windowsAttr) ?? []
@@ -294,18 +302,19 @@ final class MacApp: AbstractApp {
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
             // Second and third lines of defence are technically needed only to avoid potential flickering
             if frontmostAppBundleId != lockScreenAppBundleId {
-                (_, dead) = try windows.threadGuarded.partition {
+                for (id, window) in windows.threadGuarded {
                     try job.checkCancellation()
-                    guard $0.value.ax.containingWindowId() != nil else {
-                        return false
+                    guard window.ax.containingWindowId() != nil else {
+                        dead[id] = window
+                        continue
                     }
-                    if currentWindowIds.contains($0.key) {
-                        return true
+                    // AXWindows omits windows on inactive macOS Spaces, so only visible-workspace
+                    // windows should be pruned against the current AXWindows membership.
+                    if currentWindowIds.contains(id) || !visibleWorkspaceWindowIds.contains(id) || shouldKeepOmittedWindowAlive(window) {
+                        alive[id] = window
+                    } else {
+                        dead[id] = window
                     }
-                    return shouldKeepOmittedWindowAlive($0.value)
-                }
-                for (id, window) in windows.threadGuarded where currentWindowIds.contains(id) || shouldKeepOmittedWindowAlive(window) {
-                    alive[id] = window
                 }
             } else {
                 alive = windows.threadGuarded
