@@ -18,9 +18,6 @@ private struct EdgeSet {
     let right: Bool
     let up: Bool
     let down: Bool
-
-    var isHorizontal: Bool { left || right }
-    var isVertical: Bool { up || down }
 }
 
 @MainActor

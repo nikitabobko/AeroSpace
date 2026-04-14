@@ -3,8 +3,6 @@ import Common
 
 @MainActor
 enum GlobalObserver {
-    private static var cmdRightTap: CFMachPort? = nil
-    private static var cmdRightTapSource: CFRunLoopSource? = nil
     nonisolated private static func onNotif(_ notification: Notification) {
         // Third line of defence against lock screen window. See: closedWindowsCache
         // Second and third lines of defence are technically needed only to avoid potential flickering
@@ -121,9 +119,7 @@ enum GlobalObserver {
             userInfo: nil,
         )
         {
-            cmdRightTap = tap
             let src = CFMachPortCreateRunLoopSource(kCFAllocatorDefault, tap, 0)
-            cmdRightTapSource = src
             CFRunLoopAddSource(CFRunLoopGetCurrent(), src, .commonModes)
             CGEvent.tapEnable(tap: tap, enable: true)
         }
