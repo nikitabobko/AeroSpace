@@ -46,7 +46,7 @@ final class TestCommandTest: XCTestCase {
 
         assertEquals(
             try await parseCommand("test %{workspace-is-focused} .~ foo").cmdOrDie.run(.defaultEnv, .emptyStdin),
-            CmdResult(stdout: [], stderr: ["Interpolation variable: \'workspace-is-focused\' has type of \'bool\'.\nThe \'bool\' type is not compatible with \'.~\' operator."], exitCode: Int32ExitCode(rawValue: 2)),
+            CmdResult(stdout: [], stderr: ["Interpolation variable: \'workspace-is-focused\' has a type of Bool. The Bool type is not compatible with \'.~\' operator."], exitCode: Int32ExitCode(rawValue: 2)),
         )
     }
 

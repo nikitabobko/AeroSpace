@@ -92,9 +92,9 @@ enum Primitive: Encodable {
     case string(String)
 
     enum Kind: String {
-        case bool
-        case int
-        case string
+        case bool = "Bool"
+        case int = "Int"
+        case string = "String"
     }
 
     var kind: Kind {

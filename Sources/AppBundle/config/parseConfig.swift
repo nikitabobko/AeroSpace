@@ -323,11 +323,13 @@ func parseTable<T: ConvenienceCopyable>(
     _ backtrace: ConfigBacktrace,
     _ errors: inout [ConfigParseError],
 ) -> T {
-    guard let table = raw.asDictOrNil else {
-        errors.append(expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace))
-        return initial
+    switch raw {
+        case .dict(let table):
+            return table.parseTable(initial, fieldsParser, backtrace, &errors)
+        default:
+            errors.append(expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace))
+            return initial
     }
-    return table.parseTable(initial, fieldsParser, backtrace, &errors)
 }
 
 private func parseStartupRootContainerLayout(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Void> {

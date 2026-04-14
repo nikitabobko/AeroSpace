@@ -24,7 +24,7 @@ aerospace test [-h|--help] <lhs> /~ <rhs>
 
 The `test` utility evaluates the expression and, if it evaluates to true, returns a zero (true) exit status; otherwise it returns 1 (false).
 
-The utility is inspired by builtin `/bin/test` utility.
+The utility is inspired by the builtin `/bin/test` utility.
 
 `<lhs> .= <rhs>`:: Tests that `<lhs>` equals to `<rhs>`
 `<lhs> /= <rhs>`:: Tests that `<lhs>` does NOT equal to `<rhs>`
@@ -82,8 +82,8 @@ include::./util/conditional-interpolation-variables-header.adoc[]
 // =========================================================== Exit codes
 include::./util/conditional-exit-code-header.adoc[]
 
-0:: All the supplied conditions have evaluated to true.
-1:: One of the supplied conditions has evaluated to false.
+0:: The expression has evaluated to `true`.
+1:: The expression has evaluated to `false`.
 
 >1::
 An error occurred.

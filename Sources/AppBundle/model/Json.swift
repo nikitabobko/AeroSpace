@@ -106,11 +106,11 @@ enum Json: Encodable, Equatable {
 }
 
 enum TomlType: String {
-    case table
-    case array
+    case table = "Table"
+    case array = "Array"
 
-    case null
-    case string
-    case int
-    case bool
+    case null = "Null"
+    case string = "String"
+    case int = "Int"
+    case bool = "Bool"
 }

@@ -34,7 +34,7 @@ final class ConfigTest: XCTestCase {
             exec-on-workspace-change = ['', 1]
             """,
         )
-        assertEquals(errors, ["exec-on-workspace-change[1]: Expected type is \'string\'. But actual type is \'int\'"])
+        assertEquals(errors, ["exec-on-workspace-change[1]: Expected type is \'String\'. But actual type is \'Int\'"])
     }
 
     func testDuplicatedPersistentWorkspaces() {
@@ -179,7 +179,7 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(
             errors,
-            ["enable-normalization-flatten-containers: Expected type is \'bool\'. But actual type is \'string\'"],
+            ["enable-normalization-flatten-containers: Expected type is \'Bool\'. But actual type is \'String\'"],
         )
     }
 

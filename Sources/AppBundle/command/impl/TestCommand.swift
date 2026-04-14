@@ -23,10 +23,9 @@ struct TestCommand: Command {
 
         let (infixOperator, negated) = args.infixOperator.val.structured
         let rhs = args.rhs.val
-        let lhsType = lhs.kind.rawValue.singleQuoted
+        let lhsType = lhs.kind.rawValue
         let incompatibleLhsAndOperatorMsg = """
-            Interpolation variable: \(args.lhs.val.rawValue.singleQuoted) has type of \(lhsType).
-            The \(lhsType) type is not compatible with \(args.infixOperator.val.rawValue.singleQuoted) operator.
+            Interpolation variable: \(args.lhs.val.rawValue.singleQuoted) has a type of \(lhsType). The \(lhsType) type is not compatible with \(args.infixOperator.val.rawValue.singleQuoted) operator.
             """
 
         let result: Result<Bool, String> = switch (lhs, infixOperator) {
@@ -45,11 +44,8 @@ struct TestCommand: Command {
         }
 
         return switch result {
+            case .success(let result): result != negated ? ._true : ._false // xor
             case .failure(let err): .fail(io.err(err))
-            case .success(true) where negated: ._false
-            case .success(true): ._true
-            case .success(false) where negated: ._true
-            case .success(false): ._false
         }
     }
 }
