@@ -6,6 +6,7 @@ private struct CmdRightResizeSession {
     let windowId: UInt32
     let startPoint: CGPoint
     let startRect: Rect
+    let isFloating: Bool
     let edges: EdgeSet
     let engageX: Bool
     let engageY: Bool
@@ -30,9 +31,9 @@ func onCmdRightMouseDown() async {
     guard cmdRightResizeSession == nil else { return }
     let point = mouseLocation
     let targetWorkspace = point.monitorApproximation.activeWorkspace
-    guard let window = point.findIn(tree: targetWorkspace.rootTilingContainer, virtual: false) else { return }
-    guard let rect = window.lastAppliedLayoutPhysicalRect else { return }
+    guard let window = await findWindowForRightClickResize(at: point, in: targetWorkspace) else { return }
     guard let axRect = try? await window.getAxRect() else { return }
+    let rect = window.lastAppliedLayoutPhysicalRect ?? axRect
 
     let tolerance: CGFloat = 10
     let nearLeft = abs(point.x - rect.minX) <= tolerance
@@ -49,14 +50,22 @@ func onCmdRightMouseDown() async {
 
 
     currentlyManipulatedWithMouseWindowId = window.windowId
-    cmdRightResizeSession = CmdRightResizeSession(windowId: window.windowId, startPoint: point, startRect: axRect, edges: edges, engageX: engageXInitial, engageY: engageYInitial)
+    cmdRightResizeSession = CmdRightResizeSession(
+        windowId: window.windowId,
+        startPoint: point,
+        startRect: axRect,
+        isFloating: window.isFloating,
+        edges: edges,
+        engageX: engageXInitial,
+        engageY: engageYInitial,
+    )
 }
 
 @MainActor
 func onCmdRightMouseDragged() async {
     guard let session = cmdRightResizeSession else { return }
     guard let window = Window.get(byId: session.windowId) else { return }
-    guard let lastAppliedLayoutRect = window.lastAppliedLayoutPhysicalRect else { return }
+    let lastAppliedLayoutRect = window.lastAppliedLayoutPhysicalRect
 
     let point = mouseLocation
     let dx = point.x - session.startPoint.x
@@ -95,17 +104,36 @@ func onCmdRightMouseDragged() async {
     if newSize.width < 100 || newSize.height < 100 { return }
 
     let currentRect = Rect(
-        topLeftX: engageX ? newTopLeft.x : lastAppliedLayoutRect.topLeftX,
-        topLeftY: engageY ? newTopLeft.y : lastAppliedLayoutRect.topLeftY,
-        width: engageX ? newSize.width : lastAppliedLayoutRect.width,
-        height: engageY ? newSize.height : lastAppliedLayoutRect.height,
+        topLeftX: engageX ? newTopLeft.x : session.startRect.topLeftX,
+        topLeftY: engageY ? newTopLeft.y : session.startRect.topLeftY,
+        width: engageX ? newSize.width : session.startRect.width,
+        height: engageY ? newSize.height : session.startRect.height,
     )
-    adjustWeightsForResize(window: window, currentRect: currentRect, lastAppliedLayoutRect: lastAppliedLayoutRect)
-    scheduleCancellableCompleteRefreshSession(.globalObserver("cmdRightMouseDragged"), optimisticallyPreLayoutWorkspaces: true)
+
+    if session.isFloating {
+        window.lastFloatingSize = currentRect.size
+        window.setAxFrame(currentRect.topLeftCorner, currentRect.size)
+    } else if let lastAppliedLayoutRect {
+        adjustWeightsForResize(window: window, currentRect: currentRect, lastAppliedLayoutRect: lastAppliedLayoutRect)
+        scheduleCancellableCompleteRefreshSession(.globalObserver("cmdRightMouseDragged"), optimisticallyPreLayoutWorkspaces: true)
+    }
 }
 
 @MainActor
 func onCmdRightMouseUp() async {
     cmdRightResizeSession = nil
     try? await resetManipulatedWithMouseIfPossible()
+}
+
+@MainActor
+private func findWindowForRightClickResize(at point: CGPoint, in workspace: Workspace) async -> Window? {
+    for window in workspace.floatingWindows.reversed() {
+        if let rect = try? await window.getAxRect(), rect.contains(point) {
+            return window
+        }
+    }
+    if let tilingWindow = point.findIn(tree: workspace.rootTilingContainer, virtual: false) {
+        return tilingWindow
+    }
+    return nil
 }
