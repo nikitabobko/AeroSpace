@@ -4,6 +4,10 @@ extension CmdArgs {
     func toCommand() -> any Command {
         let command: any Command
         switch Self.info.kind {
+            case ._false:
+                command = FalseCommand(args: self as! FalseCmdArgs)
+            case ._true:
+                command = TrueCommand(args: self as! TrueCmdArgs)
             case .balanceSizes:
                 command = BalanceSizesCommand(args: self as! BalanceSizesCmdArgs)
             case .close:

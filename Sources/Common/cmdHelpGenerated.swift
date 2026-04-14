@@ -27,6 +27,9 @@ let enable_help_generated = """
 let exec_and_forget_help_generated = """
     USAGE: exec-and-forget <bash-script>
     """
+let false_help_generated = """
+    USAGE: false [-h|--help]
+    """
 let flatten_workspace_tree_help_generated = """
     USAGE: flatten-workspace-tree [-h|--help] [--workspace <workspace>]
     """
@@ -148,6 +151,9 @@ let test_help_generated = """
     """
 let trigger_binding_help_generated = """
     USAGE: trigger-binding [-h|--help] <binding> --mode <mode-id>
+    """
+let true_help_generated = """
+    USAGE: true [-h|--help]
     """
 let volume_help_generated = """
     USAGE: volume [-h|--help] (up|down) [--no-gui]

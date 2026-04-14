@@ -64,8 +64,16 @@ func testParseCommandSucc(_ command: String, _ expected: any CmdArgs) {
             if !command.args.equals(expected) {
                 failExpectedActual(expected, command.args)
             }
-        case .help: die() // todo test help
+        case .help: XCTFail("Expected to parse to command. Actual: parsed to help")
         case .failure(let msg): XCTFail(msg.msg)
+    }
+}
+
+func testParseCommandHelp(_ command: String) {
+    let parsed = parseCommand(command)
+    switch parsed {
+        case .help: break
+        default: XCTFail("Expected to parse to help")
     }
 }
 

@@ -18,6 +18,8 @@ aerospace -h;
     | enable [--fail-if-noop] on [--fail-if-noop]
     | enable [--fail-if-noop] off [--fail-if-noop]
 
+    | false
+
     | flatten-workspace-tree [--workspace <workspace>]
 
     | focus [<focus_direction_flag>]... (left|down|up|right) [<focus_direction_flag>]...
@@ -67,6 +69,8 @@ aerospace -h;
     | swap [--swap-focus|--wrap-around|--window-id <window_id>]... (left|down|up|right|dfs-next|dfs-prev) [--swap-focus|--wrap-around|--window-id <window_id>]...
 
     | test <output_format> (.=|/=|.~|/~) <output_format>
+
+    | true
 
     | summon-workspace [--fail-if-noop] <workspace> [--fail-if-noop]
 

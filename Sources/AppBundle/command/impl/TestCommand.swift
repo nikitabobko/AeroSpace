@@ -5,7 +5,7 @@ struct TestCommand: Command {
     let args: TestCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache: Bool = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> TestCommandExitCode {
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> ConditionalExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
 
         let _lhs: Result<Primitive, String> = switch target.windowOrNil {

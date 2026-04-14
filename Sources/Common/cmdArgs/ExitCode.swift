@@ -7,7 +7,6 @@ extension ExitCode {
 }
 
 public let EXIT_CODE_ZERO: Int32 = 0
-public let EXIT_CODE_ONE: Int32 = 1
 public let EXIT_CODE_TWO: Int32 = 2
 
 public struct Int32ExitCode: ExitCode, Equatable {
@@ -37,6 +36,12 @@ public enum BinaryExitCode: Int32, ExitCode {
             default: other()
         }
     }
+}
+
+public enum ConditionalExitCode: Int32, ExitCode {
+    case _true = 0
+    case _false = 1
+    case fail = 2
 }
 
 public enum IoSideEffect {

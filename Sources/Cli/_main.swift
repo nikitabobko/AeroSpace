@@ -52,12 +52,13 @@ struct Main {
 
         let parsedArgs: any CmdArgs
         switch parseCmdArgs(args) {
-            case .cmd(let _parsedArgs):
-                parsedArgs = _parsedArgs
-            case .help(let help):
-                exit(EXIT_CODE_ZERO, out: help)
-            case .failure(let e):
-                exit(e.exitCode, err: e.msg)
+            // Optimizations
+            case .cmd(_ as TrueCmdArgs): exit(ConditionalExitCode._true.rawValue)
+            case .cmd(_ as FalseCmdArgs): exit(ConditionalExitCode._false.rawValue)
+
+            case .cmd(let _parsedArgs): parsedArgs = _parsedArgs
+            case .help(let help): exit(EXIT_CODE_ZERO, out: help)
+            case .failure(let e): exit(e.exitCode, err: e.msg)
         }
 
         let failExitCode = parsedArgs.failExitCode

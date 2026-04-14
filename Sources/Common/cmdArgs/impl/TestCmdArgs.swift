@@ -18,7 +18,7 @@ public struct TestCmdArgs: CmdArgs {
             newMandatoryPosArgParser(\.rhs, parseRhs, placeholder: "<rhs>"),
         ],
     )
-    public typealias ExitCodeType = TestCommandExitCode
+    public typealias ExitCodeType = ConditionalExitCode
 
     public var lhs: Lateinit<FormatVar> = .uninitialized
     public var infixOperator: Lateinit<InfixOperator> = .uninitialized
@@ -72,29 +72,6 @@ public enum InfixOperator: String, CaseIterable, Equatable, Sendable {
 
             case .matchesRegex: (.matchesRegex, negated: false)
             case .notMatchesRegex: (.matchesRegex, negated: true)
-        }
-    }
-}
-
-public enum TestCommandExitCode: RawRepresentable, ExitCode {
-    case _true
-    case _false
-    case fail
-
-    public init?(rawValue: Int32) {
-        switch rawValue {
-            case EXIT_CODE_ZERO: self = ._true
-            case EXIT_CODE_ONE: self = ._false
-            case EXIT_CODE_TWO: self = .fail
-            default: return nil
-        }
-    }
-
-    public var rawValue: Int32 {
-        switch self {
-            case ._true: EXIT_CODE_ZERO
-            case ._false: EXIT_CODE_ONE
-            case .fail: EXIT_CODE_TWO
         }
     }
 }
