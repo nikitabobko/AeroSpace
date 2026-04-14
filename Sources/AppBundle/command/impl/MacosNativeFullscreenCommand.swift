@@ -8,12 +8,12 @@ import Common
 /// The same applies to macos-native-minimize command
 struct MacosNativeFullscreenCommand: Command {
     let args: MacosNativeFullscreenCmdArgs
-    /*conforms*/ var shouldResetClosedWindowsCache = false
+    /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
-        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let window = target.windowOrNil else {
-            return io.err(noWindowIsFocused)
+            return .fail(io.err(noWindowIsFocused))
         }
         let prevState = try await window.isMacosFullscreen
         let newState: Bool = switch args.toggle {
@@ -22,13 +22,16 @@ struct MacosNativeFullscreenCommand: Command {
             case .toggle: !prevState
         }
         if newState == prevState {
-            io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
-                "Tip: use --fail-if-noop to exit with non-zero exit code")
-            return !args.failIfNoop
+            return switch args.failIfNoop {
+                case true: .fail
+                case false:
+                    .succ(io.err((newState ? "Already fullscreen. " : "Already not fullscreen. ") +
+                            "Tip: use --fail-if-noop to exit with non-zero exit code"))
+            }
         }
         window.asMacWindow().setNativeFullscreen(newState)
         guard let workspace = window.visualWorkspace else {
-            return io.err(windowIsntPartOfTree(window))
+            return .fail(io.err(windowIsntPartOfTree(window)))
         }
         if newState { // Enter fullscreen
             window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
@@ -40,6 +43,6 @@ struct MacosNativeFullscreenCommand: Command {
                     try await window.relayoutWindow(on: workspace)
             }
         }
-        return true
+        return .succ
     }
 }

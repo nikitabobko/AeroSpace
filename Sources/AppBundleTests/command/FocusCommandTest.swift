@@ -41,6 +41,15 @@ final class FocusCommandTest: XCTestCase {
             parseCommand("focus --boundaries all-monitors-outer-frame dfs-next").errorOrNil,
             "(dfs-next|dfs-prev) only supports --boundaries workspace",
         )
+
+        assertEquals(
+            parseCommand("focus --window-id 42 --wrap-around").errorOrNil,
+            "--window-id is incompatible with other options",
+        )
+        assertEquals(
+            parseCommand("focus left --boundaries-action wrap-around-the-workspace --wrap-around").errorOrNil,
+            "ERROR: Conflicting options: --boundaries-action, --wrap-around",
+        )
     }
 
     func testFocus() {
@@ -214,29 +223,29 @@ final class FocusCommandTest: XCTestCase {
         var args = FocusCmdArgs(rawArgs: [], cardinalOrDfsDirection: .dfsRelative(.dfsPrev))
 
         args.rawBoundariesAction = .stop
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
         assertEquals(focus.windowOrNil?.windowId, 1)
 
         args.rawBoundariesAction = .fail
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 1)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 2)
         assertEquals(focus.windowOrNil?.windowId, 1)
 
         args.rawBoundariesAction = .wrapAroundTheWorkspace
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
         assertEquals(focus.windowOrNil?.windowId, 2)
 
         args.cardinalOrDfsDirection = .dfsRelative(.dfsNext)
 
         args.rawBoundariesAction = .stop
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
         assertEquals(focus.windowOrNil?.windowId, 2)
 
         args.rawBoundariesAction = .fail
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 1)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 2)
         assertEquals(focus.windowOrNil?.windowId, 2)
 
         args.rawBoundariesAction = .wrapAroundTheWorkspace
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode, 0)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 }

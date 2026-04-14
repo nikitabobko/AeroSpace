@@ -13,7 +13,7 @@ triple_quote='"""'
 
 cat << EOF > $out_file
 // FILE IS GENERATED FROM docs/aerospace-*.adoc files
-// TO REGENERATE THE FILE RUN generate.sh --all
+// TO REGENERATE THE FILE RUN generate.sh
 
 EOF
 

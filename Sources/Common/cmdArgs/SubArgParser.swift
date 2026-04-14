@@ -1,90 +1,41 @@
-public typealias SubArgParserFun<K> = @Sendable (SubArgParserInput) -> ParsedCliArgs<K>
-public protocol SubArgParserProtocol<T>: Sendable, AeroAny {
-    associatedtype K
-    associatedtype T where T: ConvenienceCopyable
-    var keyPath: SendableWritableKeyPath<T, K> { get }
-    var parse: SubArgParserFun<K> { get }
-}
-public struct SubArgParser<T: ConvenienceCopyable, K>: SubArgParserProtocol {
-    public let keyPath: SendableWritableKeyPath<T, K>
-    public let parse: SubArgParserFun<K>
+typealias SubArgParser<Root, Value> = ArgParser<SubArgParserInput, Root, Value, ()>
 
-    public init(
-        _ keyPath: SendableWritableKeyPath<T, K>,
-        _ parse: @escaping SubArgParserFun<K>,
-    ) {
-        self.keyPath = keyPath
-        self.parse = parse
-    }
+func windowIdSubArgParser<T: CmdArgs>() -> SubArgParser<T, UInt32?> {
+    singleValueSubArgParser(\T.windowId, "<window-id>", parseUInt32)
+}
+func workspaceSubArgParser<T: CmdArgs>() -> SubArgParser<T, WorkspaceName?> {
+    singleValueSubArgParser(\T.workspaceName, "<workspace>", WorkspaceName.parse)
 }
 
-func upcastSubArgParserFun<T>(_ fun: @escaping SubArgParserFun<T>) -> SubArgParserFun<T?> { { fun($0).map { $0 } } }
-
-public struct SubArgParserInput: ArgParserInputProtocol {
-    let superArg: String
-    let index: Int
-    let args: StrArrSlice
-
-    var argOrNil: String? { args.getOrNil(atIndex: index) }
+func trueBoolFlag<T>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
+    ArgParser(keyPath, constSubArgParserFun(true))
 }
 
-public func parseUInt32SubArg(i: SubArgParserInput) -> ParsedCliArgs<UInt32> {
-    if let arg = i.nonFlagArgOrNil() {
-        return .init(UInt32(arg).orFailure("Can't parse '\(arg)'. It must be a positive number"), advanceBy: 1)
-    } else {
-        return .fail("'\(i.superArg)' must be followed by mandatory UInt32", advanceBy: 0)
-    }
+func falseBoolFlag<T>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
+    ArgParser(keyPath, constSubArgParserFun(false))
 }
 
-public func optionalWindowIdFlag<T: CmdArgs>() -> SubArgParser<T, UInt32?> {
-    SubArgParser(\T.windowId, upcastSubArgParserFun(parseUInt32SubArg))
-}
-public func optionalWorkspaceFlag<T: CmdArgs>() -> SubArgParser<T, WorkspaceName?> {
-    SubArgParser(\T.workspaceName, upcastSubArgParserFun(parseWorkspaceNameSubArg))
+func boolFlag<T>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
+    ArgParser(keyPath) { input in input.argOrNil == "no" ? .succ(false, advanceBy: 1) : .succ(true, advanceBy: 0) }
 }
 
-public func trueBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
-    SubArgParser(keyPath) { _ in .succ(true, advanceBy: 0) }
-}
-
-public func falseBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool>) -> SubArgParser<T, Bool> {
-    SubArgParser(keyPath) { _ in .succ(false, advanceBy: 0) }
-}
-
-public func boolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
-    SubArgParser(keyPath) { input in input.argOrNil == "no" ? .succ(false, advanceBy: 1) : .succ(true, advanceBy: 0) }
-}
-
-public func singleValueSubArgParser<T: ConvenienceCopyable, V>(
-    _ keyPath: SendableWritableKeyPath<T, V?>,
+func singleValueSubArgParser<Root, Value>(
+    _ keyPath: SendableWritableKeyPath<Root, Value?>,
     _ placeholder: String,
-    _ mapper: @escaping @Sendable (String) -> V?,
-) -> SubArgParser<T, V?> {
-    SubArgParser(keyPath) { input in
-        if let arg = input.nonFlagArgOrNil() {
-            if let value: V = mapper(arg) {
-                .succ(value, advanceBy: 1)
-            } else {
-                .fail("Failed to convert '\(arg)' to '\(V.self)'", advanceBy: 1)
-            }
-        } else {
-            .fail("'\(placeholder)' is mandatory", advanceBy: 0)
+    _ mapper: @escaping @Sendable (String) -> Parsed<Value>,
+) -> SubArgParser<Root, Value?> {
+    ArgParser(keyPath) { input in
+        switch input.nonFlagArgOrNil() {
+            case nil: .fail("'\(input.superArg)' must be followed by '\(placeholder)'", advanceBy: 0)
+            case let arg?:
+                switch mapper(arg) {
+                    case .success(let value): .succ(value, advanceBy: 1)
+                    case .failure(let error): .fail("Failed to parse '\(arg)' CLI argument: \(error)", advanceBy: 1)
+                }
         }
     }
 }
 
-public func optionalTrueBoolFlag<T: ConvenienceCopyable>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
-    SubArgParser(keyPath) { _ in .succ(true, advanceBy: 0) }
-}
-
-public func optionalFalseBoolFlag<T: ConvenienceCopyable>(_ KeyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T, Bool?> {
-    SubArgParser(KeyPath) { _ in .succ(false, advanceBy: 0) }
-}
-
-public func parseWorkspaceNameSubArg(i: SubArgParserInput) -> ParsedCliArgs<WorkspaceName> {
-    if let arg = i.nonFlagArgOrNil() {
-        .init(WorkspaceName.parse(arg), advanceBy: 1)
-    } else {
-        .fail("'\(i.superArg)' must be followed by mandatory workspace name", advanceBy: 0)
-    }
+func constSubArgParserFun<Value: Sendable>(_ const: Value) -> ArgParserFun<SubArgParserInput, Value> {
+    return { _ in .succ(const, advanceBy: 0) }
 }

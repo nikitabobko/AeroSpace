@@ -4,6 +4,10 @@ extension CmdArgs {
     func toCommand() -> any Command {
         let command: any Command
         switch Self.info.kind {
+            case ._false:
+                command = FalseCommand(args: self as! FalseCmdArgs)
+            case ._true:
+                command = TrueCommand(args: self as! TrueCmdArgs)
             case .balanceSizes:
                 command = BalanceSizesCommand(args: self as! BalanceSizesCmdArgs)
             case .close:
@@ -66,10 +70,14 @@ extension CmdArgs {
                 command = ResizeCommand(args: self as! ResizeCmdArgs)
             case .split:
                 command = SplitCommand(args: self as! SplitCmdArgs)
+            case .subscribe:
+                die("subscribe is handled separately")
             case .summonWorkspace:
                 command = SummonWorkspaceCommand(args: self as! SummonWorkspaceCmdArgs)
             case .swap:
                 command = SwapCommand(args: self as! SwapCmdArgs)
+            case .test:
+                command = TestCommand(args: self as! TestCmdArgs)
             case .triggerBinding:
                 command = TriggerBindingCommand(args: self as! TriggerBindingCmdArgs)
             case .volume:

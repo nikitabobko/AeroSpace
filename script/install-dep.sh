@@ -9,6 +9,7 @@ swiftlint=0
 swiftformat=0
 xcodegen=0
 bundler=0
+periphery=0
 while test $# -gt 0; do
     case $1 in
         --antlr) antlr=1; shift ;;
@@ -17,6 +18,7 @@ while test $# -gt 0; do
         --xcodegen) xcodegen=1; shift ;;
         --swiftformat) swiftformat=1; shift ;;
         --bundler) bundler=1; shift ;;
+        --periphery) periphery=1; shift ;;
         --all) all=1; shift ;;
         *) echo "Unknown option $1"; exit 1 ;;
     esac
@@ -86,30 +88,40 @@ lazy-download-zip-and-link-bin() {
 
 if test $all == 1 || test $swiftlint == 1; then
     # https://github.com/realm/SwiftLint/releases
-    swiftlint_version=0.62.2
+    swiftlint_version=0.63.2
     lazy-download-zip-and-link-bin \
         swiftlint \
         https://github.com/realm/SwiftLint/releases/download/$swiftlint_version/SwiftLintBinary.artifactbundle.zip \
-        '3047357eee0838a0bafc7a6e65cd1aad61734b30d7233e28f3434149fe02f522  .deps/swiftlint/dist/zip.zip' \
+        '12befab676fc972ffde2ec295d016d53c3a85f64aabd9c7fee0032d681e307e9  .deps/swiftlint/dist/zip.zip' \
         SwiftLintBinary.artifactbundle/macos/swiftlint
 fi
 
 if test $all == 1 || test $xcodegen == 1; then
     # https://github.com/yonaskolb/XcodeGen/releases
-    xcodegen_version=2.44.1
+    xcodegen_version=2.45.3
     lazy-download-zip-and-link-bin \
         xcodegen \
         https://github.com/yonaskolb/XcodeGen/releases/download/$xcodegen_version/xcodegen.artifactbundle.zip \
-        'cfa4e1ee82fc4c95bf7bd8f7db1fda6bd073605c76a8d5cbce50c54a81867eb2  .deps/xcodegen/dist/zip.zip' \
+        '6a3cb84183c7fc88ebe0796af6a84bbf07b005bcdc61eaaef13a8a661d0675b8  .deps/xcodegen/dist/zip.zip' \
         xcodegen.artifactbundle/xcodegen-$xcodegen_version-macosx/bin/xcodegen
 fi
 
 if test $all == 1 || test $swiftformat == 1; then
     # https://github.com/nicklockwood/SwiftFormat/releases
-    swiftformat_version=0.58.6
+    swiftformat_version=0.60.1
     lazy-download-zip-and-link-bin \
         swiftformat \
         https://github.com/nicklockwood/SwiftFormat/releases/download/$swiftformat_version/swiftformat.artifactbundle.zip \
-        'd2ee571b3f15c173b1789b82b9fcf1e799cff66de0ae9f6839bd35aa8e9b9608  .deps/swiftformat/dist/zip.zip' \
+        'cb4738085cf39c08da00b79b4a3683e77458ca12909934d04e5087d8e73f5e43  .deps/swiftformat/dist/zip.zip' \
         swiftformat.artifactbundle/swiftformat-$swiftformat_version-macos/bin/swiftformat
+fi
+
+if test $all == 1 || test $periphery == 1; then
+    # https://github.com/peripheryapp/periphery/releases
+    periphery_version=3.7.2
+    lazy-download-zip-and-link-bin \
+        periphery \
+        https://github.com/peripheryapp/periphery/releases/download/$periphery_version/periphery-$periphery_version.zip \
+        '3c1fa5214ffc3e7d184e898a4b96597b45f436982dd6e5e51295aaefa3cab601  .deps/periphery/dist/zip.zip' \
+        periphery
 fi

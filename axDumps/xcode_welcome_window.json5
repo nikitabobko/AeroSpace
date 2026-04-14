@@ -1,0 +1,72 @@
+{
+  "AXActivationPoint" : "<AXValue 0xb88c24000> {value = x:541.000000 y:657.000000 type = kAXValueCGPointType}",
+  "AXCancelButton" : null,
+  "AXCloseButton" : null,
+  "AXDefaultButton" : null,
+  "AXDocument" : null,
+  "AXFocused" : 0,
+  "AXFrame" : "<AXValue 0xb895b0b00> {value = x:530.000000 y:208.000000 w:740.000000 h:460.000000 type = kAXValueCGRectType}",
+  "AXFullScreen" : 0,
+  "AXFullScreenButton" : null,
+  "AXGrowArea" : null,
+  "AXIdentifier" : "Welcome",
+  "AXMain" : 0,
+  "AXMinimizeButton" : null,
+  "AXMinimized" : 0,
+  "AXModal" : 0,
+  "AXParent" : "<AXUIElement Application 0xb89018090> {pid=7108}",
+  "AXPosition" : "<AXValue 0xb88c24000> {value = x:530.000000 y:208.000000 type = kAXValueCGPointType}",
+  "AXProxy" : null,
+  "AXRole" : "AXWindow",
+  "AXSections" : [
+    "{\n    SectionDescription = Content;\n    SectionObject = \"<AXUIElement 0xb89018090> {pid=7108}\";\n    SectionUniqueID = AXContent;\n}"
+  ],
+  "AXSize" : "<AXValue 0xb88c24000> {value = w:740.000000 h:460.000000 type = kAXValueCGSizeType}",
+  "AXSubrole" : "AXUnknown",
+  "AXTitle" : "Welcome to Xcode",
+  "AXTitleUIElement" : null,
+  "AXToolbarButton" : null,
+  "AXZoomButton" : null,
+  "Aero.AXApp" : {
+    "AXExtrasMenuBar" : null,
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=794, title=nil, role=\"AXOutline\", subrole=nil)",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=794, title=\"Welcome to Xcode\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFrame" : null,
+    "AXFrontmost" : 1,
+    "AXFunctionRowTopLevelElements" : [
+
+    ],
+    "AXMainWindow" : null,
+    "AXMenuBar" : "<AXUIElement 0xb89018090> {pid=7108}",
+    "AXPosition" : null,
+    "AXRole" : "AXApplication",
+    "AXSize" : null,
+    "AXTitle" : "Xcode",
+    "AXWindows" : [
+      "AXUIElement(AxWindowId=794, title=\"Welcome to Xcode\", role=\"AXWindow\", subrole=\"AXUnknown\")"
+    ],
+    "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXMainWindow, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
+    "Aero.AxWritable" : "AXFrontmost"
+  },
+  "Aero.App.appBundleId" : "com.apple.dt.Xcode",
+  "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.appBundlePath" : "file:///Applications/Xcode.app/",
+  "Aero.App.nsApp.execPath" : "file:///Applications/Xcode.app/Contents/MacOS/Xcode",
+  "Aero.App.pid" : 7108,
+  "Aero.App.version" : "24553",
+  "Aero.App.versionShort" : "26.2",
+  "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, get.AXMinimizeButton, get.AXDocument, get.AXCloseButton, isWritable.AXActivationPoint, get.AXFullScreenButton, get.AXProxy, get.AXDefaultButton, get.AXTitleUIElement, get.AXCancelButton, get.AXZoomButton, get.AXToolbarButton",
+  "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
+  "Aero.AxUiElementWindowType" : "popup", // todo fix
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxWritable" : "AXPosition, AXSections",
+  "Aero.axWindowId" : 794,
+  "Aero.macOS.version" : "Version 26.2 (Build 25C56)",
+  "Aero.on-window-detected" : [
+
+  ],
+  "Aero.treeNodeParent" : "Optional(AppBundle.MacosPopupWindowsContainer)",
+  "Aero.windowLevel" : "normalWindow",
+  "Aero.workspace" : null
+}

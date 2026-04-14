@@ -1,5 +1,5 @@
 // FILE IS GENERATED FROM docs/aerospace-*.adoc files
-// TO REGENERATE THE FILE RUN generate.sh --all
+// TO REGENERATE THE FILE RUN generate.sh
 
 let balance_sizes_help_generated = """
     USAGE: balance-sizes [-h|--help] [--workspace <workspace>]
@@ -27,6 +27,9 @@ let enable_help_generated = """
 let exec_and_forget_help_generated = """
     USAGE: exec-and-forget <bash-script>
     """
+let false_help_generated = """
+    USAGE: false [-h|--help]
+    """
 let flatten_workspace_tree_help_generated = """
     USAGE: flatten-workspace-tree [-h|--help] [--workspace <workspace>]
     """
@@ -39,10 +42,10 @@ let focus_monitor_help_generated = """
        OR: focus-monitor [-h|--help] <monitor-pattern>...
     """
 let focus_help_generated = """
-    USAGE: focus [-h|--help] [--ignore-floating]
+    USAGE: focus [-h|--help] [--ignore-floating] [--wrap-around]
                  [--boundaries <boundary>] [--boundaries-action <action>]
                  (left|down|up|right)
-       OR: focus [-h|--help] [--ignore-floating]
+       OR: focus [-h|--help] [--ignore-floating] [--wrap-around]
                  [--boundaries <boundary>] [--boundaries-action <action>]
                  (dfs-next|dfs-prev)
        OR: focus [-h|--help] --window-id <window-id>
@@ -129,6 +132,9 @@ let resize_help_generated = """
 let split_help_generated = """
     USAGE: split [-h|--help] [--window-id <window-id>] (horizontal|vertical|opposite)
     """
+let subscribe_help_generated = """
+    USAGE: subscribe [-h|--help] [--all] [--no-send-initial] [<event>...]
+    """
 let summon_workspace_help_generated = """
     USAGE: summon-workspace [-h|--help] [--fail-if-noop] <workspace>
     """
@@ -137,8 +143,17 @@ let swap_help_generated = """
                 [--wrap-around]
                 (left|down|up|right|dfs-next|dfs-prev)
     """
+let test_help_generated = """
+    USAGE: test [-h|--help] <lhs> .= <rhs>
+       OR: test [-h|--help] <lhs> /= <rhs>
+       OR: test [-h|--help] <lhs> .~ <rhs>
+       OR: test [-h|--help] <lhs> /~ <rhs>
+    """
 let trigger_binding_help_generated = """
     USAGE: trigger-binding [-h|--help] <binding> --mode <mode-id>
+    """
+let true_help_generated = """
+    USAGE: true [-h|--help]
     """
 let volume_help_generated = """
     USAGE: volume [-h|--help] (up|down) [--no-gui]

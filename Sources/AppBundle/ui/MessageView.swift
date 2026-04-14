@@ -24,12 +24,12 @@ public func getMessageWindow(messageModel: MessageModel) -> some Scene {
 
 public let messageWindowId = "\(aeroSpaceAppName).messageView"
 
-public struct MessageView: View {
+struct MessageView: View {
     @StateObject private var model: MessageModel
     @Environment(\.dismiss) private var dismiss: DismissAction
     @FocusState var focus: Bool
 
-    public init(model: MessageModel) {
+    init(model: MessageModel) {
         self._model = .init(wrappedValue: model)
     }
 

@@ -100,6 +100,6 @@
 
   ],
   "Aero.treeNodeParent" : "Optional(AppBundle.Workspace)",
-  "Aero.windowLevel" : "{\"unknown\":{\"layerNumber\":1001}}",
+  "Aero.windowLevel" : 1001,
   "Aero.workspace" : "1"
 }

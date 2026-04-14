@@ -1,22 +1,29 @@
 public struct FocusCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
     fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .focus,
         allowInConfig: true,
         help: focus_help_generated,
         flags: [
             "--ignore-floating": falseBoolFlag(\.floatingAsTiling),
-            "--boundaries": SubArgParser(\.rawBoundaries, upcastSubArgParserFun(parseBoundaries)),
-            "--boundaries-action": SubArgParser(\.rawBoundariesAction, upcastSubArgParserFun(parseBoundariesAction)),
-            "--window-id": SubArgParser(\.windowId, upcastSubArgParserFun(parseUInt32SubArg)),
-            "--dfs-index": SubArgParser(\.dfsIndex, upcastSubArgParserFun(parseUInt32SubArg)),
+            "--window-id": windowIdSubArgParser(),
+            "--dfs-index": singleValueSubArgParser(\.dfsIndex, "<dfs-index>", parseUInt32),
+
+            "--boundaries": ArgParser(\.rawBoundaries, upcastArgParserFun(parseBoundaries)),
+            "--boundaries-action": ArgParser(\.rawBoundariesAction, upcastArgParserFun(parseBoundariesAction)),
+            "--wrap-around": trueBoolFlag(\.wrapAroundAlias),
         ],
         posArgs: [ArgParser(\.cardinalOrDfsDirection, upcastArgParserFun(parseCardinalOrDfsDirection))],
+        conflictingOptions: [
+            ["--wrap-around", "--boundaries-action"],
+            ["--wrap-around", "--boundaries"],
+        ],
     )
 
     public var rawBoundaries: Boundaries? = nil // todo cover boundaries wrapping with tests
     public var rawBoundariesAction: WhenBoundariesCrossed? = nil
+    fileprivate var wrapAroundAlias: Bool = false
     public var dfsIndex: UInt32? = nil
     public var cardinalOrDfsDirection: CardinalOrDfsDirection? = nil
     public var floatingAsTiling: Bool = true
@@ -55,10 +62,9 @@ public enum FocusCmdTarget {
     case dfsRelative(DfsNextPrev)
 
     var isDfsRelative: Bool {
-        if case .dfsRelative = self {
-            return true
-        } else {
-            return false
+        switch self {
+            case .dfsRelative: true
+            default: false
         }
     }
 }
@@ -81,10 +87,12 @@ extension FocusCmdArgs {
     }
 
     public var boundaries: Boundaries { rawBoundaries ?? .workspace }
-    public var boundariesAction: WhenBoundariesCrossed { rawBoundariesAction ?? .stop }
+    public var boundariesAction: WhenBoundariesCrossed {
+        wrapAroundAlias ? .wrapAroundTheWorkspace : (rawBoundariesAction ?? .stop)
+    }
 }
 
-public func parseFocusCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusCmdArgs> {
+func parseFocusCmdArgs(_ args: StrArrSlice) -> ParsedCmd<FocusCmdArgs> {
     return parseSpecificCmdArgs(FocusCmdArgs(rawArgs: args), args)
         .flatMap { (raw: FocusCmdArgs) -> ParsedCmd<FocusCmdArgs> in
             raw.boundaries == .workspace && raw.boundariesAction == .wrapAroundAllMonitors

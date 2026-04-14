@@ -1,11 +1,13 @@
-final class CmdStdin {
+import Common
+
+struct CmdStdin: ~Copyable {
     private var input: String = ""
     init(_ input: String) {
         self.input = input
     }
     static var emptyStdin: CmdStdin { .init("") }
 
-    func readAll() -> String {
+    mutating func readAll() -> String {
         let result = input
         input = ""
         return result
@@ -17,18 +19,19 @@ final class CmdIo {
     var stdout: [String] = []
     var stderr: [String] = []
 
-    init(stdin: CmdStdin) { self.stdin = stdin }
+    init(stdin: consuming CmdStdin) { self.stdin = stdin }
 
-    @discardableResult func out(_ msg: String) -> Bool { stdout.append(msg); return true }
-    @discardableResult func err(_ msg: String) -> Bool { stderr.append(msg); return false }
-    @discardableResult func out(_ msg: [String]) -> Bool { stdout += msg; return true }
-    @discardableResult func err(_ msg: [String]) -> Bool { stderr += msg; return false }
+    @discardableResult func out(_ msg: String) -> IoSideEffect { stdout.append(msg); return .instance }
+    @discardableResult func err(_ msg: String) -> IoSideEffect { stderr.append(msg); return .instance }
+    @discardableResult func out(_ msg: [String]) -> IoSideEffect { stdout += msg; return .instance }
+    // periphery:ignore
+    @discardableResult func err(_ msg: [String]) -> IoSideEffect { stderr += msg; return .instance }
 
     func readStdin() -> String { stdin.readAll() }
 }
 
-struct CmdResult {
+struct CmdResult: Equatable {
     let stdout: [String]
     let stderr: [String]
-    let exitCode: Int32
+    let exitCode: Int32ExitCode
 }

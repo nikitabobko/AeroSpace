@@ -17,47 +17,56 @@ struct Main {
         let args = CommandLine.arguments.slice(1...) ?? []
 
         if args.isEmpty {
-            eprint(usage)
-            exit(1)
+            exit(EXIT_CODE_TWO, err: usage)
         }
         if args.first == "--help" || args.first == "-h" {
-            print(usage)
-            exit(0)
+            exit(EXIT_CODE_ZERO, out: usage)
         }
 
         if args.first == "--version" || args.first == "-v" {
             let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
-            let serverVersion: String?
-            if await connection.startBlocking() == nil {
-                let ans = await run(connection, [], stdin: "", windowId: nil, workspace: nil)
-                serverVersion = ans.serverVersionAndHash
+            let serverVersionAndHash: String?
+            if await connection.startBlocking().error == nil {
+                let ans = await run(connection, [], stdin: "", windowId: nil, workspace: nil, failExitCode: EXIT_CODE_TWO)
+                serverVersionAndHash = ans.serverVersionAndHash
             } else {
-                serverVersion = nil
+                serverVersionAndHash = nil
             }
             print(
                 """
                 aerospace CLI client version: \(cliClientVersionAndHash)
-                AeroSpace.app server version: \(serverVersion ?? "Unknown. The server is not running")
+                AeroSpace.app server version: \(serverVersionAndHash ?? "Unknown. The server is not running")
                 """,
             )
-            exit(0)
+            if serverVersionAndHash != nil && cliClientVersionAndHash != serverVersionAndHash {
+                eprint(
+                    """
+                    Warning: AeroSpace client/server versions don't match. Possible fixes:
+                      - Restart AeroSpace.app (server restart is required after each update)
+                      - Reinstall and restart AeroSpace (corrupted installation)
+                    """,
+                )
+            }
+            exit(EXIT_CODE_ZERO)
         }
 
-        var parsedArgs: (any CmdArgs)! = nil
+        let parsedArgs: any CmdArgs
         switch parseCmdArgs(args) {
-            case .cmd(let _parsedArgs):
-                parsedArgs = _parsedArgs
-            case .help(let help):
-                print(help)
-                exit(0)
-            case .failure(let e):
-                exit(stderrMsg: e)
+            // Optimizations
+            case .cmd(_ as TrueCmdArgs): exit(ConditionalExitCode._true.rawValue)
+            case .cmd(_ as FalseCmdArgs): exit(ConditionalExitCode._false.rawValue)
+
+            case .cmd(let _parsedArgs): parsedArgs = _parsedArgs
+            case .help(let help): exit(EXIT_CODE_ZERO, out: help)
+            case .failure(let e): exit(e.exitCode, err: e.msg)
         }
+
+        let failExitCode = parsedArgs.failExitCode
 
         let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
 
-        if let e = await connection.startBlocking() {
-            exit(stderrMsg: "Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
+        if let e = await connection.startBlocking().error {
+            exit(failExitCode, err: "Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
         }
 
         var stdin = ""
@@ -69,7 +78,8 @@ struct Main {
                 parsedArgs is MoveNodeToWorkspaceCmdArgs && (parsedArgs as! MoveNodeToWorkspaceCmdArgs).explicitStdinFlag == nil
             {
                 exit(
-                    stderrMsg: """
+                    failExitCode,
+                    err: """
                         ERROR: Implicit stdin is detected (stdin is not TTY). Implicit stdin was forbidden in AeroSpace v0.20.0.
                         1. Please supply '--stdin' flag to make stdin explicit and preserve old AeroSpace behavior
                         2. You can also use '--no-stdin' flag to behave as if no stdin was supplied
@@ -82,26 +92,33 @@ struct Main {
                 stdin += line
                 index += 1
                 if index > 1000 {
-                    exit(stderrMsg: "stdin number of lines limit is exceeded")
+                    exit(failExitCode, err: "stdin number of lines limit is exceeded")
                 }
             }
         }
 
         let windowId = ProcessInfo.processInfo.environment[AEROSPACE_WINDOW_ID].flatMap(UInt32.init)
         let workspace = ProcessInfo.processInfo.environment[AEROSPACE_WORKSPACE]
-        let ans = await run(connection, args, stdin: stdin, windowId: windowId, workspace: workspace)
+
+        // Handle subscribe command specially
+        if parsedArgs is SubscribeCmdArgs {
+            await runSubscribe(connection, args, windowId: windowId, workspace: workspace, failExitCode: parsedArgs.failExitCode)
+            exit(EXIT_CODE_ZERO) // Should not reach here
+        }
+
+        let ans = await run(connection, args, stdin: stdin, windowId: windowId, workspace: workspace, failExitCode: failExitCode)
 
         if !ans.stdout.isEmpty { print(ans.stdout) }
         if !ans.stderr.isEmpty { eprint(ans.stderr) }
-        if ans.exitCode != 0 && ans.serverVersionAndHash != cliClientVersionAndHash {
+        if ans.exitCode != EXIT_CODE_ZERO && ans.serverVersionAndHash != cliClientVersionAndHash {
             eprint(
                 """
                 Warning: AeroSpace client/server versions don't match
-                    - aerospace CLI client version: \(cliClientVersionAndHash)
-                    - AeroSpace.app server version: \(ans.serverVersionAndHash)
-                    Possible fixes:
-                    - Restart AeroSpace.app (server restart is required after each update)
-                    - Reinstall and restart AeroSpace (corrupted installation)
+                  - aerospace CLI client version: \(cliClientVersionAndHash)
+                  - AeroSpace.app server version: \(ans.serverVersionAndHash)
+                  Possible fixes:
+                  - Restart AeroSpace.app (server restart is required after each update)
+                  - Reinstall and restart AeroSpace (corrupted installation)
                 """,
             )
         }
@@ -109,17 +126,35 @@ struct Main {
     }
 }
 
-func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowId: UInt32?, workspace: String?) async -> ServerAnswer {
-    let req = ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)
-    let requestData = Result { try JSONEncoder().encode(req) }.getOrDie()
-    if let e = await connection.write(requestData) {
-        exit(stderrMsg: "Failed to write to server socket: \(e)")
+func runSubscribe(_ connection: NWConnection, _ args: StrArrSlice, windowId: UInt32?, workspace: String?, failExitCode: Int32) async {
+    if let e = await connection.writeAtomic(ClientRequest(args: args.toArray(), stdin: "", windowId: windowId, workspace: workspace)).error {
+        exit(failExitCode, err: "Failed to write to server socket: \(e)")
     }
 
-    switch await connection.read() {
+    while true {
+        switch await connection.readNonAtomic() {
+            case .success(let data):
+                if let str = String(data: data, encoding: .utf8) {
+                    print(str)
+                    unsafe fflush(stdout)
+                } else {
+                    exit(failExitCode, err: "Can't convert bytes to utf8 String")
+                }
+            case .failure(let e):
+                exit(failExitCode, err: "runSubscribe error: \(e)")
+        }
+    }
+}
+
+func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowId: UInt32?, workspace: String?, failExitCode: Int32) async -> ServerAnswer {
+    if let e = await connection.writeAtomic(ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)).error {
+        exit(failExitCode, err: "Failed to write to server socket: \(e)")
+    }
+
+    switch await connection.readNonAtomic() {
         case .success(let answer):
-            return (try? JSONDecoder().decode(ServerAnswer.self, from: answer)) ?? exitT(stderrMsg: "Failed to parse server response")
+            return (try? JSONDecoder().decode(ServerAnswer.self, from: answer)) ?? exitT(EXIT_CODE_TWO, err: "Failed to parse server response: \(String(data: answer, encoding: .utf8).prettyDescription)")
         case .failure(let error):
-            exit(stderrMsg: "Failed to read from server socket: \(error)")
+            exit(failExitCode, err: "Failed to read from server socket: \(error)")
     }
 }

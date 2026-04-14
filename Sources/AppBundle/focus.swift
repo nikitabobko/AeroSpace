@@ -17,11 +17,11 @@ struct LiveFocus: AeroAny, Equatable {
     let windowOrNil: Window?
     var workspace: Workspace
 
-    @MainActor var frozen: FrozenFocus {
+    @MainActor fileprivate var frozen: FrozenFocus {
         return FrozenFocus(
             windowId: windowOrNil?.windowId,
             workspaceName: workspace.name,
-            monitorId: workspace.workspaceMonitor.monitorId ?? 0,
+            monitorId_oneBased: workspace.workspaceMonitor.monitorId_oneBased ?? 0,
         )
     }
 }
@@ -29,29 +29,29 @@ struct LiveFocus: AeroAny, Equatable {
 /// "old", "captured", "frozen in time" Focus
 /// It's safe to keep a hard reference to this object.
 /// Unlike in LiveFocus, information inside FrozenFocus isn't guaranteed to be self-consistent.
-/// window - workspace - monitor relation could change since the object is created
-struct FrozenFocus: AeroAny, Equatable, Sendable {
+/// window - workspace - monitor relation could change since the moment object was created
+private struct FrozenFocus: AeroAny, Equatable, Sendable {
     let windowId: UInt32?
     let workspaceName: String
-    // monitorId is not part of the focus. We keep it here only for 'on-monitor-changed' to work
-    let monitorId: Int // 0-based
+    // monitorId is not part of the focus. We keep it here only for 'on-focused-monitor-changed' to work
+    let monitorId_oneBased: Int
 
     @MainActor var live: LiveFocus { // Important: don't access focus.monitorId here. monitorId is not part of the focus. Always prefer workspace
         let window: Window? = windowId.flatMap { Window.get(byId: $0) }
         let workspace = Workspace.get(byName: workspaceName)
 
-        let wsFocus = workspace.toLiveFocus()
-        let wdFocus = window?.toLiveFocusOrNil() ?? wsFocus
+        let workspaceFocus = workspace.toLiveFocus()
+        let windowFocus = window?.toLiveFocusOrNil() ?? workspaceFocus
 
-        return wsFocus.workspace != wdFocus.workspace
-            ? wsFocus // If window and workspace become separated prefer workspace
-            : wdFocus
+        return workspaceFocus.workspace != windowFocus.workspace
+            ? workspaceFocus // If window and workspace become separated prefer workspace
+            : windowFocus
     }
 }
 
 @MainActor private var _focus: FrozenFocus = {
     let monitor = mainMonitor
-    return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId: monitor.monitorId ?? 0)
+    return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId_oneBased: monitor.monitorId_oneBased ?? 0)
 }()
 
 /// Global focus.
@@ -113,7 +113,7 @@ extension Workspace {
 @MainActor var prevFocusedWorkspace: Workspace? { _prevFocusedWorkspaceName.map { Workspace.get(byName: $0) } }
 
 // Used by focus-back-and-forth
-@MainActor var _prevFocus: FrozenFocus? = nil
+@MainActor private var _prevFocus: FrozenFocus? = nil
 @MainActor var prevFocus: LiveFocus? { _prevFocus?.live.takeIf { $0 != focus } }
 
 @MainActor private var onFocusChangedRecursionGuard = false
@@ -135,7 +135,7 @@ extension Workspace {
         _prevFocusedWorkspaceName = _lastKnownFocus.workspaceName
         hasFocusedWorkspaceChanged = true
     }
-    if frozenFocus.monitorId != _lastKnownFocus.monitorId {
+    if frozenFocus.monitorId_oneBased != _lastKnownFocus.monitorId_oneBased {
         hasFocusedMonitorChanged = true
     }
     _lastKnownFocus = frozenFocus
@@ -155,6 +155,10 @@ extension Workspace {
 }
 
 @MainActor private func onFocusedMonitorChanged(_ focus: LiveFocus) {
+    broadcastEvent(.focusedMonitorChanged(
+        workspace: focus.workspace.name,
+        monitorId_oneBased: focus.workspace.workspaceMonitor.monitorId_oneBased ?? 0,
+    ))
     if config.onFocusedMonitorChanged.isEmpty { return }
     guard let token: RunSessionGuard = .isServerEnabled else { return }
     // todo potential optimization: don't run runSession if we are already in runSession
@@ -165,6 +169,10 @@ extension Workspace {
     }
 }
 @MainActor private func onFocusChanged(_ focus: LiveFocus) {
+    broadcastEvent(.focusChanged(
+        windowId: focus.windowOrNil?.windowId,
+        workspace: focus.workspace.name,
+    ))
     if config.onFocusChanged.isEmpty { return }
     guard let token: RunSessionGuard = .isServerEnabled else { return }
     // todo potential optimization: don't run runSession if we are already in runSession
@@ -176,6 +184,10 @@ extension Workspace {
 }
 
 @MainActor private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String) {
+    broadcastEvent(.workspaceChanged(
+        workspace: newWorkspace,
+        prevWorkspace: oldWorkspace,
+    ))
     if let exec = config.execOnWorkspaceChange.first {
         let process = Process()
         process.executableURL = URL(filePath: exec)

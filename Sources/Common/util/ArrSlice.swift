@@ -11,7 +11,7 @@ public struct ArrSlice<Element>: Sequence, AeroAny, ExpressibleByArrayLiteral, R
     fileprivate let offsetInBacking: Int
     /*conforms*/ public let count: Int
 
-    public init(arrayLiteral elements: Element...) {
+    /*conforms*/ public init(arrayLiteral elements: Element...) {
         self.init(elements, 0 ..< elements.count)
     }
 
@@ -66,6 +66,7 @@ extension ArrSlice: Equatable where Element: Equatable {
     }
 }
 
+// periphery:ignore
 extension Array {
     public var slice: ArrSlice<Element> { slice(0 ..< count).orDie() }
     public func slice(_ range: PartialRangeFrom<Int>) -> ArrSlice<Element>? { slice(range.lowerBound ..< count) }
@@ -81,6 +82,7 @@ extension Range<Int> {
     }
 }
 
+// periphery:ignore
 extension ArrSlice {
     public func slice(_ range: PartialRangeFrom<Int>) -> ArrSlice<Element>? { slice(range.lowerBound ..< count) }
     public func slice(_ range: PartialRangeUpTo<Int>) -> ArrSlice<Element>? { slice(0 ..< range.upperBound) }

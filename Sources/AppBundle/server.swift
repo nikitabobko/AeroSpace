@@ -9,9 +9,9 @@ func startUnixSocketServer() {
     let listener = Result { try NWListener(using: params) }.getOrDie()
     listener.newConnectionHandler = { connection in
         Task {
+            defer { connection.cancel() }
             connection.start(queue: .global())
             await newConnection(connection)
-            connection.cancel()
         }
     }
     listener.start(queue: .global())
@@ -23,13 +23,13 @@ func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) async {
     let socketFile = "/tmp/\(stableAeroSpaceAppId)-\(unixUserName).sock"
     let connection = NWConnection(to: NWEndpoint.unix(path: socketFile), using: .tcp)
     defer { connection.cancel() }
-    if await connection.startBlocking() != nil { // Can't connect, AeroSpace.app is not running
+    if await connection.startBlocking().error != nil { // Can't connect, AeroSpace.app is not running
         return
     }
 
     let req = ClientRequest(args: ["enable", state.rawValue], stdin: "", windowId: nil, workspace: nil)
-    _ = await connection.write(Result { try JSONEncoder().encode(req) }.getOrDie())
-    _ = await connection.read()
+    _ = await connection.writeAtomic(req)
+    _ = await connection.readNonAtomic()
 }
 
 private let serverVersionAndHash = "\(aeroSpaceAppVersion) \(gitHash)"
@@ -40,75 +40,84 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
         await answerToClient(ans)
     }
     func answerToClient(_ ans: ServerAnswer) async {
-        _ = await connection.write(Result { try JSONEncoder().encode(ans) }.getOrDie())
+        _ = await connection.writeAtomic(ans)
     }
     while true {
-        let (rawRequest, error) = await connection.read().getOrNils()
-        if let error {
-            await answerToClient(exitCode: 1, stderr: "Error: \(error)")
-            return
+        let rawRequest: Data
+        switch await connection.readNonAtomic() {
+            case .success(let _rawRequest): rawRequest = _rawRequest
+            case .failure(let error):
+                await answerToClient(exitCode: EXIT_CODE_TWO, stderr: "Error: \(error)")
+                return
         }
-        guard let rawRequest else { die() }
-        let _request = ClientRequest.decodeJson(rawRequest)
-        guard let request: ClientRequest = _request.getOrNil() else {
-            await answerToClient(
-                exitCode: 1,
-                stderr: """
-                    Can't parse request '\(String(describing: String(data: rawRequest, encoding: .utf8)).singleQuoted)'.
-                    Error: \(_request.failureOrNil.prettyDescription)
-                    """,
-            )
+        let request: ClientRequest
+        switch ClientRequest.decodeJson(rawRequest) {
+            case .success(let _request): request = _request
+            case .failure(let error):
+                await answerToClient(
+                    exitCode: EXIT_CODE_TWO,
+                    stderr: """
+                        Can't parse request \(String(describing: String(data: rawRequest, encoding: .utf8)).singleQuoted).
+                        Error: \(error)
+                        """,
+                )
+                continue
+        }
+        // Handle subscribe before parseCommand (subscribe doesn't have a Command impl)
+        if request.args.first == "subscribe" {
+            switch parseSubscribeCmdArgs(request.args.slice(1...).orDie()) {
+                case .cmd(let subscribeArgs): await handleSubscribeAndWaitTillError(connection, subscribeArgs)
+                case .help(let help): await answerToClient(exitCode: EXIT_CODE_ZERO, stdout: help)
+                case .failure(let err): await answerToClient(exitCode: err.exitCode, stderr: err.msg)
+            }
             continue
         }
-        let (command, help, err) = parseCommand(request.args).unwrap()
-        guard let token: RunSessionGuard = await .isServerEnabled(orIsEnableCommand: command) else {
+        let parsedCmd = parseCommand(request.args)
+        guard let token: RunSessionGuard = await .isServerEnabled(orIsEnableCommand: parsedCmd.cmdOrNil) else {
             await answerToClient(
-                exitCode: 1,
+                exitCode: EXIT_CODE_TWO,
                 stderr: "\(aeroSpaceAppName) server is disabled and doesn't accept commands. " +
                     "You can use 'aerospace enable on' to enable the server",
             )
             continue
         }
-        if let help {
-            await answerToClient(exitCode: 0, stdout: help)
-            continue
-        }
-        if let err {
-            await answerToClient(exitCode: 1, stderr: err)
-            continue
-        }
-        if command?.isExec == true {
-            await answerToClient(exitCode: 1, stderr: "exec-and-forget is prohibited in CLI")
-            continue
-        }
-        if let command {
-            let _answer: Result<ServerAnswer, Error> = await Task { @MainActor in
-                try await runLightSession(.socketServer, token) { () throws in
-                    let env = CmdEnv.init(
-                        windowId: request.windowId.flatMap { $0 },
-                        workspaceName: request.workspace.flatMap { $0 },
-                    )
-                    let cmdResult = try await command.run(env, CmdStdin(request.stdin))
-                    return ServerAnswer(
-                        exitCode: cmdResult.exitCode,
-                        stdout: cmdResult.stdout.joined(separator: "\n"),
-                        stderr: cmdResult.stderr.joined(separator: "\n"),
+        switch parsedCmd {
+            case .help(let help):
+                await answerToClient(exitCode: EXIT_CODE_ZERO, stdout: help)
+                continue
+            case .failure(let err):
+                await answerToClient(exitCode: err.exitCode, stderr: err.msg)
+                continue
+            case .cmd(let command) where command.isExec:
+                await answerToClient(exitCode: EXIT_CODE_TWO, stderr: "exec-and-forget is prohibited in CLI")
+                continue
+            case .cmd(let command):
+                let _answer: Result<ServerAnswer, Error> = await Result {
+                    try await runLightSession(.socketServer(command.args), token) { () throws in
+                        let env = CmdEnv.init(
+                            windowId: request.windowId.flattenOptional(),
+                            workspaceName: request.workspace.flattenOptional(),
+                        )
+                        let cmdResult = try await command.run(env, CmdStdin(request.stdin))
+                        return ServerAnswer(
+                            exitCode: cmdResult.exitCode.rawValue,
+                            stdout: cmdResult.stdout.joined(separator: "\n"),
+                            stderr: cmdResult.stderr.joined(separator: "\n"),
+                            serverVersionAndHash: serverVersionAndHash,
+                        )
+                    }
+                }
+                var answer = _answer.getOrNil() ??
+                    ServerAnswer(
+                        exitCode: command.args.failExitCode,
+                        stderr: "Fail to await main thread. \(_answer.failureOrNil?.localizedDescription ?? "")",
                         serverVersionAndHash: serverVersionAndHash,
                     )
+                if request.windowId == nil || request.workspace == nil {
+                    answer.stderr += "\n\nAeroSpace client has sent incomplete JSON request. 'windowId' or/and 'workspace' fields are missing. Please forward your AEROSPACE_WINDOW_ID and AEROSPACE_WORKSPACE environment variables to these JSON fields. If the appropriate environment variables are empty, pass explicit 'null' in the JSON."
                 }
-            }.result
-            var answer = _answer.getOrNil() ??
-                ServerAnswer(
-                    exitCode: 1,
-                    stderr: "Fail to await main thread. \(_answer.failureOrNil?.localizedDescription ?? "")",
-                    serverVersionAndHash: serverVersionAndHash,
-                )
-            if request.windowId == nil || request.workspace == nil {
-                answer.stderr += "\n\nAeroSpace client has sent incomplete JSON request. 'windowId' or/and 'workspace' fields are missing. Please forward your AEROSPACE_WINDOW_ID and AEROSPACE_WORKSPACE environment variables to these JSON fields. If the appropriate environment variables are empty, pass explict 'null' in the JSON."
-            }
-            await answerToClient(answer)
-            continue
+                await answerToClient(answer)
+                continue
         }
-        die("Unreachable")
     }
 }

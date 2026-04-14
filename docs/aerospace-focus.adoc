@@ -9,10 +9,10 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace focus [-h|--help] [--ignore-floating]
+aerospace focus [-h|--help] [--ignore-floating] [--wrap-around]
                 [--boundaries <boundary>] [--boundaries-action <action>]
                 (left|down|up|right)
-aerospace focus [-h|--help] [--ignore-floating]
+aerospace focus [-h|--help] [--ignore-floating] [--wrap-around]
                 [--boundaries <boundary>] [--boundaries-action <action>]
                 (dfs-next|dfs-prev)
 aerospace focus [-h|--help] --window-id <window-id>
@@ -49,6 +49,10 @@ The default is: `workspace`
 Defines the behavior when requested to cross the `<boundary>`. +
 `<action>` possible values: `(stop|fail|wrap-around-the-workspace|wrap-around-all-monitors)`. +
 The default is: `stop`
+
+--wrap-around::
+An alias for `--boundaries-action wrap-around-the-workspace`.
+The flag is incompatible with either `--boundaries-action` or `--boundaries`.
 
 --window-id <window-id>::
 Focus the window with specified `<window-id>`

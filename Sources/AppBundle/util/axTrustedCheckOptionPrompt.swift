@@ -1,3 +1,3 @@
-@preconcurrency import ApplicationServices
+@preconcurrency @unsafe import ApplicationServices
 
-let axTrustedCheckOptionPrompt: String = kAXTrustedCheckOptionPrompt.takeRetainedValue() as String
+let axTrustedCheckOptionPrompt: String = unsafe kAXTrustedCheckOptionPrompt.takeRetainedValue() as String

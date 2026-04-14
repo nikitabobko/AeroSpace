@@ -49,6 +49,7 @@ extension Rect {
     }
 
     var topLeftCorner: CGPoint { CGPoint(x: topLeftX, y: topLeftY) }
+    // periphery:ignore
     var topRightCorner: CGPoint { CGPoint(x: maxX, y: minY) }
     var bottomRightCorner: CGPoint { CGPoint(x: maxX, y: maxY) }
     var bottomLeftCorner: CGPoint { CGPoint(x: minX, y: maxY) }

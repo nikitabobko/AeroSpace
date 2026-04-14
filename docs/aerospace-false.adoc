@@ -1,0 +1,32 @@
+= aerospace-false(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-false
+// tag::purpose[]
+:manpurpose: Return false value
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace false [-h|--help]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The `false` utility returns with a non-zero exit code.
+
+// end::body[]
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

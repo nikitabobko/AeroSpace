@@ -3,6 +3,11 @@
 
 import PackageDescription
 
+let swiftSettings: [SwiftSetting] = [
+    .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+    .strictMemorySafety(),
+]
+
 let package = Package(
     name: "AeroSpacePackage",
     // Runtime support for parameterized protocol types is only available in macOS 13.0.0 or newer
@@ -19,7 +24,7 @@ let package = Package(
     dependencies: [
         .package(path: "./ShellParserGenerated"),
         .package(url: "https://github.com/InerziaSoft/ISSoundAdditions.git", exact: "2.0.1"),
-        .package(url: "https://github.com/LebJe/TOMLKit.git", exact: "0.5.5"),
+        .package(url: "https://github.com/dduan/TOMLDecoder", exact: "0.4.4"),
         .package(url: "https://github.com/apple/swift-collections.git", exact: "1.3.0"),
         .package(url: "https://github.com/soffes/HotKey.git", exact: "0.2.1"),
     ],
@@ -37,6 +42,7 @@ let package = Package(
             dependencies: [
                 .product(name: "Collections", package: "swift-collections"),
             ],
+            swiftSettings: swiftSettings,
         ),
         .target(
             name: "AppBundle",
@@ -45,31 +51,32 @@ let package = Package(
                 .product(name: "HotKey", package: "HotKey"),
                 .product(name: "ISSoundAdditions", package: "ISSoundAdditions"),
                 .product(name: "ShellParserGenerated", package: "ShellParserGenerated"),
-                .product(name: "TOMLKit", package: "TOMLKit"),
+                .product(name: "TOMLDecoder", package: "TOMLDecoder"),
                 .target(name: "Common"),
                 .target(name: "PrivateApi"),
             ],
-            swiftSettings: [
-                .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-            ],
+            swiftSettings: swiftSettings,
         ),
         .executableTarget(
             name: "AeroSpaceApp",
             dependencies: [
                 .target(name: "AppBundle"),
             ],
+            swiftSettings: swiftSettings,
         ),
         .executableTarget(
             name: "Cli",
             dependencies: [
                 .target(name: "Common"),
             ],
+            swiftSettings: swiftSettings,
         ),
         .testTarget(
             name: "AppBundleTests",
             dependencies: [
                 .target(name: "AppBundle"),
             ],
+            swiftSettings: swiftSettings,
         ),
     ],
 )

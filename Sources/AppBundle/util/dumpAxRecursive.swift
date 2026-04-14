@@ -13,19 +13,19 @@ func dumpAxRecursive(_ ax: AXUIElement, _ kind: AxKind, recursionDepth: Int = 0)
     var ignored: [String] = []
     var writable: [String] = []
     var failedAxRequest: [String] = []
-    for key: String in ax.attrs(failedAxRequest: &failedAxRequest).sortedBy({ priorityAx.contains($0) ? 0 : 1 }) {
+    for key: String in ax.attrs(failedAxRequest: &failedAxRequest) {
         if globalIgnore.contains(key) || kindSpecificIgnore[kind]?.contains(key) == true {
             ignored.append(key)
         } else {
             var raw: AnyObject?
-            if AXUIElementCopyAttributeValue(ax, key as CFString, &raw) != .success {
-                failedAxRequest.append("get.\(key)")
+            if let status = .some(unsafe AXUIElementCopyAttributeValue(ax, key as CFString, &raw)), status != .success {
+                failedAxRequest.append("get.\(key)(\(status.repr))")
             }
             result[key] = prettyValue(raw as Any?, recursionDepth: recursionDepth)
 
             var isWritable: DarwinBoolean = false
-            if AXUIElementIsAttributeSettable(ax, key as CFString, &isWritable) != .success {
-                failedAxRequest.append("isWritable.\(key)")
+            if let status = .some(unsafe AXUIElementIsAttributeSettable(ax, key as CFString, &isWritable)), status != .success {
+                failedAxRequest.append("isWritable.\(key)(\(status.repr))")
             }
             if isWritable.boolValue { writable.append(key) }
         }
@@ -50,7 +50,7 @@ private func prettyValue(_ value: Any?, recursionDepth: Int) -> Json {
         return .int(value)
     }
     if let value = value as? UInt32 {
-        return .uint32(value)
+        return .int(value)
     }
     if let value = value as? Bool {
         return .bool(value)
@@ -74,8 +74,8 @@ private func prettyValue(_ value: Any?, recursionDepth: Int) -> Json {
 extension AXUIElement {
     fileprivate func attrs(failedAxRequest: inout [String]) -> [String] {
         var rawArray: CFArray?
-        if AXUIElementCopyAttributeNames(self, &rawArray) != .success {
-            failedAxRequest.append("AXUIElementCopyAttributeNames")
+        if let status = .some(unsafe AXUIElementCopyAttributeNames(self, &rawArray)), status != .success {
+            failedAxRequest.append("AXUIElementCopyAttributeNames(\(status.repr))")
         }
         return rawArray as? [String] ?? []
     }
@@ -104,9 +104,26 @@ private let kindSpecificIgnore: [AxKind: Set<String>] = [
     ],
 ]
 
-private let priorityAx: Set<String> = [
-    Ax.titleAttr.key,
-    Ax.roleAttr.key,
-    Ax.subroleAttr.key,
-    Ax.identifierAttr.key,
-]
+extension AXError {
+    fileprivate var repr: String {
+        switch self {
+            case .actionUnsupported: "actionUnsupported"
+            case .apiDisabled: "apiDisabled"
+            case .attributeUnsupported: "attributeUnsupported"
+            case .cannotComplete: "cannotComplete"
+            case .failure: "failure"
+            case .illegalArgument: "illegalArgument"
+            case .invalidUIElement: "invalidUIElement"
+            case .invalidUIElementObserver: "invalidUIElementObserver"
+            case .noValue: "noValue"
+            case .notEnoughPrecision: "notEnoughPrecision"
+            case .notImplemented: "notImplemented"
+            case .notificationAlreadyRegistered: "notificationAlreadyRegistered"
+            case .notificationNotRegistered: "notificationNotRegistered"
+            case .notificationUnsupported: "notificationUnsupported"
+            case .parameterizedAttributeUnsupported: "parameterizedAttributeUnsupported"
+            case .success: "success"
+            @unknown default: rawValue.description
+        }
+    }
+}

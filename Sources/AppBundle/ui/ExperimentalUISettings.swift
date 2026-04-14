@@ -3,10 +3,9 @@ import SwiftUI
 struct ExperimentalUISettings {
     var displayStyle: MenuBarStyle {
         get {
-            if let value = UserDefaults.standard.string(forKey: ExperimentalUISettingsItems.displayStyle.rawValue) {
-                return MenuBarStyle(rawValue: value) ?? .monospacedText
-            } else {
-                return .monospacedText
+            switch UserDefaults.standard.string(forKey: ExperimentalUISettingsItems.displayStyle.rawValue) {
+                case let value?: MenuBarStyle(rawValue: value) ?? .monospacedText
+                case nil: .monospacedText
             }
         }
         set {

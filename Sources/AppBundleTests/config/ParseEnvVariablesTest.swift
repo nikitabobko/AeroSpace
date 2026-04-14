@@ -46,7 +46,7 @@ final class ParseEnvVariablesTest: XCTestCase {
             BAR = '${FOO}'
             """,
         )
-        assertEquals(errors.descriptions, [
+        assertEquals(errors, [
             "exec.env-vars.BAR: Env variable 'FOO' isn't presented in AeroSpace.app env vars, or not available for interpolation (because it's mutated)",
             "exec.env-vars.FOO: Env variable 'BAR' isn't presented in AeroSpace.app env vars, or not available for interpolation (because it's mutated)",
         ])
@@ -59,17 +59,20 @@ final class ParseEnvVariablesTest: XCTestCase {
             PWD = ''
             """,
         )
-        assertEquals(errors.descriptions, ["exec.env-vars.PWD: Changing 'PWD' is not allowed"])
+        assertEquals(errors, ["exec.env-vars.PWD: Changing 'PWD' is not allowed"])
     }
 }
 
 private func testSucInterpolation(_ str: String, _ vars: [String: String] = [:], expected: String) {
-    let (result, errors) = str.interpolate(with: vars).getOrNils()
-    assertEquals(result, expected)
-    assertEquals(errors ?? [], [])
+    switch str.interpolate(with: vars) {
+        case .success(let actual): assertEquals(actual, expected)
+        case .failure(let actual): assertEquals(actual, [])
+    }
 }
 
 private func testFailInterpolation(_ str: String, _ vars: [String: String] = [:]) {
-    let (_, errors) = str.interpolate(with: vars).getOrNils()
-    XCTAssertNotEqual(errors ?? [], [])
+    switch str.interpolate(with: vars) {
+        case .success(let actual): failExpectedActual(nil, actual)
+        case .failure: break
+    }
 }

@@ -3,19 +3,19 @@ import Common
 
 struct FocusMonitorCommand: Command {
     let args: FocusMonitorCmdArgs
-    /*conforms*/ var shouldResetClosedWindowsCache = false
+    /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         return switch args.target.val.resolve(target.workspace.workspaceMonitor, wrapAround: args.wrapAround) {
-            case .success(let targetMonitor): targetMonitor.activeWorkspace.focusWorkspace()
-            case .failure(let msg): io.err(msg)
+            case .success(let targetMonitor): .from(bool: targetMonitor.activeWorkspace.focusWorkspace())
+            case .failure(let msg): .fail(io.err(msg))
         }
     }
 }
 
 extension MonitorTarget {
-    func resolve(_ currentMonitor: Monitor, wrapAround: Bool) -> Result<Monitor, String> {
+    @MainActor func resolve(_ currentMonitor: Monitor, wrapAround: Bool) -> Result<Monitor, String> {
         switch self {
             case .direction(let direction):
                 guard let (monitorsInDirection, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {

@@ -3,16 +3,16 @@ import Common
 
 struct LayoutCommand: Command {
     let args: LayoutCmdArgs
-    /*conforms*/ var shouldResetClosedWindowsCache = true
+    /*conforms*/ let shouldResetClosedWindowsCache = true
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Bool {
-        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let window = target.windowOrNil else {
-            return io.err(noWindowIsFocused)
+            return .fail(io.err(noWindowIsFocused))
         }
         let targetDescription = args.toggleBetween.val.first(where: { !window.matchesDescription($0) })
             ?? args.toggleBetween.val.first.orDie()
-        if window.matchesDescription(targetDescription) { return false }
+        if window.matchesDescription(targetDescription) { return .fail }
         switch targetDescription {
             case .h_accordion:
                 return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: .h, window: window)
@@ -31,40 +31,40 @@ struct LayoutCommand: Command {
             case .vertical:
                 return changeTilingLayout(io, targetLayout: nil, targetOrientation: .v, window: window)
             case .tiling:
-                guard let parent = window.parent else { return false }
+                guard let parent = window.parent else { return .fail }
                 switch parent.cases {
                     case .macosPopupWindowsContainer:
-                        return false // Impossible
+                        return .fail // Impossible
                     case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-                        return io.err("Can't change layout for macOS minimized, fullscreen windows or windows or hidden apps. This behavior is subject to change")
+                        return .fail(io.err("Can't change layout for macOS minimized, fullscreen windows or windows or hidden apps. This behavior is subject to change"))
                     case .tilingContainer:
-                        return true // Nothing to do
+                        return .succ // Nothing to do
                     case .workspace(let workspace):
                         window.lastFloatingSize = try await window.getAxSize() ?? window.lastFloatingSize
                         try await window.relayoutWindow(on: workspace, forceTile: true)
-                        return true
+                        return .succ
                 }
             case .floating:
                 let workspace = target.workspace
                 window.bindAsFloatingWindow(to: workspace)
                 if let size = window.lastFloatingSize { window.setAxFrame(nil, size) }
-                return true
+                return .succ
         }
     }
 }
 
-@MainActor private func changeTilingLayout(_ io: CmdIo, targetLayout: Layout?, targetOrientation: Orientation?, window: Window) -> Bool {
-    guard let parent = window.parent else { return false }
+@MainActor private func changeTilingLayout(_ io: CmdIo, targetLayout: Layout?, targetOrientation: Orientation?, window: Window) -> BinaryExitCode {
+    guard let parent = window.parent else { return .fail }
     switch parent.cases {
         case .tilingContainer(let parent):
             let targetOrientation = targetOrientation ?? parent.orientation
             let targetLayout = targetLayout ?? parent.layout
             parent.layout = targetLayout
             parent.changeOrientation(targetOrientation)
-            return true
+            return .succ
         case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
              .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
-            return io.err("The window is non-tiling")
+            return .fail(io.err("The window is non-tiling"))
     }
 }
 

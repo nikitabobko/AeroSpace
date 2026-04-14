@@ -1,14 +1,14 @@
 public struct LayoutCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
     fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .layout,
         allowInConfig: true,
         help: layout_help_generated,
         flags: [
-            "--window-id": optionalWindowIdFlag(),
+            "--window-id": windowIdSubArgParser(),
         ],
-        posArgs: [newArgParser(\.toggleBetween, parseToggleBetween, mandatoryArgPlaceholder: LayoutDescription.unionLiteral)],
+        posArgs: [newMandatoryPosArgParser(\.toggleBetween, parseToggleBetween, placeholder: LayoutDescription.unionLiteral)],
     )
 
     public var toggleBetween: Lateinit<[LayoutDescription]> = .uninitialized
@@ -26,7 +26,7 @@ public struct LayoutCmdArgs: CmdArgs {
     }
 }
 
-private func parseToggleBetween(input: ArgParserInput) -> ParsedCliArgs<[LayoutCmdArgs.LayoutDescription]> {
+private func parseToggleBetween(input: PosArgParserInput) -> ParsedCliArgs<[LayoutCmdArgs.LayoutDescription]> {
     let args = input.nonFlagArgs()
 
     var result: [LayoutCmdArgs.LayoutDescription] = []
@@ -46,7 +46,7 @@ private func parseToggleBetween(input: ArgParserInput) -> ParsedCliArgs<[LayoutC
     return .succ(result, advanceBy: args.count)
 }
 
-public func parseLayoutCmdArgs(_ args: StrArrSlice) -> ParsedCmd<LayoutCmdArgs> {
+func parseLayoutCmdArgs(_ args: StrArrSlice) -> ParsedCmd<LayoutCmdArgs> {
     parseSpecificCmdArgs(LayoutCmdArgs(rawArgs: args), args).map {
         check(!$0.toggleBetween.val.isEmpty)
         return $0

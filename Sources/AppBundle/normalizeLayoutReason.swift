@@ -30,15 +30,17 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) asy
         switch window.layoutReason {
             case .standard:
                 guard let parent = window.parent else { continue }
-                if isMacosFullscreen {
-                    window.layoutReason = .macos(prevParentKind: parent.kind)
-                    window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
-                } else if isMacosMinimized {
-                    window.layoutReason = .macos(prevParentKind: parent.kind)
-                    window.bind(to: macosMinimizedWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
-                } else if isMacosWindowOfHiddenApp {
-                    window.layoutReason = .macos(prevParentKind: parent.kind)
-                    window.bind(to: workspace.macOsNativeHiddenAppsWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
+                switch true {
+                    case isMacosFullscreen:
+                        window.layoutReason = .macos(prevParentKind: parent.kind)
+                        window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
+                    case isMacosMinimized:
+                        window.layoutReason = .macos(prevParentKind: parent.kind)
+                        window.bind(to: macosMinimizedWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+                    case isMacosWindowOfHiddenApp:
+                        window.layoutReason = .macos(prevParentKind: parent.kind)
+                        window.bind(to: workspace.macOsNativeHiddenAppsWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
+                    default: break
                 }
             case .macos(let prevParentKind):
                 if !isMacosFullscreen && !isMacosMinimized && !isMacosWindowOfHiddenApp {

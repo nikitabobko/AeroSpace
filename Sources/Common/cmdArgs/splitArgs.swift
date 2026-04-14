@@ -14,20 +14,18 @@ extension String {
                         state = .parseArg(quoteChar: nil)
                         arg.append(char)
                     }
-                case .parseArg(let quoteChar):
-                    if quoteChar == char {
-                        result.append(arg)
-                        arg = ""
-                        state = .parseArgWhitespaceSeparator
-                    } else if quoteChar == nil && char.isWhitespace {
-                        result.append(arg)
-                        state = .parseArgWhitespaceSeparator
-                        arg = ""
-                    } else if quoteChar == nil && char.isQuote {
-                        return .failure("Unexpected quote \(char) in argument '\(arg)'")
-                    } else {
-                        arg.append(char)
-                    }
+                case .parseArg(char):
+                    result.append(arg)
+                    arg = ""
+                    state = .parseArgWhitespaceSeparator
+                case .parseArg(nil) where char.isWhitespace:
+                    result.append(arg)
+                    state = .parseArgWhitespaceSeparator
+                    arg = ""
+                case .parseArg(nil) where char.isQuote:
+                    return .failure("Unexpected quote \(char) in argument '\(arg)'")
+                case .parseArg:
+                    arg.append(char)
             }
         }
         if case .parseArg(let quoteChar) = state {

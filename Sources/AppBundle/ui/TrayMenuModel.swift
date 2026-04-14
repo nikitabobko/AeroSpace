@@ -18,11 +18,11 @@ public final class TrayMenuModel: ObservableObject {
 @MainActor func updateTrayText() {
     let sortedMonitors = sortedMonitors
     let focus = focus
-    TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "[\($0.uppercased())] " } ?? "") +
+    TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "(\($0.uppercased())) " } ?? "") +
         sortedMonitors
         .map {
             let hasFullscreenWindows = $0.activeWorkspace.allLeafWindowsRecursive.contains { $0.isFullscreen }
-            let activeWorkspaceName = hasFullscreenWindows ? "(\($0.activeWorkspace.name))" : $0.activeWorkspace.name
+            let activeWorkspaceName = hasFullscreenWindows ? "[\($0.activeWorkspace.name)]" : $0.activeWorkspace.name
             return ($0.activeWorkspace == focus.workspace && sortedMonitors.count > 1 ? "*" : "") + activeWorkspaceName
         }
         .joined(separator: " │ ")
@@ -85,23 +85,16 @@ struct TrayItem: Hashable, Identifiable {
     let hasFullscreenWindows: Bool
     var systemImageName: String? {
         // System image type is only valid for numbers 0 to 50 and single capital char workspace name
-        if let number = Int(name) {
-            guard number >= 0 && number <= 50 else { return nil }
-        } else if name.count == 1 {
-            guard validLetters.contains(name) else { return nil }
-        } else {
-            return nil
+        switch Int(name) {
+            case let number?: if !(0 ... 50).contains(number) { return nil }
+            case nil where name.count == 1: if !validLetters.contains(name) { return nil }
+            default: return nil
         }
         let lowercasedName = name.lowercased()
-        switch type {
-            case .mode:
-                return "\(lowercasedName).circle"
-            case .workspace:
-                if isActive {
-                    return "\(lowercasedName).square.fill"
-                } else {
-                    return "\(lowercasedName).square"
-                }
+        return switch type {
+            case .mode: "\(lowercasedName).circle"
+            case .workspace where isActive: "\(lowercasedName).square.fill"
+            case .workspace: "\(lowercasedName).square"
         }
     }
     var id: String {

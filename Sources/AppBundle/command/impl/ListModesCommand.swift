@@ -3,18 +3,18 @@ import Common
 
 struct ListModesCommand: Command {
     let args: ListModesCmdArgs
-    /*conforms*/ var shouldResetClosedWindowsCache = false
+    /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         let modes: [String] = args.current ? [activeMode ?? mainModeId] : config.modes.keys.sorted()
         return switch true {
             case args.outputOnlyCount:
-                io.out("\(modes.count)")
+                .succ(io.out("\(modes.count)"))
             case args.json:
-                JSONEncoder.aeroSpaceDefault.encodeToString(modes.map { ["mode-id": $0] }).map(io.out)
-                    ?? io.err("Failed to encode JSON")
+                JSONEncoder.aeroSpaceDefault.encodeToString(modes.map { ["mode-id": $0] }).map { .succ(io.out($0)) }
+                    ?? .fail(io.err("Failed to encode JSON"))
             default:
-                io.out(modes)
+                .succ(io.out(modes))
         }
     }
 }

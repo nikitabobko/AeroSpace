@@ -1,12 +1,12 @@
 // non-native fullscreen (default)
 {
-  "AXActivationPoint" : "<AXValue 0x600001c36e20> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
+  "AXActivationPoint" : "<AXValue 0x9780366d0> {value = x:-1.000000 y:1170.000000 type = kAXValueCGPointType}",
   "AXCancelButton" : null,
   "AXCloseButton" : null,
   "AXDefaultButton" : null,
   "AXDocument" : null,
   "AXFocused" : 1,
-  "AXFrame" : "<AXValue 0x6000009acb80> {value = x:0.000000 y:0.000000 w:1800.000000 h:1169.000000 type = kAXValueCGRectType}",
+  "AXFrame" : "<AXValue 0x97812b000> {value = x:0.000000 y:0.000000 w:1800.000000 h:1169.000000 type = kAXValueCGRectType}",
   "AXFullScreen" : 0,
   "AXFullScreenButton" : null,
   "AXGrowArea" : null,
@@ -14,52 +14,60 @@
   "AXMinimizeButton" : null,
   "AXMinimized" : 0,
   "AXModal" : 0,
-  "AXParent" : "<AXUIElement Application 0x600001c36e20> {pid=49468}",
-  "AXPosition" : "<AXValue 0x600001db5650> {value = x:0.000000 y:0.000000 type = kAXValueCGPointType}",
+  "AXParent" : "<AXUIElement Application 0x97809e580> {pid=86771}",
+  "AXPosition" : "<AXValue 0x978036430> {value = x:0.000000 y:0.000000 type = kAXValueCGPointType}",
   "AXProxy" : null,
   "AXRole" : "AXWindow",
   "AXSections" : [
 
   ],
-  "AXSize" : "<AXValue 0x600001d61c20> {value = w:1800.000000 h:1169.000000 type = kAXValueCGSizeType}",
+  "AXSize" : "<AXValue 0x9780366d0> {value = w:1800.000000 h:1169.000000 type = kAXValueCGSizeType}",
   "AXSubrole" : "AXUnknown",
   "AXTitle" : "",
   "AXTitleUIElement" : null,
   "AXToolbarButton" : null,
   "AXZoomButton" : null,
   "Aero.AXApp" : {
-    "AXExtrasMenuBar" : "<AXUIElement 0x600001dfb270> {pid=49468}",
-    "AXFocusedUIElement" : "AXUIElement(AxWindowId=15869, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=15869, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXExtrasMenuBar" : "<AXUIElement 0x97809e0d0> {pid=86771}",
+    "AXFocusedUIElement" : "AXUIElement(AxWindowId=4856, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=4856, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=15869, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
-    "AXMenuBar" : "<AXUIElement 0x600001dfb270> {pid=49468}",
+    "AXMainWindow" : "AXUIElement(AxWindowId=4856, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")",
+    "AXMenuBar" : "<AXUIElement 0x97809e0d0> {pid=86771}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
     "AXSize" : null,
     "AXTitle" : "VLC",
     "AXWindows" : [
-      "AXUIElement(AxWindowId=15863, title=\"Fullscreen Controls\", role=\"AXWindow\", subrole=\"AXDialog\")",
-      "AXUIElement(AxWindowId=15869, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")"
+      "AXUIElement(AxWindowId=2941, title=\"Fullscreen Controls\", role=\"AXWindow\", subrole=\"AXDialog\")",
+      "AXUIElement(AxWindowId=4856, title=\"\", role=\"AXWindow\", subrole=\"AXUnknown\")"
     ],
-    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
+    "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
+    "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",
+    "Aero.AxWritable" : "AXFrontmost"
   },
   "Aero.App.appBundleId" : "org.videolan.vlc",
   "Aero.App.nsApp.activationPolicy" : "regular",
+  "Aero.App.nsApp.appBundlePath" : "file:///Applications/VLC.app/",
   "Aero.App.nsApp.execPath" : "file:///Applications/VLC.app/Contents/MacOS/VLC",
+  "Aero.App.pid" : 86771,
   "Aero.App.version" : "3.0.21",
   "Aero.App.versionShort" : "3.0.21",
+  "Aero.AxFailed" : "isWritable.AXFrame, get.AXGrowArea, get.AXMinimizeButton, get.AXDocument, get.AXCloseButton, isWritable.AXActivationPoint, get.AXFullScreenButton, get.AXProxy, get.AXDefaultButton, get.AXTitleUIElement, get.AXCancelButton, get.AXZoomButton, get.AXToolbarButton",
   "Aero.AxIgnored" : "AXChildrenInNavigationOrder, AXChildren, AXRoleDescription",
-  "Aero.axWindowId" : 15869,
-  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
   "Aero.AxUiElementWindowType" : "popup", // todo fix
+  "Aero.AxUiElementWindowType_isDialogHeuristic" : true,
+  "Aero.AxWritable" : "AXPosition, AXSections, AXMain",
+  "Aero.axWindowId" : 4856,
+  "Aero.macOS.version" : "Version 26.1 (Build 25B78)",
   "Aero.on-window-detected" : [
 
   ],
   "Aero.treeNodeParent" : "Optional(AppBundle.MacosPopupWindowsContainer)",
+  "Aero.windowLevel" : "normalWindow",
   "Aero.workspace" : null
 }

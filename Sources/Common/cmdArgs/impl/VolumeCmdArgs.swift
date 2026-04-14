@@ -1,14 +1,14 @@
 public struct VolumeCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .volume,
         allowInConfig: true,
         help: volume_help_generated,
         flags: [
             "--no-gui": falseBoolFlag(\.gui),
         ],
-        posArgs: [newArgParser(\.action, parseVolumeAction, mandatoryArgPlaceholder: VolumeAction.argsUnion)],
+        posArgs: [newMandatoryPosArgParser(\.action, parseVolumeAction, placeholder: VolumeAction.argsUnion)],
     )
 
     public var gui: Bool = true
@@ -22,7 +22,7 @@ public enum VolumeAction: Equatable, Sendable {
     static let argsUnion: String = "(up|down|mute-toggle|mute-on|mute-off|set)"
 }
 
-func parseVolumeAction(i: ArgParserInput) -> ParsedCliArgs<VolumeAction> {
+func parseVolumeAction(i: PosArgParserInput) -> ParsedCliArgs<VolumeAction> {
     switch i.arg {
         case "up": return .succ(.up, advanceBy: 1)
         case "down": return .succ(.down, advanceBy: 1)

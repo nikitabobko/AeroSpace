@@ -122,7 +122,7 @@ final class MoveCommandTest: XCTestCase {
                 ]),
             ]),
         )
-        assertEquals(result.exitCode, 0)
+        assertEquals(result.exitCode.rawValue, 0)
     }
 
     func testStop_onRootNode() async throws {
@@ -140,7 +140,7 @@ final class MoveCommandTest: XCTestCase {
                 .h_tiles([.window(1), .window(2), .window(3)]),
             ]),
         )
-        assertEquals(result.exitCode, 0)
+        assertEquals(result.exitCode.rawValue, 0)
     }
 
     func testStop_onRootNode_withOppositeOrientation() async throws {
@@ -158,7 +158,7 @@ final class MoveCommandTest: XCTestCase {
                 .h_tiles([.window(1), .window(2), .window(3)]),
             ]),
         )
-        assertEquals(result.exitCode, 0)
+        assertEquals(result.exitCode.rawValue, 0)
     }
 
     func testStop_onRootNode_whenNoBoundary() async throws {
@@ -176,7 +176,7 @@ final class MoveCommandTest: XCTestCase {
                 .h_tiles([.window(2), .window(1), .window(3)]),
             ]),
         )
-        assertEquals(result.exitCode, 0)
+        assertEquals(result.exitCode.rawValue, 0)
     }
 
     func testStop_onInnerNode() async throws {
@@ -196,7 +196,7 @@ final class MoveCommandTest: XCTestCase {
                 .h_tiles([.window(1), .v_tiles([.window(3)]), .window(2)]),
             ]),
         )
-        assertEquals(result.exitCode, 0)
+        assertEquals(result.exitCode.rawValue, 0)
     }
 
     func testFail() async throws {
@@ -214,7 +214,7 @@ final class MoveCommandTest: XCTestCase {
                 .h_tiles([.window(1), .window(2), .window(3)]),
             ]),
         )
-        assertEquals(result.exitCode, 1)
+        assertEquals(result.exitCode.rawValue, 2)
     }
 
     func testMoveOut() async throws {

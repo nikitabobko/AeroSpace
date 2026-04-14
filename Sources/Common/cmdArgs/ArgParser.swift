@@ -1,66 +1,64 @@
-public typealias SendableWritableKeyPath<A, B> = Sendable & WritableKeyPath<A, B>
-public typealias ArgParserFun<K> = @Sendable (ArgParserInput) -> ParsedCliArgs<K>
-public protocol ArgParserProtocol<T>: Sendable {
-    associatedtype K
-    associatedtype T where T: ConvenienceCopyable
-    var argPlaceholderIfMandatory: String? { get }
-    var keyPath: SendableWritableKeyPath<T, K> { get }
-    var parse: ArgParserFun<K> { get }
+public typealias SendableWritableKeyPath<Root, Value> = Sendable & WritableKeyPath<Root, Value>
+typealias ArgParserFun<Input, Value> = @Sendable (Input) -> ParsedCliArgs<Value>
+protocol ArgParserProtocol<Input, Root, Context>: Sendable {
+    associatedtype Input
+    associatedtype Value
+    associatedtype Root
+    associatedtype Context
+    var context: Context { get }
+    var keyPath: SendableWritableKeyPath<Root, Value> { get }
+    var parse: ArgParserFun<Input, Value> { get }
 }
-public struct ArgParser<T: ConvenienceCopyable, K>: ArgParserProtocol {
-    public let keyPath: SendableWritableKeyPath<T, K>
-    public let parse: ArgParserFun<K>
-    public let argPlaceholderIfMandatory: String?
+struct ArgParser<Input, Root, Value, Context: Sendable>: ArgParserProtocol {
+    let keyPath: SendableWritableKeyPath<Root, Value>
+    let parse: ArgParserFun<Input, Value>
+    let context: Context
 
-    public init(
-        _ keyPath: SendableWritableKeyPath<T, K>,
-        _ parse: @escaping ArgParserFun<K>,
-        argPlaceholderIfMandatory: String? = nil,
+    init(
+        _ keyPath: SendableWritableKeyPath<Root, Value>,
+        _ parse: @escaping ArgParserFun<Input, Value>,
+        context: Context,
     ) {
         self.keyPath = keyPath
         self.parse = parse
-        self.argPlaceholderIfMandatory = argPlaceholderIfMandatory
+        self.context = context
+    }
+
+    init(
+        _ keyPath: SendableWritableKeyPath<Root, Value>,
+        _ parse: @escaping ArgParserFun<SubArgParserInput, Value>,
+    ) where Context == (), Input == SubArgParserInput {
+        self.init(keyPath, parse, context: ())
+    }
+
+    init(
+        _ keyPath: SendableWritableKeyPath<Root, Value>,
+        _ parse: @escaping ArgParserFun<PosArgParserInput, Value>,
+        argPlaceholderIfMandatory: String? = nil,
+    ) where Context == PosArgParserContext, Input == PosArgParserInput {
+        self.init(keyPath, parse, context: PosArgParserContext(argPlaceholderIfMandatory: argPlaceholderIfMandatory))
     }
 }
 
-public struct ParsedCliArgs<T> {
-    var value: Parsed<T>
-    var advanceBy: Int
+typealias PosArgParser<Root, Value> = ArgParser<PosArgParserInput, Root, Value, PosArgParserContext>
 
-    public init(_ value: Parsed<T>, advanceBy: Int) {
-        self.value = value
-        self.advanceBy = advanceBy
-    }
-
-    public static func succ(_ value: T, advanceBy: Int) -> ParsedCliArgs<T> {
-        .init(.success(value), advanceBy: advanceBy)
-    }
-
-    public static func fail(_ msg: String, advanceBy: Int) -> ParsedCliArgs<T> {
-        .init(.failure(msg), advanceBy: advanceBy)
-    }
-
-    public func flatMap<R>(_ mapper: (T) -> ParsedCliArgs<R>) -> ParsedCliArgs<R> {
-        switch value {
-            case .failure(let msg): ParsedCliArgs<R>(.failure(msg), advanceBy: advanceBy)
-            case .success(let value): mapper(value)
-        }
-    }
-
-    public func map<R>(_ mapper: (T) -> R) -> ParsedCliArgs<R> {
-        flatMap { ParsedCliArgs<R>(.success(mapper($0)), advanceBy: advanceBy) }
-    }
+struct PosArgParserContext {
+    let argPlaceholderIfMandatory: String?
 }
 
-func newArgParser<T: ConvenienceCopyable, K>(
-    _ keyPath: SendableWritableKeyPath<T, Lateinit<K>> & Sendable,
-    _ parse: @escaping @Sendable (ArgParserInput) -> ParsedCliArgs<K>,
-    mandatoryArgPlaceholder: String,
-) -> ArgParser<T, Lateinit<K>> {
-    let parseWrapper: @Sendable (ArgParserInput) -> ParsedCliArgs<Lateinit<K>> = {
+func newMandatoryPosArgParser<Root, Value>(
+    _ keyPath: SendableWritableKeyPath<Root, Lateinit<Value>>,
+    _ parse: @escaping @Sendable (PosArgParserInput) -> ParsedCliArgs<Value>,
+    placeholder: String,
+) -> PosArgParser<Root, Lateinit<Value>> {
+    let parseWrapper: @Sendable (PosArgParserInput) -> ParsedCliArgs<Lateinit<Value>> = {
         parse($0).map { .initialized($0) }
     }
-    return ArgParser(keyPath, parseWrapper, argPlaceholderIfMandatory: mandatoryArgPlaceholder)
+    return ArgParser(
+        keyPath,
+        parseWrapper,
+        context: PosArgParserContext(argPlaceholderIfMandatory: placeholder),
+    )
 }
 
 // todo reuse in config
@@ -68,12 +66,16 @@ public func parseEnum<T: RawRepresentable>(_ raw: String, _ _: T.Type) -> Parsed
     T(rawValue: raw).orFailure("Can't parse '\(raw)'.\nPossible values: \(T.unionLiteral)")
 }
 
-public func parseCardinalDirectionArg(i: ArgParserInput) -> ParsedCliArgs<CardinalDirection> {
+public func parseUInt32(_ str: String) -> Parsed<UInt32> { UInt32(str).orFailure("Can't convert '\(str)' to UInt32") }
+
+func parseCardinalDirectionArg(i: PosArgParserInput) -> ParsedCliArgs<CardinalDirection> {
     .init(parseEnum(i.arg, CardinalDirection.self), advanceBy: 1)
 }
 
-func parseCardinalOrDfsDirection(i: ArgParserInput) -> ParsedCliArgs<CardinalOrDfsDirection> {
+func parseCardinalOrDfsDirection(i: PosArgParserInput) -> ParsedCliArgs<CardinalOrDfsDirection> {
     .init(parseEnum(i.arg, CardinalOrDfsDirection.self), advanceBy: 1)
 }
 
-func upcastArgParserFun<T>(_ fun: @escaping ArgParserFun<T>) -> ArgParserFun<T?> { { fun($0).map { $0 } } }
+func upcastArgParserFun<Input, T>(_ fun: @escaping ArgParserFun<Input, T>) -> ArgParserFun<Input, T?> {
+    { fun($0).map(Optional.init) }
+}

@@ -1,16 +1,16 @@
 public struct ResizeCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
     fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .resize,
         allowInConfig: true,
         help: resize_help_generated,
         flags: [
-            "--window-id": optionalWindowIdFlag(),
+            "--window-id": windowIdSubArgParser(),
         ],
         posArgs: [
-            newArgParser(\.dimension, parseDimension, mandatoryArgPlaceholder: "(smart|smart-opposite|width|height)"),
-            newArgParser(\.units, parseUnits, mandatoryArgPlaceholder: "[+|-]<number>"),
+            newMandatoryPosArgParser(\.dimension, parseDimension, placeholder: "(smart|smart-opposite|width|height)"),
+            newMandatoryPosArgParser(\.units, parseUnits, placeholder: "[+|-]<number>"),
         ],
     )
 
@@ -39,15 +39,15 @@ public struct ResizeCmdArgs: CmdArgs {
     }
 }
 
-public func parseResizeCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ResizeCmdArgs> {
+func parseResizeCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ResizeCmdArgs> {
     parseSpecificCmdArgs(ResizeCmdArgs(rawArgs: args), args)
 }
 
-private func parseDimension(i: ArgParserInput) -> ParsedCliArgs<ResizeCmdArgs.Dimension> {
+private func parseDimension(i: PosArgParserInput) -> ParsedCliArgs<ResizeCmdArgs.Dimension> {
     .init(parseEnum(i.arg, ResizeCmdArgs.Dimension.self), advanceBy: 1)
 }
 
-private func parseUnits(i: ArgParserInput) -> ParsedCliArgs<ResizeCmdArgs.Units> {
+private func parseUnits(i: PosArgParserInput) -> ParsedCliArgs<ResizeCmdArgs.Units> {
     if let number = UInt(i.arg.removePrefix("+").removePrefix("-")) {
         switch true {
             case i.arg.starts(with: "+"): .succ(.add(number), advanceBy: 1)

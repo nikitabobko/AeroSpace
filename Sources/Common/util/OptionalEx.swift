@@ -1,9 +1,7 @@
 extension Optional {
-    public func orElse(_ other: () -> Wrapped) -> Wrapped { self ?? other() }
-
     public func orDie(
         _ message: String = "",
-        file: String = #fileID,
+        file: StaticString = #fileID,
         line: Int = #line,
         column: Int = #column,
         function: String = #function,
@@ -12,61 +10,27 @@ extension Optional {
     }
 
     public func orFailure<F: Error>(_ or: @autoclosure () -> F) -> Result<Wrapped, F> {
-        if let ok = self {
-            return .success(ok)
-        } else {
-            return .failure(or())
-        }
-    }
-
-    public func mapAsync<E, U>(_ transform: (Wrapped) async throws(E) -> U) async throws(E) -> U? where E: Error, U: ~Copyable {
-        if let ok = self {
-            return try await transform(ok)
-        } else {
-            return nil
-        }
-    }
-
-    // todo cleanup in future Swift versions
-    @MainActor
-    public func mapAsyncMainActor<E, U>(_ transform: @MainActor (Wrapped) async throws(E) -> U) async throws(E) -> U? where E: Error, U: ~Copyable {
-        if let ok = self {
-            return try await transform(ok)
-        } else {
-            return nil
-        }
-    }
-
-    public func flatMapAsync<E, U>(_ transform: (Wrapped) async throws(E) -> U?) async throws(E) -> U? where E: Error, U: ~Copyable {
-        if let ok = self {
-            return try await transform(ok)
-        } else {
-            return nil
-        }
-    }
-
-    // todo cleanup in future Swift versions
-    @MainActor
-    public func flatMapAsyncMainActor<E, U>(_ transform: @MainActor (Wrapped) async throws(E) -> U?) async throws(E) -> U? where E: Error, U: ~Copyable {
-        if let ok = self {
-            return try await transform(ok)
-        } else {
-            return nil
-        }
+        self.map(Result.success) ?? .failure(or())
     }
 
     public func asList() -> [Wrapped] {
-        if let ok = self {
-            return [ok]
-        } else {
-            return []
+        switch self {
+            case let ok?: [ok]
+            case nil: []
+        }
+    }
+
+    public func flattenOptional<T>() -> T? where Wrapped == T? {
+        switch self {
+            case let x?: x
+            case nil: nil
         }
     }
 
     public var prettyDescription: String {
-        if let unwrapped = self {
-            return String(describing: unwrapped)
+        switch self {
+            case let ok?: String(describing: ok)
+            case nil: "nil"
         }
-        return "nil"
     }
 }

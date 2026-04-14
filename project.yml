@@ -31,7 +31,7 @@ targets:
         MARKETING_VERSION: ${XCODEGEN_AEROSPACE_VERSION}
         # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
         # Specifies whether the app runs as an agent app. If this key is set to YES, Launch Services runs the app as an agent app.
-        # Agent apps do not appear in the Dock or in the Force Quit window
+        # Agent apps do not appear in the Dock or in the Force Quit window (cmd-opt-esc)
         INFOPLIST_KEY_LSUIElement: YES
         CODE_SIGN_IDENTITY: ${XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY}
       configs:
@@ -46,5 +46,5 @@ targets:
     entitlements:
       path: resources/AeroSpace.entitlements
       properties:
-        # Accessibility API doesn't work in sandboxed app
+        # Accessibility API doesn't work in sandboxed apps
         com.apple.security.app-sandbox: false

@@ -1,9 +1,8 @@
 import Common
-import TOMLKit
 
-func parseWorkspaceToMonitorAssignment(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: [MonitorDescription]] {
-    guard let rawTable = raw.table else {
-        errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
+func parseWorkspaceToMonitorAssignment(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [String: [MonitorDescription]] {
+    guard let rawTable = raw.asDictOrNil else {
+        errors += [expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace)]
         return [:]
     }
     var result: [String: [MonitorDescription]] = [:]
@@ -13,8 +12,8 @@ func parseWorkspaceToMonitorAssignment(_ raw: TOMLValueConvertible, _ backtrace:
     return result
 }
 
-func parseMonitorDescriptions(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [MonitorDescription] {
-    if let array = raw.array {
+func parseMonitorDescriptions(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [MonitorDescription] {
+    if let array = raw.asArrayOrNil {
         return array.enumerated()
             .map { (index, rawDesc) in parseMonitorDescription(rawDesc, backtrace + .index(index)).getOrNil(appendErrorTo: &errors) }
             .filterNotNil()
@@ -23,15 +22,15 @@ func parseMonitorDescriptions(_ raw: TOMLValueConvertible, _ backtrace: TomlBack
     }
 }
 
-func parseMonitorDescription(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<MonitorDescription> {
+func parseMonitorDescription(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<MonitorDescription> {
     let rawString: String
-    if let string = raw.string {
+    if let string = raw.asStringOrNil {
         rawString = string
-    } else if let int = raw.int {
+    } else if let int = raw.asIntOrNil {
         rawString = String(int)
     } else {
-        return .failure(expectedActualTypeError(expected: [.string, .int], actual: raw.type, backtrace))
+        return .failure(expectedActualTypeError(expected: [.string, .int], actual: raw.tomlType, backtrace))
     }
 
-    return parseMonitorDescription(rawString).toParsedToml(backtrace)
+    return parseMonitorDescription(rawString).toParsedConfig(backtrace)
 }

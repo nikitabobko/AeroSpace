@@ -3,17 +3,17 @@ import Common
 
 struct MoveWorkspaceToMonitorCommand: Command {
     let args: MoveWorkspaceToMonitorCmdArgs
-    /*conforms*/ var shouldResetClosedWindowsCache = true
+    /*conforms*/ let shouldResetClosedWindowsCache = true
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool {
-        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         let focusedWorkspace = target.workspace
         let prevMonitor = focusedWorkspace.workspaceMonitor
 
         switch args.target.val.resolve(target.workspace.workspaceMonitor, wrapAround: args.wrapAround) {
             case .success(let targetMonitor):
-                if targetMonitor.monitorId == prevMonitor.monitorId {
-                    return true
+                if targetMonitor.monitorId_oneBased == prevMonitor.monitorId_oneBased {
+                    return .succ
                 }
                 if targetMonitor.setActiveWorkspace(focusedWorkspace) {
                     let stubWorkspace = getStubWorkspace(for: prevMonitor)
@@ -21,14 +21,14 @@ struct MoveWorkspaceToMonitorCommand: Command {
                         prevMonitor.setActiveWorkspace(stubWorkspace),
                         "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(prevMonitor)",
                     )
-                    return true
+                    return .succ
                 } else {
-                    return io.err(
+                    return .fail(io.err(
                         "Can't move workspace '\(focusedWorkspace.name)' to monitor '\(targetMonitor.name)'. workspace-to-monitor-force-assignment doesn't allow it",
-                    )
+                    ))
                 }
             case .failure(let msg):
-                return io.err(msg)
+                return .fail(io.err(msg))
         }
     }
 }

@@ -1,19 +1,19 @@
 public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .moveNodeToWorkspace,
         allowInConfig: true,
         help: move_node_to_workspace_help_generated,
         flags: [
-            "--wrap-around": optionalTrueBoolFlag(\._wrapAround),
+            "--wrap-around": ArgParser(\._wrapAround, constSubArgParserFun(true)),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
-            "--window-id": optionalWindowIdFlag(),
-            "--focus-follows-window": trueBoolFlag(\.focusFollowsWindow),
+            "--window-id": windowIdSubArgParser(),
+            "--focus-follows-window": ArgParser(\.focusFollowsWindow, constSubArgParserFun(true)),
 
-            "--stdin": optionalTrueBoolFlag(\.explicitStdinFlag),
-            "--no-stdin": optionalFalseBoolFlag(\.explicitStdinFlag),
+            "--stdin": ArgParser(\.explicitStdinFlag, constSubArgParserFun(true)),
+            "--no-stdin": ArgParser(\.explicitStdinFlag, constSubArgParserFun(false)),
         ],
-        posArgs: [newArgParser(\.target, parseWorkspaceTarget, mandatoryArgPlaceholder: workspaceTargetPlaceholder)],
+        posArgs: [newMandatoryPosArgParser(\.target, parseWorkspaceTarget, placeholder: workspaceTargetPlaceholder)],
         conflictingOptions: [
             ["--stdin", "--no-stdin"],
         ],
@@ -35,9 +35,7 @@ extension MoveNodeToWorkspaceCmdArgs {
     public var useStdin: Bool { explicitStdinFlag ?? false }
 }
 
-func implication(ifTrue: Bool, mustHold: @autoclosure () -> Bool) -> Bool { !ifTrue || mustHold() }
-
-public func parseMoveNodeToWorkspaceCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveNodeToWorkspaceCmdArgs> {
+func parseMoveNodeToWorkspaceCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveNodeToWorkspaceCmdArgs> {
     parseSpecificCmdArgs(MoveNodeToWorkspaceCmdArgs(rawArgs: args), args)
         .filter("--wrapAround requires using (prev|next) argument") { ($0._wrapAround != nil).implies($0.target.val.isRelatve) }
         .filterNot("--fail-if-noop is incompatible with (next|prev)") { $0.failIfNoop && $0.target.val.isRelatve }

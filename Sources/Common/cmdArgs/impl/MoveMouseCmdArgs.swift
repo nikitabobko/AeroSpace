@@ -1,25 +1,25 @@
 public struct MoveMouseCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
     init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .moveMouse,
         allowInConfig: true,
         help: move_mouse_help_generated,
         flags: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],
-        posArgs: [newArgParser(\.mouseTarget, parseMouseTarget, mandatoryArgPlaceholder: "<mouse-position>")],
+        posArgs: [newMandatoryPosArgParser(\.mouseTarget, parseMouseTarget, placeholder: "<mouse-position>")],
     )
 
     public var failIfNoop: Bool = false
     public var mouseTarget: Lateinit<MouseTarget> = .uninitialized
 }
 
-func parseMouseTarget(i: ArgParserInput) -> ParsedCliArgs<MouseTarget> {
+func parseMouseTarget(i: PosArgParserInput) -> ParsedCliArgs<MouseTarget> {
     .init(parseEnum(i.arg, MouseTarget.self), advanceBy: 1)
 }
 
-public func parseMoveMouseCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveMouseCmdArgs> {
+func parseMoveMouseCmdArgs(_ args: StrArrSlice) -> ParsedCmd<MoveMouseCmdArgs> {
     parseSpecificCmdArgs(MoveMouseCmdArgs(rawArgs: args), args)
         .filter("--fail-if-noop is only compatible with window-lazy-center or monitor-lazy-center") {
             $0.failIfNoop.implies($0.mouseTarget.val == .windowLazyCenter || $0.mouseTarget.val == .monitorLazyCenter)

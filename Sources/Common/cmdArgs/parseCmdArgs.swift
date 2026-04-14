@@ -1,16 +1,23 @@
 public func parseCmdArgs(_ args: StrArrSlice) -> ParsedCmd<any CmdArgs> {
     let subcommand = String(args.first ?? "")
     if subcommand.isEmpty {
-        return .failure("Can't parse empty string command")
+        return .failure("Can't parse empty string command", EXIT_CODE_TWO)
     }
     if let subcommandParser: any SubCommandParserProtocol = subcommandParsers[subcommand] {
         return subcommandParser.parse(args: args.slice(1...).orDie())
     } else {
-        return .failure("Unrecognized subcommand '\(subcommand)'")
+        return .failure("Unrecognized subcommand '\(subcommand)'", EXIT_CODE_TWO)
     }
 }
 
-public protocol CmdArgs: ConvenienceCopyable, Equatable, CustomStringConvertible, AeroAny, Sendable {
+public protocol CmdArgs:
+    ConvenienceCopyable,
+    Equatable,
+    CustomStringConvertible,
+    AeroAny,
+    Sendable
+{
+    associatedtype ExitCodeType: ExitCode = BinaryExitCode
     static var parser: CmdParser<Self> { get }
     var commonState: CmdArgsCommonState { get set }
 }
@@ -36,6 +43,8 @@ extension CmdArgs {
         set(value) { commonState.workspaceName = value }
     }
 
+    public var failExitCode: Int32 { ExitCodeType.fail.rawValue }
+
     public func equals(_ other: any CmdArgs) -> Bool { // My brain is cursed with Java
         (other as? Self).flatMap { self == $0 } ?? false
     }
@@ -50,27 +59,25 @@ extension CmdArgs {
     }
 }
 
-public struct CmdParser<T: ConvenienceCopyable>: Sendable {
+public struct CmdParser<Root>: Sendable {
     let info: CmdStaticInfo
-    let flags: [String: any SubArgParserProtocol<T>]
-    let positionalArgs: [any ArgParserProtocol<T>]
+    let flags: [String: any ArgParserProtocol<SubArgParserInput, Root, ()>]
+    let positionalArgs: [any ArgParserProtocol<PosArgParserInput, Root, PosArgParserContext>]
     let conflictingOptions: [Set<String>]
-}
 
-public func cmdParser<T>(
-    kind: CmdKind,
-    allowInConfig: Bool,
-    help: String,
-    flags: [String: any SubArgParserProtocol<T>],
-    posArgs: [any ArgParserProtocol<T>],
-    conflictingOptions: [Set<String>] = [],
-) -> CmdParser<T> {
-    CmdParser(
-        info: CmdStaticInfo(help: help, kind: kind, allowInConfig: allowInConfig),
-        flags: flags,
-        positionalArgs: posArgs,
-        conflictingOptions: conflictingOptions,
-    )
+    init(
+        kind: CmdKind,
+        allowInConfig: Bool,
+        help: String,
+        flags: [String: any ArgParserProtocol<SubArgParserInput, Root, ()>],
+        posArgs: [any ArgParserProtocol<PosArgParserInput, Root, PosArgParserContext>],
+        conflictingOptions: [Set<String>] = [],
+    ) {
+        self.info = CmdStaticInfo(help: help, kind: kind, allowInConfig: allowInConfig)
+        self.flags = flags
+        self.positionalArgs = posArgs
+        self.conflictingOptions = conflictingOptions
+    }
 }
 
 public struct CmdStaticInfo: Equatable, Sendable {

@@ -1,0 +1,40 @@
+= aerospace-true(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-true
+// tag::purpose[]
+:manpurpose: Return true value
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace true [-h|--help]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The `true` utility returns with an exit code of zero.
+
+The utility might return with a non-zero exit in case of errors (e.g. unexpected CLI arguments)
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+// =========================================================== Exit codes
+include::./util/conditional-exit-code-header.adoc[]
+
+0:: No errors have occurred.
+>0:: An error occurred. For instance, unexpected CLI arguments.
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

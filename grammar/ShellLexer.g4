@@ -1,5 +1,5 @@
 // shell lexer grammar. Powered by https://github.com/antlr/antlr4
-// Use ./generate-shell-parser.sh to regenerate grammar code
+// Use ./script/generate-shell-parser.sh to regenerate grammar code
 lexer grammar ShellLexer;
 
 TRIPLE_QUOTE : '"""' | '\'\'\'' ; // Reserved

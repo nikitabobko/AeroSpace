@@ -37,59 +37,43 @@ protocol NonLeafTreeNodeObject: TreeNode {}
 
 extension TreeNode {
     var nodeCases: TreeNodeCases {
-        if let window = self as? Window {
-            return .window(window)
-        } else if let workspace = self as? Workspace {
-            return .workspace(workspace)
-        } else if let tilingContainer = self as? TilingContainer {
-            return .tilingContainer(tilingContainer)
-        } else if let container = self as? MacosHiddenAppsWindowsContainer {
-            return .macosHiddenAppsWindowsContainer(container)
-        } else if let container = self as? MacosMinimizedWindowsContainer {
-            return .macosMinimizedWindowsContainer(container)
-        } else if let container = self as? MacosFullscreenWindowsContainer {
-            return .macosFullscreenWindowsContainer(container)
-        } else if let container = self as? MacosPopupWindowsContainer {
-            return .macosPopupWindowsContainer(container)
-        } else {
-            die("Unknown tree")
+        switch self {
+            case let window as Window: .window(window)
+            case let workspace as Workspace: .workspace(workspace)
+            case let tilingContainer as TilingContainer: .tilingContainer(tilingContainer)
+            case let container as MacosHiddenAppsWindowsContainer: .macosHiddenAppsWindowsContainer(container)
+            case let container as MacosMinimizedWindowsContainer: .macosMinimizedWindowsContainer(container)
+            case let container as MacosFullscreenWindowsContainer: .macosFullscreenWindowsContainer(container)
+            case let container as MacosPopupWindowsContainer: .macosPopupWindowsContainer(container)
+            default: die("Unknown tree")
         }
     }
 
     func tilingTreeNodeCasesOrDie() -> TilingTreeNodeCases {
-        if let window = self as? Window {
-            return .window(window)
-        } else if let tilingContainer = self as? TilingContainer {
-            return .tilingContainer(tilingContainer)
-        } else {
-            illegalChildParentRelation(child: self, parent: parent)
+        switch self {
+            case let window as Window: .window(window)
+            case let tilingContainer as TilingContainer: .tilingContainer(tilingContainer)
+            default: illegalChildParentRelation(child: self, parent: parent)
         }
     }
 }
 
 extension NonLeafTreeNodeObject {
     var cases: NonLeafTreeNodeCases {
-        if self is Window {
-            die("Windows are leaf nodes. They can't have children")
-        } else if let workspace = self as? Workspace {
-            return .workspace(workspace)
-        } else if let tilingContainer = self as? TilingContainer {
-            return .tilingContainer(tilingContainer)
-        } else if let container = self as? MacosMinimizedWindowsContainer {
-            return .macosMinimizedWindowsContainer(container)
-        } else if let container = self as? MacosHiddenAppsWindowsContainer {
-            return .macosHiddenAppsWindowsContainer(container)
-        } else if let container = self as? MacosFullscreenWindowsContainer {
-            return .macosFullscreenWindowsContainer(container)
-        } else if let container = self as? MacosPopupWindowsContainer {
-            return .macosPopupWindowsContainer(container)
-        } else {
-            die("Unknown tree \(self)")
+        switch self {
+            case is Window: die("Windows are leaf nodes. They can't have children")
+            case let workspace as Workspace: .workspace(workspace)
+            case let tilingContainer as TilingContainer: .tilingContainer(tilingContainer)
+            case let container as MacosMinimizedWindowsContainer: .macosMinimizedWindowsContainer(container)
+            case let container as MacosHiddenAppsWindowsContainer: .macosHiddenAppsWindowsContainer(container)
+            case let container as MacosFullscreenWindowsContainer: .macosFullscreenWindowsContainer(container)
+            case let container as MacosPopupWindowsContainer: .macosPopupWindowsContainer(container)
+            default: die("Unknown tree \(self)")
         }
     }
 
     var kind: NonLeafTreeNodeKind {
-        return switch cases {
+        switch cases {
             case .tilingContainer: .tilingContainer
             case .workspace: .workspace
             case .macosMinimizedWindowsContainer: .macosMinimizedWindowsContainer

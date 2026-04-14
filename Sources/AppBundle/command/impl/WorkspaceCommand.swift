@@ -4,10 +4,10 @@ import Foundation
 
 struct WorkspaceCommand: Command {
     let args: WorkspaceCmdArgs
-    /*conforms*/ var shouldResetClosedWindowsCache = false
+    /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> Bool { // todo refactor
-        guard let target = args.resolveTargetOrReportError(env, io) else { return false }
+    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode { // todo refactor
+        guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         let focusedWs = target.workspace
         let workspaceName: String
         switch args.target.val {
@@ -19,7 +19,7 @@ struct WorkspaceCommand: Command {
                     stdin: args.useStdin ? io.readStdin() : nil,
                     target: target,
                 )
-                guard let workspace else { return false }
+                guard let workspace else { return .fail }
                 workspaceName = workspace.name
             case .direct(let name):
                 workspaceName = name.raw
@@ -28,10 +28,13 @@ struct WorkspaceCommand: Command {
                 }
         }
         if focusedWs.name == workspaceName {
-            io.err("Workspace '\(workspaceName)' is already focused. Tip: use --fail-if-noop to exit with non-zero code")
-            return !args.failIfNoop
+            return switch args.failIfNoop {
+                case true: .fail
+                case false:
+                    .succ(io.err("Workspace '\(workspaceName)' is already focused. Tip: use --fail-if-noop to exit with non-zero code"))
+            }
         } else {
-            return Workspace.get(byName: workspaceName).focusWorkspace()
+            return .from(bool: Workspace.get(byName: workspaceName).focusWorkspace())
         }
     }
 }
@@ -46,10 +49,9 @@ struct WorkspaceCommand: Command {
             .union([current])
             .sorted()
     let index = workspaces.firstIndex(where: { $0 == target.workspace }) ?? 0
-    let workspace: Workspace? = if wrapAround {
-        workspaces.get(wrappingIndex: isNext ? index + 1 : index - 1)
-    } else {
-        workspaces.getOrNil(atIndex: isNext ? index + 1 : index - 1)
+    let workspace: Workspace? = switch wrapAround {
+        case true: workspaces.get(wrappingIndex: isNext ? index + 1 : index - 1)
+        case false: workspaces.getOrNil(atIndex: isNext ? index + 1 : index - 1)
     }
     return workspace
 }

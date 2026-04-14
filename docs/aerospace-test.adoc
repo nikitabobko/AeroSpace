@@ -1,0 +1,95 @@
+= aerospace-test(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-test
+// tag::purpose[]
+:manpurpose: Condition evaluation utility
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace test [-h|--help] <lhs> .= <rhs>
+aerospace test [-h|--help] <lhs> /= <rhs>
+aerospace test [-h|--help] <lhs> .~ <rhs>
+aerospace test [-h|--help] <lhs> /~ <rhs>
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The `test` utility evaluates the expression and, if it evaluates to true, returns a zero (true) exit status; otherwise it returns 1 (false).
+
+The utility is inspired by builtin `/bin/test` utility.
+
+`<lhs> .= <rhs>`:: Tests that `<lhs>` equals to `<rhs>`
+`<lhs> /= <rhs>`:: Tests that `<lhs>` does NOT equal to `<rhs>`
+`<lhs> .~ <rhs>`:: Tests that `<lhs>` contains case insensitive `<rhs>` regex. The operator fails if `<lhs>` is not a string
+`<lhs> /~ <rhs>`:: Tests that `<lhs>` does NOT contain case insensitive `<rhs>` regex. The operator fails if `<lhs>` is not a string
+
+The choice of symbols is dictated by the shell expansion rules that "helpfully" expand arguments, if they start either with an exclamation mark or with an equals character.
+The dot prefix is used as a safe and neutral character.
+The slash denotes negation, following a common convention in functional programming (mnemonics: it "crosses out" the operator).
+The tilde is widely used in scripting languages to indicate regex matching.
+
+// =========================================================== Examples
+include::./util/conditional-examples-header.adoc[]
+
+Test if the application ID equals to Chrome: `aerospace test %{app-bundle-id} .= com.google.Chrome`
+
+Test if the application name contains "chrome" (case insensitive): `aerospace test %{app-name} .~ chrome`
+
+// =========================================================== Arguments
+include::./util/conditional-arguments-header.adoc[]
+
+<lhs>::
+The left hand side of the expression.
+The left hand side must be one of the interpolation variables (see below).
+
+<rhs>::
+An integer, a boolean (`true`/`false`), a regex, or just a plain string.
+The way the expression is interpreted depends on the type of `<lhs>` and the infix operator.
+
+// =========================================================== Interpolation Variables
+include::./util/conditional-interpolation-variables-header.adoc[]
+
+%{window-id}:: Number. Window unique ID
+%{window-title}:: String. Window title
+%{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aerospace fullscreen` command
+%{window-layout}:: String. An alias for `%{window-parent-container-layout}`
+%{window-parent-container-layout}:: String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`, `floating`) of the window's parent container.
+ 
+%{app-bundle-id}:: String. Application unique identifier. https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids[Bundle ID]
+%{app-name}:: String. Application name
+%{app-pid}:: Number. https://en.wikipedia.org/wiki/Process_identifier[UNIX process identifier]
+%{app-exec-path}:: String. Application executable path
+%{app-bundle-path}:: String. Application bundle path
+ 
+%{workspace}:: String. Name of the belonging workspace
+%{workspace-is-focused}:: Boolean. `true` if the workspace has focus
+%{workspace-is-visible}:: Boolean. `true` if the workspace is visible. A workspace can be visible but not focused in a multi-monitor setup
+%{workspace-root-container-layout}:: String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`) of the workspace the window belongs to.
+ 
+%{monitor-id}:: 1-based Number. Sequential number of the belonging monitor.
+%{monitor-appkit-nsscreen-screens-id}:: 1-based index of the belonging monitor in `NSScreen.screens` array. Useful for integration with other tools that might be using `NSScreen.screens` ordering (like sketchybar).
+%{monitor-name}:: String. Name of the belonging monitor
+%{monitor-is-main}:: Boolean. `true` if the monitor is main.
+ 
+// =========================================================== Exit codes
+include::./util/conditional-exit-code-header.adoc[]
+
+0:: All the supplied conditions have evaluated to true.
+1:: One of the supplied conditions has evaluated to false.
+
+>1::
+An error occurred.
+For instance, when `<rhs>` type doesn't match `<lhs>` type, or if the `test` subcommand couldn't be parsed.
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

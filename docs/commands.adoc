@@ -232,6 +232,13 @@ include::aerospace-debug-windows.adoc[tags=synopsis]
 include::aerospace-debug-windows.adoc[tags=purpose]
 include::aerospace-debug-windows.adoc[tags=body]
 
+=== false
+----
+include::aerospace-false.adoc[tags=synopsis]
+----
+include::aerospace-false.adoc[tags=purpose]
+include::aerospace-false.adoc[tags=body]
+
 === list-apps
 ----
 include::aerospace-list-apps.adoc[tags=synopsis]
@@ -273,3 +280,24 @@ include::aerospace-list-workspaces.adoc[tags=synopsis]
 ----
 include::aerospace-list-workspaces.adoc[tags=purpose]
 include::aerospace-list-workspaces.adoc[tags=body]
+
+=== subscribe
+----
+include::aerospace-subscribe.adoc[tags=synopsis]
+----
+include::aerospace-subscribe.adoc[tags=purpose]
+include::aerospace-subscribe.adoc[tags=body]
+
+=== test
+----
+include::aerospace-test.adoc[tags=synopsis]
+----
+include::aerospace-test.adoc[tags=purpose]
+include::aerospace-test.adoc[tags=body]
+
+=== true
+----
+include::aerospace-true.adoc[tags=synopsis]
+----
+include::aerospace-true.adoc[tags=purpose]
+include::aerospace-true.adoc[tags=body]

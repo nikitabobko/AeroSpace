@@ -1,6 +1,5 @@
 import AppKit
 import Common
-import TOMLKit
 
 let testEnv = ["PATH": "AEROSPACE_TEST_PATH", "AEROSPACE_INHERITED_TEST_ENV": "inherited"]
 private var env: [String: String] {
@@ -29,13 +28,13 @@ struct RawExecConfig: ConvenienceCopyable, Equatable {
     }
 }
 
-func parseExecConfig(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> ExecConfig {
+func parseExecConfig(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> ExecConfig {
     parseTable(raw, RawExecConfig(), rawExecConfigParser, backtrace, &errors).expand()
 }
 
-private func parseEnvVariables(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError]) -> [String: String] {
-    guard let table = raw.table else {
-        errors.append(expectedActualTypeError(expected: .array, actual: raw.type, backtrace))
+private func parseEnvVariables(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [String: String] {
+    guard let table = raw.asDictOrNil else {
+        errors.append(expectedActualTypeError(expected: .array, actual: raw.tomlType, backtrace))
         return [:]
     }
     let mutated = table.keys

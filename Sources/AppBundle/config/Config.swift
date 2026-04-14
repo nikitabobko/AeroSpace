@@ -23,7 +23,7 @@ var defaultConfigUrl: URL {
     }
 }
 @MainActor let defaultConfig: Config = {
-    let parsedConfig = parseConfig((try? String(contentsOf: defaultConfigUrl)).orDie())
+    let parsedConfig = parseConfig(Result { try String(contentsOf: defaultConfigUrl, encoding: .utf8) }.getOrDie())
     if !parsedConfig.errors.isEmpty {
         die("Can't parse default config: \(parsedConfig.errors)")
     }
@@ -42,6 +42,7 @@ struct Config: ConvenienceCopyable {
     var defaultRootContainerLayout: Layout = .tiles
     var defaultRootContainerOrientation: DefaultContainerOrientation = .auto
     var startAtLogin: Bool = false
+    var autoReloadConfig: Bool = false
     var automaticallyUnhideMacosHiddenApps: Bool = false
     var accordionPadding: Int = 30
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true

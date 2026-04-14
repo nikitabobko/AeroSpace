@@ -62,6 +62,6 @@
 
   ],
   "Aero.treeNodeParent" : "AppBundle.TilingContainer",
-  "Aero.windowLevel" : "{\"normalWindow\":{}}",
+  "Aero.windowLevel" : "normalWindow",
   "Aero.workspace" : "M"
 }

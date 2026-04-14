@@ -1,7 +1,7 @@
 public struct ListAppsCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .listApps,
         allowInConfig: false,
         help: list_apps_help_generated,
@@ -38,7 +38,7 @@ extension ListAppsCmdArgs {
     }
 }
 
-public func parseListAppsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListAppsCmdArgs> {
+func parseListAppsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListAppsCmdArgs> {
     parseSpecificCmdArgs(ListAppsCmdArgs(rawArgs: args), args)
         .flatMap { if $0.json, let msg = getErrorIfFormatIsIncompatibleWithJson($0._format) { .failure(msg) } else { .cmd($0) } }
 }

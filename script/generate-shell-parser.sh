@@ -1,5 +1,5 @@
 #!/bin/bash
-cd "$(dirname "$0")"
+cd "$(dirname "$0")/.."
 source ./script/setup.sh
 
 ./script/install-dep.sh --antlr

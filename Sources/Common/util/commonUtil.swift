@@ -14,7 +14,7 @@ private var recursionDetectorDuringTermination = false
 
 public func dieT<T>(
     _ __message: String = "",
-    file: String = #fileID,
+    file: StaticString = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,
@@ -68,12 +68,13 @@ public func dieT<T>(
 }
 
 public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
+    case configAutoReload
     case globalObserver(String)
     case globalObserverLeftMouseUp
     case menuBarButton
     case hotkeyBinding
     case startup
-    case socketServer
+    case socketServer(any CmdArgs)
     case resetManipulatedWithMouse
     case ax(String)
     case onFocusedMonitorChanged
@@ -87,12 +88,13 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
     public var description: String {
         switch self {
             case .ax(let str): "ax(\(str))"
+            case .configAutoReload: "configAutoReload"
             case .globalObserver(let str): "globalObserver(\(str))"
             case .globalObserverLeftMouseUp: "globalObserverLeftMouseUp"
             case .hotkeyBinding: "hotkeyBinding"
             case .menuBarButton: "menuBarButton"
             case .resetManipulatedWithMouse: "resetManipulatedWithMouse"
-            case .socketServer: " socketServer"
+            case .socketServer(let args): "socketServer: \(args)"
             case .startup: "startup"
             case .onFocusedMonitorChanged: "onFocusedMonitorChanged"
             case .onFocusChanged: "onFocusChanged"
@@ -105,12 +107,11 @@ public func throwT<T>(_ error: Error) throws -> T {
     throw error
 }
 
-public func printStacktrace() { print(getStringStacktrace()) }
 public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(separator: "\n") }
 
 @inlinable public func die(
     _ message: String = "",
-    file: String = #fileID,
+    file: StaticString = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,
@@ -121,7 +122,7 @@ public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(sep
 public func check(
     _ condition: Bool,
     _ message: @autoclosure () -> String = "",
-    file: String = #fileID,
+    file: StaticString = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,
@@ -171,14 +172,6 @@ extension Bool {
     public func implies(_ mustHold: @autoclosure () -> Bool) -> Bool { !self || mustHold() }
 }
 
-extension Double {
-    public var squared: Double { self * self }
-}
-
-extension Slice {
-    public func toArray() -> [Base.Element] { Array(self) }
-}
-
 extension URL {
     public func open(with url: URL) {
         NSWorkspace.shared.open([self], withApplicationAt: url, configuration: NSWorkspace.OpenConfiguration())
@@ -186,20 +179,24 @@ extension URL {
 }
 
 public func eprint(_ msg: String) {
-    fputs(msg + "\n", stderr)
+    unsafe fputs(msg + "\n", stderr)
 }
 
-public func exit(stderrMsg message: String = "") -> Never {
-    exitT(stderrMsg: message)
+public func exit(_ exitCode: Int32, out: String? = nil, err: String? = nil) -> Never {
+    exitT(exitCode, out: out, err: err)
 }
 
-public func exitT<T>(stderrMsg message: String = "") -> T {
-    eprint(message)
-    exit(1)
+public func exitT<T>(_ exitCode: Int32, out: String? = nil, err: String? = nil) -> T {
+    if let out { print(out) }
+    if let err { eprint(err) }
+    exit(exitCode)
 }
+
+/// 'id' stands for 'identity'. It's a common name in functional programming
+public func id<T>(_ t: T) -> T { t }
 
 @inlinable
-public func allowOnlyCancellationError<T>(isolation: isolated (any Actor)? = #isolation, _ block: () async throws -> sending T) async throws -> sending T {
+public func allowOnlyCancellationError<T>(_ block: () async throws -> sending T) async throws -> sending T {
     do {
         return try await block()
     } catch let e as CancellationError {

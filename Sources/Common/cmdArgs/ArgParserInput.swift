@@ -1,16 +1,24 @@
-public struct ArgParserInput: ArgParserInputProtocol {
-    let index: Int
-    let args: StrArrSlice
+struct PosArgParserInput: ArgParserInput {
+    /*conforms*/ let index: Int
+    /*conforms*/ let args: StrArrSlice
 
     var arg: String { args[index] }
 }
 
-protocol ArgParserInputProtocol {
+struct SubArgParserInput: ArgParserInput {
+    let superArg: String
+    /*conforms*/ let index: Int
+    /*conforms*/ let args: StrArrSlice
+
+    var argOrNil: String? { args.getOrNil(atIndex: index) }
+}
+
+protocol ArgParserInput {
     var index: Int { get }
     var args: StrArrSlice { get }
 }
 
-extension ArgParserInputProtocol {
+extension ArgParserInput {
     func getOrNil(relativeIndex i: Int) -> String? { args.getOrNil(atIndex: index + i) }
 
     func nonFlagArgs() -> ArrSlice<String> {

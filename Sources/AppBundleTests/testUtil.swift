@@ -22,7 +22,7 @@ func setUpWorkspacesForTests() {
     config.defaultRootContainerOrientation = .horizontal // Make default layout predictable
 
     // Don't create any bindings and workspaces for tests
-    config.modes = [mainModeId: Mode(name: nil, bindings: [:])]
+    config.modes = [mainModeId: Mode(bindings: [:])]
     config.persistentWorkspaces = []
 
     for workspace in Workspace.all {
@@ -42,30 +42,22 @@ func setUpWorkspacesForTests() {
 
 extension ParsedCmd {
     var errorOrNil: String? {
-        if case .failure(let e) = self {
-            return e
-        } else {
-            return nil
+        return switch self {
+            case .failure(let e): e.msg
+            case .cmd, .help: nil
         }
     }
 
-    var cmdOrDie: T { cmdOrNil ?? dieT() }
-
-    var isHelp: Bool {
-        if case .help = self {
-            return true
-        } else {
-            return false
-        }
-    }
+    var cmdOrDie: T { cmdOrNil ?? dieT("\(self)") }
 }
 
-func testParseCommandFail(_ command: String, msg expected: String) {
+func testParseCommandFail(_ command: String, msg expectedMsg: String, exitCode expectedExitCode: Int32, file: String = #filePath, line: Int = #line) {
     let parsed = parseCommand(command)
     switch parsed {
         case .cmd(let command): XCTFail("\(command) isn't supposed to be parcelable")
-        case .failure(let msg): assertEquals(msg, expected)
         case .help: die() // todo test help
+        case .failure(let failure):
+            assertEquals(failure, .init(expectedMsg, expectedExitCode), file: file, line: line)
     }
 }
 

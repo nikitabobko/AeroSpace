@@ -77,10 +77,9 @@ func openConfigButton(showShortcutGroup: Bool = false) -> some View {
                 fallbackConfig.open(with: editor)
         }
     }.keyboardShortcut(",", modifiers: .command)
-    if showShortcutGroup {
-        shortcutGroup(label: Text("⌘ ,"), content: button)
-    } else {
-        button
+    switch showShortcutGroup {
+        case true: shortcutGroup(label: Text("⌘ ,"), content: button)
+        case false: button
     }
 }
 
@@ -92,10 +91,9 @@ func reloadConfigButton(showShortcutGroup: Bool = false) -> some View {
                 try await runLightSession(.menuBarButton, token) { _ = try await reloadConfig() }
             }
         }.keyboardShortcut("R", modifiers: .command)
-        if showShortcutGroup {
-            shortcutGroup(label: Text("⌘ R"), content: button)
-        } else {
-            button
+        switch showShortcutGroup {
+            case true: shortcutGroup(label: Text("⌘ R"), content: button)
+            case false: button
         }
     }
 }

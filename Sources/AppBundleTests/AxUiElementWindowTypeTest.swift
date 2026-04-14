@@ -17,12 +17,10 @@ func checkAxDumpsRecursive(_ dir: URL) throws {
         if file.pathExtension == "md" { continue }
 
         let rawJson = try JSONSerialization.jsonObject(with: Data.init(contentsOf: file), options: [.json5Allowed]) as! [String: Any]
-        let json = Json.newOrDie(rawJson).asDictOrDie
+        let json = Json.newOrDieRecursive(rawJson).asDictOrDie
         let app = json["Aero.AXApp"]!.asDictOrDie
         let appBundleId = (rawJson["Aero.App.appBundleId"] as? String).flatMap { KnownBundleId.init(rawValue: $0) }
-        let windowLevel = (rawJson["Aero.windowLevel"] as? String)?.data(using: .utf8)
-            .map { (try? JSONDecoder().decode(MacOsWindowLevel.self, from: $0)) ?? dieT() }?
-            .normalize
+        let windowLevel = json["Aero.windowLevel"].map { MacOsWindowLevel.fromJson($0) ?? dieT() }
         let activationPolicy: NSApplication.ActivationPolicy = .from(string: rawJson["Aero.App.nsApp.activationPolicy"] as! String)
         assertEquals(
             json.getWindowType(axApp: app, appBundleId, activationPolicy, windowLevel),
@@ -55,12 +53,8 @@ extension [String: Json]: AxUiElementMock {
     public func containingWindowId() -> CGWindowID? { _containingWindowId() }
 
     private func _containingWindowId() -> CGWindowID {
-        let windowId = self["Aero.axWindowId"]?.rawValue ?? dieT()
-        if let windowId = windowId as? Int {
-            return UInt32.init(windowId)
-        } else {
-            return windowId as? UInt32 ?? dieT()
-        }
+        let windowId = self["Aero.axWindowId"]?.asInt64OrNil ?? dieT()
+        return UInt32.init(exactly: windowId).orDie()
     }
 }
 

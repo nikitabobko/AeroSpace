@@ -1,18 +1,15 @@
 import Common
 import HotKey
-import TOMLKit
 
 struct Mode: ConvenienceCopyable, Equatable, Sendable {
-    /// User visible name. Optional. todo drop it?
-    var name: String?
     var bindings: [String: HotkeyBinding]
 
-    static let zero = Mode(name: nil, bindings: [:])
+    static let zero = Mode(bindings: [:])
 }
 
-func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError], _ mapping: [String: Key]) -> [String: Mode] {
-    guard let rawTable = raw.table else {
-        errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
+func parseModes(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError], _ mapping: [String: Key]) -> [String: Mode] {
+    guard let rawTable = raw.asDictOrNil else {
+        errors += [expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace)]
         return [:]
     }
     var result: [String: Mode] = [:]
@@ -25,9 +22,9 @@ func parseModes(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ error
     return result
 }
 
-func parseMode(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace, _ errors: inout [TomlParseError], _ mapping: [String: Key]) -> Mode {
-    guard let rawTable: TOMLTable = raw.table else {
-        errors += [expectedActualTypeError(expected: .table, actual: raw.type, backtrace)]
+func parseMode(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError], _ mapping: [String: Key]) -> Mode {
+    guard let rawTable: Json.JsonDict = raw.asDictOrNil else {
+        errors += [expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace)]
         return .zero
     }
 

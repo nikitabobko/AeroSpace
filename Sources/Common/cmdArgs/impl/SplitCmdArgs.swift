@@ -1,14 +1,14 @@
 public struct SplitCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
     fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
-    public static let parser: CmdParser<Self> = cmdParser(
+    public static let parser: CmdParser<Self> = .init(
         kind: .split,
         allowInConfig: true,
         help: split_help_generated,
         flags: [
-            "--window-id": optionalWindowIdFlag(),
+            "--window-id": windowIdSubArgParser(),
         ],
-        posArgs: [newArgParser(\.arg, parseSplitArg, mandatoryArgPlaceholder: SplitArg.unionLiteral)],
+        posArgs: [newMandatoryPosArgParser(\.arg, parseSplitArg, placeholder: SplitArg.unionLiteral)],
     )
 
     public var arg: Lateinit<SplitArg> = .uninitialized
@@ -23,10 +23,10 @@ public struct SplitCmdArgs: CmdArgs {
     }
 }
 
-public func parseSplitCmdArgs(_ args: StrArrSlice) -> ParsedCmd<SplitCmdArgs> {
+func parseSplitCmdArgs(_ args: StrArrSlice) -> ParsedCmd<SplitCmdArgs> {
     parseSpecificCmdArgs(SplitCmdArgs(rawArgs: args), args)
 }
 
-private func parseSplitArg(i: ArgParserInput) -> ParsedCliArgs<SplitCmdArgs.SplitArg> {
+private func parseSplitArg(i: PosArgParserInput) -> ParsedCliArgs<SplitCmdArgs.SplitArg> {
     .init(parseEnum(i.arg, SplitCmdArgs.SplitArg.self), advanceBy: 1)
 }
