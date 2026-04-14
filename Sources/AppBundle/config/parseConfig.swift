@@ -117,6 +117,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     persistentWorkspacesKey: Parser(\.persistentWorkspaces, parsePersistentWorkspaces),
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseArrayOfStrings),
     "exec": Parser(\.execConfig, parseExecConfig),
+    "mouse-resize-modifier": Parser(\.mouseResizeModifier, parseMouseResizeModifier),
 
     keyMappingConfigRootKey: Parser(\.keyMapping, skipParsing(Config().keyMapping)), // Parsed manually
     modeConfigRootKey: Parser(\.modes, skipParsing(Config().modes)), // Parsed manually
@@ -366,6 +367,13 @@ private func parseDefaultContainerOrientation(_ raw: Json, _ backtrace: ConfigBa
     parseString(raw, backtrace).flatMap {
         DefaultContainerOrientation(rawValue: $0)
             .orFailure(.semantic(backtrace, "Can't parse default container orientation '\($0)'"))
+    }
+}
+
+private func parseMouseResizeModifier(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<MouseResizeModifier> {
+    parseString(raw, backtrace).flatMap {
+        MouseResizeModifier(rawValue: $0)
+            .orFailure(.semantic(backtrace, "Can't parse mouse resize modifier '\($0)'. Possible values: cmd, alt, ctrl, shift"))
     }
 }
 
