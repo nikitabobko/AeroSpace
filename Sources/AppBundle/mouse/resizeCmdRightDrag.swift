@@ -94,14 +94,13 @@ func onCmdRightMouseDragged() async {
 
     if newSize.width < 100 || newSize.height < 100 { return }
 
-    if engageX {
-        let rectX = Rect(topLeftX: newTopLeft.x, topLeftY: lastAppliedLayoutRect.topLeftCorner.y, width: newSize.width, height: lastAppliedLayoutRect.size.height)
-        adjustWeightsForResize(window: window, currentRect: rectX, lastAppliedLayoutRect: lastAppliedLayoutRect)
-    }
-    if engageY {
-        let rectY = Rect(topLeftX: lastAppliedLayoutRect.topLeftCorner.x, topLeftY: newTopLeft.y, width: lastAppliedLayoutRect.size.width, height: newSize.height)
-        adjustWeightsForResize(window: window, currentRect: rectY, lastAppliedLayoutRect: lastAppliedLayoutRect)
-    }
+    let currentRect = Rect(
+        topLeftX: engageX ? newTopLeft.x : lastAppliedLayoutRect.topLeftX,
+        topLeftY: engageY ? newTopLeft.y : lastAppliedLayoutRect.topLeftY,
+        width: engageX ? newSize.width : lastAppliedLayoutRect.width,
+        height: engageY ? newSize.height : lastAppliedLayoutRect.height,
+    )
+    adjustWeightsForResize(window: window, currentRect: currentRect, lastAppliedLayoutRect: lastAppliedLayoutRect)
     scheduleRefreshSession(.globalObserver("cmdRightMouseDragged"), optimisticallyPreLayoutWorkspaces: true)
 }
 
