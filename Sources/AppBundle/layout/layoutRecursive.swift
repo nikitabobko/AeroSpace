@@ -46,6 +46,8 @@ extension TreeNode {
                         try await container.layoutTiles(point, width: width, height: height, virtual: virtual, context)
                     case .accordion:
                         try await container.layoutAccordion(point, width: width, height: height, virtual: virtual, context)
+                    case .scrolling:
+                        try await container.layoutScrolling(point, width: width, height: height, virtual: virtual, context)
                 }
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
                  .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
@@ -169,6 +171,35 @@ extension TilingContainer {
                         context,
                     )
             }
+        }
+    }
+
+    @MainActor
+    fileprivate func layoutScrolling(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
+        clampScrollingIndex()
+        switch children.count {
+            case 0:
+                return
+            case 1:
+                try await children[0].layoutRecursive(point, width: width, height: height, virtual: virtual, context)
+            default:
+                let pageWidth = width / 2
+                let rawGap = context.resolvedGaps.inner.horizontal.toDouble()
+                for (index, child) in children.enumerated() {
+                    let virtualX = virtual.topLeftX + CGFloat(index) * pageWidth
+                    let physicalX = point.x + CGFloat(index - scrollingIndex) * pageWidth
+                    let isLeftVisiblePage = index == scrollingIndex
+                    let isRightVisiblePage = index == scrollingIndex + 1
+                    let lPadding = isRightVisiblePage ? rawGap / 2 : 0
+                    let rPadding = isLeftVisiblePage ? rawGap / 2 : 0
+                    try await child.layoutRecursive(
+                        CGPoint(x: physicalX + lPadding, y: point.y),
+                        width: pageWidth - lPadding - rPadding,
+                        height: height,
+                        virtual: Rect(topLeftX: virtualX, topLeftY: virtual.topLeftY, width: pageWidth, height: height),
+                        context,
+                    )
+                }
         }
     }
 }
