@@ -17,17 +17,17 @@ struct Main {
         let args = CommandLine.arguments.slice(1...) ?? []
 
         if args.isEmpty {
-            exit(1, err: usage)
+            exit(EXIT_CODE_TWO, err: usage)
         }
         if args.first == "--help" || args.first == "-h" {
-            exit(0, out: usage)
+            exit(EXIT_CODE_ZERO, out: usage)
         }
 
         if args.first == "--version" || args.first == "-v" {
             let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
             let serverVersionAndHash: String?
             if await connection.startBlocking().error == nil {
-                let ans = await run(connection, [], stdin: "", windowId: nil, workspace: nil)
+                let ans = await run(connection, [], stdin: "", windowId: nil, workspace: nil, failExitCode: EXIT_CODE_TWO)
                 serverVersionAndHash = ans.serverVersionAndHash
             } else {
                 serverVersionAndHash = nil
@@ -47,7 +47,7 @@ struct Main {
                     """,
                 )
             }
-            exit(0)
+            exit(EXIT_CODE_ZERO)
         }
 
         let parsedArgs: any CmdArgs
@@ -55,15 +55,17 @@ struct Main {
             case .cmd(let _parsedArgs):
                 parsedArgs = _parsedArgs
             case .help(let help):
-                exit(0, out: help)
+                exit(EXIT_CODE_ZERO, out: help)
             case .failure(let e):
                 exit(e.exitCode, err: e.msg)
         }
 
+        let failExitCode = parsedArgs.failExitCode
+
         let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
 
         if let e = await connection.startBlocking().error {
-            exit(1, err: "Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
+            exit(failExitCode, err: "Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
         }
 
         var stdin = ""
@@ -75,7 +77,7 @@ struct Main {
                 parsedArgs is MoveNodeToWorkspaceCmdArgs && (parsedArgs as! MoveNodeToWorkspaceCmdArgs).explicitStdinFlag == nil
             {
                 exit(
-                    1,
+                    failExitCode,
                     err: """
                         ERROR: Implicit stdin is detected (stdin is not TTY). Implicit stdin was forbidden in AeroSpace v0.20.0.
                         1. Please supply '--stdin' flag to make stdin explicit and preserve old AeroSpace behavior
@@ -89,7 +91,7 @@ struct Main {
                 stdin += line
                 index += 1
                 if index > 1000 {
-                    exit(1, err: "stdin number of lines limit is exceeded")
+                    exit(failExitCode, err: "stdin number of lines limit is exceeded")
                 }
             }
         }
@@ -99,15 +101,15 @@ struct Main {
 
         // Handle subscribe command specially
         if parsedArgs is SubscribeCmdArgs {
-            await runSubscribe(connection, args, windowId: windowId, workspace: workspace)
-            exit(0) // Should not reach here
+            await runSubscribe(connection, args, windowId: windowId, workspace: workspace, failExitCode: parsedArgs.failExitCode)
+            exit(EXIT_CODE_ZERO) // Should not reach here
         }
 
-        let ans = await run(connection, args, stdin: stdin, windowId: windowId, workspace: workspace)
+        let ans = await run(connection, args, stdin: stdin, windowId: windowId, workspace: workspace, failExitCode: failExitCode)
 
         if !ans.stdout.isEmpty { print(ans.stdout) }
         if !ans.stderr.isEmpty { eprint(ans.stderr) }
-        if ans.exitCode != 0 && ans.serverVersionAndHash != cliClientVersionAndHash {
+        if ans.exitCode != EXIT_CODE_ZERO && ans.serverVersionAndHash != cliClientVersionAndHash {
             eprint(
                 """
                 Warning: AeroSpace client/server versions don't match
@@ -123,9 +125,9 @@ struct Main {
     }
 }
 
-func runSubscribe(_ connection: NWConnection, _ args: StrArrSlice, windowId: UInt32?, workspace: String?) async {
+func runSubscribe(_ connection: NWConnection, _ args: StrArrSlice, windowId: UInt32?, workspace: String?, failExitCode: Int32) async {
     if let e = await connection.writeAtomic(ClientRequest(args: args.toArray(), stdin: "", windowId: windowId, workspace: workspace)).error {
-        exit(1, err: "Failed to write to server socket: \(e)")
+        exit(failExitCode, err: "Failed to write to server socket: \(e)")
     }
 
     while true {
@@ -135,23 +137,23 @@ func runSubscribe(_ connection: NWConnection, _ args: StrArrSlice, windowId: UIn
                     print(str)
                     unsafe fflush(stdout)
                 } else {
-                    exit(1, err: "Can't convert bytes to utf8 String")
+                    exit(failExitCode, err: "Can't convert bytes to utf8 String")
                 }
             case .failure(let e):
-                exit(1, err: "runSubscribe error: \(e)")
+                exit(failExitCode, err: "runSubscribe error: \(e)")
         }
     }
 }
 
-func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowId: UInt32?, workspace: String?) async -> ServerAnswer {
+func run(_ connection: NWConnection, _ args: StrArrSlice, stdin: String, windowId: UInt32?, workspace: String?, failExitCode: Int32) async -> ServerAnswer {
     if let e = await connection.writeAtomic(ClientRequest(args: args.toArray(), stdin: stdin, windowId: windowId, workspace: workspace)).error {
-        exit(1, err: "Failed to write to server socket: \(e)")
+        exit(failExitCode, err: "Failed to write to server socket: \(e)")
     }
 
     switch await connection.readNonAtomic() {
         case .success(let answer):
-            return (try? JSONDecoder().decode(ServerAnswer.self, from: answer)) ?? exitT(1, err: "Failed to parse server response: \(String(data: answer, encoding: .utf8).prettyDescription)")
+            return (try? JSONDecoder().decode(ServerAnswer.self, from: answer)) ?? exitT(EXIT_CODE_TWO, err: "Failed to parse server response: \(String(data: answer, encoding: .utf8).prettyDescription)")
         case .failure(let error):
-            exit(1, err: "Failed to read from server socket: \(error)")
+            exit(failExitCode, err: "Failed to read from server socket: \(error)")
     }
 }

@@ -80,7 +80,7 @@ var serverArgs: ServerArgs { unsafe _serverArgs }
 private func initServerArgs() {
     let args = CommandLine.arguments.slice(1...) ?? []
     if args.contains(where: { $0 == "-h" || $0 == "--help" }) {
-        exit(0, out: serverHelp)
+        exit(EXIT_CODE_ZERO, out: serverHelp)
     }
     var index = 0
     while index < args.count {
@@ -88,11 +88,11 @@ private func initServerArgs() {
         index += 1
         switch current {
             case "--version", "-v":
-                exit(0, out: "\(aeroSpaceAppVersion) \(gitHash)")
+                exit(EXIT_CODE_ZERO, out: "\(aeroSpaceAppVersion) \(gitHash)")
             case "--config-path":
                 switch args.getOrNil(atIndex: index) {
                     case let arg?: unsafe _serverArgs.configLocation = arg
-                    case nil: exit(1, err: "Missing <path> in --config-path flag")
+                    case nil: exit(EXIT_CODE_TWO, err: "Missing <path> in --config-path flag")
                 }
                 index += 1
             case "--read-only": // todo rename to '--disabled' and unite with disabled feature
@@ -102,10 +102,10 @@ private func initServerArgs() {
                 // Usually it's '-NSDocumentRevisionsDebugMode NO'/'-NSDocumentRevisionsDebugMode YES'
                 while args.getOrNil(atIndex: index)?.starts(with: "-") == false { index += 1 }
             default:
-                exit(1, err: "Unrecognized flag '\(args.first.orDie())'")
+                exit(EXIT_CODE_TWO, err: "Unrecognized flag '\(args.first.orDie())'")
         }
     }
     if let path = serverArgs.configLocation, !FileManager.default.fileExists(atPath: path) {
-        exit(1, err: "\(path) doesn't exist")
+        exit(EXIT_CODE_TWO, err: "\(path) doesn't exist")
     }
 }

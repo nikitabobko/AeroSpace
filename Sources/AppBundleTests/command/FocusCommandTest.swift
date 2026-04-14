@@ -227,7 +227,7 @@ final class FocusCommandTest: XCTestCase {
         assertEquals(focus.windowOrNil?.windowId, 1)
 
         args.rawBoundariesAction = .fail
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 1)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 2)
         assertEquals(focus.windowOrNil?.windowId, 1)
 
         args.rawBoundariesAction = .wrapAroundTheWorkspace
@@ -241,7 +241,7 @@ final class FocusCommandTest: XCTestCase {
         assertEquals(focus.windowOrNil?.windowId, 2)
 
         args.rawBoundariesAction = .fail
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 1)
+        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 2)
         assertEquals(focus.windowOrNil?.windowId, 2)
 
         args.rawBoundariesAction = .wrapAroundTheWorkspace
