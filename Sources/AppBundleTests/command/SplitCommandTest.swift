@@ -69,4 +69,17 @@ final class SplitCommandTest: XCTestCase {
             .window(2),
         ]))
     }
+
+    func testSplitVerticalFailsInScrollingLayout() async throws {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+        }
+        root.layout = .scrolling
+
+        let result = try await SplitCommand(args: SplitCmdArgs(rawArgs: [], .vertical)).run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.stderr, ["The scrolling layout is always horizontal"])
+        assertEquals(root.layoutDescription, .scrolling([.window(1)]))
+        assertEquals(root.orientation, .h)
+    }
 }
