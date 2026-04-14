@@ -133,6 +133,16 @@ extension AxUiElementMock {
             return false
         }
 
+        // Emacs child frames (posframes, corfu completion popups, etc.)
+        // These are transient UI elements that should not be managed as windows.
+        // https://github.com/nikitabobko/AeroSpace/issues/776
+        if id == .emacs &&
+            get(Ax.subroleAttr) == kAXFloatingWindowSubrole &&
+            get(Ax.isMainAttr) == false
+        {
+            return false
+        }
+
         if id?.isFirefox != true {
             return isWindowHeuristicOld(axApp: axApp, id)
         }
