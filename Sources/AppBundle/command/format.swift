@@ -60,17 +60,13 @@ extension [AeroObj] {
 
 enum Primitive: Encodable {
     case bool(Bool)
-    case int(Int)
-    case int32(Int32)
-    case uint32(UInt32)
+    case int(Int64)
     case string(String)
 
     func toString() -> String {
         switch self {
             case .bool(let x): x.description
             case .int(let x): x.description
-            case .int32(let x): x.description
-            case .uint32(let x): x.description
             case .string(let x): x
         }
     }
@@ -79,13 +75,15 @@ enum Primitive: Encodable {
         let value: Encodable = switch self {
             case .bool(let x): x
             case .int(let x): x
-            case .int32(let x): x
-            case .uint32(let x): x
             case .string(let x): x
         }
         var container = encoder.singleValueContainer()
         try container.encode(value)
     }
+
+    public static func int(_ int: UInt32) -> Self { .int(Int64(exactly: int).orDie()) }
+    public static func int(_ int: Int32) -> Self { .int(Int64(exactly: int).orDie()) }
+    public static func int(_ int: Int) -> Self { .int(Int64(exactly: int).orDie()) }
 }
 
 private struct Cell<T> {
@@ -118,7 +116,7 @@ extension String {
         switch (obj, formatVar) {
             case (.window(let w, let title), .window(let f)):
                 return switch f {
-                    case .windowId: .success(.uint32(w.windowId))
+                    case .windowId: .success(.int(w.windowId))
                     case .windowIsFullscreen: .success(.bool(w.isFullscreen))
                     case .windowTitle: .success(.string(title))
                     case .windowLayout, .windowParentContainerLayout: toLayoutResult(w: w)
@@ -141,7 +139,7 @@ extension String {
                 return switch f {
                     case .appBundleId: .success(.string(a.rawAppBundleId ?? "NULL-APP-BUNDLE-ID"))
                     case .appName: .success(.string(a.name ?? "NULL-APP-NAME"))
-                    case .appPid: .success(.int32(a.pid))
+                    case .appPid: .success(.int(a.pid))
                     case .appExecPath: .success(.string(a.execPath ?? "NULL-APP-EXEC-PATH"))
                     case .appBundlePath: .success(.string(a.bundlePath ?? "NULL-APP-BUNDLE-PATH"))
                 }
