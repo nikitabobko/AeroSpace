@@ -86,26 +86,26 @@ enum GlobalObserver {
                 (1 << CGEventType.mouseMoved.rawValue) |
                 (1 << CGEventType.flagsChanged.rawValue),
         )
-        if let tap = CGEvent.tapCreate(
+        if let tap = unsafe CGEvent.tapCreate(
             tap: .cgSessionEventTap,
             place: .headInsertEventTap,
             options: .defaultTap,
             eventsOfInterest: CGEventMask(mask),
             callback: { _, type, event, _ in
-                if !TrayMenuModel.shared.isEnabled { return Unmanaged.passUnretained(event) }
+                if !TrayMenuModel.shared.isEnabled { return unsafe Unmanaged.passUnretained(event) }
                 let flags = event.flags
                 let isModifier = flags.contains(config.mouseResizeModifier.cgEventFlag)
-                guard isModifier else { return Unmanaged.passUnretained(event) }
+                guard isModifier else { return unsafe Unmanaged.passUnretained(event) }
                 switch type {
                     case .rightMouseDown:
                         Task { @MainActor in await onCmdRightMouseDown() }
                         return nil
                     case .rightMouseDragged:
                         Task { @MainActor in await onCmdRightMouseDragged() }
-                        return Unmanaged.passUnretained(event)
+                        return unsafe Unmanaged.passUnretained(event)
                     case .mouseMoved:
                         Task { @MainActor in await onCmdRightMouseDragged() }
-                        return Unmanaged.passUnretained(event)
+                        return unsafe Unmanaged.passUnretained(event)
                     case .rightMouseUp:
                         Task { @MainActor in await onCmdRightMouseUp() }
                         return nil
@@ -113,9 +113,9 @@ enum GlobalObserver {
                         if !isModifier {
                             Task { @MainActor in await onCmdRightMouseUp() }
                         }
-                        return Unmanaged.passUnretained(event)
+                        return unsafe Unmanaged.passUnretained(event)
                     default:
-                        return Unmanaged.passUnretained(event)
+                        return unsafe Unmanaged.passUnretained(event)
                 }
             },
             userInfo: nil,
