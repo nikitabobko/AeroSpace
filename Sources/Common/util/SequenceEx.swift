@@ -1,5 +1,4 @@
 // periphery:ignore:all
-import AppKit
 import OrderedCollections
 
 extension Sequence {
@@ -53,7 +52,7 @@ extension Sequence {
         self.min(by: { a, b in selector(a) < selector(b) })
     }
 
-    @inlinable public func maxByOrDie(_ selector: (Self.Element) -> some Comparable) -> Self.Element? {
+    @inlinable public func maxByOrDie(_ selector: (Self.Element) -> some Comparable) -> Self.Element {
         self.maxBy(selector) ?? dieT("Empty sequence")
     }
 

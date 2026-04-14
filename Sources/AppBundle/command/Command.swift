@@ -8,7 +8,7 @@ protocol Command: AeroAny, Equatable, Sendable {
     @MainActor
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> T.ExitCodeType
 
-    /// We should reset closedWindowsCache when the command can potentiall change the tree
+    /// We should reset closedWindowsCache when the command can potentially change the tree
     var shouldResetClosedWindowsCache: Bool { get }
 }
 
