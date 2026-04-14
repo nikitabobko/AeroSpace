@@ -101,7 +101,7 @@ func onCmdRightMouseDragged() async {
         height: engageY ? newSize.height : lastAppliedLayoutRect.height,
     )
     adjustWeightsForResize(window: window, currentRect: currentRect, lastAppliedLayoutRect: lastAppliedLayoutRect)
-    scheduleRefreshSession(.globalObserver("cmdRightMouseDragged"), optimisticallyPreLayoutWorkspaces: true)
+    scheduleCancellableCompleteRefreshSession(.globalObserver("cmdRightMouseDragged"), optimisticallyPreLayoutWorkspaces: true)
 }
 
 @MainActor

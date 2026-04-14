@@ -370,7 +370,7 @@ private func parseDefaultContainerOrientation(_ raw: Json, _ backtrace: ConfigBa
     }
 }
 
-private func parseMouseResizeModifier(_ raw: TOMLValueConvertible, _ backtrace: TomlBacktrace) -> ParsedToml<MouseResizeModifier> {
+private func parseMouseResizeModifier(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<MouseResizeModifier> {
     parseString(raw, backtrace).flatMap {
         MouseResizeModifier(rawValue: $0)
             .orFailure(.semantic(backtrace, "Can't parse mouse resize modifier '\($0)'. Possible values: cmd, alt, ctrl, shift"))
