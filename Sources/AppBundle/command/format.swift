@@ -13,13 +13,8 @@ struct WindowWithPrefetchedTitle {
         try await resolveWindow(window, needsTitle: formatVar == .window(.windowTitle))
     }
 
-    static func resolveWindow(_ window: Window, for format: [StringInterToken]) async throws -> Self {
-        let needsTitle = format.contains(where: {
-            switch $0 {
-                case .interVar(let v): v == FormatVar.WindowFormatVar.windowTitle.rawValue
-                case .literal: false
-            }
-        })
+    static func resolveWindow(_ window: Window, for format: [InterToken<InterVar>]) async throws -> Self {
+        let needsTitle = format.contains { $0 == .interVar(.formatVar(.window(.windowTitle))) }
         return try await resolveWindow(window, needsTitle: needsTitle)
     }
 
@@ -51,7 +46,7 @@ enum AeroObj {
 
 extension [AeroObj] {
     @MainActor
-    func format(_ format: [StringInterToken]) -> Result<[String], String> {
+    func format(_ format: [InterToken<InterVar>]) -> Result<[String], String> {
         var cellTable: [[Cell<String>]] = []
         for obj in self {
             var line: [Cell<String>] = []
@@ -59,7 +54,7 @@ extension [AeroObj] {
             var errors: [String] = []
             for token in format {
                 switch token {
-                    case .interVar(PlainInterVar.rightPadding.rawValue):
+                    case .interVar(.plainInterVar(.rightPadding)):
                         line.append(Cell(value: curCell, rightPadding: true))
                         curCell = ""
                     case .literal(let literal):
@@ -204,15 +199,12 @@ extension PlainInterVar {
     }
 }
 
-extension String {
+extension InterVar {
     @MainActor func expandFormatVar(obj: AeroObj) -> Result<Primitive, String> {
-        if let it = FormatVar(rawValue: self)?.expandFormatVar(obj: obj) {
-            return it
+        switch self {
+            case .formatVar(let it): it.expandFormatVar(obj: obj)
+            case .plainInterVar(let it): it.expandFormatVar()
         }
-        if let it = PlainInterVar(rawValue: self)?.expandFormatVar() {
-            return it
-        }
-        return .failure(unknownInterpolationVariable(variable: self, obj))
     }
 }
 

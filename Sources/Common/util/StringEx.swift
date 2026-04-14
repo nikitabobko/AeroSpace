@@ -70,7 +70,7 @@ extension [[String]] {
 
 extension String {
     public func interpolate(with variables: [String: String]) -> Result<String, [String]> {
-        interpolationTokens(interpolationChar: "$")
+        rawInterpolationTokens(interpolationChar: "$")
             .mapError { [$0] }
             .flatMap { tokens in
                 tokens.mapAllOrFailures { token in
@@ -85,9 +85,30 @@ extension String {
             .map { $0.joined(separator: "") }
     }
 
-    public func interpolationTokens(interpolationChar: Character) -> Result<[StringInterToken], String> {
+    public func interpolationTokens<T>(
+        interpolationChar: Character,
+        ofInterVarType type: T.Type,
+    ) -> Result<[InterToken<T>], String> where T: Sendable, T: Equatable, T: CaseIterable, T: RawRepresentable, T.RawValue == String {
+        rawInterpolationTokens(interpolationChar: interpolationChar).flatMap { rawTokens in
+            var result: [InterToken<T>] = []
+            for token in rawTokens {
+                switch token {
+                    case .literal(let literal):
+                        result.append(.literal(literal))
+                    case .interVar(let value):
+                        switch parseEnum(value, type) {
+                            case .success(let interVar): result.append(.interVar(interVar))
+                            case .failure(let err): return .failure(err)
+                        }
+                }
+            }
+            return .success(result)
+        }
+    }
+
+    func rawInterpolationTokens(interpolationChar: Character) -> Result<[RawStringInterToken], String> {
         var mode: InterpolationParserState = .stringLiteral(currLiteral: "")
-        var result: [StringInterToken] = []
+        var result: [RawStringInterToken] = []
         for char: Character? in (Array(self) + [nil]) {
             switch (mode, char) { // State machine
                 case (.stringLiteral(let literal), interpolationChar):
@@ -122,10 +143,12 @@ extension String {
     }
 }
 
-public enum StringInterToken: Equatable, Sendable {
+public enum InterToken<T>: Equatable, Sendable where T: Equatable, T: Sendable {
     case literal(String)
-    case interVar(String) // "interpolation variable"
+    case interVar(T) // "interpolation variable"
 }
+
+typealias RawStringInterToken = InterToken<String>
 
 private enum InterpolationParserState {
     case stringLiteral(currLiteral: String)

@@ -36,7 +36,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
     fileprivate var allAlias: Bool = false
 
     public var filteringOptions = FilteringOptions()
-    public var _format: [StringInterToken] = []
+    public var _format: [InterToken<InterVar>] = []
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
 
@@ -50,12 +50,12 @@ public struct ListWindowsCmdArgs: CmdArgs {
 }
 
 extension ListWindowsCmdArgs {
-    public var format: [StringInterToken] {
+    public var format: [InterToken<InterVar>] {
         _format.isEmpty
             ? [
-                .interVar("window-id"), .interVar("right-padding"), .literal(" | "),
-                .interVar("app-name"), .interVar("right-padding"), .literal(" | "),
-                .interVar("window-title"),
+                .interVar(.formatVar(.window(.windowId))), .interVar(.plainInterVar(.rightPadding)), .literal(" | "),
+                .interVar(.formatVar(.app(.appName))), .interVar(.plainInterVar(.rightPadding)), .literal(" | "),
+                .interVar(.formatVar(.window(.windowTitle))),
             ]
             : _format
     }
@@ -80,12 +80,12 @@ func parseListWindowsCmdArgs(_ args: StrArrSlice) -> ParsedCmd<ListWindowsCmdArg
 }
 
 func formatParser<Root>(
-    _ keyPath: SendableWritableKeyPath<Root, [StringInterToken]>,
+    _ keyPath: SendableWritableKeyPath<Root, [InterToken<InterVar>]>,
     for kind: AeroObjKind,
-) -> SubArgParser<Root, [StringInterToken]> {
+) -> SubArgParser<Root, [InterToken<InterVar>]> {
     return ArgParser(keyPath) { input in
         if let arg = input.nonFlagArgOrNil() {
-            return switch arg.interpolationTokens(interpolationChar: "%") {
+            return switch arg.interpolationTokens(interpolationChar: "%", ofInterVarType: InterVar.self) {
                 case .success(let tokens): .succ(tokens, advanceBy: 1)
                 case .failure(let err): .fail("Failed to parse <output-format>. \(err)", advanceBy: 1)
             }
@@ -202,6 +202,32 @@ public enum PlainInterVar: String, CaseIterable, Sendable, Equatable {
     case rightPadding = "right-padding"
     case newline = "newline"
     case tab = "tab"
+}
+
+public enum InterVar: RawRepresentable, Equatable, CaseIterable, Sendable {
+    case formatVar(FormatVar)
+    case plainInterVar(PlainInterVar)
+
+    public static var allCases: [InterVar] {
+        FormatVar.allCases.map(InterVar.formatVar) + PlainInterVar.allCases.map(InterVar.plainInterVar)
+    }
+
+    public init?(rawValue: String) {
+        if let it = FormatVar(rawValue: rawValue) {
+            self = .formatVar(it)
+        } else if let it = PlainInterVar(rawValue: rawValue) {
+            self = .plainInterVar(it)
+        } else {
+            return nil
+        }
+    }
+
+    public var rawValue: String {
+        switch self {
+            case .formatVar(let it): it.rawValue
+            case .plainInterVar(let it): it.rawValue
+        }
+    }
 }
 
 public enum AeroObjKind: CaseIterable, Sendable {

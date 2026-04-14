@@ -3,19 +3,19 @@ import Foundation
 
 extension [AeroObj] {
     @MainActor
-    func formatToJson(_ format: [StringInterToken], ignoreRightPaddingVar: Bool) -> Result<String, String> {
+    func formatToJson(_ format: [InterToken<InterVar>], ignoreRightPaddingVar: Bool) -> Result<String, String> {
         var list: [[String: Primitive]] = []
         for richObj in self {
             var rawObj: [String: Primitive] = [:]
             for token in format {
                 switch token {
-                    case .interVar(PlainInterVar.rightPadding.rawValue) where ignoreRightPaddingVar:
+                    case .interVar(.plainInterVar(.rightPadding)) where ignoreRightPaddingVar:
                         break
                     case .literal:
                         break // should be spaces
                     case .interVar(let varName):
                         switch varName.expandFormatVar(obj: richObj) {
-                            case .success(let expanded): rawObj[varName] = expanded
+                            case .success(let expanded): rawObj[varName.rawValue] = expanded
                             case .failure(let error): return .failure(error)
                         }
                 }

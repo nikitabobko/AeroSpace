@@ -26,7 +26,7 @@ public struct TestCmdArgs: CmdArgs {
 }
 
 private func parseRhs(_ input: PosArgParserInput) -> ParsedCliArgs<String> {
-    let result = input.arg.interpolationTokens(interpolationChar: "%").flatMap { tokens in
+    let result = input.arg.rawInterpolationTokens(interpolationChar: "%").flatMap { tokens in
         switch tokens.sequencePattern {
             case .one(.literal(let literal)): .success(literal)
             default: .failure("Right hand side doesn't allow interpolation variables")
@@ -36,9 +36,9 @@ private func parseRhs(_ input: PosArgParserInput) -> ParsedCliArgs<String> {
 }
 
 private func parseLhs(_ input: PosArgParserInput) -> ParsedCliArgs<FormatVar> {
-    let result = input.arg.interpolationTokens(interpolationChar: "%").flatMap { tokens in
+    let result = input.arg.interpolationTokens(interpolationChar: "%", ofInterVarType: FormatVar.self).flatMap { tokens in
         switch tokens.sequencePattern {
-            case .one(.interVar(let interVar)): parseEnum(interVar, FormatVar.self)
+            case .one(.interVar(let formatVar)): .success(formatVar)
             default: .failure("Left hand side must be a single interpolation variable")
         }
     }

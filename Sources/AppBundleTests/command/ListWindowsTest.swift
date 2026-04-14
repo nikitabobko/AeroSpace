@@ -54,7 +54,7 @@ final class ListWindowsTest: XCTestCase {
                 AeroObj.window(.forTest(window: TestWindow.new(id: 2, parent: $0), title: "non-empty")),
                 AeroObj.window(.forTest(window: TestWindow.new(id: 1, parent: $0), title: "")),
             ]
-            assertEquals(windows.format([.interVar("window-title")]), .success(["non-empty", ""]))
+            assertEquals(windows.format([.interVar(.formatVar(.window(.windowTitle)))]), .success(["non-empty", ""]))
         }
 
         Workspace.get(byName: name).rootTilingContainer.apply {
@@ -62,7 +62,7 @@ final class ListWindowsTest: XCTestCase {
                 AeroObj.window(.forTest(window: TestWindow.new(id: 2, parent: $0), title: "non-empty")),
                 AeroObj.window(.forTest(window: TestWindow.new(id: 10, parent: $0), title: "")),
             ]
-            assertEquals(windows.format([.interVar("window-id"), .interVar("right-padding"), .interVar("window-title")]), .success(["2 non-empty", "10"]))
+            assertEquals(windows.format([.interVar(.formatVar(.window(.windowId))), .interVar(.plainInterVar(.rightPadding)), .interVar(.formatVar(.window(.windowTitle)))]), .success(["2 non-empty", "10"]))
         }
 
         Workspace.get(byName: name).rootTilingContainer.apply {
@@ -70,7 +70,7 @@ final class ListWindowsTest: XCTestCase {
                 AeroObj.window(.forTest(window: TestWindow.new(id: 2, parent: $0), title: "title1")),
                 AeroObj.window(.forTest(window: TestWindow.new(id: 10, parent: $0), title: "title2")),
             ]
-            assertEquals(windows.format([.interVar("window-id"), .interVar("right-padding"), .literal(" | "), .interVar("window-title")]), .success(["2  | title1", "10 | title2"]))
+            assertEquals(windows.format([.interVar(.formatVar(.window(.windowId))), .interVar(.plainInterVar(.rightPadding)), .literal(" | "), .interVar(.formatVar(.window(.windowTitle)))]), .success(["2  | title1", "10 | title2"]))
         }
     }
 }
