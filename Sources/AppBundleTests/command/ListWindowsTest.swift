@@ -51,24 +51,24 @@ final class ListWindowsTest: XCTestCase {
     func testFormat() {
         Workspace.get(byName: name).rootTilingContainer.apply {
             let windows = [
-                AeroObj.window(window: TestWindow.new(id: 2, parent: $0), title: "non-empty"),
-                AeroObj.window(window: TestWindow.new(id: 1, parent: $0), title: ""),
+                AeroObj.window(.forTest(window: TestWindow.new(id: 2, parent: $0), title: "non-empty")),
+                AeroObj.window(.forTest(window: TestWindow.new(id: 1, parent: $0), title: "")),
             ]
             assertEquals(windows.format([.interVar("window-title")]), .success(["non-empty", ""]))
         }
 
         Workspace.get(byName: name).rootTilingContainer.apply {
             let windows = [
-                AeroObj.window(window: TestWindow.new(id: 2, parent: $0), title: "non-empty"),
-                AeroObj.window(window: TestWindow.new(id: 10, parent: $0), title: ""),
+                AeroObj.window(.forTest(window: TestWindow.new(id: 2, parent: $0), title: "non-empty")),
+                AeroObj.window(.forTest(window: TestWindow.new(id: 10, parent: $0), title: "")),
             ]
             assertEquals(windows.format([.interVar("window-id"), .interVar("right-padding"), .interVar("window-title")]), .success(["2 non-empty", "10"]))
         }
 
         Workspace.get(byName: name).rootTilingContainer.apply {
             let windows = [
-                AeroObj.window(window: TestWindow.new(id: 2, parent: $0), title: "title1"),
-                AeroObj.window(window: TestWindow.new(id: 10, parent: $0), title: "title2"),
+                AeroObj.window(.forTest(window: TestWindow.new(id: 2, parent: $0), title: "title1")),
+                AeroObj.window(.forTest(window: TestWindow.new(id: 10, parent: $0), title: "title2")),
             ]
             assertEquals(windows.format([.interVar("window-id"), .interVar("right-padding"), .literal(" | "), .interVar("window-title")]), .success(["2  | title1", "10 | title2"]))
         }

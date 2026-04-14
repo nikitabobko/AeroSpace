@@ -1,7 +1,40 @@
 import Common
 
+struct WindowWithPrefetchedTitle {
+    let window: Window
+    let title: String?
+
+    private init(window: Window, title: String?) {
+        self.window = window
+        self.title = title
+    }
+
+    static func resolveWindow(_ window: Window, for formatVar: FormatVar) async throws -> Self {
+        try await resolveWindow(window, needsTitle: formatVar == .window(.windowTitle))
+    }
+
+    static func resolveWindow(_ window: Window, for format: [StringInterToken]) async throws -> Self {
+        let needsTitle = format.contains(where: {
+            switch $0 {
+                case .interVar(let v): v == FormatVar.WindowFormatVar.windowTitle.rawValue
+                case .literal: false
+            }
+        })
+        return try await resolveWindow(window, needsTitle: needsTitle)
+    }
+
+    private static func resolveWindow(_ window: Window, needsTitle: Bool) async throws -> Self {
+        let title: String = try await window.title
+        return .init(window: window, title: needsTitle ? title : nil)
+    }
+
+    static func forTest(window: Window, title: String?) -> Self {
+        .init(window: window, title: title)
+    }
+}
+
 enum AeroObj {
-    case window(window: Window, title: String)
+    case window(WindowWithPrefetchedTitle)
     case workspace(Workspace)
     case app(any AbstractApp)
     case monitor(Monitor)
@@ -108,13 +141,13 @@ private struct Cell<T> {
 extension FormatVar {
     @MainActor func expandFormatVar(obj: AeroObj) -> Result<Primitive, String> {
         switch (obj, self) {
-            case (.window(let w, _), .workspace):
-                return w.nodeWorkspace.flatMap(AeroObj.workspace).map(expandFormatVar) ?? .success(.string("NULL-WORKSPACE"))
-            case (.window(let w, _), .monitor):
-                return w.nodeMonitor.flatMap(AeroObj.monitor).map(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
-            case (.window(let w, _), .app):
-                return expandFormatVar(obj: .app(w.app))
-            case (.window(_, _), .window): break
+            case (.window(let w), .workspace):
+                return w.window.nodeWorkspace.flatMap(AeroObj.workspace).map(expandFormatVar) ?? .success(.string("NULL-WORKSPACE"))
+            case (.window(let w), .monitor):
+                return w.window.nodeMonitor.flatMap(AeroObj.monitor).map(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
+            case (.window(let w), .app):
+                return expandFormatVar(obj: .app(w.window.app))
+            case (.window(_), .window): break
 
             case (.workspace(let ws), .monitor):
                 return expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitor))
@@ -125,12 +158,12 @@ extension FormatVar {
         }
 
         switch (obj, self) {
-            case (.window(let w, let title), .window(let f)):
+            case (.window(let w), .window(let f)):
                 return switch f {
-                    case .windowId: .success(.int(w.windowId))
-                    case .windowIsFullscreen: .success(.bool(w.isFullscreen))
-                    case .windowTitle: .success(.string(title))
-                    case .windowLayout, .windowParentContainerLayout: toLayoutResult(w: w)
+                    case .windowId: .success(.int(w.window.windowId))
+                    case .windowIsFullscreen: .success(.bool(w.window.isFullscreen))
+                    case .windowTitle: .success(.string(w.title.orDie("Title wasn't prefeched")))
+                    case .windowLayout, .windowParentContainerLayout: toLayoutResult(w: w.window)
                 }
             case (.workspace(let w), .workspace(let f)):
                 return switch f {

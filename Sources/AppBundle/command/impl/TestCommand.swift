@@ -9,8 +9,7 @@ struct TestCommand: Command {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
 
         let _lhs: Result<Primitive, String> = switch target.windowOrNil {
-            // todo Optimize excessive AX title queries before the inter vars expansion
-            case let window?: args.lhs.val.expandFormatVar(obj: .window(window: window, title: try await window.title))
+            case let window?: args.lhs.val.expandFormatVar(obj: .window(try await .resolveWindow(window, for: args.lhs.val)))
             case nil: args.lhs.val.expandFormatVar(obj: .workspace(target.workspace))
         }
 
