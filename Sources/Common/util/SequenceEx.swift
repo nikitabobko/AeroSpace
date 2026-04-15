@@ -120,7 +120,7 @@ extension Sequence {
         guard let first = iterator.next() else { return .empty }
         guard let second = iterator.next() else { return .one(first) }
         guard let _ = iterator.next() else { return .two(first, second) }
-        return .many(self)
+        return .many
     }
 }
 
@@ -128,5 +128,5 @@ public enum SequencePattern<Seq: Sequence> {
     case empty
     case one(Seq.Element)
     case two(Seq.Element, Seq.Element)
-    case many(Seq)
+    case many
 }

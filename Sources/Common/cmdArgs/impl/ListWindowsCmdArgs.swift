@@ -131,6 +131,16 @@ public enum FormatVar: RawRepresentable, Equatable, CaseIterable, Sendable {
     case app(AppFormatVar)
     case monitor(MonitorFormatVar)
 
+    // periphery:ignore
+    private var kind: AeroObjKind {
+        switch self {
+            case .app: .app
+            case .monitor: .monitor
+            case .window: .window
+            case .workspace: .workspace
+        }
+    }
+
     public static var allCases: [FormatVar] {
         AeroObjKind.allCases.flatMap {
             switch $0 {
@@ -208,17 +218,39 @@ public enum InterVar: RawRepresentable, Equatable, CaseIterable, Sendable {
     case formatVar(FormatVar)
     case plainInterVar(PlainInterVar)
 
+    private enum Kind: CaseIterable, Equatable, Sendable {
+        case formatVar
+        case plainInterVar
+    }
+
+    // periphery:ignore
+    private var kind: Kind {
+        switch self {
+            case .formatVar: .formatVar
+            case .plainInterVar: .plainInterVar
+        }
+    }
+
     public static var allCases: [InterVar] {
-        FormatVar.allCases.map(InterVar.formatVar) + PlainInterVar.allCases.map(InterVar.plainInterVar)
+        Kind.allCases.flatMap { kind in
+            switch kind {
+                case .formatVar: FormatVar.allCases.map(InterVar.formatVar)
+                case .plainInterVar: PlainInterVar.allCases.map(InterVar.plainInterVar)
+            }
+        }
     }
 
     public init?(rawValue: String) {
-        if let it = FormatVar(rawValue: rawValue) {
-            self = .formatVar(it)
-        } else if let it = PlainInterVar(rawValue: rawValue) {
-            self = .plainInterVar(it)
-        } else {
-            return nil
+        let this: [Self] = Kind.allCases.map { kind in
+            switch kind {
+                case .formatVar: FormatVar(rawValue: rawValue).map(InterVar.formatVar)
+                case .plainInterVar: PlainInterVar(rawValue: rawValue).map(InterVar.plainInterVar)
+            }
+        }.filterNotNil()
+        switch this.sequencePattern {
+            case .empty: return nil
+            case .one(let it): self = it
+            default: die("Clashed cases: \(this)")
         }
     }
 
@@ -232,16 +264,6 @@ public enum InterVar: RawRepresentable, Equatable, CaseIterable, Sendable {
 
 public enum AeroObjKind: CaseIterable, Sendable {
     case window, workspace, app, monitor
-
-    // periphery:ignore
-    private static func unused(_ it: FormatVar) -> Self {
-        switch it {
-            case .app: .app
-            case .monitor: .monitor
-            case .window: .window
-            case .workspace: .workspace
-        }
-    }
 }
 
 public func getAvailableInterVars(for kind: AeroObjKind) -> [String] {
