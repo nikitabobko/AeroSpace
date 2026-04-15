@@ -25,7 +25,7 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # You can set 0 to disable the padding feature
 accordion-padding = 30
 
-# Possible values: tiles|accordion
+# Possible values: tiles|accordion|scrolling
 default-root-container-layout = 'tiles'
 
 # Possible values: horizontal|vertical|auto
@@ -115,6 +115,9 @@ on-mode-changed = []
     # See: https://nikitabobko.github.io/AeroSpace/commands#layout
     alt-slash = 'layout tiles horizontal vertical'
     alt-comma = 'layout accordion horizontal vertical'
+    # Useful when you switch a workspace to the scrolling layout with `layout scrolling`
+    alt-left = 'scroll left'
+    alt-right = 'scroll right'
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#focus
     alt-h = 'focus left'

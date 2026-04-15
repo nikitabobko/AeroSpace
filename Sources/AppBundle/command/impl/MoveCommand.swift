@@ -12,6 +12,7 @@ struct MoveCommand: Command {
             return .fail(io.err(noWindowIsFocused))
         }
         guard let parent = currentWindow.parent else { return .fail }
+        let result: BinaryExitCode
         switch parent.cases {
             case .tilingContainer(let parent):
                 let indexOfCurrent = currentWindow.ownIndex.orDie()
@@ -19,22 +20,26 @@ struct MoveCommand: Command {
                 if parent.orientation == direction.orientation && parent.children.indices.contains(indexOfSiblingTarget) {
                     switch parent.children[indexOfSiblingTarget].tilingTreeNodeCasesOrDie() {
                         case .tilingContainer(let topLevelSiblingTargetContainer):
-                            return deepMoveIn(window: currentWindow, into: topLevelSiblingTargetContainer, moveDirection: direction)
+                            result = deepMoveIn(window: currentWindow, into: topLevelSiblingTargetContainer, moveDirection: direction)
                         case .window: // "swap windows"
                             let prevBinding = currentWindow.unbindFromParent()
                             currentWindow.bind(to: parent, adaptiveWeight: prevBinding.adaptiveWeight, index: indexOfSiblingTarget)
-                            return .succ
+                            result = .succ
                     }
                 } else {
-                    return moveOut(window: currentWindow, direction: direction, io, args, env)
+                    result = moveOut(window: currentWindow, direction: direction, io, args, env)
                 }
             case .workspace: // floating window
-                return .fail(io.err("moving floating windows isn't yet supported")) // todo
+                result = .fail(io.err("moving floating windows isn't yet supported")) // todo
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-                return .fail(io.err(moveOutMacosUnconventionalWindow))
+                result = .fail(io.err(moveOutMacosUnconventionalWindow))
             case .macosPopupWindowsContainer:
-                return .fail // Impossible
+                result = .fail // Impossible
         }
+        if result == .succ {
+            currentWindow.nodeWorkspace?.rootTilingContainer.reveal(currentWindow, preferRightPane: false)
+        }
+        return result
     }
 }
 
@@ -52,8 +57,7 @@ struct MoveCommand: Command {
                 case .stop: return .succ
                 case .fail: return .fail
                 case .createImplicitContainer:
-                    createImplicitContainerAndMoveWindow(window, workspace, direction)
-                    return .succ
+                    return .from(bool: createImplicitContainerAndMoveWindow(window, workspace, direction, io))
             }
         case .allMonitorsOuterFrame:
             guard let (monitors, index) = window.nodeMonitor?.findRelativeMonitor(inDirection: direction) else {
@@ -67,7 +71,7 @@ struct MoveCommand: Command {
 
                 return MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
             } else {
-                return hitAllMonitorsOuterFrameBoundaries(window, workspace, args, direction)
+                return hitAllMonitorsOuterFrameBoundaries(window, workspace, args, direction, io)
             }
     }
 }
@@ -77,13 +81,13 @@ struct MoveCommand: Command {
     _ workspace: Workspace,
     _ args: MoveCmdArgs,
     _ direction: CardinalDirection,
+    _ io: CmdIo,
 ) -> BinaryExitCode {
     switch args.boundariesAction {
         case .stop: return .succ
         case .fail: return .fail
         case .createImplicitContainer:
-            createImplicitContainerAndMoveWindow(window, workspace, direction)
-            return .succ
+            return .from(bool: createImplicitContainerAndMoveWindow(window, workspace, direction, io))
     }
 }
 
@@ -125,14 +129,20 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
     _ window: Window,
     _ workspace: Workspace,
     _ direction: CardinalDirection,
-) {
+    _ io: CmdIo,
+) -> Bool {
     let prevRoot = workspace.rootTilingContainer
+    if prevRoot.layout == .scrolling {
+        io.err("move --boundaries-action create-implicit-container doesn't support the scrolling layout")
+        return false
+    }
     prevRoot.unbindFromParent()
     // Force tiles layout
     _ = TilingContainer(parent: workspace, adaptiveWeight: WEIGHT_AUTO, direction.orientation, .tiles, index: 0)
     check(prevRoot != workspace.rootTilingContainer)
     prevRoot.bind(to: workspace.rootTilingContainer, adaptiveWeight: WEIGHT_AUTO, index: 0)
     window.bind(to: workspace.rootTilingContainer, adaptiveWeight: WEIGHT_AUTO, index: direction.insertionOffset)
+    return true
 }
 
 @MainActor private func deepMoveIn(window: Window, into container: TilingContainer, moveDirection: CardinalDirection) -> BinaryExitCode {
@@ -155,13 +165,15 @@ extension TilingTreeNodeCases {
     @MainActor fileprivate func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TilingTreeNodeCases {
         switch self {
             case .window:
-                self
+                return self
             case .tilingContainer(let container) where container.orientation == orientation:
-                .tilingContainer(container)
+                return .tilingContainer(container)
             case .tilingContainer(let container):
-                container.mostRecentChild.orDie("Empty containers must be detached during normalization")
-                    .tilingTreeNodeCasesOrDie()
-                    .findDeepMoveInTargetRecursive(orientation)
+                return container.layout == .tabs
+                    ? .tilingContainer(container)
+                    : container.mostRecentChild.orDie("Empty containers must be detached during normalization")
+                        .tilingTreeNodeCasesOrDie()
+                        .findDeepMoveInTargetRecursive(orientation)
         }
     }
 }

@@ -227,20 +227,31 @@ private func toLayoutString(tc: TilingContainer) -> String {
         case (.tiles, .v): return LayoutCmdArgs.LayoutDescription.v_tiles.rawValue
         case (.accordion, .h): return LayoutCmdArgs.LayoutDescription.h_accordion.rawValue
         case (.accordion, .v): return LayoutCmdArgs.LayoutDescription.v_accordion.rawValue
+        case (.scrolling, _): return LayoutCmdArgs.LayoutDescription.scrolling.rawValue
+        case (.tabs, _): return LayoutCmdArgs.LayoutDescription.tabs.rawValue
     }
 }
 
 private func toLayoutResult(w: Window) -> Result<Primitive, String> {
     guard let parent = w.parent else { return .failure("NULL-PARENT") }
-    return switch getChildParentRelation(child: w, parent: parent) {
-        case .tiling(let tc): .success(.string(toLayoutString(tc: tc)))
-        case .floatingWindow: .success(.string(LayoutCmdArgs.LayoutDescription.floating.rawValue))
-        case .macosNativeFullscreenWindow: .success(.string("macos_native_fullscreen"))
-        case .macosNativeHiddenAppWindow: .success(.string("macos_native_window_of_hidden_app"))
-        case .macosNativeMinimizedWindow: .success(.string("macos_native_minimized"))
-        case .macosPopupWindow: .success(.string("NULL-WINDOW-LAYOUT"))
-
-        case .rootTilingContainer: .failure("Not possible")
-        case .shimContainerRelation: .failure("Window cannot have a shim container relation")
+    switch getChildParentRelation(child: w, parent: parent) {
+        case .tiling(let tc):
+            let rootContainer = w.parentsWithSelf.compactMap { $0 as? TilingContainer }.last
+            let layoutContainer = rootContainer?.layout == .scrolling ? rootContainer ?? tc : tc
+            return .success(.string(toLayoutString(tc: layoutContainer)))
+        case .floatingWindow:
+            return .success(.string(LayoutCmdArgs.LayoutDescription.floating.rawValue))
+        case .macosNativeFullscreenWindow:
+            return .success(.string("macos_native_fullscreen"))
+        case .macosNativeHiddenAppWindow:
+            return .success(.string("macos_native_window_of_hidden_app"))
+        case .macosNativeMinimizedWindow:
+            return .success(.string("macos_native_minimized"))
+        case .macosPopupWindow:
+            return .success(.string("NULL-WINDOW-LAYOUT"))
+        case .rootTilingContainer:
+            return .failure("Not possible")
+        case .shimContainerRelation:
+            return .failure("Window cannot have a shim container relation")
     }
 }

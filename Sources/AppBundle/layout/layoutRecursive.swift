@@ -2,13 +2,15 @@ import AppKit
 
 extension Workspace {
     @MainActor
-    func layoutWorkspace() async throws {
-        if isEffectivelyEmpty { return }
+    func layoutWorkspace() async throws -> [TabHeaderSnapshot] {
+        if isEffectivelyEmpty { return [] }
         let rect = workspaceMonitor.visibleRectPaddedByOuterGaps
+        let context = LayoutContext(self)
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in monitors horizontal configuration. ¯\_(ツ)_/¯
-        try await layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, LayoutContext(self))
+        try await layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, context)
+        return context.tabHeaderSnapshots
     }
 }
 
@@ -28,14 +30,20 @@ extension TreeNode {
                 }
             case .window(let window):
                 if window.windowId != currentlyManipulatedWithMouseWindowId {
+                    let previousPhysicalRect = lastAppliedLayoutPhysicalRect
                     lastAppliedLayoutVirtualRect = virtual
                     if window.isFullscreen && window == context.workspace.rootTilingContainer.mostRecentWindowRecursive {
                         lastAppliedLayoutPhysicalRect = nil
+                        window.isHiddenForTabs = false
                         window.layoutFullscreen(context)
                     } else {
                         lastAppliedLayoutPhysicalRect = physicalRect
                         window.isFullscreen = false
-                        window.setAxFrame(point, CGSize(width: width, height: height))
+                        let wasHiddenForTabs = window.isHiddenForTabs
+                        window.isHiddenForTabs = false
+                        if wasHiddenForTabs || !rectEquals(previousPhysicalRect, physicalRect) {
+                            window.setAxFrame(point, CGSize(width: width, height: height))
+                        }
                     }
                 }
             case .tilingContainer(let container):
@@ -46,6 +54,10 @@ extension TreeNode {
                         try await container.layoutTiles(point, width: width, height: height, virtual: virtual, context)
                     case .accordion:
                         try await container.layoutAccordion(point, width: width, height: height, virtual: virtual, context)
+                    case .scrolling:
+                        try await container.layoutScrolling(point, width: width, height: height, virtual: virtual, context)
+                    case .tabs:
+                        try await container.layoutTabs(point, width: width, height: height, virtual: virtual, context)
                 }
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
                  .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
@@ -54,18 +66,17 @@ extension TreeNode {
     }
 }
 
-private struct LayoutContext {
-    let workspace: Workspace
-    let resolvedGaps: ResolvedGaps
-
-    @MainActor
-    init(_ workspace: Workspace) {
-        self.workspace = workspace
-        self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor)
-    }
+private func rectEquals(_ lhs: Rect?, _ rhs: Rect) -> Bool {
+    guard let lhs else { return false }
+    return lhs.topLeftX == rhs.topLeftX &&
+        lhs.topLeftY == rhs.topLeftY &&
+        lhs.width == rhs.width &&
+        lhs.height == rhs.height
 }
 
 extension Window {
+    static let tabsHiddenPoint = CGPoint(x: -20000, y: -20000)
+
     @MainActor
     fileprivate func layoutFloatingWindow(_ context: LayoutContext) async throws {
         let workspace = context.workspace
@@ -99,6 +110,18 @@ extension Window {
             ? context.workspace.workspaceMonitor.visibleRect
             : context.workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
         setAxFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height))
+    }
+
+    @MainActor
+    fileprivate func hideForTabs() {
+        if isHiddenForTabs { return }
+        let size = lastAppliedLayoutPhysicalRect?.size
+            ?? lastAppliedLayoutVirtualRect?.size
+            ?? lastFloatingSize
+            ?? CGSize(width: 1, height: 1)
+        lastAppliedLayoutPhysicalRect = nil
+        isHiddenForTabs = true
+        setAxFrame(Self.tabsHiddenPoint, size)
     }
 }
 
@@ -169,6 +192,131 @@ extension TilingContainer {
                         context,
                     )
             }
+        }
+    }
+
+    @MainActor
+    fileprivate func layoutScrolling(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
+        clampScrollingIndex()
+        switch children.count {
+            case 0:
+                return
+            case 1:
+                try await children[0].layoutRecursive(point, width: width, height: height, virtual: virtual, context)
+            default:
+                let pageWidth = width / 2
+                let rawGap = context.resolvedGaps.inner.horizontal.toDouble()
+                for (index, child) in children.enumerated() {
+                    let virtualX = virtual.topLeftX + CGFloat(index) * pageWidth
+                    let physicalX = point.x + CGFloat(index - scrollingIndex) * pageWidth
+                    let isLeftVisiblePage = index == scrollingIndex
+                    let isRightVisiblePage = index == scrollingIndex + 1
+                    let lPadding = isRightVisiblePage ? rawGap / 2 : 0
+                    let rPadding = isLeftVisiblePage ? rawGap / 2 : 0
+                    try await child.layoutRecursive(
+                        CGPoint(x: physicalX + lPadding, y: point.y),
+                        width: pageWidth - lPadding - rPadding,
+                        height: height,
+                        virtual: Rect(topLeftX: virtualX, topLeftY: virtual.topLeftY, width: pageWidth, height: height),
+                        context,
+                    )
+                }
+        }
+    }
+
+    @MainActor
+    fileprivate func layoutTabs(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
+        guard let activeChild = mostRecentChild ?? children.first else { return }
+        let headerHeight = TabHeaderMetrics.height
+        let hasVisibleHeader = width >= TabHeaderMetrics.minTabWidth && height > headerHeight + 1
+        let headerFrame = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: hasVisibleHeader ? headerHeight : 0)
+        if hasVisibleHeader {
+            let availableWidth = max(0, width - 2 * TabHeaderMetrics.horizontalPadding)
+            let spacingCount = max(0, children.count - 1)
+            let itemWidth = max(
+                1,
+                (availableWidth - CGFloat(spacingCount) * TabHeaderMetrics.itemSpacing) / CGFloat(max(1, children.count)),
+            )
+            var cursorX = TabHeaderMetrics.horizontalPadding
+            var items: [TabHeaderItem] = []
+            for (index, child) in children.enumerated() {
+                guard let targetWindow = child.tabHeaderTargetWindow(),
+                      let title = try await child.tabHeaderTitle()
+                else { continue }
+                let remaining = max(0, width - cursorX - TabHeaderMetrics.horizontalPadding)
+                let currentWidth = min(itemWidth, remaining)
+                if currentWidth <= 0 { break }
+                let itemFrame = Rect(
+                    topLeftX: cursorX,
+                    topLeftY: TabHeaderMetrics.verticalPadding,
+                    width: currentWidth,
+                    height: headerHeight - 2 * TabHeaderMetrics.verticalPadding,
+                )
+                let closeButtonFrame = Rect(
+                    topLeftX: max(
+                        itemFrame.minX,
+                        itemFrame.maxX - TabHeaderMetrics.closeButtonTrailingInset - TabHeaderMetrics.closeButtonSize,
+                    ),
+                    topLeftY: itemFrame.topLeftY + (itemFrame.height - TabHeaderMetrics.closeButtonSize) / 2,
+                    width: min(TabHeaderMetrics.closeButtonSize, itemFrame.width),
+                    height: min(TabHeaderMetrics.closeButtonSize, itemFrame.height),
+                )
+                let titleMaxX = max(itemFrame.minX, closeButtonFrame.minX - TabHeaderMetrics.closeButtonLeadingSpacing)
+                let titleFrame = Rect(
+                    topLeftX: itemFrame.topLeftX,
+                    topLeftY: itemFrame.topLeftY,
+                    width: max(0, titleMaxX - itemFrame.topLeftX),
+                    height: itemFrame.height,
+                )
+                items.append(
+                    TabHeaderItem(
+                        id: "\(ObjectIdentifier(self).debugDescription)-\(index)-\(targetWindow.windowId)",
+                        targetWindow: targetWindow,
+                        title: title,
+                        frame: itemFrame,
+                        titleFrame: titleFrame,
+                        closeButtonFrame: closeButtonFrame,
+                        isActive: child == activeChild,
+                    ),
+                )
+                cursorX += currentWidth + TabHeaderMetrics.itemSpacing
+            }
+            if !items.isEmpty {
+                context.tabHeaderSnapshots.append(
+                    TabHeaderSnapshot(
+                        id: ObjectIdentifier(self),
+                        headerFrame: headerFrame,
+                        items: items,
+                    ),
+                )
+            }
+        }
+        for child in children where child != activeChild {
+            try await child.hideSubtreeForTabs()
+        }
+        let contentPoint = hasVisibleHeader ? point + CGPoint(x: 0, y: headerHeight) : point
+        let contentHeight = hasVisibleHeader ? height - headerHeight : height
+        let contentVirtual = hasVisibleHeader
+            ? Rect(topLeftX: virtual.topLeftX, topLeftY: virtual.topLeftY + headerHeight, width: virtual.width, height: virtual.height - headerHeight)
+            : virtual
+        try await activeChild.layoutRecursive(contentPoint, width: width, height: contentHeight, virtual: contentVirtual, context)
+    }
+}
+
+extension TreeNode {
+    @MainActor
+    fileprivate func hideSubtreeForTabs() async throws {
+        switch nodeCases {
+            case .window(let window):
+                window.hideForTabs()
+            case .tilingContainer(let container):
+                container.lastAppliedLayoutPhysicalRect = nil
+                for child in container.children {
+                    try await child.hideSubtreeForTabs()
+                }
+            case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
+                 .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
+                return
         }
     }
 }
