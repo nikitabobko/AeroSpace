@@ -15,8 +15,8 @@ struct MoveWorkspaceToMonitorCommand: Command {
                 if targetMonitor.monitorId_oneBased == prevMonitor.monitorId_oneBased {
                     return .succ
                 }
+                let stubWorkspace = getStubWorkspace(for: prevMonitor)
                 if targetMonitor.setActiveWorkspace(focusedWorkspace) {
-                    let stubWorkspace = getStubWorkspace(for: prevMonitor)
                     check(
                         prevMonitor.setActiveWorkspace(stubWorkspace),
                         "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(prevMonitor)",
