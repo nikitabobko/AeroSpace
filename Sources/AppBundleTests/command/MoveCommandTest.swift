@@ -177,7 +177,7 @@ final class MoveCommandTest: XCTestCase {
 
         let result = try await parseCommand("move --boundaries-action create-implicit-container up").cmdOrDie
             .run(.defaultEnv, .emptyStdin)
-        assertEquals(result.exitCode, 1)
+        assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stderr, ["move --boundaries-action create-implicit-container doesn't support the scrolling layout"])
         assertEquals(
             workspace.layoutDescription,
@@ -363,6 +363,8 @@ extension TreeNode {
                             : .v_accordion(container.children.map(\.layoutDescription))
                     case .scrolling:
                         .scrolling(container.children.map(\.layoutDescription))
+                    case .tabs:
+                        .tabs(container.children.map(\.layoutDescription))
                 }
         }
     }
@@ -375,6 +377,7 @@ enum LayoutDescription: Equatable {
     case h_accordion([LayoutDescription])
     case v_accordion([LayoutDescription])
     case scrolling([LayoutDescription])
+    case tabs([LayoutDescription])
     case window(UInt32)
     case macosPopupWindowsContainer
     case macosMinimized

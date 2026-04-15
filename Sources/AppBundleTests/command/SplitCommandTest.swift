@@ -77,7 +77,7 @@ final class SplitCommandTest: XCTestCase {
         root.layout = .scrolling
 
         let result = try await SplitCommand(args: SplitCmdArgs(rawArgs: [], .vertical)).run(.defaultEnv, .emptyStdin)
-        assertEquals(result.exitCode, 1)
+        assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stderr, ["The scrolling layout is always horizontal"])
         assertEquals(root.layoutDescription, .scrolling([.window(1)]))
         assertEquals(root.orientation, .h)
