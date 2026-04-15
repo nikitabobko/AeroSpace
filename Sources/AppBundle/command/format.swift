@@ -1,7 +1,7 @@
 import Common
 
 enum AeroObj {
-    case window(window: Window, title: String)
+    case window(window: Window, title: String, rect: Rect?)
     case workspace(Workspace)
     case app(any AbstractApp)
     case monitor(Monitor)
@@ -100,13 +100,13 @@ extension String {
         switch (obj, formatVar) {
             case (_, .none): break
 
-            case (.window(let w, _), .workspace):
+            case (.window(let w, _, _), .workspace):
                 return w.nodeWorkspace.flatMap(AeroObj.workspace).map(expandFormatVar) ?? .success(.string("NULL-WOKRSPACE"))
-            case (.window(let w, _), .monitor):
+            case (.window(let w, _, _), .monitor):
                 return w.nodeMonitor.flatMap(AeroObj.monitor).map(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
-            case (.window(let w, _), .app):
+            case (.window(let w, _, _), .app):
                 return expandFormatVar(obj: .app(w.app))
-            case (.window(_, _), .window): break
+            case (.window(_, _, _), .window): break
 
             case (.workspace(let ws), .monitor):
                 return expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitor))
@@ -116,12 +116,16 @@ extension String {
             case (.monitor(_), _): break
         }
         switch (obj, formatVar) {
-            case (.window(let w, let title), .window(let f)):
+            case (.window(let w, let title, let rect), .window(let f)):
                 return switch f {
                     case .windowId: .success(.uint32(w.windowId))
                     case .windowIsFullscreen: .success(.bool(w.isFullscreen))
                     case .windowTitle: .success(.string(title))
                     case .windowLayout, .windowParentContainerLayout: toLayoutResult(w: w)
+                    case .windowX: .success(.int(rect.map { Int($0.topLeftX) } ?? 0))
+                    case .windowY: .success(.int(rect.map { Int($0.topLeftY) } ?? 0))
+                    case .windowWidth: .success(.int(rect.map { Int($0.width) } ?? 0))
+                    case .windowHeight: .success(.int(rect.map { Int($0.height) } ?? 0))
                 }
             case (.workspace(let w), .workspace(let f)):
                 return switch f {

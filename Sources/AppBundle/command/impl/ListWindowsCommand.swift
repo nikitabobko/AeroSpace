@@ -44,14 +44,14 @@ struct ListWindowsCommand: Command {
         if args.outputOnlyCount {
             return io.out("\(windows.count)")
         } else {
-            var _list: [(window: Window, title: String)] = [] // todo cleanup
+            var _list: [(window: Window, title: String, rect: Rect?)] = [] // todo cleanup
             for window in windows {
-                _list.append((window, try await window.title))
+                _list.append((window, try await window.title, try await window.getAxRect()))
             }
             _list = _list.filter { $0.window.isBound }
             _list = _list.sortedBy([{ $0.window.app.name ?? "" }, \.title])
 
-            let list = _list.map { AeroObj.window(window: $0.window, title: $0.title) }
+            let list = _list.map { AeroObj.window(window: $0.window, title: $0.title, rect: $0.rect) }
             if args.json {
                 return switch list.formatToJson(args.format, ignoreRightPaddingVar: args._format.isEmpty) {
                     case .success(let json): io.out(json)
