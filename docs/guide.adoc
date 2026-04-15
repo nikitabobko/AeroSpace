@@ -256,12 +256,13 @@ The tree structure can be changed with three commands:
 [#layouts]
 === Layouts
 
-In total, AeroSpace provides 4 possible layouts:
+In total, AeroSpace provides 5 possible layouts:
 
 - `h_tiles` horizontal tiles (in i3, it’s called "horizontal split")
 - `v_tiles` vertical tiles (in i3, it’s called "vertical split")
 - `h_accordion` horizontal accordion (analog of i3’s "tabbed layout")
 - `v_accordion` vertical accordion (analog of i3’s "stacked layout")
+- `tabs` tabs layout where only the most recently focused child is visible
 
 <<tree,From the previous section>>, you’re already familiar with the `tiles` layout.
 
@@ -282,6 +283,9 @@ You can navigate the windows in an `h_accordion` by using the `focus (left|right
 While in a `v_accordion`, you can navigate the windows using the `focus (up|down)` command.
 
 Accordion padding is configurable via `accordion-padding` option.
+
+Tabs layout shows only one child at a time.
+The visible child is selected by focus history of the container.
 
 [#normalization]
 === Normalization

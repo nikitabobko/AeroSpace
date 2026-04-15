@@ -113,6 +113,7 @@ enum Layout: String {
     case tiles
     case accordion
     case scrolling
+    case tabs
 }
 
 extension String {

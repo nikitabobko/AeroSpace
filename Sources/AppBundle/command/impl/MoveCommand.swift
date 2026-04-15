@@ -165,13 +165,15 @@ extension TilingTreeNodeCases {
     @MainActor fileprivate func findDeepMoveInTargetRecursive(_ orientation: Orientation) -> TilingTreeNodeCases {
         switch self {
             case .window:
-                self
+                return self
             case .tilingContainer(let container) where container.orientation == orientation:
-                .tilingContainer(container)
+                return .tilingContainer(container)
             case .tilingContainer(let container):
-                container.mostRecentChild.orDie("Empty containers must be detached during normalization")
-                    .tilingTreeNodeCasesOrDie()
-                    .findDeepMoveInTargetRecursive(orientation)
+                return container.layout == .tabs
+                    ? .tilingContainer(container)
+                    : container.mostRecentChild.orDie("Empty containers must be detached during normalization")
+                        .tilingTreeNodeCasesOrDie()
+                        .findDeepMoveInTargetRecursive(orientation)
         }
     }
 }

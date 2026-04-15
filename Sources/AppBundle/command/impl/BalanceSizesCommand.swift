@@ -23,6 +23,7 @@ private func balance(_ parent: TilingContainer) {
             case .tiles: child.setWeight(parent.orientation, 1)
             case .accordion: break // Do nothing
             case .scrolling: break
+            case .tabs: break
         }
         if let child = child as? TilingContainer {
             balance(child)

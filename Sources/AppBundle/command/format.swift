@@ -228,6 +228,7 @@ private func toLayoutString(tc: TilingContainer) -> String {
         case (.accordion, .h): return LayoutCmdArgs.LayoutDescription.h_accordion.rawValue
         case (.accordion, .v): return LayoutCmdArgs.LayoutDescription.v_accordion.rawValue
         case (.scrolling, _): return LayoutCmdArgs.LayoutDescription.scrolling.rawValue
+        case (.tabs, _): return LayoutCmdArgs.LayoutDescription.tabs.rawValue
     }
 }
 

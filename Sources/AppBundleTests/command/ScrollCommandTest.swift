@@ -19,7 +19,7 @@ final class ScrollCommandTest: XCTestCase {
         }
 
         let result = try await parseCommand("layout scrolling").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(result.exitCode, 0)
+        assertEquals(result.exitCode.rawValue, 0)
         assertEquals(root.layout, .scrolling)
         assertEquals(root.orientation, .h)
         assertEquals(root.scrollingIndex, 0)
@@ -34,7 +34,7 @@ final class ScrollCommandTest: XCTestCase {
         }
 
         let result = try await parseCommand("layout scrolling").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(result.exitCode, 1)
+        assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stderr, ["The 'scrolling' layout is only supported for workspace root containers"])
     }
 
@@ -48,7 +48,7 @@ final class ScrollCommandTest: XCTestCase {
         root.layout = .scrolling
         root.scrollingIndex = 1
 
-        try await workspace.layoutWorkspace()
+        _ = try await workspace.layoutWorkspace()
 
         let workspaceRect = workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
         let pageWidth = workspaceRect.width / 2
@@ -80,7 +80,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(root.scrollingIndex, 0)
 
         let scrollRight = try await parseCommand("scroll right").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(scrollRight.exitCode, 0)
+        assertEquals(scrollRight.exitCode.rawValue, 0)
         assertEquals(root.scrollingIndex, 1)
         assertEquals(focus.windowOrNil?.windowId, 3)
 
@@ -109,7 +109,7 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(root.scrollingIndex, 1)
 
         let result = try await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(result.exitCode, 0)
+        assertEquals(result.exitCode.rawValue, 0)
         assertEquals(root.layoutDescription, .scrolling([.window(1), .window(2), .window(4), .window(3)]))
         assertEquals(root.scrollingIndex, 2)
         assertEquals(focus.windowOrNil?.windowId, 3)
@@ -154,11 +154,11 @@ final class ScrollCommandTest: XCTestCase {
         root.layout = .scrolling
 
         let resizeResult = try await parseCommand("resize smart +10").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(resizeResult.exitCode, 1)
+        assertEquals(resizeResult.exitCode.rawValue, 2)
         assertEquals(resizeResult.stderr, ["resize command doesn't support the scrolling layout"])
 
         let balanceResult = try await parseCommand("balance-sizes").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(balanceResult.exitCode, 1)
+        assertEquals(balanceResult.exitCode.rawValue, 2)
         assertEquals(balanceResult.stderr, ["balance-sizes command doesn't support the scrolling layout"])
     }
 
@@ -170,7 +170,7 @@ final class ScrollCommandTest: XCTestCase {
         }
         root.layout = .scrolling
 
-        let windows = root.allLeafWindowsRecursive.map { AeroObj.window(window: $0, title: "w\($0.windowId)") }
-        assertEquals(windows.format([.interVar("window-layout")]), .success(["scrolling", "scrolling"]))
+        let windows = root.allLeafWindowsRecursive.map { AeroObj.window(.forTest(window: $0, title: "w\($0.windowId)")) }
+        assertSucc(windows.format([.interVar("window-layout")]), ["scrolling", "scrolling"])
     }
 }

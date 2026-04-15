@@ -28,6 +28,8 @@ struct LayoutCommand: Command {
                 return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: nil, window: window)
             case .scrolling:
                 return changeTilingLayout(io, targetLayout: .scrolling, targetOrientation: .h, window: window)
+            case .tabs:
+                return changeTilingLayout(io, targetLayout: .tabs, targetOrientation: nil, window: window)
             case .horizontal:
                 return changeTilingLayout(io, targetLayout: nil, targetOrientation: .h, window: window)
             case .vertical:
@@ -86,6 +88,7 @@ extension Window {
         return switch layout {
             case .accordion:   (parent as? TilingContainer)?.layout == .accordion
             case .tiles:       (parent as? TilingContainer)?.layout == .tiles
+            case .tabs:        (parent as? TilingContainer)?.layout == .tabs
             case .scrolling:
                 parentsWithSelf.compactMap { $0 as? TilingContainer }.last?.layout == .scrolling
             case .horizontal:  (parent as? TilingContainer)?.orientation == .h
