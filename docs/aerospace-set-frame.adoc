@@ -1,0 +1,45 @@
+= aerospace-set-frame(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-set-frame
+// tag::purpose[]
+:manpurpose: Set the position and/or size of a floating window
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace set-frame [-h|--help] [--window-id <window-id>]
+                    [--x <[+|-]pixels>] [--y <[+|-]pixels>]
+                    [--width <[+|-]pixels>] [--height <[+|-]pixels>]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+Set absolute position and/or size of a floating window in pixels.
+Use +/- prefix for relative adjustments (e.g. --width +10).
+Errors if the resulting frame is not within any monitor's bounds.
+Only works on floating windows.
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
+
+--x <[+|-]pixels>:: Set or adjust the window's X position (top-left corner)
+--y <[+|-]pixels>:: Set or adjust the window's Y position (top-left corner)
+--width <[+|-]pixels>:: Set or adjust the window's width
+--height <[+|-]pixels>:: Set or adjust the window's height
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

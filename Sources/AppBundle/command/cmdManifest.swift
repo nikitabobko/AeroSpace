@@ -64,6 +64,8 @@ extension CmdArgs {
                 command = ReloadConfigCommand(args: self as! ReloadConfigCmdArgs)
             case .resize:
                 command = ResizeCommand(args: self as! ResizeCmdArgs)
+            case .setFrame:
+                command = SetFrameCommand(args: self as! SetFrameCmdArgs)
             case .setGaps:
                 command = SetGapsCommand(args: self as! SetGapsCmdArgs)
             case .split:

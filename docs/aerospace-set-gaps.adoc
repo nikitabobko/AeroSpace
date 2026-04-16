@@ -1,0 +1,37 @@
+= aerospace-set-gaps(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-set-gaps
+// tag::purpose[]
+:manpurpose: Set gaps for the focused workspace
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace set-gaps [-h|--help] [--workspace <workspace>]
+                   [--outer-left-right <size>] [--outer-top-bottom <size>]
+                   [--inner <size>]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--workspace <workspace>:: Target workspace (default: focused)
+--outer-left-right <size>:: Set outer left/right gaps
+--outer-top-bottom <size>:: Set outer top/bottom gaps
+--inner <size>:: Set inner gaps
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

@@ -31,6 +31,8 @@ let subcommandDescriptions = [
     ["  move", "Move the focused window in the given direction"],
     ["  reload-config", "Reload currently active config"],
     ["  resize", "Resize the focused window"],
+    ["  set-frame", "Set the position and/or size of a floating window"],
+    ["  set-gaps", "Set gaps for the focused workspace"],
     ["  split", "Split focused window"],
     ["  subscribe", "Subscribe to AeroSpace events and receive notifications via socket"],
     ["  summon-workspace", "Move the requested workspace to the focused monitor."],
