@@ -12,8 +12,8 @@ func interceptTermination(_ _signal: Int32) {
     signal(_signal, { signal in
         check(Thread.current.isMainThread)
         Task {
-            defer { exit(signal) }
-            try await terminationHandler.beforeTermination()
+            try? await terminationHandler?.beforeTermination()
+            exit(signal)
         }
     } as sig_t)
 }

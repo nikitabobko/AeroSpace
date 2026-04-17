@@ -54,7 +54,7 @@ public func dieT<T>(
             message: message,
         )
     }
-    if !recursionDetectorDuringTermination {
+    if let terminationHandler, !recursionDetectorDuringTermination {
         let semaphore = DispatchSemaphore(value: 0)
         Task {
             defer { semaphore.signal() }

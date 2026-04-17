@@ -47,8 +47,8 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         reloadConfigButton()
         Button("Quit \(aeroSpaceAppName)") {
             Task {
-                defer { terminateApp() }
-                try await terminationHandler.beforeTermination()
+                try? await terminationHandler?.beforeTermination()
+                terminateApp()
             }
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
