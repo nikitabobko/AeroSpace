@@ -18,4 +18,4 @@ if test $check_uncommitted_files -eq 1; then ./script/check-uncommitted-files.sh
 if test $check_uncommitted_files -eq 1; then ./script/check-uncommitted-files.sh; fi
 
 ./script/install-dep.sh --swiftlint
-./.deps/swiftlint/swiftlint lint --quiet --fix
+./.deps/swiftlint/swiftlint lint --quiet
