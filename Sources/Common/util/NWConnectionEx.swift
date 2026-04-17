@@ -21,7 +21,7 @@ extension NWConnection {
         await withCheckedContinuation { cont in
             let isDone = IsDone()
             stateUpdateHandler = { state in
-                Task {
+                Task.startUnstructured {
                     let error: NWError?
                     switch state {
                         case .cancelled, .preparing, .setup: return

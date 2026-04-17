@@ -4,6 +4,11 @@ source ./script/setup.sh
 
 ./format.sh
 
+if grep -E '( Task\.init| Task\s*\{| Task\()' -r ./Sources; then
+    echo "ERROR: don't use Task.init directly. Use Task.startUnstructured instead."
+    exit 1
+fi
+
 ./script/install-dep.sh --swiftlint
 ./.deps/swiftlint/swiftlint lint --quiet
 

@@ -1,4 +1,5 @@
 import AppKit
+import Common
 import SwiftUI
 
 public final class VolumePanel: NSPanelHud {
@@ -25,7 +26,7 @@ public final class VolumePanel: NSPanelHud {
 
     func startTimer() {
         timer = .scheduledTimer(withTimeInterval: 2 /* seconds */, repeats: false) { _ in
-            Task { @MainActor [weak self] in
+            Task.startUnstructured { @MainActor [weak self] in
                 self?.close()
             }
         }

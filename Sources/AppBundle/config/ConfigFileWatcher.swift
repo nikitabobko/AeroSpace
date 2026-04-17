@@ -33,7 +33,7 @@ private let debounceDelay: Duration = .milliseconds(200)
     if !config.autoReloadConfig { return }
     currentWatcher = ConfigFileWatcher(url: configUrl) {
         debounceTask?.cancel()
-        debounceTask = Task {
+        debounceTask = Task.startUnstructured {
             try await Task.sleep(for: debounceDelay)
             if let token: RunSessionGuard = .isServerEnabled {
                 try await runLightSession(.configAutoReload, token) {

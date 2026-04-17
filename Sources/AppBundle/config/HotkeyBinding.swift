@@ -30,7 +30,7 @@ extension HotKey {
     let targetBindings = targetMode.flatMap { config.modes[$0] }?.bindings ?? [:]
     for binding in targetBindings.values where !hotkeys.keys.contains(binding.descriptionWithKeyCode) {
         hotkeys[binding.descriptionWithKeyCode] = HotKey(key: binding.keyCode, modifiers: binding.modifiers, keyDownHandler: {
-            Task {
+            Task.startUnstructured {
                 if let activeMode {
                     broadcastEvent(.bindingTriggered(
                         mode: activeMode,

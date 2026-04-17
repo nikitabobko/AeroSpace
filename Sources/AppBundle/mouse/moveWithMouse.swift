@@ -7,14 +7,14 @@ private var moveWithMouseTask: Task<(), any Error>? = nil
 func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableRawPointer?) {
     let windowId = ax.containingWindowId()
     let notif = notif as String
-    Task { @MainActor in
+    Task.startUnstructured { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
         guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
             scheduleCancellableCompleteRefreshSession(.ax(notif))
             return
         }
         moveWithMouseTask?.cancel()
-        moveWithMouseTask = Task {
+        moveWithMouseTask = Task.startUnstructured {
             try checkCancellation()
             try await runLightSession(.ax(notif), token) {
                 try await moveWithMouse(window)

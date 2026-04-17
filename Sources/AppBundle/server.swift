@@ -8,7 +8,7 @@ func startUnixSocketServer() {
     params.requiredLocalEndpoint = .unix(path: socketPath)
     let listener = Result { try NWListener(using: params) }.getOrDie()
     listener.newConnectionHandler = { connection in
-        Task {
+        Task.startUnstructured {
             defer { connection.cancel() }
             connection.start(queue: .global())
             await newConnection(connection)

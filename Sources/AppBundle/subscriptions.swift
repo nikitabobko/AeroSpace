@@ -49,7 +49,7 @@ private let jsonEncoder: JSONEncoder = {
 }()
 
 func broadcastEvent(_ event: ServerEvent) {
-    Task { @MainActor in
+    Task.startUnstructured { @MainActor in
         for (id, subscriber) in subscribers {
             guard subscriber.events.contains(event.eventType) else { continue }
             if await subscriber.connection.writeAtomic(event, jsonEncoder).error != nil {

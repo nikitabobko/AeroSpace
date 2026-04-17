@@ -3,7 +3,7 @@ import Common
 import Foundation
 
 @MainActor public func initAppBundle() {
-    Task {
+    Task.startUnstructured {
         initTerminationHandler()
         unsafe _isCli = false
         initServerArgs()
