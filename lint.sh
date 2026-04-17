@@ -2,7 +2,10 @@
 cd "$(dirname "$0")"
 source ./script/setup.sh
 
-./format.sh "$@"
+./format.sh
+
+./script/install-dep.sh --swiftlint
+./.deps/swiftlint/swiftlint lint --quiet
 
 if sw_vers -productVersion | grep -q "^14"; then # macOS 14
     # dyld[6263]: Library not loaded: /usr/lib/swift/libswiftSynchronization.dylib
