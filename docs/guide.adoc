@@ -78,9 +78,9 @@ Please see the following config samples:
 * xref:./goodies.adoc#i3-like-config[i3 like config]
 * {url-search-for-config}[Search for configs by other users on GitHub] for inspiration
 
-AeroSpace uses TOML format for the config.
+AeroSpace uses TOML 1.1.0 format for the config.
 TOML is easy to read, and it supports comments.
-See https://toml.io/en/v1.0.0[TOML spec for more info]
+See https://toml.io/en/v1.1.0[TOML spec for more info]
 
 [#default-config]
 === Default config
@@ -476,14 +476,17 @@ Here is a showcase example that uses all the possible configurations:
 
 [source,toml]
 ----
-[[on-window-detected]]
-    if.app-id = 'com.apple.systempreferences'
-    if.app-name-regex-substring = 'settings'
-    if.window-title-regex-substring = 'substring'
-    if.workspace = 'workspace-name'
-    if.during-aerospace-startup = true
-    check-further-callbacks = true
-    run = ['layout floating', 'move-node-to-workspace S']  # The callback itself
+on-window-detected = [
+    {
+        if.app-id = 'com.apple.systempreferences',
+        if.app-name-regex-substring = 'settings',
+        if.window-title-regex-substring = 'substring',
+        if.workspace = 'workspace-name',
+        if.during-aerospace-startup = true,
+        check-further-callbacks = true,
+        run = ['layout floating', 'move-node-to-workspace S'],  # The callback itself
+    },
+]
 ----
 
 `run` commands are run only if the detected window matches all the specified conditions.
@@ -540,25 +543,29 @@ Examples of automations:
 +
 [source,toml]
 ----
-[[on-window-detected]]
-    if.app-id = 'org.alacritty'
-    run = 'move-node-to-workspace T' # mnemonics T - Terminal
-
-[[on-window-detected]]
-    if.app-id = 'com.google.Chrome'
-    run = 'move-node-to-workspace W' # mnemonics W - Web browser
-
-[[on-window-detected]]
-    if.app-id = 'com.jetbrains.intellij'
-    run = 'move-node-to-workspace I' # mnemonics I - IDE
+on-window-detected = [
+    {
+        if.app-id = 'org.alacritty',
+        run = 'move-node-to-workspace T', # mnemonics T - Terminal
+    },
+    {
+        if.app-id = 'com.google.Chrome',
+        run = 'move-node-to-workspace W', # mnemonics W - Web browser
+    },
+    {
+        if.app-id = 'com.jetbrains.intellij',
+        run = 'move-node-to-workspace I', # mnemonics I - IDE
+    }
+]
 ----
 * Make all windows float by default
 +
 [source,toml]
 ----
-[[on-window-detected]]
-    check-further-callbacks = true
-    run = 'layout floating'
+on-window-detected = [
+    { check-further-callbacks = true, run = 'layout floating', },
+    # all other callbacks...
+]
 ----
 
 [#on-focus-changed-callbacks]
@@ -691,17 +698,21 @@ You can also use `on-window-detected` to force tile or force float all windows o
 +
 [source,toml]
 ----
-[[on-window-detected]]
-    if.app-id = '...'
-    run = 'layout tiling'
+on-window-detected = [
+    # Other callbacks...
+    { if.app-id = '...', run = 'layout tiling', },
+    # Other callbacks...
+]
 ----
 . Force float all the windows (or windows of a particular app)
 +
 [source,toml]
 ----
-[[on-window-detected]]
-    if.app-id = '...'
-    run = 'layout floating'
+on-window-detected = [
+    # Other callbacks...
+    { if.app-id = '...', run = 'layout floating', },
+    # Other callbacks...
+]
 ----
 
 == Common pitfall: keyboard keys handling
