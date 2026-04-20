@@ -55,16 +55,22 @@ public func dieT<T>(
         )
     }
     if let terminationHandler, !recursionDetectorDuringTermination {
-        let semaphore = DispatchSemaphore(value: 0)
-        Task.startUnstructured {
-            defer { semaphore.signal() }
-            try await $recursionDetectorDuringTermination.withValue(true) {
-                try await terminationHandler.beforeTermination()
+        MainActor.runSync {
+            $recursionDetectorDuringTermination.withValue(true) {
+                terminationHandler.beforeTermination()
             }
         }
-        semaphore.wait()
     }
     fatalError("\n" + message)
+}
+
+extension MainActor {
+    static func runSync(block: @escaping @MainActor () -> ()) {
+        switch Thread.isMainThread {
+            case true: MainActor.assumeIsolated(block)
+            case false: DispatchQueue.main.asyncAndWait { block() }
+        }
+    }
 }
 
 public enum RefreshSessionEvent: Sendable, CustomStringConvertible {

@@ -188,10 +188,6 @@ final class MacWindow: Window {
         macApp.setAxFrame(windowId, topLeft, size)
     }
 
-    func setAxFrameBlocking(_ topLeft: CGPoint?, _ size: CGSize?) async throws {
-        try await macApp.setAxFrameBlocking(windowId, topLeft, size)
-    }
-
     override func getAxRect() async throws -> Rect? {
         try await macApp.getAxRect(windowId)
     }
