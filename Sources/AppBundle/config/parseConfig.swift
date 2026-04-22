@@ -89,7 +89,6 @@ struct Parser<S: ConvenienceCopyable, T>: ParserProtocol {
 private let keyMappingConfigRootKey = "key-mapping"
 private let modeConfigRootKey = "mode"
 private let persistentWorkspacesKey = "persistent-workspaces"
-private let tilingFilterConfigRootKey = "tiling-filter"
 
 // For every new config option you add, think:
 // 1. Does it make sense to have different value
@@ -123,7 +122,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     modeConfigRootKey: Parser(\.modes, skipParsing(Config().modes)), // Parsed manually
 
     "gaps": Parser(\.gaps, parseGaps),
-    tilingFilterConfigRootKey: Parser(\.tilingFilter, parseWindowTilingFilter),
+    "tiling-filter": Parser(\.tilingFilter, parseWindowTilingFilter),
     "workspace-to-monitor-force-assignment": Parser(\.workspaceToMonitorForceAssignment, parseWorkspaceToMonitorAssignment),
     "on-window-detected": Parser(\.onWindowDetected, parseOnWindowDetectedArray),
 
