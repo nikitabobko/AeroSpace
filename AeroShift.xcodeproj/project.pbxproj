@@ -1,0 +1,372 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2481B7A5E909B852AC561834 /* AeroSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BD4BFB51F554DA748C7C92 /* AeroSpaceApp.swift */; };
+		61D62901102EA744BEA2B8FB /* default-config.toml in Resources */ = {isa = PBXBuildFile; fileRef = 112007BDE009B28F367DEF4F /* default-config.toml */; };
+		DD9A3668CF8AB11C757F61E5 /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = D5931B76D900EC8C70A08A0A /* AppBundle */; };
+		F83F1A024F09EB5917591201 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A8A756DA5A53716FD412035 /* Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		112007BDE009B28F367DEF4F /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
+		1A8A756DA5A53716FD412035 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		9E70B179FF12AAA90B960263 /* AeroSpace */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AeroSpace; path = .; sourceTree = SOURCE_ROOT; };
+		CB676DAE72E1EFC48F277405 /* AeroShift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroShift.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D67DD6B51EBDE9C01C3692C9 /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
+		E1BD4BFB51F554DA748C7C92 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AFC5405758A7576B6C23DD9D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DD9A3668CF8AB11C757F61E5 /* AppBundle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		0072CBB33F2444B937BF4A35 /* AeroSpaceApp */ = {
+			isa = PBXGroup;
+			children = (
+				E1BD4BFB51F554DA748C7C92 /* AeroSpaceApp.swift */,
+			);
+			name = AeroSpaceApp;
+			path = Sources/AeroSpaceApp;
+			sourceTree = "<group>";
+		};
+		16BBB995AF4508CBE90622AF /* config-examples */ = {
+			isa = PBXGroup;
+			children = (
+				112007BDE009B28F367DEF4F /* default-config.toml */,
+			);
+			name = "config-examples";
+			path = "docs/config-examples";
+			sourceTree = "<group>";
+		};
+		2706F78619EC3A9694B93A4A /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				9E70B179FF12AAA90B960263 /* AeroSpace */,
+			);
+			name = Packages;
+			sourceTree = "<group>";
+		};
+		5C0BCAE834CA4CE4FD6178C8 = {
+			isa = PBXGroup;
+			children = (
+				0072CBB33F2444B937BF4A35 /* AeroSpaceApp */,
+				16BBB995AF4508CBE90622AF /* config-examples */,
+				2706F78619EC3A9694B93A4A /* Packages */,
+				7AAC90B8D4BDD0A8B81B6D27 /* resources */,
+				F0525F182F59FE30A02CAE24 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		7AAC90B8D4BDD0A8B81B6D27 /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				D67DD6B51EBDE9C01C3692C9 /* AeroSpace.entitlements */,
+				1A8A756DA5A53716FD412035 /* Assets.xcassets */,
+			);
+			path = resources;
+			sourceTree = "<group>";
+		};
+		F0525F182F59FE30A02CAE24 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CB676DAE72E1EFC48F277405 /* AeroShift.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9B767AA0BE72C75E73101AC6 /* AeroShift */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BD19C87F9253A3DB1179185E /* Build configuration list for PBXNativeTarget "AeroShift" */;
+			buildPhases = (
+				C7F133ED98530B1F1C9C1F31 /* Sources */,
+				84228BEE3B049950018D3473 /* Resources */,
+				AFC5405758A7576B6C23DD9D /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AeroShift;
+			packageProductDependencies = (
+				D5931B76D900EC8C70A08A0A /* AppBundle */,
+			);
+			productName = AeroShift;
+			productReference = CB676DAE72E1EFC48F277405 /* AeroShift.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		D658B492A1EDC4924DAF0701 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+				};
+			};
+			buildConfigurationList = F7E67570DCE99482853AA319 /* Build configuration list for PBXProject "AeroShift" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 5C0BCAE834CA4CE4FD6178C8;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5BDACD595B4FD03E825D8DB1 /* XCLocalSwiftPackageReference "." */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = F0525F182F59FE30A02CAE24 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9B767AA0BE72C75E73101AC6 /* AeroShift */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		84228BEE3B049950018D3473 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F83F1A024F09EB5917591201 /* Assets.xcassets in Resources */,
+				61D62901102EA744BEA2B8FB /* default-config.toml in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		C7F133ED98530B1F1C9C1F31 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2481B7A5E909B852AC561834 /* AeroSpaceApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		27A9A4E810070435299AC7A0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = resources/AeroSpace.entitlements;
+				CODE_SIGN_IDENTITY = "aeroshift-codesign-certificate";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = "0.0.0-SNAPSHOT";
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.boredphilosopher96.aeroshift.debug;
+				PRODUCT_NAME = "AeroShift-Debug";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.2;
+			};
+			name = Debug;
+		};
+		91CB34D9A55631C752B7E1B7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = resources/AeroSpace.entitlements;
+				CODE_SIGN_IDENTITY = "aeroshift-codesign-certificate";
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = "0.0.0-SNAPSHOT";
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.boredphilosopher96.aeroshift;
+				PRODUCT_NAME = AeroShift;
+				SDKROOT = macosx;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
+				SWIFT_VERSION = 6.2;
+			};
+			name = Release;
+		};
+		B1E90431BA04676AC831276F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		DB399AFB84BE66471FA79BC1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BD19C87F9253A3DB1179185E /* Build configuration list for PBXNativeTarget "AeroShift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				27A9A4E810070435299AC7A0 /* Debug */,
+				91CB34D9A55631C752B7E1B7 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F7E67570DCE99482853AA319 /* Build configuration list for PBXProject "AeroShift" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DB399AFB84BE66471FA79BC1 /* Debug */,
+				B1E90431BA04676AC831276F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		5BDACD595B4FD03E825D8DB1 /* XCLocalSwiftPackageReference "." */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = .;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		D5931B76D900EC8C70A08A0A /* AppBundle */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = AppBundle;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = D658B492A1EDC4924DAF0701 /* Project object */;
+}

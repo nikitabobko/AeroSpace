@@ -47,7 +47,7 @@ struct DebugWindowsCommand: Command {
                     """
                     Debug windows session has started
                     1. Focus the problematic window
-                    2. Run 'aerospace debug-windows' once again to finish the session and get the results
+                    2. Run 'aeroshift debug-windows' once again to finish the session and get the results
                     """,
                 )
                 // Make sure that the Terminal window that started the recording is recorded first

@@ -27,10 +27,10 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             Divider()
         }
         Button {
-            NSWorkspace.shared.open(URL(string: "https://github.com/sponsors/nikitabobko").orDie())
+            NSWorkspace.shared.open(URL(string: "https://github.com/Boredphilosopher96/AeroSpace").orDie())
             viewModel.sponsorshipMessage = sponsorshipPrompts.randomElement().orDie()
         } label: {
-            Text("Sponsor AeroSpace on GitHub")
+            Text("Open AeroShift fork repository")
             Text(viewModel.sponsorshipMessage)
         }
         Divider()

@@ -1,6 +1,6 @@
-= aerospace-debug-windows(1)
+= aeroshift-debug-windows(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-debug-windows
+:manname: aeroshift-debug-windows
 // tag::purpose[]
 :manpurpose: Interactive command to record Accessibility API debug information to create bug reports
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace debug-windows [-h|--help] [--window-id <window-id>]
+aeroshift debug-windows [-h|--help] [--window-id <window-id>]
 
 // end::synopsis[]
 

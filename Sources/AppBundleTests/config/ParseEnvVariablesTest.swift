@@ -47,8 +47,8 @@ final class ParseEnvVariablesTest: XCTestCase {
             """,
         )
         assertEquals(errors, [
-            "exec.env-vars.BAR: Env variable 'FOO' isn't presented in AeroSpace.app env vars, or not available for interpolation (because it's mutated)",
-            "exec.env-vars.FOO: Env variable 'BAR' isn't presented in AeroSpace.app env vars, or not available for interpolation (because it's mutated)",
+            "exec.env-vars.BAR: Env variable 'FOO' isn't presented in AeroShift.app env vars, or not available for interpolation (because it's mutated)",
+            "exec.env-vars.FOO: Env variable 'BAR' isn't presented in AeroShift.app env vars, or not available for interpolation (because it's mutated)",
         ])
     }
 

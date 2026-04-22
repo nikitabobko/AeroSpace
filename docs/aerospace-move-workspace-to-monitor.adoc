@@ -1,6 +1,6 @@
-= aerospace-move-workspace-to-monitor(1)
+= aeroshift-move-workspace-to-monitor(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-move-workspace-to-monitor
+:manname: aeroshift-move-workspace-to-monitor
 // tag::purpose[]
 :manpurpose: Move workspace to monitor targeted by relative direction, by order, or by pattern.
 // end::purpose[]
@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (left|down|up|right)
-aerospace move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (next|prev)
-aerospace move-workspace-to-monitor [-h|--help] [--workspace <workspace>] <monitor-pattern>...
+aeroshift move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (left|down|up|right)
+aeroshift move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (next|prev)
+aeroshift move-workspace-to-monitor [-h|--help] [--workspace <workspace>] <monitor-pattern>...
 
 // end::synopsis[]
 

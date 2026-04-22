@@ -1,6 +1,6 @@
-= aerospace-macos-native-fullscreen(1)
+= aeroshift-macos-native-fullscreen(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-macos-native-fullscreen
+:manname: aeroshift-macos-native-fullscreen
 // tag::purpose[]
 :manpurpose: Toggle macOS fullscreen for the focused window
 // end::purpose[]
@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace macos-native-fullscreen [-h|--help] [--window-id <window-id>]
-aerospace macos-native-fullscreen [-h|--help] [--window-id <window-id>] [--fail-if-noop] on
-aerospace macos-native-fullscreen [-h|--help] [--window-id <window-id>] [--fail-if-noop] off
+aeroshift macos-native-fullscreen [-h|--help] [--window-id <window-id>]
+aeroshift macos-native-fullscreen [-h|--help] [--window-id <window-id>] [--fail-if-noop] on
+aeroshift macos-native-fullscreen [-h|--help] [--window-id <window-id>] [--fail-if-noop] off
 
 // end::synopsis[]
 

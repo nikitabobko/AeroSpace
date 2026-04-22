@@ -21,11 +21,11 @@ jobs:
 
         close() {
           gh issue edit "$ISSUE" --add-label bin
-          gh issue close "$ISSUE" --comment "Please don't open issues directly, use GitHub Discussions instead. See: https://github.com/nikitabobko/AeroSpace/issues/947"
+          gh issue close "$ISSUE" --comment "Please don't open issues directly on this fork. Use GitHub Discussions instead: https://github.com/Boredphilosopher96/AeroSpace/discussions . This repository is an unofficial AeroSpace fork."
           gh issue lock "$ISSUE"
         }
 
-        test "$author" = nikitabobko || test "$author" = mobile-ar || test "$author" = rickyz || close
+        test "$author" = Boredphilosopher96 || close
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         GH_REPO: ${{ github.repository }}

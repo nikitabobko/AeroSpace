@@ -1,6 +1,6 @@
-= aerospace-reload-config(1)
+= aeroshift-reload-config(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-reload-config
+:manname: aeroshift-reload-config
 // tag::purpose[]
 :manpurpose: Reload currently active config
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace reload-config [-h|--help] [--no-gui] [--dry-run]
+aeroshift reload-config [-h|--help] [--no-gui] [--dry-run]
 
 // end::synopsis[]
 

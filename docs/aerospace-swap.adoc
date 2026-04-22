@@ -1,6 +1,6 @@
-= aerospace-swap(1)
+= aeroshift-swap(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-swap
+:manname: aeroshift-swap
 // tag::purpose[]
 :manpurpose: Swaps the focused window with another window.
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace swap [-h|--help] [--window-id <window-id>] [--swap-focus]
+aeroshift swap [-h|--help] [--window-id <window-id>] [--swap-focus]
                [--wrap-around]
                (left|down|up|right|dfs-next|dfs-prev)
 

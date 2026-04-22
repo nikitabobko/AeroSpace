@@ -9,15 +9,15 @@ let swiftSettings: [SwiftSetting] = [
 ]
 
 let package = Package(
-    name: "AeroSpacePackage",
+    name: "AeroShiftPackage",
     // Runtime support for parameterized protocol types is only available in macOS 13.0.0 or newer
     // And it specifies deploymentTarget for CLI
     platforms: [.macOS(.v13)],
     // Products define the executables and libraries a package produces, making them visible to other packages.
     products: [
-        .executable(name: "aerospace", targets: ["Cli"]),
+        .executable(name: "aeroshift", targets: ["Cli"]),
         // Don't use this build for release, use xcode instead
-        .executable(name: "AeroSpaceApp", targets: ["AeroSpaceApp"]),
+        .executable(name: "AeroShiftApp", targets: ["AeroShiftApp"]),
         // We only need to expose this as a product for xcode
         .library(name: "AppBundle", targets: ["AppBundle"]),
     ],
@@ -58,10 +58,11 @@ let package = Package(
             swiftSettings: swiftSettings,
         ),
         .executableTarget(
-            name: "AeroSpaceApp",
+            name: "AeroShiftApp",
             dependencies: [
                 .target(name: "AppBundle"),
             ],
+            path: "Sources/AeroSpaceApp",
             swiftSettings: swiftSettings,
         ),
         .executableTarget(

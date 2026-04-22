@@ -6,6 +6,16 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 
 # Don't forget to also update ./ShellParserGenerated/Package.swift
 export antlr_version="4.13.1"
+export cli_name="aeroshift"
+export app_bundle_name="AeroShift"
+export debug_app_bundle_name="AeroShift-Debug"
+export debug_app_launcher_name="AeroShiftApp"
+export release_root_prefix="AeroShift-v"
+export config_dotfile_name=".aeroshift.toml"
+export xdg_config_subdir="aeroshift"
+export xdg_config_filename="aeroshift.toml"
+export primary_cask_name="aeroshift"
+export dev_cask_name="aeroshift-dev"
 
 if command -v mise > /dev/null 2>&1; then
     eval "$(mise env -s bash)"

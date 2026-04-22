@@ -1,6 +1,6 @@
-= aerospace-balance-sizes(1)
+= aeroshift-balance-sizes(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-balance-sizes
+:manname: aeroshift-balance-sizes
 // tag::purpose[]
 :manpurpose: Balance sizes of all windows in the current workspace
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace balance-sizes [-h|--help] [--workspace <workspace>]
+aeroshift balance-sizes [-h|--help] [--workspace <workspace>]
 
 // end::synopsis[]
 

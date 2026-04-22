@@ -63,7 +63,7 @@ private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMa
     "workspace": Parser(\.workspace, upcast(parseString)),
     "app-name-regex-substring": Parser(\.appNameRegexSubstring, upcast(parseCasInsensitiveRegex)),
     "window-title-regex-substring": Parser(\.windowTitleRegexSubstring, upcast(parseCasInsensitiveRegex)),
-    "during-aerospace-startup": Parser(\.duringAeroSpaceStartup, upcast(parseBool)),
+    "during-aeroshift-startup": Parser(\.duringAeroSpaceStartup, upcast(parseBool)),
 ]
 
 private func upcast<T>(

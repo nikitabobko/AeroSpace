@@ -1,6 +1,6 @@
-= aerospace-close-all-windows-but-current(1)
+= aeroshift-close-all-windows-but-current(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-close-all-windows-but-current
+:manname: aeroshift-close-all-windows-but-current
 // tag::purpose[]
 :manpurpose: On the focused workspace, close all windows but current
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace close-all-windows-but-current [-h|--help] [--quit-if-last-window]
+aeroshift close-all-windows-but-current [-h|--help] [--quit-if-last-window]
 
 // end::synopsis[]
 

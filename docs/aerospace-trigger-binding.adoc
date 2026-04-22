@@ -1,15 +1,15 @@
-= aerospace-trigger-binding(1)
+= aeroshift-trigger-binding(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-trigger-binding
+:manname: aeroshift-trigger-binding
 // tag::purpose[]
-:manpurpose: Trigger AeroSpace binding as if it was pressed by user
+:manpurpose: Trigger an AeroShift binding as if it was pressed by user
 // end::purpose[]
 
 // =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace trigger-binding [-h|--help] <binding> --mode <mode-id>
+aeroshift trigger-binding [-h|--help] <binding> --mode <mode-id>
 
 // end::synopsis[]
 
@@ -19,8 +19,8 @@ aerospace trigger-binding [-h|--help] <binding> --mode <mode-id>
 // tag::body[]
 {manpurpose}
 
-You can use aerospace-config command to inspect available bindings: +
-`aerospace config --get mode.main.binding --keys`
+You can use aeroshift-config command to inspect available bindings: +
+`aeroshift config --get mode.main.binding --keys`
 
 // =========================================================== Options
 include::util/conditional-options-header.adoc[]
@@ -37,9 +37,9 @@ include::util/conditional-arguments-header.adoc[]
 include::util/conditional-examples-header.adoc[]
 
 * Run alphabetically first binding from config (useless and synthetic example): +
-`aerospace trigger-binding --mode main "$(aerospace config --get mode.main.binding --keys | head -1)"`
+`aeroshift trigger-binding --mode main "$(aeroshift config --get mode.main.binding --keys | head -1)"`
 * Trigger `alt-tab` binding: +
-`aerospace trigger-binding --mode main alt-tab`
+`aeroshift trigger-binding --mode main alt-tab`
 
 // end::body[]
 

@@ -15,7 +15,7 @@ body:
         ### Additional info
 
         ```shell
-        $ aerospace -v
+        $ aeroshift -v
         ```
     validations:
       required: true

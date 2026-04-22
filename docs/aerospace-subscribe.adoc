@@ -1,15 +1,15 @@
-= aerospace-subscribe(1)
+= aeroshift-subscribe(1)
 include::util/man-attributes.adoc[]
 // tag::purpose[]
-:manpurpose: Subscribe to AeroSpace events and receive notifications via socket
+:manpurpose: Subscribe to AeroShift events and receive notifications via socket
 // end::purpose[]
-:manname: aerospace-subscribe
+:manname: aeroshift-subscribe
 
 // =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace subscribe [-h|--help] [--all] [--no-send-initial] [<event>...]
+aeroshift subscribe [-h|--help] [--all] [--no-send-initial] [<event>...]
 
 // end::synopsis[]
 
@@ -19,7 +19,7 @@ aerospace subscribe [-h|--help] [--all] [--no-send-initial] [<event>...]
 // tag::body[]
 {manpurpose}
 
-This command connects to the AeroSpace server and receives real-time event notifications as JSON lines.
+This command connects to the AeroShift server and receives real-time event notifications as JSON lines.
 The connection remains open until terminated (e.g., via Ctrl+C).
 
 On connect, the current state is sent immediately (focus-changed with current window/workspace, mode-changed with current mode, etc.).

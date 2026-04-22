@@ -1,6 +1,6 @@
-= aerospace-exec-and-forget(1)
+= aeroshift-exec-and-forget(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-exec-and-forget
+:manname: aeroshift-exec-and-forget
 // tag::purpose[]
 :manpurpose: Run /bin/bash -c '<bash-script>'
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace exec-and-forget <bash-script>
+aeroshift exec-and-forget <bash-script>
 
 // end::synopsis[]
 

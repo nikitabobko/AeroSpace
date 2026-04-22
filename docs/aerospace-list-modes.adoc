@@ -1,15 +1,15 @@
-= aerospace-list-modes(1)
+= aeroshift-list-modes(1)
 include::util/man-attributes.adoc[]
 // tag::purpose[]
 :manpurpose: Print a list of modes currently specified in the configuration
 // end::purpose[]
-:manname: aerospace-list-modes
+:manname: aeroshift-list-modes
 
 // =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace list-modes [-h|--help] [--current] [--count] [--json]
+aeroshift list-modes [-h|--help] [--current] [--count] [--json]
 
 // end::synopsis[]
 

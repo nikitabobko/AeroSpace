@@ -1,10 +1,10 @@
 # LICENSE
 
-The AeroSpace itself is licensed under MIT. See [LICENSE](./LICENSE.txt) for the full license text.
+AeroShift is an unofficial fork of upstream AeroSpace. The code in this repository is licensed under MIT. See [LICENSE](./LICENSE.txt) for the full license text.
 
 ## Bundled dependencies and materials
 
-AeroSpace bundles the following dependencies and uses the following materials:
+AeroShift bundles the following dependencies and uses the following materials:
 
 **HotKey**.
 [HotKey GitHub link](https://github.com/soffes/HotKey).
@@ -19,7 +19,7 @@ TOMLDecoder is used as TOML parsing library.
 **ANTLR v4**.
 [ANTLR v4 GitHub link](https://github.com/antlr/antlr4).
 [ANTLR BSD-3 license](./third-party-license/LICENSE-antlr.txt).
-ANTLR is used to parse AeroSpace built-in shell like language.
+ANTLR is used to parse the built-in shell-like language used by AeroShift.
 
 **swift-collections**.
 [swift-collections GitHub link](https://github.com/apple/swift-collections).

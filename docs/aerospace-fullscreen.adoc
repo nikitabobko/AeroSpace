@@ -1,6 +1,6 @@
-= aerospace-fullscreen(1)
+= aeroshift-fullscreen(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-fullscreen
+:manname: aeroshift-fullscreen
 // tag::purpose[]
 :manpurpose: Toggle the fullscreen mode for the focused window
 // end::purpose[]
@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace fullscreen [-h|--help]     [--window-id <window-id>] [--no-outer-gaps]
-aerospace fullscreen [-h|--help] on  [--window-id <window-id>] [--no-outer-gaps] [--fail-if-noop]
-aerospace fullscreen [-h|--help] off [--window-id <window-id>] [--fail-if-noop]
+aeroshift fullscreen [-h|--help]     [--window-id <window-id>] [--no-outer-gaps]
+aeroshift fullscreen [-h|--help] on  [--window-id <window-id>] [--no-outer-gaps] [--fail-if-noop]
+aeroshift fullscreen [-h|--help] off [--window-id <window-id>] [--fail-if-noop]
 
 // end::synopsis[]
 

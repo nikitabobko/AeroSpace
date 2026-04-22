@@ -1,15 +1,15 @@
-= aerospace-mode(1)
+= aeroshift-mode(1)
 include::util/man-attributes.adoc[]
 // tag::purpose[]
 :manpurpose: Activate the specified binding mode
 // end::purpose[]
-:manname: aerospace-mode
+:manname: aeroshift-mode
 
 // =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace mode [-h|--help] <binding-mode>
+aeroshift mode [-h|--help] <binding-mode>
 
 // end::synopsis[]
 

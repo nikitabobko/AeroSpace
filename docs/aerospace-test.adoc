@@ -1,6 +1,6 @@
-= aerospace-test(1)
+= aeroshift-test(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-test
+:manname: aeroshift-test
 // tag::purpose[]
 :manpurpose: Condition evaluation utility
 // end::purpose[]
@@ -9,10 +9,10 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace test [-h|--help] <lhs> .= <rhs>
-aerospace test [-h|--help] <lhs> /= <rhs>
-aerospace test [-h|--help] <lhs> .~ <rhs>
-aerospace test [-h|--help] <lhs> /~ <rhs>
+aeroshift test [-h|--help] <lhs> .= <rhs>
+aeroshift test [-h|--help] <lhs> /= <rhs>
+aeroshift test [-h|--help] <lhs> .~ <rhs>
+aeroshift test [-h|--help] <lhs> /~ <rhs>
 
 // end::synopsis[]
 
@@ -39,9 +39,9 @@ The tilde is widely used in scripting languages to indicate regex matching.
 // =========================================================== Examples
 include::./util/conditional-examples-header.adoc[]
 
-Test if the application ID equals to Chrome: `aerospace test %{app-bundle-id} .= com.google.Chrome`
+Test if the application ID equals to Chrome: `aeroshift test %{app-bundle-id} .= com.google.Chrome`
 
-Test if the application name contains "chrome" (case insensitive): `aerospace test %{app-name} .~ chrome`
+Test if the application name contains "chrome" (case insensitive): `aeroshift test %{app-name} .~ chrome`
 
 // =========================================================== Arguments
 include::./util/conditional-arguments-header.adoc[]
@@ -59,7 +59,7 @@ include::./util/conditional-interpolation-variables-header.adoc[]
 
 %{window-id}:: Number. Window unique ID
 %{window-title}:: String. Window title
-%{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aerospace fullscreen` command
+%{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aeroshift fullscreen` command
 %{window-layout}:: String. An alias for `%{window-parent-container-layout}`
 %{window-parent-container-layout}:: String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`, `floating`) of the window's parent container.
  

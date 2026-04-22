@@ -1,15 +1,15 @@
-= aerospace-join-with(1)
+= aeroshift-join-with(1)
 include::util/man-attributes.adoc[]
 // tag::purpose[]
 :manpurpose: Put the focused window and the nearest node in the specified direction under a common parent container
 // end::purpose[]
-:manname: aerospace-join-with
+:manname: aeroshift-join-with
 
 // =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace join-with [-h|--help] [--window-id <window-id>] (left|down|up|right)
+aeroshift join-with [-h|--help] [--window-id <window-id>] (left|down|up|right)
 
 // end::synopsis[]
 

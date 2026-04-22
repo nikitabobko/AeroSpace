@@ -1,7 +1,7 @@
 import Common
 import Foundation
 
-let configDotfileName = ".aerospace.toml"
+let configDotfileName = ".aeroshift.toml"
 func findCustomConfigUrl() -> ConfigFile {
     let xdgConfigHome = ProcessInfo.processInfo.environment["XDG_CONFIG_HOME"].map { URL(filePath: $0) }
         ?? FileManager.default.homeDirectoryForCurrentUser.appending(path: ".config/")
@@ -10,7 +10,7 @@ func findCustomConfigUrl() -> ConfigFile {
         case nil:
             [
                 FileManager.default.homeDirectoryForCurrentUser.appending(path: configDotfileName),
-                xdgConfigHome.appending(path: "aerospace").appending(path: "aerospace.toml"),
+                xdgConfigHome.appending(path: "aeroshift").appending(path: "aeroshift.toml"),
             ]
     }
     let existingCandidates: [URL] = candidates.filter { (candidate: URL) in FileManager.default.fileExists(atPath: candidate.path) }

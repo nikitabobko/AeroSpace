@@ -1,15 +1,15 @@
-= aerospace-summon-workspace(1)
+= aeroshift-summon-workspace(1)
 include::util/man-attributes.adoc[]
 // tag::purpose[]
 :manpurpose: Move the requested workspace to the focused monitor.
 // end::purpose[]
-:manname: aerospace-summon-workspace
+:manname: aeroshift-summon-workspace
 
 // =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace summon-workspace [-h|--help] [--fail-if-noop] <workspace>
+aeroshift summon-workspace [-h|--help] [--fail-if-noop] <workspace>
 
 // end::synopsis[]
 

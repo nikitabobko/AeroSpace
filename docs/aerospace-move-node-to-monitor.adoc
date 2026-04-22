@@ -1,6 +1,6 @@
-= aerospace-move-node-to-monitor(1)
+= aeroshift-move-node-to-monitor(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-move-node-to-monitor
+:manname: aeroshift-move-node-to-monitor
 // tag::purpose[]
 :manpurpose: Move window to monitor targeted by relative direction, by order, or by pattern
 // end::purpose[]
@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
+aeroshift move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
                                [--wrap-around] (left|down|up|right|next|prev)
-aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
+aeroshift move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
                                [--fail-if-noop] <monitor-pattern>...
 
 // end::synopsis[]
@@ -30,7 +30,7 @@ include::./util/conditional-options-header.adoc[]
 
 --focus-follows-window::
 Make sure that the window in question receives focus after moving.
-This flag is a shortcut for manually running `aerospace-workspace`/`aerospace-focus` after `move-node-to-monitor` successful execution.
+This flag is a shortcut for manually running `aeroshift-workspace`/`aeroshift-focus` after `move-node-to-monitor` successful execution.
 
 --fail-if-noop::
 Exit with non-zero code if moving window to monitor it already belongs to

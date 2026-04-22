@@ -1,71 +1,72 @@
-= AeroSpace Guide
+= AeroShift Guide
 include::util/site-attributes.adoc[]
-:url-search-for-config: https://github.com/search?q=path%3A*aerospace.toml&type=code
+:url-search-for-config: https://github.com/search?q=path%3A*aeroshift.toml&type=code
 
 include::util/header.adoc[]
 
 This Guide is designed to be read from top to bottom as a whole.
 You can skip parts that are obvious.
 
+NOTE: AeroShift is an unofficial fork of upstream AeroSpace. When upstream issues or links appear below, they are cited as upstream history or reference material.
+
 [#installation]
 == Installation
 
-[#homebrew-installation]
-=== Homebrew installation (Preferred)
+[#release-installation]
+=== Release artifact installation
 
-https://brew.sh/[Homebrew] is a package manager for macOS
+Download release artifacts from this fork, not from upstream AeroSpace.
 
-[source,bash]
-----
-brew install --cask nikitabobko/tap/aerospace
-----
+. Download the latest available zip from https://github.com/Boredphilosopher96/AeroSpace/releases[the fork releases page]
+. Unpack zip
+. Put unpacked `AeroShift-v$VERSION/AeroShift.app` into `/Applications`
+. Put unpacked `AeroShift-v$VERSION/bin/aeroshift` anywhere on `$PATH` if you want CLI access
 
-*(Optional)* You might need to configure your shell to enable completion provided by homebrew packages: https://docs.brew.sh/Shell-Completion
-AeroSpace provides bash, fish and zsh completions.
-
-You can also install specific previous https://github.com/nikitabobko/homebrew-tap/tree/main/Casks[pinned homebrew Casks versions]:
-[source,bash]
-----
-brew install --cask nikitabobko/tap/aerospace@0.12.0
-----
+*(Optional)* You might need to configure your shell to enable completion provided by your shell setup or by Homebrew: https://docs.brew.sh/Shell-Completion
+AeroShift ships bash, fish, and zsh completions in its release archive.
 
 [#manual-installation]
-=== Manual installation
+=== Build from source
 
-. Download the latest available zip from https://github.com/nikitabobko/AeroSpace/releases[releases page]
-. Unpack zip
-. Put unpacked `AeroSpace-v$VERSION/AeroSpace.app` to `/Applications`
-. Put unpacked `AeroSpace-v$VERSION/bin/aerospace` anywhere to `$PATH`
-(The step is optional. It is only needed if you want to be able to interact with AeroSpace from CLI)
+For a repo-local source setup, use `mise`:
+
+[source,bash]
+----
+mise install
+mise run setup
+mise run build
+----
+
+Contributor and release-install notes are covered in https://github.com/Boredphilosopher96/AeroSpace/blob/main/dev-docs/development.md[Development Notes].
 
 If you see this message
 
 ----
-"AeroSpace.app" can't be opened because Apple cannot check it for malicious software.
+"AeroShift.app" can't be opened because Apple cannot check it for malicious software.
 ----
 
 **Option 1** to resolve the problem
 
 ```
-xattr -d com.apple.quarantine /Applications/AeroSpace.app
+xattr -d com.apple.quarantine /Applications/AeroShift.app
 ```
 
 **Option 2** to resolve the problem
 
-. navigate in Finder to `/Applications/AeroSpace.app`
+. navigate in Finder to `/Applications/AeroShift.app`
 . Right mouse click
 . Open (yes, it's that stupid)
 
-[#configuring-aerospace]
-== Configuring AeroSpace
+[#configuring-aeroshift]
+== Configuring AeroShift
 
 [#config-location]
 === Custom config location
 
-AeroSpace tries to find the custom config in two locations:
+AeroShift tries to find the custom config in two locations:
 
-. `~/.aerospace.toml`
-. `+${XDG_CONFIG_HOME}/aerospace/aerospace.toml+`
+. `~/.aeroshift.toml`
+. `+${XDG_CONFIG_HOME}/aeroshift/aeroshift.toml+`
 (environment variable `XDG_CONFIG_HOME` fallbacks to `~/.config` if the variable is not presented)
 
 If the config is found in more than one location then the ambiguity is reported.
@@ -78,7 +79,7 @@ Please see the following config samples:
 * xref:./goodies.adoc#i3-like-config[i3 like config]
 * {url-search-for-config}[Search for configs by other users on GitHub] for inspiration
 
-AeroSpace uses TOML format for the config.
+AeroShift uses TOML format for the config.
 TOML is easy to read, and it supports comments.
 See https://toml.io/en/v1.0.0[TOML spec for more info]
 
@@ -88,7 +89,7 @@ See https://toml.io/en/v1.0.0[TOML spec for more info]
 The default config is part of the documentation, it contains all trivial configuration keys with comments.
 Please read the default config!
 Non-trivial configuration options are mentioned further in this guide.
-If no custom config is found, AeroSpace will load the default config.
+If no custom config is found, AeroShift will load the default config.
 
 If the key is omitted in the custom config, it falls back to the value in the default config, unless it's stated otherwise for the specific keys. Namely:
 
@@ -103,7 +104,7 @@ You can bootstrap your custom config by copying the default config from the app 
 
 [source,shell]
 ----
-cp /Applications/AeroSpace.app/Contents/Resources/default-config.toml ~/.aerospace.toml
+cp /Applications/AeroShift.app/Contents/Resources/default-config.toml ~/.aeroshift.toml
 ----
 
 link:config-examples/default-config.toml[Download default-config.toml]
@@ -118,7 +119,7 @@ include::config-examples/default-config.toml[]
 
 You can create multiple sets of bindings by creating different binding modes.
 When you switch to a different binding mode, all the bindings from the current mode are deactivated, and only the bindings specified in the new mode become active.
-The initial binding mode that AeroSpace starts out with is "main".
+The initial binding mode that AeroShift starts out with is "main".
 
 This feature is absolutely identical to the one
 https://i3wm.org/docs/userguide.html#binding_modes[in i3]
@@ -139,11 +140,11 @@ Working with binding modes consists of two parts:
 [#commands]
 === Commands
 
-Commands are the thing you use to manipulate AeroSpace and query its state.
+Commands are the thing you use to manipulate AeroShift and query its state.
 
 There are two ways on how you can use commands:
 
-. Bind keys to run AeroSpace commands. Example:
+. Bind keys to run AeroShift commands. Example:
 +
 [source,toml]
 ----
@@ -157,7 +158,7 @@ There are two ways on how you can use commands:
 +
 [source,bash]
 ----
-aerospace workspace 1
+aeroshift workspace 1
 ----
 
 For the list of available commands see: xref:commands.adoc[]
@@ -179,7 +180,7 @@ If you use different layout, different alphabet, or you just want to have a fanc
     alt-unicorn = 'workspace wonderland' # (⁀ᗢ⁀)
 ----
 
-* For `dvorak` and `colemak` users, AeroSpace offers preconfigured presets.
+* For `dvorak` and `colemak` users, AeroShift offers preconfigured presets.
 +
 [source,toml]
 ----
@@ -192,7 +193,7 @@ If you use different layout, different alphabet, or you just want to have a fanc
 
 You can configure environment variables of `exec-*` commands and callbacks (such as xref:commands.adoc#exec-and-forget[exec-and-forget], <<exec-on-workspace-change-callback>>)
 
-* `exec.inherit-env-vars = true` configures whether inherit environment variables of `AeroSpace.app` or not. (The default is `true`)
+* `exec.inherit-env-vars = true` configures whether inherit environment variables of `AeroShift.app` or not. (The default is `true`)
 * You can override env variables with the following syntax:
 +
 [source,toml]
@@ -204,7 +205,7 @@ You can configure environment variables of `exec-*` commands and callbacks (such
 Environment variable substitution is supported in form of `+${ENV_VAR}+`
 * You can inspect what is the end result of environment variables using xref:commands.adoc#list-exec-env-vars[`list-exec-env-vars` command]
 * GUI apps on macOS don’t have Homebrew’s prefix in their `PATH` by default (https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities[docs.brew.sh]).
-That's why unless you override `exec` section in your config, AeroSpace falls back to the following `exec` configuration:
+That's why unless you override `exec` section in your config, AeroShift falls back to the following `exec` configuration:
 +
 [source,toml]
 ----
@@ -217,13 +218,13 @@ That's why unless you override `exec` section in your config, AeroSpace falls ba
 [#tree]
 == Tree
 
-AeroSpace stores all windows and containers in a tree.
-AeroSpace tree tiling model is https://i3wm.org/docs/userguide.html#tree[inspired by i3].
+AeroShift stores all windows and containers in a tree.
+AeroShift tree tiling model is https://i3wm.org/docs/userguide.html#tree[inspired by i3].
 
 *Definition.* Each non-leaf node is called a "Container"
 
 WARNING: i3 has a different terminology.
-"container" in i3 is the same as "node" in AeroSpace.
+"container" in i3 is the same as "node" in AeroShift.
 
 * Each workspace contains its own single root node
 * Each container can contain arbitrary number of children nodes
@@ -256,7 +257,7 @@ The tree structure can be changed with three commands:
 [#layouts]
 === Layouts
 
-In total, AeroSpace provides 4 possible layouts:
+In total, AeroShift provides 4 possible layouts:
 
 - `h_tiles` horizontal tiles (in i3, it’s called "horizontal split")
 - `v_tiles` vertical tiles (in i3, it’s called "vertical split")
@@ -286,7 +287,7 @@ Accordion padding is configurable via `accordion-padding` option.
 [#normalization]
 === Normalization
 
-By default, AeroSpace does two types of tree normalizations:
+By default, AeroShift does two types of tree normalizations:
 
 . Containers that have only one child are "flattened".
 The root container is an exception, it is allowed to have a single window child.
@@ -368,28 +369,28 @@ Native macOS Spaces have a lot of problems
 * You can’t create/delete/reorder Space and move windows between Spaces with hotkeys (you can only switch between Spaces with hotkeys)
 * Apple doesn't provide public API to communicate with Spaces (create/delete/reorder/switch Space and move windows between Spaces)
 
-Since Spaces are so hard to deal with, AeroSpace reimplements Spaces and calls them "Workspaces".
+Since Spaces are so hard to deal with, AeroShift reimplements Spaces and calls them "Workspaces".
 The idea is that if the workspace isn’t active then all of its windows are placed outside the visible area of the screen, in the bottom right or left corner.
 Once you switch back to the workspace, (e.g. by the means of xref:commands.adoc#workspace[workspace] command, or `cmd + tab`) windows are placed back to the visible area of the screen.
 
-When you quit the AeroSpace or when the AeroSpace detects that it's about to crash, AeroSpace will place all windows back to the visible area of the screen.
+When you quit the AeroShift or when the AeroShift detects that it's about to crash, AeroShift will place all windows back to the visible area of the screen.
 
-AeroSpace shows the name of currently active workspace in its tray icon (top right corner), to give users a visual feedback on what workspace is currently active.
+AeroShift shows the name of currently active workspace in its tray icon (top right corner), to give users a visual feedback on what workspace is currently active.
 
-The intended workflow of using AeroSpace workspaces is to only have one macOS Space (or as many monitors you have, if `Displays have separate Spaces` is enabled) and don’t interact with macOS Spaces anymore.
+The intended workflow of using AeroShift workspaces is to only have one macOS Space (or as many monitors you have, if `Displays have separate Spaces` is enabled) and don’t interact with macOS Spaces anymore.
 
 [NOTE]
 ====
 For better or worse, macOS doesn’t allow to place windows outside the visible area entirely.
 You will still be able to see a 1 pixel vertical line of "hidden" windows in the bottom right or left corner of your screen.
-That means, that if AeroSpace crashes badly you will still be able to manually "unhide" the windows by dragging these few pixels to the center of the screen.
+That means, that if AeroShift crashes badly you will still be able to manually "unhide" the windows by dragging these few pixels to the center of the screen.
 
 If you want to minimize the visibility of hidden windows, it's recommended to place Dock in the bottom (and additionally turn automatic hiding on)
 ====
 
 === Proper monitor arrangement
 
-Since AeroSpace needs a free space to hide windows in,
+Since AeroShift needs a free space to hide windows in,
 please make sure to arrange monitors in a way where *every monitor has free space in the bottom right or left corner.* (`System Settings -> Displays -> Arrange...`)
 
 If you fail to arrange your monitors properly, you will see parts of hidden windows on other monitors.
@@ -409,7 +410,7 @@ image::./assets/monitor-arrangement-2-good.svg[,,align="center"]
 [#a-note-on-mission-control]
 === A note on mission control
 
-For some reason, mission control doesn't like that AeroSpace puts a lot of windows in the bottom right corner of the screen.
+For some reason, mission control doesn't like that AeroShift puts a lot of windows in the bottom right corner of the screen.
 Mission control shows windows too small even when there is enough space to show them bigger.
 
 There is a workaround. You can enable `Group windows by application` setting:
@@ -431,7 +432,7 @@ People report all sorts of weird issues related to focus and performance when th
 * macOS randomly switches focus back: https://github.com/nikitabobko/AeroSpace/issues/289[#289]
 
 When `Displays have separate Spaces` is enabled,
-moving windows between monitors causes windows to move between different Spaces which is not correctly handled by the public APIs AeroSpace uses,
+moving windows between monitors causes windows to move between different Spaces which is not correctly handled by the public APIs AeroShift uses,
 apparently, these APIs are not aware about Spaces existence.
 Spaces are just cursed in macOS. The less Spaces you have, the better macOS behaves.
 
@@ -444,7 +445,7 @@ Spaces are just cursed in macOS. The less Spaces you have, the better macOS beha
 
 |Overall stability and performance
 |❌ Weird focus and performance issues may happen (see the list above)
-|👍 Public Apple API are more stable (which in turn affects AeroSpace stability)
+|👍 Public Apple API are more stable (which in turn affects AeroShift stability)
 
 |When the first monitor is in fullscreen
 |👍 Second monitor operates independently
@@ -481,7 +482,7 @@ Here is a showcase example that uses all the possible configurations:
     if.app-name-regex-substring = 'settings'
     if.window-title-regex-substring = 'substring'
     if.workspace = 'workspace-name'
-    if.during-aerospace-startup = true
+    if.during-aeroshift-startup = true
     check-further-callbacks = true
     run = ['layout floating', 'move-node-to-workspace S']  # The callback itself
 ----
@@ -509,10 +510,10 @@ Available window conditions are:
 |`if.window-title-regex-substring`
 |Window title case insensitive regex substring of the detected window
 
-|`if.during-aerospace-startup`
+|`if.during-aeroshift-startup`
 a|
-* If `true` then run the callback only during AeroSpace startup.
-* If `false` then run callback only *NOT* during AeroSpace startup.
+* If `true` then run the callback only during AeroShift startup.
+* If `false` then run callback only *NOT* during AeroShift startup.
 * If not specified then the condition isn’t checked
 
 |`if.workspace`
@@ -520,15 +521,15 @@ a|
 
 |===
 
-* `if.during-aerospace-startup = true` is useful if you want to do the initial app arrangement only on startup.
+* `if.during-aeroshift-startup = true` is useful if you want to do the initial app arrangement only on startup.
 
-* `if.during-aerospace-startup = false` is useful if you want to relaunch AeroSpace, but the callback has side effects that you don’t want to run on every relaunch.
+* `if.during-aeroshift-startup = false` is useful if you want to relaunch AeroShift, but the callback has side effects that you don’t want to run on every relaunch.
 (e.g. the callback opens new windows)
 
 There are several ways to know `app-id`:
 
 * Take a look at precompiled xref:./goodies.adoc#popular-apps-ids[list of Apple application IDs]
-* You can use xref:commands.adoc#list-apps[`aerospace list-apps`] CLI command to get IDs of running applications
+* You can use xref:commands.adoc#list-apps[`aeroshift list-apps`] CLI command to get IDs of running applications
 * `mdls -name kMDItemCFBundleIdentifier -r /Applications/App.app`
 
 IMPORTANT: Some windows initialize their title after the window appears.
@@ -592,17 +593,17 @@ It may be useful for integrating with bars.
 ----
 # Notify Sketchybar about workspace change
 exec-on-workspace-change = ['/bin/bash', '-c',
-    'sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSPACE_FOCUSED_WORKSPACE'
+    'sketchybar --trigger aerospace_workspace_change FOCUSED=$AEROSHIFT_FOCUSED_WORKSPACE'
 ]
 ----
 
 Besides the <<exec-env-vars,`exec.env-vars`>>, the process has access to the following environment variables:
 
-* `AEROSPACE_FOCUSED_WORKSPACE` - the workspace user switched to
-* `AEROSPACE_PREV_WORKSPACE` - the workspace user switched from
+* `AEROSHIFT_FOCUSED_WORKSPACE` - the workspace user switched to
+* `AEROSHIFT_PREV_WORKSPACE` - the workspace user switched from
 
 For a more elaborate example on how to integrate with Sketchybar see
-xref:./goodies.adoc#show-aerospace-workspaces-in-sketchybar[]
+xref:./goodies.adoc#show-aeroshift-workspaces-in-sketchybar[]
 
 [#multiple-monitors]
 == Multiple monitors
@@ -616,8 +617,8 @@ The showed workspaces are called "visible" workspaces
 
 When you switch to a workspace:
 
-. AeroSpace takes the assigned monitor of the workspace and makes the workspace visible on the monitor
-. AeroSpace focuses the workspace
+. AeroShift takes the assigned monitor of the workspace and makes the workspace visible on the monitor
+. AeroShift focuses the workspace
 
 You can move workspace to a different monitor with xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command.
 
@@ -627,11 +628,11 @@ Thus, using one workspace per secondary monitor and "the rest" on the main monit
 
 [NOTE]
 ====
-The only difference between AeroSpace and i3 is switching to empty workspaces.
-When you switch to an empty workspace, AeroSpace puts the workspace on an assigned monitor; i3 puts the workspace on currently active monitor.
+The only difference between AeroShift and i3 is switching to empty workspaces.
+When you switch to an empty workspace, AeroShift puts the workspace on an assigned monitor; i3 puts the workspace on currently active monitor.
 
-* I find that AeroSpace model works better with <<observation,_the observation_>> listed above.
-* AeroSpace model is more consistent (it works the same for empty workspaces and non-empty workspaces)
+* I find that AeroShift model works better with <<observation,_the observation_>> listed above.
+* AeroShift model is more consistent (it works the same for empty workspaces and non-empty workspaces)
 ====
 
 [#assign-workspaces-to-monitors]
@@ -675,15 +676,15 @@ xref:commands.adoc#move-workspace-to-monitor[move-workspace-to-monitor] command 
 Even some Apple dialogs don't implement the API properly.
 (E.g. Finder "Copy" progress window doesn't let others know that it's a dialog)
 
-AeroSpace uses the API to gently ask windows whether they are dialogs, but AeroSpace also applies some heuristics.
+AeroShift uses the API to gently ask windows whether they are dialogs, but AeroShift also applies some heuristics.
 
 For example, windows without a fullscreen button (NB! fullscreen button and maximize button are different buttons) are generally considered dialogs, excluding terminal apps (WezTerm, Alacritty, iTerm2, etc.).
 
 Windows that are recognized as dialogs are floated by default.
 
 If you find that some windows are not handled properly, you're welcome to create a PR that improves the heuristic.
-It's fine to hardcode special handling for popular applications, AeroSpace already does it.
-Please see `isDialogHeuristic` function in AeroSpace sources.
+It's fine to hardcode special handling for popular applications, AeroShift already does it.
+Please see `isDialogHeuristic` function in AeroShift sources.
 
 You can also use `on-window-detected` to force tile or force float all windows of a particular application:
 
@@ -706,4 +707,4 @@ You can also use `on-window-detected` to force tile or force float all windows o
 
 == Common pitfall: keyboard keys handling
 
-If you can't make AeroSpace handle some keys in your config, please make sure that you don't have keys conflict with other software that might listen to global keys (e.g. skhd, Karabiner-Elements, Raycast)
+If you can't make AeroShift handle some keys in your config, please make sure that you don't have keys conflict with other software that might listen to global keys (e.g. skhd, Karabiner-Elements, Raycast)

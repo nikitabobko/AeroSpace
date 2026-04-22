@@ -1,4 +1,6 @@
 # Reference: https://github.com/i3/i3/blob/next/etc/config
+# AeroShift is an unofficial fork of upstream AeroSpace.
+# Upstream reference links below are kept as historical and behavioral context.
 
 config-version = 2
 
@@ -48,7 +50,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
     alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
 
-    # Not supported, because this command is redundant in AeroSpace mental model.
+    # Not supported, because this command is redundant in AeroShift mental model.
     # See: https://nikitabobko.github.io/AeroSpace/guide#floating-windows
     #alt-space = 'focus toggle_tiling_floating'
 

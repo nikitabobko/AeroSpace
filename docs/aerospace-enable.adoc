@@ -1,6 +1,6 @@
-= aerospace-enable(1)
+= aeroshift-enable(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-enable
+:manname: aeroshift-enable
 // tag::purpose[]
 :manpurpose: Temporarily disable window management
 // end::purpose[]
@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace enable [-h|--help] toggle
-aerospace enable [-h|--help] on [--fail-if-noop]
-aerospace enable [-h|--help] off [--fail-if-noop]
+aeroshift enable [-h|--help] toggle
+aeroshift enable [-h|--help] on [--fail-if-noop]
+aeroshift enable [-h|--help] off [--fail-if-noop]
 
 // end::synopsis[]
 
@@ -21,9 +21,9 @@ aerospace enable [-h|--help] off [--fail-if-noop]
 // tag::body[]
 {manpurpose}
 
-When you disable AeroSpace, windows from currently invisible workspaces will be placed to the visible area of the screen
+When you disable AeroShift, windows from currently invisible workspaces will be placed to the visible area of the screen
 
-Key events are not intercepted when AeroSpace is disabled
+Key events are not intercepted when AeroShift is disabled
 
 // =========================================================== Options
 include::util/conditional-options-header.adoc[]

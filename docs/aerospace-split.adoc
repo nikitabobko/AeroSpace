@@ -1,6 +1,6 @@
-= aerospace-split(1)
+= aeroshift-split(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-split
+:manname: aeroshift-split
 // tag::purpose[]
 :manpurpose: Split focused window
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace split [-h|--help] [--window-id <window-id>] (horizontal|vertical|opposite)
+aeroshift split [-h|--help] [--window-id <window-id>] (horizontal|vertical|opposite)
 
 // end::synopsis[]
 

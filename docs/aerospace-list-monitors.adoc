@@ -1,6 +1,6 @@
-= aerospace-list-monitors(1)
+= aeroshift-list-monitors(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-list-monitors
+:manname: aeroshift-list-monitors
 // tag::purpose[]
 :manpurpose: Print monitors that satisfy conditions
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>] [--count] [--json]
+aeroshift list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>] [--count] [--json]
 
 // end::synopsis[]
 

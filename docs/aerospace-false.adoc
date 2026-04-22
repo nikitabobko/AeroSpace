@@ -1,6 +1,6 @@
-= aerospace-false(1)
+= aeroshift-false(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-false
+:manname: aeroshift-false
 // tag::purpose[]
 :manpurpose: Return false value
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace false [-h|--help]
+aeroshift false [-h|--help]
 
 // end::synopsis[]
 

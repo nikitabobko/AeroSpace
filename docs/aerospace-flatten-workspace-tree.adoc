@@ -1,6 +1,6 @@
-= aerospace-flatten-workspace-tree(1)
+= aeroshift-flatten-workspace-tree(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-flatten-workspace-tree
+:manname: aeroshift-flatten-workspace-tree
 // tag::purpose[]
 :manpurpose: Flatten the tree of the focused workspace
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace flatten-workspace-tree [-h|--help] [--workspace <workspace>]
+aeroshift flatten-workspace-tree [-h|--help] [--workspace <workspace>]
 
 // end::synopsis[]
 

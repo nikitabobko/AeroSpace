@@ -1,15 +1,15 @@
-= aerospace-move-mouse(1)
+= aeroshift-move-mouse(1)
 include::./util/man-attributes.adoc[]
 // tag::purpose[]
 :manpurpose: Move mouse to the requested position
 // end::purpose[]
-:manname: aerospace-move-mouse
+:manname: aeroshift-move-mouse
 
 // =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace move-mouse [-h|--help] [--fail-if-noop] <mouse-position>
+aeroshift move-mouse [-h|--help] [--fail-if-noop] <mouse-position>
 
 // end::synopsis[]
 
@@ -44,7 +44,7 @@ Possible values:
 include::util/conditional-examples-header.adoc[]
 
 * Try to move mouse to the center of the window. If there is no window in focus, move mouse to the center of the monitor: +
-`aerospace move-mouse window-lazy-center || aerospace move-mouse monitor-lazy-center`
+`aeroshift move-mouse window-lazy-center || aeroshift move-mouse monitor-lazy-center`
 
 // end::body[]
 

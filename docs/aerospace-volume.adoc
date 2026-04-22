@@ -1,17 +1,17 @@
-= aerospace-volume(1)
+= aeroshift-volume(1)
 include::util/man-attributes.adoc[]
 // tag::purpose[]
 :manpurpose: Manipulate volume
 // end::purpose[]
-:manname: aerospace-volume
+:manname: aeroshift-volume
 
 // =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace volume [-h|--help] (up|down) [--no-gui]
-aerospace volume [-h|--help] (mute-toggle|mute-off|mute-on) [--no-gui]
-aerospace volume [-h|--help] set <number> [--no-gui]
+aeroshift volume [-h|--help] (up|down) [--no-gui]
+aeroshift volume [-h|--help] (mute-toggle|mute-off|mute-on) [--no-gui]
+aeroshift volume [-h|--help] set <number> [--no-gui]
 
 // end::synopsis[]
 

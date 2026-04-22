@@ -1,15 +1,15 @@
-= aerospace-workspace-back-and-forth(1)
+= aeroshift-workspace-back-and-forth(1)
 include::util/man-attributes.adoc[]
 // tag::purpose[]
 :manpurpose: Switch between the focused workspace and previously focused workspace back and forth
 // end::purpose[]
-:manname: aerospace-workspace-back-and-forth
+:manname: aeroshift-workspace-back-and-forth
 
 // =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace workspace-back-and-forth [-h|--help]
+aeroshift workspace-back-and-forth [-h|--help]
 
 // end::synopsis[]
 

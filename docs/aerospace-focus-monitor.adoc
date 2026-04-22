@@ -1,6 +1,6 @@
-= aerospace-focus-monitor(1)
+= aeroshift-focus-monitor(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-focus-monitor
+:manname: aeroshift-focus-monitor
 // tag::purpose[]
 :manpurpose: Focus monitor by relative direction, by order, or by pattern
 // end::purpose[]
@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace focus-monitor [-h|--help] [--wrap-around] (left|down|up|right)
-aerospace focus-monitor [-h|--help] [--wrap-around] (next|prev)
-aerospace focus-monitor [-h|--help] <monitor-pattern>...
+aeroshift focus-monitor [-h|--help] [--wrap-around] (left|down|up|right)
+aeroshift focus-monitor [-h|--help] [--wrap-around] (next|prev)
+aeroshift focus-monitor [-h|--help] <monitor-pattern>...
 
 // end::synopsis[]
 

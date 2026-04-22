@@ -1,6 +1,6 @@
-= aerospace-macos-native-minimize(1)
+= aeroshift-macos-native-minimize(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-macos-native-minimize
+:manname: aeroshift-macos-native-minimize
 // tag::purpose[]
 :manpurpose: Minimize focused window
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace macos-native-minimize [-h|--help] [--window-id <window-id>]
+aeroshift macos-native-minimize [-h|--help] [--window-id <window-id>]
 
 // end::synopsis[]
 

@@ -9,15 +9,13 @@ rm -rf .shell-completion && mkdir -p \
 
 usage_file=./grammar/commands-bnf-grammar.txt
 
-complgen --zsh .shell-completion/zsh/_aerospace "$usage_file"
-complgen --fish .shell-completion/fish/aerospace.fish "$usage_file"
-complgen --bash .shell-completion/bash/aerospace "$usage_file"
+complgen --zsh ".shell-completion/zsh/_$cli_name" "$usage_file"
+complgen --fish ".shell-completion/fish/$cli_name.fish" "$usage_file"
+complgen --bash ".shell-completion/bash/$cli_name" "$usage_file"
 
 # Check basic syntax
-zsh -c 'autoload -Uz compinit; compinit; source ./.shell-completion/zsh/_aerospace'
-fish -c 'source ./.shell-completion/fish/aerospace.fish'
+zsh -c "autoload -Uz compinit; compinit; source ./.shell-completion/zsh/_$cli_name"
+fish -c "source ./.shell-completion/fish/$cli_name.fish"
 if not-outdated-bash --version | grep -q 'version 5'; then
-    not-outdated-bash -c 'source ./.shell-completion/bash/aerospace'
-else
-    echo "warning: bash completion syntax validation skipped because bash >= 5 is not available" > /dev/stderr
+    not-outdated-bash -c "source ./.shell-completion/bash/$cli_name"
 fi

@@ -1,18 +1,18 @@
-= aerospace-config(1)
+= aeroshift-config(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-config
+:manname: aeroshift-config
 // tag::purpose[]
-:manpurpose: Query AeroSpace config options
+:manpurpose: Query AeroShift config options
 // end::purpose[]
 
 // =========================================================== Synopsis
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace config [-h|--help] --get <name> [--json] [--keys]
-aerospace config [-h|--help] --major-keys
-aerospace config [-h|--help] --all-keys
-aerospace config [-h|--help] --config-path
+aeroshift config [-h|--help] --get <name> [--json] [--keys]
+aeroshift config [-h|--help] --major-keys
+aeroshift config [-h|--help] --all-keys
+aeroshift config [-h|--help] --config-path
 
 // end::synopsis[]
 
@@ -46,14 +46,14 @@ include::util/conditional-examples-header.adoc[]
 * List all binding modes:
 +
 ----
-$ aerospace config --get mode --keys
+$ aeroshift config --get mode --keys
 main
 service
 ----
 * List all key bindings for 'main' binding mode:
 +
 ----
-$ aerospace config --get mode.main.binding --keys
+$ aeroshift config --get mode.main.binding --keys
 alt-1
 alt-2
 ...
@@ -61,7 +61,7 @@ alt-2
 * List all key bindings for 'main' binding mode in JSON format:
 +
 ----
-$ aerospace config --get mode.main.binding --json
+$ aeroshift config --get mode.main.binding --json
 {
   "alt-w" : "workspace W",
   "alt-y" : "workspace Y",

@@ -1,6 +1,6 @@
-= aerospace-close(1)
+= aeroshift-close(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-close
+:manname: aeroshift-close
 // tag::purpose[]
 :manpurpose: Close the focused window
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace close [-h|--help] [--quit-if-last-window] [--window-id <window-id>]
+aeroshift close [-h|--help] [--quit-if-last-window] [--window-id <window-id>]
 
 // end::synopsis[]
 

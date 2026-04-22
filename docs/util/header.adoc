@@ -1,11 +1,12 @@
 ====
-AeroSpace is an i3-like tiling window manager for macOS
+AeroShift is an unofficial fork of upstream AeroSpace, the i3-like tiling window manager for macOS.
 
-*Project homepage*: https://github.com/nikitabobko/AeroSpace
+*Fork repository*: https://github.com/Boredphilosopher96/AeroSpace +
+*Upstream AeroSpace*: https://github.com/nikitabobko/AeroSpace
 
 image:assets/icon.png[300,300,float="right"]
 
-* xref:guide.adoc[AeroSpace Guide]
-* xref:commands.adoc[AeroSpace Commands]
-* xref:goodies.adoc[AeroSpace Goodies]
+* xref:guide.adoc[AeroShift Guide]
+* xref:commands.adoc[AeroShift Commands]
+* xref:goodies.adoc[AeroShift Goodies]
 ====

@@ -17,8 +17,8 @@ build-site() {
     cp ./docs/index.html ./.site
 
     cd .site
-        # Delete "aerospace " prefifx in synopsis
-        sed -E -i '' '/tag::synopsis/, /end::synopsis/ s/^(aerospace | {10})//' aerospace*
+        # Delete "aeroshift " prefix in synopsis
+        sed -E -i '' '/tag::synopsis/, /end::synopsis/ s/^(aeroshift | {10})//' aerospace*
         bundle exec asciidoctor ./guide.adoc ./commands.adoc ./goodies.adoc
         cp goodies.html goodness.html # backwards compatibility
         rm -rf ./*.adoc
@@ -40,7 +40,7 @@ build-man() {
         #   We use groff's \[ti] escape (which produces a literal tilde) instead.
         #   Note: escaping .~ in asciidoc via pass:[] doesn't work because asciidoctor
         #   converts \\ to \(rs) before groff sees the input.
-        sed -E -i '' 's|\.~|\.\\[ti]|g; s|/~|/\\[ti]|g' aerospace-test.1
+        sed -E -i '' 's|\.~|\.\\[ti]|g; s|/~|/\\[ti]|g' "aeroshift-test.1"
 
         rm -rf -- *.adoc
     cd - > /dev/null

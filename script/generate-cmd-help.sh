@@ -4,7 +4,7 @@ source ./script/setup.sh
 
 out_file='./Sources/Common/cmdHelpGenerated.swift'
 
-aerospace_prefix="aerospace"
+aerospace_prefix="aeroshift"
 ____usage_prefix="   USAGE:"
 _______or_prefix="      OR:"
 ____strip_prefix="   "

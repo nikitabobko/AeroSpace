@@ -1,6 +1,6 @@
 public let sponsorshipPrompts = [
-    "AeroSpace is a side project\nSponsor if it helps you",
-    "AeroSpace is built in my free time\nYour support means a lot",
-    "AeroSpace is free and open-source\nYour support matters",
-    "Enjoying AeroSpace?\nYou can help keep it going",
+    "AeroShift is an unofficial fork\nUse it with that in mind",
+    "AeroShift tracks upstream AeroSpace\nCheck the fork repo for changes",
+    "AeroShift is fork-specific software\nReview the fork docs before installing",
+    "Using AeroShift?\nSee the fork repository for details",
 ]

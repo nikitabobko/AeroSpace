@@ -1,6 +1,6 @@
-= aerospace-list-windows(1)
+= aeroshift-list-windows(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-list-windows
+:manname: aeroshift-list-windows
 // tag::purpose[]
 :manpurpose: Print windows that satisfy conditions
 // end::purpose[]
@@ -9,12 +9,12 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
+aeroshift list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
                        [--monitor <monitor>...] [--workspace <workspace>...]
                        [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>]
                        [--count] [--json]
-aerospace list-windows [-h|--help] --all [--format <output-format>] [--count] [--json]
-aerospace list-windows [-h|--help] --focused [--format <output-format>] [--count] [--json]
+aeroshift list-windows [-h|--help] --all [--format <output-format>] [--count] [--json]
+aeroshift list-windows [-h|--help] --focused [--format <output-format>] [--count] [--json]
 
 // end::synopsis[]
 
@@ -78,7 +78,7 @@ The following variables can be used inside `<output-format>`:
 
 %{window-id}:: Number. Window unique ID
 %{window-title}:: String. Window title
-%{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aerospace fullscreen` command
+%{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aeroshift fullscreen` command
 %{window-layout}:: String. An alias for `%{window-parent-container-layout}`
 %{window-parent-container-layout}:: String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`, `floating`) of the window's parent container.
 

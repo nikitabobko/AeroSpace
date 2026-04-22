@@ -1,6 +1,6 @@
-= aerospace-resize(1)
+= aeroshift-resize(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-resize
+:manname: aeroshift-resize
 // tag::purpose[]
 :manpurpose: Resize the focused window
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace resize [-h|--help] [--window-id <window-id>] (smart|smart-opposite|width|height) [+|-]<number>
+aeroshift resize [-h|--help] [--window-id <window-id>] (smart|smart-opposite|width|height) [+|-]<number>
 
 // end::synopsis[]
 

@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-let testEnv = ["PATH": "AEROSPACE_TEST_PATH", "AEROSPACE_INHERITED_TEST_ENV": "inherited"]
+let testEnv = ["PATH": "AEROSHIFT_TEST_PATH", "AEROSHIFT_INHERITED_TEST_ENV": "inherited"]
 private var env: [String: String] {
     isUnitTest ? testEnv : ProcessInfo.processInfo.environment
 }

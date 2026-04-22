@@ -1,6 +1,6 @@
-= aerospace-layout(1)
+= aeroshift-layout(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-layout
+:manname: aeroshift-layout
 // tag::purpose[]
 :manpurpose: Change layout of the focused window to the given layout
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace layout [-h|--help] [--window-id <window-id>]
+aeroshift layout [-h|--help] [--window-id <window-id>]
                  (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
 
 // end::synopsis[]
@@ -39,16 +39,16 @@ include::./util/window-id-flag-desc.adoc[]
 include::util/conditional-examples-header.adoc[]
 
 * Toggle between `floating` and `tiling` layouts (order of args doesn't matter): +
-`aerospace layout floating tiling`
+`aeroshift layout floating tiling`
 
 * Toggle orientation (order of args doesn't matter): +
-`aerospace layout horizontal vertical`
+`aeroshift layout horizontal vertical`
 
 * Toggle between `tiles` and `accordion` layouts (order of args doesn't matter): +
-`aerospace layout tiles accordion`
+`aeroshift layout tiles accordion`
 
 * Switch to `tiles` layout. Toggle the layout orientation if already in `tiles` layout: +
-`aerospace layout tiles horizontal vertical`
+`aeroshift layout tiles horizontal vertical`
 
 // end::body[]
 

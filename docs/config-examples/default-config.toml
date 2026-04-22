@@ -1,15 +1,17 @@
-# Place a copy of this config to ~/.aerospace.toml
-# After that, you can edit ~/.aerospace.toml to your liking
+# Place a copy of this config to ~/.aeroshift.toml
+# After that, you can edit ~/.aeroshift.toml to your liking
+# AeroShift is an unofficial fork of upstream AeroSpace.
+# Upstream reference links below are kept as historical and behavioral context.
 
 # Config version for compatibility and deprecations
 # Fallback value (if you omit the key): config-version = 1
 config-version = 2
 
-# You can use it to add commands that run after AeroSpace startup.
+# You can use it to add commands that run after AeroShift startup.
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
 after-startup-command = []
 
-# Start AeroSpace at login
+# Start AeroShift at login
 start-at-login = false
 
 # Automatically reload the config when the config file is saved

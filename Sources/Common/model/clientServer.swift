@@ -33,8 +33,8 @@ public struct ClientRequest: Codable, Sendable, ConvenienceCopyable, Equatable {
     public let stdin: String
 
     // Double Optional to encode explicit null into JSON
-    public var windowId: UInt32??  // Please forward AEROSPACE_WINDOW_ID env variable here
-    public var workspace: String?? // Please forward AEROSPACE_WORKSPACE env variable here
+    public var windowId: UInt32??  // Please forward AEROSHIFT_WINDOW_ID env variable here
+    public var workspace: String?? // Please forward AEROSHIFT_WORKSPACE env variable here
 
     public init(
         args: [String],
