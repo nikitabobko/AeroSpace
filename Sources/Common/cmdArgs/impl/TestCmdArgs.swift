@@ -10,7 +10,7 @@ public struct TestCmdArgs: CmdArgs {
         // Alternative name: --act-on-window-id.
         // Alternative 2: `with-context [--window-id <window-id>] [--workspace <workspace>] <subcommand>` command
         // Alternative 3: `env [name=value]... <subcommand>` command
-        // Alternative 4: --window-id and --workspace flags for aerospace top-level command + aerospace subcommand
+        // Alternative 4: --window-id and --workspace flags for aeroshift top-level command + aeroshift subcommand
         flags: [:],
         posArgs: [
             newMandatoryPosArgParser(\.lhs, parseLhs, placeholder: "<lhs>"),

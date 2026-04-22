@@ -68,7 +68,7 @@
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=28187, title=\"AeroSpace — AeroSpace.xcodeproj\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(AxWindowId=28187, title=\"AeroShift — AeroShift.xcodeproj\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x600002eeb420> {pid=76223}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
@@ -76,7 +76,7 @@
     "AXTitle" : "Xcode",
     "AXWindows" : [
       "AXUIElement(AxWindowId=28220, title=\"\", role=\"AXWindow\", subrole=\"AXDialog\")",
-      "AXUIElement(AxWindowId=28187, title=\"AeroSpace — AeroSpace.xcodeproj\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(AxWindowId=28187, title=\"AeroShift — AeroShift.xcodeproj\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxFailed" : "isWritable.AXFunctionRowTopLevelElements, get.AXFrame, isWritable.AXFrame, get.AXExtrasMenuBar, isWritable.AXExtrasMenuBar, get.AXSize, isWritable.AXSize, get.AXPosition, isWritable.AXPosition",
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden",

@@ -29,13 +29,13 @@
   "Aero.AXApp" : {
     "AXExtrasMenuBar" : null,
     "AXFocusedUIElement" : "AXUIElement(AxWindowId=14010, title=nil, role=\"AXTextArea\", subrole=nil)",
-    "AXFocusedWindow" : "AXUIElement(AxWindowId=14010, title=\"AeroSpace — AxWindowKindTest.swift\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXFocusedWindow" : "AXUIElement(AxWindowId=14010, title=\"AeroShift — AxWindowKindTest.swift\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXFrame" : null,
     "AXFrontmost" : 1,
     "AXFunctionRowTopLevelElements" : [
 
     ],
-    "AXMainWindow" : "AXUIElement(AxWindowId=14010, title=\"AeroSpace — AxWindowKindTest.swift\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
+    "AXMainWindow" : "AXUIElement(AxWindowId=14010, title=\"AeroShift — AxWindowKindTest.swift\", role=\"AXWindow\", subrole=\"AXStandardWindow\")",
     "AXMenuBar" : "<AXUIElement 0x600001938f90> {pid=27529}",
     "AXPosition" : null,
     "AXRole" : "AXApplication",
@@ -43,7 +43,7 @@
     "AXTitle" : "Xcode",
     "AXWindows" : [
       "AXUIElement(AxWindowId=14483, title=\"Build Succeeded\", role=\"AXWindow\", subrole=\"AXSystemDialog\")",
-      "AXUIElement(AxWindowId=14010, title=\"AeroSpace — AxWindowKindTest.swift\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
+      "AXUIElement(AxWindowId=14010, title=\"AeroShift — AxWindowKindTest.swift\", role=\"AXWindow\", subrole=\"AXStandardWindow\")"
     ],
     "Aero.AxIgnored" : "AXChildren, AXChildrenInNavigationOrder, AXEnhancedUserInterface, AXPreferredLanguage, AXRoleDescription, AXHidden"
   },

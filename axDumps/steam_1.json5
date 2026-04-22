@@ -1,5 +1,5 @@
 // Steam is weird. It shows one visible window, but creates 2 AX objects.
-// AeroSpace has to deliberatery ignore the redundant AX object to avoid weird focus issues
+// AeroShift has to deliberatery ignore the redundant AX object to avoid weird focus issues
 // ./steam_1.json5 -- valid AX object
 // ./steam_2.json5 -- weird AX object
 {
