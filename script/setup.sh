@@ -7,6 +7,10 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 # Don't forget to also update ./ShellParserGenerated/Package.swift
 export antlr_version="4.13.1"
 
+if command -v mise > /dev/null 2>&1; then
+    eval "$(mise env -s bash)"
+fi
+
 add-optional-dep-to-bin() {
     if /usr/bin/which "$1" &> /dev/null; then
         /bin/cat > ".deps/bin/${2:-$1}" <<EOF
