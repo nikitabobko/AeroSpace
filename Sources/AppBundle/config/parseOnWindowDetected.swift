@@ -29,7 +29,7 @@ struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
     var appNameRegexSubstring: CaseInsensitiveRegex?
     var windowTitleRegexSubstring: CaseInsensitiveRegex?
     var workspace: String?
-    var duringAeroSpaceStartup: Bool?
+    var duringAeroShiftStartup: Bool?
 
     var debugJson: Json {
         var resultParts: [String] = []
@@ -45,8 +45,8 @@ struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
         if let workspace {
             resultParts.append("workspace=\"\(workspace)\"")
         }
-        if let duringAeroSpaceStartup {
-            resultParts.append("duringAeroSpaceStartup=\(duringAeroSpaceStartup)")
+        if let duringAeroShiftStartup {
+            resultParts.append("duringAeroShiftStartup=\(duringAeroShiftStartup)")
         }
         return .string(resultParts.joined(separator: ", "))
     }
@@ -63,7 +63,7 @@ private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMa
     "workspace": Parser(\.workspace, upcast(parseString)),
     "app-name-regex-substring": Parser(\.appNameRegexSubstring, upcast(parseCasInsensitiveRegex)),
     "window-title-regex-substring": Parser(\.windowTitleRegexSubstring, upcast(parseCasInsensitiveRegex)),
-    "during-aeroshift-startup": Parser(\.duringAeroSpaceStartup, upcast(parseBool)),
+    "during-aeroshift-startup": Parser(\.duringAeroShiftStartup, upcast(parseBool)),
 ]
 
 private func upcast<T>(

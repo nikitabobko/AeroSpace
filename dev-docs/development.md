@@ -1,13 +1,13 @@
 # Development Notes
 
-This repository builds the unofficial `AeroShift` fork of upstream AeroSpace. Keep the fork naming explicit in docs, screenshots, release assets, and user-facing strings.
+This repository builds the unofficial `AeroShift` fork of [AeroSpace](https://github.com/nikitabobko/AeroSpace). Keep the fork naming explicit in docs, screenshots, release assets, and user-facing strings.
 
 To build/install from sources do the following:
 1. Install dependencies
 2. Create codesign certificate in `Keychain Access.app`
 3. Run one of the entry point scripts to build/install from sources
 
-If you struggle to build AeroShift locally, you can also refer to [builds in this fork's GitHub Actions](https://github.com/Boredphilosopher96/AeroSpace/actions)
+If you struggle to build AeroShift locally, you can also refer to [builds in this fork's GitHub Actions](https://github.com/Boredphilosopher96/AeroShift/actions)
 
 ## Definitions
 

@@ -21,7 +21,7 @@ jobs:
 
         close() {
           gh issue edit "$ISSUE" --add-label bin
-          gh issue close "$ISSUE" --comment "Please don't open issues directly on this fork. Use GitHub Discussions instead: https://github.com/Boredphilosopher96/AeroSpace/discussions . This repository is an unofficial AeroSpace fork."
+          gh issue close "$ISSUE" --comment "Please don't open issues directly on this fork. Use GitHub Discussions instead: https://github.com/Boredphilosopher96/AeroShift/discussions . This repository is an unofficial AeroShift fork of AeroSpace."
           gh issue lock "$ISSUE"
         }
 

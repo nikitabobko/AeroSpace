@@ -7,7 +7,7 @@ include::util/header.adoc[]
 This Guide is designed to be read from top to bottom as a whole.
 You can skip parts that are obvious.
 
-NOTE: AeroShift is an unofficial fork of upstream AeroSpace. When upstream issues or links appear below, they are cited as upstream history or reference material.
+NOTE: AeroShift is an unofficial fork of https://github.com/nikitabobko/AeroSpace[AeroSpace]. When upstream issues or links appear below, they are cited as upstream history or reference material.
 
 [#installation]
 == Installation
@@ -15,9 +15,9 @@ NOTE: AeroShift is an unofficial fork of upstream AeroSpace. When upstream issue
 [#release-installation]
 === Release artifact installation
 
-Download release artifacts from this fork, not from upstream AeroSpace.
+Download release artifacts from this fork, not from upstream https://github.com/nikitabobko/AeroSpace[AeroSpace].
 
-. Download the latest available zip from https://github.com/Boredphilosopher96/AeroSpace/releases[the fork releases page]
+. Download the latest available zip from https://github.com/Boredphilosopher96/AeroShift/releases[the fork releases page]
 . Unpack zip
 . Put unpacked `AeroShift-v$VERSION/AeroShift.app` into `/Applications`
 . Put unpacked `AeroShift-v$VERSION/bin/aeroshift` anywhere on `$PATH` if you want CLI access
@@ -37,7 +37,8 @@ mise run setup
 mise run build
 ----
 
-Contributor and release-install notes are covered in https://github.com/Boredphilosopher96/AeroSpace/blob/main/dev-docs/development.md[Development Notes].
+Contributor and release-install notes are covered in https://github.com/Boredphilosopher96/AeroShift/blob/main/dev-docs/development.md[Development Notes].
+Upstream docs remain at https://github.com/nikitabobko/AeroSpace/tree/main/docs[AeroSpace docs].
 
 If you see this message
 

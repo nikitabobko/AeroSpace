@@ -40,7 +40,7 @@ final class ListModesTest: XCTestCase {
         assertEquals(countResult.stderr, [])
 
         let jsonResult = try await ListModesCommand(args: ListModesCmdArgs(rawArgs: []).copy(\.json, true)).run(.defaultEnv, .emptyStdin)
-        let expectedJson = JSONEncoder.aeroSpaceDefault.encodeToString([
+        let expectedJson = JSONEncoder.aeroShiftDefault.encodeToString([
             ["mode-id": "main"],
             ["mode-id": "resize"],
             ["mode-id": "service"],
@@ -50,7 +50,7 @@ final class ListModesTest: XCTestCase {
         assertEquals(jsonResult.stderr, [])
 
         let currentJsonResult = try await ListModesCommand(args: ListModesCmdArgs(rawArgs: []).copy(\.current, true).copy(\.json, true)).run(.defaultEnv, .emptyStdin)
-        let expectedCurrentJson = JSONEncoder.aeroSpaceDefault.encodeToString([
+        let expectedCurrentJson = JSONEncoder.aeroShiftDefault.encodeToString([
             ["mode-id": "main"],
         ])
         assertEquals(currentJsonResult.exitCode.rawValue, 0)

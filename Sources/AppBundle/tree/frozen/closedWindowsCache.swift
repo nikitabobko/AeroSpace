@@ -4,9 +4,9 @@ import Common
 /// First line of defence against lock screen
 ///
 /// When you lock the screen, all accessibility API becomes unobservable (all attributes become empty, window id
-/// becomes nil, etc.) which tricks AeroSpace into thinking that all windows were closed.
-/// That's why every time a window dies AeroSpace caches the "entire world" (unless window is already presented in the cache)
-/// so that once the screen is unlocked, AeroSpace could restore windows to where they were
+/// becomes nil, etc.) which tricks AeroShift into thinking that all windows were closed.
+/// That's why every time a window dies AeroShift caches the "entire world" (unless window is already presented in the cache)
+/// so that once the screen is unlocked, AeroShift could restore windows to where they were
 @MainActor private var closedWindowsCache = FrozenWorld(workspaces: [], monitors: [], windowIds: [])
 
 struct FrozenMonitor: Sendable {

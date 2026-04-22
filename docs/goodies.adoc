@@ -3,7 +3,7 @@ include::util/site-attributes.adoc[]
 
 include::util/header.adoc[]
 
-NOTE: AeroShift is an unofficial fork of upstream AeroSpace. Some third-party integrations below were originally written for AeroSpace and may need small command-name adjustments for `aeroshift`.
+NOTE: AeroShift is an unofficial fork of https://github.com/nikitabobko/AeroSpace[AeroSpace]. Some third-party integrations below were originally written for https://github.com/nikitabobko/AeroSpace[AeroSpace] and may need small command-name adjustments for `aeroshift`.
 
 Do you have a cool automatization, AeroShift integration, or workflow?
 Feel free to open an issue or pull request to add it to this list!
@@ -54,7 +54,7 @@ after-startup-command = [
 [#raycast-extension]
 == Raycast extension
 
-There is a third-party Raycast extension for upstream AeroSpace: https://www.raycast.com/limonkufu/aerospace
+There is a third-party Raycast extension for https://github.com/nikitabobko/AeroSpace[AeroSpace]: https://www.raycast.com/limonkufu/aerospace
 
 It assumes upstream naming, so review and adapt its commands before using it with AeroShift.
 

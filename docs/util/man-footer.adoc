@@ -1,14 +1,15 @@
 == Resources
 
-*Fork repository:* https://github.com/Boredphilosopher96/AeroSpace +
-*Upstream AeroSpace:* https://github.com/nikitabobko/AeroSpace +
-*Guide:* https://github.com/Boredphilosopher96/AeroSpace/blob/main/docs/guide.adoc +
+*Fork repository:* https://github.com/Boredphilosopher96/AeroShift[AeroShift repository] +
+*Upstream repository:* https://github.com/nikitabobko/AeroSpace[AeroSpace repository] +
+*Upstream docs:* https://github.com/nikitabobko/AeroSpace/tree/main/docs[AeroSpace docs] +
+*Guide:* https://github.com/Boredphilosopher96/AeroShift/blob/main/docs/guide.adoc +
 
 == BUGS
 
-Bugs can be discussed at https://github.com/Boredphilosopher96/AeroSpace/discussions/categories/potential-bugs
+Bugs can be discussed at https://github.com/Boredphilosopher96/AeroShift/discussions/categories/potential-bugs
 
-If a bug also reproduces in upstream AeroSpace, please say so explicitly.
+If a bug also reproduces in upstream https://github.com/nikitabobko/AeroSpace[AeroSpace], please say so explicitly.
 
 == License
 
@@ -18,4 +19,4 @@ You can find the full text of AeroShift license and its dependencies in the 'leg
 
 == AUTHOR
 
-Boredphilosopher96 and contributors, based on AeroSpace by Nikita Bobko
+Boredphilosopher96 and contributors, based on https://github.com/nikitabobko/AeroSpace[AeroSpace] by Nikita Bobko

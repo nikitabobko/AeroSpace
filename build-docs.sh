@@ -18,7 +18,7 @@ build-site() {
 
     cd .site
         # Delete "aeroshift " prefix in synopsis
-        sed -E -i '' '/tag::synopsis/, /end::synopsis/ s/^(aeroshift | {10})//' aerospace*
+        sed -E -i '' '/tag::synopsis/, /end::synopsis/ s/^(aeroshift | {10})//' aeroshift*
         bundle exec asciidoctor ./guide.adoc ./commands.adoc ./goodies.adoc
         cp goodies.html goodness.html # backwards compatibility
         rm -rf ./*.adoc
@@ -33,7 +33,7 @@ build-site() {
 build-man() {
     cp-docs .man
     cd .man
-        bundle exec asciidoctor -b manpage aerospace*.adoc
+        bundle exec asciidoctor -b manpage aeroshift*.adoc
 
         # Comment by AI:
         #   gman (the g Dai client) renders bare .~ and /~ as ligatures (~ becomes ˜).

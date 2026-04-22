@@ -7,208 +7,208 @@ Commands documentation is also available as manpages.
 
 == balance-sizes
 ----
-include::aerospace-balance-sizes.adoc[tags=synopsis]
+include::aeroshift-balance-sizes.adoc[tags=synopsis]
 ----
-include::aerospace-balance-sizes.adoc[tags=purpose]
-include::aerospace-balance-sizes.adoc[tags=body]
+include::aeroshift-balance-sizes.adoc[tags=purpose]
+include::aeroshift-balance-sizes.adoc[tags=body]
 
 == close
 ----
-include::aerospace-close.adoc[tags=synopsis]
+include::aeroshift-close.adoc[tags=synopsis]
 ----
-include::aerospace-close.adoc[tags=purpose]
-include::aerospace-close.adoc[tags=body]
+include::aeroshift-close.adoc[tags=purpose]
+include::aeroshift-close.adoc[tags=body]
 
 == close-all-windows-but-current
 ----
-include::aerospace-close-all-windows-but-current.adoc[tags=synopsis]
+include::aeroshift-close-all-windows-but-current.adoc[tags=synopsis]
 ----
-include::aerospace-close-all-windows-but-current.adoc[tags=purpose]
-include::aerospace-close-all-windows-but-current.adoc[tags=body]
+include::aeroshift-close-all-windows-but-current.adoc[tags=purpose]
+include::aeroshift-close-all-windows-but-current.adoc[tags=body]
 
 == enable
 ----
-include::aerospace-enable.adoc[tags=synopsis]
+include::aeroshift-enable.adoc[tags=synopsis]
 ----
-include::aerospace-enable.adoc[tags=purpose]
-include::aerospace-enable.adoc[tags=body]
+include::aeroshift-enable.adoc[tags=purpose]
+include::aeroshift-enable.adoc[tags=body]
 
 == exec-and-forget
 ----
-include::aerospace-exec-and-forget.adoc[tags=synopsis]
+include::aeroshift-exec-and-forget.adoc[tags=synopsis]
 ----
-include::aerospace-exec-and-forget.adoc[tags=purpose]
-include::aerospace-exec-and-forget.adoc[tags=body]
+include::aeroshift-exec-and-forget.adoc[tags=purpose]
+include::aeroshift-exec-and-forget.adoc[tags=body]
 
 == flatten-workspace-tree
 ----
-include::aerospace-flatten-workspace-tree.adoc[tags=synopsis]
+include::aeroshift-flatten-workspace-tree.adoc[tags=synopsis]
 ----
-include::aerospace-flatten-workspace-tree.adoc[tags=purpose]
-include::aerospace-flatten-workspace-tree.adoc[tags=body]
+include::aeroshift-flatten-workspace-tree.adoc[tags=purpose]
+include::aeroshift-flatten-workspace-tree.adoc[tags=body]
 
 == focus
 ----
-include::aerospace-focus.adoc[tags=synopsis]
+include::aeroshift-focus.adoc[tags=synopsis]
 ----
-include::aerospace-focus.adoc[tags=purpose]
-include::aerospace-focus.adoc[tags=body]
+include::aeroshift-focus.adoc[tags=purpose]
+include::aeroshift-focus.adoc[tags=body]
 
 == focus-back-and-forth
 ----
 
-include::./aerospace-focus-back-and-forth.adoc[tags=synopsis]
+include::./aeroshift-focus-back-and-forth.adoc[tags=synopsis]
 ----
-include::./aerospace-focus-back-and-forth.adoc[tags=purpose]
-include::./aerospace-focus-back-and-forth.adoc[tags=body]
+include::./aeroshift-focus-back-and-forth.adoc[tags=purpose]
+include::./aeroshift-focus-back-and-forth.adoc[tags=body]
 
 == focus-monitor
 ----
-include::aerospace-focus-monitor.adoc[tags=synopsis]
+include::aeroshift-focus-monitor.adoc[tags=synopsis]
 ----
-include::aerospace-focus-monitor.adoc[tags=purpose]
-include::aerospace-focus-monitor.adoc[tags=body]
+include::aeroshift-focus-monitor.adoc[tags=purpose]
+include::aeroshift-focus-monitor.adoc[tags=body]
 
 == fullscreen
 ----
-include::aerospace-fullscreen.adoc[tags=synopsis]
+include::aeroshift-fullscreen.adoc[tags=synopsis]
 ----
-include::aerospace-fullscreen.adoc[tags=purpose]
-include::aerospace-fullscreen.adoc[tags=body]
+include::aeroshift-fullscreen.adoc[tags=purpose]
+include::aeroshift-fullscreen.adoc[tags=body]
 
 == join-with
 ----
-include::aerospace-join-with.adoc[tags=synopsis]
+include::aeroshift-join-with.adoc[tags=synopsis]
 ----
-include::aerospace-join-with.adoc[tags=purpose]
-include::aerospace-join-with.adoc[tags=body]
+include::aeroshift-join-with.adoc[tags=purpose]
+include::aeroshift-join-with.adoc[tags=body]
 
 == layout
 ----
-include::aerospace-layout.adoc[tags=synopsis]
+include::aeroshift-layout.adoc[tags=synopsis]
 ----
-include::aerospace-layout.adoc[tags=purpose]
-include::aerospace-layout.adoc[tags=body]
+include::aeroshift-layout.adoc[tags=purpose]
+include::aeroshift-layout.adoc[tags=body]
 
 == macos-native-fullscreen
 ----
-include::aerospace-macos-native-fullscreen.adoc[tags=synopsis]
+include::aeroshift-macos-native-fullscreen.adoc[tags=synopsis]
 ----
-include::aerospace-macos-native-fullscreen.adoc[tags=purpose]
-include::aerospace-macos-native-fullscreen.adoc[tags=body]
+include::aeroshift-macos-native-fullscreen.adoc[tags=purpose]
+include::aeroshift-macos-native-fullscreen.adoc[tags=body]
 
 == macos-native-minimize
 ----
-include::aerospace-macos-native-minimize.adoc[tags=synopsis]
+include::aeroshift-macos-native-minimize.adoc[tags=synopsis]
 ----
-include::aerospace-macos-native-minimize.adoc[tags=purpose]
-include::aerospace-macos-native-minimize.adoc[tags=body]
+include::aeroshift-macos-native-minimize.adoc[tags=purpose]
+include::aeroshift-macos-native-minimize.adoc[tags=body]
 
 == mode
 ----
-include::aerospace-mode.adoc[tags=synopsis]
+include::aeroshift-mode.adoc[tags=synopsis]
 ----
-include::aerospace-mode.adoc[tags=purpose]
-include::aerospace-mode.adoc[tags=body]
+include::aeroshift-mode.adoc[tags=purpose]
+include::aeroshift-mode.adoc[tags=body]
 
 [#move]
 == move
 ----
-include::aerospace-move.adoc[tags=synopsis]
+include::aeroshift-move.adoc[tags=synopsis]
 ----
-include::aerospace-move.adoc[tags=purpose]
-include::aerospace-move.adoc[tags=body]
+include::aeroshift-move.adoc[tags=purpose]
+include::aeroshift-move.adoc[tags=body]
 
 == move-mouse
 ----
-include::./aerospace-move-mouse.adoc[tags=synopsis]
+include::./aeroshift-move-mouse.adoc[tags=synopsis]
 ----
-include::./aerospace-move-mouse.adoc[tags=purpose]
-include::./aerospace-move-mouse.adoc[tags=body]
+include::./aeroshift-move-mouse.adoc[tags=purpose]
+include::./aeroshift-move-mouse.adoc[tags=body]
 
 == move-node-to-monitor
 ----
-include::aerospace-move-node-to-monitor.adoc[tags=synopsis]
+include::aeroshift-move-node-to-monitor.adoc[tags=synopsis]
 ----
-include::aerospace-move-node-to-monitor.adoc[tags=purpose]
-include::aerospace-move-node-to-monitor.adoc[tags=body]
+include::aeroshift-move-node-to-monitor.adoc[tags=purpose]
+include::aeroshift-move-node-to-monitor.adoc[tags=body]
 
 == move-node-to-workspace
 ----
-include::aerospace-move-node-to-workspace.adoc[tags=synopsis]
+include::aeroshift-move-node-to-workspace.adoc[tags=synopsis]
 ----
-include::aerospace-move-node-to-workspace.adoc[tags=purpose]
-include::aerospace-move-node-to-workspace.adoc[tags=body]
+include::aeroshift-move-node-to-workspace.adoc[tags=purpose]
+include::aeroshift-move-node-to-workspace.adoc[tags=body]
 
 == move-workspace-to-monitor
 ----
-include::aerospace-move-workspace-to-monitor.adoc[tags=synopsis]
+include::aeroshift-move-workspace-to-monitor.adoc[tags=synopsis]
 ----
-include::aerospace-move-workspace-to-monitor.adoc[tags=purpose]
-include::aerospace-move-workspace-to-monitor.adoc[tags=body]
+include::aeroshift-move-workspace-to-monitor.adoc[tags=purpose]
+include::aeroshift-move-workspace-to-monitor.adoc[tags=body]
 
 == reload-config
 ----
-include::aerospace-reload-config.adoc[tags=synopsis]
+include::aeroshift-reload-config.adoc[tags=synopsis]
 ----
-include::aerospace-reload-config.adoc[tags=purpose]
-include::aerospace-reload-config.adoc[tags=body]
+include::aeroshift-reload-config.adoc[tags=purpose]
+include::aeroshift-reload-config.adoc[tags=body]
 
 == resize
 ----
-include::aerospace-resize.adoc[tags=synopsis]
+include::aeroshift-resize.adoc[tags=synopsis]
 ----
-include::aerospace-resize.adoc[tags=purpose]
-include::aerospace-resize.adoc[tags=body]
+include::aeroshift-resize.adoc[tags=purpose]
+include::aeroshift-resize.adoc[tags=body]
 
 == split
 ----
-include::aerospace-split.adoc[tags=synopsis]
+include::aeroshift-split.adoc[tags=synopsis]
 ----
-include::aerospace-split.adoc[tags=purpose]
-include::aerospace-split.adoc[tags=body]
+include::aeroshift-split.adoc[tags=purpose]
+include::aeroshift-split.adoc[tags=body]
 
 == swap
 ----
-include::aerospace-swap.adoc[tags=synopsis]
+include::aeroshift-swap.adoc[tags=synopsis]
 ----
-include::aerospace-swap.adoc[tags=purpose]
-include::aerospace-swap.adoc[tags=body]
+include::aeroshift-swap.adoc[tags=purpose]
+include::aeroshift-swap.adoc[tags=body]
 
 == summon-workspace
 ----
-include::./aerospace-summon-workspace.adoc[tags=synopsis]
+include::./aeroshift-summon-workspace.adoc[tags=synopsis]
 ----
-include::./aerospace-summon-workspace.adoc[tags=purpose]
-include::./aerospace-summon-workspace.adoc[tags=body]
+include::./aeroshift-summon-workspace.adoc[tags=purpose]
+include::./aeroshift-summon-workspace.adoc[tags=body]
 
 == trigger-binding
 ----
-include::aerospace-trigger-binding.adoc[tags=synopsis]
+include::aeroshift-trigger-binding.adoc[tags=synopsis]
 ----
-include::aerospace-trigger-binding.adoc[tags=purpose]
-include::aerospace-trigger-binding.adoc[tags=body]
+include::aeroshift-trigger-binding.adoc[tags=purpose]
+include::aeroshift-trigger-binding.adoc[tags=body]
 
 == volume
 ----
-include::./aerospace-volume.adoc[tags=synopsis]
+include::./aeroshift-volume.adoc[tags=synopsis]
 ----
-include::./aerospace-volume.adoc[tags=purpose]
-include::./aerospace-volume.adoc[tags=body]
+include::./aeroshift-volume.adoc[tags=purpose]
+include::./aeroshift-volume.adoc[tags=body]
 
 == workspace
 ----
-include::aerospace-workspace.adoc[tags=synopsis]
+include::aeroshift-workspace.adoc[tags=synopsis]
 ----
-include::aerospace-workspace.adoc[tags=purpose]
-include::aerospace-workspace.adoc[tags=body]
+include::aeroshift-workspace.adoc[tags=purpose]
+include::aeroshift-workspace.adoc[tags=body]
 
 == workspace-back-and-forth
 ----
-include::aerospace-workspace-back-and-forth.adoc[tags=synopsis]
+include::aeroshift-workspace-back-and-forth.adoc[tags=synopsis]
 ----
-include::aerospace-workspace-back-and-forth.adoc[tags=purpose]
-include::aerospace-workspace-back-and-forth.adoc[tags=body]
+include::aeroshift-workspace-back-and-forth.adoc[tags=purpose]
+include::aeroshift-workspace-back-and-forth.adoc[tags=body]
 
 == Query commands
 
@@ -220,84 +220,84 @@ Query commands are commands that do not change the state but rather allow the ex
 
 === config
 ----
-include::aerospace-config.adoc[tags=synopsis]
+include::aeroshift-config.adoc[tags=synopsis]
 ----
-include::aerospace-config.adoc[tags=purpose]
-include::aerospace-config.adoc[tags=body]
+include::aeroshift-config.adoc[tags=purpose]
+include::aeroshift-config.adoc[tags=body]
 
 === debug-windows
 ----
-include::aerospace-debug-windows.adoc[tags=synopsis]
+include::aeroshift-debug-windows.adoc[tags=synopsis]
 ----
-include::aerospace-debug-windows.adoc[tags=purpose]
-include::aerospace-debug-windows.adoc[tags=body]
+include::aeroshift-debug-windows.adoc[tags=purpose]
+include::aeroshift-debug-windows.adoc[tags=body]
 
 === false
 ----
-include::aerospace-false.adoc[tags=synopsis]
+include::aeroshift-false.adoc[tags=synopsis]
 ----
-include::aerospace-false.adoc[tags=purpose]
-include::aerospace-false.adoc[tags=body]
+include::aeroshift-false.adoc[tags=purpose]
+include::aeroshift-false.adoc[tags=body]
 
 === list-apps
 ----
-include::aerospace-list-apps.adoc[tags=synopsis]
+include::aeroshift-list-apps.adoc[tags=synopsis]
 ----
-include::aerospace-list-apps.adoc[tags=purpose]
-include::aerospace-list-apps.adoc[tags=body]
+include::aeroshift-list-apps.adoc[tags=purpose]
+include::aeroshift-list-apps.adoc[tags=body]
 
 === list-exec-env-vars
 ----
-include::aerospace-list-exec-env-vars.adoc[tags=synopsis]
+include::aeroshift-list-exec-env-vars.adoc[tags=synopsis]
 ----
-include::aerospace-list-exec-env-vars.adoc[tags=purpose]
-include::aerospace-list-exec-env-vars.adoc[tags=body]
+include::aeroshift-list-exec-env-vars.adoc[tags=purpose]
+include::aeroshift-list-exec-env-vars.adoc[tags=body]
 
 === list-modes
 ----
-include::aerospace-list-modes.adoc[tags=synopsis]
+include::aeroshift-list-modes.adoc[tags=synopsis]
 ----
-include::aerospace-list-modes.adoc[tags=purpose]
-include::aerospace-list-modes.adoc[tags=body]
+include::aeroshift-list-modes.adoc[tags=purpose]
+include::aeroshift-list-modes.adoc[tags=body]
 
 === list-monitors
 ----
-include::aerospace-list-monitors.adoc[tags=synopsis]
+include::aeroshift-list-monitors.adoc[tags=synopsis]
 ----
-include::aerospace-list-monitors.adoc[tags=purpose]
-include::aerospace-list-monitors.adoc[tags=body]
+include::aeroshift-list-monitors.adoc[tags=purpose]
+include::aeroshift-list-monitors.adoc[tags=body]
 
 === list-windows
 ----
-include::aerospace-list-windows.adoc[tags=synopsis]
+include::aeroshift-list-windows.adoc[tags=synopsis]
 ----
-include::aerospace-list-windows.adoc[tags=purpose]
-include::aerospace-list-windows.adoc[tags=body]
+include::aeroshift-list-windows.adoc[tags=purpose]
+include::aeroshift-list-windows.adoc[tags=body]
 
 === list-workspaces
 ----
-include::aerospace-list-workspaces.adoc[tags=synopsis]
+include::aeroshift-list-workspaces.adoc[tags=synopsis]
 ----
-include::aerospace-list-workspaces.adoc[tags=purpose]
-include::aerospace-list-workspaces.adoc[tags=body]
+include::aeroshift-list-workspaces.adoc[tags=purpose]
+include::aeroshift-list-workspaces.adoc[tags=body]
 
 === subscribe
 ----
-include::aerospace-subscribe.adoc[tags=synopsis]
+include::aeroshift-subscribe.adoc[tags=synopsis]
 ----
-include::aerospace-subscribe.adoc[tags=purpose]
-include::aerospace-subscribe.adoc[tags=body]
+include::aeroshift-subscribe.adoc[tags=purpose]
+include::aeroshift-subscribe.adoc[tags=body]
 
 === test
 ----
-include::aerospace-test.adoc[tags=synopsis]
+include::aeroshift-test.adoc[tags=synopsis]
 ----
-include::aerospace-test.adoc[tags=purpose]
-include::aerospace-test.adoc[tags=body]
+include::aeroshift-test.adoc[tags=purpose]
+include::aeroshift-test.adoc[tags=body]
 
 === true
 ----
-include::aerospace-true.adoc[tags=synopsis]
+include::aeroshift-true.adoc[tags=synopsis]
 ----
-include::aerospace-true.adoc[tags=purpose]
-include::aerospace-true.adoc[tags=body]
+include::aeroshift-true.adoc[tags=purpose]
+include::aeroshift-true.adoc[tags=body]

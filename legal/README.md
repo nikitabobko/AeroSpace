@@ -1,6 +1,6 @@
 # LICENSE
 
-AeroShift is an unofficial fork of upstream AeroSpace. The code in this repository is licensed under MIT. See [LICENSE](./LICENSE.txt) for the full license text.
+AeroShift is an unofficial fork of [AeroSpace](https://github.com/nikitabobko/AeroSpace). The code in this repository is licensed under MIT. See [LICENSE](./LICENSE.txt) for the full license text.
 
 ## Bundled dependencies and materials
 

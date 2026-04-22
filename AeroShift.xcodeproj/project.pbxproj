@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2481B7A5E909B852AC561834 /* AeroSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BD4BFB51F554DA748C7C92 /* AeroSpaceApp.swift */; };
 		61D62901102EA744BEA2B8FB /* default-config.toml in Resources */ = {isa = PBXBuildFile; fileRef = 112007BDE009B28F367DEF4F /* default-config.toml */; };
+		B3D04F53055AA4DD97286929 /* AeroShiftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A216C1A18E77D0947D5218 /* AeroShiftApp.swift */; };
 		DD9A3668CF8AB11C757F61E5 /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = D5931B76D900EC8C70A08A0A /* AppBundle */; };
 		F83F1A024F09EB5917591201 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A8A756DA5A53716FD412035 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
@@ -16,10 +16,10 @@
 /* Begin PBXFileReference section */
 		112007BDE009B28F367DEF4F /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
 		1A8A756DA5A53716FD412035 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		9E70B179FF12AAA90B960263 /* AeroSpace */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AeroSpace; path = .; sourceTree = SOURCE_ROOT; };
+		1E48FFB9A2BAE894F14F2EE1 /* AeroShift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AeroShift; path = .; sourceTree = SOURCE_ROOT; };
+		97A216C1A18E77D0947D5218 /* AeroShiftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroShiftApp.swift; sourceTree = "<group>"; };
+		A3D8B32B36394DCA992C3403 /* AeroShift.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroShift.entitlements; sourceTree = "<group>"; };
 		CB676DAE72E1EFC48F277405 /* AeroShift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroShift.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		D67DD6B51EBDE9C01C3692C9 /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
-		E1BD4BFB51F554DA748C7C92 /* AeroSpaceApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroSpaceApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,15 +34,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		0072CBB33F2444B937BF4A35 /* AeroSpaceApp */ = {
-			isa = PBXGroup;
-			children = (
-				E1BD4BFB51F554DA748C7C92 /* AeroSpaceApp.swift */,
-			);
-			name = AeroSpaceApp;
-			path = Sources/AeroSpaceApp;
-			sourceTree = "<group>";
-		};
 		16BBB995AF4508CBE90622AF /* config-examples */ = {
 			isa = PBXGroup;
 			children = (
@@ -55,7 +46,7 @@
 		2706F78619EC3A9694B93A4A /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				9E70B179FF12AAA90B960263 /* AeroSpace */,
+				1E48FFB9A2BAE894F14F2EE1 /* AeroShift */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -63,7 +54,7 @@
 		5C0BCAE834CA4CE4FD6178C8 = {
 			isa = PBXGroup;
 			children = (
-				0072CBB33F2444B937BF4A35 /* AeroSpaceApp */,
+				97862B3B32105186CAFB283F /* AeroShiftApp */,
 				16BBB995AF4508CBE90622AF /* config-examples */,
 				2706F78619EC3A9694B93A4A /* Packages */,
 				7AAC90B8D4BDD0A8B81B6D27 /* resources */,
@@ -74,10 +65,19 @@
 		7AAC90B8D4BDD0A8B81B6D27 /* resources */ = {
 			isa = PBXGroup;
 			children = (
-				D67DD6B51EBDE9C01C3692C9 /* AeroSpace.entitlements */,
+				A3D8B32B36394DCA992C3403 /* AeroShift.entitlements */,
 				1A8A756DA5A53716FD412035 /* Assets.xcassets */,
 			);
 			path = resources;
+			sourceTree = "<group>";
+		};
+		97862B3B32105186CAFB283F /* AeroShiftApp */ = {
+			isa = PBXGroup;
+			children = (
+				97A216C1A18E77D0947D5218 /* AeroShiftApp.swift */,
+			);
+			name = AeroShiftApp;
+			path = Sources/AeroShiftApp;
 			sourceTree = "<group>";
 		};
 		F0525F182F59FE30A02CAE24 /* Products */ = {
@@ -161,7 +161,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2481B7A5E909B852AC561834 /* AeroSpaceApp.swift in Sources */,
+				B3D04F53055AA4DD97286929 /* AeroShiftApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,7 +172,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = resources/AeroSpace.entitlements;
+				CODE_SIGN_ENTITLEMENTS = resources/AeroShift.entitlements;
 				CODE_SIGN_IDENTITY = "aeroshift-codesign-certificate";
 				COMBINE_HIDPI_IMAGES = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -194,7 +194,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = resources/AeroSpace.entitlements;
+				CODE_SIGN_ENTITLEMENTS = resources/AeroShift.entitlements;
 				CODE_SIGN_IDENTITY = "aeroshift-codesign-certificate";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;

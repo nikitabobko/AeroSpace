@@ -4,7 +4,7 @@ import SwiftUI
 // This file is shared between SPM and xcode project
 
 @main
-struct AeroSpaceApp: App {
+struct AeroShiftApp: App {
     @StateObject var viewModel = TrayMenuModel.shared
     @StateObject var messageModel = MessageModel.shared
     @Environment(\.openWindow) var openWindow: OpenWindowAction

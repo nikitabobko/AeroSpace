@@ -9,7 +9,7 @@ let swiftSettings: [SwiftSetting] = [
 ]
 
 let package = Package(
-    name: "AeroShiftPackage",
+    name: "AeroShift",
     // Runtime support for parameterized protocol types is only available in macOS 13.0.0 or newer
     // And it specifies deploymentTarget for CLI
     platforms: [.macOS(.v13)],
@@ -62,7 +62,7 @@ let package = Package(
             dependencies: [
                 .target(name: "AppBundle"),
             ],
-            path: "Sources/AeroSpaceApp",
+            path: "Sources/AeroShiftApp",
             swiftSettings: swiftSettings,
         ),
         .executableTarget(

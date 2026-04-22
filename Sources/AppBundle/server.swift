@@ -20,7 +20,7 @@ func startUnixSocketServer() {
 func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) async {
     if serverArgs.isReadOnly { return }
     if !isDebug { return }
-    let socketFile = "/tmp/\(stableAeroSpaceAppId)-\(unixUserName).sock"
+    let socketFile = "/tmp/\(stableAeroShiftAppId)-\(unixUserName).sock"
     let connection = NWConnection(to: NWEndpoint.unix(path: socketFile), using: .tcp)
     defer { connection.cancel() }
     if await connection.startBlocking().error != nil { // Can't connect, AeroShift.app is not running
@@ -32,7 +32,7 @@ func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) async {
     _ = await connection.readNonAtomic()
 }
 
-private let serverVersionAndHash = "\(aeroSpaceAppVersion) \(gitHash)"
+private let serverVersionAndHash = "\(aeroShiftAppVersion) \(gitHash)"
 
 private func newConnection(_ connection: NWConnection) async { // todo add exit codes
     func answerToClient(exitCode: Int32, stdout: String = "", stderr: String = "") async {
@@ -76,7 +76,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
         guard let token: RunSessionGuard = await .isServerEnabled(orIsEnableCommand: parsedCmd.cmdOrNil) else {
             await answerToClient(
                 exitCode: EXIT_CODE_TWO,
-                stderr: "\(aeroSpaceAppName) server is disabled and doesn't accept commands. " +
+                stderr: "\(aeroShiftAppName) server is disabled and doesn't accept commands. " +
                     "You can use 'aeroshift enable on' to enable the server",
             )
             continue

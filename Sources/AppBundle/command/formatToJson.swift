@@ -22,6 +22,6 @@ extension [AeroObj] {
             }
             list.append(rawObj)
         }
-        return JSONEncoder.aeroSpaceDefault.encodeToString(list).orFailure("Can't encode '\(list)' to JSON")
+        return JSONEncoder.aeroShiftDefault.encodeToString(list).orFailure("Can't encode '\(list)' to JSON")
     }
 }

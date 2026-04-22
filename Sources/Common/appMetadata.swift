@@ -1,8 +1,8 @@
-public let stableAeroSpaceAppId: String = "io.github.boredphilosopher96.aeroshift"
+public let stableAeroShiftAppId: String = "io.github.boredphilosopher96.aeroshift"
 #if DEBUG
-    public let aeroSpaceAppId: String = "io.github.boredphilosopher96.aeroshift.debug"
-    public let aeroSpaceAppName: String = "AeroShift-Debug"
+    public let aeroShiftAppId: String = "io.github.boredphilosopher96.aeroshift.debug"
+    public let aeroShiftAppName: String = "AeroShift-Debug"
 #else
-    public let aeroSpaceAppId: String = stableAeroSpaceAppId
-    public let aeroSpaceAppName: String = "AeroShift"
+    public let aeroShiftAppId: String = stableAeroShiftAppId
+    public let aeroShiftAppName: String = "AeroShift"
 #endif

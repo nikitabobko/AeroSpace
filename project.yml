@@ -4,7 +4,7 @@
 name: AeroShift
 
 packages:
-  AeroShiftPackage:
+  AeroShift:
     path: .
 
 configs:
@@ -17,23 +17,23 @@ targets:
     platform: macOS
     deploymentTarget: "13.0"
     sources:
-      - "Sources/AeroSpaceApp"
+      - "Sources/AeroShiftApp"
       - "resources"
       - "docs/config-examples/default-config.toml"
     dependencies:
-      - package: AeroShiftPackage
+      - package: AeroShift
         product: AppBundle
     # https://developer.apple.com/documentation/xcode/build-settings-reference
     settings:
       base:
         SWIFT_VERSION: 6.2 # Swift Language Version
         GENERATE_INFOPLIST_FILE: YES
-        MARKETING_VERSION: ${XCODEGEN_AEROSPACE_VERSION}
+        MARKETING_VERSION: ${XCODEGEN_AEROSHIFT_VERSION}
         # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
         # Specifies whether the app runs as an agent app. If this key is set to YES, Launch Services runs the app as an agent app.
         # Agent apps do not appear in the Dock or in the Force Quit window (cmd-opt-esc)
         INFOPLIST_KEY_LSUIElement: YES
-        CODE_SIGN_IDENTITY: ${XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY}
+        CODE_SIGN_IDENTITY: ${XCODEGEN_AEROSHIFT_CODE_SIGN_IDENTITY}
       configs:
         Debug:
           PRODUCT_NAME: AeroShift-Debug
@@ -44,7 +44,7 @@ targets:
           SWIFT_TREAT_WARNINGS_AS_ERRORS: YES
           GCC_TREAT_WARNINGS_AS_ERRORS: YES
     entitlements:
-      path: resources/AeroSpace.entitlements
+      path: resources/AeroShift.entitlements
       properties:
         # Accessibility API doesn't work in sandboxed apps
         com.apple.security.app-sandbox: false

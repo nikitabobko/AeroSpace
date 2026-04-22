@@ -88,7 +88,7 @@ private func initServerArgs() {
         index += 1
         switch current {
             case "--version", "-v":
-                exit(EXIT_CODE_ZERO, out: "\(aeroSpaceAppVersion) \(gitHash)")
+                exit(EXIT_CODE_ZERO, out: "\(aeroShiftAppVersion) \(gitHash)")
             case "--config-path":
                 switch args.getOrNil(atIndex: index) {
                     case let arg?: unsafe _serverArgs.configLocation = arg

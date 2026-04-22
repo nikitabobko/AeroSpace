@@ -97,8 +97,8 @@ struct Main {
             }
         }
 
-        let windowId = ProcessInfo.processInfo.environment[AEROSPACE_WINDOW_ID].flatMap(UInt32.init)
-        let workspace = ProcessInfo.processInfo.environment[AEROSPACE_WORKSPACE]
+        let windowId = ProcessInfo.processInfo.environment[AEROSHIFT_WINDOW_ID].flatMap(UInt32.init)
+        let workspace = ProcessInfo.processInfo.environment[AEROSHIFT_WORKSPACE]
 
         // Handle subscribe command specially
         if parsedArgs is SubscribeCmdArgs {

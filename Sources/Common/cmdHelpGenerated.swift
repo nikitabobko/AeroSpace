@@ -1,4 +1,4 @@
-// FILE IS GENERATED FROM docs/aerospace-*.adoc files
+// FILE IS GENERATED FROM docs/aeroshift-*.adoc files
 // TO REGENERATE THE FILE RUN generate.sh
 
 let balance_sizes_help_generated = """

@@ -2,7 +2,7 @@ import AppKit
 import Darwin
 import Foundation
 
-public let socketPath = "/tmp/\(aeroSpaceAppId)-\(unixUserName).sock"
+public let socketPath = "/tmp/\(aeroShiftAppId)-\(unixUserName).sock"
 public let unixUserName = NSUserName()
 public let mainModeId = "main"
 
@@ -24,11 +24,11 @@ public func dieT<T>(
     let message =
         """
         Please report to:
-            https://github.com/Boredphilosopher96/AeroSpace/issues
+            https://github.com/Boredphilosopher96/AeroShift/issues
             Please describe what you did to trigger this error
 
         Message: \(_message)
-        Version: \(aeroSpaceAppVersion)
+        Version: \(aeroShiftAppVersion)
         Git hash: \(gitHash)
         refreshSessionEvent: \(refreshSessionEvent.prettyDescription)
         Date: \(Date.now)

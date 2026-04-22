@@ -1,7 +1,7 @@
 import Foundation
 
 extension JSONEncoder {
-    public static var aeroSpaceDefault: JSONEncoder {
+    public static var aeroShiftDefault: JSONEncoder {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .withoutEscapingSlashes, .sortedKeys]
         return encoder

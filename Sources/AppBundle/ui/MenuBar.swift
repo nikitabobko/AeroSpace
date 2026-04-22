@@ -5,8 +5,8 @@ import SwiftUI
 @MainActor
 public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it be converted to "SwiftUI struct"?
     MenuBarExtra {
-        let shortIdentification = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitShortHash)"
-        let identification      = "\(aeroSpaceAppName) v\(aeroSpaceAppVersion) \(gitHash)"
+        let shortIdentification = "\(aeroShiftAppName) v\(aeroShiftAppVersion) \(gitShortHash)"
+        let identification      = "\(aeroShiftAppName) v\(aeroShiftAppVersion) \(gitHash)"
         Text(shortIdentification)
         Button("Copy to clipboard") { identification.copyToClipboard() }
             .keyboardShortcut("C", modifiers: .command)
@@ -27,7 +27,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             Divider()
         }
         Button {
-            NSWorkspace.shared.open(URL(string: "https://github.com/Boredphilosopher96/AeroSpace").orDie())
+            NSWorkspace.shared.open(URL(string: "https://github.com/Boredphilosopher96/AeroShift").orDie())
             viewModel.sponsorshipMessage = sponsorshipPrompts.randomElement().orDie()
         } label: {
             Text("Open AeroShift fork repository")
@@ -45,7 +45,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         getExperimentalUISettingsMenu(viewModel: viewModel)
         openConfigButton()
         reloadConfigButton()
-        Button("Quit \(aeroSpaceAppName)") {
+        Button("Quit \(aeroShiftAppName)") {
             Task {
                 defer { terminateApp() }
                 try await terminationHandler.beforeTermination()

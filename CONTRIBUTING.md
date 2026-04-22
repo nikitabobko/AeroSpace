@@ -1,14 +1,14 @@
 # Contributing
 
-AeroShift is an unofficial fork of upstream AeroSpace. Keep that distinction explicit in code, docs, release assets, screenshots, and issue reports.
+AeroShift is an unofficial fork of [AeroSpace](https://github.com/nikitabobko/AeroSpace). Keep that distinction explicit in code, docs, release assets, screenshots, and issue reports.
 
 ## Discussions First
 
 Use Discussions in this fork before opening issues:
 
-- https://github.com/Boredphilosopher96/AeroSpace/discussions
+- [AeroShift Discussions](https://github.com/Boredphilosopher96/AeroShift/discussions)
 
-Do not file fork-specific behavior against upstream AeroSpace unless you have reproduced it there too.
+Do not file fork-specific behavior against upstream [AeroSpace](https://github.com/nikitabobko/AeroSpace) unless you have reproduced it there too.
 
 ## Reporting Problems
 
@@ -19,7 +19,7 @@ When reporting a bug or proposing a feature for AeroShift, include:
 - your config
 - AeroShift version
 - macOS version
-- whether the behavior is fork-only or also reproducible in upstream AeroSpace
+- whether the behavior is fork-only or also reproducible in upstream [AeroSpace](https://github.com/nikitabobko/AeroSpace)
 
 ## Pull Requests
 
@@ -29,7 +29,7 @@ When sending a PR:
 
 - use the `AeroShift` and `aeroshift` names for all user-facing artifacts
 - label upstream references as upstream
-- call out any deliberate fork-only divergence from upstream AeroSpace
+- call out any deliberate fork-only divergence from upstream [AeroSpace](https://github.com/nikitabobko/AeroSpace)
 - keep commits scoped and coherent
 
 ## Local Validation

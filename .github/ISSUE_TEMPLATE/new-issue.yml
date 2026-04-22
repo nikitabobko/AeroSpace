@@ -4,7 +4,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        AeroShift is an unofficial fork of AeroSpace. Please use GitHub Discussions in this fork before opening issues: https://github.com/Boredphilosopher96/AeroSpace/discussions
+        AeroShift is an unofficial fork of [AeroSpace](https://github.com/nikitabobko/AeroSpace). Please use GitHub Discussions in this fork before opening issues: https://github.com/Boredphilosopher96/AeroShift/discussions
   - type: checkboxes
     id: checkbox
     attributes:
