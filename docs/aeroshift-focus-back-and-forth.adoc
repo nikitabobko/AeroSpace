@@ -20,7 +20,7 @@ aeroshift focus-back-and-forth [-h|--help]
 {manpurpose}.
 The element is either a window or an empty workspace.
 
-AeroShift stores only one previously focused window in history,
+Aeroshift stores only one previously focused window in history,
 which means that if you close the previous window,
 `focus-back-and-forth` has no window to switch focus to.
 In that case, the command will exit with non-zero exit code.

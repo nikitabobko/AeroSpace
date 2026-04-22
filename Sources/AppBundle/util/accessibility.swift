@@ -12,7 +12,7 @@ func checkAccessibilityPermissions() {
 }
 
 private func resetAccessibility() {
-    _ = try? Process.run(URL(filePath: "/usr/bin/tccutil"), arguments: ["reset", "Accessibility", aeroShiftAppId])
+    _ = try? Process.run(URL(filePath: "/usr/bin/tccutil"), arguments: ["reset", "Accessibility", aeroshiftAppId])
 }
 
 protocol ReadableAttr: Sendable {

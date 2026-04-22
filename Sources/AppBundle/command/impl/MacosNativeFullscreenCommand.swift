@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-/// Problem ID-B6E178F2: It's not first-class citizen command in AeroShift model, since it interacts with macOS API directly.
+/// Problem ID-B6E178F2: It's not first-class citizen command in Aeroshift model, since it interacts with macOS API directly.
 /// Consecutive macos-native-fullscreen commands may not works as expected (because macOS may report correct state with a
 /// delay), or may flicker
 ///

@@ -35,15 +35,15 @@ struct Main {
             print(
                 """
                 aeroshift CLI client version: \(cliClientVersionAndHash)
-                AeroShift.app server version: \(serverVersionAndHash ?? "Unknown. The server is not running")
+                Aeroshift.app server version: \(serverVersionAndHash ?? "Unknown. The server is not running")
                 """,
             )
             if serverVersionAndHash != nil && cliClientVersionAndHash != serverVersionAndHash {
                 eprint(
                     """
-                    Warning: AeroShift client/server versions don't match. Possible fixes:
-                      - Restart AeroShift.app (server restart is required after each update)
-                      - Reinstall and restart AeroShift (corrupted installation)
+                    Warning: Aeroshift client/server versions don't match. Possible fixes:
+                      - Restart Aeroshift.app (server restart is required after each update)
+                      - Reinstall and restart Aeroshift (corrupted installation)
                     """,
                 )
             }
@@ -66,7 +66,7 @@ struct Main {
         let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
 
         if let e = await connection.startBlocking().error {
-            exit(failExitCode, err: "Can't connect to AeroShift server. Is AeroShift.app running?\n\(e.localizedDescription)")
+            exit(failExitCode, err: "Can't connect to Aeroshift server. Is Aeroshift.app running?\n\(e.localizedDescription)")
         }
 
         var stdin = ""
@@ -81,7 +81,7 @@ struct Main {
                     failExitCode,
                     err: """
                         ERROR: Implicit stdin is detected (stdin is not TTY). Implicit stdin was forbidden in upstream AeroSpace v0.20.0.
-                        1. Please supply '--stdin' flag to make stdin explicit and preserve old AeroShift behavior
+                        1. Please supply '--stdin' flag to make stdin explicit and preserve old Aeroshift behavior
                         2. You can also use '--no-stdin' flag to behave as if no stdin was supplied
                         Breaking change issue in upstream AeroSpace: https://github.com/nikitabobko/AeroSpace/issues/1683
                         """,
@@ -113,12 +113,12 @@ struct Main {
         if ans.exitCode != EXIT_CODE_ZERO && ans.serverVersionAndHash != cliClientVersionAndHash {
             eprint(
                 """
-                Warning: AeroShift client/server versions don't match
+                Warning: Aeroshift client/server versions don't match
                   - aeroshift CLI client version: \(cliClientVersionAndHash)
-                  - AeroShift.app server version: \(ans.serverVersionAndHash)
+                  - Aeroshift.app server version: \(ans.serverVersionAndHash)
                   Possible fixes:
-                  - Restart AeroShift.app (server restart is required after each update)
-                  - Reinstall and restart AeroShift (corrupted installation)
+                  - Restart Aeroshift.app (server restart is required after each update)
+                  - Reinstall and restart Aeroshift (corrupted installation)
                 """,
             )
         }

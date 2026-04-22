@@ -1,11 +1,11 @@
-= AeroShift Goodies
+= Aeroshift Goodies
 include::util/site-attributes.adoc[]
 
 include::util/header.adoc[]
 
-NOTE: AeroShift is an unofficial fork of https://github.com/nikitabobko/AeroSpace[AeroSpace]. Some third-party integrations below were originally written for https://github.com/nikitabobko/AeroSpace[AeroSpace] and may need small command-name adjustments for `aeroshift`.
+NOTE: Aeroshift is an unofficial fork of https://github.com/nikitabobko/AeroSpace[AeroSpace]. Some third-party integrations below were originally written for https://github.com/nikitabobko/AeroSpace[AeroSpace] and may need small command-name adjustments for `aeroshift`.
 
-Do you have a cool automatization, AeroShift integration, or workflow?
+Do you have a cool automatization, Aeroshift integration, or workflow?
 Feel free to open an issue or pull request to add it to this list!
 The source code of the page can be found in the `./docs` directory.
 
@@ -40,13 +40,13 @@ full-screen-api.transition-duration.leave = 0 0
 
 To highlight the focused window with colored border you can use link:https://github.com/FelixKratz/JankyBorders[JankyBorders].
 
-You can also use `after-startup-command` to start JankyBorders together with AeroShift
+You can also use `after-startup-command` to start JankyBorders together with Aeroshift
 
 [source,toml]
 ----
 after-startup-command = [
     # JankyBorders has a built-in detection of already running process,
-    # so it won't be run twice on AeroShift restart
+    # so it won't be run twice on Aeroshift restart
     'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0'
 ]
 ----
@@ -56,7 +56,7 @@ after-startup-command = [
 
 There is a third-party Raycast extension for https://github.com/nikitabobko/AeroSpace[AeroSpace]: https://www.raycast.com/limonkufu/aerospace
 
-It assumes upstream naming, so review and adapt its commands before using it with AeroShift.
+It assumes upstream naming, so review and adapt its commands before using it with Aeroshift.
 
 If you struggle remembering shortcuts, it's useful to search for commands until they become muscle memory.
 
@@ -94,17 +94,17 @@ CAUTION: Make sure that you trust project authors before running the distributed
 Alternatively, inspect the source code, and build it yourself.
 
 [#show-aeroshift-workspaces-in-sketchybar]
-== Show AeroShift workspaces in Sketchybar
+== Show Aeroshift workspaces in Sketchybar
 
-You can integrate AeroShift workspace indicators with link:https://github.com/FelixKratz/SketchyBar[Sketchybar].
+You can integrate Aeroshift workspace indicators with link:https://github.com/FelixKratz/SketchyBar[Sketchybar].
 Use these snippets as a starting point.
 
 .~/.aeroshift.toml
 [source,toml]
 ----
-# Run Sketchybar together with AeroShift
+# Run Sketchybar together with Aeroshift
 # sketchybar has a built-in detection of already running process,
-# so it won't be run twice on AeroShift restart
+# so it won't be run twice on Aeroshift restart
 after-startup-command = ['exec-and-forget sketchybar']
 
 # Notify Sketchybar about workspace change
@@ -148,11 +148,11 @@ fi
 ----
 
 [#show-aeroshift-workspaces-in-simple-bar]
-== Show AeroShift workspaces in simple-bar
+== Show Aeroshift workspaces in simple-bar
 
-link:https://github.com/Jean-Tinland/simple-bar[simple-bar] can be used to display AeroShift workspaces.
+link:https://github.com/Jean-Tinland/simple-bar[simple-bar] can be used to display Aeroshift workspaces.
 
-In order to sync simple-bar with AeroShift, add these lines to your AeroShift config file:
+In order to sync simple-bar with Aeroshift, add these lines to your Aeroshift config file:
 
 .~/.aeroshift.toml
 [source,toml]

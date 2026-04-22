@@ -5,8 +5,8 @@ import SwiftUI
 @MainActor
 public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it be converted to "SwiftUI struct"?
     MenuBarExtra {
-        let shortIdentification = "\(aeroShiftAppName) v\(aeroShiftAppVersion) \(gitShortHash)"
-        let identification      = "\(aeroShiftAppName) v\(aeroShiftAppVersion) \(gitHash)"
+        let shortIdentification = "\(aeroshiftAppName) v\(aeroshiftAppVersion) \(gitShortHash)"
+        let identification      = "\(aeroshiftAppName) v\(aeroshiftAppVersion) \(gitHash)"
         Text(shortIdentification)
         Button("Copy to clipboard") { identification.copyToClipboard() }
             .keyboardShortcut("C", modifiers: .command)
@@ -27,10 +27,10 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             Divider()
         }
         Button {
-            NSWorkspace.shared.open(URL(string: "https://github.com/Boredphilosopher96/AeroShift").orDie())
+            NSWorkspace.shared.open(URL(string: "https://github.com/Boredphilosopher96/Aeroshift").orDie())
             viewModel.sponsorshipMessage = sponsorshipPrompts.randomElement().orDie()
         } label: {
-            Text("Open AeroShift fork repository")
+            Text("Open Aeroshift fork repository")
             Text(viewModel.sponsorshipMessage)
         }
         Divider()
@@ -45,7 +45,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         getExperimentalUISettingsMenu(viewModel: viewModel)
         openConfigButton()
         reloadConfigButton()
-        Button("Quit \(aeroShiftAppName)") {
+        Button("Quit \(aeroshiftAppName)") {
             Task {
                 defer { terminateApp() }
                 try await terminationHandler.beforeTermination()

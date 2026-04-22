@@ -32,8 +32,8 @@ fi
 ./test.sh
 ./build-release.sh --build-version "$build_version"
 
-git tag -a "v$build_version" -m "v$build_version" && git push git@github.com:Boredphilosopher96/AeroShift.git "v$build_version"
-link="https://github.com/Boredphilosopher96/AeroShift/releases/new?tag=v$build_version"
+git tag -a "v$build_version" -m "v$build_version" && git push git@github.com:Boredphilosopher96/Aeroshift.git "v$build_version"
+link="https://github.com/Boredphilosopher96/Aeroshift/releases/new?tag=v$build_version"
 open "$link" || { echo "$link"; exit 1; }
 sleep 1
 open -R "./.release/$release_root_prefix$build_version.zip"
@@ -43,7 +43,7 @@ read -r
 
 ./script/build-brew-cask.sh \
     --cask-name "$primary_cask_name" \
-    --zip-uri "https://github.com/Boredphilosopher96/AeroShift/releases/download/v$build_version/$release_root_prefix$build_version.zip" \
+    --zip-uri "https://github.com/Boredphilosopher96/Aeroshift/releases/download/v$build_version/$release_root_prefix$build_version.zip" \
     --build-version "$build_version"
 
 eval "$cask_git_repo_path/pin.sh"

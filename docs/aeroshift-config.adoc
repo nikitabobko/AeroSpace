@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aeroshift-config
 // tag::purpose[]
-:manpurpose: Query AeroShift config options
+:manpurpose: Query Aeroshift config options
 // end::purpose[]
 
 // =========================================================== Synopsis

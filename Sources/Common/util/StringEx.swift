@@ -77,7 +77,7 @@ extension String {
                     switch token {
                         case .literal(let literal): .success(literal)
                         case .interVar(let value):
-                            variables[value].orFailure("Env variable '\(value)' isn't presented in AeroShift.app env vars, "
+                            variables[value].orFailure("Env variable '\(value)' isn't presented in Aeroshift.app env vars, "
                                 + "or not available for interpolation (because it's mutated)")
                     }
                 }

@@ -2,7 +2,7 @@ import AppKit
 import Darwin
 import Foundation
 
-public let socketPath = "/tmp/\(aeroShiftAppId)-\(unixUserName).sock"
+public let socketPath = "/tmp/\(aeroshiftAppId)-\(unixUserName).sock"
 public let unixUserName = NSUserName()
 public let mainModeId = "main"
 
@@ -24,11 +24,11 @@ public func dieT<T>(
     let message =
         """
         Please report to:
-            https://github.com/Boredphilosopher96/AeroShift/issues
+            https://github.com/Boredphilosopher96/Aeroshift/issues
             Please describe what you did to trigger this error
 
         Message: \(_message)
-        Version: \(aeroShiftAppVersion)
+        Version: \(aeroshiftAppVersion)
         Git hash: \(gitHash)
         refreshSessionEvent: \(refreshSessionEvent.prettyDescription)
         Date: \(Date.now)
@@ -50,7 +50,7 @@ public func dieT<T>(
             filenameIfConsoleApp: recursionDetectorDuringTermination
                 ? "aeroshift-runtime-error-recursion.txt"
                 : "aeroshift-runtime-error.txt",
-            title: "AeroShift Runtime Error",
+            title: "Aeroshift Runtime Error",
             message: message,
         )
     }

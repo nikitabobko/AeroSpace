@@ -9,11 +9,11 @@ aeroshift [-h|--help] [-v|--version] <subcommand> [<subcommand-options>...] [<su
 
 == Description
 
-AeroShift is an unofficial fork of https://github.com/nikitabobko/AeroSpace[AeroSpace], the i3-like tiling window manager for macOS.
+Aeroshift is an unofficial fork of https://github.com/nikitabobko/AeroSpace[AeroSpace], the i3-like tiling window manager for macOS.
 
-*aeroshift* command line program is used to manipulate AeroShift and query its state.
+*aeroshift* command line program is used to manipulate Aeroshift and query its state.
 
-See https://github.com/Boredphilosopher96/AeroShift/blob/main/docs/commands.adoc[AeroShift command docs] for available <subcommand> options
+See https://github.com/Boredphilosopher96/Aeroshift/blob/main/docs/commands.adoc[Aeroshift command docs] for available <subcommand> options
 
 See each <subcommand> individual man page for <subcommand-options> and <subcommand-arguments>
 

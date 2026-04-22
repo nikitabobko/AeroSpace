@@ -1,5 +1,5 @@
 ifndef::env-site[]
 :doctype: manpage
-:manmanual: AeroShift Manual
-:mansource: AeroShift
+:manmanual: Aeroshift Manual
+:mansource: Aeroshift
 endif::[]

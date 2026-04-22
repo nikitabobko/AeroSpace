@@ -21,9 +21,9 @@ aeroshift enable [-h|--help] off [--fail-if-noop]
 // tag::body[]
 {manpurpose}
 
-When you disable AeroShift, windows from currently invisible workspaces will be placed to the visible area of the screen
+When you disable Aeroshift, windows from currently invisible workspaces will be placed to the visible area of the screen
 
-Key events are not intercepted when AeroShift is disabled
+Key events are not intercepted when Aeroshift is disabled
 
 // =========================================================== Options
 include::util/conditional-options-header.adoc[]

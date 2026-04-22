@@ -64,11 +64,11 @@ struct ServerArgs: Sendable {
 }
 
 private let serverHelp = """
-    USAGE: \(CommandLine.arguments.first ?? "AeroShift.app/Contents/MacOS/AeroShift") [<options>]
+    USAGE: \(CommandLine.arguments.first ?? "Aeroshift.app/Contents/MacOS/Aeroshift") [<options>]
 
     OPTIONS:
       -h, --help              Print help
-      -v, --version           Print AeroShift.app version
+      -v, --version           Print Aeroshift.app version
       --config-path <path>    Config path. It will take priority over ~/.aeroshift.toml
                               and ${XDG_CONFIG_HOME}/aeroshift/aeroshift.toml
       --read-only             Disable window management.
@@ -88,7 +88,7 @@ private func initServerArgs() {
         index += 1
         switch current {
             case "--version", "-v":
-                exit(EXIT_CODE_ZERO, out: "\(aeroShiftAppVersion) \(gitHash)")
+                exit(EXIT_CODE_ZERO, out: "\(aeroshiftAppVersion) \(gitHash)")
             case "--config-path":
                 switch args.getOrNil(atIndex: index) {
                     case let arg?: unsafe _serverArgs.configLocation = arg

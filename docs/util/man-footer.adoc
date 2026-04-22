@@ -1,13 +1,13 @@
 == Resources
 
-*Fork repository:* https://github.com/Boredphilosopher96/AeroShift[AeroShift repository] +
+*Fork repository:* https://github.com/Boredphilosopher96/Aeroshift[Aeroshift repository] +
 *Upstream repository:* https://github.com/nikitabobko/AeroSpace[AeroSpace repository] +
 *Upstream docs:* https://github.com/nikitabobko/AeroSpace/tree/main/docs[AeroSpace docs] +
-*Guide:* https://github.com/Boredphilosopher96/AeroShift/blob/main/docs/guide.adoc +
+*Guide:* https://github.com/Boredphilosopher96/Aeroshift/blob/main/docs/guide.adoc +
 
 == BUGS
 
-Bugs can be discussed at https://github.com/Boredphilosopher96/AeroShift/discussions/categories/potential-bugs
+Bugs can be discussed at https://github.com/Boredphilosopher96/Aeroshift/discussions/categories/potential-bugs
 
 If a bug also reproduces in upstream https://github.com/nikitabobko/AeroSpace[AeroSpace], please say so explicitly.
 
@@ -15,7 +15,7 @@ If a bug also reproduces in upstream https://github.com/nikitabobko/AeroSpace[Ae
 
 Copyright (C) 2023 Nikita Bobko +
 Free use of this software is granted under the terms of the MIT License +
-You can find the full text of AeroShift license and its dependencies in the 'legal' directory of the distributed zip archive.
+You can find the full text of Aeroshift license and its dependencies in the 'legal' directory of the distributed zip archive.
 
 == AUTHOR
 

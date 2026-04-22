@@ -1,5 +1,5 @@
 // NoMachine is weird. It shows one visible window, but creates 2 AX objects.
-// AeroShift has to deliberatery ignore the redundant AX object to avoid weird focus issues
+// Aeroshift has to deliberatery ignore the redundant AX object to avoid weird focus issues
 // ./nomachine_welcome_window_1.json5 -- valid AX object
 // ./nomachine_welcome_window_2.json5 -- weird AX object
 {

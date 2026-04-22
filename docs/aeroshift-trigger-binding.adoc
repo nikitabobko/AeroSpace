@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aeroshift-trigger-binding
 // tag::purpose[]
-:manpurpose: Trigger an AeroShift binding as if it was pressed by user
+:manpurpose: Trigger an Aeroshift binding as if it was pressed by user
 // end::purpose[]
 
 // =========================================================== Synopsis

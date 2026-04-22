@@ -1,10 +1,10 @@
 # Xcode project configuration. Managed by https://github.com/yonaskolb/XcodeGen
 # Xcode is only used to build the release App Bundle. Debug builds only use Swift Package Manager
 
-name: AeroShift
+name: Aeroshift
 
 packages:
-  AeroShift:
+  Aeroshift:
     path: .
 
 configs:
@@ -12,16 +12,16 @@ configs:
   Release: release
 
 targets:
-  AeroShift:
+  Aeroshift:
     type: application
     platform: macOS
     deploymentTarget: "13.0"
     sources:
-      - "Sources/AeroShiftApp"
+      - "Sources/AeroshiftApp"
       - "resources"
       - "docs/config-examples/default-config.toml"
     dependencies:
-      - package: AeroShift
+      - package: Aeroshift
         product: AppBundle
     # https://developer.apple.com/documentation/xcode/build-settings-reference
     settings:
@@ -36,15 +36,15 @@ targets:
         CODE_SIGN_IDENTITY: ${XCODEGEN_AEROSHIFT_CODE_SIGN_IDENTITY}
       configs:
         Debug:
-          PRODUCT_NAME: AeroShift-Debug
+          PRODUCT_NAME: Aeroshift-Debug
           PRODUCT_BUNDLE_IDENTIFIER: io.github.boredphilosopher96.aeroshift.debug
         Release:
-          PRODUCT_NAME: AeroShift
+          PRODUCT_NAME: Aeroshift
           PRODUCT_BUNDLE_IDENTIFIER: io.github.boredphilosopher96.aeroshift
           SWIFT_TREAT_WARNINGS_AS_ERRORS: YES
           GCC_TREAT_WARNINGS_AS_ERRORS: YES
     entitlements:
-      path: resources/AeroShift.entitlements
+      path: resources/Aeroshift.entitlements
       properties:
         # Accessibility API doesn't work in sandboxed apps
         com.apple.security.app-sandbox: false

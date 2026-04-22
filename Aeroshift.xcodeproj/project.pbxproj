@@ -7,83 +7,83 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		61D62901102EA744BEA2B8FB /* default-config.toml in Resources */ = {isa = PBXBuildFile; fileRef = 112007BDE009B28F367DEF4F /* default-config.toml */; };
-		B3D04F53055AA4DD97286929 /* AeroShiftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97A216C1A18E77D0947D5218 /* AeroShiftApp.swift */; };
-		DD9A3668CF8AB11C757F61E5 /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = D5931B76D900EC8C70A08A0A /* AppBundle */; };
-		F83F1A024F09EB5917591201 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1A8A756DA5A53716FD412035 /* Assets.xcassets */; };
+		3346DCAE7CB5F705F2F313AC /* AeroshiftApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCF3C774A43AE92588B2435F /* AeroshiftApp.swift */; };
+		531C5E5913F115FC3009A421 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4255584B7C06B56461A745D1 /* Assets.xcassets */; };
+		9EDB784561905B96A5298193 /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = 3F7A79B1F9F35ECCF6F3DC64 /* AppBundle */; };
+		F8B2F92708751C42948F6AC2 /* default-config.toml in Resources */ = {isa = PBXBuildFile; fileRef = DA2B2A6F8D390DFB37CC9F76 /* default-config.toml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		112007BDE009B28F367DEF4F /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
-		1A8A756DA5A53716FD412035 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		1E48FFB9A2BAE894F14F2EE1 /* AeroShift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = AeroShift; path = .; sourceTree = SOURCE_ROOT; };
-		97A216C1A18E77D0947D5218 /* AeroShiftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroShiftApp.swift; sourceTree = "<group>"; };
-		A3D8B32B36394DCA992C3403 /* AeroShift.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroShift.entitlements; sourceTree = "<group>"; };
-		CB676DAE72E1EFC48F277405 /* AeroShift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AeroShift.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		027BC0BC3D94CA72E3A0EE01 /* Aeroshift */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Aeroshift; path = .; sourceTree = SOURCE_ROOT; };
+		1A090506FBCAC4424ED29AF5 /* Aeroshift.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Aeroshift.entitlements; sourceTree = "<group>"; };
+		4255584B7C06B56461A745D1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DA2B2A6F8D390DFB37CC9F76 /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
+		DAEB10D7B242B971F7FCFCFA /* Aeroshift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Aeroshift.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DCF3C774A43AE92588B2435F /* AeroshiftApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AeroshiftApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		AFC5405758A7576B6C23DD9D /* Frameworks */ = {
+		91A7F737ED299D55D8D3F971 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DD9A3668CF8AB11C757F61E5 /* AppBundle in Frameworks */,
+				9EDB784561905B96A5298193 /* AppBundle in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		16BBB995AF4508CBE90622AF /* config-examples */ = {
+		0F1B8EAA291B8B1380F64B0C /* config-examples */ = {
 			isa = PBXGroup;
 			children = (
-				112007BDE009B28F367DEF4F /* default-config.toml */,
+				DA2B2A6F8D390DFB37CC9F76 /* default-config.toml */,
 			);
 			name = "config-examples";
 			path = "docs/config-examples";
 			sourceTree = "<group>";
 		};
-		2706F78619EC3A9694B93A4A /* Packages */ = {
+		272BF8CD511830408AD32320 = {
 			isa = PBXGroup;
 			children = (
-				1E48FFB9A2BAE894F14F2EE1 /* AeroShift */,
-			);
-			name = Packages;
-			sourceTree = "<group>";
-		};
-		5C0BCAE834CA4CE4FD6178C8 = {
-			isa = PBXGroup;
-			children = (
-				97862B3B32105186CAFB283F /* AeroShiftApp */,
-				16BBB995AF4508CBE90622AF /* config-examples */,
-				2706F78619EC3A9694B93A4A /* Packages */,
-				7AAC90B8D4BDD0A8B81B6D27 /* resources */,
-				F0525F182F59FE30A02CAE24 /* Products */,
+				4FB641F4F17D7E8FE33EB945 /* AeroshiftApp */,
+				0F1B8EAA291B8B1380F64B0C /* config-examples */,
+				C7AC89F1943F82055511A4A5 /* Packages */,
+				5E49B4DF3B041813538DAE1A /* resources */,
+				EB22E9B04D303C5BD47F347D /* Products */,
 			);
 			sourceTree = "<group>";
 		};
-		7AAC90B8D4BDD0A8B81B6D27 /* resources */ = {
+		4FB641F4F17D7E8FE33EB945 /* AeroshiftApp */ = {
 			isa = PBXGroup;
 			children = (
-				A3D8B32B36394DCA992C3403 /* AeroShift.entitlements */,
-				1A8A756DA5A53716FD412035 /* Assets.xcassets */,
+				DCF3C774A43AE92588B2435F /* AeroshiftApp.swift */,
+			);
+			name = AeroshiftApp;
+			path = Sources/AeroshiftApp;
+			sourceTree = "<group>";
+		};
+		5E49B4DF3B041813538DAE1A /* resources */ = {
+			isa = PBXGroup;
+			children = (
+				1A090506FBCAC4424ED29AF5 /* Aeroshift.entitlements */,
+				4255584B7C06B56461A745D1 /* Assets.xcassets */,
 			);
 			path = resources;
 			sourceTree = "<group>";
 		};
-		97862B3B32105186CAFB283F /* AeroShiftApp */ = {
+		C7AC89F1943F82055511A4A5 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				97A216C1A18E77D0947D5218 /* AeroShiftApp.swift */,
+				027BC0BC3D94CA72E3A0EE01 /* Aeroshift */,
 			);
-			name = AeroShiftApp;
-			path = Sources/AeroShiftApp;
+			name = Packages;
 			sourceTree = "<group>";
 		};
-		F0525F182F59FE30A02CAE24 /* Products */ = {
+		EB22E9B04D303C5BD47F347D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CB676DAE72E1EFC48F277405 /* AeroShift.app */,
+				DAEB10D7B242B971F7FCFCFA /* Aeroshift.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -91,30 +91,30 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		9B767AA0BE72C75E73101AC6 /* AeroShift */ = {
+		E91B9A7B3E83DD5E40F2C84E /* Aeroshift */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = BD19C87F9253A3DB1179185E /* Build configuration list for PBXNativeTarget "AeroShift" */;
+			buildConfigurationList = BED7EBC2CF85FDA3F89A80D9 /* Build configuration list for PBXNativeTarget "Aeroshift" */;
 			buildPhases = (
-				C7F133ED98530B1F1C9C1F31 /* Sources */,
-				84228BEE3B049950018D3473 /* Resources */,
-				AFC5405758A7576B6C23DD9D /* Frameworks */,
+				4F992DBA94DDBAE6B661DACF /* Sources */,
+				F64BE59F6E69CC833321C65C /* Resources */,
+				91A7F737ED299D55D8D3F971 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = AeroShift;
+			name = Aeroshift;
 			packageProductDependencies = (
-				D5931B76D900EC8C70A08A0A /* AppBundle */,
+				3F7A79B1F9F35ECCF6F3DC64 /* AppBundle */,
 			);
-			productName = AeroShift;
-			productReference = CB676DAE72E1EFC48F277405 /* AeroShift.app */;
+			productName = Aeroshift;
+			productReference = DAEB10D7B242B971F7FCFCFA /* Aeroshift.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		D658B492A1EDC4924DAF0701 /* Project object */ = {
+		21CFD126E147FA5A086F071F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
@@ -122,79 +122,57 @@
 				TargetAttributes = {
 				};
 			};
-			buildConfigurationList = F7E67570DCE99482853AA319 /* Build configuration list for PBXProject "AeroShift" */;
+			buildConfigurationList = ABE171286B0775566DC42ACE /* Build configuration list for PBXProject "Aeroshift" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				Base,
 				en,
 			);
-			mainGroup = 5C0BCAE834CA4CE4FD6178C8;
+			mainGroup = 272BF8CD511830408AD32320;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
-				5BDACD595B4FD03E825D8DB1 /* XCLocalSwiftPackageReference "." */,
+				2835D6028FAC6D59AC0E8655 /* XCLocalSwiftPackageReference "." */,
 			);
 			preferredProjectObjectVersion = 77;
-			productRefGroup = F0525F182F59FE30A02CAE24 /* Products */;
+			productRefGroup = EB22E9B04D303C5BD47F347D /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				9B767AA0BE72C75E73101AC6 /* AeroShift */,
+				E91B9A7B3E83DD5E40F2C84E /* Aeroshift */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		84228BEE3B049950018D3473 /* Resources */ = {
+		F64BE59F6E69CC833321C65C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F83F1A024F09EB5917591201 /* Assets.xcassets in Resources */,
-				61D62901102EA744BEA2B8FB /* default-config.toml in Resources */,
+				531C5E5913F115FC3009A421 /* Assets.xcassets in Resources */,
+				F8B2F92708751C42948F6AC2 /* default-config.toml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		C7F133ED98530B1F1C9C1F31 /* Sources */ = {
+		4F992DBA94DDBAE6B661DACF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B3D04F53055AA4DD97286929 /* AeroShiftApp.swift in Sources */,
+				3346DCAE7CB5F705F2F313AC /* AeroshiftApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		27A9A4E810070435299AC7A0 /* Debug */ = {
+		3223A04B6D3478D45A0C7A89 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = resources/AeroShift.entitlements;
-				CODE_SIGN_IDENTITY = "aeroshift-codesign-certificate";
-				COMBINE_HIDPI_IMAGES = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_LSUIElement = YES;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 13.0;
-				MARKETING_VERSION = "0.0.0-SNAPSHOT";
-				PRODUCT_BUNDLE_IDENTIFIER = io.github.boredphilosopher96.aeroshift.debug;
-				PRODUCT_NAME = "AeroShift-Debug";
-				SDKROOT = macosx;
-				SWIFT_VERSION = 6.2;
-			};
-			name = Debug;
-		};
-		91CB34D9A55631C752B7E1B7 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = resources/AeroShift.entitlements;
+				CODE_SIGN_ENTITLEMENTS = resources/Aeroshift.entitlements;
 				CODE_SIGN_IDENTITY = "aeroshift-codesign-certificate";
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_TREAT_WARNINGS_AS_ERRORS = YES;
@@ -207,14 +185,36 @@
 				MACOSX_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = "0.0.0-SNAPSHOT";
 				PRODUCT_BUNDLE_IDENTIFIER = io.github.boredphilosopher96.aeroshift;
-				PRODUCT_NAME = AeroShift;
+				PRODUCT_NAME = Aeroshift;
 				SDKROOT = macosx;
 				SWIFT_TREAT_WARNINGS_AS_ERRORS = YES;
 				SWIFT_VERSION = 6.2;
 			};
 			name = Release;
 		};
-		B1E90431BA04676AC831276F /* Release */ = {
+		B05BEFEE1EDA9C962C5A15ED /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = resources/Aeroshift.entitlements;
+				CODE_SIGN_IDENTITY = "aeroshift-codesign-certificate";
+				COMBINE_HIDPI_IMAGES = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSUIElement = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MARKETING_VERSION = "0.0.0-SNAPSHOT";
+				PRODUCT_BUNDLE_IDENTIFIER = io.github.boredphilosopher96.aeroshift.debug;
+				PRODUCT_NAME = "Aeroshift-Debug";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 6.2;
+			};
+			name = Debug;
+		};
+		C5797852005C3F185045C059 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -269,7 +269,7 @@
 			};
 			name = Release;
 		};
-		DB399AFB84BE66471FA79BC1 /* Debug */ = {
+		E91F33EEF38A248548C8C1AE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -334,20 +334,20 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		BD19C87F9253A3DB1179185E /* Build configuration list for PBXNativeTarget "AeroShift" */ = {
+		ABE171286B0775566DC42ACE /* Build configuration list for PBXProject "Aeroshift" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				27A9A4E810070435299AC7A0 /* Debug */,
-				91CB34D9A55631C752B7E1B7 /* Release */,
+				E91F33EEF38A248548C8C1AE /* Debug */,
+				C5797852005C3F185045C059 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
-		F7E67570DCE99482853AA319 /* Build configuration list for PBXProject "AeroShift" */ = {
+		BED7EBC2CF85FDA3F89A80D9 /* Build configuration list for PBXNativeTarget "Aeroshift" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DB399AFB84BE66471FA79BC1 /* Debug */,
-				B1E90431BA04676AC831276F /* Release */,
+				B05BEFEE1EDA9C962C5A15ED /* Debug */,
+				3223A04B6D3478D45A0C7A89 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -355,18 +355,18 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		5BDACD595B4FD03E825D8DB1 /* XCLocalSwiftPackageReference "." */ = {
+		2835D6028FAC6D59AC0E8655 /* XCLocalSwiftPackageReference "." */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = .;
 		};
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		D5931B76D900EC8C70A08A0A /* AppBundle */ = {
+		3F7A79B1F9F35ECCF6F3DC64 /* AppBundle */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AppBundle;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
-	rootObject = D658B492A1EDC4924DAF0701 /* Project object */;
+	rootObject = 21CFD126E147FA5A086F071F /* Project object */;
 }

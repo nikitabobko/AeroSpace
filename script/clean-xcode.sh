@@ -4,8 +4,8 @@ source ./script/setup.sh
 
 ./script/check-uncommitted-files.sh
 
-rm -rf ~/Library/Developer/Xcode/DerivedData/AeroShift-*
+rm -rf ~/Library/Developer/Xcode/DerivedData/Aeroshift-*
 rm -rf ./.xcode-build
 
-rm -rf AeroShift.xcodeproj
+rm -rf Aeroshift.xcodeproj
 ./generate.sh

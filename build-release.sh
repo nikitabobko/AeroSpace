@@ -44,7 +44,7 @@ rm -rf .release && mkdir .release
 xcode_configuration="Release"
 xcodebuild -version
 xcodebuild-pretty .release/xcodebuild.log clean build \
-    -scheme AeroShift \
+    -scheme Aeroshift \
     -destination "generic/platform=macOS" \
     -configuration "$xcode_configuration" \
     -derivedDataPath .xcode-build

@@ -11,7 +11,7 @@ struct ListModesCommand: Command {
             case args.outputOnlyCount:
                 .succ(io.out("\(modes.count)"))
             case args.json:
-                JSONEncoder.aeroShiftDefault.encodeToString(modes.map { ["mode-id": $0] }).map { .succ(io.out($0)) }
+                JSONEncoder.aeroshiftDefault.encodeToString(modes.map { ["mode-id": $0] }).map { .succ(io.out($0)) }
                     ?? .fail(io.err("Failed to encode JSON"))
             default:
                 .succ(io.out(modes))

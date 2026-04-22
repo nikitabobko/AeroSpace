@@ -20,10 +20,10 @@ func startUnixSocketServer() {
 func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) async {
     if serverArgs.isReadOnly { return }
     if !isDebug { return }
-    let socketFile = "/tmp/\(stableAeroShiftAppId)-\(unixUserName).sock"
+    let socketFile = "/tmp/\(stableAeroshiftAppId)-\(unixUserName).sock"
     let connection = NWConnection(to: NWEndpoint.unix(path: socketFile), using: .tcp)
     defer { connection.cancel() }
-    if await connection.startBlocking().error != nil { // Can't connect, AeroShift.app is not running
+    if await connection.startBlocking().error != nil { // Can't connect, Aeroshift.app is not running
         return
     }
 
@@ -32,7 +32,7 @@ func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) async {
     _ = await connection.readNonAtomic()
 }
 
-private let serverVersionAndHash = "\(aeroShiftAppVersion) \(gitHash)"
+private let serverVersionAndHash = "\(aeroshiftAppVersion) \(gitHash)"
 
 private func newConnection(_ connection: NWConnection) async { // todo add exit codes
     func answerToClient(exitCode: Int32, stdout: String = "", stderr: String = "") async {
@@ -76,7 +76,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
         guard let token: RunSessionGuard = await .isServerEnabled(orIsEnableCommand: parsedCmd.cmdOrNil) else {
             await answerToClient(
                 exitCode: EXIT_CODE_TWO,
-                stderr: "\(aeroShiftAppName) server is disabled and doesn't accept commands. " +
+                stderr: "\(aeroshiftAppName) server is disabled and doesn't accept commands. " +
                     "You can use 'aeroshift enable on' to enable the server",
             )
             continue
@@ -114,7 +114,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
                         serverVersionAndHash: serverVersionAndHash,
                     )
                 if request.windowId == nil || request.workspace == nil {
-                    answer.stderr += "\n\nAeroShift client has sent incomplete JSON request. 'windowId' or/and 'workspace' fields are missing. Please forward your AEROSHIFT_WINDOW_ID and AEROSHIFT_WORKSPACE environment variables to these JSON fields. If the appropriate environment variables are empty, pass explicit 'null' in the JSON."
+                    answer.stderr += "\n\nAeroshift client has sent incomplete JSON request. 'windowId' or/and 'workspace' fields are missing. Please forward your AEROSHIFT_WINDOW_ID and AEROSHIFT_WORKSPACE environment variables to these JSON fields. If the appropriate environment variables are empty, pass explicit 'null' in the JSON."
                 }
                 await answerToClient(answer)
                 continue
