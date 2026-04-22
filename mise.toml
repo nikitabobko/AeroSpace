@@ -5,6 +5,7 @@ ruby.compile = false
 
 [tools]
 ruby = "3.4"
+swift = "6.3"
 swiftlint = "0.63.2"
 swiftformat = "0.60.1"
 xcodegen = "2.45.3"
