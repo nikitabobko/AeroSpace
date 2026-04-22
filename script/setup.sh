@@ -16,6 +16,9 @@ export xdg_config_subdir="aeroshift"
 export xdg_config_filename="aeroshift.toml"
 export primary_cask_name="aeroshift"
 export dev_cask_name="aeroshift-dev"
+export homebrew_tap_owner="Boredphilosopher96"
+export homebrew_tap_name="aeroshift"
+export homebrew_tap_repo_name="homebrew-aeroshift"
 
 if command -v mise > /dev/null 2>&1; then
     eval "$(mise env -s bash)"

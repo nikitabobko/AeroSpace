@@ -24,8 +24,9 @@ brew list aerospace > /dev/null 2>&1 && brew uninstall aerospace
 brew list "$dev_cask_name" > /dev/null 2>&1 && brew uninstall "$dev_cask_name"
 brew list "$primary_cask_name" > /dev/null 2>&1 && brew uninstall "$primary_cask_name"
 
-brew_tap_namespace="$(brew --repository)/Library/Taps/aeroshift-user"
-brew_tap_root="$brew_tap_namespace/homebrew-aeroshift-tap"
+brew_tap_owner_dir="$(printf '%s' "$homebrew_tap_owner" | tr '[:upper:]' '[:lower:]')"
+brew_tap_namespace="$(brew --repository)/Library/Taps/$brew_tap_owner_dir"
+brew_tap_root="$brew_tap_namespace/$homebrew_tap_repo_name"
 cleanup-brew-tap() {
     rm -rf "$brew_tap_namespace"
 }
@@ -35,4 +36,4 @@ rm -rf "$brew_tap_namespace"
 mkdir -p "$brew_tap_root/Casks"
 cp "./.release/$dev_cask_name.rb" "$brew_tap_root/Casks/$dev_cask_name.rb"
 
-HOMEBREW_NO_AUTO_UPDATE=1 brew install --cask "aeroshift-user/aeroshift-tap/$dev_cask_name"
+HOMEBREW_NO_AUTO_UPDATE=1 brew install --cask "$brew_tap_owner_dir/$homebrew_tap_name/$dev_cask_name"
