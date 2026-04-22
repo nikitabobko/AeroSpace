@@ -211,3 +211,10 @@ public func allowOnlyCancellationError<T>(_ block: () async throws -> sending T)
         die("throws must only be used for CancellationError")
     }
 }
+
+@inlinable public func zipIfCountsAreEqual<C1, C2>(_ c1: C1, _ c2: C2) -> Zip2Sequence<C1, C2>? where C1: Collection, C2: Collection {
+    switch c1.count == c2.count {
+        case true: zip(c1, c2)
+        case false: nil
+    }
+}
