@@ -19,6 +19,7 @@ export PATH
 
 brew list aerospace-dev-user/aerospace-dev-tap/aerospace-dev > /dev/null 2>&1 && brew uninstall aerospace-dev-user/aerospace-dev-tap/aerospace-dev # Compatibility. Drop after a while
 brew list nikitabobko/local-tap/aerospace-dev > /dev/null 2>&1 && brew uninstall nikitabobko/local-tap/aerospace-dev
+brew list aerospace-dev > /dev/null 2>&1 && brew uninstall aerospace-dev
 brew list aerospace > /dev/null 2>&1 && brew uninstall aerospace
 brew list "$dev_cask_name" > /dev/null 2>&1 && brew uninstall "$dev_cask_name"
 brew list "$primary_cask_name" > /dev/null 2>&1 && brew uninstall "$primary_cask_name"
