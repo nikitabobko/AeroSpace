@@ -215,7 +215,10 @@ private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: M
     return switch try await macApp.getAxUiElementWindowType(windowId, windowLevel) {
         case .popup: BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         case .dialog: BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-        case .window: unbindAndGetBindingDataForNewTilingWindow(workspace, window: window)
+        case .window:
+            config.tilingFilter.shouldTile(appName: macApp.name)
+                ? unbindAndGetBindingDataForNewTilingWindow(workspace, window: window)
+                : BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
     }
 }
 

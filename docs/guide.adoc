@@ -357,6 +357,28 @@ The floating window parent container is determined as the smallest tiling contai
 
 This technique eliminates the need for an additional binding for focusing floating windows.
 
+[#tiling-filter]
+=== Tiling filter
+
+You can control which applications participate in tiling with `tiling-filter`.
+
+[source,toml]
+----
+[tiling-filter]
+    mode = 'exclude'
+    apps = ['Finder', 'Mail']
+----
+
+`tiling-filter.mode` supports:
+
+* `none` - disable filtering and tile all regular windows
+* `include` - tile only apps listed in `tiling-filter.apps`
+* `exclude` - tile all regular windows except apps listed in `tiling-filter.apps`
+
+`tiling-filter.apps` is an array of application names (exact match, case-sensitive), for example values returned by xref:commands.adoc#list-apps[`aerospace list-apps`].
+
+Windows excluded from tiling by this filter are still managed as floating windows, therefore commands like xref:commands.adoc#move-node-to-workspace[`move-node-to-workspace`] continue to work for them.
+
 [#emulation-of-virtual-workspaces]
 == Emulation of virtual workspaces
 

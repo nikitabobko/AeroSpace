@@ -89,6 +89,7 @@ struct Parser<S: ConvenienceCopyable, T>: ParserProtocol {
 private let keyMappingConfigRootKey = "key-mapping"
 private let modeConfigRootKey = "mode"
 private let persistentWorkspacesKey = "persistent-workspaces"
+private let tilingFilterConfigRootKey = "tiling-filter"
 
 // For every new config option you add, think:
 // 1. Does it make sense to have different value
@@ -122,12 +123,18 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     modeConfigRootKey: Parser(\.modes, skipParsing(Config().modes)), // Parsed manually
 
     "gaps": Parser(\.gaps, parseGaps),
+    tilingFilterConfigRootKey: Parser(\.tilingFilter, parseWindowTilingFilter),
     "workspace-to-monitor-force-assignment": Parser(\.workspaceToMonitorForceAssignment, parseWorkspaceToMonitorAssignment),
     "on-window-detected": Parser(\.onWindowDetected, parseOnWindowDetectedArray),
 
     // Deprecated
     "non-empty-workspaces-root-containers-layout-on-startup": Parser(\._nonEmptyWorkspacesRootContainersLayoutOnStartup, parseStartupRootContainerLayout),
     "indent-for-nested-containers-with-the-same-orientation": Parser(\._indentForNestedContainersWithTheSameOrientation, parseIndentForNestedContainersWithTheSameOrientation),
+]
+
+private let windowTilingFilterParser: [String: any ParserProtocol<WindowTilingFilter>] = [
+    "mode": Parser(\.mode, parseWindowTilingFilterMode),
+    "apps": Parser(\.apps, parseArrayOfStrings),
 ]
 
 extension ParsedCmd where T == any Command {
@@ -351,6 +358,17 @@ private func parsePersistentWorkspaces(_ raw: Json, _ backtrace: ConfigBacktrace
             let set = arr.toOrderedSet()
             return set.count == arr.count ? .success(set) : .failure(.semantic(backtrace, "Contains duplicated workspace names"))
         }
+}
+
+private func parseWindowTilingFilter(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> WindowTilingFilter {
+    parseTable(raw, .none, windowTilingFilterParser, backtrace, &errors)
+}
+
+private func parseWindowTilingFilterMode(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<WindowTilingFilterMode> {
+    parseString(raw, backtrace).flatMap {
+        WindowTilingFilterMode(rawValue: $0)
+            .orFailure(.semantic(backtrace, "Can't parse tiling filter mode '\($0)'"))
+    }
 }
 
 private func parseArrayOfStrings(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<[String]> {

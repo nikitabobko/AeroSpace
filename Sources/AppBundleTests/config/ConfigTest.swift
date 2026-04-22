@@ -454,6 +454,33 @@ final class ConfigTest: XCTestCase {
         ])
     }
 
+    func testParseWindowTilingFilter() {
+        let (config, errors) = parseConfig(
+            """
+            [tiling-filter]
+                mode = 'exclude'
+                apps = ['Google Chrome', 'System Settings']
+            """,
+        )
+        assertEquals(errors, [])
+        assertEquals(config.tilingFilter.mode, .exclude)
+        assertEquals(config.tilingFilter.apps, ["Google Chrome", "System Settings"])
+    }
+
+    func testParseWindowTilingFilterErrors() {
+        let (_, errors) = parseConfig(
+            """
+            [tiling-filter]
+                mode = 'blacklist'
+                apps = ['Safari', 1]
+            """,
+        )
+        assertEquals(errors, [
+            "tiling-filter.apps[1]: Expected type is \'string\'. But actual type is \'int\'",
+            "tiling-filter.mode: Can\'t parse tiling filter mode \'blacklist\'",
+        ])
+    }
+
     func testParseKeyMapping() {
         let (config, errors) = parseConfig(
             """

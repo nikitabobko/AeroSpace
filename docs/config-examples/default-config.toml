@@ -79,6 +79,17 @@ on-mode-changed = []
     outer.top =        0
     outer.right =      0
 
+# Filter tiling by app name (localized application name from macOS)
+# Windows filtered out from tiling are still managed as floating windows,
+# so they can be moved between workspaces with usual commands/keybindings.
+# Possible values:
+    # - none:    Disable filtering and tile all regular windows
+    # - include: Tile only listed apps
+    # - exclude: Tile all apps except listed ones
+[tiling-filter]
+    mode = 'none'
+    apps = []
+
 # 'main' binding mode declaration
 # See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
 # 'main' binding mode must be always presented

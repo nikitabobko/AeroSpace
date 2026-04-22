@@ -56,6 +56,7 @@ struct Config: ConvenienceCopyable {
     var onFocusedMonitorChanged: [any Command] = []
 
     var gaps: Gaps = .zero
+    var tilingFilter: WindowTilingFilter = .none
     var workspaceToMonitorForceAssignment: [String: [MonitorDescription]] = [:]
     var modes: [String: Mode] = [:]
     var onWindowDetected: [WindowDetectedCallback] = []
@@ -64,4 +65,25 @@ struct Config: ConvenienceCopyable {
 
 enum DefaultContainerOrientation: String {
     case horizontal, vertical, auto
+}
+
+enum WindowTilingFilterMode: String {
+    case none, include, exclude
+}
+
+struct WindowTilingFilter: ConvenienceCopyable {
+    var mode: WindowTilingFilterMode = .none
+    var apps: [String] = []
+
+    static let none = WindowTilingFilter()
+
+    func shouldTile(appName: String?) -> Bool {
+        let normalizedName = appName?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let isListed = apps.contains(normalizedName)
+        return switch mode {
+            case .none: true
+            case .include: isListed
+            case .exclude: !isListed
+        }
+    }
 }
