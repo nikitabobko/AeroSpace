@@ -21,6 +21,15 @@ brew list aerospace-dev-user/aerospace-dev-tap/aerospace-dev > /dev/null 2>&1 &&
 brew list nikitabobko/local-tap/aerospace-dev > /dev/null 2>&1 && brew uninstall nikitabobko/local-tap/aerospace-dev
 brew list aerospace > /dev/null 2>&1 && brew uninstall aerospace
 
-brew install --cask ./.release/aerospace-dev.rb
+brew_tap_namespace="$(brew --repository)/Library/Taps/aerospace-dev-user"
+brew_tap_root="$brew_tap_namespace/homebrew-aerospace-dev-tap"
+cleanup-brew-tap() {
+    rm -rf "$brew_tap_namespace"
+}
+trap cleanup-brew-tap EXIT
 
-rm -rf "$(brew --prefix)/Library/Taps/aerospace-dev-user" # Compatibility. Drop after a while
+rm -rf "$brew_tap_namespace"
+mkdir -p "$brew_tap_root/Casks"
+cp ./.release/aerospace-dev.rb "$brew_tap_root/Casks/aerospace-dev.rb"
+
+HOMEBREW_NO_AUTO_UPDATE=1 brew install --cask aerospace-dev-user/aerospace-dev-tap/aerospace-dev
