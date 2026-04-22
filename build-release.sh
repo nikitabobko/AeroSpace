@@ -12,6 +12,11 @@ while test $# -gt 0; do
     esac
 done
 
+if test "$codesign_identity" != "-" && ! security find-identity -v -p codesigning | grep -q "$codesign_identity"; then
+    echo "warning: codesign identity '$codesign_identity' is unavailable. Falling back to ad-hoc signing." > /dev/stderr
+    codesign_identity="-"
+fi
+
 #############
 ### BUILD ###
 #############
