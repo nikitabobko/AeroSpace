@@ -250,7 +250,7 @@ link:https://github.com/magicmark/spacelist[Spacelist] is a terminal UI applicat
 [#popular-apps-ids]
 == List of Apple application IDs
 
-The list is useful to compose custom xref:guide.adoc#on-window-detected-callback[on-window-detected callback].
+The list is useful to compose custom xref:./guide.adoc#on-window-detected-callback[on-window-detected callback].
 
 [cols="1,3"]
 |===

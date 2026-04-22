@@ -265,21 +265,26 @@ private func onWindowDetected(_ window: Window) async throws {
 extension WindowDetectedCallback {
     @MainActor
     func matches(_ window: Window) async throws -> Bool {
-        if let startupMatcher = matcher.duringAeroSpaceStartup, startupMatcher != isStartup {
-            return false
+        switch self.matcher {
+            case .legacy(let matcher):
+                if let startupMatcher = matcher.duringAeroSpaceStartup, startupMatcher != isStartup {
+                    return false
+                }
+                if let regex = matcher.windowTitleRegexSubstring, !(try await window.title).contains(caseInsensitiveRegex: regex) {
+                    return false
+                }
+                if let appId = matcher.appId, appId != window.app.rawAppBundleId {
+                    return false
+                }
+                if let regex = matcher.appNameRegexSubstring, !(window.app.name ?? "").contains(caseInsensitiveRegex: regex) {
+                    return false
+                }
+                if let workspace = matcher.workspace, workspace != window.nodeWorkspace?.name {
+                    return false
+                }
+                return true
+            case .command(let command):
+                return try await command.run(.defaultEnv.copy(\.windowId, window.windowId), .emptyStdin).exitCode.rawValue == 0
         }
-        if let regex = matcher.windowTitleRegexSubstring, !(try await window.title).contains(caseInsensitiveRegex: regex) {
-            return false
-        }
-        if let appId = matcher.appId, appId != window.app.rawAppBundleId {
-            return false
-        }
-        if let regex = matcher.appNameRegexSubstring, !(window.app.name ?? "").contains(caseInsensitiveRegex: regex) {
-            return false
-        }
-        if let workspace = matcher.workspace, workspace != window.nodeWorkspace?.name {
-            return false
-        }
-        return true
     }
 }

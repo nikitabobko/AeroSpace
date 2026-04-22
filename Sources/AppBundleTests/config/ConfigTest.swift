@@ -289,28 +289,38 @@ final class ConfigTest: XCTestCase {
     func testParseOnWindowDetected() {
         let (parsed, errors) = parseConfig(
             """
-            [[on-window-detected]] # 0
-                check-further-callbacks = true
-                run = ['layout floating', 'move-node-to-workspace W']
-            [[on-window-detected]] # 1
-                if.app-id = 'com.apple.systempreferences'
-                run = []
-            [[on-window-detected]] # 2
-            [[on-window-detected]] # 3
-                run = ['move-node-to-workspace S', 'layout tiling']
-            [[on-window-detected]] # 4
-                run = ['move-node-to-workspace S', 'move-node-to-workspace W']
-            [[on-window-detected]] # 5
-                run = ['move-node-to-workspace S', 'layout h_tiles']
+            on-window-detected = [
+                { # 0
+                    check-further-callbacks = true,
+                    run = ['layout floating', 'move-node-to-workspace W'],
+                },
+                { # 1
+                    if.app-id = 'com.apple.systempreferences',
+                    run = [],
+                },
+                {}, # 2
+                { # 3
+                    run = ['move-node-to-workspace S', 'layout tiling'],
+                },
+                { # 4
+                    run = ['move-node-to-workspace S', 'move-node-to-workspace W'],
+                },
+                { # 5
+                    run = ['move-node-to-workspace S', 'layout h_tiles'],
+                },
+                { # 6
+                    if = 'test %{app-bundle-id} .= org.alacritty',
+                    run = ['move-node-to-workspace T'],
+                },
+            ]
             """,
         )
+        let matcher6Args = TestCmdArgs(rawArgs: [])
+            .copy(\.lhs, .initialized(.app(.appBundleId)))
+            .copy(\.infixOperator, .initialized(.equals))
+            .copy(\.rhs, .initialized("org.alacritty"))
         assertEquals(parsed.onWindowDetected, [
             WindowDetectedCallback( // 0
-                matcher: WindowDetectedCallbackMatcher(
-                    appId: nil,
-                    appNameRegexSubstring: nil,
-                    windowTitleRegexSubstring: nil,
-                ),
                 checkFurtherCallbacks: true,
                 rawRun: [
                     LayoutCommand(args: LayoutCmdArgs(rawArgs: [], toggleBetween: [.floating])),
@@ -318,11 +328,9 @@ final class ConfigTest: XCTestCase {
                 ],
             ),
             WindowDetectedCallback( // 1
-                matcher: WindowDetectedCallbackMatcher(
+                matcher: .legacy(LegacyWindowDetectedCallbackMatcher(
                     appId: "com.apple.systempreferences",
-                    appNameRegexSubstring: nil,
-                    windowTitleRegexSubstring: nil,
-                ),
+                )),
                 rawRun: [],
             ),
             WindowDetectedCallback( // 3
@@ -341,6 +349,12 @@ final class ConfigTest: XCTestCase {
                 rawRun: [
                     MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "S")),
                     LayoutCommand(args: LayoutCmdArgs(rawArgs: [], toggleBetween: [.h_tiles])),
+                ],
+            ),
+            WindowDetectedCallback( // 6
+                matcher: .command(TestCommand(args: matcher6Args)),
+                rawRun: [
+                    MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "T")),
                 ],
             ),
         ])
@@ -392,7 +406,8 @@ final class ConfigTest: XCTestCase {
                 run = []
             """,
         )
-        XCTAssertTrue(config.onWindowDetected.singleOrNil()!.matcher.appNameRegexSubstring != nil)
+        let expected = WindowDetectedCallbackMatcher.legacy(LegacyWindowDetectedCallbackMatcher(appNameRegexSubstring: .new("^system settings$").getOrDie()))
+        assertEquals(config.onWindowDetected.singleOrNil()!.matcher, expected)
         assertEquals(errors, [])
     }
 

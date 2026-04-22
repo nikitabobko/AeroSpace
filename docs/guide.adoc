@@ -470,68 +470,47 @@ defaults write com.apple.spaces spans-displays -bool true && killall SystemUISer
 [#on-window-detected-callback]
 === 'on-window-detected' callback
 
-You can use `on-window-detected` callback to run commands every time a new window is detected.
-
-Here is a showcase example that uses all the possible configurations:
+You can use `on-window-detected` config option to run commands every time a new window is detected.
 
 [source,toml]
 ----
 on-window-detected = [
     {
-        if.app-id = 'com.apple.systempreferences',
-        if.app-name-regex-substring = 'settings',
-        if.window-title-regex-substring = 'substring',
-        if.workspace = 'workspace-name',
-        if.during-aerospace-startup = true,
+        if = 'test %{app-bundle-id} .= com.apple.systempreferences',
         check-further-callbacks = true,
         run = ['layout floating', 'move-node-to-workspace S'],  # The callback itself
     },
 ]
 ----
 
-`run` commands are run only if the detected window matches all the specified conditions.
-If no conditions are specified then `run` is run every time a new window is detected.
+`on-window-detected` is an ordered list of callback objects.
+Every object has `if` (optional) and `run` (mandatory) keys inside.
+When a new window is detected:
+. AeroSpace processes the list of the callback objects in the defined order.
+. For every callback object, AeroSpace runs the command in the `if`.
+. If the `if` command exits with zero exit code (successful), then AeroSpace runs the command in the `run` and doesn't process any further callback objects.
+. If the `if` command exits with non-zero exit code (fail), then AeroSpace processes the next object in the list.
 
-Several callbacks can be declared in the config.
-The callbacks are processed in the order they are declared.
-By default, the first callback that matches the criteria is run, and further callbacks are not considered.
-(The behavior can be overridden with `check-further-callbacks` option)
+Additionally, if you want to keep processing the list of callbacks when the `if` is successful, you can use the `check-further-callbacks` option like so:
 
-Available window conditions are:
+[source,toml]
+----
+on-window-detected = [
+    {
+        if = 'test %{app-bundle-id} .= com.apple.systempreferences',
+        run = ['layout floating', 'move-node-to-workspace S'],
 
-[cols="1,2"]
-|===
-|Condition TOML key |Condition description
+        # The next callbacks will be considered even if this one is successful.
+        check-further-callbacks = true,
+    },
+    # all other callbacks...
+]
+----
 
-|`if.app-id`
-|Application ID exact match of the detected window
-
-|`if.app-name-regex-substring`
-|Application name case insensitive regex substring of the detected window
-
-|`if.window-title-regex-substring`
-|Window title case insensitive regex substring of the detected window
-
-|`if.during-aerospace-startup`
-a|
-* If `true` then run the callback only during AeroSpace startup.
-* If `false` then run callback only *NOT* during AeroSpace startup.
-* If not specified then the condition isn’t checked
-
-|`if.workspace`
-|Window's workspace name exact match
-
-|===
-
-* `if.during-aerospace-startup = true` is useful if you want to do the initial app arrangement only on startup.
-
-* `if.during-aerospace-startup = false` is useful if you want to relaunch AeroSpace, but the callback has side effects that you don’t want to run on every relaunch.
-(e.g. the callback opens new windows)
-
-There are several ways to know `app-id`:
+There are several ways to know `app-bundle-id`:
 
 * Take a look at precompiled xref:./goodies.adoc#popular-apps-ids[list of Apple application IDs]
-* You can use xref:commands.adoc#list-apps[`aerospace list-apps`] CLI command to get IDs of running applications
+* You can use xref:./commands.adoc#list-apps[`aerospace list-apps`] CLI command to get IDs of running applications
 * `mdls -name kMDItemCFBundleIdentifier -r /Applications/App.app`
 
 IMPORTANT: Some windows initialize their title after the window appears.
@@ -545,15 +524,15 @@ Examples of automations:
 ----
 on-window-detected = [
     {
-        if.app-id = 'org.alacritty',
+        if = 'test %{app-bundle-id} .= org.alacritty',
         run = 'move-node-to-workspace T', # mnemonics T - Terminal
     },
     {
-        if.app-id = 'com.google.Chrome',
+        if = 'test %{app-bundle-id} .= com.google.Chrome',
         run = 'move-node-to-workspace W', # mnemonics W - Web browser
     },
     {
-        if.app-id = 'com.jetbrains.intellij',
+        if = 'test %{app-bundle-id} .= com.jetbrains.intellij',
         run = 'move-node-to-workspace I', # mnemonics I - IDE
     }
 ]
@@ -718,3 +697,33 @@ on-window-detected = [
 == Common pitfall: keyboard keys handling
 
 If you can't make AeroSpace handle some keys in your config, please make sure that you don't have keys conflict with other software that might listen to global keys (e.g. skhd, Karabiner-Elements, Raycast)
+
+== Deprecations
+
+=== Legacy 'on-window-detected' syntax
+
+The following `if.*` syntax inside `on-window-detected` is soft deprecated.
+It is still supported, and it will probably remain supported forever given its wide use.
+
+[source,toml]
+----
+on-window-detected = [
+    {
+        if.app-id = 'com.apple.systempreferences', # ❌ Please don't do that
+        run = ['layout floating', 'move-node-to-workspace S'],
+    },
+]
+----
+
+Instead of the `if.*` syntax, you are encouraged to use `if = 'test ...'` syntax.
+See xref:./commands.adoc#test[the test helper command documentation] for more information.
+
+[source,toml]
+----
+on-window-detected = [
+    {
+        if = 'test %{app-bundle-id} .= com.apple.systempreferences', # ✅ Do this
+        run = ['layout floating', 'move-node-to-workspace S'],
+    },
+]
+----

@@ -131,7 +131,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
 ]
 
 extension ParsedCmd where T == any Command {
-    fileprivate func toEither() -> Parsed<T> {
+    func toEither() -> Parsed<T> {
         return switch self {
             case .cmd(let a):
                 a.info.allowInConfig

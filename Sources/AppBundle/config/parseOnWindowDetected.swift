@@ -1,7 +1,7 @@
 import Common
 
 struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
-    var matcher: WindowDetectedCallbackMatcher = WindowDetectedCallbackMatcher()
+    var matcher: WindowDetectedCallbackMatcher = .command(TrueCommand.instance)
     var checkFurtherCallbacks: Bool = false
     var rawRun: [any Command]? = nil
 
@@ -11,7 +11,10 @@ struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
 
     var debugJson: Json {
         var result: [String: Json] = [:]
-        result["matcher"] = matcher.debugJson
+        result["matcher"] = switch matcher {
+            case .command(let command): .string(command.args.description)
+            case .legacy(let legacy): legacy.debugJson
+        }
         if let commands = rawRun {
             result["commands"] = .string(commands.prettyDescription)
         }
@@ -19,12 +22,12 @@ struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
     }
 
     static func == (lhs: WindowDetectedCallback, rhs: WindowDetectedCallback) -> Bool {
-        return lhs.matcher == rhs.matcher && lhs.checkFurtherCallbacks == rhs.checkFurtherCallbacks &&
+        lhs.matcher == rhs.matcher && lhs.checkFurtherCallbacks == rhs.checkFurtherCallbacks &&
             zip(lhs.run, rhs.run).allSatisfy { $0.equals($1) }
     }
 }
 
-struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
+struct LegacyWindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
     var appId: String?
     var appNameRegexSubstring: CaseInsensitiveRegex?
     var windowTitleRegexSubstring: CaseInsensitiveRegex?
@@ -52,13 +55,26 @@ struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
     }
 }
 
+enum WindowDetectedCallbackMatcher: Equatable {
+    case command(any Command)
+    case legacy(LegacyWindowDetectedCallbackMatcher)
+
+    static func == (lhs: WindowDetectedCallbackMatcher, rhs: WindowDetectedCallbackMatcher) -> Bool {
+        switch (lhs, rhs) {
+            case (.command(let command1), .command(let command2)): command1.equals(command2)
+            case (.legacy(let matcher1), .legacy(let matcher2)): matcher1 == matcher2
+            default: false
+        }
+    }
+}
+
 private let windowDetectedParser: [String: any ParserProtocol<WindowDetectedCallback>] = [
     "if": Parser(\.matcher, parseMatcher),
     "check-further-callbacks": Parser(\.checkFurtherCallbacks, parseBool),
     "run": Parser(\.rawRun, upcast { parseCommandOrCommands($0).toParsedConfig($1) }),
 ]
 
-private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMatcher>] = [
+private let matcherParsers: [String: any ParserProtocol<LegacyWindowDetectedCallbackMatcher>] = [
     "app-id": Parser(\.appId, upcast(parseString)),
     "workspace": Parser(\.workspace, upcast(parseString)),
     "app-name-regex-substring": Parser(\.appNameRegexSubstring, upcast(parseCasInsensitiveRegex)),
@@ -86,7 +102,16 @@ private func parseCasInsensitiveRegex(_ raw: Json, _ backtrace: ConfigBacktrace)
 }
 
 private func parseMatcher(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> WindowDetectedCallbackMatcher {
-    parseTable(raw, WindowDetectedCallbackMatcher(), matcherParsers, backtrace, &errors)
+    switch raw {
+        case .dict(let raw):
+            return .legacy(raw.parseTable(LegacyWindowDetectedCallbackMatcher(), matcherParsers, backtrace, &errors))
+        case .string(let raw):
+            return .command(parseCommand(raw).toEither().toParsedConfig(backtrace).getOrNil(appendErrorTo: &errors) ?? TrueCommand.instance)
+        default:
+            // Intentionally skip Table type from the list of expected types
+            errors.append(.semantic(backtrace, expectedActualTypeError(expected: .string, actual: raw.tomlType)))
+            return .command(TrueCommand.instance)
+    }
 }
 
 private func parseWindowDetectedCallback(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> WindowDetectedCallback? {
