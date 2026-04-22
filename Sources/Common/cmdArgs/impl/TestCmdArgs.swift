@@ -3,7 +3,7 @@ public struct TestCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .test,
-        allowInConfig: false,
+        allowInConfig: true,
         help: test_help_generated,
         // Design question: Does --window-id flag compare window ids or checks the conditions against the specified window?
         // Design question: Does --workspace flag compare workspaces or checks the conditions against the specified workspace?
