@@ -16,21 +16,38 @@ EOF
     fi
 }
 
+add-first-available-dep-to-bin() {
+    alias_name=$1
+    shift
+    for tool_name in "$@"; do
+        if /usr/bin/which "$tool_name" &> /dev/null; then
+            /bin/cat > ".deps/bin/$alias_name" <<EOF
+#!/bin/bash
+exec '$(/usr/bin/which "$tool_name")' "\$@"
+EOF
+            return
+        fi
+    done
+}
+
 if /bin/test -z "${NUKE_PATH:-}"; then
     /bin/rm -rf .deps/bin
     /bin/mkdir -p .deps/bin
 
     add-optional-dep-to-bin bash not-outdated-bash # build-shell-completion.sh
     add-optional-dep-to-bin fish # build-shell-completion.sh
-    add-optional-dep-to-bin rustc # build-shell-completion.sh
-    add-optional-dep-to-bin cargo # build-shell-completion.sh
-    add-optional-dep-to-bin brew # install-from-sources.sh
+    add-optional-dep-to-bin ruby
     add-optional-dep-to-bin bundle # build-docs.sh
     add-optional-dep-to-bin bundler # build-docs.sh
+    add-optional-dep-to-bin antlr4 # script/generate-shell-parser.sh
+    add-first-available-dep-to-bin complgen complgen complgen-aarch64-apple complgen-x86_64-apple # build-shell-completion.sh
     add-optional-dep-to-bin xcbeautify # build-release.sh
+    add-optional-dep-to-bin swiftformat # format.sh
+    add-optional-dep-to-bin swiftlint # format.sh
+    add-optional-dep-to-bin xcodegen # generate.sh
+    add-optional-dep-to-bin periphery # lint.sh
     add-optional-dep-to-bin git
     add-optional-dep-to-bin swift
-    add-optional-dep-to-bin swiftly
 
     export PATH="${PWD}/.deps/bin:/bin:/usr/bin"
     chmod +x .deps/bin/*
@@ -38,13 +55,7 @@ if /bin/test -z "${NUKE_PATH:-}"; then
 fi
 
 swift() {
-    if /usr/bin/which swiftly &> /dev/null; then
-        swiftly run swift "$@"
-    else
-        echo "warning: swiftly is not installed. Fallback to plain swift. Swift compilation might not be reproducible" > /dev/stderr
-        /usr/bin/env swift --version
-        /usr/bin/env swift "$@"
-    fi
+    /usr/bin/env swift "$@"
 }
 
 xcodebuild-pretty() {

@@ -12,10 +12,8 @@ done
 
 if test $check_uncommitted_files -eq 1; then ./script/check-uncommitted-files.sh; fi
 
-./script/install-dep.sh --swiftformat
-./.deps/swiftformat/swiftformat .
+swiftformat .
 
 if test $check_uncommitted_files -eq 1; then ./script/check-uncommitted-files.sh; fi
 
-./script/install-dep.sh --swiftlint
-./.deps/swiftlint/swiftlint lint --quiet --fix
+swiftlint lint --quiet --fix
