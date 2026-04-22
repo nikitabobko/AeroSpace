@@ -62,5 +62,15 @@ EOF
 
 if test $generate_xcodeproj = 1; then
     export XCODEGEN_AEROSHIFT_VERSION=$build_version
-    xcodegen # https://github.com/yonaskolb/XcodeGen
+    # XcodeGen currently derives local Swift package file reference names from the
+    # checkout directory basename. Generate via a stable symlink so CI and local
+    # clones produce the same project.pbxproj even when the repo folder casing differs.
+    xcodegen_tmp_dir=$(mktemp -d)
+    trap 'rm -rf "$xcodegen_tmp_dir"' EXIT
+    xcodegen_root="$xcodegen_tmp_dir/Aeroshift"
+    ln -s "$(pwd -P)" "$xcodegen_root"
+    xcodegen \
+        --spec "$xcodegen_root/project.yml" \
+        --project "$xcodegen_root" \
+        --project-root "$xcodegen_root" # https://github.com/yonaskolb/XcodeGen
 fi

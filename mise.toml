@@ -25,7 +25,11 @@ bundle --version
 swiftformat --version
 swiftlint version
 xcodegen --version
-periphery version
+if sw_vers -productVersion | grep -q "^14"; then
+  echo 'warning: periphery version is skipped on macOS 14'
+else
+  periphery version
+fi
 if command -v complgen >/dev/null 2>&1; then
   complgen --version
 elif command -v complgen-aarch64-apple >/dev/null 2>&1; then
