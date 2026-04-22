@@ -36,13 +36,15 @@ fi
 fish --version
 """
 
+[tasks.bundle-install]
+hide = true
+description = "Install Ruby gem dependencies"
+run = "bundle install"
+
 [tasks.setup]
 description = "Install repo dependencies and generate project files"
-run = """
-set -euo pipefail
-bundle install
-./generate.sh
-"""
+depends = ["bundle-install"]
+run = "./generate.sh"
 
 [tasks.build]
 description = "Build the debug binaries"
@@ -54,6 +56,7 @@ run = "./test.sh"
 
 [tasks.docs]
 description = "Build the website and man pages"
+depends = ["bundle-install"]
 run = "./build-docs.sh"
 
 [tasks.format]
@@ -70,4 +73,14 @@ run = "./build-shell-completion.sh"
 
 [tasks.release]
 description = "Build release artifacts"
+depends = ["bundle-install"]
 run = "./build-release.sh"
+
+[tasks.release-ci]
+description = "Build release artifacts and verify the source-install path in CI"
+depends = ["bundle-install"]
+run = """
+set -euo pipefail
+./build-release.sh --codesign-identity -
+./install-from-sources.sh --dont-rebuild
+"""

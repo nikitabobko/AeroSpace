@@ -31,10 +31,14 @@ jobs:
       - run: env # Debug
       - uses: actions/checkout@v6
       - run: ./.github/gh-actions-runner-xcode-select.sh
-      - run: brew install swiftly
-      - run: swiftly init --skip-install --assume-yes --verbose && swiftly install
-      - run: ./build-debug.sh
-      - run: ./test.sh
+      - uses: jdx/mise-action@v4
+        with:
+          version: 2026.4.18
+          install: true
+          cache: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: mise run doctor
+      - run: mise run test
 
   # We build release artifacts only on the latest macOS versions because:
   # 1. It cuts the build time twice on GH Actions
@@ -50,13 +54,15 @@ jobs:
       - run: env # Debug
       - uses: actions/checkout@v6
       - run: ./.github/gh-actions-runner-xcode-select.sh
-      - run: brew install bash fish xcbeautify swiftly
-      - run: swiftly init --skip-install --assume-yes --verbose && swiftly install
-      - name: './build-release.sh'
-        run: |
-          # "-" means "Sign to run locally". There is no aerospace-codesign-certificate on GH Actions
-          ./build-release.sh --codesign-identity -
-          ./install-from-sources.sh --dont-rebuild
+      - uses: jdx/mise-action@v4
+        with:
+          version: 2026.4.18
+          install: true
+          cache: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: mise run doctor
+      - name: 'mise run release-ci'
+        run: mise run release-ci
       - name: cat ./.release/xcodebuild.log
         if: ${{ always() }}
         run: 'if test -f ./.release/xcodebuild.log; then cat ./.release/xcodebuild.log; fi'

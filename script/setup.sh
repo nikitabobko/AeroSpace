@@ -50,6 +50,7 @@ if /bin/test -z "${NUKE_PATH:-}"; then
     add-optional-dep-to-bin swiftlint # format.sh
     add-optional-dep-to-bin xcodegen # generate.sh
     add-optional-dep-to-bin periphery # lint.sh
+    add-optional-dep-to-bin brew # install-from-sources.sh
     add-optional-dep-to-bin git
     add-optional-dep-to-bin swift
 

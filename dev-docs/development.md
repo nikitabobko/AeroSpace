@@ -14,16 +14,13 @@ If you struggle to build AeroSpace locally, you can also refer to [builds in Git
 ## 1. Install dependencies
 
 1.  Install Xcode from App Store https://apps.apple.com/us/app/xcode/id497799835
-2.  Install [swiftly](https://github.com/swiftlang/swiftly).
-    Swiftly is a Swift toolchain manager that will make sure that you use the same swift version as written in `.swift-version` file.
-    `brew install swiftly`
-3.  If you want to build shell completion, install rust, bash and fish
-    -   Install Rust using rustup. https://www.rust-lang.org/tools/install
-    -   `brew install bash fish`
-4.  If you want to build man pages, install Ruby >= 3.0. I recommend using [rbenv](https://github.com/rbenv/rbenv).
-    -   `rbenv install 3.3.4` (or whatever 3.x version)
-    -   Install asciidoctor using Ruby `bundler`. `cd AeroSpace && bundler install`
-5.  Install optional `xcbeautify` to make Xcode build logs readable. `brew install xcbeautify`
+2.  Install [mise](https://mise.jdx.dev/) on your machine.
+    AeroSpace keeps its repo-managed toolchain in `mise.toml`, so local contributors and GitHub Actions use the same tool versions.
+3.  From the repo root, install the repo toolchain with `mise install`.
+    This installs the repo-managed Ruby, bundler, shell-completion generator, formatting/linting tools, and other CLI dependencies.
+4.  Run `mise run setup`.
+    This installs Ruby gems with bundler and regenerates the project files.
+5.  Homebrew is still required only for `install-from-sources.sh`, because that script installs the generated local cask.
 
 ## 2. Create codesign certificate
 
@@ -39,10 +36,22 @@ If you only plan to build the debug version of AeroSpace, you can run it from th
 
 ## 3. Entry point scripts
 
+Prefer the `mise` tasks as the public entry points:
+-   `mise run setup`
+-   `mise run build`
+-   `mise run test`
+-   `mise run docs`
+-   `mise run format`
+-   `mise run lint`
+-   `mise run completions`
+-   `mise run release`
+
+The shell scripts below are the underlying implementation that those tasks run.
+
 **Debug build**
 -   `build-debug.sh` - Build debug build to `.debug` dir by using SPM. (Xcode is not involved)
 -   `test.sh` - Run tests.
--   `swiftformat.sh` - Format the code.
+-   `format.sh` - Format the code.
 -   `run-debug.sh` - Run AeroSpace.app debug build.
 -   `run-cli.sh` - Run `aerospace` in CLI. Arguments are forwarded to `aerospace` binary.
 -   `build-docs.sh` - Build the site and man pages to `.site` and `.man` dirs respectively.
