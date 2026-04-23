@@ -4,13 +4,12 @@
 
 Aeroshift is an unofficial fork of [AeroSpace](https://github.com/nikitabobko/AeroSpace), the i3-like tiling window manager for macOS.
 
-User-facing artifacts from this repository use:
+## Install
 
-- `Aeroshift.app`
-- `aeroshift`
-- `~/.aeroshift.toml`
-- `~/.config/aeroshift/aeroshift.toml`
-- `aeroshift` and `aeroshift-dev` casks
+```bash
+brew tap boredphilosopher96/aeroshift
+brew install --cask aeroshift
+```
 
 ## Docs
 
@@ -19,9 +18,9 @@ User-facing artifacts from this repository use:
 - [Goodies](./docs/goodies.adoc)
 - [Development Notes](./dev-docs/development.md)
 
-## Installation
+## Build From Source
 
-To work on this repository locally:
+To build Aeroshift locally:
 
 ```bash
 mise install
@@ -37,10 +36,6 @@ mise run docs
 mise run completions
 mise run release-ci
 ```
-
-Release artifacts are published as `Aeroshift` and `aeroshift`.
-
-The Homebrew tap for this project lives at [Boredphilosopher96/homebrew-aeroshift](https://github.com/Boredphilosopher96/homebrew-aeroshift). Install instructions will be added here once the first tagged Aeroshift release is published there.
 
 ## Support
 

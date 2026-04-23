@@ -1,0 +1,61 @@
+name: release-bundles
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: release-bundles-main
+  cancel-in-progress: false
+
+jobs:
+  build-release-bundles:
+    name: build-release-bundles
+    runs-on: macos-15
+    # Configure required reviewers for the "release-bundles" environment in
+    # repository settings to require a human approval after merges to main.
+    environment: release-bundles
+    permissions:
+      contents: read
+    steps:
+      - run: env # Debug
+      - uses: actions/checkout@v6
+      - run: ./.github/gh-actions-runner-xcode-select.sh
+      - uses: jdx/mise-action@v4
+        with:
+          version: 2026.4.18
+          install: true
+          cache: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: mise run doctor
+      - id: bundle-version
+        name: Compute bundle version
+        run: |
+          set -euo pipefail
+          short_sha="$(printf '%s' "$GITHUB_SHA" | cut -c1-7)"
+          echo "build_version=0.0.0-main.${GITHUB_RUN_NUMBER}-${short_sha}-SNAPSHOT" >> "$GITHUB_OUTPUT"
+      - name: Build release bundles
+        run: |
+          set -euo pipefail
+          ./build-release.sh --build-version "${{ steps.bundle-version.outputs.build_version }}" --codesign-identity -
+          ./install-from-sources.sh --dont-rebuild
+      - name: Upload xcodebuild log
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: xcodebuild-log-${{ steps.bundle-version.outputs.build_version }}
+          path: .release/xcodebuild.log
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Upload release bundle artifacts
+        if: ${{ success() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-bundles-${{ steps.bundle-version.outputs.build_version }}
+          path: |
+            .release/Aeroshift-v${{ steps.bundle-version.outputs.build_version }}.zip
+            .release/aeroshift.rb
+            .release/aeroshift-dev.rb
+          if-no-files-found: error
+          retention-days: 14
