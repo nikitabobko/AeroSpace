@@ -65,6 +65,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.HOMEBREW_TAP_PAT }}
         run: |
+          gh auth setup-git
           gh repo clone AdrianLSY/homebrew-tap /tmp/tap
           cd /tmp/tap
           git config user.name "github-actions[bot]"
