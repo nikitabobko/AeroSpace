@@ -32,7 +32,7 @@ brew install --cask nikitabobko/tap/aerospace@0.12.0
 [#manual-installation]
 === Manual installation
 
-. Download the latest available zip from https://github.com/nikitabobko/AeroSpace/releases[releases page]
+. Download the latest available zip from https://github.com/AdrianLSY/AeroSpace/releases[releases page]
 . Unpack zip
 . Put unpacked `AeroSpace-v$VERSION/AeroSpace.app` to `/Applications`
 . Put unpacked `AeroSpace-v$VERSION/bin/aerospace` anywhere to `$PATH`
@@ -603,6 +603,105 @@ Besides the <<exec-env-vars,`exec.env-vars`>>, the process has access to the fol
 
 For a more elaborate example on how to integrate with Sketchybar see
 xref:./goodies.adoc#show-aerospace-workspaces-in-sketchybar[]
+
+[#auto-raise]
+== Auto raise (focus follows mouse)
+
+AeroSpace bundles a port of https://github.com/sbmpost/AutoRaise[AutoRaise], so focus can follow the mouse cursor into any window on the currently-focused workspace.
+
+* Disabled by default. Enable it with `[auto-raise] enabled = true`.
+* Only windows belonging to the currently-focused workspace are raised.
+Hovering a window that lives on a non-focused workspace (for example on another monitor) never switches workspace, matching i3 behavior.
+* Raises go through the same focus machinery as xref:./commands.adoc#focus[`focus`] command — the tree's most-recent-child pointer, monitor active-workspace state, and xref:#on-focus-changed-callbacks[`on-focus-changed`] callbacks stay consistent.
+
+[#auto-raise-on-focus-changed-gotcha]
+[IMPORTANT]
+====
+`on-focus-changed` fires on every hover-raise, because a hover-raise is a focus change.
+If you have an expensive `on-focus-changed` callback, that command will run each time the cursor crosses a window boundary.
+Keep the callback cheap, or disable auto-raise for the workspaces / monitors where you don't want it.
+====
+
+[#auto-raise-config]
+=== Configuration
+
+[source,toml]
+----
+[auto-raise]
+    enabled                 = true           # default: false
+    poll-millis             = 8              # default: 8 (≈120 Hz throttle), min: 1
+    ignore-space-changed    = false          # default: false
+    invert-disable-key      = false          # default: false
+    invert-ignore-apps      = false          # default: false
+    ignore-apps             = []             # default: []. Application names. Exact match
+    ignore-titles           = []             # default: []. ICU regex applied to window title
+    stay-focused-bundle-ids = []             # default: []. Application bundle IDs
+    disable-key             = "control"      # default: "control". one of: control|option|disabled
+----
+
+[cols="1,2"]
+|===
+|Key |Meaning
+
+|`enabled`
+|Master switch. `false` keeps the event tap uninstalled. Runtime `enable-auto-raise` / `disable-auto-raise` commands override this — once you disable at runtime, reloading the config does not silently re-enable.
+
+|`poll-millis`
+|Minimum milliseconds between mouse-moved evaluations. Lower = more responsive, higher = less CPU. Default 8 ≈ 120 Hz. Must be ≥ 1.
+
+|`ignore-space-changed`
+|If `true`, switching macOS Spaces does not re-evaluate the window under the cursor. Useful if you toggle Spaces via gestures and don't want focus to jump.
+
+|`invert-disable-key`
+|If `true`, auto-raise only operates while `disable-key` is held (opt-in model). Default `false` means holding the modifier suppresses raises (opt-out model).
+
+|`invert-ignore-apps`
+|If `true`, `ignore-apps` becomes an allow-list — only listed apps participate in hover-raise.
+
+|`ignore-apps`
+|Application names (as shown in the menu bar — e.g. `"Finder"`, `"Safari"`) that are ignored by hover-raise. Exact match, case-sensitive.
+
+|`ignore-titles`
+|Window-title patterns that are ignored. Entries are ICU regular expressions (same engine `NSRegularExpression` uses). Invalid regex fails config parsing.
+
+|`stay-focused-bundle-ids`
+|Application bundle IDs (e.g. `"com.apple.SecurityAgent"`) that refuse to lose focus to hover-raise. Once focused, the cursor can move freely over other windows without losing focus until you focus something else via keyboard / click / command.
+
+|`disable-key`
+|Modifier that temporarily disables hover-raise while held. One of `"control"`, `"option"`, or `"disabled"` (no disable modifier). Apple's `cmd` and `shift` are not available here because they're already overloaded by macOS.
+|===
+
+[#auto-raise-commands]
+=== Runtime toggle
+
+* xref:./commands.adoc#enable-auto-raise[`enable-auto-raise`] — start hover-raise using the loaded `[auto-raise]` config. Clears any prior runtime-disable. Note: this is a toggle, not a reload — if the bridge is already running, the command does not re-read `[auto-raise]` from disk. Use xref:./commands.adoc#reload-config[`reload-config`] to apply TOML edits.
+* xref:./commands.adoc#disable-auto-raise[`disable-auto-raise`] — stop hover-raise and set a sticky flag. Subsequent config reloads (via xref:./commands.adoc#reload-config[`reload-config`] or the file watcher) will NOT re-enable until `enable-auto-raise` is run again.
+* Both commands are idempotent by default. Pass `--fail-if-noop` to get a non-zero exit when the command doesn't change state — useful for scripts.
+* The master xref:./commands.adoc#enable[`enable off`] command also pauses hover-raise — mouse movement stops driving focus while window management is disabled. `enable on` resumes hover-raise at its prior running state. A sticky runtime-disable from `disable-auto-raise` survives the off/on cycle.
+
+Example keybinding:
+[source,toml]
+----
+[mode.main.binding]
+    alt-shift-slash = 'enable-auto-raise'
+    alt-slash       = 'disable-auto-raise'
+----
+
+[#auto-raise-mouse-follows-focus]
+=== Hover-raise vs. mouse-follows-focus
+
+These are two different behaviors that are easy to confuse:
+
+* **Hover-raise** (this section) — moving the mouse changes focus.
+* **Mouse-follows-focus** — changing focus (via a keybinding, say xref:./commands.adoc#focus[`focus left`]) moves the mouse cursor onto the newly-focused window. Configured with xref:./commands.adoc#move-mouse[`move-mouse`] in an xref:#on-focus-changed-callbacks[`on-focus-changed`] callback.
+
+Both can be enabled simultaneously. When they are, the `move-mouse` fired from `on-focus-changed` does not re-trigger hover-raise — it resettles the cursor inside the already-focused window.
+
+[#auto-raise-license]
+[NOTE]
+====
+Linking AutoRaise into AeroSpace makes the combined binary GPL-2.0-or-later. Source files outside `Sources/AutoRaiseCore/` keep their original license (MIT for most of the project). See `LICENSE.txt` and `LICENSE-GPL` at the repo root.
+====
 
 [#multiple-monitors]
 == Multiple monitors

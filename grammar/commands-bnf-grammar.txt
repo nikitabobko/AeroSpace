@@ -14,9 +14,13 @@ aerospace -h;
 
     | close-all-windows-but-current [--quit-if-last-window]
 
+    | disable-auto-raise [--fail-if-noop]
+
     | enable toggle
     | enable [--fail-if-noop] on [--fail-if-noop]
     | enable [--fail-if-noop] off [--fail-if-noop]
+
+    | enable-auto-raise [--fail-if-noop]
 
     | false
 

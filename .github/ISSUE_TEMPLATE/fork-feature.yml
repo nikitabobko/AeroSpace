@@ -1,0 +1,40 @@
+name: Feature request (fork-specific)
+description: A feature request for AutoRaise, fork docs, or fork release tooling
+labels: ["feature-request", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        For feature requests about **fork-specific** work: AutoRaise behavior,
+        fork docs, release tooling, or integrations that don't belong upstream.
+
+        Feature requests for AeroSpace itself are better filed at
+        [upstream feature-ideas](https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas).
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Use cases
+      description: The scenarios where this would be useful — concrete examples work better than abstractions.
+    validations:
+      required: true
+  - type: textarea
+    id: proposed
+    attributes:
+      label: Proposed syntax / synopsis
+      description: If it's a config key or CLI command, sketch the user-facing surface.
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: What else would solve the problem? Why isn't that enough?
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Fork or upstream?
+      description: Best-guess of where this belongs. Maintainers will re-route if needed.
+      options:
+        - Fork-specific (AutoRaise, fork infrastructure)
+        - Upstream AeroSpace
+        - Not sure
+    validations:
+      required: true

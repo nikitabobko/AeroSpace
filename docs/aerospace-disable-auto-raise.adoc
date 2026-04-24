@@ -1,0 +1,38 @@
+= aerospace-disable-auto-raise(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-disable-auto-raise
+// tag::purpose[]
+:manpurpose: Disable hover-raise at runtime
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace disable-auto-raise [-h|--help] [--fail-if-noop]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+Stops hover-raise and sets a sticky runtime-disabled flag. Subsequent config
+reloads (via `reload-config` or the config file watcher) will not re-enable
+hover-raise until `enable-auto-raise` is run.
+
+When hover-raise is already stopped, the command succeeds without changing
+state. Pass `--fail-if-noop` to exit non-zero in that case.
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+--fail-if-noop:: Exit with non-zero exit code if auto-raise is already disabled
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

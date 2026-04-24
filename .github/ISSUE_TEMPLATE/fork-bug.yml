@@ -1,0 +1,61 @@
+name: Bug (fork-specific)
+description: A bug in AutoRaise, fork docs, or fork release tooling
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for filing! This template is for bugs in **fork-specific**
+        features (AutoRaise, fork docs, fork release tooling), but we also
+        accept reports for upstream AeroSpace behavior here.
+
+        If a bug is clearly in upstream behavior (tiling, focus, multi-monitor,
+        config parsing, CLI), you're welcome to file it here or at
+        [upstream discussions](https://github.com/nikitabobko/AeroSpace/discussions)
+        — either place works.
+  - type: input
+    id: version
+    attributes:
+      label: AeroSpace version
+      description: Output of `aerospace --version`. Fork versions look like `0.18.7-adrianlsy.2`.
+      placeholder: "0.18.7-adrianlsy.2"
+    validations:
+      required: true
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      placeholder: "macOS 15.2"
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Minimal steps to observe the bug. The shorter, the faster it gets fixed.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: config
+    attributes:
+      label: Relevant config snippet
+      description: Lines from your `aerospace.toml`. Redact anything sensitive.
+      render: toml
+  - type: textarea
+    id: debug
+    attributes:
+      label: "`aerospace debug-windows` output (if applicable)"
+      description: Output when the bug occurred. Attach as a file if long.
+      render: shell

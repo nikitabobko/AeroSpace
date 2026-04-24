@@ -31,7 +31,16 @@ struct EnableCommand: Command {
                 }
             }
             try await activateMode(mainModeId)
+            // Resume hover-raise if a prior `enable off` paused it. A sticky
+            // runtime-disable set via `disable-auto-raise` is preserved inside
+            // the controller — resumeFromMaster is a no-op in that case.
+            AutoRaiseController.resumeFromMaster()
         } else {
+            // Pause hover-raise so mouse-moved events don't keep mutating
+            // focus while window management is disabled. The pause captures
+            // the current running state so the matching `enable on` restores
+            // it; `disable-auto-raise` sticky state is untouched.
+            AutoRaiseController.pauseForMaster()
             try await activateMode(nil)
         }
         return .succ

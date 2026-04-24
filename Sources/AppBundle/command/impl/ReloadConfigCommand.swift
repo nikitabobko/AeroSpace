@@ -32,6 +32,13 @@ struct ReloadConfigCommand: Command {
                 resetHotKeys()
                 config = parsedConfig
                 configUrl = url
+                // Apply the auto-raise config before activateMode so a
+                // throw from activateMode doesn't leave auto-raise lagging
+                // behind the global `config`. Other post-assignment work
+                // (syncStartAtLogin, MessageModel clear) is still skipped
+                // on throw — that's a broader ordering story for another
+                // change.
+                AutoRaiseController.reload(config: config.autoRaise)
                 try await activateMode(activeMode)
                 syncStartAtLogin()
                 MessageModel.shared.message = nil

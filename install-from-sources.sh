@@ -20,6 +20,7 @@ export PATH
 brew list aerospace-dev-user/aerospace-dev-tap/aerospace-dev > /dev/null 2>&1 && brew uninstall aerospace-dev-user/aerospace-dev-tap/aerospace-dev # Compatibility. Drop after a while
 brew list nikitabobko/local-tap/aerospace-dev > /dev/null 2>&1 && brew uninstall nikitabobko/local-tap/aerospace-dev
 brew list aerospace > /dev/null 2>&1 && brew uninstall aerospace
+brew list aerospace-adrianlsy > /dev/null 2>&1 && brew uninstall aerospace-adrianlsy
 which brew-install-path > /dev/null 2>&1 || brew install nikitabobko/tap/brew-install-path
 
 # Override HOMEBREW_CACHE. Otherwise, homebrew refuses to "redownload" the snapshot file

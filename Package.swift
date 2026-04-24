@@ -37,6 +37,13 @@ let package = Package(
             path: "Sources/PrivateApi",
             publicHeadersPath: "include",
         ),
+        // ObjC++ port of AutoRaise (GPL-2.0-or-later), driven as a library by AppBundle.
+        // See openspec change integrate-autoraise for the bridge and license discussion.
+        .target(
+            name: "AutoRaiseCore",
+            path: "Sources/AutoRaiseCore",
+            publicHeadersPath: "include",
+        ),
         .target(
             name: "Common",
             dependencies: [
@@ -54,6 +61,7 @@ let package = Package(
                 .product(name: "TOMLDecoder", package: "TOMLDecoder"),
                 .target(name: "Common"),
                 .target(name: "PrivateApi"),
+                .target(name: "AutoRaiseCore"),
             ],
             swiftSettings: swiftSettings,
         ),

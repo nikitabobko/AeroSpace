@@ -1,0 +1,44 @@
+= aerospace-enable-auto-raise(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-enable-auto-raise
+// tag::purpose[]
+:manpurpose: Enable hover-raise at runtime
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace enable-auto-raise [-h|--help] [--fail-if-noop]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+Starts hover-raise using the currently-loaded `[auto-raise]` config section.
+Clears any runtime-disable set by a prior `disable-auto-raise`, so a subsequent
+config reload will honor the config's `enabled` value again.
+
+When hover-raise is already running, the command succeeds without changing
+state. Pass `--fail-if-noop` to exit non-zero in that case.
+
+`enable-auto-raise` is a runtime toggle, not a reload. Editing `[auto-raise]`
+keys in the config file does not take effect when `enable-auto-raise` is
+re-run against an already-running bridge — use
+xref:./aerospace-reload-config.adoc[`reload-config`] (or the config file
+watcher) to apply TOML changes.
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+--fail-if-noop:: Exit with non-zero exit code if auto-raise is already enabled
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

@@ -1,19 +1,21 @@
 == Resources
 
-*Project homepage:* https://github.com/nikitabobko/AeroSpace +
-*Guide:* https://nikitabobko.github.io/AeroSpace/guide +
+*Project homepage:* https://github.com/AdrianLSY/AeroSpace +
+*Guide:* https://adrianlsy.github.io/AeroSpace/guide +
 
 == BUGS
 
-Bugs can be reported to https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs
+Fork-specific bugs (AutoRaise, fork docs, release tooling) can be reported to https://github.com/AdrianLSY/AeroSpace/issues
 
-Maintainers will move verified bugs to https://github.com/nikitabobko/AeroSpace/issues
+Upstream AeroSpace bugs can also be filed there, or at https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs
 
 == License
 
 Copyright (C) 2023 Nikita Bobko +
-Free use of this software is granted under the terms of the MIT License +
-You can find the full text of AeroSpace license and its dependencies in the 'legal' directory of the distributed zip archive.
+Most source files are licensed under the MIT License. +
+`Sources/AutoRaiseCore/` is licensed under GPL-2.0-or-later. +
+The combined binary is distributed under GPL-2.0-or-later. +
+Full license texts and bundled dependency licenses are in the 'legal' directory of the distributed zip archive.
 
 == AUTHOR
 

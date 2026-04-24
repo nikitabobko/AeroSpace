@@ -7,6 +7,8 @@ let subcommandDescriptions = [
     ["  close", "Close the focused window"],
     ["  config", "Query AeroSpace config options"],
     ["  debug-windows", "Interactive command to record Accessibility API debug information to create bug reports"],
+    ["  disable-auto-raise", "Disable hover-raise at runtime"],
+    ["  enable-auto-raise", "Enable hover-raise at runtime"],
     ["  enable", "Temporarily disable window management"],
     ["  false", "Return false value"],
     ["  flatten-workspace-tree", "Flatten the tree of the focused workspace"],

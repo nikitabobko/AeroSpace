@@ -19,6 +19,12 @@ let config_help_generated = """
 let debug_windows_help_generated = """
     USAGE: debug-windows [-h|--help] [--window-id <window-id>]
     """
+let disable_auto_raise_help_generated = """
+    USAGE: disable-auto-raise [-h|--help] [--fail-if-noop]
+    """
+let enable_auto_raise_help_generated = """
+    USAGE: enable-auto-raise [-h|--help] [--fail-if-noop]
+    """
 let enable_help_generated = """
     USAGE: enable [-h|--help] toggle
        OR: enable [-h|--help] on [--fail-if-noop]

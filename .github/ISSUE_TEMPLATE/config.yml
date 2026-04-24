@@ -1,1 +1,5 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Upstream AeroSpace discussions
+    url: https://github.com/nikitabobko/AeroSpace/discussions
+    about: "You can also file upstream AeroSpace bugs (tiling, focus, multi-monitor, config parsing, CLI) directly at the upstream project if you prefer."

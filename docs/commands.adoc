@@ -26,12 +26,26 @@ include::aerospace-close-all-windows-but-current.adoc[tags=synopsis]
 include::aerospace-close-all-windows-but-current.adoc[tags=purpose]
 include::aerospace-close-all-windows-but-current.adoc[tags=body]
 
+== disable-auto-raise
+----
+include::aerospace-disable-auto-raise.adoc[tags=synopsis]
+----
+include::aerospace-disable-auto-raise.adoc[tags=purpose]
+include::aerospace-disable-auto-raise.adoc[tags=body]
+
 == enable
 ----
 include::aerospace-enable.adoc[tags=synopsis]
 ----
 include::aerospace-enable.adoc[tags=purpose]
 include::aerospace-enable.adoc[tags=body]
+
+== enable-auto-raise
+----
+include::aerospace-enable-auto-raise.adoc[tags=synopsis]
+----
+include::aerospace-enable-auto-raise.adoc[tags=purpose]
+include::aerospace-enable-auto-raise.adoc[tags=body]
 
 == exec-and-forget
 ----

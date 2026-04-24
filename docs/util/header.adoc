@@ -1,7 +1,9 @@
 ====
 AeroSpace is an i3-like tiling window manager for macOS
 
-*Project homepage*: https://github.com/nikitabobko/AeroSpace
+*Homepage*: https://adrianlsy.github.io/AeroSpace/guide[Docs] | https://github.com/AdrianLSY/AeroSpace[GitHub]
+
+*Upstream*: https://github.com/nikitabobko/AeroSpace
 
 image:assets/icon.png[300,300,float="right"]
 

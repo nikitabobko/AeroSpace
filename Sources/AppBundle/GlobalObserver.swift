@@ -16,6 +16,17 @@ enum GlobalObserver {
             } else {
                 scheduleCancellableCompleteRefreshSession(.globalObserver(notifName))
             }
+            // integrate-autoraise §D6: fan out to AutoRaiseController. The
+            // refresh session handles AeroSpace's own reconciliation; the
+            // controller notifies AutoRaiseCore's AX side so its suppression
+            // window / space-change hook fire without a parallel observer.
+            switch notifName {
+                case NSWorkspace.activeSpaceDidChangeNotification.rawValue:
+                    AutoRaiseController.onActiveSpaceDidChange()
+                case NSWorkspace.didActivateApplicationNotification.rawValue:
+                    AutoRaiseController.onAppDidActivate()
+                default: break
+            }
         }
     }
 

@@ -18,8 +18,12 @@ extension CmdArgs {
                 command = ConfigCommand(args: self as! ConfigCmdArgs)
             case .debugWindows:
                 command = DebugWindowsCommand(args: self as! DebugWindowsCmdArgs)
+            case .disableAutoRaise:
+                command = DisableAutoRaiseCommand(args: self as! DisableAutoRaiseCmdArgs)
             case .enable:
                 command = EnableCommand(args: self as! EnableCmdArgs)
+            case .enableAutoRaise:
+                command = EnableAutoRaiseCommand(args: self as! EnableAutoRaiseCmdArgs)
             case .execAndForget:
                 die("exec-and-forget is parsed separately")
             case .flattenWorkspaceTree:

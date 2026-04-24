@@ -1,3 +1,19 @@
+AeroSpace is distributed under two licenses.
+
+Individual source files remain under the license declared in their header.
+Most files are MIT-licensed (see below). Files under Sources/AutoRaiseCore/
+are derived from AutoRaise (https://github.com/sbmpost/AutoRaise) and are
+licensed under GPL-2.0-or-later; their original copyright headers are
+preserved.
+
+Because the compiled AeroSpace binary links AutoRaiseCore, the binary as a
+whole is distributed under GPL-2.0-or-later. The full text of GPL-2.0 is in
+LICENSE-GPL at the repository root.
+
+================================================================================
+MIT License (applies to files that are not part of AutoRaiseCore)
+================================================================================
+
 MIT License
 
 Copyright (c) 2023 Nikita Bobko

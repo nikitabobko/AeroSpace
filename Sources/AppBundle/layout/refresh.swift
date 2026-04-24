@@ -86,6 +86,7 @@ func runLightSession<T>(
             if focusBefore != focusAfter {
                 focusAfter?.nativeFocus() // syncFocusToMacOs
             }
+            AutoRaiseController.onLayoutDidChange()
             scheduleCancellableCompleteRefreshSession(event)
             return result
         }

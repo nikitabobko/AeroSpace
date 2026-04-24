@@ -8,7 +8,9 @@ public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     case closeAllWindowsButCurrent = "close-all-windows-but-current"
     case config
     case debugWindows = "debug-windows"
+    case disableAutoRaise = "disable-auto-raise"
     case enable
+    case enableAutoRaise = "enable-auto-raise"
     case execAndForget = "exec-and-forget"
     case flattenWorkspaceTree = "flatten-workspace-tree"
     case focus
@@ -62,8 +64,12 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = SubCommandParser(parseConfigCmdArgs)
             case .debugWindows:
                 result[kind.rawValue] = SubCommandParser(DebugWindowsCmdArgs.init)
+            case .disableAutoRaise:
+                result[kind.rawValue] = SubCommandParser(DisableAutoRaiseCmdArgs.init)
             case .enable:
                 result[kind.rawValue] = SubCommandParser(parseEnableCmdArgs)
+            case .enableAutoRaise:
+                result[kind.rawValue] = SubCommandParser(EnableAutoRaiseCmdArgs.init)
             case .execAndForget:
                 break // exec-and-forget is parsed separately
             case .flattenWorkspaceTree:

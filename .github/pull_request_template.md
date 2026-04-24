@@ -1,10 +1,11 @@
-## PR checklist
+## Summary
 
-- [ ] Explain your changes in the relevant commit messages rather than in the PR description. The PR description must not contain more information than the commit messages (except for images and other media).
-- [ ] Each commit must explain what/why/how and motivation in its description. https://cbea.ms/git-commit/
-- [ ] Don't forget to link the appropriate issues/discussions in commit messages (if applicable).
-- [ ] Each commit must be an atomic change (a PR may contain several commits). Don't introduce new functional changes together with refactorings in the same commit.
-- [ ] `./test.sh` exits with non-zero exit code.
-- [ ] Avoid merge commits, always rebase and force push.
+<!-- 1-2 sentences. The commit messages should carry the detail; this is just a header. -->
 
-Failure to follow the checklist with no apparent reasons will result in silent PR rejection.
+## Checklist
+
+- [ ] Linked issue / discussion (if applicable).
+- [ ] Each commit is atomic; commit messages explain what / why / how.
+- [ ] `./test.sh` exits 0.
+- [ ] No merge commits; rebase + force-push.
+- [ ] If touching `Sources/AutoRaiseCore/**`, contribution is licensed GPL-2.0-or-later (not MIT). The combined binary is already GPL-2.0-or-later.
