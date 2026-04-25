@@ -256,12 +256,14 @@ The tree structure can be changed with three commands:
 [#layouts]
 === Layouts
 
-In total, AeroSpace provides 4 possible layouts:
+In total, AeroSpace provides 6 possible layouts:
 
 - `h_tiles` horizontal tiles (in i3, it’s called "horizontal split")
 - `v_tiles` vertical tiles (in i3, it’s called "vertical split")
 - `h_accordion` horizontal accordion (analog of i3’s "tabbed layout")
 - `v_accordion` vertical accordion (analog of i3’s "stacked layout")
+- `h_dwindle` horizontal dwindle (Hyprland-style binary-tree split, this fork only)
+- `v_dwindle` vertical dwindle (Hyprland-style binary-tree split, this fork only)
 
 <<tree,From the previous section>>, you’re already familiar with the `tiles` layout.
 
@@ -282,6 +284,104 @@ You can navigate the windows in an `h_accordion` by using the `focus (left|right
 While in a `v_accordion`, you can navigate the windows using the `focus (up|down)` command.
 
 Accordion padding is configurable via `accordion-padding` option.
+
+[#dwindle]
+==== Dwindle
+
+NOTE: Dwindle is a fork-specific feature. It is *not* available in upstream `nikitabobko/AeroSpace`. See https://github.com/nikitabobko/AeroSpace/issues/260[upstream issue #260] for the upstream tracking issue on dynamic layouts.
+
+The `dwindle` layout renders identically to `tiles` but uses a different
+*insertion* algorithm: a new window wraps the focused window in a new dwindle
+container of opposite orientation, then joins it as a sibling. The result is a
+binary tree with alternating-orientation splits, matching the dwindle layout
+in Hyprland and other dynamic tilers.
+
+You can opt in via `default-root-container-layout = 'dwindle'` (sets the
+default for new workspaces) or by running `aerospace layout dwindle` to flip a
+specific container.
+
+Compared to `tiles`, where new windows append as siblings of the focused
+window's container:
+
+----
+# tiles, after opening 4 windows in sequence
+h_tiles
+├── window 1
+├── window 2
+├── window 3
+└── window 4
+----
+
+dwindle wraps the focused window each time:
+
+----
+# dwindle, after opening 4 windows in sequence (each window splits the previous focus)
+h_dwindle
+├── window 1
+└── v_dwindle
+    ├── window 2
+    └── h_dwindle
+        ├── window 3
+        └── window 4
+----
+
+Compared to `accordion` (windows stacked, only the focused one visible),
+dwindle keeps every window visible, just allocated to progressively smaller
+slices of the screen.
+
+Behaviour is tunable via the <<dwindle-config,`[dwindle]` configuration
+section>>.
+
+*Hyprland features intentionally not implemented:* `smart_resizing` (conflicts
+with AeroSpace's tree-walk resize semantics), `permanent_direction_override`
+(niche), `pseudotile` (overlaps with `aerospace layout floating`),
+`special_scale_factor` (no special-workspace concept). See the
+https://wiki.hyprland.org/Configuring/Dwindle-Layout/[Hyprland dwindle docs]
+for context.
+
+[#dwindle-config]
+==== `[dwindle]` configuration
+
+All keys are optional. Defaults match "vanilla Hyprland dwindle behaviour, but
+conservative" — opt into the more aggressive options explicitly.
+
+[source,toml]
+----
+[dwindle]
+    force-split             = 'auto'    # default: 'auto'. one of: auto|first|second
+    smart-split             = false     # default: false
+    preserve-split          = false     # default: false
+    default-split-ratio     = 0.5       # default: 0.5. Must be in (0.0, 1.0)
+    split-width-multiplier  = 1.0       # default: 1.0. Must be > 0
+    no-gaps-when-only       = false     # default: false
+    use-active-for-splits   = true      # default: true
+----
+
+[cols="1,2"]
+|===
+|Key |Meaning
+
+|`force-split`
+|Which side of the focused window the new window joins. `auto` matches Hyprland's default (right/bottom). `first` puts the new window on the left/top. `second` is the explicit form of `auto`.
+
+|`smart-split`
+|If `true`, cursor position inside the focused window decides split orientation and side, overriding `force-split`. Closest edge to the cursor wins: cursor near the left edge → vertical split with new window on the left, near the bottom edge → horizontal split with new window below, etc. Cursor outside the focused window's rect falls back to `force-split` and aspect-ratio default.
+
+|`preserve-split`
+|If `true`, dwindle-created split containers survive when reduced to a single child (instead of being collapsed by `enable-normalization-flatten-containers`). Closing one side of a split keeps the split direction so the next inserted window picks up the same orientation. Zero-child cleanup is unaffected — fully-emptied splits are still removed.
+
+|`default-split-ratio`
+|Initial weight ratio between the focused window and the new window, in the open interval `(0.0, 1.0)`. `0.5` produces an even split; `0.7` makes the new window 70% of the slot.
+
+|`split-width-multiplier`
+|Multiplier applied on top of `default-split-ratio` to compute the new window's weight. Effective ratio = `default-split-ratio * split-width-multiplier`, clamped to `[0.05, 0.95]`. Must be `> 0`.
+
+|`no-gaps-when-only`
+|If `true`, a workspace that contains exactly one window drops outer gaps and uses the monitor's full visible rect. Adding a second window restores gaps. Scoped to dwindle-rooted workspaces.
+
+|`use-active-for-splits`
+|Default `true`: splits target the focused (most-recent) window. If `false`, splits target the window under the cursor at insertion time, falling back to the focused window when the cursor is over no window.
+|===
 
 [#normalization]
 === Normalization

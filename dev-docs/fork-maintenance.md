@@ -31,20 +31,44 @@ a conflict on them; keep the fork side and continue.
 | `script/build-brew-cask.sh` | Added `aerospace-adrianlsy` case + `--homepage` flag | Re-apply fork hunk |
 | `install-from-sources.sh` | Added `aerospace-adrianlsy` to pre-install uninstall list | Re-apply fork hunk |
 | `CLAUDE.md` | Fork-specific architecture notes | Keep fork version |
+| `docs/guide.adoc` | Dwindle layout + `[dwindle]` config section, plus AutoRaise section | Keep both fork sections; accept upstream edits to other parts |
+| `docs/aerospace-layout.adoc` | Synopsis + body extended for `dwindle\|h_dwindle\|v_dwindle` | Re-apply fork hunk to synopsis line and body |
+| `docs/config-examples/default-config.toml` | Commented `[dwindle]` example block + `dwindle` listed in `default-root-container-layout` comment | Re-apply fork hunks |
+| `Sources/AppBundle/tree/TilingContainer.swift` | `Layout.dwindle` enum case + `preserveSplit: Bool` field | Re-apply additions; verify other call-sites still cover all enum cases |
+| `Sources/AppBundle/tree/MacWindow.swift` | `unbindAndGetBindingDataForNewTilingWindow` calls `DwindleInsertion.compute` before falling through to standard logic | Re-apply the dwindle branch at the top of the function |
+| `Sources/AppBundle/tree/normalizeContainers.swift` | `unbindEmptyAndAutoFlatten` checks `!preserveSplit` before single-child collapse | Re-apply guard |
+| `Sources/AppBundle/config/Config.swift` | `var dwindle: DwindleConfig = DwindleConfig()` | Re-apply field |
+| `Sources/AppBundle/config/parseConfig.swift` | `"dwindle"` parser entry in `configParser` table | Re-apply line |
+| `Sources/AppBundle/command/impl/LayoutCommand.swift` | New cases for `.dwindle`, `.h_dwindle`, `.v_dwindle` in `matchesDescription` and the dispatch switch | Re-apply additions |
+| `Sources/AppBundle/model/Json.swift` | Added `case double(Double)` and `asDoubleOrNil` | Required by `[dwindle]` float-valued options. Re-apply if upstream rebases over this. |
+| `Sources/Common/cmdArgs/impl/LayoutCmdArgs.swift` | `LayoutDescription` adds `dwindle`, `h_dwindle`, `v_dwindle` | Re-apply additions |
 
 Files that stay upstream-shaped — do not rebrand on rebase:
 
-- `docs/guide.adoc` — entire file except the AutoRaise section (which
-  lives at `#auto-raise`). Upstream owns the guide.
-- `docs/aerospace-*.adoc` command pages — except fork-specific ones
-  (`aerospace-enable-auto-raise.adoc`, `aerospace-disable-auto-raise.adoc`).
 - `dev-docs/architecture.md`, `dev-docs/development.md` — upstream-correct.
 - `Sources/**/*.swift` — upstream architecture; fork-specific code is
-  confined to `Sources/AutoRaiseCore/**` and
-  `Sources/AppBundle/autoraise/**` and rarely conflicts with upstream.
+  confined to `Sources/AutoRaiseCore/**`, `Sources/AppBundle/autoraise/**`,
+  and `Sources/AppBundle/dwindle/**`. Each rarely conflicts with upstream
+  except where a hook is wired into a conflict-prone file (see table).
 - `legal/README.md`, `third-party-license/**` — dependency licenses.
 - `.github/FUNDING.yml` — intentionally unchanged; sponsorship still
   credits upstream maintainer.
+
+### Fork-specific divergences
+
+Two deliberate divergences from upstream `nikitabobko/main`:
+
+1. **AutoRaise** — see `Sources/AutoRaiseCore/**`,
+   `Sources/AppBundle/autoraise/**`. GPL-2.0-or-later because the AutoRaise
+   port is GPL.
+2. **Dwindle layout** — see `Sources/AppBundle/dwindle/**`,
+   `Sources/AppBundleTests/dwindle/**`. MIT (does not touch
+   `Sources/AutoRaiseCore/`). Tracks Hyprland's `dwindle` plugin behaviour.
+   Upstream's [#260](https://github.com/nikitabobko/AeroSpace/issues/260)
+   tracks dynamic layouts but has no implementation as of 2026-04. If
+   upstream lands a different design, accept the rework cost; isolated
+   logic in `Sources/AppBundle/dwindle/` keeps the call-site disruption
+   small.
 
 ## Release workflow
 

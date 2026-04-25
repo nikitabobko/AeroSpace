@@ -299,6 +299,10 @@ extension TreeNode {
                         container.orientation == .h
                             ? .h_accordion(container.children.map(\.layoutDescription))
                             : .v_accordion(container.children.map(\.layoutDescription))
+                    case .dwindle:
+                        container.orientation == .h
+                            ? .h_dwindle(container.children.map(\.layoutDescription))
+                            : .v_dwindle(container.children.map(\.layoutDescription))
                 }
         }
     }
@@ -310,6 +314,8 @@ enum LayoutDescription: Equatable {
     case v_tiles([LayoutDescription])
     case h_accordion([LayoutDescription])
     case v_accordion([LayoutDescription])
+    case h_dwindle([LayoutDescription])
+    case v_dwindle([LayoutDescription])
     case window(UInt32)
     case macosPopupWindowsContainer
     case macosMinimized

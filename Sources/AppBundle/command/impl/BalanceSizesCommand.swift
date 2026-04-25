@@ -17,7 +17,7 @@ struct BalanceSizesCommand: Command {
 private func balance(_ parent: TilingContainer) {
     for child in parent.children {
         switch parent.layout {
-            case .tiles: child.setWeight(parent.orientation, 1)
+            case .tiles, .dwindle: child.setWeight(parent.orientation, 1) // dwindle treats as tiles for sizing
             case .accordion: break // Do nothing
         }
         if let child = child as? TilingContainer {

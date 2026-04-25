@@ -95,6 +95,7 @@ private func restoreTreeRecursive(frozenContainer: FrozenContainer, parent: NonL
         frozenContainer.layout,
         index: index,
     )
+    container.preserveSplit = frozenContainer.preserveSplit
 
     for (index, child) in frozenContainer.children.enumerated() {
         switch child {

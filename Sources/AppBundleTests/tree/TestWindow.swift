@@ -39,4 +39,17 @@ final class TestWindow: Window, CustomStringConvertible {
     @MainActor override func getAxRect() async throws -> Rect? { // todo change to not Optional
         _rect
     }
+
+    /// No-op for tests. The base `Window.setAxFrame` dies as "not implemented";
+    /// MacWindow forwards to AX. Tests that drive `layoutWorkspace()` need a
+    /// silent stub so the layout pass can exercise rect math without AX.
+    override func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) {
+        if let topLeft, let size {
+            _rect = Rect(topLeftX: topLeft.x, topLeftY: topLeft.y, width: size.width, height: size.height)
+        } else if let size, let existing = _rect {
+            _rect = Rect(topLeftX: existing.topLeftX, topLeftY: existing.topLeftY, width: size.width, height: size.height)
+        } else if let topLeft, let existing = _rect {
+            _rect = Rect(topLeftX: topLeft.x, topLeftY: topLeft.y, width: existing.width, height: existing.height)
+        }
+    }
 }

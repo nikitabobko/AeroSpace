@@ -38,8 +38,8 @@ open class TreeNode: Equatable, AeroAny {
                 if parent.orientation != targetOrientation {
                     die("You can't change \(targetOrientation) weight of nodes located in \(parent.orientation) container")
                 }
-                if parent.layout != .tiles {
-                    die("Weight can be changed only for nodes whose parent has 'tiles' layout")
+                if parent.layout != .tiles && parent.layout != .dwindle {
+                    die("Weight can be changed only for nodes whose parent has 'tiles' or 'dwindle' layout")
                 }
                 adaptiveWeight = newValue
             default:

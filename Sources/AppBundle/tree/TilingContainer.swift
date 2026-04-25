@@ -5,6 +5,10 @@ final class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider 
     fileprivate var _orientation: Orientation
     var orientation: Orientation { _orientation }
     var layout: Layout
+    /// Set to `true` by the dwindle insertion algorithm when `[dwindle].preserve-split = true`.
+    /// Containers with this flag survive `unbindEmptyAndAutoFlatten`'s single-child collapse
+    /// (zero-child cleanup still runs). See `Sources/AppBundle/dwindle/DwindleInsertion.swift`.
+    var preserveSplit: Bool = false
 
     @MainActor
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, _ orientation: Orientation, _ layout: Layout, index: Int) {
@@ -58,6 +62,7 @@ extension TilingContainer {
 enum Layout: String {
     case tiles
     case accordion
+    case dwindle
 }
 
 extension String {

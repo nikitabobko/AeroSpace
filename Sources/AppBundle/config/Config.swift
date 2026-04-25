@@ -61,6 +61,7 @@ struct Config: ConvenienceCopyable {
     var onWindowDetected: [WindowDetectedCallback] = []
     var onModeChanged: [any Command] = []
     var autoRaise: AutoRaiseConfig = AutoRaiseConfig()
+    var dwindle: DwindleConfig = DwindleConfig()
 }
 
 enum DefaultContainerOrientation: String {

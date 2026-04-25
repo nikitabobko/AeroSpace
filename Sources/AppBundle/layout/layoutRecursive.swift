@@ -4,7 +4,16 @@ extension Workspace {
     @MainActor
     func layoutWorkspace() async throws {
         if isEffectivelyEmpty { return }
-        let rect = workspaceMonitor.visibleRectPaddedByOuterGaps
+        // `[dwindle].no-gaps-when-only` (fork-specific): when set and the
+        // workspace's root is dwindle and there's exactly one window, drop
+        // outer gaps so the window fills the monitor's visible rect. Adding
+        // a second window restores gaps. Scoped to dwindle-rooted workspaces.
+        let useNoGaps = config.dwindle.noGapsWhenOnly
+            && rootTilingContainer.layout == .dwindle
+            && allLeafWindowsRecursive.count == 1
+        let rect = useNoGaps
+            ? workspaceMonitor.visibleRect
+            : workspaceMonitor.visibleRectPaddedByOuterGaps
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in monitors horizontal configuration. ¯\_(ツ)_/¯
@@ -42,7 +51,7 @@ extension TreeNode {
                 lastAppliedLayoutPhysicalRect = physicalRect
                 lastAppliedLayoutVirtualRect = virtual
                 switch container.layout {
-                    case .tiles:
+                    case .tiles, .dwindle: // dwindle renders identically to tiles; insertion algorithm differs (see DwindleInsertion.swift)
                         try await container.layoutTiles(point, width: width, height: height, virtual: virtual, context)
                     case .accordion:
                         try await container.layoutAccordion(point, width: width, height: height, virtual: virtual, context)

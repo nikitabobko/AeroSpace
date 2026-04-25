@@ -10,7 +10,7 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace layout [-h|--help] [--window-id <window-id>]
-                 (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
+                 (h_tiles|v_tiles|h_accordion|v_accordion|h_dwindle|v_dwindle|tiles|accordion|dwindle|horizontal|vertical|tiling|floating)...
 
 // end::synopsis[]
 
@@ -22,10 +22,17 @@ aerospace layout [-h|--help] [--window-id <window-id>]
 
 If several arguments are supplied then finds the first argument that doesn't describe the currently active layout, and applies the layout.
 
-* Change both tiling layout and orientation in one go: `h_tiles|v_tiles|h_accordion|v_accordion`
-* Change tiling layout but preserve orientation: `tiles|accordion`
+* Change both tiling layout and orientation in one go: `h_tiles|v_tiles|h_accordion|v_accordion|h_dwindle|v_dwindle`
+* Change tiling layout but preserve orientation: `tiles|accordion|dwindle`
 * Change orientation but preserve layout: `horizontal|vertical`
 * Toggle floating/tiling mode: `tiling|floating`
+
+The `dwindle` layout renders identically to `tiles` but uses Hyprland-style
+binary-tree insertion: a new window wraps the focused window in a new dwindle
+container of opposite orientation, then joins it as a sibling. Tunables live
+under `[dwindle]` in the TOML config — see the configuration reference for
+`force-split`, `smart-split`, `preserve-split`, `default-split-ratio`,
+`split-width-multiplier`, `no-gaps-when-only`, and `use-active-for-splits`.
 
 // =========================================================== Options
 include::./util/conditional-options-header.adoc[]
@@ -46,6 +53,9 @@ include::util/conditional-examples-header.adoc[]
 
 * Toggle between `tiles` and `accordion` layouts (order of args doesn't matter): +
 `aerospace layout tiles accordion`
+
+* Toggle between `dwindle` and `tiles` layouts: +
+`aerospace layout dwindle tiles`
 
 * Switch to `tiles` layout. Toggle the layout orientation if already in `tiles` layout: +
 `aerospace layout tiles horizontal vertical`

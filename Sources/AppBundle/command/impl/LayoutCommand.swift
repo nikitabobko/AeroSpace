@@ -22,10 +22,16 @@ struct LayoutCommand: Command {
                 return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: .h, window: window)
             case .v_tiles:
                 return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: .v, window: window)
+            case .h_dwindle:
+                return changeTilingLayout(io, targetLayout: .dwindle, targetOrientation: .h, window: window)
+            case .v_dwindle:
+                return changeTilingLayout(io, targetLayout: .dwindle, targetOrientation: .v, window: window)
             case .accordion:
                 return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: nil, window: window)
             case .tiles:
                 return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: nil, window: window)
+            case .dwindle:
+                return changeTilingLayout(io, targetLayout: .dwindle, targetOrientation: nil, window: window)
             case .horizontal:
                 return changeTilingLayout(io, targetLayout: nil, targetOrientation: .h, window: window)
             case .vertical:
@@ -73,12 +79,15 @@ extension Window {
         return switch layout {
             case .accordion:   (parent as? TilingContainer)?.layout == .accordion
             case .tiles:       (parent as? TilingContainer)?.layout == .tiles
+            case .dwindle:     (parent as? TilingContainer)?.layout == .dwindle
             case .horizontal:  (parent as? TilingContainer)?.orientation == .h
             case .vertical:    (parent as? TilingContainer)?.orientation == .v
             case .h_accordion: (parent as? TilingContainer).map { $0.layout == .accordion && $0.orientation == .h } == true
             case .v_accordion: (parent as? TilingContainer).map { $0.layout == .accordion && $0.orientation == .v } == true
             case .h_tiles:     (parent as? TilingContainer).map { $0.layout == .tiles && $0.orientation == .h } == true
             case .v_tiles:     (parent as? TilingContainer).map { $0.layout == .tiles && $0.orientation == .v } == true
+            case .h_dwindle:   (parent as? TilingContainer).map { $0.layout == .dwindle && $0.orientation == .h } == true
+            case .v_dwindle:   (parent as? TilingContainer).map { $0.layout == .dwindle && $0.orientation == .v } == true
             case .tiling:      parent is TilingContainer
             case .floating:    parent is Workspace
         }

@@ -223,6 +223,13 @@ private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: M
 @MainActor
 private func unbindAndGetBindingDataForNewTilingWindow(_ workspace: Workspace, window: Window?) -> BindingData {
     window?.unbindFromParent() // It's important to unbind to get correct data from below
+    // Dwindle path: when the resolved insertion target sits inside a `Layout.dwindle`
+    // container, wrap-and-split instead of sibling-add. `DwindleInsertion.compute`
+    // returns nil when dwindle doesn't apply (no target, or target's parent isn't
+    // a dwindle container), in which case we fall through to standard behaviour.
+    if let dwindleData = DwindleInsertion.compute(workspace: workspace) {
+        return dwindleData
+    }
     let mruWindow = workspace.mostRecentWindowRecursive
     if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
         return BindingData(

@@ -199,9 +199,12 @@ final class ConfigTest: XCTestCase {
             ["(Line 1) Syntax error: missing =."],
         )
 
+        // Doubles now decode through `Json.double` (added for the `[dwindle]`
+        // section's float-valued options), so the error is "unknown key" not
+        // "unsupported type".
         assertEquals(
             parseConfig("foo = 1.0").errors,
-            ["foo: Unsupported TOML type: Double"],
+            ["foo: Unknown top-level key"],
         )
 
         assertEquals(
