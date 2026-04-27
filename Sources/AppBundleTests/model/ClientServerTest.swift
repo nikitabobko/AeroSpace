@@ -80,8 +80,8 @@ final class ClientServerTest: XCTestCase {
             (.modeChanged(mode: "resize"),
              #"{"_event":"mode-changed","mode":"resize"}"#),
 
-            (.windowDetected(windowId: 456, workspace: "1", appBundleId: "com.example", appName: "Example"),
-             #"{"_event":"window-detected","appBundleId":"com.example","appName":"Example","windowId":456,"workspace":"1"}"#),
+            (.windowDetected(windowId: 456, workspace: "1", appBundleId: "com.example", appName: "Example", tiledWindowCount: 3),
+             #"{"_event":"window-detected","appBundleId":"com.example","appName":"Example","tiledWindowCount":3,"windowId":456,"workspace":"1"}"#),
 
             (.bindingTriggered(mode: "main", binding: "alt-h"),
              #"{"_event":"binding-triggered","binding":"alt-h","mode":"main"}"#),
