@@ -40,6 +40,8 @@ extension CmdArgs {
                 command = ListModesCommand(args: self as! ListModesCmdArgs)
             case .listMonitors:
                 command = ListMonitorsCommand(args: self as! ListMonitorsCmdArgs)
+            case .listTree:
+                command = ListTreeCommand(args: self as! ListTreeCmdArgs)
             case .listWindows:
                 command = ListWindowsCommand(args: self as! ListWindowsCmdArgs)
             case .listWorkspaces:

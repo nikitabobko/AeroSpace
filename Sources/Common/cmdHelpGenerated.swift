@@ -72,6 +72,9 @@ let list_modes_help_generated = """
 let list_monitors_help_generated = """
     USAGE: list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>] [--count] [--json]
     """
+let list_tree_help_generated = """
+    USAGE: list-tree [-h|--help]
+    """
 let list_windows_help_generated = """
     USAGE: list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
                         [--monitor <monitor>...] [--workspace <workspace>...]

@@ -1,0 +1,30 @@
+= aerospace-list-tree(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-list-tree
+// tag::purpose[]
+:manpurpose: Print the full workspace tree as hierarchical JSON
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace list-tree [-h|--help]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+Outputs a JSON array of monitors, each containing its workspaces, each containing its windows.
+All workspaces are included, even empty ones.
+
+-h, --help:: Print help
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]
