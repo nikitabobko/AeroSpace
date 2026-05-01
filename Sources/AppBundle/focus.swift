@@ -93,7 +93,11 @@ extension Workspace {
     func toLiveFocus() -> LiveFocus {
         // todo unfortunately mostRecentWindowRecursive may recursively reach empty rootTilingContainer
         //      while floating or macos unconventional windows might be presented
-        if let wd = mostRecentWindowRecursive ?? anyLeafWindowRecursive {
+        // Skip windows of macOS-hidden apps. Focusing them would `nsApp.activate()` and force-unhide,
+        // which is what users with `automatically-unhide-macos-hidden-apps = false` (or with the app in
+        // `automatically-unhide-macos-hidden-apps-exceptions`) explicitly want to avoid.
+        // https://github.com/nikitabobko/AeroSpace/issues/503
+        if let wd = mostRecentFocusableWindowRecursive ?? anyFocusableLeafWindowRecursive {
             LiveFocus(windowOrNil: wd, workspace: self)
         } else {
             LiveFocus(windowOrNil: nil, workspace: self) // emptyWorkspace
