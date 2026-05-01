@@ -25,17 +25,21 @@ enum GlobalObserver {
             guard let token: RunSessionGuard = .isServerEnabled else { return }
             try await runLightSession(.globalObserver(notifName), token) {
                 if config.automaticallyUnhideMacosHiddenApps {
+                    let hiddenNonExceptionCount = MacApp.allAppsMap.values.count(where: {
+                        $0.nsApp.isHidden && !$0.isExcludedFromAutoUnhide
+                    })
                     if let w = prevFocus?.windowOrNil,
                        w.macAppUnsafe.nsApp.isHidden,
+                       !w.macAppUnsafe.isExcludedFromAutoUnhide,
                        // "Hide others" (cmd-alt-h) -> don't force focus
                        // "Hide app" (cmd-h) -> force focus
-                       MacApp.allAppsMap.values.count(where: { $0.nsApp.isHidden }) == 1
+                       hiddenNonExceptionCount == 1
                     {
                         // Force focus
                         _ = w.focusWindow()
                         w.nativeFocus()
                     }
-                    for app in MacApp.allAppsMap.values {
+                    for app in MacApp.allAppsMap.values where !app.isExcludedFromAutoUnhide {
                         app.nsApp.unhide()
                     }
                 }

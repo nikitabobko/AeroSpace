@@ -29,3 +29,11 @@ extension AbstractApp {
 extension Window {
     var macAppUnsafe: MacApp { app as! MacApp }
 }
+
+extension AbstractApp {
+    @MainActor
+    var isExcludedFromAutoUnhide: Bool {
+        guard let bundleId = rawAppBundleId else { return false }
+        return config.automaticallyUnhideMacosHiddenAppsExceptions.contains(bundleId)
+    }
+}
