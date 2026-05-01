@@ -72,6 +72,24 @@ final class TreeNodeTest: XCTestCase {
         assertEquals(workspace.rootTilingContainer.children.count, 0)
     }
 
+    func testToLiveFocusSkipsHiddenAppWindows() {
+        // https://github.com/nikitabobko/AeroSpace/issues/503
+        // Focusing a window in MacosHiddenAppsWindowsContainer would call nsApp.activate()
+        // which force-unhides the app — the exact thing the user wanted to avoid.
+        let workspace = Workspace.get(byName: name)
+        TestWindow.new(id: 1, parent: workspace.macOsNativeHiddenAppsWindowsContainer)
+
+        XCTAssertNil(workspace.toLiveFocus().windowOrNil, "Hidden-app windows must not be focus targets")
+    }
+
+    func testToLiveFocusPrefersVisibleOverHidden() {
+        let workspace = Workspace.get(byName: name)
+        TestWindow.new(id: 1, parent: workspace.macOsNativeHiddenAppsWindowsContainer)
+        TestWindow.new(id: 2, parent: workspace.rootTilingContainer)
+
+        assertEquals(workspace.toLiveFocus().windowOrNil?.windowId, 2)
+    }
+
     func testNormalizeContainers_flattenContainers() {
         let workspace = Workspace.get(byName: name) // Don't cache root node
         workspace.rootTilingContainer.apply {
