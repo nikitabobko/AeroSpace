@@ -61,6 +61,27 @@ extension TreeNode {
         return nil
     }
 
+    /// Like `mostRecentWindowRecursive`, but skips windows of macOS-hidden apps.
+    /// Focusing such windows would `nsApp.activate()` the hidden app and force-unhide it.
+    /// See https://github.com/nikitabobko/AeroSpace/issues/503
+    var mostRecentFocusableWindowRecursive: Window? {
+        if self is MacosHiddenAppsWindowsContainer { return nil }
+        return self as? Window ?? mostRecentChild?.mostRecentFocusableWindowRecursive
+    }
+
+    var anyFocusableLeafWindowRecursive: Window? {
+        if self is MacosHiddenAppsWindowsContainer { return nil }
+        if let window = self as? Window {
+            return window
+        }
+        for child in children {
+            if let window = child.anyFocusableLeafWindowRecursive {
+                return window
+            }
+        }
+        return nil
+    }
+
     // Doesn't contain at least one window
     var isEffectivelyEmpty: Bool {
         anyLeafWindowRecursive == nil
