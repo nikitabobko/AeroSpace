@@ -56,6 +56,52 @@ final class ConfigTest: XCTestCase {
         assertEquals(errors, ["persistent-workspaces: This config option is only available since \'config-version = 2\'"])
     }
 
+    func testParseAutomaticallyUnhideMacosHiddenAppsExceptions() {
+        let (config, errors) = parseConfig(
+            """
+            automatically-unhide-macos-hidden-apps = true
+            automatically-unhide-macos-hidden-apps-exceptions = ['com.hnc.Discord', 'com.ubnt.UniFi']
+            """,
+        )
+        assertEquals(errors, [])
+        assertEquals(config.automaticallyUnhideMacosHiddenAppsExceptions, ["com.hnc.Discord", "com.ubnt.UniFi"])
+    }
+
+    func testAutomaticallyUnhideMacosHiddenAppsExceptionsRequiresAutoUnhideEnabled() {
+        let (_, errors) = parseConfig(
+            """
+            automatically-unhide-macos-hidden-apps-exceptions = ['com.hnc.Discord']
+            """,
+        )
+        assertEquals(
+            errors,
+            ["automatically-unhide-macos-hidden-apps-exceptions: 'automatically-unhide-macos-hidden-apps-exceptions' is meaningful only when 'automatically-unhide-macos-hidden-apps' is true"],
+        )
+    }
+
+    func testAutomaticallyUnhideMacosHiddenAppsExceptionsTypeError() {
+        let (_, errors) = parseConfig(
+            """
+            automatically-unhide-macos-hidden-apps = true
+            automatically-unhide-macos-hidden-apps-exceptions = ['com.hnc.Discord', 1]
+            """,
+        )
+        assertEquals(
+            errors,
+            ["automatically-unhide-macos-hidden-apps-exceptions[1]: Expected type is \'string\'. But actual type is \'int\'"],
+        )
+    }
+
+    func testEmptyExceptionsListWithAutoUnhideDisabledIsAllowed() {
+        let (_, errors) = parseConfig(
+            """
+            automatically-unhide-macos-hidden-apps = false
+            automatically-unhide-macos-hidden-apps-exceptions = []
+            """,
+        )
+        assertEquals(errors, [])
+    }
+
     func testQueryCantBeUsedInConfig() {
         let (_, errors) = parseConfig(
             """

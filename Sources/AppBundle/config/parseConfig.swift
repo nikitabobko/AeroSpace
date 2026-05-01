@@ -113,6 +113,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "start-at-login": Parser(\.startAtLogin, parseBool),
     "auto-reload-config": Parser(\.autoReloadConfig, parseBool),
     "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
+    "automatically-unhide-macos-hidden-apps-exceptions": Parser(\.automaticallyUnhideMacosHiddenAppsExceptions, parseAutomaticallyUnhideMacosHiddenAppsExceptions),
     "accordion-padding": Parser(\.accordionPadding, parseInt),
     persistentWorkspacesKey: Parser(\.persistentWorkspaces, parsePersistentWorkspaces),
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseArrayOfStrings),
@@ -245,6 +246,13 @@ func tomlAnyToParsedConfigRecursive(any: Any, _ backtrace: ConfigBacktrace) -> P
             .toOrderedSet()
     }
 
+    if !config.automaticallyUnhideMacosHiddenApps && !config.automaticallyUnhideMacosHiddenAppsExceptions.isEmpty {
+        errors += [.semantic(
+            .rootKey("automatically-unhide-macos-hidden-apps-exceptions"),
+            "'automatically-unhide-macos-hidden-apps-exceptions' is meaningful only when 'automatically-unhide-macos-hidden-apps' is true",
+        )]
+    }
+
     if config.enableNormalizationFlattenContainers {
         let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings.values }
             .flatMap { $0.commands }
@@ -343,6 +351,10 @@ private func parseLayout(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedCon
 
 private func skipParsing<T: Sendable>(_ value: T) -> @Sendable (_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<T> {
     { _, _ in .success(value) }
+}
+
+private func parseAutomaticallyUnhideMacosHiddenAppsExceptions(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Set<String>> {
+    parseArrayOfStrings(raw, backtrace).map { Set($0) }
 }
 
 private func parsePersistentWorkspaces(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<OrderedSet<String>> {
