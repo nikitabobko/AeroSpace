@@ -220,6 +220,22 @@ If `automatically-unhide-macos-hidden-apps` isn't enough, you can disable `cmd-h
     cmd-alt-h = [] # Disable "hide others"
 ----
 
+[#unhide-exceptions]
+== Exclude misbehaving apps from `automatically-unhide-macos-hidden-apps`
+
+Some apps (such as Discord, Raycast, or the UniFi Network app) misuse macOS "hide application" feature to close their windows. With `automatically-unhide-macos-hidden-apps = true` they would keep popping back up immediately. Use `automatically-unhide-macos-hidden-apps-exceptions` to list bundle IDs that should remain hidden:
+
+.~/.aerospace.toml
+[source,toml]
+----
+automatically-unhide-macos-hidden-apps = true
+automatically-unhide-macos-hidden-apps-exceptions = [
+    'com.hnc.Discord',
+    'com.raycast.macos',
+    'com.ubnt.unifiac',
+]
+----
+
 [#screenshoot-shortcut]
 == Take screenshots to clipboard using keyboard shortcut
 
