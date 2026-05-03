@@ -60,7 +60,7 @@ let join_with_help_generated = """
     USAGE: join-with [-h|--help] [--window-id <window-id>] (left|down|up|right)
     """
 let layout_help_generated = """
-    USAGE: layout [-h|--help] [--window-id <window-id>]
+    USAGE: layout [-h|--help] [--window-id <window-id>|--root]
                   (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
     """
 let list_apps_help_generated = """
