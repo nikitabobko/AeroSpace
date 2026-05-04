@@ -26,6 +26,7 @@ struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
 
 struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
     var appId: String?
+    var appIdRegexSubstring: CaseInsensitiveRegex?
     var appNameRegexSubstring: CaseInsensitiveRegex?
     var windowTitleRegexSubstring: CaseInsensitiveRegex?
     var workspace: String?
@@ -35,6 +36,9 @@ struct WindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
         var resultParts: [String] = []
         if let appId {
             resultParts.append("appId=\"\(appId)\"")
+        }
+        if let appIdRegexSubstring {
+            resultParts.append("appIdRegexSubstring=\"\(appIdRegexSubstring.origin)\"")
         }
         if let appNameRegexSubstring {
             resultParts.append("appNameRegexSubstring=\"\(appNameRegexSubstring.origin)\"")
@@ -61,8 +65,9 @@ private let windowDetectedParser: [String: any ParserProtocol<WindowDetectedCall
 private let matcherParsers: [String: any ParserProtocol<WindowDetectedCallbackMatcher>] = [
     "app-id": Parser(\.appId, upcast(parseString)),
     "workspace": Parser(\.workspace, upcast(parseString)),
-    "app-name-regex-substring": Parser(\.appNameRegexSubstring, upcast(parseCasInsensitiveRegex)),
-    "window-title-regex-substring": Parser(\.windowTitleRegexSubstring, upcast(parseCasInsensitiveRegex)),
+    "app-id-regex-substring": Parser(\.appIdRegexSubstring, upcast(parseCaseInsensitiveRegex)),
+    "app-name-regex-substring": Parser(\.appNameRegexSubstring, upcast(parseCaseInsensitiveRegex)),
+    "window-title-regex-substring": Parser(\.windowTitleRegexSubstring, upcast(parseCaseInsensitiveRegex)),
     "during-aerospace-startup": Parser(\.duringAeroSpaceStartup, upcast(parseBool)),
 ]
 
@@ -81,7 +86,7 @@ func parseOnWindowDetectedArray(_ raw: Json, _ backtrace: ConfigBacktrace, _ err
     }
 }
 
-private func parseCasInsensitiveRegex(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<CaseInsensitiveRegex> {
+private func parseCaseInsensitiveRegex(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<CaseInsensitiveRegex> {
     parseString(raw, backtrace).flatMap { CaseInsensitiveRegex.new($0).toParsedConfig(backtrace) }
 }
 
