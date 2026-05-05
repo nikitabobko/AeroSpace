@@ -29,9 +29,9 @@ struct LayoutCommand: Command {
                 node = .tilingContainer(target.workspace.rootTilingContainer)
         }
 
-        let targetDescription = args.toggleBetween.val.first(where: { !node.matchesDescription($0) })
+        let targetDescription = args.toggleBetween.val.first(where: { !node.matchesDescription($0, target.windowOrNil) })
             ?? args.toggleBetween.val.first.orDie()
-        if node.matchesDescription(targetDescription) { return .fail }
+        if node.matchesDescription(targetDescription, target.windowOrNil) { return .fail }
         switch targetDescription {
             case .h_accordion:
                 return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: .h, node: node)
@@ -66,6 +66,16 @@ struct LayoutCommand: Command {
                 window.bindAsFloatingWindow(to: workspace)
                 if let size = window.lastFloatingSize { window.setAxFrame(nil, size) }
                 return .succ
+            case .sticky:
+                guard let window = target.windowOrNil else { return .fail(io.err(noWindowIsFocused)) }
+                guard let macWindow = window as? MacWindow else { return .fail }
+                if macWindow.isSticky {
+                    macWindow.isSticky = false
+                } else {
+                    guard case .floatingWindowsContainer = node else { return .fail }
+                    macWindow.isSticky = true
+                }
+                return .succ
         }
     }
 }
@@ -89,7 +99,7 @@ struct LayoutCommand: Command {
 }
 
 extension ConventionalWindowParentCases {
-    fileprivate func matchesDescription(_ layout: LayoutCmdArgs.LayoutDescription) -> Bool {
+    fileprivate func matchesDescription(_ layout: LayoutCmdArgs.LayoutDescription, _ window: Window?) -> Bool {
         return switch layout {
             case .accordion:   tilingContainerOrNil?.layout == .accordion
             case .tiles:       tilingContainerOrNil?.layout == .tiles
@@ -101,6 +111,7 @@ extension ConventionalWindowParentCases {
             case .v_tiles:     tilingContainerOrNil.map { $0.layout == .tiles && $0.orientation == .v } == true
             case .tiling:      tilingContainerOrNil != nil
             case .floating:    floatingWindowsContainerOrNil != nil
+            case .sticky:      floatingWindowsContainerOrNil != nil && (window as? MacWindow)?.isSticky == true
         }
     }
 }
