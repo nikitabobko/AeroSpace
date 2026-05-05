@@ -193,10 +193,20 @@ private func layoutWorkspaces() async throws {
         workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
         try await workspace.layoutWorkspace()
     }
+    // unhide sticky windows from non-visible workspaces
+    for workspace in Workspace.all where !workspace.isVisible {
+        for window in workspace.allLeafWindowsRecursive {
+            let macWindow = window as! MacWindow
+            if macWindow.isSticky { macWindow.unhideFromCorner() }
+        }
+    }
+    // hide non-sticky windows from non-visible workspaces
     for workspace in Workspace.all where !workspace.isVisible {
         let corner = monitorToOptimalHideCorner[workspace.workspaceMonitor.rect.topLeftCorner] ?? .bottomRightCorner
         for window in workspace.allLeafWindowsRecursive {
-            try await (window as! MacWindow).hideInCorner(corner) // todo as!
+            let macWindow = window as! MacWindow
+            if macWindow.isSticky { continue }
+            try await macWindow.hideInCorner(corner) // todo as!
         }
     }
 }
