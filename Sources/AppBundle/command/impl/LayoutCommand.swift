@@ -49,6 +49,15 @@ struct LayoutCommand: Command {
                 window.bindAsFloatingWindow(to: workspace)
                 if let size = window.lastFloatingSize { window.setAxFrame(nil, size) }
                 return .succ
+            case .sticky:
+                guard let macWindow = window as? MacWindow else { return .fail }
+                if macWindow.isSticky {
+                    macWindow.isSticky = false
+                } else {
+                    guard window.parent is Workspace else { return .fail }
+                    macWindow.isSticky = true
+                }
+                return .succ
         }
     }
 }
@@ -81,6 +90,7 @@ extension Window {
             case .v_tiles:     (parent as? TilingContainer).map { $0.layout == .tiles && $0.orientation == .v } == true
             case .tiling:      parent is TilingContainer
             case .floating:    parent is Workspace
+            case .sticky:      (parent is Workspace) && (self as? MacWindow)?.isSticky == true
         }
     }
 }
