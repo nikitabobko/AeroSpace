@@ -26,6 +26,8 @@ final class MacApp: AbstractApp {
     //      and make deinitialization automatic in deinit
     @MainActor static var allAppsMap: [pid_t: MacApp] = [:]
     @MainActor private static var wipPids: [pid_t: AwaitableOneTimeBroadcastLatch] = [:]
+    @MainActor private static var failedRegistrationRetryAfter: [pid_t: Date] = [:]
+    private static let failedRegistrationRetryDelay: TimeInterval = 5
 
     private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement, _ axSubscriptions: [AxSubscription], _ thread: Thread) {
         self.nsApp = nsApp
@@ -50,6 +52,10 @@ final class MacApp: AbstractApp {
 
         while true {
             if let existing = allAppsMap[pid] { return existing }
+            if let retryAfter = failedRegistrationRetryAfter[pid] {
+                if retryAfter > Date() { return nil }
+                failedRegistrationRetryAfter[pid] = nil
+            }
             try checkCancellation()
             if let wip = wipPids[pid] {
                 try await wip.await()
@@ -69,7 +75,12 @@ final class MacApp: AbstractApp {
                     let isGood = !subscriptions.isEmpty
                     let app = isGood ? MacApp(nsApp, axApp, subscriptions, Thread.current) : nil
                     Task { @MainActor in
-                        allAppsMap[pid] = app
+                        if let app {
+                            allAppsMap[pid] = app
+                            failedRegistrationRetryAfter[pid] = nil
+                        } else {
+                            failedRegistrationRetryAfter[pid] = Date().addingTimeInterval(failedRegistrationRetryDelay)
+                        }
                         await wip.signalToAll()
                         wipPids[pid] = nil
                     }
@@ -300,7 +311,10 @@ final class MacApp: AbstractApp {
     }
 
     private func destroy() async {
-        _ = await Task { @MainActor [pid] in _ = MacApp.allAppsMap.removeValue(forKey: pid) }.result
+        _ = await Task { @MainActor [pid] in
+            _ = MacApp.allAppsMap.removeValue(forKey: pid)
+            MacApp.failedRegistrationRetryAfter[pid] = nil
+        }.result
         for (_, job) in setFrameJobs {
             job.cancel()
         }
