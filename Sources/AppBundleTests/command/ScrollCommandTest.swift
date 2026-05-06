@@ -55,17 +55,21 @@ final class ScrollCommandTest: XCTestCase {
         let expectedHeight = workspaceRect.height - 1
         let windows = root.children.compactMap { $0 as? TestWindow }
 
-        let rect1 = windows[0].lastAppliedLayoutPhysicalRect.orDie("window 1 should be laid out")
+        // Off-screen pages must be hidden, otherwise their negative/overflow
+        // physicalX bleeds onto adjacent monitors.
+        XCTAssertNil(windows[0].lastAppliedLayoutPhysicalRect)
+        assertEquals(windows[0].isHiddenForTabs, true)
+
         let rect2 = windows[1].lastAppliedLayoutPhysicalRect.orDie("window 2 should be laid out")
         let rect3 = windows[2].lastAppliedLayoutPhysicalRect.orDie("window 3 should be laid out")
 
-        assertEquals(rect1.topLeftX, workspaceRect.topLeftX - pageWidth)
-        assertEquals(rect1.width, pageWidth)
         assertEquals(rect2.topLeftX, workspaceRect.topLeftX)
         assertEquals(rect2.width, pageWidth)
+        assertEquals(windows[1].isHiddenForTabs, false)
         assertEquals(rect3.topLeftX, workspaceRect.topLeftX + pageWidth)
         assertEquals(rect3.width, pageWidth)
         assertEquals(rect3.height, expectedHeight)
+        assertEquals(windows[2].isHiddenForTabs, false)
     }
 
     func testScrollCommandsMoveViewportAndFocus() async throws {
