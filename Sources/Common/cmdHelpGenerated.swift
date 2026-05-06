@@ -61,7 +61,7 @@ let join_with_help_generated = """
     """
 let layout_help_generated = """
     USAGE: layout [-h|--help] [--window-id <window-id>]
-                  (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
+                  (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|scrolling|tabs|horizontal|vertical|tiling|floating)...
     """
 let list_apps_help_generated = """
     USAGE: list-apps [-h|--help] [--macos-native-hidden [no]] [--format <output-format>] [--count] [--json]
@@ -128,6 +128,9 @@ let reload_config_help_generated = """
     """
 let resize_help_generated = """
     USAGE: resize [-h|--help] [--window-id <window-id>] (smart|smart-opposite|width|height) [+|-]<number>
+    """
+let scroll_help_generated = """
+    USAGE: scroll [-h|--help] (left|right)
     """
 let split_help_generated = """
     USAGE: split [-h|--help] [--window-id <window-id>] (horizontal|vertical|opposite)

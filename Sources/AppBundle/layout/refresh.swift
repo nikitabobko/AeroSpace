@@ -29,7 +29,10 @@ func runHeavyCompleteRefreshSession(
 ) async {
     let state = signposter.beginInterval(#function, "event: \(event) axTaskLocalAppThreadToken: \(axTaskLocalAppThreadToken?.idForDebug)")
     defer { signposter.endInterval(#function, state) }
-    if !TrayMenuModel.shared.isEnabled { return }
+    if !TrayMenuModel.shared.isEnabled {
+        TabHeadersPanelController.shared.closeAll()
+        return
+    }
     let res = await Result {
         try await $refreshSessionEvent.withValue(event) {
             try await $_isStartup.withValue(event.isStartup) {
@@ -155,9 +158,10 @@ enum OptimalHideCorner {
 @MainActor
 private func layoutWorkspaces() async throws {
     if !TrayMenuModel.shared.isEnabled {
+        TabHeadersPanelController.shared.closeAll()
         for workspace in Workspace.all {
             workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
-            try await workspace.layoutWorkspace() // Unhide tiling windows from corner
+            _ = try await workspace.layoutWorkspace() // Unhide tiling windows from corner
         }
         return
     }
@@ -187,11 +191,12 @@ private func layoutWorkspaces() async throws {
         monitorToOptimalHideCorner[monitor.rect.topLeftCorner] = corner
     }
 
+    var tabHeaderSnapshots: [TabHeaderSnapshot] = []
     // to reduce flicker, first unhide visible workspaces, then hide invisible ones
     for monitor in monitors {
         let workspace = monitor.activeWorkspace
         workspace.allLeafWindowsRecursive.forEach { ($0 as! MacWindow).unhideFromCorner() } // todo as!
-        try await workspace.layoutWorkspace()
+        tabHeaderSnapshots += try await workspace.layoutWorkspace()
     }
     for workspace in Workspace.all where !workspace.isVisible {
         let corner = monitorToOptimalHideCorner[workspace.workspaceMonitor.rect.topLeftCorner] ?? .bottomRightCorner
@@ -199,6 +204,7 @@ private func layoutWorkspaces() async throws {
             try await (window as! MacWindow).hideInCorner(corner) // todo as!
         }
     }
+    TabHeadersPanelController.shared.refresh(with: tabHeaderSnapshots)
 }
 
 @MainActor

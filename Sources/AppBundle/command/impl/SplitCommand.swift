@@ -24,6 +24,9 @@ struct SplitCommand: Command {
                     case .horizontal: .h
                     case .opposite: parent.orientation.opposite
                 }
+                if parent.layout == .scrolling && orientation != .h {
+                    return .fail(io.err("The scrolling layout is always horizontal"))
+                }
                 if parent.children.count == 1 {
                     parent.changeOrientation(orientation)
                 } else {
