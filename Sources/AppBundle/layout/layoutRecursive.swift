@@ -207,10 +207,16 @@ extension TilingContainer {
                 let pageWidth = width / 2
                 let rawGap = context.resolvedGaps.inner.horizontal.toDouble()
                 for (index, child) in children.enumerated() {
-                    let virtualX = virtual.topLeftX + CGFloat(index) * pageWidth
-                    let physicalX = point.x + CGFloat(index - scrollingIndex) * pageWidth
                     let isLeftVisiblePage = index == scrollingIndex
                     let isRightVisiblePage = index == scrollingIndex + 1
+                    // Off-screen pages must be parked off-screen, otherwise their
+                    // negative/overflowing physicalX bleeds onto adjacent monitors.
+                    guard isLeftVisiblePage || isRightVisiblePage else {
+                        try await child.hideSubtreeForTabs()
+                        continue
+                    }
+                    let virtualX = virtual.topLeftX + CGFloat(index) * pageWidth
+                    let physicalX = point.x + CGFloat(index - scrollingIndex) * pageWidth
                     let lPadding = isRightVisiblePage ? rawGap / 2 : 0
                     let rPadding = isLeftVisiblePage ? rawGap / 2 : 0
                     try await child.layoutRecursive(
