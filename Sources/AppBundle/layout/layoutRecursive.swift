@@ -4,7 +4,7 @@ extension Workspace {
     @MainActor
     func layoutWorkspace() async throws {
         if isEffectivelyEmpty { return }
-        let rect = workspaceMonitor.visibleRectPaddedByOuterGaps
+        let rect = workspaceMonitor.visibleRectPaddedByOuterGapsForWorkspace(name)
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in monitors horizontal configuration. ¯\_(ツ)_/¯
@@ -61,7 +61,7 @@ private struct LayoutContext {
     @MainActor
     init(_ workspace: Workspace) {
         self.workspace = workspace
-        self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor)
+        self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor, workspace: workspace.name)
     }
 }
 

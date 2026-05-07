@@ -67,17 +67,17 @@ struct ResolvedGaps {
         let right: Int
     }
 
-    @MainActor init(gaps: Gaps, monitor: any Monitor) {
+    @MainActor init(gaps: Gaps, monitor: any Monitor, workspace: String? = nil) {
         inner = .init(
-            vertical: gaps.inner.vertical.getValue(for: monitor),
-            horizontal: gaps.inner.horizontal.getValue(for: monitor),
+            vertical: gaps.inner.vertical.getValue(for: monitor, workspace: workspace),
+            horizontal: gaps.inner.horizontal.getValue(for: monitor, workspace: workspace),
         )
 
         outer = .init(
-            left: gaps.outer.left.getValue(for: monitor),
-            bottom: gaps.outer.bottom.getValue(for: monitor),
-            top: gaps.outer.top.getValue(for: monitor),
-            right: gaps.outer.right.getValue(for: monitor),
+            left: gaps.outer.left.getValue(for: monitor, workspace: workspace),
+            bottom: gaps.outer.bottom.getValue(for: monitor, workspace: workspace),
+            top: gaps.outer.top.getValue(for: monitor, workspace: workspace),
+            right: gaps.outer.right.getValue(for: monitor, workspace: workspace),
         )
     }
 }

@@ -1,8 +1,13 @@
 extension Monitor {
     @MainActor
     var visibleRectPaddedByOuterGaps: Rect {
+        visibleRectPaddedByOuterGapsForWorkspace(nil)
+    }
+
+    @MainActor
+    func visibleRectPaddedByOuterGapsForWorkspace(_ workspace: String?) -> Rect {
         let topLeft = visibleRect.topLeftCorner
-        let gaps = ResolvedGaps(gaps: config.gaps, monitor: self)
+        let gaps = ResolvedGaps(gaps: config.gaps, monitor: self, workspace: workspace)
         return Rect(
             topLeftX: topLeft.x + gaps.outer.left.toDouble(),
             topLeftY: topLeft.y + gaps.outer.top.toDouble(),
