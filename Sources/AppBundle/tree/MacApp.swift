@@ -104,10 +104,17 @@ final class MacApp: AbstractApp {
     func getFocusedWindow() async throws -> Window? {
         let result: (UInt32, [UInt32])? = try await thread?.runInLoop { [nsApp, axApp, windows, appId] job in
             guard let focused = try axApp.threadGuarded.get(Ax.focusedWindowAttr) else { return nil }
-            // For tab-based apps (e.g. Fork): atomically prune stale tab AX windows
-            // when the focused tab changes. Without this, the new tab is registered
-            // before the old one is GC'd, briefly producing two MacWindows that
-            // re-tile the workspace and cause a visible layout flicker.
+            // Register the focused window first. If it can't be registered (e.g.
+            // `isLeftMouseButtonDown` makes `getOrRegisterAxWindow` skip new
+            // registrations), bail out without touching anything else.
+            guard try windows.threadGuarded.getOrRegisterAxWindow(windowId: focused.windowId, focused.ax.cast, nsApp, job) != nil else {
+                return nil
+            }
+            // For tab-based apps (e.g. Fork): only after the new focused tab is in
+            // the dict, prune stale tab AX windows. Doing this in the opposite order
+            // would empty the dict during a click (mouse-down skips registration)
+            // and the next refresh would GC the only Fork MacWindow, briefly
+            // collapsing its tile -- which the user sees as a layout flicker.
             var staleIds: [UInt32] = []
             if appId?.hasTabsAsWindows == true {
                 let valid = Set((axApp.threadGuarded.get(Ax.windowsAttr) ?? []).map(\.windowId))
@@ -115,9 +122,6 @@ final class MacApp: AbstractApp {
                 for id in staleIds {
                     windows.threadGuarded.removeValue(forKey: id)
                 }
-            }
-            guard try windows.threadGuarded.getOrRegisterAxWindow(windowId: focused.windowId, focused.ax.cast, nsApp, job) != nil else {
-                return nil
             }
             return (focused.windowId, staleIds)
         }
@@ -305,7 +309,12 @@ final class MacApp: AbstractApp {
             // Some apps (e.g. Fork) expose each tab as a separate AXWindow whose AX
             // object stays valid after the tab is hidden, so containingWindowId() alone
             // keeps stale tabs alive. Opt-in: AXWindows excludes windows on inactive Spaces.
-            let trustAxWindowsAsAliveSet: Set<UInt32>? = appId?.hasTabsAsWindows == true
+            // For tab-based apps, intersect the alive set with `AXWindows`. Skip
+            // this filter while the left mouse button is down: in that state
+            // `getOrRegisterAxWindow` refuses to add new windows, so applying
+            // the filter would drop the old tab without being able to add the
+            // new one and would briefly leave the app with zero tracked windows.
+            let trustAxWindowsAsAliveSet: Set<UInt32>? = (appId?.hasTabsAsWindows == true && !isLeftMouseButtonDown)
                 ? Set(axWindowsList.map(\.windowId))
                 : nil
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
