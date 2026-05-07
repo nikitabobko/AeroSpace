@@ -16,17 +16,21 @@ final class MacWindow: Window {
 
     @MainActor
     @discardableResult
-    static func getOrRegister(windowId: UInt32, macApp: MacApp) async throws -> MacWindow {
+    static func getOrRegister(windowId: UInt32, macApp: MacApp, inheritedBinding: BindingData? = nil) async throws -> MacWindow {
         if let existing = allWindowsMap[windowId] { return existing }
         let rect = try await macApp.getAxRect(windowId)
-        let data = try await unbindAndGetBindingDataForNewWindow(
-            windowId,
-            macApp,
-            isStartup
-                ? (rect?.center.monitorApproximation ?? mainMonitor).activeWorkspace
-                : focus.workspace,
-            window: nil,
-        )
+        let data: BindingData = if let inheritedBinding {
+            inheritedBinding
+        } else {
+            try await unbindAndGetBindingDataForNewWindow(
+                windowId,
+                macApp,
+                isStartup
+                    ? (rect?.center.monitorApproximation ?? mainMonitor).activeWorkspace
+                    : focus.workspace,
+                window: nil,
+            )
+        }
 
         // atomic synchronous section
         if let existing = allWindowsMap[windowId] { return existing }

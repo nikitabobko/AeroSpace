@@ -8,6 +8,7 @@ enum KnownBundleId: String, Equatable {
     case cleanshotx = "pl.maketheweb.cleanshotx"
     case emacs = "org.gnu.Emacs"
     case finder = "com.apple.finder"
+    case fork = "com.DanPristupov.Fork"
     case ghostty = "com.mitchellh.ghostty"
     case gimp = "org.gimp.gimp-2.10"
     case iphonesimulator = "com.apple.iphonesimulator"
@@ -39,5 +40,13 @@ enum KnownBundleId: String, Equatable {
 
     var isVscode: Bool {
         self == .vscode || self == .vscodium
+    }
+
+    /// True for apps that expose each native macOS tab as a separate AXWindow whose
+    /// AX object stays valid after the tab is hidden. AeroSpace must trust the app's
+    /// `AXWindows` (rather than the per-element `containingWindowId()`) to know which
+    /// tabs are actually visible right now.
+    var hasTabsAsWindows: Bool {
+        self == .fork || self == .ghostty
     }
 }
