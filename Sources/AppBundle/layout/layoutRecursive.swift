@@ -13,7 +13,8 @@ extension Workspace {
         let height = rect.height - 1
         var virtual = rect
         if let ratio = config.singleWindowAspectRatio,
-           rootTilingContainer.hasSingleLeafWindowRecursive {
+           rootTilingContainer.hasSingleLeafWindowRecursive
+        {
             let constrainedWidth = height * ratio.width / ratio.height
             if constrainedWidth < width {
                 let xOffset = (width - constrainedWidth) / 2
