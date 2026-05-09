@@ -123,6 +123,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
 
     "gaps": Parser(\.gaps, parseGaps),
     "single-window-aspect-ratio": Parser(\.singleWindowAspectRatio, parseSingleWindowAspectRatio),
+    "apply-aspect-to-accordion": Parser(\.applyAspectToAccordion, parseApplyAspectOrientation),
     "workspace-to-monitor-force-assignment": Parser(\.workspaceToMonitorForceAssignment, parseWorkspaceToMonitorAssignment),
     "on-window-detected": Parser(\.onWindowDetected, parseOnWindowDetectedArray),
 
@@ -370,6 +371,13 @@ private func parseSingleWindowAspectRatio(_ raw: Json, _ backtrace: ConfigBacktr
             return .failure(.semantic(backtrace, "Expected format 'WIDTH:HEIGHT' (e.g. '16:9')"))
         }
         return .success(AspectRatio(width: CGFloat(parts[0]), height: CGFloat(parts[1])))
+    }
+}
+
+private func parseApplyAspectOrientation(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<ApplyAspectOrientation> {
+    parseString(raw, backtrace).flatMap {
+        ApplyAspectOrientation(rawValue: $0)
+            .orFailure(.semantic(backtrace, "Expected 'vertical', 'horizontal', 'all', or 'none'"))
     }
 }
 

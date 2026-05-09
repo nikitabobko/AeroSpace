@@ -12,9 +12,7 @@ extension Workspace {
         var width = rect.width
         let height = rect.height - 1
         var virtual = rect
-        if let ratio = config.singleWindowAspectRatio,
-           rootTilingContainer.hasSingleLeafWindowRecursive
-        {
+        if let ratio = config.singleWindowAspectRatio, shouldApplyAspectRatio(to: rootTilingContainer) {
             let constrainedWidth = height * ratio.width / ratio.height
             if constrainedWidth < width {
                 let xOffset = (width - constrainedWidth) / 2
@@ -25,6 +23,24 @@ extension Workspace {
         }
         try await layoutRecursive(point, width: width, height: height, virtual: virtual, LayoutContext(self))
     }
+}
+
+@MainActor
+private func shouldApplyAspectRatio(to root: TilingContainer) -> Bool {
+    if root.hasSingleLeafWindowRecursive { return true }
+    let accordion: TilingContainer
+    if root.layout == .accordion {
+        accordion = root
+    } else if root.children.count == 1,
+              let child = root.children.first as? TilingContainer,
+              child.layout == .accordion
+    {
+        accordion = child
+    } else {
+        return false
+    }
+    return accordion.children.allSatisfy { $0 is Window }
+        && config.applyAspectToAccordion.matches(accordion.orientation)
 }
 
 extension TreeNode {
