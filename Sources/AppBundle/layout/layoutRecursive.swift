@@ -8,7 +8,21 @@ extension Workspace {
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in monitors horizontal configuration. ¯\_(ツ)_/¯
-        try await layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, LayoutContext(self))
+        var point = rect.topLeftCorner
+        var width = rect.width
+        let height = rect.height - 1
+        var virtual = rect
+        if let ratio = config.singleWindowAspectRatio,
+           rootTilingContainer.hasSingleLeafWindowRecursive {
+            let constrainedWidth = height * ratio.width / ratio.height
+            if constrainedWidth < width {
+                let xOffset = (width - constrainedWidth) / 2
+                point = CGPoint(x: rect.topLeftX + xOffset, y: rect.topLeftY)
+                virtual = Rect(topLeftX: rect.topLeftX + xOffset, topLeftY: rect.topLeftY, width: constrainedWidth, height: rect.height)
+                width = constrainedWidth
+            }
+        }
+        try await layoutRecursive(point, width: width, height: height, virtual: virtual, LayoutContext(self))
     }
 }
 

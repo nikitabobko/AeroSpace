@@ -66,6 +66,19 @@ extension TreeNode {
         anyLeafWindowRecursive == nil
     }
 
+    var hasSingleLeafWindowRecursive: Bool {
+        var found = false
+        func visit(_ node: TreeNode) -> Bool {
+            if node is Window {
+                if found { return false }
+                found = true
+                return true
+            }
+            return node.children.allSatisfy { visit($0) }
+        }
+        return visit(self) && found
+    }
+
     @MainActor
     var hWeight: CGFloat {
         get { getWeight(.h) }

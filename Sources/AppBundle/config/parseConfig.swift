@@ -122,6 +122,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     modeConfigRootKey: Parser(\.modes, skipParsing(Config().modes)), // Parsed manually
 
     "gaps": Parser(\.gaps, parseGaps),
+    "single-window-aspect-ratio": Parser(\.singleWindowAspectRatio, parseSingleWindowAspectRatio),
     "workspace-to-monitor-force-assignment": Parser(\.workspaceToMonitorForceAssignment, parseWorkspaceToMonitorAssignment),
     "on-window-detected": Parser(\.onWindowDetected, parseOnWindowDetectedArray),
 
@@ -360,6 +361,16 @@ private func parseArrayOfStrings(_ raw: Json, _ backtrace: ConfigBacktrace) -> P
                 parseString(elem, backtrace + .index(index))
             }
         }
+}
+
+private func parseSingleWindowAspectRatio(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<AspectRatio?> {
+    parseString(raw, backtrace).flatMap { str in
+        let parts = str.split(whereSeparator: { $0 == ":" || $0 == " " }).compactMap { Double($0) }
+        guard parts.count == 2, parts[0] > 0, parts[1] > 0 else {
+            return .failure(.semantic(backtrace, "Expected format 'WIDTH:HEIGHT' (e.g. '16:9')"))
+        }
+        return .success(AspectRatio(width: CGFloat(parts[0]), height: CGFloat(parts[1])))
+    }
 }
 
 private func parseDefaultContainerOrientation(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<DefaultContainerOrientation> {
