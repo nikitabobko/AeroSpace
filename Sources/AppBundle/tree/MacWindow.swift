@@ -14,6 +14,19 @@ final class MacWindow: Window {
     @MainActor static var allWindowsMap: [UInt32: MacWindow] = [:]
     @MainActor static var allWindows: [MacWindow] { Array(allWindowsMap.values) }
 
+    /// Synchronous swap-registration used during a tab swap in tab-based apps.
+    /// Doing this without awaits ensures the workspace tree is never observed in a
+    /// "gap" state (between the stale tab being unbound and the new tab being bound),
+    /// which is critical because the refresh task can be cancelled mid-await and
+    /// leave the tree without a tile until the next refresh -- a visible flicker.
+    @MainActor
+    static func registerWithInheritedBinding(windowId: UInt32, macApp: MacApp, binding: BindingData) -> MacWindow {
+        if let existing = allWindowsMap[windowId] { return existing }
+        let window = MacWindow(windowId, macApp, lastFloatingSize: nil, parent: binding.parent, adaptiveWeight: binding.adaptiveWeight, index: binding.index)
+        allWindowsMap[windowId] = window
+        return window
+    }
+
     @MainActor
     @discardableResult
     static func getOrRegister(windowId: UInt32, macApp: MacApp) async throws -> MacWindow {
