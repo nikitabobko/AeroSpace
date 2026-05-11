@@ -126,10 +126,11 @@ final class MacApp: AbstractApp {
             return (focused.windowId, staleIds)
         }
         guard let (windowId, staleIds) = result else { return nil }
-        // Capture the binding location of the stale MacWindow so the new tab can
-        // inherit the same tile slot. Without this, GCing the old tab and creating
-        // the new one through MRU placement can put the replacement in a different
-        // slot, which the user sees as a layout flicker.
+        // Unbind stale MacWindows and capture one's BindingData so the new tab can
+        // inherit the same tile slot. The full unbind -> bind dance MUST be done
+        // without awaiting anything in between, otherwise the cancellable refresh
+        // task can be cancelled mid-await and leave the workspace tree with a gap
+        // that the user sees as a layout flicker.
         var inheritedBinding: BindingData? = nil
         for id in staleIds {
             guard let stale = MacWindow.allWindowsMap.removeValue(forKey: id) else { continue }
@@ -138,7 +139,10 @@ final class MacApp: AbstractApp {
                 inheritedBinding = bindingData
             }
         }
-        return try await MacWindow.getOrRegister(windowId: windowId, macApp: self, inheritedBinding: inheritedBinding)
+        if let inheritedBinding {
+            return MacWindow.registerWithInheritedBinding(windowId: windowId, macApp: self, binding: inheritedBinding)
+        }
+        return try await MacWindow.getOrRegister(windowId: windowId, macApp: self)
     }
 
     @MainActor func nativeFocus(_ windowId: UInt32) {
