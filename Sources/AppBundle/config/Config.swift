@@ -56,6 +56,8 @@ struct Config: ConvenienceCopyable {
     var onFocusedMonitorChanged: [any Command] = []
 
     var gaps: Gaps = .zero
+    var singleWindowAspectRatio: AspectRatio? = nil
+    var applyAspectToAccordion: ApplyAspectOrientation = .all
     var workspaceToMonitorForceAssignment: [String: [MonitorDescription]] = [:]
     var modes: [String: Mode] = [:]
     var onWindowDetected: [WindowDetectedCallback] = []
@@ -64,4 +66,22 @@ struct Config: ConvenienceCopyable {
 
 enum DefaultContainerOrientation: String {
     case horizontal, vertical, auto
+}
+
+struct AspectRatio: Equatable, Sendable {
+    let width: CGFloat
+    let height: CGFloat
+}
+
+enum ApplyAspectOrientation: String {
+    case vertical, horizontal, all, none
+
+    func matches(_ orientation: Orientation) -> Bool {
+        switch self {
+            case .all: return true
+            case .horizontal: return orientation == .h
+            case .vertical: return orientation == .v
+            case .none: return false
+        }
+    }
 }
