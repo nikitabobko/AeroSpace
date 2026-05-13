@@ -248,6 +248,40 @@ final class ConfigTest: XCTestCase {
         )
     }
 
+    func testPairNewWindowWithFocused_disabled() {
+        let (parsed, errors) = parseConfig("pair-new-window-with-focused = 'disabled'")
+        assertEquals(errors, [])
+        assertEquals(parsed.pairNewWindowWithFocused, .disabled)
+    }
+
+    func testPairNewWindowWithFocused_validValues() {
+        let toml = """
+            enable-normalization-opposite-orientation-for-nested-containers = false
+            pair-new-window-with-focused = 'h_accordion'
+            """
+        let (parsed, errors) = parseConfig(toml)
+        assertEquals(errors, [])
+        assertEquals(parsed.pairNewWindowWithFocused, .wrap(orientation: .h, layout: .accordion))
+    }
+
+    func testPairNewWindowWithFocused_invalidValue() {
+        let (_, errors) = parseConfig(
+            """
+            enable-normalization-opposite-orientation-for-nested-containers = false
+            pair-new-window-with-focused = 'sideways'
+            """,
+        )
+        assertEquals(errors, ["pair-new-window-with-focused: Can't parse 'sideways'. Possible values: disabled|h_accordion|v_accordion|h_tiles|v_tiles"])
+    }
+
+    func testPairNewWindowWithFocused_requiresOppositeOrientationNormalizationDisabled() {
+        let (_, errors) = parseConfig("pair-new-window-with-focused = 'h_accordion'")
+        assertEquals(
+            errors,
+            ["pair-new-window-with-focused: 'pair-new-window-with-focused' requires 'enable-normalization-opposite-orientation-for-nested-containers = false', because the normalization may flip the orientation of the newly created container right after it is built."],
+        )
+    }
+
     func testParseWorkspaceToMonitorAssignment() {
         let (parsed, errors) = parseConfig(
             """

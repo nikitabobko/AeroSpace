@@ -39,6 +39,7 @@ final class MacWindow: Window {
                 ? (rect?.center.monitorApproximation ?? mainMonitor).activeWorkspace
                 : focus.workspace,
             window: nil,
+            isNewWindow: true,
         )
 
         // atomic synchronous section
@@ -215,28 +216,49 @@ extension Window {
     @MainActor
     func relayoutWindow(on workspace: Workspace, forceTile: Bool = false) async throws {
         let data = forceTile
-            ? unbindAndGetBindingDataForNewTilingWindow(workspace, window: self)
-            : try await unbindAndGetBindingDataForNewWindow(self.asMacWindow().windowId, self.asMacWindow().macApp, workspace, window: self)
+            ? unbindAndGetBindingDataForNewTilingWindow(workspace, window: self, isNewWindow: false)
+            : try await unbindAndGetBindingDataForNewWindow(self.asMacWindow().windowId, self.asMacWindow().macApp, workspace, window: self, isNewWindow: false)
         bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
     }
 }
 
 // The function is private because it's unsafe. It leaves the window in unbound state
 @MainActor
-private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace, window: Window?) async throws -> BindingData {
+private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace, window: Window?, isNewWindow: Bool) async throws -> BindingData {
     let windowLevel = getWindowLevel(for: windowId)
     return switch try await macApp.getAxUiElementWindowType(windowId, windowLevel) {
         case .popup: BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         case .dialog: BindingData(parent: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-        case .window: unbindAndGetBindingDataForNewTilingWindow(workspace, window: window)
+        case .window: unbindAndGetBindingDataForNewTilingWindow(workspace, window: window, isNewWindow: isNewWindow)
     }
 }
 
 // The function is private because it's unsafe. It leaves the window in unbound state
 @MainActor
-private func unbindAndGetBindingDataForNewTilingWindow(_ workspace: Workspace, window: Window?) -> BindingData {
+private func unbindAndGetBindingDataForNewTilingWindow(_ workspace: Workspace, window: Window?, isNewWindow: Bool) -> BindingData {
     window?.unbindFromParent() // It's important to unbind to get correct data from below
     let mruWindow = workspace.mostRecentWindowRecursive
+
+    // Wrap the new window together with the MRU (previously focused) window in a fresh
+    // container of the configured layout. The new container takes the MRU's slot in its
+    // original parent, and the MRU + new window become its only children.
+    if isNewWindow,
+       case let .wrap(orientation, layout) = config.pairNewWindowWithFocused,
+       let mruWindow,
+       let mruParent = mruWindow.parent as? TilingContainer
+    {
+        let mruBinding = mruWindow.unbindFromParent()
+        let newContainer = TilingContainer(
+            parent: mruParent,
+            adaptiveWeight: mruBinding.adaptiveWeight,
+            orientation,
+            layout,
+            index: mruBinding.index,
+        )
+        mruWindow.bind(to: newContainer, adaptiveWeight: WEIGHT_AUTO, index: 0)
+        return BindingData(parent: newContainer, adaptiveWeight: WEIGHT_AUTO, index: 1)
+    }
+
     if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
         return BindingData(
             parent: tilingParent,

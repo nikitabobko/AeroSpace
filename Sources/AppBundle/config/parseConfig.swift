@@ -110,6 +110,8 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "default-root-container-layout": Parser(\.defaultRootContainerLayout, parseLayout),
     "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, parseDefaultContainerOrientation),
 
+    "pair-new-window-with-focused": Parser(\.pairNewWindowWithFocused, parsePairNewWindowWithFocused),
+
     "start-at-login": Parser(\.startAtLogin, parseBool),
     "auto-reload-config": Parser(\.autoReloadConfig, parseBool),
     "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
@@ -245,6 +247,13 @@ func tomlAnyToParsedConfigRecursive(any: Any, _ backtrace: ConfigBacktrace) -> P
             .toOrderedSet()
     }
 
+    if config.pairNewWindowWithFocused != .disabled && config.enableNormalizationOppositeOrientationForNestedContainers {
+        errors += [.semantic(
+            .rootKey("pair-new-window-with-focused"),
+            "'pair-new-window-with-focused' requires 'enable-normalization-opposite-orientation-for-nested-containers = false', because the normalization may flip the orientation of the newly created container right after it is built.",
+        )]
+    }
+
     if config.enableNormalizationFlattenContainers {
         let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings.values }
             .flatMap { $0.commands }
@@ -366,6 +375,19 @@ private func parseDefaultContainerOrientation(_ raw: Json, _ backtrace: ConfigBa
     parseString(raw, backtrace).flatMap {
         DefaultContainerOrientation(rawValue: $0)
             .orFailure(.semantic(backtrace, "Can't parse default container orientation '\($0)'"))
+    }
+}
+
+private func parsePairNewWindowWithFocused(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<PairNewWindowWithFocused> {
+    parseString(raw, backtrace).flatMap { str in
+        switch str {
+            case "disabled": .success(.disabled)
+            case "h_accordion", "h-accordion": .success(.wrap(orientation: .h, layout: .accordion))
+            case "v_accordion", "v-accordion": .success(.wrap(orientation: .v, layout: .accordion))
+            case "h_tiles", "h-tiles", "h_list", "h-list": .success(.wrap(orientation: .h, layout: .tiles))
+            case "v_tiles", "v-tiles", "v_list", "v-list": .success(.wrap(orientation: .v, layout: .tiles))
+            default: .failure(.semantic(backtrace, "Can't parse '\(str)'. Possible values: disabled|h_accordion|v_accordion|h_tiles|v_tiles"))
+        }
     }
 }
 

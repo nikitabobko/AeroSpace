@@ -60,8 +60,14 @@ struct Config: ConvenienceCopyable {
     var modes: [String: Mode] = [:]
     var onWindowDetected: [WindowDetectedCallback] = []
     var onModeChanged: [any Command] = []
+    var pairNewWindowWithFocused: PairNewWindowWithFocused = .disabled
 }
 
 enum DefaultContainerOrientation: String {
     case horizontal, vertical, auto
+}
+
+enum PairNewWindowWithFocused: Equatable, Sendable {
+    case disabled
+    case wrap(orientation: Orientation, layout: Layout)
 }
