@@ -71,13 +71,17 @@ func exitMacOsNativeUnconventionalState(window: Window, prev: MacosPrev, workspa
     // same slot. This preserves nested splits the user set up before fullscreen.
     if let prevParent = prev.parent, prevParent.nodeWorkspace === workspace {
         window.unbindFromParent()
-        let clampedIndex = min(prev.index, prevParent.children.count)
+        // Sibling anchors are more robust than the raw saved index because the
+        // parent's children list may have shifted while the window was in the
+        // unconventional container (e.g., another sibling briefly gc'd and
+        // re-registered, or another sibling also entered and exited fullscreen).
+        let restoreIndex = prev.resolveIndex(in: prevParent)
         // Use WEIGHT_AUTO so the window picks up the current average sibling weight.
         // Saving prev.adaptiveWeight is wrong because while this window was in the
         // unconventional container, its siblings' weights were rebalanced to fill
         // the freed space; restoring the old absolute weight makes this window
         // noticeably smaller than its siblings after the rebalance.
-        window.bind(to: prevParent, adaptiveWeight: WEIGHT_AUTO, index: clampedIndex)
+        window.bind(to: prevParent, adaptiveWeight: WEIGHT_AUTO, index: restoreIndex)
         // Same reason as in enterMacOsUnconventionalState: the cached world from when
         // this window was still in the unconventional container is now stale and
         // would re-float this window if restoration fires.

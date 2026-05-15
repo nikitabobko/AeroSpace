@@ -60,12 +60,45 @@ final class MacosPrev {
     let parentKind: NonLeafTreeNodeKind
     let index: Int
     let adaptiveWeight: CGFloat
+    /// Sibling anchors captured at fullscreen entry. On exit we look these up in
+    /// the parent's current children to find the correct insertion point even if
+    /// the parent's child list has shifted in the meantime (e.g., another window
+    /// briefly gc'd and re-registered during the fullscreen transition).
+    let nextSiblingWindowId: UInt32?
+    let prevSiblingWindowId: UInt32?
 
     init(parent: NonLeafTreeNodeObject, index: Int, adaptiveWeight: CGFloat) {
         self.parent = parent
         self.parentKind = parent.kind
         self.index = index
         self.adaptiveWeight = adaptiveWeight
+        // index here is the window's own index in parent.children BEFORE it has
+        // moved into the unconventional container.
+        let nextIdx = index + 1
+        let prevIdx = index - 1
+        self.nextSiblingWindowId = nextIdx < parent.children.count
+            ? (parent.children[nextIdx] as? Window)?.windowId
+            : nil
+        self.prevSiblingWindowId = prevIdx >= 0
+            ? (parent.children[prevIdx] as? Window)?.windowId
+            : nil
+    }
+
+    @MainActor
+    func resolveIndex(in parent: NonLeafTreeNodeObject) -> Int {
+        // Prefer next sibling: inserting before it pushes it down and keeps the
+        // ordering relative to whatever comes after.
+        if let nextId = nextSiblingWindowId,
+           let nextIdx = parent.children.firstIndex(where: { ($0 as? Window)?.windowId == nextId })
+        {
+            return nextIdx
+        }
+        if let prevId = prevSiblingWindowId,
+           let prevIdx = parent.children.firstIndex(where: { ($0 as? Window)?.windowId == prevId })
+        {
+            return prevIdx + 1
+        }
+        return min(index, parent.children.count)
     }
 }
 
