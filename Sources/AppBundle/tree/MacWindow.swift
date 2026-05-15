@@ -41,9 +41,7 @@ final class RecentBinding {
             return nextIdx
         }
         // No next sibling was saved means this window was at the end of its
-        // parent's children at gc time. Insert at the end now -- this avoids
-        // colliding with another restoring sibling whose prev anchor is the
-        // same window as ours.
+        // parent's children at gc time. Insert at the end now.
         if nextSiblingWindowId == nil {
             return parent.children.count
         }

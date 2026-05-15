@@ -119,6 +119,14 @@ func refreshModel() {
     normalizeContainers()
 }
 
+/// One refresh of tolerance before garbage-collecting a window. macOS AX
+/// briefly returns nil for `containingWindowId()` of unrelated windows while
+/// another app enters or exits native fullscreen; without tolerance the
+/// refresh loop would gc those windows and the next refresh would re-register
+/// them as brand new, scrambling tile order via pair-new-window-with-focused.
+@MainActor private var missingRefreshCount: [UInt32: Int] = [:]
+private let gcTolerance = 1
+
 @MainActor
 private func refresh() async throws {
     // Garbage collect terminated apps and windows before working with all windows
@@ -127,7 +135,15 @@ private func refresh() async throws {
 
     for window in MacWindow.allWindows {
         if !aliveWindowIds.contains(window.windowId) {
-            window.garbageCollect(skipClosedWindowsCache: false)
+            let count = (missingRefreshCount[window.windowId] ?? 0) + 1
+            if count > gcTolerance {
+                missingRefreshCount.removeValue(forKey: window.windowId)
+                window.garbageCollect(skipClosedWindowsCache: false)
+            } else {
+                missingRefreshCount[window.windowId] = count
+            }
+        } else {
+            missingRefreshCount.removeValue(forKey: window.windowId)
         }
     }
     for (app, windowIds) in mapping {

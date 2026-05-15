@@ -86,16 +86,11 @@ final class MacosPrev {
 
     @MainActor
     func resolveIndex(in parent: NonLeafTreeNodeObject) -> Int {
-        // Prefer next sibling: inserting before it pushes it down and keeps the
-        // ordering relative to whatever comes after.
         if let nextId = nextSiblingWindowId,
            let nextIdx = parent.children.firstIndex(where: { ($0 as? Window)?.windowId == nextId })
         {
             return nextIdx
         }
-        // No next sibling means this window was at the end of its parent's
-        // children at fullscreen-entry time. Restore at the end -- this avoids
-        // colliding with another window whose prev anchor is the same as ours.
         if nextSiblingWindowId == nil {
             return parent.children.count
         }
