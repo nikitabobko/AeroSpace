@@ -51,16 +51,26 @@ enum GlobalObserver {
         cfg: MouseDragJoinConfig,
         mouseLocation: CGPoint,
     ) {
+        // Decide before/after using the target's pre-drop center, since the target
+        // hasn't moved during an Alt-drag (the swap path was suppressed).
         let after: Bool = if let rect = target.lastAppliedLayoutPhysicalRect {
-            mouseLocation.getProjection(targetParent.orientation) >= rect.center.getProjection(targetParent.orientation)
+            mouseLocation.getProjection(cfg.orientation) >= rect.center.getProjection(cfg.orientation)
         } else {
             true
         }
+        // Detach dragged first so its old container can later be flattened by
+        // normalization without interfering with target's index computation.
         dragged.unbindFromParent()
-        let targetIndex = target.ownIndex.orDie()
-        dragged.bind(to: targetParent, adaptiveWeight: WEIGHT_AUTO, index: after ? targetIndex + 1 : targetIndex)
-        targetParent.layout = cfg.layout
-        targetParent.changeOrientation(cfg.orientation)
+        let targetBinding = target.unbindFromParent()
+        let newContainer = TilingContainer(
+            parent: targetParent,
+            adaptiveWeight: targetBinding.adaptiveWeight,
+            cfg.orientation,
+            cfg.layout,
+            index: targetBinding.index,
+        )
+        target.bind(to: newContainer, adaptiveWeight: WEIGHT_AUTO, index: 0)
+        dragged.bind(to: newContainer, adaptiveWeight: WEIGHT_AUTO, index: after ? 1 : 0)
     }
 
     @MainActor
