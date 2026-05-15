@@ -5,30 +5,52 @@ import Common
 final class RecentBinding {
     weak var parent: NonLeafTreeNodeObject?
     /// `index` is captured at gc time, but the parent's children can shift between
-    /// gc and re-registration (e.g., another sibling enters native fullscreen).
-    /// `prevSiblingWindowId` is a stable anchor: the id of the sibling that was
-    /// immediately before this window. We look it up at restore time and place
-    /// this window right after it, falling back to the saved index if the anchor
-    /// is gone.
+    /// gc and re-registration. Sibling anchors are stable references: the ids of
+    /// the immediate neighbors of this window at gc time. On restore we look them
+    /// up in the parent's current children to insert the window in the same
+    /// relative position. `index` is only a last-resort fallback.
     let index: Int
+    let nextSiblingWindowId: UInt32?
     let prevSiblingWindowId: UInt32?
     let adaptiveWeight: CGFloat
     init(_ binding: BindingData) {
         self.parent = binding.parent
         self.index = binding.index
-        let priorIdx = binding.index - 1
-        self.prevSiblingWindowId = priorIdx >= 0 && priorIdx < binding.parent.children.count
-            ? (binding.parent.children[priorIdx] as? Window)?.windowId
+        // `binding.index` is the slot this window occupied right before being
+        // unbound. The parent's `children` already excludes this window, so
+        // `children[index]` is what was immediately AFTER, and `children[index-1]`
+        // is what was immediately BEFORE.
+        let nextIdx = binding.index
+        let prevIdx = binding.index - 1
+        self.nextSiblingWindowId = nextIdx < binding.parent.children.count
+            ? (binding.parent.children[nextIdx] as? Window)?.windowId
+            : nil
+        self.prevSiblingWindowId = prevIdx >= 0 && prevIdx < binding.parent.children.count
+            ? (binding.parent.children[prevIdx] as? Window)?.windowId
             : nil
         self.adaptiveWeight = binding.adaptiveWeight
     }
 
     @MainActor
     func resolveIndex(in parent: NonLeafTreeNodeObject) -> Int {
-        if let prevId = prevSiblingWindowId,
-           let anchor = parent.children.firstIndex(where: { ($0 as? Window)?.windowId == prevId })
+        // Prefer the next sibling: inserting before it pushes it down and
+        // preserves the ordering of whatever comes after.
+        if let nextId = nextSiblingWindowId,
+           let nextIdx = parent.children.firstIndex(where: { ($0 as? Window)?.windowId == nextId })
         {
-            return anchor + 1
+            return nextIdx
+        }
+        // No next sibling was saved means this window was at the end of its
+        // parent's children at gc time. Insert at the end now -- this avoids
+        // colliding with another restoring sibling whose prev anchor is the
+        // same window as ours.
+        if nextSiblingWindowId == nil {
+            return parent.children.count
+        }
+        if let prevId = prevSiblingWindowId,
+           let prevIdx = parent.children.firstIndex(where: { ($0 as? Window)?.windowId == prevId })
+        {
+            return prevIdx + 1
         }
         return min(index, parent.children.count)
     }

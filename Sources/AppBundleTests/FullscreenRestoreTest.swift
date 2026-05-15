@@ -203,6 +203,102 @@ final class FullscreenRestoreTest: XCTestCase {
         XCTAssertEqual(rightSibling.ownIndex, 2)
     }
 
+    /// Reproduces the exact path observed in the real environment: target at
+    /// index 0, sibling at index 1 gets gc'd while target is fullscreen, target
+    /// exits before the sibling re-registers. Without next-sibling anchors on
+    /// the sibling's RecentBinding the re-registered sibling lands at the front
+    /// and pushes the just-restored target one slot to the right.
+    func testExitFullscreenAtIndexZeroWithSiblingGc() async throws {
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+
+        let target = TestWindow.new(id: 100, parent: root)
+        let middleSibling = TestWindow.new(id: 200, parent: root)
+        let rightSibling = TestWindow.new(id: 300, parent: root)
+
+        // target enters fullscreen.
+        let prev = MacosPrev(parent: target.parent!, index: target.ownIndex!, adaptiveWeight: 1)
+        target.layoutReason = .macos(prev: prev)
+        target.bind(
+            to: workspace.macOsNativeFullscreenWindowsContainer,
+            adaptiveWeight: WEIGHT_DOESNT_MATTER,
+            index: INDEX_BIND_LAST,
+        )
+
+        // The middle sibling briefly gc's. Use the same path production code
+        // takes for transient gc bookkeeping so the saved binding info is
+        // identical to what the running app would see.
+        let middleBinding = middleSibling.unbindFromParent()
+        MacWindow.recordGcdBinding(middleSibling.windowId, middleBinding)
+        MacWindow.markSeen(middleSibling.windowId)
+        XCTAssertEqual(root.children.count, 1) // [rightSibling]
+
+        // target exits fullscreen.
+        try await exitMacOsNativeUnconventionalState(window: target, prev: prev, workspace: workspace)
+        XCTAssertEqual(target.ownIndex, 0, "target must land at index 0 -- there is nothing in front of it")
+
+        // The middle sibling re-registers; on restore it must use its saved
+        // anchors to slot in between target and rightSibling.
+        if let saved = MacWindow.popRecentlyGcdBinding(middleSibling.windowId),
+           let savedParent = saved.parent
+        {
+            middleSibling.bind(to: savedParent, adaptiveWeight: WEIGHT_AUTO, index: saved.resolveIndex(in: savedParent))
+        } else {
+            XCTFail("popRecentlyGcdBinding must return saved binding")
+        }
+
+        XCTAssertEqual(target.ownIndex, 0, "target must remain at index 0 after sibling rebinds")
+        XCTAssertEqual(middleSibling.ownIndex, 1)
+        XCTAssertEqual(rightSibling.ownIndex, 2)
+    }
+
+    /// The hardest case: target is in the MIDDLE, the last sibling (at the
+    /// right end) briefly gc's during target's fullscreen, target exits before
+    /// the sibling re-registers. Naive "prevSibling anchor" would make the
+    /// returning right sibling collide with target (both anchored after the
+    /// leftmost window). The fix: a window whose nextSibling was nil at gc/save
+    /// time must restore at the END, not after its prev sibling.
+    func testExitFullscreenWhenLastSiblingGcDuringFullscreen() async throws {
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+
+        let left = TestWindow.new(id: 100, parent: root)
+        let target = TestWindow.new(id: 200, parent: root)
+        let rightSibling = TestWindow.new(id: 300, parent: root)
+
+        let prev = MacosPrev(parent: target.parent!, index: target.ownIndex!, adaptiveWeight: 1)
+        target.layoutReason = .macos(prev: prev)
+        target.bind(
+            to: workspace.macOsNativeFullscreenWindowsContainer,
+            adaptiveWeight: WEIGHT_DOESNT_MATTER,
+            index: INDEX_BIND_LAST,
+        )
+
+        // While target is fullscreen, the right sibling briefly gc's. Save the
+        // binding the same way production code does.
+        let rightBinding = rightSibling.unbindFromParent()
+        MacWindow.recordGcdBinding(rightSibling.windowId, rightBinding)
+        MacWindow.markSeen(rightSibling.windowId)
+        XCTAssertEqual(root.children.count, 1) // [left]
+
+        // target exits fullscreen first.
+        try await exitMacOsNativeUnconventionalState(window: target, prev: prev, workspace: workspace)
+        XCTAssertEqual(target.ownIndex, 1, "target lands between left and (gone) right")
+
+        // Then the right sibling re-registers.
+        if let saved = MacWindow.popRecentlyGcdBinding(rightSibling.windowId),
+           let savedParent = saved.parent
+        {
+            rightSibling.bind(to: savedParent, adaptiveWeight: WEIGHT_AUTO, index: saved.resolveIndex(in: savedParent))
+        } else {
+            XCTFail("popRecentlyGcdBinding must return saved binding")
+        }
+
+        XCTAssertEqual(left.ownIndex, 0)
+        XCTAssertEqual(target.ownIndex, 1, "target must remain at index 1, not be pushed by returning right sibling")
+        XCTAssertEqual(rightSibling.ownIndex, 2, "right sibling was at the end -- it must restore at the end")
+    }
+
     /// Single-window workspace -- the simple case must still work after the fix.
     func testExitFullscreenSingleWindow() async throws {
         let workspace = Workspace.get(byName: name)

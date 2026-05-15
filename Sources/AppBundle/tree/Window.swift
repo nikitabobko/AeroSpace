@@ -93,6 +93,12 @@ final class MacosPrev {
         {
             return nextIdx
         }
+        // No next sibling means this window was at the end of its parent's
+        // children at fullscreen-entry time. Restore at the end -- this avoids
+        // colliding with another window whose prev anchor is the same as ours.
+        if nextSiblingWindowId == nil {
+            return parent.children.count
+        }
         if let prevId = prevSiblingWindowId,
            let prevIdx = parent.children.firstIndex(where: { ($0 as? Window)?.windowId == prevId })
         {
