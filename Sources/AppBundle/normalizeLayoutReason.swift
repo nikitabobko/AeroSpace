@@ -1,3 +1,5 @@
+import CoreGraphics
+
 @MainActor
 func normalizeLayoutReason() async throws {
     for workspace in Workspace.all {
@@ -29,31 +31,50 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) asy
             !config.automaticallyUnhideMacosHiddenApps && window.macAppUnsafe.nsApp.isHidden
         switch window.layoutReason {
             case .standard:
-                guard let parent = window.parent else { continue }
+                guard window.parent != nil else { continue }
                 switch true {
                     case isMacosFullscreen:
-                        window.layoutReason = .macos(prevParentKind: parent.kind)
-                        window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
+                        enterMacOsUnconventionalState(window: window, newParent: workspace.macOsNativeFullscreenWindowsContainer, newWeight: WEIGHT_DOESNT_MATTER)
                     case isMacosMinimized:
-                        window.layoutReason = .macos(prevParentKind: parent.kind)
-                        window.bind(to: macosMinimizedWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+                        enterMacOsUnconventionalState(window: window, newParent: macosMinimizedWindowsContainer, newWeight: 1)
                     case isMacosWindowOfHiddenApp:
-                        window.layoutReason = .macos(prevParentKind: parent.kind)
-                        window.bind(to: workspace.macOsNativeHiddenAppsWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
+                        enterMacOsUnconventionalState(window: window, newParent: workspace.macOsNativeHiddenAppsWindowsContainer, newWeight: WEIGHT_DOESNT_MATTER)
                     default: break
                 }
-            case .macos(let prevParentKind):
+            case .macos(let prev):
                 if !isMacosFullscreen && !isMacosMinimized && !isMacosWindowOfHiddenApp {
-                    try await exitMacOsNativeUnconventionalState(window: window, prevParentKind: prevParentKind, workspace: workspace)
+                    try await exitMacOsNativeUnconventionalState(window: window, prev: prev, workspace: workspace)
                 }
         }
     }
 }
 
 @MainActor
-func exitMacOsNativeUnconventionalState(window: Window, prevParentKind: NonLeafTreeNodeKind, workspace: Workspace) async throws {
+private func enterMacOsUnconventionalState(window: Window, newParent: NonLeafTreeNodeObject, newWeight: CGFloat) {
+    guard let oldParent = window.parent, let oldIndex = window.ownIndex else { return }
+    let oldWeight: CGFloat = (oldParent as? TilingContainer)
+        .map { window.getWeight($0.orientation) } ?? WEIGHT_DOESNT_MATTER
+    window.layoutReason = .macos(prev: MacosPrev(parent: oldParent, index: oldIndex, adaptiveWeight: oldWeight))
+    window.bind(to: newParent, adaptiveWeight: newWeight, index: INDEX_BIND_LAST)
+}
+
+@MainActor
+func exitMacOsNativeUnconventionalState(window: Window, prev: MacosPrev, workspace: Workspace) async throws {
     window.layoutReason = .standard
-    switch prevParentKind {
+
+    // Preferred path: restore to the exact container the window came from, at the
+    // same slot. This preserves nested splits the user set up before fullscreen.
+    if let prevParent = prev.parent, prevParent.nodeWorkspace === workspace {
+        window.unbindFromParent()
+        let clampedIndex = min(prev.index, prevParent.children.count)
+        window.bind(to: prevParent, adaptiveWeight: prev.adaptiveWeight, index: clampedIndex)
+        return
+    }
+
+    // Fallback: previous parent was gc'd (e.g. flattened away while the window
+    // was fullscreen) or moved to another workspace. Use the previous kind to
+    // pick a reasonable destination.
+    switch prev.parentKind {
         case .workspace:
             window.bindAsFloatingWindow(to: workspace)
         case .tilingContainer:

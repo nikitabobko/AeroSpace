@@ -43,10 +43,30 @@ open class Window: TreeNode, Hashable {
     func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) { die("Not implemented") }
 }
 
-enum LayoutReason: Equatable {
+enum LayoutReason {
     case standard
-    /// Reason for the cur temp layout is macOS native fullscreen, minimize, or hide
-    case macos(prevParentKind: NonLeafTreeNodeKind)
+    /// Reason for the cur temp layout is macOS native fullscreen, minimize, or hide.
+    /// Carries the previous binding so the window can be restored to the exact
+    /// nested container + index it came from, instead of being dumped at the end
+    /// of the workspace's root tiling container.
+    case macos(prev: MacosPrev)
+}
+
+@MainActor
+final class MacosPrev {
+    /// Weak so we don't pin a container that `normalizeContainers` would otherwise
+    /// gc while the window is in fullscreen.
+    weak var parent: NonLeafTreeNodeObject?
+    let parentKind: NonLeafTreeNodeKind
+    let index: Int
+    let adaptiveWeight: CGFloat
+
+    init(parent: NonLeafTreeNodeObject, index: Int, adaptiveWeight: CGFloat) {
+        self.parent = parent
+        self.parentKind = parent.kind
+        self.index = index
+        self.adaptiveWeight = adaptiveWeight
+    }
 }
 
 extension Window {
