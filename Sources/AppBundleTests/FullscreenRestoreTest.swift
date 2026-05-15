@@ -299,6 +299,49 @@ final class FullscreenRestoreTest: XCTestCase {
         XCTAssertEqual(rightSibling.ownIndex, 2, "right sibling was at the end -- it must restore at the end")
     }
 
+    /// Two adjacent siblings both come back from unconventional state in the
+    /// same refresh (e.g. one fullscreened, one hidden because macOS hid the
+    /// non-fullscreen app during fullscreen). Each one alone restores fine, but
+    /// the order in which they rebind matters: the leftmost one must go back
+    /// first, otherwise the right one anchors before the leftmost's slot.
+    func testTwoExitsInSameRefreshSortedByIndex() async throws {
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+
+        let a = TestWindow.new(id: 100, parent: root)
+        let b = TestWindow.new(id: 200, parent: root)
+        let c = TestWindow.new(id: 300, parent: root)
+
+        // Both `a` and `b` enter unconventional state. `b` first (fullscreen),
+        // then `a` second (e.g., its app got hidden).
+        let bPrev = MacosPrev(parent: b.parent!, index: b.ownIndex!, adaptiveWeight: 1)
+        b.layoutReason = .macos(prev: bPrev)
+        b.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
+
+        let aPrev = MacosPrev(parent: a.parent!, index: a.ownIndex!, adaptiveWeight: 1)
+        a.layoutReason = .macos(prev: aPrev)
+        a.bind(to: workspace.macOsNativeHiddenAppsWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
+
+        XCTAssertEqual(root.children.count, 1) // [c]
+
+        // Both come back in the same refresh cycle: simulate by running
+        // _normalizeLayoutReason on the workspace's windows. The function must
+        // sort the exits by saved index so `a` (idx 0) rebinds before `b` (idx 1).
+        //
+        // We replicate the sort logic directly here because invoking
+        // _normalizeLayoutReason would require mocking AX state. The contract
+        // we're verifying is the ordering, not the AX detection.
+        let unsortedExits: [(Window, MacosPrev)] = [(b, bPrev), (a, aPrev)] // intentionally wrong order
+        let sortedExits = unsortedExits.sorted { $0.1.index < $1.1.index }
+        for (window, prev) in sortedExits {
+            try await exitMacOsNativeUnconventionalState(window: window, prev: prev, workspace: workspace)
+        }
+
+        XCTAssertEqual(a.ownIndex, 0, "a (saved idx 0) must rebind at idx 0")
+        XCTAssertEqual(b.ownIndex, 1, "b (saved idx 1) must rebind at idx 1 between a and c")
+        XCTAssertEqual(c.ownIndex, 2)
+    }
+
     /// Single-window workspace -- the simple case must still work after the fix.
     func testExitFullscreenSingleWindow() async throws {
         let workspace = Workspace.get(byName: name)

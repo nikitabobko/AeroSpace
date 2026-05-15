@@ -24,6 +24,14 @@ private func validateStillPopups() async throws {
 
 @MainActor
 private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) async throws {
+    // Collect transitions first so we can run the exits in the saved-index
+    // order. When two siblings of the same tiling container come back from
+    // unconventional state in the same refresh (e.g. one was fullscreened and
+    // the other got hidden because macOS hides non-fullscreen apps), the
+    // leftmost one must rebind first or the second one's anchor look-up will
+    // collide with the first and the two will swap.
+    var exits: [(window: Window, prev: MacosPrev)] = []
+    var enters: [() -> Void] = []
     for window in windows {
         let isMacosFullscreen = try await window.isMacosFullscreen
         let isMacosMinimized = try await (!isMacosFullscreen).andAsync { @MainActor @Sendable in try await window.isMacosMinimized }
@@ -34,18 +42,26 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) asy
                 guard window.parent != nil else { continue }
                 switch true {
                     case isMacosFullscreen:
-                        enterMacOsUnconventionalState(window: window, newParent: workspace.macOsNativeFullscreenWindowsContainer, newWeight: WEIGHT_DOESNT_MATTER)
+                        enters.append { enterMacOsUnconventionalState(window: window, newParent: workspace.macOsNativeFullscreenWindowsContainer, newWeight: WEIGHT_DOESNT_MATTER) }
                     case isMacosMinimized:
-                        enterMacOsUnconventionalState(window: window, newParent: macosMinimizedWindowsContainer, newWeight: 1)
+                        enters.append { enterMacOsUnconventionalState(window: window, newParent: macosMinimizedWindowsContainer, newWeight: 1) }
                     case isMacosWindowOfHiddenApp:
-                        enterMacOsUnconventionalState(window: window, newParent: workspace.macOsNativeHiddenAppsWindowsContainer, newWeight: WEIGHT_DOESNT_MATTER)
+                        enters.append { enterMacOsUnconventionalState(window: window, newParent: workspace.macOsNativeHiddenAppsWindowsContainer, newWeight: WEIGHT_DOESNT_MATTER) }
                     default: break
                 }
             case .macos(let prev):
                 if !isMacosFullscreen && !isMacosMinimized && !isMacosWindowOfHiddenApp {
-                    try await exitMacOsNativeUnconventionalState(window: window, prev: prev, workspace: workspace)
+                    exits.append((window, prev))
                 }
         }
+    }
+    // Run enters first; later exits are based on the resulting tree.
+    for action in enters { action() }
+    // Exits in saved-index order so adjacent windows rebind left-to-right and
+    // each later exit can anchor against the already-restored earlier ones.
+    exits.sort { $0.prev.index < $1.prev.index }
+    for (window, prev) in exits {
+        try await exitMacOsNativeUnconventionalState(window: window, prev: prev, workspace: workspace)
     }
 }
 

@@ -119,13 +119,18 @@ func refreshModel() {
     normalizeContainers()
 }
 
-/// One refresh of tolerance before garbage-collecting a window. macOS AX
-/// briefly returns nil for `containingWindowId()` of unrelated windows while
-/// another app enters or exits native fullscreen; without tolerance the
-/// refresh loop would gc those windows and the next refresh would re-register
-/// them as brand new, scrambling tile order via pair-new-window-with-focused.
-@MainActor private var missingRefreshCount: [UInt32: Int] = [:]
-private let gcTolerance = 1
+/// Last time we saw each known window alive. macOS AX returns nil for
+/// `containingWindowId()` on unrelated windows for the entire duration of
+/// another app's native fullscreen transition -- often several refresh cycles.
+/// Without tolerance the refresh loop gc's them, the next refresh
+/// re-registers them as brand new, and pair-new-window-with-focused wraps
+/// them in an h_accordion container with whatever was MRU.
+@MainActor private var lastSeenAlive: [UInt32: Date] = [:]
+/// Tolerate a window being briefly absent for this long before garbage-
+/// collecting it. Covers the entire macOS fullscreen-transition animation
+/// plus a margin; significantly shorter than the user could deliberately
+/// close-and-reopen a window.
+private let gcGracePeriod: TimeInterval = 8.0
 
 @MainActor
 private func refresh() async throws {
@@ -133,17 +138,16 @@ private func refresh() async throws {
     let mapping = try await MacApp.refreshAllAndGetAliveWindowIds(frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier)
     let aliveWindowIds = mapping.values.flatMap(id).toSet()
 
+    let now = Date.now
     for window in MacWindow.allWindows {
-        if !aliveWindowIds.contains(window.windowId) {
-            let count = (missingRefreshCount[window.windowId] ?? 0) + 1
-            if count > gcTolerance {
-                missingRefreshCount.removeValue(forKey: window.windowId)
-                window.garbageCollect(skipClosedWindowsCache: false)
-            } else {
-                missingRefreshCount[window.windowId] = count
-            }
-        } else {
-            missingRefreshCount.removeValue(forKey: window.windowId)
+        if aliveWindowIds.contains(window.windowId) {
+            lastSeenAlive[window.windowId] = now
+            continue
+        }
+        let lastSeen = lastSeenAlive[window.windowId] ?? .distantPast
+        if lastSeen.distance(to: now) > gcGracePeriod {
+            lastSeenAlive.removeValue(forKey: window.windowId)
+            window.garbageCollect(skipClosedWindowsCache: false)
         }
     }
     for (app, windowIds) in mapping {
