@@ -135,6 +135,10 @@ final class MacApp: AbstractApp {
         for id in staleIds {
             guard let stale = MacWindow.allWindowsMap.removeValue(forKey: id) else { continue }
             let bindingData = stale.unbindFromParent()
+            // Same reason as MacWindow.garbageCollect: if this id comes back as a
+            // re-registration shortly after, restore it to the same slot rather
+            // than treating it as a new window.
+            MacWindow.recordGcdBinding(id, bindingData)
             if inheritedBinding == nil, bindingData.parent is TilingContainer {
                 inheritedBinding = bindingData
             }
@@ -310,6 +314,7 @@ final class MacApp: AbstractApp {
             var alive: [UInt32: AxWindow] = windows.threadGuarded
             var dead = [UInt32: AxWindow]()
             let axWindowsList = axApp.threadGuarded.get(Ax.windowsAttr) ?? []
+            let axWindowsIds = Set(axWindowsList.map(\.windowId))
             // Some apps (e.g. Fork) expose each tab as a separate AXWindow whose AX
             // object stays valid after the tab is hidden, so containingWindowId() alone
             // keeps stale tabs alive. Opt-in: AXWindows excludes windows on inactive Spaces.
@@ -319,14 +324,19 @@ final class MacApp: AbstractApp {
             // the filter would drop the old tab without being able to add the
             // new one and would briefly leave the app with zero tracked windows.
             let trustAxWindowsAsAliveSet: Set<UInt32>? = (appId?.hasTabsAsWindows == true && !isLeftMouseButtonDown)
-                ? Set(axWindowsList.map(\.windowId))
+                ? axWindowsIds
                 : nil
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
             // Second and third lines of defence are technically needed only to avoid potential flickering
             if frontmostAppBundleId != lockScreenAppBundleId {
                 (alive, dead) = try alive.partition { (id, window) in
                     try job.checkCancellation()
-                    if window.ax.containingWindowId() == nil { return false }
+                    // `containingWindowId()` transiently returns nil during other apps'
+                    // native fullscreen transitions even for windows that are still
+                    // alive and listed in `axWindowsList`. Treat the window as alive in
+                    // that case to avoid spurious gc + re-register, which scrambles
+                    // tile order via the pair-new-window-with-focused heuristic.
+                    if window.ax.containingWindowId() == nil && !axWindowsIds.contains(id) { return false }
                     if let trustAxWindowsAsAliveSet, !trustAxWindowsAsAliveSet.contains(id) { return false }
                     return true
                 }

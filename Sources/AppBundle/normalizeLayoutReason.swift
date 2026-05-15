@@ -56,6 +56,11 @@ private func enterMacOsUnconventionalState(window: Window, newParent: NonLeafTre
         .map { window.getWeight($0.orientation) } ?? WEIGHT_DOESNT_MATTER
     window.layoutReason = .macos(prev: MacosPrev(parent: oldParent, index: oldIndex, adaptiveWeight: oldWeight))
     window.bind(to: newParent, adaptiveWeight: newWeight, index: INDEX_BIND_LAST)
+    // The layout just changed: any cached "world" from earlier (which would mark
+    // this window as still-tiled) is now stale and would re-tile this window if
+    // restoration fires for unrelated reasons (e.g. transient browser popup gets
+    // gc'd and re-registered).
+    resetClosedWindowsCache()
 }
 
 @MainActor
@@ -67,9 +72,19 @@ func exitMacOsNativeUnconventionalState(window: Window, prev: MacosPrev, workspa
     if let prevParent = prev.parent, prevParent.nodeWorkspace === workspace {
         window.unbindFromParent()
         let clampedIndex = min(prev.index, prevParent.children.count)
-        window.bind(to: prevParent, adaptiveWeight: prev.adaptiveWeight, index: clampedIndex)
+        // Use WEIGHT_AUTO so the window picks up the current average sibling weight.
+        // Saving prev.adaptiveWeight is wrong because while this window was in the
+        // unconventional container, its siblings' weights were rebalanced to fill
+        // the freed space; restoring the old absolute weight makes this window
+        // noticeably smaller than its siblings after the rebalance.
+        window.bind(to: prevParent, adaptiveWeight: WEIGHT_AUTO, index: clampedIndex)
+        // Same reason as in enterMacOsUnconventionalState: the cached world from when
+        // this window was still in the unconventional container is now stale and
+        // would re-float this window if restoration fires.
+        resetClosedWindowsCache()
         return
     }
+    resetClosedWindowsCache()
 
     // Fallback: previous parent was gc'd (e.g. flattened away while the window
     // was fullscreen) or moved to another workspace. Use the previous kind to

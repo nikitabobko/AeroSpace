@@ -63,10 +63,19 @@ struct FrozenWorkspace: Sendable {
             .singleOrNil()?
             .setActiveWorkspace(workspace)
         for frozenWindow in frozenWorkspace.floatingWindows {
-            MacWindow.get(byId: frozenWindow.id)?.bindAsFloatingWindow(to: workspace)
+            guard let window = MacWindow.get(byId: frozenWindow.id) else { continue }
+            // Don't disturb already-tiled or unconventional windows: cache may be
+            // stale (e.g., this window has been re-tiled since caching).
+            if let parent = window.parent, !(parent is MacosPopupWindowsContainer) { continue }
+            window.bindAsFloatingWindow(to: workspace)
         }
-        for frozenWindow in frozenWorkspace.macosUnconventionalWindows { // Will get fixed by normalizations
-            MacWindow.get(byId: frozenWindow.id)?.bindAsFloatingWindow(to: workspace)
+        for frozenWindow in frozenWorkspace.macosUnconventionalWindows {
+            guard let window = MacWindow.get(byId: frozenWindow.id) else { continue }
+            // Same reason: don't blindly re-float a window that's already happily placed.
+            // If it's actually still in fullscreen/minimized state, normalizeLayoutReason
+            // will move it to the right container on the next refresh.
+            if let parent = window.parent, !(parent is MacosPopupWindowsContainer) { continue }
+            window.bindAsFloatingWindow(to: workspace)
         }
         let prevRoot = workspace.rootTilingContainer // Save prevRoot into a variable to avoid it being garbage collected earlier than needed
         let potentialOrphans = prevRoot.allLeafWindowsRecursive

@@ -1,6 +1,39 @@
 import AppKit
 import Common
 
+@MainActor
+final class RecentBinding {
+    weak var parent: NonLeafTreeNodeObject?
+    /// `index` is captured at gc time, but the parent's children can shift between
+    /// gc and re-registration (e.g., another sibling enters native fullscreen).
+    /// `prevSiblingWindowId` is a stable anchor: the id of the sibling that was
+    /// immediately before this window. We look it up at restore time and place
+    /// this window right after it, falling back to the saved index if the anchor
+    /// is gone.
+    let index: Int
+    let prevSiblingWindowId: UInt32?
+    let adaptiveWeight: CGFloat
+    init(_ binding: BindingData) {
+        self.parent = binding.parent
+        self.index = binding.index
+        let priorIdx = binding.index - 1
+        self.prevSiblingWindowId = priorIdx >= 0 && priorIdx < binding.parent.children.count
+            ? (binding.parent.children[priorIdx] as? Window)?.windowId
+            : nil
+        self.adaptiveWeight = binding.adaptiveWeight
+    }
+
+    @MainActor
+    func resolveIndex(in parent: NonLeafTreeNodeObject) -> Int {
+        if let prevId = prevSiblingWindowId,
+           let anchor = parent.children.firstIndex(where: { ($0 as? Window)?.windowId == prevId })
+        {
+            return anchor + 1
+        }
+        return min(index, parent.children.count)
+    }
+}
+
 final class MacWindow: Window {
     let macApp: MacApp
     private var prevUnhiddenProportionalPositionInsideWorkspaceRect: CGPoint?
@@ -13,6 +46,64 @@ final class MacWindow: Window {
 
     @MainActor static var allWindowsMap: [UInt32: MacWindow] = [:]
     @MainActor static var allWindows: [MacWindow] { Array(allWindowsMap.values) }
+
+    /// Window ids that were garbage-collected very recently. Some AX state changes
+    /// (e.g., another app entering native fullscreen) momentarily make a window's
+    /// `containingWindowId()` return nil, so the refresh loop gc's it and then
+    /// re-registers it on the next refresh. Without this set, `getOrRegister`
+    /// would treat the re-registration as a brand-new window and trigger
+    /// `pair-new-window-with-focused`, wrapping the re-registered window in an
+    /// h_accordion container with whatever is MRU -- visually hiding the window.
+    @MainActor static var recentlyGcdAt: [UInt32: Date] = [:]
+    @MainActor static var recentlyGcdBindings: [UInt32: RecentBinding] = [:]
+    /// Longer than typical AX transient (~few seconds) but short enough that the
+    /// bookkeeping doesn't grow unbounded. Window position recovery only matters
+    /// while the window is briefly dead during a fullscreen transition.
+    private static let recentlyGcdWindow: TimeInterval = 60.0
+
+    /// Any window id this AeroSpace instance has ever registered. A windowId
+    /// that's been seen before is by definition not a "new window" -- it's the
+    /// same window returning from a transient AX state. Without this,
+    /// pair-new-window-with-focused triggers for windows that briefly vanish
+    /// during another app's native fullscreen and wraps them in an h_accordion
+    /// container, visually hiding them behind whatever was MRU.
+    @MainActor private static var everSeenWindowIds: Set<UInt32> = []
+    @MainActor static func wasEverSeen(_ windowId: UInt32) -> Bool { everSeenWindowIds.contains(windowId) }
+    @MainActor static func markSeen(_ windowId: UInt32) { everSeenWindowIds.insert(windowId) }
+
+    /// AeroSpace fires multiple refresh sessions back-to-back when it launches:
+    /// some have `isStartup=true`, some don't (AX-event-triggered refreshes that
+    /// ran outside the startup TaskLocal scope). Treat anything within this
+    /// grace window as pre-existing.
+    @MainActor static let aerospaceStartedAt: Date = .now
+    private static let startupGraceWindow: TimeInterval = 5.0
+    @MainActor static var isWithinStartupGrace: Bool {
+        aerospaceStartedAt.distance(to: .now) < startupGraceWindow
+    }
+
+    @MainActor static func wasRecentlyGcd(_ windowId: UInt32) -> Bool {
+        guard let when = recentlyGcdAt[windowId] else { return false }
+        if when.distance(to: .now) > recentlyGcdWindow {
+            recentlyGcdAt.removeValue(forKey: windowId)
+            recentlyGcdBindings.removeValue(forKey: windowId)
+            return false
+        }
+        return true
+    }
+
+    @MainActor static func popRecentlyGcdBinding(_ windowId: UInt32) -> RecentBinding? {
+        guard wasRecentlyGcd(windowId) else { return nil }
+        defer {
+            recentlyGcdAt.removeValue(forKey: windowId)
+            recentlyGcdBindings.removeValue(forKey: windowId)
+        }
+        return recentlyGcdBindings[windowId]
+    }
+
+    @MainActor static func recordGcdBinding(_ windowId: UInt32, _ binding: BindingData) {
+        recentlyGcdAt[windowId] = .now
+        recentlyGcdBindings[windowId] = RecentBinding(binding)
+    }
 
     /// Synchronous swap-registration used during a tab swap in tab-based apps.
     /// Doing this without awaits ensures the workspace tree is never observed in a
@@ -32,6 +123,32 @@ final class MacWindow: Window {
     static func getOrRegister(windowId: UInt32, macApp: MacApp) async throws -> MacWindow {
         if let existing = allWindowsMap[windowId] { return existing }
         let rect = try await macApp.getAxRect(windowId)
+
+        // If this id was gc'd very recently, it's the same window briefly bouncing
+        // through an AX transient state (e.g., another app entering native
+        // fullscreen). Restore it to the exact slot it occupied before, instead
+        // of re-classifying it as a new window and placing it next to the MRU.
+        if let saved = popRecentlyGcdBinding(windowId),
+           let savedParent = saved.parent,
+           savedParent.nodeWorkspace != nil
+        {
+            let window = MacWindow(windowId, macApp, lastFloatingSize: rect?.size, parent: savedParent, adaptiveWeight: WEIGHT_AUTO, index: saved.resolveIndex(in: savedParent))
+            allWindowsMap[windowId] = window
+            markSeen(windowId)
+            return window
+        }
+
+        // Falling back to classification means we don't have a saved binding to
+        // restore from. The window is genuinely new only if all of these are true:
+        //  - AeroSpace is not in startup discovery (TaskLocal or grace window).
+        //  - AeroSpace has never registered this windowId before.
+        // Otherwise it's the same window returning from a transient AX state
+        // (e.g., re-classified during another app's native fullscreen
+        // transition) and we must not run pair-new-window-with-focused on it.
+        let isGenuinelyNew = !isStartup
+            && !MacWindow.isWithinStartupGrace
+            && !MacWindow.wasEverSeen(windowId)
+        MacWindow.markSeen(windowId)
         let data = try await unbindAndGetBindingDataForNewWindow(
             windowId,
             macApp,
@@ -39,7 +156,7 @@ final class MacWindow: Window {
                 ? (rect?.center.monitorApproximation ?? mainMonitor).activeWorkspace
                 : focus.workspace,
             window: nil,
-            isNewWindow: true,
+            isNewWindow: isGenuinelyNew,
         )
 
         // atomic synchronous section
@@ -94,7 +211,12 @@ final class MacWindow: Window {
             return
         }
         if !skipClosedWindowsCache { cacheClosedWindowIfNeeded() }
-        let parent = unbindFromParent().parent
+        let binding = unbindFromParent()
+        let parent = binding.parent
+        // Remember the exact slot so a near-immediate re-registration (transient
+        // AX state, not the user opening a new window) can be placed back in
+        // the same spot rather than being re-classified as a new window.
+        if !skipClosedWindowsCache { MacWindow.recordGcdBinding(windowId, binding) }
         let deadWindowWorkspace = parent.nodeWorkspace
         let focus = focus
         if let deadWindowWorkspace, deadWindowWorkspace == focus.workspace ||
