@@ -282,6 +282,57 @@ final class ConfigTest: XCTestCase {
         )
     }
 
+    func testMouseDragJoin_disabledByDefault() {
+        let (parsed, errors) = parseConfig("")
+        assertEquals(errors, [])
+        XCTAssertNil(parsed.mouseDragJoin)
+    }
+
+    func testMouseDragJoin_parseValid() {
+        let toml = """
+            enable-normalization-opposite-orientation-for-nested-containers = false
+            [mouse-drag-join]
+            modifier = 'alt'
+            layout = 'h_accordion'
+            """
+        let (parsed, errors) = parseConfig(toml)
+        assertEquals(errors, [])
+        assertEquals(parsed.mouseDragJoin, MouseDragJoinConfig(modifier: .option, orientation: .h, layout: .accordion))
+    }
+
+    func testMouseDragJoin_requiresOppositeOrientationNormalizationDisabled() {
+        let toml = """
+            [mouse-drag-join]
+            modifier = 'alt'
+            layout = 'h_accordion'
+            """
+        let (_, errors) = parseConfig(toml)
+        assertEquals(errors, ["mouse-drag-join: 'mouse-drag-join' requires 'enable-normalization-opposite-orientation-for-nested-containers = false', because changing a container's orientation cascades up the tree when this normalization is enabled."])
+    }
+
+    func testMouseDragJoin_invalidModifier() {
+        let toml = """
+            enable-normalization-opposite-orientation-for-nested-containers = false
+            [mouse-drag-join]
+            modifier = 'fn'
+            layout = 'h_accordion'
+            """
+        let (_, errors) = parseConfig(toml)
+        assertEquals(errors, ["mouse-drag-join.modifier: Can't parse modifier 'fn'. Possible values: alt|cmd|ctrl|shift"])
+    }
+
+    func testMouseDragJoin_unknownKey() {
+        let toml = """
+            enable-normalization-opposite-orientation-for-nested-containers = false
+            [mouse-drag-join]
+            modifier = 'alt'
+            layout = 'h_accordion'
+            foo = 'bar'
+            """
+        let (_, errors) = parseConfig(toml)
+        assertEquals(errors, ["mouse-drag-join.foo: Unknown key"])
+    }
+
     func testParseWorkspaceToMonitorAssignment() {
         let (parsed, errors) = parseConfig(
             """

@@ -51,6 +51,13 @@ private func moveFloatingWindow(_ window: Window) async throws {
 private func moveTilingWindow(_ window: Window) {
     currentlyManipulatedWithMouseWindowId = window.windowId
     window.lastAppliedLayoutPhysicalRect = nil
+    // When the join modifier is held, defer all tree updates until mouseUp so the
+    // user can preview the drop without continuous swaps reshuffling the layout.
+    if let joinModifier = config.mouseDragJoin?.modifier,
+       NSEvent.modifierFlags.contains(joinModifier)
+    {
+        return
+    }
     let mouseLocation = mouseLocation
     let targetWorkspace = mouseLocation.monitorApproximation.activeWorkspace
     let swapTarget = mouseLocation.findIn(tree: targetWorkspace.rootTilingContainer, virtual: false)?.takeIf { $0 != window }

@@ -61,6 +61,7 @@ struct Config: ConvenienceCopyable {
     var onWindowDetected: [WindowDetectedCallback] = []
     var onModeChanged: [any Command] = []
     var pairNewWindowWithFocused: PairNewWindowWithFocused = .disabled
+    var mouseDragJoin: MouseDragJoinConfig? = nil
 }
 
 enum DefaultContainerOrientation: String {
@@ -70,4 +71,10 @@ enum DefaultContainerOrientation: String {
 enum PairNewWindowWithFocused: Equatable, Sendable {
     case disabled
     case wrap(orientation: Orientation, layout: Layout)
+}
+
+struct MouseDragJoinConfig: ConvenienceCopyable, Equatable {
+    var modifier: NSEvent.ModifierFlags
+    var orientation: Orientation
+    var layout: Layout
 }

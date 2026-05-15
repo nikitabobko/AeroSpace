@@ -111,6 +111,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "default-root-container-orientation": Parser(\.defaultRootContainerOrientation, parseDefaultContainerOrientation),
 
     "pair-new-window-with-focused": Parser(\.pairNewWindowWithFocused, parsePairNewWindowWithFocused),
+    "mouse-drag-join": Parser(\.mouseDragJoin, parseMouseDragJoin),
 
     "start-at-login": Parser(\.startAtLogin, parseBool),
     "auto-reload-config": Parser(\.autoReloadConfig, parseBool),
@@ -254,6 +255,13 @@ func tomlAnyToParsedConfigRecursive(any: Any, _ backtrace: ConfigBacktrace) -> P
         )]
     }
 
+    if config.mouseDragJoin != nil && config.enableNormalizationOppositeOrientationForNestedContainers {
+        errors += [.semantic(
+            .rootKey("mouse-drag-join"),
+            "'mouse-drag-join' requires 'enable-normalization-opposite-orientation-for-nested-containers = false', because changing a container's orientation cascades up the tree when this normalization is enabled.",
+        )]
+    }
+
     if config.enableNormalizationFlattenContainers {
         let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings.values }
             .flatMap { $0.commands }
@@ -379,14 +387,52 @@ private func parseDefaultContainerOrientation(_ raw: Json, _ backtrace: ConfigBa
 }
 
 private func parsePairNewWindowWithFocused(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<PairNewWindowWithFocused> {
-    parseString(raw, backtrace).flatMap { str in
-        switch str {
-            case "disabled": .success(.disabled)
-            case "h_accordion", "h-accordion": .success(.wrap(orientation: .h, layout: .accordion))
-            case "v_accordion", "v-accordion": .success(.wrap(orientation: .v, layout: .accordion))
-            case "h_tiles", "h-tiles", "h_list", "h-list": .success(.wrap(orientation: .h, layout: .tiles))
-            case "v_tiles", "v-tiles", "v_list", "v-list": .success(.wrap(orientation: .v, layout: .tiles))
-            default: .failure(.semantic(backtrace, "Can't parse '\(str)'. Possible values: disabled|h_accordion|v_accordion|h_tiles|v_tiles"))
+    parseString(raw, backtrace).flatMap { str -> ParsedConfig<PairNewWindowWithFocused> in
+        if str == "disabled" { return .success(.disabled) }
+        guard let (orientation, layout) = parseOrientedLayout(str) else {
+            return .failure(.semantic(backtrace, "Can't parse '\(str)'. Possible values: disabled|h_accordion|v_accordion|h_tiles|v_tiles"))
+        }
+        return .success(.wrap(orientation: orientation, layout: layout))
+    }
+}
+
+private func parseOrientedLayout(_ str: String) -> (Orientation, Layout)? {
+    switch str {
+        case "h_accordion", "h-accordion": (.h, .accordion)
+        case "v_accordion", "v-accordion": (.v, .accordion)
+        case "h_tiles", "h-tiles", "h_list", "h-list": (.h, .tiles)
+        case "v_tiles", "v-tiles", "v_list", "v-list": (.v, .tiles)
+        default: nil
+    }
+}
+
+private func parseMouseDragJoin(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<MouseDragJoinConfig?> {
+    guard let dict = raw.asDictOrNil else {
+        return .failure(expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace))
+    }
+    var allowedKeys = Set(["modifier", "layout"])
+    for key in dict.keys where !allowedKeys.contains(key) {
+        return .failure(unknownKeyError(backtrace + .key(key)))
+    }
+    guard let modifierRaw = dict["modifier"] else {
+        return .failure(.semantic(backtrace, "Missing required key 'modifier'"))
+    }
+    guard let layoutRaw = dict["layout"] else {
+        return .failure(.semantic(backtrace, "Missing required key 'layout'"))
+    }
+    let modifierResult = parseString(modifierRaw, backtrace + .key("modifier")).flatMap { str in
+        modifiersMap[str].map { ParsedConfig<NSEvent.ModifierFlags>.success($0) }
+            ?? .failure(.semantic(backtrace + .key("modifier"), "Can't parse modifier '\(str)'. Possible values: \(modifiersMap.keys.sorted().joined(separator: "|"))"))
+    }
+    let layoutResult = parseString(layoutRaw, backtrace + .key("layout")).flatMap { str -> ParsedConfig<(Orientation, Layout)> in
+        if let pair = parseOrientedLayout(str) {
+            return .success(pair)
+        }
+        return .failure(.semantic(backtrace + .key("layout"), "Can't parse '\(str)'. Possible values: h_accordion|v_accordion|h_tiles|v_tiles"))
+    }
+    return modifierResult.flatMap { modifier in
+        layoutResult.map { (orientation, layout) in
+            MouseDragJoinConfig(modifier: modifier, orientation: orientation, layout: layout)
         }
     }
 }
