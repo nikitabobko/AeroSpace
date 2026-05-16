@@ -54,8 +54,10 @@ enum LayoutReason {
 
 @MainActor
 final class MacosPrev {
-    /// Weak so we don't pin a container that `normalizeContainers` would otherwise
-    /// gc while the window is in fullscreen.
+    /// Weak so workspace teardown can still gc the container if it's legitimately
+    /// destroyed. While we hold a pending count on `parent` (see below), the
+    /// container's normal parent-children strong refs keep it alive -- so this
+    /// weak ref stays valid for the lifetime of the unconventional state.
     weak var parent: NonLeafTreeNodeObject?
     let parentKind: NonLeafTreeNodeKind
     let index: Int
@@ -82,6 +84,19 @@ final class MacosPrev {
         self.prevSiblingWindowId = prevIdx >= 0
             ? (parent.children[prevIdx] as? Window)?.windowId
             : nil
+        // Mark the container as having a logical child currently away in
+        // unconventional state, so `unbindEmptyAndAutoFlatten` won't flatten it
+        // out from under us.
+        (parent as? TilingContainer)?.pendingFullscreenChildren += 1
+    }
+
+    isolated deinit {
+        // Symmetric release. Runs when the owning window's layoutReason transitions
+        // away from .macos, OR when the window itself is deallocated while still
+        // in unconventional state (e.g. gc'd during fullscreen). `parent` is weak
+        // and may already be nil if the container was destroyed externally -- in
+        // that case there's no counter to decrement anyway.
+        (parent as? TilingContainer)?.pendingFullscreenChildren -= 1
     }
 
     @MainActor

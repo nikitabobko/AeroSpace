@@ -342,6 +342,52 @@ final class FullscreenRestoreTest: XCTestCase {
         XCTAssertEqual(c.ownIndex, 2)
     }
 
+    /// User-reported bug: a window sits in an h_accordion together with one other
+    /// window (e.g. Chrome stacked accordion-style: [home tab, YouTube]). The
+    /// user presses F to fullscreen YouTube. While YouTube is in the
+    /// unconventional container, the accordion has only one child left
+    /// (the home tab), and `normalizeContainers` -- which runs on every refresh
+    /// -- auto-flattens it. On Esc, `prev.parent` (weak) is nil and the fallback
+    /// path drops YouTube as a flat sibling at the root, destroying the
+    /// accordion structure the user set up.
+    func testAccordionParentSurvivesFullscreenWhileChildIsAway() async throws {
+        config.enableNormalizationFlattenContainers = true
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+        let accordion = TilingContainer(parent: root, adaptiveWeight: 1, .h, .accordion, index: INDEX_BIND_LAST)
+        let chromeHome = TestWindow.new(id: 1, parent: accordion)
+        let youtube = TestWindow.new(id: 2, parent: accordion)
+        _ = TestWindow.new(id: 3, parent: root) // neighbor at root
+
+        // YouTube enters fullscreen.
+        let prev = MacosPrev(parent: youtube.parent!, index: youtube.ownIndex!, adaptiveWeight: 1)
+        youtube.layoutReason = .macos(prev: prev)
+        youtube.bind(
+            to: workspace.macOsNativeFullscreenWindowsContainer,
+            adaptiveWeight: WEIGHT_DOESNT_MATTER,
+            index: INDEX_BIND_LAST,
+        )
+        XCTAssertEqual(accordion.children.count, 1, "accordion has only chromeHome while YouTube is fullscreen")
+
+        // Some unrelated refresh fires normalizeContainers. With auto-flatten on,
+        // an accordion with a single child is the textbook flatten target.
+        workspace.normalizeContainers()
+
+        XCTAssertTrue(
+            chromeHome.parent === accordion,
+            "accordion must NOT be flattened while one of its children is in unconventional state",
+        )
+        XCTAssertNotNil(prev.parent, "weak ref to accordion must still resolve")
+
+        // YouTube exits fullscreen. It must land back inside the accordion.
+        try await exitMacOsNativeUnconventionalState(window: youtube, prev: prev, workspace: workspace)
+
+        XCTAssertTrue(youtube.parent === accordion, "YouTube must restore to the accordion, not the root")
+        XCTAssertEqual(accordion.children.count, 2)
+        XCTAssertEqual(youtube.ownIndex, 1)
+        XCTAssertEqual(chromeHome.ownIndex, 0)
+    }
+
     /// Single-window workspace -- the simple case must still work after the fix.
     func testExitFullscreenSingleWindow() async throws {
         let workspace = Workspace.get(byName: name)

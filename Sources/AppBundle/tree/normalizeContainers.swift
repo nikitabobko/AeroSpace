@@ -9,7 +9,14 @@ extension Workspace {
 
 extension TilingContainer {
     @MainActor fileprivate func unbindEmptyAndAutoFlatten() {
-        if let child = children.singleOrNil(), config.enableNormalizationFlattenContainers && (child is TilingContainer || !isRootContainer) {
+        // Treat windows that are temporarily detached (in macOS native fullscreen,
+        // minimized, or hidden) as logical children of this container. Without
+        // this, an accordion-of-two that has one child in fullscreen looks like a
+        // single-child container and gets flattened -- which destroys the
+        // container the fullscreen window expects to come back to.
+        if let child = children.singleOrNil(), pendingFullscreenChildren == 0,
+           config.enableNormalizationFlattenContainers && (child is TilingContainer || !isRootContainer)
+        {
             child.unbindFromParent()
             let mru = parent?.mostRecentChild
             let previousBinding = unbindFromParent()
@@ -24,7 +31,7 @@ extension TilingContainer {
             for child in children {
                 (child as? TilingContainer)?.unbindEmptyAndAutoFlatten()
             }
-            if children.isEmpty && !isRootContainer {
+            if children.isEmpty && pendingFullscreenChildren == 0 && !isRootContainer {
                 unbindFromParent()
             }
         }

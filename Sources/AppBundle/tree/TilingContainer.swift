@@ -5,6 +5,16 @@ final class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider 
     fileprivate var _orientation: Orientation
     var orientation: Orientation { _orientation }
     var layout: Layout
+    /// Number of windows that logically belong to this container but are currently
+    /// detached because they are in macOS-unconventional state (native fullscreen,
+    /// minimized, or hidden app). Such a window saves a `MacosPrev` pointing here
+    /// and expects to come back. `unbindEmptyAndAutoFlatten` must treat the
+    /// container as if these windows were still here -- otherwise an accordion
+    /// with two children gets flattened the moment one of them enters fullscreen
+    /// (only one actual child remaining), the parent ref in `MacosPrev` (weak)
+    /// goes nil, and on exit the window lands at the root as a flat sibling
+    /// instead of restoring into the accordion.
+    @MainActor var pendingFullscreenChildren: Int = 0
 
     @MainActor
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, _ orientation: Orientation, _ layout: Layout, index: Int) {
