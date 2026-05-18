@@ -186,6 +186,26 @@ If you use different layout, different alphabet, or you just want to have a fanc
     preset = 'dvorak'  # or 'colemak'
 ----
 
+[#config-version]
+=== config-version
+
+`config-version` is a mechanism for introducing breaking changes to AeroSpace.
+
+Omitting `config-version` is equivalent to `config-version = 1` (the lowest possible version).
+The currently highest possible version is 2.
+It is recommended to use that version.
+
+If `config-version` is lower than the highest possible, xref:./commands.adoc#reload-config[reload-config] will emit a warning to stderr.
+
+[#config-version-2]
+==== config-version = 2
+
+By specifying `config-version = 2`, you opt-in to the following behavior:
+
+* You unlock the possibility to specify `persistent-workspaces` config option in your config explicitly.
+* The fallback value of `persistent-workspaces` becomes an empty array
+(In `config-version = 1`, the fallback value of `persistent-workspaces` was inferred from the right hand side of your keyboard bindings. It's proved to be error-prone)
+
 [#exec-env-vars]
 === exec-* Environment Variables
 
