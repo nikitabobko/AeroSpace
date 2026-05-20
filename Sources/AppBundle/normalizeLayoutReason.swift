@@ -32,12 +32,15 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) asy
                 guard let parent = window.parent else { continue }
                 switch true {
                     case isMacosFullscreen:
+                        if window.isFloating { try await window.asMacWindow().saveFloatingPositionIfNeeded() }
                         window.layoutReason = .macos(prevParentKind: parent.kind)
                         window.bind(to: workspace.macOsNativeFullscreenWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
                     case isMacosMinimized:
+                        if window.isFloating { try await window.asMacWindow().saveFloatingPositionIfNeeded() }
                         window.layoutReason = .macos(prevParentKind: parent.kind)
                         window.bind(to: macosMinimizedWindowsContainer, adaptiveWeight: 1, index: INDEX_BIND_LAST)
                     case isMacosWindowOfHiddenApp:
+                        if window.isFloating { try await window.asMacWindow().saveFloatingPositionIfNeeded() }
                         window.layoutReason = .macos(prevParentKind: parent.kind)
                         window.bind(to: workspace.macOsNativeHiddenAppsWindowsContainer, adaptiveWeight: WEIGHT_DOESNT_MATTER, index: INDEX_BIND_LAST)
                     default: break
