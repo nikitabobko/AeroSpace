@@ -320,6 +320,55 @@ final class MoveCommandTest: XCTestCase {
         )
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
+
+    func testCreateImplicitContainerOrFail_normalizationDisabled() async throws {
+        config.enableNormalizationFlattenContainers = false
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 3, parent: $0)
+        }
+        let result = try await parseCommand("move --boundaries-action create-implicit-container-or-fail up")
+            .cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stdout.count, 1)
+        assertEquals(
+            workspace.layoutDescription,
+            .workspace([.v_tiles([.window(2), .h_tiles([.window(1), .window(3)])])]),
+        )
+    }
+
+    func testCreateImplicitContainerOrFail_succeeds() async throws {
+        config.enableNormalizationFlattenContainers = true
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 3, parent: $0)
+        }
+        let result = try await parseCommand("move --boundaries-action create-implicit-container-or-fail up")
+            .cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(
+            workspace.layoutDescription,
+            .workspace([.v_tiles([.window(2), .h_tiles([.window(1), .window(3)])])]),
+        )
+    }
+
+    func testCreateImplicitContainerOrFail_fails() async throws {
+        config.enableNormalizationFlattenContainers = true
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
+        }
+        let before = workspace.layoutDescription
+        let result = try await parseCommand("move --boundaries-action create-implicit-container-or-fail left")
+            .cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(workspace.layoutDescription, before)
+    }
 }
 
 extension TreeNode {
