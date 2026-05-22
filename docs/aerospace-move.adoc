@@ -36,7 +36,7 @@ The default is: `workspace`
 
 --boundaries-action <boundary-action>::
 Defines the behavior when requested to move across the `<boundary>`. +
-`<boundary-action>` possible values: `(stop|fail|create-implicit-container)`. +
+`<boundary-action>` possible values: `(stop|fail|create-implicit-container|create-implicit-container-or-fail)`. +
 The default is: `create-implicit-container`
 
 // =========================================================== Examples
@@ -131,6 +131,8 @@ v_tiles
 the implicit container isn't created.
 +
 Instead, `window 2` would be moved to the monitor above the current.
++
+*Remark on `create-implicit-container-or-fail`*: When `--boundaries-action` is set to `create-implicit-container-or-fail` (and normalization is enabled), the command will fail if the newly created implicit container is immediately flattened away by container normalization.
 
 // end::body[]
 
