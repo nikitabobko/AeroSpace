@@ -21,7 +21,13 @@ func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
                 return .failure(msg)
         }
     }
-    let (parsedConfig, errors) = (try? String(contentsOf: configUrl, encoding: .utf8)).map { parseConfig($0) } ?? (defaultConfig, [])
+    let configStr: String
+    do {
+        configStr = try String(contentsOf: configUrl, encoding: .utf8)
+    } catch {
+        return .failure("Can't read contents of \(configUrl.path.singleQuoted) as a utf8 string: \(error.localizedDescription)")
+    }
+    let (parsedConfig, errors) = parseConfig(configStr)
 
     if errors.isEmpty {
         return .success((parsedConfig, configUrl))
