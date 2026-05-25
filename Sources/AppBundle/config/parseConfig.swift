@@ -41,7 +41,7 @@ func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
     }
 }
 
-enum ConfigParseError: Error, CustomStringConvertible, Equatable {
+enum ConfigParseDiagnostic: Error, CustomStringConvertible, Equatable {
     case semantic(_ backtrace: ConfigBacktrace, _ message: String)
     case syntax(_ message: String)
 
@@ -55,13 +55,13 @@ enum ConfigParseError: Error, CustomStringConvertible, Equatable {
     }
 }
 
-typealias ParsedConfig<T> = Result<T, ConfigParseError>
+typealias ParsedConfig<T> = Result<T, ConfigParseDiagnostic>
 
 extension ParserProtocol {
     func transformRawConfig(_ raw: S,
                             _ value: Json,
                             _ backtrace: ConfigBacktrace,
-                            _ errors: inout [ConfigParseError]) -> S
+                            _ errors: inout [ConfigParseDiagnostic]) -> S
     {
         if let value = parse(value, backtrace, &errors).getOrNil(appendErrorTo: &errors) {
             return raw.copy(keyPath, value)
@@ -74,14 +74,14 @@ protocol ParserProtocol<S>: Sendable {
     associatedtype T
     associatedtype S where S: ConvenienceCopyable
     var keyPath: SendableWritableKeyPath<S, T> { get }
-    var parse: @Sendable (Json, ConfigBacktrace, inout [ConfigParseError]) -> ParsedConfig<T> { get }
+    var parse: @Sendable (Json, ConfigBacktrace, inout [ConfigParseDiagnostic]) -> ParsedConfig<T> { get }
 }
 
 struct Parser<S: ConvenienceCopyable, T>: ParserProtocol {
     let keyPath: SendableWritableKeyPath<S, T>
-    let parse: @Sendable (Json, ConfigBacktrace, inout [ConfigParseError]) -> ParsedConfig<T>
+    let parse: @Sendable (Json, ConfigBacktrace, inout [ConfigParseDiagnostic]) -> ParsedConfig<T>
 
-    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (Json, ConfigBacktrace, inout [ConfigParseError]) -> T) {
+    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (Json, ConfigBacktrace, inout [ConfigParseDiagnostic]) -> T) {
         self.keyPath = keyPath
         self.parse = { raw, backtrace, errors -> ParsedConfig<T> in .success(parse(raw, backtrace, &errors)) }
     }
@@ -211,7 +211,7 @@ func tomlAnyToParsedConfigRecursive(any: Any, _ backtrace: ConfigBacktrace) -> P
     return (result.config, result.errors.map(\.description).sorted())
 }
 
-@MainActor private func _parseConfig(_ rawToml: String) -> (config: Config, errors: [ConfigParseError]) { // todo change return value to Result
+@MainActor private func _parseConfig(_ rawToml: String) -> (config: Config, errors: [ConfigParseDiagnostic]) { // todo change return value to Result
     let rawTable: Json.JsonDict
     do {
         let dict: [String: Any] = try .init(try TOMLTable(source: rawToml))
@@ -224,7 +224,7 @@ func tomlAnyToParsedConfigRecursive(any: Any, _ backtrace: ConfigBacktrace) -> P
         return (defaultConfig, [.syntax(error.description)])
     }
 
-    var errors: [ConfigParseError] = []
+    var errors: [ConfigParseDiagnostic] = []
 
     var config = rawTable.parseTable(Config(), configParser, .emptyRoot, &errors)
 
@@ -301,7 +301,7 @@ extension Json {
         guard let asDictOrNil else {
             return .failure(expectedActualTypeError(expected: .table, actual: tomlType, backtrace))
         }
-        let singleKeyError: ConfigParseError = .semantic(
+        let singleKeyError: ConfigParseDiagnostic = .semantic(
             backtrace,
             expectedKey != nil
                 ? "The table is expected to have a single key '\(expectedKey.orDie())'"
@@ -327,7 +327,7 @@ func parseTable<T: ConvenienceCopyable>(
     _ initial: T,
     _ fieldsParser: [String: any ParserProtocol<T>],
     _ backtrace: ConfigBacktrace,
-    _ errors: inout [ConfigParseError],
+    _ errors: inout [ConfigParseDiagnostic],
 ) -> T {
     switch raw {
         case .dict(let table):
@@ -435,7 +435,7 @@ extension Json.JsonDict {
         _ initial: T,
         _ fieldsParser: [String: any ParserProtocol<T>],
         _ backtrace: ConfigBacktrace,
-        _ errors: inout [ConfigParseError],
+        _ errors: inout [ConfigParseDiagnostic],
     ) -> T {
         var raw = initial
 
@@ -451,14 +451,14 @@ extension Json.JsonDict {
     }
 }
 
-func unknownKeyError(_ backtrace: ConfigBacktrace) -> ConfigParseError {
+func unknownKeyError(_ backtrace: ConfigBacktrace) -> ConfigParseDiagnostic {
     .semantic(backtrace, backtrace.isRootKey ? "Unknown top-level key" : "Unknown key")
 }
 
-func expectedActualTypeError(expected: TomlType, actual: TomlType, _ backtrace: ConfigBacktrace) -> ConfigParseError {
+func expectedActualTypeError(expected: TomlType, actual: TomlType, _ backtrace: ConfigBacktrace) -> ConfigParseDiagnostic {
     .semantic(backtrace, expectedActualTypeError(expected: expected, actual: actual))
 }
 
-func expectedActualTypeError(expected: [TomlType], actual: TomlType, _ backtrace: ConfigBacktrace) -> ConfigParseError {
+func expectedActualTypeError(expected: [TomlType], actual: TomlType, _ backtrace: ConfigBacktrace) -> ConfigParseDiagnostic {
     .semantic(backtrace, expectedActualTypeError(expected: expected, actual: actual))
 }

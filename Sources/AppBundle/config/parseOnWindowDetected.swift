@@ -88,7 +88,7 @@ private func upcast<T>(
     { fun($0, $1).map(Optional.init) }
 }
 
-func parseOnWindowDetectedArray(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [WindowDetectedCallback] {
+func parseOnWindowDetectedArray(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [WindowDetectedCallback] {
     if let array = raw.asArrayOrNil {
         return array.enumerated().map { (index, raw) in parseWindowDetectedCallback(raw, backtrace + .index(index), &errors) }.filterNotNil()
     } else {
@@ -101,7 +101,7 @@ private func parseCasInsensitiveRegex(_ raw: Json, _ backtrace: ConfigBacktrace)
     parseString(raw, backtrace).flatMap { CaseInsensitiveRegex.new($0).toParsedConfig(backtrace) }
 }
 
-private func parseMatcher(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> WindowDetectedCallbackMatcher {
+private func parseMatcher(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> WindowDetectedCallbackMatcher {
     switch raw {
         case .dict(let raw):
             return .legacy(raw.parseTable(LegacyWindowDetectedCallbackMatcher(), matcherParsers, backtrace, &errors))
@@ -114,8 +114,8 @@ private func parseMatcher(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: i
     }
 }
 
-private func parseWindowDetectedCallback(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> WindowDetectedCallback? {
-    var myErrors: [ConfigParseError] = []
+private func parseWindowDetectedCallback(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> WindowDetectedCallback? {
+    var myErrors: [ConfigParseDiagnostic] = []
     let callback = parseTable(raw, WindowDetectedCallback(), windowDetectedParser, backtrace, &myErrors)
 
     if callback.rawRun == nil { // ID-46D063B2

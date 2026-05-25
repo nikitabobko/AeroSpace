@@ -41,7 +41,7 @@ struct ReloadConfigCommand: Command {
             stdout.append(msg)
             if !args.noGui {
                 Task.startUnstructured { @MainActor in
-                    MessageModel.shared.message = Message(description: "AeroSpace Config Error", body: msg)
+                    MessageModel.shared.message = Message(description: "AeroSpace Config Diagnostics", body: msg)
                 }
             }
             result = false

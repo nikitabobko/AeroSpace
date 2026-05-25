@@ -35,7 +35,7 @@ func parseDynamicValue<T>(
     ofType valueType: T.Type,
     _ fallback: T,
     _ backtrace: ConfigBacktrace,
-    _ errors: inout [ConfigParseError],
+    _ errors: inout [ConfigParseDiagnostic],
 ) -> DynamicConfigValue<T> {
     if let simpleValue = parseSimpleType(raw, ofType: T.self) {
         return .constant(simpleValue)
@@ -64,7 +64,7 @@ func parseDynamicValue<T>(
     }
 }
 
-func parsePerMonitorValues<T>(_ array: Json.JsonArray, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [PerMonitorValue<T>] {
+func parsePerMonitorValues<T>(_ array: Json.JsonArray, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [PerMonitorValue<T>] {
     array.enumerated().compactMap { (index: Int, raw: Json) -> PerMonitorValue<T>? in
         var backtrace = backtrace + .index(index)
 

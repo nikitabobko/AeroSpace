@@ -99,18 +99,18 @@ private let outerParser: [String: any ParserProtocol<Gaps.Outer>] = [
     "right": Parser(\.right, parseIntDynamicValue),
 ]
 
-private func parseIntDynamicValue(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> DynamicConfigValue<Int> {
+private func parseIntDynamicValue(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> DynamicConfigValue<Int> {
     parseDynamicValue(raw, ofType: Int.self, 0, backtrace, &errors)
 }
 
-func parseGaps(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> Gaps {
+func parseGaps(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> Gaps {
     parseTable(raw, .zero, gapsParser, backtrace, &errors)
 }
 
-func parseInner(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> Gaps.Inner {
+func parseInner(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> Gaps.Inner {
     parseTable(raw, Gaps.Inner.zero, innerParser, backtrace, &errors)
 }
 
-func parseOuter(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> Gaps.Outer {
+func parseOuter(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> Gaps.Outer {
     parseTable(raw, Gaps.Outer.zero, outerParser, backtrace, &errors)
 }

@@ -1,6 +1,6 @@
 import Common
 
-func parseWorkspaceToMonitorAssignment(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [String: [MonitorDescription]] {
+func parseWorkspaceToMonitorAssignment(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [String: [MonitorDescription]] {
     guard let rawTable = raw.asDictOrNil else {
         errors += [expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace)]
         return [:]
@@ -12,7 +12,7 @@ func parseWorkspaceToMonitorAssignment(_ raw: Json, _ backtrace: ConfigBacktrace
     return result
 }
 
-func parseMonitorDescriptions(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseError]) -> [MonitorDescription] {
+func parseMonitorDescriptions(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [MonitorDescription] {
     if let array = raw.asArrayOrNil {
         return array.enumerated()
             .map { (index, rawDesc) in parseMonitorDescription(rawDesc, backtrace + .index(index)).getOrNil(appendErrorTo: &errors) }
