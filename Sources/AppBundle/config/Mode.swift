@@ -9,7 +9,7 @@ struct Mode: ConvenienceCopyable, Equatable, Sendable {
 
 func parseModes(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic], _ mapping: [String: Key]) -> [String: Mode] {
     guard let rawTable = raw.asDictOrNil else {
-        errors += [expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace)]
+        errors += [expectedActualTypeDiagnostic(expected: .table, actual: raw.tomlType, backtrace)]
         return [:]
     }
     var result: [String: Mode] = [:]
@@ -17,14 +17,14 @@ func parseModes(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [Conf
         result[key] = parseMode(value, backtrace + .key(key), &errors, mapping)
     }
     if !result.keys.contains(mainModeId) {
-        errors += [.semantic(backtrace, "Please specify '\(mainModeId)' mode")]
+        errors += [.init(backtrace, "Please specify '\(mainModeId)' mode")]
     }
     return result
 }
 
 func parseMode(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic], _ mapping: [String: Key]) -> Mode {
     guard let rawTable: Json.JsonDict = raw.asDictOrNil else {
-        errors += [expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace)]
+        errors += [expectedActualTypeDiagnostic(expected: .table, actual: raw.tomlType, backtrace)]
         return .zero
     }
 
@@ -35,7 +35,7 @@ func parseMode(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [Confi
             case "binding":
                 result.bindings = parseBindings(value, backtrace, &errors, mapping)
             default:
-                errors += [unknownKeyError(backtrace)]
+                errors += [unknownKeyDiagnostic(backtrace)]
         }
     }
     return result

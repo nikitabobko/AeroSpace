@@ -34,7 +34,7 @@ func parseExecConfig(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout 
 
 private func parseEnvVariables(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [String: String] {
     guard let table = raw.asDictOrNil else {
-        errors.append(expectedActualTypeError(expected: .array, actual: raw.tomlType, backtrace))
+        errors.append(expectedActualTypeDiagnostic(expected: .array, actual: raw.tomlType, backtrace))
         return [:]
     }
     let mutated = table.keys
@@ -43,7 +43,7 @@ private func parseEnvVariables(_ raw: Json, _ backtrace: ConfigBacktrace, _ erro
     var result: [String: String] = [:]
     for (key, value) in table {
         let backtrace = backtrace + .key(key)
-        if key == "PWD" { errors.append(.semantic(backtrace, "Changing 'PWD' is not allowed")) }
+        if key == "PWD" { errors.append(.init(backtrace, "Changing 'PWD' is not allowed")) }
         guard let rawStr = parseString(value, backtrace).getOrNil(appendErrorTo: &errors) else { continue }
         var env = baseEnv
         if let add: String = fullEnv[key] {
@@ -51,7 +51,7 @@ private func parseEnvVariables(_ raw: Json, _ backtrace: ConfigBacktrace, _ erro
         }
         switch rawStr.interpolate(with: env) {
             case .success(let interpolated): result[key] = interpolated
-            case .failure(let _errros): errors += _errros.map { .semantic(backtrace, $0) }
+            case .failure(let _errros): errors += _errros.map { .init(backtrace, $0) }
         }
     }
     return result

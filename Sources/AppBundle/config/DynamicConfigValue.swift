@@ -41,17 +41,17 @@ func parseDynamicValue<T>(
         return .constant(simpleValue)
     } else if let array = raw.asArrayOrNil {
         if array.isEmpty {
-            errors.append(.semantic(backtrace, "The array must not be empty"))
+            errors.append(.init(backtrace, "The array must not be empty"))
             return .constant(fallback)
         }
 
         guard let defaultValue = array.last.flatMap({ parseSimpleType($0, ofType: T.self) }) else {
-            errors.append(.semantic(backtrace, "The last item in the array must be of type \(T.self)"))
+            errors.append(.init(backtrace, "The last item in the array must be of type \(T.self)"))
             return .constant(fallback)
         }
 
         if array.dropLast().isEmpty {
-            errors.append(.semantic(backtrace, "The array must contain at least one monitor pattern"))
+            errors.append(.init(backtrace, "The array must contain at least one monitor pattern"))
             return .constant(fallback)
         }
 
@@ -59,7 +59,7 @@ func parseDynamicValue<T>(
 
         return .perMonitor(rules, default: defaultValue)
     } else {
-        errors.append(.semantic(backtrace, "Unsupported type: \(raw.tomlType), expected: \(valueType) or array"))
+        errors.append(.init(backtrace, "Unsupported type: \(raw.tomlType), expected: \(valueType) or array"))
         return .constant(fallback)
     }
 }
@@ -80,7 +80,7 @@ func parsePerMonitorValues<T>(_ array: Json.JsonArray, _ backtrace: ConfigBacktr
         guard let monitorDescription = monitorDescriptionResult.getOrNil(appendErrorTo: &errors) else { return nil }
 
         guard let value = parseSimpleType(value, ofType: T.self) else {
-            errors.append(.semantic(backtrace, "Expected type is '\(T.self)'. But actual type is '\(value.tomlType)'"))
+            errors.append(.init(backtrace, "Expected type is '\(T.self)'. But actual type is '\(value.tomlType)'"))
             return nil
         }
 

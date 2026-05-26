@@ -92,7 +92,7 @@ func parseOnWindowDetectedArray(_ raw: Json, _ backtrace: ConfigBacktrace, _ err
     if let array = raw.asArrayOrNil {
         return array.enumerated().map { (index, raw) in parseWindowDetectedCallback(raw, backtrace + .index(index), &errors) }.filterNotNil()
     } else {
-        errors += [expectedActualTypeError(expected: .array, actual: raw.tomlType, backtrace)]
+        errors += [expectedActualTypeDiagnostic(expected: .array, actual: raw.tomlType, backtrace)]
         return []
     }
 }
@@ -109,7 +109,7 @@ private func parseMatcher(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: i
             return .command(parseCommand(raw).toEither().toParsedConfig(backtrace).getOrNil(appendErrorTo: &errors) ?? TrueCommand.instance)
         default:
             // Intentionally skip Table type from the list of expected types
-            errors.append(.semantic(backtrace, expectedActualTypeError(expected: .string, actual: raw.tomlType)))
+            errors.append(.init(backtrace, expectedActualTypeError(expected: .string, actual: raw.tomlType)))
             return .command(TrueCommand.instance)
     }
 }
@@ -119,7 +119,7 @@ private func parseWindowDetectedCallback(_ raw: Json, _ backtrace: ConfigBacktra
     let callback = parseTable(raw, WindowDetectedCallback(), windowDetectedParser, backtrace, &myErrors)
 
     if callback.rawRun == nil { // ID-46D063B2
-        myErrors.append(.semantic(backtrace, "'run' is mandatory key"))
+        myErrors.append(.init(backtrace, "'run' is mandatory key"))
     }
 
     if !myErrors.isEmpty {

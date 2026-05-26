@@ -25,7 +25,7 @@ final class ConfigTest: XCTestCase {
             config-version = 0
             """,
         )
-        assertEquals(errors, ["config-version: Must be in [1, 2] range"])
+        assertEquals(errors, ["[ERROR] config-version: config-version must be in [1, 2] range"])
     }
 
     func testExecOnWorkspaceChangeDifferentTypesError() {
@@ -34,7 +34,7 @@ final class ConfigTest: XCTestCase {
             exec-on-workspace-change = ['', 1]
             """,
         )
-        assertEquals(errors, ["exec-on-workspace-change[1]: Expected type is \'String\'. But actual type is \'Int\'"])
+        assertEquals(errors, ["[ERROR] exec-on-workspace-change[1]: Expected type is \'String\'. But actual type is \'Int\'"])
     }
 
     func testDuplicatedPersistentWorkspaces() {
@@ -44,7 +44,7 @@ final class ConfigTest: XCTestCase {
             persistent-workspaces = ['a', 'a']
             """,
         )
-        assertEquals(errors, ["persistent-workspaces: Contains duplicated workspace names"])
+        assertEquals(errors, ["[ERROR] persistent-workspaces: Contains duplicated workspace names"])
     }
 
     func testPersistentWorkspacesAreAvailableOnlySinceVersion2() {
@@ -53,7 +53,7 @@ final class ConfigTest: XCTestCase {
             persistent-workspaces = ['a']
             """,
         )
-        assertEquals(errors, ["persistent-workspaces: This config option is only available since \'config-version = 2\'"])
+        assertEquals(errors, ["[ERROR] persistent-workspaces: This config option is only available since \'config-version = 2\'"])
     }
 
     func testQueryCantBeUsedInConfig() {
@@ -100,7 +100,7 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(
             errors,
-            ["mode: Please specify \'main\' mode"],
+            ["[ERROR] mode: Please specify \'main\' mode"],
         )
         assertEquals(config.modes[mainModeId], nil)
     }
@@ -117,8 +117,8 @@ final class ConfigTest: XCTestCase {
         assertEquals(
             errors,
             [
-                "mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
-                "mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding",
+                "[ERROR] mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
+                "[ERROR] mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding",
             ],
         )
         let binding = HotkeyBinding(.option, .k, [FocusCommand.new(direction: .up)])
@@ -151,7 +151,7 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(
             errors,
-            ["unknownKey: Unknown top-level key"],
+            ["[ERROR] unknownKey: Unknown top-level key"],
         )
         assertEquals(config.enableNormalizationFlattenContainers, false)
     }
@@ -166,7 +166,7 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(
             errors,
-            ["gaps.unknownKey: Unknown key"],
+            ["[ERROR] gaps.unknownKey: Unknown key"],
         )
         assertEquals(config.enableNormalizationFlattenContainers, false)
     }
@@ -179,34 +179,34 @@ final class ConfigTest: XCTestCase {
         )
         assertEquals(
             errors,
-            ["enable-normalization-flatten-containers: Expected type is \'Bool\'. But actual type is \'String\'"],
+            ["[ERROR] enable-normalization-flatten-containers: Expected type is \'Bool\'. But actual type is \'String\'"],
         )
     }
 
     func testConfigParseError() {
         assertEquals(
             parseConfig("true").errors,
-            ["(Line 1) Syntax error: missing =."],
+            ["[ERROR] (Line 1) Syntax error: missing =."],
         )
 
         assertEquals(
             parseConfig("\n1").errors,
-            ["(Line 2) Syntax error: missing =."],
+            ["[ERROR] (Line 2) Syntax error: missing =."],
         )
 
         assertEquals(
             parseConfig("foo: 1").errors,
-            ["(Line 1) Syntax error: missing =."],
+            ["[ERROR] (Line 1) Syntax error: missing =."],
         )
 
         assertEquals(
             parseConfig("foo = 1.0").errors,
-            ["foo: Unsupported TOML type: Double"],
+            ["[ERROR] foo: Unsupported TOML type: Double"],
         )
 
         assertEquals(
             parseConfig("foo.bar = 1979-05-27").errors,
-            ["foo.bar: Unsupported TOML type: LocalDate"],
+            ["[ERROR] foo.bar: Unsupported TOML type: LocalDate"],
         )
     }
 
@@ -235,17 +235,15 @@ final class ConfigTest: XCTestCase {
                 alt-s = 'split horizontal'
             """,
         )
-        assertEquals(
-            errors,
-            ["""
-                The config contains:
-                1. usage of 'split' command
-                2. enable-normalization-flatten-containers = true
-                These two settings don't play nicely together. 'split' command has no effect when enable-normalization-flatten-containers is disabled.
+        let expected = """
+            [ERROR] The config contains:
+            1. usage of 'split' command
+            2. enable-normalization-flatten-containers = true
+            These two settings don't play nicely together. 'split' command has no effect when enable-normalization-flatten-containers is disabled.
 
-                My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.
-                """],
-        )
+            My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.
+            """
+        assertEquals(errors, [expected])
     }
 
     func testParseWorkspaceToMonitorAssignment() {
@@ -280,8 +278,8 @@ final class ConfigTest: XCTestCase {
             ],
         )
         assertEquals([
-            "workspace-to-monitor-force-assignment.w7[0]: Empty string is an illegal monitor description",
-            "workspace-to-monitor-force-assignment.w8: Monitor sequence numbers uses 1-based indexing. Values less than 1 are illegal",
+            "[ERROR] workspace-to-monitor-force-assignment.w7[0]: Empty string is an illegal monitor description",
+            "[ERROR] workspace-to-monitor-force-assignment.w8: Monitor sequence numbers uses 1-based indexing. Values less than 1 are illegal",
         ], errors)
         assertEquals([:], defaultConfig.workspaceToMonitorForceAssignment)
     }
@@ -360,7 +358,7 @@ final class ConfigTest: XCTestCase {
         ])
 
         assertEquals(errors, [
-            "on-window-detected[2]: \'run\' is mandatory key",
+            "[ERROR] on-window-detected[2]: \'run\' is mandatory key",
         ])
     }
 
@@ -395,7 +393,7 @@ final class ConfigTest: XCTestCase {
             run = 'layout floating'
             """,
         ).errors
-        assertEquals(errors, ["(Line 1) Syntax error: invalid or missing key."])
+        assertEquals(errors, ["[ERROR] (Line 1) Syntax error: invalid or missing key."])
     }
 
     func testParseOnWindowDetectedRegex() {
@@ -463,9 +461,9 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(errors2, [
-            "gaps.inner.horizontal: The last item in the array must be of type Int",
-            "gaps.inner.vertical[0]: The table is expected to have a single key \'monitor\'",
-            "gaps.inner.vertical[1].monitor: The table is expected to have a single key",
+            "[ERROR] gaps.inner.horizontal: The last item in the array must be of type Int",
+            "[ERROR] gaps.inner.vertical[0]: The table is expected to have a single key \'monitor\'",
+            "[ERROR] gaps.inner.vertical[1].monitor: The table is expected to have a single key",
         ])
     }
 
@@ -496,8 +494,8 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(errors1, [
-            "key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code",
-            "key-mapping.key-notation-to-key-code: ' f' is invalid key notation",
+            "[ERROR] key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code",
+            "[ERROR] key-mapping.key-notation-to-key-code: ' f' is invalid key notation",
         ])
 
         let (dvorakConfig, dvorakErrors) = parseConfig(

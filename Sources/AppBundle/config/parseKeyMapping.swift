@@ -38,7 +38,7 @@ private func parsePreset(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedCon
 private func parseKeyNotationToKeyCode(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [String: Key] {
     var result: [String: Key] = [:]
     guard let table = raw.asDictOrNil else {
-        errors.append(expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace))
+        errors.append(expectedActualTypeDiagnostic(expected: .table, actual: raw.tomlType, backtrace))
         return result
     }
     for (key, value): (String, Json) in table {
@@ -47,11 +47,11 @@ private func parseKeyNotationToKeyCode(_ raw: Json, _ backtrace: ConfigBacktrace
             if let value = parseString(value, backtrace).getOrNil(appendErrorTo: &errors) {
                 switch keyNotationToKeyCode[value] {
                     case let value?: result[key] = value
-                    case nil: errors.append(.semantic(backtrace, "\(value.singleQuoted) is invalid key code"))
+                    case nil: errors.append(.init(backtrace, "\(value.singleQuoted) is invalid key code"))
                 }
             }
         } else {
-            errors.append(.semantic(backtrace, "\(key.singleQuoted) is invalid key notation"))
+            errors.append(.init(backtrace, "\(key.singleQuoted) is invalid key notation"))
         }
     }
     return result

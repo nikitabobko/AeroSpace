@@ -87,7 +87,7 @@ struct HotkeyBinding: Equatable, Sendable {
 
 func parseBindings(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic], _ mapping: [String: Key]) -> [String: HotkeyBinding] {
     guard let rawTable = raw.asDictOrNil else {
-        errors += [expectedActualTypeError(expected: .table, actual: raw.tomlType, backtrace)]
+        errors += [expectedActualTypeDiagnostic(expected: .table, actual: raw.tomlType, backtrace)]
         return [:]
     }
     var result: [String: HotkeyBinding] = [:]
@@ -102,7 +102,7 @@ func parseBindings(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [C
             .getOrNil(appendErrorTo: &errors)
         if let binding {
             if result.keys.contains(binding.descriptionWithKeyCode) {
-                errors.append(.semantic(backtrace, "'\(binding.descriptionWithKeyCode)' Binding redeclaration"))
+                errors.append(.init(backtrace, "'\(binding.descriptionWithKeyCode)' Binding redeclaration"))
             }
             result[binding.descriptionWithKeyCode] = binding
         }
@@ -114,11 +114,11 @@ func parseBinding(_ raw: String, _ backtrace: ConfigBacktrace, _ mapping: [Strin
     let rawKeys = raw.split(separator: "-")
     let modifiers: ParsedConfig<NSEvent.ModifierFlags> = rawKeys.dropLast()
         .mapAllOrFailure {
-            modifiersMap[String($0)].orFailure(.semantic(backtrace, "Can't parse modifiers in '\(raw)' binding"))
+            modifiersMap[String($0)].orFailure(.init(backtrace, "Can't parse modifiers in '\(raw)' binding"))
         }
         .map { NSEvent.ModifierFlags($0) }
     let key: ParsedConfig<Key> = rawKeys.last.flatMap { mapping[String($0)] }
-        .orFailure(.semantic(backtrace, "Can't parse the key in '\(raw)' binding"))
+        .orFailure(.init(backtrace, "Can't parse the key in '\(raw)' binding"))
     return modifiers.flatMap { modifiers -> ParsedConfig<(NSEvent.ModifierFlags, Key)> in
         key.flatMap { key -> ParsedConfig<(NSEvent.ModifierFlags, Key)> in
             .success((modifiers, key))
