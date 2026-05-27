@@ -7,6 +7,10 @@ func assertTrue(_ actual: Bool, file: String = #filePath, line: Int = #line) {
     assertEquals(actual, true, file: file, line: line)
 }
 
+func assertFalse(_ actual: Bool, file: String = #filePath, line: Int = #line) {
+    assertEquals(actual, false, file: file, line: line)
+}
+
 // Because assertEquals default messages are unreadable!
 // periphery:ignore
 func assertNotEquals<T>(_ actual: T, _ expected: T, file: String = #filePath, line: Int = #line) where T: Equatable {

@@ -19,12 +19,13 @@ final class ConfigTest: XCTestCase {
     }
 
     func testConfigVersionOutOfBounds() {
-        let errors = parseConfig(
+        let result = parseConfig(
             """
             config-version = 0
             """,
-        ).errors
-        assertEquals(errors, ["[ERROR] config-version: config-version must be in [1, 2] range"])
+        )
+        assertTrue(result.allowReloadConfig)
+        assertEquals(result.errors, ["[ERROR] config-version: config-version must be in [1, 2] range"])
     }
 
     func testExecOnWorkspaceChangeDifferentTypesError() {
@@ -71,8 +72,9 @@ final class ConfigTest: XCTestCase {
             mode.main = {}
             """,
         )
+        assertTrue(result.allowReloadConfig)
         assertEquals(result.errors, [])
-        XCTAssertTrue(result.config.modes[mainModeId]?.bindings.isEmpty == true)
+        assertTrue(result.config.modes[mainModeId]?.bindings.isEmpty == true)
     }
 
     func testParseMode() {
@@ -183,6 +185,7 @@ final class ConfigTest: XCTestCase {
     }
 
     func testConfigParseError() {
+        assertFalse(parseConfig("true").allowReloadConfig)
         assertEquals(
             parseConfig("true").errors,
             ["[ERROR] (Line 1) Syntax error: missing =."],

@@ -44,10 +44,12 @@ func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
 struct ConfigParseDiagnostic: Error, Equatable {
     let backtrace: ConfigBacktrace
     let message: String
+    let preventConfigReload: Bool // for severe config errors (like TOML parse error)
 
-    public init(_ backtrace: ConfigBacktrace, _ message: String) {
+    public init(_ backtrace: ConfigBacktrace, _ message: String, preventConfigReload: Bool = false) {
         self.backtrace = backtrace
         self.message = message
+        self.preventConfigReload = preventConfigReload
     }
 
     func description() -> String {
@@ -214,14 +216,19 @@ func tomlAnyToJsonRecursive(
 struct ParseConfigResult {
     let config: Config
     let errors: [String]
+    let allowReloadConfig: Bool
 }
 
-@MainActor func parseConfig(_ rawToml: String) -> ParseConfigResult { // todo change return value to Result
+@MainActor func parseConfig(_ rawToml: String) -> ParseConfigResult {
     let result = _parseConfig(rawToml)
-    return ParseConfigResult(config: result.config, errors: result.errors.map { $0.description() }.sorted())
+    return ParseConfigResult(
+        config: result.config,
+        errors: result.errors.map { $0.description() }.sorted(),
+        allowReloadConfig: result.errors.allSatisfy { !$0.preventConfigReload },
+    )
 }
 
-@MainActor private func _parseConfig(_ rawToml: String) -> (config: Config, errors: [ConfigParseDiagnostic]) { // todo change return value to Result
+@MainActor private func _parseConfig(_ rawToml: String) -> (config: Config, errors: [ConfigParseDiagnostic]) {
     var errors: [ConfigParseDiagnostic] = []
 
     let rawTable: Json.JsonDict
@@ -232,11 +239,11 @@ struct ParseConfigResult {
             case .dict(let dict): rawTable = dict
             default: // dead code
                 let msg = "Config parsing error: the top level type must be a TOML Table. But got: \((json ?? .null).tomlType)"
-                errors.append(.init(.emptyRoot, msg))
+                errors.append(.init(.emptyRoot, msg, preventConfigReload: true))
                 rawTable = [:]
         }
     } catch {
-        errors.append(.init(.emptyRoot, error.description))
+        errors.append(.init(.emptyRoot, error.description, preventConfigReload: true))
         rawTable = [:]
     }
 
