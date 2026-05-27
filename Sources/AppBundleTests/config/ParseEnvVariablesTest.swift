@@ -18,34 +18,34 @@ final class ParseEnvVariablesTest: XCTestCase {
     }
 
     func testInherit() {
-        let (config1, errors1) = parseConfig("exec.inherit-env-vars = false")
-        assertEquals(errors1, [])
-        assertEquals(config1.execConfig.envVariables, [:])
+        let result1 = parseConfig("exec.inherit-env-vars = false")
+        assertEquals(result1.errors, [])
+        assertEquals(result1.config.execConfig.envVariables, [:])
 
-        let (config2, errors2) = parseConfig("exec.inherit-env-vars = true")
-        assertEquals(errors2, [])
-        assertEquals(config2.execConfig.envVariables, testEnv)
+        let result2 = parseConfig("exec.inherit-env-vars = true")
+        assertEquals(result2.errors, [])
+        assertEquals(result2.config.execConfig.envVariables, testEnv)
     }
 
     func testAddVars() {
-        let (config, errors) = parseConfig(
+        let result = parseConfig(
             """
             [exec.env-vars]
             FOO = 'BAR'
             """,
         )
-        assertEquals(errors, [])
-        assertEquals(config.execConfig.envVariables, testEnv + ["FOO": "BAR"])
+        assertEquals(result.errors, [])
+        assertEquals(result.config.execConfig.envVariables, testEnv + ["FOO": "BAR"])
     }
 
     func testCyclicDep() {
-        let (_, errors) = parseConfig(
+        let errors = parseConfig(
             """
             [exec.env-vars]
             FOO = '${BAR}'
             BAR = '${FOO}'
             """,
-        )
+        ).errors
         assertEquals(errors, [
             "[ERROR] exec.env-vars.BAR: Env variable 'FOO' isn't presented in AeroSpace.app env vars, or not available for interpolation (because it's mutated)",
             "[ERROR] exec.env-vars.FOO: Env variable 'BAR' isn't presented in AeroSpace.app env vars, or not available for interpolation (because it's mutated)",
@@ -53,12 +53,12 @@ final class ParseEnvVariablesTest: XCTestCase {
     }
 
     func testForbidPwd() {
-        let (_, errors) = parseConfig(
+        let errors = parseConfig(
             """
             [exec.env-vars]
             PWD = ''
             """,
-        )
+        ).errors
         assertEquals(errors, ["[ERROR] exec.env-vars.PWD: Changing 'PWD' is not allowed"])
     }
 }

@@ -27,15 +27,15 @@ func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
     } catch {
         return .failure("Can't read contents of \(configUrl.path.singleQuoted) as a utf8 string: \(error.localizedDescription)")
     }
-    let (parsedConfig, errors) = parseConfig(configStr)
+    let result = parseConfig(configStr)
 
-    if errors.isEmpty {
-        return .success((parsedConfig, configUrl))
+    if result.errors.isEmpty {
+        return .success((result.config, configUrl))
     } else {
         let msg = """
             Failed to parse \(configUrl.absoluteURL.path)
 
-            \(errors.map(\.description).joined(separator: "\n\n"))
+            \(result.errors.map(\.description).joined(separator: "\n\n"))
             """
         return .failure(msg)
     }
@@ -211,9 +211,14 @@ func tomlAnyToJsonRecursive(
     }
 }
 
-@MainActor func parseConfig(_ rawToml: String) -> (config: Config, errors: [String]) { // todo change return value to Result
+struct ParseConfigResult {
+    let config: Config
+    let errors: [String]
+}
+
+@MainActor func parseConfig(_ rawToml: String) -> ParseConfigResult { // todo change return value to Result
     let result = _parseConfig(rawToml)
-    return (result.config, result.errors.map { $0.description() }.sorted())
+    return ParseConfigResult(config: result.config, errors: result.errors.map { $0.description() }.sorted())
 }
 
 @MainActor private func _parseConfig(_ rawToml: String) -> (config: Config, errors: [ConfigParseDiagnostic]) { // todo change return value to Result
