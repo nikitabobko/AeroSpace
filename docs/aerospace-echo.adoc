@@ -2,7 +2,7 @@
 include::util/man-attributes.adoc[]
 :manname: aerospace-echo
 // tag::purpose[]
-:manpurpose: Print arguments
+:manpurpose: Print arguments and interpolation variables to stdout
 // end::purpose[]
 
 // =========================================================== Synopsis
@@ -17,7 +17,7 @@ aerospace echo [-h|--help] [--stderr] [--window-id <window-id>] -- <string>...
 == Description
 
 // tag::body[]
-{manpurpose}
+Print `<string>...` arguments and *interpolation variables* to stdout.
 
 You can use this command in combination with other commands to do various things:
 
@@ -37,7 +37,7 @@ include::./util/window-id-flag-desc.adoc[]
 include::./util/conditional-arguments-header.adoc[]
 
 <string>:: The argument to print.
-Each `<string>` argument can contain interpolation variables similar to those in xref:./commands.adoc#list-windows[list-windows command].
+Each `<string>` argument can contain *interpolation variables* similar to those in xref:./commands.adoc#list-windows[list-windows command].
 You can specify multiple `<string>` arguments - each of them is printed on a separate line.
 
 // =========================================================== Examples

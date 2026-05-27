@@ -38,7 +38,7 @@ See https://nikitabobko.github.io/AeroSpace/guide#shell for more info.
 include::util/conditional-examples-header.adoc[]
 
 * Cycle between workspaces a, b, and c: +
-`aerospace eval 'echo a b c | workspace --stdin next'`
+`aerospace eval 'echo a b c | workspace --wrap-around --stdin next'`
 
 // end::body[]
 

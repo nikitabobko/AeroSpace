@@ -7,7 +7,7 @@ let subcommandDescriptions = [
     ["  close", "Close the focused window"],
     ["  config", "Query AeroSpace config options"],
     ["  debug-windows", "Interactive command to record Accessibility API debug information to create bug reports"],
-    ["  echo", "Print arguments"],
+    ["  echo", "Print arguments and interpolation variables to stdout"],
     ["  enable", "Temporarily disable window management"],
     ["  eval", "Send multiple commands to AeroSpace at once"],
     ["  false", "Return false value"],

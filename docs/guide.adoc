@@ -98,7 +98,7 @@ If the key is omitted in the custom config, it falls back to the value in the de
 Rule of thumb: all the "scalar like" values always fall back to the default config. All the "vector like" values fall back to the empty TOML array or table.
 
 That allows you to keep your config tidy and clean from trivial config keys for which you like the default values.
-You can bootstrap your custom config by copying the default config from the app installation -
+You can bootstrap your custom config by copying the default config from the app installation:
 
 [source,shell]
 ----
@@ -599,7 +599,7 @@ on-window-detected = [
         run = 'move-node-to-workspace T', # mnemonics T - Terminal
     },
     {
-        if = 'test %{app-bundle-id} = com.google.Chrome',
+        if = 'test %{app-bundle-id} = com.google.Chrome || test %{app-bundle-id} = org.mozilla.firefox',
         run = 'move-node-to-workspace W', # mnemonics W - Web browser
     },
     {

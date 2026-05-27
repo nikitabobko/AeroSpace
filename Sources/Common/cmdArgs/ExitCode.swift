@@ -1,3 +1,4 @@
+// todo try to simplify these types
 public protocol ExitCode: RawRepresentable<Int32>, AeroAny, Sendable {
     static var fail: Self { get }
 }

@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-enum Json: Encodable, Equatable {
+enum Json: Encodable, Equatable { // todo rename to Dto? (data transfer object)
     // vector
     case dict(JsonDict)
     case array(JsonArray)

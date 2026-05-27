@@ -451,10 +451,9 @@ struct ConfigBacktrace: CustomStringConvertible, Equatable {
 
     var isRootKey: Bool { path.singleOrNil().map(\.isKey) == true }
 
-    static func + (lhs: Self, rhs: TomlBacktraceItem) -> Self {
-        var result = lhs
-        result.path += [rhs]
-        return result
+    static func + (lhs: consuming Self, rhs: TomlBacktraceItem) -> Self {
+        lhs.path += [rhs]
+        return lhs
     }
 }
 
