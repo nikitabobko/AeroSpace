@@ -26,25 +26,22 @@ struct ReloadConfigCommand: Command {
     stdout: inout String,
 ) async throws -> Bool {
     let result = readConfig(forceConfigUrl: forceConfigUrl)
-    switch result.combinedErrorMsg {
-        case nil:
-            if !args.dryRun {
-                resetHotKeys()
-                config = result.config
-                configUrl = result.configUrl
-                try await activateMode(activeMode)
-                syncStartAtLogin()
-                MessageModel.shared.message = nil
+    if let msg = result.combinedErrorMsg {
+        stdout.append(msg)
+        if !args.noGui {
+            Task.startUnstructured { @MainActor in
+                MessageModel.shared.message = Message(description: "AeroSpace Config Diagnostics", body: msg)
             }
-        case let msg?:
-            stdout.append(msg)
-            if !args.noGui {
-                Task.startUnstructured { @MainActor in
-                    MessageModel.shared.message = Message(description: "AeroSpace Config Diagnostics", body: msg)
-                }
-            }
+        }
+    } else {
+        MessageModel.shared.message = nil
     }
-    if !args.dryRun {
+    if result.allowReloadConfig && !args.dryRun {
+        resetHotKeys()
+        config = result.config
+        configUrl = result.configUrl
+        try await activateMode(activeMode)
+        syncStartAtLogin()
         syncConfigFileWatcher()
     }
     return result.combinedErrorMsg == nil
