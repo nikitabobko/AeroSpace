@@ -25,29 +25,27 @@ struct ReloadConfigCommand: Command {
     forceConfigUrl: URL? = nil,
     stdout: inout String,
 ) async throws -> Bool {
-    let result: Bool
-    switch readConfig(forceConfigUrl: forceConfigUrl) {
-        case .success(let (parsedConfig, url)):
+    let result = readConfig(forceConfigUrl: forceConfigUrl)
+    switch result.combinedErrorMsg {
+        case nil:
             if !args.dryRun {
                 resetHotKeys()
-                config = parsedConfig
-                configUrl = url
+                config = result.config
+                configUrl = result.configUrl
                 try await activateMode(activeMode)
                 syncStartAtLogin()
                 MessageModel.shared.message = nil
             }
-            result = true
-        case .failure(let msg):
+        case let msg?:
             stdout.append(msg)
             if !args.noGui {
                 Task.startUnstructured { @MainActor in
                     MessageModel.shared.message = Message(description: "AeroSpace Config Diagnostics", body: msg)
                 }
             }
-            result = false
     }
     if !args.dryRun {
         syncConfigFileWatcher()
     }
-    return result
+    return result.combinedErrorMsg == nil
 }

@@ -4,8 +4,18 @@ import HotKey
 import TOMLDecoder
 import OrderedCollections
 
+struct ReadConfigResult {
+    let config: Config
+    let configUrl: URL
+    let combinedErrorMsg: String?
+    let allowReloadConfig: Bool
+}
+
 @MainActor
-func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
+func readConfig(forceConfigUrl: URL? = nil) -> ReadConfigResult {
+    var errors: [String] = []
+    var allowReloadConfig = true
+
     let configUrl: URL
     if let forceConfigUrl {
         configUrl = forceConfigUrl
@@ -18,27 +28,39 @@ func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
                     Ambiguous config error. Several configs found:
                     \(candidates.map(\.path).joined(separator: "\n"))
                     """
-                return .failure(msg)
+                errors.append(msg)
+                allowReloadConfig = false
+                configUrl = defaultConfigUrl
         }
     }
     let configStr: String
     do {
         configStr = try String(contentsOf: configUrl, encoding: .utf8)
     } catch {
-        return .failure("Can't read contents of \(configUrl.path.singleQuoted) as a utf8 string: \(error.localizedDescription)")
+        errors.append("Can't read contents of \(configUrl.path.singleQuoted) as a utf8 string: \(error.localizedDescription)")
+        allowReloadConfig = false
+        configStr = ""
     }
     let result = parseConfig(configStr)
+    errors += result.errors.map { $0.description() }
+    allowReloadConfig = allowReloadConfig && result.allowReloadConfig
 
-    if result.errors.isEmpty {
-        return .success((result.config, configUrl))
-    } else {
-        let msg = """
+    let combinedErrorMsg: String? = switch errors.isEmpty {
+        case true: nil
+        case false:
+            """
             Failed to parse \(configUrl.absoluteURL.path)
 
             \(result.errors.map { $0.description() }.joined(separator: "\n\n"))
             """
-        return .failure(msg)
     }
+
+    return ReadConfigResult(
+        config: result.config,
+        configUrl: configUrl,
+        combinedErrorMsg: combinedErrorMsg,
+        allowReloadConfig: allowReloadConfig,
+    )
 }
 
 struct ConfigParseDiagnostic: Error, Equatable {
