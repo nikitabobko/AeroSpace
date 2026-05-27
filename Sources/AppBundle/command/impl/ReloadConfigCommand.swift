@@ -7,7 +7,7 @@ struct ReloadConfigCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
         var stdout = ""
-        let isOk = try await reloadConfig(args: args, stdout: &stdout)
+        let isOk = try await reloadConfig(args: args, combinedErrorMsg: &stdout)
         if !stdout.isEmpty {
             io.out(stdout)
         }
@@ -17,17 +17,17 @@ struct ReloadConfigCommand: Command {
 
 @MainActor func reloadConfig(forceConfigUrl: URL? = nil) async throws -> Bool {
     var devNull = ""
-    return try await reloadConfig(forceConfigUrl: forceConfigUrl, stdout: &devNull)
+    return try await reloadConfig(forceConfigUrl: forceConfigUrl, combinedErrorMsg: &devNull)
 }
 
 @MainActor func reloadConfig(
     args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []),
     forceConfigUrl: URL? = nil,
-    stdout: inout String,
+    combinedErrorMsg: inout String,
 ) async throws -> Bool {
     let result = readConfig(forceConfigUrl: forceConfigUrl)
     if let msg = result.combinedErrorMsg {
-        stdout.append(msg)
+        combinedErrorMsg.append(msg)
         if !args.noGui {
             Task.startUnstructured { @MainActor in
                 MessageModel.shared.message = Message(description: "AeroSpace Config Diagnostics", body: msg)

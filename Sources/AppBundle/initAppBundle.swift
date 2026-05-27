@@ -15,7 +15,7 @@ import Foundation
         if try await !reloadConfig() {
             var out = ""
             check(
-                try await reloadConfig(forceConfigUrl: defaultConfigUrl, stdout: &out),
+                try await reloadConfig(forceConfigUrl: defaultConfigUrl, combinedErrorMsg: &out),
                 """
                 Can't load default config. Your installation is probably corrupted.
                 Please don't modify \(defaultConfigUrl.description.singleQuoted)
