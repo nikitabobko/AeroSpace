@@ -184,30 +184,30 @@ func parseCommandOrCommands(_ raw: Json) -> Parsed<[any Command]> {
     }
 }
 
-func tomlAnyToParsedConfigRecursive(any: Any, _ backtrace: ConfigBacktrace) -> ParsedConfig<Json> {
+func tomlAnyToJsonRecursive(
+    any: Any,
+    _ backtrace: ConfigBacktrace,
+    _ errors: inout [ConfigParseDiagnostic],
+) -> Json? {
     switch any {
         case let dict as [String: Any]:
             var json = Json.JsonDict()
             for (key, tomlValue) in dict {
-                let jsonResultValue = tomlAnyToParsedConfigRecursive(any: tomlValue, backtrace + .key(key))
-                switch jsonResultValue {
-                    case .success(let jsonValue): json[key] = jsonValue
-                    case .failure(let fail): return .failure(fail)
-                }
+                json[key] = tomlAnyToJsonRecursive(any: tomlValue, backtrace + .key(key), &errors)
             }
-            return .success(.dict(json))
+            return .dict(json)
         case let array as [Any]:
             var json = Json.JsonArray()
             for (index, tomlValue) in array.enumerated() {
-                let jsonResultValue = tomlAnyToParsedConfigRecursive(any: tomlValue, backtrace + .index(index))
-                switch jsonResultValue {
-                    case .success(let jsonValue): json.append(jsonValue)
-                    case .failure(let fail): return .failure(fail)
-                }
+                let element = tomlAnyToJsonRecursive(any: tomlValue, backtrace + .index(index), &errors)
+                guard let element else { continue }
+                json.append(element)
             }
-            return .success(.array(json))
+            return .array(json)
         default:
-            return Json.newScalarOrNil(any).orFailure(.init(backtrace, "Unsupported TOML type: \(type(of: any))"))
+            if let value = Json.newScalarOrNil(any) { return value }
+            errors.append(.init(backtrace, "Unsupported TOML type: \(type(of: any))"))
+            return nil
     }
 }
 
@@ -217,19 +217,23 @@ func tomlAnyToParsedConfigRecursive(any: Any, _ backtrace: ConfigBacktrace) -> P
 }
 
 @MainActor private func _parseConfig(_ rawToml: String) -> (config: Config, errors: [ConfigParseDiagnostic]) { // todo change return value to Result
+    var errors: [ConfigParseDiagnostic] = []
+
     let rawTable: Json.JsonDict
     do {
         let dict: [String: Any] = try .init(try TOMLTable(source: rawToml))
-        switch tomlAnyToParsedConfigRecursive(any: dict, .emptyRoot) {
-            case .success(.dict(let dict)): rawTable = dict
-            case .success: return (defaultConfig, [.init(.emptyRoot, "Config parsing error: the top level type must be a TOML Table")])
-            case .failure(let fail): return (defaultConfig, [fail])
+        let json = tomlAnyToJsonRecursive(any: dict, .emptyRoot, &errors)
+        switch json {
+            case .dict(let dict): rawTable = dict
+            default: // dead code
+                let msg = "Config parsing error: the top level type must be a TOML Table. But got: \((json ?? .null).tomlType)"
+                errors.append(.init(.emptyRoot, msg))
+                rawTable = [:]
         }
     } catch {
-        return (defaultConfig, [.init(.emptyRoot, error.description)])
+        errors.append(.init(.emptyRoot, error.description))
+        rawTable = [:]
     }
-
-    var errors: [ConfigParseDiagnostic] = []
 
     var config = rawTable.parseTable(Config(), configParser, .emptyRoot, &errors)
 

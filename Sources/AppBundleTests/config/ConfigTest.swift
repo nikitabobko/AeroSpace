@@ -206,7 +206,7 @@ final class ConfigTest: XCTestCase {
 
         assertEquals(
             parseConfig("foo.bar = 1979-05-27").errors,
-            ["[ERROR] foo.bar: Unsupported TOML type: LocalDate"],
+            ["[ERROR] foo.bar: Unsupported TOML type: LocalDate", "[ERROR] foo: Unknown top-level key"],
         )
     }
 
