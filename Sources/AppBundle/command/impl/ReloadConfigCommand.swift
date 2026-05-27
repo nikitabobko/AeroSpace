@@ -29,9 +29,7 @@ struct ReloadConfigCommand: Command {
     if let msg = result.combinedErrorMsg {
         combinedErrorMsg.append(msg)
         if !args.noGui {
-            Task.startUnstructured { @MainActor in
-                MessageModel.shared.message = Message(description: "AeroSpace Config Diagnostics", body: msg)
-            }
+            MessageModel.shared.message = Message(description: "AeroSpace Config Diagnostics", body: msg)
         }
     } else {
         MessageModel.shared.message = nil
