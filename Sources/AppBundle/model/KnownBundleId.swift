@@ -13,6 +13,7 @@ enum KnownBundleId: String, Equatable {
     case iphonesimulator = "com.apple.iphonesimulator"
     case iterm2 = "com.googlecode.iterm2"
     case kitty = "net.kovidgoyal.kitty"
+    case outlook = "com.microsoft.Outlook"
     case photoBooth = "com.apple.PhotoBooth"
     case qutebrowser = "org.qutebrowser.qutebrowser"
     case screenstudio = "com.timpler.screenstudio"
