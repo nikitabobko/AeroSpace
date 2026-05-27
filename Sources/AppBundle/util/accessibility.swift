@@ -5,14 +5,20 @@ import PrivateApi
 @MainActor
 func checkAccessibilityPermissions() {
     let options = [axTrustedCheckOptionPrompt: true]
-    if !AXIsProcessTrustedWithOptions(options as CFDictionary) {
-        resetAccessibility() // Because macOS doesn't reset it for us when the app signature changes...
-        terminateApp()
-    }
-}
-
-private func resetAccessibility() {
-    _ = try? Process.run(URL(filePath: "/usr/bin/tccutil"), arguments: ["reset", "Accessibility", aeroSpaceAppId])
+    _ = AXIsProcessTrustedWithOptions(options as CFDictionary)
+    // On macOS 26 (Tahoe), AXIsProcessTrustedWithOptions returns false for
+    // ad-hoc-signed binaries even after the user grants accessibility,
+    // because Tahoe added a strict "anchor apple" platform-requirement check
+    // to TCC that ad-hoc signatures cannot satisfy. The previous behaviour
+    // (calling tccutil reset + terminateApp on a false return) caused an
+    // infinite re-prompt loop under launchd KeepAlive: every launch failed
+    // the trust check, reset its own TCC entry, exited, and got respawned,
+    // re-prompting the user each time.
+    //
+    // We now fire the prompt once (no-op when AX is already trusted) and
+    // continue. If AX is genuinely not granted, the AX calls themselves
+    // will fail later and the user can grant via System Settings without
+    // AeroSpace fighting its own TCC state.
 }
 
 protocol ReadableAttr: Sendable {
