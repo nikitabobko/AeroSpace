@@ -1,0 +1,55 @@
+name: publish-castrozan-release
+
+on:
+  push:
+    branches:
+      - "fix/**"
+      - "feat/**"
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-publish:
+    runs-on: macos-26
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: ./.github/gh-actions-runner-xcode-select.sh
+
+      - run: brew install bash fish xcbeautify swiftly
+
+      - run: swiftly init --skip-install --assume-yes --verbose && swiftly install
+
+      - name: build release
+        run: |
+          ./build-release.sh --codesign-identity - --build-version "${GITHUB_SHA::7}-castrozan"
+
+      - name: package zip
+        id: package
+        run: |
+          mkdir -p .release-out
+          (cd .release && zip -r ../.release-out/AeroSpace.app.zip AeroSpace.app aerospace)
+          echo "zip_path=.release-out/AeroSpace.app.zip" >> "$GITHUB_OUTPUT"
+          sha=$(/usr/bin/shasum -a 256 .release-out/AeroSpace.app.zip | awk '{print $1}')
+          echo "sha256=$sha" >> "$GITHUB_OUTPUT"
+
+      - name: derive release tag from branch
+        id: tag
+        run: |
+          branch="${GITHUB_REF#refs/heads/}"
+          tag="castrozan-${branch//\//-}"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: publish or refresh release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ steps.tag.outputs.tag }}"
+          gh release delete "$tag" --yes --cleanup-tag 2>/dev/null || true
+          gh release create "$tag" \
+            --target "$GITHUB_SHA" \
+            --title "Castrozan fork build for $tag" \
+            --notes "Automated build from commit $GITHUB_SHA on branch ${GITHUB_REF#refs/heads/}. SHA256: ${{ steps.package.outputs.sha256 }}" \
+            --prerelease \
+            "${{ steps.package.outputs.zip_path }}"
