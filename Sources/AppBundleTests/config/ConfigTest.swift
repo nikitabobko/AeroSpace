@@ -13,6 +13,12 @@ final class ConfigTest: XCTestCase {
         assertEquals(result.config.enableNormalizationOppositeOrientationForNestedContainers, false)
     }
 
+    func testEmptyConfig() {
+        let result = parseConfig("")
+        assertEquals(result.errors, [])
+        assertTrue(result.allowReloadConfig)
+    }
+
     func testParseDefaultConfig() {
         let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/default-config.toml"), encoding: .utf8)
         assertEquals(parseConfig(toml).errors, [])
