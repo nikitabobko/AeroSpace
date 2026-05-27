@@ -31,7 +31,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertTrue(result.allowReloadConfig)
-        assertEquals(result.errors, ["[ERROR] config-version: config-version must be in [1, 2] range"])
+        assertEquals(result.strErrors, ["[ERROR] config-version: config-version must be in [1, 2] range"])
     }
 
     func testExecOnWorkspaceChangeDifferentTypesError() {
@@ -39,7 +39,7 @@ final class ConfigTest: XCTestCase {
             """
             exec-on-workspace-change = ['', 1]
             """,
-        ).errors
+        ).strErrors
         assertEquals(errors, ["[ERROR] exec-on-workspace-change[1]: Expected type is \'String\'. But actual type is \'Int\'"])
     }
 
@@ -49,7 +49,7 @@ final class ConfigTest: XCTestCase {
             config-version = 2
             persistent-workspaces = ['a', 'a']
             """,
-        ).errors
+        ).strErrors
         assertEquals(errors, ["[ERROR] persistent-workspaces: Contains duplicated workspace names"])
     }
 
@@ -58,7 +58,7 @@ final class ConfigTest: XCTestCase {
             """
             persistent-workspaces = ['a']
             """,
-        ).errors
+        ).strErrors
         assertEquals(errors, ["[ERROR] persistent-workspaces: This config option is only available since \'config-version = 2\'"])
     }
 
@@ -68,7 +68,7 @@ final class ConfigTest: XCTestCase {
             [mode.main.binding]
                 alt-a = 'list-apps'
             """,
-        ).errors
+        ).strErrors
         XCTAssertTrue(errors.singleOrNil()?.contains("cannot be used in config") == true)
     }
 
@@ -106,7 +106,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(
-            result.errors,
+            result.strErrors,
             ["[ERROR] mode: Please specify \'main\' mode"],
         )
         assertEquals(result.config.modes[mainModeId], nil)
@@ -122,7 +122,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(
-            result.errors,
+            result.strErrors,
             [
                 "[ERROR] mode.main.binding.aalt-j: Can\'t parse modifiers in \'aalt-j\' binding",
                 "[ERROR] mode.main.binding.alt-hh: Can\'t parse the key in \'alt-hh\' binding",
@@ -157,7 +157,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(
-            result.errors,
+            result.strErrors,
             ["[ERROR] unknownKey: Unknown top-level key"],
         )
         assertEquals(result.config.enableNormalizationFlattenContainers, false)
@@ -172,7 +172,7 @@ final class ConfigTest: XCTestCase {
             """,
         )
         assertEquals(
-            result.errors,
+            result.strErrors,
             ["[ERROR] gaps.unknownKey: Unknown key"],
         )
         assertEquals(result.config.enableNormalizationFlattenContainers, false)
@@ -183,7 +183,7 @@ final class ConfigTest: XCTestCase {
             """
             enable-normalization-flatten-containers = 'true'
             """,
-        ).errors
+        ).strErrors
         assertEquals(
             errors,
             ["[ERROR] enable-normalization-flatten-containers: Expected type is \'Bool\'. But actual type is \'String\'"],
@@ -193,27 +193,27 @@ final class ConfigTest: XCTestCase {
     func testConfigParseError() {
         assertFalse(parseConfig("true").allowReloadConfig)
         assertEquals(
-            parseConfig("true").errors,
+            parseConfig("true").strErrors,
             ["[ERROR] (Line 1) Syntax error: missing =."],
         )
 
         assertEquals(
-            parseConfig("\n1").errors,
+            parseConfig("\n1").strErrors,
             ["[ERROR] (Line 2) Syntax error: missing =."],
         )
 
         assertEquals(
-            parseConfig("foo: 1").errors,
+            parseConfig("foo: 1").strErrors,
             ["[ERROR] (Line 1) Syntax error: missing =."],
         )
 
         assertEquals(
-            parseConfig("foo = 1.0").errors,
+            parseConfig("foo = 1.0").strErrors,
             ["[ERROR] foo: Unsupported TOML type: Double"],
         )
 
         assertEquals(
-            parseConfig("foo.bar = 1979-05-27").errors,
+            parseConfig("foo.bar = 1979-05-27").strErrors,
             ["[ERROR] foo.bar: Unsupported TOML type: LocalDate", "[ERROR] foo: Unknown top-level key"],
         )
     }
@@ -242,7 +242,7 @@ final class ConfigTest: XCTestCase {
             [mode.foo.binding]
                 alt-s = 'split horizontal'
             """,
-        ).errors
+        ).strErrors
         let expected = """
             [ERROR] The config contains:
             1. usage of 'split' command
@@ -288,7 +288,7 @@ final class ConfigTest: XCTestCase {
         assertEquals([
             "[ERROR] workspace-to-monitor-force-assignment.w7[0]: Empty string is an illegal monitor description",
             "[ERROR] workspace-to-monitor-force-assignment.w8: Monitor sequence numbers uses 1-based indexing. Values less than 1 are illegal",
-        ], result.errors)
+        ], result.strErrors)
         assertEquals([:], defaultConfig.workspaceToMonitorForceAssignment)
     }
 
@@ -365,7 +365,7 @@ final class ConfigTest: XCTestCase {
             ),
         ])
 
-        assertEquals(result.errors, [
+        assertEquals(result.strErrors, [
             "[ERROR] on-window-detected[2]: \'run\' is mandatory key",
         ])
     }
@@ -400,7 +400,7 @@ final class ConfigTest: XCTestCase {
             if.app-id = 'com.openai.chat'
             run = 'layout floating'
             """,
-        ).errors
+        ).strErrors
         assertEquals(errors, ["[ERROR] (Line 1) Syntax error: invalid or missing key."])
     }
 
@@ -468,7 +468,7 @@ final class ConfigTest: XCTestCase {
                 inner.vertical = [{ foo.main = 1 }, { monitor = { foo = 2, bar = 3 } }, 1]
             """,
         )
-        assertEquals(result2.errors, [
+        assertEquals(result2.strErrors, [
             "[ERROR] gaps.inner.horizontal: The last item in the array must be of type Int",
             "[ERROR] gaps.inner.vertical[0]: The table is expected to have a single key \'monitor\'",
             "[ERROR] gaps.inner.vertical[1].monitor: The table is expected to have a single key",
@@ -500,7 +500,7 @@ final class ConfigTest: XCTestCase {
                 q = 'qw'
                 ' f' = 'f'
             """,
-        ).errors
+        ).strErrors
         assertEquals(errors1, [
             "[ERROR] key-mapping.key-notation-to-key-code: ' f' is invalid key notation",
             "[ERROR] key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code",
@@ -522,5 +522,11 @@ final class ConfigTest: XCTestCase {
         assertEquals(colemakResult.errors, [])
         assertEquals(colemakResult.config.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
         assertEquals(colemakResult.config.keyMapping.resolve()["f"], .e)
+    }
+}
+
+extension ParseConfigResult {
+    var strErrors: [String] {
+        errors.map { $0.description() }
     }
 }

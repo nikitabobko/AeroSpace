@@ -45,7 +45,7 @@ final class ParseEnvVariablesTest: XCTestCase {
             FOO = '${BAR}'
             BAR = '${FOO}'
             """,
-        ).errors
+        ).strErrors
         assertEquals(errors, [
             "[ERROR] exec.env-vars.BAR: Env variable 'FOO' isn't presented in AeroSpace.app env vars, or not available for interpolation (because it's mutated)",
             "[ERROR] exec.env-vars.FOO: Env variable 'BAR' isn't presented in AeroSpace.app env vars, or not available for interpolation (because it's mutated)",
@@ -58,7 +58,7 @@ final class ParseEnvVariablesTest: XCTestCase {
             [exec.env-vars]
             PWD = ''
             """,
-        ).errors
+        ).strErrors
         assertEquals(errors, ["[ERROR] exec.env-vars.PWD: Changing 'PWD' is not allowed"])
     }
 }

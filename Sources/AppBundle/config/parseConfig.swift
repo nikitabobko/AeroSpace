@@ -35,7 +35,7 @@ func readConfig(forceConfigUrl: URL? = nil) -> Result<(Config, URL), String> {
         let msg = """
             Failed to parse \(configUrl.absoluteURL.path)
 
-            \(result.errors.map(\.description).joined(separator: "\n\n"))
+            \(result.errors.map { $0.description() }.joined(separator: "\n\n"))
             """
         return .failure(msg)
     }
@@ -215,20 +215,12 @@ func tomlAnyToOrderedJsonRecursive(
 
 struct ParseConfigResult {
     let config: Config
-    let errors: [String]
-    let allowReloadConfig: Bool
+    let errors: [ConfigParseDiagnostic]
+
+    var allowReloadConfig: Bool { errors.allSatisfy { !$0.preventConfigReload } }
 }
 
 @MainActor func parseConfig(_ rawToml: String) -> ParseConfigResult {
-    let result = _parseConfig(rawToml)
-    return ParseConfigResult(
-        config: result.config,
-        errors: result.errors.map { $0.description() },
-        allowReloadConfig: result.errors.allSatisfy { !$0.preventConfigReload },
-    )
-}
-
-@MainActor private func _parseConfig(_ rawToml: String) -> (config: Config, errors: [ConfigParseDiagnostic]) {
     var errors: [ConfigParseDiagnostic] = []
 
     let rawTable: OrderedJson.JsonDict
@@ -290,7 +282,7 @@ struct ParseConfigResult {
             )]
         }
     }
-    return (config, errors)
+    return ParseConfigResult(config: config, errors: errors)
 }
 
 func parseIndentForNestedContainersWithTheSameOrientation(_ _: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Void> {
