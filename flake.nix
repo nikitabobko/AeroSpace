@@ -38,7 +38,7 @@
 
             src = pkgs.fetchurl {
               url = releaseZipUrl;
-              sha256 = pkgs.lib.fakeSha256;
+              sha256 = "sha256-kfPgLhyv4YMolyORtnGpqIR0qkiqc9znzj1VfKI9Ds8=";
             };
 
             nativeBuildInputs = [ pkgs.unzip ];
