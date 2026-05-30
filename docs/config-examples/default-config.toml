@@ -45,6 +45,14 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app
 automatically-unhide-macos-hidden-apps = false
 
+# Show a transient Apple-style overlay with the workspace name when the focused workspace changes
+# Fallback value (if you omit the key): workspace-hud = true
+workspace-hud = true
+
+# How long (in milliseconds) the workspace overlay stays on screen before fading out
+# Fallback value (if you omit the key): workspace-hud-duration-ms = 850
+workspace-hud-duration-ms = 850
+
 # List of workspaces that should stay alive even when they contain no windows,
 # even when they are invisible.
 # This config option is only available since 'config-version = 2'

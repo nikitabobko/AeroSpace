@@ -188,6 +188,14 @@ extension Workspace {
         workspace: newWorkspace,
         prevWorkspace: oldWorkspace,
     ))
+    if config.workspaceHud {
+        let ws = Workspace.get(byName: newWorkspace)
+        WorkspaceHud.shared.show(
+            workspace: newWorkspace,
+            monitorScreenId: ws.workspaceMonitor.monitorAppKitNsScreenScreensId,
+            durationMs: config.workspaceHudDurationMs,
+        )
+    }
     if let exec = config.execOnWorkspaceChange.first {
         let process = Process()
         process.executableURL = URL(filePath: exec)
