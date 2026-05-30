@@ -25,6 +25,20 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # You can set 0 to disable the padding feature
 accordion-padding = 30
 
+# Opt-in: when a 'move <direction>' command would hit the edge of a same-orientation split, cycle the
+# focused window's size along that axis instead, through `move-resize-toggle-ratios`. Works on all
+# four edges. This intentionally repurposes the default `move` behavior at an edge, so it is OFF by
+# default; enable it explicitly. (When there is no same-orientation split to resize, `move` always
+# behaves normally regardless of this setting.)
+# Fallback value (if you omit the key): move-resize-toggle-at-edge = false
+move-resize-toggle-at-edge = false
+# The sizes (as percentages of the parent the focused window occupies) the toggle cycles through.
+# Each 'move' against the edge steps to the next larger percentage, wrapping back to the first.
+# Values must be 1-99; they're sorted automatically. Default 50/60/70 keeps the neighbour usable on
+# native/smaller screens (raise e.g. to [50, 67, 75] if you want bigger steps on large monitors).
+# Fallback value (if you omit the key): move-resize-toggle-ratios = [50, 60, 70]
+move-resize-toggle-ratios = [50, 60, 70]
+
 # Possible values: tiles|accordion
 default-root-container-layout = 'tiles'
 

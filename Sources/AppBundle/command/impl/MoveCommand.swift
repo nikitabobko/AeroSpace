@@ -26,6 +26,14 @@ struct MoveCommand: Command {
                             return .succ
                     }
                 } else {
+                    // Only hijack the edge `move` for a size toggle when there is actually a
+                    // same-orientation split to resize. Otherwise fall through to the normal
+                    // moveOut (e.g. move-up in an all-horizontal layout must still move/reorganize).
+                    if config.moveResizeToggleAtEdge, isAtExtremeEdge(currentWindow, direction),
+                       let exit = resizeToggleAtEdge(window: currentWindow, direction: direction)
+                    {
+                        return exit
+                    }
                     return moveOut(window: currentWindow, direction: direction, io, args, env)
                 }
             case .workspace: // floating window
@@ -148,6 +156,70 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
                 index: deepTarget.ownIndex.orDie() + 1,
             )
     }
+    return .succ
+}
+
+/// Fractions of the parent the window cycles through, derived from the configurable
+/// `move-resize-toggle-ratios` (percentages). Defaults to 50/60/70 (1/2 -> 3/5 -> 7/10), which keep
+/// the neighbour usable on smaller/native screens. Always sorted ascending and clamped to (0, 1).
+@MainActor private var resizeToggleRatios: [CGFloat] {
+    let ratios = config.moveResizeToggleRatios
+        .map { CGFloat($0) / 100 }
+        .filter { $0 > 0 && $0 < 1 }
+        .sorted()
+    return ratios.isEmpty ? [0.5] : ratios
+}
+
+/// True when `window` cannot be moved/swapped any further in `direction`: there is no ancestor
+/// tiling container (oriented along `direction`) holding a sibling beyond the window in that
+/// direction. This is exactly the case where a plain `move` would be a no-op against the edge.
+@MainActor private func isAtExtremeEdge(_ window: Window, _ direction: CardinalDirection) -> Bool {
+    for node in window.parentsWithSelf {
+        guard let parent = node.parent as? TilingContainer else { break }
+        if parent.orientation == direction.orientation {
+            let siblingIndex = node.ownIndex.orDie() + direction.focusOffset
+            if parent.children.indices.contains(siblingIndex) {
+                return false // there's a neighbour to move/swap into
+            }
+        }
+    }
+    return true
+}
+
+/// Cycle the window's size along `direction`'s axis through `resizeToggleRatios` by adjusting the
+/// adaptiveWeight of the window's slice within the relevant tiling container. Other siblings keep
+/// their weights, so the window simply claims a larger/smaller fraction of the shared axis.
+///
+/// Returns nil when there is no meaningful same-orientation split to resize, so the caller can fall
+/// back to the normal `moveOut` behavior. This guarantees the feature only ADDS a size toggle at
+/// real edges and never swallows a move that would otherwise do something.
+@MainActor private func resizeToggleAtEdge(window: Window, direction: CardinalDirection) -> BinaryExitCode? {
+    let orientation = direction.orientation
+    // The node to resize is the window's ancestor (or itself) whose parent is a tiles container
+    // oriented along the move axis — the same selection ResizeCommand uses for an explicit axis.
+    let node = window.parentsWithSelf.first { node in
+        guard let parent = node.parent as? TilingContainer else { return false }
+        return parent.layout == .tiles && parent.orientation == orientation
+    }
+    guard let node, let parent = node.parent as? TilingContainer else { return nil }
+    guard parent.children.count > 1 else { return nil } // nothing to share the axis with
+
+    let totalWeight = CGFloat(parent.children.sumOfDouble { $0.getWeight(orientation) })
+    let nodeWeight = node.getWeight(orientation)
+    let otherWeight = totalWeight - nodeWeight
+    guard otherWeight > 0 else { return nil }
+
+    let currentRatio = nodeWeight / totalWeight
+    // Pick the next ratio strictly larger than the current one, wrapping back to the first.
+    // A small epsilon avoids getting stuck when the current ratio equals a cycle value.
+    let ratios = resizeToggleRatios
+    let epsilon: CGFloat = 0.01
+    let nextRatio = ratios.first { $0 > currentRatio + epsilon } ?? ratios[0]
+
+    // weight that makes node occupy `nextRatio` of the parent, with the other siblings unchanged:
+    // nextRatio = newWeight / (newWeight + otherWeight)  =>  newWeight = nextRatio/(1-nextRatio) * otherWeight
+    let newWeight = nextRatio / (1 - nextRatio) * otherWeight
+    node.setWeight(orientation, newWeight)
     return .succ
 }
 

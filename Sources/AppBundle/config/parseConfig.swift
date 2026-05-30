@@ -114,6 +114,8 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "auto-reload-config": Parser(\.autoReloadConfig, parseBool),
     "automatically-unhide-macos-hidden-apps": Parser(\.automaticallyUnhideMacosHiddenApps, parseBool),
     "accordion-padding": Parser(\.accordionPadding, parseInt),
+    "move-resize-toggle-at-edge": Parser(\.moveResizeToggleAtEdge, parseBool),
+    "move-resize-toggle-ratios": Parser(\.moveResizeToggleRatios, parseMoveResizeToggleRatios),
     persistentWorkspacesKey: Parser(\.persistentWorkspaces, parsePersistentWorkspaces),
     "exec-on-workspace-change": Parser(\.execOnWorkspaceChange, parseArrayOfStrings),
     "exec": Parser(\.execConfig, parseExecConfig),
@@ -350,6 +352,25 @@ private func parsePersistentWorkspaces(_ raw: Json, _ backtrace: ConfigBacktrace
         .flatMap { arr in
             let set = arr.toOrderedSet()
             return set.count == arr.count ? .success(set) : .failure(.semantic(backtrace, "Contains duplicated workspace names"))
+        }
+}
+
+private func parseMoveResizeToggleRatios(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<[Int]> {
+    parseTomlArray(raw, backtrace)
+        .flatMap { arr in
+            arr.enumerated().mapAllOrFailure { (index, elem) in
+                parseInt(elem, backtrace + .index(index))
+            }
+        }
+        .flatMap { ints in
+            // Percentages of the parent the window occupies. Must be in (0, 100), at least one value.
+            if ints.isEmpty {
+                return .failure(.semantic(backtrace, "move-resize-toggle-ratios must contain at least one value"))
+            }
+            if let bad = ints.first(where: { $0 <= 0 || $0 >= 100 }) {
+                return .failure(.semantic(backtrace, "move-resize-toggle-ratios values must be between 1 and 99 (got \(bad))"))
+            }
+            return .success(ints.sorted())
         }
 }
 
