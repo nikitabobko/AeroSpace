@@ -28,29 +28,37 @@ final class FocusedWindowBorderPanel: NSPanel {
     override var canBecomeKey: Bool { false }
     override var canBecomeMain: Bool { false }
 
-    @MainActor func show(rect: Rect, colorHex: String, width: Int, opacityPercent: Int, cornerRadius: Int) {
+    @MainActor func show(rect: Rect, colorHex: String, width: Int, opacityPercent: Int, cornerRadius: Int, inset: Int) {
         let w = CGFloat(width)
+        // `inset` pulls the stroke that many points back INTO the window. With inset 0
+        // the stroke sits fully outside (the historical behavior). With inset > 0 the
+        // border overlaps the window's own rounded corner, so the real corner masks any
+        // mismatch between our configured radius and the window's true radius — no gap
+        // shows even when the exact per-window radius is unknown. Clamp so we never push
+        // past the inner edge of the stroke.
+        let inset = CGFloat(min(max(inset, 0), width))
+        let grow = w - inset // net expansion beyond the window edge on every side
         // AeroSpace Rect is top-left origin (y grows down). Convert back to Cocoa
-        // (bottom-left origin) and expand by the border width on every side so the
-        // stroke hugs the window from the outside.
+        // (bottom-left origin) and expand by `grow` on every side.
         let cocoaY = mainMonitor.height - rect.topLeftY - rect.height
         let frame = NSRect(
-            x: rect.topLeftX - w,
-            y: cocoaY - w,
-            width: rect.width + 2 * w,
-            height: rect.height + 2 * w,
+            x: rect.topLeftX - grow,
+            y: cocoaY - grow,
+            width: rect.width + 2 * grow,
+            height: rect.height + 2 * grow,
         )
 
         // Combine the color's own alpha with the separate opacity percentage.
         let baseColor = NSColor(argbHex: colorHex) ?? .systemGreen
         let opacityFactor = CGFloat(min(max(opacityPercent, 0), 100)) / 100
         let finalColor = baseColor.withAlphaComponent(baseColor.alphaComponent * opacityFactor)
-        // Outer radius = the window's apparent corner radius plus the border width,
-        // so the stroke's outer edge stays concentric with the window corner.
+        // Outer radius = the window's apparent corner radius plus however far the stroke's
+        // outer edge sits outside the window edge (`grow`), so the outer edge stays
+        // concentric with the window corner.
         let view = FocusedWindowBorderView(
             color: Color(nsColor: finalColor),
             width: w,
-            cornerRadius: CGFloat(cornerRadius) + w,
+            cornerRadius: CGFloat(cornerRadius) + grow,
         )
         if let hosting {
             hosting.rootView = view
@@ -126,5 +134,6 @@ extension NSColor {
         width: config.focusedWindowBorderWidth,
         opacityPercent: config.focusedWindowBorderOpacity,
         cornerRadius: config.focusedWindowBorderRadius,
+        inset: config.focusedWindowBorderInset,
     )
 }

@@ -62,6 +62,10 @@ focused-window-border-opacity = 100
 # per-window corner radius, so this is a global value - tune it to match your apps.
 # Fallback value (if you omit the key): focused-window-border-radius = 10
 focused-window-border-radius = 10
+# Pull the border this many points back into the window so the window's own rounded
+# corner masks any radius mismatch (hides corner gaps). 0 = border fully outside.
+# Fallback value (if you omit the key): focused-window-border-inset = 0
+focused-window-border-inset = 0
 
 # List of workspaces that should stay alive even when they contain no windows,
 # even when they are invisible.

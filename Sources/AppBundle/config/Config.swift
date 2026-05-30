@@ -49,6 +49,7 @@ struct Config: ConvenienceCopyable {
     var focusedWindowBorderWidth: Int = 4
     var focusedWindowBorderOpacity: Int = 100
     var focusedWindowBorderRadius: Int = 10
+    var focusedWindowBorderInset: Int = 0
     var accordionPadding: Int = 30
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
     var persistentWorkspaces: OrderedSet<String> = []
