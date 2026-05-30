@@ -37,7 +37,29 @@ final class MacWindow: Window {
         if try await !restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window) {
             try await tryOnWindowDetected(window)
         }
+        window.preventNewWindowFlickerIfNeeded()
         return window
+    }
+
+    // Move a freshly detected tiling window offscreen the instant it's registered, *before* macOS paints
+    // it at its native spawn position (usually screen center). The subsequent layoutWorkspaces() in the same
+    // refresh session unhides it straight into its final tiled slot, so the user never sees the center flash.
+    // Opt-in via `new-window-prevent-flicker` because moving windows via the AX API is app-dependent.
+    @MainActor
+    func preventNewWindowFlickerIfNeeded() {
+        guard config.newWindowPreventFlicker else { return }
+        guard !isStartup else { return } // On startup everything is laid out at once; no per-window flash to hide
+        guard let nodeMonitor, let workspace = nodeWorkspace, workspace.isVisible else { return }
+        // Only tiling windows flash at a wrong spot; floating windows keep their native position on purpose.
+        guard parent is TilingContainer else { return }
+        if isHiddenInCorner { return }
+        // Stash a sentinel so layoutWorkspaces()'s unhideFromCorner() treats this as a hidden tiling window
+        // (the value itself is unused for tiling windows - they're repositioned by layoutRecursive).
+        prevUnhiddenProportionalPositionInsideWorkspaceRect = .zero
+        // Single non-blocking AX move to the bottom-right corner, mirroring hideInCorner's offscreen target.
+        let s = lastFloatingSize ?? .zero
+        let corner = nodeMonitor.visibleRect.bottomRightCorner + CGPoint(x: 1, y: 1) - CGPoint(x: s.width, y: 0)
+        setAxFrame(corner, nil)
     }
 
     // var description: String {
