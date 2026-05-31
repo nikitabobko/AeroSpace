@@ -24,8 +24,8 @@ struct WindowWithPrefetchedTitle {
     }
 
     private static func resolveWindow(_ window: Window, needsTitle: Bool) async throws -> Self {
-        let title: String = try await window.title
-        return .init(window: window, title: needsTitle ? title : nil)
+        let title = needsTitle ? try await window.title : nil
+        return .init(window: window, title: title)
     }
 
     static func forTest(window: Window, title: String?) -> Self {
@@ -162,7 +162,7 @@ extension FormatVar {
                 return switch f {
                     case .windowId: .success(.int(w.window.windowId))
                     case .windowIsFullscreen: .success(.bool(w.window.isFullscreen))
-                    case .windowTitle: .success(.string(w.title.orDie("Title wasn't prefeched")))
+                    case .windowTitle: .success(.string(w.title.orDie("Title wasn't prefetched")))
                     case .windowLayout, .windowParentContainerLayout: toLayoutResult(w: w.window)
                 }
             case (.workspace(let w), .workspace(let f)):
