@@ -85,6 +85,17 @@ final class MoveCommandTest: XCTestCase {
         assertEquals(window1.hWeight, 1)
     }
 
+    func testSwapWindows_swapsWhenLeftIndexIsGreater() {
+        let root = Workspace.get(byName: name).rootTilingContainer
+        let window1 = TestWindow.new(id: 1, parent: root)
+        TestWindow.new(id: 2, parent: root)
+        let window3 = TestWindow.new(id: 3, parent: root)
+
+        swapWindows(window3, window1)
+
+        assertEquals(root.layoutDescription, .h_tiles([.window(3), .window(2), .window(1)]))
+    }
+
     func testMoveIn_newWeight() async throws {
         var window1: Window!
         var window2: Window!

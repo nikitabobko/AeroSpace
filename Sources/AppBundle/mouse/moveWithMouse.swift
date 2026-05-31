@@ -76,7 +76,7 @@ private func moveTilingWindow(_ window: Window) {
 func swapWindows(_ window1: Window, _ window2: Window) {
     if window1 == window2 { return }
     guard let index1 = window1.ownIndex else { return }
-    guard let index2 = window1.ownIndex else { return }
+    guard let index2 = window2.ownIndex else { return }
 
     if index1 < index2 {
         let binding2 = window2.unbindFromParent()
