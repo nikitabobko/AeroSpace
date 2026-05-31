@@ -1,4 +1,5 @@
 @testable import AppBundle
+import AppKit
 import Common
 import XCTest
 
@@ -71,6 +72,44 @@ final class ListWindowsTest: XCTestCase {
                 AeroObj.window(.forTest(window: TestWindow.new(id: 10, parent: $0), title: "title2")),
             ]
             assertEquals(windows.format([.interVar("window-id"), .interVar("right-padding"), .literal(" | "), .interVar("window-title")]), .success(["2  | title1", "10 | title2"]))
+        }
+    }
+
+    func testResolveWindowFetchesTitleOnlyWhenFormatNeedsIt() async throws {
+        let window = TitleFetchCountingWindow.new(
+            id: 1,
+            parent: Workspace.get(byName: name).rootTilingContainer,
+        )
+
+        _ = try await WindowWithPrefetchedTitle.resolveWindow(window, for: [.interVar("window-id")])
+        assertEquals(window.titleReadCount, 0)
+
+        let resolved = try await WindowWithPrefetchedTitle.resolveWindow(window, for: [.interVar("window-title")])
+        assertEquals(window.titleReadCount, 1)
+        assertEquals([AeroObj.window(resolved)].format([.interVar("window-title")]), .success(["counted"]))
+    }
+}
+
+private final class TitleFetchCountingWindow: Window {
+    private(set) var titleReadCount = 0
+
+    @MainActor
+    private init(_ id: UInt32, _ parent: NonLeafTreeNodeObject) {
+        super.init(id: id, TestApp.shared, lastFloatingSize: nil, parent: parent, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+    }
+
+    @discardableResult
+    @MainActor
+    static func new(id: UInt32, parent: NonLeafTreeNodeObject) -> TitleFetchCountingWindow {
+        let window = TitleFetchCountingWindow(id, parent)
+        TestApp.shared._windows.append(window)
+        return window
+    }
+
+    override var title: String {
+        get async {
+            titleReadCount += 1
+            return "counted"
         }
     }
 }
