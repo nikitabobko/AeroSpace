@@ -1,4 +1,5 @@
 @testable import AppBundle
+import AppKit
 import Common
 import Foundation
 import HotKey
@@ -15,6 +16,8 @@ let projectRoot: URL = {
 
 @MainActor
 func setUpWorkspacesForTests() {
+    resetWorkspaceMonitorStateForTests()
+    testMonitors = nil
     config = defaultConfig
     configUrl = defaultConfigUrl
     config.enableNormalizationFlattenContainers = false // Make layout tests more predictable
@@ -24,6 +27,11 @@ func setUpWorkspacesForTests() {
     // Don't create any bindings and workspaces for tests
     config.modes = [mainModeId: Mode(bindings: [:])]
     config.persistentWorkspaces = []
+    config.onFocusChanged = []
+    config.onFocusedMonitorChanged = []
+    config.execOnWorkspaceChange = []
+    config.onWindowDetected = []
+    config.onModeChanged = []
 
     for workspace in Workspace.all {
         for child in workspace.children {
@@ -38,6 +46,28 @@ func setUpWorkspacesForTests() {
 
     TestApp.shared.focusedWindow = nil
     TestApp.shared.windows = []
+}
+
+private struct TestMonitor: Monitor {
+    let monitorAppKitNsScreenScreensId: Int
+    let name: String
+    let rect: Rect
+    let visibleRect: Rect
+    let isMain: Bool
+    var width: CGFloat { rect.width }
+    var height: CGFloat { rect.height }
+}
+
+@MainActor
+@discardableResult
+func setUpTwoTestMonitors() -> (main: Monitor, secondary: Monitor) {
+    let mainRect = Rect(topLeftX: 0, topLeftY: 0, width: 1920, height: 1080)
+    let secondaryRect = Rect(topLeftX: 1920, topLeftY: 0, width: 1920, height: 1080)
+    let main = TestMonitor(monitorAppKitNsScreenScreensId: 1, name: "Main Test Monitor", rect: mainRect, visibleRect: mainRect, isMain: true)
+    let secondary = TestMonitor(monitorAppKitNsScreenScreensId: 2, name: "Secondary Test Monitor", rect: secondaryRect, visibleRect: secondaryRect, isMain: false)
+    testMonitors = [main, secondary]
+    gcMonitors()
+    return (main, secondary)
 }
 
 extension ParsedCmd {

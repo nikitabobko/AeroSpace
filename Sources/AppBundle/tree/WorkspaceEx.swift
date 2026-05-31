@@ -47,4 +47,8 @@ extension Workspace {
             .compactMap { $0.resolveMonitor(sortedMonitors: sortedMonitors) }
             .first
     }
+
+    @MainActor func canBeAssigned(to monitor: Monitor) -> Bool {
+        forceAssignedMonitor.map { $0.rect.topLeftCorner == monitor.rect.topLeftCorner } ?? true
+    }
 }

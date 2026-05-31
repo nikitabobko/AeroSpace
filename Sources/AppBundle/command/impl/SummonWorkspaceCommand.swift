@@ -16,9 +16,12 @@ struct SummonWorkspaceCommand: Command {
             }
         }
         let prevMonitor = workspace.isVisible ? workspace.workspaceMonitor : nil
+        guard workspace.canBeAssigned(to: monitor) else {
+            return .fail(io.err("Can't move workspace '\(workspace.name)' to monitor '\(monitor.name)'. workspace-to-monitor-force-assignment doesn't allow it"))
+        }
+        let stubWorkspace = prevMonitor.map { getStubWorkspace(for: $0) }
         if monitor.setActiveWorkspace(workspace) {
-            if let prevMonitor {
-                let stubWorkspace = getStubWorkspace(for: prevMonitor)
+            if let prevMonitor, let stubWorkspace {
                 check(
                     prevMonitor.setActiveWorkspace(stubWorkspace),
                     "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(prevMonitor)",

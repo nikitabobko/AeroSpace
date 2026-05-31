@@ -7,6 +7,16 @@ import Common
 @MainActor private var screenPointToVisibleWorkspace: [CGPoint: Workspace] = [:]
 @MainActor private var visibleWorkspaceToScreenPoint: [Workspace: CGPoint] = [:]
 
+@MainActor func resetWorkspaceMonitorStateForTests() {
+    check(isUnitTest)
+    screenPointToPrevVisibleWorkspace = [:]
+    screenPointToVisibleWorkspace = [:]
+    visibleWorkspaceToScreenPoint = [:]
+    for workspace in Workspace.all {
+        workspace.assignedMonitorPoint = nil
+    }
+}
+
 // The returned workspace must be invisible and it must belong to the requested monitor
 @MainActor func getStubWorkspace(for monitor: Monitor) -> Workspace {
     getStubWorkspace(forPoint: monitor.rect.topLeftCorner)

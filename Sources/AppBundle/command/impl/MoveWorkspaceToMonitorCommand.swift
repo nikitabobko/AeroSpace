@@ -15,8 +15,13 @@ struct MoveWorkspaceToMonitorCommand: Command {
                 if targetMonitor.monitorId_oneBased == prevMonitor.monitorId_oneBased {
                     return .succ
                 }
+                guard focusedWorkspace.canBeAssigned(to: targetMonitor) else {
+                    return .fail(io.err(
+                        "Can't move workspace '\(focusedWorkspace.name)' to monitor '\(targetMonitor.name)'. workspace-to-monitor-force-assignment doesn't allow it",
+                    ))
+                }
+                let stubWorkspace = getStubWorkspace(for: prevMonitor)
                 if targetMonitor.setActiveWorkspace(focusedWorkspace) {
-                    let stubWorkspace = getStubWorkspace(for: prevMonitor)
                     check(
                         prevMonitor.setActiveWorkspace(stubWorkspace),
                         "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(prevMonitor)",

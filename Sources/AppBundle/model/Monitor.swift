@@ -93,9 +93,23 @@ private let testMonitor = MonitorImpl(
     visibleRect: testMonitorRect,
     isMain: true,
 )
+private let testMonitorsThreadDictionaryKey = "aerospace.testMonitors"
+
+var testMonitors: [Monitor]? {
+    get {
+        Thread.current.threadDictionary[testMonitorsThreadDictionaryKey] as? [Monitor]
+    }
+    set {
+        if let newValue {
+            Thread.current.threadDictionary[testMonitorsThreadDictionaryKey] = newValue
+        } else {
+            Thread.current.threadDictionary.removeObject(forKey: testMonitorsThreadDictionaryKey)
+        }
+    }
+}
 
 var mainMonitor: Monitor {
-    if isUnitTest { return testMonitor }
+    if isUnitTest { return testMonitors?.first(where: \.isMain) ?? testMonitors?.first ?? testMonitor }
     let screens = NSScreen.screens
     // Fallback: If main screen can't be found (e.g., during display reconfiguration),
     // return screens.first or testMonitor to avoid crash
@@ -106,7 +120,7 @@ var mainMonitor: Monitor {
 
 var monitors: [Monitor] {
     isUnitTest
-        ? [testMonitor]
+        ? (testMonitors ?? [testMonitor])
         : NSScreen.screens.enumerated().map { $0.element.toMonitor(monitorAppKitNsScreenScreensId: $0.offset + 1) }
 }
 
