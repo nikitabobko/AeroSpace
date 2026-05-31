@@ -7,6 +7,13 @@ struct FocusCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
+        if let window = target.windowOrNil, try await shouldFailBecauseFullscreen(
+            window: window,
+            failIfFullscreen: args.failIfFullscreen,
+            failIfMacosNativeFullscreen: args.failIfMacosNativeFullscreen,
+        ) {
+            return .fail
+        }
         // todo bug: floating windows break mru
         let floatingWindows = args.floatingAsTiling ? try await makeFloatingWindowsSeenAsTiling(workspace: target.workspace) : []
         defer {

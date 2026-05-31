@@ -44,6 +44,7 @@ let focus_monitor_help_generated = """
 let focus_help_generated = """
     USAGE: focus [-h|--help] [--ignore-floating] [--wrap-around]
                  [--boundaries <boundary>] [--boundaries-action <action>]
+                 [--fail-if-fullscreen] [--fail-if-macos-native-fullscreen]
                  (left|down|up|right)
        OR: focus [-h|--help] [--ignore-floating] [--wrap-around]
                  [--boundaries <boundary>] [--boundaries-action <action>]
@@ -121,7 +122,9 @@ let move_workspace_to_monitor_help_generated = """
        OR: move-workspace-to-monitor [-h|--help] [--workspace <workspace>] <monitor-pattern>...
     """
 let move_help_generated = """
-    USAGE: move [-h|--help] [--window-id <window-id>] [--boundaries <boundary>] [--boundaries-action <boundary-action>] (left|down|up|right)
+    USAGE: move [-h|--help] [--window-id <window-id>] [--boundaries <boundary>]
+                [--boundaries-action <boundary-action>] [--fail-if-fullscreen]
+                [--fail-if-macos-native-fullscreen] (left|down|up|right)
     """
 let reload_config_help_generated = """
     USAGE: reload-config [-h|--help] [--no-gui] [--dry-run]

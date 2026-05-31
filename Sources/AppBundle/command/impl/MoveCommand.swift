@@ -5,11 +5,18 @@ struct MoveCommand: Command {
     let args: MoveCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = true
 
-    func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
         let direction = args.direction.val
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let currentWindow = target.windowOrNil else {
             return .fail(io.err(noWindowIsFocused))
+        }
+        if try await shouldFailBecauseFullscreen(
+            window: currentWindow,
+            failIfFullscreen: args.failIfFullscreen,
+            failIfMacosNativeFullscreen: args.failIfMacosNativeFullscreen,
+        ) {
+            return .fail
         }
         guard let parent = currentWindow.parent else { return .fail }
         switch parent.cases {
