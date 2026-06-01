@@ -60,6 +60,7 @@ include::./util/conditional-interpolation-variables-header.adoc[]
 %{window-id}:: Number. Window unique ID
 %{window-title}:: String. Window title
 %{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aerospace fullscreen` command
+%{window-is-sticky}:: Boolean. Is window in sticky mode by `aerospace sticky` command
 %{window-layout}:: String. An alias for `%{window-parent-container-layout}`
 %{window-parent-container-layout}:: String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`, `floating`) of the window's parent container.
  

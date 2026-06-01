@@ -100,7 +100,7 @@ What stops us from 1.0 release:
   - [ ] https://github.com/nikitabobko/AeroSpace/issues/28 Maybe it will allow to distinguish left and right modifiers. Maybe not
 
 Big and important issues which will go after 1.0 release:
-- [ ] https://github.com/nikitabobko/AeroSpace/issues/2 sticky windows
+- [x] https://github.com/nikitabobko/AeroSpace/issues/2 sticky windows
 - [ ] https://github.com/nikitabobko/AeroSpace/issues/260 Dynamic TWM
 
 ## Development

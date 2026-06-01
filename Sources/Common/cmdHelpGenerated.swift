@@ -132,6 +132,11 @@ let resize_help_generated = """
 let split_help_generated = """
     USAGE: split [-h|--help] [--window-id <window-id>] (horizontal|vertical|opposite)
     """
+let sticky_help_generated = """
+    USAGE: sticky [-h|--help] [--window-id <window-id>]
+       OR: sticky [-h|--help] [--window-id <window-id>] [--fail-if-noop] on
+       OR: sticky [-h|--help] [--window-id <window-id>] [--fail-if-noop] off
+    """
 let subscribe_help_generated = """
     USAGE: subscribe [-h|--help] [--all] [--no-send-initial] [<event>...]
     """

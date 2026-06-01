@@ -31,7 +31,12 @@ extension TreeNode {
 
     /// Also see: workspace
     @MainActor
-    var visualWorkspace: Workspace? { nodeWorkspace ?? nodeMonitor?.activeWorkspace }
+    var visualWorkspace: Workspace? {
+        if let window = self as? Window {
+            return window.visualWorkspaceForWindow
+        }
+        return nodeWorkspace ?? nodeMonitor?.activeWorkspace
+    }
 
     @MainActor
     var nodeMonitor: Monitor? {
