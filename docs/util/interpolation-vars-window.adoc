@@ -4,5 +4,6 @@ macOS native tabs are separate windows under the hood. AeroSpace treats the whol
 Different apps implement tabs differently. Apps that use native tabs: Finder.app, Terminal.app. Apps that don't use native tabs: Safari. Third-party apps usually don't use native tabs
 %{window-title}:: String. Window title
 %{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aerospace fullscreen` command
+%{window-is-sticky}:: Boolean. Is window in sticky mode by `aerospace sticky` command
 %{window-layout}:: String. An alias for `%{window-parent-container-layout}`
 %{window-parent-container-layout}:: String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`, `floating`) of the window's parent container.
