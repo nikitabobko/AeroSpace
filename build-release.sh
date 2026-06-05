@@ -134,7 +134,7 @@ if test "$notarize" = 1; then
     xcrun stapler staple ".release/$app_name.app"
     xcrun stapler validate ".release/$app_name.app"
     /usr/sbin/spctl -a -vvv -t exec ".release/$app_name.app"
-    /usr/sbin/spctl -a -vvv -t exec ".release/$cli_name"
+    codesign -v --strict ".release/$cli_name"
 fi
 
 ############
