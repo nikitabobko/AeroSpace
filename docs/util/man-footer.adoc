@@ -1,7 +1,7 @@
 == Resources
 
-*Project homepage:* https://github.com/saadjs/FlightDeck +
-*Guide:* https://github.com/saadjs/FlightDeck/blob/main/docs/guide.adoc +
+*Project homepage:* https://saadjs.github.io/FlightDeck/ +
+*Guide:* https://saadjs.github.io/FlightDeck/guide.html +
 
 == BUGS
 

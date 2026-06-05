@@ -1,0 +1,86 @@
+= AeroSpace Compatibility
+include::util/site-attributes.adoc[]
+:description: FlightDeck preserved paths and interfaces, current distribution differences from AeroSpace, and migration guidance.
+
+FlightDeck is a signed and notarized distribution of AeroSpace.
+Its goal is to preserve full configuration and CLI compatibility so users can switch without changing their setup.
+
+[#preserved-interfaces]
+== Preserved interfaces
+
+The following AeroSpace interfaces are intentionally retained unchanged:
+
+[cols="1,3"]
+|===
+| Interface | Details
+
+| Config file paths
+| `~/.aerospace.toml` and `${XDG_CONFIG_HOME}/aerospace/aerospace.toml`
+
+| Config syntax
+| All TOML keys, types, and default values are identical to AeroSpace
+
+| Environment variables
+| `AEROSPACE_FOCUSED_WORKSPACE`, `AEROSPACE_PREV_WORKSPACE`, `AEROSPACE_INHERITED_*`, and all other `AEROSPACE_*` variables
+
+| IPC socket path
+| Same as AeroSpace
+
+| `flightdeck config` output
+| Identical key names and JSON structure to `aerospace config`
+|===
+
+[#distribution-differences]
+== Distribution differences
+
+These are the current differences between FlightDeck and AeroSpace as distributed applications:
+
+[cols="1,1,1"]
+|===
+| Aspect | AeroSpace | FlightDeck
+
+| CLI executable name
+| `aerospace`
+| `flightdeck`
+
+| App bundle name
+| `AeroSpace.app`
+| `FlightDeck.app`
+
+| Homebrew cask
+| `nikitabobko/tap/aerospace`
+| `saadjs/tap/flightdeck`
+
+| Codesigning
+| Not signed (requires manual security approval)
+| Developer ID signed, notarized, and stapled by Apple
+
+| `aerospace` CLI alias
+| Provided
+| Not provided — use `flightdeck`
+
+| Simultaneous installation
+| —
+| FlightDeck and AeroSpace should not run simultaneously
+|===
+
+[#config-option-differences]
+== Config option differences
+
+FlightDeck currently has *no config-option deviations* from AeroSpace.
+Every option documented in the xref:config-reference.adoc[Config Reference] behaves identically to its AeroSpace equivalent.
+
+[#migration-from-aerospace]
+== Migrating from AeroSpace
+
+. Quit AeroSpace.
+. Install FlightDeck: `brew install --cask saadjs/tap/flightdeck`.
+. Your existing `~/.aerospace.toml` works without modification.
+. Replace `aerospace` with `flightdeck` in any shell scripts or aliases.
+. Remove any manual AeroSpace security approvals from System Settings → Privacy & Security — FlightDeck is notarized and does not require them.
+
+[#upstream-issue-links]
+== Upstream issue links
+
+Some FlightDeck config options carry links to https://github.com/nikitabobko/AeroSpace/issues[AeroSpace issues] as provenance.
+These links remain valid because the underlying behavior is identical and the upstream tracker provides the original context and discussion.

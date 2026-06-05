@@ -1,8 +1,6 @@
 = FlightDeck Goodies
 include::util/site-attributes.adoc[]
 
-include::util/header.adoc[]
-
 Do you have a cool automatization, FlightDeck integration, or workflow?
 Feel free to open an issue or pull request to add it to this list!
 The source code of the page can be found in the `./docs` directory.
