@@ -27,21 +27,6 @@ Project setup, build instructions, and test details are available in [dev-docs/d
 
 FlightDeck is Developer ID-signed, notarized by Apple, and distributed through [`saadjs/homebrew-tap`](https://github.com/saadjs/homebrew-tap).
 
-## GitHub Actions release
-
-The `release` workflow builds, signs, notarizes, staples, uploads `FlightDeck-v<version>.zip` to the matching GitHub release, and commits `Casks/flightdeck.rb` to `saadjs/homebrew-tap`.
-
-Configure these repository secrets before running it:
-
-- `APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_BASE64`: base64-encoded Developer ID Application `.p12`
-- `APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD`: `.p12` export password
-- `APPLE_KEYCHAIN_PASSWORD`: temporary CI keychain password
-- `APPLE_ID`: Apple Developer account email
-- `APPLE_APP_SPECIFIC_PASSWORD`: app-specific password for notarization
-- `HOMEBREW_TAP_TOKEN`: GitHub token with write access to `saadjs/homebrew-tap`
-
-Run it manually with a version such as `1.0.0`, or push a tag named `v<version>`.
-
 ## Project values
 
 **Values**
