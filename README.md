@@ -4,6 +4,10 @@
 
 AeroSpace is an i3-like tiling window manager for macOS
 
+> [!NOTE]
+> FlightDeck is a fork of [AeroSpace](https://github.com/nikitabobko/AeroSpace) by [Nikita Bobko](https://github.com/nikitabobko).
+> This project is not affiliated with or endorsed by the original AeroSpace project.
+
 Videos:
 - [YouTube 91 sec Demo](https://www.youtube.com/watch?v=UOl7ErqWbrk)
 - [YouTube Guide by Josean Martinez](https://www.youtube.com/watch?v=-FoWClVHG5g)
