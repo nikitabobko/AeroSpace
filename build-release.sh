@@ -29,7 +29,7 @@ fi
 ### BUILD ###
 #############
 
-./build-docs.sh
+./build-docs.sh man
 ./build-shell-completion.sh
 
 ./generate.sh

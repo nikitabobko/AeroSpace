@@ -1,0 +1,8 @@
+{
+  "name": "flightdeck-docs",
+  "private": true,
+  "description": "FlightDeck documentation build dependencies",
+  "dependencies": {
+    "pagefind": "1.5.2"
+  }
+}

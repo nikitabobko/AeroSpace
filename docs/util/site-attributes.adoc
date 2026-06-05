@@ -1,10 +1,15 @@
 :idprefix:
 :idseparator: -
 :prewrap!:
-:relfilesuffix:
+:relfilesuffix: .html
 :sectanchors:
 :sectlinks:
 :sectnums:
 :source-highlighter: pygments
+:pygments-css: style
+:pygments-style: monokai
 :toc: left
 :env-site:
+:site-url: https://saadjs.github.io/FlightDeck
+:docinfo: shared
+:stylesheet!:

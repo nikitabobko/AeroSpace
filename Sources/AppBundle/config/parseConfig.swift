@@ -93,7 +93,7 @@ private let persistentWorkspacesKey = "persistent-workspaces"
 // For every new config option you add, think:
 // 1. Does it make sense to have different value
 // 2. Prefer commands and commands flags over toml options if possible
-private let configParser: [String: any ParserProtocol<Config>] = [
+let configParser: [String: any ParserProtocol<Config>] = [
     "config-version": Parser(\.configVersion, parseConfigVersion),
 
     "after-login-command": Parser(\.afterLoginCommand, parseAfterLoginCommand),

@@ -1,8 +1,6 @@
 = FlightDeck Commands
 include::util/site-attributes.adoc[]
 
-include::util/header.adoc[]
-
 Commands documentation is also available as manpages.
 
 == balance-sizes

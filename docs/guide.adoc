@@ -2,8 +2,6 @@
 include::util/site-attributes.adoc[]
 :url-search-for-config: https://github.com/search?q=path%3A*aerospace.toml&type=code
 
-include::util/header.adoc[]
-
 This Guide is designed to be read from top to bottom as a whole.
 You can skip parts that are obvious.
 

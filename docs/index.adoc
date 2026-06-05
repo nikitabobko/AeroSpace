@@ -1,0 +1,58 @@
+= FlightDeck
+include::util/site-attributes.adoc[]
+:description: FlightDeck is a signed and notarized i3-like tiling window manager for macOS, fully compatible with AeroSpace configuration.
+
+FlightDeck is an i3-like tiling window manager for macOS.
+It is a signed and notarized distribution of link:https://github.com/nikitabobko/AeroSpace[AeroSpace], preserving full configuration and CLI compatibility.
+
+[.landing-grid]
+== Documentation
+
+[.card]
+=== xref:guide.adoc[Installation & Guide]
+
+Start here: Homebrew installation, config file location, layouts, workspaces, binding modes, and focus callbacks.
+
+[.card]
+=== xref:config-reference.adoc[Config Reference]
+
+Complete reference for every supported TOML option — types, defaults, version restrictions, deprecations, and examples.
+
+[.card]
+=== xref:commands.adoc[Commands]
+
+All `flightdeck` CLI subcommands with synopsis and options. Also available as manpages.
+
+[.card]
+=== xref:compatibility.adoc[AeroSpace Compatibility]
+
+Preserved paths and interfaces, current distribution differences, and migration guidance from AeroSpace.
+
+[.card]
+=== xref:goodies.adoc[Goodies]
+
+Community tips: window dragging, non-native fullscreen, JankyBorders integration, and more.
+
+== Quick Start
+
+[source,bash]
+----
+brew install --cask saadjs/tap/flightdeck
+----
+
+Existing AeroSpace configs and `~/.aerospace.toml` work without changes.
+Use `flightdeck` instead of `aerospace` for terminal invocations.
+
+== About
+
+FlightDeck is built from the AeroSpace source and adds:
+
+* Developer ID codesigning and Apple notarization
+* Stapled Gatekeeper tickets so the first launch never blocks
+* Homebrew cask distribution at `saadjs/tap/flightdeck`
+
+Configuration syntax, paths (`~/.aerospace.toml`), and environment variables (`AEROSPACE_*`) are intentionally unchanged so existing configurations continue to work.
+FlightDeck and AeroSpace should not run simultaneously.
+
+Bugs in the underlying window manager can be reported upstream at https://github.com/nikitabobko/AeroSpace/issues.
+FlightDeck-specific issues (distribution, signing, CLI) go to https://github.com/saadjs/FlightDeck/issues.
