@@ -8,7 +8,7 @@ cli_name="flightdeck"
 team_id="${FLIGHTDECK_TEAM_ID:-2ZPA772V9V}"
 codesign_identity="${DEVELOPER_ID_APPLICATION:-}"
 notarize=0
-notary_profile="${FLIGHTDECK_NOTARY_PROFILE:-view-md-notary}"
+notary_profile="${FLIGHTDECK_NOTARY_PROFILE:-flightdeck-notary}"
 while test $# -gt 0; do
     case $1 in
         --build-version) build_version="$2"; shift 2;;

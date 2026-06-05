@@ -6,7 +6,7 @@ build_version=""
 tap_git_repo_path="${FLIGHTDECK_HOMEBREW_TAP_PATH:-$HOME/src/homebrew-tap}"
 team_id="${FLIGHTDECK_TEAM_ID:-2ZPA772V9V}"
 codesign_identity="${DEVELOPER_ID_APPLICATION:-}"
-notary_profile="${FLIGHTDECK_NOTARY_PROFILE:-view-md-notary}"
+notary_profile="${FLIGHTDECK_NOTARY_PROFILE:-flightdeck-notary}"
 run_tests=1
 while test $# -gt 0; do
     case $1 in
