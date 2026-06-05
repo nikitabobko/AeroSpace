@@ -127,7 +127,10 @@ private func refresh() async throws {
 
     for window in MacWindow.allWindows {
         if !aliveWindowIds.contains(window.windowId) {
-            window.garbageCollect(skipClosedWindowsCache: false)
+            window.garbageCollect(
+                skipClosedWindowsCache: false,
+                hasOtherLiveWindowsInApp: mapping[window.macApp]?.contains { $0 != window.windowId } == true,
+            )
         }
     }
     for (app, windowIds) in mapping {

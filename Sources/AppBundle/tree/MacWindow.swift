@@ -75,7 +75,15 @@ final class MacWindow: Window {
     // skipClosedWindowsCache is an optimization when it's definitely not necessary to cache closed window.
     //                        If you are unsure, it's better to pass `false`
     @MainActor
-    func garbageCollect(skipClosedWindowsCache: Bool) {
+    func garbageCollect(
+        skipClosedWindowsCache: Bool,
+        hasOtherLiveWindowsInApp: Bool? = nil,
+        appIsTerminating: Bool = false,
+    ) {
+        let wasFocused = focus.windowOrNil === self
+        let hasOtherLiveWindowsInApp = hasOtherLiveWindowsInApp ?? MacWindow.allWindowsMap.values.contains {
+            $0.windowId != windowId && $0.app.pid == app.pid
+        }
         if MacWindow.allWindowsMap.removeValue(forKey: windowId) == nil {
             return
         }
@@ -91,7 +99,13 @@ final class MacWindow: Window {
                     let deadWindowFocus = deadWindowWorkspace.toLiveFocus()
                     _ = setFocus(to: deadWindowFocus)
                     // Guard against "Apple Reminders popup" bug: https://github.com/nikitabobko/AeroSpace/issues/201
-                    if focus.windowOrNil?.app.pid != app.pid {
+                    if focus.windowOrNil?.app.pid != app.pid &&
+                        shouldFocusNextWindowOnWindowClosed(
+                            wasFocused: wasFocused,
+                            hasOtherLiveWindowsInApp: hasOtherLiveWindowsInApp,
+                            appIsTerminating: appIsTerminating || macApp.nsApp.isTerminated,
+                        )
+                    {
                         // Force focus to fix macOS annoyance with focused apps without windows.
                         //   https://github.com/nikitabobko/AeroSpace/issues/65
                         deadWindowFocus.windowOrNil?.nativeFocus()
@@ -196,6 +210,15 @@ final class MacWindow: Window {
     override func getAxRect() async throws -> Rect? {
         try await macApp.getAxRect(windowId)
     }
+}
+
+@MainActor
+func shouldFocusNextWindowOnWindowClosed(
+    wasFocused: Bool,
+    hasOtherLiveWindowsInApp: Bool,
+    appIsTerminating: Bool,
+) -> Bool {
+    config.focusNextWindowOnWindowClosed || !wasFocused || hasOtherLiveWindowsInApp || appIsTerminating
 }
 
 extension Window {

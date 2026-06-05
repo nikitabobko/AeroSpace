@@ -15,8 +15,15 @@ final class ConfigTest: XCTestCase {
 
     func testParseDefaultConfig() {
         let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/default-config.toml"), encoding: .utf8)
-        let (_, errors) = parseConfig(toml)
+        let (config, errors) = parseConfig(toml)
         assertEquals(errors, [])
+        assertEquals(config.focusNextWindowOnWindowClosed, true)
+    }
+
+    func testParseFocusNextWindowOnWindowClosed() {
+        let (config, errors) = parseConfig("focus-next-window-on-window-closed = false")
+        assertEquals(errors, [])
+        assertEquals(config.focusNextWindowOnWindowClosed, false)
     }
 
     func testConfigVersionOutOfBounds() {
