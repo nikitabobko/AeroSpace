@@ -11,6 +11,7 @@
 		1F90CAA8118CD05388E0B894 /* default-config.toml in Resources */ = {isa = PBXBuildFile; fileRef = 8FE45A887100EB70912B07F0 /* default-config.toml */; };
 		9A79B26FA2D562EA0205B326 /* AppBundle in Frameworks */ = {isa = PBXBuildFile; productRef = ECC8BF5C545D8BA3E33465AC /* AppBundle */; };
 		BD26CD2F1401D18BE9BC4F1F /* AeroSpaceApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18C104E927E079E60C91AE3E /* AeroSpaceApp.swift */; };
+		F8F4107A82626FF7A05C298E /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = D8F525571AC3D0B4C197B46F /* AppIcon.icon */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		84C35D8E25B61D4D1ADB1851 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8FE45A887100EB70912B07F0 /* default-config.toml */ = {isa = PBXFileReference; path = "default-config.toml"; sourceTree = "<group>"; };
 		CF85755BFF66B59A84F98262 /* AeroSpace.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AeroSpace.entitlements; sourceTree = "<group>"; };
+		D8F525571AC3D0B4C197B46F /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = wrapper.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		FB9BF54FA41EED0DA1B8BBE8 /* FlightDeck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlightDeck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -48,6 +50,7 @@
 			children = (
 				CF85755BFF66B59A84F98262 /* AeroSpace.entitlements */,
 				84C35D8E25B61D4D1ADB1851 /* Assets.xcassets */,
+				95979FFF6C78F2A7249ADE70 /* FlightDeckIcon */,
 			);
 			path = resources;
 			sourceTree = "<group>";
@@ -86,6 +89,14 @@
 			);
 			name = AeroSpaceApp;
 			path = Sources/AeroSpaceApp;
+			sourceTree = "<group>";
+		};
+		95979FFF6C78F2A7249ADE70 /* FlightDeckIcon */ = {
+			isa = PBXGroup;
+			children = (
+				D8F525571AC3D0B4C197B46F /* AppIcon.icon */,
+			);
+			path = FlightDeckIcon;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -149,6 +160,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8F4107A82626FF7A05C298E /* AppIcon.icon in Resources */,
 				12511A028C1AA1D6B1627C41 /* Assets.xcassets in Resources */,
 				1F90CAA8118CD05388E0B894 /* default-config.toml in Resources */,
 			);
