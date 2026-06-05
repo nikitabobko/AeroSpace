@@ -6,6 +6,10 @@ FlightDeck is an i3-like tiling window manager for macOS.
 > FlightDeck is a fork of [AeroSpace](https://github.com/nikitabobko/AeroSpace) by [Nikita Bobko](https://github.com/nikitabobko).
 > This project is not affiliated with or endorsed by the original AeroSpace project.
 
+## Documentation
+
+For usage and configuration details, see the official [AeroSpace documentation](https://nikitabobko.github.io/AeroSpace/guide).
+
 ## Key features
 
 - Tiling window manager based on a tree paradigm
