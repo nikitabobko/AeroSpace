@@ -1,0 +1,232 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version without the leading v
+        required: true
+        type: string
+  push:
+    tags:
+      - 'v*'
+
+concurrency:
+  group: flightdeck-release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: notarize and publish
+    runs-on: macos-26
+    defaults:
+      run:
+        shell: bash
+        working-directory: FlightDeck
+    env:
+      DEVELOPER_ID_APPLICATION: 'Developer ID Application: Saad Bash (2ZPA772V9V)'
+      FLIGHTDECK_NOTARY_PROFILE: flightdeck-notary
+      FLIGHTDECK_TEAM_ID: 2ZPA772V9V
+    steps:
+      - name: Checkout FlightDeck
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          path: FlightDeck
+
+      - name: Resolve release version
+        id: release
+        run: |
+          set -euo pipefail
+
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" ]]; then
+            version="${{ inputs.version }}"
+          else
+            version="${GITHUB_REF_NAME#v}"
+          fi
+          version="${version#v}"
+
+          if [[ -z "$version" || ! "$version" =~ ^[0-9A-Za-z][0-9A-Za-z._-]*$ ]]; then
+            echo "::error::Invalid release version: $version"
+            exit 1
+          fi
+          if [[ "$version" == *SNAPSHOT* ]]; then
+            echo "::error::Refusing to publish SNAPSHOT releases"
+            exit 1
+          fi
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$version" >> "$GITHUB_OUTPUT"
+          echo "zip=FlightDeck-v$version.zip" >> "$GITHUB_OUTPUT"
+
+      - name: Check release secrets
+        env:
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_BASE64 }}
+          APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+          HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          missing=0
+          for name in \
+            APPLE_APP_SPECIFIC_PASSWORD \
+            APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_BASE64 \
+            APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD \
+            APPLE_ID \
+            APPLE_KEYCHAIN_PASSWORD \
+            HOMEBREW_TAP_TOKEN
+          do
+            if [[ -z "${!name:-}" ]]; then
+              echo "::error::$name secret is required"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
+      - name: Checkout Homebrew tap
+        uses: actions/checkout@v6
+        with:
+          repository: saadjs/homebrew-tap
+          path: homebrew-tap
+          token: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+
+      - name: Select Xcode
+        run: ./.github/gh-actions-runner-xcode-select.sh
+
+      - name: Install build dependencies
+        run: |
+          set -euo pipefail
+
+          brew install bash fish openjdk ruby rust swiftly xcbeautify
+          {
+            echo "$(brew --prefix openjdk)/bin"
+            echo "$(brew --prefix ruby)/bin"
+          } >> "$GITHUB_PATH"
+          swiftly init --skip-install --assume-yes --verbose
+          swiftly install
+
+      - name: Import Apple signing certificate
+        env:
+          CERTIFICATE_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_BASE64 }}
+          CERTIFICATE_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_APPLICATION_CERTIFICATE_PASSWORD }}
+          KEYCHAIN_PASSWORD: ${{ secrets.APPLE_KEYCHAIN_PASSWORD }}
+        run: |
+          set -euo pipefail
+
+          certificate_path="$RUNNER_TEMP/developer-id-application.p12"
+          keychain_path="$RUNNER_TEMP/flightdeck-signing.keychain-db"
+
+          echo -n "$CERTIFICATE_BASE64" | base64 --decode -o "$certificate_path"
+
+          security create-keychain -p "$KEYCHAIN_PASSWORD" "$keychain_path"
+          security set-keychain-settings -lut 21600 "$keychain_path"
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$keychain_path"
+          security import "$certificate_path" \
+            -P "$CERTIFICATE_PASSWORD" \
+            -A \
+            -t cert \
+            -f pkcs12 \
+            -k "$keychain_path"
+          security set-key-partition-list \
+            -S apple-tool:,apple:,codesign: \
+            -k "$KEYCHAIN_PASSWORD" \
+            "$keychain_path"
+          security list-keychains -d user -s "$keychain_path"
+          security default-keychain -s "$keychain_path"
+          security find-identity -v -p codesigning "$keychain_path"
+
+      - name: Configure Apple notarization
+        env:
+          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+        run: |
+          set -euo pipefail
+
+          xcrun notarytool store-credentials "$FLIGHTDECK_NOTARY_PROFILE" \
+            --apple-id "$APPLE_ID" \
+            --team-id "$FLIGHTDECK_TEAM_ID" \
+            --password "$APPLE_APP_SPECIFIC_PASSWORD"
+
+      - name: Build notarized release and cask
+        run: |
+          set -euo pipefail
+
+          script/release-local.sh \
+            --build-version "${{ steps.release.outputs.version }}" \
+            --tap-git-repo-path "$GITHUB_WORKSPACE/homebrew-tap"
+
+      - name: Verify notarized release artifact
+        run: |
+          set -euo pipefail
+
+          version="${{ steps.release.outputs.version }}"
+          release_zip=".release/${{ steps.release.outputs.zip }}"
+          verify_dir="$RUNNER_TEMP/flightdeck-release-verify"
+          release_root="$verify_dir/FlightDeck-v$version"
+
+          rm -rf "$verify_dir"
+          mkdir -p "$verify_dir"
+          ditto -x -k "$release_zip" "$verify_dir"
+
+          codesign -vvv --strict "$release_root/FlightDeck.app"
+          codesign -vvv --strict "$release_root/bin/flightdeck"
+          xcrun stapler validate "$release_root/FlightDeck.app"
+          spctl -a -vvv -t exec "$release_root/FlightDeck.app"
+          spctl -a -vvv -t exec "$release_root/bin/flightdeck"
+          file "$release_root/FlightDeck.app/Contents/MacOS/FlightDeck"
+          file "$release_root/bin/flightdeck"
+          zipinfo -1 "$release_zip" | grep -q "FlightDeck-v$version/manpage/flightdeck.1"
+
+      - name: Publish GitHub release asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          tag="${{ steps.release.outputs.tag }}"
+          release_zip=".release/${{ steps.release.outputs.zip }}"
+
+          if gh release view "$tag" > /dev/null 2>&1; then
+            gh release upload "$tag" "$release_zip" --clobber
+          else
+            create_args=(
+              "$tag"
+              "$release_zip"
+              --title "FlightDeck ${{ steps.release.outputs.version }}"
+              --notes "FlightDeck ${{ steps.release.outputs.version }}"
+            )
+            if [[ "$GITHUB_REF_TYPE" != "tag" ]]; then
+              create_args+=(--target "$GITHUB_SHA")
+            fi
+            gh release create "${create_args[@]}"
+          fi
+
+      - name: Commit Homebrew tap cask
+        working-directory: ${{ github.workspace }}/homebrew-tap
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add Casks/flightdeck.rb
+
+          if git diff --cached --quiet; then
+            echo "No Homebrew tap changes to publish"
+            exit 0
+          fi
+
+          git commit -m "chore: update flightdeck to ${{ steps.release.outputs.version }}"
+          git push
+
+      - name: Print xcodebuild log
+        if: ${{ always() }}
+        run: |
+          if [[ -f .release/xcodebuild.log ]]; then
+            cat .release/xcodebuild.log
+          fi
