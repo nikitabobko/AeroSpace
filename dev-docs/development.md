@@ -20,10 +20,13 @@ If you struggle to build AeroSpace locally, you can also refer to [builds in Git
 3.  If you want to build shell completion, install rust, bash and fish
     -   Install Rust using rustup. https://www.rust-lang.org/tools/install
     -   `brew install bash fish`
-4.  If you want to build man pages, install Ruby >= 3.0. I recommend using [rbenv](https://github.com/rbenv/rbenv).
-    -   `rbenv install 3.3.4` (or whatever 3.x version)
+4.  If you want to regenerate the shell parser, install Java.
+    -   `brew install openjdk`
+    -   If you use Homebrew OpenJDK, make sure `/opt/homebrew/opt/openjdk/bin` is on `PATH` before running `generate.sh`.
+5.  If you want to build man pages, install Ruby >= 3.0 and < 5.0.
+    -   `brew install ruby`
     -   Install asciidoctor using Ruby `bundler`. `cd AeroSpace && bundler install`
-5.  Install optional `xcbeautify` to make Xcode build logs readable. `brew install xcbeautify`
+6.  Install optional `xcbeautify` to make Xcode build logs readable. `brew install xcbeautify`
 
 ## 2. Create codesign certificate
 
