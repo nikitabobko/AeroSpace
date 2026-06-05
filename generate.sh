@@ -41,7 +41,7 @@ entries() {
             continue
         fi
         subcommand=$(basename $file | sed 's/^aerospace-//' | sed 's/\.adoc$//')
-        desc="$(grep :manpurpose: "$file" | sed -E 's/:manpurpose: //')"
+        desc="$(grep :manpurpose: "$file" | sed -E 's/:manpurpose: //' | sed -E 's/AeroSpace/FlightDeck/g; s/aerospace/flightdeck/g')"
         echo "    [\"  $subcommand\", \"$desc\"],"
     done
 }
