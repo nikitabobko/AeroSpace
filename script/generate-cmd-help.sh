@@ -4,7 +4,7 @@ source ./script/setup.sh
 
 out_file='./Sources/Common/cmdHelpGenerated.swift'
 
-aerospace_prefix="aerospace"
+flightdeck_prefix="flightdeck"
 ____usage_prefix="   USAGE:"
 _______or_prefix="      OR:"
 ____strip_prefix="   "
@@ -23,8 +23,8 @@ for file in docs/aerospace-*.adoc; do
         sed '1d' | \
         sed '$d' | \
         sed '/^$/ d' | \
-        sed "1   s/^$aerospace_prefix/$____usage_prefix/" | \
-        sed "2,$ s/^$aerospace_prefix/$_______or_prefix/" | \
+        sed "1   s/^$flightdeck_prefix/$____usage_prefix/" | \
+        sed "2,$ s/^$flightdeck_prefix/$_______or_prefix/" | \
         sed     "s/^$____strip_prefix//" | \
         sed "1 s/^/let ${subcommand}_help_generated = $triple_quote\n/" | \
         sed "\$ s/$/\n${triple_quote}/" | \

@@ -7,9 +7,9 @@
 ## High level project infrastructure overview
 
 - `../Sources`.
-  The majority of AeroSpace source code. Managed by SPM `../Package.swift`
+  The majority of FlightDeck source code. Managed by SPM `../Package.swift`
 - `../Sources/AppBundle/`.
-  AeroSpace.app server. Technically, it's a SPM library that is exposed to `xcode-app-bundle-launcher`
+  FlightDeck app server. Technically, it's an SPM library that is exposed to `xcode-app-bundle-launcher`
 - `../Sources/Cli/`.
   CLI client. CLI client is built purely using SPM, no Xcode involved (phew!)
 - `../Sources/Common/`.
@@ -29,7 +29,7 @@
 
 ## client/server interaction
 
-`aerospace` CLI binary is client. `AeroSpace.app` is server. Client and server talk to each other via predefined UNIX file.
+The `flightdeck` CLI binary is the client. `FlightDeck.app` is the server. Client and server talk to each other through a predefined UNIX socket.
 
 Each time you run a CLI command:
 1. Args are parsed by the client, args parsing errors are reported if any. Help is shown if `-h`/`--help` is passed.
@@ -47,6 +47,7 @@ todo
 
 Command checklist:
 - [ ] Documentation in `../docs/aerospace-*` and `../docs/commands.adoc`
+  - [ ] Keep the `docs/aerospace-*` source filenames for easier upstream rebases; user-facing content and generated manpages use FlightDeck.
   - [ ] Check that site looks alright `./.site/commands.html`
   - [ ] Check that man page looks alright `./.man`
 - [ ] Do `--window-id` and/or `--workspace` flags make sense for the command?

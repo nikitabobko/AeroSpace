@@ -19,8 +19,8 @@ build-site() {
     cp ./docs/index.html ./.site
 
     cd .site
-        # Delete "aerospace " prefifx in synopsis
-        sed -E -i '' '/tag::synopsis/, /end::synopsis/ s/^(aerospace | {10})//' aerospace*
+        # Delete "flightdeck " prefix in command synopses embedded in the website.
+        sed -E -i '' '/tag::synopsis/, /end::synopsis/ s/^(flightdeck | {10})//' aerospace*
         bundler exec asciidoctor ./guide.adoc ./commands.adoc ./goodies.adoc
         cp goodies.html goodness.html # backwards compatibility
         rm -rf ./*.adoc
@@ -39,20 +39,13 @@ build-man() {
             mv "$file" "flightdeck${file#aerospace}"
         done
 
-        sed -E -i '' \
-            -e 's/AeroSpace/FlightDeck/g' \
-            -e 's/aerospace/flightdeck/g' \
-            -e 's|github.com/nikitabobko/FlightDeck|github.com/nikitabobko/AeroSpace|g' \
-            -e 's|nikitabobko.github.io/FlightDeck|nikitabobko.github.io/AeroSpace|g' \
-            flightdeck*.adoc util/man-attributes.adoc
+        # Source filenames retain the upstream aerospace-* prefix for easier rebases.
+        # Generated manpage filenames and includes use the public flightdeck command.
+        sed -E -i '' 's|include::(\./)?aerospace-|include::\1flightdeck-|g' flightdeck*.adoc
 
         bundler exec asciidoctor -b manpage flightdeck*.adoc
 
-        # Comment by AI:
-        #   gman (the g Dai client) renders bare .~ and /~ as ligatures (~ becomes ˜).
-        #   We use groff's \[ti] escape (which produces a literal tilde) instead.
-        #   Note: escaping .~ in asciidoc via pass:[] doesn't work because asciidoctor
-        #   converts \\ to \(rs) before groff sees the input.
+        # gman renders bare .~ and /~ as ligatures, so use groff's literal tilde.
         sed -E -i '' 's|\.~|\.\\[ti]|g; s|/~|/\\[ti]|g' flightdeck-test.1
 
         rm -rf -- *.adoc

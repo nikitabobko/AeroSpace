@@ -8,7 +8,20 @@ FlightDeck is an i3-like tiling window manager for macOS.
 
 ## Documentation
 
-For usage and configuration details, see the official [AeroSpace documentation](https://nikitabobko.github.io/AeroSpace/guide).
+Install the signed and notarized release from the Homebrew tap:
+
+```sh
+brew install --cask saadjs/tap/flightdeck
+```
+
+See the [FlightDeck guide](./docs/guide.adoc), [command reference](./docs/commands.adoc), and bundled `flightdeck` manpages for usage and configuration details.
+
+## AeroSpace compatibility
+
+FlightDeck preserves AeroSpace's configuration format and compatibility-sensitive interfaces. Existing configs continue to load from `~/.aerospace.toml` or `${XDG_CONFIG_HOME}/aerospace/aerospace.toml`, and existing `AEROSPACE_*` callback variables and `aerospace_workspace_change` integrations remain unchanged.
+
+Use `flightdeck` instead of `aerospace` for CLI invocations. Commands inside the TOML config do not need to be changed.
+FlightDeck does not install an `aerospace` CLI alias, and FlightDeck and AeroSpace should not run simultaneously.
 
 ## Key features
 

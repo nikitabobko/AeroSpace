@@ -1,6 +1,6 @@
-= aerospace-enable(1)
+= flightdeck-enable(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-enable
+:manname: flightdeck-enable
 // tag::purpose[]
 :manpurpose: Temporarily disable window management
 // end::purpose[]
@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace enable [-h|--help] toggle
-aerospace enable [-h|--help] on [--fail-if-noop]
-aerospace enable [-h|--help] off [--fail-if-noop]
+flightdeck enable [-h|--help] toggle
+flightdeck enable [-h|--help] on [--fail-if-noop]
+flightdeck enable [-h|--help] off [--fail-if-noop]
 
 // end::synopsis[]
 
@@ -21,9 +21,9 @@ aerospace enable [-h|--help] off [--fail-if-noop]
 // tag::body[]
 {manpurpose}
 
-When you disable AeroSpace, windows from currently invisible workspaces will be placed to the visible area of the screen
+When you disable FlightDeck, windows from currently invisible workspaces will be placed to the visible area of the screen
 
-Key events are not intercepted when AeroSpace is disabled
+Key events are not intercepted when FlightDeck is disabled
 
 // =========================================================== Options
 include::util/conditional-options-header.adoc[]

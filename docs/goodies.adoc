@@ -1,9 +1,9 @@
-= AeroSpace Goodies
+= FlightDeck Goodies
 include::util/site-attributes.adoc[]
 
 include::util/header.adoc[]
 
-Do you have a cool automatization, AeroSpace integration, or workflow?
+Do you have a cool automatization, FlightDeck integration, or workflow?
 Feel free to open an issue or pull request to add it to this list!
 The source code of the page can be found in the `./docs` directory.
 
@@ -38,13 +38,13 @@ full-screen-api.transition-duration.leave = 0 0
 
 To highlight the focused window with colored border you can use link:https://github.com/FelixKratz/JankyBorders[JankyBorders].
 
-You can also use `after-startup-command` to start JankyBorders together with AeroSpace
+You can also use `after-startup-command` to start JankyBorders together with FlightDeck
 
 [source,toml]
 ----
 after-startup-command = [
     # JankyBorders has a built-in detection of already running process,
-    # so it won't be run twice on AeroSpace restart
+    # so it won't be run twice on FlightDeck restart
     'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=5.0'
 ]
 ----
@@ -52,7 +52,8 @@ after-startup-command = [
 [#raycast-extension]
 == AeroSpace Raycast extension
 
-There is a third party Raycast extension for AeroSpace. https://www.raycast.com/limonkufu/aerospace
+The third-party https://www.raycast.com/limonkufu/aerospace[AeroSpace Raycast extension] targets the `aerospace` executable.
+It is not a drop-in FlightDeck integration unless it lets you configure the executable path to `flightdeck`.
 
 If you struggle remembering shortcuts, it's useful to search for commands until they become muscle memory.
 
@@ -73,9 +74,9 @@ The following commands focus next or previous workspaces on monitors where the m
 
 [source,bash]
 ----
-aerospace workspace "$(aerospace list-workspaces --monitor mouse --visible)" && aerospace workspace next
+flightdeck workspace "$(flightdeck list-workspaces --monitor mouse --visible)" && flightdeck workspace next
 
-aerospace workspace "$(aerospace list-workspaces --monitor mouse --visible)" && aerospace workspace prev
+flightdeck workspace "$(flightdeck list-workspaces --monitor mouse --visible)" && flightdeck workspace prev
 ----
 
 Use the software of your choice to assign trackpad gestures to the respective commands.
@@ -83,24 +84,25 @@ Here are a few third party options in alphabetical order:
 
 * https://github.com/acsandmann/aerospace-swipe
 * link:https://folivora.ai/[BetterTouchTool] can assign arbitrary commands to trackpad gestures.
-Beware that you might need to specify full path to aerospace executable https://community.folivora.ai/t/how-to-execute-terminal-command-to-switch-workspaces-with-aerospace/35914
+Beware that you might need to specify the full path to the `flightdeck` executable.
 * https://github.com/MediosZ/SwipeAeroSpace
 
 CAUTION: Make sure that you trust project authors before running the distributed binaries.
 Alternatively, inspect the source code, and build it yourself.
 
-[#show-aerospace-workspaces-in-sketchybar]
-== Show AeroSpace workspaces in Sketchybar
+[#show-flightdeck-workspaces-in-sketchybar]
+== Show FlightDeck workspaces in Sketchybar
 
-You can integrate AeroSpace workspace indicators with link:https://github.com/FelixKratz/SketchyBar[Sketchybar].
+You can integrate FlightDeck workspace indicators with link:https://github.com/FelixKratz/SketchyBar[Sketchybar].
 Use these snippets as a starting point.
+The `AEROSPACE_*` variables and `aerospace_workspace_change` event name remain unchanged for compatibility.
 
 .~/.aerospace.toml
 [source,toml]
 ----
-# Run Sketchybar together with AeroSpace
+# Run Sketchybar together with FlightDeck
 # sketchybar has a built-in detection of already running process,
-# so it won't be run twice on AeroSpace restart
+# so it won't be run twice on FlightDeck restart
 after-startup-command = ['exec-and-forget sketchybar']
 
 # Notify Sketchybar about workspace change
@@ -114,7 +116,7 @@ exec-on-workspace-change = ['/bin/bash', '-c',
 ----
 sketchybar --add event aerospace_workspace_change
 
-for sid in $(aerospace list-workspaces --all); do
+for sid in $(flightdeck list-workspaces --all); do
     sketchybar --add item space.$sid left \
         --subscribe space.$sid aerospace_workspace_change \
         --set space.$sid \
@@ -123,18 +125,18 @@ for sid in $(aerospace list-workspaces --all); do
         background.height=20 \
         background.drawing=off \
         label="$sid" \
-        click_script="aerospace workspace $sid" \
-        script="$CONFIG_DIR/plugins/aerospace.sh $sid"
+        click_script="flightdeck workspace $sid" \
+        script="$CONFIG_DIR/plugins/flightdeck.sh $sid"
 done
 ----
 
-.~/.config/sketchybar/plugins/aerospace.sh
+.~/.config/sketchybar/plugins/flightdeck.sh
 [source,bash]
 ----
 #!/usr/bin/env bash
 
 # make sure it's executable with:
-# chmod +x ~/.config/sketchybar/plugins/aerospace.sh
+# chmod +x ~/.config/sketchybar/plugins/flightdeck.sh
 
 if [ "$1" = "$FOCUSED_WORKSPACE" ]; then
     sketchybar --set $NAME background.drawing=on
@@ -143,12 +145,12 @@ else
 fi
 ----
 
-[#show-aerospace-workspaces-in-simple-bar]
-== Show AeroSpace workspaces in simple-bar
+[#show-flightdeck-workspaces-in-simple-bar]
+== Show FlightDeck workspaces in simple-bar
 
-link:https://github.com/Jean-Tinland/simple-bar[simple-bar] can be used to display AeroSpace workspaces.
+link:https://github.com/Jean-Tinland/simple-bar[simple-bar] can be used to display FlightDeck workspaces.
 
-In order to sync simple-bar with AeroSpace, add these lines to your AeroSpace config file:
+In order to sync simple-bar with FlightDeck, add these lines to your FlightDeck config file:
 
 .~/.aerospace.toml
 [source,toml]

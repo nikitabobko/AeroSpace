@@ -1,6 +1,6 @@
-= aerospace-true(1)
+= flightdeck-true(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-true
+:manname: flightdeck-true
 // tag::purpose[]
 :manpurpose: Return true value
 // end::purpose[]
@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace true [-h|--help]
+flightdeck true [-h|--help]
 
 // end::synopsis[]
 

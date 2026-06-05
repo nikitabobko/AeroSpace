@@ -1,6 +1,6 @@
-= aerospace-list-workspaces(1)
+= flightdeck-list-workspaces(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-list-workspaces
+:manname: flightdeck-list-workspaces
 // tag::purpose[]
 :manpurpose: Print workspaces that satisfy conditions
 // end::purpose[]
@@ -9,9 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]] [--format <output-format>] [--count] [--json]
-aerospace list-workspaces [-h|--help] --all [--format <output-format>] [--count] [--json]
-aerospace list-workspaces [-h|--help] --focused [--format <output-format>] [--count] [--json]
+flightdeck list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]] [--format <output-format>] [--count] [--json]
+flightdeck list-workspaces [-h|--help] --all [--format <output-format>] [--count] [--json]
+flightdeck list-workspaces [-h|--help] --focused [--format <output-format>] [--count] [--json]
 
 // end::synopsis[]
 

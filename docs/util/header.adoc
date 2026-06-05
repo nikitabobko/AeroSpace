@@ -1,11 +1,11 @@
 ====
-AeroSpace is an i3-like tiling window manager for macOS
+FlightDeck is an i3-like tiling window manager for macOS
 
-*Project homepage*: https://github.com/nikitabobko/AeroSpace
+*Project homepage*: https://github.com/saadjs/FlightDeck
 
-image:assets/icon.png[300,300,float="right"]
+* xref:guide.adoc[FlightDeck Guide]
+* xref:commands.adoc[FlightDeck Commands]
+* xref:goodies.adoc[FlightDeck Goodies]
 
-* xref:guide.adoc[AeroSpace Guide]
-* xref:commands.adoc[AeroSpace Commands]
-* xref:goodies.adoc[AeroSpace Goodies]
+FlightDeck preserves AeroSpace configuration compatibility while providing a signed and notarized distribution.
 ====

@@ -1,6 +1,6 @@
-= aerospace-workspace(1)
+= flightdeck-workspace(1)
 include::util/man-attributes.adoc[]
-:manname: aerospace-workspace
+:manname: flightdeck-workspace
 // tag::purpose[]
 :manpurpose: Focus the specified workspace
 // end::purpose[]
@@ -9,8 +9,8 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace workspace [-h|--help] [--auto-back-and-forth] [--fail-if-noop] <workspace-name>
-aerospace workspace [-h|--help] [--wrap-around] [--stdin|--no-stdin] (next|prev)
+flightdeck workspace [-h|--help] [--auto-back-and-forth] [--fail-if-noop] <workspace-name>
+flightdeck workspace [-h|--help] [--wrap-around] [--stdin|--no-stdin] (next|prev)
 
 // end::synopsis[]
 
@@ -55,7 +55,7 @@ Incompatible with `--stdin`
 include::util/conditional-examples-header.adoc[]
 
 * Go to the next non empty workspace on the focused monitor: +
-`aerospace list-workspaces --monitor focused --empty no | aerospace workspace --stdin next`
+`flightdeck list-workspaces --monitor focused --empty no | flightdeck workspace --stdin next`
 
 // end::body[]
 
