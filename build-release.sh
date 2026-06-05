@@ -64,10 +64,11 @@ FLIGHTDECK_TEAM_ID="$team_id" ./generate.sh --ignore-cmd-help --ignore-shell-par
 cp -r ".xcode-build/Build/Products/$xcode_configuration/$app_name.app" .release
 cp -r ".build/apple/Products/Release/$cli_name" .release
 
-################
-### SIGN CLI ###
-################
+############
+### SIGN ###
+############
 
+codesign --force --deep --options runtime --timestamp -s "$codesign_identity" ".release/$app_name.app"
 codesign --force --options runtime --timestamp -s "$codesign_identity" ".release/$cli_name"
 
 ################
