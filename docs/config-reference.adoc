@@ -116,6 +116,42 @@ Useful if you never intentionally hide apps and want to avoid accidentally losin
 automatically-unhide-macos-hidden-apps = true
 ----
 
+[#focus-next-window-on-window-closed]
+== focus-next-window-on-window-closed
+
+[cols="1,3"]
+|===
+| Type | Boolean
+| Default | `true`
+|===
+
+Controls what happens to focus when the focused application's final managed
+window is closed.
+
+When `true` (the default), FlightDeck lets focus move to the next window. This
+matches standard macOS behavior and avoids leaving a focused application that no
+longer has any windows.
+
+When `false`, FlightDeck keeps the now-windowless application focused instead of
+transferring focus elsewhere. This is useful if you want an immediate ⌘Q to quit
+the application whose last window you just closed.
+
+[source,toml]
+----
+focus-next-window-on-window-closed = false
+----
+
+[NOTE]
+====
+Regardless of this setting, macOS may activate a same-application window that
+lives on another, non-visible workspace when you close the application's visible
+window — leaving keyboard focus on a window you cannot see. This is a macOS
+behavior that the setting cannot override. Because of this, `false` is only
+useful when an application's windows stay on a single workspace; if you keep
+windows of the same application spread across workspaces, leave this option at
+its default.
+====
+
 [#accordion-padding]
 == accordion-padding
 

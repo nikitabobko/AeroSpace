@@ -48,6 +48,11 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # Also see: https://saadjs.github.io/FlightDeck/goodies#disable-hide-app
 automatically-unhide-macos-hidden-apps = false
 
+# Focus another window after the focused app's final managed window closes
+# Set to false to keep the windowless app active so cmd-q can quit it
+# Fallback value (if you omit the key): focus-next-window-on-window-closed = true
+focus-next-window-on-window-closed = true
+
 # List of workspaces that should stay alive even when they contain no windows,
 # even when they are invisible.
 # This config option is only available since 'config-version = 2'
