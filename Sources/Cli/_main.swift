@@ -5,7 +5,7 @@ import Network
 
 let usage =
     """
-    USAGE: \(CommandLine.arguments.first ?? "aerospace") [-h|--help] [-v|--version] <subcommand> [<args>...]
+    USAGE: \(CommandLine.arguments.first ?? "flightdeck") [-h|--help] [-v|--version] <subcommand> [<args>...]
 
     SUBCOMMANDS:
     \(subcommandDescriptions.sortedBy { $0[0] }.toPaddingTable(columnSeparator: "   ").joined(separator: "\n"))
@@ -34,16 +34,16 @@ struct Main {
             }
             print(
                 """
-                aerospace CLI client version: \(cliClientVersionAndHash)
-                AeroSpace.app server version: \(serverVersionAndHash ?? "Unknown. The server is not running")
+                flightdeck CLI client version: \(cliClientVersionAndHash)
+                FlightDeck.app server version: \(serverVersionAndHash ?? "Unknown. The server is not running")
                 """,
             )
             if serverVersionAndHash != nil && cliClientVersionAndHash != serverVersionAndHash {
                 eprint(
                     """
-                    Warning: AeroSpace client/server versions don't match. Possible fixes:
-                      - Restart AeroSpace.app (server restart is required after each update)
-                      - Reinstall and restart AeroSpace (corrupted installation)
+                    Warning: FlightDeck client/server versions don't match. Possible fixes:
+                      - Restart FlightDeck.app (server restart is required after each update)
+                      - Reinstall and restart FlightDeck (corrupted installation)
                     """,
                 )
             }
@@ -66,7 +66,7 @@ struct Main {
         let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
 
         if let e = await connection.startBlocking().error {
-            exit(failExitCode, err: "Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
+            exit(failExitCode, err: "Can't connect to FlightDeck server. Is FlightDeck.app running?\n\(e.localizedDescription)")
         }
 
         var stdin = ""
@@ -113,12 +113,12 @@ struct Main {
         if ans.exitCode != EXIT_CODE_ZERO && ans.serverVersionAndHash != cliClientVersionAndHash {
             eprint(
                 """
-                Warning: AeroSpace client/server versions don't match
-                  - aerospace CLI client version: \(cliClientVersionAndHash)
-                  - AeroSpace.app server version: \(ans.serverVersionAndHash)
+                Warning: FlightDeck client/server versions don't match
+                  - flightdeck CLI client version: \(cliClientVersionAndHash)
+                  - FlightDeck.app server version: \(ans.serverVersionAndHash)
                   Possible fixes:
-                  - Restart AeroSpace.app (server restart is required after each update)
-                  - Reinstall and restart AeroSpace (corrupted installation)
+                  - Restart FlightDeck.app (server restart is required after each update)
+                  - Reinstall and restart FlightDeck (corrupted installation)
                 """,
             )
         }

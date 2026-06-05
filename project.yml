@@ -12,7 +12,7 @@ configs:
   Release: release
 
 targets:
-  AeroSpace:
+  FlightDeck:
     type: application
     platform: macOS
     deploymentTarget: "13.0"
@@ -28,19 +28,22 @@ targets:
       base:
         SWIFT_VERSION: 6.2 # Swift Language Version
         GENERATE_INFOPLIST_FILE: YES
-        MARKETING_VERSION: ${XCODEGEN_AEROSPACE_VERSION}
+        MARKETING_VERSION: ${XCODEGEN_FLIGHTDECK_VERSION}
         # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/LaunchServicesKeys.html#//apple_ref/doc/uid/20001431-108256
         # Specifies whether the app runs as an agent app. If this key is set to YES, Launch Services runs the app as an agent app.
         # Agent apps do not appear in the Dock or in the Force Quit window (cmd-opt-esc)
         INFOPLIST_KEY_LSUIElement: YES
-        CODE_SIGN_IDENTITY: ${XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY}
       configs:
         Debug:
-          PRODUCT_NAME: AeroSpace-Debug
-          PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace.debug
+          PRODUCT_NAME: FlightDeck-Debug
+          PRODUCT_BUNDLE_IDENTIFIER: sh.saad.flightdeck.debug
         Release:
-          PRODUCT_NAME: AeroSpace
-          PRODUCT_BUNDLE_IDENTIFIER: bobko.aerospace
+          CODE_SIGN_IDENTITY: ${XCODEGEN_FLIGHTDECK_CODE_SIGN_IDENTITY}
+          PRODUCT_NAME: FlightDeck
+          PRODUCT_BUNDLE_IDENTIFIER: sh.saad.flightdeck
+          DEVELOPMENT_TEAM: ${XCODEGEN_FLIGHTDECK_DEVELOPMENT_TEAM}
+          ENABLE_HARDENED_RUNTIME: YES
+          OTHER_CODE_SIGN_FLAGS: --timestamp
           SWIFT_TREAT_WARNINGS_AS_ERRORS: YES
           GCC_TREAT_WARNINGS_AS_ERRORS: YES
     entitlements:

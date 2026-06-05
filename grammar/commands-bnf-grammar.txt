@@ -1,10 +1,10 @@
-# EBNF-like grammar of aerospace CLI args to generate shell completion. Managed by https://github.com/adaszko/complgen
+# EBNF-like grammar of flightdeck CLI args to generate shell completion. Managed by https://github.com/adaszko/complgen
 # Run ./build-shell-completion.sh to generate shell completion
-aerospace <subcommand>;
-aerospace -v;
-aerospace --version;
-aerospace --help;
-aerospace -h;
+flightdeck <subcommand>;
+flightdeck -v;
+flightdeck --version;
+flightdeck --help;
+flightdeck -h;
 
 <subcommand> ::=
 

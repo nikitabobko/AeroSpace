@@ -23,6 +23,10 @@ For usage and configuration details, see the official [AeroSpace documentation](
 
 Project setup, build instructions, and test details are available in [dev-docs/development.md](./dev-docs/development.md).
 
+## Distribution
+
+FlightDeck is Developer ID-signed, notarized by Apple, and distributed through [`saadjs/homebrew-tap`](https://github.com/saadjs/homebrew-tap).
+
 ## Project values
 
 **Values**

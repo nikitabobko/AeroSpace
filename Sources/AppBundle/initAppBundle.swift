@@ -64,11 +64,11 @@ struct ServerArgs: Sendable {
 }
 
 private let serverHelp = """
-    USAGE: \(CommandLine.arguments.first ?? "AeroSpace.app/Contents/MacOS/AeroSpace") [<options>]
+    USAGE: \(CommandLine.arguments.first ?? "FlightDeck.app/Contents/MacOS/FlightDeck") [<options>]
 
     OPTIONS:
       -h, --help              Print help
-      -v, --version           Print AeroSpace.app version
+      -v, --version           Print FlightDeck.app version
       --config-path <path>    Config path. It will take priority over ~/.aerospace.toml
                               and ${XDG_CONFIG_HOME}/aerospace/aerospace.toml
       --read-only             Disable window management.
