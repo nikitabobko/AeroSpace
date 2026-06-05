@@ -15,6 +15,7 @@
 /.vscode
 # External dependencies
 /.deps
+/docs/node_modules
 
 # For whatever local files that developers might want to keep there (I personally keep a separate `generated-html` git worktree here)
 /.local

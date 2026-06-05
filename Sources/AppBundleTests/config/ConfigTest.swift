@@ -502,4 +502,21 @@ final class ConfigTest: XCTestCase {
         assertEquals(colemakConfig.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
         assertEquals(colemakConfig.keyMapping.resolve()["f"], .e)
     }
+
+    func testConfigReferenceCoversAllTopLevelKeys() throws {
+        let refPath = projectRoot.appending(component: "docs/config-reference.adoc")
+        let refContent = try String(contentsOf: refPath, encoding: .utf8)
+
+        var missing: [String] = []
+        for key in configParser.keys {
+            // Each accepted key must appear as a section anchor in the reference.
+            // Anchors use the idseparator '-' and idprefix '' pattern, so
+            // "config-version" appears as [[#config-version]] or [#config-version].
+            let anchor = "[#\(key)]"
+            if !refContent.contains(anchor) {
+                missing.append(key)
+            }
+        }
+        XCTAssert(missing.isEmpty, "config-reference.adoc is missing sections for: \(missing.sorted().joined(separator: ", "))")
+    }
 }
