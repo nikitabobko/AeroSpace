@@ -1,0 +1,389 @@
+---
+title: "Config reference"
+description: "Complete reference for FlightDeck TOML configuration."
+---
+
+This page documents every top-level key accepted by FlightDeck's TOML configuration file.
+The config file is loaded from `~/.aerospace.toml` or `${XDG_CONFIG_HOME}/aerospace/aerospace.toml`.
+
+See the [Guide](/guide) for a narrative introduction, and [default-config.toml](config-examples/default-config.toml) for a ready-to-copy starter.
+
+A *dynamic* value can be either a scalar or a per-monitor array:
+
+```toml
+# Constant form
+gaps.outer.top = 8
+
+# Per-monitor form: last element is the default
+gaps.outer.top = [{ monitor.main = 16 }, { monitor."some-pattern" = 32 }, 8]
+```
+
+## config-version
+
+|   |   |   |   |   |   |
+| --- | --- | --- | --- | --- | --- |
+| Type | Integer | Default | `1` | Range | `1` – `2` |
+
+Declares the config format version.
+Required to use options that are only available from a given version (e.g. `persistent-workspaces` requires `config-version = 2`).
+
+```toml
+config-version = 2
+```
+
+## after-startup-command
+
+|   |   |   |   |
+| --- | --- | --- | --- |
+| Type | String or array of strings (FlightDeck commands) | Default | `[]` |
+
+Commands to run after FlightDeck starts.
+
+```toml
+after-startup-command = ['exec-and-forget borders active_color=0xffe1e3e4']
+```
+
+## after-login-command
+
+|   |   |   |   |   |   |
+| --- | --- | --- | --- | --- | --- |
+| Type | Array | Default | `[]` | Status | *Deprecated* since AeroSpace 0.19.0 — drop this key from your config |
+
+Previously ran commands after macOS login.
+Removed in favour of `after-startup-command`.
+An empty array is accepted for backwards compatibility; any non-empty value is a parse error.
+
+## start-at-login
+
+|   |   |   |   |
+| --- | --- | --- | --- |
+| Type | Boolean | Default | `false` |
+
+Register FlightDeck as a login item so it starts automatically when you log in to macOS.
+
+```toml
+start-at-login = true
+```
+
+## auto-reload-config
+
+|   |   |   |   |
+| --- | --- | --- | --- |
+| Type | Boolean | Default | `false` |
+
+Reload the config automatically whenever the config file is saved.
+After enabling this option, reload once manually to activate auto-reload.
+
+```toml
+auto-reload-config = true
+```
+
+## automatically-unhide-macos-hidden-apps
+
+|   |   |   |   |
+| --- | --- | --- | --- |
+| Type | Boolean | Default | `false` |
+
+Automatically un-hide applications that were hidden with macOS ⌘H / ⌘⌥H.
+Useful if you never intentionally hide apps and want to avoid accidentally losing windows.
+
+```toml
+automatically-unhide-macos-hidden-apps = true
+```
+
+## focus-next-window-on-window-closed
+
+|   |   |   |   |
+| --- | --- | --- | --- |
+| Type | Boolean | Default | `true` |
+
+Controls what happens to focus when the focused application's final managed
+window is closed.
+
+When `true` (the default), FlightDeck lets focus move to the next window. This
+matches standard macOS behavior and avoids leaving a focused application that no
+longer has any windows.
+
+When `false`, FlightDeck keeps the now-windowless application focused instead of
+transferring focus elsewhere. This is useful if you want an immediate ⌘Q to quit
+the application whose last window you just closed.
+
+```toml
+focus-next-window-on-window-closed = false
+```
+
+<Note>
+Regardless of this setting, macOS may activate a same-application window that
+lives on another, non-visible workspace when you close the application's visible
+window — leaving keyboard focus on a window you cannot see. This is a macOS
+behavior that the setting cannot override. Because of this, `false` is only
+useful when an application's windows stay on a single workspace; if you keep
+windows of the same application spread across workspaces, leave this option at
+its default.
+</Note>
+
+## accordion-padding
+
+|   |   |   |   |
+| --- | --- | --- | --- |
+| Type | Integer (pixels) | Default | `30` |
+
+Width of the overlap padding shown in accordion layout.
+Set to `0` to disable the padding effect entirely.
+
+```toml
+accordion-padding = 30
+```
+
+## default-root-container-layout
+
+|   |   |   |   |   |   |
+| --- | --- | --- | --- | --- | --- |
+| Type | String | Default | `tiles` | Values | `tiles`, `accordion` |
+
+Default layout for the root container of every workspace.
+
+```toml
+default-root-container-layout = 'tiles'
+```
+
+## default-root-container-orientation
+
+|   |   |   |   |   |   |
+| --- | --- | --- | --- | --- | --- |
+| Type | String | Default | `auto` | Values | `horizontal`, `vertical`, `auto` |
+
+Default orientation for the root container of every workspace.
+`auto` uses `horizontal` for monitors wider than they are tall, and `vertical` otherwise.
+
+```toml
+default-root-container-orientation = 'auto'
+```
+
+## enable-normalization-flatten-containers
+
+|   |   |   |   |
+| --- | --- | --- | --- |
+| Type | Boolean | Default | `true` |
+
+Automatically flatten redundant nested containers that have the same orientation as their parent.
+See the [Normalization](/guide#normalization) section of the Guide.
+
+```toml
+enable-normalization-flatten-containers = true
+```
+
+NOTE: Enabling this option makes the `split` command have no effect.
+Use `join-with` instead.
+
+## enable-normalization-opposite-orientation-for-nested-containers
+
+|   |   |   |   |
+| --- | --- | --- | --- |
+| Type | Boolean | Default | `true` |
+
+Automatically set the orientation of a new nested container to be the opposite of its parent.
+See the [Normalization](/guide#normalization) section of the Guide.
+
+```toml
+enable-normalization-opposite-orientation-for-nested-containers = true
+```
+
+## persistent-workspaces
+
+|   |   |   |   |   |   |
+| --- | --- | --- | --- | --- | --- |
+| Type | Array of strings | Default | `[]` | Requires | `config-version = 2` |
+
+Workspace names that remain alive even when empty and invisible.
+Without this option, empty workspaces are destroyed and their names freed.
+
+```toml
+persistent-workspaces = ["1", "2", "3", "A", "B", "C"]
+```
+
+## on-focus-changed
+
+|   |   |   |   |
+| --- | --- | --- | --- |
+| Type | String or array of strings (FlightDeck commands) | Default | `[]` |
+
+Commands to run every time focus changes (window or monitor).
+See [on-focus-changed callbacks](/guide#on-focus-changed-callbacks) in the Guide.
+
+```toml
+on-focus-changed = ['exec-and-forget borders active_color=0xffe1e3e4']
+```
+
+## on-focused-monitor-changed
+
+|   |   |   |   |
+| --- | --- | --- | --- |
+| Type | String or array of strings (FlightDeck commands) | Default | `[]` |
+
+Commands to run when the focused monitor changes.
+A common use is to warp the mouse cursor to the new monitor's center.
+
+```toml
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+```
+
+## on-mode-changed
+
+|   |   |   |   |
+| --- | --- | --- | --- |
+| Type | String or array of strings (FlightDeck commands) | Default | `[]` |
+
+Commands to run every time the active binding mode changes.
+See [Binding modes](/guide#binding-modes) in the Guide.
+
+```toml
+on-mode-changed = ['exec-and-forget echo mode changed']
+```
+
+## exec-on-workspace-change
+
+|   |   |   |   |   |   |
+| --- | --- | --- | --- | --- | --- |
+| Type | Array of strings (shell command tokens) | Default | `[]` | Status | Deprecated — prefer `on-focus-changed` with `exec-and-forget` |
+
+Shell command tokens to execute whenever the focused workspace changes.
+The environment exposes `AEROSPACE_FOCUSED_WORKSPACE` and `AEROSPACE_PREV_WORKSPACE`.
+
+## exec
+
+|   |   |
+| --- | --- |
+| Type | Table |
+
+Controls the environment that `exec-and-forget` and `exec-on-workspace-change` commands run in.
+
+```toml
+[exec]
+inherit-env-vars = true
+
+[exec.env-vars]
+PATH = '/opt/homebrew/bin:/usr/local/bin:${PATH}'
+```
+
+.Nested keys
+|   |   |   |   |   |   |   |   |   |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Key | Type | Description | `inherit-env-vars` | Boolean (default `true`) | Inherit the current process environment when running exec commands | `env-vars` | Table of strings | Additional or overriding environment variables; values support `${VAR}` interpolation |
+
+## key-mapping
+
+|   |   |
+| --- | --- |
+| Type | Table |
+
+Configures the keyboard preset used to resolve key names in binding mode definitions.
+See [Key mapping](/guide#key-mapping) in the Guide.
+
+```toml
+[key-mapping]
+preset = 'qwerty'
+```
+
+.Nested keys
+|   |   |   |   |   |   |
+| --- | --- | --- | --- | --- | --- |
+| Key | Type | Description | `preset` | String (`qwerty`, `dvorak`, `colemak`) | Physical key layout preset; defaults to `qwerty` |
+
+## gaps
+
+|   |   |
+| --- | --- |
+| Type | Table |
+
+Spacing between windows and between windows and monitor edges.
+Each sub-key accepts a constant integer or a dynamic per-monitor array.
+
+```toml
+[gaps]
+inner.horizontal = 10
+inner.vertical   = 10
+outer.left       = 8
+outer.bottom     = 8
+outer.top        = [{ monitor.main = 24 }, 8]
+outer.right      = 8
+```
+
+.Nested keys
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Key | Type | Description | `inner.horizontal` | Dynamic Integer (default `0`) | Gap between windows arranged side-by-side | `inner.vertical` | Dynamic Integer (default `0`) | Gap between windows stacked vertically | `outer.left` | Dynamic Integer (default `0`) | Gap between the leftmost window column and the monitor edge | `outer.right` | Dynamic Integer (default `0`) | Gap between the rightmost window column and the monitor edge | `outer.top` | Dynamic Integer (default `0`) | Gap between the top window row and the monitor edge | `outer.bottom` | Dynamic Integer (default `0`) | Gap between the bottom window row and the monitor edge |
+
+## workspace-to-monitor-force-assignment
+
+|   |   |
+| --- | --- |
+| Type | Table (workspace name → monitor pattern or array) |
+
+Pin named workspaces to specific monitors.
+See [Assign workspaces to monitors](/guide#assign-workspaces-to-monitors) in the Guide.
+
+```toml
+[workspace-to-monitor-force-assignment]
+1 = 'main'
+2 = ['secondary', 'main']
+```
+
+## mode
+
+|   |   |
+| --- | --- |
+| Type | Table (mode name → binding table) |
+
+Defines binding modes and their key bindings.
+The `main` mode must always be present.
+See [Binding modes](/guide#binding-modes) in the Guide.
+
+```toml
+[mode.main.binding]
+alt-h = 'focus left'
+alt-shift-semicolon = 'mode service'
+
+[mode.service.binding]
+esc = ['reload-config', 'mode main']
+```
+
+## on-window-detected
+
+|   |   |
+| --- | --- |
+| Type | Array of tables |
+
+Callbacks that run when a new window is detected.
+Each entry may filter by app ID, app name, window title, workspace, or FlightDeck startup state.
+See [on-window-detected](/guide#on-window-detected) in the Guide.
+
+```toml
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = 'move-node-to-workspace F'
+
+[[on-window-detected]]
+if.app-name-regex-substring = 'terminal'
+run = ['layout floating', 'move-node-to-workspace T']
+check-further-callbacks = true
+```
+
+.Matcher keys (all optional)
+|   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Key | Type | Description | `if.app-id` | String | Exact macOS bundle identifier | `if.app-name-regex-substring` | String (regex) | Case-insensitive regex matched against the app name | `if.window-title-regex-substring` | String (regex) | Case-insensitive regex matched against the window title | `if.workspace` | String | Workspace the window would be placed in | `if.during-aerospace-startup` | Boolean | Whether FlightDeck is currently starting up | `check-further-callbacks` | Boolean (default `false`) | Continue evaluating later callbacks after this one matches | `run` | String or array | Commands to execute when this callback matches |
+
+## indent-for-nested-containers-with-the-same-orientation
+
+|   |   |   |   |
+| --- | --- | --- | --- |
+| Type | — (ignored) | Status | *Deprecated* — drop this key from your config (see [AeroSpace#96](https://github.com/nikitabobko/AeroSpace/issues/96)) |
+
+## non-empty-workspaces-root-containers-layout-on-startup
+
+|   |   |   |   |
+| --- | --- | --- | --- |
+| Type | String | Status | *Deprecated* — drop this key from your config |
+
+Only the value `"smart"` is accepted (for backwards-compatibility error reporting).

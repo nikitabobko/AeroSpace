@@ -1,8 +1,0 @@
-ifndef::env-site[]
-== Interpolation Variables
-endif::[]
-
-ifdef::env-site[]
-[.lead]
-**INTERPOLATION VARIABLES**
-endif::[]

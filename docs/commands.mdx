@@ -219,7 +219,7 @@ Exit with non-zero exit code if already in the requested mode
 
 ## exec-and-forget
 
-Run /bin/bash -c '<bash-script>'
+Run `/bin/bash -c '&lt;bash-script&gt;'`
 
 ### Synopsis
 
@@ -2054,11 +2054,10 @@ FlightDeck is an i3-like tiling window manager for macOS
 
 *flightdeck* command line program is used to manipulate FlightDeck and query its state.
 
-See https://github.com/saadjs/FlightDeck/blob/main/docs/commands.adoc for available &lt;subcommand&gt; options
+See the command sections above for available &lt;subcommand&gt; options.
 
 See each &lt;subcommand&gt; individual man page for &lt;subcommand-options&gt; and &lt;subcommand-arguments&gt;
 
 Existing AeroSpace configs remain compatible. FlightDeck intentionally continues to use `~/.aerospace.toml`, `${XDG_CONFIG_HOME}/aerospace/aerospace.toml`, and the `AEROSPACE_*` environment variables.
 Use `flightdeck` instead of `aerospace` for terminal invocations.
 FlightDeck does not install an `aerospace` CLI alias, and FlightDeck and AeroSpace should not run simultaneously.
-

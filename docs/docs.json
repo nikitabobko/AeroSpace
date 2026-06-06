@@ -1,0 +1,75 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "FlightDeck",
+  "description": "Signed and notarized i3-like tiling window manager for macOS",
+  "logo": {
+    "light": "/assets/icon.png",
+    "dark": "/assets/icon.png"
+  },
+  "favicon": "/assets/icon.png",
+  "colors": {
+    "primary": "#2563eb",
+    "light": "#60a5fa",
+    "dark": "#1d4ed8"
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Documentation",
+        "pages": [
+          "index",
+          "guide",
+          "commands",
+          "config-reference",
+          "compatibility",
+          "goodies"
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/saadjs/FlightDeck"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Install",
+      "href": "/guide#installation"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/saadjs/FlightDeck"
+    }
+  },
+  "redirects": [
+    {
+      "source": "/guide.html",
+      "destination": "/guide"
+    },
+    {
+      "source": "/commands.html",
+      "destination": "/commands"
+    },
+    {
+      "source": "/config-reference.html",
+      "destination": "/config-reference"
+    },
+    {
+      "source": "/compatibility.html",
+      "destination": "/compatibility"
+    },
+    {
+      "source": "/goodies.html",
+      "destination": "/goodies"
+    },
+    {
+      "source": "/goodness.html",
+      "destination": "/goodies"
+    }
+  ]
+}

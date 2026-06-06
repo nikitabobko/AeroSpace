@@ -1,8 +1,0 @@
-ifndef::env-site[]
-== Output Format
-endif::[]
-
-ifdef::env-site[]
-[.lead]
-**OUTPUT FORMAT**
-endif::[]

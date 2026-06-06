@@ -1,8 +1,0 @@
-ifndef::env-site[]
-== Exit Codes
-endif::[]
-
-ifdef::env-site[]
-[.lead]
-**EXIT CODES**
-endif::[]

@@ -1,55 +1,49 @@
-= FlightDeck
-include::util/site-attributes.adoc[]
-:description: FlightDeck is a signed and notarized i3-like tiling window manager for macOS, fully compatible with AeroSpace configuration.
+---
+title: "FlightDeck"
+description: "Signed and notarized i3-like tiling window manager for macOS."
+---
 
 FlightDeck is an i3-like tiling window manager for macOS.
-It is a signed and notarized distribution of link:https://github.com/nikitabobko/AeroSpace[AeroSpace], preserving full configuration and CLI compatibility.
+It is a signed and notarized distribution of [AeroSpace](https://github.com/nikitabobko/AeroSpace), preserving full configuration and CLI compatibility.
 
-[.landing-grid]
-== Documentation
+## Documentation
 
-[.card]
-=== xref:guide.adoc[Installation & Guide]
+### [Installation & Guide](/guide)
 
 Start here: Homebrew installation, config file location, layouts, workspaces, binding modes, and focus callbacks.
 
-[.card]
-=== xref:config-reference.adoc[Config Reference]
+### [Config Reference](/config-reference)
 
 Complete reference for every supported TOML option — types, defaults, version restrictions, deprecations, and examples.
 
-[.card]
-=== xref:commands.adoc[Commands]
+### [Commands](/commands)
 
 All `flightdeck` CLI subcommands with synopsis and options. Also available as manpages.
 
-[.card]
-=== xref:compatibility.adoc[AeroSpace Compatibility]
+### [AeroSpace Compatibility](/compatibility)
 
 Preserved paths and interfaces, current distribution differences, and migration guidance from AeroSpace.
 
-[.card]
-=== xref:goodies.adoc[Goodies]
+### [Goodies](/goodies)
 
 Community tips: window dragging, non-native fullscreen, JankyBorders integration, and more.
 
-== Quick Start
+## Quick Start
 
-[source,bash]
-----
+```bash
 brew install --cask saadjs/tap/flightdeck
-----
+```
 
 Existing AeroSpace configs and `~/.aerospace.toml` work without changes.
 Use `flightdeck` instead of `aerospace` for terminal invocations.
 
-== About
+## About
 
 FlightDeck is built from the AeroSpace source and adds:
 
-* Developer ID codesigning and Apple notarization
-* Stapled Gatekeeper tickets so the first launch never blocks
-* Homebrew cask distribution at `saadjs/tap/flightdeck`
+- Developer ID codesigning and Apple notarization
+- Stapled Gatekeeper tickets so the first launch never blocks
+- Homebrew cask distribution at `saadjs/tap/flightdeck`
 
 Configuration syntax, paths (`~/.aerospace.toml`), and environment variables (`AEROSPACE_*`) are intentionally unchanged so existing configurations continue to work.
 FlightDeck and AeroSpace should not run simultaneously.

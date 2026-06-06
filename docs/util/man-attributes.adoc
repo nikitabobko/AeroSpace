@@ -1,5 +1,0 @@
-ifndef::env-site[]
-:doctype: manpage
-:manmanual: FlightDeck Manual
-:mansource: FlightDeck
-endif::[]

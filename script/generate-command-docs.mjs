@@ -9,6 +9,7 @@ const swiftDescriptionsPath = path.join(root, "Sources", "Cli", "subcommandDescr
 const manDir = path.join(root, ".man");
 
 const source = fs.readFileSync(sourcePath, "utf8");
+const decodeEntities = (value) => value.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
 const commandPattern = /^## ([a-z0-9-]+)\n\n([^#\n][^\n]*)\n\n### Synopsis\n\n```shell\n([\s\S]*?)\n```([\s\S]*?)(?=^## [a-z0-9-]+\n|(?![\s\S]))/gm;
 const commands = [];
 const names = new Set();
@@ -24,7 +25,7 @@ while ((match = commandPattern.exec(source)) !== null) {
     throw new Error(`${name}: unsupported AsciiDoc syntax remains`);
   }
   names.add(name);
-  commands.push({ name, description, synopsis, body: body.trim() });
+  commands.push({ name, description: decodeEntities(description).replaceAll("`", ""), synopsis, body: body.trim() });
 }
 
 if (commands.length < 42) {
@@ -37,7 +38,6 @@ const unmatched = [...source.matchAll(/^## ([a-z0-9-]+)$/gm)]
 if (unmatched.length) throw new Error(`Malformed command sections: ${unmatched.join(", ")}`);
 
 const swiftEscape = (value) => value.replaceAll("\\", "\\\\").replaceAll('"', '\\"');
-const decodeEntities = (value) => value.replaceAll("&lt;", "<").replaceAll("&gt;", ">");
 const helpName = (name) => name.replaceAll("-", "_");
 const helpSynopsis = (synopsis) => {
   const lines = decodeEntities(synopsis).split("\n");

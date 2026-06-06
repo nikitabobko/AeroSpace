@@ -1,8 +1,0 @@
-ifndef::env-site[]
-== Operators
-endif::[]
-
-ifdef::env-site[]
-[.lead]
-**OPERATORS**
-endif::[]

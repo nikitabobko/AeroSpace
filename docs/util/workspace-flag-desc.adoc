@@ -1,1 +1,0 @@
-Act on the specified workspace instead of the focused workspace

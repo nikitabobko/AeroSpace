@@ -1,8 +1,0 @@
-ifndef::env-site[]
-== Arguments
-endif::[]
-
-ifdef::env-site[]
-[.lead]
-**ARGUMENTS**
-endif::[]
