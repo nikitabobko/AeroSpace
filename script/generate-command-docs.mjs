@@ -75,9 +75,9 @@ const descriptionsOutput = [
 
 const roffEscape = (value) => value
   .replaceAll("\\", "\\e")
+  .replaceAll("`", "")
   .replace(/^-/, "\\-")
   .replace(/^([.'])/, "\\&$1")
-  .replaceAll("`", "")
   .replaceAll("*", "")
   .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
   .replaceAll("&lt;", "<")

@@ -18,11 +18,11 @@ flightdeck balance-sizes [-h|--help] [--workspace <workspace>]
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --workspace &lt;workspace&gt;
+#### `--workspace <workspace>`
 
 Act on the specified workspace instead of the focused workspace
 
@@ -40,10 +40,10 @@ flightdeck close-all-windows-but-current [-h|--help] [--quit-if-last-window]
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --quit-if-last-window
+#### `--quit-if-last-window`
 
 Quit the apps instead of closing them if it's their last window
 
@@ -64,14 +64,14 @@ You might want to use the command from CLI for scripting purposes
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --quit-if-last-window
+#### `--quit-if-last-window`
 
 Quit the app instead of closing if it's the last window of the app
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Act on the specified window instead of the focused window
 
@@ -99,25 +99,25 @@ Printing other complicated objects requires `--json` or `--keys` flag.
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --get &lt;name&gt;
+#### `--get <name>`
 
 Get the value for a given key. You can inspect available keys with `--major-keys` or `--all-keys`
-#### --major-keys
+#### `--major-keys`
 
 Print major keys
-#### --all-keys
+#### `--all-keys`
 
 Print all available keys recursively
-#### --json
+#### `--json`
 
 Print result in JSON format
-#### --keys
+#### `--keys`
 
 Print keys of the complicated object (map or array)
-#### --config-path
+#### `--config-path`
 
 Print absolute path to the loaded config
 
@@ -180,11 +180,11 @@ The only intended use case is to report bugs about incorrect windows handling.
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Print debug information of the specified window right away.
 Usage of this flag disables interactive mode.
@@ -209,10 +209,10 @@ Key events are not intercepted when FlightDeck is disabled
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --fail-if-noop
+#### `--fail-if-noop`
 
 Exit with non-zero exit code if already in the requested mode
 
@@ -270,11 +270,11 @@ The command is useful when you messed up with your layout, and it's easier to "r
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --workspace &lt;workspace&gt;
+#### `--workspace <workspace>`
 
 Act on the specified workspace instead of the focused workspace
 
@@ -320,25 +320,25 @@ flightdeck focus-monitor [-h|--help] <monitor-pattern>...
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --wrap-around
+#### `--wrap-around`
 
 Make it possible to wrap around focus
 
 ### Arguments
 
 
-#### (left|down|up|right)
+#### `(left|down|up|right)`
 
 Focus monitor in direction relative to the focused monitor
 
-#### (next|prev)
+#### `(next|prev)`
 
 Focus next|prev monitor in order they appear in tray icon
 
-#### &lt;monitor-pattern&gt;...
+#### `<monitor-pattern>...`
 
 Find the first matching monitor and focus it.
 Multiple monitor patterns is useful for different monitor configurations.
@@ -374,37 +374,37 @@ https://github.com/nikitabobko/AeroSpace/issues/5
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --boundaries &lt;boundary&gt;
+#### `--boundaries <boundary>`
 
 Defines focus boundaries. 
 `&lt;boundary&gt;` possible values: `(workspace|all-monitors-outer-frame)`. 
 The default is: `workspace`
 
-#### --boundaries-action &lt;action&gt;
+#### `--boundaries-action <action>`
 
 Defines the behavior when requested to cross the `&lt;boundary&gt;`. 
 `&lt;action&gt;` possible values: `(stop|fail|wrap-around-the-workspace|wrap-around-all-monitors)`. 
 The default is: `stop`
 
-#### --wrap-around
+#### `--wrap-around`
 
 An alias for `--boundaries-action wrap-around-the-workspace`.
 The flag is incompatible with either `--boundaries-action` or `--boundaries`.
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Focus the window with specified `&lt;window-id&gt;`
 
-#### --dfs-index &lt;dfs-index&gt;
+#### `--dfs-index <dfs-index>`
 
 Focus window by its index, based on a depth-first search (DFS) of the window within the workspace tree.
 Index is 0-based.
 
-#### --ignore-floating
+#### `--ignore-floating`
 
 Don't perceive floating windows as part of the tree.
 It may be useful for more reliable scripting.
@@ -412,11 +412,11 @@ It may be useful for more reliable scripting.
 ### Arguments
 
 
-#### (left|down|up|right)
+#### `(left|down|up|right)`
 
 Set focus to the nearest window in the given direction.
 
-#### (dfs-next|dfs-prev)
+#### `(dfs-next|dfs-prev)`
 
 Set focus to the window before or after the current window in the depth-first order (top-to-bottom and left-to-right) of windows in the current workspace tree.
 In this mode, `--boundaries` must be `workspace` (the default) and `--boundaries-action` can be set to one of `(stop|fail|wrap-around-the-workspace)`.
@@ -439,24 +439,24 @@ Switching to a different tiling window within the same workspace while the curre
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --no-outer-gaps
+#### `--no-outer-gaps`
 
 Remove the outer gaps when in fullscreen mode
-#### --fail-if-noop
+#### `--fail-if-noop`
 
 Exit with non-zero exit code if already fullscreen or already not fullscreen
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Act on the specified window instead of the focused window
 
 ### Arguments
 
 
-#### on, off
+#### `on, off`
 
 `on` means enter fullscreen mode. `off` means exit fullscreen mode.
 Toggle between the two if not specified
@@ -500,11 +500,11 @@ There is an observation that the only reason why you might want to split a node 
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Act on the specified window instead of the focused window
 
@@ -530,11 +530,11 @@ If several arguments are supplied then finds the first argument that doesn't des
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Act on the specified window instead of the focused window
 
@@ -569,26 +569,26 @@ The command is useful to inspect list of applications to compose filter for [on-
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --macos-native-hidden [no]
+#### `--macos-native-hidden [no]`
 
 Filter results to only print hidden applications.
 `[no]` inverts the condition
 
-#### --format &lt;output-format&gt;
+#### `--format <output-format>`
 
 Specify output format. See "Output Format" section for more details.
 Incompatible with `--count`
 
-#### --count
+#### `--count`
 
 Output only the number of apps.
 Incompatible with: `--format`, `--json`
 
-#### --json
+#### `--json`
 
 Output in JSON format.
 Can be used in combination with `--format` to specify which data to include into the json.
@@ -663,21 +663,21 @@ See [the guide](/guide#binding-modes) for documentation about binding modes
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --current
+#### `--current`
 
 Only print the currently active mode.
 Incompatible with `--count`
 
-#### --count
+#### `--count`
 
 Output only the number of modes.
 Incompatible with `--current`, `--json`
 
-#### --json
+#### `--json`
 
 Output in JSON format.
 Incompatible with `--count`
@@ -696,32 +696,32 @@ flightdeck list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --focused [no]
+#### `--focused [no]`
 
 Filter results to only print the focused monitor.
 `[no]` inverts the condition
 
-#### --mouse [no]
+#### `--mouse [no]`
 
 Filter results to only print the monitor with the mouse.
 `[no]` inverts the condition
 
-#### --format &lt;output-format&gt;
+#### `--format <output-format>`
 
 Specify output format.
 See "Output Format" section for more details.
 Incompatible with `--count`
 
-#### --count
+#### `--count`
 
 Output only the number of monitors.
 Incompatible with `--format`
 
-#### --json
+#### `--json`
 
 Output in JSON format.
 Can be used in combination with `--format` to specify which data to include into the json.
@@ -780,11 +780,11 @@ flightdeck list-windows [-h|--help] --focused [--format <output-format>] [--coun
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --all
+#### `--all`
 
 Alias for `--monitor all`.
 Please use this option *with caution*.
@@ -795,13 +795,13 @@ If you're automating something then you don't want to mess up with workspaces/wi
 
 With great power comes great responsibility.
 
-#### --focused
+#### `--focused`
 
 Print the focused window.
 Please note that it is possible for no window to be in focus.
 In that case, error is reported.
 
-#### --workspace &lt;workspace&gt;...
+#### `--workspace <workspace>...`
 
 Filter results to only print windows that belong to either of specified workspaces.
 `&lt;workspace&gt;...` is a space-separated list of workspace names.
@@ -812,7 +812,7 @@ Possible values:
 1. `focused` is a special workspace name that represents the focused workspace
 1. `visible` is a special workspace name that represents all currently visible workspaces (In multi-monitor setup, there are multiple visible workspaces)
 
-#### --monitor &lt;monitors&gt;
+#### `--monitor <monitors>`
 
 Filter results to only print workspaces/windows that are attached to specified monitors.
 `&lt;monitors&gt;` is a space separated list of monitor IDs. 
@@ -824,27 +824,27 @@ Possible monitors IDs:
 1. `mouse` is a special monitor ID that represents monitor with the mouse
 1. `focused` is a special monitor ID that represents the focused monitor
 
-#### --pid &lt;pid&gt;
+#### `--pid <pid>`
 
 Filter results to only print windows that belong to the Application with specified `&lt;pid&gt;`
 
-#### --app-bundle-id &lt;app-bundle-id&gt;
+#### `--app-bundle-id <app-bundle-id>`
 
 Filter results to only print windows that belong to the Application with specified [Bundle ID](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids)
 
 Deprecated (but still supported) flag name: `--app-id`
 
-#### --format &lt;output-format&gt;
+#### `--format <output-format>`
 
 Specify output format. See "Output Format" section for more details.
 Incompatible with `--count`
 
-#### --count
+#### `--count`
 
 Output only the number of windows.
 Incompatible with `--format`
 
-#### --json
+#### `--json`
 
 Output in JSON format.
 Can be used in combination with `--format` to specify which data to include into the json.
@@ -945,14 +945,14 @@ flightdeck list-workspaces [-h|--help] --focused [--format <output-format>] [--c
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --format &lt;output-format&gt;
+#### `--format <output-format>`
 
 Specify output format. See "Output Format" section for more details
 
-#### --all
+#### `--all`
 
 Alias for `--monitor all`.
 Please use this option *with caution*.
@@ -963,12 +963,12 @@ If you're automating something then you don't want to mess up with workspaces/wi
 
 With great power comes great responsibility.
 
-#### --focused
+#### `--focused`
 
 An alias for `--monitor focused --visible`.
 Always prints a single workspace
 
-#### --monitor &lt;monitors&gt;
+#### `--monitor <monitors>`
 
 Filter results to only print workspaces/windows that are attached to specified monitors.
 `&lt;monitors&gt;` is a space separated list of monitor IDs. 
@@ -980,29 +980,29 @@ Possible monitors IDs:
 1. `mouse` is a special monitor ID that represents monitor with the mouse
 1. `focused` is a special monitor ID that represents the focused monitor
 
-#### --visible [no]
+#### `--visible [no]`
 
 Filter results to only print currently visible workspaces.
 `[no]` inverts the condition.
 Several workspaces can be visible in multi-monitor setup
 
-#### --empty [no]
+#### `--empty [no]`
 
 Filter results to only print empty workspaces.
 `[no]` inverts the condition.
 
-#### --format &lt;output-format&gt;
+#### `--format <output-format>`
 
 Specify output format.
 See "Output Format" section for more details.
 Incompatible with `--count`
 
-#### --count
+#### `--count`
 
 Output only the number of workspaces.
 Incompatible with `--format`
 
-#### --json
+#### `--json`
 
 Output in JSON format.
 Can be used in combination with `--format` to specify which data to include into the json.
@@ -1071,21 +1071,21 @@ flightdeck macos-native-fullscreen [-h|--help] [--window-id <window-id>] [--fail
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --fail-if-noop
+#### `--fail-if-noop`
 
 Exit with non-zero exit code if already fullscreen or already not fullscreen
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Act on the specified window instead of the focused window
 
 ### Arguments
 
 
-#### on, off
+#### `on, off`
 
 `on` means enter fullscreen mode.
 `off` means exit fullscreen mode.
@@ -1105,11 +1105,11 @@ flightdeck macos-native-minimize [-h|--help] [--window-id <window-id>]
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Act on the specified window instead of the focused window
 
@@ -1140,11 +1140,11 @@ flightdeck move-mouse [-h|--help] [--fail-if-noop] <mouse-position>
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --fail-if-noop
+#### `--fail-if-noop`
 
 Exit with non-zero exit code if mouse is already at the requested position.
 The flag is compatible only with `window-lazy-center` and `monitor-lazy-center` arguments.
@@ -1152,7 +1152,7 @@ The flag is compatible only with `window-lazy-center` and `monitor-lazy-center` 
 ### Arguments
 
 
-#### &lt;mouse-position&gt;
+#### `<mouse-position>`
 
 Position to move mouse to.
 Possible values:
@@ -1185,38 +1185,38 @@ flightdeck move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-f
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --wrap-around
+#### `--wrap-around`
 
 Make it possible to wrap around the movement
 
-#### --focus-follows-window
+#### `--focus-follows-window`
 
 Make sure that the window in question receives focus after moving.
 This flag is a shortcut for manually running `flightdeck-workspace`/`flightdeck-focus` after `move-node-to-monitor` successful execution.
 
-#### --fail-if-noop
+#### `--fail-if-noop`
 
 Exit with non-zero code if moving window to monitor it already belongs to
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Act on the specified window instead of the focused window
 
 ### Arguments
 
 
-#### (left|down|up|right)
+#### `(left|down|up|right)`
 
 Move window to monitor in direction relative to the focused monitor
 
-#### (next|prev)
+#### `(next|prev)`
 
 Move window to next|prev monitor in order they appear in tray icon
 
-#### &lt;monitor-pattern&gt;...
+#### `<monitor-pattern>...`
 
 Find the first matching monitor and move the window there.
 Multiple monitor patterns is useful for different monitor configurations.
@@ -1242,31 +1242,31 @@ flightdeck move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-i
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --wrap-around
+#### `--wrap-around`
 
 Make it possible to jump between first and last workspaces using (next|prev)
-#### --fail-if-noop
+#### `--fail-if-noop`
 
 Exit with non-zero code if move window to workspace it already belongs to
 
-#### --focus-follows-window
+#### `--focus-follows-window`
 
 Make sure that the window in question receives focus after moving.
 This flag is a shortcut for manually running `flightdeck-workspace`/`flightdeck-focus` after `move-node-to-workspace` successful execution.
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Act on the specified window instead of the focused window
 
-#### --stdin
+#### `--stdin`
 
 Read the list of workspaces from stdin.
 Incompatible with `--no-stdin`
 
-#### --no-stdin
+#### `--no-stdin`
 
 Ignore the list of workspaces from stdin, even if provided.
 Incompatible with `--stdin`
@@ -1274,10 +1274,10 @@ Incompatible with `--stdin`
 ### Arguments
 
 
-#### (next|prev)
+#### `(next|prev)`
 
 Move window to next or prev workspace
-#### &lt;workspace-name&gt;
+#### `<workspace-name>`
 
 Specifies workspace name where to move window to
 
@@ -1301,30 +1301,30 @@ The command fails for workspaces [that have monitor force assignment](/guide#ass
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --wrap-around
+#### `--wrap-around`
 
 Allows to move workspace between first and last monitors
 
-#### --workspace &lt;workspace&gt;
+#### `--workspace <workspace>`
 
 Act on the specified workspace instead of the focused workspace
 
 ### Arguments
 
 
-#### (left|down|up|right)
+#### `(left|down|up|right)`
 
 Move workspace to monitor in direction relative to the focused monitor
 
-#### (next|prev)
+#### `(next|prev)`
 
 Move the workspace to next or prev monitor.
 'next' or 'prev' monitor is calculated relative to the monitor `&lt;workspace&gt;` currently belongs to.
 
-#### &lt;monitor-pattern&gt;
+#### `<monitor-pattern>`
 
 Find the first matching monitor and move the workspace there.
 Multiple monitor patterns is useful for different monitor configurations.
@@ -1348,21 +1348,21 @@ Deprecated name: `move-through`
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Act on the specified window instead of the focused window
 
-#### --boundaries &lt;boundary&gt;
+#### `--boundaries <boundary>`
 
 Defines move boundaries. 
 `&lt;boundary&gt;` possible values: `(workspace|all-monitors-outer-frame)`. 
 The default is: `workspace`
 
-#### --boundaries-action &lt;boundary-action&gt;
+#### `--boundaries-action <boundary-action>`
 
 Defines the behavior when requested to move across the `&lt;boundary&gt;`. 
 `&lt;boundary-action&gt;` possible values: `(stop|fail|create-implicit-container)`. 
@@ -1477,23 +1477,23 @@ If the config contains errors they will be printed to stdout, and GUI will open 
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --no-gui
+#### `--no-gui`
 
 Don't open GUI to show error. Only use stdout to report errors
-#### --dry-run
+#### `--dry-run`
 
 Validate the config and show errors (if any) but don't reload the config
 
 ### Exit Codes
 
 
-#### 0
+#### `0`
 
 Success. The config is reloaded successfully.
-#### non-zero exit code
+#### `non-zero exit code`
 
 Failure. The config contains errors.
 
@@ -1525,11 +1525,11 @@ Second argument controls how much the size changes
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Act on the specified window instead of the focused window
 
@@ -1564,11 +1564,11 @@ Consider using `join-with` if you want to keep `enable-normalization-flatten-con
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Act on the specified window instead of the focused window
 
@@ -1591,15 +1591,15 @@ On connect, the current state is sent immediately (focus-changed with current wi
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --all
+#### `--all`
 
 Subscribe to all event types
 
-#### --no-send-initial
+#### `--no-send-initial`
 
 Do not send the initial state on connect
 
@@ -1608,27 +1608,27 @@ Do not send the initial state on connect
 
 The following events can be subscribed to:
 
-#### focus-changed
+#### `focus-changed`
 
 Fired when window focus changes. Includes `windowId`, `workspace`.
 
-#### focused-monitor-changed
+#### `focused-monitor-changed`
 
 Fired when the focused monitor changes. Includes `workspace`, `monitorId`.
 
-#### focused-workspace-changed
+#### `focused-workspace-changed`
 
 Fired when the focused workspace changes. Includes `workspace`, `prevWorkspace`.
 
-#### mode-changed
+#### `mode-changed`
 
 Fired when the binding mode changes. Includes `mode`.
 
-#### window-detected
+#### `window-detected`
 
 Fired when a new window is detected. Includes `windowId`, `workspace`, `appBundleId`, `appName`.
 
-#### binding-triggered
+#### `binding-triggered`
 
 Fired when a keyboard binding is triggered. Includes `binding`, `mode`.
 
@@ -1664,17 +1664,17 @@ In single monitor setup the command is identical to `workspace` command.
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --fail-if-noop
+#### `--fail-if-noop`
 
 Exit with non-zero exit code if the workspace is already visible on the focused monitor.
 
 ### Arguments
 
 
-#### &lt;workspace&gt;
+#### `<workspace>`
 
 The workspace to operate on.
 
@@ -1696,31 +1696,31 @@ The operation is equivalent to dragging a window with the mouse.
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
-#### --window-id &lt;window-id&gt;
+#### `--window-id <window-id>`
 
 Act on the specified window instead of the focused window
 
-#### --swap-focus
+#### `--swap-focus`
 
 Swap focus away from the currently focused window.
 By default, this command does not change the focused window.
 
-#### --wrap-around
+#### `--wrap-around`
 
 Wrap around if the window is at the edge of the workspace (for `(left|down|up|right)`) or the start/end of the depth first order (for `(dfs-next|dfs-prev)`).
 
 ### Arguments
 
 
-#### (left|down|up|right)
+#### `(left|down|up|right)`
 
 Swaps the focused window with the nearest window in the given direction.
 
-#### (dfs-next|dfs-prev)
+#### `(dfs-next|dfs-prev)`
 
 Swaps the focused window with the next or previous window in the depth-first order (top-to-bottom and left-to-right) of windows in the current workspace tree.
 
@@ -1770,12 +1770,12 @@ Test if the application name contains "chrome" (case insensitive): `flightdeck t
 ### Arguments
 
 
-#### &lt;lhs&gt;
+#### `<lhs>`
 
 The left hand side of the expression.
 The left hand side must be one of the interpolation variables (see below).
 
-#### &lt;rhs&gt;
+#### `<rhs>`
 
 An integer, a boolean (`true`/`false`), a regex, or just a plain string.
 The way the expression is interpreted depends on the type of `&lt;lhs&gt;` and the infix operator.
@@ -1845,14 +1845,14 @@ Boolean. `true` if the monitor is main.
 ### Exit Codes
 
 
-#### 0
+#### `0`
 
 All the supplied conditions have evaluated to true.
-#### 1
+#### `1`
 
 One of the supplied conditions has evaluated to false.
 
-#### >1
+#### `>1`
 
 An error occurred.
 For instance, when `&lt;rhs&gt;` type doesn't match `&lt;lhs&gt;` type, or if the `test` subcommand couldn't be parsed.
@@ -1874,17 +1874,17 @@ You can use flightdeck-config command to inspect available bindings:
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --mode &lt;mode-id&gt;
+#### `--mode <mode-id>`
 
 Mode to search `&lt;binding&gt;` in
 
 ### Arguments
 
 
-#### &lt;binding&gt;
+#### `<binding>`
 
 Binding to trigger
 
@@ -1914,17 +1914,17 @@ The utility might return with a non-zero exit in case of errors (e.g. unexpected
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
 
 ### Exit Codes
 
 
-#### 0
+#### `0`
 
 No errors have occurred.
-#### >0
+#### `>0`
 
 An error occurred. For instance, unexpected CLI arguments.
 
@@ -1944,23 +1944,23 @@ flightdeck volume [-h|--help] set <number> [--no-gui]
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --no-gui
+#### `--no-gui`
 
 Don't show volume GUI indicator
 
 ### Arguments
 
 
-#### (up|down)
+#### `(up|down)`
 
 Increase or decrease the volume
-#### (mute-toggle|mute-on|mute-off)
+#### `(mute-toggle|mute-on|mute-off)`
 
 Toggle/On/Off mute
-#### set &lt;number&gt;
+#### `set <number>`
 
 Set volume to the exact value on scale from 0 to 100
 
@@ -2006,29 +2006,29 @@ Focuses next or previous workspace in *the list*.
 ### Options
 
 
-#### -h, --help
+#### `-h, --help`
 
 Print help
-#### --wrap-around
+#### `--wrap-around`
 
 Make it possible to jump between first and last workspaces using `(next|prev)`
 
-#### --auto-back-and-forth
+#### `--auto-back-and-forth`
 
 Automatic `back-and-forth` when switching to already focused workspace.
 Incompatible with `--fail-if-noop`
 
-#### --fail-if-noop
+#### `--fail-if-noop`
 
 Exit with non-zero exit code if switch to the already focused workspace.
 Incompatible with `--auto-back-and-forth`
 
-#### --stdin
+#### `--stdin`
 
 Read the list of workspaces from stdin.
 Incompatible with `--no-stdin`
 
-#### --no-stdin
+#### `--no-stdin`
 
 Ignore the list of workspaces from stdin, even if provided.
 Incompatible with `--stdin`
