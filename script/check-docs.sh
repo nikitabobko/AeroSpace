@@ -25,4 +25,9 @@ if grep -R "nikitabobko.github.io/AeroSpace" docs --exclude-dir=node_modules; th
     exit 1
 fi
 
+if grep -R "saadjs.github.io/FlightDeck" docs README.md --exclude-dir=node_modules; then
+    echo "Legacy FlightDeck documentation URLs remain" >&2
+    exit 1
+fi
+
 echo "Docs checks passed."

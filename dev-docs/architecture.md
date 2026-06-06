@@ -25,7 +25,7 @@
 - `../Sources/AppBundleTests/`.
   Tests
 - `../docs/`.
-  Documentation sources for site and man pages in Asciidoc format https://asciidoc.org/
+  Mintlify MDX documentation sources. `commands.mdx` also generates CLI help and man pages.
 
 ## client/server interaction
 
@@ -46,9 +46,9 @@ todo
 ../Sources/Common/cmdArgs/
 
 Command checklist:
-- [ ] Documentation in `../docs/aerospace-*` and `../docs/commands.adoc`
-  - [ ] Keep the `docs/aerospace-*` source filenames for easier upstream rebases; user-facing content and generated manpages use FlightDeck.
-  - [ ] Check that site looks alright `./.site/commands.html`
+- [ ] Documentation in `../docs/commands.mdx`
+  - [ ] Run `cd docs && npm run validate && npm run broken-links`
+  - [ ] Preview the command reference with `cd docs && npm run dev`
   - [ ] Check that man page looks alright `./.man`
 - [ ] Do `--window-id` and/or `--workspace` flags make sense for the command?
 - [ ] Shell completion `../grammar/commands-bnf-grammar.txt`

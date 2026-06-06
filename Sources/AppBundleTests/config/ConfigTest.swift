@@ -511,19 +511,17 @@ final class ConfigTest: XCTestCase {
     }
 
     func testConfigReferenceCoversAllTopLevelKeys() throws {
-        let refPath = projectRoot.appending(component: "docs/config-reference.adoc")
+        let refPath = projectRoot.appending(component: "docs/config-reference.mdx")
         let refContent = try String(contentsOf: refPath, encoding: .utf8)
 
         var missing: [String] = []
         for key in configParser.keys {
-            // Each accepted key must appear as a section anchor in the reference.
-            // Anchors use the idseparator '-' and idprefix '' pattern, so
-            // "config-version" appears as [[#config-version]] or [#config-version].
-            let anchor = "[#\(key)]"
-            if !refContent.contains(anchor) {
+            // Mintlify derives the section anchor from each level-two MDX heading.
+            let heading = "## \(key)"
+            if !refContent.contains(heading) {
                 missing.append(key)
             }
         }
-        XCTAssert(missing.isEmpty, "config-reference.adoc is missing sections for: \(missing.sorted().joined(separator: ", "))")
+        XCTAssert(missing.isEmpty, "config-reference.mdx is missing sections for: \(missing.sorted().joined(separator: ", "))")
     }
 }

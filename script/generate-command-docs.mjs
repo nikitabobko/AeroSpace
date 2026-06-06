@@ -76,6 +76,7 @@ const descriptionsOutput = [
 const roffEscape = (value) => value
   .replaceAll("\\", "\\e")
   .replace(/^-/, "\\-")
+  .replace(/^([.'])/, "\\&$1")
   .replaceAll("`", "")
   .replaceAll("*", "")
   .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
@@ -113,7 +114,7 @@ for (const command of commands) {
   const manName = command.name === "flightdeck" ? "flightdeck" : `flightdeck-${command.name}`;
   const synopsis = command.synopsis.split("\n").map(roffEscape).join("\n.br\n");
   const output = [
-    `.TH "${manName.toUpperCase()}" "1" "" "FlightDeck" "FlightDeck Manual"`,
+    `.TH "${manName.toUpperCase()}" "1" "June 2026" "FlightDeck" "FlightDeck Manual"`,
     ".SH NAME",
     `${manName} \\- ${roffEscape(command.description)}`,
     ".SH SYNOPSIS",

@@ -18,7 +18,7 @@ enable-normalization-opposite-orientation-for-nested-containers = false
 on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 
 [mode.main.binding]
-    # See: https://saadjs.github.io/FlightDeck/goodies#open-a-new-window-with-applescript
+    # See: https://flightdeck.saad.sh/goodies#open-a-new-window-with-applescript
     alt-enter = '''exec-and-forget osascript -e '
     tell application "Terminal"
         do script
@@ -51,7 +51,7 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
     alt-shift-space = 'layout floating tiling' # 'floating toggle' in i3
 
     # Not supported, because this command is redundant in FlightDeck mental model.
-    # See: https://saadjs.github.io/FlightDeck/guide#floating-windows
+    # See: https://flightdeck.saad.sh/guide#floating-windows
     #alt-space = 'focus toggle_tiling_floating'
 
     # `focus parent`/`focus child` are not yet supported, and it's not clear whether they

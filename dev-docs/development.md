@@ -23,9 +23,7 @@ FlightDeck tracks upstream AeroSpace closely. When diagnosing an upstream build 
 4.  If you want to regenerate the shell parser, install Java.
     -   `brew install openjdk`
     -   If you use Homebrew OpenJDK, make sure `/opt/homebrew/opt/openjdk/bin` is on `PATH` before running `generate.sh`.
-5.  If you want to build man pages, install Ruby >= 3.0 and < 5.0.
-    -   `brew install ruby`
-    -   Install asciidoctor using Ruby `bundler`. `cd FlightDeck && bundler install`
+5.  Install Node.js 22 to generate man pages and preview or validate the Mintlify documentation.
 6.  Install optional `xcbeautify` to make Xcode build logs readable. `brew install xcbeautify`
 
 ## 2. Create codesign certificate
@@ -48,7 +46,8 @@ If you only plan to build the debug version of FlightDeck, you can run it from t
 -   `swiftformat.sh` - Format the code.
 -   `run-debug.sh` - Run the FlightDeck debug app.
 -   `run-cli.sh` - Run `flightdeck` in CLI. Arguments are forwarded to the `flightdeck` binary.
--   `build-docs.sh` - Build the site and man pages to `.site` and `.man` dirs respectively.
+-   `build-docs.sh` - Generate man pages from `docs/commands.mdx` into `.man`.
+-   `cd docs && npm run dev` - Preview the Mintlify documentation site.
 -   `build-shell-completion.sh` - Build shell completion to `.shell-completion`.
     You can test that the completion works properly by sourcing the file `source ./.shell-completion/zsh/_flightdeck`
 -   `generate.sh` - Regenerate generated project files. `AeroSpace.xcodeproj` is generated, and some of the source files
