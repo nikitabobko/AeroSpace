@@ -70,7 +70,7 @@ If the key is omitted in the custom config, it falls back to the value in the de
 
 - `mode.*.binding`. It falls back to the empty TOML table. Your config is the source of truth for keyboard bindings. You must explicitly mention all the keyboard bindings and [binding modes](#binding-modes) in your config.
 - `on-focused-monitor-changed`. It falls back to the empty TOML array.
-- `exec` TOML table. See: [exec-env-vars](#exec-env-vars) (It's so boring and verbose, I don't even want to mention it in the `default-config.toml`)
+- `exec` TOML table. See: [exec environment variables](#exec-environment-variables) (It's so boring and verbose, I don't even want to mention it in the `default-config.toml`)
 
 Rule of thumb: all the "scalar like" values always fall back to the default config. All the "vector like" values fall back to the empty TOML array or table.
 
@@ -636,7 +636,7 @@ defaults write com.apple.spaces spans-displays -bool true && killall SystemUISer
 
 ## Callbacks
 
-### 'on-window-detected' callback
+### on-window-detected callback
 
 You can use `on-window-detected` callback to run commands every time a new window is detected.
 
@@ -679,7 +679,7 @@ Available window conditions are:
 
 There are several ways to know `app-id`:
 
-- Take a look at precompiled [list of Apple application IDs](/goodies#popular-apps-ids)
+- Take a look at the precompiled [list of Apple application IDs](/goodies#list-of-apple-application-ids)
 - You can use [`flightdeck list-apps`](/commands#list-apps) CLI command to get IDs of running applications
 - `mdls -name kMDItemCFBundleIdentifier -r /Applications/App.app`
 
@@ -711,7 +711,7 @@ Examples of automations:
     run = 'layout floating'
 ```
 
-### 'on-focus-changed' callbacks
+### on-focus-changed callbacks
 
 You can track focus changes using the following callbacks: `on-focus-changed` and `on-focused-monitor-changed`.
 
@@ -730,7 +730,7 @@ You shouldn't rely on the order callbacks are called, since it's an implementati
 The callbacks are "recursion resistant", which means that any focus change within the callback won't retrigger the callback.
 Changing the focus within these callbacks is a bad idea anyway, and the way it's handled will probably change in future versions.
 
-### 'exec-on-workspace-change' callback
+### exec-on-workspace-change callback
 
 `exec-on-workspace-change` callback allows to run arbitrary process when focused workspace changes.
 It may be useful for integrating with bars.
@@ -742,7 +742,7 @@ exec-on-workspace-change = ['/bin/bash', '-c',
 ]
 ```
 
-Besides the [`exec.env-vars`](#exec-env-vars), the process has access to the following environment variables:
+Besides the [`exec.env-vars`](#exec-environment-variables), the process has access to the following environment variables:
 
 - `AEROSPACE_FOCUSED_WORKSPACE` - the workspace user switched to
 - `AEROSPACE_PREV_WORKSPACE` - the workspace user switched from
@@ -768,7 +768,9 @@ When you switch to a workspace:
 
 You can move workspace to a different monitor with [move-workspace-to-monitor](/commands#move-workspace-to-monitor) command.
 
-The idea of making pool of workspaces shared is based on [#observation]*the observation* that most users have a limited set of workspaces on their secondary monitors.
+### Observation
+
+The idea of making the pool of workspaces shared is based on the observation that most users have a limited set of workspaces on their secondary monitors.
 Secondary monitors are frequently dedicated to specific tasks (browser, shell), or for monitoring various activities such as logs and dashboards.
 Thus, using one workspace per secondary monitor and "the rest" on the main monitor often makes sense.
 
