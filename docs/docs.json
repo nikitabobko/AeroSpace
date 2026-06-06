@@ -32,6 +32,7 @@
     "links": [
       {
         "label": "GitHub",
+        "icon": "github",
         "href": "https://github.com/saadjs/FlightDeck"
       }
     ],
