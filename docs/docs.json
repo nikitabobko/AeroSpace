@@ -1,11 +1,11 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "FlightDeck",
+  "name": "FlightDeck Docs",
   "description": "Signed and notarized i3-like tiling window manager for macOS",
   "logo": {
-    "light": "/assets/icon.png",
-    "dark": "/assets/icon.png"
+    "light": "/assets/logo-light.svg",
+    "dark": "/assets/logo-dark.svg"
   },
   "favicon": "/assets/icon.png",
   "colors": {

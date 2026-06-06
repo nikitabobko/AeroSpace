@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="190" height="40" viewBox="0 0 190 40" role="img" aria-labelledby="title">
+  <title id="title">FlightDeck Docs</title>
+  <rect width="40" height="40" rx="9" fill="#0ea5e9"/>
+  <path d="M9 9.5 31 20 9 30.5l5-10.5L9 9.5Z" fill="none" stroke="#082f49" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M14 20h12" stroke="#082f49" stroke-width="2.5" stroke-linecap="round"/>
+  <text x="52" y="26" fill="#0f172a" font-family="Inter, ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="600">FlightDeck Docs</text>
+</svg>
