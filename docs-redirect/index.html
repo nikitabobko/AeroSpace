@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex">
+    <title>FlightDeck documentation moved</title>
+    <script>
+      const page = location.pathname.split("/").pop().replace(/\.html$/, "");
+      const routes = {
+        "": "/",
+        index: "/",
+        guide: "/guide",
+        commands: "/commands",
+        "config-reference": "/config-reference",
+        compatibility: "/compatibility",
+        goodies: "/goodies",
+        goodness: "/goodies"
+      };
+      const destination = routes[page] ?? "/";
+      location.replace(`https://flightdeck.saad.sh${destination}${location.hash}`);
+    </script>
+    <noscript>
+      <meta http-equiv="refresh" content="0;url=https://flightdeck.saad.sh/">
+    </noscript>
+  </head>
+  <body>
+    <p>FlightDeck documentation moved to <a href="https://flightdeck.saad.sh/">flightdeck.saad.sh</a>.</p>
+  </body>
+</html>
