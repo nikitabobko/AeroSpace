@@ -1,8 +1,13 @@
 {
   "name": "flightdeck-docs",
   "private": true,
-  "description": "FlightDeck documentation build dependencies",
+  "description": "FlightDeck Mintlify documentation",
+  "scripts": {
+    "dev": "mint dev",
+    "validate": "mint validate",
+    "broken-links": "mint broken-links"
+  },
   "dependencies": {
-    "pagefind": "1.5.2"
+    "mint": "4.2.597"
   }
 }

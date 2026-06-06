@@ -1,0 +1,2064 @@
+---
+title: "Commands"
+description: "Complete FlightDeck CLI command reference."
+---
+
+Commands are also available as bundled manpages.
+
+## balance-sizes
+
+Balance sizes of all windows in the current workspace
+
+### Synopsis
+
+```shell
+flightdeck balance-sizes [-h|--help] [--workspace <workspace>]
+```
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --workspace &lt;workspace&gt;
+
+Act on the specified workspace instead of the focused workspace
+
+
+## close-all-windows-but-current
+
+On the focused workspace, close all windows but current
+
+### Synopsis
+
+```shell
+flightdeck close-all-windows-but-current [-h|--help] [--quit-if-last-window]
+```
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --quit-if-last-window
+
+Quit the apps instead of closing them if it's their last window
+
+
+## close
+
+Close the focused window
+
+### Synopsis
+
+```shell
+flightdeck close [-h|--help] [--quit-if-last-window] [--window-id <window-id>]
+```
+
+Normally, you don’t need to use this command, because macOS offers its own `cmd+w` binding.
+You might want to use the command from CLI for scripting purposes
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --quit-if-last-window
+
+Quit the app instead of closing if it's the last window of the app
+
+#### --window-id &lt;window-id&gt;
+
+Act on the specified window instead of the focused window
+
+
+## config
+
+Query FlightDeck config options
+
+### Synopsis
+
+```shell
+flightdeck config [-h|--help] --get <name> [--json] [--keys]
+flightdeck config [-h|--help] --major-keys
+flightdeck config [-h|--help] --all-keys
+flightdeck config [-h|--help] --config-path
+```
+
+For now, only `mode.*` config options are supported
+
+Under the hood, the config is represented as recursive data structure of maps, arrays, strings, and integers.
+
+Printing without `--json` or `--keys` flag is supported only for scalar types (strings and integers) and array of scalar types.
+Printing other complicated objects requires `--json` or `--keys` flag.
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --get &lt;name&gt;
+
+Get the value for a given key. You can inspect available keys with `--major-keys` or `--all-keys`
+#### --major-keys
+
+Print major keys
+#### --all-keys
+
+Print all available keys recursively
+#### --json
+
+Print result in JSON format
+#### --keys
+
+Print keys of the complicated object (map or array)
+#### --config-path
+
+Print absolute path to the loaded config
+
+### Examples
+
+
+- List all binding modes:
+
+```text
+$ flightdeck config --get mode --keys
+main
+service
+```
+- List all key bindings for 'main' binding mode:
+
+```text
+$ flightdeck config --get mode.main.binding --keys
+alt-1
+alt-2
+...
+```
+- List all key bindings for 'main' binding mode in JSON format:
+
+```text
+$ flightdeck config --get mode.main.binding --json
+{
+  "alt-w" : "workspace W",
+  "alt-y" : "workspace Y",
+  "alt-n" : "workspace N",
+  "alt-shift-e" : "move-node-to-workspace E",
+  "alt-shift-m" : "move-node-to-workspace M",
+  "alt-shift-t" : "move-node-to-workspace T",
+...
+```
+
+
+## debug-windows
+
+Interactive command to record Accessibility API debug information to create bug reports
+
+### Synopsis
+
+```shell
+flightdeck debug-windows [-h|--help] [--window-id <window-id>]
+```
+
+Use this command output to report bug reports about incorrect windows handling
+(e.g. some windows are floated when they shouldn't).
+
+The intended usage is the following:
+
+1. Run the command to start the debug session recording
+1. Focus problematic window or make the window appear.
+1. Run the command one more time to stop the debug session recording and print the results
+
+`debug-windows` command is *not stable API*.
+Please *don't rely on* the command existence and output format.
+The only intended use case is to report bugs about incorrect windows handling.
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --window-id &lt;window-id&gt;
+
+Print debug information of the specified window right away.
+Usage of this flag disables interactive mode.
+
+
+## enable
+
+Temporarily disable window management
+
+### Synopsis
+
+```shell
+flightdeck enable [-h|--help] toggle
+flightdeck enable [-h|--help] on [--fail-if-noop]
+flightdeck enable [-h|--help] off [--fail-if-noop]
+```
+
+When you disable FlightDeck, windows from currently invisible workspaces will be placed to the visible area of the screen
+
+Key events are not intercepted when FlightDeck is disabled
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --fail-if-noop
+
+Exit with non-zero exit code if already in the requested mode
+
+
+## exec-and-forget
+
+Run /bin/bash -c '<bash-script>'
+
+### Synopsis
+
+```shell
+flightdeck exec-and-forget <bash-script>
+```
+
+Run `/bin/bash -c '&lt;bash-script&gt;'`, and don't wait for the command termination.
+Stdout, stderr and exit code are ignored.
+
+For example, you can use this command to launch applications:
+
+```toml
+alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
+```
+
+`&lt;bash-script&gt;` is passed "as is" to bash without any transformations and escaping. `&lt;bash-script&gt;` is treated as suffix of the TOML string, it's not even an argument in classic CLI sense
+
+- The command is available in config
+- The command is *NOT* available in CLI
+
+
+## false
+
+Return false value
+
+### Synopsis
+
+```shell
+flightdeck false [-h|--help]
+```
+
+The `false` utility returns with a non-zero exit code.
+
+
+## flatten-workspace-tree
+
+Flatten the tree of the focused workspace
+
+### Synopsis
+
+```shell
+flightdeck flatten-workspace-tree [-h|--help] [--workspace <workspace>]
+```
+
+The command is useful when you messed up with your layout, and it's easier to "reset" it and start again.
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --workspace &lt;workspace&gt;
+
+Act on the specified workspace instead of the focused workspace
+
+
+## focus-back-and-forth
+
+Switch between the current and previously focused elements back and forth
+
+### Synopsis
+
+```shell
+flightdeck focus-back-and-forth [-h|--help]
+```
+
+.
+The element is either a window or an empty workspace.
+
+FlightDeck stores only one previously focused window in history,
+which means that if you close the previous window,
+`focus-back-and-forth` has no window to switch focus to.
+In that case, the command will exit with non-zero exit code.
+
+That's why it may be preferred to combine `focus-back-and-forth` with `workspace-back-and-forth`: 
+```text
+flightdeck focus-back-and-forth || flightdeck workspace-back-and-forth
+```
+
+Also see: [ workspace-back-and-forth](#workspace-back-and-forth)
+
+
+## focus-monitor
+
+Focus monitor by relative direction, by order, or by pattern
+
+### Synopsis
+
+```shell
+flightdeck focus-monitor [-h|--help] [--wrap-around] (left|down|up|right)
+flightdeck focus-monitor [-h|--help] [--wrap-around] (next|prev)
+flightdeck focus-monitor [-h|--help] <monitor-pattern>...
+```
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --wrap-around
+
+Make it possible to wrap around focus
+
+### Arguments
+
+
+#### (left|down|up|right)
+
+Focus monitor in direction relative to the focused monitor
+
+#### (next|prev)
+
+Focus next|prev monitor in order they appear in tray icon
+
+#### &lt;monitor-pattern&gt;...
+
+Find the first matching monitor and focus it.
+Multiple monitor patterns is useful for different monitor configurations.
+Monitor patterns follow the same format as in `workspace-to-monitor-force-assignment` config option
+
+
+## focus
+
+Set focus to a window.
+
+### Synopsis
+
+```shell
+flightdeck focus [-h|--help] [--ignore-floating] [--wrap-around]
+                [--boundaries <boundary>] [--boundaries-action <action>]
+                (left|down|up|right)
+flightdeck focus [-h|--help] [--ignore-floating] [--wrap-around]
+                [--boundaries <boundary>] [--boundaries-action <action>]
+                (dfs-next|dfs-prev)
+flightdeck focus [-h|--help] --window-id <window-id>
+flightdeck focus [-h|--help] --dfs-index <dfs-index>
+```
+
+Contrary to i3, `focus` command doesn't have a separate argument to focus floating windows.
+From `focus` command perspective, floating windows are part of [the tree](/guide#tree).
+The floating window parent container is determined as the smallest tiling container that contains the center of the floating window.
+The technique eliminates the need for an additional binding for floating windows.
+This behavior can be disabled with `--ignore-floating` flag.
+
+`focus child|parent` isn't supported because the necessity of this operation is under the question.
+https://github.com/nikitabobko/AeroSpace/issues/5
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --boundaries &lt;boundary&gt;
+
+Defines focus boundaries. 
+`&lt;boundary&gt;` possible values: `(workspace|all-monitors-outer-frame)`. 
+The default is: `workspace`
+
+#### --boundaries-action &lt;action&gt;
+
+Defines the behavior when requested to cross the `&lt;boundary&gt;`. 
+`&lt;action&gt;` possible values: `(stop|fail|wrap-around-the-workspace|wrap-around-all-monitors)`. 
+The default is: `stop`
+
+#### --wrap-around
+
+An alias for `--boundaries-action wrap-around-the-workspace`.
+The flag is incompatible with either `--boundaries-action` or `--boundaries`.
+
+#### --window-id &lt;window-id&gt;
+
+Focus the window with specified `&lt;window-id&gt;`
+
+#### --dfs-index &lt;dfs-index&gt;
+
+Focus window by its index, based on a depth-first search (DFS) of the window within the workspace tree.
+Index is 0-based.
+
+#### --ignore-floating
+
+Don't perceive floating windows as part of the tree.
+It may be useful for more reliable scripting.
+
+### Arguments
+
+
+#### (left|down|up|right)
+
+Set focus to the nearest window in the given direction.
+
+#### (dfs-next|dfs-prev)
+
+Set focus to the window before or after the current window in the depth-first order (top-to-bottom and left-to-right) of windows in the current workspace tree.
+In this mode, `--boundaries` must be `workspace` (the default) and `--boundaries-action` can be set to one of `(stop|fail|wrap-around-the-workspace)`.
+
+
+## fullscreen
+
+Toggle the fullscreen mode for the focused window
+
+### Synopsis
+
+```shell
+flightdeck fullscreen [-h|--help]     [--window-id <window-id>] [--no-outer-gaps]
+flightdeck fullscreen [-h|--help] on  [--window-id <window-id>] [--no-outer-gaps] [--fail-if-noop]
+flightdeck fullscreen [-h|--help] off [--window-id <window-id>] [--fail-if-noop]
+```
+
+Switching to a different tiling window within the same workspace while the current focused window is in fullscreen mode results in the fullscreen window exiting fullscreen mode.
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --no-outer-gaps
+
+Remove the outer gaps when in fullscreen mode
+#### --fail-if-noop
+
+Exit with non-zero exit code if already fullscreen or already not fullscreen
+
+#### --window-id &lt;window-id&gt;
+
+Act on the specified window instead of the focused window
+
+### Arguments
+
+
+#### on, off
+
+`on` means enter fullscreen mode. `off` means exit fullscreen mode.
+Toggle between the two if not specified
+
+
+## join-with
+
+Put the focused window and the nearest node in the specified direction under a common parent container
+
+### Synopsis
+
+```shell
+flightdeck join-with [-h|--help] [--window-id <window-id>] (left|down|up|right)
+```
+
+### Examples
+
+
+Given this layout
+
+```text
+h_tiles
+├── window 1
+├── window 2 (focused)
+└── window 3
+```
+
+`join-with right` will result in the following layout
+
+```text
+h_tiles
+├── window 1
+└── v_tiles
+    ├── window 2 (focused)
+    └── window 3
+```
+
+NOTE: `join-with` is a high-level replacement for i3's [split command](https://i3wm.org/docs/userguide.html#_splitting_containers).
+There is an observation that the only reason why you might want to split a node is to put several windows under a common "umbrella" parent. Unlike `split`, `join-with` can be used with [`enable-normalization-flatten-containers`](/guide#normalization)
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --window-id &lt;window-id&gt;
+
+Act on the specified window instead of the focused window
+
+
+## layout
+
+Change layout of the focused window to the given layout
+
+### Synopsis
+
+```shell
+flightdeck layout [-h|--help] [--window-id <window-id>]
+                 (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
+```
+
+If several arguments are supplied then finds the first argument that doesn't describe the currently active layout, and applies the layout.
+
+- Change both tiling layout and orientation in one go: `h_tiles|v_tiles|h_accordion|v_accordion`
+- Change tiling layout but preserve orientation: `tiles|accordion`
+- Change orientation but preserve layout: `horizontal|vertical`
+- Toggle floating/tiling mode: `tiling|floating`
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --window-id &lt;window-id&gt;
+
+Act on the specified window instead of the focused window
+
+### Examples
+
+
+- Toggle between `floating` and `tiling` layouts (order of args doesn't matter): 
+`flightdeck layout floating tiling`
+
+- Toggle orientation (order of args doesn't matter): 
+`flightdeck layout horizontal vertical`
+
+- Toggle between `tiles` and `accordion` layouts (order of args doesn't matter): 
+`flightdeck layout tiles accordion`
+
+- Switch to `tiles` layout. Toggle the layout orientation if already in `tiles` layout: 
+`flightdeck layout tiles horizontal vertical`
+
+
+## list-apps
+
+Print the list of running applications that appears in the Dock and may have a user interface
+
+### Synopsis
+
+```shell
+flightdeck list-apps [-h|--help] [--macos-native-hidden [no]] [--format <output-format>] [--count] [--json]
+```
+
+The command is useful to inspect list of applications to compose filter for [on-window-detected callback](/guide#on-window-detected-callback)
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --macos-native-hidden [no]
+
+Filter results to only print hidden applications.
+`[no]` inverts the condition
+
+#### --format &lt;output-format&gt;
+
+Specify output format. See "Output Format" section for more details.
+Incompatible with `--count`
+
+#### --count
+
+Output only the number of apps.
+Incompatible with: `--format`, `--json`
+
+#### --json
+
+Output in JSON format.
+Can be used in combination with `--format` to specify which data to include into the json.
+Incompatible with `--count`
+
+### Output Format
+
+
+Output format can be configured with optional `[--format &lt;output-format&gt;]` option.
+`&lt;output-format&gt;` supports [string interpolation](https://en.wikipedia.org/wiki/String_interpolation).
+
+If not specified, the default `&lt;output-format&gt;` is: 
+`%{app-pid}%{right-padding} | %{app-bundle-id}%{right-padding} | %{app-name}`
+
+The following variables can be used inside `&lt;output-format&gt;`:
+
+#### %{app-bundle-id}
+
+String. Application unique identifier. [Bundle ID](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids)
+#### %{app-name}
+
+String. Application name
+#### %{app-pid}
+
+Number. [UNIX process identifier](https://en.wikipedia.org/wiki/Process_identifier)
+#### %{app-exec-path}
+
+String. Application executable path
+#### %{app-bundle-path}
+
+String. Application bundle path
+
+#### %{right-padding}
+
+A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column
+#### %{newline}
+
+Unicode U+000A newline symbol `\n`
+#### %{tab}
+
+Unicode U+0009 tab symbol `\t`
+
+
+## list-exec-env-vars
+
+List environment variables that exec-* commands and callbacks are run with
+
+### Synopsis
+
+```shell
+flightdeck list-exec-env-vars [-h|--help]
+```
+
+Examples of commands and callbacks:
+
+- `flightdeck exec-and-forget` command
+- `exec-on-workspace-change-callback`
+
+
+## list-modes
+
+Print a list of modes currently specified in the configuration
+
+### Synopsis
+
+```shell
+flightdeck list-modes [-h|--help] [--current] [--count] [--json]
+```
+
+See [the guide](/guide#binding-modes) for documentation about binding modes
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --current
+
+Only print the currently active mode.
+Incompatible with `--count`
+
+#### --count
+
+Output only the number of modes.
+Incompatible with `--current`, `--json`
+
+#### --json
+
+Output in JSON format.
+Incompatible with `--count`
+
+
+## list-monitors
+
+Print monitors that satisfy conditions
+
+### Synopsis
+
+```shell
+flightdeck list-monitors [-h|--help] [--focused [no]] [--mouse [no]] [--format <output-format>] [--count] [--json]
+```
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --focused [no]
+
+Filter results to only print the focused monitor.
+`[no]` inverts the condition
+
+#### --mouse [no]
+
+Filter results to only print the monitor with the mouse.
+`[no]` inverts the condition
+
+#### --format &lt;output-format&gt;
+
+Specify output format.
+See "Output Format" section for more details.
+Incompatible with `--count`
+
+#### --count
+
+Output only the number of monitors.
+Incompatible with `--format`
+
+#### --json
+
+Output in JSON format.
+Can be used in combination with `--format` to specify which data to include into the json.
+Incompatible with `--count`
+
+### Output Format
+
+
+Output format can be configured with optional `[--format &lt;output-format&gt;]` option.
+`&lt;output-format&gt;` supports [string interpolation](https://en.wikipedia.org/wiki/String_interpolation).
+
+If not specified, the default `&lt;output-format&gt;` is: 
+`%{monitor-id}%{right-padding} | %{monitor-name}`
+
+The following variables can be used inside `&lt;output-format&gt;`:
+
+#### %{monitor-id}
+
+1-based Number. Sequential number of the belonging monitor
+#### %{monitor-appkit-nsscreen-screens-id}
+
+1-based index of the belonging monitor in `NSScreen.screens` array. Useful for integration with other tools that might be using `NSScreen.screens` ordering (like sketchybar).
+#### %{monitor-name}
+
+String. Name of the belonging monitor
+#### %{monitor-is-main}
+
+Boolean. True if the monitor is main.
+
+#### %{right-padding}
+
+A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column
+#### %{newline}
+
+Unicode U+000A newline symbol `\n`
+#### %{tab}
+
+Unicode U+0009 tab symbol `\t`
+
+
+## list-windows
+
+Print windows that satisfy conditions
+
+### Synopsis
+
+```shell
+flightdeck list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
+                       [--monitor <monitor>...] [--workspace <workspace>...]
+                       [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>]
+                       [--count] [--json]
+flightdeck list-windows [-h|--help] --all [--format <output-format>] [--count] [--json]
+flightdeck list-windows [-h|--help] --focused [--format <output-format>] [--count] [--json]
+```
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --all
+
+Alias for `--monitor all`.
+Please use this option *with caution*.
+Use it when you really need to get workspaces/windows from *all monitors*.
+
+For multi-monitor setup `--monitor focused` is almost always a preferred option.
+If you're automating something then you don't want to mess up with workspaces/windows on a different monitor.
+
+With great power comes great responsibility.
+
+#### --focused
+
+Print the focused window.
+Please note that it is possible for no window to be in focus.
+In that case, error is reported.
+
+#### --workspace &lt;workspace&gt;...
+
+Filter results to only print windows that belong to either of specified workspaces.
+`&lt;workspace&gt;...` is a space-separated list of workspace names.
+
+Possible values: 
+
+1. Workspace name
+1. `focused` is a special workspace name that represents the focused workspace
+1. `visible` is a special workspace name that represents all currently visible workspaces (In multi-monitor setup, there are multiple visible workspaces)
+
+#### --monitor &lt;monitors&gt;
+
+Filter results to only print workspaces/windows that are attached to specified monitors.
+`&lt;monitors&gt;` is a space separated list of monitor IDs. 
+
+Possible monitors IDs: 
+
+1. 1-based index of a monitor as if monitors were ordered horizontally from left to right
+1. `all` is a special monitor ID that represents all monitors
+1. `mouse` is a special monitor ID that represents monitor with the mouse
+1. `focused` is a special monitor ID that represents the focused monitor
+
+#### --pid &lt;pid&gt;
+
+Filter results to only print windows that belong to the Application with specified `&lt;pid&gt;`
+
+#### --app-bundle-id &lt;app-bundle-id&gt;
+
+Filter results to only print windows that belong to the Application with specified [Bundle ID](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids)
+
+Deprecated (but still supported) flag name: `--app-id`
+
+#### --format &lt;output-format&gt;
+
+Specify output format. See "Output Format" section for more details.
+Incompatible with `--count`
+
+#### --count
+
+Output only the number of windows.
+Incompatible with `--format`
+
+#### --json
+
+Output in JSON format.
+Can be used in combination with `--format` to specify which data to include into the json.
+Incompatible with `--count`
+
+### Output Format
+
+
+Output format can be configured with optional `[--format &lt;output-format&gt;]` option.
+`&lt;output-format&gt;` supports [string interpolation](https://en.wikipedia.org/wiki/String_interpolation).
+
+If not specified, the default `&lt;output-format&gt;` is: 
+`%{window-id}%{right-padding} | %{app-name}%{right-padding} | %{window-title}`
+
+The following variables can be used inside `&lt;output-format&gt;`:
+
+#### %{window-id}
+
+Number. Window unique ID
+#### %{window-title}
+
+String. Window title
+#### %{window-is-fullscreen}
+
+Boolean. Is window in fullscreen by `flightdeck fullscreen` command
+#### %{window-layout}
+
+String. An alias for `%{window-parent-container-layout}`
+#### %{window-parent-container-layout}
+
+String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`, `floating`) of the window's parent container.
+
+#### %{app-bundle-id}
+
+String. Application unique identifier. [Bundle ID](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids)
+#### %{app-name}
+
+String. Application name
+#### %{app-pid}
+
+Number. [UNIX process identifier](https://en.wikipedia.org/wiki/Process_identifier)
+#### %{app-exec-path}
+
+String. Application executable path
+#### %{app-bundle-path}
+
+String. Application bundle path
+
+#### %{workspace}
+
+String. Name of the belonging workspace
+#### %{workspace-is-focused}
+
+Boolean. `true` if the workspace has focus
+#### %{workspace-is-visible}
+
+Boolean. `true` if the workspace is visible. A workspace can be visible but not focused in a multi-monitor setup
+#### %{workspace-root-container-layout}
+
+String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`) of the workspace the window belongs to.
+
+#### %{monitor-id}
+
+1-based Number. Sequential number of the belonging monitor.
+#### %{monitor-appkit-nsscreen-screens-id}
+
+1-based index of the belonging monitor in `NSScreen.screens` array. Useful for integration with other tools that might be using `NSScreen.screens` ordering (like sketchybar).
+#### %{monitor-name}
+
+String. Name of the belonging monitor
+#### %{monitor-is-main}
+
+Boolean. `true` if the monitor is main.
+
+#### %{right-padding}
+
+A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column
+#### %{newline}
+
+Unicode U+000A newline symbol `\n`
+#### %{tab}
+
+Unicode U+0009 tab symbol `\t`
+
+
+## list-workspaces
+
+Print workspaces that satisfy conditions
+
+### Synopsis
+
+```shell
+flightdeck list-workspaces [-h|--help] --monitor <monitor>... [--visible [no]] [--empty [no]] [--format <output-format>] [--count] [--json]
+flightdeck list-workspaces [-h|--help] --all [--format <output-format>] [--count] [--json]
+flightdeck list-workspaces [-h|--help] --focused [--format <output-format>] [--count] [--json]
+```
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --format &lt;output-format&gt;
+
+Specify output format. See "Output Format" section for more details
+
+#### --all
+
+Alias for `--monitor all`.
+Please use this option *with caution*.
+Use it when you really need to get workspaces/windows from *all monitors*.
+
+For multi-monitor setup `--monitor focused` is almost always a preferred option.
+If you're automating something then you don't want to mess up with workspaces/windows on a different monitor.
+
+With great power comes great responsibility.
+
+#### --focused
+
+An alias for `--monitor focused --visible`.
+Always prints a single workspace
+
+#### --monitor &lt;monitors&gt;
+
+Filter results to only print workspaces/windows that are attached to specified monitors.
+`&lt;monitors&gt;` is a space separated list of monitor IDs. 
+
+Possible monitors IDs: 
+
+1. 1-based index of a monitor as if monitors were ordered horizontally from left to right
+1. `all` is a special monitor ID that represents all monitors
+1. `mouse` is a special monitor ID that represents monitor with the mouse
+1. `focused` is a special monitor ID that represents the focused monitor
+
+#### --visible [no]
+
+Filter results to only print currently visible workspaces.
+`[no]` inverts the condition.
+Several workspaces can be visible in multi-monitor setup
+
+#### --empty [no]
+
+Filter results to only print empty workspaces.
+`[no]` inverts the condition.
+
+#### --format &lt;output-format&gt;
+
+Specify output format.
+See "Output Format" section for more details.
+Incompatible with `--count`
+
+#### --count
+
+Output only the number of workspaces.
+Incompatible with `--format`
+
+#### --json
+
+Output in JSON format.
+Can be used in combination with `--format` to specify which data to include into the json.
+Incompatible with `--count`
+
+### Output Format
+
+
+Output format can be configured with optional `[--format &lt;output-format&gt;]` option.
+`&lt;output-format&gt;` supports [string interpolation](https://en.wikipedia.org/wiki/String_interpolation).
+
+If not specified, the default `&lt;output-format&gt;` is: 
+`%{workspace}`
+
+The following variables can be used inside `&lt;output-format&gt;`:
+
+#### %{workspace}
+
+String. Name of the belonging workspace
+#### %{workspace-is-focused}
+
+Boolean. `true` if the workspace has focus
+#### %{workspace-is-visible}
+
+Boolean. `true` if the workspace is visible. A workspace can be visible but not focused in a multi-monitor setup
+#### %{workspace-root-container-layout}
+
+String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`) of the workspace's root container
+
+#### %{monitor-id}
+
+1-based Number. Sequential number of the belonging monitor
+#### %{monitor-appkit-nsscreen-screens-id}
+
+1-based Number. Sequential number of the belonging monitor in `NSScreen.screens`. Useful for integration with other tools that might be using `NSScreen.screens` ordering (like sketchybar).
+#### %{monitor-name}
+
+String. Name of the belonging monitor
+#### %{monitor-is-main}
+
+Boolean. `true` if the monitor is main.
+
+#### %{right-padding}
+
+A special variable which expands with a minimum number of spaces required to form a right padding in the appropriate column
+#### %{newline}
+
+Unicode U+000A newline symbol `\n`
+#### %{tab}
+
+Unicode U+0009 tab symbol `\t`
+
+
+## macos-native-fullscreen
+
+Toggle macOS fullscreen for the focused window
+
+### Synopsis
+
+```shell
+flightdeck macos-native-fullscreen [-h|--help] [--window-id <window-id>]
+flightdeck macos-native-fullscreen [-h|--help] [--window-id <window-id>] [--fail-if-noop] on
+flightdeck macos-native-fullscreen [-h|--help] [--window-id <window-id>] [--fail-if-noop] off
+```
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --fail-if-noop
+
+Exit with non-zero exit code if already fullscreen or already not fullscreen
+
+#### --window-id &lt;window-id&gt;
+
+Act on the specified window instead of the focused window
+
+### Arguments
+
+
+#### on, off
+
+`on` means enter fullscreen mode.
+`off` means exit fullscreen mode.
+Toggle between the two if not specified
+
+
+## macos-native-minimize
+
+Minimize focused window
+
+### Synopsis
+
+```shell
+flightdeck macos-native-minimize [-h|--help] [--window-id <window-id>]
+```
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --window-id &lt;window-id&gt;
+
+Act on the specified window instead of the focused window
+
+
+## mode
+
+Activate the specified binding mode
+
+### Synopsis
+
+```shell
+flightdeck mode [-h|--help] <binding-mode>
+```
+
+See [the guide](/guide#binding-modes) for documentation about binding modes
+
+
+## move-mouse
+
+Move mouse to the requested position
+
+### Synopsis
+
+```shell
+flightdeck move-mouse [-h|--help] [--fail-if-noop] <mouse-position>
+```
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --fail-if-noop
+
+Exit with non-zero exit code if mouse is already at the requested position.
+The flag is compatible only with `window-lazy-center` and `monitor-lazy-center` arguments.
+
+### Arguments
+
+
+#### &lt;mouse-position&gt;
+
+Position to move mouse to.
+Possible values:
+
+- `monitor-lazy-center`. Move mouse to the center of the focused monitor, *unless* it is already within the monitor boundaries.
+- `monitor-force-center`. Move mouse to the center of the focused monitor.
+- `window-lazy-center`. Move mouse to the center of the focused window, *unless* it is already within the window boundaries. Exit with non-zero code if no window is focused.
+- `window-force-center`. Move mouse to the center of the focused window. Exit with non-zero code if no window is focused.
+
+### Examples
+
+
+- Try to move mouse to the center of the window. If there is no window in focus, move mouse to the center of the monitor: 
+`flightdeck move-mouse window-lazy-center || flightdeck move-mouse monitor-lazy-center`
+
+
+## move-node-to-monitor
+
+Move window to monitor targeted by relative direction, by order, or by pattern
+
+### Synopsis
+
+```shell
+flightdeck move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
+                               [--wrap-around] (left|down|up|right|next|prev)
+flightdeck move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
+                               [--fail-if-noop] <monitor-pattern>...
+```
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --wrap-around
+
+Make it possible to wrap around the movement
+
+#### --focus-follows-window
+
+Make sure that the window in question receives focus after moving.
+This flag is a shortcut for manually running `flightdeck-workspace`/`flightdeck-focus` after `move-node-to-monitor` successful execution.
+
+#### --fail-if-noop
+
+Exit with non-zero code if moving window to monitor it already belongs to
+
+#### --window-id &lt;window-id&gt;
+
+Act on the specified window instead of the focused window
+
+### Arguments
+
+
+#### (left|down|up|right)
+
+Move window to monitor in direction relative to the focused monitor
+
+#### (next|prev)
+
+Move window to next|prev monitor in order they appear in tray icon
+
+#### &lt;monitor-pattern&gt;...
+
+Find the first matching monitor and move the window there.
+Multiple monitor patterns is useful for different monitor configurations.
+Monitor patterns follow the same format as in `workspace-to-monitor-force-assignment` config option
+
+
+## move-node-to-workspace
+
+Move the focused window to the specified workspace
+
+### Synopsis
+
+```shell
+flightdeck move-node-to-workspace [-h|--help] [--focus-follows-window] [--wrap-around]
+                                 [--stdin|--no-stdin]
+                                 (next|prev)
+flightdeck move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-if-noop]
+                                 [--window-id <window-id>] <workspace-name>
+```
+
+`(next|prev)` is identical to `workspace (next|prev)`
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --wrap-around
+
+Make it possible to jump between first and last workspaces using (next|prev)
+#### --fail-if-noop
+
+Exit with non-zero code if move window to workspace it already belongs to
+
+#### --focus-follows-window
+
+Make sure that the window in question receives focus after moving.
+This flag is a shortcut for manually running `flightdeck-workspace`/`flightdeck-focus` after `move-node-to-workspace` successful execution.
+
+#### --window-id &lt;window-id&gt;
+
+Act on the specified window instead of the focused window
+
+#### --stdin
+
+Read the list of workspaces from stdin.
+Incompatible with `--no-stdin`
+
+#### --no-stdin
+
+Ignore the list of workspaces from stdin, even if provided.
+Incompatible with `--stdin`
+
+### Arguments
+
+
+#### (next|prev)
+
+Move window to next or prev workspace
+#### &lt;workspace-name&gt;
+
+Specifies workspace name where to move window to
+
+
+## move-workspace-to-monitor
+
+Move workspace to monitor targeted by relative direction, by order, or by pattern.
+
+### Synopsis
+
+```shell
+flightdeck move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (left|down|up|right)
+flightdeck move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (next|prev)
+flightdeck move-workspace-to-monitor [-h|--help] [--workspace <workspace>] <monitor-pattern>...
+```
+
+Focus follows the focused workspace, so the workspace stays focused.
+
+The command fails for workspaces [that have monitor force assignment](/guide#assign-workspaces-to-monitors).
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --wrap-around
+
+Allows to move workspace between first and last monitors
+
+#### --workspace &lt;workspace&gt;
+
+Act on the specified workspace instead of the focused workspace
+
+### Arguments
+
+
+#### (left|down|up|right)
+
+Move workspace to monitor in direction relative to the focused monitor
+
+#### (next|prev)
+
+Move the workspace to next or prev monitor.
+'next' or 'prev' monitor is calculated relative to the monitor `&lt;workspace&gt;` currently belongs to.
+
+#### &lt;monitor-pattern&gt;
+
+Find the first matching monitor and move the workspace there.
+Multiple monitor patterns is useful for different monitor configurations.
+Monitor patterns follow the same format as in `workspace-to-monitor-force-assignment` config option
+
+
+## move
+
+Move the focused window in the given direction
+
+### Synopsis
+
+```shell
+flightdeck move [-h|--help] [--window-id <window-id>] [--boundaries <boundary>] [--boundaries-action <boundary-action>] (left|down|up|right)
+```
+
+Move the focused window in the given direction. See the "Examples" section for more details.
+
+Deprecated name: `move-through`
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --window-id &lt;window-id&gt;
+
+Act on the specified window instead of the focused window
+
+#### --boundaries &lt;boundary&gt;
+
+Defines move boundaries. 
+`&lt;boundary&gt;` possible values: `(workspace|all-monitors-outer-frame)`. 
+The default is: `workspace`
+
+#### --boundaries-action &lt;boundary-action&gt;
+
+Defines the behavior when requested to move across the `&lt;boundary&gt;`. 
+`&lt;boundary-action&gt;` possible values: `(stop|fail|create-implicit-container)`. 
+The default is: `create-implicit-container`
+
+### Examples
+
+
+1. Given this layout
+
+```text
+h_tiles
+├── window 1 (focused)
+└── window 2
+```
+
+`move right` will result in the following layout
+
+```text
+h_tiles
+├── window 2
+└── window 1 (focused)
+```
+
+1. Given this layout
+
+```text
+h_tiles
+├── window 1
+├── window 2 (focused)
+└── v_tiles
+    ├── window 3
+    └── window 4
+```
+
+`move right` will result in the following layout
+
+```text
+h_tiles
+├── window 1
+└── v_tiles
+    ├── window 3
+    ├── window 2 (focused)
+    └── window 4
+```
+
+1. Given this layout
+
+```text
+h_tiles
+├── window 1
+└── v_tiles
+    ├── window 3
+    ├── window 2 (focused)
+    └── window 4
+```
+
+`move left` will result in the following layout
+
+```text
+h_tiles
+├── window 1
+├── window 2 (focused)
+└── v_tiles
+    ├── window 3
+    └── window 4
+```
+
+1. *Implicit container example*
+
+In some cases, `move` needs to implicitly create a container to fulfill your command.
+
+Given this layout
+
+```text
+h_tiles
+├── window 1
+├── window 2 (focused)
+└── window 3
+```
+
+`move up` will result in the following layout
+
+```text
+v_tiles
+├── window 2 (focused)
+└── h_tiles
+    ├── window 1
+    └── window 3
+```
+
+`v_tiles` is an implicitly created container.
+
+*Remark*: If `--boundaries` is set to `all-monitors-outer-frame` and there is a monitor in the `up` direction,
+the implicit container isn't created.
+
+Instead, `window 2` would be moved to the monitor above the current.
+
+
+## reload-config
+
+Reload currently active config
+
+### Synopsis
+
+```shell
+flightdeck reload-config [-h|--help] [--no-gui] [--dry-run]
+```
+
+If the config contains errors they will be printed to stdout, and GUI will open to show the errors.
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --no-gui
+
+Don't open GUI to show error. Only use stdout to report errors
+#### --dry-run
+
+Validate the config and show errors (if any) but don't reload the config
+
+### Exit Codes
+
+
+#### 0
+
+Success. The config is reloaded successfully.
+#### non-zero exit code
+
+Failure. The config contains errors.
+
+
+## resize
+
+Resize the focused window
+
+### Synopsis
+
+```shell
+flightdeck resize [-h|--help] [--window-id <window-id>] (smart|smart-opposite|width|height) [+|-]<number>
+```
+
+The dimension to resize is chosen by the first argument
+
+- `width` changes width
+- `height` changes height
+- `smart` changes width if the parent has horizontal orientation, and
+it changes height if the parent has vertical orientation
+- `smart-opposite` resizes the opposite axis of smart
+
+Second argument controls how much the size changes
+
+- If the `&lt;number&gt;` is prefixed with `+` then the dimension is increased
+- If the `&lt;number&gt;` is prefixed with `-` then the dimension is decreased
+- If the `&lt;number&gt;` is prefixed with neither `+` nor `-` then the command changes the absolute value of the dimension
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --window-id &lt;window-id&gt;
+
+Act on the specified window instead of the focused window
+
+
+## split
+
+Split focused window
+
+### Synopsis
+
+```shell
+flightdeck split [-h|--help] [--window-id <window-id>] (horizontal|vertical|opposite)
+```
+
+`split` command exists solely for compatibility with i3.
+Unless you're hardcore i3 user who knows what they are doing, it's recommended to use `join-with`
+
+*If the parent of focused window contains more than one child*, then the command
+
+1. Creates a new tiling container
+1. Replaces the focused window with the container
+1. Puts the focused window into the container as its only child
+
+The argument configures orientation of the newly created container.
+`opposite` means opposite orientation compared to the parent container.
+
+*If the parent of the focused window contains only a single child* (the window itself), then `split` command changes the orientation of the parent container
+
+IMPORTANT: `split` command has no effect if `enable-normalization-flatten-containers` is turned on.
+Consider using `join-with` if you want to keep `enable-normalization-flatten-containers` enabled
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --window-id &lt;window-id&gt;
+
+Act on the specified window instead of the focused window
+
+
+## subscribe
+
+Subscribe to FlightDeck events and receive notifications via socket
+
+### Synopsis
+
+```shell
+flightdeck subscribe [-h|--help] [--all] [--no-send-initial] [<event>...]
+```
+
+This command connects to the FlightDeck server and receives real-time event notifications as JSON lines.
+The connection remains open until terminated (e.g., via Ctrl+C).
+
+On connect, the current state is sent immediately (focus-changed with current window/workspace, mode-changed with current mode, etc.).
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --all
+
+Subscribe to all event types
+
+#### --no-send-initial
+
+Do not send the initial state on connect
+
+### Arguments
+
+
+The following events can be subscribed to:
+
+#### focus-changed
+
+Fired when window focus changes. Includes `windowId`, `workspace`.
+
+#### focused-monitor-changed
+
+Fired when the focused monitor changes. Includes `workspace`, `monitorId`.
+
+#### focused-workspace-changed
+
+Fired when the focused workspace changes. Includes `workspace`, `prevWorkspace`.
+
+#### mode-changed
+
+Fired when the binding mode changes. Includes `mode`.
+
+#### window-detected
+
+Fired when a new window is detected. Includes `windowId`, `workspace`, `appBundleId`, `appName`.
+
+#### binding-triggered
+
+Fired when a keyboard binding is triggered. Includes `binding`, `mode`.
+
+### Output Format
+
+
+Events are output as JSON lines (one JSON object per line):
+
+```text
+{"_event":"focused-monitor-changed","monitorId":1,"workspace":"M"}
+{"_event":"focused-workspace-changed","prevWorkspace":"M","workspace":"M"}
+{"_event":"mode-changed","mode":"main"}
+{"_event":"focus-changed","windowId":28218,"workspace":"M"}
+```
+
+
+## summon-workspace
+
+Move the requested workspace to the focused monitor.
+
+### Synopsis
+
+```shell
+flightdeck summon-workspace [-h|--help] [--fail-if-noop] <workspace>
+```
+
+The moved workspace becomes focused.
+The behavior is identical to Xmonad.
+
+The command makes sense only in multi-monitor setup.
+In single monitor setup the command is identical to `workspace` command.
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --fail-if-noop
+
+Exit with non-zero exit code if the workspace is already visible on the focused monitor.
+
+### Arguments
+
+
+#### &lt;workspace&gt;
+
+The workspace to operate on.
+
+
+## swap
+
+Swaps the focused window with another window.
+
+### Synopsis
+
+```shell
+flightdeck swap [-h|--help] [--window-id <window-id>] [--swap-focus]
+               [--wrap-around]
+               (left|down|up|right|dfs-next|dfs-prev)
+```
+
+The operation is equivalent to dragging a window with the mouse.
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+#### --window-id &lt;window-id&gt;
+
+Act on the specified window instead of the focused window
+
+#### --swap-focus
+
+Swap focus away from the currently focused window.
+By default, this command does not change the focused window.
+
+#### --wrap-around
+
+Wrap around if the window is at the edge of the workspace (for `(left|down|up|right)`) or the start/end of the depth first order (for `(dfs-next|dfs-prev)`).
+
+### Arguments
+
+
+#### (left|down|up|right)
+
+Swaps the focused window with the nearest window in the given direction.
+
+#### (dfs-next|dfs-prev)
+
+Swaps the focused window with the next or previous window in the depth-first order (top-to-bottom and left-to-right) of windows in the current workspace tree.
+
+
+## test
+
+Condition evaluation utility
+
+### Synopsis
+
+```shell
+flightdeck test [-h|--help] <lhs> .= <rhs>
+flightdeck test [-h|--help] <lhs> /= <rhs>
+flightdeck test [-h|--help] <lhs> .~ <rhs>
+flightdeck test [-h|--help] <lhs> /~ <rhs>
+```
+
+The `test` utility evaluates the expression and, if it evaluates to true, returns a zero (true) exit status; otherwise it returns 1 (false).
+
+The utility is inspired by builtin `/bin/test` utility.
+
+#### `&lt;lhs&gt; .= &lt;rhs&gt;`
+
+Tests that `&lt;lhs&gt;` equals to `&lt;rhs&gt;`
+#### `&lt;lhs&gt; /= &lt;rhs&gt;`
+
+Tests that `&lt;lhs&gt;` does NOT equal to `&lt;rhs&gt;`
+#### `&lt;lhs&gt; .~ &lt;rhs&gt;`
+
+Tests that `&lt;lhs&gt;` contains case insensitive `&lt;rhs&gt;` regex. The operator fails if `&lt;lhs&gt;` is not a string
+#### `&lt;lhs&gt; /~ &lt;rhs&gt;`
+
+Tests that `&lt;lhs&gt;` does NOT contain case insensitive `&lt;rhs&gt;` regex. The operator fails if `&lt;lhs&gt;` is not a string
+
+The choice of symbols is dictated by the shell expansion rules that "helpfully" expand arguments, if they start either with an exclamation mark or with an equals character.
+The dot prefix is used as a safe and neutral character.
+The slash denotes negation, following a common convention in functional programming (mnemonics: it "crosses out" the operator).
+The tilde is widely used in scripting languages to indicate regex matching.
+
+### Examples
+
+
+Test if the application ID equals to Chrome: `flightdeck test %{app-bundle-id} .= com.google.Chrome`
+
+Test if the application name contains "chrome" (case insensitive): `flightdeck test %{app-name} .~ chrome`
+
+### Arguments
+
+
+#### &lt;lhs&gt;
+
+The left hand side of the expression.
+The left hand side must be one of the interpolation variables (see below).
+
+#### &lt;rhs&gt;
+
+An integer, a boolean (`true`/`false`), a regex, or just a plain string.
+The way the expression is interpreted depends on the type of `&lt;lhs&gt;` and the infix operator.
+
+### Interpolation Variables
+
+
+#### %{window-id}
+
+Number. Window unique ID
+#### %{window-title}
+
+String. Window title
+#### %{window-is-fullscreen}
+
+Boolean. Is window in fullscreen by `flightdeck fullscreen` command
+#### %{window-layout}
+
+String. An alias for `%{window-parent-container-layout}`
+#### %{window-parent-container-layout}
+
+String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`, `floating`) of the window's parent container.
+ 
+#### %{app-bundle-id}
+
+String. Application unique identifier. [Bundle ID](https://developer.apple.com/documentation/appstoreconnectapi/bundle_ids)
+#### %{app-name}
+
+String. Application name
+#### %{app-pid}
+
+Number. [UNIX process identifier](https://en.wikipedia.org/wiki/Process_identifier)
+#### %{app-exec-path}
+
+String. Application executable path
+#### %{app-bundle-path}
+
+String. Application bundle path
+ 
+#### %{workspace}
+
+String. Name of the belonging workspace
+#### %{workspace-is-focused}
+
+Boolean. `true` if the workspace has focus
+#### %{workspace-is-visible}
+
+Boolean. `true` if the workspace is visible. A workspace can be visible but not focused in a multi-monitor setup
+#### %{workspace-root-container-layout}
+
+String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`) of the workspace the window belongs to.
+ 
+#### %{monitor-id}
+
+1-based Number. Sequential number of the belonging monitor.
+#### %{monitor-appkit-nsscreen-screens-id}
+
+1-based index of the belonging monitor in `NSScreen.screens` array. Useful for integration with other tools that might be using `NSScreen.screens` ordering (like sketchybar).
+#### %{monitor-name}
+
+String. Name of the belonging monitor
+#### %{monitor-is-main}
+
+Boolean. `true` if the monitor is main.
+ 
+
+### Exit Codes
+
+
+#### 0
+
+All the supplied conditions have evaluated to true.
+#### 1
+
+One of the supplied conditions has evaluated to false.
+
+#### >1
+
+An error occurred.
+For instance, when `&lt;rhs&gt;` type doesn't match `&lt;lhs&gt;` type, or if the `test` subcommand couldn't be parsed.
+
+
+## trigger-binding
+
+Trigger FlightDeck binding as if it was pressed by user
+
+### Synopsis
+
+```shell
+flightdeck trigger-binding [-h|--help] <binding> --mode <mode-id>
+```
+
+You can use flightdeck-config command to inspect available bindings: 
+`flightdeck config --get mode.main.binding --keys`
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --mode &lt;mode-id&gt;
+
+Mode to search `&lt;binding&gt;` in
+
+### Arguments
+
+
+#### &lt;binding&gt;
+
+Binding to trigger
+
+### Examples
+
+
+- Run alphabetically first binding from config (useless and synthetic example): 
+`flightdeck trigger-binding --mode main "$(flightdeck config --get mode.main.binding --keys | head -1)"`
+- Trigger `alt-tab` binding: 
+`flightdeck trigger-binding --mode main alt-tab`
+
+
+## true
+
+Return true value
+
+### Synopsis
+
+```shell
+flightdeck true [-h|--help]
+```
+
+The `true` utility returns with an exit code of zero.
+
+The utility might return with a non-zero exit in case of errors (e.g. unexpected CLI arguments)
+
+### Options
+
+
+#### -h, --help
+
+Print help
+
+### Exit Codes
+
+
+#### 0
+
+No errors have occurred.
+#### >0
+
+An error occurred. For instance, unexpected CLI arguments.
+
+
+## volume
+
+Manipulate volume
+
+### Synopsis
+
+```shell
+flightdeck volume [-h|--help] (up|down) [--no-gui]
+flightdeck volume [-h|--help] (mute-toggle|mute-off|mute-on) [--no-gui]
+flightdeck volume [-h|--help] set <number> [--no-gui]
+```
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --no-gui
+
+Don't show volume GUI indicator
+
+### Arguments
+
+
+#### (up|down)
+
+Increase or decrease the volume
+#### (mute-toggle|mute-on|mute-off)
+
+Toggle/On/Off mute
+#### set &lt;number&gt;
+
+Set volume to the exact value on scale from 0 to 100
+
+
+## workspace-back-and-forth
+
+Switch between the focused workspace and previously focused workspace back and forth
+
+### Synopsis
+
+```shell
+flightdeck workspace-back-and-forth [-h|--help]
+```
+
+Unlike `focus-back-and-forth`, `workspace-back-and-forth` always succeeds.
+Because unlike windows, workspaces can not be "closed".
+Workspaces are name-addressable objects.
+They are created and destroyed on the fly.
+
+Also see: [ focus-back-and-forth](#focus-back-and-forth)
+
+
+## workspace
+
+Focus the specified workspace
+
+### Synopsis
+
+```shell
+flightdeck workspace [-h|--help] [--auto-back-and-forth] [--fail-if-noop] <workspace-name>
+flightdeck workspace [-h|--help] [--wrap-around] [--stdin|--no-stdin] (next|prev)
+```
+
+*1. &lt;workspace-name&gt; syntax*
+
+*2. (next|prev) syntax*
+
+Focuses next or previous workspace in *the list*.
+
+- If `--stdin` is specified, then *the list* is taken from stdin
+- Otherwise, *the list* is defined as all workspaces on focused monitor in alphabetical order
+
+### Options
+
+
+#### -h, --help
+
+Print help
+#### --wrap-around
+
+Make it possible to jump between first and last workspaces using `(next|prev)`
+
+#### --auto-back-and-forth
+
+Automatic `back-and-forth` when switching to already focused workspace.
+Incompatible with `--fail-if-noop`
+
+#### --fail-if-noop
+
+Exit with non-zero exit code if switch to the already focused workspace.
+Incompatible with `--auto-back-and-forth`
+
+#### --stdin
+
+Read the list of workspaces from stdin.
+Incompatible with `--no-stdin`
+
+#### --no-stdin
+
+Ignore the list of workspaces from stdin, even if provided.
+Incompatible with `--stdin`
+
+### Examples
+
+
+- Go to the next non empty workspace on the focused monitor: 
+`flightdeck list-workspaces --monitor focused --empty no | flightdeck workspace --stdin next`
+
+
+## flightdeck
+
+i3-like tiling window manager for macOS
+
+### Synopsis
+
+```shell
+flightdeck [-h|--help] [-v|--version] <subcommand> [<subcommand-options>...] [<subcommand-arguments>...]
+```
+
+FlightDeck is an i3-like tiling window manager for macOS
+
+*flightdeck* command line program is used to manipulate FlightDeck and query its state.
+
+See https://github.com/saadjs/FlightDeck/blob/main/docs/commands.adoc for available &lt;subcommand&gt; options
+
+See each &lt;subcommand&gt; individual man page for &lt;subcommand-options&gt; and &lt;subcommand-arguments&gt;
+
+Existing AeroSpace configs remain compatible. FlightDeck intentionally continues to use `~/.aerospace.toml`, `${XDG_CONFIG_HOME}/aerospace/aerospace.toml`, and the `AEROSPACE_*` environment variables.
+Use `flightdeck` instead of `aerospace` for terminal invocations.
+FlightDeck does not install an `aerospace` CLI alias, and FlightDeck and AeroSpace should not run simultaneously.
+

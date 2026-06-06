@@ -26,10 +26,8 @@ if /bin/test -z "${NUKE_PATH:-}"; then
     add-optional-dep-to-bin cargo # build-shell-completion.sh
     add-optional-dep-to-bin java # generate-shell-parser.sh
     add-optional-dep-to-bin brew # install-from-sources.sh
-    add-optional-dep-to-bin bundle # build-docs.sh
-    add-optional-dep-to-bin bundler # build-docs.sh
-    add-optional-dep-to-bin node # build-docs.sh (Pagefind)
-    add-optional-dep-to-bin npm # build-docs.sh (Pagefind)
+    add-optional-dep-to-bin node # documentation generators
+    add-optional-dep-to-bin npm # Mintlify local preview and validation
     add-optional-dep-to-bin xcbeautify # build-release.sh
     add-optional-dep-to-bin git
     add-optional-dep-to-bin swift
