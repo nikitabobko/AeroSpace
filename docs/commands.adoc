@@ -295,6 +295,13 @@ include::aerospace-test.adoc[tags=synopsis]
 include::aerospace-test.adoc[tags=purpose]
 include::aerospace-test.adoc[tags=body]
 
+=== test-not
+----
+include::aerospace-test-not.adoc[tags=synopsis]
+----
+include::aerospace-test-not.adoc[tags=purpose]
+include::aerospace-test-not.adoc[tags=body]
+
 === true
 ----
 include::aerospace-true.adoc[tags=synopsis]

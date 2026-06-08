@@ -36,6 +36,7 @@ let subcommandDescriptions = [
     ["  subscribe", "Subscribe to AeroSpace events and receive notifications via socket"],
     ["  summon-workspace", "Move the requested workspace to the focused monitor."],
     ["  swap", "Swaps the focused window with another window."],
+    ["  test-not", "Negative condition evaluation utility"],
     ["  test", "Condition evaluation utility"],
     ["  trigger-binding", "Trigger AeroSpace binding as if it was pressed by user"],
     ["  true", "Return true value"],

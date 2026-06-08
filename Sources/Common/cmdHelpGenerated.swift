@@ -146,6 +146,10 @@ let swap_help_generated = """
                 [--wrap-around]
                 (left|down|up|right|dfs-next|dfs-prev)
     """
+let test_not_help_generated = """
+    USAGE: test-not [-h|--help] <lhs> = <rhs>
+       OR: test-not [-h|--help] <lhs> ~= <rhs>
+    """
 let test_help_generated = """
     USAGE: test [-h|--help] <lhs> = <rhs>
        OR: test [-h|--help] <lhs> ~= <rhs>

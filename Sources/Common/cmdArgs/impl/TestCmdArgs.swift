@@ -13,9 +13,9 @@ public struct TestCmdArgs: CmdArgs {
         // Alternative 4: --window-id and --workspace flags for aerospace top-level command + aerospace subcommand
         flags: [:],
         posArgs: [
-            newMandatoryPosArgParser(\.lhs, parseLhs, placeholder: "<lhs>"),
-            newMandatoryPosArgParser(\.infixOperator, parseInfixOperator, placeholder: "<operator>"),
-            newMandatoryPosArgParser(\.rhs, parseRhs, placeholder: "<rhs>"),
+            newMandatoryPosArgParser(\.lhs, parseTestLhs, placeholder: "<lhs>"),
+            newMandatoryPosArgParser(\.infixOperator, parseTestInfixOperator, placeholder: "<operator>"),
+            newMandatoryPosArgParser(\.rhs, parseTestRhs, placeholder: "<rhs>"),
         ],
     )
     public typealias ExitCodeType = ConditionalExitCode
@@ -25,7 +25,7 @@ public struct TestCmdArgs: CmdArgs {
     public var rhs: Lateinit<String> = .uninitialized
 }
 
-private func parseRhs(_ input: PosArgParserInput) -> ParsedCliArgs<String> {
+func parseTestRhs(_ input: PosArgParserInput) -> ParsedCliArgs<String> {
     let result = input.arg.rawInterpolationTokens(interpolationChar: "%").flatMap { tokens in
         switch tokens.sequencePattern {
             case .one(.literal(let literal)): .success(literal)
@@ -35,7 +35,7 @@ private func parseRhs(_ input: PosArgParserInput) -> ParsedCliArgs<String> {
     return .init(result, advanceBy: 1)
 }
 
-private func parseLhs(_ input: PosArgParserInput) -> ParsedCliArgs<FormatVar> {
+func parseTestLhs(_ input: PosArgParserInput) -> ParsedCliArgs<FormatVar> {
     let result = input.arg.interpolationTokens(interpolationChar: "%", ofInterVarType: FormatVar.self).flatMap { tokens in
         switch tokens.sequencePattern {
             case .one(.interVar(let formatVar)): .success(formatVar)
@@ -45,7 +45,7 @@ private func parseLhs(_ input: PosArgParserInput) -> ParsedCliArgs<FormatVar> {
     return .init(result, advanceBy: 1)
 }
 
-private func parseInfixOperator(_ input: PosArgParserInput) -> ParsedCliArgs<InfixOperator> {
+func parseTestInfixOperator(_ input: PosArgParserInput) -> ParsedCliArgs<InfixOperator> {
     .init(parseEnum(input.arg, InfixOperator.self), advanceBy: 1)
 }
 

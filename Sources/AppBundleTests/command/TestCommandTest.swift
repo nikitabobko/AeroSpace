@@ -14,6 +14,14 @@ final class TestCommandTest: XCTestCase {
                 .copy(\.infixOperator, .initialized(.equals))
                 .copy(\.rhs, .initialized("foo")),
         )
+        testParseCommandSucc(
+            "test-not %{app-bundle-id} ~= foo",
+            TestNotCmdArgs(rawArgs: [])
+                .copy(\.testArgs.lhs, .initialized(.app(.appBundleId)))
+                .copy(\.testArgs.infixOperator, .initialized(.matchesRegex))
+                .copy(\.testArgs.rhs, .initialized("foo")),
+        )
+
         testParseCommandFail("test %{foo} = foo", msg: "ERROR: Can\'t parse \'foo\'.\n       Possible values: (window-id|window-is-fullscreen|window-title|window-layout|window-parent-container-layout|workspace|workspace-is-focused|workspace-is-visible|workspace-root-container-layout|app-bundle-id|app-name|app-pid|app-exec-path|app-bundle-path|monitor-id|monitor-appkit-nsscreen-screens-id|monitor-name|monitor-is-main)", exitCode: 2)
         testParseCommandFail("test foo = foo", msg: "ERROR: Left hand side must be a single interpolation variable", exitCode: 2)
         testParseCommandFail("test foo%{app-bundle-id} = foo", msg: "ERROR: Left hand side must be a single interpolation variable", exitCode: 2)

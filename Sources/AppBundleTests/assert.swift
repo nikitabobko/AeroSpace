@@ -61,15 +61,15 @@ func assertFail<F>(_ actual: Result<some Any, F>, _ expected: F? = nil, file: St
     }
 }
 
-func testParseCommandSucc(_ command: String, _ expected: any CmdArgs) {
+func testParseCommandSucc(_ command: String, _ expected: any CmdArgs, file: String = #filePath, line: Int = #line) {
     let parsed = parseCommand(command)
     switch parsed {
         case .cmd(let command):
             if !command.args.equals(expected) {
-                failExpectedActual(expected, command.args)
+                failExpectedActual(expected, command.args, file: file, line: line)
             }
-        case .help: XCTFail("Expected to parse to command. Actual: parsed to help")
-        case .failure(let msg): XCTFail(msg.msg)
+        case .help: failExpectedActual("parsed successfully", "Parsed as help", file: file, line: line)
+        case .failure(let msg): failExpectedActual("parsed successfully", "Failed to parse: \(msg.msg)", file: file, line: line)
     }
 }
 

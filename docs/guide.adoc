@@ -505,10 +505,13 @@ on-window-detected = [
 `on-window-detected` is an ordered list of callback objects.
 Every object has `if` (optional) and `run` (mandatory) keys inside.
 When a new window is detected:
+
 . AeroSpace processes the list of the callback objects in the defined order.
 . For every callback object, AeroSpace runs the command in the `if`.
 . If the `if` command exits with zero exit code (successful), then AeroSpace runs the command in the `run` and doesn't process any further callback objects.
-. If the `if` command exits with non-zero exit code (fail), then AeroSpace processes the next object in the list.
+. If the `if` command exits with non-zero exit code (fail), then AeroSpace attempts processing the next object in the list.
+
+xref:./commands.adoc#test[test], xref:./commands.adoc#test-not[test-not], xref:./commands.adoc#true[true] and xref:./commands.adoc#false[false] commands are designed to be used inside the `if`.
 
 Additionally, if you want to keep processing the list of callbacks when the `if` is successful, you can use the `check-further-callbacks` option like so:
 
@@ -526,6 +529,7 @@ on-window-detected = [
 ]
 ----
 
+A common use case is to match against app bundle ID in `on-window-detected` callback.
 There are several ways to know `app-bundle-id`:
 
 * Take a look at precompiled xref:./goodies.adoc#popular-apps-ids[list of Apple application IDs]

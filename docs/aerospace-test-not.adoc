@@ -1,0 +1,29 @@
+= aerospace-test-not(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-test-not
+// tag::purpose[]
+:manpurpose: Negative condition evaluation utility
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace test-not [-h|--help] <lhs> = <rhs>
+aerospace test-not [-h|--help] <lhs> ~= <rhs>
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The subcommand works exactly the same as the `test` subcommand, except the result (exit code) is negated.
+Please refer to the `test` subcomman documentation for more information.
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]
