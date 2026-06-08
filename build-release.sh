@@ -16,7 +16,7 @@ done
 ### BUILD ###
 #############
 
-./build-docs.sh
+./build-docs.sh --release
 ./build-shell-completion.sh
 
 ./generate.sh
