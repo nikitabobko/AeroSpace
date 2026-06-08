@@ -131,11 +131,11 @@ final class MacApp: AbstractApp {
         }
     }
 
-    func setAxFrame(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {
+    func setAxFrame(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?, animated: AnimationConfig? = nil) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         setFrameJobs[windowId] = withWindowAsync(windowId) { [axApp] window, job in
             try disableAnimations(app: axApp.threadGuarded, job) {
-                try setFrame(window, topLeft, size, job)
+                try setFrame(window, topLeft, size, animated, job)
             }
         }
     }
@@ -144,7 +144,9 @@ final class MacApp: AbstractApp {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         try await withWindow(windowId) { [axApp] window, job in
             try disableAnimations(app: axApp.threadGuarded, job) {
-                try setFrame(window, topLeft, size, job)
+                // Don't animate the blocking variant. It's used during shutdown / rare paths
+                // where we want the change to apply synchronously.
+                try setFrame(window, topLeft, size, nil, job)
             }
         }
     }
@@ -371,14 +373,80 @@ extension [UInt32: AxWindow] {
     }
 }
 
-private func setFrame(_ window: AXUIElement, _ topLeft: CGPoint?, _ size: CGSize?, _ job: RunLoopJob) throws {
+private func setFrame(_ window: AXUIElement, _ topLeft: CGPoint?, _ size: CGSize?, _ animation: AnimationConfig?, _ job: RunLoopJob) throws {
     // Set size and then the position. The order is important https://github.com/nikitabobko/AeroSpace/issues/143
     //                                                        https://github.com/nikitabobko/AeroSpace/issues/335
+    if let animation, animation.enabled, animation.durationSec > 0,
+       let topLeft, let size,
+       let startSize = window.get(Ax.sizeAttr),
+       let startTopLeft = window.get(Ax.topLeftCornerAttr),
+       (abs(startSize.width - size.width) > 0.5 ||
+           abs(startSize.height - size.height) > 0.5 ||
+           abs(startTopLeft.x - topLeft.x) > 0.5 ||
+           abs(startTopLeft.y - topLeft.y) > 0.5)
+    {
+        try animateFrame(
+            window: window,
+            startTopLeft: startTopLeft, startSize: startSize,
+            endTopLeft: topLeft, endSize: size,
+            animation: animation,
+            job,
+        )
+        return
+    }
     if let size { window.set(Ax.sizeAttr, size) }
     try job.checkCancellation()
     if let topLeft { window.set(Ax.topLeftCornerAttr, topLeft) } else { return }
     try job.checkCancellation()
     if let size { window.set(Ax.sizeAttr, size) }
+}
+
+private func animateFrame(
+    window: AXUIElement,
+    startTopLeft: CGPoint, startSize: CGSize,
+    endTopLeft: CGPoint, endSize: CGSize,
+    animation: AnimationConfig,
+    _ job: RunLoopJob,
+) throws {
+    let durationSec = animation.durationSec
+    let frameInterval = animation.frameIntervalSec
+    let easing = animation.easing
+    let startTime = CFAbsoluteTimeGetCurrent()
+    var nextDeadline = startTime + frameInterval
+
+    while true {
+        try job.checkCancellation()
+        let now = CFAbsoluteTimeGetCurrent()
+        let elapsed = now - startTime
+        let rawT = durationSec <= 0 ? 1.0 : elapsed / durationSec
+        let t = rawT >= 1.0 ? 1.0 : rawT
+        let eased = easing.apply(t)
+
+        let interpSize = CGSize(
+            width: startSize.width + (endSize.width - startSize.width) * eased,
+            height: startSize.height + (endSize.height - startSize.height) * eased,
+        )
+        let interpTopLeft = CGPoint(
+            x: startTopLeft.x + (endTopLeft.x - startTopLeft.x) * eased,
+            y: startTopLeft.y + (endTopLeft.y - startTopLeft.y) * eased,
+        )
+
+        // Same order as the static setFrame: size, position, size.
+        // The double-size set fixes the issue where, on the final frame,
+        // certain apps (Terminal.app, etc.) snap to a stale size after a position change.
+        window.set(Ax.sizeAttr, interpSize)
+        try job.checkCancellation()
+        window.set(Ax.topLeftCornerAttr, interpTopLeft)
+        try job.checkCancellation()
+        window.set(Ax.sizeAttr, interpSize)
+
+        if t >= 1.0 { return }
+
+        // Pace ourselves to the configured fps; if we're already behind, skip the sleep.
+        let sleep = nextDeadline - CFAbsoluteTimeGetCurrent()
+        if sleep > 0 { Thread.sleep(forTimeInterval: sleep) }
+        nextDeadline += frameInterval
+    }
 }
 
 // Some undocumented magic

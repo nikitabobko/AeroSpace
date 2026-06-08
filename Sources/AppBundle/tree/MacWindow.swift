@@ -185,8 +185,9 @@ final class MacWindow: Window {
         try await macApp.getAxSize(windowId)
     }
 
-    override func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) {
-        macApp.setAxFrame(windowId, topLeft, size)
+    @MainActor
+    override func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?, animated: Bool = true) {
+        macApp.setAxFrame(windowId, topLeft, size, animated: animated ? config.animation : nil)
     }
 
     func setAxFrameBlocking(_ topLeft: CGPoint?, _ size: CGSize?) async throws {

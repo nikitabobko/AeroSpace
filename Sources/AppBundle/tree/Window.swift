@@ -40,7 +40,8 @@ open class Window: TreeNode, Hashable {
     func getAxRect() async throws -> Rect? { die("Not implemented") }
     func getCenter() async throws -> CGPoint? { try await getAxRect()?.center }
 
-    func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) { die("Not implemented") }
+    @MainActor
+    func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?, animated: Bool = true) { die("Not implemented") }
 }
 
 enum LayoutReason: Equatable {

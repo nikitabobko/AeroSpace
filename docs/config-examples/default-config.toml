@@ -63,6 +63,20 @@ on-mode-changed = []
 [key-mapping]
     preset = 'qwerty'
 
+# Smooth window resize/move animations.
+# - 'enabled' turns the animation on/off
+# - 'duration-ms' is the total animation duration (0 means instant)
+# - 'fps' is the target frame rate of the interpolation. Achieved fps depends on
+#   how fast each application responds to AX size/position requests. Slow apps
+#   (e.g. some Electron apps) will not actually hit 120fps.
+# - 'easing' shapes the interpolation curve. Possible values:
+#   linear | ease-out-cubic | ease-in-out-cubic
+[animation]
+    enabled = true
+    duration-ms = 150
+    fps = 120
+    easing = 'ease-out-cubic'
+
 # Gaps between windows (inner-*) and between monitor edges (outer-*).
 # Possible values:
 # - Constant:     gaps.outer.top = 8
