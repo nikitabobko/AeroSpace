@@ -60,6 +60,7 @@ include::./util/conditional-interpolation-variables-header.adoc[]
 %{window-id}:: Number. Window unique ID
 %{window-title}:: String. Window title
 %{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aerospace fullscreen` command
+%{window-is-floating}:: Boolean. `true` if the window is floating (its parent container is the workspace itself rather than a tiling container)
 %{window-layout}:: String. An alias for `%{window-parent-container-layout}`
 %{window-parent-container-layout}:: String. The layout (`v_tiles`, `h_tiles`, `v_accordion`, `h_accordion`, `floating`) of the window's parent container.
  
