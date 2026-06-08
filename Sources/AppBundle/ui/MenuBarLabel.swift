@@ -64,6 +64,7 @@ struct MenuBarLabel: View {
                             name: item.name,
                             isActive: item.isFocused,
                             hasFullscreenWindows: item.hasFullscreenWindows,
+                            isFocusedWindowFloating: item.isFocusedWindowFloating,
                         )
                         itemView(for: trayItem)
                             .opacity(item.isVisible ? 1 : 0.5)
@@ -95,7 +96,7 @@ struct MenuBarLabel: View {
                 .bold()
                 .padding(.bottom, 6)
             ForEach(otherWorkspaces, id: \.name) { item in
-                itemView(for: TrayItem(type: .workspace, name: item.name, isActive: false, hasFullscreenWindows: item.hasFullscreenWindows))
+                itemView(for: TrayItem(type: .workspace, name: item.name, isActive: false, hasFullscreenWindows: item.hasFullscreenWindows, isFocusedWindowFloating: item.isFocusedWindowFloating))
             }
         }
         .opacity(0.6)
@@ -111,13 +112,23 @@ struct MenuBarLabel: View {
     @ViewBuilder
     fileprivate func itemView(for item: TrayItem) -> some View {
         let view = itemSubView(for: item)
-        if item.hasFullscreenWindows {
-            let strokeStyle = StrokeStyle(lineWidth: 2, lineCap: .square, lineJoin: .miter, miterLimit: 10, dash: [10, 5], dashPhase: 3)
+        if item.hasFullscreenWindows || item.isFocusedWindowFloating {
+            // Fullscreen → dashed border around the square. Focused-window-floating →
+            // dotted border on the focused workspace's square. Fullscreen wins: a square
+            // that has a fullscreen window shows only the dashed border, never the dotted
+            // one (a window that's both fullscreen and floating reads as fullscreen).
+            let fullscreenStroke = StrokeStyle(lineWidth: 2, lineCap: .square, lineJoin: .miter, miterLimit: 10, dash: [10, 5], dashPhase: 3)
+            let floatingStroke = StrokeStyle(lineWidth: 2, lineCap: .round, lineJoin: .round, dash: [0.1, 6])
             view
                 .padding(4)
                 .overlay {
-                    RoundedRectangle(cornerRadius: itemCornerRadius, style: .continuous)
-                        .strokeBorder(finalColor, style: strokeStyle)
+                    if item.hasFullscreenWindows {
+                        RoundedRectangle(cornerRadius: itemCornerRadius, style: .continuous)
+                            .strokeBorder(finalColor, style: fullscreenStroke)
+                    } else if item.isFocusedWindowFloating {
+                        RoundedRectangle(cornerRadius: itemCornerRadius, style: .continuous)
+                            .strokeBorder(finalColor, style: floatingStroke)
+                    }
                 }
         } else {
             view
