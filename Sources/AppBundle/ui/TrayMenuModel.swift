@@ -27,10 +27,16 @@ public final class TrayMenuModel: ObservableObject {
         }
         .joined(separator: " │ ")
     TrayMenuModel.shared.workspaces = Workspace.all.map {
-        let apps = $0.allLeafWindowsRecursive.map { $0.app.name?.takeIf { !$0.isEmpty } }.filterNotNil().toSet()
+        let windows = $0.allLeafWindowsRecursive
+        let appName = { (w: Window) in w.app.name?.takeIf { !$0.isEmpty } }
+        let apps = windows.map(appName).filterNotNil().toSet()
+        // Apps that have at least one floating window in this workspace get a leading ⬚ marker
+        let floatingApps = windows.filter(\.isFloating).map(appName).filterNotNil().toSet()
         let dash = " - "
         let suffix = switch true {
-            case !apps.isEmpty: dash + apps.sorted().joinTruncating(separator: ", ", length: 25)
+            case !apps.isEmpty: dash + apps.sorted()
+            .map { floatingApps.contains($0) ? "⬚ \($0)" : $0 }
+            .joinTruncating(separator: ", ", length: 25)
             case $0.isVisible: dash + $0.workspaceMonitor.name
             default: ""
         }
