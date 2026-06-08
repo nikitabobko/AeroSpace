@@ -7,8 +7,8 @@ final class SplitArgsTest: XCTestCase {
         testSucSplit("echo foo", expected: ["echo", "foo"])
         testSucSplit("echo 'foo'", expected: ["echo", "foo"])
         testSucSplit("'echo' foo", expected: ["echo", "foo"])
-        testSucSplit("echo \"'\"", expected: ["echo", "'"])
-        testSucSplit("echo '\"'", expected: ["echo", "\""])
+        testSucSplit(#"echo "'""#, expected: ["echo", "'"])
+        testSucSplit(#"echo '"'"#, expected: ["echo", "\""])
         testSucSplit("  echo '  foo bar'", expected: ["echo", "  foo bar"])
 
         testFailSplit("echo 'foo")

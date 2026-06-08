@@ -103,8 +103,16 @@ func getChildParentRelation(child: TreeNode, parent: NonLeafTreeNodeObject) -> C
     illegalChildParentRelation(child: child, parent: parent)
 }
 
-func illegalChildParentRelation(child: TreeNode, parent: NonLeafTreeNodeObject?) -> Never {
-    die("Illegal child-parent relation. Child: \(child), Parent: \((parent ?? child.parent).prettyDescription)")
+func illegalChildParentRelation(
+    child: TreeNode,
+    parent: NonLeafTreeNodeObject?,
+    file: StaticString = #fileID,
+    line: Int = #line,
+    column: Int = #column,
+    function: String = #function,
+) -> Never {
+    let msg = "Illegal child-parent relation. Child: \(child), Parent: \((parent ?? child.parent).prettyDescription)"
+    die(msg, file: file, line: line, column: column, function: function)
 }
 
 func getChildParentRelationOrNil(child: TreeNode, parent: NonLeafTreeNodeObject) -> ChildParentRelation? {

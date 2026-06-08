@@ -33,7 +33,7 @@ struct MoveCommand: Command {
                             return .succ
                     }
                 } else {
-                    return moveOut(window: currentWindow, direction: direction, io, args, env)
+                    return moveOut(tilingWindow: currentWindow, direction: direction, io, args, env)
                 }
             case .workspace: // floating window
                 return .fail(io.err("moving floating windows isn't yet supported")) // todo
@@ -97,13 +97,13 @@ struct MoveCommand: Command {
 private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimized windows and windows of hidden apps isn't yet supported. This behavior is subject to change"
 
 @MainActor private func moveOut(
-    window: Window,
+    tilingWindow window: Window,
     direction: CardinalDirection,
     _ io: CmdIo,
     _ args: MoveCmdArgs,
     _ env: CmdEnv,
 ) -> BinaryExitCode {
-    let innerMostChild = window.parents.first(where: {
+    let innerMostTilingContainer = window.parents.first(where: {
         return switch $0.parent?.cases {
             case .tilingContainer(let parent): parent.orientation == direction.orientation
             // Stop searching
@@ -111,12 +111,12 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
                  .macosHiddenAppsWindowsContainer, .macosPopupWindowsContainer: true
         }
     }) as? TilingContainer
-    guard let innerMostChild else { return .fail }
-    guard let parent = innerMostChild.parent else { return .fail }
+    guard let innerMostTilingContainer else { return .fail(io.err(bugPrompt())) } // Impossible
+    guard let parent = innerMostTilingContainer.parent else { return .fail }
     switch parent.cases {
         case .tilingContainer(let parent):
             check(parent.orientation == direction.orientation)
-            guard let ownIndex = innerMostChild.ownIndex else { return .fail }
+            guard let ownIndex = innerMostTilingContainer.ownIndex else { return .fail }
             window.bind(to: parent, adaptiveWeight: WEIGHT_AUTO, index: ownIndex + direction.insertionOffset)
             return .succ
         case .workspace(let parent):

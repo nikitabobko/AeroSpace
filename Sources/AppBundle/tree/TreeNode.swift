@@ -116,7 +116,7 @@ open class TreeNode: Equatable, AeroAny {
 
     @discardableResult
     func unbindFromParent() -> BindingData {
-        unbindIfBound() ?? dieT("\(self) is already unbound. The stacktrace where it was unbound:\n\(unboundStacktrace ?? "nil")")
+        unbindIfBound() ?? dieT("\(self) is already unbound. The stacktrace where it was unbound:\n\(unboundStacktrace.prettyDescription)")
     }
 
     nonisolated public static func == (lhs: TreeNode, rhs: TreeNode) -> Bool {

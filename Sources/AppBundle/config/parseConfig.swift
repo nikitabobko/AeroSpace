@@ -53,6 +53,7 @@ struct ConfigParseDiagnostic: Error, Equatable {
     let preventConfigReload: Bool // for severe config errors (like TOML parse error)
 
     public init(_ backtrace: ConfigBacktrace, _ message: String, preventConfigReload: Bool = false) {
+        check(!message.isEmpty)
         self.backtrace = backtrace
         self.message = message
         self.preventConfigReload = preventConfigReload

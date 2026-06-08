@@ -23,7 +23,7 @@ import Foundation
         await runHeavyCompleteRefreshSession(
             .startup,
             // It's important for the first initialization to be non cancellable
-            // to make sure that isStartup propagates // to all places
+            // to make sure that isStartup propagates to all places
             cancellable: false,
             layoutWorkspaces: false,
         )

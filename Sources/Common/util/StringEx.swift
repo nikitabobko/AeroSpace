@@ -11,7 +11,6 @@ extension String {
         split(separator: "\n", omittingEmptySubsequences: false).map { with + $0 }.joined(separator: "\n")
     }
 
-    public func quoted(with char: String) -> String { char + self + char }
     public var singleQuoted: String { "'" + self + "'" }
     public var doubleQuoted: String { "\"" + self + "\"" }
 }

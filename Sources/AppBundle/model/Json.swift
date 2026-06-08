@@ -32,7 +32,7 @@ enum Json: Encodable, Equatable {
             case let value as [Any?]: .array(value.map(newOrDieRecursive))
             default:
                 newScalarOrNil(value)
-                    ?? dieT("Can't parse \(String(describing: value)) (\(Swift.type(of: value))) to JSON")
+                    ?? dieT("Can't parse \(String(describing: value)) (\(Swift::type(of: value))) to JSON")
         }
     }
 

@@ -152,16 +152,16 @@ struct FocusCommand: Command {
         let floatingWindowData = FloatingWindowData(
             window: window,
             center: center,
-            parent: tilingParent,
+            tilingParent: tilingParent,
             adaptiveWeight: data.adaptiveWeight,
             index: index,
         )
         _floatingWindows.append(floatingWindowData)
     }
-    let floatingWindows: [FloatingWindowData] = _floatingWindows.sortedBy { $0.center.getProjection($0.parent.orientation) }.reversed()
+    let floatingWindows: [FloatingWindowData] = _floatingWindows.sortedBy { $0.center.getProjection($0.tilingParent.orientation) }.reversed()
 
     for floating in floatingWindows { // Make floating windows be seen as tiling
-        floating.window.bind(to: floating.parent, adaptiveWeight: 1, index: floating.index)
+        floating.window.bind(to: floating.tilingParent, adaptiveWeight: 1, index: floating.index)
     }
     return floatingWindows
 }
@@ -180,7 +180,7 @@ private struct FloatingWindowData {
     let window: Window
     let center: CGPoint
 
-    let parent: TilingContainer
+    let tilingParent: TilingContainer
     let adaptiveWeight: CGFloat
     let index: Int
 }
