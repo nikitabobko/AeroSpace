@@ -1,10 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e # Exit if one of commands exit with non-zero exit code
 set -u # Treat unset variables and parameters other than the special parameters ‘@’ or ‘*’ as an error
 set -o pipefail # Any command failed in the pipe fails the whole pipe
 # set -x # Print shell commands as they are executed (or you can try -v which is less verbose)
 
-# Don't forget to also update ./ShellParserGenerated/Package.swift
+if ! grep -q '^5\.' <<< "$BASH_VERSION"; then
+    echo "Your bash version is too old. Version 5 is the minimum required version" > /dev/stderr
+    exit 1
+fi
+
+# When you bump this version, don't forget to also bump ./ShellParserGenerated/Package.swift
 export antlr_version="4.13.1"
 
 add-optional-dep-to-bin() {
@@ -20,7 +25,7 @@ if /bin/test -z "${NUKE_PATH:-}"; then
     /bin/rm -rf .deps/bin
     /bin/mkdir -p .deps/bin
 
-    add-optional-dep-to-bin bash not-outdated-bash # build-shell-completion.sh
+    add-optional-dep-to-bin bash
     add-optional-dep-to-bin fish # build-shell-completion.sh
     add-optional-dep-to-bin rustc # build-shell-completion.sh
     add-optional-dep-to-bin cargo # build-shell-completion.sh
