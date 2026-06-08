@@ -12,18 +12,8 @@ import Foundation
             interceptTermination(SIGINT)
             interceptTermination(SIGKILL)
         }
-        if try await !reloadConfig() {
-            var out = ""
-            check(
-                try await reloadConfig(forceConfigUrl: defaultConfigUrl, combinedErrorMsg: &out),
-                """
-                Can't load default config. Your installation is probably corrupted.
-                Please don't modify \(defaultConfigUrl.description.singleQuoted)
-
-                \(out)
-                """,
-            )
-        }
+        try await bootstrapConfig()
+        _ = try await reloadConfig()
 
         checkAccessibilityPermissions()
         startUnixSocketServer()
@@ -42,6 +32,19 @@ import Foundation
             _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
         }
     }
+}
+
+@MainActor private func bootstrapConfig() async throws {
+    var out = ""
+    check(
+        try await reloadConfig(forceConfigUrl: defaultConfigUrl, combinedErrorMsg: &out),
+        """
+        Can't load default config. Your installation is probably corrupted.
+        Please don't modify \(defaultConfigUrl.description.singleQuoted)
+
+        \(out)
+        """,
+    )
 }
 
 @MainActor
