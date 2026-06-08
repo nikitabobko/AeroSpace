@@ -79,7 +79,6 @@ Please see the following config samples:
 * {url-search-for-config}[Search for configs by other users on GitHub] for inspiration
 
 AeroSpace uses TOML 1.1.0 format for the config.
-TOML is easy to read, and it supports comments.
 See https://toml.io/en/v1.1.0[TOML spec for more info]
 
 [#default-config]
