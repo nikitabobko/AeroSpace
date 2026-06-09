@@ -7,6 +7,7 @@ import Foundation
         initTerminationHandler()
         unsafe _isCli = false
         initServerArgs()
+        keepCurrentKeyCodeMapUpToDate()
         if isDebug {
             await toggleReleaseServerIfDebug(.off)
             interceptTermination(SIGINT)

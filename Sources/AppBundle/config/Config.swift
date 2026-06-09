@@ -1,6 +1,5 @@
 import AppKit
 import Common
-import HotKey
 import OrderedCollections
 
 func getDefaultConfigUrlFromProject() -> URL {
