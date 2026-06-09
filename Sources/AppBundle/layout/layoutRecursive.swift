@@ -8,8 +8,39 @@ extension Workspace {
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in monitors horizontal configuration. ¯\_(ツ)_/¯
-        try await layoutRecursive(rect.topLeftCorner, width: rect.width, height: rect.height - 1, virtual: rect, LayoutContext(self))
+        var point = rect.topLeftCorner
+        var width = rect.width
+        let height = rect.height - 1
+        var virtual = rect
+        if let ratio = config.singleWindowAspectRatio, shouldApplyAspectRatio(to: rootTilingContainer) {
+            let constrainedWidth = height * ratio.width / ratio.height
+            if constrainedWidth < width {
+                let xOffset = (width - constrainedWidth) / 2
+                point = CGPoint(x: rect.topLeftX + xOffset, y: rect.topLeftY)
+                virtual = Rect(topLeftX: rect.topLeftX + xOffset, topLeftY: rect.topLeftY, width: constrainedWidth, height: rect.height)
+                width = constrainedWidth
+            }
+        }
+        try await layoutRecursive(point, width: width, height: height, virtual: virtual, LayoutContext(self))
     }
+}
+
+@MainActor
+private func shouldApplyAspectRatio(to root: TilingContainer) -> Bool {
+    if root.hasSingleLeafWindowRecursive { return true }
+    let accordion: TilingContainer
+    if root.layout == .accordion {
+        accordion = root
+    } else if root.children.count == 1,
+              let child = root.children.first as? TilingContainer,
+              child.layout == .accordion
+    {
+        accordion = child
+    } else {
+        return false
+    }
+    return accordion.children.allSatisfy { $0 is Window }
+        && config.applyAspectToAccordion.matches(accordion.orientation)
 }
 
 extension TreeNode {
