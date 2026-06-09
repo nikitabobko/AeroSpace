@@ -35,8 +35,7 @@ open class Window: TreeNode, Hashable {
     var isMacosFullscreen: Bool { get async throws { false } }
     var isMacosMinimized: Bool { get async throws { false } } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
     var isHiddenInCorner: Bool { die("Not implemented") }
-    @MainActor
-    func nativeFocus() { die("Not implemented") }
+    @MainActor func nativeFocus() { die("Not implemented") }
     func getAxRect() async throws -> Rect? { die("Not implemented") }
     func getCenter() async throws -> CGPoint? { try await getAxRect()?.center }
 
