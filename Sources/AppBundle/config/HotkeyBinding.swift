@@ -26,6 +26,15 @@ extension HotKey {
 }
 
 @MainActor var activeMode: String? = mainModeId
+@MainActor var isManualModeOverride: Bool = false
+@MainActor var lastAutoAppMode: String? = nil
+
+@MainActor func isAutoMode(_ modeName: String?) -> Bool {
+    guard let name = modeName else { return true }
+    if name == mainModeId { return true }
+    return config.modes[name]?.app != nil
+}
+
 @MainActor func activateMode(_ targetMode: String?) async throws {
     let targetBindings = targetMode.flatMap { config.modes[$0] }?.bindings ?? [:]
     for binding in targetBindings.values where !hotkeys.keys.contains(binding.descriptionWithKeyCode) {

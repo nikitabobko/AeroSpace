@@ -227,8 +227,10 @@ func tomlAnyToParsedConfigRecursive(any: Any, _ backtrace: ConfigBacktrace) -> P
     }
 
     // Parse modeConfigRootKey after keyMappingConfigRootKey
-    if let modes = rawTable[modeConfigRootKey].flatMap({ parseModes($0, .rootKey(modeConfigRootKey), &errors, config.keyMapping.resolve()) }) {
+    if let rawModes = rawTable[modeConfigRootKey] {
+        let (modes, appModes) = parseModes(rawModes, .rootKey(modeConfigRootKey), &errors, config.keyMapping.resolve())
         config.modes = modes
+        config.appModes = appModes
     }
 
     if config.configVersion <= 1 {
@@ -353,7 +355,7 @@ private func parsePersistentWorkspaces(_ raw: Json, _ backtrace: ConfigBacktrace
         }
 }
 
-private func parseArrayOfStrings(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<[String]> {
+func parseArrayOfStrings(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<[String]> {
     parseTomlArray(raw, backtrace)
         .flatMap { arr in
             arr.enumerated().mapAllOrFailure { (index, elem) in
