@@ -502,8 +502,8 @@ final class ConfigTest: XCTestCase {
             """,
         ).errors
         assertEquals(errors1, [
-            "[ERROR] key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code",
             "[ERROR] key-mapping.key-notation-to-key-code: ' f' is invalid key notation",
+            "[ERROR] key-mapping.key-notation-to-key-code.q: 'qw' is invalid key code",
         ])
 
         let dvorakResult = parseConfig(

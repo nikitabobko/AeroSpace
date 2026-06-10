@@ -28,11 +28,11 @@ struct RawExecConfig: ConvenienceCopyable, Equatable {
     }
 }
 
-func parseExecConfig(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> ExecConfig {
+func parseExecConfig(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> ExecConfig {
     parseTable(raw, RawExecConfig(), rawExecConfigParser, backtrace, &errors).expand()
 }
 
-private func parseEnvVariables(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [String: String] {
+private func parseEnvVariables(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [String: String] {
     guard let table = raw.asDictOrNil else {
         errors.append(expectedActualTypeDiagnostic(expected: .array, actual: raw.tomlType, backtrace))
         return [:]

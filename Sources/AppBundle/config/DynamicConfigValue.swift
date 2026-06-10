@@ -31,7 +31,7 @@ extension DynamicConfigValue {
 }
 
 func parseDynamicValue<T>(
-    _ raw: Json,
+    _ raw: OrderedJson,
     ofType valueType: T.Type,
     _ fallback: T,
     _ backtrace: ConfigBacktrace,
@@ -64,8 +64,8 @@ func parseDynamicValue<T>(
     }
 }
 
-func parsePerMonitorValues<T>(_ array: Json.JsonArray, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [PerMonitorValue<T>] {
-    array.enumerated().compactMap { (index: Int, raw: Json) -> PerMonitorValue<T>? in
+func parsePerMonitorValues<T>(_ array: OrderedJson.JsonArray, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [PerMonitorValue<T>] {
+    array.enumerated().compactMap { (index: Int, raw: OrderedJson) -> PerMonitorValue<T>? in
         var backtrace = backtrace + .index(index)
 
         guard let (key, value) = raw.unwrapTableWithSingleKey(expectedKey: "monitor", &backtrace)

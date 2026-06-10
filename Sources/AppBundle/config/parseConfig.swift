@@ -66,7 +66,7 @@ typealias ParsedConfig<T> = Result<T, ConfigParseDiagnostic>
 
 extension ParserProtocol {
     func transformRawConfig(_ raw: S,
-                            _ value: Json,
+                            _ value: OrderedJson,
                             _ backtrace: ConfigBacktrace,
                             _ errors: inout [ConfigParseDiagnostic]) -> S
     {
@@ -81,19 +81,19 @@ protocol ParserProtocol<S>: Sendable {
     associatedtype T
     associatedtype S where S: ConvenienceCopyable
     var keyPath: SendableWritableKeyPath<S, T> { get }
-    var parse: @Sendable (Json, ConfigBacktrace, inout [ConfigParseDiagnostic]) -> ParsedConfig<T> { get }
+    var parse: @Sendable (OrderedJson, ConfigBacktrace, inout [ConfigParseDiagnostic]) -> ParsedConfig<T> { get }
 }
 
 struct Parser<S: ConvenienceCopyable, T>: ParserProtocol {
     let keyPath: SendableWritableKeyPath<S, T>
-    let parse: @Sendable (Json, ConfigBacktrace, inout [ConfigParseDiagnostic]) -> ParsedConfig<T>
+    let parse: @Sendable (OrderedJson, ConfigBacktrace, inout [ConfigParseDiagnostic]) -> ParsedConfig<T>
 
-    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (Json, ConfigBacktrace, inout [ConfigParseDiagnostic]) -> T) {
+    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (OrderedJson, ConfigBacktrace, inout [ConfigParseDiagnostic]) -> T) {
         self.keyPath = keyPath
         self.parse = { raw, backtrace, errors -> ParsedConfig<T> in .success(parse(raw, backtrace, &errors)) }
     }
 
-    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (Json, ConfigBacktrace) -> ParsedConfig<T>) {
+    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (OrderedJson, ConfigBacktrace) -> ParsedConfig<T>) {
         self.keyPath = keyPath
         self.parse = { raw, backtrace, _ -> ParsedConfig<T> in parse(raw, backtrace) }
     }
@@ -162,7 +162,7 @@ extension Command {
     }
 }
 
-func parseAfterLoginCommand(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<[any Command]> {
+func parseAfterLoginCommand(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<[any Command]> {
     if let array = raw.asArrayOrNil, array.count == 0 {
         return .success([])
     }
@@ -170,7 +170,7 @@ func parseAfterLoginCommand(_ raw: Json, _ backtrace: ConfigBacktrace) -> Parsed
     return .failure(.init(backtrace, msg))
 }
 
-func parseCommandOrCommands(_ raw: Json) -> Parsed<[any Command]> {
+func parseCommandOrCommands(_ raw: OrderedJson) -> Parsed<[any Command]> {
     if let rawString = raw.asStringOrNil {
         return parseCommand(rawString).toEither().map { [$0] }
     } else if let rawArray = raw.asArrayOrNil {
@@ -186,28 +186,28 @@ func parseCommandOrCommands(_ raw: Json) -> Parsed<[any Command]> {
     }
 }
 
-func tomlAnyToJsonRecursive(
+func tomlAnyToOrderedJsonRecursive(
     any: Any,
     _ backtrace: ConfigBacktrace,
     _ errors: inout [ConfigParseDiagnostic],
-) -> Json? {
+) -> OrderedJson? {
     switch any {
         case let dict as [String: Any]:
-            var json = Json.JsonDict()
-            for (key, tomlValue) in dict {
-                json[key] = tomlAnyToJsonRecursive(any: tomlValue, backtrace + .key(key), &errors)
+            var json = OrderedJson.JsonDict()
+            for (key, tomlValue) in dict.sortedEntries {
+                json[key] = tomlAnyToOrderedJsonRecursive(any: tomlValue, backtrace + .key(key), &errors)
             }
             return .dict(json)
         case let array as [Any]:
-            var json = Json.JsonArray()
+            var json = OrderedJson.JsonArray()
             for (index, tomlValue) in array.enumerated() {
-                let element = tomlAnyToJsonRecursive(any: tomlValue, backtrace + .index(index), &errors)
+                let element = tomlAnyToOrderedJsonRecursive(any: tomlValue, backtrace + .index(index), &errors)
                 guard let element else { continue }
                 json.append(element)
             }
             return .array(json)
         default:
-            if let value = Json.newScalarOrNil(any) { return value }
+            if let value = OrderedJson.newScalarOrNil(any) { return value }
             errors.append(.init(backtrace, "Unsupported TOML type: \(type(of: any))"))
             return nil
     }
@@ -223,7 +223,7 @@ struct ParseConfigResult {
     let result = _parseConfig(rawToml)
     return ParseConfigResult(
         config: result.config,
-        errors: result.errors.map { $0.description() }.sorted(),
+        errors: result.errors.map { $0.description() },
         allowReloadConfig: result.errors.allSatisfy { !$0.preventConfigReload },
     )
 }
@@ -231,10 +231,10 @@ struct ParseConfigResult {
 @MainActor private func _parseConfig(_ rawToml: String) -> (config: Config, errors: [ConfigParseDiagnostic]) {
     var errors: [ConfigParseDiagnostic] = []
 
-    let rawTable: Json.JsonDict
+    let rawTable: OrderedJson.JsonDict
     do {
         let dict: [String: Any] = try .init(try TOMLTable(source: rawToml))
-        let json = tomlAnyToJsonRecursive(any: dict, .emptyRoot, &errors)
+        let json = tomlAnyToOrderedJsonRecursive(any: dict, .emptyRoot, &errors)
         switch json {
             case .dict(let dict): rawTable = dict
             default: // dead code
@@ -293,32 +293,32 @@ struct ParseConfigResult {
     return (config, errors)
 }
 
-func parseIndentForNestedContainersWithTheSameOrientation(_ _: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Void> {
+func parseIndentForNestedContainersWithTheSameOrientation(_ _: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Void> {
     let msg = "Deprecated. Please drop it from the config. See https://github.com/nikitabobko/AeroSpace/issues/96"
     return .failure(.init(backtrace, msg))
 }
 
-func parseConfigVersion(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Int> {
+func parseConfigVersion(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Int> {
     let min = 1
     let max = 2
     return parseInt(raw, backtrace)
         .filter(.init(backtrace, "config-version must be in [\(min), \(max)] range")) { (min ... max).contains($0) }
 }
 
-func parseInt(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Int> {
+func parseInt(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Int> {
     raw.asIntOrNil.orFailure(expectedActualTypeDiagnostic(expected: .int, actual: raw.tomlType, backtrace))
 }
 
-func parseString(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<String> {
+func parseString(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<String> {
     raw.asStringOrNil.orFailure(expectedActualTypeDiagnostic(expected: .string, actual: raw.tomlType, backtrace))
 }
 
-func parseSimpleType<T>(_ raw: Json, ofType: T.Type) -> T? {
+func parseSimpleType<T>(_ raw: OrderedJson, ofType: T.Type) -> T? {
     (raw.asIntOrNil as? T) ?? (raw.asStringOrNil as? T) ?? (raw.asBoolOrNil as? T)
 }
 
-extension Json {
-    func unwrapTableWithSingleKey(expectedKey: String? = nil, _ backtrace: inout ConfigBacktrace) -> ParsedConfig<(key: String, value: Json)> {
+extension OrderedJson {
+    func unwrapTableWithSingleKey(expectedKey: String? = nil, _ backtrace: inout ConfigBacktrace) -> ParsedConfig<(key: String, value: OrderedJson)> {
         guard let asDictOrNil else {
             return .failure(expectedActualTypeDiagnostic(expected: .table, actual: tomlType, backtrace))
         }
@@ -328,7 +328,7 @@ extension Json {
                 ? "The table is expected to have a single key '\(expectedKey.orDie())'"
                 : "The table is expected to have a single key",
         )
-        guard let (actualKey, value): (String, Json) = asDictOrNil.count == 1 ? asDictOrNil.first : nil else {
+        guard let (actualKey, value): (String, OrderedJson) = asDictOrNil.count == 1 ? asDictOrNil.first : nil else {
             return .failure(singleKeyError)
         }
         if expectedKey != nil && expectedKey != actualKey {
@@ -339,12 +339,12 @@ extension Json {
     }
 }
 
-func parseTomlArray(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Json.JsonArray> {
+func parseTomlArray(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<OrderedJson.JsonArray> {
     raw.asArrayOrNil.orFailure(expectedActualTypeDiagnostic(expected: .array, actual: raw.tomlType, backtrace))
 }
 
 func parseTable<T: ConvenienceCopyable>(
-    _ raw: Json,
+    _ raw: OrderedJson,
     _ initial: T,
     _ fieldsParser: [String: any ParserProtocol<T>],
     _ backtrace: ConfigBacktrace,
@@ -359,22 +359,22 @@ func parseTable<T: ConvenienceCopyable>(
     }
 }
 
-private func parseStartupRootContainerLayout(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Void> {
+private func parseStartupRootContainerLayout(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Void> {
     parseString(raw, backtrace)
         .filter(.init(backtrace, "'non-empty-workspaces-root-containers-layout-on-startup' is deprecated. Please drop it from your config")) { raw in raw == "smart" }
         .map { _ in () }
 }
 
-private func parseLayout(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Layout> {
+private func parseLayout(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Layout> {
     parseString(raw, backtrace)
         .flatMap { $0.parseLayout().orFailure(.init(backtrace, "Can't parse layout '\($0)'")) }
 }
 
-private func skipParsing<T: Sendable>(_ value: T) -> @Sendable (_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<T> {
+private func skipParsing<T: Sendable>(_ value: T) -> @Sendable (_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<T> {
     { _, _ in .success(value) }
 }
 
-private func parsePersistentWorkspaces(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<OrderedSet<String>> {
+private func parsePersistentWorkspaces(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<OrderedSet<String>> {
     parseArrayOfStrings(raw, backtrace)
         .flatMap { arr in
             let set = arr.toOrderedSet()
@@ -382,7 +382,7 @@ private func parsePersistentWorkspaces(_ raw: Json, _ backtrace: ConfigBacktrace
         }
 }
 
-private func parseArrayOfStrings(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<[String]> {
+private func parseArrayOfStrings(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<[String]> {
     parseTomlArray(raw, backtrace)
         .flatMap { arr in
             arr.enumerated().mapAllOrFailure { (index, elem) in
@@ -391,7 +391,7 @@ private func parseArrayOfStrings(_ raw: Json, _ backtrace: ConfigBacktrace) -> P
         }
 }
 
-private func parseDefaultContainerOrientation(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<DefaultContainerOrientation> {
+private func parseDefaultContainerOrientation(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<DefaultContainerOrientation> {
     parseString(raw, backtrace).flatMap {
         DefaultContainerOrientation(rawValue: $0)
             .orFailure(.init(backtrace, "Can't parse default container orientation '\($0)'"))
@@ -404,7 +404,7 @@ extension Parsed where Failure == String {
     }
 }
 
-func parseBool(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<Bool> {
+func parseBool(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Bool> {
     raw.asBoolOrNil.orFailure(expectedActualTypeDiagnostic(expected: .bool, actual: raw.tomlType, backtrace))
 }
 
@@ -451,7 +451,7 @@ enum TomlBacktraceItem: Equatable {
     }
 }
 
-extension Json.JsonDict {
+extension OrderedJson.JsonDict {
     func parseTable<T: ConvenienceCopyable>(
         _ initial: T,
         _ fieldsParser: [String: any ParserProtocol<T>],

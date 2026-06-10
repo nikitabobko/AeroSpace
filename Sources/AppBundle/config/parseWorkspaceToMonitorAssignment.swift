@@ -1,6 +1,6 @@
 import Common
 
-func parseWorkspaceToMonitorAssignment(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [String: [MonitorDescription]] {
+func parseWorkspaceToMonitorAssignment(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [String: [MonitorDescription]] {
     guard let rawTable = raw.asDictOrNil else {
         errors += [expectedActualTypeDiagnostic(expected: .table, actual: raw.tomlType, backtrace)]
         return [:]
@@ -12,7 +12,7 @@ func parseWorkspaceToMonitorAssignment(_ raw: Json, _ backtrace: ConfigBacktrace
     return result
 }
 
-func parseMonitorDescriptions(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [MonitorDescription] {
+func parseMonitorDescriptions(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [MonitorDescription] {
     if let array = raw.asArrayOrNil {
         return array.enumerated()
             .map { (index, rawDesc) in parseMonitorDescription(rawDesc, backtrace + .index(index)).getOrNil(appendErrorTo: &errors) }
@@ -22,7 +22,7 @@ func parseMonitorDescriptions(_ raw: Json, _ backtrace: ConfigBacktrace, _ error
     }
 }
 
-func parseMonitorDescription(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<MonitorDescription> {
+func parseMonitorDescription(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<MonitorDescription> {
     let rawString: String
     if let string = raw.asStringOrNil {
         rawString = string

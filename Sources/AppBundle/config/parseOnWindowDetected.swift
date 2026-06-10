@@ -83,12 +83,12 @@ private let matcherParsers: [String: any ParserProtocol<LegacyWindowDetectedCall
 ]
 
 private func upcast<T>(
-    _ fun: @escaping @Sendable (Json, ConfigBacktrace) -> ParsedConfig<T>,
-) -> @Sendable (Json, ConfigBacktrace) -> ParsedConfig<T?> {
+    _ fun: @escaping @Sendable (OrderedJson, ConfigBacktrace) -> ParsedConfig<T>,
+) -> @Sendable (OrderedJson, ConfigBacktrace) -> ParsedConfig<T?> {
     { fun($0, $1).map(Optional.init) }
 }
 
-func parseOnWindowDetectedArray(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [WindowDetectedCallback] {
+func parseOnWindowDetectedArray(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [WindowDetectedCallback] {
     if let array = raw.asArrayOrNil {
         return array.enumerated().map { (index, raw) in parseWindowDetectedCallback(raw, backtrace + .index(index), &errors) }.filterNotNil()
     } else {
@@ -97,11 +97,11 @@ func parseOnWindowDetectedArray(_ raw: Json, _ backtrace: ConfigBacktrace, _ err
     }
 }
 
-private func parseCasInsensitiveRegex(_ raw: Json, _ backtrace: ConfigBacktrace) -> ParsedConfig<CaseInsensitiveRegex> {
+private func parseCasInsensitiveRegex(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<CaseInsensitiveRegex> {
     parseString(raw, backtrace).flatMap { CaseInsensitiveRegex.new($0).toParsedConfig(backtrace) }
 }
 
-private func parseMatcher(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> WindowDetectedCallbackMatcher {
+private func parseMatcher(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> WindowDetectedCallbackMatcher {
     switch raw {
         case .dict(let raw):
             return .legacy(raw.parseTable(LegacyWindowDetectedCallbackMatcher(), matcherParsers, backtrace, &errors))
@@ -114,7 +114,7 @@ private func parseMatcher(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: i
     }
 }
 
-private func parseWindowDetectedCallback(_ raw: Json, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> WindowDetectedCallback? {
+private func parseWindowDetectedCallback(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> WindowDetectedCallback? {
     var myErrors: [ConfigParseDiagnostic] = []
     let callback = parseTable(raw, WindowDetectedCallback(), windowDetectedParser, backtrace, &myErrors)
 
