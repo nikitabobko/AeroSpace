@@ -13,6 +13,7 @@ struct MenuBarLabel: View {
     let itemSize = CGFloat(40)
     let itemBorderSize = CGFloat(3)
     let itemCornerRadius = CGFloat(6)
+    let focusedWindowBadgeSize = CGFloat(32)
 
     private var finalColor: Color {
         return color ?? (menuColorScheme == .dark ? Color.white : Color.black)
@@ -69,6 +70,7 @@ struct MenuBarLabel: View {
                             .opacity(item.isVisible ? 1 : 0.5)
                     }
             }
+            focusedWindowBadges
         }
     }
 
@@ -84,6 +86,17 @@ struct MenuBarLabel: View {
             if item.type == .mode {
                 modeSeparator(with: .monospaced)
             }
+        }
+    }
+
+    private var focusedWindowBadges: some View {
+        ForEach(viewModel.focusedWindowBadges) { badge in
+            Image(systemName: badge.systemImageName)
+                .font(.system(size: focusedWindowBadgeSize, weight: .semibold, design: .rounded))
+                .symbolRenderingMode(.monochrome)
+                .foregroundStyle(finalColor)
+                .frame(width: itemSize, height: itemSize)
+                .accessibilityLabel(Text(badge.accessibilityLabel))
         }
     }
 
