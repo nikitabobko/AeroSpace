@@ -206,6 +206,24 @@ By specifying `config-version = 2`, you opt-in to the following behavior:
 * The fallback value of `persistent-workspaces` becomes an empty array
 (In `config-version = 1`, the fallback value of `persistent-workspaces` was inferred from the right hand side of your keyboard bindings. It's proved to be error-prone)
 
+[#after-startup-command]
+=== after-startup-command
+
+You use `after-startup-command` to run arbitrary commands on AeroSpace startup.
+
+Common use cases:
+
+. Run third-party tool on AeroSpace startup (e.g. Sketchybar)
+. Set default layouts for specific workspaces
++
+[source,toml]
+----
+after-startup-command = [
+    'layout --workspace 2 --root v_tiles',
+    'layout --workspace 3 --root h_accordion',
+]
+----
+
 [#exec-env-vars]
 === exec-* Environment Variables
 
