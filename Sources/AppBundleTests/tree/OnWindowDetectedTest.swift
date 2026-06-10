@@ -21,4 +21,24 @@ final class OnWindowDetectedTest: XCTestCase {
         assertEquals(try await callback.matches(detected), true)
         assertEquals(try await callback.matches(focused), false)
     }
+
+    func testRunCommandReceivesDetectedWindowIdInEnv() async throws {
+        let workspaceA = Workspace.get(byName: "a")
+        let focused = TestWindow.new(id: 1, parent: workspaceA.rootTilingContainer)
+        let detected = TestWindow.new(id: 2, parent: workspaceA.rootTilingContainer)
+        assertEquals(focused.focusWindow(), true)
+        assertEquals(focus.windowOrNil?.windowId, 1)
+
+        config.onWindowDetected = [
+            WindowDetectedCallback(
+                matcher: .command(TrueCommand.instance),
+                rawRun: [parseCommand("move-node-to-workspace b").cmdOrDie],
+            ),
+        ]
+
+        try await tryOnWindowDetected(detected) // todo: tryOnWindowDetected must not be called manually in tests
+
+        assertEquals((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 2)
+        assertEquals((workspaceA.rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
+    }
 }
