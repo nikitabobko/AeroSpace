@@ -1,2 +1,9 @@
 # GitHub: linguist-generated marks paths that you would like to be ignored for the repository's language statistics and hidden by default in diffs
 AeroSpace.xcodeproj/project.pbxproj linguist-generated=true
+
+# Treat generated files as binary files so that they don't show up in `git diff` (can be overridden by `git diff --text`)
+ShellParserGenerated/Sources/ -diff
+Sources/Cli/subcommandDescriptionsGenerated.swift -diff
+Sources/Common/versionGenerated.swift -diff
+Sources/Common/cmdHelpGenerated.swift -diff
+Sources/Common/gitHashGenerated.swift -diff
