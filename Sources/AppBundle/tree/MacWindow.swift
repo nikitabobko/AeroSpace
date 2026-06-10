@@ -31,9 +31,11 @@ final class MacWindow: Window {
         // atomic synchronous section
         if let existing = allWindowsMap[windowId] { return existing }
         let window = MacWindow(windowId, macApp, lastFloatingSize: rect?.size, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
+        window.isAwaitingOnWindowDetected = true
         allWindowsMap[windowId] = window
 
         try await debugWindowsIfRecording(window)
+        defer { window.isAwaitingOnWindowDetected = false }
         if try await !restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window) {
             try await tryOnWindowDetected(window)
         }
