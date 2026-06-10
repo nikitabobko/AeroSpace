@@ -147,10 +147,8 @@ let swap_help_generated = """
                 (left|down|up|right|dfs-next|dfs-prev)
     """
 let test_help_generated = """
-    USAGE: test [-h|--help] <lhs> .= <rhs>
-       OR: test [-h|--help] <lhs> /= <rhs>
-       OR: test [-h|--help] <lhs> .~ <rhs>
-       OR: test [-h|--help] <lhs> /~ <rhs>
+    USAGE: test [-h|--help] <lhs> = <rhs>
+       OR: test [-h|--help] <lhs> ~= <rhs>
     """
 let trigger_binding_help_generated = """
     USAGE: trigger-binding [-h|--help] <binding> --mode <mode-id>

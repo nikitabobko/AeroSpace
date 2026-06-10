@@ -495,7 +495,7 @@ You can use `on-window-detected` config option to run commands every time a new 
 ----
 on-window-detected = [
     {
-        if = 'test %{app-bundle-id} .= com.apple.systempreferences',
+        if = 'test %{app-bundle-id} = com.apple.systempreferences',
         check-further-callbacks = true,
         run = ['layout floating', 'move-node-to-workspace S'],  # The callback itself
     },
@@ -516,7 +516,7 @@ Additionally, if you want to keep processing the list of callbacks when the `if`
 ----
 on-window-detected = [
     {
-        if = 'test %{app-bundle-id} .= com.apple.systempreferences',
+        if = 'test %{app-bundle-id} = com.apple.systempreferences',
         run = ['layout floating', 'move-node-to-workspace S'],
 
         # The next callbacks will be considered even if this one is successful.
@@ -543,15 +543,15 @@ Examples of automations:
 ----
 on-window-detected = [
     {
-        if = 'test %{app-bundle-id} .= org.alacritty',
+        if = 'test %{app-bundle-id} = org.alacritty',
         run = 'move-node-to-workspace T', # mnemonics T - Terminal
     },
     {
-        if = 'test %{app-bundle-id} .= com.google.Chrome',
+        if = 'test %{app-bundle-id} = com.google.Chrome',
         run = 'move-node-to-workspace W', # mnemonics W - Web browser
     },
     {
-        if = 'test %{app-bundle-id} .= com.jetbrains.intellij',
+        if = 'test %{app-bundle-id} = com.jetbrains.intellij',
         run = 'move-node-to-workspace I', # mnemonics I - IDE
     }
 ]
@@ -741,7 +741,7 @@ See xref:./commands.adoc#test[the test helper command documentation] for more in
 ----
 on-window-detected = [
     {
-        if = 'test %{app-bundle-id} .= com.apple.systempreferences', # ✅ Do this
+        if = 'test %{app-bundle-id} = com.apple.systempreferences', # ✅ Do this
         run = ['layout floating', 'move-node-to-workspace S'],
     },
 ]

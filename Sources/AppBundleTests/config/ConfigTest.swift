@@ -345,7 +345,7 @@ final class ConfigTest: XCTestCase {
                     run = ['move-node-to-workspace S', 'layout h_tiles'],
                 },
                 { # 6
-                    if = 'test %{app-bundle-id} .= org.alacritty',
+                    if = 'test %{app-bundle-id} = org.alacritty',
                     run = ['move-node-to-workspace T'],
                 },
             ]

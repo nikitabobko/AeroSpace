@@ -21,7 +21,7 @@ struct TestCommand: Command {
             return .fail
         }
 
-        let (infixOperator, negated) = args.infixOperator.val.structured
+        let infixOperator = args.infixOperator.val
         let rhs = args.rhs.val
         let lhsType = lhs.kind.rawValue
         let incompatibleLhsAndOperatorMsg = """
@@ -44,7 +44,7 @@ struct TestCommand: Command {
         }
 
         return switch result {
-            case .success(let result): result != negated ? ._true : ._false // xor
+            case .success(let result): result ? ._true : ._false
             case .failure(let err): .fail(io.err(err))
         }
     }

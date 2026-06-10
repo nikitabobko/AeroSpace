@@ -9,10 +9,8 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace test [-h|--help] <lhs> .= <rhs>
-aerospace test [-h|--help] <lhs> /= <rhs>
-aerospace test [-h|--help] <lhs> .~ <rhs>
-aerospace test [-h|--help] <lhs> /~ <rhs>
+aerospace test [-h|--help] <lhs> = <rhs>
+aerospace test [-h|--help] <lhs> ~= <rhs>
 
 // end::synopsis[]
 
@@ -26,22 +24,15 @@ The `test` utility evaluates the expression and, if it evaluates to true, return
 
 The utility is inspired by the builtin `/bin/test` utility.
 
-`<lhs> .= <rhs>`:: Tests that `<lhs>` equals to `<rhs>`
-`<lhs> /= <rhs>`:: Tests that `<lhs>` does NOT equal to `<rhs>`
-`<lhs> .~ <rhs>`:: Tests that `<lhs>` contains case insensitive `<rhs>` regex. The operator fails if `<lhs>` is not a string
-`<lhs> /~ <rhs>`:: Tests that `<lhs>` does NOT contain case insensitive `<rhs>` regex. The operator fails if `<lhs>` is not a string
-
-The choice of symbols is dictated by the shell expansion rules that "helpfully" expand arguments, if they start either with an exclamation mark or with an equals character.
-The dot prefix is used as a safe and neutral character.
-The slash denotes negation, following a common convention in functional programming (mnemonics: it "crosses out" the operator).
-The tilde is widely used in scripting languages to indicate regex matching.
+`<lhs> = <rhs>`:: Tests that `<lhs>` equals to `<rhs>`
+`<lhs> ~= <rhs>`:: Tests that `<lhs>` contains case insensitive `<rhs>` regex. The command fails if `<lhs>` is not a string
 
 // =========================================================== Examples
 include::./util/conditional-examples-header.adoc[]
 
-Test if the application ID equals to Chrome: `aerospace test %{app-bundle-id} .= com.google.Chrome`
+Test if the application ID equals to Chrome: `aerospace test %{app-bundle-id} = com.google.Chrome`
 
-Test if the application name contains "chrome" (case insensitive): `aerospace test %{app-name} .~ chrome`
+Test if the application name contains "chrome" (case insensitive): `aerospace test %{app-name} ~= chrome`
 
 // =========================================================== Arguments
 include::./util/conditional-arguments-header.adoc[]

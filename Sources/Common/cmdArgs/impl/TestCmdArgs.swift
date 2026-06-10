@@ -54,24 +54,6 @@ func parseTestCmdArgs(_ args: StrArrSlice) -> ParsedCmd<TestCmdArgs> {
 }
 
 public enum InfixOperator: String, CaseIterable, Equatable, Sendable {
-    case equals = ".="
-    case notEquals = "/="
-
-    case matchesRegex = ".~"
-    case notMatchesRegex = "/~"
-
-    public enum Reduced: Sendable, Equatable {
-        case equals
-        case matchesRegex
-    }
-
-    public var structured: (Reduced, negated: Bool) {
-        switch self {
-            case .equals: (.equals, negated: false)
-            case .notEquals: (.equals, negated: true)
-
-            case .matchesRegex: (.matchesRegex, negated: false)
-            case .notMatchesRegex: (.matchesRegex, negated: true)
-        }
-    }
+    case equals = "="
+    case matchesRegex = "~="
 }

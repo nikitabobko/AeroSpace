@@ -14,7 +14,7 @@ final class OnWindowDetectedTest: XCTestCase {
         assertEquals(focus.windowOrNil?.windowId, 1)
 
         let callback = WindowDetectedCallback(
-            matcher: .command(parseCommand("test %{window-id} .= 2").cmdOrDie),
+            matcher: .command(parseCommand("test %{window-id} = 2").cmdOrDie),
             rawRun: [],
         )
 
