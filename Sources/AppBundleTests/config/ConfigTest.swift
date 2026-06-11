@@ -8,6 +8,7 @@ final class ConfigTest: XCTestCase {
         let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/i3-like-config-example.toml"), encoding: .utf8)
         let result = parseConfig(toml)
         assertEquals(result.errors, [])
+        assertEquals(result.warnings, [])
         assertEquals(result.config.execConfig, defaultConfig.execConfig)
         assertEquals(result.config.enableNormalizationFlattenContainers, false)
         assertEquals(result.config.enableNormalizationOppositeOrientationForNestedContainers, false)
@@ -17,11 +18,15 @@ final class ConfigTest: XCTestCase {
         let result = parseConfig("")
         assertEquals(result.errors, [])
         assertTrue(result.allowReloadConfig)
+        assertEquals(result.warnings.count, 1)
+        assertTrue(result.strWarnings.first?.starts(with: "[WARNING] The current 'config-version = 1' is outdated.") == true)
     }
 
     func testParseDefaultConfig() {
         let toml = try! String(contentsOf: projectRoot.appending(component: "docs/config-examples/default-config.toml"), encoding: .utf8)
-        assertEquals(parseConfig(toml).errors, [])
+        let result = parseConfig(toml)
+        assertEquals(result.errors, [])
+        assertEquals(result.warnings, [])
     }
 
     func testConfigVersionOutOfBounds() {
@@ -32,6 +37,31 @@ final class ConfigTest: XCTestCase {
         )
         assertTrue(result.allowReloadConfig)
         assertEquals(result.strErrors, ["[ERROR] config-version: config-version must be in [1, 2] range"])
+    }
+
+    func testConfigVersionOutdatedWarning() {
+        let result = parseConfig(
+            """
+            config-version = 1
+            """,
+        )
+        assertTrue(result.allowReloadConfig)
+        assertEquals(result.errors, [])
+        assertEquals(result.strWarnings, [
+            "[WARNING] The current 'config-version = 1' is outdated. " +
+                "Please consider migrating to 'config-version = \(maxConfigVersion)'. " +
+                "See https://nikitabobko.github.io/AeroSpace/guide#config-version for the migration guide.",
+        ])
+    }
+
+    func testLatestConfigVersionNoWarning() {
+        let result = parseConfig(
+            """
+            config-version = \(maxConfigVersion)
+            """,
+        )
+        assertEquals(result.errors, [])
+        assertEquals(result.warnings, [])
     }
 
     func testExecOnWorkspaceChangeDifferentTypesError() {
@@ -527,6 +557,10 @@ final class ConfigTest: XCTestCase {
 
 extension ParseConfigResult {
     var strErrors: [String] {
-        errors.map { $0.description() }
+        errors.map { $0.description(.error) }
+    }
+
+    var strWarnings: [String] {
+        warnings.map { $0.description(.warning) }
     }
 }

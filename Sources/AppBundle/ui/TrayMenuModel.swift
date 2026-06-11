@@ -13,6 +13,7 @@ public final class TrayMenuModel: ObservableObject {
     @Published var workspaces: [WorkspaceViewModel] = []
     @Published var experimentalUISettings: ExperimentalUISettings = ExperimentalUISettings()
     @Published var sponsorshipMessage: String = sponsorshipPrompts.randomElement().orDie()
+    @Published var lastReloadConfigContainedWarnings: Bool = false
 }
 
 @MainActor func updateTrayText() {

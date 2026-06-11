@@ -11,6 +11,19 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         Button("Copy to clipboard") { identification.copyToClipboard() }
             .keyboardShortcut("C", modifiers: .command)
         Divider()
+        if let token: RunSessionGuard = .isServerEnabled, viewModel.lastReloadConfigContainedWarnings {
+            Button {
+                Task.startUnstructured {
+                    try await runLightSession(.menuBarButton, token) {
+                        let args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []).copy(\.warningsAsErrors, true)
+                        _ = try await reloadConfig(args: args)
+                    }
+                }
+            } label: {
+                Label("Config contains warnings...", systemImage: "exclamationmark.triangle.fill")
+            }
+            Divider()
+        }
         if let token: RunSessionGuard = .isServerEnabled {
             Text("Workspaces:")
             ForEach(viewModel.workspaces, id: \.name) { workspace in
@@ -44,7 +57,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         }.keyboardShortcut("E", modifiers: .command)
         getExperimentalUISettingsMenu(viewModel: viewModel)
         openConfigButton()
-        reloadConfigButton()
+        reloadConfigButton(warningsAsErrors: false)
         Button("Quit \(aeroSpaceAppName)") {
             Task.startUnstructured {
                 terminationHandler?.beforeTermination()
@@ -84,11 +97,14 @@ func openConfigButton(showShortcutGroup: Bool = false) -> some View {
 }
 
 @MainActor @ViewBuilder
-func reloadConfigButton(showShortcutGroup: Bool = false) -> some View {
+func reloadConfigButton(showShortcutGroup: Bool = false, warningsAsErrors: Bool) -> some View {
     if let token: RunSessionGuard = .isServerEnabled {
         let button = Button("Reload config") {
             Task.startUnstructured {
-                try await runLightSession(.menuBarButton, token) { _ = try await reloadConfig() }
+                try await runLightSession(.menuBarButton, token) {
+                    let args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []).copy(\.warningsAsErrors, warningsAsErrors)
+                    _ = try await reloadConfig(args: args)
+                }
             }
         }.keyboardShortcut("R", modifiers: .command)
         switch showShortcutGroup {

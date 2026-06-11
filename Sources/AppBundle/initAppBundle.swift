@@ -35,16 +35,14 @@ import Foundation
 }
 
 @MainActor private func bootstrapConfig() async throws {
-    var out = ""
-    check(
-        try await reloadConfig(forceConfigUrl: defaultConfigUrl, combinedErrorMsg: &out),
-        """
+    let result = try await reloadConfig(forceConfigUrl: defaultConfigUrl)
+    let msg = """
         Can't load default config. Your installation is probably corrupted.
         Please don't modify \(defaultConfigUrl.description.singleQuoted)
 
-        \(out)
-        """,
-    )
+        \(result.stdout)
+        """
+    check(result.isOk, msg)
 }
 
 @MainActor

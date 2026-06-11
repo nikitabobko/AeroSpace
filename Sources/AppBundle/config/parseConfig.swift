@@ -5,17 +5,23 @@ import TOMLDecoder
 import OrderedCollections
 
 struct ReadConfigResult {
-    let config: Config
     let configUrl: URL
-    let combinedErrorMsg: String?
-    let allowReloadConfig: Bool
+    let parseConfigResult: ParseConfigResult
+
+    @MainActor static func fatal(configUrl: URL, message: String) -> Self {
+        ReadConfigResult(
+            configUrl: configUrl,
+            parseConfigResult: ParseConfigResult(
+                config: defaultConfig,
+                errors: [.init(.emptyRoot, message, preventConfigReload: true)],
+                warnings: [],
+            ),
+        )
+    }
 }
 
 @MainActor
-func readConfig(forceConfigUrl: URL? = nil) -> ReadConfigResult {
-    var errors: [String] = []
-    var allowReloadConfig = true
-
+func readConfig(forceConfigUrl: URL?) -> ReadConfigResult {
     let configUrl: URL
     if let forceConfigUrl {
         configUrl = forceConfigUrl
@@ -28,39 +34,17 @@ func readConfig(forceConfigUrl: URL? = nil) -> ReadConfigResult {
                     Ambiguous config error. Several configs found:
                     \(candidates.map(\.path).joined(separator: "\n"))
                     """
-                errors.append(msg)
-                allowReloadConfig = false
-                configUrl = defaultConfigUrl
+                return .fatal(configUrl: defaultConfigUrl, message: msg)
         }
     }
     let configStr: String
     do {
         configStr = try String(contentsOf: configUrl, encoding: .utf8)
     } catch {
-        errors.append("Can't read contents of \(configUrl.path.singleQuoted) as a utf8 string: \(error.localizedDescription)")
-        allowReloadConfig = false
-        configStr = ""
+        let msg = "Can't read contents of \(configUrl.path.singleQuoted) as a utf8 string: \(error.localizedDescription)"
+        return .fatal(configUrl: configUrl, message: msg)
     }
-    let result = parseConfig(configStr)
-    errors += result.errors.map { $0.description() }
-    allowReloadConfig = allowReloadConfig && result.allowReloadConfig
-
-    let combinedErrorMsg: String? = switch errors.isEmpty {
-        case true: nil
-        case false:
-            """
-            Failed to parse \(configUrl.absoluteURL.path)
-
-            \(result.errors.map { $0.description() }.joined(separator: "\n\n"))
-            """
-    }
-
-    return ReadConfigResult(
-        config: result.config,
-        configUrl: configUrl,
-        combinedErrorMsg: combinedErrorMsg,
-        allowReloadConfig: allowReloadConfig,
-    )
+    return ReadConfigResult(configUrl: configUrl, parseConfigResult: parseConfig(configStr))
 }
 
 struct ConfigParseDiagnostic: Error, Equatable {
@@ -74,13 +58,18 @@ struct ConfigParseDiagnostic: Error, Equatable {
         self.preventConfigReload = preventConfigReload
     }
 
-    func description() -> String {
+    func description(_ severity: Severity) -> String {
         let backtraceDesc = backtrace.description
         // todo Make 'split' + flatten normalization prettier
         return switch backtraceDesc.isEmpty {
-            case true: "[ERROR] \(message)"
-            case false: "[ERROR] \(backtraceDesc): \(message)"
+            case true: "[\(severity.rawValue)] \(message)"
+            case false: "[\(severity.rawValue)] \(backtraceDesc): \(message)"
         }
+    }
+
+    enum Severity: String {
+        case warning = "WARNING"
+        case error = "ERROR"
     }
 }
 
@@ -238,12 +227,14 @@ func tomlAnyToOrderedJsonRecursive(
 struct ParseConfigResult {
     let config: Config
     let errors: [ConfigParseDiagnostic]
+    let warnings: [ConfigParseDiagnostic]
 
     var allowReloadConfig: Bool { errors.allSatisfy { !$0.preventConfigReload } }
 }
 
 @MainActor func parseConfig(_ rawToml: String) -> ParseConfigResult {
     var errors: [ConfigParseDiagnostic] = []
+    var warnings: [ConfigParseDiagnostic] = []
 
     let rawTable: OrderedJson.JsonDict
     do {
@@ -304,7 +295,13 @@ struct ParseConfigResult {
             )]
         }
     }
-    return ParseConfigResult(config: config, errors: errors)
+    if config.configVersion < maxConfigVersion {
+        let msg = "The current 'config-version = \(config.configVersion)' is outdated. " +
+            "Please consider migrating to 'config-version = \(maxConfigVersion)'. " +
+            "See https://nikitabobko.github.io/AeroSpace/guide#config-version for the migration guide."
+        warnings.append(.init(.emptyRoot, msg))
+    }
+    return ParseConfigResult(config: config, errors: errors, warnings: warnings)
 }
 
 func parseIndentForNestedContainersWithTheSameOrientation(_ _: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Void> {
@@ -312,11 +309,12 @@ func parseIndentForNestedContainersWithTheSameOrientation(_ _: OrderedJson, _ ba
     return .failure(.init(backtrace, msg))
 }
 
+let minConfigVersion = 1
+let maxConfigVersion = 2
+
 func parseConfigVersion(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Int> {
-    let min = 1
-    let max = 2
-    return parseInt(raw, backtrace)
-        .filter(.init(backtrace, "config-version must be in [\(min), \(max)] range")) { (min ... max).contains($0) }
+    parseInt(raw, backtrace)
+        .filter(.init(backtrace, "config-version must be in [\(minConfigVersion), \(maxConfigVersion)] range")) { (minConfigVersion ... maxConfigVersion).contains($0) }
 }
 
 func parseInt(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Int> {

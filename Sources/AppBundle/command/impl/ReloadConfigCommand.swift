@@ -6,41 +6,78 @@ struct ReloadConfigCommand: Command {
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
-        var stdout = ""
-        let isOk = try await reloadConfig(args: args, combinedErrorMsg: &stdout)
-        if !stdout.isEmpty {
-            io.out(stdout)
+        let result = try await reloadConfig(args: args)
+        if !result.stdout.isEmpty {
+            io.out(result.stdout)
         }
-        return .from(bool: isOk)
+        if !result.stderr.isEmpty {
+            io.err(result.stderr)
+        }
+        return .from(bool: result.isOk)
     }
 }
 
-@MainActor func reloadConfig(forceConfigUrl: URL? = nil) async throws -> Bool {
-    var devNull = ""
-    return try await reloadConfig(forceConfigUrl: forceConfigUrl, combinedErrorMsg: &devNull)
+struct ReloadConfigResult {
+    let isOk: Bool
+    let stdout: String
+    let stderr: String
 }
 
 @MainActor func reloadConfig(
     args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []),
     forceConfigUrl: URL? = nil,
-    combinedErrorMsg: inout String,
-) async throws -> Bool {
+) async throws -> ReloadConfigResult {
     let result = readConfig(forceConfigUrl: forceConfigUrl)
-    if let msg = result.combinedErrorMsg {
-        combinedErrorMsg.append(msg)
-        if !args.noGui {
-            MessageModel.shared.message = Message(description: "AeroSpace Config Diagnostics", body: msg)
+    let parseResult = result.parseConfigResult
+    let warningsAsErrors = args.warningsAsErrors
+
+    var errors = parseResult.errors.map { $0.description(.error) }
+    var warnings = parseResult.warnings.map { $0.description(.warning) }
+    let containsWarnings = !parseResult.warnings.isEmpty
+
+    if !args.noGui {
+        let lines = errors + warnings
+        switch true {
+            case !errors.isEmpty:
+                let msg = failedToParseMsg(configUrl: result.configUrl, errorsCount: parseResult.errors.count, warningsCount: parseResult.warnings.count, lines: lines)
+                MessageModel.shared.message = Message(body: msg, containsWarnings: containsWarnings)
+            case warningsAsErrors && !warnings.isEmpty:
+                let msg = parsedWithWarningsMsg(configUrl: result.configUrl, warningsCount: parseResult.warnings.count, lines: lines)
+                MessageModel.shared.message = Message(body: msg, containsWarnings: containsWarnings)
+            default:
+                MessageModel.shared.message = nil
         }
-    } else {
-        MessageModel.shared.message = nil
     }
-    if result.allowReloadConfig && !args.dryRun {
+    if parseResult.allowReloadConfig && !args.dryRun {
+        TrayMenuModel.shared.lastReloadConfigContainedWarnings = containsWarnings
         resetHotKeys()
-        config = result.config
+        config = parseResult.config
         configUrl = result.configUrl
         try await activateMode(activeMode)
         syncStartAtLogin()
         syncConfigFileWatcher()
     }
-    return result.combinedErrorMsg == nil
+
+    if warningsAsErrors {
+        errors += warnings
+        warnings = []
+    }
+
+    return ReloadConfigResult(
+        isOk: errors.isEmpty,
+        stdout: errors.joined(separator: "\n\n"),
+        stderr: warnings.joined(separator: "\n\n"),
+    )
+}
+
+private func failedToParseMsg(configUrl: URL, errorsCount: Int, warningsCount: Int, lines: [String]) -> String {
+    let path = configUrl.absoluteURL.path.singleQuoted
+    let header = "Failed to parse \(path). \(errorsCount) error(s). \(warningsCount) warning(s)"
+    return "\(header)\n\n\(lines.joined(separator: "\n\n"))"
+}
+
+private func parsedWithWarningsMsg(configUrl: URL, warningsCount: Int, lines: [String]) -> String {
+    let path = configUrl.absoluteURL.path.singleQuoted
+    let header = "Parsed \(path) with \(warningsCount) warning(s). Feel free to close this window."
+    return "\(header)\n\n\(lines.joined(separator: "\n\n"))"
 }

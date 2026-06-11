@@ -8,10 +8,12 @@ public struct ReloadConfigCmdArgs: CmdArgs {
         flags: [
             "--no-gui": trueBoolFlag(\.noGui),
             "--dry-run": trueBoolFlag(\.dryRun),
+            "--warnings-as-errors": trueBoolFlag(\.warningsAsErrors),
         ],
         posArgs: [],
     )
 
     public var noGui: Bool = false
     public var dryRun: Bool = false
+    public var warningsAsErrors: Bool = false
 }
