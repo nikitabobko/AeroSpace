@@ -40,7 +40,7 @@ struct MoveCommand: Command {
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
                 return .fail(io.err(moveOutMacosUnconventionalWindow))
             case .macosPopupWindowsContainer:
-                return .fail // Impossible
+                return .fail(io.err(bugPrompt())) // Impossible
         }
     }
 }
@@ -124,7 +124,7 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
         case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
             return .fail(io.err(moveOutMacosUnconventionalWindow))
         case .macosPopupWindowsContainer:
-            return .fail // Impossible
+            return .fail(io.err(bugPrompt())) // Impossible
     }
 }
 

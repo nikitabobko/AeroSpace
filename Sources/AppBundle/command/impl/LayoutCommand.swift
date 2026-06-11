@@ -34,7 +34,7 @@ struct LayoutCommand: Command {
                 guard let parent = window.parent else { return .fail }
                 switch parent.cases {
                     case .macosPopupWindowsContainer:
-                        return .fail // Impossible
+                        return .fail(io.err(bugPrompt())) // Impossible
                     case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
                         return .fail(io.err("Can't change layout for macOS minimized, fullscreen windows or windows or hidden apps. This behavior is subject to change"))
                     case .tilingContainer:

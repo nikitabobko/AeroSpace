@@ -12,17 +12,16 @@ public var refreshSessionEvent: RefreshSessionEvent? = nil
 @TaskLocal
 private var recursionDetectorDuringTermination = false
 
-public func dieT<T>(
+public func bugPrompt(
     _ __message: String = "",
     file: StaticString = #fileID,
     line: Int = #line,
     column: Int = #column,
     function: String = #function,
-) -> T {
+) -> String {
     let _message = __message.contains("\n") ? "\n" + __message.prefixLines(with: "    ") : __message
     let thread = Thread.current
-    let message =
-        """
+    return """
         Please report to:
             https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs
             Please describe what you did to trigger this error
@@ -45,6 +44,16 @@ public func dieT<T>(
         Stacktrace:
         \(getStringStacktrace())
         """
+}
+
+public func dieT<T>(
+    _ __message: String = "",
+    file: StaticString = #fileID,
+    line: Int = #line,
+    column: Int = #column,
+    function: String = #function,
+) -> T {
+    let message = bugPrompt(__message, file: file, line: line, column: column, function: function)
     if !isUnitTest && isServer {
         showMessageInGui(
             filenameIfConsoleApp: recursionDetectorDuringTermination
