@@ -9,7 +9,7 @@ struct LayoutCommand: Command {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
 
         let node: ConventionalWindowParentCases
-        switch target.windowOrNil {
+        switch args.root ? nil : target.windowOrNil {
             case let window?:
                 switch window.windowParentCases {
                     case .floatingWindowsContainer(let it):
