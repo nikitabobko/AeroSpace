@@ -4,7 +4,10 @@ import XCTest
 
 @MainActor
 final class WorkspaceCommandTest: XCTestCase {
-    override func setUp() async throws { setUpWorkspacesForTests() }
+    override func setUp() async throws {
+        setUpWorkspacesForTests()
+        _prevFocusedWorkspaceName = nil
+    }
 
     func testParseWorkspaceCommand() {
         testParseCommandFail("workspace my mail", msg: "ERROR: Unknown argument 'mail'", exitCode: 2)
@@ -18,5 +21,143 @@ final class WorkspaceCommandTest: XCTestCase {
         assertEquals(parseCommand("workspace --stdin foo").errorOrNil, "--stdin and --no-stdin require using (next|prev) argument")
         testParseCommandSucc("workspace --stdin next", WorkspaceCmdArgs(target: .relative(.next)).copy(\.explicitStdinFlag, true))
         testParseCommandSucc("workspace --no-stdin next", WorkspaceCmdArgs(target: .relative(.next)).copy(\.explicitStdinFlag, false))
+    }
+
+    func testDirect_focusDifferentWorkspace() async throws {
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+
+        let result = try await parseCommand("workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stdout, [])
+        assertEquals(result.stderr, [])
+        assertEquals(focus.workspace.name, "b")
+    }
+
+    func testDirect_alreadyFocused_succWithMessage() async throws {
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+
+        let result = try await parseCommand("workspace a").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stdout, [])
+        assertEquals(result.stderr, ["Workspace 'a' is already focused. Tip: use --fail-if-noop to exit with non-zero code"])
+        assertEquals(focus.workspace.name, "a")
+    }
+
+    func testDirect_alreadyFocused_failIfNoop_fails() async throws {
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+
+        let result = try await parseCommand("workspace --fail-if-noop a").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.stdout, [])
+        assertEquals(result.stderr, [])
+        assertEquals(focus.workspace.name, "a")
+    }
+
+    func testAutoBackAndForth_alreadyFocused_focusesPrev() async throws {
+        // Make "b" alive so it can be focused as the back-and-forth target.
+        _ = Workspace.get(byName: "b")
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+        _prevFocusedWorkspaceName = "b"
+
+        let result = try await parseCommand("workspace --auto-back-and-forth a").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(focus.workspace.name, "b")
+    }
+
+    func testAutoBackAndForth_alreadyFocused_noPrev_fails() async throws {
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+        // _prevFocusedWorkspaceName is nil from setUp — WorkspaceBackAndForthCommand has nothing to focus.
+
+        let result = try await parseCommand("workspace --auto-back-and-forth a").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(focus.workspace.name, "a")
+    }
+
+    func testAutoBackAndForth_differentWorkspace_focusesTarget() async throws {
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+        // --auto-back-and-forth only kicks in when the target equals the focused workspace.
+        // Otherwise it's a regular direct focus.
+        _prevFocusedWorkspaceName = "c" // should be ignored
+
+        let result = try await parseCommand("workspace --auto-back-and-forth b").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(focus.workspace.name, "b")
+    }
+
+    func testRelativeNext_stdin() async throws {
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+
+        let result = try await parseCommand("workspace --stdin next").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(focus.workspace.name, "b")
+    }
+
+    func testRelativePrev_stdin() async throws {
+        assertTrue(Workspace.get(byName: "b").focusWorkspace())
+
+        let result = try await parseCommand("workspace --stdin prev").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(focus.workspace.name, "a")
+    }
+
+    func testRelativeNext_wrapAround_stdin() async throws {
+        assertTrue(Workspace.get(byName: "c").focusWorkspace())
+
+        let result = try await parseCommand("workspace --wrap-around --stdin next").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(focus.workspace.name, "a")
+    }
+
+    func testRelativePrev_wrapAround_stdin() async throws {
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+
+        let result = try await parseCommand("workspace --wrap-around --stdin prev").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(focus.workspace.name, "c")
+    }
+
+    func testRelativeNext_noNext_failsWithoutWrap() async throws {
+        assertTrue(Workspace.get(byName: "c").focusWorkspace())
+
+        // "c" is the last workspace in the stdin list, no wrap-around → cannot resolve next.
+        let result = try await parseCommand("workspace --stdin next").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(focus.workspace.name, "c")
+    }
+
+    func testRelativePrev_noPrev_failsWithoutWrap() async throws {
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+
+        let result = try await parseCommand("workspace --stdin prev").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(focus.workspace.name, "a")
+    }
+
+    func testRelativeNext_emptyStdin_fails() async throws {
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+
+        let result = try await parseCommand("workspace --stdin next").cmdOrDie.run(.defaultEnv, CmdStdin(""))
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(focus.workspace.name, "a")
+    }
+
+    func testRelativeNext_currentNotInStdin_picksFirst() async throws {
+        // When current workspace isn't in the stdin list, index defaults to 0, so `next` lands on index 1.
+        assertTrue(Workspace.get(byName: "z").focusWorkspace())
+
+        let result = try await parseCommand("workspace --stdin next").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(focus.workspace.name, "b")
+    }
+
+    func testRelativeNext_noStdin_picksFromAllWorkspaces() async throws {
+        // Without --stdin, getNextPrevWorkspace pulls from Workspace.all on the focused monitor.
+        _ = Workspace.get(byName: "b") // keep "b" alive in the registry
+        _ = Workspace.get(byName: "c")
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+
+        let result = try await parseCommand("workspace next").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(focus.workspace.name, "b")
     }
 }

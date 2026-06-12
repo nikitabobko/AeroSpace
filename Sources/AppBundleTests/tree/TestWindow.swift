@@ -41,6 +41,10 @@ final class TestWindow: Window, CustomStringConvertible {
         _rect
     }
 
+    @MainActor override func getAxSize() async throws -> CGSize? {
+        _rect.map { CGSize(width: $0.width, height: $0.height) }
+    }
+
     override var isMacosFullscreen: Bool {
         get async {
             isMacosFullscreenForTest

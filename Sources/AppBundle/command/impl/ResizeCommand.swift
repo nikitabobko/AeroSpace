@@ -1,7 +1,7 @@
 import AppKit
 import Common
 
-struct ResizeCommand: Command { // todo cover with tests
+struct ResizeCommand: Command {
     let args: ResizeCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = true
 

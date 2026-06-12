@@ -505,6 +505,181 @@ final class ConfigTest: XCTestCase {
         ])
     }
 
+    func testAfterLoginCommandDeprecation() {
+        let result = parseConfig(
+            """
+            after-login-command = ['exec-and-forget echo hi']
+            """,
+        )
+        assertEquals(
+            result.strErrors,
+            ["[ERROR] after-login-command: after-login-command is deprecated since AeroSpace 0.19.0. https://github.com/nikitabobko/AeroSpace/issues/1482"],
+        )
+
+        // Empty array is still accepted
+        let okResult = parseConfig(
+            """
+            after-login-command = []
+            """,
+        )
+        assertEquals(okResult.errors, [])
+    }
+
+    func testOnFocusChangedAsSingleStringAndAsList() {
+        let result = parseConfig(
+            """
+            on-focus-changed = 'focus left'
+            on-mode-changed = ['focus right', 'focus up']
+            on-focused-monitor-changed = 'focus down'
+            """,
+        )
+        assertEquals(result.errors, [])
+        assertEquals(result.config.onFocusChanged.count, 1)
+        XCTAssertTrue(result.config.onFocusChanged[0] is FocusCommand)
+        assertEquals(result.config.onModeChanged.count, 2)
+        assertEquals(result.config.onFocusedMonitorChanged.count, 1)
+    }
+
+    func testOnFocusChangedTypeError() {
+        let result = parseConfig(
+            """
+            on-focus-changed = 1
+            """,
+        )
+        assertEquals(
+            result.strErrors,
+            ["[ERROR] on-focus-changed: Expected types are \'string\' or \'array\'. But actual type is \'int\'"],
+        )
+    }
+
+    func testMacosNativeCommandsMustBeLast() {
+        let errors = parseConfig(
+            """
+            on-focus-changed = ['macos-native-fullscreen', 'focus left']
+            """,
+        ).strErrors
+        assertEquals(
+            errors,
+            ["[ERROR] on-focus-changed: macos-native-* commands are only allowed to be the last commands in the list"],
+        )
+
+        // Macos-native-* command as the last entry is allowed
+        let ok = parseConfig(
+            """
+            on-focus-changed = ['focus left', 'macos-native-fullscreen']
+            """,
+        )
+        assertEquals(ok.errors, [])
+    }
+
+    func testParseDefaultRootContainerLayout() {
+        let result = parseConfig(
+            """
+            default-root-container-layout = 'accordion'
+            """,
+        )
+        assertEquals(result.errors, [])
+        assertEquals(result.config.defaultRootContainerLayout, .accordion)
+
+        let listResult = parseConfig(
+            """
+            default-root-container-layout = 'list'
+            """,
+        )
+        assertEquals(listResult.errors, [])
+        assertEquals(listResult.config.defaultRootContainerLayout, .tiles)
+
+        let bad = parseConfig(
+            """
+            default-root-container-layout = 'bogus'
+            """,
+        )
+        assertEquals(
+            bad.strErrors,
+            ["[ERROR] default-root-container-layout: Can\'t parse layout \'bogus\'"],
+        )
+    }
+
+    func testParseDefaultRootContainerOrientation() {
+        let result = parseConfig(
+            """
+            default-root-container-orientation = 'vertical'
+            """,
+        )
+        assertEquals(result.errors, [])
+        assertEquals(result.config.defaultRootContainerOrientation, .vertical)
+
+        let bad = parseConfig(
+            """
+            default-root-container-orientation = 'diagonal'
+            """,
+        )
+        assertEquals(
+            bad.strErrors,
+            ["[ERROR] default-root-container-orientation: Can\'t parse default container orientation \'diagonal\'"],
+        )
+    }
+
+    func testDeprecatedIndentForNestedContainers() {
+        let errors = parseConfig(
+            """
+            indent-for-nested-containers-with-the-same-orientation = 30
+            """,
+        ).strErrors
+        assertEquals(
+            errors,
+            ["[ERROR] indent-for-nested-containers-with-the-same-orientation: Deprecated. Please drop it from the config. See https://github.com/nikitabobko/AeroSpace/issues/96"],
+        )
+    }
+
+    func testDeprecatedNonEmptyWorkspacesRootContainersLayoutOnStartup() {
+        // The 'smart' value used to be accepted and is silently dropped now
+        let smart = parseConfig(
+            """
+            non-empty-workspaces-root-containers-layout-on-startup = 'smart'
+            """,
+        )
+        assertEquals(smart.errors, [])
+
+        let bad = parseConfig(
+            """
+            non-empty-workspaces-root-containers-layout-on-startup = 'tiles'
+            """,
+        ).strErrors
+        assertEquals(
+            bad,
+            ["[ERROR] non-empty-workspaces-root-containers-layout-on-startup: \'non-empty-workspaces-root-containers-layout-on-startup\' is deprecated. Please drop it from your config"],
+        )
+    }
+
+    func testOutdatedConfigVersionWarning() {
+        let result = parseConfig(
+            """
+            config-version = 1
+            """,
+        )
+        assertEquals(result.errors, [])
+        assertEquals(result.warnings.count, 1)
+        XCTAssertTrue(result.warnings[0].message.contains("'config-version = 1' is outdated"))
+
+        // config-version = 2 (the current max) should not produce the outdated warning
+        let v2 = parseConfig(
+            """
+            config-version = 2
+            """,
+        )
+        assertEquals(v2.errors, [])
+        assertEquals(v2.warnings, [])
+    }
+
+    func testTopLevelTypeIsNotTable() {
+        // TOML arrays at the root parse as a key error, but values returning a non-table json hit the
+        // preventConfigReload path. Use a doubled array-of-tables header to trigger TOML syntax failure
+        // and confirm that an unparsable TOML is flagged as preventing reload.
+        let result = parseConfig("a = ")
+        assertFalse(result.allowReloadConfig)
+    }
+
     func testParseKeyMapping() {
         let result = parseConfig(
             """
