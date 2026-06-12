@@ -33,7 +33,27 @@ enum NonLeafTreeNodeKind: Equatable {
     case macosPopupWindowsContainer
 }
 
+enum TilingContainerParentCases {
+    case unbound
+    case tilingContainer(TilingContainer)
+    case workspace(Workspace)
+}
+
 protocol NonLeafTreeNodeObject: TreeNode {}
+
+extension TilingContainer {
+    var tilingContainerParentCases: TilingContainerParentCases {
+        guard let parent else { return .unbound }
+        return switch parent.cases {
+            case .tilingContainer(let it): .tilingContainer(it)
+            case .workspace(let it): .workspace(it)
+            case .macosFullscreenWindowsContainer: dieT("macosFullscreenWindowsContainer can't be TilingContainer's parent")
+            case .macosHiddenAppsWindowsContainer: dieT("macosHiddenAppsWindowsContainer can't be TilingContainer's parent")
+            case .macosMinimizedWindowsContainer: dieT("macosMinimizedWindowsContainer can't be TilingContainer's parent")
+            case .macosPopupWindowsContainer: dieT("macosPopupWindowsContainer can't be TilingContainer's parent")
+        }
+    }
+}
 
 extension TreeNode {
     var nodeCases: TreeNodeCases {

@@ -112,8 +112,8 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
         }
     }) as? TilingContainer
     guard let innerMostTilingContainer else { return .fail(io.err(bugPrompt())) } // Impossible
-    guard let parent = innerMostTilingContainer.parent else { return .fail }
-    switch parent.cases {
+    switch innerMostTilingContainer.tilingContainerParentCases {
+        case .unbound: return .fail
         case .tilingContainer(let parent):
             check(parent.orientation == direction.orientation)
             guard let ownIndex = innerMostTilingContainer.ownIndex else { return .fail }
@@ -121,10 +121,6 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
             return .succ
         case .workspace(let parent):
             return hitWorkspaceBoundaries(window, parent, io, args, direction, env)
-        case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-            return .fail(io.err(moveOutMacosUnconventionalWindow))
-        case .macosPopupWindowsContainer:
-            return .fail(io.err(bugPrompt())) // Impossible
     }
 }
 
