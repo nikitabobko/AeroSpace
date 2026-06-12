@@ -91,3 +91,9 @@ extension HotkeyBinding {
         self.init(modifiers, keyCode, commands, descriptionWithKeyNotation: descriptionWithKeyNotation)
     }
 }
+
+extension FocusCommand {
+    static func new(direction: CardinalDirection) -> FocusCommand {
+        FocusCommand(args: FocusCmdArgs(rawArgs: [], cardinalOrDfsDirection: .direction(direction)))
+    }
+}

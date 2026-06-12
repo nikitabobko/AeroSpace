@@ -16,11 +16,6 @@ public struct SwapCmdArgs: CmdArgs {
     public var target: Lateinit<CardinalOrDfsDirection> = .uninitialized
     public var swapFocus: Bool = false
     public var wrapAround: Bool = false
-
-    public init(rawArgs: [String], target: CardinalOrDfsDirection) {
-        self.commonState = .init(rawArgs.slice)
-        self.target = .initialized(target)
-    }
 }
 
 func parseSwapCmdArgs(_ args: StrArrSlice) -> ParsedCmd<SwapCmdArgs> {

@@ -21,11 +21,6 @@ public struct MoveCmdArgs: CmdArgs {
     public var failIfFullscreen: Bool = false
     public var failIfMacosNativeFullscreen: Bool = false
 
-    public init(rawArgs: [String], _ direction: CardinalDirection) {
-        self.commonState = .init(rawArgs.slice)
-        self.direction = .initialized(direction)
-    }
-
     public enum Boundaries: String, CaseIterable, Equatable, Sendable {
         case workspace
         case allMonitorsOuterFrame = "all-monitors-outer-frame"

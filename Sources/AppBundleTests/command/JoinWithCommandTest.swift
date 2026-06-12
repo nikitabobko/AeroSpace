@@ -13,7 +13,7 @@ final class JoinWithCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0)
         }
 
-        try await JoinWithCommand(args: JoinWithCmdArgs(rawArgs: [], direction: .right)).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("join-with right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([
             .window(0),
             .v_tiles([

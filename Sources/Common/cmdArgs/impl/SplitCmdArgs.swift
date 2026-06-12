@@ -13,11 +13,6 @@ public struct SplitCmdArgs: CmdArgs {
 
     public var arg: Lateinit<SplitArg> = .uninitialized
 
-    public init(rawArgs: [String], _ arg: SplitArg) {
-        self.commonState = .init(rawArgs.slice)
-        self.arg = .initialized(arg)
-    }
-
     public enum SplitArg: String, CaseIterable, Sendable {
         case horizontal, vertical, opposite
     }

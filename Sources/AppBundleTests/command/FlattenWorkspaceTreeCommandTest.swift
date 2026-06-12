@@ -18,7 +18,7 @@ final class FlattenWorkspaceTreeCommandTest: XCTestCase {
         }
         assertEquals(workspace.focusWorkspace(), true)
 
-        try await FlattenWorkspaceTreeCommand(args: FlattenWorkspaceTreeCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("flatten-workspace-tree").cmdOrDie.run(.defaultEnv, .emptyStdin)
         workspace.normalizeContainers()
         assertEquals(workspace.layoutDescription, .workspace([.h_tiles([.window(1), .window(2)]), .floatingWindowsContainer([.window(3)])]))
     }

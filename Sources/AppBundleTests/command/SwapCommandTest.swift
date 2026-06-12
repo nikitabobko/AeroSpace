@@ -15,28 +15,28 @@ final class SwapCommandTest: XCTestCase {
             TestWindow.new(id: 3, parent: $0)
         }
 
-        try await SwapCommand(args: SwapCmdArgs(rawArgs: [], target: .direction(.right))).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("swap right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(3), .window(2)]),
                                .window(1)]))
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
-        try await SwapCommand(args: SwapCmdArgs(rawArgs: [], target: .direction(.left))).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("swap left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(1), .window(2)]),
                                .window(3)]))
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
-        try await SwapCommand(args: SwapCmdArgs(rawArgs: [], target: .direction(.down))).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("swap down").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(2), .window(1)]),
                                .window(3)]))
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
-        try await SwapCommand(args: SwapCmdArgs(rawArgs: [], target: .direction(.up))).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("swap up").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(1), .window(2)]),
                                .window(3)]))
@@ -53,28 +53,28 @@ final class SwapCommandTest: XCTestCase {
             TestWindow.new(id: 3, parent: $0)
         }
 
-        try await SwapCommand(args: SwapCmdArgs(rawArgs: [], target: .dfsRelative(.dfsNext))).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("swap dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(2), .window(1)]),
                                .window(3)]))
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
-        try await SwapCommand(args: SwapCmdArgs(rawArgs: [], target: .dfsRelative(.dfsNext))).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("swap dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(2), .window(3)]),
                                .window(1)]))
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
-        try await SwapCommand(args: SwapCmdArgs(rawArgs: [], target: .dfsRelative(.dfsPrev))).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("swap dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(2), .window(1)]),
                                .window(3)]))
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
-        try await SwapCommand(args: SwapCmdArgs(rawArgs: [], target: .dfsRelative(.dfsPrev))).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("swap dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(1), .window(2)]),
                                .window(3)]))
@@ -89,15 +89,12 @@ final class SwapCommandTest: XCTestCase {
             TestWindow.new(id: 3, parent: $0)
         }
 
-        var args = SwapCmdArgs(rawArgs: [], target: .direction(.left))
-        args.wrapAround = true
-        try await SwapCommand(args: args).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("swap --wrap-around left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([.window(3), .window(2), .window(1)]))
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
-        args.target = .initialized(.direction(.right))
-        try await SwapCommand(args: args).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("swap --wrap-around right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([.window(1), .window(2), .window(3)]))
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
@@ -110,15 +107,12 @@ final class SwapCommandTest: XCTestCase {
             TestWindow.new(id: 3, parent: $0)
         }
 
-        var args = SwapCmdArgs(rawArgs: [], target: .dfsRelative(.dfsPrev))
-        args.wrapAround = true
-        try await SwapCommand(args: args).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("swap --wrap-around dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([.window(3), .window(2), .window(1)]))
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
-        args.target = .initialized(.dfsRelative(.dfsNext))
-        try await SwapCommand(args: args).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("swap --wrap-around dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([.window(1), .window(2), .window(3)]))
         assertEquals(focus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
@@ -131,9 +125,7 @@ final class SwapCommandTest: XCTestCase {
             TestWindow.new(id: 3, parent: $0)
         }
 
-        var args = SwapCmdArgs(rawArgs: [], target: .direction(.right))
-        args.swapFocus = true
-        try await SwapCommand(args: args).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("swap --swap-focus right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([.window(1), .window(3), .window(2)]))
         assertEquals(focus.windowOrNil?.windowId, 3)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 3)

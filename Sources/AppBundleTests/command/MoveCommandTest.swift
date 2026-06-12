@@ -54,7 +54,7 @@ final class MoveCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0)
         }
 
-        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([.window(2), .window(1)]))
     }
 
@@ -69,7 +69,7 @@ final class MoveCommandTest: XCTestCase {
             }
         }
 
-        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(
             root.layoutDescription,
             .h_tiles([
@@ -99,7 +99,7 @@ final class MoveCommandTest: XCTestCase {
         }
         window3.markAsMostRecentChild()
 
-        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(
             root.layoutDescription,
             .h_tiles([
@@ -122,7 +122,7 @@ final class MoveCommandTest: XCTestCase {
         let window2 = TestWindow.new(id: 2, parent: root, adaptiveWeight: 2)
         _ = window2.focusWindow()
 
-        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("move left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(window2.hWeight, 2)
         assertEquals(window1.hWeight, 1)
     }
@@ -139,7 +139,7 @@ final class MoveCommandTest: XCTestCase {
         }
         _ = window1.focusWindow()
 
-        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(window2.hWeight, 1)
         assertEquals(window2.vWeight, 1)
         assertEquals(window1.vWeight, 1)
@@ -154,7 +154,7 @@ final class MoveCommandTest: XCTestCase {
             TestWindow.new(id: 3, parent: $0)
         }
 
-        let result = try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .up)).run(.defaultEnv, .emptyStdin)
+        let result = try await parseCommand("move up").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(
             workspace.layoutDescription,
             .workspace([
@@ -269,7 +269,7 @@ final class MoveCommandTest: XCTestCase {
             }
         }
 
-        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("move left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(
             root.layoutDescription,
             .h_tiles([
@@ -291,7 +291,7 @@ final class MoveCommandTest: XCTestCase {
             assertEquals(TestWindow.new(id: 2, parent: $0.rootTilingContainer).focusWindow(), true)
         }
 
-        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .right)).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("move right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(
             workspace.rootTilingContainer.layoutDescription,
             .h_tiles([
@@ -310,7 +310,7 @@ final class MoveCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0.rootTilingContainer)
         }
 
-        try await MoveCommand(args: MoveCmdArgs(rawArgs: [], .left)).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("move left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(
             workspace.rootTilingContainer.layoutDescription,
             .h_tiles([

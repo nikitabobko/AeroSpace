@@ -118,7 +118,7 @@ final class FocusCommandTest: XCTestCase {
         }
 
         assertEquals(focus.windowOrNil?.windowId, 2)
-        try await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 3)
     }
 
@@ -129,7 +129,7 @@ final class FocusCommandTest: XCTestCase {
         }
 
         assertEquals(focus.windowOrNil?.windowId, 1)
-        try await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
@@ -141,9 +141,9 @@ final class FocusCommandTest: XCTestCase {
         }
 
         assertEquals(focus.windowOrNil?.windowId, 2)
-        try await FocusCommand.new(direction: .up).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus up").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
-        try await FocusCommand.new(direction: .down).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus down").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
@@ -154,7 +154,7 @@ final class FocusCommandTest: XCTestCase {
         }
 
         assertEquals(focus.windowOrNil?.windowId, 1)
-        try await FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 
@@ -165,10 +165,7 @@ final class FocusCommandTest: XCTestCase {
         }
 
         assertEquals(focus.windowOrNil?.windowId, 1)
-        var args = FocusCmdArgs(rawArgs: [], cardinalOrDfsDirection: .direction(.left))
-        args.rawBoundaries = .workspace
-        args.rawBoundariesAction = .wrapAroundTheWorkspace
-        try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus --boundaries workspace --boundaries-action wrap-around-the-workspace left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
@@ -191,18 +188,18 @@ final class FocusCommandTest: XCTestCase {
 
         assertEquals(workspace.mostRecentWindowRecursive?.windowId, 3) // The latest bound
         _ = startWindow.focusWindow()
-        try await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 3)
 
         window2.markAsMostRecentChild()
         _ = startWindow.focusWindow()
-        try await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
 
         window3.markAsMostRecentChild()
         unrelatedWindow.markAsMostRecentChild()
         _ = startWindow.focusWindow()
-        try await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
     }
 
@@ -214,7 +211,7 @@ final class FocusCommandTest: XCTestCase {
             }
         }
 
-        try await FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 
@@ -226,7 +223,7 @@ final class FocusCommandTest: XCTestCase {
             }
         }
 
-        try await FocusCommand.new(direction: .left).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 
@@ -244,18 +241,18 @@ final class FocusCommandTest: XCTestCase {
 
         assertEquals(focus.windowOrNil?.windowId, 1)
 
-        try await FocusCommand.new(dfsRelative: .dfsNext).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
-        try await FocusCommand.new(dfsRelative: .dfsNext).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 3)
-        try await FocusCommand.new(dfsRelative: .dfsNext).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 4)
 
-        try await FocusCommand.new(dfsRelative: .dfsPrev).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 3)
-        try await FocusCommand.new(dfsRelative: .dfsPrev).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 2)
-        try await FocusCommand.new(dfsRelative: .dfsPrev).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("focus dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 
@@ -267,41 +264,22 @@ final class FocusCommandTest: XCTestCase {
 
         assertEquals(focus.windowOrNil?.windowId, 1)
 
-        var args = FocusCmdArgs(rawArgs: [], cardinalOrDfsDirection: .dfsRelative(.dfsPrev))
-
-        args.rawBoundariesAction = .stop
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
+        assertEquals(try await parseCommand("focus --boundaries-action stop dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
         assertEquals(focus.windowOrNil?.windowId, 1)
 
-        args.rawBoundariesAction = .fail
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 2)
+        assertEquals(try await parseCommand("focus --boundaries-action fail dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin).exitCode.rawValue, 2)
         assertEquals(focus.windowOrNil?.windowId, 1)
 
-        args.rawBoundariesAction = .wrapAroundTheWorkspace
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
+        assertEquals(try await parseCommand("focus --boundaries-action wrap-around-the-workspace dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
         assertEquals(focus.windowOrNil?.windowId, 2)
 
-        args.cardinalOrDfsDirection = .dfsRelative(.dfsNext)
-
-        args.rawBoundariesAction = .stop
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
+        assertEquals(try await parseCommand("focus --boundaries-action stop dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
         assertEquals(focus.windowOrNil?.windowId, 2)
 
-        args.rawBoundariesAction = .fail
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 2)
+        assertEquals(try await parseCommand("focus --boundaries-action fail dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin).exitCode.rawValue, 2)
         assertEquals(focus.windowOrNil?.windowId, 2)
 
-        args.rawBoundariesAction = .wrapAroundTheWorkspace
-        assertEquals(try await FocusCommand(args: args).run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
+        assertEquals(try await parseCommand("focus --boundaries-action wrap-around-the-workspace dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
         assertEquals(focus.windowOrNil?.windowId, 1)
-    }
-}
-
-extension FocusCommand {
-    static func new(direction: CardinalDirection) -> FocusCommand {
-        FocusCommand(args: FocusCmdArgs(rawArgs: [], cardinalOrDfsDirection: .direction(direction)))
-    }
-    static func new(dfsRelative: DfsNextPrev) -> FocusCommand {
-        FocusCommand(args: FocusCmdArgs(rawArgs: [], cardinalOrDfsDirection: .dfsRelative(dfsRelative)))
     }
 }

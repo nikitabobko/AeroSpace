@@ -12,7 +12,7 @@ final class SplitCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0)
         }
 
-        try await SplitCommand(args: SplitCmdArgs(rawArgs: [], .vertical)).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("split vertical").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([
             .v_tiles([
                 .window(1),
@@ -27,7 +27,7 @@ final class SplitCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0)
         }
 
-        try await SplitCommand(args: SplitCmdArgs(rawArgs: [], .opposite)).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("split opposite").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([
             .v_tiles([
                 .window(1),
@@ -44,7 +44,7 @@ final class SplitCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0)
         }
 
-        try await SplitCommand(args: SplitCmdArgs(rawArgs: [], .horizontal)).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("split horizontal").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([
             .h_tiles([
                 .window(1),
@@ -61,7 +61,7 @@ final class SplitCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0)
         }
 
-        try await SplitCommand(args: SplitCmdArgs(rawArgs: [], .opposite)).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("split opposite").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([
             .h_tiles([
                 .window(1),

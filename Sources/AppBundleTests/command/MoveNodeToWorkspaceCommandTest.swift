@@ -20,7 +20,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             _ = TestWindow.new(id: 1, parent: $0).focusWindow()
         }
 
-        try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("move-node-to-workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         assertEquals((Workspace.get(byName: "b").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }
@@ -31,7 +31,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             _ = TestWindow.new(id: 1, parent: $0).focusWindow()
         }
 
-        try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("move-node-to-workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.workspace.name, "a")
     }
 
@@ -41,7 +41,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             _ = TestWindow.new(id: 2, parent: $0).focusWindow()
         }
 
-        try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("move-node-to-workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(focus.windowOrNil?.windowId, 1)
     }
 
@@ -50,7 +50,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             assertTrue(TestWindow.new(id: 1, parent: $0.floatingWindowsContainer).focusWindow())
         }
 
-        try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.defaultEnv, .emptyStdin)
+        try await parseCommand("move-node-to-workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
         assertEquals((Workspace.get(byName: "b").floatingWindowsContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }
@@ -67,7 +67,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
 
         assertEquals(focus.workspace, workspaceA)
 
-        try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "a").copy(\.windowId, 2))
+        try await parseCommand("move-node-to-workspace --window-id 2 a").cmdOrDie
             .run(.defaultEnv, .emptyStdin)
 
         assertEquals(focus.workspace, workspaceA)
@@ -77,7 +77,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
     }
 
     func testNoWindowIsFocused() async throws {
-        let result = try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b"))
+        let result = try await parseCommand("move-node-to-workspace b").cmdOrDie
             .run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stderr, [noWindowIsFocused])
@@ -88,7 +88,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             _ = TestWindow.new(id: 1, parent: $0).focusWindow()
         }
 
-        let result = try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "a"))
+        let result = try await parseCommand("move-node-to-workspace a").cmdOrDie
             .run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr.count, 1)
@@ -101,7 +101,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             _ = TestWindow.new(id: 1, parent: $0).focusWindow()
         }
 
-        let result = try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "a").copy(\.failIfNoop, true))
+        let result = try await parseCommand("move-node-to-workspace --fail-if-noop a").cmdOrDie
             .run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stderr, [])
@@ -115,7 +115,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         }
         assertEquals(focus.workspace.name, "a")
 
-        try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b").copy(\.focusFollowsWindow, true))
+        try await parseCommand("move-node-to-workspace --focus-follows-window b").cmdOrDie
             .run(.defaultEnv, .emptyStdin)
         assertEquals(focus.workspace.name, "b")
         assertEquals(focus.windowOrNil?.windowId, 1)
@@ -129,7 +129,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         // Make "b" alive so the relative target has somewhere to go
         _ = Workspace.get(byName: "b").rootTilingContainer
 
-        try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .relative(.next)))
+        try await parseCommand("move-node-to-workspace next").cmdOrDie
             .run(.defaultEnv, .emptyStdin)
 
         assertTrue(Workspace.get(byName: "a").isEffectivelyEmpty)
@@ -143,7 +143,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             _ = TestWindow.new(id: 1, parent: $0).focusWindow()
         }
 
-        let result = try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .relative(.prev)))
+        let result = try await parseCommand("move-node-to-workspace prev").cmdOrDie
             .run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stderr, ["Can't resolve next or prev workspace"])
@@ -157,7 +157,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         }
 
         // Stdin-controlled list keeps the wrap behavior independent of which workspaces happen to be alive.
-        try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .relative(.prev), wrapAround: true).copy(\.explicitStdinFlag, true))
+        try await parseCommand("move-node-to-workspace --wrap-around --stdin prev").cmdOrDie
             .run(.defaultEnv, CmdStdin("a\nb\n"))
 
         assertTrue(Workspace.get(byName: "a").isEffectivelyEmpty)
@@ -170,7 +170,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         }
 
         // Workspaces listed via stdin: focus is "a", next should be the workspace listed after it.
-        try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(target: .relative(.next)).copy(\.explicitStdinFlag, true))
+        try await parseCommand("move-node-to-workspace --stdin next").cmdOrDie
             .run(.defaultEnv, CmdStdin("a\nx\ny\n"))
 
         assertTrue(Workspace.get(byName: "a").isEffectivelyEmpty)
