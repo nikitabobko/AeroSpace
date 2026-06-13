@@ -127,7 +127,7 @@ let move_help_generated = """
                 [--fail-if-macos-native-fullscreen] (left|down|up|right)
     """
 let reload_config_help_generated = """
-    USAGE: reload-config [-h|--help] [--no-gui] [--dry-run]
+    USAGE: reload-config [-h|--help] [--no-gui] [--dry-run] [--warnings-as-errors]
     """
 let resize_help_generated = """
     USAGE: resize [-h|--help] [--window-id <window-id>] (smart|smart-opposite|width|height) [+|-]<number>
