@@ -26,15 +26,14 @@ func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableR
 @MainActor
 private func moveWithMouse(_ window: Window) async throws { // todo cover with tests
     resetClosedWindowsCache()
-    guard let parent = window.parent else { return }
-    switch parent.cases {
-        case .workspace:
+    switch window.windowParentCases {
+        case .floatingWindowsContainer:
             try await moveFloatingWindow(window)
+        case .macosFullscreenWindowsContainer, .macosMinimizedWindowsContainer, .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
+            return // Unconventional windows can't be moved with mouse
         case .tilingContainer:
             moveTilingWindow(window)
-        case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
-             .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
-            return // Unconventional windows can't be moved with mouse
+        case .unbound: return
     }
 }
 

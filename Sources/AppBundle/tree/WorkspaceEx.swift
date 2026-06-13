@@ -18,8 +18,19 @@ extension Workspace {
         }
     }
 
+    @MainActor
     var floatingWindows: [Window] {
-        children.filterIsInstance(of: Window.self)
+        floatingWindowsContainer.children.filterIsInstance(of: Window.self)
+    }
+
+    @MainActor
+    var floatingWindowsContainer: FloatingWindowsContainer {
+        let containers = children.filterIsInstance(of: FloatingWindowsContainer.self)
+        return switch containers.count {
+            case 0: FloatingWindowsContainer(parent: self)
+            case 1: containers.singleOrNil().orDie()
+            default: dieT("Workspace must contain zero or one FloatingWindowsContainer")
+        }
     }
 
     @MainActor var macOsNativeFullscreenWindowsContainer: MacosFullscreenWindowsContainer {

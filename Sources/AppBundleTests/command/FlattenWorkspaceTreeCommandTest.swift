@@ -14,12 +14,12 @@ final class FlattenWorkspaceTreeCommandTest: XCTestCase {
                     TestWindow.new(id: 2, parent: $0)
                 }
             }
-            TestWindow.new(id: 3, parent: $0) // floating
+            TestWindow.new(id: 3, parent: $0.floatingWindowsContainer) // floating
         }
         assertEquals(workspace.focusWorkspace(), true)
 
         try await FlattenWorkspaceTreeCommand(args: FlattenWorkspaceTreeCmdArgs(rawArgs: [])).run(.defaultEnv, .emptyStdin)
         workspace.normalizeContainers()
-        assertEquals(workspace.layoutDescription, .workspace([.h_tiles([.window(1), .window(2)]), .window(3)]))
+        assertEquals(workspace.layoutDescription, .workspace([.h_tiles([.window(1), .window(2)]), .floatingWindowsContainer([.window(3)])]))
     }
 }

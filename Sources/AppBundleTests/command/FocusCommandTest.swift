@@ -111,7 +111,7 @@ final class FocusCommandTest: XCTestCase {
 
     func testFocusOverFloatingWindows() async throws {
         assertEquals(focus.windowOrNil, nil)
-        Workspace.get(byName: name).apply {
+        Workspace.get(byName: name).floatingWindowsContainer.apply {
             TestWindow.new(id: 1, parent: $0, rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100))
             assertEquals(TestWindow.new(id: 2, parent: $0, rect: Rect(topLeftX: 10, topLeftY: 10, width: 100, height: 100)).focusWindow(), true)
             TestWindow.new(id: 3, parent: $0, rect: Rect(topLeftX: 20, topLeftY: 20, width: 100, height: 100))

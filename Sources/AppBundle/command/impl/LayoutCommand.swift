@@ -31,16 +31,18 @@ struct LayoutCommand: Command {
             case .vertical:
                 return changeTilingLayout(io, targetLayout: nil, targetOrientation: .v, window: window)
             case .tiling:
-                guard let parent = window.parent else { return .fail }
-                switch parent.cases {
+                switch window.windowParentCases {
+                    case .unbound:
+                        return .fail
                     case .macosPopupWindowsContainer:
                         return .fail(io.err(bugPrompt())) // Impossible
                     case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
                         return .fail(io.err("Can't change layout for macOS minimized, fullscreen windows or windows or hidden apps. This behavior is subject to change"))
                     case .tilingContainer:
                         return .succ // Nothing to do
-                    case .workspace(let workspace):
+                    case .floatingWindowsContainer(let container):
                         window.lastFloatingSize = try await window.getAxSize() ?? window.lastFloatingSize
+                        guard let workspace = container.nodeWorkspace else { return .fail(io.err(bugPrompt())) }
                         try await window.relayoutWindow(on: workspace, forceTile: true)
                         return .succ
                 }
@@ -62,9 +64,12 @@ struct LayoutCommand: Command {
             parent.layout = targetLayout
             parent.changeOrientation(targetOrientation)
             return .succ
-        case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
-             .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
+        case .floatingWindowsContainer, .macosMinimizedWindowsContainer,
+             .macosFullscreenWindowsContainer, .macosPopupWindowsContainer,
+             .macosHiddenAppsWindowsContainer:
             return .fail(io.err("The window is non-tiling"))
+        case .workspace:
+            return .fail(io.err(bugPrompt()))
     }
 }
 
@@ -80,7 +85,7 @@ extension Window {
             case .h_tiles:     (parent as? TilingContainer).map { $0.layout == .tiles && $0.orientation == .h } == true
             case .v_tiles:     (parent as? TilingContainer).map { $0.layout == .tiles && $0.orientation == .v } == true
             case .tiling:      parent is TilingContainer
-            case .floating:    parent is Workspace
+            case .floating:    parent is FloatingWindowsContainer
         }
     }
 }

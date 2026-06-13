@@ -47,12 +47,12 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
 
     func testPreserveFloatingLayout() async throws {
         let workspaceA = Workspace.get(byName: "a").apply {
-            _ = TestWindow.new(id: 1, parent: $0).focusWindow()
+            assertTrue(TestWindow.new(id: 1, parent: $0.floatingWindowsContainer).focusWindow())
         }
 
         try await MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "b")).run(.defaultEnv, .emptyStdin)
         XCTAssertTrue(workspaceA.isEffectivelyEmpty)
-        assertEquals(Workspace.get(byName: "b").children.filterIsInstance(of: Window.self).singleOrNil()?.windowId, 1)
+        assertEquals((Workspace.get(byName: "b").floatingWindowsContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }
 
     func testSummonWindow() async throws {

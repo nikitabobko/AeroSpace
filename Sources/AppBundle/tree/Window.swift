@@ -49,12 +49,22 @@ enum LayoutReason: Equatable {
 }
 
 extension Window {
-    var isFloating: Bool { parent is Workspace } // todo drop. It will be a source of bugs when sticky is introduced
+    var isFloating: Bool { // todo drop. It will be a source of bugs when sticky is introduced
+        switch windowParentCases {
+            case .floatingWindowsContainer: true
+            case .macosFullscreenWindowsContainer: false
+            case .macosHiddenAppsWindowsContainer: false
+            case .macosMinimizedWindowsContainer: false
+            case .macosPopupWindowsContainer: false
+            case .tilingContainer: false
+            case .unbound: false
+        }
+    }
 
     @discardableResult
     @MainActor
     func bindAsFloatingWindow(to workspace: Workspace) -> BindingData? {
-        bind(to: workspace, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+        bind(to: workspace.floatingWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
     }
 
     func asMacWindow() -> MacWindow { self as! MacWindow }

@@ -12,12 +12,13 @@ func collectAllWindowIds(workspace: Workspace) -> [UInt32] {
         collectAllWindowIdsRecursive(workspace.rootTilingContainer)
 }
 
-func collectAllWindowIdsRecursive(_ node: TreeNode) -> [UInt32] {
+private func collectAllWindowIdsRecursive(_ node: TreeNode) -> [UInt32] {
     switch node.nodeCases {
         case .macosFullscreenWindowsContainer,
              .macosHiddenAppsWindowsContainer,
              .macosMinimizedWindowsContainer,
              .macosPopupWindowsContainer,
+             .floatingWindowsContainer,
              .workspace: []
         case .tilingContainer(let c):
             c.children.reduce(into: [UInt32]()) { partialResult, elem in

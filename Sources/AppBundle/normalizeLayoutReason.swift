@@ -54,8 +54,10 @@ private func _normalizeLayoutReason(workspace: Workspace, windows: [Window]) asy
 func exitMacOsNativeUnconventionalState(window: Window, prevParentKind: NonLeafTreeNodeKind, workspace: Workspace) async throws {
     window.layoutReason = .standard
     switch prevParentKind {
-        case .workspace:
+        case .floatingWindowsContainer:
             window.bindAsFloatingWindow(to: workspace)
+        case .workspace:
+            break // Not possible
         case .tilingContainer:
             try await window.relayoutWindow(on: workspace, forceTile: true)
         case .macosPopupWindowsContainer: // Since the window was minimized/fullscreened it was mistakenly detected as popup. Relayout the window

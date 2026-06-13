@@ -18,8 +18,8 @@ struct MoveCommand: Command {
         ) {
             return .fail
         }
-        guard let parent = currentWindow.parent else { return .fail }
-        switch parent.cases {
+        switch currentWindow.windowParentCases {
+            case .unbound: return .fail
             case .tilingContainer(let parent):
                 let indexOfCurrent = currentWindow.ownIndex.orDie()
                 let indexOfSiblingTarget = indexOfCurrent + direction.focusOffset
@@ -35,7 +35,7 @@ struct MoveCommand: Command {
                 } else {
                     return moveOut(tilingWindow: currentWindow, direction: direction, io, args, env)
                 }
-            case .workspace: // floating window
+            case .floatingWindowsContainer: // floating window
                 return .fail(io.err("moving floating windows isn't yet supported")) // todo
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
                 return .fail(io.err(moveOutMacosUnconventionalWindow))
@@ -106,9 +106,14 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
     let innerMostTilingContainer = window.parents.first(where: {
         return switch $0.parent?.cases {
             case .tilingContainer(let parent): parent.orientation == direction.orientation
-            // Stop searching
-            case .workspace, .macosMinimizedWindowsContainer, nil, .macosFullscreenWindowsContainer,
-                 .macosHiddenAppsWindowsContainer, .macosPopupWindowsContainer: true
+            // Stop searching: we have hit the workspace
+            case nil, .workspace: true
+            // Impossible: tilingContainer's parent can only be a workspace or tilingContainer
+            case .floatingWindowsContainer,
+                 .macosMinimizedWindowsContainer,
+                 .macosFullscreenWindowsContainer,
+                 .macosHiddenAppsWindowsContainer,
+                 .macosPopupWindowsContainer: true
         }
     }) as? TilingContainer
     guard let innerMostTilingContainer else { return .fail(io.err(bugPrompt())) } // Impossible
