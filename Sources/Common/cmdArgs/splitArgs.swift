@@ -48,22 +48,22 @@ private enum State {
 
 extension [String] {
     public func joinArgs() -> String {
-        self.map {
-            lazy var containsWhitespaces = $0.rangeOfCharacter(from: .whitespacesAndNewlines) != nil
-            let containsSingleQuote = $0.contains("'")
-            let containsDoubleQuote = $0.contains("\"")
+        self.map { arg in
+            lazy var containsWhitespaces = arg.rangeOfCharacter(from: .whitespacesAndNewlines) != nil
+            let containsSingleQuote = arg.contains("'")
+            let containsDoubleQuote = arg.contains("\"")
             return switch true {
                 case containsDoubleQuote && !containsSingleQuote:
-                    $0.singleQuoted
+                    arg.singleQuoted
                 case containsSingleQuote && !containsDoubleQuote:
-                    $0.doubleQuoted
+                    arg.doubleQuoted
                 case containsSingleQuote && containsDoubleQuote:
                     // Technically shouldn't be possible according to splitArgs
-                    $0.replacing("'", with: "\\'").replacing("\"", with: "\\\"").doubleQuoted
+                    arg.replacing("'", with: "\\'").replacing("\"", with: "\\\"").doubleQuoted
                 case containsWhitespaces:
-                    $0.singleQuoted
+                    arg.singleQuoted
                 default:
-                    $0
+                    arg
             }
         }.joined(separator: " ")
     }
