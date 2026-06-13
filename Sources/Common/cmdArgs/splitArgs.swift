@@ -49,7 +49,7 @@ private enum State {
 extension [String] {
     public func joinArgs() -> String {
         self.map { arg in
-            lazy var containsWhitespaces = arg.rangeOfCharacter(from: .whitespacesAndNewlines) != nil
+            let containsWhitespaces = arg.rangeOfCharacter(from: .whitespacesAndNewlines) != nil
             let containsSingleQuote = arg.contains("'")
             let containsDoubleQuote = arg.contains("\"")
             return switch true {

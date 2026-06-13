@@ -162,13 +162,13 @@ final class MacApp: AbstractApp {
     }
 
     func getAxRect(_ windowId: UInt32) async throws -> Rect? {
-        try await withWindow(windowId) { window, job in try AppBundle::getAxRect(window: window, job: job) }
+        try await withWindow(windowId) { window, job in try AppBundle.getAxRect(window: window, job: job) }
     }
 
     func getAxRectForTermination(_ windowId: UInt32) -> Rect? {
         let future = CompletableFuture<Rect?>()
         let job = withWindowAsync(windowId) { window, job in
-            future.complete(try AppBundle::getAxRect(window: window, job: job))
+            future.complete(try AppBundle.getAxRect(window: window, job: job))
         }
         return switch job.isCancelled {
             case true: nil

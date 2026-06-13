@@ -42,7 +42,7 @@ extension [String: Json]: AxUiElementMock {
         }
         if let value = value.rawValue {
             return attr.getter(value as AnyObject)
-                ?? dieT("Value \(value) (of type \(Swift::type(of: value))) isn't convertible to \(attr.key)")
+                ?? dieT("Value \(value) (of type \(Swift.type(of: value))) isn't convertible to \(attr.key)")
         } else {
             return nil
         }
