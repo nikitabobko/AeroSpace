@@ -26,6 +26,10 @@ struct LayoutCommand: Command {
                 return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: nil, window: window)
             case .tiles:
                 return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: nil, window: window)
+            case .scrolling:
+                return changeTilingLayout(io, targetLayout: .scrolling, targetOrientation: .h, window: window)
+            case .tabs:
+                return changeTilingLayout(io, targetLayout: .tabs, targetOrientation: nil, window: window)
             case .horizontal:
                 return changeTilingLayout(io, targetLayout: nil, targetOrientation: .h, window: window)
             case .vertical:
@@ -57,10 +61,21 @@ struct LayoutCommand: Command {
     guard let parent = window.parent else { return .fail }
     switch parent.cases {
         case .tilingContainer(let parent):
+            if targetLayout == .scrolling && !parent.isRootContainer {
+                return .fail(io.err("The 'scrolling' layout is only supported for workspace root containers"))
+            }
+            if parent.layout == .scrolling && targetLayout == nil && targetOrientation == .v {
+                return .fail(io.err("The scrolling layout is always horizontal"))
+            }
             let targetOrientation = targetOrientation ?? parent.orientation
             let targetLayout = targetLayout ?? parent.layout
             parent.layout = targetLayout
             parent.changeOrientation(targetOrientation)
+            if targetLayout == .scrolling {
+                parent.reveal(window, preferRightPane: true)
+            } else {
+                parent.clampScrollingIndex()
+            }
             return .succ
         case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
              .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer:
@@ -73,6 +88,9 @@ extension Window {
         return switch layout {
             case .accordion:   (parent as? TilingContainer)?.layout == .accordion
             case .tiles:       (parent as? TilingContainer)?.layout == .tiles
+            case .tabs:        (parent as? TilingContainer)?.layout == .tabs
+            case .scrolling:
+                parentsWithSelf.compactMap { $0 as? TilingContainer }.last?.layout == .scrolling
             case .horizontal:  (parent as? TilingContainer)?.orientation == .h
             case .vertical:    (parent as? TilingContainer)?.orientation == .v
             case .h_accordion: (parent as? TilingContainer).map { $0.layout == .accordion && $0.orientation == .h } == true

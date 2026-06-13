@@ -7,6 +7,9 @@ struct ResizeCommand: Command { // todo cover with tests
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
+        if target.workspace.rootTilingContainer.layout == .scrolling {
+            return .fail(io.err("resize command doesn't support the scrolling layout"))
+        }
 
         let candidates = target.windowOrNil?.parentsWithSelf
             .filter { ($0.parent as? TilingContainer)?.layout == .tiles }

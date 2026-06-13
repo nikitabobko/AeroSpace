@@ -10,7 +10,7 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace layout [-h|--help] [--window-id <window-id>]
-                 (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating)...
+                 (h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|scrolling|tabs|horizontal|vertical|tiling|floating)...
 
 // end::synopsis[]
 
@@ -24,8 +24,12 @@ If several arguments are supplied then finds the first argument that doesn't des
 
 * Change both tiling layout and orientation in one go: `h_tiles|v_tiles|h_accordion|v_accordion`
 * Change tiling layout but preserve orientation: `tiles|accordion`
+* Switch the workspace root container to scrolling layout: `scrolling`
+* Switch the current tiling container to tabs layout: `tabs`
 * Change orientation but preserve layout: `horizontal|vertical`
 * Toggle floating/tiling mode: `tiling|floating`
+
+The `scrolling` layout is only supported on the workspace root container, and it is always horizontal.
 
 // =========================================================== Options
 include::./util/conditional-options-header.adoc[]
@@ -46,6 +50,12 @@ include::util/conditional-examples-header.adoc[]
 
 * Toggle between `tiles` and `accordion` layouts (order of args doesn't matter): +
 `aerospace layout tiles accordion`
+
+* Switch the workspace root container to the scrolling layout: +
+`aerospace layout scrolling`
+
+* Return from scrolling layout to ordinary tiling: +
+`aerospace layout tiles`
 
 * Switch to `tiles` layout. Toggle the layout orientation if already in `tiles` layout: +
 `aerospace layout tiles horizontal vertical`
