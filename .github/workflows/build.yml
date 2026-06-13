@@ -31,7 +31,7 @@ jobs:
       - run: env # Debug
       - uses: actions/checkout@v6
       - run: ./.github/gh-actions-runner-xcode-select.sh
-      - run: brew install swiftly
+      - run: brew install swiftly bash
       - run: swiftly init --skip-install --assume-yes --verbose && swiftly install
       - run: ./build-debug.sh
       - run: ./test.sh
