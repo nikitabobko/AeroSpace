@@ -7,9 +7,13 @@ public struct LayoutCmdArgs: CmdArgs {
         help: layout_help_generated,
         flags: [
             "--window-id": windowIdSubArgParser(),
+            "--workspace": workspaceSubArgParser(),
             "--root": trueBoolFlag(\.root),
         ],
         posArgs: [newMandatoryPosArgParser(\.toggleBetween, parseToggleBetween, placeholder: LayoutDescription.unionLiteral)],
+        conflictingOptions: [
+            ["--window-id", "--workspace"],
+        ],
     )
 
     public var toggleBetween: Lateinit<[LayoutDescription]> = .uninitialized
@@ -67,6 +71,7 @@ func parseLayoutCmdArgs(_ args: StrArrSlice) -> ParsedCmd<LayoutCmdArgs> {
                 }
             }
         }
+        .filter("--workspace flag requires using an explicit --root flag") { ($0.workspaceName != nil).implies($0.root) }
 }
 
 extension String {

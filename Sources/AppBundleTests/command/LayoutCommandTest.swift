@@ -21,6 +21,16 @@ final class LayoutCommandTest: XCTestCase {
             "layout --root accordion tiles",
             LayoutCmdArgs(rawArgs: [], toggleBetween: [.accordion, .tiles]).copy(\.root, true),
         )
+        testParseCommandFail(
+            "layout --workspace 2 tiles",
+            msg: "--workspace flag requires using an explicit --root flag",
+            exitCode: 2,
+        )
+        testParseCommandFail(
+            "layout --workspace 2 --window-id 2 tiles",
+            msg: "ERROR: Conflicting options: --window-id, --workspace",
+            exitCode: 2,
+        )
     }
 
     func testChangeOrientation() async throws {
@@ -272,6 +282,22 @@ final class LayoutCommandTest: XCTestCase {
         assertEquals(otherRoot.layout, .tiles)
 
         try await parseCommand("layout --root --window-id 2 v_accordion").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(otherRoot.layout, .accordion)
+        assertEquals(otherRoot.orientation, .v)
+        assertEquals(focusedRoot.layout, .tiles) // Focused workspace must be untouched
+    }
+
+    func testRoot_withWorkspaceFlag_targetsThatWorkspace() async throws {
+        let focusedRoot = Workspace.get(byName: "a").rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+        }
+        let otherRoot = Workspace.get(byName: "b").rootTilingContainer.apply {
+            TestWindow.new(id: 2, parent: $0)
+        }
+        assertEquals(focusedRoot.layout, .tiles)
+        assertEquals(otherRoot.layout, .tiles)
+
+        try await parseCommand("layout --root --workspace b v_accordion").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(otherRoot.layout, .accordion)
         assertEquals(otherRoot.orientation, .v)
         assertEquals(focusedRoot.layout, .tiles) // Focused workspace must be untouched

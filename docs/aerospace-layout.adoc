@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace layout [-h|--help] [--window-id <window-id>] [--root] (<target-layout>)...
+aerospace layout [-h|--help] [--window-id <window-id>|--workspace <workspace>] [--root] (<target-layout>)...
 
 // end::synopsis[]
 
@@ -26,6 +26,9 @@ include::./util/conditional-options-header.adoc[]
 
 --window-id <window-id>::
 include::./util/window-id-flag-desc.adoc[]
+
+--workspace <workspace>::
+include::./util/workspace-flag-desc.adoc[]
 
 --root::
 Instead of the focused window, change the layout of the workspace tiling root node.
