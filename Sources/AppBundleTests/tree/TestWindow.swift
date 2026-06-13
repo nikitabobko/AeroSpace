@@ -3,6 +3,7 @@ import AppKit
 
 final class TestWindow: Window, CustomStringConvertible {
     private var _rect: Rect?
+    var beforeGetAxRect: (@MainActor () async throws -> Void)?
 
     @MainActor
     private init(_ id: UInt32, _ parent: NonLeafTreeNodeObject, _ adaptiveWeight: CGFloat, _ rect: Rect?) {
@@ -37,6 +38,11 @@ final class TestWindow: Window, CustomStringConvertible {
     }
 
     @MainActor override func getAxRect() async throws -> Rect? { // todo change to not Optional
-        _rect
+        try await beforeGetAxRect?()
+        return _rect
+    }
+
+    override func getAxSize() async throws -> CGSize? {
+        _rect.map { CGSize(width: $0.width, height: $0.height) }
     }
 }

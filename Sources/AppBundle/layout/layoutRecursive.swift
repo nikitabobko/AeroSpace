@@ -26,6 +26,12 @@ extension TreeNode {
                     window.lastAppliedLayoutVirtualRect = nil
                     try await window.layoutFloatingWindow(context)
                 }
+                // Position sticky windows from hidden workspaces that are visually on this workspace
+                let stickyWindows = windowsVisuallyOnWorkspace(workspace)
+                    .filter { $0.isSticky && $0.nodeWorkspace != workspace }
+                for window in stickyWindows {
+                    try await window.layoutFloatingWindow(context)
+                }
             case .window(let window):
                 if window.windowId != currentlyManipulatedWithMouseWindowId {
                     lastAppliedLayoutVirtualRect = virtual

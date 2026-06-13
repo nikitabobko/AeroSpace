@@ -141,6 +141,7 @@ struct FocusCommand: Command {
             tilingParent = workspace.rootTilingContainer
         }
 
+        guard window.parent === workspace else { continue }
         let data = window.unbindFromParent()
         let floatingWindowData = FloatingWindowData(
             window: window,
