@@ -134,19 +134,72 @@ final class StickyCommandTest: XCTestCase {
         assertEquals(result.stdout.toSet(), ["1 true", "2 false"])
     }
 
-    func testStickyDoesNotChangeWindowOwnershipOrLayout() async throws {
+    func testStickyOnAutoFloatsTilingWindow() async throws {
         let workspaceA = Workspace.get(byName: "a")
         var window: TestWindow!
         workspaceA.rootTilingContainer.apply {
             window = TestWindow.new(id: 1, parent: $0)
         }
-        let parentBefore = window.parent
         _ = window.focusWindow()
+
+        assertTrue(window.isFloating == false)
 
         try await parseCommand("sticky on").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
+        assertEquals(window.isSticky, true)
+        assertTrue(window.isFloating)
         assertEquals(window.nodeWorkspace, workspaceA)
-        assertTrue(window.parent === parentBefore)
+    }
+
+    func testStickyOnPreservesAlreadyFloatingWindow() async throws {
+        let workspaceA = Workspace.get(byName: "a")
+        var window: TestWindow!
+        window = TestWindow.new(id: 1, parent: workspaceA) // Direct child of workspace = floating
+        _ = window.focusWindow()
+
+        assertTrue(window.isFloating)
+
+        try await parseCommand("sticky on").cmdOrDie.run(.defaultEnv, .emptyStdin)
+
+        assertEquals(window.isSticky, true)
+        assertTrue(window.isFloating)
+        assertEquals(window.nodeWorkspace, workspaceA)
+    }
+
+    func testStickyOffDoesNotReTile() async throws {
+        let workspaceA = Workspace.get(byName: "a")
+        var window: TestWindow!
+        workspaceA.rootTilingContainer.apply {
+            window = TestWindow.new(id: 1, parent: $0)
+        }
+        _ = window.focusWindow()
+
+        try await parseCommand("sticky on").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertTrue(window.isFloating)
+
+        try await parseCommand("sticky off").cmdOrDie.run(.defaultEnv, .emptyStdin)
+
+        assertEquals(window.isSticky, false)
+        assertTrue(window.isFloating) // Still floating, not auto-re-tiled
+    }
+
+    func testStickyWindowPositioningOnWorkspaceSwitch() {
+        let workspaceA = Workspace.get(byName: "a")
+        let workspaceB = Workspace.get(byName: "b")
+        var window: TestWindow!
+        workspaceA.rootTilingContainer.apply {
+            window = TestWindow.new(id: 1, parent: $0)
+        }
+        window.isSticky = true
+        // Simulate auto-float: sticky on would have made it floating
+        window.bindAsFloatingWindow(to: workspaceA)
+
+        check(workspaceB.focusWorkspace())
+
+        // Sticky floating window should be visually on workspace B
+        assertEquals(window.nodeWorkspace, workspaceA)
+        assertEquals(window.visualWorkspace, workspaceB)
+        assertEquals(windowsVisuallyOnWorkspace(workspaceB).contains(window), true)
     }
 
     func testMoveNodeToWorkspacePreservesStickyState() async throws {

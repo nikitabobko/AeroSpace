@@ -22,7 +22,9 @@ aerospace sticky [-h|--help] [--window-id <window-id>] [--fail-if-noop] off
 // tag::body[]
 Sticky windows stay visible when their workspace is hidden.
 
-`sticky` is independent of window layout. It doesn't move the window to another workspace, and it doesn't switch between tiling and floating layout.
+When `sticky on` is called, the window is automatically converted to floating layout. This is by design: a pinned window should not participate in tiling layout, and should float above the active workspace's tiled windows.
+
+`sticky off` clears the sticky flag but does *not* restore tiling layout. To return a window to tiling, use `layout tiling` after `sticky off`.
 
 If the window is minimized, hidden by macOS, or in macOS native fullscreen, macOS native state still takes precedence. `sticky` only affects AeroSpace workspace visibility.
 

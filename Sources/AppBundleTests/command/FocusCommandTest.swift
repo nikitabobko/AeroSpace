@@ -134,6 +134,24 @@ struct FocusCommandTest {
         assertEquals(globalFocus.windowOrNil?.windowId, 2)
     }
 
+    @Test func testFocusSkipsFloatingWindowThatWasUnboundDuringAxRead() async {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
+        }
+        let floating = TestWindow.new(id: 3, parent: workspace, rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100))
+        floating.beforeGetAxRect = {
+            floating.beforeGetAxRect = nil
+            floating.unbindFromParent()
+        }
+
+        await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+
+        assertEquals(globalFocus.windowOrNil?.windowId, 2)
+        assertEquals(floating.isBound, false)
+    }
+
     @Test func testFocusAcrossTheContainerOrientation() async {
         Workspace.get(byName: name).apply {
             TestWindow.new(id: 1, parent: $0.rootTilingContainer)
