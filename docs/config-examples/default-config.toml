@@ -45,6 +45,28 @@ on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
 # Also see: https://nikitabobko.github.io/AeroSpace/goodies#disable-hide-app
 automatically-unhide-macos-hidden-apps = false
 
+# Draw a colored border around the currently focused window.
+# Native alternative to external tools like JankyBorders for the focused-window case.
+# Fallback value (if you omit the key): focused-window-border = false
+focused-window-border = false
+# Border color as 0xAARRGGBB (alpha, red, green, blue). Same format as JankyBorders.
+# Fallback value (if you omit the key): focused-window-border-color = '0xff12B981'
+focused-window-border-color = '0xff12B981'
+# Border thickness in points.
+# Fallback value (if you omit the key): focused-window-border-width = 4
+focused-window-border-width = 4
+# Border opacity as a percentage 0-100. Multiplies the alpha of the color above.
+# Fallback value (if you omit the key): focused-window-border-opacity = 100
+focused-window-border-opacity = 100
+# Corner radius (points) of the window the border hugs. macOS does not expose the
+# per-window corner radius, so this is a global value - tune it to match your apps.
+# Fallback value (if you omit the key): focused-window-border-radius = 10
+focused-window-border-radius = 10
+# Pull the border this many points back into the window so the window's own rounded
+# corner masks any radius mismatch (hides corner gaps). 0 = border fully outside.
+# Fallback value (if you omit the key): focused-window-border-inset = 0
+focused-window-border-inset = 0
+
 # List of workspaces that should stay alive even when they contain no windows,
 # even when they are invisible.
 # This config option is only available since 'config-version = 2'
