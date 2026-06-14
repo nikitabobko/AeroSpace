@@ -31,7 +31,15 @@ struct LayoutCommand: Command {
 
         let targetDescription = args.toggleBetween.val.first(where: { !node.matchesDescription($0) })
             ?? args.toggleBetween.val.first.orDie()
-        if node.matchesDescription(targetDescription) { return .fail }
+        if node.matchesDescription(targetDescription) {
+            switch args.failIfNoop {
+                case true: return .fail
+                case false:
+                    let msg = "Already in the requested \(targetDescription.rawValue) mode. " +
+                        "Tip: use --fail-if-noop to exit with non-zero exit code"
+                    return .succ(io.err(msg))
+            }
+        }
         switch targetDescription {
             case .h_accordion:
                 return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: .h, node: node)

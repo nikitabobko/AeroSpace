@@ -9,7 +9,9 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace layout [-h|--help] [--window-id <window-id>|--workspace <workspace>] [--root] (<target-layout>)...
+aerospace layout [-h|--help] [--window-id <window-id>|--workspace <workspace>]
+                 [--root] [--fail-if-noop]
+                 (<target-layout>)...
 
 // end::synopsis[]
 
@@ -33,6 +35,10 @@ include::./util/workspace-flag-desc.adoc[]
 --root::
 Instead of the focused window, change the layout of the workspace tiling root node.
 When you use this flag, `tiling` and `floating` become invalid values for `<target-layout>`.
+
+--fail-if-noop::
+Exit with non-zero exit code if already in the requested layout.
+When you use this flag, the command permits only one `<target-layout>` argument.
 
 // =========================================================== Arguments
 include::./util/conditional-arguments-header.adoc[]

@@ -9,6 +9,7 @@ public struct LayoutCmdArgs: CmdArgs {
             "--window-id": windowIdSubArgParser(),
             "--workspace": workspaceSubArgParser(),
             "--root": trueBoolFlag(\.root),
+            "--fail-if-noop": trueBoolFlag(\.failIfNoop),
         ],
         posArgs: [newMandatoryPosArgParser(\.toggleBetween, parseToggleBetween, placeholder: LayoutDescription.unionLiteral)],
         conflictingOptions: [
@@ -31,6 +32,7 @@ public struct LayoutCmdArgs: CmdArgs {
     }
 
     public var root: Bool = false
+    public var failIfNoop: Bool = false
 }
 
 public let layoutCommandRootFlagIncompatibilityMsg = "layout command: --root and tiling|floating are incompatible"
@@ -72,6 +74,7 @@ func parseLayoutCmdArgs(_ args: StrArrSlice) -> ParsedCmd<LayoutCmdArgs> {
             }
         }
         .filter("--workspace flag requires using an explicit --root flag") { ($0.workspaceName != nil).implies($0.root) }
+        .filter("--fail-if-noop allows only one <target-layout> argument") { $0.failIfNoop.implies($0.toggleBetween.val.count == 1) }
 }
 
 extension String {

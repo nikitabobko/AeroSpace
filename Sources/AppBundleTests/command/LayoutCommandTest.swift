@@ -31,6 +31,11 @@ final class LayoutCommandTest: XCTestCase {
             msg: "ERROR: Conflicting options: --window-id, --workspace",
             exitCode: 2,
         )
+        testParseCommandFail(
+            "layout --fail-if-noop accordion tiling",
+            msg: "--fail-if-noop allows only one <target-layout> argument",
+            exitCode: 2,
+        )
     }
 
     func testChangeOrientation() async throws {
@@ -87,7 +92,7 @@ final class LayoutCommandTest: XCTestCase {
         }
 
         let result = try await parseCommand("layout h_tiles").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.exitCode.rawValue, 0)
         assertEquals(root.layoutDescription, .h_tiles([.window(1), .window(2)]))
     }
 
@@ -119,7 +124,7 @@ final class LayoutCommandTest: XCTestCase {
 
         let result = try await parseCommand("layout h_tiles").cmdOrDie
             .run(.defaultEnv.copy(\.workspaceName, name), .emptyStdin)
-        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.exitCode.rawValue, 0)
         assertEquals(workspace.rootTilingContainer.layout, .tiles)
         assertEquals(workspace.rootTilingContainer.orientation, .h)
     }
@@ -137,7 +142,15 @@ final class LayoutCommandTest: XCTestCase {
         let workspace = Workspace.get(byName: name)
         let result = try await parseCommand("layout tiling").cmdOrDie
             .run(.defaultEnv.copy(\.workspaceName, name), .emptyStdin)
-        // .tiling is already matched by the empty workspace's rootTilingContainer, so it fails without an error message
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stderr, ["Already in the requested tiling mode. Tip: use --fail-if-noop to exit with non-zero exit code"])
+        assertTrue(workspace.isEffectivelyEmpty)
+    }
+
+    func testEmptyWorkspace_tiling_failIfNoop() async throws {
+        let workspace = Workspace.get(byName: name)
+        let result = try await parseCommand("layout tiling --fail-if-noop").cmdOrDie
+            .run(.defaultEnv.copy(\.workspaceName, name), .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stderr, [])
         assertTrue(workspace.isEffectivelyEmpty)
@@ -176,8 +189,7 @@ final class LayoutCommandTest: XCTestCase {
         }
 
         let result = try await parseCommand("layout tiling").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        // .tiling already matched -> fails early without invoking changeTilingLayout
-        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.exitCode.rawValue, 0)
         assertEquals(root.layoutDescription, .h_tiles([.window(1), .window(2)]))
     }
 
@@ -188,7 +200,7 @@ final class LayoutCommandTest: XCTestCase {
         }
 
         let result = try await parseCommand("layout floating").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.exitCode.rawValue, 0)
         assertEquals(workspace.floatingWindows.map(\.windowId), [1])
     }
 
@@ -332,7 +344,7 @@ final class LayoutCommandTest: XCTestCase {
         assertEquals(root.layoutDescription, .h_tiles([.window(1), .window(2)]))
 
         let result = try await parseCommand("layout --root h_tiles").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.exitCode.rawValue, 0)
         assertEquals(root.layoutDescription, .h_tiles([.window(1), .window(2)]))
     }
 }
