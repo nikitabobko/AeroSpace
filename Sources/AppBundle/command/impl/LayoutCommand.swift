@@ -84,6 +84,12 @@ struct LayoutCommand: Command {
             let targetLayout = targetLayout ?? parent.layout
             parent.layout = targetLayout
             parent.changeOrientation(targetOrientation)
+            if parent.isRootContainer {
+                broadcastEvent(.workspaceLayoutChanged(
+                    workspace: window.nodeWorkspace?.name ?? "",
+                    layout: toLayoutString(tc: parent),
+                ))
+            }
             return .succ
     }
 }
