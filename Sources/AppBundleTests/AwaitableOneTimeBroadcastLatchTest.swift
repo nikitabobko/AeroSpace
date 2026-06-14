@@ -84,7 +84,7 @@ final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
         try await latch.await()
     }
 
-    private func assertThrowsCancellation<T: Sendable>(_ task: Task<T, any Error>, file: String = #filePath, line: Int = #line) async {
+    private func assertThrowsCancellation<T: Sendable>(_ task: Task<T, any Error>, file: StaticString = #filePath, line: UInt = #line) async {
         do {
             _ = try await task.value
             failExpectedActual("CancellationError", "no error thrown", file: file, line: line)

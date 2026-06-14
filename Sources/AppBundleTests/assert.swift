@@ -3,55 +3,55 @@
 import Common
 import XCTest
 
-func assertTrue(_ actual: Bool, file: String = #filePath, line: Int = #line) {
+func assertTrue(_ actual: Bool, file: StaticString = #filePath, line: UInt = #line) {
     assertEquals(actual, true, file: file, line: line)
 }
 
-func assertFalse(_ actual: Bool, file: String = #filePath, line: Int = #line) {
+func assertFalse(_ actual: Bool, file: StaticString = #filePath, line: UInt = #line) {
     assertEquals(actual, false, file: file, line: line)
 }
 
 // Because assertEquals default messages are unreadable!
 // periphery:ignore
-func assertNotEquals<T>(_ actual: T, _ expected: T, file: String = #filePath, line: Int = #line) where T: Equatable {
+func assertNotEquals<T>(_ actual: T, _ expected: T, file: StaticString = #filePath, line: UInt = #line) where T: Equatable {
     if actual == expected {
         failExpectedActual("not \(expected)", actual, file: file, line: line)
     }
 }
 
-func assertNil(_ actual: Any?, file: String = #filePath, line: Int = #line) {
+func assertNil(_ actual: Any?, file: StaticString = #filePath, line: UInt = #line) {
     if let actual {
         failExpectedActual("nil", actual, file: file, line: line)
     }
 }
 
-func assertNotNil(_ actual: Any?, file: String = #filePath, line: Int = #line) {
+func assertNotNil(_ actual: Any?, file: StaticString = #filePath, line: UInt = #line) {
     if actual == nil {
         failExpectedActual("not nil", "nil", file: file, line: line)
     }
 }
 
-func assertEquals<T>(_ actual: T, _ expected: T, additionalMsg: String? = nil, file: String = #filePath, line: Int = #line) where T: Equatable {
+func assertEquals<T>(_ actual: T, _ expected: T, additionalMsg: String? = nil, file: StaticString = #filePath, line: UInt = #line) where T: Equatable {
     if actual != expected {
         failExpectedActual(expected, actual, additionalMsg: additionalMsg, file: file, line: line)
     }
 }
 
 
-func assertSucc<T>(_ actual: Result<T, some Any>, file: String = #filePath, line: Int = #line) {
+func assertSucc<T>(_ actual: Result<T, some Any>, file: StaticString = #filePath, line: UInt = #line) {
     switch actual {
         case .failure: failExpectedActual("Result.success", actual, file: file, line: line)
         case .success: break
     }
 }
 
-func assertSucc<T>(_ actual: Result<T, some Any>, _ expected: T, file: String = #filePath, line: Int = #line) where T: Equatable {
+func assertSucc<T>(_ actual: Result<T, some Any>, _ expected: T, file: StaticString = #filePath, line: UInt = #line) where T: Equatable {
     switch actual {
         case .failure: failExpectedActual("Result.success", actual, file: file, line: line)
         case .success(let actual): assertEquals(actual, expected, file: file, line: line)
     }
 }
-func assertFail<F>(_ actual: Result<some Any, F>, _ expected: F? = nil, file: String = #filePath, line: Int = #line) where F: Equatable {
+func assertFail<F>(_ actual: Result<some Any, F>, _ expected: F? = nil, file: StaticString = #filePath, line: UInt = #line) where F: Equatable {
     switch actual {
         case .success: failExpectedActual("Result.failure", actual, file: file, line: line)
         case .failure(let actual):
@@ -61,7 +61,7 @@ func assertFail<F>(_ actual: Result<some Any, F>, _ expected: F? = nil, file: St
     }
 }
 
-func testParseCommandSucc(_ command: String, _ expected: any CmdArgs, file: String = #filePath, line: Int = #line) {
+func testParseCommandSucc(_ command: String, _ expected: any CmdArgs, file: StaticString = #filePath, line: UInt = #line) {
     let parsed = parseCommand(command)
     switch parsed {
         case .cmd(let command):
@@ -81,16 +81,17 @@ func testParseCommandHelp(_ command: String) {
     }
 }
 
-func failExpectedActual(_ expected: Any?, _ actual: Any?, additionalMsg: String? = nil, file: String = #filePath, line: Int = #line) {
+func failExpectedActual(_ expected: Any?, _ actual: Any?, additionalMsg: String? = nil, file: StaticString = #filePath, line: UInt = #line) {
     let additionalMsg = additionalMsg.map { "\n    Additional Message:\n        \($0)" } ?? ""
     XCTFail(
         """
-
-        \(file):\(line): Assertion failed\(additionalMsg)
+        Assertion failed\(additionalMsg)
             Expected:
                 \(expected.prettyDescription)
             Actual:
                 \(actual.prettyDescription)
         """,
+        file: file,
+        line: line,
     )
 }

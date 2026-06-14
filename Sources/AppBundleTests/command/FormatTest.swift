@@ -3,7 +3,7 @@ import Common
 import Foundation
 import XCTest
 
-private func assertPrimitive(_ actual: Result<Primitive, String>, _ expected: Primitive, file: String = #filePath, line: Int = #line) {
+private func assertPrimitive(_ actual: Result<Primitive, String>, _ expected: Primitive, file: StaticString = #filePath, line: UInt = #line) {
     switch actual {
         case .failure: failExpectedActual("Result.success(\(expected.toString()))", actual, file: file, line: line)
         case .success(let primitive):
