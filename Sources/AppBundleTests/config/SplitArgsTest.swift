@@ -13,6 +13,7 @@ final class SplitArgsTest: XCTestCase {
 
         testFailSplit("echo 'foo")
         testFailSplit("echo foo'")
+        testFailSplit("echo a'b")
     }
 }
 
