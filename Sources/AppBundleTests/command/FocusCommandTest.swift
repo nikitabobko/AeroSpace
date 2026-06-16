@@ -134,22 +134,78 @@ struct FocusCommandTest {
         assertEquals(globalFocus.windowOrNil?.windowId, 2)
     }
 
-    @Test func testFocusSkipsFloatingWindowThatWasUnboundDuringAxRead() async {
+    @Test func testDirectionalFocusNoOpsIfFocusChangesDuringFloatingAxRead() async {
+        let sourceWorkspace = Workspace.get(byName: name)
+        let otherWorkspace = Workspace.get(byName: "other")
+        sourceWorkspace.rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
+        }
+        let floating = TestWindow.new(
+            id: 3,
+            parent: sourceWorkspace,
+            rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100),
+        )
+        floating.beforeGetAxRect = {
+            floating.beforeGetAxRect = nil
+            assertEquals(otherWorkspace.focusWorkspace(), true)
+        }
+
+        let result = await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(globalFocus.workspace.name, "other")
+        assertEquals(globalFocus.windowOrNil, nil)
+    }
+
+    @Test func testDirectionalFocusCommandsRunSerially() async throws {
         let workspace = Workspace.get(byName: name)
         workspace.rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0)
         }
-        let floating = TestWindow.new(id: 3, parent: workspace, rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100))
+        let floating = TestWindow.new(
+            id: 3,
+            parent: workspace,
+            rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100),
+        )
+        let firstAxReadStarted = AwaitableOneTimeBroadcastLatch()
+        let allowAxReadToFinish = AwaitableOneTimeBroadcastLatch()
+        var axReadStarts = 0
         floating.beforeGetAxRect = {
-            floating.beforeGetAxRect = nil
-            floating.unbindFromParent()
+            axReadStarts += 1
+            await firstAxReadStarted.signalToAll()
+            try await allowAxReadToFinish.await()
         }
 
-        await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+        let first = Task.startUnstructured { @MainActor in
+            await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+        }
+        try await firstAxReadStarted.await()
 
-        assertEquals(globalFocus.windowOrNil?.windowId, 2)
-        assertEquals(floating.isBound, false)
+        let second = Task.startUnstructured { @MainActor in
+            await FocusCommand.new(direction: .right).run(.defaultEnv, .emptyStdin)
+        }
+        await Task.yield()
+        await Task.yield()
+        assertEquals(axReadStarts, 1)
+
+        await allowAxReadToFinish.signalToAll()
+        _ = try await first.value
+        _ = try await second.value
+    }
+
+    @Test func testFocusDfsRelativeIncludesFloatingWindows() async {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
+        }
+        TestWindow.new(id: 3, parent: workspace, rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100))
+
+        await FocusCommand.new(dfsRelative: .dfsPrev).run(.defaultEnv, .emptyStdin)
+
+        assertEquals(globalFocus.windowOrNil?.windowId, 3)
     }
 
     @Test func testFocusAcrossTheContainerOrientation() async {
