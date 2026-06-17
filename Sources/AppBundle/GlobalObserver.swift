@@ -27,11 +27,11 @@ enum GlobalObserver {
                 if config.automaticallyUnhideMacosHiddenApps {
                     if let w = prevFocus?.windowOrNil,
                        w.macAppUnsafe.nsApp.isHidden,
-                       // "Hide others" (cmd-alt-h) -> don't force focus
-                       // "Hide app" (cmd-h) -> force focus
+                       // "Hide others" (cmd-alt-h) -> don't force globalFocus
+                       // "Hide app" (cmd-h) -> force globalFocus
                        MacApp.allAppsMap.values.count(where: { $0.nsApp.isHidden }) == 1
                     {
-                        // Force focus
+                        // Force globalFocus
                         _ = w.focusWindow()
                         w.nativeFocus()
                     }
@@ -62,7 +62,13 @@ enum GlobalObserver {
                 try await resetManipulatedWithMouseIfPossible()
                 let mouseLocation = mouseLocation
                 let clickedMonitor = mouseLocation.monitorApproximation
-                if let workspace = workspaceToFocusAfterLeftMouseUp(mouseLocation: mouseLocation, clickedMonitor: clickedMonitor) {
+                let shouldCheckDesktopClick = clickedMonitor.visibleRect.contains(mouseLocation) && clickedMonitor.visibleWorkspace != globalFocus.workspace
+                let desktopClick = shouldCheckDesktopClick && isClickOnDesktop(mouseLocation: mouseLocation)
+                if let workspace = workspaceToFocusAfterLeftMouseUp(
+                    mouseLocation: mouseLocation,
+                    clickedMonitor: clickedMonitor,
+                    isClickOnDesktop: desktopClick,
+                ) {
                     // Detect clicks on desktop of different monitors
                     _ = try await runLightSession(.globalObserverLeftMouseUp, token) {
                         workspace.focusWorkspace()
@@ -78,8 +84,31 @@ enum GlobalObserver {
 }
 
 @MainActor
-func workspaceToFocusAfterLeftMouseUp(mouseLocation: Point, clickedMonitor: MonitorInfo) -> Workspace? {
+func workspaceToFocusAfterLeftMouseUp(mouseLocation: Point, clickedMonitor: MonitorInfo, isClickOnDesktop: Bool) -> Workspace? {
     guard clickedMonitor.visibleRect.contains(mouseLocation) else { return nil }
+    guard isClickOnDesktop else { return nil }
     let clickedWorkspace = clickedMonitor.visibleWorkspace
     return clickedWorkspace == globalFocus.workspace ? nil : clickedWorkspace
+}
+
+func isClickOnDesktop(mouseLocation: Point) -> Bool {
+    guard let windowInfos = copyOnScreenNonDesktopWindowInfos() else { return false }
+    return isClickOnDesktop(mouseLocation: mouseLocation, windowInfos: windowInfos)
+}
+
+func isClickOnDesktop(mouseLocation: Point, windowInfos: [NSDictionary]) -> Bool {
+    !windowInfos.contains { windowInfo in
+        let alpha = (windowInfo[kCGWindowAlpha] as? NSNumber)?.doubleValue ?? 1
+        guard alpha > 0 else { return false }
+        guard let boundsDict = windowInfo[kCGWindowBounds] as? NSDictionary,
+              let bounds = CGRect(dictionaryRepresentation: boundsDict as CFDictionary)
+        else { return false }
+        return bounds.contains(mouseLocation)
+    }
+}
+
+private func copyOnScreenNonDesktopWindowInfos() -> [NSDictionary]? {
+    let options = CGWindowListOption(arrayLiteral: .excludeDesktopElements, .optionOnScreenOnly)
+    guard let cfArray = CGWindowListCopyWindowInfo(options, CGWindowID(0)) as? [CFDictionary] else { return nil }
+    return cfArray.map { $0 as NSDictionary }
 }
