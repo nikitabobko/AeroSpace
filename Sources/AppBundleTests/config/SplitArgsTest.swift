@@ -11,9 +11,12 @@ final class SplitArgsTest: XCTestCase {
         testSucSplit(#"echo '"'"#, expected: ["echo", "\""])
         testSucSplit("  echo '  foo bar'", expected: ["echo", "  foo bar"])
 
+        testSucSplit("  echo\n '  foo bar'", expected: ["echo", "  foo bar"])
+
         testFailSplit("echo 'foo")
         testFailSplit("echo foo'")
         testFailSplit("echo a'b")
+        // testFailSplit("echo 'a'b") // fails
     }
 }
 
