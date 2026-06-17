@@ -118,9 +118,8 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
     }
 }
 
-public func throwT<T>(_ error: Error) throws -> T {
-    throw error
-}
+// periphery:ignore
+public func throwT<T>(_ error: Error) throws -> T { throw error }
 
 public func getStringStacktrace() -> String { Thread.callStackSymbols.joined(separator: "\n") }
 

@@ -9,9 +9,6 @@ if ! grep -q '^5\.' <<< "$BASH_VERSION"; then
     exit 1
 fi
 
-# When you bump this version, don't forget to also bump ./ShellParserGenerated/Package.swift
-export antlr_version="4.13.1"
-
 add-optional-dep-to-bin() {
     if /usr/bin/which "$1" &> /dev/null; then
         /bin/cat > ".deps/bin/${2:-$1}" <<EOF

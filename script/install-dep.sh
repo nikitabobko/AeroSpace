@@ -3,7 +3,6 @@ cd "$(dirname "$0")/.."
 source ./script/setup.sh
 
 all=0
-antlr=0
 complgen=0
 swiftlint=0
 swiftformat=0
@@ -12,7 +11,6 @@ bundler=0
 periphery=0
 while test $# -gt 0; do
     case $1 in
-        --antlr) antlr=1; shift ;;
         --complgen) complgen=1; shift ;;
         --swiftlint) swiftlint=1; shift ;;
         --xcodegen) xcodegen=1; shift ;;
@@ -36,18 +34,6 @@ if test $all == 1 || test $bundler == 1; then
     marker=$(get-marker bundler "$(cat ./Gemfile)" "$(cat ./.bundle/*)")
     if ! test -f "$marker"; then
         bundler install
-        create-marker "$marker"
-    fi
-fi
-
-if test $all == 1 || test $antlr == 1; then
-    # https://github.com/antlr/antlr4/releases
-    antlr_tools='antlr4-tools==0.2.1'
-    marker=$(get-marker antlr $antlr_tools $antlr_version)
-    if ! test -f "$marker"; then
-        python3 -m venv .deps/python-venv
-        source .deps/python-venv/bin/activate
-        python3 -m pip install "$antlr_tools"
         create-marker "$marker"
     fi
 fi

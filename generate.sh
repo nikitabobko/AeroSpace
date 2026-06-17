@@ -6,7 +6,6 @@ export XCODEGEN_AEROSPACE_CODE_SIGN_IDENTITY="aerospace-codesign-certificate"
 build_version="0.0.0-SNAPSHOT"
 generate_xcodeproj=1
 generate_cmd_help=1
-generate_shell_parser=1
 generate_git_hash=0
 while test $# -gt 0; do
     case $1 in
@@ -15,14 +14,9 @@ while test $# -gt 0; do
         --generate-git-hash) generate_git_hash=1; shift 1;;
         --ignore-cmd-help) generate_cmd_help=0; shift 1 ;;
         --ignore-xcodeproj) generate_xcodeproj=0; shift 1 ;;
-        --ignore-shell-parser) generate_shell_parser=0; shift 1 ;;
         *) echo "Unknown option $1"; exit 1 ;;
     esac
 done
-
-if test $generate_shell_parser = 1; then
-    ./script/generate-shell-parser.sh
-fi
 
 if test $generate_cmd_help = 1; then
     # It takes 300ms for the script to complete

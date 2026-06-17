@@ -16,11 +16,6 @@ HotKey is used as a more convenient wrapper around macOS Carbon API to listen fo
 [TOMLDecoder MIT license](./third-party-license/LICENSE-TOMLDecoder.txt).
 TOMLDecoder is used as TOML parsing library.
 
-**ANTLR v4**.
-[ANTLR v4 GitHub link](https://github.com/antlr/antlr4).
-[ANTLR BSD-3 license](./third-party-license/LICENSE-antlr.txt).
-ANTLR is used to parse AeroSpace built-in shell like language.
-
 **swift-collections**.
 [swift-collections GitHub link](https://github.com/apple/swift-collections).
 [swift-collections Apache 2.0 license](./third-party-license/LICENSE-swift-collections.txt).
