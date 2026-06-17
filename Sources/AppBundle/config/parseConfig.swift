@@ -121,7 +121,7 @@ private let persistentWorkspacesKey = "persistent-workspaces"
 private let configParser: [String: any ParserProtocol<Config>] = [
     "config-version": Parser(\.configVersion, parseConfigVersion),
 
-    "after-login-command": Parser(\.afterLoginCommand, parseAfterLoginCommand),
+    "after-login-command": Parser(\._afterLoginCommand, parseDeprecatedAfterLoginCommand),
     "after-startup-command": Parser(\.afterStartupCommand) { parseCommandOrCommands($0).toParsedConfig($1) },
 
     "on-focus-changed": Parser(\.onFocusChanged) { parseCommandOrCommands($0).toParsedConfig($1) },
@@ -174,7 +174,7 @@ extension Command {
     }
 }
 
-func parseAfterLoginCommand(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<[any Command]> {
+func parseDeprecatedAfterLoginCommand(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<[any Command]> {
     if let array = raw.asArrayOrNil, array.count == 0 {
         return .success([])
     }

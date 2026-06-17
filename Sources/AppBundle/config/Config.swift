@@ -34,7 +34,7 @@ var defaultConfigUrl: URL {
 
 struct Config: ConvenienceCopyable {
     var configVersion: Int = 1
-    var afterLoginCommand: [any Command] = []
+    var _afterLoginCommand: [any Command] = []
     var afterStartupCommand: [any Command] = []
     var _indentForNestedContainersWithTheSameOrientation: Void = ()
     var enableNormalizationFlattenContainers: Bool = true
