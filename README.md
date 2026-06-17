@@ -169,5 +169,6 @@ Source: [reddit](https://www.reddit.com/r/MacOS/comments/k6hiwk/keyboard_modifie
 
 ## Related projects
 
-- [Amethyst](https://github.com/ianyh/Amethyst)
-- [yabai](https://github.com/koekeishiya/yabai)
+- [Amethyst](https://github.com/ianyh/Amethyst) - tiling window manager à la xmonad
+- [InstantSpaceSwitcher](https://github.com/jurplel/InstantSpaceSwitcher) - Instant space switching by synthesizing trackpad gesture with an artificially high velocity
+- [yabai](https://github.com/koekeishiya/yabai) - a tiling window manager for macOS based on binary space partitioning
