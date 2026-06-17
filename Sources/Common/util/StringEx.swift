@@ -1,6 +1,13 @@
+import Foundation
+
 public typealias Parsed<T> = Result<T, String>
-extension String: @retroactive Error {} // Make it possible to use String in Result. todo migrate to self written Result monad
-extension Array: @retroactive Error where Element: Error {} // Make it possible to use [String] in Result. todo migrate to self written Result monad
+extension String: @retroactive LocalizedError { // Make it possible to use String in Result. todo migrate to self written Result monad
+    public var errorDescription: String? { self }
+}
+
+// Make it possible to use [String] in Result. todo migrate to self written Result monad
+extension Array: @retroactive Error where Element: Error {}
+extension Array: @retroactive LocalizedError where Element: LocalizedError {}
 
 extension String {
     public func trim() -> String {
