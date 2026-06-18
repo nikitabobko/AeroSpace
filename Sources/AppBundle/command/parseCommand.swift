@@ -4,7 +4,7 @@ func parseCommand(_ raw: String) -> ParsedCmd<Shell<any Command>> {
     if raw.starts(with: "exec-and-forget") {
         return .cmd(.cmd(ExecAndForgetCommand(args: ExecAndForgetCmdArgs(bashScript: raw.removePrefix("exec-and-forget")))))
     }
-    return switch raw.parseShell() {
+    return switch raw.lexAndParseShell() {
         case .success(let it): it.flatMap(parseCommand)
         case .failure(let it): ParsedCmd.failure(it, EXIT_CODE_TWO)
     }

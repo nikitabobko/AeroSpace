@@ -17,7 +17,7 @@ import Common
 // Cmd = Word+
 
 extension String {
-    func parseShell() -> Parsed<Shell<[String]>> {
+    func lexAndParseShell() -> Parsed<Shell<[String]>> {
         self.shellLexerTokens().flatMap(AppBundle.parseShell)
     }
 }
