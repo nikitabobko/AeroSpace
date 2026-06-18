@@ -542,26 +542,6 @@ final class ConfigTest: XCTestCase {
         )
     }
 
-    func testMacosNativeCommandsMustBeLast() {
-        let errors = parseConfig(
-            """
-            on-focus-changed = ['macos-native-fullscreen', 'focus left']
-            """,
-        ).strErrors
-        assertEquals(
-            errors,
-            ["[ERROR] on-focus-changed: macos-native-* commands are only allowed to be the last commands in the list"],
-        )
-
-        // Macos-native-* command as the last entry is allowed
-        let ok = parseConfig(
-            """
-            on-focus-changed = ['focus left', 'macos-native-fullscreen']
-            """,
-        )
-        assertEquals(ok.errors, [])
-    }
-
     func testParseDefaultRootContainerLayout() {
         let result = parseConfig(
             """

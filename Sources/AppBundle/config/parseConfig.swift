@@ -165,12 +165,6 @@ extension ParsedCmd {
     }
 }
 
-extension Command {
-    fileprivate var isMacOsNativeCommand: Bool { // Problem ID-B6E178F2
-        self is MacosNativeMinimizeCommand || self is MacosNativeFullscreenCommand
-    }
-}
-
 func parseDeprecatedAfterLoginCommand(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<[any Command]> {
     if let array = raw.asArrayOrNil, array.count == 0 {
         return .success([])
@@ -187,9 +181,7 @@ func parseCommandOrCommands(_ raw: OrderedJson) -> Parsed<[any Command]> {
             let rawString: String = rawArray[index].asStringOrNil ?? expectedActualTypeError(expected: .string, actual: rawArray[index].tomlType)
             return parseCommand(rawString).toEither()
         }
-        return commands.filter("macos-native-* commands are only allowed to be the last commands in the list") {
-            !$0.dropLast().contains(where: { $0.isMacOsNativeCommand })
-        }
+        return commands
     } else {
         return .failure(expectedActualTypeError(expected: [.string, .array], actual: raw.tomlType))
     }
