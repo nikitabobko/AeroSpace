@@ -61,7 +61,7 @@ func assertFail<F>(_ actual: Result<some Any, F>, _ expected: F? = nil, file: St
     }
 }
 
-func testParseCommandSucc(_ command: String, _ expected: any CmdArgs, file: StaticString = #filePath, line: UInt = #line) {
+func testParseSingleCommandSucc(_ command: String, _ expected: any CmdArgs, file: StaticString = #filePath, line: UInt = #line) {
     let parsed = parseCommand(command)
     switch parsed {
         case .cmd(let command):

@@ -17,7 +17,7 @@ final class LayoutCommandTest: XCTestCase {
             msg: "layout command: --root and tiling|floating are incompatible",
             exitCode: 2,
         )
-        testParseCommandSucc(
+        testParseSingleCommandSucc(
             "layout --root accordion tiles",
             LayoutCmdArgs(rawArgs: [], toggleBetween: [.accordion, .tiles]).copy(\.root, true),
         )

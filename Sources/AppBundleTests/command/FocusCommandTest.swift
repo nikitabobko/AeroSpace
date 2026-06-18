@@ -27,7 +27,7 @@ final class FocusCommandTest: XCTestCase {
         XCTAssertTrue(parseCommand("focus --boundaries left").errorOrNil?.contains("Possible values") == true)
         var expected = FocusCmdArgs(rawArgs: [], cardinalOrDfsDirection: .direction(.left))
         expected.rawBoundaries = .workspace
-        testParseCommandSucc("focus --boundaries workspace left", expected)
+        testParseSingleCommandSucc("focus --boundaries workspace left", expected)
 
         assertEquals(
             parseCommand("focus --boundaries workspace --boundaries workspace left").errorOrNil,

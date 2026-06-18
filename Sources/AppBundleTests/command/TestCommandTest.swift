@@ -7,14 +7,14 @@ final class TestCommandTest: XCTestCase {
     override func setUp() async throws { setUpWorkspacesForTests() }
 
     func testParse() {
-        testParseCommandSucc(
+        testParseSingleCommandSucc(
             "test %{app-bundle-id} = foo",
             TestCmdArgs(rawArgs: [])
                 .copy(\.lhs, .initialized(.app(.appBundleId)))
                 .copy(\.infixOperator, .initialized(.equals))
                 .copy(\.rhs, .initialized("foo")),
         )
-        testParseCommandSucc(
+        testParseSingleCommandSucc(
             "test-not %{app-bundle-id} ~= foo",
             TestNotCmdArgs(rawArgs: [])
                 .copy(\.testArgs.lhs, .initialized(.app(.appBundleId)))
