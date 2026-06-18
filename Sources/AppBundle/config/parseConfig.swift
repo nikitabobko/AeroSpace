@@ -90,7 +90,7 @@ extension ParserProtocol {
 }
 
 struct ConfigParserContext {
-    var configVersion: Int
+    var configVersion: ConfigVersion
     var errors: [ConfigParseDiagnostic]
 }
 
@@ -254,10 +254,10 @@ struct ParseConfigResult {
         rawTable = [:]
     }
 
-    let configVersion: Int =
+    let configVersion: ConfigVersion =
         switch rawTable[configVersionConfigRootKey].flatMap({ parseConfigVersion($0, .rootKey(configVersionConfigRootKey)).getOrNil(appendErrorTo: &errors.value) }) {
             case let it?: it
-            case nil: minConfigVersion
+            case nil: .min
         }
 
     var c = ConfigParserContext(configVersion: configVersion, errors: errors.consume())
@@ -274,7 +274,7 @@ struct ParseConfigResult {
         config.modes = modes
     }
 
-    if config.configVersion <= 1 {
+    if config.configVersion <= ._1 {
         if rawTable.keys.contains(persistentWorkspacesKey) {
             c.errors += [.init(.rootKey(persistentWorkspacesKey), "This config option is only available since 'config-version = 2'")]
         }
@@ -307,9 +307,9 @@ struct ParseConfigResult {
             )]
         }
     }
-    if config.configVersion < maxConfigVersion {
+    if config.configVersion < .max {
         let msg = "The current 'config-version = \(config.configVersion)' is outdated. " +
-            "Please consider migrating to 'config-version = \(maxConfigVersion)'. " +
+            "Please consider migrating to 'config-version = \(ConfigVersion.max)'. " +
             "See https://nikitabobko.github.io/AeroSpace/guide#config-version for the migration guide."
         warnings.append(.init(.emptyRoot, msg))
     }
@@ -321,12 +321,9 @@ func parseIndentForNestedContainersWithTheSameOrientation(_ _: OrderedJson, _ ba
     return .failure(.init(backtrace, msg))
 }
 
-let minConfigVersion = 1
-let maxConfigVersion = 2
-
-func parseConfigVersion(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Int> {
+func parseConfigVersion(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<ConfigVersion> {
     parseInt(raw, backtrace)
-        .filter(.init(backtrace, "config-version must be in [\(minConfigVersion), \(maxConfigVersion)] range")) { (minConfigVersion ... maxConfigVersion).contains($0) }
+        .flatMap { ConfigVersion.init(rawValue: $0).orFailure(.init(backtrace, "config-version must be in [\(ConfigVersion.min), \(ConfigVersion.max)] range")) }
 }
 
 func parseInt(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Int> {

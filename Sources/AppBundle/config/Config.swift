@@ -33,7 +33,7 @@ var defaultConfigUrl: URL {
 @MainActor var configUrl: URL = defaultConfigUrl
 
 struct Config: ConvenienceCopyable {
-    var configVersion: Int = 1
+    var configVersion: ConfigVersion = ._1
     var _afterLoginCommand: [any Command] = []
     var afterStartupCommand: Shell<any Command> = .empty
     var _indentForNestedContainersWithTheSameOrientation: Void = ()
@@ -60,6 +60,17 @@ struct Config: ConvenienceCopyable {
     var modes: [String: Mode] = [:]
     var onWindowDetected: [WindowDetectedCallback] = []
     var onModeChanged: Shell<any Command> = .empty
+}
+
+enum ConfigVersion: Int, Comparable, CaseIterable, Sendable, CustomStringConvertible {
+    case _1 = 1
+    case _2 = 2
+
+    static let max = allCases.max().orDie()
+    static let min = allCases.min().orDie()
+    static func < (lhs: ConfigVersion, rhs: ConfigVersion) -> Bool { lhs.rawValue < rhs.rawValue }
+
+    var description: String { rawValue.description }
 }
 
 enum DefaultContainerOrientation: String {

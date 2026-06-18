@@ -49,7 +49,7 @@ final class ConfigTest: XCTestCase {
         assertEquals(result.errors, [])
         assertEquals(result.strWarnings, [
             "[WARNING] The current 'config-version = 1' is outdated. " +
-                "Please consider migrating to 'config-version = \(maxConfigVersion)'. " +
+                "Please consider migrating to 'config-version = \(ConfigVersion.max)'. " +
                 "See https://nikitabobko.github.io/AeroSpace/guide#config-version for the migration guide.",
         ])
     }
@@ -57,7 +57,7 @@ final class ConfigTest: XCTestCase {
     func testLatestConfigVersionNoWarning() {
         let result = parseConfig(
             """
-            config-version = \(maxConfigVersion)
+            config-version = \(ConfigVersion.max)
             """,
         )
         assertEquals(result.errors, [])
