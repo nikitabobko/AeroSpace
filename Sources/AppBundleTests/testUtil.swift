@@ -84,7 +84,7 @@ extension MoveNodeToWorkspaceCmdArgs {
 }
 
 extension HotkeyBinding {
-    init(_ modifiers: NSEvent.ModifierFlags, _ keyCode: Key, _ commands: [any Command]) {
+    init(_ modifiers: NSEvent.ModifierFlags, _ keyCode: Key, _ commands: Shell<any Command>) {
         let descriptionWithKeyNotation = modifiers.isEmpty
             ? keyCode.toString()
             : modifiers.toString() + "-" + keyCode.toString()

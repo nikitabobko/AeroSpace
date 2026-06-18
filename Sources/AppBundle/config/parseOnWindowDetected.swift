@@ -1,29 +1,28 @@
 import Common
 
 struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
-    var matcher: WindowDetectedCallbackMatcher = .command(TrueCommand.instance)
+    var matcher: WindowDetectedCallbackMatcher = .command(.empty)
     var checkFurtherCallbacks: Bool = false
-    var rawRun: [any Command]? = nil
+    var rawRun: Shell<any Command>? = nil
 
-    var run: [any Command] {
+    var run: Shell<any Command> {
         rawRun ?? dieT("ID-46D063B2 should have discarded nil")
     }
 
     var debugJson: Json {
         var result: [String: Json] = [:]
         result["matcher"] = switch matcher {
-            case .command(let command): .string(command.args.description)
+            case .command(let command): .string(command.shellOfCommandsDescription)
             case .legacy(let legacy): legacy.debugJson
         }
         if let commands = rawRun {
-            result["commands"] = .string(commands.prettyDescription)
+            result["commands"] = .string(commands.shellOfCommandsDescription)
         }
         return .dict(result)
     }
 
     static func == (lhs: WindowDetectedCallback, rhs: WindowDetectedCallback) -> Bool {
-        lhs.matcher == rhs.matcher && lhs.checkFurtherCallbacks == rhs.checkFurtherCallbacks &&
-            zip(lhs.run, rhs.run).allSatisfy { $0.equals($1) }
+        lhs.matcher == rhs.matcher && lhs.checkFurtherCallbacks == rhs.checkFurtherCallbacks && lhs.run.equals(rhs.run)
     }
 }
 
@@ -56,7 +55,7 @@ struct LegacyWindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
 }
 
 enum WindowDetectedCallbackMatcher: Equatable {
-    case command(any Command)
+    case command(Shell<any Command>)
     case legacy(LegacyWindowDetectedCallbackMatcher)
 
     static func == (lhs: WindowDetectedCallbackMatcher, rhs: WindowDetectedCallbackMatcher) -> Bool {
@@ -71,7 +70,7 @@ enum WindowDetectedCallbackMatcher: Equatable {
 private let windowDetectedParser: [String: any ParserProtocol<WindowDetectedCallback>] = [
     "if": Parser(\.matcher, parseMatcher),
     "check-further-callbacks": Parser(\.checkFurtherCallbacks, parseBool),
-    "run": Parser(\.rawRun, upcast { parseCommandOrCommands($0).toParsedConfig($1) }),
+    "run": Parser(\.rawRun, parseShellOfCommandsForConfig),
 ]
 
 private let matcherParsers: [String: any ParserProtocol<LegacyWindowDetectedCallbackMatcher>] = [
@@ -106,11 +105,11 @@ private func parseMatcher(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ er
         case .dict(let raw):
             return .legacy(raw.parseTable(LegacyWindowDetectedCallbackMatcher(), matcherParsers, backtrace, &errors))
         case .string(let raw):
-            return .command(parseCommand(raw).toEither().toParsedConfig(backtrace).getOrNil(appendErrorTo: &errors) ?? TrueCommand.instance)
+            return .command(parseCommand(raw).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &errors) ?? .empty)
         default:
             // Intentionally skip Table type from the list of expected types
             errors.append(.init(backtrace, expectedActualTypeError(expected: .string, actual: raw.tomlType)))
-            return .command(TrueCommand.instance)
+            return .command(.empty)
     }
 }
 

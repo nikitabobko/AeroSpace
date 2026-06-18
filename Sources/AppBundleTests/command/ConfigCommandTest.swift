@@ -64,7 +64,7 @@ final class ConfigCommandTest: XCTestCase {
 
     func testAllKeys() async throws {
         let command = parseCommand("focus left").cmdOrDie
-        let binding = HotkeyBinding(.option, .h, [command])
+        let binding = HotkeyBinding(.option, .h, command)
         config.modes = ["main": Mode(bindings: [binding.descriptionWithKeyCode: binding])]
 
         let result = try await parseCommand("config --all-keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
@@ -133,36 +133,36 @@ final class ConfigCommandTest: XCTestCase {
 
     func testGetScalar() async throws {
         let command = parseCommand("focus left").cmdOrDie
-        let binding = HotkeyBinding(.option, .h, [command])
+        let binding = HotkeyBinding(.option, .h, command)
         config.modes = ["main": Mode(bindings: [binding.descriptionWithKeyCode: binding])]
 
         let result = try await parseCommand("config --get mode.main.binding.alt-h").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
-        assertEquals(result.stdout, [command.args.description])
+        assertEquals(result.stdout, [command.shellOfCommandsDescription])
     }
 
     func testGetScalar_keys_fails() async throws {
         let command = parseCommand("focus left").cmdOrDie
-        let binding = HotkeyBinding(.option, .h, [command])
+        let binding = HotkeyBinding(.option, .h, command)
         config.modes = ["main": Mode(bindings: [binding.descriptionWithKeyCode: binding])]
 
         let result = try await parseCommand("config --get mode.main.binding.alt-h --keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stdout, [])
         // The error message interpolates the enum directly, yielding the default Swift case repr.
-        assertEquals(result.stderr, ["--keys flag cannot be applied to scalar object 'string(\"\(command.args.description)\")'"])
+        assertEquals(result.stderr, ["--keys flag cannot be applied to scalar object 'string(\"\(command.shellOfCommandsDescription)\")'"])
     }
 
     func testGetScalar_dereference_fails() async throws {
         let command = parseCommand("focus left").cmdOrDie
-        let binding = HotkeyBinding(.option, .h, [command])
+        let binding = HotkeyBinding(.option, .h, command)
         config.modes = ["main": Mode(bindings: [binding.descriptionWithKeyCode: binding])]
 
         let result = try await parseCommand("config --get mode.main.binding.alt-h.foo").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stdout, [])
-        assertEquals(result.stderr, ["Can't dereference scalar value '\(command.args.description)'"])
+        assertEquals(result.stderr, ["Can't dereference scalar value '\(command.shellOfCommandsDescription)'"])
     }
 
     func testGetMissingKey_fails() async throws {

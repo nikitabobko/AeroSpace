@@ -38,7 +38,7 @@ extension HotKey {
                     ))
                     try await runLightSession(.hotkeyBinding, .checkServerIsEnabledOrDie()) { () throws in
                         _ = try await config.modes[activeMode]?.bindings[binding.descriptionWithKeyCode]?.commands
-                            .runCmdSeq(.defaultEnv, .emptyStdin)
+                            .run(.defaultEnv, .emptyStdin)
                     }
                 }
             }
@@ -54,7 +54,7 @@ extension HotKey {
         if !config.onModeChanged.isEmpty {
             guard let token: RunSessionGuard = .isServerEnabled else { return }
             try await runLightSession(.onModeChanged, token) {
-                _ = try await config.onModeChanged.runCmdSeq(.defaultEnv, .emptyStdin)
+                _ = try await config.onModeChanged.run(.defaultEnv, .emptyStdin)
             }
         }
     }
@@ -63,11 +63,11 @@ extension HotKey {
 struct HotkeyBinding: Equatable, Sendable {
     let modifiers: NSEvent.ModifierFlags
     let keyCode: Key
-    let commands: [any Command]
+    let commands: Shell<any Command>
     let descriptionWithKeyCode: String
     let descriptionWithKeyNotation: String
 
-    init(_ modifiers: NSEvent.ModifierFlags, _ keyCode: Key, _ commands: [any Command], descriptionWithKeyNotation: String) {
+    init(_ modifiers: NSEvent.ModifierFlags, _ keyCode: Key, _ commands: Shell<any Command>, descriptionWithKeyNotation: String) {
         self.modifiers = modifiers
         self.keyCode = keyCode
         self.commands = commands
@@ -81,7 +81,7 @@ struct HotkeyBinding: Equatable, Sendable {
         lhs.modifiers == rhs.modifiers &&
             lhs.keyCode == rhs.keyCode &&
             lhs.descriptionWithKeyCode == rhs.descriptionWithKeyCode &&
-            zipIfCountsAreEqual(lhs.commands, rhs.commands)?.allSatisfy { $0.equals($1) } == true
+            lhs.commands.equals(rhs.commands)
     }
 }
 
@@ -94,10 +94,9 @@ func parseBindings(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: i
     for (binding, rawCommand): (String, OrderedJson) in rawTable {
         let backtrace = backtrace + .key(binding)
         let binding = parseBinding(binding, backtrace, mapping)
-            .flatMap { modifiers, key -> ParsedConfig<HotkeyBinding> in
-                parseCommandOrCommands(rawCommand).toParsedConfig(backtrace).map {
-                    HotkeyBinding(modifiers, key, $0, descriptionWithKeyNotation: binding)
-                }
+            .map { modifiers, key -> HotkeyBinding in
+                let commands = parseShellOfCommandsForConfig(rawCommand, backtrace, &errors)
+                return HotkeyBinding(modifiers, key, commands, descriptionWithKeyNotation: binding)
             }
             .getOrNil(appendErrorTo: &errors)
         if let binding {

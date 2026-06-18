@@ -1,12 +1,12 @@
 import Common
 
-func parseCommand(_ raw: String) -> ParsedCmd<any Command> {
+func parseCommand(_ raw: String) -> ParsedCmd<Shell<any Command>> {
     if raw.starts(with: "exec-and-forget") {
-        return .cmd(ExecAndForgetCommand(args: ExecAndForgetCmdArgs(bashScript: raw.removePrefix("exec-and-forget"))))
+        return .cmd(.cmd(ExecAndForgetCommand(args: ExecAndForgetCmdArgs(bashScript: raw.removePrefix("exec-and-forget")))))
     }
-    return switch raw.splitArgs() {
-        case .success(let args): parseCommand(args)
-        case .failure(let fail): .failure(fail, EXIT_CODE_TWO)
+    return switch raw.parseShell() {
+        case .success(let it): it.flatMap(parseCommand)
+        case .failure(let it): ParsedCmd.failure(it, EXIT_CODE_TWO)
     }
 }
 

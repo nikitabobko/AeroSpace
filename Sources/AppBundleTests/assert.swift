@@ -64,12 +64,13 @@ func assertFail<F>(_ actual: Result<some Any, F>, _ expected: F? = nil, file: St
 func testParseSingleCommandSucc(_ command: String, _ expected: any CmdArgs, file: StaticString = #filePath, line: UInt = #line) {
     let parsed = parseCommand(command)
     switch parsed {
-        case .cmd(let command):
+        case .cmd(.cmd(let command)):
             if !command.args.equals(expected) {
                 failExpectedActual(expected, command.args, file: file, line: line)
             }
-        case .help: failExpectedActual("parsed successfully", "Parsed as help", file: file, line: line)
-        case .failure(let msg): failExpectedActual("parsed successfully", "Failed to parse: \(msg.msg)", file: file, line: line)
+        case .cmd(let shell): failExpectedActual("Parsed as single Command", "Parsed as shell: \(shell.shellOfCommandsDescription)", file: file, line: line)
+        case .help: failExpectedActual("Parsed successfully", "Parsed as help", file: file, line: line)
+        case .failure(let msg): failExpectedActual("Parsed successfully", "Failed to parse: \(msg.msg)", file: file, line: line)
     }
 }
 

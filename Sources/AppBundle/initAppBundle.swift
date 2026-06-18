@@ -29,7 +29,7 @@ import Foundation
         )
         try await runLightSession(.startup, .forceRun) {
             smartLayoutAtStartup()
-            _ = try await config.afterStartupCommand.runCmdSeq(.defaultEnv, .emptyStdin)
+            _ = try await config.afterStartupCommand.run(.defaultEnv, .emptyStdin)
         }
     }
 }

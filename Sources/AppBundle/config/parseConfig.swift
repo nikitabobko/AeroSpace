@@ -122,11 +122,11 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "config-version": Parser(\.configVersion, parseConfigVersion),
 
     "after-login-command": Parser(\._afterLoginCommand, parseDeprecatedAfterLoginCommand),
-    "after-startup-command": Parser(\.afterStartupCommand) { parseCommandOrCommands($0).toParsedConfig($1) },
+    "after-startup-command": Parser(\.afterStartupCommand, parseShellOfCommandsForConfig),
 
-    "on-focus-changed": Parser(\.onFocusChanged) { parseCommandOrCommands($0).toParsedConfig($1) },
-    "on-mode-changed": Parser(\.onModeChanged) { parseCommandOrCommands($0).toParsedConfig($1) },
-    "on-focused-monitor-changed": Parser(\.onFocusedMonitorChanged) { parseCommandOrCommands($0).toParsedConfig($1) },
+    "on-focus-changed": Parser(\.onFocusChanged, parseShellOfCommandsForConfig),
+    "on-mode-changed": Parser(\.onModeChanged, parseShellOfCommandsForConfig),
+    "on-focused-monitor-changed": Parser(\.onFocusedMonitorChanged, parseShellOfCommandsForConfig),
     // "on-focused-workspace-changed": Parser(\.onFocusedWorkspaceChanged, { parseCommandOrCommands($0).toParsedConfig($1) }),
 
     "enable-normalization-flatten-containers": Parser(\.enableNormalizationFlattenContainers, parseBool),
@@ -156,7 +156,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
 ]
 
 extension ParsedCmd {
-    func toEither() -> Parsed<T> {
+    func toResult() -> Parsed<T> {
         return switch self {
             case .cmd(let a): .success(a)
             case .help(let a): .failure(a)
@@ -173,17 +173,23 @@ func parseDeprecatedAfterLoginCommand(_ raw: OrderedJson, _ backtrace: ConfigBac
     return .failure(.init(backtrace, msg))
 }
 
-func parseCommandOrCommands(_ raw: OrderedJson) -> Parsed<[any Command]> {
+func parseShellOfCommandsForConfig(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> Shell<any Command> {
     if let rawString = raw.asStringOrNil {
-        return parseCommand(rawString).toEither().map { [$0] }
+        return parseCommand(rawString).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &errors) ?? .empty
     } else if let rawArray = raw.asArrayOrNil {
-        let commands: Parsed<[any Command]> = (0 ..< rawArray.count).mapAllOrFailure { index in
-            let rawString: String = rawArray[index].asStringOrNil ?? expectedActualTypeError(expected: .string, actual: rawArray[index].tomlType)
-            return parseCommand(rawString).toEither()
+        var result = [Shell<any Command>]()
+        for (index, elem) in rawArray.enumerated() {
+            let backtrace = backtrace + .index(index)
+            if let elem = elem.asStringOrNil {
+                result.append(parseCommand(elem).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &errors) ?? .empty)
+            } else {
+                errors.append(.init(backtrace, expectedActualTypeError(expected: .string, actual: elem.tomlType)))
+            }
         }
-        return commands
+        return .newCompound(result, Shell<any Command>.seq)
     } else {
-        return .failure(expectedActualTypeError(expected: [.string, .array], actual: raw.tomlType))
+        errors.append(.init(backtrace, expectedActualTypeError(expected: [.string, .array], actual: raw.tomlType)))
+        return .empty
     }
 }
 
@@ -260,8 +266,9 @@ struct ParseConfigResult {
         config.persistentWorkspaces = (config.modes.values.lazy
             .flatMap { (mode: Mode) -> [HotkeyBinding] in Array(mode.bindings.values) }
             .flatMap { (binding: HotkeyBinding) -> [String] in
-                binding.commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw } +
-                    binding.commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw }
+                let commands = binding.commands.flatten()
+                return commands.filterIsInstance(of: WorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw } +
+                    commands.filterIsInstance(of: MoveNodeToWorkspaceCommand.self).compactMap { $0.args.target.val.workspaceNameOrNil()?.raw }
             }
             + (config.workspaceToMonitorForceAssignment).keys)
             .toOrderedSet()
@@ -269,7 +276,7 @@ struct ParseConfigResult {
 
     if config.enableNormalizationFlattenContainers {
         let containsSplitCommand = config.modes.values.lazy.flatMap { $0.bindings.values }
-            .flatMap { $0.commands }
+            .flatMap { $0.commands.flatten() }
             .contains { $0 is SplitCommand }
         if containsSplitCommand {
             errors += [.init(

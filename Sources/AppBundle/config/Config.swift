@@ -35,7 +35,7 @@ var defaultConfigUrl: URL {
 struct Config: ConvenienceCopyable {
     var configVersion: Int = 1
     var _afterLoginCommand: [any Command] = []
-    var afterStartupCommand: [any Command] = []
+    var afterStartupCommand: Shell<any Command> = .empty
     var _indentForNestedContainersWithTheSameOrientation: Void = ()
     var enableNormalizationFlattenContainers: Bool = true
     var _nonEmptyWorkspacesRootContainersLayoutOnStartup: Void = ()
@@ -51,15 +51,15 @@ struct Config: ConvenienceCopyable {
     var keyMapping = KeyMapping()
     var execConfig: ExecConfig = ExecConfig()
 
-    var onFocusChanged: [any Command] = []
+    var onFocusChanged: Shell<any Command> = .empty
     // var onFocusedWorkspaceChanged: [any Command] = []
-    var onFocusedMonitorChanged: [any Command] = []
+    var onFocusedMonitorChanged: Shell<any Command> = .empty
 
     var gaps: Gaps = .zero
     var workspaceToMonitorForceAssignment: [String: [MonitorDescription]] = [:]
     var modes: [String: Mode] = [:]
     var onWindowDetected: [WindowDetectedCallback] = []
-    var onModeChanged: [any Command] = []
+    var onModeChanged: Shell<any Command> = .empty
 }
 
 enum DefaultContainerOrientation: String {

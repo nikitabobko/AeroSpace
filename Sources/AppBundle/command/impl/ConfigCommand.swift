@@ -130,10 +130,8 @@ extension ConfigMapValue {
     }
 }
 
-extension [Command] {
-    var prettyDescription: String {
-        map { $0.args.description }.joined(separator: "; ")
-    }
+extension Shell<any Command> {
+    var shellOfCommandsDescription: String { buildDescription { $0.args.description } }
 }
 
 @MainActor func buildConfigMap() -> ConfigMapValue {
@@ -141,7 +139,7 @@ extension [Command] {
         var keyNotationToScript: [String: ConfigMapValue] = [:]
         for binding in mode.bindings.values {
             keyNotationToScript[binding.descriptionWithKeyNotation] =
-                .scalar(.string(binding.commands.prettyDescription))
+                .scalar(.string(binding.commands.shellOfCommandsDescription))
         }
         return .map(["binding": .map(keyNotationToScript)])
     }

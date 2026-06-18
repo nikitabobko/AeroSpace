@@ -93,6 +93,24 @@ final class ShellParserTest: XCTestCase {
         // Per the grammar, a parenthesized group is a Pipe-level atom and cannot itself be piped.
         assertFail("(foo) | bar".parseShell(), "Line 1 Column 7: Unexpected token '|'")
     }
+
+    func testBuildDescription() {
+        func render(_ shell: Shell<[String]>) -> String { shell.buildDescription { $0.joined(separator: " ") } }
+
+        assertEquals(render(.or(.and("a", "b"), "c")), "a && b || c")
+        assertEquals(render(.seq(.or("a", "b"), .and("c", "d"))), "a || b; c && d")
+        assertEquals(render(.and(.pipe("a", "b"), "c")), "a | b && c")
+
+        assertEquals(render(.and(.or("a", "b"), "c")), "(a || b) && c")
+        assertEquals(render(.and("a", .or("b", "c"))), "a && (b || c)")
+        assertEquals(render(.pipe(.seq("a", "b"), "c")), "(a; b) | c")
+        assertEquals(render(.or(.seq("a", "b"), "c")), "(a; b) || c")
+        assertEquals(render(.and(.or("a", "b"), .or("c", "d"))), "(a || b) && (c || d)")
+
+        assertEquals(render("foo"), "foo")
+        assertEquals(render(.and(["a", "b", "c"])), "a && b && c")
+        assertEquals(render(.empty), "")
+    }
 }
 
 extension Shell {

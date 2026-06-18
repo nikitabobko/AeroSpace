@@ -150,7 +150,7 @@ There are two ways on how you can use commands:
     # Bind alt-1 key to switch to workspace 1
     alt-1 = 'workspace 1'
     # Or bind a sequence of commands
-    alt-shift-1 = ['move-node-to-workspace 1', 'workspace 1']
+    alt-shift-1 = 'move-node-to-workspace 1; workspace 1'
 ----
 . Run commands in CLI. Open up a Terminal.app and type:
 +
@@ -160,6 +160,36 @@ aerospace workspace 1
 ----
 
 For the list of available commands see: xref:commands.adoc[]
+
+[#shell]
+=== Shell
+
+AeroSpace reimplements a small subset of Shell syntax.
+Namely, the well-known operators: `;`, `||`, `&&`, `|`, and parenthesis to specify the precedence (listed in the precedence order).
+
+That is what allows you to combine commands and run them in sequence or pipe one into another:
+
+[source,toml]
+----
+[mode.main.binding]
+    alt-shift-1 = 'move-node-to-workspace 1; workspace 1'
+
+    alt-right = 'list-workspaces --monitor focused --empty no | workspace --stdin next'
+----
+
+This Shell-like string is exactly what you pass to the xref:./commands.adoc#eval[eval command] argument.
+
+[NOTE]
+====
+*(1)* In traditional Shell, `||` and `&&` have the same precedence and are left associative,
+so `foo || bar && baz` parses as `(foo || bar) && baz`.
+AeroSpace's shell syntax diverges from that dubious design decision.
+
+Instead, it follows the hopefully more intuitive precedence rules, where `&&` operator has bigger binding power,
+so the very same command above parses as `foo || (bar && baz)`.
+
+*(2)* In AeroSpace, the pipe operator `|` semantic matches `set -o pipefail` from traditional shells.
+====
 
 [#key-mapping]
 === Keyboard layouts and key mapping
