@@ -3,7 +3,6 @@ public struct MoveWorkspaceToMonitorCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .moveWorkspaceToMonitor,
-        allowInConfig: true,
         help: move_workspace_to_monitor_help_generated,
         flags: [
             "--wrap-around": trueBoolFlag(\.wrapAround),

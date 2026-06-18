@@ -3,7 +3,6 @@ public struct VolumeCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .volume,
-        allowInConfig: true,
         help: volume_help_generated,
         flags: [
             "--no-gui": falseBoolFlag(\.gui),

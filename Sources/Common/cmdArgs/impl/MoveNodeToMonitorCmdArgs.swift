@@ -3,7 +3,6 @@ public struct MoveNodeToMonitorCmdArgs: CmdArgs {
     fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .moveNodeToMonitor,
-        allowInConfig: true,
         help: move_node_to_monitor_help_generated,
         flags: [
             // "Own" option

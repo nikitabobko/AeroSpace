@@ -3,7 +3,6 @@ public struct SwapCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .swap,
-        allowInConfig: true,
         help: swap_help_generated,
         flags: [
             "--swap-focus": trueBoolFlag(\.swapFocus),

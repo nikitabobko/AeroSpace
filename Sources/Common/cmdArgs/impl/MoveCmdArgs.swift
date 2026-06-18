@@ -3,7 +3,6 @@ public struct MoveCmdArgs: CmdArgs {
     fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .move,
-        allowInConfig: true,
         help: move_help_generated,
         flags: [
             "--window-id": windowIdSubArgParser(),

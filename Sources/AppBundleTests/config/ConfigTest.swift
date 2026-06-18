@@ -92,16 +92,6 @@ final class ConfigTest: XCTestCase {
         assertEquals(errors, ["[ERROR] persistent-workspaces: This config option is only available since \'config-version = 2\'"])
     }
 
-    func testQueryCantBeUsedInConfig() {
-        let errors = parseConfig(
-            """
-            [mode.main.binding]
-                alt-a = 'list-apps'
-            """,
-        ).strErrors
-        XCTAssertTrue(errors.singleOrNil()?.contains("cannot be used in config") == true)
-    }
-
     func testDropBindings() {
         let result = parseConfig(
             """

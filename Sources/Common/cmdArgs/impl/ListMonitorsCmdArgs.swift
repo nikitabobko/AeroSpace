@@ -3,7 +3,6 @@ public struct ListMonitorsCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .listMonitors,
-        allowInConfig: false,
         help: list_monitors_help_generated,
         flags: [
             "--focused": boolFlag(\.focused),

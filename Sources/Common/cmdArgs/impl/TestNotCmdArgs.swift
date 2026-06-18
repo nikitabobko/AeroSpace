@@ -3,7 +3,6 @@ public struct TestNotCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .testNot,
-        allowInConfig: true,
         help: test_not_help_generated,
         flags: [:],
         posArgs: [],

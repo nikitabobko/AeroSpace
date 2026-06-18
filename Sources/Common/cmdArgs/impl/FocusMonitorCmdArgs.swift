@@ -3,7 +3,6 @@ public struct FocusMonitorCmdArgs: CmdArgs {
     fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .focusMonitor,
-        allowInConfig: true,
         help: focus_monitor_help_generated,
         flags: [
             "--wrap-around": trueBoolFlag(\.wrapAround),

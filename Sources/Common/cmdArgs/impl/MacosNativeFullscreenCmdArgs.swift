@@ -3,7 +3,6 @@ public struct MacosNativeFullscreenCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .macosNativeFullscreen,
-        allowInConfig: true,
         help: macos_native_fullscreen_help_generated,
         flags: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),

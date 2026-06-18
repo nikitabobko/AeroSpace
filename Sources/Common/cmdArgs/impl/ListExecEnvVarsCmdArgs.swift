@@ -3,7 +3,6 @@ public struct ListExecEnvVarsCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .listExecEnvVars,
-        allowInConfig: true,
         help: list_exec_env_vars_help_generated,
         flags: [:],
         posArgs: [],

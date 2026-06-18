@@ -3,7 +3,6 @@ public struct EnableCmdArgs: CmdArgs {
     fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .enable,
-        allowInConfig: true,
         help: enable_help_generated,
         flags: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),

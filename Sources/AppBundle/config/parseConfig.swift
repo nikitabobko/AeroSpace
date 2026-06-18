@@ -155,13 +155,10 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "indent-for-nested-containers-with-the-same-orientation": Parser(\._indentForNestedContainersWithTheSameOrientation, parseIndentForNestedContainersWithTheSameOrientation),
 ]
 
-extension ParsedCmd where T == any Command {
+extension ParsedCmd {
     func toEither() -> Parsed<T> {
         return switch self {
-            case .cmd(let a):
-                a.info.allowInConfig
-                    ? .success(a)
-                    : .failure("Command '\(a.info.kind.rawValue)' cannot be used in config")
+            case .cmd(let a): .success(a)
             case .help(let a): .failure(a)
             case .failure(let a): .failure(a.msg)
         }

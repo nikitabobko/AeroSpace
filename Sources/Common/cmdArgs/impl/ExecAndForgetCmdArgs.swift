@@ -2,7 +2,6 @@ public struct ExecAndForgetCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
     public static let parser: CmdParser<Self> = .init(
         kind: .execAndForget,
-        allowInConfig: true,
         help: exec_and_forget_help_generated,
         flags: [:],
         posArgs: [],

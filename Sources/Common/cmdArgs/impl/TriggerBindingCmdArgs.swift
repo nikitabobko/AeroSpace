@@ -3,7 +3,6 @@ public struct TriggerBindingCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .triggerBinding,
-        allowInConfig: true,
         help: trigger_binding_help_generated,
         flags: [
             "--mode": singleValueSubArgParser(\._mode, "<mode-id>", Result.success),

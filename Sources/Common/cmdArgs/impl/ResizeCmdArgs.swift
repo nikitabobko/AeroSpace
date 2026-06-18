@@ -3,7 +3,6 @@ public struct ResizeCmdArgs: CmdArgs {
     fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .resize,
-        allowInConfig: true,
         help: resize_help_generated,
         flags: [
             "--window-id": windowIdSubArgParser(),

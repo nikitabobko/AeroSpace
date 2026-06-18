@@ -3,7 +3,6 @@ public struct SplitCmdArgs: CmdArgs {
     fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .split,
-        allowInConfig: true,
         help: split_help_generated,
         flags: [
             "--window-id": windowIdSubArgParser(),

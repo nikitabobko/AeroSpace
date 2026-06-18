@@ -3,7 +3,6 @@ public struct FocusCmdArgs: CmdArgs {
     fileprivate init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .focus,
-        allowInConfig: true,
         help: focus_help_generated,
         flags: [
             "--ignore-floating": falseBoolFlag(\.floatingAsTiling),

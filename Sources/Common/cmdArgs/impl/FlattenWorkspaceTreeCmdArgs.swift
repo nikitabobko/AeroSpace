@@ -3,7 +3,6 @@ public struct FlattenWorkspaceTreeCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .flattenWorkspaceTree,
-        allowInConfig: true,
         help: flatten_workspace_tree_help_generated,
         flags: [
             "--workspace": workspaceSubArgParser(),

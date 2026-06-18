@@ -3,7 +3,6 @@ public struct CloseCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .close,
-        allowInConfig: true,
         help: close_help_generated,
         flags: [
             "--quit-if-last-window": trueBoolFlag(\.quitIfLastWindow),

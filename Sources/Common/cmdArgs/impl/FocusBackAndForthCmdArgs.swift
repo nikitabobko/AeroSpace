@@ -3,7 +3,6 @@ public struct FocusBackAndForthCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .focusBackAndForth,
-        allowInConfig: true,
         help: focus_back_and_forth_help_generated,
         flags: [:],
         posArgs: [],

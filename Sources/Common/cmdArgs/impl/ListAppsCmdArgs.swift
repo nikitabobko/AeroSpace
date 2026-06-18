@@ -3,7 +3,6 @@ public struct ListAppsCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .listApps,
-        allowInConfig: false,
         help: list_apps_help_generated,
         flags: [
             "--macos-native-hidden": boolFlag(\.macosHidden),

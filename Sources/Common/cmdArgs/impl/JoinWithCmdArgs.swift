@@ -3,7 +3,6 @@ public struct JoinWithCmdArgs: CmdArgs {
     init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .joinWith,
-        allowInConfig: true,
         help: join_with_help_generated,
         flags: [
             "--window-id": windowIdSubArgParser(),
