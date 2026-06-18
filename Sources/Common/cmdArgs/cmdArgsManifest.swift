@@ -1,15 +1,17 @@
 public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     // Sorted
 
-    case _false = "false"
-    case _true = "true"
     case balanceSizes = "balance-sizes"
     case close
     case closeAllWindowsButCurrent = "close-all-windows-but-current"
     case config
     case debugWindows = "debug-windows"
     case enable
+    case eval
     case execAndForget = "exec-and-forget"
+
+    case _false = "false"
+
     case flattenWorkspaceTree = "flatten-workspace-tree"
     case focus
     case focusBackAndForth = "focus-back-and-forth"
@@ -40,6 +42,9 @@ public enum CmdKind: String, CaseIterable, Equatable, Sendable {
     case test
     case testNot = "test-not"
     case triggerBinding = "trigger-binding"
+
+    case _true = "true"
+
     case volume
     case workspace
     case workspaceBackAndForth = "workspace-back-and-forth"
@@ -49,10 +54,6 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
     var result: [String: any SubCommandParserProtocol] = [:]
     for kind in CmdKind.allCases {
         switch kind {
-            case ._false:
-                result[kind.rawValue] = SubCommandParser(FalseCmdArgs.init)
-            case ._true:
-                result[kind.rawValue] = SubCommandParser(TrueCmdArgs.init)
             case .balanceSizes:
                 result[kind.rawValue] = SubCommandParser(BalanceSizesCmdArgs.init)
             case .close:
@@ -65,8 +66,12 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = SubCommandParser(DebugWindowsCmdArgs.init)
             case .enable:
                 result[kind.rawValue] = SubCommandParser(parseEnableCmdArgs)
+            case .eval:
+                result[kind.rawValue] = SubCommandParser(EvalCmdArgs.init)
             case .execAndForget:
                 break // exec-and-forget is parsed separately
+            case ._false:
+                result[kind.rawValue] = SubCommandParser(FalseCmdArgs.init)
             case .flattenWorkspaceTree:
                 result[kind.rawValue] = SubCommandParser(FlattenWorkspaceTreeCmdArgs.init)
             case .focus:
@@ -131,6 +136,8 @@ func initSubcommands() -> [String: any SubCommandParserProtocol] {
                 result[kind.rawValue] = SubCommandParser(parseTestNotCmdArgs)
             case .triggerBinding:
                 result[kind.rawValue] = SubCommandParser(parseTriggerBindingCmdArgs)
+            case ._true:
+                result[kind.rawValue] = SubCommandParser(TrueCmdArgs.init)
             case .volume:
                 result[kind.rawValue] = SubCommandParser(VolumeCmdArgs.init)
             case .workspace:

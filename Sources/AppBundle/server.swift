@@ -88,15 +88,13 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
             case .failure(let err):
                 await answerToClient(exitCode: err.exitCode, stderr: err.msg)
                 continue
-            case .cmd(let command) where command.isExec:
-                await answerToClient(exitCode: EXIT_CODE_TWO, stderr: "exec-and-forget is prohibited in CLI")
-                continue
             case .cmd(let command):
                 let _answer: Result<ServerAnswer, Error> = await Result {
                     try await runLightSession(.socketServer(command.args), token) { () throws in
                         let env = CmdEnv.init(
                             windowId: request.windowId.flattenOptional(),
                             workspaceName: request.workspace.flattenOptional(),
+                            forbidExecAndForget: true,
                         )
                         let cmdResult = try await command.run(env, CmdStdin(request.stdin))
                         return ServerAnswer(

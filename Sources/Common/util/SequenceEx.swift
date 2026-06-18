@@ -40,8 +40,8 @@ extension Sequence {
                     result.append(element)
                 case .help(let help):
                     return .help(help)
-                case .failure(let errors):
-                    return .failure(errors)
+                case .failure(let cmdParsingFailure):
+                    return .failure(cmdParsingFailure)
             }
         }
         return .cmd(result)

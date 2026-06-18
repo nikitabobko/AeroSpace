@@ -48,6 +48,13 @@ include::aerospace-enable.adoc[tags=synopsis]
 include::aerospace-enable.adoc[tags=purpose]
 include::aerospace-enable.adoc[tags=body]
 
+== eval
+----
+include::aerospace-eval.adoc[tags=synopsis]
+----
+include::aerospace-eval.adoc[tags=purpose]
+include::aerospace-eval.adoc[tags=body]
+
 == exec-and-forget
 ----
 include::aerospace-exec-and-forget.adoc[tags=synopsis]

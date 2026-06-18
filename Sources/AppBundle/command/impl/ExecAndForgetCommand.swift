@@ -6,6 +6,9 @@ struct ExecAndForgetCommand: Command {
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
+        if env.forbidExecAndForget {
+            return .fail(io.err("exec-and-forget is prohibited in CLI"))
+        }
         // todo shall exec-and-forget fork exec session?
         // It doesn't throw if exit code is non-zero
         let process = Process()

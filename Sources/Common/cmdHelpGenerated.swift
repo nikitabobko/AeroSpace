@@ -24,6 +24,9 @@ let enable_help_generated = """
        OR: enable [-h|--help] on [--fail-if-noop]
        OR: enable [-h|--help] off [--fail-if-noop]
     """
+let eval_help_generated = """
+    USAGE: eval [-h|--help] <aerospace-shell-expr>
+    """
 let exec_and_forget_help_generated = """
     USAGE: exec-and-forget <bash-script>
     """

@@ -1,8 +1,9 @@
 import Common
 
 struct CmdEnv: ConvenienceCopyable {
-    var windowId: UInt32?
-    var workspaceName: String?
+    var windowId: UInt32? = nil
+    var workspaceName: String? = nil
+    var forbidExecAndForget: Bool = false
 
     static let defaultEnv: CmdEnv = .init()
     func withFocus(_ focus: LiveFocus) -> CmdEnv {

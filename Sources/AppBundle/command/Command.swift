@@ -32,6 +32,4 @@ extension Command {
     func run(_ env: CmdEnv, _ stdin: consuming CmdStdin) async throws -> CmdResult {
         return try await Shell.cmd(self).run(env, stdin)
     }
-
-    var isExec: Bool { self is ExecAndForgetCommand }
 }

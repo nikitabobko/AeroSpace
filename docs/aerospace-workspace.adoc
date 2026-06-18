@@ -27,7 +27,7 @@ aerospace workspace [-h|--help] [--wrap-around] [--stdin|--no-stdin] (next|prev)
 Focuses next or previous workspace in *the list*.
 
 * If `--stdin` is specified, then *the list* is taken from stdin
-* Otherwise, *the list* is defined as all workspaces on focused monitor in alphabetical order
+* Otherwise, *the list* is defined as all workspaces (even empty ones) on focused monitor in alphabetical order
 
 // =========================================================== Options
 include::util/conditional-options-header.adoc[]
