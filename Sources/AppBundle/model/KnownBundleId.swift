@@ -19,6 +19,7 @@ enum KnownBundleId: String, Equatable {
     case screenstudio = "com.timpler.screenstudio"
     case slack = "com.tinyspeck.slackmacgap"
     case steam = "com.valvesoftware.steam.helper"
+    case vitaminr = "net.publicspace.dist.vitaminr4"
     case wezterm = "com.github.wez.wezterm"
     case xcode = "com.apple.dt.Xcode"
     case zenBrowser = "app.zen-browser.zen"
