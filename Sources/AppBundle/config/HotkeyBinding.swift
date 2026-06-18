@@ -85,9 +85,9 @@ struct HotkeyBinding: Equatable, Sendable {
     }
 }
 
-func parseBindings(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic], _ mapping: [String: Key]) -> [String: HotkeyBinding] {
+func parseBindings(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext, _ mapping: [String: Key]) -> [String: HotkeyBinding] {
     guard let rawTable = raw.asDictOrNil else {
-        errors += [expectedActualTypeDiagnostic(expected: .table, actual: raw.tomlType, backtrace)]
+        c.errors += [expectedActualTypeDiagnostic(expected: .table, actual: raw.tomlType, backtrace)]
         return [:]
     }
     var result: [String: HotkeyBinding] = [:]
@@ -95,13 +95,13 @@ func parseBindings(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: i
         let backtrace = backtrace + .key(binding)
         let binding = parseBinding(binding, backtrace, mapping)
             .map { modifiers, key -> HotkeyBinding in
-                let commands = parseShellOfCommandsForConfig(rawCommand, backtrace, &errors)
+                let commands = parseShellOfCommandsForConfig(rawCommand, backtrace, &c)
                 return HotkeyBinding(modifiers, key, commands, descriptionWithKeyNotation: binding)
             }
-            .getOrNil(appendErrorTo: &errors)
+            .getOrNil(appendErrorTo: &c.errors)
         if let binding {
             if result.keys.contains(binding.descriptionWithKeyCode) {
-                errors.append(.init(backtrace, "'\(binding.descriptionWithKeyCode)' Binding redeclaration"))
+                c.errors.append(.init(backtrace, "'\(binding.descriptionWithKeyCode)' Binding redeclaration"))
             }
             result[binding.descriptionWithKeyCode] = binding
         }

@@ -80,27 +80,32 @@ extension ParserProtocol {
     func transformRawConfig(_ raw: S,
                             _ value: OrderedJson,
                             _ backtrace: ConfigBacktrace,
-                            _ errors: inout [ConfigParseDiagnostic]) -> S
+                            _ c: inout ConfigParserContext) -> S
     {
-        if let value = parse(value, backtrace, &errors).getOrNil(appendErrorTo: &errors) {
+        if let value = parse(value, backtrace, &c).getOrNil(appendErrorTo: &c.errors) {
             return raw.copy(keyPath, value)
         }
         return raw
     }
 }
 
+struct ConfigParserContext {
+    var configVersion: Int
+    var errors: [ConfigParseDiagnostic]
+}
+
 protocol ParserProtocol<S>: Sendable {
     associatedtype T
     associatedtype S where S: ConvenienceCopyable
     var keyPath: SendableWritableKeyPath<S, T> { get }
-    var parse: @Sendable (OrderedJson, ConfigBacktrace, inout [ConfigParseDiagnostic]) -> ParsedConfig<T> { get }
+    var parse: @Sendable (OrderedJson, ConfigBacktrace, inout ConfigParserContext) -> ParsedConfig<T> { get }
 }
 
 struct Parser<S: ConvenienceCopyable, T>: ParserProtocol {
     let keyPath: SendableWritableKeyPath<S, T>
-    let parse: @Sendable (OrderedJson, ConfigBacktrace, inout [ConfigParseDiagnostic]) -> ParsedConfig<T>
+    let parse: @Sendable (OrderedJson, ConfigBacktrace, inout ConfigParserContext) -> ParsedConfig<T>
 
-    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (OrderedJson, ConfigBacktrace, inout [ConfigParseDiagnostic]) -> T) {
+    init(_ keyPath: SendableWritableKeyPath<S, T>, _ parse: @escaping @Sendable (OrderedJson, ConfigBacktrace, inout ConfigParserContext) -> T) {
         self.keyPath = keyPath
         self.parse = { raw, backtrace, errors -> ParsedConfig<T> in .success(parse(raw, backtrace, &errors)) }
     }
@@ -112,6 +117,7 @@ struct Parser<S: ConvenienceCopyable, T>: ParserProtocol {
 }
 
 private let keyMappingConfigRootKey = "key-mapping"
+private let configVersionConfigRootKey = "config-version"
 private let modeConfigRootKey = "mode"
 private let persistentWorkspacesKey = "persistent-workspaces"
 
@@ -119,7 +125,7 @@ private let persistentWorkspacesKey = "persistent-workspaces"
 // 1. Does it make sense to have different value
 // 2. Prefer commands and commands flags over toml options if possible
 private let configParser: [String: any ParserProtocol<Config>] = [
-    "config-version": Parser(\.configVersion, parseConfigVersion),
+    configVersionConfigRootKey: Parser(\.configVersion, skipParsing(Config().configVersion)), // Parsed manually
 
     "after-login-command": Parser(\._afterLoginCommand, parseDeprecatedAfterLoginCommand),
     "after-startup-command": Parser(\.afterStartupCommand, parseShellOfCommandsForConfig),
@@ -173,22 +179,22 @@ func parseDeprecatedAfterLoginCommand(_ raw: OrderedJson, _ backtrace: ConfigBac
     return .failure(.init(backtrace, msg))
 }
 
-func parseShellOfCommandsForConfig(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> Shell<any Command> {
+func parseShellOfCommandsForConfig(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> Shell<any Command> {
     if let rawString = raw.asStringOrNil {
-        return parseCommand(rawString).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &errors) ?? .empty
+        return parseCommand(rawString).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &c.errors) ?? .empty
     } else if let rawArray = raw.asArrayOrNil {
         var result = [Shell<any Command>]()
         for (index, elem) in rawArray.enumerated() {
             let backtrace = backtrace + .index(index)
             if let elem = elem.asStringOrNil {
-                result.append(parseCommand(elem).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &errors) ?? .empty)
+                result.append(parseCommand(elem).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &c.errors) ?? .empty)
             } else {
-                errors.append(.init(backtrace, expectedActualTypeError(expected: .string, actual: elem.tomlType)))
+                c.errors.append(.init(backtrace, expectedActualTypeError(expected: .string, actual: elem.tomlType)))
             }
         }
         return .newCompound(result, Shell<any Command>.seq)
     } else {
-        errors.append(.init(backtrace, expectedActualTypeError(expected: [.string, .array], actual: raw.tomlType)))
+        c.errors.append(.init(backtrace, expectedActualTypeError(expected: [.string, .array], actual: raw.tomlType)))
         return .empty
     }
 }
@@ -229,39 +235,48 @@ struct ParseConfigResult {
 }
 
 @MainActor func parseConfig(_ rawToml: String) -> ParseConfigResult {
-    var errors: [ConfigParseDiagnostic] = []
-    var warnings: [ConfigParseDiagnostic] = []
+    var errors = NonCopyable([ConfigParseDiagnostic]())
+    var warnings = [ConfigParseDiagnostic]()
 
     let rawTable: OrderedJson.JsonDict
     do {
         let dict: [String: Any] = try .init(try TOMLTable(source: rawToml))
-        let json = tomlAnyToOrderedJsonRecursive(any: dict, .emptyRoot, &errors)
+        let json = tomlAnyToOrderedJsonRecursive(any: dict, .emptyRoot, &errors.value)
         switch json {
             case .dict(let dict): rawTable = dict
             default: // dead code
                 let msg = "Config parsing error: the top level type must be a TOML Table. But got: \((json ?? .null).tomlType)"
-                errors.append(.init(.emptyRoot, msg, preventConfigReload: true))
+                errors.value.append(.init(.emptyRoot, msg, preventConfigReload: true))
                 rawTable = [:]
         }
     } catch {
-        errors.append(.init(.emptyRoot, error.description, preventConfigReload: true))
+        errors.value.append(.init(.emptyRoot, error.description, preventConfigReload: true))
         rawTable = [:]
     }
 
-    var config = rawTable.parseTable(Config(), configParser, .emptyRoot, &errors)
+    let configVersion: Int =
+        switch rawTable[configVersionConfigRootKey].flatMap({ parseConfigVersion($0, .rootKey(configVersionConfigRootKey)).getOrNil(appendErrorTo: &errors.value) }) {
+            case let it?: it
+            case nil: minConfigVersion
+        }
 
-    if let mapping = rawTable[keyMappingConfigRootKey].flatMap({ parseKeyMapping($0, .rootKey(keyMappingConfigRootKey), &errors) }) {
+    var c = ConfigParserContext(configVersion: configVersion, errors: errors.consume())
+
+    var config = rawTable.parseTable(Config(), configParser, .emptyRoot, &c)
+    config.configVersion = configVersion
+
+    if let mapping = rawTable[keyMappingConfigRootKey].flatMap({ parseKeyMapping($0, .rootKey(keyMappingConfigRootKey), &c) }) {
         config.keyMapping = mapping
     }
 
     // Parse modeConfigRootKey after keyMappingConfigRootKey
-    if let modes = rawTable[modeConfigRootKey].flatMap({ parseModes($0, .rootKey(modeConfigRootKey), &errors, config.keyMapping.resolve()) }) {
+    if let modes = rawTable[modeConfigRootKey].flatMap({ parseModes($0, .rootKey(modeConfigRootKey), &c, config.keyMapping.resolve()) }) {
         config.modes = modes
     }
 
     if config.configVersion <= 1 {
         if rawTable.keys.contains(persistentWorkspacesKey) {
-            errors += [.init(.rootKey(persistentWorkspacesKey), "This config option is only available since 'config-version = 2'")]
+            c.errors += [.init(.rootKey(persistentWorkspacesKey), "This config option is only available since 'config-version = 2'")]
         }
         config.persistentWorkspaces = (config.modes.values.lazy
             .flatMap { (mode: Mode) -> [HotkeyBinding] in Array(mode.bindings.values) }
@@ -279,7 +294,7 @@ struct ParseConfigResult {
             .flatMap { $0.commands.flatten() }
             .contains { $0 is SplitCommand }
         if containsSplitCommand {
-            errors += [.init(
+            c.errors += [.init(
                 .emptyRoot, // todo Make 'split' + flatten normalization prettier
                 """
                 The config contains:
@@ -298,7 +313,7 @@ struct ParseConfigResult {
             "See https://nikitabobko.github.io/AeroSpace/guide#config-version for the migration guide."
         warnings.append(.init(.emptyRoot, msg))
     }
-    return ParseConfigResult(config: config, errors: errors, warnings: warnings)
+    return ParseConfigResult(config: config, errors: c.errors, warnings: warnings)
 }
 
 func parseIndentForNestedContainersWithTheSameOrientation(_ _: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Void> {
@@ -357,13 +372,13 @@ func parseTable<T: ConvenienceCopyable>(
     _ initial: T,
     _ fieldsParser: [String: any ParserProtocol<T>],
     _ backtrace: ConfigBacktrace,
-    _ errors: inout [ConfigParseDiagnostic],
+    _ c: inout ConfigParserContext,
 ) -> T {
     switch raw {
         case .dict(let table):
-            return table.parseTable(initial, fieldsParser, backtrace, &errors)
+            return table.parseTable(initial, fieldsParser, backtrace, &c)
         default:
-            errors.append(expectedActualTypeDiagnostic(expected: .table, actual: raw.tomlType, backtrace))
+            c.errors.append(expectedActualTypeDiagnostic(expected: .table, actual: raw.tomlType, backtrace))
             return initial
     }
 }
@@ -465,15 +480,15 @@ extension OrderedJson.JsonDict {
         _ initial: T,
         _ fieldsParser: [String: any ParserProtocol<T>],
         _ backtrace: ConfigBacktrace,
-        _ errors: inout [ConfigParseDiagnostic],
+        _ c: inout ConfigParserContext,
     ) -> T {
         var raw = initial
 
         for (key, value) in self {
             let backtrace: ConfigBacktrace = backtrace + .key(key)
             switch fieldsParser[key] {
-                case let parser?: raw = parser.transformRawConfig(raw, value, backtrace, &errors)
-                case nil: errors.append(unknownKeyDiagnostic(backtrace))
+                case let parser?: raw = parser.transformRawConfig(raw, value, backtrace, &c)
+                case nil: c.errors.append(unknownKeyDiagnostic(backtrace))
             }
         }
 

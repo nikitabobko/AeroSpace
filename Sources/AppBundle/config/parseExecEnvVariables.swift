@@ -28,13 +28,13 @@ struct RawExecConfig: ConvenienceCopyable, Equatable {
     }
 }
 
-func parseExecConfig(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> ExecConfig {
-    parseTable(raw, RawExecConfig(), rawExecConfigParser, backtrace, &errors).expand()
+func parseExecConfig(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> ExecConfig {
+    parseTable(raw, RawExecConfig(), rawExecConfigParser, backtrace, &c).expand()
 }
 
-private func parseEnvVariables(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [String: String] {
+private func parseEnvVariables(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> [String: String] {
     guard let table = raw.asDictOrNil else {
-        errors.append(expectedActualTypeDiagnostic(expected: .array, actual: raw.tomlType, backtrace))
+        c.errors.append(expectedActualTypeDiagnostic(expected: .array, actual: raw.tomlType, backtrace))
         return [:]
     }
     let mutated = table.keys
@@ -43,15 +43,15 @@ private func parseEnvVariables(_ raw: OrderedJson, _ backtrace: ConfigBacktrace,
     var result: [String: String] = [:]
     for (key, value) in table {
         let backtrace = backtrace + .key(key)
-        if key == "PWD" { errors.append(.init(backtrace, "Changing 'PWD' is not allowed")) }
-        guard let rawStr = parseString(value, backtrace).getOrNil(appendErrorTo: &errors) else { continue }
+        if key == "PWD" { c.errors.append(.init(backtrace, "Changing 'PWD' is not allowed")) }
+        guard let rawStr = parseString(value, backtrace).getOrNil(appendErrorTo: &c.errors) else { continue }
         var env = baseEnv
         if let add: String = fullEnv[key] {
             env[key] = add
         }
         switch rawStr.interpolate(with: env) {
             case .success(let interpolated): result[key] = interpolated
-            case .failure(let _errros): errors += _errros.map { .init(backtrace, $0) }
+            case .failure(let _errros): c.errors += _errros.map { .init(backtrace, $0) }
         }
     }
     return result

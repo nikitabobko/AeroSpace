@@ -87,11 +87,11 @@ private func upcast<T>(
     { fun($0, $1).map(Optional.init) }
 }
 
-func parseOnWindowDetectedArray(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> [WindowDetectedCallback] {
+func parseOnWindowDetectedArray(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> [WindowDetectedCallback] {
     if let array = raw.asArrayOrNil {
-        return array.enumerated().map { (index, raw) in parseWindowDetectedCallback(raw, backtrace + .index(index), &errors) }.filterNotNil()
+        return array.enumerated().map { (index, raw) in parseWindowDetectedCallback(raw, backtrace + .index(index), &c) }.filterNotNil()
     } else {
-        errors += [expectedActualTypeDiagnostic(expected: .array, actual: raw.tomlType, backtrace)]
+        c.errors += [expectedActualTypeDiagnostic(expected: .array, actual: raw.tomlType, backtrace)]
         return []
     }
 }
@@ -100,29 +100,29 @@ private func parseCasInsensitiveRegex(_ raw: OrderedJson, _ backtrace: ConfigBac
     parseString(raw, backtrace).flatMap { CaseInsensitiveRegex.new($0).toParsedConfig(backtrace) }
 }
 
-private func parseMatcher(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> WindowDetectedCallbackMatcher {
+private func parseMatcher(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> WindowDetectedCallbackMatcher {
     switch raw {
         case .dict(let raw):
-            return .legacy(raw.parseTable(LegacyWindowDetectedCallbackMatcher(), matcherParsers, backtrace, &errors))
+            return .legacy(raw.parseTable(LegacyWindowDetectedCallbackMatcher(), matcherParsers, backtrace, &c))
         case .string(let raw):
-            return .command(parseCommand(raw).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &errors) ?? .empty)
+            return .command(parseCommand(raw).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &c.errors) ?? .empty)
         default:
             // Intentionally skip Table type from the list of expected types
-            errors.append(.init(backtrace, expectedActualTypeError(expected: .string, actual: raw.tomlType)))
+            c.errors.append(.init(backtrace, expectedActualTypeError(expected: .string, actual: raw.tomlType)))
             return .command(.empty)
     }
 }
 
-private func parseWindowDetectedCallback(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ errors: inout [ConfigParseDiagnostic]) -> WindowDetectedCallback? {
-    var myErrors: [ConfigParseDiagnostic] = []
-    let callback = parseTable(raw, WindowDetectedCallback(), windowDetectedParser, backtrace, &myErrors)
+private func parseWindowDetectedCallback(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> WindowDetectedCallback? {
+    var myContext = ConfigParserContext(configVersion: c.configVersion, errors: [])
+    let callback = parseTable(raw, WindowDetectedCallback(), windowDetectedParser, backtrace, &myContext)
 
     if callback.rawRun == nil { // ID-46D063B2
-        myErrors.append(.init(backtrace, "'run' is mandatory key"))
+        myContext.errors.append(.init(backtrace, "'run' is mandatory key"))
     }
 
-    if !myErrors.isEmpty {
-        errors += myErrors
+    if !myContext.errors.isEmpty {
+        c.errors += myContext.errors
         return nil
     }
 
