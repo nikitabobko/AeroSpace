@@ -331,6 +331,16 @@ Configured by `enable-normalization-flatten-containers`
 . Containers that nest into each other must have opposite orientations.
 Configured by `enable-normalization-opposite-orientation-for-nested-containers`
 
+An optional third normalization, "binary tree" (off by default), can be enabled with
+`enable-normalization-binary-tree`.
+When enabled, it overrides the opposite-orientation normalization and applies two rules to every tiling container:
+
+. The tree is forced to be binary: any container with more than two children has its rightmost siblings
+  wrapped in a new sub-container until exactly two remain.
+. Each container is oriented based on the aspect ratio of its allotted rect: `horizontal` if width > height,
+  `vertical` otherwise. The rect is computed top-down starting from the workspace's visible rect, split in
+  half (by children weights) at every level.
+
 [.lead]
 *Example 1*
 
@@ -379,6 +389,7 @@ Though you can disable normalizations by placing these lines to your config:
 ----
 enable-normalization-flatten-containers = false
 enable-normalization-opposite-orientation-for-nested-containers = false
+enable-normalization-binary-tree = false
 ----
 
 Unless you're hardcore i3 user who knows what they are doing, it's recommended to keep the normalizations enabled.

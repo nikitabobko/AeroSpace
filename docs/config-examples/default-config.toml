@@ -19,6 +19,9 @@ auto-reload-config = false
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
 enable-normalization-opposite-orientation-for-nested-containers = true
+# When true, forces the tree to be binary and orients each container by the aspect ratio of its rect
+# (horizontal if wider than tall, vertical otherwise). Overrides the opposite-orientation normalization.
+enable-normalization-binary-tree = false
 
 # See: https://nikitabobko.github.io/AeroSpace/guide#layouts
 # The 'accordion-padding' specifies the size of accordion padding
