@@ -22,7 +22,7 @@ func boolFlag<T>(_ keyPath: SendableWritableKeyPath<T, Bool?>) -> SubArgParser<T
 func singleValueSubArgParser<Root, Value>(
     _ keyPath: SendableWritableKeyPath<Root, Value?>,
     _ placeholder: String,
-    _ mapper: @escaping @Sendable (String) -> Parsed<Value>,
+    _ mapper: @escaping @Sendable (String) -> ResOrStr<Value>,
 ) -> SubArgParser<Root, Value?> {
     ArgParser(keyPath) { input in
         switch input.nonFlagArgOrNil() {

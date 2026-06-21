@@ -12,7 +12,7 @@ public enum MonitorDescription: Equatable, Sendable {
     }
 }
 
-public func parseMonitorDescription(_ raw: String) -> Parsed<MonitorDescription> {
+public func parseMonitorDescription(_ raw: String) -> ResOrStr<MonitorDescription> {
     if let int = Int(raw) {
         return int >= 1
             ? .success(.sequenceNumber(int))

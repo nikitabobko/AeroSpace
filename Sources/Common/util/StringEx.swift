@@ -1,6 +1,6 @@
 import Foundation
 
-public typealias Parsed<T> = Result<T, String>
+public typealias ResOrStr<T> = Result<T, String>
 extension String: @retroactive LocalizedError { // Make it possible to use String in Result. todo migrate to self written Result monad
     public var errorDescription: String? { self }
 }

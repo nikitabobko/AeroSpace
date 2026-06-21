@@ -9,7 +9,7 @@ public struct CaseInsensitiveRegex: Equatable, Sendable {
         unsafe self.regex = regex
     }
 
-    public static func new(_ str: String) -> Parsed<CaseInsensitiveRegex> {
+    public static func new(_ str: String) -> ResOrStr<CaseInsensitiveRegex> {
         Result { try Regex(str) }
             .mapError { e in "Can't parse \(str.singleQuoted) regex: \(e.localizedDescription)" }
             .map { CaseInsensitiveRegex(str, $0.ignoresCase()) }

@@ -17,12 +17,12 @@ import Common
 // Cmd = Word+
 
 extension String {
-    func lexAndParseShell() -> Parsed<Shell<[String]>> {
+    func lexAndParseShell() -> ResOrStr<Shell<[String]>> {
         self.shellLexerTokens().flatMap(AppBundle.parseShell)
     }
 }
 
-func parseShell(_ tokens: [LexerToken]) -> Parsed<Shell<[String]>> {
+func parseShell(_ tokens: [LexerToken]) -> ResOrStr<Shell<[String]>> {
     Result { () throws(String) in
         switch tokens.singleOrNil() {
             case let single? where single.payload == .end:

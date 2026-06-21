@@ -5,7 +5,7 @@ public struct WorkspaceName: Equatable, Sendable {
         self.raw = raw
     }
 
-    public static func parse(_ raw: String) -> Parsed<WorkspaceName> {
+    public static func parse(_ raw: String) -> ResOrStr<WorkspaceName> {
         // reserved names
         if raw == "focused" || raw == "non-focused" ||
             raw == "visible" || raw == "invisible" || raw == "non-visible" ||

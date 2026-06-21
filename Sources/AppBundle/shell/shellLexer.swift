@@ -1,7 +1,7 @@
 import Common
 
 extension String {
-    public func shellLexerTokens() -> Parsed<[LexerToken]> {
+    public func shellLexerTokens() -> ResOrStr<[LexerToken]> {
         Result { () throws(String) in try _shellLexerTokens(self) }
     }
 }

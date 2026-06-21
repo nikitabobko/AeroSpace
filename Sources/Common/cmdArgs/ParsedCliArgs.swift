@@ -1,8 +1,8 @@
 public struct ParsedCliArgs<T> {
-    var value: Parsed<T>
+    var value: ResOrStr<T>
     var advanceBy: Int
 
-    public init(_ value: Parsed<T>, advanceBy: Int) {
+    public init(_ value: ResOrStr<T>, advanceBy: Int) {
         self.value = value
         self.advanceBy = advanceBy
     }

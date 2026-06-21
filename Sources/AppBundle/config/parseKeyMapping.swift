@@ -31,7 +31,7 @@ func parseKeyMapping(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inou
     parseTable(raw, KeyMapping(), keyMappingParser, backtrace, &c)
 }
 
-private func parsePreset(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<KeyMapping.Preset> {
+private func parsePreset(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<KeyMapping.Preset> {
     parseString(raw, backtrace).flatMap { parseEnum($0, KeyMapping.Preset.self).toParsedConfig(backtrace) }
 }
 

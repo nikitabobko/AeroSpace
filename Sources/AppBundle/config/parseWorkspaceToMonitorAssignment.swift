@@ -22,7 +22,7 @@ func parseMonitorDescriptions(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, 
     }
 }
 
-func parseMonitorDescription(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<MonitorDescription> {
+func parseMonitorDescription(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<MonitorDescription> {
     let rawString: String
     if let string = raw.asStringOrNil {
         rawString = string
