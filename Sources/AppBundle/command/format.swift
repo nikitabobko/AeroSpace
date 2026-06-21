@@ -1,4 +1,5 @@
 import Common
+import Foundation
 
 struct WindowWithPrefetchedTitle {
     let window: Window
@@ -46,12 +47,12 @@ enum AeroObj {
 
 extension [AeroObj] {
     @MainActor
-    func format(_ format: [InterToken<InterVar>]) -> Result<[String], String> {
+    func format(_ format: [InterToken<InterVar>]) -> Result<[String], [InterVarExpansionError]> {
         var cellTable: [[Cell<String>]] = []
         for obj in self {
             var line: [Cell<String>] = []
             var curCell: String = ""
-            var errors: [String] = []
+            var errors = [InterVarExpansionError]()
             for token in format {
                 switch token {
                     case .interVar(.plainInterVar(.rightPadding)):
@@ -66,7 +67,7 @@ extension [AeroObj] {
                         }
                 }
             }
-            if !errors.isEmpty { return .failure(errors.joinErrors()) }
+            if !errors.isEmpty { return .failure(errors) }
             line.append(Cell(value: curCell, rightPadding: false))
             cellTable.append(line)
         }
@@ -134,7 +135,7 @@ private struct Cell<T> {
 }
 
 extension FormatVar {
-    @MainActor func expandFormatVar(obj: AeroObj) -> Result<Primitive, String> {
+    @MainActor func expandFormatVar(obj: AeroObj) -> Result<Primitive, InterVarExpansionError> {
         switch (obj, self) {
             case (.window(let w), .workspace):
                 return w.window.nodeWorkspace.flatMap(AeroObj.workspace).map(expandFormatVar) ?? .success(.string("NULL-WORKSPACE"))
@@ -184,23 +185,43 @@ extension FormatVar {
                 }
             default: break
         }
-        return .failure(unknownInterpolationVariable(variable: rawValue, obj))
+        return .failure(.unknownInterpolationVariable(unknownInterpolationVariable(variable: rawValue, obj)))
     }
 }
 
+enum InterVarExpansionError: LocalizedError, CustomStringConvertible {
+    case unknownInterpolationVariable(String)
+    case nullParent(String)
+    case notPossible(String)
+    case windowParentIllegalRelation(String)
+    case rightPaddingCannotBeExpanded(String)
+
+    public var description: String {
+        switch self {
+            case .unknownInterpolationVariable(let msg): msg
+            case .nullParent(let msg): msg
+            case .notPossible(let msg): msg
+            case .windowParentIllegalRelation(let msg): msg
+            case .rightPaddingCannotBeExpanded(let msg): msg
+        }
+    }
+
+    public var errorDescription: String? { description }
+}
+
 extension PlainInterVar {
-    @MainActor func expandFormatVar() -> Result<Primitive, String> {
+    @MainActor func expandFormatVar() -> Result<Primitive, InterVarExpansionError> {
         switch self {
             case .newline: .success(.string("\n"))
             case .tab: .success(.string("\t"))
             case .rightPadding:
-                .failure("\(PlainInterVar.rightPadding.rawValue.singleQuoted) interpolation variable cannot be expanded")
+                .failure(.rightPaddingCannotBeExpanded("\(PlainInterVar.rightPadding.rawValue.singleQuoted) interpolation variable cannot be expanded"))
         }
     }
 }
 
 extension InterVar {
-    @MainActor func expandFormatVar(obj: AeroObj) -> Result<Primitive, String> {
+    @MainActor func expandFormatVar(obj: AeroObj) -> Result<Primitive, InterVarExpansionError> {
         switch self {
             case .formatVar(let it): it.expandFormatVar(obj: obj)
             case .plainInterVar(let it): it.expandFormatVar()
@@ -222,8 +243,8 @@ private func toLayoutString(tc: TilingContainer) -> String {
     }
 }
 
-private func toLayoutResult(w: Window) -> Result<Primitive, String> {
-    guard let parent = w.parent else { return .failure("NULL-PARENT") }
+private func toLayoutResult(w: Window) -> Result<Primitive, InterVarExpansionError> {
+    guard let parent = w.parent else { return .failure(.nullParent("NULL-PARENT")) }
     return switch getChildParentRelation(child: w, parent: parent) {
         case .tiling(let tc): .success(.string(toLayoutString(tc: tc)))
         case .floatingWindow: .success(.string(LayoutCmdArgs.LayoutDescription.floating.rawValue))
@@ -232,7 +253,7 @@ private func toLayoutResult(w: Window) -> Result<Primitive, String> {
         case .macosNativeMinimizedWindow: .success(.string("macos_native_minimized"))
         case .macosPopupWindow: .success(.string("NULL-WINDOW-LAYOUT"))
 
-        case .rootTilingContainer: .failure("Not possible")
-        case .shimContainerRelation: .failure("Window cannot have a shim container relation")
+        case .rootTilingContainer: .failure(.notPossible("Not possible"))
+        case .shimContainerRelation: .failure(.windowParentIllegalRelation("Window cannot have a shim container relation"))
     }
 }

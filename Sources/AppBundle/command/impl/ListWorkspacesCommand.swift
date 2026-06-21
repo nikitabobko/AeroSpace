@@ -31,7 +31,7 @@ struct ListWorkspacesCommand: Command {
             default:
                 switch list.format(args.format) {
                     case .success(let lines): .succ(io.out(lines))
-                    case .failure(let msg): .fail(io.err(msg))
+                    case .failure(let msg): .fail(io.err(msg.map(\.description).joinErrors()))
                 }
         }
     }

@@ -8,15 +8,18 @@ struct TestCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> ConditionalExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
 
-        let _lhs: Result<Primitive, String> = switch target.windowOrNil {
+        let _lhs: Result<Primitive, InterVarExpansionError> = switch target.windowOrNil {
             case let window?: args.lhs.val.expandFormatVar(obj: .window(try await .resolveWindow(window, for: args.lhs.val)))
             case nil: args.lhs.val.expandFormatVar(obj: .workspace(target.workspace))
         }
 
-        guard let lhs = _lhs.getIgnoringErrorsOrNil() else {
-            io.err(noWindowIsFocused)
-            return .fail
-        }
+        guard let lhs = _lhs.getOrNil(onFailure: { err in
+            switch err {
+                case .unknownInterpolationVariable: io.err(noWindowIsFocused)
+                case .notPossible, .nullParent,
+                     .rightPaddingCannotBeExpanded, .windowParentIllegalRelation: io.err(err.description)
+            }
+        }) else { return .fail }
 
         let infixOperator = args.infixOperator.val
         let rhs = args.rhs.val

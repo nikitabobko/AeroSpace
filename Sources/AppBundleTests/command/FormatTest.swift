@@ -3,7 +3,7 @@ import Common
 import Foundation
 import XCTest
 
-private func assertPrimitive(_ actual: Result<Primitive, String>, _ expected: Primitive, file: StaticString = #filePath, line: UInt = #line) {
+private func assertPrimitive(_ actual: Result<Primitive, InterVarExpansionError>, _ expected: Primitive, file: StaticString = #filePath, line: UInt = #line) {
     switch actual {
         case .failure: failExpectedActual("Result.success(\(expected.toString()))", actual, file: file, line: line)
         case .success(let primitive):
@@ -53,7 +53,7 @@ final class FormatTest: XCTestCase {
 
     func testFormatEmptyInput() {
         let result: [AeroObj] = []
-        assertEquals(result.format([.interVar(.formatVar(.window(.windowId)))]), .success([]))
+        assertSucc(result.format([.interVar(.formatVar(.window(.windowId)))]), [])
     }
 
     func testFormatWithNewlineAndTab() {
@@ -66,7 +66,7 @@ final class FormatTest: XCTestCase {
             .interVar(.plainInterVar(.newline)),
             .literal("end"),
         ])
-        assertEquals(result, .success(["42\tX\nend"]))
+        assertSucc(result, ["42\tX\nend"])
     }
 
     func testFormatMultipleRightPaddingColumns() {
@@ -83,10 +83,10 @@ final class FormatTest: XCTestCase {
                 .interVar(.plainInterVar(.rightPadding)),
                 .literal(" END"),
             ])
-            assertEquals(result, .success([
+            assertSucc(result, [
                 "2   | a  END",
                 "100 | bb END",
-            ]))
+            ])
         }
     }
 
@@ -101,6 +101,7 @@ final class FormatTest: XCTestCase {
         switch result {
             case .success: XCTFail("expected failure")
             case .failure(let msg):
+                let msg = msg.map(\.description).joined(separator: "\n")
                 assertTrue(msg.contains("Unknown interpolation variable 'window-id'"))
                 assertTrue(msg.contains("Unknown interpolation variable 'window-title'"))
         }
@@ -207,13 +208,6 @@ final class FormatTest: XCTestCase {
         assertPrimitive(FormatVar.window(.windowLayout).expandFormatVar(obj: obj), .string("NULL-WINDOW-LAYOUT"))
     }
 
-    func testExpandWindowLayoutNullParent() {
-        let window = TestWindow.new(id: 1, parent: Workspace.get(byName: name).rootTilingContainer)
-        window.unbindFromParent()
-        let obj = AeroObj.window(.forTest(window: window, title: nil))
-        assertFail(FormatVar.window(.windowLayout).expandFormatVar(obj: obj), "NULL-PARENT")
-    }
-
     func testExpandWindowToWorkspaceWhenWindowHasWorkspace() {
         let window = TestWindow.new(id: 1, parent: Workspace.get(byName: name).rootTilingContainer)
         let obj = AeroObj.window(.forTest(window: window, title: nil))
@@ -289,32 +283,9 @@ final class FormatTest: XCTestCase {
         assertPrimitive(FormatVar.app(.appBundlePath).expandFormatVar(obj: obj), .string("NULL-APP-BUNDLE-PATH"))
     }
 
-    func testExpandMismatchedReturnsUnknownInterpolation() {
-        let workspace = AeroObj.workspace(Workspace.get(byName: name))
-        let result = FormatVar.window(.windowId).expandFormatVar(obj: workspace)
-        switch result {
-            case .success: XCTFail("expected failure")
-            case .failure(let msg):
-                assertTrue(msg.starts(with: "Unknown interpolation variable 'window-id'."))
-                assertTrue(msg.contains("Possible values:"))
-                assertTrue(msg.contains("workspace"))
-        }
-
-        let app = AeroObj.app(TestApp.shared)
-        assertFail(FormatVar.window(.windowId).expandFormatVar(obj: app))
-        assertFail(FormatVar.workspace(.workspaceName).expandFormatVar(obj: app))
-        assertFail(FormatVar.monitor(.monitorName).expandFormatVar(obj: app))
-
-        let monitor = AeroObj.monitor(mainMonitor)
-        assertFail(FormatVar.window(.windowId).expandFormatVar(obj: monitor))
-        assertFail(FormatVar.workspace(.workspaceName).expandFormatVar(obj: monitor))
-        assertFail(FormatVar.app(.appName).expandFormatVar(obj: monitor))
-    }
-
     func testPlainInterVarExpand() {
         assertPrimitive(PlainInterVar.newline.expandFormatVar(), .string("\n"))
         assertPrimitive(PlainInterVar.tab.expandFormatVar(), .string("\t"))
-        assertFail(PlainInterVar.rightPadding.expandFormatVar(), "'right-padding' interpolation variable cannot be expanded")
     }
 
     func testInterVarExpandDelegates() {

@@ -16,7 +16,7 @@ extension [AeroObj] {
                     case .interVar(let varName):
                         switch varName.expandFormatVar(obj: richObj) {
                             case .success(let expanded): rawObj[varName.rawValue] = expanded
-                            case .failure(let error): return .failure(error)
+                            case .failure(let error): return .failure(error.description)
                         }
                 }
             }
