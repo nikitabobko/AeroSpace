@@ -4,8 +4,13 @@ public struct EvalCmdArgs: CmdArgs {
     public static let parser: CmdParser<Self> = .init(
         kind: .eval,
         help: eval_help_generated,
-        flags: [:],
-        posArgs: [dashDashArg(mandatory: false), newMandatoryPosArgParser(\.shellExpr, consumeStrCliArg, placeholder: "<aerospace-shell-expr>")],
+        flags: [
+            "--stdin": ArgParser(\.commonState.explicitStdinFlag, constSubArgParserFun(true)),
+        ],
+        posArgs: [
+            dashDashArg(mandatory: false),
+            newMandatoryPosArgParser(\.shellExpr, consumeStrCliArg, placeholder: "<aerospace-shell-expr>"),
+        ],
         conflictingOptions: [],
     )
 
