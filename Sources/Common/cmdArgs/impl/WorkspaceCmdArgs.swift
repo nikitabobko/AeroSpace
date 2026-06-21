@@ -9,8 +9,8 @@ public struct WorkspaceCmdArgs: CmdArgs {
             "--wrap-around": ArgParser(\._wrapAround, constSubArgParserFun(true)),
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),
 
-            "--stdin": ArgParser(\.explicitStdinFlag, constSubArgParserFun(true)),
-            "--no-stdin": ArgParser(\.explicitStdinFlag, constSubArgParserFun(false)),
+            "--stdin": ArgParser(\.commonState.explicitStdinFlag, constSubArgParserFun(true)),
+            "--no-stdin": ArgParser(\.commonState.explicitStdinFlag, constSubArgParserFun(false)),
         ],
         posArgs: [
             dashDashArg(mandatory: false),
@@ -25,7 +25,6 @@ public struct WorkspaceCmdArgs: CmdArgs {
     public var _autoBackAndForth: Bool?
     public var failIfNoop: Bool = false
     public var _wrapAround: Bool?
-    public var explicitStdinFlag: Bool? = nil
 }
 
 func parseWorkspaceCmdArgs(_ args: StrArrSlice) -> ParsedCmd<WorkspaceCmdArgs> {
@@ -34,13 +33,13 @@ func parseWorkspaceCmdArgs(_ args: StrArrSlice) -> ParsedCmd<WorkspaceCmdArgs> {
         .filterNot("--auto-back-and-forth is incompatible with \(NextPrev.unionLiteral)") { $0._autoBackAndForth != nil && $0.target.val.isRelatve }
         .filterNot("--fail-if-noop is incompatible with \(NextPrev.unionLiteral)") { $0.failIfNoop && $0.target.val.isRelatve }
         .filterNot("--fail-if-noop is incompatible with --auto-back-and-forth") { $0.autoBackAndForth && $0.failIfNoop }
-        .filter("--stdin and --no-stdin require using \(NextPrev.unionLiteral) argument") { ($0.explicitStdinFlag != nil).implies($0.target.val.isRelatve) }
+        .filter("--stdin and --no-stdin require using \(NextPrev.unionLiteral) argument") { ($0.commonState.explicitStdinFlag != nil).implies($0.target.val.isRelatve) }
 }
 
 extension WorkspaceCmdArgs {
     public var wrapAround: Bool { _wrapAround ?? false }
     public var autoBackAndForth: Bool { _autoBackAndForth ?? false }
-    public var useStdin: Bool { explicitStdinFlag ?? false }
+    public var useStdin: Bool { commonState.explicitStdinFlag ?? false }
 }
 
 public enum WorkspaceTarget: Equatable, Sendable {

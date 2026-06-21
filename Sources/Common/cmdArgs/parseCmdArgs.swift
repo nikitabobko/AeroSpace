@@ -26,6 +26,7 @@ public struct CmdArgsCommonState: ConvenienceCopyable, Equatable, Sendable {
     let rawArgsForStrRepr: EquatableNoop<StrArrSlice>
     var windowId: UInt32? = nil
     var workspaceName: WorkspaceName? = nil
+    public var explicitStdinFlag: Bool? = nil
 
     public init(_ raw: StrArrSlice) { rawArgsForStrRepr = .init(raw) }
 }

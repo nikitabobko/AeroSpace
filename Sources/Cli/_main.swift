@@ -70,12 +70,12 @@ struct Main {
         }
 
         var stdin = ""
-        if (parsedArgs is WorkspaceCmdArgs && (parsedArgs as! WorkspaceCmdArgs).target.val.isRelatve
-            || parsedArgs is MoveNodeToWorkspaceCmdArgs && (parsedArgs as! MoveNodeToWorkspaceCmdArgs).target.val.isRelatve)
-            && hasStdin()
+        if parsedArgs.commonState.explicitStdinFlag == true ||
+            // todo: drop after a couple of versions
+            ((parsedArgs is WorkspaceCmdArgs && (parsedArgs as! WorkspaceCmdArgs).target.val.isRelatve || parsedArgs is MoveNodeToWorkspaceCmdArgs && (parsedArgs as! MoveNodeToWorkspaceCmdArgs).target.val.isRelatve) && hasStdin())
         {
-            if parsedArgs is WorkspaceCmdArgs && (parsedArgs as! WorkspaceCmdArgs).explicitStdinFlag == nil ||
-                parsedArgs is MoveNodeToWorkspaceCmdArgs && (parsedArgs as! MoveNodeToWorkspaceCmdArgs).explicitStdinFlag == nil
+            if parsedArgs is WorkspaceCmdArgs && parsedArgs.commonState.explicitStdinFlag == nil ||
+                parsedArgs is MoveNodeToWorkspaceCmdArgs && parsedArgs.commonState.explicitStdinFlag == nil
             {
                 exit(
                     failExitCode,

@@ -19,8 +19,8 @@ final class WorkspaceCommandTest: XCTestCase {
         assertEquals(parseCommand("workspace --auto-back-and-forth next").errorOrNil, "--auto-back-and-forth is incompatible with (next|prev)")
         testParseSingleCommandSucc("workspace next --wrap-around", WorkspaceCmdArgs(target: .relative(.next), wrapAround: true))
         assertEquals(parseCommand("workspace --stdin foo").errorOrNil, "--stdin and --no-stdin require using (next|prev) argument")
-        testParseSingleCommandSucc("workspace --stdin next", WorkspaceCmdArgs(target: .relative(.next)).copy(\.explicitStdinFlag, true))
-        testParseSingleCommandSucc("workspace --no-stdin next", WorkspaceCmdArgs(target: .relative(.next)).copy(\.explicitStdinFlag, false))
+        testParseSingleCommandSucc("workspace --stdin next", WorkspaceCmdArgs(target: .relative(.next)).copy(\.commonState.explicitStdinFlag, true))
+        testParseSingleCommandSucc("workspace --no-stdin next", WorkspaceCmdArgs(target: .relative(.next)).copy(\.commonState.explicitStdinFlag, false))
     }
 
     func testParseDashDash() {
