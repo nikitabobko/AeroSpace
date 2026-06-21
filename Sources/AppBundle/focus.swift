@@ -118,7 +118,7 @@ extension Workspace {
 
 @MainActor private var onFocusChangedRecursionGuard = false
 // Should be called in refreshSession
-@MainActor func checkOnFocusChangedCallbacks() {
+@MainActor func checkOnFocusChangedCallbacks() async throws {
     if refreshSessionEvent?.isStartup == true {
         return
     }
@@ -144,43 +144,30 @@ extension Workspace {
     onFocusChangedRecursionGuard = true
     defer { onFocusChangedRecursionGuard = false }
     if hasFocusChanged {
-        onFocusChanged(focus)
+        _ = try await onFocusChanged(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, focus)
     }
     if let _prevFocusedWorkspaceName, hasFocusedWorkspaceChanged {
         onWorkspaceChanged(_prevFocusedWorkspaceName, frozenFocus.workspaceName)
     }
     if hasFocusedMonitorChanged {
-        onFocusedMonitorChanged(focus)
+        _ = try await onFocusedMonitorChanged(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, focus)
     }
 }
 
-@MainActor private func onFocusedMonitorChanged(_ focus: LiveFocus) {
+@MainActor func onFocusedMonitorChanged(_ env: CmdEnv, _ io: CmdIo, _ focus: LiveFocus) async throws -> Int32ExitCode {
     broadcastEvent(.focusedMonitorChanged(
         workspace: focus.workspace.name,
         monitorId_oneBased: focus.workspace.workspaceMonitor.monitorId_oneBased ?? 0,
     ))
-    if config.onFocusedMonitorChanged.isEmpty { return }
-    guard let token: RunSessionGuard = .isServerEnabled else { return }
-    // todo potential optimization: don't run runSession if we are already in runSession
-    Task.startUnstructured {
-        try await runLightSession(.onFocusedMonitorChanged, token) {
-            _ = try await config.onFocusedMonitorChanged.run(.defaultEnv.withFocus(focus), .emptyStdin)
-        }
-    }
+    return try await config.onFocusedMonitorChanged.run(env.withFocus(focus), io)
 }
-@MainActor private func onFocusChanged(_ focus: LiveFocus) {
+
+@MainActor func onFocusChanged(_ env: CmdEnv, _ io: CmdIo, _ focus: LiveFocus) async throws -> Int32ExitCode {
     broadcastEvent(.focusChanged(
         windowId: focus.windowOrNil?.windowId,
         workspace: focus.workspace.name,
     ))
-    if config.onFocusChanged.isEmpty { return }
-    guard let token: RunSessionGuard = .isServerEnabled else { return }
-    // todo potential optimization: don't run runSession if we are already in runSession
-    Task.startUnstructured {
-        try await runLightSession(.onFocusChanged, token) {
-            _ = try await config.onFocusChanged.run(.defaultEnv.withFocus(focus), .emptyStdin)
-        }
-    }
+    return try await config.onFocusChanged.run(env.withFocus(focus), io)
 }
 
 @MainActor private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String) {

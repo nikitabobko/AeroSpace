@@ -35,6 +35,8 @@ final class CmdIoImpl: CmdIo {
 
     init(stdin: consuming CmdStdin) { self.stdin = stdin }
     func readStdin() -> String { stdin.readAll() }
+
+    static var emptyStdinIgnoringOut: CmdIo { CmdIoImpl(stdin: .emptyStdin) }
 }
 
 final class CmdIoForwardingStdin: CmdIo {

@@ -39,7 +39,7 @@ func runHeavyCompleteRefreshSession(
 
                 if shouldLayoutWorkspaces && optimisticallyPreLayoutWorkspaces { try await layoutWorkspaces() }
 
-                refreshModel()
+                try await refreshModel()
                 try await refresh()
                 gcMonitors()
 
@@ -74,9 +74,9 @@ func runLightSession<T>(
             updateFocusCache(nativeFocused)
             let focusBefore = focus.windowOrNil
 
-            refreshModel()
+            try await refreshModel()
             let result = try await body()
-            refreshModel()
+            try await refreshModel()
 
             let focusAfter = focus.windowOrNil
 
@@ -113,9 +113,9 @@ struct RunSessionGuard: Sendable {
 }
 
 @MainActor
-func refreshModel() {
+func refreshModel() async throws {
     Workspace.garbageCollectUnusedWorkspaces()
-    checkOnFocusChangedCallbacks()
+    try await checkOnFocusChangedCallbacks()
     normalizeContainers()
 }
 

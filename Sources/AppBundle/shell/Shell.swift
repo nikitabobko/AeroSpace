@@ -108,7 +108,7 @@ extension Shell where T == any Command {
             case .cmd(let command):
                 let exitCode = Int32ExitCode(rawValue: try await command.run(env, io).rawValue)
                 if command.shouldResetClosedWindowsCache { resetClosedWindowsCache() }
-                refreshModel()
+                try await refreshModel()
                 return exitCode
             case .and(let commands): return try await runShellAnd(commands, env, io)
             case .empty: return Int32ExitCode(rawValue: EXIT_CODE_ZERO)
