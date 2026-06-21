@@ -201,8 +201,9 @@ If you use different layout, different alphabet, or you just want to have a fanc
 [source,toml]
 ----
 # Define my fancy unicorn key notation
-[key-mapping.key-notation-to-key-code]
-    unicorn = 'u'
+key-mapping.key-notation-to-key-code = {
+    unicorn = 'u',
+}
 
 [mode.main.binding]
     alt-unicorn = 'workspace wonderland' # (⁀ᗢ⁀)
@@ -212,8 +213,7 @@ If you use different layout, different alphabet, or you just want to have a fanc
 +
 [source,toml]
 ----
-[key-mapping]
-    preset = 'dvorak'  # or 'colemak'
+key-mapping.preset = 'dvorak'  # or 'colemak'
 ----
 
 [#config-version]
