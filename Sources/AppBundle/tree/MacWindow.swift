@@ -256,7 +256,7 @@ private func onWindowDetected(_ window: Window) async throws {
         appName: window.app.name,
     ))
     for callback in config.onWindowDetected where try await callback.matches(window) {
-        _ = try await callback.run.run(.defaultEnv.copy(\.windowId, window.windowId), .emptyStdin)
+        _ = try await callback.run.run(.defaultEnv.withWindowId(window.windowId), .emptyStdin)
         if !callback.checkFurtherCallbacks {
             return
         }
@@ -285,7 +285,7 @@ extension WindowDetectedCallback {
                 }
                 return true
             case .command(let command):
-                return try await command.run(.defaultEnv.copy(\.windowId, window.windowId), .emptyStdin).exitCode.rawValue == 0
+                return try await command.run(.defaultEnv.withWindowId(window.windowId), .emptyStdin).exitCode.rawValue == 0
         }
     }
 }

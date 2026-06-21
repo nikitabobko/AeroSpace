@@ -15,7 +15,7 @@ struct CloseAllWindowsButCurrentCommand: Command {
         }
         var result = BinaryExitCode.succ
         for window in workspace.allLeafWindowsRecursive where window != focused {
-            result = try await CloseCommand(args: args.closeArgs).run(env.copy(\.windowId, window.windowId), io).and(result)
+            result = try await CloseCommand(args: args.closeArgs).run(env.withWindowId(window.windowId), io).and(result)
         }
         return result
     }

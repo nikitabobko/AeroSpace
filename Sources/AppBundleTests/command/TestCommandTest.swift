@@ -161,7 +161,7 @@ final class TestCommandTest: XCTestCase {
 
     func testExecTargetResolutionFailure() async throws {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
-        let env = CmdEnv.defaultEnv.copy(\.windowId, UInt32(9999))
+        let env = CmdEnv.defaultEnv.withWindowId(9999)
 
         assertEquals(
             try await parseCommand("test %{window-id} = 1").cmdOrDie.run(env, .emptyStdin),
