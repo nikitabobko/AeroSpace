@@ -18,4 +18,76 @@ final class EvalCommandTest: XCTestCase {
         )
         assertEquals(parseCommand("eval --").errorOrNil, "ERROR: Argument '<aerospace-shell-expr>' is mandatory")
     }
+
+    func testRunSimpleCommand() async throws {
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+
+        let result = try await parseCommand("eval 'workspace b'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stdout, [])
+        assertEquals(result.stderr, [])
+        assertEquals(focus.workspace.name, "b")
+    }
+
+    func testRunForwardsStdout() async throws {
+        assertTrue(Workspace.get(byName: name).focusWorkspace())
+
+        let result = try await parseCommand("eval 'echo -- hello'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stdout, ["hello"])
+        assertEquals(result.stderr, [])
+    }
+
+    func testRunShellComposition() async throws {
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+
+        let result = try await parseCommand("eval 'workspace a && workspace b'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(focus.workspace.name, "b")
+    }
+
+    func testRunEmptyShellExpr() async throws {
+        assertTrue(Workspace.get(byName: name).focusWorkspace())
+
+        let result = try await parseCommand("eval ''").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stdout, [])
+        assertEquals(result.stderr, [])
+    }
+
+    func testRunUnrecognizedSubcommand() async throws {
+        assertTrue(Workspace.get(byName: name).focusWorkspace())
+
+        let result = try await parseCommand("eval 'no-such-command'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.stdout, [])
+        assertEquals(result.stderr, ["Unrecognized subcommand 'no-such-command'"])
+    }
+
+    func testRunInnerParseFailureForwardsErrorAndExitCode() async throws {
+        assertTrue(Workspace.get(byName: name).focusWorkspace())
+
+        let result = try await parseCommand("eval 'workspace'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.stdout, [])
+        assertEquals(result.stderr, ["ERROR: Argument '(<workspace-name>|next|prev)' is mandatory"])
+    }
+
+    func testRunRejectsInnerHelp() async throws {
+        assertTrue(Workspace.get(byName: name).focusWorkspace())
+
+        let result = try await parseCommand("eval 'workspace --help'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.stdout, [])
+        assertEquals(result.stderr, ["--help is not supported inside eval command"])
+    }
+
+    func testRunNestedEval() async throws {
+        assertTrue(Workspace.get(byName: "a").focusWorkspace())
+
+        let result = try await parseCommand("eval 'eval \"workspace b\"'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(result.stderr, [])
+        assertEquals(focus.workspace.name, "b")
+    }
 }
