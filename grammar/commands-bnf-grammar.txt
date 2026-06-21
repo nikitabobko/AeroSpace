@@ -75,6 +75,9 @@ aerospace -h;
 
     | resize [--window-id <window_id>] (smart|smart-opposite|width|height) [+|-]<number> [--window-id <window_id>]
 
+    | run-callback [--for-every-window|--window-id <window_id>]... on-window-detected [--for-every-window|--window-id <window_id>]...
+    | run-callback (on-focus-changed|on-focused-monitor-changed)
+
     | split [--window-id <window_id>] (horizontal|vertical|opposite) [--window-id <window_id>]
 
     | swap [--swap-focus|--wrap-around|--window-id <window_id>]... (left|down|up|right|dfs-next|dfs-prev) [--swap-focus|--wrap-around|--window-id <window_id>]...

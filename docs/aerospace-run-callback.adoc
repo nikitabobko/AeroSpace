@@ -1,0 +1,65 @@
+= aerospace-run-callback(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-run-callback
+// tag::purpose[]
+:manpurpose: Run AeroSpace config callbacks on demand
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace run-callback [-h|--help] [--for-every-window|--window-id <window-id>] on-window-detected
+aerospace run-callback [-h|--help] (on-focus-changed|on-focused-monitor-changed)
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The command lets you manually re-run callbacks that AeroSpace normally invokes in response to events:
+
+* `on-window-detected` - callbacks defined by `on-window-detected` config option.
+  By default the callbacks are run for the focused window only.
+  Pass `--for-every-window` to apply the callbacks to every currently known window
+  (useful right after `reload-config` to retroactively apply new rules to already open windows),
+  or pass `--window-id` to target a specific window.
+* `on-focus-changed` - runs commands listed under the `on-focus-changed` config key.
+* `on-focused-monitor-changed` - runs commands listed under the `on-focused-monitor-changed` config key.
+
+The command forwards stdout and stderr of all commands run in the callback.
+That opens up one more usecase - you can use this command to see the output of your callbacks.
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--for-every-window::
+Run `on-window-detected` callbacks for every window.
+Only valid with `on-window-detected`.
+Mutually exclusive with `--window-id`.
+
+--window-id <window-id>::
+include::./util/window-id-flag-desc.adoc[]
++
+Only valid with `on-window-detected`.
+Mutually exclusive with `--for-every-window`.
+
+// =========================================================== Arguments
+include::./util/conditional-arguments-header.adoc[]
+
+<callback>:: One of: `on-window-detected`, `on-focus-changed`, `on-focused-monitor-changed`
+
+// =========================================================== Exit code
+include::./util/conditional-exit-code-header.adoc[]
+
+The command forwards the exit code of the callback.
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]

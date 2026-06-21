@@ -241,26 +241,28 @@ func tryOnWindowDetected(_ window: Window) async throws {
     switch window.windowParentCases {
         case .tilingContainer, .floatingWindowsContainer, .macosMinimizedWindowsContainer,
              .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
-            try await onWindowDetected(window)
+            _ = try await onWindowDetected(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, window)
         case .macosPopupWindowsContainer, .unbound:
             break
     }
 }
 
 @MainActor
-private func onWindowDetected(_ window: Window) async throws {
+func onWindowDetected(_ env: CmdEnv, _ io: CmdIo, _ window: Window) async throws -> Int32ExitCode {
     broadcastEvent(.windowDetected(
         windowId: window.windowId,
         workspace: window.nodeWorkspace?.name,
         appBundleId: window.app.rawAppBundleId,
         appName: window.app.name,
     ))
+    var lastExitCode = Int32ExitCode.succ
     for callback in config.onWindowDetected where try await callback.matches(window) {
-        _ = try await callback.run.run(.defaultEnv.withWindowId(window.windowId), .emptyStdin)
+        lastExitCode = try await callback.run.run(env.withWindowId(window.windowId), io)
         if !callback.checkFurtherCallbacks {
-            return
+            return lastExitCode
         }
     }
+    return lastExitCode
 }
 
 extension WindowDetectedCallback {
