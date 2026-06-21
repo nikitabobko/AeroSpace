@@ -1,27 +1,16 @@
 # Contributing
 
-## Users cannot create GitHub Issues directly
+The main and the most important rule: **read the room!**
 
-AeroSpace project doesn't accept Issues directly - we ask you to create a [Discussion](https://github.com/nikitabobko/AeroSpace/discussions) first.
+* Does your patch look like typical commit in the repo?
+* Does your commit message look like typical commit message in the repo?
+* Does your test look like typical test in the repo?
+* etc.
 
-The submitted Issues are often either obvious duplicates, environmental problems, or configuration errors by the users themselves.
-For a hobby project, I don't have enough time and energy to process every such submitted Issue.
-
-As an alternative, you can start a Discussion on [GitHub discussions](https://github.com/nikitabobko/AeroSpace/discussions) forum.
-Any Discussion which clearly identifies a problem and can be confirmed or reproduced will be converted to an Issue by maintainers.
-
-It's users' responsibility to minimize their bugs as much as possible.
-All users play a part in bugs reproduction.
-
-In general the flow is the following:
-- Discussions are here to kick-off the discussion and identify what the actionable item exactly is
-- Issues are created later. Issues are well-formed, clear and actionable tasks
-
-This pattern makes it easier for maintainers or contributors to find issues to work on since _almost every_ Issue is ready to be worked on.
-
-## Submit bugs and feature ideas
+## Submiting bugs and feature ideas
 
 Submit bugs to https://github.com/nikitabobko/AeroSpace/discussions/categories/potential-bugs
+
 Submit feature ideas to https://github.com/nikitabobko/AeroSpace/discussions/categories/feature-ideas
 
 Rules:
@@ -41,65 +30,20 @@ Rules:
 **Consider including in feature request**
 
 * Use cases!
-* Did I mention use cases?
 * Alternative approaches
 * Links to docs of similar features in other window managers that you know
 * Synopsis, if you suggest a new command
 * Mental model description
 
-## Discuss issues/discussions
+## Submiting code
 
-One of the most useful thing you can do is to discuss issues/discussions.
-
-Imagine that you were assigned to fix the issue.
-Try to suggest the best approach and design on how to fix the issue.
-Suggest the synopsis/config format, reason in written form what is good about it, what is bad about it, what are the alternatives, etc.
-Basically, see the "Prior discussion" section in [Submit Pull Requests](#submit-pull-requests).
-
-If you have something to contribute to the conversation. Do it!
-
-Please keep the conversation to the point. Discuss one issue at a time, crossreference other issues
-
-You can take a look at the following issues:
-
-* Most voted issues: https://github.com/nikitabobko/AeroSpace/issues?q=is%3Aissue+is%3Aopen+sort%3Areactions-%2B1-desc
-* Sometimes conversations happen on old issues that aren’t yet closed. See https://github.com/nikitabobko/AeroSpace/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc
-* Issues that are unclear on how to fix, or issues that require design of the interface (CLI or config interface) are tagged with `design-needed` tag https://github.com/nikitabobko/AeroSpace/issues?q=is%3Aissue+is%3Aopen+label%3Adesign-needed
-
-## Submit Pull Requests
-
-Small and trivial improvements can be submitted without any discussion.
-
-**Prior discussion**. For non-trivial changes (such as user visible changes), it's always better to ask for prior approval and discuss what you want to do before doing it.
-
-Please create a new discussion and describe you want to do.
-
-Consider including
-
-* What users will observe after your change?
-* Feature interaction with existing features or potential future features
-* What use cases does it cover
-* What is the proposed syntax for the config
-* What is the proposed synopsis of CLI command
-* How you think it should be implemented (if you can describe it)
-* etc.
-
-Discussing that you want to do something doesn't put any obligations on you. If you don't want to start the discussion just because you're afraid that you won't do it. Don't be afraid!
-
-**Commit hygiene**. Each submitted commit must be atomic change (a Pull Request may contain several commits). Don't introduce new functional changes together with refactorings in the same commit.
-
-Similarly, when implementing features and bug fixes, please stick to the structure of the codebase as much as possible and do not take this as an opportunity to do some "refactoring along the way".
-
-A good commit message also mentions the motivation of the change (the commit describes what, why and how)
+There are 2 options:
+1. Send email patches to: `echo YWVyb3NwYWNlLXBhdGNoZXNAYm9ia28ueHl6Cg== | base64 --decode`
+2. Send GitHub PRs
 
 **License Agreement**. By contributing changes to this repository, you agree to license your contributions under the MIT license.
 
-Maintainers can merge your pull request with arbitrary modifications.
-
-**Pull request merge**. It cannot be guaranteed that your pull request will be merged even after the discussion.
-Be ready that your pull request might be rejected because the implementation isn't good, or the approach is incorrect.
-
-The prior discussion is here for you to minimize the risk of rejection.
+Maintainers can apply your patch with arbitrary modifications.
 
 ## Spread the word
 
@@ -116,4 +60,5 @@ Submit your tips to [the Goodies page](https://nikitabobko.github.io/AeroSpace/g
 
 ## Support the project financially
 
-Supporting the project financially counts as a contribution (even if it's just a $1/month). https://github.com/sponsors/nikitabobko
+Supporting the project financially counts as a contribution (even if it's just a $1/month).
+You can sponsor the project on GitHub Sponsors page: https://github.com/sponsors/nikitabobko
