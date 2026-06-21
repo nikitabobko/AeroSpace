@@ -38,16 +38,8 @@ extension String {
 }
 
 @MainActor private func getKey(_ io: CmdIo, args: ConfigCmdArgs, key: String) -> BinaryExitCode {
-    let keyPath: [String]
-    switch key.toKeyPath() {
-        case .success(let _keyPath): keyPath = _keyPath
-        case .failure(let error): return .fail(io.err(error))
-    }
-    var configMap: ConfigMapValue
-    switch buildConfigMap().find(keyPath: keyPath.slice) {
-        case .success(let value): configMap = value
-        case .failure(let error): return .fail(io.err(error))
-    }
+    guard let keyPath = key.toKeyPath().getOrNil(appendErrorTo: &io.stderr) else { return .fail }
+    guard var configMap = buildConfigMap().find(keyPath: keyPath.slice).getOrNil(appendErrorTo: &io.stderr) else { return .fail }
     if args.keys {
         switch configMap {
             case .scalar(let scalar):

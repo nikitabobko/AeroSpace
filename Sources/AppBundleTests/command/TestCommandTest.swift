@@ -63,7 +63,7 @@ final class TestCommandTest: XCTestCase {
 
         assertEquals(
             try await parseCommand("test %{window-id} = 1").cmdOrDie.run(.defaultEnv, .emptyStdin),
-            CmdResult(stdout: [], stderr: ["Unknown interpolation variable \'window-id\'. Possible values:\n  workspace\n  workspace-is-focused\n  workspace-is-visible\n  workspace-root-container-layout\n  monitor-id\n  monitor-appkit-nsscreen-screens-id\n  monitor-name\n  monitor-is-main\n  right-padding\n  newline\n  tab", "No window is focused"], exitCode: Int32ExitCode(rawValue: 2)),
+            CmdResult(stdout: [], stderr: ["No window is focused"], exitCode: Int32ExitCode(rawValue: 2)),
         )
     }
 

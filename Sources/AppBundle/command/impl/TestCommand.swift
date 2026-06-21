@@ -13,11 +13,8 @@ struct TestCommand: Command {
             case nil: args.lhs.val.expandFormatVar(obj: .workspace(target.workspace))
         }
 
-        guard let lhs = _lhs.getOrNil(appendErrorTo: &io.stderr) else {
-            if target.windowOrNil == nil {
-                // The format var likely requires a window context. Report a clearer error.
-                io.err(noWindowIsFocused)
-            }
+        guard let lhs = _lhs.getIgnoringErrorsOrNil() else {
+            io.err(noWindowIsFocused)
             return .fail
         }
 
