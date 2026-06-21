@@ -5,7 +5,7 @@ struct EvalCommand: Command {
     /*conforms*/ let shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Int32ExitCode {
-        switch parseCommand(args.shellExpr.val) {
+        switch parseCommand(args.shellExpr.val, allowExecAndForget: false) {
             case .failure(let cmdParsingFailure):
                 io.err(cmdParsingFailure.msg)
                 return Int32ExitCode(rawValue: cmdParsingFailure.exitCode)

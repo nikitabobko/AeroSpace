@@ -1,7 +1,7 @@
 import Common
 
-func parseCommand(_ raw: String) -> ParsedCmd<Shell<any Command>> {
-    if raw.starts(with: "exec-and-forget") {
+func parseCommand(_ raw: String, allowExecAndForget: Bool) -> ParsedCmd<Shell<any Command>> {
+    if allowExecAndForget && raw.starts(with: "exec-and-forget") {
         return .cmd(.cmd(ExecAndForgetCommand(args: ExecAndForgetCmdArgs(bashScript: raw.removePrefix("exec-and-forget")))))
     }
     return switch raw.lexAndParseShell() {

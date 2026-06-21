@@ -3,7 +3,6 @@ import Common
 struct CmdEnv {
     var windowId: UInt32? = nil
     var workspaceName: String? = nil
-    var forbidExecAndForget: Bool = false
 
     static let defaultEnv: CmdEnv = .init()
 

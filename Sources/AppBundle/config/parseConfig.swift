@@ -181,13 +181,13 @@ func parseDeprecatedAfterLoginCommand(_ raw: OrderedJson, _ backtrace: ConfigBac
 
 func parseShellOfCommandsForConfig(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> Shell<any Command> {
     if let rawString = raw.asStringOrNil {
-        return parseCommand(rawString).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &c.errors) ?? .empty
+        return parseCommand(rawString, allowExecAndForget: true).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &c.errors) ?? .empty
     } else if let rawArray = raw.asArrayOrNil {
         var result = [Shell<any Command>]()
         for (index, elem) in rawArray.enumerated() {
             let backtrace = backtrace + .index(index)
             if let elem = elem.asStringOrNil {
-                result.append(parseCommand(elem).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &c.errors) ?? .empty)
+                result.append(parseCommand(elem, allowExecAndForget: true).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &c.errors) ?? .empty)
             } else {
                 c.errors.append(.init(backtrace, expectedActualTypeError(expected: .string, actual: elem.tomlType)))
             }
