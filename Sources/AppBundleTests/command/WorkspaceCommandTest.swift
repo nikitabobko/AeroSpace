@@ -23,6 +23,18 @@ final class WorkspaceCommandTest: XCTestCase {
         testParseSingleCommandSucc("workspace --no-stdin next", WorkspaceCmdArgs(target: .relative(.next)).copy(\.explicitStdinFlag, false))
     }
 
+    func testParseDashDash() {
+        testParseSingleCommandSucc("workspace -- foo", WorkspaceCmdArgs(target: .direct(.parse("foo").getOrDie())))
+        assertEquals(parseCommand("workspace -- next").errorOrNil, "ERROR: 'next' is a reserved workspace name")
+        assertEquals(parseCommand("workspace --").errorOrNil, "ERROR: Argument \'(<workspace-name>|next|prev)\' is mandatory")
+        testParseSingleCommandSucc(
+            "workspace --auto-back-and-forth -- foo",
+            WorkspaceCmdArgs(target: .direct(.parse("foo").getOrDie()), autoBackAndForth: true),
+        )
+        assertEquals(parseCommand("workspace -- foo --fail-if-noop").errorOrNil, "ERROR: Unknown argument '--fail-if-noop'")
+        assertEquals(parseCommand("workspace -- --help").errorOrNil, "ERROR: Workspace names starting with dash are disallowed")
+    }
+
     func testDirect_focusDifferentWorkspace() async throws {
         assertTrue(Workspace.get(byName: "a").focusWorkspace())
 

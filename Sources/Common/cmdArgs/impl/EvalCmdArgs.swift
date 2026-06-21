@@ -5,7 +5,7 @@ public struct EvalCmdArgs: CmdArgs {
         kind: .eval,
         help: eval_help_generated,
         flags: [:],
-        posArgs: [newMandatoryPosArgParser(\.shellExpr, consumeStrCliArg, placeholder: "<aerospace-shell-expr>")],
+        posArgs: [dashDashArg(mandatory: false), newMandatoryPosArgParser(\.shellExpr, consumeStrCliArg, placeholder: "<aerospace-shell-expr>")],
         conflictingOptions: [],
     )
 

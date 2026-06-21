@@ -12,7 +12,7 @@ include::util/man-attributes.adoc[]
 aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
                                [--wrap-around] (left|down|up|right|next|prev)
 aerospace move-node-to-monitor [-h|--help] [--window-id <window-id>] [--focus-follows-window]
-                               [--fail-if-noop] <monitor-pattern>...
+                               [--fail-if-noop] [--] <monitor-pattern>...
 
 // end::synopsis[]
 

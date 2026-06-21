@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace eval [-h|--help] <aerospace-shell-expr>
+aerospace eval [-h|--help] [--] <aerospace-shell-expr>
 
 // end::synopsis[]
 

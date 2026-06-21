@@ -46,6 +46,20 @@ struct PosArgParserContext {
     let argPlaceholderIfMandatory: String?
 }
 
+func dashDashArg<Root: AeroAny>(mandatory: Bool) -> PosArgParser<Root, ()> {
+    return ArgParser(
+        \.noopKeyPath,
+        { input in
+            switch (input.arg, mandatory) {
+                case ("--", _): .succ((), advanceBy: 1)
+                case (_, false): .succ((), advanceBy: 0)
+                case (_, true): .fail("Expected: --. Got: \(input.arg.singleQuoted)", advanceBy: 0)
+            }
+        },
+        context: PosArgParserContext(argPlaceholderIfMandatory: mandatory ? "--" : nil),
+    )
+}
+
 func newMandatoryPosArgParser<Root, Value>(
     _ keyPath: SendableWritableKeyPath<Root, Lateinit<Value>>,
     _ parse: @escaping @Sendable (PosArgParserInput) -> ParsedCliArgs<Value>,

@@ -20,6 +20,11 @@ extension AeroAny {
 
     @inlinable public func takeIf(_ predicate: (Self) -> Bool) -> Self? { predicate(self) ? self : nil }
     @inlinable public func then<R>(_ body: (Self) -> R) -> R { body(self) }
+
+    var noopKeyPath: () {
+        get { () }
+        set {} // swiftlint:disable:this unused_setter_value
+    }
 }
 
 extension Int: AeroAny {}

@@ -5,28 +5,37 @@ func parseSpecificCmdArgs<T: CmdArgs>(_ raw: T, _ args: StrArrSlice) -> ParsedCm
     var posArgumentParserIndex = 0
     var options: Set<String> = Set()
     var index = 0
+    var positionalOnly = false
 
-    while index < args.count {
+    loop: while index < args.count {
         let arg = args[index]
-        if arg == "-h" || arg == "--help" {
-            return .help(T.info.help)
-        } else if arg.starts(with: "-") && !isResizeNegativeUnitsArg(raw, arg: arg) {
-            if let optionParser = T.parser.flags[arg] {
-                index += 1
-                if !options.insert(arg).inserted {
-                    errors.append("Duplicated option \(arg.singleQuoted)")
+
+        switch (positionalOnly, arg) {
+            case (false, "-h"), (false, "--help"):
+                return .help(T.info.help)
+            case (false, _) where arg.isCliDashFlag && !isResizeNegativeUnitsArg(raw, arg: arg):
+                if let optionParser = T.parser.flags[arg] {
+                    index += 1
+                    if !options.insert(arg).inserted {
+                        errors.append("Duplicated option \(arg.singleQuoted)")
+                    }
+                    raw = optionParser.transformRaw(raw, &index, SubArgParserInput(superArg: arg, index: index, args: args), &errors)
+                } else {
+                    errors.append("Unknown flag \(arg.singleQuoted)")
+                    break loop
                 }
-                raw = optionParser.transformRaw(raw, &index, SubArgParserInput(superArg: arg, index: index, args: args), &errors)
-            } else {
-                errors.append("Unknown flag \(arg.singleQuoted)")
-                break
-            }
-        } else if let parser = T.parser.positionalArgs.getOrNil(atIndex: posArgumentParserIndex) {
-            raw = parser.transformRaw(raw, &index, PosArgParserInput(index: index, args: args), &errors)
-            posArgumentParserIndex += 1
-        } else {
-            errors.append("Unknown argument \(arg.singleQuoted)")
-            break
+            default:
+                if arg == "--" {
+                    positionalOnly = true
+                }
+                if let parser = T.parser.positionalArgs.getOrNil(atIndex: posArgumentParserIndex) {
+                    let input = PosArgParserInput(index: index, args: args, sawDashDash: positionalOnly)
+                    raw = parser.transformRaw(raw, &index, input, &errors)
+                    posArgumentParserIndex += 1
+                } else {
+                    errors.append("Unknown argument \(arg.singleQuoted)")
+                    break loop
+                }
         }
     }
 
@@ -68,7 +77,6 @@ extension ArgParserProtocol where Root: ConvenienceCopyable {
     }
 }
 
-// Hack to preserve backwards compatibility
 private func isResizeNegativeUnitsArg(_ raw: any CmdArgs, arg: String) -> Bool {
     var iter = arg.makeIterator()
     return raw is ResizeCmdArgs && iter.next() == "-" && iter.next()?.isNumber == true

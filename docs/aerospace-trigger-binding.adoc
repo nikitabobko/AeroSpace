@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace trigger-binding [-h|--help] <binding> --mode <mode-id>
+aerospace trigger-binding [-h|--help] --mode <mode-id> [--] <binding>
 
 // end::synopsis[]
 

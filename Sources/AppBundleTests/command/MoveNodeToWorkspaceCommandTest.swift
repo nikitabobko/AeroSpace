@@ -14,6 +14,16 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         testParseSingleCommandSucc("move-node-to-workspace --no-stdin next", MoveNodeToWorkspaceCmdArgs(target: .relative(.next)).copy(\.explicitStdinFlag, false))
     }
 
+    func testParseDashDash() {
+        testParseSingleCommandSucc("move-node-to-workspace -- foo", MoveNodeToWorkspaceCmdArgs(workspace: "foo"))
+        assertEquals(parseCommand("move-node-to-workspace -- prev").errorOrNil, "ERROR: 'prev' is a reserved workspace name")
+        assertEquals(parseCommand("move-node-to-workspace --").errorOrNil, "ERROR: Argument \'(<workspace-name>|next|prev)\' is mandatory")
+        testParseSingleCommandSucc(
+            "move-node-to-workspace --focus-follows-window -- foo",
+            MoveNodeToWorkspaceCmdArgs(workspace: "foo").copy(\.focusFollowsWindow, true),
+        )
+    }
+
     func testSimple() async throws {
         let workspaceA = Workspace.get(byName: "a")
         workspaceA.rootTilingContainer.apply {

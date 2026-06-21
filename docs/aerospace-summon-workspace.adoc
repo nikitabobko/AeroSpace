@@ -9,7 +9,7 @@ include::util/man-attributes.adoc[]
 == Synopsis
 [verse]
 // tag::synopsis[]
-aerospace summon-workspace [-h|--help] [--fail-if-noop] <workspace>
+aerospace summon-workspace [-h|--help] [--fail-if-noop] [--] <workspace>
 
 // end::synopsis[]
 

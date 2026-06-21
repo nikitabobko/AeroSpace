@@ -12,7 +12,10 @@ public struct MoveNodeToWorkspaceCmdArgs: CmdArgs {
             "--stdin": ArgParser(\.explicitStdinFlag, constSubArgParserFun(true)),
             "--no-stdin": ArgParser(\.explicitStdinFlag, constSubArgParserFun(false)),
         ],
-        posArgs: [newMandatoryPosArgParser(\.target, parseWorkspaceTarget, placeholder: workspaceTargetPlaceholder)],
+        posArgs: [
+            dashDashArg(mandatory: false),
+            newMandatoryPosArgParser(\.target, parseWorkspaceTarget, placeholder: workspaceTargetPlaceholder),
+        ],
         conflictingOptions: [
             ["--stdin", "--no-stdin"],
         ],

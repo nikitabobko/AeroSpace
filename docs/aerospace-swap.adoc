@@ -10,8 +10,7 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace swap [-h|--help] [--window-id <window-id>] [--swap-focus]
-               [--wrap-around]
-               (left|down|up|right|dfs-next|dfs-prev)
+               [--wrap-around] (left|down|up|right|dfs-next|dfs-prev)
 
 // end::synopsis[]
 

@@ -13,7 +13,7 @@ aerospace move-node-to-workspace [-h|--help] [--focus-follows-window] [--wrap-ar
                                  [--stdin|--no-stdin]
                                  (next|prev)
 aerospace move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-if-noop]
-                                 [--window-id <window-id>] <workspace-name>
+                                 [--window-id <window-id>] [--] <workspace-name>
 
 // end::synopsis[]
 

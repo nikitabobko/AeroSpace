@@ -7,7 +7,10 @@ public struct TriggerBindingCmdArgs: CmdArgs {
         flags: [
             "--mode": singleValueSubArgParser(\._mode, "<mode-id>", Result.success),
         ],
-        posArgs: [newMandatoryPosArgParser(\.binding, consumeStrCliArg, placeholder: "<binding>")],
+        posArgs: [
+            dashDashArg(mandatory: false),
+            newMandatoryPosArgParser(\.binding, consumeStrCliArg, placeholder: "<binding>"),
+        ],
     )
     public typealias ExitCodeType = Int32ExitCode
 

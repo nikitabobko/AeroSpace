@@ -11,7 +11,7 @@ include::util/man-attributes.adoc[]
 // tag::synopsis[]
 aerospace move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (left|down|up|right)
 aerospace move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--wrap-around] (next|prev)
-aerospace move-workspace-to-monitor [-h|--help] [--workspace <workspace>] <monitor-pattern>...
+aerospace move-workspace-to-monitor [-h|--help] [--workspace <workspace>] [--] <monitor-pattern>...
 
 // end::synopsis[]
 
