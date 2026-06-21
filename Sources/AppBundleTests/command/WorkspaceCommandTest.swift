@@ -153,13 +153,13 @@ final class WorkspaceCommandTest: XCTestCase {
         assertEquals(focus.workspace.name, "a")
     }
 
-    func testRelativeNext_currentNotInStdin_picksFirst() async throws {
+    func testRelativeNext_currentNotInStdin() async throws {
         // When current workspace isn't in the stdin list, index defaults to 0, so `next` lands on index 1.
         assertTrue(Workspace.get(byName: "z").focusWorkspace())
 
         let result = try await parseCommand("workspace --stdin next").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(focus.workspace.name, "a")
     }
 
     func testRelativeNext_noStdin_picksFromAllWorkspaces() async throws {

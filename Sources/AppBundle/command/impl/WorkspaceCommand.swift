@@ -57,8 +57,9 @@ struct WorkspaceCommand: Command {
             .toSet()
             .union([current])
             .sorted()
-    let _index = workspaces.firstIndex(where: { $0 == target.workspace }) ?? 0
-    let index = isNext ? _index + 1 : _index - 1
+    let index = workspaces.firstIndex(where: { $0 == target.workspace })
+        .map { index in isNext ? index + 1 : index - 1 }
+        ?? 0
     let workspace: Parsed<Workspace> = switch wrapAround {
         case true: workspaces.get(wrappingIndex: index).orFailure("List of workspaces is empty")
         case false:
