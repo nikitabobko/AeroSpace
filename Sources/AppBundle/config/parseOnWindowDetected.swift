@@ -105,7 +105,7 @@ private func parseMatcher(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c:
         case .dict(let raw):
             return .legacy(raw.parseTable(LegacyWindowDetectedCallbackMatcher(), matcherParsers, backtrace, &c))
         case .string(let raw):
-            return .command(parseCommand(raw, allowExecAndForget: false).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &c.errors) ?? .empty)
+            return .command(parseCommand(raw, allowExecAndForget: false, allowEval: false).toResult().toParsedConfig(backtrace).getOrNil(appendErrorTo: &c.errors) ?? .empty)
         default:
             // Intentionally skip Table type from the list of expected types
             c.errors.append(.init(backtrace, expectedActualTypeError(expected: .string, actual: raw.tomlType)))

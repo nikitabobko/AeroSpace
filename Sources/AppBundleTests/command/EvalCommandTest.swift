@@ -86,8 +86,8 @@ final class EvalCommandTest: XCTestCase {
         assertTrue(Workspace.get(byName: "a").focusWorkspace())
 
         let result = try await parseCommand("eval 'eval \"workspace b\"'").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(result.stderr, [])
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.stderr, ["Redundant eval"])
+        assertEquals(focus.workspace.name, "a")
     }
 }
