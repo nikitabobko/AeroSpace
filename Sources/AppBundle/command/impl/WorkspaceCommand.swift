@@ -19,7 +19,7 @@ struct WorkspaceCommand: Command {
                     stdin: args.useStdin ? io.readStdin() : nil,
                     target: target,
                 )
-                guard let workspace else { return .fail }
+                guard let workspace = workspace.getOrNil(appendErrorTo: &io.stderr) else { return .fail }
                 workspaceName = workspace.name
             case .direct(let name):
                 workspaceName = name.raw
@@ -39,19 +39,31 @@ struct WorkspaceCommand: Command {
     }
 }
 
-@MainActor func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String?, target: LiveFocus) -> Workspace? {
-    let stdinWorkspaces: [String] = stdin?.split(separator: "\n").map { String($0).trim() }.filter { !$0.isEmpty } ?? []
+@MainActor func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String?, target: LiveFocus) -> Parsed<Workspace> {
+    let _stdinWorkspaces: Parsed<[WorkspaceName]> = stdin?.split(whereSeparator: \.isWhitespace)
+        .map { String($0).trim() }
+        .filter { !$0.isEmpty }
+        .mapAllOrFailure(WorkspaceName.parse)
+        ?? .success([])
+    let stdinWorkspaces: [WorkspaceName]
+    switch _stdinWorkspaces {
+        case .success(let __stdinWorkspaces): stdinWorkspaces = __stdinWorkspaces
+        case .failure(let msg): return .failure(msg)
+    }
     let currentMonitor = current.workspaceMonitor
     let workspaces: [Workspace] = stdin != nil
-        ? stdinWorkspaces.map { Workspace.get(byName: $0) }
+        ? stdinWorkspaces.map { Workspace.get(byName: $0.raw) }
         : Workspace.all.filter { $0.workspaceMonitor.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }
             .toSet()
             .union([current])
             .sorted()
-    let index = workspaces.firstIndex(where: { $0 == target.workspace }) ?? 0
-    let workspace: Workspace? = switch wrapAround {
-        case true: workspaces.get(wrappingIndex: isNext ? index + 1 : index - 1)
-        case false: workspaces.getOrNil(atIndex: isNext ? index + 1 : index - 1)
+    let _index = workspaces.firstIndex(where: { $0 == target.workspace }) ?? 0
+    let index = isNext ? _index + 1 : _index - 1
+    let workspace: Parsed<Workspace> = switch wrapAround {
+        case true: workspaces.get(wrappingIndex: index).orFailure("List of workspaces is empty")
+        case false:
+            workspaces.getOrNil(atIndex: index)
+                .orFailure("Can't find workspace at index: \(index). The list contains \(workspaces.count) workspaces")
     }
     return workspace
 }
