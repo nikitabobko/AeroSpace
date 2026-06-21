@@ -1,0 +1,30 @@
+import Common
+
+struct EchoCommand: Command {
+    let args: EchoCmdArgs
+    /*conforms*/ let shouldResetClosedWindowsCache = false
+
+    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
+        guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
+        var obj = [AeroObj]()
+        if let window = target.windowOrNil {
+            let a: WindowWithPrefetchedTitle = try await .resolveWindow(window, for: args.args.val.flatMap { $0 })
+            obj.append(AeroObj.window(a))
+        } else {
+            obj.append(AeroObj.workspace(target.workspace))
+        }
+        for argWithInterVars in args.args.val {
+            guard let strs = obj.format(argWithInterVars).getIgnoringErrorsOrNil() else {
+                io.err(noWindowIsFocused)
+                return .fail
+            }
+            for str in strs {
+                switch args.isStderr {
+                    case true: io.err(str)
+                    case false: io.out(str)
+                }
+            }
+        }
+        return .succ
+    }
+}

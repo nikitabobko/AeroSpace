@@ -18,6 +18,8 @@ extension CmdArgs {
                 command = ConfigCommand(args: self as! ConfigCmdArgs)
             case .debugWindows:
                 command = DebugWindowsCommand(args: self as! DebugWindowsCmdArgs)
+            case .echo:
+                command = EchoCommand(args: self as! EchoCmdArgs)
             case .enable:
                 command = EnableCommand(args: self as! EnableCmdArgs)
             case .eval:

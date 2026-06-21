@@ -40,6 +40,12 @@ include::aerospace-debug-windows.adoc[tags=synopsis]
 include::aerospace-debug-windows.adoc[tags=purpose]
 include::aerospace-debug-windows.adoc[tags=body]
 
+== echo
+----
+include::aerospace-echo.adoc[tags=synopsis]
+----
+include::aerospace-echo.adoc[tags=purpose]
+include::aerospace-echo.adoc[tags=body]
 
 == enable
 ----

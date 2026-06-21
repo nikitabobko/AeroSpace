@@ -19,6 +19,9 @@ let config_help_generated = """
 let debug_windows_help_generated = """
     USAGE: debug-windows [-h|--help] [--window-id <window-id>]
     """
+let echo_help_generated = """
+    USAGE: echo [-h|--help] [--stderr] [--window-id <window-id>] -- <string>...
+    """
 let enable_help_generated = """
     USAGE: enable [-h|--help] toggle
        OR: enable [-h|--help] on [--fail-if-noop]

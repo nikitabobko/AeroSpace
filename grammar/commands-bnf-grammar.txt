@@ -14,11 +14,20 @@ aerospace -h;
 
     | close-all-windows-but-current [--quit-if-last-window]
 
+    | config [--json | --keys]... --get {{{ aerospace config --major-keys }}} [--json | --keys]...
+    | config --major-keys
+    | config --all-keys
+    | config --config-path
+
+    | debug-windows [--window-id <window_id>]
+
+    | echo [--stderr|--window <window_id>]... --
+
     | enable toggle
     | enable [--fail-if-noop] on [--fail-if-noop]
     | enable [--fail-if-noop] off [--fail-if-noop]
 
-    | eval {{{ true }}}
+    | eval
 
     | false
 
@@ -88,13 +97,6 @@ aerospace -h;
     | workspace [--wrap-around|--stdin|--no-stdin]... (next|prev) [--wrap-around|--stdin|--no-stdin]...
 
     | workspace-back-and-forth
-
-    | config [--json | --keys]... --get {{{ aerospace config --major-keys }}} [--json | --keys]...
-    | config --major-keys
-    | config --all-keys
-    | config --config-path
-
-    | debug-windows [--window-id <window_id>]
 
     | list-apps [--macos-native-hidden [no] | --format <output_format> | --count | --json]...
 
