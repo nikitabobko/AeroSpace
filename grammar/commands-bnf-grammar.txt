@@ -27,7 +27,7 @@ aerospace -h;
     | enable [--fail-if-noop] on [--fail-if-noop]
     | enable [--fail-if-noop] off [--fail-if-noop]
 
-    | eval
+    | eval [--stdin]
 
     | false
 
