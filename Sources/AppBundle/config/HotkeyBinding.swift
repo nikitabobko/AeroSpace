@@ -113,11 +113,11 @@ func parseBinding(_ raw: String, _ backtrace: ConfigBacktrace, _ mapping: [Strin
     let rawKeys = raw.split(separator: "-")
     let modifiers: ParsedConfig<NSEvent.ModifierFlags> = rawKeys.dropLast()
         .mapAllOrFailure {
-            modifiersMap[String($0)].orFailure(.init(backtrace, "Can't parse modifiers in '\(raw)' binding"))
+            modifiersMap[String($0)].toResult(.init(backtrace, "Can't parse modifiers in '\(raw)' binding"))
         }
         .map { NSEvent.ModifierFlags($0) }
     let key: ParsedConfig<Key> = rawKeys.last.flatMap { mapping[String($0)] }
-        .orFailure(.init(backtrace, "Can't parse the key in '\(raw)' binding"))
+        .toResult(.init(backtrace, "Can't parse the key in '\(raw)' binding"))
     return modifiers.flatMap { modifiers -> ParsedConfig<(NSEvent.ModifierFlags, Key)> in
         key.flatMap { key -> ParsedConfig<(NSEvent.ModifierFlags, Key)> in
             .success((modifiers, key))

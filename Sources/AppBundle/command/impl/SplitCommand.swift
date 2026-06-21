@@ -13,7 +13,7 @@ struct SplitCommand: Command {
         guard let window = target.windowOrNil else {
             return .fail(io.err(noWindowIsFocused))
         }
-        guard let parent = window.parent else { return .fail }
+        guard let parent = window.parent else { return .fail(io.err(bugPrompt())) }
         switch parent.cases {
             case .floatingWindowsContainer:
                 // Nothing to do for floating and macOS native fullscreen windows

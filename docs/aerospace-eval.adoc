@@ -37,8 +37,8 @@ See https://nikitabobko.github.io/AeroSpace/guide#shell for more info.
 // =========================================================== Examples
 include::util/conditional-examples-header.adoc[]
 
-* Go to the next non empty workspace on the focused monitor: +
-`aerospace eval 'list-workspaces --monitor focused --empty no | workspace --stdin next'`
+* Cycle between workspaces a, b, and c: +
+`aerospace eval 'echo a b c | workspace --stdin next'`
 
 // end::body[]
 

@@ -40,31 +40,27 @@ struct WorkspaceCommand: Command {
 }
 
 @MainActor func getNextPrevWorkspace(current: Workspace, isNext: Bool, wrapAround: Bool, stdin: String?, target: LiveFocus) -> Parsed<Workspace> {
-    let _stdinWorkspaces: Parsed<[WorkspaceName]> = stdin?.split(whereSeparator: \.isWhitespace)
-        .map { String($0).trim() }
-        .filter { !$0.isEmpty }
-        .mapAllOrFailure(WorkspaceName.parse)
-        ?? .success([])
-    let stdinWorkspaces: [WorkspaceName]
-    switch _stdinWorkspaces {
-        case .success(let __stdinWorkspaces): stdinWorkspaces = __stdinWorkspaces
-        case .failure(let msg): return .failure(msg)
+    Result { () throws(String) in
+        let stdinWorkspaces: [WorkspaceName] = try stdin?.split(whereSeparator: \.isWhitespace)
+            .map { String($0).trim() }
+            .filter { !$0.isEmpty }
+            .mapAllOrFailure(WorkspaceName.parse)
+            .get()
+            ?? []
+        let currentMonitor = current.workspaceMonitor
+        let workspaces: [Workspace] = stdin != nil
+            ? stdinWorkspaces.map { Workspace.get(byName: $0.raw) }
+            : Workspace.all.filter { $0.workspaceMonitor.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }
+                .toSet()
+                .union([current])
+                .sorted()
+        let index = workspaces.firstIndex(where: { $0 == target.workspace })
+            .map { index in isNext ? index + 1 : index - 1 }
+            ?? 0
+        return wrapAround
+            ? try workspaces.get(wrappingIndex: index).toResult("List of workspaces is empty").get()
+            : try workspaces.getOrNil(atIndex: index)
+                .toResult("Can't find workspace at index: \(index). The list contains \(workspaces.count) workspaces")
+                .get()
     }
-    let currentMonitor = current.workspaceMonitor
-    let workspaces: [Workspace] = stdin != nil
-        ? stdinWorkspaces.map { Workspace.get(byName: $0.raw) }
-        : Workspace.all.filter { $0.workspaceMonitor.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }
-            .toSet()
-            .union([current])
-            .sorted()
-    let index = workspaces.firstIndex(where: { $0 == target.workspace })
-        .map { index in isNext ? index + 1 : index - 1 }
-        ?? 0
-    let workspace: Parsed<Workspace> = switch wrapAround {
-        case true: workspaces.get(wrappingIndex: index).orFailure("List of workspaces is empty")
-        case false:
-            workspaces.getOrNil(atIndex: index)
-                .orFailure("Can't find workspace at index: \(index). The list contains \(workspaces.count) workspaces")
-    }
-    return workspace
 }

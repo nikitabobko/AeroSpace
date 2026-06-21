@@ -77,10 +77,10 @@ func newMandatoryPosArgParser<Root, Value>(
 
 // todo reuse in config
 public func parseEnum<T: RawRepresentable>(_ raw: String, _ _: T.Type) -> Parsed<T> where T.RawValue == String, T: CaseIterable {
-    T(rawValue: raw).orFailure("Can't parse '\(raw)'.\nPossible values: \(T.unionLiteral)")
+    T(rawValue: raw).toResult("Can't parse '\(raw)'.\nPossible values: \(T.unionLiteral)")
 }
 
-public func parseUInt32(_ str: String) -> Parsed<UInt32> { UInt32(str).orFailure("Can't convert '\(str)' to UInt32") }
+public func parseUInt32(_ str: String) -> Parsed<UInt32> { UInt32(str).toResult("Can't convert '\(str)' to UInt32") }
 
 func parseCardinalDirectionArg(i: PosArgParserInput) -> ParsedCliArgs<CardinalDirection> {
     .init(parseEnum(i.arg, CardinalDirection.self), advanceBy: 1)

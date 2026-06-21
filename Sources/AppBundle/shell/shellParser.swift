@@ -23,17 +23,19 @@ extension String {
 }
 
 func parseShell(_ tokens: [LexerToken]) -> Parsed<Shell<[String]>> {
-    switch tokens.singleOrNil() {
-        case let single? where single.payload == .end:
-            return .success(.empty)
-        default:
-            var index = 0
-            let result = Result { () throws(String) in try parseShellSeq(&index, tokens) }
-            let token = tokens[index]
-            return result
-                .filter("\(token.location): Unexpected token \(token.payload.description.singleQuoted)") { _ in
-                    token.payload == .end
+    Result { () throws(String) in
+        switch tokens.singleOrNil() {
+            case let single? where single.payload == .end:
+                return .empty
+            default:
+                var index = 0
+                let result = try parseShellSeq(&index, tokens)
+                let token = tokens[index]
+                if token.payload != .end {
+                    throw "\(token.location): Unexpected token \(token.payload.description.singleQuoted)"
                 }
+                return result
+        }
     }
 }
 

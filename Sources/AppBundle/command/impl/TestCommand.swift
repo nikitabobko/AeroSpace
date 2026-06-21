@@ -8,12 +8,12 @@ struct TestCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> ConditionalExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
 
-        let _lhs: Result<Primitive, InterVarExpansionError> = switch target.windowOrNil {
+        let lhs: Result<Primitive, InterVarExpansionError> = switch target.windowOrNil {
             case let window?: args.lhs.val.expandFormatVar(obj: .window(try await .resolveWindow(window, for: args.lhs.val)))
             case nil: args.lhs.val.expandFormatVar(obj: .workspace(target.workspace))
         }
 
-        guard let lhs = _lhs.getOrNil(onFailure: { err in
+        guard let lhs = lhs.getOrNil(onFailure: { err in
             switch err {
                 case .unknownInterpolationVariable: io.err(noWindowIsFocused)
                 case .notPossible, .nullParent,
@@ -30,11 +30,11 @@ struct TestCommand: Command {
 
         let result: Result<Bool, String> = switch (lhs, infixOperator) {
             case (.bool(let lhs), .equals):
-                Bool(rhs).orFailure("Can't convert String \(rhs.singleQuoted) to Bool").map { rhs in lhs == rhs }
+                Bool(rhs).toResult("Can't convert String \(rhs.singleQuoted) to Bool").map { rhs in lhs == rhs }
             case (.bool, .matchesRegex):
                 .failure(incompatibleLhsAndOperatorMsg)
             case (.int(let lhs), .equals):
-                Int64(rhs).orFailure("Can't convert String \(rhs.singleQuoted) to Int").map { rhs in lhs == rhs }
+                Int64(rhs).toResult("Can't convert String \(rhs.singleQuoted) to Int").map { rhs in lhs == rhs }
             case (.int, .matchesRegex):
                 .failure(incompatibleLhsAndOperatorMsg)
             case (.string(let lhs), .equals):

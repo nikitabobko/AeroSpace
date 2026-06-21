@@ -254,11 +254,9 @@ struct ParseConfigResult {
         rawTable = [:]
     }
 
-    let configVersion: ConfigVersion =
-        switch rawTable[configVersionConfigRootKey].flatMap({ parseConfigVersion($0, .rootKey(configVersionConfigRootKey)).getOrNil(appendErrorTo: &errors.value) }) {
-            case let it?: it
-            case nil: .min
-        }
+    let configVersion: ConfigVersion = rawTable[configVersionConfigRootKey]
+        .flatMap { parseConfigVersion($0, .rootKey(configVersionConfigRootKey)).getOrNil(appendErrorTo: &errors.value) }
+        ?? .min
 
     var c = ConfigParserContext(configVersion: configVersion, errors: errors.consume())
 
@@ -323,15 +321,15 @@ func parseIndentForNestedContainersWithTheSameOrientation(_ _: OrderedJson, _ ba
 
 func parseConfigVersion(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<ConfigVersion> {
     parseInt(raw, backtrace)
-        .flatMap { ConfigVersion.init(rawValue: $0).orFailure(.init(backtrace, "config-version must be in [\(ConfigVersion.min), \(ConfigVersion.max)] range")) }
+        .flatMap { ConfigVersion.init(rawValue: $0).toResult(.init(backtrace, "config-version must be in [\(ConfigVersion.min), \(ConfigVersion.max)] range")) }
 }
 
 func parseInt(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Int> {
-    raw.asIntOrNil.orFailure(expectedActualTypeDiagnostic(expected: .int, actual: raw.tomlType, backtrace))
+    raw.asIntOrNil.toResult(expectedActualTypeDiagnostic(expected: .int, actual: raw.tomlType, backtrace))
 }
 
 func parseString(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<String> {
-    raw.asStringOrNil.orFailure(expectedActualTypeDiagnostic(expected: .string, actual: raw.tomlType, backtrace))
+    raw.asStringOrNil.toResult(expectedActualTypeDiagnostic(expected: .string, actual: raw.tomlType, backtrace))
 }
 
 func parseSimpleType<T>(_ raw: OrderedJson, ofType: T.Type) -> T? {
@@ -361,7 +359,7 @@ extension OrderedJson {
 }
 
 func parseTomlArray(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<OrderedJson.JsonArray> {
-    raw.asArrayOrNil.orFailure(expectedActualTypeDiagnostic(expected: .array, actual: raw.tomlType, backtrace))
+    raw.asArrayOrNil.toResult(expectedActualTypeDiagnostic(expected: .array, actual: raw.tomlType, backtrace))
 }
 
 func parseTable<T: ConvenienceCopyable>(
@@ -388,7 +386,7 @@ private func parseStartupRootContainerLayout(_ raw: OrderedJson, _ backtrace: Co
 
 private func parseLayout(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Layout> {
     parseString(raw, backtrace)
-        .flatMap { $0.parseLayout().orFailure(.init(backtrace, "Can't parse layout '\($0)'")) }
+        .flatMap { $0.parseLayout().toResult(.init(backtrace, "Can't parse layout '\($0)'")) }
 }
 
 private func skipParsing<T: Sendable>(_ value: T) -> @Sendable (_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<T> {
@@ -415,7 +413,7 @@ private func parseArrayOfStrings(_ raw: OrderedJson, _ backtrace: ConfigBacktrac
 private func parseDefaultContainerOrientation(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<DefaultContainerOrientation> {
     parseString(raw, backtrace).flatMap {
         DefaultContainerOrientation(rawValue: $0)
-            .orFailure(.init(backtrace, "Can't parse default container orientation '\($0)'"))
+            .toResult(.init(backtrace, "Can't parse default container orientation '\($0)'"))
     }
 }
 
@@ -426,7 +424,7 @@ extension Parsed where Failure == String {
 }
 
 func parseBool(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ParsedConfig<Bool> {
-    raw.asBoolOrNil.orFailure(expectedActualTypeDiagnostic(expected: .bool, actual: raw.tomlType, backtrace))
+    raw.asBoolOrNil.toResult(expectedActualTypeDiagnostic(expected: .bool, actual: raw.tomlType, backtrace))
 }
 
 struct ConfigBacktrace: CustomStringConvertible, Equatable {

@@ -51,6 +51,11 @@ Incompatible with `--no-stdin`
 Ignore the list of workspaces from stdin, even if provided.
 Incompatible with `--stdin`
 
+// =========================================================== Arguments
+include::./util/conditional-arguments-header.adoc[]
+
+<workspace-name>:: Workspace name to focus.
+
 // =========================================================== Examples
 include::util/conditional-examples-header.adoc[]
 

@@ -9,7 +9,7 @@ extension Optional {
         self ?? dieT("orDie: " + message, file: file, line: line, column: column, function: function)
     }
 
-    public func orFailure<F: Error>(_ or: @autoclosure () -> F) -> Result<Wrapped, F> {
+    public func toResult<F: Error>(_ or: @autoclosure () -> F) -> Result<Wrapped, F> {
         self.map(Result.success) ?? .failure(or())
     }
 

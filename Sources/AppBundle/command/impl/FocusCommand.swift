@@ -27,7 +27,7 @@ struct FocusCommand: Command {
                 let window = target.windowOrNil
                 if let (parent, ownIndex) = window?.closestParent(hasChildrenInDirection: direction, withLayout: nil) {
                     guard let windowToFocus = parent.children[ownIndex + direction.focusOffset]
-                        .findLeafWindowRecursive(snappedTo: direction.opposite) else { return .fail }
+                        .findLeafWindowRecursive(snappedTo: direction.opposite) else { return .fail(io.err(bugPrompt())) }
                     return .from(bool: windowToFocus.focusWindow())
                 } else {
                     return hitWorkspaceBoundaries(target, io, args, direction)
@@ -58,7 +58,7 @@ struct FocusCommand: Command {
                         case .stop: return .succ
                         case .fail: return .fail
                         case .wrapAroundTheWorkspace: targetIndex = (targetIndex + windows.count) % windows.count
-                        case .wrapAroundAllMonitors: return dieT("Must be discarded by args parser")
+                        case .wrapAroundAllMonitors: return .fail(io.err(bugPrompt("Must be discarded by args parser")))
                     }
                 }
                 return .from(bool: windows[targetIndex].focusWindow())
@@ -78,18 +78,18 @@ struct FocusCommand: Command {
                 case .stop: .succ
                 case .fail: .fail
                 case .wrapAroundTheWorkspace: wrapAroundTheWorkspace(target, io, direction)
-                case .wrapAroundAllMonitors: dieT("Must be discarded by args parser")
+                case .wrapAroundAllMonitors: .fail(io.err("Must be discarded by args parser"))
             }
         case .allMonitorsOuterFrame:
             let currentMonitor = target.workspace.workspaceMonitor
             guard let (monitors, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
-                return .fail(io.err("Should never happen. Can't find the current monitor"))
+                return .fail(io.err(bugPrompt("Should never happen. Can't find the current monitor")))
             }
 
             if let targetMonitor = monitors.getOrNil(atIndex: index) {
                 return .from(bool: targetMonitor.activeWorkspace.focusWorkspace())
             } else {
-                guard let wrapped = monitors.get(wrappingIndex: index) else { return .fail }
+                guard let wrapped = monitors.get(wrappingIndex: index) else { return .fail(io.err(bugPrompt("\(index) \(monitors)"))) }
                 return hitAllMonitorsOuterFrameBoundaries(target, io, args, direction, wrapped)
             }
     }
