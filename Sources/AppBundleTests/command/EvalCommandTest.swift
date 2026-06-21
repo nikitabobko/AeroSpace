@@ -87,7 +87,7 @@ final class EvalCommandTest: XCTestCase {
 
         let result = try await parseCommand("eval 'eval \"workspace b\"'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
-        assertEquals(result.stderr, ["Redundant eval"])
+        assertEquals(result.stderr, ["Illegal eval (Tip: nested evals are forbidden)"])
         assertEquals(focus.workspace.name, "a")
     }
 }

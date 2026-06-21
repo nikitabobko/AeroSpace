@@ -769,6 +769,189 @@ on-window-detected = [
 
 If you can't make AeroSpace handle some keys in your config, please make sure that you don't have keys conflict with other software that might listen to global keys (e.g. skhd, Karabiner-Elements, Raycast)
 
+[#socket-protocol]
+== Socket protocol
+
+This section documents the client-server socket protocol that the `aerospace` CLI uses to talk to the running `AeroSpace.app` server.
+It is intended for people who want to integrate with AeroSpace from a custom client (e.g. a status bar, an editor plugin, a script in a language without an `aerospace` wrapper).
+
+[#socket-location]
+=== Socket location
+
+AeroSpace listens on a Unix-domain stream socket:
+
+[source]
+----
+/tmp/bobko.aerospace-${USER}.sock        # AeroSpace.app (release builds)
+/tmp/bobko.aerospace.debug-${USER}.sock  # AeroSpace-Debug.app (debug builds only)
+----
+
+`${USER}` is the result of `NSUserName()` in Swift (typically equivalent to `$USER` / `id -un` / `whoami` in shell).
+
+[#socket-wire-format]
+=== Wire format
+
+All numbers on the wire are 4-byte unsigned integers in host byte order.
+AeroSpace only runs on Apple Silicon and Intel macOS, both little-endian, so in practice the framing is always 4 bytes, little-endian.
+
+Immediately after connecting, both sides perform a *one-shot handshake*:
+
+. *The Client* writes its `SOCKET_PROTOCOL_VERSION` as a single 4-byte unsigned integer.
+. *The Server* reads the client's `SOCKET_PROTOCOL_VERSION` and decides in what kind of compatibility mode it needs to communicate with this particular client.
+. *The Server* writes its `SOCKET_PROTOCOL_VERSION` as a single 4-byte unsigned integer.
+. *The Client* compares the two versions and decides if it wants to process.
+. *The Server* compares the two versions and decides if it wants to process.
+
+The current and the only valid value for `SOCKET_PROTOCOL_VERSION` is `1`.
+Currently, right after sending its own version, the server disconnects if it doesn't recognise `SOCKET_PROTOCOL_VERSION`.
+
+*After the handshake*, every message (in either direction) is a length-prefixed JSON frame:
+
+[source]
+----
++-----------------------+----------------------------+
+| length (UInt32, LE)   | JSON payload (UTF-8 bytes) |
++-----------------------+----------------------------+
+----
+
+`length` is the byte length of the JSON payload, *not* counting the 4 length-prefix bytes themselves. The payload is a UTF-8-encoded JSON object.
+
+The flow then depends on the command:
+
+* *One-shot commands:* (basically, almost all commands) The client sends one `ClientRequest` frame. The server sends one `ServerAnswer` frame. This loop repeats indefinitely until the client disconnects.
+* xref:./commands.adoc#subscribe[*subscribe command:*] (treated separately) The client sends one `ClientRequest` frame, then the server sends an unbounded stream of `ServerEvent` frames until the client disconnects. The client must not send anything else on the connection.
+
+[#socket-client-request]
+=== ClientRequest
+
+The request payload is a JSON object with the following fields:
+
+[source,json]
+----
+{
+    "args": ["workspace", "1"],
+    "stdin": "",
+    "windowId": null,
+    "workspace": null
+}
+----
+
+[cols="1,1,3"]
+|===
+| Field | Type | Description
+
+| `args`
+| array of strings
+| The CLI arguments as you would pass them to `aerospace`, *excluding* the program name itself. For example, `["workspace", "1"]` is the wire form of `aerospace workspace 1`. To send the `subscribe` command, pass `["subscribe", ...]` here.
+
+| `stdin`
+| string
+| Contents to feed to the command as standard input. Use `""` if the command doesn't read stdin. Some commands (e.g. xref:./commands.adoc#workspace[`workspace --stdin`]) consume this field.
+
+| `windowId`
+| unsigned 32-bit integer or `null`
+| The value of the `AEROSPACE_WINDOW_ID` environment variable as the client saw it, or `null` if there is no such variable in scope. AeroSpace sets this variable when invoking xref:commands.adoc#exec[exec callbacks] so that the called process knows the window it was triggered from. If you are calling AeroSpace from your own context (no surrounding window), send `null`.
+
+| `workspace`
+| string or `null`
+| The value of the `AEROSPACE_WORKSPACE` environment variable as the client saw it, or `null` if unset. Same rationale as `windowId`.
+|===
+
+[#socket-server-answer]
+=== ServerAnswer
+
+The reply to a one-shot command is a JSON object:
+
+[source,json]
+----
+{
+    "exitCode": 0,
+    "stdout": "1\n2\n3",
+    "stderr": "",
+    "serverVersionAndHash": "0.20.0-Beta 33fa0643"
+}
+----
+
+[cols="1,1,3"]
+|===
+| Field | Type | Description
+
+| `exitCode`
+| signed 32-bit integer
+| `0` on success, non-zero on failure. Mirrors what the `aerospace` CLI would have exited with.
+
+| `stdout`
+| string
+| What the CLI would have printed to standard output. May contain newlines.
+
+| `stderr`
+| string
+| What the CLI would have printed to standard error.
+
+| `serverVersionAndHash`
+| string
+| Free-form `"<version> <git-hash>"` identifying the running server. Useful for compatibility checks; compare against the equivalent string from your own client and warn the user on mismatch.
+|===
+
+[#socket-subscribe]
+=== Subscribe mode
+
+When the client sends a request with `args` starting with `"subscribe"`, the server enters event-streaming mode. The remaining `args` follow the same syntax as the xref:./commands.adoc#subscribe[`aerospace subscribe`] CLI command (`--all`, `--no-send-initial`, or an explicit list of event types).
+
+After accepting the subscription, the server writes framed JSON objects in the same length-prefixed format as `ServerAnswer`. The server keeps writing until the connection is closed.
+
+[#socket-example]
+=== End-to-end example
+
+A minimal Python client that runs `aerospace list-workspaces --focused`:
+
+[source,python]
+----
+import json, os, socket, struct
+
+SOCKET_PROTOCOL_VERSION = 1
+sock_path = f"/tmp/bobko.aerospace-{os.getlogin()}.sock"
+
+def send_frame(s, payload):
+    s.sendall(struct.pack("<I", len(payload)) + payload)
+
+def recv_exact(s, n):
+    buf = b""
+    while len(buf) < n:
+        chunk = s.recv(n - len(buf))
+        if not chunk:
+            raise ConnectionError("server closed connection")
+        buf += chunk
+    return buf
+
+def recv_frame(s):
+    (length,) = struct.unpack("<I", recv_exact(s, 4))
+    return recv_exact(s, length)
+
+with socket.socket(socket.AF_UNIX, socket.SOCK_STREAM) as s:
+    s.connect(sock_path)
+
+    # Version handshake
+    s.sendall(struct.pack("<I", SOCKET_PROTOCOL_VERSION))
+    (server_version,) = struct.unpack("<I", recv_exact(s, 4))
+    if server_version != SOCKET_PROTOCOL_VERSION:
+        raise RuntimeError(f"unsupported server version {server_version}")
+
+    # One-shot command
+    request = {
+        "args": ["list-workspaces", "--focused"],
+        "stdin": "",
+        "windowId": None,
+        "workspace": None,
+    }
+    send_frame(s, json.dumps(request).encode("utf-8"))
+
+    answer = json.loads(recv_frame(s))
+    if answer["exitCode"] != 0:
+        raise RuntimeError(answer["stderr"])
+    print(answer["stdout"])
+----
+
 == Deprecations
 
 === Legacy 'on-window-detected' syntax

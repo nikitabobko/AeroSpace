@@ -26,16 +26,20 @@ struct Main {
         if args.first == "--version" || args.first == "-v" {
             let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
             let serverVersionAndHash: String?
-            if await connection.startBlocking().error == nil {
-                let ans = await run(connection, [], stdin: "", windowId: nil, workspace: nil, failExitCode: EXIT_CODE_TWO)
-                serverVersionAndHash = ans.serverVersionAndHash
-            } else {
-                serverVersionAndHash = nil
+            switch await connection.initConnection().error {
+                case nil:
+                    let ans = await run(connection, [], stdin: "", windowId: nil, workspace: nil, failExitCode: EXIT_CODE_TWO)
+                    serverVersionAndHash = ans.serverVersionAndHash
+                case .nwError(let e):
+                    eprint(e.localizedDescription)
+                    serverVersionAndHash = nil
+                case .customError(let msg):
+                    exit(EXIT_CODE_TWO, err: msg)
             }
             print(
                 """
                 aerospace CLI client version: \(cliClientVersionAndHash)
-                AeroSpace.app server version: \(serverVersionAndHash ?? "Unknown. The server is not running")
+                AeroSpace.app server version: \(serverVersionAndHash ?? "Unknown. The server is not responding")
                 """,
             )
             if serverVersionAndHash != nil && cliClientVersionAndHash != serverVersionAndHash {
@@ -65,8 +69,12 @@ struct Main {
 
         let connection = NWConnection(to: NWEndpoint.unix(path: socketPath), using: .tcp)
 
-        if let e = await connection.startBlocking().error {
-            exit(failExitCode, err: "Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
+        switch await connection.initConnection().error {
+            case nil: break
+            case .customError(let msg):
+                exit(failExitCode, err: msg)
+            case .nwError(let e):
+                exit(failExitCode, err: "Can't connect to AeroSpace server. Is AeroSpace.app running?\n\(e.localizedDescription)")
         }
 
         var stdin = ""

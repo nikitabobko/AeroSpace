@@ -4,21 +4,18 @@ import Foundation
 extension NWConnection {
     public func writeAtomic(_ msg: Codable, _ encoder: JSONEncoder = JSONEncoder()) async -> ((), error: NWError?) {
         let payload = Result { try encoder.encode(msg) }.getOrDie()
-        var data = unsafe withUnsafeBytes(of: UInt32(payload.count)) { unsafe Data($0) }
+        var data = unsafe withUnsafeBytes(of: UInt32(payload.count)) { pointer in unsafe Data.init(pointer) }
         check(data.count == 4)
         data.append(payload)
         return await withCheckedContinuation { cont in
             send(content: data, completion: .contentProcessed { error in
-                switch error {
-                    case let error?: cont.resume(returning: ((), error))
-                    case nil: cont.resume(returning: ((), nil))
-                }
+                cont.resume(returning: ((), error))
             })
         }
     }
 
-    public func startBlocking() async -> ((), error: NWError?) {
-        await withCheckedContinuation { cont in
+    public func initConnection() async -> ((), error: InitConnectionError?) {
+        let error1 = await withCheckedContinuation { cont in
             let isDone = IsDone()
             stateUpdateHandler = { state in
                 Task.startUnstructured {
@@ -34,11 +31,35 @@ extension NWConnection {
                         return
                     }
                     self.stateUpdateHandler = nil
-                    cont.resume(returning: ((), error))
+                    cont.resume(returning: error.map(InitConnectionError.nwError))
                 }
             }
             start(queue: .global())
         }
+        if error1 != nil { return ((), error1) }
+
+        let error2 = await writeUInt32(SOCKET_PROTOCOL_VERSION).error
+        if error2 != nil { return ((), error2.map(InitConnectionError.nwError)) }
+
+        switch await self.readUInt32() {
+            case .success(let serverVersion) where serverVersion != SOCKET_PROTOCOL_VERSION:
+                let msg = """
+                    Client SOCKET_PROTOCOL_VERSION: \(SOCKET_PROTOCOL_VERSION)
+                    Server SOCKET_PROTOCOL_VERSION: \(serverVersion)
+
+                    The client and server versions are incompatible. (Potential fix: restart AeroSpace)
+                    """
+                return ((), .customError(msg))
+            case .success:
+                return ((), nil)
+            case .failure(let error):
+                return ((), .nwError(error))
+        }
+    }
+
+    public enum InitConnectionError: Sendable {
+        case nwError(NWError)
+        case customError(String)
     }
 
     private func read(bytes size: Int) async -> Result<Data, NWError> {
@@ -47,10 +68,7 @@ extension NWConnection {
             let remaining = size - data.count
             let chunk: Result<Data, NWError> = await withCheckedContinuation { cont in
                 receive(minimumIncompleteLength: remaining, maximumLength: remaining) { data, context, isComplete, error in
-                    switch error {
-                        case let error?: cont.resume(returning: .failure(error))
-                        case nil: cont.resume(returning: .success(data ?? Data()))
-                    }
+                    cont.resume(returning: error.map(Result.failure) ?? Result.success(data ?? Data()))
                 }
             }
             switch chunk {
@@ -58,6 +76,7 @@ extension NWConnection {
                 case .failure: return chunk
             }
         }
+        check(data.count == size)
         return .success(data)
     }
 
@@ -72,10 +91,23 @@ extension NWConnection {
         }
     }
 
+    public func readUInt32() async -> Result<UInt32, NWError> {
+        await read(bytes: 4).map { data in
+            unsafe data.withUnsafeBytes { pointer in unsafe pointer.load(as: UInt32.self) }
+        }
+    }
+
+    public func writeUInt32(_ int: UInt32) async -> ((), error: NWError?) {
+        let data = unsafe withUnsafeBytes(of: int) { pointer in unsafe Data.init(pointer) }
+        check(data.count == 4)
+        return await withCheckedContinuation { cont in
+            send(content: data, completion: .contentProcessed { error in cont.resume(returning: ((), error)) })
+        }
+    }
+
     public func readNonAtomic() async -> Result<Data, NWError> {
-        switch await read(bytes: 4) {
-            case .success(let header):
-                let count = unsafe header.withUnsafeBytes { unsafe $0.load(as: UInt32.self) }
+        switch await readUInt32() {
+            case .success(let count):
                 return await read(bytes: Int(count))
             case .failure(let e):
                 return .failure(e)

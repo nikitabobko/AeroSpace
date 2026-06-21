@@ -23,7 +23,7 @@ func toggleReleaseServerIfDebug(_ state: EnableCmdArgs.State) async {
     let socketFile = "/tmp/\(stableAeroSpaceAppId)-\(unixUserName).sock"
     let connection = NWConnection(to: NWEndpoint.unix(path: socketFile), using: .tcp)
     defer { connection.cancel() }
-    if await connection.startBlocking().error != nil { // Can't connect, AeroSpace.app is not running
+    if await connection.initConnection().error != nil { // Can't connect, AeroSpace.app is not running
         return
     }
 
@@ -42,6 +42,12 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
     func answerToClient(_ ans: ServerAnswer) async {
         _ = await connection.writeAtomic(ans)
     }
+
+    guard let clientVersion = await connection.readUInt32().getIgnoringErrorsOrNil() else { return }
+    // The server unconditionally answers with the only version it supports
+    if await connection.writeUInt32(SOCKET_PROTOCOL_VERSION).error != nil { return }
+    if clientVersion != SOCKET_PROTOCOL_VERSION { return }
+
     while true {
         guard let rawRequest = await connection.readNonAtomic().getOrNil(onFailure: { err in
             await answerToClient(exitCode: EXIT_CODE_TWO, stderr: "Error: \(err)")
