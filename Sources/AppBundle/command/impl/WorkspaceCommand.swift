@@ -60,7 +60,11 @@ struct WorkspaceCommand: Command {
         return wrapAround
             ? try workspaces.get(wrappingIndex: index).toResult("List of workspaces is empty").get()
             : try workspaces.getOrNil(atIndex: index)
-                .toResult("Can't find workspace at index: \(index). The list contains \(workspaces.count) workspaces")
+                .toResult(
+                    index >= workspaces.count
+                        ? "Reached the end of the supplied workspaces list"
+                        : "Rached the beginning of the supplied workspaces list"
+                )
                 .get()
     }
 }
