@@ -156,7 +156,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         let result = try await parseCommand("move-node-to-workspace prev").cmdOrDie
             .run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
-        assertEquals(result.stderr, ["Can\'t find workspace at index: -1. The list contains 2 workspaces"])
+        assertEquals(result.stderr, ["Rached the beginning of the supplied workspaces list"])
         // Window untouched
         assertEquals((Workspace.get(byName: "a").rootTilingContainer.children.singleOrNil() as? Window)?.windowId, 1)
     }

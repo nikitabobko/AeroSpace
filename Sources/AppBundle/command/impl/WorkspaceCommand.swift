@@ -54,6 +54,7 @@ struct WorkspaceCommand: Command {
                 .toSet()
                 .union([current])
                 .sorted()
+        if workspaces.isEmpty { throw "The list of workspaces is empty" }
         let index = workspaces.firstIndex(where: { $0 == target.workspace })
             .map { index in isNext ? index + 1 : index - 1 }
             ?? 0
