@@ -1,0 +1,77 @@
+<style>
+#toc a.toc-active { font-weight: bold; }
+</style>
+<script>
+(function () {
+  var toc = document.getElementById('toc');
+  if (!toc) return;
+
+  var tocLinks = Array.prototype.slice.call(toc.querySelectorAll('a[href^="#"]'));
+  var linkById = {};
+  var sections = [];
+
+  tocLinks.forEach(function (link) {
+    var href = link.getAttribute('href');
+    if (!href || href.length < 2) return;
+    var id;
+    try { id = decodeURIComponent(href.slice(1)); } catch (_) { id = href.slice(1); }
+    var el = document.getElementById(id);
+    if (!el) return;
+    linkById[id] = link;
+    sections.push(el);
+  });
+
+  if (sections.length === 0) return;
+
+  sections.sort(function (a, b) {
+    return a.getBoundingClientRect().top - b.getBoundingClientRect().top;
+  });
+
+  var current = null;
+
+  function setActive(id) {
+    if (current === id) return;
+    if (current && linkById[current]) linkById[current].classList.remove('toc-active');
+    current = id;
+    if (current && linkById[current]) linkById[current].classList.add('toc-active');
+  }
+
+  function update() {
+    var offset = 80;
+    var scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    var activeId = sections[0].id;
+    for (var i = 0; i < sections.length; i++) {
+      var top = sections[i].getBoundingClientRect().top + scrollY;
+      if (top - offset <= scrollY) {
+        activeId = sections[i].id;
+      } else {
+        break;
+      }
+    }
+    var docHeight = document.documentElement.scrollHeight;
+    var viewportBottom = scrollY + window.innerHeight;
+    if (viewportBottom >= docHeight - 2) {
+      activeId = sections[sections.length - 1].id;
+    }
+    setActive(activeId);
+  }
+
+  var ticking = false;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () {
+      update();
+      ticking = false;
+    });
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  if (document.readyState === 'complete' || document.readyState === 'interactive') {
+    update();
+  } else {
+    document.addEventListener('DOMContentLoaded', update);
+  }
+})();
+</script>
