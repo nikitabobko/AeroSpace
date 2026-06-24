@@ -81,7 +81,7 @@ struct HotkeyBinding: Equatable, Sendable {
         lhs.modifiers == rhs.modifiers &&
             lhs.keyCode == rhs.keyCode &&
             lhs.descriptionWithKeyCode == rhs.descriptionWithKeyCode &&
-            lhs.commands.equals(rhs.commands)
+            lhs.commands.strictEquals(rhs.commands)
     }
 }
 

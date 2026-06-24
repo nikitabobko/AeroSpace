@@ -6,4 +6,6 @@ struct TrueCommand: Command {
     /*conforms*/ let shouldResetClosedWindowsCache: Bool = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) async throws -> ConditionalExitCode { ._true }
+
+    static let instance = TrueCommand(args: TrueCmdArgs(rawArgs: []))
 }

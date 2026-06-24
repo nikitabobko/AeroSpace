@@ -22,7 +22,7 @@ struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
     }
 
     static func == (lhs: WindowDetectedCallback, rhs: WindowDetectedCallback) -> Bool {
-        lhs.matcher == rhs.matcher && lhs.checkFurtherCallbacks == rhs.checkFurtherCallbacks && lhs.run.equals(rhs.run)
+        lhs.matcher == rhs.matcher && lhs.checkFurtherCallbacks == rhs.checkFurtherCallbacks && lhs.run.strictEquals(rhs.run)
     }
 }
 
@@ -60,7 +60,7 @@ enum WindowDetectedCallbackMatcher: Equatable {
 
     static func == (lhs: WindowDetectedCallbackMatcher, rhs: WindowDetectedCallbackMatcher) -> Bool {
         switch (lhs, rhs) {
-            case (.command(let command1), .command(let command2)): command1.equals(command2)
+            case (.command(let command1), .command(let command2)): command1.strictEquals(command2)
             case (.legacy(let matcher1), .legacy(let matcher2)): matcher1 == matcher2
             default: false
         }
@@ -116,6 +116,12 @@ private func parseMatcher(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c:
 private func parseWindowDetectedCallback(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> WindowDetectedCallback? {
     var myContext = ConfigParserContext(configVersion: c.configVersion, errors: [], warnings: [])
     let callback = parseTable(raw, WindowDetectedCallback(), windowDetectedParser, backtrace, &myContext)
+
+    if callback.matcher == .command(.empty) && !callback.checkFurtherCallbacks {
+        let msg = "Omitting 'if' is error prone. You can use `if = 'true'` to preserve the previous behavior.\n" +
+            "But heads up! You may have missed 'check-further-callbacks = true'"
+        myContext.errors.append(.init(backtrace, msg))
+    }
 
     if callback.rawRun == nil { // ID-46D063B2
         myContext.errors.append(.init(backtrace, "'run' is mandatory key"))

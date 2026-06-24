@@ -327,6 +327,7 @@ final class ConfigTest: XCTestCase {
             """
             on-window-detected = [
                 { # 0
+                    if = 'true',
                     check-further-callbacks = true,
                     run = ['layout floating', 'move-node-to-workspace W'],
                 },
@@ -336,18 +337,19 @@ final class ConfigTest: XCTestCase {
                 },
                 {}, # 2
                 { # 3
-                    run = ['move-node-to-workspace S', 'layout tiling'],
+                    if = 'true', run = ['move-node-to-workspace S', 'layout tiling'],
                 },
                 { # 4
-                    run = ['move-node-to-workspace S', 'move-node-to-workspace W'],
+                    if = 'true', run = ['move-node-to-workspace S', 'move-node-to-workspace W'],
                 },
                 { # 5
-                    run = ['move-node-to-workspace S', 'layout h_tiles'],
+                    if = 'true', run = ['move-node-to-workspace S', 'layout h_tiles'],
                 },
                 { # 6
                     if = 'test %{app-bundle-id} = org.alacritty',
                     run = ['move-node-to-workspace T'],
                 },
+                { if = '', run = ''}, # 7
             ]
             """,
         )
@@ -357,6 +359,7 @@ final class ConfigTest: XCTestCase {
             .copy(\.rhs, .initialized("org.alacritty"))
         assertEquals(result.config.onWindowDetected, [
             WindowDetectedCallback( // 0
+                matcher: .command(.cmd(TrueCommand.instance)),
                 checkFurtherCallbacks: true,
                 rawRun: .seq([
                     .cmd(LayoutCommand(args: LayoutCmdArgs(rawArgs: [], toggleBetween: [.floating]))),
@@ -370,18 +373,21 @@ final class ConfigTest: XCTestCase {
                 rawRun: .empty,
             ),
             WindowDetectedCallback( // 3
+                matcher: .command(.cmd(TrueCommand.instance)),
                 rawRun: .seq([
                     .cmd(MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "S"))),
                     .cmd(LayoutCommand(args: LayoutCmdArgs(rawArgs: [], toggleBetween: [.tiling]))),
                 ]),
             ),
             WindowDetectedCallback( // 4
+                matcher: .command(.cmd(TrueCommand.instance)),
                 rawRun: .seq([
                     .cmd(MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "S"))),
                     .cmd(MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "W"))),
                 ]),
             ),
             WindowDetectedCallback( // 5
+                matcher: .command(.cmd(TrueCommand.instance)),
                 rawRun: .seq([
                     .cmd(MoveNodeToWorkspaceCommand(args: MoveNodeToWorkspaceCmdArgs(workspace: "S"))),
                     .cmd(LayoutCommand(args: LayoutCmdArgs(rawArgs: [], toggleBetween: [.h_tiles]))),
@@ -394,8 +400,29 @@ final class ConfigTest: XCTestCase {
         ])
 
         assertEquals(result.strErrors, [
+            "[ERROR] on-window-detected[2]: Omitting \'if\' is error prone. You can use `if = \'true\'` to preserve the previous behavior.\nBut heads up! You may have missed \'check-further-callbacks = true\'",
             "[ERROR] on-window-detected[2]: \'run\' is mandatory key",
+            "[ERROR] on-window-detected[7]: Omitting \'if\' is error prone. You can use `if = \'true\'` to preserve the previous behavior.\nBut heads up! You may have missed \'check-further-callbacks = true\'",
         ])
+    }
+
+    func testParseOnWindowDetected2() {
+        let result = parseConfig(
+            """
+            on-window-detected = [
+                { check-further-callbacks = true, run = '', },
+            ]
+            """,
+        )
+        assertEquals(result.config.onWindowDetected, [
+            WindowDetectedCallback(
+                matcher: .command(.empty),
+                checkFurtherCallbacks: true,
+                rawRun: .empty,
+            ),
+        ])
+
+        assertEquals(result.errors, [])
     }
 
     func testParseInlineTables() {

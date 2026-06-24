@@ -78,14 +78,14 @@ extension Shell: Equatable where T: Equatable {}
 extension Shell: Sendable where T: Sendable {}
 
 extension Shell where T == any Command {
-    func equals(_ other: Self) -> Bool {
+    func strictEquals(_ other: Self) -> Bool {
         return switch (self, other) {
             case (.empty, .empty): true
             case (.cmd(let a), .cmd(let b)): a.equals(b)
-            case (.and(let a), .and(let b)): zipIfCountsAreEqual(a, b)?.allSatisfy { a, b in a.equals(b) } == true
-            case (.or(let a), .or(let b)): zipIfCountsAreEqual(a, b)?.allSatisfy { a, b in a.equals(b) } == true
-            case (.pipe(let a), .pipe(let b)): zipIfCountsAreEqual(a, b)?.allSatisfy { a, b in a.equals(b) } == true
-            case (.seq(let a), .seq(let b)): zipIfCountsAreEqual(a, b)?.allSatisfy { a, b in a.equals(b) } == true
+            case (.and(let a), .and(let b)): zipIfCountsAreEqual(a, b)?.allSatisfy { a, b in a.strictEquals(b) } == true
+            case (.or(let a), .or(let b)): zipIfCountsAreEqual(a, b)?.allSatisfy { a, b in a.strictEquals(b) } == true
+            case (.pipe(let a), .pipe(let b)): zipIfCountsAreEqual(a, b)?.allSatisfy { a, b in a.strictEquals(b) } == true
+            case (.seq(let a), .seq(let b)): zipIfCountsAreEqual(a, b)?.allSatisfy { a, b in a.strictEquals(b) } == true
 
             case (.empty, _): false
             case (.cmd, _): false
