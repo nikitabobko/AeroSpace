@@ -1,7 +1,7 @@
 import Common
 
 extension CmdArgs {
-    func toCommand() -> any Command {
+    func toCommand() -> ParsedCmd<any Command> {
         let command: any Command
         switch Self.info.kind {
             case ._false:
@@ -25,7 +25,7 @@ extension CmdArgs {
             case .eval:
                 command = EvalCommand(args: self as! EvalCmdArgs)
             case .execAndForget:
-                die("exec-and-forget is parsed separately")
+                return .failure("exec-and-forget is not a real command and it's NOT allowed in the shell", EXIT_CODE_TWO)
             case .flattenWorkspaceTree:
                 command = FlattenWorkspaceTreeCommand(args: self as! FlattenWorkspaceTreeCmdArgs)
             case .focus:
@@ -77,7 +77,7 @@ extension CmdArgs {
             case .split:
                 command = SplitCommand(args: self as! SplitCmdArgs)
             case .subscribe:
-                die("subscribe is handled separately")
+                return .failure("subscribe is not supported in the eval", EXIT_CODE_TWO)
             case .summonWorkspace:
                 command = SummonWorkspaceCommand(args: self as! SummonWorkspaceCmdArgs)
             case .swap:
@@ -96,6 +96,6 @@ extension CmdArgs {
                 command = WorkspaceBackAndForthCommand(args: self as! WorkspaceBackAndForthCmdArgs)
         }
         check(command.info == Self.info)
-        return command
+        return .cmd(command)
     }
 }
