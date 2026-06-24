@@ -661,6 +661,59 @@ Besides the <<exec-env-vars,`exec.env-vars`>>, the process has access to the fol
 For a more elaborate example on how to integrate with Sketchybar see
 xref:./goodies.adoc#show-aerospace-workspaces-in-sketchybar[]
 
+[#environment-variables]
+== Environment variables
+
+When AeroSpace runs a callback's command (such as the `test`/`run` clause of an <<on-window-detected-callback>>, or the command in an <<on-focus-changed-callbacks>>),
+it adds one of the following environment variables to the command's environment to identify the target the callback fired against:
+
+* `AEROSPACE_WINDOW_ID` - the numeric ID of a specific window
+* `AEROSPACE_WORKSPACE` - the name of a specific workspace
+
+If there is a target window, `AEROSPACE_WINDOW_ID` is set to its ID.
+Otherwise (the target is an empty workspace with no window to point at), `AEROSPACE_WORKSPACE` is set to that workspace's name instead.
+Exactly one of the two is set at a time.
+
+In practice:
+
+* For <<on-window-detected-callback>>, the target is the newly detected window, so `AEROSPACE_WINDOW_ID` is always set.
+* For <<on-focus-changed-callbacks>> (`on-focus-changed`, `on-focused-monitor-changed`), the target is the new focus, so `AEROSPACE_WINDOW_ID` is set when a window is focused, and `AEROSPACE_WORKSPACE` is set when focus lands on an empty workspace.
+
+Commands that need a target (xref:commands.adoc#layout[layout], xref:commands.adoc#move-node-to-workspace[move-node-to-workspace], xref:commands.adoc#move[move], etc.)
+honor the forwarded context before falling back to the currently focused window or workspace.
+That makes all commands in callbacks operate on the originating window or workspace even when global focus has already moved:
+
+[source,toml]
+----
+on-window-detected = [
+    # Both commands operate on the *just-detected* window:
+    #   1. 'move-node-to-workspace 2' moves the new window to workspace 2.
+    #      Moving the window away typically causes some *other* window on
+    #      the current workspace to receive focus.
+    #   2. 'layout floating' still floats the originally detected window
+    #      (not the window that became focused after step 1), because the second
+    #      command inherits the same AEROSPACE_WINDOW_ID as the first.
+    { if = 'true', run = 'move-node-to-workspace 2; layout floating' },
+
+    # 'aerospace move-node-to-workspace W' moves the *newly detected* window,
+    # because the child shell inherits AEROSPACE_WINDOW_ID pointing at it.
+    { if = 'true', run = 'exec-and-forget sleep 1; aerospace move-node-to-workspace W' },
+]
+----
+
+[#overriding-context]
+=== Overriding the context with `--window-id` / `--workspace`
+
+Many commands that need a target (xref:commands.adoc#layout[layout], xref:commands.adoc#move-node-to-workspace[move-node-to-workspace], xref:commands.adoc#close[close], etc.) accept explicit `--window-id <id>` and/or `--workspace <name>` options.
+These flags take precedence over the environment variables.
+The full resolution order, from highest to lowest priority, is:
+
+. `--window-id` command-line option
+. `--workspace` command-line option
+. `AEROSPACE_WINDOW_ID` environment variable
+. `AEROSPACE_WORKSPACE` environment variable
+. The currently focused window or the currently focused empty workspace
+
 [#multiple-monitors]
 == Multiple monitors
 
@@ -818,8 +871,13 @@ Currently, right after sending its own version, the server disconnects if it doe
 
 The flow then depends on the command:
 
-* *One-shot commands:* (basically, almost all commands) The client sends one `ClientRequest` frame. The server sends one `ServerAnswer` frame. This loop repeats indefinitely until the client disconnects.
-* xref:./commands.adoc#subscribe[*subscribe command:*] (treated separately) The client sends one `ClientRequest` frame, then the server sends an unbounded stream of `ServerEvent` frames until the client disconnects. The client must not send anything else on the connection.
+* *One-shot commands:* (basically, almost all commands) The client sends one `ClientRequest` frame.
+  The server sends one `ServerAnswer` frame.
+  This loop repeats indefinitely until the client disconnects.
+
+* xref:./commands.adoc#subscribe[*subscribe command:*] (treated separately) The client sends one `ClientRequest` frame,
+  then the server sends an unbounded stream of `ServerEvent` frames until the client disconnects.
+  The client must not send anything else on the connection.
 
 [#socket-client-request]
 === ClientRequest
@@ -842,15 +900,20 @@ The request payload is a JSON object with the following fields:
 
 | `args`
 | array of strings
-| The CLI arguments as you would pass them to `aerospace`, *excluding* the program name itself. For example, `["workspace", "1"]` is the wire form of `aerospace workspace 1`. To send the `subscribe` command, pass `["subscribe", ...]` here.
+| The CLI arguments as you would pass them to `aerospace`, *excluding* the program name itself.
+For example, `["workspace", "1"]` is the wire form of `aerospace workspace 1`.
+To send the `subscribe` command, pass `["subscribe", ...]` here.
 
 | `stdin`
 | string
-| Contents to feed to the command as standard input. Use `""` if the command doesn't read stdin. Some commands (e.g. xref:./commands.adoc#workspace[`workspace --stdin`]) consume this field.
+| Contents to feed to the command as standard input.
+Use `""` if the command doesn't read stdin.
+Some commands (e.g. xref:./commands.adoc#workspace[`workspace --stdin`]) consume this field.
 
 | `windowId`
 | unsigned 32-bit integer or `null`
-| The value of the `AEROSPACE_WINDOW_ID` environment variable as the client saw it, or `null` if there is no such variable in scope. AeroSpace sets this variable when invoking xref:commands.adoc#exec[exec callbacks] so that the called process knows the window it was triggered from. If you are calling AeroSpace from your own context (no surrounding window), send `null`.
+| The value of the `AEROSPACE_WINDOW_ID` environment variable as the client saw it, or `null` if there is no such variable in scope.
+AeroSpace sets this variable when invoking callbacks so that the called commands know the window they was triggered from (see <<environment-variables>>).
 
 | `workspace`
 | string or `null`
