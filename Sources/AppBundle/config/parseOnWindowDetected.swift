@@ -114,7 +114,7 @@ private func parseMatcher(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c:
 }
 
 private func parseWindowDetectedCallback(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> WindowDetectedCallback? {
-    var myContext = ConfigParserContext(configVersion: c.configVersion, errors: [])
+    var myContext = ConfigParserContext(configVersion: c.configVersion, errors: [], warnings: [])
     let callback = parseTable(raw, WindowDetectedCallback(), windowDetectedParser, backtrace, &myContext)
 
     if callback.rawRun == nil { // ID-46D063B2
@@ -123,6 +123,7 @@ private func parseWindowDetectedCallback(_ raw: OrderedJson, _ backtrace: Config
 
     if !myContext.errors.isEmpty {
         c.errors += myContext.errors
+        c.warnings += myContext.warnings
         return nil
     }
 

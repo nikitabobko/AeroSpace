@@ -92,6 +92,7 @@ extension ParserProtocol {
 struct ConfigParserContext {
     var configVersion: ConfigVersion
     var errors: [ConfigParseDiagnostic]
+    var warnings: [ConfigParseDiagnostic]
 }
 
 protocol ParserProtocol<S>: Sendable {
@@ -236,7 +237,6 @@ struct ParseConfigResult {
 
 @MainActor func parseConfig(_ rawToml: String) -> ParseConfigResult {
     var errors = NonCopyable([ConfigParseDiagnostic]())
-    var warnings = [ConfigParseDiagnostic]()
 
     let rawTable: OrderedJson.JsonDict
     do {
@@ -258,7 +258,7 @@ struct ParseConfigResult {
         .flatMap { parseConfigVersion($0, .rootKey(configVersionConfigRootKey)).getOrNil(appendErrorTo: &errors.value) }
         ?? .min
 
-    var c = ConfigParserContext(configVersion: configVersion, errors: errors.consume())
+    var c = ConfigParserContext(configVersion: configVersion, errors: errors.consume(), warnings: [ConfigParseDiagnostic]())
 
     var config = rawTable.parseTable(Config(), configParser, .emptyRoot, &c)
     config.configVersion = configVersion
@@ -309,9 +309,9 @@ struct ParseConfigResult {
         let msg = "The current 'config-version = \(config.configVersion)' is outdated. " +
             "Please consider migrating to 'config-version = \(ConfigVersion.max)'. " +
             "See https://nikitabobko.github.io/AeroSpace/guide#config-version for the migration guide."
-        warnings.append(.init(.emptyRoot, msg))
+        c.warnings.append(.init(.emptyRoot, msg))
     }
-    return ParseConfigResult(config: config, errors: c.errors, warnings: warnings)
+    return ParseConfigResult(config: config, errors: c.errors, warnings: c.warnings)
 }
 
 func parseIndentForNestedContainersWithTheSameOrientation(_ _: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<Void> {
