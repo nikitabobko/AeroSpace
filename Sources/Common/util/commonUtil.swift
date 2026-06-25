@@ -93,9 +93,14 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
     case resetManipulatedWithMouse
     case ax(String)
     case onModeChanged
+    case focusFollowsMouse
 
     public var isStartup: Bool {
         if case .startup = self { return true } else { return false }
+    }
+
+    public var isFocusFollowsMouse: Bool {
+        if case .focusFollowsMouse = self { return true } else { return false }
     }
 
     public var description: String {
@@ -110,6 +115,7 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
             case .socketServer(let args): "socketServer: \(args)"
             case .startup: "startup"
             case .onModeChanged: "onModeChanged"
+            case .focusFollowsMouse: "focusFollowsMouse"
         }
     }
 }

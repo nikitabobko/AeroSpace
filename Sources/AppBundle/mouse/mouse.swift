@@ -12,8 +12,4 @@ func isManipulatedWithMouse(_ window: Window) async throws -> Bool {
 }
 
 /// Same motivation as in monitorFrameNormalized
-var mouseLocation: CGPoint {
-    let mainMonitorHeight: CGFloat = mainMonitor.height
-    let location = NSEvent.mouseLocation
-    return location.copy(\.y, mainMonitorHeight - location.y)
-}
+var mouseLocation: CGPoint { NSEvent.mouseLocation.withYAxisFlipped }

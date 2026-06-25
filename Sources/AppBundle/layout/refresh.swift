@@ -69,25 +69,34 @@ func runLightSession<T>(
     activeRefreshTask = nil
     return try await $refreshSessionEvent.withValue(event) {
         try await $_isStartup.withValue(event.isStartup) {
-            let nativeFocused = try await getNativeFocusedWindow()
-            if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
-            updateFocusCache(nativeFocused)
-            let focusBefore = focus.windowOrNil
+            if event.isFocusFollowsMouse {
+                let result = try await body()
+                try await refreshModel()
 
-            try await refreshModel()
-            let result = try await body()
-            try await refreshModel()
+                updateTrayText()
+                SecureInputPanel.shared.refresh()
+                return result
+            } else {
+                let nativeFocused = try await getNativeFocusedWindow()
+                if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
+                updateFocusCache(nativeFocused)
+                let focusBefore = focus.windowOrNil
 
-            let focusAfter = focus.windowOrNil
+                try await refreshModel()
+                let result = try await body()
+                try await refreshModel()
 
-            updateTrayText()
-            SecureInputPanel.shared.refresh()
-            try await layoutWorkspaces()
-            if focusBefore != focusAfter {
-                focusAfter?.nativeFocus() // syncFocusToMacOs
+                let focusAfter = focus.windowOrNil
+
+                updateTrayText()
+                SecureInputPanel.shared.refresh()
+                try await layoutWorkspaces()
+                if focusBefore != focusAfter {
+                    focusAfter?.nativeFocus() // syncFocusToMacOs
+                }
+                scheduleCancellableCompleteRefreshSession(event)
+                return result
             }
-            scheduleCancellableCompleteRefreshSession(event)
-            return result
         }
     }
 }
@@ -114,9 +123,13 @@ struct RunSessionGuard: Sendable {
 
 @MainActor
 func refreshModel() async throws {
-    Workspace.garbageCollectUnusedWorkspaces()
-    try await checkOnFocusChangedCallbacks()
-    normalizeContainers()
+    if refreshSessionEvent?.isFocusFollowsMouse == true {
+        try await checkOnFocusChangedCallbacks()
+    } else {
+        Workspace.garbageCollectUnusedWorkspaces()
+        try await checkOnFocusChangedCallbacks()
+        normalizeContainers()
+    }
 }
 
 @MainActor

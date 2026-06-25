@@ -100,6 +100,13 @@ extension CGPoint {
     var vectorLength: CGFloat { sqrt(x * x + y * y) }
 
     var monitorApproximation: Monitor { monitors.minByOrDie { distance(toOuterFrame: $0.rect) } }
+
+    var withYAxisFlipped: CGPoint {
+        consuming get {
+            self.y = mainMonitor.height - self.y
+            return self
+        }
+    }
 }
 
 extension CGFloat {
