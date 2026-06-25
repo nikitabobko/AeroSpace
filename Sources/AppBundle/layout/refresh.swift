@@ -66,34 +66,25 @@ func runLightSession<T>(
     activeRefreshTask?.cancel() // Give priority to runSession
     activeRefreshTask = nil
     return try await $refreshSessionEvent.withValue(event) {
-        if event.isFocusFollowsMouse {
-            let result = try await body()
-            await refreshModel_nonCancellable()
+        let nativeFocused = try await getNativeFocusedWindow(.cancellable)
+        if let nativeFocused { try await debugWindowsIfRecording(nativeFocused, .cancellable) }
+        updateFocusCache(nativeFocused)
+        let focusBefore = focus.windowOrNil
 
-            updateTrayText()
-            SecureInputPanel.shared.refresh()
-            return result
-        } else {
-            let nativeFocused = try await getNativeFocusedWindow(.cancellable)
-            if let nativeFocused { try await debugWindowsIfRecording(nativeFocused, .cancellable) }
-            updateFocusCache(nativeFocused)
-            let focusBefore = focus.windowOrNil
+        await refreshModel_nonCancellable()
+        let result = try await body()
+        await refreshModel_nonCancellable()
 
-            await refreshModel_nonCancellable()
-            let result = try await body()
-            await refreshModel_nonCancellable()
+        let focusAfter = focus.windowOrNil
 
-            let focusAfter = focus.windowOrNil
-
-            updateTrayText()
-            SecureInputPanel.shared.refresh()
-            try await layoutWorkspaces()
-            if focusBefore != focusAfter {
-                focusAfter?.nativeFocus() // syncFocusToMacOs
-            }
-            scheduleCancellableCompleteRefreshSession(event)
-            return result
+        updateTrayText()
+        SecureInputPanel.shared.refresh()
+        if !event.isFocusFollowsMouse { try await layoutWorkspaces() }
+        if focusBefore != focusAfter {
+            focusAfter?.nativeFocus() // syncFocusToMacOs
         }
+        if !event.isFocusFollowsMouse { scheduleCancellableCompleteRefreshSession(event) }
+        return result
     }
 }
 
