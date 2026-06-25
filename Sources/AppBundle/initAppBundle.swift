@@ -24,7 +24,7 @@ import Foundation
             .startup,
             // It's important for the first initialization to be non cancellable
             // to make sure that isStartup propagates to all places
-            cancellable: false,
+            assumeCancellable: false,
             layoutWorkspaces: false,
         )
         try await runLightSession(.startup, .forceRun) {

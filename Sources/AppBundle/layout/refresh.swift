@@ -14,7 +14,7 @@ func scheduleCancellableCompleteRefreshSession(
         try checkCancellation()
         await runHeavyCompleteRefreshSession(
             event,
-            cancellable: true,
+            assumeCancellable: true,
             optimisticallyPreLayoutWorkspaces: optimisticallyPreLayoutWorkspaces,
         )
     }
@@ -23,7 +23,7 @@ func scheduleCancellableCompleteRefreshSession(
 @MainActor
 func runHeavyCompleteRefreshSession(
     _ event: RefreshSessionEvent,
-    cancellable: Bool,
+    assumeCancellable: Bool,
     layoutWorkspaces shouldLayoutWorkspaces: Bool = true,
     optimisticallyPreLayoutWorkspaces: Bool = false,
 ) async {
@@ -50,7 +50,7 @@ func runHeavyCompleteRefreshSession(
     }
     switch res {
         case .success(()): break
-        case .failure(let err as CancellationError): check(cancellable, "Non cancellable refresh session was canceled: \(err) (\(type(of: err)))")
+        case .failure(let err as CancellationError): check(assumeCancellable, "Non cancellable refresh session was canceled: \(err) (\(type(of: err)))")
         case .failure(let err): die("Illegal error: \(err)")
     }
 }
