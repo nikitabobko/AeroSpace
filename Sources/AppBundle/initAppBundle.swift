@@ -55,9 +55,7 @@ private func smartLayoutAtStartup() {
     }
 }
 
-@TaskLocal
-var _isStartup: Bool? = false
-var isStartup: Bool { _isStartup ?? dieT("isStartup is not initialized") }
+var isStartup: Bool { refreshSessionEvent.orDie("refreshSessionEvent is not initialized").isStartup }
 
 struct ServerArgs: Sendable {
     var configLocation: String? = nil
