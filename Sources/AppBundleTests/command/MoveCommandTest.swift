@@ -11,6 +11,31 @@ final class MoveCommandTest: XCTestCase {
         assertNil(parseCommand("move --fail-if-macos-native-fullscreen --window-id 1 right").errorOrNil)
     }
 
+    func testBinaryTree_edgeMoveHitsBoundaryInsteadOfUnnesting() async throws {
+        // With binary-tree normalization on, a window at the workspace edge (nothing in `direction`
+        // anywhere up the tree) must apply the boundary action instead of bubbling out of its
+        // container — otherwise normalization re-nests it and it can never cross to an adjacent
+        // monitor. Here --boundaries-action stop → no-op. (cf. testStop_onInnerNode without binary tree.)
+        config.enableNormalizationBinaryTree = true
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
+                TestWindow.new(id: 3, parent: $0)
+            }
+        }
+
+        let result = try await parseCommand("move --boundaries-action stop right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(
+            workspace.layoutDescription,
+            .workspace([
+                .h_tiles([.window(1), .v_tiles([.window(2), .window(3)])]),
+            ]),
+        )
+        assertEquals(result.exitCode.rawValue, 0)
+    }
+
     func testFailIfFullscreen() async throws {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             let window = TestWindow.new(id: 1, parent: $0)
