@@ -5,7 +5,7 @@ struct ListWindowsCommand: Command {
     let args: ListWindowsCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
+    func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
         let focus = focus
         var windows: [Window] = []
 
@@ -45,7 +45,8 @@ struct ListWindowsCommand: Command {
         } else {
             var _list: [WindowWithPrefetchedTitle] = [] // todo cleanup
             for window in windows {
-                _list.append(try await .resolveWindow(window, for: args.format))
+                guard let window = try? await WindowWithPrefetchedTitle.resolveWindow(window, for: args.format, .nonCancellable) else { return .fail(io.err(bugPrompt())) }
+                _list.append(window)
             }
             _list = _list.filter { $0.window.isBound }
             _list = _list.sortedBy([{ $0.window.app.name ?? "" }, { $0.title ?? "" }])

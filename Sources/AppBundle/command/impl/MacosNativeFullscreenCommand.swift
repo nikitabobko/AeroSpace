@@ -10,12 +10,12 @@ struct MacosNativeFullscreenCommand: Command {
     let args: MacosNativeFullscreenCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
+    func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let window = target.windowOrNil else {
             return .fail(io.err(noWindowIsFocused))
         }
-        let prevState = try await window.isMacosFullscreen
+        guard let prevState = try? await window.isMacosFullscreen(.nonCancellable) else { return .fail(io.err(bugPrompt())) }
         let newState: Bool = switch args.toggle {
             case .on: true
             case .off: false
@@ -38,9 +38,22 @@ struct MacosNativeFullscreenCommand: Command {
         } else { // Exit fullscreen
             switch window.layoutReason {
                 case .macos(let prevParentKind):
-                    try await exitMacOsNativeUnconventionalState(window: window, prevParentKind: prevParentKind, workspace: workspace)
+                    do {
+                        try await exitMacOsNativeUnconventionalState(
+                            window: window,
+                            prevParentKind: prevParentKind,
+                            workspace: workspace,
+                            .nonCancellable,
+                        )
+                    } catch {
+                        return .fail(io.err(bugPrompt()))
+                    }
                 default:
-                    try await window.relayoutWindow(on: workspace)
+                    do {
+                        try await window.relayoutWindow(on: workspace, .nonCancellable)
+                    } catch {
+                        return .fail(io.err(bugPrompt()))
+                    }
             }
         }
         return .succ

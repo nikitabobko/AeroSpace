@@ -118,7 +118,7 @@ extension Workspace {
 
 @MainActor private var onFocusChangedRecursionGuard = false
 // Should be called in refreshSession
-@MainActor func checkOnFocusChangedCallbacks() async throws {
+@MainActor func checkOnFocusChangedCallbacks_nonCancellable() async {
     if refreshSessionEvent?.isStartup == true {
         return
     }
@@ -144,30 +144,30 @@ extension Workspace {
     onFocusChangedRecursionGuard = true
     defer { onFocusChangedRecursionGuard = false }
     if hasFocusChanged {
-        _ = try await onFocusChanged(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, focus)
+        _ = await onFocusChanged(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, focus)
     }
     if let _prevFocusedWorkspaceName, hasFocusedWorkspaceChanged {
         onWorkspaceChanged(_prevFocusedWorkspaceName, frozenFocus.workspaceName, focus)
     }
     if hasFocusedMonitorChanged {
-        _ = try await onFocusedMonitorChanged(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, focus)
+        _ = await onFocusedMonitorChanged(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, focus)
     }
 }
 
-@MainActor func onFocusedMonitorChanged(_ env: CmdEnv, _ io: CmdIo, _ focus: LiveFocus) async throws -> Int32ExitCode {
+@MainActor func onFocusedMonitorChanged(_ env: CmdEnv, _ io: CmdIo, _ focus: LiveFocus) async -> Int32ExitCode {
     broadcastEvent(.focusedMonitorChanged(
         workspace: focus.workspace.name,
         monitorId_oneBased: focus.workspace.workspaceMonitor.monitorId_oneBased ?? 0,
     ))
-    return try await config.onFocusedMonitorChanged.run(env.withFocus(focus), io)
+    return await config.onFocusedMonitorChanged.run(env.withFocus(focus), io)
 }
 
-@MainActor func onFocusChanged(_ env: CmdEnv, _ io: CmdIo, _ focus: LiveFocus) async throws -> Int32ExitCode {
+@MainActor func onFocusChanged(_ env: CmdEnv, _ io: CmdIo, _ focus: LiveFocus) async -> Int32ExitCode {
     broadcastEvent(.focusChanged(
         windowId: focus.windowOrNil?.windowId,
         workspace: focus.workspace.name,
     ))
-    return try await config.onFocusChanged.run(env.withFocus(focus), io)
+    return await config.onFocusChanged.run(env.withFocus(focus), io)
 }
 
 @MainActor private func onWorkspaceChanged(_ oldWorkspace: String, _ newWorkspace: String, _ focus: LiveFocus) {

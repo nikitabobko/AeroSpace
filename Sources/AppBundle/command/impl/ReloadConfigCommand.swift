@@ -5,8 +5,8 @@ struct ReloadConfigCommand: Command {
     let args: ReloadConfigCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
-        let result = try await reloadConfig(args: args)
+    func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
+        let result = await reloadConfig_nonCancellable(args: args)
         if !result.stdout.isEmpty {
             io.out(result.stdout)
         }
@@ -23,10 +23,10 @@ struct ReloadConfigResult {
     let stderr: String
 }
 
-@MainActor func reloadConfig(
+@MainActor func reloadConfig_nonCancellable(
     args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []),
     forceConfigUrl: URL? = nil,
-) async throws -> ReloadConfigResult {
+) async -> ReloadConfigResult {
     let result = readConfig(forceConfigUrl: forceConfigUrl)
     let parseResult = result.parseConfigResult
     let warningsAsErrors = args.warningsAsErrors
@@ -53,7 +53,7 @@ struct ReloadConfigResult {
         resetHotKeys()
         config = parseResult.config
         configUrl = result.configUrl
-        try await activateMode(activeMode)
+        await activateMode_nonCancellable(activeMode)
         syncStartAtLogin()
         syncFocusFollowsMouse(config)
         syncConfigFileWatcher()

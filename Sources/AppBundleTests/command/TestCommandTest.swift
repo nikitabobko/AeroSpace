@@ -32,163 +32,163 @@ final class TestCommandTest: XCTestCase {
         testParseCommandFail("test %{window-id} = %{invalid}", msg: "ERROR: Right hand side doesn\'t allow interpolation variables", exitCode: 2)
     }
 
-    func testExec() async throws {
+    func testExec() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
 
         assertEquals(
-            try await parseCommand("test %{window-id} = 1").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{window-id} = 1").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: [], exitCode: Int32ExitCode(rawValue: 0)),
         )
 
         assertEquals(
-            try await parseCommand("test %{window-id} = 2").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{window-id} = 2").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: [], exitCode: Int32ExitCode(rawValue: 1)),
         )
 
         assertEquals(
-            try await parseCommand("test %{workspace-is-focused} = foo").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{workspace-is-focused} = foo").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: ["Can\'t convert String \'foo\' to Bool"], exitCode: Int32ExitCode(rawValue: 2)),
         )
 
         assertEquals(
-            try await parseCommand("test %{workspace-is-focused} ~= foo").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{workspace-is-focused} ~= foo").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: ["Interpolation variable: \'workspace-is-focused\' has a type of Bool. The Bool type is not compatible with \'~=\' operator."], exitCode: Int32ExitCode(rawValue: 2)),
         )
     }
 
-    func testExecNoWindow() async throws {
+    func testExecNoWindow() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
 
         assertEquals(
-            try await parseCommand("test %{window-id} = 1").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{window-id} = 1").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: ["No window is focused"], exitCode: Int32ExitCode(rawValue: 2)),
         )
     }
 
-    func testExecWorkspaceContextSuccess() async throws {
+    func testExecWorkspaceContextSuccess() async {
         // Exercises the workspace-only branch of `_lhs` where no window is focused
         // and the lhs interpolation variable resolves against the workspace target.
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
 
         assertEquals(
-            try await parseCommand("test %{workspace-is-focused} = true").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{workspace-is-focused} = true").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: [], exitCode: Int32ExitCode(rawValue: 0)),
         )
     }
 
-    func testExecBoolEquals() async throws {
+    func testExecBoolEquals() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
 
         assertEquals(
-            try await parseCommand("test %{workspace-is-focused} = true").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{workspace-is-focused} = true").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: [], exitCode: Int32ExitCode(rawValue: 0)),
         )
 
         assertEquals(
-            try await parseCommand("test %{workspace-is-focused} = false").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{workspace-is-focused} = false").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: [], exitCode: Int32ExitCode(rawValue: 1)),
         )
     }
 
-    func testExecIntEqualsRhsNotInt() async throws {
+    func testExecIntEqualsRhsNotInt() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
 
         assertEquals(
-            try await parseCommand("test %{window-id} = abc").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{window-id} = abc").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: ["Can\'t convert String \'abc\' to Int"], exitCode: Int32ExitCode(rawValue: 2)),
         )
     }
 
-    func testExecIntMatchesRegexIncompatible() async throws {
+    func testExecIntMatchesRegexIncompatible() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
 
         assertEquals(
-            try await parseCommand("test %{window-id} ~= 1").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{window-id} ~= 1").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: ["Interpolation variable: \'window-id\' has a type of Int. The Int type is not compatible with \'~=\' operator."], exitCode: Int32ExitCode(rawValue: 2)),
         )
     }
 
-    func testExecStringEquals() async throws {
+    func testExecStringEquals() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
 
         assertEquals(
-            try await parseCommand("test %{app-bundle-id} = bobko.AeroSpace.test-app").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{app-bundle-id} = bobko.AeroSpace.test-app").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: [], exitCode: Int32ExitCode(rawValue: 0)),
         )
 
         assertEquals(
-            try await parseCommand("test %{app-bundle-id} = other.bundle.id").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{app-bundle-id} = other.bundle.id").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: [], exitCode: Int32ExitCode(rawValue: 1)),
         )
     }
 
-    func testExecStringMatchesRegex() async throws {
+    func testExecStringMatchesRegex() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
 
         assertEquals(
-            try await parseCommand("test %{app-bundle-id} ~= AERO").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{app-bundle-id} ~= AERO").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: [], exitCode: Int32ExitCode(rawValue: 0)),
         )
 
         assertEquals(
-            try await parseCommand("test %{app-bundle-id} ~= zzzzz").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test %{app-bundle-id} ~= zzzzz").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: [], exitCode: Int32ExitCode(rawValue: 1)),
         )
     }
 
-    func testExecStringMatchesRegexInvalidPattern() async throws {
+    func testExecStringMatchesRegexInvalidPattern() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
 
-        let result = try await parseCommand("test %{app-bundle-id} ~= [").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("test %{app-bundle-id} ~= [").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stdout, [])
         assertTrue(result.stderr.first?.contains("Can\'t parse \'[\' regex") ?? false)
     }
 
-    func testExecTargetResolutionFailure() async throws {
+    func testExecTargetResolutionFailure() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
         let env = CmdEnv.defaultEnv.withWindowId(9999)
 
         assertEquals(
-            try await parseCommand("test %{window-id} = 1").cmdOrDie.run(env, .emptyStdin),
+            await parseCommand("test %{window-id} = 1").cmdOrDie.run(env, .emptyStdin),
             CmdResult(stdout: [], stderr: ["Invalid <window-id> 9999 specified in AEROSPACE_WINDOW_ID env variable"], exitCode: Int32ExitCode(rawValue: 2)),
         )
     }
 
-    func testNotExec() async throws {
+    func testNotExec() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
 
         // test inner=true → test-not=false
         assertEquals(
-            try await parseCommand("test-not %{window-id} = 1").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test-not %{window-id} = 1").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: [], exitCode: Int32ExitCode(rawValue: 1)),
         )
 
         // test inner=false → test-not=true
         assertEquals(
-            try await parseCommand("test-not %{window-id} = 2").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test-not %{window-id} = 2").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: [], exitCode: Int32ExitCode(rawValue: 0)),
         )
 
         // test inner=fail → test-not=fail (propagates without inverting)
         assertEquals(
-            try await parseCommand("test-not %{workspace-is-focused} = foo").cmdOrDie.run(.defaultEnv, .emptyStdin),
+            await parseCommand("test-not %{workspace-is-focused} = foo").cmdOrDie.run(.defaultEnv, .emptyStdin),
             CmdResult(stdout: [], stderr: ["Can\'t convert String \'foo\' to Bool"], exitCode: Int32ExitCode(rawValue: 2)),
         )
     }

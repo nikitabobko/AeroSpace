@@ -40,13 +40,6 @@ indirect enum Shell<T> {
         }
     }
 
-    var isEmpty: Bool {
-        switch self {
-            case .empty: true
-            default: false
-        }
-    }
-
     func buildDescription(_ stringifier: (T) -> String) -> String {
         let parentPrecedence = precedence
         func render(_ child: Shell<T>) -> String {
@@ -103,50 +96,50 @@ extension Shell where T == any Command {
 // 3. on-window-detected callback
 // 4. Tray icon buttons
 extension Shell where T == any Command {
-    @MainActor func run(_ env: CmdEnv, _ io: CmdIo) async throws -> Int32ExitCode {
+    @MainActor func run(_ env: CmdEnv, _ io: CmdIo) async -> Int32ExitCode {
         switch self {
             case .cmd(let command):
-                let exitCode = Int32ExitCode(rawValue: try await command.run(env, io).rawValue)
+                let exitCode = Int32ExitCode(rawValue: await command.run(env, io).rawValue)
                 if command.shouldResetClosedWindowsCache { resetClosedWindowsCache() }
-                try await refreshModel()
+                await refreshModel_nonCancellable()
                 return exitCode
-            case .and(let commands): return try await runShellAnd(commands, env, io)
+            case .and(let commands): return await runShellAnd(commands, env, io)
             case .empty: return Int32ExitCode(rawValue: EXIT_CODE_ZERO)
-            case .or(let commands): return try await runShellOr(commands, env, io)
-            case .pipe(let commands): return try await runShellPipe(commands, env, io)
-            case .seq(let commands): return try await runShellSeq(commands, env, io)
+            case .or(let commands): return await runShellOr(commands, env, io)
+            case .pipe(let commands): return await runShellPipe(commands, env, io)
+            case .seq(let commands): return await runShellSeq(commands, env, io)
         }
     }
 
-    @discardableResult @MainActor func run(_ env: CmdEnv, _ stdin: consuming CmdStdin) async throws -> CmdResult {
+    @discardableResult @MainActor func run(_ env: CmdEnv, _ stdin: consuming CmdStdin) async -> CmdResult {
         let io: CmdIo = CmdIoImpl(stdin: stdin)
-        let exitCode = try await run(env, io)
+        let exitCode = await run(env, io)
         return CmdResult(stdout: io.stdout, stderr: io.stderr, exitCode: exitCode)
     }
 }
 
-@MainActor private func runShellOr(_ commands: [Shell<any Command>], _ env: CmdEnv, _ io: CmdIo) async throws -> Int32ExitCode {
+@MainActor private func runShellOr(_ commands: [Shell<any Command>], _ env: CmdEnv, _ io: CmdIo) async -> Int32ExitCode {
     var exitCode = Int32ExitCode(rawValue: EXIT_CODE_TWO)
     for command in commands {
-        exitCode = try await command.run(env, io)
+        exitCode = await command.run(env, io)
         if exitCode.rawValue == 0 { break }
     }
     return exitCode
 }
 
-@MainActor private func runShellAnd(_ commands: [Shell<any Command>], _ env: CmdEnv, _ io: CmdIo) async throws -> Int32ExitCode {
+@MainActor private func runShellAnd(_ commands: [Shell<any Command>], _ env: CmdEnv, _ io: CmdIo) async -> Int32ExitCode {
     var exitCode = Int32ExitCode(rawValue: EXIT_CODE_ZERO)
     for command in commands {
-        exitCode = try await command.run(env, io)
+        exitCode = await command.run(env, io)
         if exitCode.rawValue != 0 { break }
     }
     return exitCode
 }
 
-@MainActor private func runShellSeq(_ commands: [Shell<any Command>], _ env: CmdEnv, _ io: CmdIo) async throws -> Int32ExitCode {
+@MainActor private func runShellSeq(_ commands: [Shell<any Command>], _ env: CmdEnv, _ io: CmdIo) async -> Int32ExitCode {
     var exitCode = Int32ExitCode(rawValue: EXIT_CODE_ZERO)
     for command in commands {
-        exitCode = try await command.run(env, io)
+        exitCode = await command.run(env, io)
     }
     return exitCode
 }
@@ -155,12 +148,12 @@ extension Shell where T == any Command {
 /// For long-running or streaming commands this would matter, but AeroSpace's commands are short and synchronous, so this is fine
 ///
 /// The semantics is similar to 'set -o pipefail'
-@MainActor private func runShellPipe(_ commands: [Shell<any Command>], _ env: CmdEnv, _ originalIo: CmdIo) async throws -> Int32ExitCode {
+@MainActor private func runShellPipe(_ commands: [Shell<any Command>], _ env: CmdEnv, _ originalIo: CmdIo) async -> Int32ExitCode {
     var rightmostNonZeroExitCode = Int32ExitCode(rawValue: EXIT_CODE_ZERO)
     var io: CmdIo = CmdIoForwardingStdin(stdin: originalIo)
     var lastStdout = [String]()
     for command in commands {
-        let exitCode = try await command.run(env, io)
+        let exitCode = await command.run(env, io)
         originalIo.stderr += io.stderr
         lastStdout = io.stdout
         io = CmdIoImpl(stdin: .init(lastStdout.joined(separator: "\n")))

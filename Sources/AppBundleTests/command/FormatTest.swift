@@ -28,10 +28,10 @@ final class FormatTest: XCTestCase {
 
     func testResolveWindowForFormatVarPrefetchesTitleOnlyWhenNeeded() async throws {
         let window = TestWindow.new(id: 7, parent: Workspace.get(byName: name).rootTilingContainer)
-        let withTitle = try await WindowWithPrefetchedTitle.resolveWindow(window, for: .window(.windowTitle))
+        let withTitle = try await WindowWithPrefetchedTitle.resolveWindow(window, for: .window(.windowTitle), .nonCancellable)
         assertEquals(withTitle.title, "TestWindow(7)")
 
-        let withoutTitle = try await WindowWithPrefetchedTitle.resolveWindow(window, for: .window(.windowId))
+        let withoutTitle = try await WindowWithPrefetchedTitle.resolveWindow(window, for: .window(.windowId), .nonCancellable)
         assertNil(withoutTitle.title)
     }
 
@@ -41,13 +41,13 @@ final class FormatTest: XCTestCase {
         let withTitle = try await WindowWithPrefetchedTitle.resolveWindow(window, for: [
             .literal("foo"),
             .interVar(.formatVar(.window(.windowTitle))),
-        ])
+        ], .nonCancellable)
         assertEquals(withTitle.title, "TestWindow(3)")
 
         let withoutTitle = try await WindowWithPrefetchedTitle.resolveWindow(window, for: [
             .interVar(.formatVar(.window(.windowId))),
             .interVar(.plainInterVar(.newline)),
-        ])
+        ], .nonCancellable)
         assertNil(withoutTitle.title)
     }
 

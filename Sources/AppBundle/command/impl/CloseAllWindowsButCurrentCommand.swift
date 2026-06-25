@@ -5,7 +5,7 @@ struct CloseAllWindowsButCurrentCommand: Command {
     let args: CloseAllWindowsButCurrentCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
+    func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let focused = target.windowOrNil else {
             return .fail(io.err("Empty workspace"))
@@ -15,7 +15,7 @@ struct CloseAllWindowsButCurrentCommand: Command {
         }
         var result = BinaryExitCode.succ
         for window in workspace.allLeafWindowsRecursive where window != focused {
-            result = try await CloseCommand(args: args.closeArgs).run(env.withWindowId(window.windowId), io).and(result)
+            result = await CloseCommand(args: args.closeArgs).run(env.withWindowId(window.windowId), io).and(result)
         }
         return result
     }

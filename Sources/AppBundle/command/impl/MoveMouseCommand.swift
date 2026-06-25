@@ -5,12 +5,12 @@ struct MoveMouseCommand: Command {
     let args: MoveMouseCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
+    func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
         let mouse = mouseLocation
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         switch args.mouseTarget.val {
             case .windowLazyCenter:
-                guard let rect = try await windowSubjectRectOrReportError(target, io) else { return .fail }
+                guard let rect = await windowSubjectRectOrReportError(target, io) else { return .fail }
                 if rect.contains(mouse) {
                     return switch args.failIfNoop {
                         case true: .fail
@@ -20,7 +20,7 @@ struct MoveMouseCommand: Command {
                 }
                 return moveMouse(io, rect.center)
             case .windowForceCenter:
-                guard let rect = try await windowSubjectRectOrReportError(target, io) else { return .fail }
+                guard let rect = await windowSubjectRectOrReportError(target, io) else { return .fail }
                 return moveMouse(io, rect.center)
             case .monitorLazyCenter:
                 let rect = target.workspace.workspaceMonitor.rect
@@ -54,13 +54,13 @@ private func moveMouse(_ io: CmdIo, _ point: CGPoint) -> BinaryExitCode {
 }
 
 @MainActor
-private func windowSubjectRectOrReportError(_ target: LiveFocus, _ io: CmdIo) async throws -> Rect? {
+private func windowSubjectRectOrReportError(_ target: LiveFocus, _ io: CmdIo) async -> Rect? {
     // todo bug it's bad that we operate on the "ax physical" state directly. command seq won't work correctly
     //      focus <direction> command has the similar problem
     if let window: Window = target.windowOrNil {
         if let rect = window.lastAppliedLayoutPhysicalRect {
             return rect
-        } else if let rect = try await window.getAxRect() {
+        } else if let rect = try? await window.getAxRect(.nonCancellable) {
             return rect
         } else {
             io.err("Failed to get rect of window '\(window.windowId)'")

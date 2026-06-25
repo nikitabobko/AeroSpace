@@ -6,7 +6,7 @@ protocol Command: AeroAny, Equatable, Sendable {
 
     var args: T { get }
     @MainActor
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> T.ExitCodeType
+    func run(_ env: CmdEnv, _ io: CmdIo) async -> T.ExitCodeType
 
     /// We should reset closedWindowsCache when the command can potentially change the tree
     var shouldResetClosedWindowsCache: Bool { get }
@@ -29,7 +29,7 @@ extension Command {
 extension Command {
     @MainActor
     @discardableResult
-    func run(_ env: CmdEnv, _ stdin: consuming CmdStdin) async throws -> CmdResult {
-        return try await Shell.cmd(self).run(env, stdin)
+    func run(_ env: CmdEnv, _ stdin: consuming CmdStdin) async -> CmdResult {
+        return await Shell.cmd(self).run(env, stdin)
     }
 }

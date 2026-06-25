@@ -10,17 +10,17 @@ struct WindowWithPrefetchedTitle {
         self.title = title
     }
 
-    static func resolveWindow(_ window: Window, for formatVar: FormatVar) async throws -> Self {
-        try await resolveWindow(window, needsTitle: formatVar == .window(.windowTitle))
+    static func resolveWindow(_ window: Window, for formatVar: FormatVar, _ cm: CancellationMode) async throws -> Self {
+        try await resolveWindow(window, needsTitle: formatVar == .window(.windowTitle), cm)
     }
 
-    static func resolveWindow(_ window: Window, for format: [InterToken<InterVar>]) async throws -> Self {
+    static func resolveWindow(_ window: Window, for format: [InterToken<InterVar>], _ cm: CancellationMode) async throws -> Self {
         let needsTitle = format.contains { $0 == .interVar(.formatVar(.window(.windowTitle))) }
-        return try await resolveWindow(window, needsTitle: needsTitle)
+        return try await resolveWindow(window, needsTitle: needsTitle, cm)
     }
 
-    private static func resolveWindow(_ window: Window, needsTitle: Bool) async throws -> Self {
-        let title = needsTitle ? try await window.title : nil
+    private static func resolveWindow(_ window: Window, needsTitle: Bool, _ cm: CancellationMode) async throws -> Self {
+        let title = needsTitle ? try await window.getTitle(cm) : nil
         return .init(window: window, title: title)
     }
 

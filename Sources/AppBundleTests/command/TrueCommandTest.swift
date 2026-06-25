@@ -14,7 +14,7 @@ final class TrueCommandTest: XCTestCase {
         testParseCommandHelp("true --help")
     }
 
-    func testExitCode() async throws {
-        assertEquals(try await parseCommand("true").cmdOrDie.run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
+    func testExitCode() async {
+        assertEquals(await parseCommand("true").cmdOrDie.run(.defaultEnv, .emptyStdin).exitCode.rawValue, 0)
     }
 }

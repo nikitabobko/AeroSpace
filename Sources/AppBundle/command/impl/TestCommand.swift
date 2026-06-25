@@ -5,12 +5,16 @@ struct TestCommand: Command {
     let args: TestCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache: Bool = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> ConditionalExitCode {
+    func run(_ env: CmdEnv, _ io: CmdIo) async -> ConditionalExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
 
-        let lhs: Result<Primitive, InterVarExpansionError> = switch target.windowOrNil {
-            case let window?: args.lhs.val.expandFormatVar(obj: .window(try await .resolveWindow(window, for: args.lhs.val)))
-            case nil: args.lhs.val.expandFormatVar(obj: .workspace(target.workspace))
+        let lhs: Result<Primitive, InterVarExpansionError>
+        switch target.windowOrNil {
+            case let window?:
+                guard let window = try? await WindowWithPrefetchedTitle.resolveWindow(window, for: args.lhs.val, .nonCancellable) else { return .fail(io.err(bugPrompt())) }
+                lhs = args.lhs.val.expandFormatVar(obj: .window(window))
+            case nil:
+                lhs = args.lhs.val.expandFormatVar(obj: .workspace(target.workspace))
         }
 
         guard let lhs = lhs.getOrNil(onFailure: { err in

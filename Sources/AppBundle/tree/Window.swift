@@ -30,14 +30,14 @@ open class Window: TreeNode, Hashable {
         hasher.combine(windowId)
     }
 
-    func getAxSize() async throws -> CGSize? { die("Not implemented") }
-    var title: String { get async throws { die("Not implemented") } }
-    var isMacosFullscreen: Bool { get async throws { false } }
-    var isMacosMinimized: Bool { get async throws { false } } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
+    func getAxSize(_ cm: CancellationMode) async throws -> CGSize? { die("Not implemented") }
+    func getTitle(_ cm: CancellationMode) async throws -> String { die("Not implemented") }
+    func isMacosFullscreen(_ cm: CancellationMode) async throws -> Bool { false }
+    func isMacosMinimized(_ cm: CancellationMode) async throws -> Bool { false } // todo replace with enum MacOsWindowNativeState { normal, fullscreen, invisible }
     var isHiddenInCorner: Bool { die("Not implemented") }
     @MainActor func nativeFocus() { die("Not implemented") }
-    func getAxRect() async throws -> Rect? { die("Not implemented") }
-    func getCenter() async throws -> CGPoint? { try await getAxRect()?.center }
+    func getAxRect(_ cm: CancellationMode) async throws -> Rect? { die("Not implemented") }
+    func getCenter(_ cm: CancellationMode) async throws -> CGPoint? { try await getAxRect(cm)?.center }
 
     func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) { die("Not implemented") }
 }

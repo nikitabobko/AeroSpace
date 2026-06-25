@@ -92,7 +92,7 @@ private func newConnection(_ connection: NWConnection) async { // todo add exit 
                                 windowId: request.windowId.flattenOptional(),
                                 workspaceName: request.workspace.flattenOptional(),
                             )
-                            let cmdResult = try await command.run(env, CmdStdin(request.stdin))
+                            let cmdResult = await command.run(env, CmdStdin(request.stdin))
                             return ServerAnswer(
                                 exitCode: cmdResult.exitCode.rawValue,
                                 stdout: cmdResult.stdout.joined(separator: "\n"),

@@ -5,7 +5,7 @@ struct EnableCommand: Command {
     let args: EnableCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
+    func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
         let prevState = TrayMenuModel.shared.isEnabled
         let newState: Bool = switch args.targetState.val {
             case .on: true
@@ -27,12 +27,12 @@ struct EnableCommand: Command {
         if newState {
             for workspace in Workspace.all {
                 for window in workspace.allLeafWindowsRecursive where window.isFloating {
-                    window.lastFloatingSize = try await window.getAxSize() ?? window.lastFloatingSize
+                    window.lastFloatingSize = (try? await window.getAxSize(.nonCancellable)) ?? window.lastFloatingSize
                 }
             }
-            try await activateMode(mainModeId)
+            await activateMode_nonCancellable(mainModeId)
         } else {
-            try await activateMode(nil)
+            await activateMode_nonCancellable(nil)
         }
         return .succ
     }

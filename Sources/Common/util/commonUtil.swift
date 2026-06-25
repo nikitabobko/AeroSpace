@@ -92,7 +92,6 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
     case socketServer(any CmdArgs)
     case resetManipulatedWithMouse
     case ax(String)
-    case onModeChanged
     case focusFollowsMouse
 
     public var isStartup: Bool {
@@ -114,7 +113,6 @@ public enum RefreshSessionEvent: Sendable, CustomStringConvertible {
             case .resetManipulatedWithMouse: "resetManipulatedWithMouse"
             case .socketServer(let args): "socketServer: \(args)"
             case .startup: "startup"
-            case .onModeChanged: "onModeChanged"
             case .focusFollowsMouse: "focusFollowsMouse"
         }
     }
@@ -210,17 +208,6 @@ public func exitT<T>(_ exitCode: Int32, out: String? = nil, err: String? = nil) 
 
 /// 'id' stands for 'identity'. It's a common name in functional programming
 public func id<T>(_ t: T) -> T { t }
-
-@inlinable
-public func allowOnlyCancellationError<T>(_ block: () async throws -> sending T) async throws -> sending T {
-    do {
-        return try await block()
-    } catch let e as CancellationError {
-        throw e
-    } catch {
-        die("throws must only be used for CancellationError")
-    }
-}
 
 @inlinable public func zipIfCountsAreEqual<C1, C2>(_ c1: C1, _ c2: C2) -> Zip2Sequence<C1, C2>? where C1: Collection, C2: Collection {
     switch c1.count == c2.count {

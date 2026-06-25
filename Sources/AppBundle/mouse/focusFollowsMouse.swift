@@ -36,7 +36,7 @@ import AppKit
             for window in workspace.floatingWindowsContainer.mruChildren {
                 try checkCancellation()
                 guard let window = window as? Window else { continue }
-                guard let rect = try await window.getAxRect() else { continue }
+                guard let rect = try await window.getAxRect(.cancellable) else { continue }
                 if rect.contains(location) {
                     try await runLightSession(.focusFollowsMouse, token) {
                         _ = window.focusWindow()

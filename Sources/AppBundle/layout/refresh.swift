@@ -32,13 +32,13 @@ func runHeavyCompleteRefreshSession(
     if !TrayMenuModel.shared.isEnabled { return }
     let res = await Result {
         try await $refreshSessionEvent.withValue(event) {
-            let nativeFocused = try await getNativeFocusedWindow()
-            if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
+            let nativeFocused = try await getNativeFocusedWindow(.cancellable)
+            if let nativeFocused { try await debugWindowsIfRecording(nativeFocused, .cancellable) }
             updateFocusCache(nativeFocused)
 
             if shouldLayoutWorkspaces && optimisticallyPreLayoutWorkspaces { try await layoutWorkspaces() }
 
-            try await refreshModel()
+            await refreshModel_nonCancellable()
             try await refresh()
             gcMonitors()
 
@@ -68,20 +68,20 @@ func runLightSession<T>(
     return try await $refreshSessionEvent.withValue(event) {
         if event.isFocusFollowsMouse {
             let result = try await body()
-            try await refreshModel()
+            await refreshModel_nonCancellable()
 
             updateTrayText()
             SecureInputPanel.shared.refresh()
             return result
         } else {
-            let nativeFocused = try await getNativeFocusedWindow()
-            if let nativeFocused { try await debugWindowsIfRecording(nativeFocused) }
+            let nativeFocused = try await getNativeFocusedWindow(.cancellable)
+            if let nativeFocused { try await debugWindowsIfRecording(nativeFocused, .cancellable) }
             updateFocusCache(nativeFocused)
             let focusBefore = focus.windowOrNil
 
-            try await refreshModel()
+            await refreshModel_nonCancellable()
             let result = try await body()
-            try await refreshModel()
+            await refreshModel_nonCancellable()
 
             let focusAfter = focus.windowOrNil
 
@@ -118,12 +118,12 @@ struct RunSessionGuard: Sendable {
 }
 
 @MainActor
-func refreshModel() async throws {
+func refreshModel_nonCancellable() async {
     if refreshSessionEvent?.isFocusFollowsMouse == true {
-        try await checkOnFocusChangedCallbacks()
+        await checkOnFocusChangedCallbacks_nonCancellable()
     } else {
         Workspace.garbageCollectUnusedWorkspaces()
-        try await checkOnFocusChangedCallbacks()
+        await checkOnFocusChangedCallbacks_nonCancellable()
         normalizeContainers()
     }
 }

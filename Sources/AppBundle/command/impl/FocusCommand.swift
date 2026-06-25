@@ -5,9 +5,9 @@ struct FocusCommand: Command {
     let args: FocusCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
+    func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
-        if let window = target.windowOrNil, try await shouldFailBecauseFullscreen(
+        if let window = target.windowOrNil, await shouldFailBecauseFullscreen_nonCancellable(
             window: window,
             failIfFullscreen: args.failIfFullscreen,
             failIfMacosNativeFullscreen: args.failIfMacosNativeFullscreen,
@@ -15,7 +15,7 @@ struct FocusCommand: Command {
             return .fail
         }
         // todo bug: floating windows break mru
-        let floatingWindows = args.floatingAsTiling ? try await makeFloatingWindowsSeenAsTiling(workspace: target.workspace) : []
+        let floatingWindows = args.floatingAsTiling ? await makeFloatingWindowsSeenAsTiling(workspace: target.workspace) : []
         defer {
             if args.floatingAsTiling {
                 restoreFloatingWindows(floatingWindows: floatingWindows, workspace: target.workspace)
@@ -122,22 +122,22 @@ struct FocusCommand: Command {
     return .from(bool: windowToFocus.focusWindow())
 }
 
-@MainActor private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) async throws -> [FloatingWindowData] {
+@MainActor private func makeFloatingWindowsSeenAsTiling(workspace: Workspace) async -> [FloatingWindowData] {
     let mruBefore = workspace.mostRecentWindowRecursive
     defer {
         mruBefore?.markAsMostRecentChild()
     }
     var _floatingWindows: [FloatingWindowData] = []
     for window in workspace.floatingWindows {
-        let center = try await window.getCenter() // todo bug: we shouldn't access ax api here. What if the window was moved but it wasn't committed to ax yet?
-        guard let center else { continue }
+        // todo bug: we shouldn't access ax api here. What if the window was moved but it wasn't committed to ax yet?
+        guard let center = try? await window.getCenter(.nonCancellable) else { continue }
 
         let tilingParent: TilingContainer
         let index: Int
         if let target = center.coerce(in: workspace.workspaceMonitor.visibleRectPaddedByOuterGaps)?
             .findIn(tree: workspace.rootTilingContainer, virtual: true)
         {
-            guard let targetCenter = try await target.getCenter() else { continue }
+            guard let targetCenter = try? await target.getCenter(.nonCancellable) else { continue }
             guard let _tilingParent = target.parent as? TilingContainer else { continue }
             tilingParent = _tilingParent
             index = center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)

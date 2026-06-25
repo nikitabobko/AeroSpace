@@ -4,7 +4,7 @@ import Foundation
 extension Thread {
     @discardableResult
     func runInLoopAsync(
-        job: RunLoopJob = RunLoopJob(),
+        job: RunLoopJob,
         autoCheckCancelled: Bool = true,
         _ body: @Sendable @escaping (RunLoopJob) -> (),
     ) -> RunLoopJob {
@@ -14,9 +14,12 @@ extension Thread {
         return job
     }
 
-    func runInLoop<T>(_ body: @Sendable @escaping (RunLoopJob) throws -> T) async throws -> T { // todo try to convert to typed throws
-        try checkCancellation()
-        let job = RunLoopJob()
+    func runInLoop<T>(
+        _ cm: CancellationMode,
+        _ body: @Sendable @escaping (RunLoopJob) throws -> T,
+    ) async throws -> T { // todo try to convert to typed throws
+        try checkCancellation(cm)
+        let job = RunLoopJob(cm)
         return try await withTaskCancellationHandler {
             try await withCheckedThrowingContinuation { cont in
                 // It's unsafe to implicitly cancel because cont.resume should be invoked exactly once
@@ -25,6 +28,7 @@ extension Thread {
                         try job.checkCancellation()
                         cont.resume(returning: try body(job))
                     } catch {
+                        if cm == .nonCancellable { die() }
                         cont.resume(throwing: error)
                     }
                 }
@@ -61,15 +65,19 @@ final class RunLoopJob: Sendable, AeroAny {
     nonisolated(unsafe) private var _isCancelled: Int32 = 0
     var isCancelled: Bool { unsafe _isCancelled == 1 }
     func cancel() {
+        if cm == .nonCancellable { return }
         while !isCancelled {
             unsafe OSAtomicCompareAndSwapInt(0, 1, &_isCancelled)
         }
     }
 
-    static let cancelled: RunLoopJob = RunLoopJob().also { $0.cancel() }
+    let cm: CancellationMode
+    public init(_ cm: CancellationMode) { self.cm = cm }
+
+    static let cancelled: RunLoopJob = RunLoopJob(.cancellable).also { $0.cancel() }
 
     func checkCancellation() throws {
-        if isCancelled {
+        if cm == .cancellable && isCancelled {
             throw CancellationError()
         }
     }

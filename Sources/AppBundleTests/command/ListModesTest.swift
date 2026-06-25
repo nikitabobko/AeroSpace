@@ -17,29 +17,29 @@ final class ListModesTest: XCTestCase {
     }
 
     @MainActor
-    func testListModesOutput() async throws {
+    func testListModesOutput() async {
         config.modes = [
             "main": Mode(bindings: [:]),
             "service": Mode(bindings: [:]),
             "resize": Mode(bindings: [:]),
         ]
 
-        let defaultResult = try await parseCommand("list-modes").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let defaultResult = await parseCommand("list-modes").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(defaultResult.exitCode.rawValue, 0)
         assertEquals(defaultResult.stdout, ["main", "resize", "service"])
         assertEquals(defaultResult.stderr, [])
 
-        let currentResult = try await parseCommand("list-modes --current").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let currentResult = await parseCommand("list-modes --current").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(currentResult.exitCode.rawValue, 0)
         assertEquals(currentResult.stdout, ["main"])
         assertEquals(currentResult.stderr, [])
 
-        let countResult = try await parseCommand("list-modes --count").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let countResult = await parseCommand("list-modes --count").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(countResult.exitCode.rawValue, 0)
         assertEquals(countResult.stdout, ["3"])
         assertEquals(countResult.stderr, [])
 
-        let jsonResult = try await parseCommand("list-modes --json").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let jsonResult = await parseCommand("list-modes --json").cmdOrDie.run(.defaultEnv, .emptyStdin)
         let expectedJson = JSONEncoder.aeroSpaceDefault.encodeToString([
             ["mode-id": "main"],
             ["mode-id": "resize"],
@@ -49,7 +49,7 @@ final class ListModesTest: XCTestCase {
         assertEquals(jsonResult.stdout, [expectedJson])
         assertEquals(jsonResult.stderr, [])
 
-        let currentJsonResult = try await parseCommand("list-modes --current --json").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let currentJsonResult = await parseCommand("list-modes --current --json").cmdOrDie.run(.defaultEnv, .emptyStdin)
         let expectedCurrentJson = JSONEncoder.aeroSpaceDefault.encodeToString([
             ["mode-id": "main"],
         ])

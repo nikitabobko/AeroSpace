@@ -48,71 +48,71 @@ final class EchoCommandTest: XCTestCase {
         testParseCommandHelp("echo --help")
     }
 
-    func testRunPlainNoWindow() async throws {
+    func testRunPlainNoWindow() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
-        let result = try await parseCommand("echo -- foo").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("echo -- foo").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         assertEquals(result.stdout, ["foo"])
     }
 
-    func testRunMultipleArgs() async throws {
+    func testRunMultipleArgs() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
-        let result = try await parseCommand("echo -- foo bar baz").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("echo -- foo bar baz").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         assertEquals(result.stdout, ["foo", "bar", "baz"])
     }
 
-    func testRunStderr() async throws {
+    func testRunStderr() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
-        let result = try await parseCommand("echo --stderr -- foo").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("echo --stderr -- foo").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, [])
         assertEquals(result.stderr, ["foo"])
     }
 
-    func testRunWindowInterpolation() async throws {
+    func testRunWindowInterpolation() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
         }
-        let result = try await parseCommand("echo -- '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("echo -- '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         assertEquals(result.stdout, ["1"])
     }
 
-    func testRunWindowInterpolationNoWindow() async throws {
+    func testRunWindowInterpolationNoWindow() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
-        let result = try await parseCommand("echo -- '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("echo -- '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stdout, [])
         assertEquals(result.stderr, [noWindowIsFocused])
     }
 
-    func testRunWorkspaceInterpolation() async throws {
+    func testRunWorkspaceInterpolation() async {
         assertEquals(Workspace.get(byName: name).focusWorkspace(), true)
-        let result = try await parseCommand("echo -- '%{workspace}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("echo -- '%{workspace}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         assertEquals(result.stdout, [name])
     }
 
-    func testRunMixedLiteralAndInterpolation() async throws {
+    func testRunMixedLiteralAndInterpolation() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 42, parent: $0).focusWindow(), true)
         }
-        let result = try await parseCommand("echo -- 'id: %{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("echo -- 'id: %{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         assertEquals(result.stdout, ["id: 42"])
     }
 
-    func testRunStderrWithInterpolation() async throws {
+    func testRunStderrWithInterpolation() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 5, parent: $0).focusWindow(), true)
         }
-        let result = try await parseCommand("echo --stderr -- '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("echo --stderr -- '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, [])
         assertEquals(result.stderr, ["5"])

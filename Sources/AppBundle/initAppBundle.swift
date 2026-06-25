@@ -12,8 +12,8 @@ import Foundation
             interceptTermination(SIGINT)
             interceptTermination(SIGKILL)
         }
-        try await bootstrapConfig()
-        _ = try await reloadConfig()
+        await bootstrapConfig_nonCancellable()
+        _ = await reloadConfig_nonCancellable()
 
         checkAccessibilityPermissions()
         startUnixSocketServer()
@@ -29,13 +29,13 @@ import Foundation
         )
         try await runLightSession(.startup, .forceRun) {
             smartLayoutAtStartup()
-            _ = try await config.afterStartupCommand.run(.defaultEnv, .emptyStdin)
+            _ = await config.afterStartupCommand.run(.defaultEnv, .emptyStdin)
         }
     }
 }
 
-@MainActor private func bootstrapConfig() async throws {
-    let result = try await reloadConfig(forceConfigUrl: defaultConfigUrl)
+@MainActor private func bootstrapConfig_nonCancellable() async {
+    let result = await reloadConfig_nonCancellable(forceConfigUrl: defaultConfigUrl)
     let msg = """
         Can't load default config. Your installation is probably corrupted.
         Please don't modify \(defaultConfigUrl.description.singleQuoted)

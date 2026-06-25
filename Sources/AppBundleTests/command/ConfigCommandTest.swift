@@ -41,19 +41,19 @@ final class ConfigCommandTest: XCTestCase {
         assertTrue(conflictErr?.contains("--all-keys") == true)
     }
 
-    func testConfigPath() async throws {
-        let result = try await parseCommand("config --config-path").cmdOrDie.run(.defaultEnv, .emptyStdin)
+    func testConfigPath() async {
+        let result = await parseCommand("config --config-path").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         assertEquals(result.stdout, [configUrl.absoluteURL.path])
     }
 
-    func testMajorKeys() async throws {
+    func testMajorKeys() async {
         config.modes = [
             "main": Mode(bindings: [:]),
             "service": Mode(bindings: [:]),
         ]
-        let result = try await parseCommand("config --major-keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("config --major-keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         // The whole listing comes back as one stdout entry separated by newlines.
@@ -62,12 +62,12 @@ final class ConfigCommandTest: XCTestCase {
         assertEquals(lines, [".", "mode", "mode.main.binding", "mode.service.binding"])
     }
 
-    func testAllKeys() async throws {
+    func testAllKeys() async {
         let command = parseCommand("focus left").cmdOrDie
         let binding = HotkeyBinding(.option, .h, command)
         config.modes = ["main": Mode(bindings: [binding.descriptionWithKeyCode: binding])]
 
-        let result = try await parseCommand("config --all-keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("config --all-keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         // Single mode + single binding => dict iteration order doesn't affect the output.
@@ -77,8 +77,8 @@ final class ConfigCommandTest: XCTestCase {
         )
     }
 
-    func testGetRoot_complexObject_fails() async throws {
-        let result = try await parseCommand("config --get .").cmdOrDie.run(.defaultEnv, .emptyStdin)
+    func testGetRoot_complexObject_fails() async {
+        let result = await parseCommand("config --get .").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stdout, [])
         assertEquals(
@@ -87,107 +87,107 @@ final class ConfigCommandTest: XCTestCase {
         )
     }
 
-    func testGetRoot_keys() async throws {
+    func testGetRoot_keys() async {
         config.modes = ["main": Mode(bindings: [:])]
-        let result = try await parseCommand("config --get . --keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("config --get . --keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         assertEquals(result.stdout, ["mode"])
     }
 
-    func testGetRoot_json() async throws {
+    func testGetRoot_json() async {
         config.modes = ["main": Mode(bindings: [:])]
         let expectedMap: ConfigMapValue = .map(["mode": .map(["main": .map(["binding": .map([:])])])])
         let expectedJson = JSONEncoder.aeroSpaceDefault.encodeToString(expectedMap)
 
-        let result = try await parseCommand("config --get . --json").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("config --get . --json").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         assertEquals(result.stdout, [expectedJson])
     }
 
-    func testGetRoot_keysJson() async throws {
+    func testGetRoot_keysJson() async {
         config.modes = ["main": Mode(bindings: [:])]
         // --keys converts the map into an array of string-scalar keys, which is then JSON-encoded.
         let expected = JSONEncoder.aeroSpaceDefault.encodeToString(
             ConfigMapValue.array([.scalar(.string("mode"))]),
         )
 
-        let result = try await parseCommand("config --get . --keys --json").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("config --get . --keys --json").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         assertEquals(result.stdout, [expected])
     }
 
-    func testGetMode_keys_sortedOutput() async throws {
+    func testGetMode_keys_sortedOutput() async {
         config.modes = [
             "main": Mode(bindings: [:]),
             "service": Mode(bindings: [:]),
         ]
-        let result = try await parseCommand("config --get mode --keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("config --get mode --keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         // Plain (non-json) array output is sorted before printing.
         assertEquals(result.stdout, ["main\nservice"])
     }
 
-    func testGetScalar() async throws {
+    func testGetScalar() async {
         let command = parseCommand("focus left").cmdOrDie
         let binding = HotkeyBinding(.option, .h, command)
         config.modes = ["main": Mode(bindings: [binding.descriptionWithKeyCode: binding])]
 
-        let result = try await parseCommand("config --get mode.main.binding.alt-h").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("config --get mode.main.binding.alt-h").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         assertEquals(result.stdout, [command.shellOfCommandsDescription])
     }
 
-    func testGetScalar_keys_fails() async throws {
+    func testGetScalar_keys_fails() async {
         let command = parseCommand("focus left").cmdOrDie
         let binding = HotkeyBinding(.option, .h, command)
         config.modes = ["main": Mode(bindings: [binding.descriptionWithKeyCode: binding])]
 
-        let result = try await parseCommand("config --get mode.main.binding.alt-h --keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("config --get mode.main.binding.alt-h --keys").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stdout, [])
         // The error message interpolates the enum directly, yielding the default Swift case repr.
         assertEquals(result.stderr, ["--keys flag cannot be applied to scalar object 'string(\"\(command.shellOfCommandsDescription)\")'"])
     }
 
-    func testGetScalar_dereference_fails() async throws {
+    func testGetScalar_dereference_fails() async {
         let command = parseCommand("focus left").cmdOrDie
         let binding = HotkeyBinding(.option, .h, command)
         config.modes = ["main": Mode(bindings: [binding.descriptionWithKeyCode: binding])]
 
-        let result = try await parseCommand("config --get mode.main.binding.alt-h.foo").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("config --get mode.main.binding.alt-h.foo").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stdout, [])
         assertEquals(result.stderr, ["Can't dereference scalar value '\(command.shellOfCommandsDescription)'"])
     }
 
-    func testGetMissingKey_fails() async throws {
-        let result = try await parseCommand("config --get nonExistent").cmdOrDie.run(.defaultEnv, .emptyStdin)
+    func testGetMissingKey_fails() async {
+        let result = await parseCommand("config --get nonExistent").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stdout, [])
         assertEquals(result.stderr, ["No value at key token 'nonExistent'"])
     }
 
-    func testGetInvalidPath_emptyKey() async throws {
-        let result = try await parseCommand("config --get ''").cmdOrDie.run(.defaultEnv, .emptyStdin)
+    func testGetInvalidPath_emptyKey() async {
+        let result = await parseCommand("config --get ''").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stdout, [])
         assertEquals(result.stderr, ["Invalid empty key"])
     }
 
-    func testGetInvalidPath_doubleDot() async throws {
-        let result = try await parseCommand("config --get a..b").cmdOrDie.run(.defaultEnv, .emptyStdin)
+    func testGetInvalidPath_doubleDot() async {
+        let result = await parseCommand("config --get a..b").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stdout, [])
         assertEquals(result.stderr, ["Invalid key 'a..b'"])
     }
 
-    func testGetInvalidPath_trailingDot() async throws {
-        let result = try await parseCommand("config --get a.").cmdOrDie.run(.defaultEnv, .emptyStdin)
+    func testGetInvalidPath_trailingDot() async {
+        let result = await parseCommand("config --get a.").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stdout, [])
         assertEquals(result.stderr, ["Invalid key 'a.'"])

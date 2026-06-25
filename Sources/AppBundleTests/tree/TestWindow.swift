@@ -31,23 +31,15 @@ final class TestWindow: Window, CustomStringConvertible {
         unbindFromParent()
     }
 
-    override var title: String {
-        get async { // redundant async. todo create bug report to Swift
-            description
-        }
-    }
+    override func getTitle(_ cm: CancellationMode) async throws -> String { description }
 
-    @MainActor override func getAxRect() async throws -> Rect? { // todo change to not Optional
+    @MainActor override func getAxRect(_ cm: CancellationMode) async throws -> Rect? { // todo change to not Optional
         _rect
     }
 
-    @MainActor override func getAxSize() async throws -> CGSize? {
+    @MainActor override func getAxSize(_ cm: CancellationMode) async throws -> CGSize? {
         _rect.map { CGSize(width: $0.width, height: $0.height) }
     }
 
-    override var isMacosFullscreen: Bool {
-        get async {
-            isMacosFullscreenForTest
-        }
-    }
+    override func isMacosFullscreen(_ cm: CancellationMode) async throws -> Bool { isMacosFullscreenForTest }
 }

@@ -21,83 +21,83 @@ final class ListWorkspacesTest: XCTestCase {
         assertEquals(parseCommand("list-workspaces --all --focused --monitor mouse").errorOrNil, "ERROR: Conflicting options: --all, --focused, --monitor")
     }
 
-    func testRunAll() async throws {
+    func testRunAll() async {
         TestWindow.new(id: 1, parent: Workspace.get(byName: "a").rootTilingContainer)
         TestWindow.new(id: 2, parent: Workspace.get(byName: "b").rootTilingContainer)
-        let result = try await parseCommand("list-workspaces --all").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("list-workspaces --all").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stderr, [])
         // Initial focused workspace "setUpWorkspacesForTests" is included; sort uses logical segments.
         assertEquals(result.stdout, ["a", "b", "setUpWorkspacesForTests"])
     }
 
-    func testRunVisible() async throws {
+    func testRunVisible() async {
         TestWindow.new(id: 1, parent: Workspace.get(byName: "a").rootTilingContainer)
-        let result = try await parseCommand("list-workspaces --monitor all --visible").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("list-workspaces --monitor all --visible").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         // Only the focused workspace is visible after setUp on the single test monitor.
         assertEquals(result.stdout, ["setUpWorkspacesForTests"])
     }
 
-    func testRunInvisible() async throws {
+    func testRunInvisible() async {
         TestWindow.new(id: 1, parent: Workspace.get(byName: "a").rootTilingContainer)
         TestWindow.new(id: 2, parent: Workspace.get(byName: "b").rootTilingContainer)
-        let result = try await parseCommand("list-workspaces --monitor all --visible no").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("list-workspaces --monitor all --visible no").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, ["a", "b"])
     }
 
-    func testRunEmpty() async throws {
+    func testRunEmpty() async {
         TestWindow.new(id: 1, parent: Workspace.get(byName: "a").rootTilingContainer)
         _ = Workspace.get(byName: "b") // empty (no windows)
-        let result = try await parseCommand("list-workspaces --monitor all --empty").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("list-workspaces --monitor all --empty").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, ["b", "setUpWorkspacesForTests"])
     }
 
-    func testRunNonEmpty() async throws {
+    func testRunNonEmpty() async {
         TestWindow.new(id: 1, parent: Workspace.get(byName: "a").rootTilingContainer)
         _ = Workspace.get(byName: "b") // empty
-        let result = try await parseCommand("list-workspaces --monitor all --empty no").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("list-workspaces --monitor all --empty no").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, ["a"])
     }
 
-    func testRunFocusedAlias() async throws {
+    func testRunFocusedAlias() async {
         // The initial focused workspace is "setUpWorkspacesForTests" (visible on the focused monitor).
         TestWindow.new(id: 1, parent: Workspace.get(byName: "a").rootTilingContainer)
-        let result = try await parseCommand("list-workspaces --focused").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("list-workspaces --focused").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         // --focused expands to --monitor focused --visible true.
         assertEquals(result.stdout, ["setUpWorkspacesForTests"])
     }
 
-    func testRunMonitorFocused() async throws {
+    func testRunMonitorFocused() async {
         TestWindow.new(id: 1, parent: Workspace.get(byName: "a").rootTilingContainer)
-        let result = try await parseCommand("list-workspaces --monitor focused").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("list-workspaces --monitor focused").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         // All workspaces default to the main (focused) monitor in tests.
         assertEquals(result.stdout, ["a", "setUpWorkspacesForTests"])
     }
 
-    func testRunInvalidMonitor() async throws {
-        let result = try await parseCommand("list-workspaces --monitor 99").cmdOrDie.run(.defaultEnv, .emptyStdin)
+    func testRunInvalidMonitor() async {
+        let result = await parseCommand("list-workspaces --monitor 99").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stdout, [])
         assertEquals(result.stderr, ["Invalid monitor ID: 99"])
     }
 
-    func testRunCount() async throws {
+    func testRunCount() async {
         TestWindow.new(id: 1, parent: Workspace.get(byName: "a").rootTilingContainer)
         TestWindow.new(id: 2, parent: Workspace.get(byName: "b").rootTilingContainer)
-        let result = try await parseCommand("list-workspaces --all --count").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("list-workspaces --all --count").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, ["3"])
     }
 
-    func testRunJson() async throws {
+    func testRunJson() async {
         TestWindow.new(id: 1, parent: Workspace.get(byName: "a").rootTilingContainer)
-        let result = try await parseCommand("list-workspaces --all --format '%{workspace}' --json").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        let result = await parseCommand("list-workspaces --all --format '%{workspace}' --json").cmdOrDie.run(.defaultEnv, .emptyStdin)
         let expected = JSONEncoder.aeroSpaceDefault.encodeToString([
             ["workspace": "a"],
             ["workspace": "setUpWorkspacesForTests"],

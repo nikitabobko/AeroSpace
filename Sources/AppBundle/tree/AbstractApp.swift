@@ -4,7 +4,7 @@ protocol AbstractApp: AnyObject, Hashable, AeroAny {
     var pid: Int32 { get }
     var rawAppBundleId: String? { get }
 
-    @MainActor func getFocusedWindow() async throws -> Window?
+    @MainActor func getFocusedWindow(_ cm: CancellationMode) async throws -> Window?
     var name: String? { get }
     var execPath: String? { get }
     var bundlePath: String? { get }

@@ -37,5 +37,5 @@ final class TestApp: AbstractApp {
             _focusedWindow = newValue
         }
     }
-    @MainActor func getFocusedWindow() -> Window? { _focusedWindow }
+    @MainActor func getFocusedWindow(_ cm: CancellationMode) -> Window? { _focusedWindow }
 }

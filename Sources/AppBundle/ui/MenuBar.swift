@@ -16,7 +16,7 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
                 Task.startUnstructured {
                     try await runLightSession(.menuBarButton, token) {
                         let args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []).copy(\.warningsAsErrors, true)
-                        _ = try await reloadConfig(args: args)
+                        _ = await reloadConfig_nonCancellable(args: args)
                     }
                 }
             } label: {
@@ -49,8 +49,8 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         Divider()
         Button(viewModel.isEnabled ? "Disable" : "Enable") {
             Task.startUnstructured {
-                try await runLightSession(.menuBarButton, .forceRun) { () throws in
-                    _ = try await EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle))
+                try await runLightSession(.menuBarButton, .forceRun) {
+                    _ = await EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle))
                         .run(.defaultEnv, .emptyStdin)
                 }
             }
@@ -103,7 +103,7 @@ func reloadConfigButton(showShortcutGroup: Bool = false, warningsAsErrors: Bool)
             Task.startUnstructured {
                 try await runLightSession(.menuBarButton, token) {
                     let args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []).copy(\.warningsAsErrors, warningsAsErrors)
-                    _ = try await reloadConfig(args: args)
+                    _ = await reloadConfig_nonCancellable(args: args)
                 }
             }
         }.keyboardShortcut("R", modifiers: .command)

@@ -5,13 +5,13 @@ struct MoveCommand: Command {
     let args: MoveCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = true
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
+    func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
         let direction = args.direction.val
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let currentWindow = target.windowOrNil else {
             return .fail(io.err(noWindowIsFocused))
         }
-        if try await shouldFailBecauseFullscreen(
+        if await shouldFailBecauseFullscreen_nonCancellable(
             window: currentWindow,
             failIfFullscreen: args.failIfFullscreen,
             failIfMacosNativeFullscreen: args.failIfMacosNativeFullscreen,
@@ -171,16 +171,16 @@ extension TilingTreeNodeCases {
     }
 }
 
-func shouldFailBecauseFullscreen(
+func shouldFailBecauseFullscreen_nonCancellable(
     window: Window,
     failIfFullscreen: Bool,
     failIfMacosNativeFullscreen: Bool,
-) async throws -> Bool {
+) async -> Bool {
     if failIfFullscreen && window.isFullscreen {
         return true
     }
     if failIfMacosNativeFullscreen {
-        if try await window.isMacosFullscreen {
+        if true == (try? await window.isMacosFullscreen(.nonCancellable)) {
             return true
         }
     }

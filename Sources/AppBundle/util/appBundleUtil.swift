@@ -137,8 +137,13 @@ extension CGPoint: @retroactive Hashable { // todo migrate to self written Point
 #endif
 
 @inlinable
-func checkCancellation() throws(CancellationError) {
-    if Task.isCancelled {
+func checkCancellation(_ cm: CancellationMode = .cancellable) throws(CancellationError) {
+    if cm == .cancellable && Task.isCancelled {
         throw CancellationError()
     }
+}
+
+public enum CancellationMode: Equatable, Sendable {
+    case cancellable
+    case nonCancellable
 }

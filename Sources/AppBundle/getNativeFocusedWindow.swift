@@ -20,6 +20,6 @@ private var focusedApp: (any AbstractApp)? {
 }
 
 @MainActor
-func getNativeFocusedWindow() async throws -> Window? {
-    try await focusedApp?.getFocusedWindow()
+func getNativeFocusedWindow(_ cm: CancellationMode) async throws -> Window? {
+    try await focusedApp?.getFocusedWindow(cm)
 }

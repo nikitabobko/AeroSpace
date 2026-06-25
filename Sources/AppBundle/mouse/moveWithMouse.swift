@@ -39,7 +39,7 @@ private func moveWithMouse(_ window: Window) async throws { // todo cover with t
 
 @MainActor
 private func moveFloatingWindow(_ window: Window) async throws {
-    guard let targetWorkspace = try await window.getCenter()?.monitorApproximation.activeWorkspace else { return }
+    guard let targetWorkspace = try await window.getCenter(.cancellable)?.monitorApproximation.activeWorkspace else { return }
     guard let parent = window.parent else { return }
     if targetWorkspace != parent {
         window.bindAsFloatingWindow(to: targetWorkspace)
