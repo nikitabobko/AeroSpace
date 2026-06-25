@@ -97,12 +97,12 @@ struct ConfigParserContext {
 
 protocol ParserProtocol<S>: Sendable {
     associatedtype T
-    associatedtype S where S: ConvenienceCopyable
+    associatedtype S where S: ConvenienceMutable
     var keyPath: SendableWritableKeyPath<S, T> { get }
     var parse: @Sendable (OrderedJson, ConfigBacktrace, inout ConfigParserContext) -> ResOrConfigParseDiagnostic<T> { get }
 }
 
-struct Parser<S: ConvenienceCopyable, T>: ParserProtocol {
+struct Parser<S: ConvenienceMutable, T>: ParserProtocol {
     let keyPath: SendableWritableKeyPath<S, T>
     let parse: @Sendable (OrderedJson, ConfigBacktrace, inout ConfigParserContext) -> ResOrConfigParseDiagnostic<T>
 
@@ -363,7 +363,7 @@ func parseTomlArray(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrCo
     raw.asArrayOrNil.toResult(expectedActualTypeDiagnostic(expected: .array, actual: raw.tomlType, backtrace))
 }
 
-func parseTable<T: ConvenienceCopyable>(
+func parseTable<T: ConvenienceMutable>(
     _ raw: OrderedJson,
     _ initial: T,
     _ fieldsParser: [String: any ParserProtocol<T>],
@@ -471,7 +471,7 @@ enum TomlBacktraceItem: Equatable {
 }
 
 extension OrderedJson.JsonDict {
-    func parseTable<T: ConvenienceCopyable>(
+    func parseTable<T: ConvenienceMutable>(
         _ initial: T,
         _ fieldsParser: [String: any ParserProtocol<T>],
         _ backtrace: ConfigBacktrace,

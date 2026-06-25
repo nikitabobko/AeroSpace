@@ -39,7 +39,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
 
-    public struct FilteringOptions: ConvenienceCopyable, Equatable, Sendable {
+    public struct FilteringOptions: ConvenienceMutable, Equatable, Sendable {
         public var monitors: [MonitorId] = []
         public var focused: Bool = false
         public var workspaces: [WorkspaceFilter] = []

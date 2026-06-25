@@ -1,6 +1,6 @@
 import Common
 
-struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
+struct WindowDetectedCallback: ConvenienceMutable, Equatable {
     var matcher: WindowDetectedCallbackMatcher = .command(.empty)
     var checkFurtherCallbacks: Bool = false
     var rawRun: Shell<any Command>? = nil
@@ -26,7 +26,7 @@ struct WindowDetectedCallback: ConvenienceCopyable, Equatable {
     }
 }
 
-struct LegacyWindowDetectedCallbackMatcher: ConvenienceCopyable, Equatable {
+struct LegacyWindowDetectedCallbackMatcher: ConvenienceMutable, Equatable {
     var appId: String?
     var appNameRegexSubstring: CaseInsensitiveRegex?
     var windowTitleRegexSubstring: CaseInsensitiveRegex?

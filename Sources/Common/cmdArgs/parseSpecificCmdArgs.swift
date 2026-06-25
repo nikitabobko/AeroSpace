@@ -66,7 +66,7 @@ public struct CmdParsingFailure: Sendable, Equatable {
     }
 }
 
-extension ArgParserProtocol where Root: ConvenienceCopyable {
+extension ArgParserProtocol where Root: ConvenienceMutable {
     fileprivate func transformRaw(_ raw: consuming Root, _ index: inout Int, _ input: Input, _ errors: inout [String]) -> Root {
         let parsedCliArgs = parse(input)
         index += parsedCliArgs.advanceBy

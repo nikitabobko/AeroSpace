@@ -74,7 +74,7 @@ func + (a: CGPoint, b: CGPoint) -> CGPoint {
     CGPoint(x: a.x + b.x, y: a.y + b.y)
 }
 
-extension CGPoint: ConvenienceCopyable {}
+extension CGPoint: ConvenienceMutable {}
 
 extension CGPoint {
     func distance(toOuterFrame rect: Rect) -> CGFloat {

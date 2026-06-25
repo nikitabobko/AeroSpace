@@ -21,7 +21,7 @@ public struct ServerAnswer: Codable, Sendable {
     }
 }
 
-public struct ClientRequest: Codable, Sendable, ConvenienceCopyable, Equatable {
+public struct ClientRequest: Codable, Sendable, ConvenienceMutable, Equatable {
     // periphery:ignore - Unused. keep it for API compatibility with old servers for a couple of version
     public var command: String? = nil
 
