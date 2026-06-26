@@ -3,11 +3,21 @@ import Common
 import PrivateApi
 
 @MainActor
-func checkAccessibilityPermissions() {
+func waitForAccessibilityPermission_nonCancellable() async {
     let options = [axTrustedCheckOptionPrompt: true]
-    if !AXIsProcessTrustedWithOptions(options as CFDictionary) {
-        resetAccessibility() // Because macOS doesn't reset it for us when the app signature changes...
-        terminateApp()
+    while true {
+        let status = TrayMenuModel.shared.axPermissionStatus == .waitingWithPrompt
+            ? AXIsProcessTrustedWithOptions(options as CFDictionary)
+            : AXIsProcessTrusted()
+        if status {
+            TrayMenuModel.shared.axPermissionStatus = .granted
+            break
+        }
+        if TrayMenuModel.shared.axPermissionStatus == .waitingWithPrompt {
+            resetAccessibility() // Because macOS doesn't reset it for us when the app signature changes...
+        }
+        TrayMenuModel.shared.axPermissionStatus = .waiting
+        try? await Task.sleep(for: .seconds(1))
     }
 }
 

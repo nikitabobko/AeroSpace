@@ -7,15 +7,16 @@ import Foundation
         initTerminationHandler()
         unsafe _isCli = false
         initServerArgs()
+        await waitForAccessibilityPermission_nonCancellable()
         if isDebug {
             await toggleReleaseServerIfDebug(.off)
             interceptTermination(SIGINT)
             interceptTermination(SIGKILL)
         }
+
         await bootstrapConfig_nonCancellable()
         _ = await reloadConfig_nonCancellable()
 
-        checkAccessibilityPermissions()
         startUnixSocketServer()
         GlobalObserver.initObserver()
         Workspace.garbageCollectUnusedWorkspaces() // init workspaces

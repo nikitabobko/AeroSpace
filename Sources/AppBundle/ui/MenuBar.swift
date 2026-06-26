@@ -11,53 +11,60 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
         Button("Copy to clipboard") { identification.copyToClipboard() }
             .keyboardShortcut("C", modifiers: .command)
         Divider()
-        if let token: RunSessionGuard = .isServerEnabled, viewModel.lastReloadConfigContainedWarnings {
-            Button {
-                Task.startUnstructured {
-                    try await runLightSession(.menuBarButton, token) {
-                        let args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []).copy(\.warningsAsErrors, true)
-                        _ = await reloadConfig_nonCancellable(args: args)
-                    }
-                }
-            } label: {
-                Label("Config contains warnings...", systemImage: "exclamationmark.triangle.fill")
-            }
-            Divider()
-        }
-        if let token: RunSessionGuard = .isServerEnabled {
-            Text("Workspaces:")
-            ForEach(viewModel.workspaces, id: \.name) { workspace in
+
+        if viewModel.axPermissionStatus == .granted {
+            if let token: RunSessionGuard = .isServerEnabled, viewModel.lastReloadConfigContainedWarnings {
                 Button {
                     Task.startUnstructured {
-                        try await runLightSession(.menuBarButton, token) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
+                        try await runLightSession(.menuBarButton, token) {
+                            let args: ReloadConfigCmdArgs = ReloadConfigCmdArgs(rawArgs: []).copy(\.warningsAsErrors, true)
+                            _ = await reloadConfig_nonCancellable(args: args)
+                        }
                     }
                 } label: {
-                    Toggle(isOn: .constant(workspace.isFocused)) {
-                        Text(workspace.name + workspace.suffix).font(.system(.body, design: .monospaced))
+                    Label("Config contains warnings...", systemImage: "exclamationmark.triangle.fill")
+                }
+                Divider()
+            }
+            if let token: RunSessionGuard = .isServerEnabled {
+                Text("Workspaces:")
+                ForEach(viewModel.workspaces, id: \.name) { workspace in
+                    Button {
+                        Task.startUnstructured {
+                            try await runLightSession(.menuBarButton, token) { _ = Workspace.get(byName: workspace.name).focusWorkspace() }
+                        }
+                    } label: {
+                        Toggle(isOn: .constant(workspace.isFocused)) {
+                            Text(workspace.name + workspace.suffix).font(.system(.body, design: .monospaced))
+                        }
                     }
                 }
+                Divider()
+            }
+            Button {
+                NSWorkspace.shared.open(URL(string: "https://github.com/sponsors/nikitabobko").orDie())
+                viewModel.sponsorshipMessage = sponsorshipPrompts.randomElement().orDie()
+            } label: {
+                Text("Sponsor AeroSpace on GitHub")
+                Text(viewModel.sponsorshipMessage)
             }
             Divider()
-        }
-        Button {
-            NSWorkspace.shared.open(URL(string: "https://github.com/sponsors/nikitabobko").orDie())
-            viewModel.sponsorshipMessage = sponsorshipPrompts.randomElement().orDie()
-        } label: {
-            Text("Sponsor AeroSpace on GitHub")
-            Text(viewModel.sponsorshipMessage)
-        }
-        Divider()
-        Button(viewModel.isEnabled ? "Disable" : "Enable") {
-            Task.startUnstructured {
-                try await runLightSession(.menuBarButton, .forceRun) {
-                    _ = await EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle))
-                        .run(.defaultEnv, .emptyStdin)
+            Button(viewModel.isEnabled ? "Disable" : "Enable") {
+                Task.startUnstructured {
+                    try await runLightSession(.menuBarButton, .forceRun) {
+                        _ = await EnableCommand(args: EnableCmdArgs(rawArgs: [], targetState: .toggle))
+                            .run(.defaultEnv, .emptyStdin)
+                    }
                 }
+            }.keyboardShortcut("E", modifiers: .command)
+            getExperimentalUISettingsMenu(viewModel: viewModel)
+            openConfigButton()
+            reloadConfigButton(warningsAsErrors: false)
+        } else {
+            Button("AeroSpace requires accessibility permission to move windows") {
+                viewModel.axPermissionStatus = .waitingWithPrompt
             }
-        }.keyboardShortcut("E", modifiers: .command)
-        getExperimentalUISettingsMenu(viewModel: viewModel)
-        openConfigButton()
-        reloadConfigButton(warningsAsErrors: false)
+        }
         Button("Quit \(aeroSpaceAppName)") {
             Task.startUnstructured {
                 terminationHandler?.beforeTermination()
@@ -65,12 +72,17 @@ public func menuBar(viewModel: TrayMenuModel) -> some Scene { // todo should it 
             }
         }.keyboardShortcut("Q", modifiers: .command)
     } label: {
-        if viewModel.isEnabled {
-            MenuBarLabel().environmentObject(viewModel)
-        } else {
-            Image(systemName: "pause.circle.fill")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
+        switch (viewModel.axPermissionStatus, viewModel.isEnabled) {
+            case (.granted, true):
+                MenuBarLabel().environmentObject(viewModel)
+            case (.granted, false):
+                Image(systemName: "pause.circle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+            case (_, _):
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
         }
     }
 }
