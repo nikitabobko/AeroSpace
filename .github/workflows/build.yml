@@ -58,6 +58,7 @@ jobs:
         run: |
           # "-" means "Sign to run locally". There is no aerospace-codesign-certificate on GH Actions
           ./build-release.sh --codesign-identity -
+          brew trust nikitabobko/tap
           ./install-from-sources.sh --dont-rebuild
       - name: cat ./.release/xcodebuild.log
         if: ${{ always() }}
