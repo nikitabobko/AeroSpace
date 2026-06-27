@@ -54,4 +54,13 @@ extension Rect {
     var size: CGSize { CGSize(width: width, height: height) }
 
     func getDimension(_ orientation: Orientation) -> CGFloat { orientation == .h ? width : height }
+
+    var nsRect: NSRect {
+        NSRect(
+            x: topLeftX,
+            y: mainMonitor.height - topLeftY - height,
+            width: width,
+            height: height,
+        )
+    }
 }

@@ -14,11 +14,17 @@ final class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider 
             _layout =  value
         }
     }
+    private var _scrollingIndex: Int = 0
+    var scrollingIndex: Int {
+        get { _scrollingIndex }
+        set { _scrollingIndex = max(0, newValue) }
+    }
 
     func copyFrom(_ other: TilingContainer) {
         self._orientation = other.orientation
         self._layout = other.layout
         self.lifeStatus = other.lifeStatus
+        self._scrollingIndex = other.scrollingIndex
     }
 
     @MainActor
@@ -41,6 +47,55 @@ final class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider 
 
 extension TilingContainer {
     var isRootContainer: Bool { parent is Workspace }
+    var isScrollingRoot: Bool { isRootContainer && layout == .scrolling }
+
+    var maxScrollingIndex: Int { max(0, children.count - 2) }
+
+    func clampScrollingIndex() {
+        scrollingIndex = isScrollingRoot ? min(scrollingIndex, maxScrollingIndex) : 0
+    }
+
+    @MainActor
+    func reveal(_ window: Window?, preferRightPane: Bool) {
+        guard isScrollingRoot else { return }
+        guard let index = window.flatMap(scrollingPageIndex(for:)) else {
+            clampScrollingIndex()
+            return
+        }
+        scrollingIndex = preferRightPane
+            ? min(max(0, index - 1), maxScrollingIndex)
+            : min(
+                max(
+                    0,
+                    index < scrollingIndex
+                        ? index
+                        : (index > scrollingIndex + 1 ? index - 1 : scrollingIndex),
+                ),
+                maxScrollingIndex,
+            )
+    }
+
+    @MainActor
+    func scroll(in direction: CardinalDirection) -> Window? {
+        guard isScrollingRoot else { return nil }
+        switch direction {
+            case .left:
+                let nextIndex = max(0, scrollingIndex - 1)
+                scrollingIndex = nextIndex
+                return children.getOrNil(atIndex: nextIndex)?.findLeafWindowRecursive(snappedTo: .left)
+            case .right:
+                let nextIndex = min(maxScrollingIndex, scrollingIndex + 1)
+                scrollingIndex = nextIndex
+                return children.getOrNil(atIndex: nextIndex + 1)?.findLeafWindowRecursive(snappedTo: .right)
+            case .up, .down:
+                return nil
+        }
+    }
+
+    @MainActor
+    private func scrollingPageIndex(for window: Window) -> Int? {
+        window.parentsWithSelf.first(where: { $0.parent === self })?.ownIndex
+    }
 
     @MainActor
     func changeOrientation(_ targetOrientation: Orientation) {
@@ -71,6 +126,8 @@ extension TilingContainer {
 enum Layout: String {
     case tiles
     case accordion
+    case scrolling
+    case tabs
 }
 
 extension String {
