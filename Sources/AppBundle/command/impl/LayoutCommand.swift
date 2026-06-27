@@ -42,21 +42,25 @@ struct LayoutCommand: Command {
         }
         switch targetDescription {
             case .h_accordion:
-                return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: .h, node: node)
+                return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: .h, node: node, window: target.windowOrNil)
             case .v_accordion:
-                return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: .v, node: node)
+                return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: .v, node: node, window: target.windowOrNil)
             case .h_tiles:
-                return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: .h, node: node)
+                return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: .h, node: node, window: target.windowOrNil)
             case .v_tiles:
-                return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: .v, node: node)
+                return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: .v, node: node, window: target.windowOrNil)
             case .accordion:
-                return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: nil, node: node)
+                return changeTilingLayout(io, targetLayout: .accordion, targetOrientation: nil, node: node, window: target.windowOrNil)
             case .tiles:
-                return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: nil, node: node)
+                return changeTilingLayout(io, targetLayout: .tiles, targetOrientation: nil, node: node, window: target.windowOrNil)
+            case .scrolling:
+                return changeTilingLayout(io, targetLayout: .scrolling, targetOrientation: .h, node: node, window: target.windowOrNil)
+            case .tabs:
+                return changeTilingLayout(io, targetLayout: .tabs, targetOrientation: nil, node: node, window: target.windowOrNil)
             case .horizontal:
-                return changeTilingLayout(io, targetLayout: nil, targetOrientation: .h, node: node)
+                return changeTilingLayout(io, targetLayout: nil, targetOrientation: .h, node: node, window: target.windowOrNil)
             case .vertical:
-                return changeTilingLayout(io, targetLayout: nil, targetOrientation: .v, node: node)
+                return changeTilingLayout(io, targetLayout: nil, targetOrientation: .v, node: node, window: target.windowOrNil)
             case .tiling:
                 guard let window = target.windowOrNil else { return .fail(io.err(noWindowIsFocused)) }
                 switch node {
@@ -87,15 +91,27 @@ struct LayoutCommand: Command {
     targetLayout: Layout?,
     targetOrientation: Orientation?,
     node: ConventionalWindowParentCases,
+    window: Window?,
 ) -> BinaryExitCode {
     switch node {
         case .floatingWindowsContainer:
             return .fail(io.err("The window is non-tiling"))
         case .tilingContainer(let parent):
+            if targetLayout == .scrolling && !parent.isRootContainer {
+                return .fail(io.err("The 'scrolling' layout is only supported for workspace root containers"))
+            }
+            if parent.layout == .scrolling && targetLayout == nil && targetOrientation == .v {
+                return .fail(io.err("The scrolling layout is always horizontal"))
+            }
             let targetOrientation = targetOrientation ?? parent.orientation
             let targetLayout = targetLayout ?? parent.layout
             parent.layout = targetLayout
             parent.changeOrientation(targetOrientation)
+            if targetLayout == .scrolling {
+                parent.reveal(window, preferRightPane: true)
+            } else {
+                parent.clampScrollingIndex()
+            }
             return .succ
     }
 }
@@ -105,6 +121,9 @@ extension ConventionalWindowParentCases {
         return switch layout {
             case .accordion:   tilingContainerOrNil?.layout == .accordion
             case .tiles:       tilingContainerOrNil?.layout == .tiles
+            case .tabs:        tilingContainerOrNil?.layout == .tabs
+            case .scrolling:
+                tilingContainerOrNil?.parentsWithSelf.compactMap { $0 as? TilingContainer }.last?.layout == .scrolling
             case .horizontal:  tilingContainerOrNil?.orientation == .h
             case .vertical:    tilingContainerOrNil?.orientation == .v
             case .h_accordion: tilingContainerOrNil.map { $0.layout == .accordion && $0.orientation == .h } == true
