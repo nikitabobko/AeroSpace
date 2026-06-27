@@ -72,6 +72,7 @@ private struct FrozenFocus: AeroAny, Equatable, Sendable {
     let status = newFocus.workspace.workspaceMonitorInfo.setVisibleWorkspace(newFocus.workspace)
 
     newFocus.windowOrNil?.markAsMostRecentChild()
+    newFocus.workspace.rootTilingContainer.reveal(newFocus.windowOrNil, preferRightPane: false)
     return status
 }
 extension Window {
