@@ -78,6 +78,8 @@ aerospace -h;
     | run-callback [--for-every-window|--window-id <window_id>]... on-window-detected [--for-every-window|--window-id <window_id>]...
     | run-callback (on-focus-changed|on-focused-monitor-changed)
 
+    | scroll (left|right)
+
     | split [--window-id <window_id>] (horizontal|vertical|opposite) [--window-id <window_id>]
 
     | swap [--swap-focus|--wrap-around|--window-id <window_id>]... (left|down|up|right|dfs-next|dfs-prev) [--swap-focus|--wrap-around|--window-id <window_id>]...
@@ -124,7 +126,7 @@ aerospace -h;
 <workspace> ::= {{{ aerospace list-workspaces --monitor all --empty no }}};
 <number> ::= {{{ true }}};
 <monitor_pattern> ::= {{{ true }}};
-<layouts> ::= h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating;
+<layouts> ::= h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|scrolling|tabs|horizontal|vertical|tiling|floating;
 
 <list_workspaces1_flag> ::= --visible [no] | --empty [no] | --format <output_format> | --format <output_format> | --count | --json;
 
