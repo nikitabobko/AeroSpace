@@ -117,6 +117,12 @@ extension CGPoint {
                 })
             case .accordion:
                 tree.mostRecentInhabitedChild
+            case .scrolling:
+                tree.inhabitedChildren.first(where: {
+                    (virtual ? $0.lastAppliedLayoutVirtualRect : $0.lastAppliedLayoutPhysicalRect)?.contains(point) == true
+                })
+            case .tabs:
+                tree.mostRecentInhabitedChild
         }
         guard let target else { return nil }
         return switch target.tilingTreeNodeCasesOrDie() {
