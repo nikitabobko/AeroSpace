@@ -39,7 +39,7 @@ import AppKit
                     break
                 }
             }
-            if window == nil { window = location.findIn(tree: workspace.rootTilingContainer, virtual: false) }
+            if window == nil { window = location.findWindowRecursively(in: workspace.rootTilingContainer, virtual: false) }
             if let window {
                 try await runLightSession(.focusFollowsMouse, token) {
                     _ = window.focusWindow()

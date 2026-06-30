@@ -52,7 +52,7 @@ private func moveTilingWindow(_ window: Window) {
     window.lastAppliedLayoutPhysicalRect = nil
     let mouseLocation = mouseLocation
     let targetWorkspace = mouseLocation.monitorApproximation.activeWorkspace
-    let swapTarget = mouseLocation.findIn(tree: targetWorkspace.rootTilingContainer, virtual: false)?.takeIf { $0 != window }
+    let swapTarget = mouseLocation.findWindowRecursively(in: targetWorkspace.rootTilingContainer, virtual: false)?.takeIf { $0 != window }
     if targetWorkspace != window.nodeWorkspace { // Move window to a different monitor
         let index: Int = if let swapTarget, let parent = swapTarget.parent as? TilingContainer, let targetRect = swapTarget.lastAppliedLayoutPhysicalRect {
             mouseLocation.getProjection(parent.orientation) >= targetRect.center.getProjection(parent.orientation)
@@ -84,15 +84,15 @@ func swapWindows(mruDominant window1: Window, _ window2: Window) {
 
 extension CGPoint {
     @MainActor
-    func findIn(tree: TilingContainer, virtual: Bool) -> Window? {
+    func findWindowRecursively(in tree: TilingContainer, virtual: Bool) -> Window? {
         if let window = tree.mostRecentWindowRecursive, window.isFullscreen {
             return window
         }
-        return _findInRecursive(tree: tree, virtual: virtual)
+        return _findWindowRecursively(in: tree, virtual: virtual)
     }
 
     @MainActor
-    private func _findInRecursive(tree: TilingContainer, virtual: Bool) -> Window? {
+    private func _findWindowRecursively(in tree: TilingContainer, virtual: Bool) -> Window? {
         let point = self
         let target: TreeNode? = switch tree.layout {
             case .tiles:
@@ -105,7 +105,7 @@ extension CGPoint {
         guard let target else { return nil }
         return switch target.tilingTreeNodeCasesOrDie() {
             case .window(let window): window
-            case .tilingContainer(let container): _findInRecursive(tree: container, virtual: virtual)
+            case .tilingContainer(let container): _findWindowRecursively(in: container, virtual: virtual)
         }
     }
 }

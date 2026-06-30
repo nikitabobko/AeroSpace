@@ -12,7 +12,7 @@ AeroSpace bundles the following dependencies and uses the following materials:
 HotKey is used as a more convenient wrapper around macOS Carbon API to listen for global shortcuts.
 
 **TOMLDecoder**.
-[TOMLDecoder GitHub link](https://github.com/LebJe/TOMLKit).
+[TOMLDecoder GitHub link](https://github.com/dduan/TOMLDecoder).
 [TOMLDecoder MIT license](./third-party-license/LICENSE-TOMLDecoder.txt).
 TOMLDecoder is used as TOML parsing library.
 
