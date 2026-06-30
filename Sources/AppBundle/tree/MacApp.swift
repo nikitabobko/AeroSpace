@@ -27,7 +27,12 @@ final class MacApp: AbstractApp {
     @MainActor static var allAppsMap: [pid_t: MacApp] = [:]
     @MainActor private static var wipPids: [pid_t: AwaitableOneTimeBroadcastLatch] = [:]
 
-    private init(_ nsApp: NSRunningApplication, _ axApp: AXUIElement, _ axSubscriptions: [AxSubscription], _ thread: Thread) {
+    private init(
+        _ nsApp: NSRunningApplication,
+        _ axApp: AXUIElement,
+        _ axSubscriptions: [AxSubscription],
+        _ thread: Thread,
+    ) {
         self.nsApp = nsApp
         self.axApp = .init(axApp)
         self.pid = nsApp.processIdentifier
@@ -67,6 +72,11 @@ final class MacApp: AbstractApp {
                 let subscriptions = (try? unsafe AxSubscription.bulkSubscribe(nsApp, axApp, job, handlers)) ?? []
                 let isGood = !subscriptions.isEmpty
                 let app = isGood ? MacApp(nsApp, axApp, subscriptions, Thread.current) : nil
+
+                let appAxSubscriptionsThreadGuarded = app?.appAxSubscriptions
+                let windowsThreadGuarded = app?.windows
+                let axAppThreadGuarded = app?.axApp
+
                 Task.startUnstructured { @MainActor in
                     allAppsMap[pid] = app
                     wipPids[pid] = nil
@@ -74,6 +84,11 @@ final class MacApp: AbstractApp {
                 }
                 if isGood {
                     CFRunLoopRun()
+
+                    // Destroy AX objects in reverse order of their creation
+                    appAxSubscriptionsThreadGuarded?.destroy()
+                    windowsThreadGuarded?.destroy()
+                    axAppThreadGuarded?.destroy()
                 }
             }
         }
@@ -321,12 +336,7 @@ final class MacApp: AbstractApp {
             job.cancel()
         }
         setFrameJobs = [:]
-        thread?.runInLoopAsync(job: RunLoopJob(.nonCancellable)) { [windows, appAxSubscriptions, axApp] job in
-            appAxSubscriptions.destroy() // Destroy AX objects in reverse order of their creation
-            windows.destroy()
-            axApp.destroy()
-            CFRunLoopStop(CFRunLoopGetCurrent())
-        }
+        thread?.runInLoopAsync(job: RunLoopJob(.nonCancellable)) { job in CFRunLoopStop(CFRunLoopGetCurrent()) }
         thread = nil // Disallow all future job submissions
     }
 
