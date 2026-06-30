@@ -1,1 +1,2 @@
-Act on the specified window instead of the focused window
+Act on the specified window instead of the focused window.
+The flag takes precedence over `AEROSPACE_WINDOW_ID` and `AEROSPACE_WORKSPACE` xref:./guide.adoc#environment-variables[environment variables].

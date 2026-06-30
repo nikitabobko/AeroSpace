@@ -1,8 +1,8 @@
 ifndef::env-site[]
-== Exit Codes
+== Operators
 endif::[]
 
 ifdef::env-site[]
 [.lead]
-**EXIT CODES**
+**OPERATORS**
 endif::[]
