@@ -70,8 +70,8 @@ final class MacApp: AbstractApp {
                     let app = isGood ? MacApp(nsApp, axApp, subscriptions, Thread.current) : nil
                     Task.startUnstructured { @MainActor in
                         allAppsMap[pid] = app
-                        await wip.signalToAll()
                         wipPids[pid] = nil
+                        await wip.signalToAll()
                     }
                     if isGood {
                         CFRunLoopRun()
