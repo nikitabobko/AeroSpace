@@ -48,39 +48,40 @@ final class MacApp: AbstractApp {
         // AX requests crash if you send them to yourself
         if pid == myPid { return nil }
 
-        while true {
-            if let existing = allAppsMap[pid] { return existing }
-            try checkCancellation()
-            if let wip = wipPids[pid] {
-                try await wip.await()
-                continue
-            }
-            let wip = AwaitableOneTimeBroadcastLatch()
-            wipPids[pid] = wip
+        if let existing = allAppsMap[pid] { return existing }
+        try checkCancellation()
+        if let wip = wipPids[pid] {
+            try await wip.await()
+            return allAppsMap[pid]
+        }
+        let wip = AwaitableOneTimeBroadcastLatch()
+        wipPids[pid] = wip
 
-            let thread = Thread {
-                $axTaskLocalAppThreadToken.withValue(AxAppThreadToken(pid: pid, idForDebug: nsApp.idForDebug)) {
-                    let axApp = AXUIElementCreateApplication(nsApp.processIdentifier)
-                    let handlers: HandlerToNotifKeyMapping = unsafe [
-                        (refreshObs, [kAXWindowCreatedNotification, kAXFocusedWindowChangedNotification]),
-                    ]
-                    let job = RunLoopJob(.cancellable)
-                    let subscriptions = (try? unsafe AxSubscription.bulkSubscribe(nsApp, axApp, job, handlers)) ?? []
-                    let isGood = !subscriptions.isEmpty
-                    let app = isGood ? MacApp(nsApp, axApp, subscriptions, Thread.current) : nil
-                    Task.startUnstructured { @MainActor in
-                        allAppsMap[pid] = app
-                        wipPids[pid] = nil
-                        await wip.signalToAll()
-                    }
-                    if isGood {
-                        CFRunLoopRun()
-                    }
+        let thread = Thread {
+            $axTaskLocalAppThreadToken.withValue(AxAppThreadToken(pid: pid, idForDebug: nsApp.idForDebug)) {
+                let axApp = AXUIElementCreateApplication(nsApp.processIdentifier)
+                let handlers: HandlerToNotifKeyMapping = unsafe [
+                    (refreshObs, [kAXWindowCreatedNotification, kAXFocusedWindowChangedNotification]),
+                ]
+                let job = RunLoopJob(.cancellable)
+                let subscriptions = (try? unsafe AxSubscription.bulkSubscribe(nsApp, axApp, job, handlers)) ?? []
+                let isGood = !subscriptions.isEmpty
+                let app = isGood ? MacApp(nsApp, axApp, subscriptions, Thread.current) : nil
+                Task.startUnstructured { @MainActor in
+                    allAppsMap[pid] = app
+                    wipPids[pid] = nil
+                    await wip.signalToAll()
+                }
+                if isGood {
+                    CFRunLoopRun()
                 }
             }
-            thread.name = "AxAppThread \(nsApp.idForDebug)"
-            thread.start()
         }
+        thread.name = "AxAppThread \(nsApp.idForDebug)"
+        thread.start()
+
+        try await wip.await()
+        return allAppsMap[pid]
     }
 
     func closeAndUnregisterAxWindow(_ windowId: UInt32) {
