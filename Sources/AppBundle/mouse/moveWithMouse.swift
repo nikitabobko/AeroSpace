@@ -85,6 +85,14 @@ func swapWindows(mruDominant window1: Window, _ window2: Window) {
 extension CGPoint {
     @MainActor
     func findIn(tree: TilingContainer, virtual: Bool) -> Window? {
+        if let window = tree.mostRecentWindowRecursive, window.isFullscreen {
+            return window
+        }
+        return _findInRecursive(tree: tree, virtual: virtual)
+    }
+
+    @MainActor
+    private func _findInRecursive(tree: TilingContainer, virtual: Bool) -> Window? {
         let point = self
         let target: TreeNode? = switch tree.layout {
             case .tiles:
@@ -97,7 +105,7 @@ extension CGPoint {
         guard let target else { return nil }
         return switch target.tilingTreeNodeCasesOrDie() {
             case .window(let window): window
-            case .tilingContainer(let container): findIn(tree: container, virtual: virtual)
+            case .tilingContainer(let container): _findInRecursive(tree: container, virtual: virtual)
         }
     }
 }
