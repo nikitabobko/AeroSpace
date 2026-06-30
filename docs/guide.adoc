@@ -970,10 +970,10 @@ A minimal Python client that runs `aerospace list-workspaces --focused`:
 
 [source,python]
 ----
-import json, os, socket, struct
+import getpass, json, socket, struct
 
 SOCKET_PROTOCOL_VERSION = 1
-sock_path = f"/tmp/bobko.aerospace-{os.getlogin()}.sock"
+sock_path = f"/tmp/bobko.aerospace-{getpass.getuser()}.sock"
 
 def send_frame(s, payload):
     s.sendall(struct.pack("<I", len(payload)) + payload)
