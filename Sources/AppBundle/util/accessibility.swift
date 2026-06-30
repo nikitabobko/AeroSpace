@@ -186,6 +186,10 @@ enum Ax {
         var setter: @Sendable (T) -> CFTypeRef?
     }
 
+    static let parentWindowRecursive = ReadableAttrImpl<AXUIElement>(
+        key: kAXWindowAttribute,
+        getter: { ($0 as! AXUIElement) },
+    )
     static let titleAttr = WritableAttrImpl<String>(
         key: kAXTitleAttribute,
         getter: { $0 as? String },

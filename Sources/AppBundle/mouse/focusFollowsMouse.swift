@@ -24,6 +24,10 @@ import AppKit
         focusFollowsTask = Task.startUnstructured { @MainActor in
             guard let token: RunSessionGuard = .isServerEnabled else { return }
             try checkCancellation()
+            // Ignores macOS menubar dropdown, but, unfortunately, it doesn't ignore non-native menu-like fake windows.
+            // todo: It would be cool to somehow reuse isWindowHeuristic logic here
+            if await isAxWindowUnderMouse(location) == false { return }
+            try checkCancellation()
             let workspace = location.monitorApproximation.activeWorkspace
             var window: Window? = nil
             for child in workspace.floatingWindowsContainer.mruChildren {
@@ -44,4 +48,15 @@ import AppKit
             }
         }
     }
+}
+
+@concurrent
+private nonisolated func isAxWindowUnderMouse(_ location: CGPoint) async -> Bool? {
+    let systemwide = AXUIElementCreateSystemWide()
+    var element: AXUIElement?
+    if unsafe AXUIElementCopyElementAtPosition(systemwide, Float(location.x), Float(location.y), &element) != .success {
+        return nil
+    }
+    guard let element else { return nil }
+    return element.get(Ax.parentWindowRecursive) != nil || element.get(Ax.roleAttr) == kAXWindowRole
 }
