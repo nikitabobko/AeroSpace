@@ -8,6 +8,25 @@ final class ShellParserTest: XCTestCase {
         assertSucc("foo && bar || baz".lexAndParseShell(), .or(.and("foo", "bar"), "baz"))
         assertSucc("foo || bar && baz".lexAndParseShell(), .or("foo", .and("bar", "baz")))
         assertSucc("echo '' \"\"".lexAndParseShell(), .cmd(["echo", "", ""]))
+
+        let a = """
+            foo ||
+                bar
+            """
+        assertFail(a.lexAndParseShell(), "Line 1 Column 7: Expected at least one word. Got: \n")
+        let b = """
+            foo
+                || bar
+            """
+        assertFail(b.lexAndParseShell(), "Line 1 Column 4: Please escape newline with backslash character.")
+        let c = """
+            foo || \\
+                bar || \\ # comment
+                baz \\
+                || duh \\ # comment
+                || qux
+            """
+        assertSucc(c.lexAndParseShell(), .or(["foo", "bar", "baz", "duh", "qux"]))
     }
 
     func testParserEmpty() {

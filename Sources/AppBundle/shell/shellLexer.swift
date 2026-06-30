@@ -40,15 +40,13 @@ private func _shellLexerTokens(_ str: String) throws(String) -> [LexerToken] {
             case (.quotedWord, _): // Yet another character of a quoted word
                 word.append(char.value)
 
-            // All the remaining states below: .skipWhitespaces, .bareWord, .backslash, or .rightAfterQuotedWord
-
-            case (_, "#"): // Start comment
-                try flushWord(.bare)
-                state = .comment
-
+            case (.backslash, "#"): // Skip comments after backslash
+                while let next = array.getOrNil(atIndex: index), next.value != "\n" { index += 1 }
             case (.backslash, "\n"): state = .skipWhitespaces
             case (.backslash, _) where char.value.isWhitespace: break
             case (.backslash, _): throw "\(char.location): backslash can be followed only by whitespaces, newlines and comments, but it is followed by \(char.value.description.singleQuoted)."
+
+            // All the remaining states below: .skipWhitespaces, .bareWord, or .rightAfterQuotedWord
 
             case (_, "\n"):
                 try flushWord(.bare)
@@ -72,6 +70,9 @@ private func _shellLexerTokens(_ str: String) throws(String) -> [LexerToken] {
             case (_, "\\"):
                 try flushWord(.bare)
                 state = .backslash
+            case (_, "#"): // Start comment
+                try flushWord(.bare)
+                state = .comment
             case (_, ";"):
                 try flushWord(.bare)
                 result.append(.init(char.location, .semicolon))
@@ -112,7 +113,7 @@ private func _shellLexerTokens(_ str: String) throws(String) -> [LexerToken] {
     let binaryOperators: [LexerToken.Payload?] = [.and, .or, .pipe]
     for (index, token) in result.enumerated() {
         if token.payload == .newline && binaryOperators.contains(result.getOrNil(atIndex: index + 1)?.payload) {
-            throw "\(token.location): Please escape new line with backslash character."
+            throw "\(token.location): Please escape newline with backslash character."
         }
     }
     return result

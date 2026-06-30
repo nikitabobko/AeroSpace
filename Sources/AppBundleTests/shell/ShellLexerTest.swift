@@ -8,8 +8,8 @@ final class ShellLexerTest: XCTestCase {
         assertSucc("echo  foo".shellLexerTokens(), [.word(l: 1, c: 1, "echo"), .word(l: 1, c: 7, "foo"), .end(l: 1, c: 10)])
         assertSucc("echo 'foo' &&".shellLexerTokens(), [.word(l: 1, c: 1, "echo"), .word(l: 1, c: 6, "foo"), .and(l: 1, c: 12), .end(l: 1, c: 14)])
         assertSucc("echo 'foo' \\ \n&&".shellLexerTokens(), [.word(l: 1, c: 1, "echo"), .word(l: 1, c: 6, "foo"), .and(l: 2, c: 1), .end(l: 2, c: 3)])
-        assertFail("echo 'foo'\n &&".shellLexerTokens(), "Line 1 Column 11: Please escape new line with backslash character.")
-        assertFail("echo 'foo' \n &&".shellLexerTokens(), "Line 1 Column 12: Please escape new line with backslash character.")
+        assertFail("echo 'foo'\n &&".shellLexerTokens(), "Line 1 Column 11: Please escape newline with backslash character.")
+        assertFail("echo 'foo' \n &&".shellLexerTokens(), "Line 1 Column 12: Please escape newline with backslash character.")
 
         assertSucc("echo ''".shellLexerTokens(), [.word(l: 1, c: 1, "echo"), .word(l: 1, c: 6, ""), .end(l: 1, c: 8)])
     }
