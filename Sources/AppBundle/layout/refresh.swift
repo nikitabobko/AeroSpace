@@ -88,11 +88,13 @@ func runLightSession<T>(
     }
 }
 
-struct RunSessionGuard: Sendable {
+enum RunSessionGuard: Sendable {
+    case forceRun
+
     @MainActor
-    static var isServerEnabled: RunSessionGuard? { TrayMenuModel.shared.isEnabled ? forceRun : nil }
+    static var isServerEnabled: Self? { TrayMenuModel.shared.isEnabled ? forceRun : nil }
     @MainActor
-    static func isServerEnabled(orIsEnableCommand command: (any Command)?) -> RunSessionGuard? {
+    static func isServerEnabled(orIsEnableCommand command: (any Command)?) -> Self? {
         command is EnableCommand ? .forceRun : .isServerEnabled
     }
     @MainActor
@@ -101,11 +103,9 @@ struct RunSessionGuard: Sendable {
         line: Int = #line,
         column: Int = #column,
         function: String = #function,
-    ) -> RunSessionGuard {
+    ) -> Self {
         .isServerEnabled ?? dieT("server is disabled", file: file, line: line, column: column, function: function)
     }
-    static let forceRun = RunSessionGuard()
-    private init() {}
 }
 
 @MainActor

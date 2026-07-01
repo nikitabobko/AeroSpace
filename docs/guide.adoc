@@ -931,7 +931,7 @@ The reply to a one-shot command is a JSON object:
     "exitCode": 0,
     "stdout": "1\n2\n3",
     "stderr": "",
-    "serverVersionAndHash": "0.20.0-Beta 33fa0643"
+    "serverVersionAndHash": "0.20.0-Beta 1ec4234a"
 }
 ----
 

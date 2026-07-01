@@ -28,3 +28,7 @@ extension Dictionary where Key: Comparable {
         entries.sortedBy { $0.key }
     }
 }
+
+public func + <K, V>(lhs: [K: V], rhs: [K: V]) -> [K: V] {
+    lhs.merging(rhs) { _, r in r }
+}
