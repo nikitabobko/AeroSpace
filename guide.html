@@ -2386,10 +2386,10 @@ AeroSpace sets this variable when invoking callbacks so that the called commands
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight nowrap"><code data-lang="python"><span></span><span class="tok-kn">import</span><span class="tok-w"> </span><span class="tok-nn">json</span><span class="tok-o">,</span><span class="tok-w"> </span><span class="tok-nn">os</span><span class="tok-o">,</span><span class="tok-w"> </span><span class="tok-nn">socket</span><span class="tok-o">,</span><span class="tok-w"> </span><span class="tok-nn">struct</span>
+<pre class="pygments highlight nowrap"><code data-lang="python"><span></span><span class="tok-kn">import</span><span class="tok-w"> </span><span class="tok-nn">getpass</span><span class="tok-o">,</span><span class="tok-w"> </span><span class="tok-nn">json</span><span class="tok-o">,</span><span class="tok-w"> </span><span class="tok-nn">socket</span><span class="tok-o">,</span><span class="tok-w"> </span><span class="tok-nn">struct</span>
 
 <span class="tok-n">SOCKET_PROTOCOL_VERSION</span> <span class="tok-o">=</span> <span class="tok-mi">1</span>
-<span class="tok-n">sock_path</span> <span class="tok-o">=</span> <span class="tok-sa">f</span><span class="tok-s2">&quot;/tmp/bobko.aerospace-</span><span class="tok-si">{</span><span class="tok-n">os</span><span class="tok-o">.</span><span class="tok-n">getlogin</span><span class="tok-p">()</span><span class="tok-si">}</span><span class="tok-s2">.sock&quot;</span>
+<span class="tok-n">sock_path</span> <span class="tok-o">=</span> <span class="tok-sa">f</span><span class="tok-s2">&quot;/tmp/bobko.aerospace-</span><span class="tok-si">{</span><span class="tok-n">getpass</span><span class="tok-o">.</span><span class="tok-n">getuser</span><span class="tok-p">()</span><span class="tok-si">}</span><span class="tok-s2">.sock&quot;</span>
 
 <span class="tok-k">def</span><span class="tok-w"> </span><span class="tok-nf">send_frame</span><span class="tok-p">(</span><span class="tok-n">s</span><span class="tok-p">,</span> <span class="tok-n">payload</span><span class="tok-p">):</span>
     <span class="tok-n">s</span><span class="tok-o">.</span><span class="tok-n">sendall</span><span class="tok-p">(</span><span class="tok-n">struct</span><span class="tok-o">.</span><span class="tok-n">pack</span><span class="tok-p">(</span><span class="tok-s2">&quot;&lt;I&quot;</span><span class="tok-p">,</span> <span class="tok-nb">len</span><span class="tok-p">(</span><span class="tok-n">payload</span><span class="tok-p">))</span> <span class="tok-o">+</span> <span class="tok-n">payload</span><span class="tok-p">)</span>
@@ -2473,7 +2473,7 @@ See <a href="./commands#test">the test helper command documentation</a> for more
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-06-30 17:19:01 +0200
+Last updated 2026-07-01 11:43:47 +0200
 </div>
 </div>
 <style>
