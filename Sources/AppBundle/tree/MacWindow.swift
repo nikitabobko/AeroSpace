@@ -80,6 +80,7 @@ final class MacWindow: Window {
         if MacWindow.allWindowsMap.removeValue(forKey: windowId) == nil {
             return
         }
+        TabHeaderTitleCache.shared.invalidate(windowId: windowId)
         if !skipClosedWindowsCache { cacheClosedWindowIfNeeded() }
         let parent = unbindFromParent().parent
         let deadWindowWorkspace = parent.nodeWorkspace
@@ -114,6 +115,7 @@ final class MacWindow: Window {
     }
 
     override func closeAxWindow() {
+        TabHeaderTitleCache.shared.invalidate(windowId: windowId)
         garbageCollect(skipClosedWindowsCache: true)
         macApp.closeAndUnregisterAxWindow(windowId)
     }
@@ -173,7 +175,10 @@ final class MacWindow: Window {
 
                 setAxFrame(CGPoint(x: newX, y: newY), nil)
             case .macosNativeFullscreenWindow, .macosNativeHiddenAppWindow, .macosNativeMinimizedWindow,
-                 .macosPopupWindow, .tiling, .rootTilingContainer, .shimContainerRelation: break
+                 .macosPopupWindow, .tiling, .rootTilingContainer, .shimContainerRelation:
+                // The window was physically moved away while the workspace was hidden, so force the next layout pass
+                // to re-apply its frame instead of assuming the cached rect is still on screen.
+                lastAppliedLayoutPhysicalRect = nil
         }
 
         self.prevUnhiddenProportionalPositionInsideWorkspaceRect = nil
