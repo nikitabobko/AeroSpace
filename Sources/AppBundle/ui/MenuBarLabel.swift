@@ -10,7 +10,7 @@ struct MenuBarLabel: View {
     let style: MenuBarStyle?
 
     let hStackSpacing = CGFloat(6)
-    let itemSize = CGFloat(40)
+    let itemSize = CGFloat(33)
     let itemBorderSize = CGFloat(3)
     let itemCornerRadius = CGFloat(6)
 
