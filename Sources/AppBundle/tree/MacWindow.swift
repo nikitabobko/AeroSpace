@@ -132,6 +132,14 @@ final class MacWindow: Window {
                 let absolutePoint = topLeftCorner - monitorRect.topLeftCorner
                 prevUnhiddenProportionalPositionInsideWorkspaceRect =
                     CGPoint(x: absolutePoint.x / monitorRect.width, y: absolutePoint.y / monitorRect.height)
+                // Refresh lastFloatingSize from the live AX rect so that unhideFromCorner
+                // clamps against the window's actual current size rather than a size cached
+                // at window-detect time. Otherwise windows resized after detection get nudged
+                // away from the right/bottom workspace edges on every unhide.
+                // https://github.com/nikitabobko/AeroSpace/issues/1519
+                if isFloating {
+                    lastFloatingSize = windowRect.size
+                }
             }
         }
         let p: CGPoint
