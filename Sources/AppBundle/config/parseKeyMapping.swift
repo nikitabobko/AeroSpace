@@ -28,7 +28,7 @@ struct KeyMapping: ConvenienceMutable, Equatable, Sendable {
 }
 
 func parseKeyMapping(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> KeyMapping {
-    parseTable(raw, KeyMapping(), keyMappingParser, backtrace, &c)
+    parseNonEmptyTable(raw, KeyMapping(), keyMappingParser, backtrace, &c)
 }
 
 private func parsePreset(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<KeyMapping.Preset> {

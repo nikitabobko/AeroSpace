@@ -104,13 +104,13 @@ private func parseIntDynamicValue(_ raw: OrderedJson, _ backtrace: ConfigBacktra
 }
 
 func parseGaps(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> Gaps {
-    parseTable(raw, .zero, gapsParser, backtrace, &c)
+    parseNonEmptyTable(raw, .zero, gapsParser, backtrace, &c)
 }
 
 func parseInner(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> Gaps.Inner {
-    parseTable(raw, Gaps.Inner.zero, innerParser, backtrace, &c)
+    parseNonEmptyTable(raw, Gaps.Inner.zero, innerParser, backtrace, &c)
 }
 
 func parseOuter(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> Gaps.Outer {
-    parseTable(raw, Gaps.Outer.zero, outerParser, backtrace, &c)
+    parseNonEmptyTable(raw, Gaps.Outer.zero, outerParser, backtrace, &c)
 }
