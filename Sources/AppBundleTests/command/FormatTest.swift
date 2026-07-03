@@ -23,7 +23,7 @@ final class FormatTest: XCTestCase {
         assertEquals(AeroObj.window(.forTest(window: window, title: nil)).kind, .window)
         assertEquals(AeroObj.workspace(workspace).kind, .workspace)
         assertEquals(AeroObj.app(TestApp.shared).kind, .app)
-        assertEquals(AeroObj.monitor(mainMonitor).kind, .monitor)
+        assertEquals(AeroObj.monitor(mainMonitorInfo).kind, .monitor)
     }
 
     func testResolveWindowForFormatVarPrefetchesTitleOnlyWhenNeeded() async throws {
@@ -224,7 +224,7 @@ final class FormatTest: XCTestCase {
     func testExpandWindowToMonitorWhenWindowHasMonitor() {
         let window = TestWindow.new(id: 1, parent: Workspace.get(byName: name).rootTilingContainer)
         let obj = AeroObj.window(.forTest(window: window, title: nil))
-        assertPrimitive(FormatVar.monitor(.monitorName).expandFormatVar(obj: obj), .string(mainMonitor.name))
+        assertPrimitive(FormatVar.monitor(.monitorName).expandFormatVar(obj: obj), .string(mainMonitorInfo.name))
     }
 
     func testExpandWindowToMonitorWhenWindowDetached() {
@@ -261,12 +261,12 @@ final class FormatTest: XCTestCase {
     func testExpandWorkspaceToMonitor() {
         let workspace = Workspace.get(byName: name)
         let obj = AeroObj.workspace(workspace)
-        assertPrimitive(FormatVar.monitor(.monitorName).expandFormatVar(obj: obj), .string(mainMonitor.name))
+        assertPrimitive(FormatVar.monitor(.monitorName).expandFormatVar(obj: obj), .string(mainMonitorInfo.name))
         assertPrimitive(FormatVar.monitor(.monitorIsMain).expandFormatVar(obj: obj), .bool(true))
     }
 
     func testExpandMonitorVars() {
-        let monitor = mainMonitor
+        let monitor = mainMonitorInfo
         let obj = AeroObj.monitor(monitor)
         assertPrimitive(FormatVar.monitor(.monitorAppKitNsScreenScreensId).expandFormatVar(obj: obj), .int(Int64(monitor.monitorAppKitNsScreenScreensId)))
         assertPrimitive(FormatVar.monitor(.monitorName).expandFormatVar(obj: obj), .string(monitor.name))

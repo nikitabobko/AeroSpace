@@ -100,7 +100,7 @@ struct FocusCommand: Command {
     _ io: CmdIo,
     _ args: FocusCmdArgs,
     _ direction: CardinalDirection,
-    _ wrappedMonitor: Monitor,
+    _ wrappedMonitor: MonitorInfo,
 ) -> BinaryExitCode {
     switch args.boundariesAction {
         case .stop:

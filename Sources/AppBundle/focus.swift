@@ -50,7 +50,7 @@ private struct FrozenFocus: AeroAny, Equatable, Sendable {
 }
 
 @MainActor private var _focus: FrozenFocus = {
-    let monitor = mainMonitor
+    let monitor = mainMonitorInfo
     return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId_oneBased: monitor.monitorId_oneBased ?? 0)
 }()
 

@@ -8,7 +8,7 @@ import Common
 @MainActor private var visibleWorkspaceToScreenPoint: [Workspace: CGPoint] = [:]
 
 // The returned workspace must be invisible and it must belong to the requested monitor
-@MainActor func getStubWorkspace(for monitor: Monitor) -> Workspace {
+@MainActor func getStubWorkspace(for monitor: MonitorInfo) -> Workspace {
     getStubWorkspace(forPoint: monitor.rect.topLeftCorner)
 }
 
@@ -105,15 +105,15 @@ extension Workspace {
     @MainActor
     var isVisible: Bool { visibleWorkspaceToScreenPoint.keys.contains(self) }
     @MainActor
-    var workspaceMonitor: Monitor {
+    var workspaceMonitor: MonitorInfo {
         forceAssignedMonitor
             ?? visibleWorkspaceToScreenPoint[self]?.monitorApproximation
             ?? assignedMonitorPoint?.monitorApproximation
-            ?? mainMonitor
+            ?? mainMonitorInfo
     }
 }
 
-extension Monitor {
+extension MonitorInfo {
     @MainActor
     var activeWorkspace: Workspace {
         if let existing = screenPointToVisibleWorkspace[rect.topLeftCorner] {
@@ -134,7 +134,7 @@ extension Monitor {
 
 @MainActor
 func gcMonitors() {
-    if screenPointToVisibleWorkspace.count != monitors.count {
+    if screenPointToVisibleWorkspace.count != monitorInfos.count {
         rearrangeWorkspacesOnMonitors()
     }
 }
@@ -164,7 +164,7 @@ extension CGPoint {
 
 @MainActor
 private func rearrangeWorkspacesOnMonitors() {
-    let newScreens = monitors.map(\.rect.topLeftCorner)
+    let newScreens = monitorInfos.map(\.rect.topLeftCorner)
     var newScreenToOldScreenMapping: [CGPoint: CGPoint] = [:]
     for (oldScreen, _) in screenPointToVisibleWorkspace {
         guard let newScreen = newScreens.minBy({ ($0 - oldScreen).vectorLength }) else { continue }

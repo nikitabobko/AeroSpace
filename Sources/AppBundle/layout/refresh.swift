@@ -161,7 +161,7 @@ private func layoutWorkspaces() async throws {
         }
         return
     }
-    let monitors = monitors
+    let monitors = monitorInfos
     var monitorToOptimalHideCorner: [CGPoint: OptimalHideCorner] = [:]
     for monitor in monitors {
         let xOff = monitor.width * 0.1
@@ -176,7 +176,7 @@ private func layoutWorkspaces() async throws {
         let blc2 = monitor.rect.bottomLeftCorner + CGPoint(x: xOff, y: 2)
         let blc3 = monitor.rect.bottomLeftCorner + CGPoint(x: -2, y: 2)
 
-        func contains(_ monitor: Monitor, _ point: CGPoint) -> Int { monitor.rect.contains(point) ? 1 : 0 }
+        func contains(_ monitor: MonitorInfo, _ point: CGPoint) -> Int { monitor.rect.contains(point) ? 1 : 0 }
         let important = 10
 
         let corner: OptimalHideCorner =

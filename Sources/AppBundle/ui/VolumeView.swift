@@ -17,8 +17,8 @@ public final class VolumePanel: NSPanelHud {
         let hostingView = NSHostingView(rootView: VolumeView(volume: volume))
         hostingView.frame = NSRect(x: 0, y: 0, width: panelFrame.width, height: panelFrame.height)
         self.contentView?.addSubview(hostingView)
-        panelFrame.origin.x = mainMonitor.width - panelFrame.size.width - 20
-        panelFrame.origin.y = (mainMonitor.height - panelFrame.size.height) / 2
+        panelFrame.origin.x = mainMonitorInfo.width - panelFrame.size.width - 20
+        panelFrame.origin.y = (mainMonitorInfo.height - panelFrame.size.height) / 2
         self.setFrame(panelFrame, display: true)
         self.orderFrontRegardless()
         startTimer()

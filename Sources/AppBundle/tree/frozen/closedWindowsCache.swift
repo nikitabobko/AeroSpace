@@ -13,7 +13,7 @@ struct FrozenMonitor: Sendable {
     let topLeftCorner: CGPoint
     let visibleWorkspace: String
 
-    @MainActor init(_ monitor: Monitor) {
+    @MainActor init(_ monitor: MonitorInfo) {
         topLeftCorner = monitor.rect.topLeftCorner
         visibleWorkspace = monitor.activeWorkspace.name
     }
@@ -45,7 +45,7 @@ struct FrozenWorkspace: Sendable {
     }
     closedWindowsCache = FrozenWorld(
         workspaces: allWs.map { FrozenWorkspace($0) },
-        monitors: monitors.map(FrozenMonitor.init),
+        monitors: monitorInfos.map(FrozenMonitor.init),
         windowIds: allWindowIds,
     )
 }
@@ -54,7 +54,7 @@ struct FrozenWorkspace: Sendable {
     if !closedWindowsCache.windowIds.contains(newlyDetectedWindow.windowId) {
         return false
     }
-    let monitors = monitors
+    let monitors = monitorInfos
     let topLeftCornerToMonitor = monitors.grouped { $0.rect.topLeftCorner }
 
     for frozenWorkspace in closedWindowsCache.workspaces {

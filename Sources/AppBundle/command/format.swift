@@ -33,7 +33,7 @@ enum AeroObj {
     case window(WindowWithPrefetchedTitle)
     case workspace(Workspace)
     case app(any AbstractApp)
-    case monitor(Monitor)
+    case monitor(MonitorInfo)
 
     var kind: AeroObjKind {
         switch self {

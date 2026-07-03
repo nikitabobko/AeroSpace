@@ -34,7 +34,7 @@ func setUpWorkspacesForTests() {
     Workspace.garbageCollectUnusedWorkspaces()
     check(focus.workspace.isEffectivelyEmpty)
     check(focus.workspace === Workspace.all.singleOrNil(), Workspace.all.map(\.description).joined(separator: ", "))
-    check(mainMonitor.setActiveWorkspace(focus.workspace))
+    check(mainMonitorInfo.setActiveWorkspace(focus.workspace))
 
     TestApp.shared.focusedWindow = nil
     TestApp.shared.windows = []

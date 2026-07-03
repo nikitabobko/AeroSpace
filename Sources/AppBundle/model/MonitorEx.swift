@@ -1,4 +1,4 @@
-extension Monitor {
+extension MonitorInfo {
     @MainActor
     var visibleRectPaddedByOuterGaps: Rect {
         let topLeft = visibleRect.topLeftCorner
@@ -12,7 +12,7 @@ extension Monitor {
     }
 
     var monitorId_oneBased: Int? {
-        let sorted = sortedMonitors
+        let sorted = sortedMonitorInfos
         let origin = self.rect.topLeftCorner
         return sorted.firstIndex { $0.rect.topLeftCorner == origin }.map { $0 + 1 }
     }

@@ -34,7 +34,7 @@ extension TreeNode {
     var visualWorkspace: Workspace? { nodeWorkspace ?? nodeMonitor?.activeWorkspace }
 
     @MainActor
-    var nodeMonitor: Monitor? {
+    var nodeMonitor: MonitorInfo? {
         switch self.nodeCases {
             case .workspace(let ws): ws.workspaceMonitor
             case .window,

@@ -15,7 +15,7 @@ struct FocusMonitorCommand: Command {
 }
 
 extension MonitorTarget {
-    @MainActor func resolve(_ currentMonitor: Monitor, wrapAround: Bool) -> Result<Monitor, String> {
+    @MainActor func resolve(_ currentMonitor: MonitorInfo, wrapAround: Bool) -> Result<MonitorInfo, String> {
         switch self {
             case .direction(let direction):
                 guard let (monitorsInDirection, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
@@ -27,7 +27,7 @@ extension MonitorTarget {
                 }
                 return .success(targetMonitor)
             case .relative(let nextPrev):
-                let monitors = sortedMonitors
+                let monitors = sortedMonitorInfos
                 guard let curIndex = monitors.firstIndex(where: { $0.rect.topLeftCorner == currentMonitor.rect.topLeftCorner }) else {
                     return .failure("Can't find current monitor")
                 }
@@ -38,7 +38,7 @@ extension MonitorTarget {
                 }
                 return .success(targetMonitor)
             case .patterns(let patterns):
-                let monitors = sortedMonitors
+                let monitors = sortedMonitorInfos
                 guard let targetMonitor = patterns.lazy.compactMap({ $0.resolveMonitor(sortedMonitors: monitors) }).first else {
                     return .failure("None of the monitors match the pattern(s)")
                 }
@@ -47,16 +47,16 @@ extension MonitorTarget {
     }
 }
 
-extension Monitor {
-    func relation(to monitor: Monitor) -> Orientation {
+extension MonitorInfo {
+    func relation(to monitor: MonitorInfo) -> Orientation {
         guard let otherYRange = monitor.rect.minY.until(excl: monitor.rect.maxY) else { return .h }
         guard let myYRange = rect.minY.until(excl: rect.maxY) else { return .h }
         return myYRange.overlaps(otherYRange) ? .h : .v
     }
 
-    func findRelativeMonitor(inDirection direction: CardinalDirection) -> (monitorsInDirection: [Monitor], index: Int)? {
+    func findRelativeMonitor(inDirection direction: CardinalDirection) -> (monitorsInDirection: [MonitorInfo], index: Int)? {
         let currentMonitor = self
-        let monitors = sortedMonitors.filter {
+        let monitors = sortedMonitorInfos.filter {
             currentMonitor.rect.topLeftCorner == $0.rect.topLeftCorner ||
                 $0.relation(to: currentMonitor) == direction.orientation
         }

@@ -40,7 +40,7 @@ struct ListWorkspacesCommand: Command {
 extension [MonitorId] {
     @MainActor func resolveMonitors(_ io: CmdIo) -> Set<CGPoint> {
         var requested: Set<CGPoint> = []
-        let sortedMonitors = sortedMonitors
+        let sortedMonitors = sortedMonitorInfos
         for id in self {
             let resolved = id.resolve(io, sortedMonitors: sortedMonitors)
             if resolved.isEmpty {
@@ -55,14 +55,14 @@ extension [MonitorId] {
 }
 
 extension MonitorId {
-    @MainActor func resolve(_ io: CmdIo, sortedMonitors: [Monitor]) -> [Monitor] {
+    @MainActor func resolve(_ io: CmdIo, sortedMonitors: [MonitorInfo]) -> [MonitorInfo] {
         switch self {
             case .focused:
                 return [focus.workspace.workspaceMonitor]
             case .mouse:
                 return [mouseLocation.monitorApproximation]
             case .all:
-                return monitors
+                return monitorInfos
             case .index(let index):
                 if let monitor = sortedMonitors.getOrNil(atIndex: index) {
                     return [monitor]
