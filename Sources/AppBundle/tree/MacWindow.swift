@@ -99,6 +99,8 @@ final class MacWindow: Window {
                     }
                 case .macosPopupWindowsContainer, // Don't switch back on popup destruction
                      .workspace, // Workspace is invalid parent for windows
+                     .monitor, // Monitor is invalid parent for windows
+                     .workspacesContainer, // WorkspacesContainer is invalid parent for windows
                      .macosMinimizedWindowsContainer: // Don't switch back on minimized windows destruction
                     break
             }
@@ -258,7 +260,7 @@ func runOnWindowDetected(ifConventional window: Window) async {
                     .run(.defaultEnv.withWindowId(window.windowId), .emptyStdin)
             }
             _ = await onWindowDetected(.defaultEnv, CmdIoImpl.emptyStdinIgnoringOut, window)
-        case .macosPopupWindowsContainer, .unbound:
+        case .macosPopupWindowsContainer, nil:
             break
     }
 }

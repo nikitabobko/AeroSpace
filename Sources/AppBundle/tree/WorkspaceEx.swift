@@ -50,4 +50,10 @@ extension Workspace {
             default: dieT("Workspace must contain zero or one MacosHiddenAppsWindowsContainer")
         }
     }
+
+    @MainActor var isVisible: Bool { (parent as? WorkspacesContainer)?.visibleWorkspaceNameOrStale == self.name }
+
+    @MainActor var workspaceMonitor: MonitorInfo { // todo revisit this API (rename)
+        return nodeMonitorInfo.orDie() // todo
+    }
 }

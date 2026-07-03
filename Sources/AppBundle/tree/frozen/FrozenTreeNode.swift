@@ -18,6 +18,8 @@ struct FrozenContainer: Sendable {
                 case .window(let w): .window(FrozenWindow(w))
                 case .tilingContainer(let c): .container(FrozenContainer(c))
                 case .workspace,
+                     .monitor,
+                     .workspacesContainer,
                      .floatingWindowsContainer,
                      .macosMinimizedWindowsContainer,
                      .macosHiddenAppsWindowsContainer,

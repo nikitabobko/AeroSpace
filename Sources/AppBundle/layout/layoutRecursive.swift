@@ -1,8 +1,9 @@
 import AppKit
+import Common
 
 extension Workspace {
     @MainActor
-    func layoutWorkspace() async throws {
+    func layoutWorkspace() async throws { // todo revisit API
         if isEffectivelyEmpty { return }
         let rect = workspaceMonitor.visibleRectPaddedByOuterGaps
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
@@ -17,6 +18,10 @@ extension TreeNode {
     fileprivate func layoutRecursive(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
         let physicalRect = Rect(topLeftX: point.x, topLeftY: point.y, width: width, height: height)
         switch nodeCases {
+            case .monitor(let it):
+                try await it.getWorkspacesContainerOrCreate().getVisibleWorkspaceOrCreate(parent: it)
+                    .layoutRecursive(point, width: width, height: height, virtual: virtual, context)
+            case .workspacesContainer: die()
             case .workspace(let workspace):
                 lastAppliedLayoutPhysicalRect = physicalRect
                 lastAppliedLayoutVirtualRect = virtual
@@ -26,7 +31,7 @@ extension TreeNode {
                 for window in container.children.filterIsInstance(of: Window.self) {
                     window.lastAppliedLayoutPhysicalRect = nil
                     window.lastAppliedLayoutVirtualRect = nil
-                    try await window.layoutFloatingWindow(context)
+                    try await window.layoutFloatingWindow(context) // todo make it parallel. Get rid of 'try await'
                 }
             case .window(let window):
                 if window.windowId != currentlyManipulatedWithMouseWindowId {

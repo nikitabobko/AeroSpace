@@ -19,7 +19,7 @@ struct MoveCommand: Command {
             return .fail
         }
         switch currentWindow.windowParentCases {
-            case .unbound: return .fail
+            case nil: return .fail
             case .tilingContainer(let parent):
                 guard let indexOfCurrent = currentWindow.ownIndex else { return .fail(io.err(bugPrompt())) }
                 let indexOfSiblingTarget = indexOfCurrent + direction.focusOffset
@@ -111,6 +111,8 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
             // Impossible: tilingContainer's parent can only be a workspace or tilingContainer
             case .floatingWindowsContainer,
                  .macosMinimizedWindowsContainer,
+                 .monitor,
+                 .workspacesContainer,
                  .macosFullscreenWindowsContainer,
                  .macosHiddenAppsWindowsContainer,
                  .macosPopupWindowsContainer: true

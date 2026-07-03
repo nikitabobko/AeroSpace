@@ -33,7 +33,7 @@ private func moveWithMouse(_ window: Window) async throws { // todo cover with t
             return // Unconventional windows can't be moved with mouse
         case .tilingContainer:
             moveTilingWindow(window)
-        case .unbound: return
+        case nil: return
     }
 }
 

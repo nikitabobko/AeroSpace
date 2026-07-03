@@ -45,7 +45,7 @@ open class Window: TreeNode, Hashable {
 enum LayoutReason: Equatable {
     case standard
     /// Reason for the cur temp layout is macOS native fullscreen, minimize, or hide
-    case macos(prevParentKind: NonLeafTreeNodeKind)
+    case macos(prevParentKind: WindowParentCases.Kind)
 }
 
 extension Window {
@@ -57,7 +57,7 @@ extension Window {
             case .macosMinimizedWindowsContainer: false
             case .macosPopupWindowsContainer: false
             case .tilingContainer: false
-            case .unbound: false
+            case nil: false
         }
     }
 
