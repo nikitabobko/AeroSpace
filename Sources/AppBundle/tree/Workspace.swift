@@ -15,7 +15,7 @@ import Common
 @MainActor
 private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     if let prev = screenPointToPrevVisibleWorkspace[point].map({ Workspace.get(byName: $0) }),
-       !prev.isVisible && prev.workspaceMonitor.rect.topLeftCorner == point && prev.forceAssignedMonitor == nil
+       !prev.isVisible && prev.workspaceMonitor.rect.topLeftCorner == point
     {
         return prev
     }
@@ -26,7 +26,7 @@ private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     }
     return (1 ... Int.max).lazy
         .map { Workspace.get(byName: String($0)) }
-        .first { $0.isEffectivelyEmpty && !$0.isVisible && !config.persistentWorkspaces.contains($0.name) && $0.forceAssignedMonitor == nil }
+        .first { $0.isEffectivelyEmpty && !$0.isVisible && !config.persistentWorkspaces.contains($0.name) }
         .orDie("Can't create empty workspace")
 }
 
@@ -106,8 +106,7 @@ extension Workspace {
     var isVisible: Bool { visibleWorkspaceToScreenPoint.keys.contains(self) }
     @MainActor
     var workspaceMonitor: MonitorInfo {
-        forceAssignedMonitor
-            ?? visibleWorkspaceToScreenPoint[self]?.monitorApproximation
+        visibleWorkspaceToScreenPoint[self]?.monitorApproximation
             ?? assignedMonitorPoint?.monitorApproximation
             ?? mainMonitorInfo
     }
@@ -142,9 +141,6 @@ func gcMonitors() {
 extension CGPoint {
     @MainActor
     fileprivate func setActiveWorkspace(_ workspace: Workspace) -> Bool {
-        if !isValidAssignment(workspace: workspace, screen: self) {
-            return false
-        }
         if let prevMonitorPoint = visibleWorkspaceToScreenPoint[workspace] {
             visibleWorkspaceToScreenPoint.removeValue(forKey: workspace)
             screenPointToPrevVisibleWorkspace[prevMonitorPoint] =
@@ -190,13 +186,5 @@ private func rearrangeWorkspacesOnMonitors() {
         let stubWorkspace = getStubWorkspace(forPoint: newScreen)
         check(newScreen.setActiveWorkspace(stubWorkspace),
               "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(newScreen)")
-    }
-}
-
-@MainActor
-private func isValidAssignment(workspace: Workspace, screen: CGPoint) -> Bool {
-    switch workspace.forceAssignedMonitor {
-        case let forceAssigned? where forceAssigned.rect.topLeftCorner != screen: false
-        default: true
     }
 }

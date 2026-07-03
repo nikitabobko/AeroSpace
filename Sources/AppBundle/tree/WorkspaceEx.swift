@@ -50,12 +50,4 @@ extension Workspace {
             default: dieT("Workspace must contain zero or one MacosHiddenAppsWindowsContainer")
         }
     }
-
-    @MainActor var forceAssignedMonitor: MonitorInfo? {
-        guard let monitorDescriptions = config.workspaceToMonitorForceAssignment[name] else { return nil }
-        let sortedMonitors = sortedMonitorInfos
-        return monitorDescriptions.lazy
-            .compactMap { $0.resolveMonitorInfo(sortedMonitors: sortedMonitors) }
-            .first
-    }
 }
