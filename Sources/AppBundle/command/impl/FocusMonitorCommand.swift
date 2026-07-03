@@ -39,7 +39,7 @@ extension MonitorTarget {
                 return .success(targetMonitor)
             case .patterns(let patterns):
                 let monitors = sortedMonitorInfos
-                guard let targetMonitor = patterns.lazy.compactMap({ $0.resolveMonitor(sortedMonitors: monitors) }).first else {
+                guard let targetMonitor = patterns.lazy.compactMap({ $0.resolveMonitorInfo(sortedMonitors: monitors) }).first else {
                     return .failure("None of the monitors match the pattern(s)")
                 }
                 return .success(targetMonitor)

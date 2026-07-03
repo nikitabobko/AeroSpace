@@ -1,7 +1,7 @@
 import Common
 
 extension MonitorDescription {
-    @MainActor func resolveMonitor(sortedMonitors: [MonitorInfo]) -> MonitorInfo? {
+    @MainActor func resolveMonitorInfo(sortedMonitors: [MonitorInfo]) -> MonitorInfo? {
         switch self {
             case .sequenceNumber(let number): sortedMonitors.getOrNil(atIndex: number - 1)
             case .main: mainMonitorInfo
