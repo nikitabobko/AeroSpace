@@ -9,6 +9,10 @@ struct NativeFocusRaceProtection {
     // App activation can arrive just before the window-created notification.
     // Give the new window time to be registered on the current workspace.
     static let appActivationGraceDuration: Duration = .milliseconds(150)
+    // Launch Services and launchers such as Raycast can emit delayed app
+    // activations well after a new window is visible.  An explicit workspace
+    // command is newer user intent and must win over that startup fallout.
+    static let workspaceSwitchProtectionDuration: Duration = .seconds(3)
 
     private struct ProtectedClose {
         let workspaceName: String
@@ -20,8 +24,14 @@ struct NativeFocusRaceProtection {
         let expiresAt: ContinuousClock.Instant
     }
 
+    private struct ProtectedWorkspaceSwitch {
+        let workspaceName: String
+        let expiresAt: ContinuousClock.Instant
+    }
+
     private var protectedClose: ProtectedClose?
     private var appActivation: AppActivation?
+    private var protectedWorkspaceSwitch: ProtectedWorkspaceSwitch?
 
     mutating func recordWindowClose(
         workspaceName: String,
@@ -47,6 +57,32 @@ struct NativeFocusRaceProtection {
         if appActivation?.appPid == appPid {
             appActivation = nil
         }
+    }
+
+    mutating func recordWorkspaceSwitch(
+        workspaceName: String,
+        now: ContinuousClock.Instant = clock.now,
+    ) {
+        protectedWorkspaceSwitch = ProtectedWorkspaceSwitch(
+            workspaceName: workspaceName,
+            expiresAt: now.advanced(by: Self.workspaceSwitchProtectionDuration),
+        )
+    }
+
+    mutating func clearWorkspaceSwitch() {
+        protectedWorkspaceSwitch = nil
+    }
+
+    func shouldSuppressAfterWorkspaceSwitch(
+        currentWorkspaceName: String,
+        nativeWorkspaceName: String,
+        now: ContinuousClock.Instant = clock.now,
+    ) -> Bool {
+        guard let protectedWorkspaceSwitch,
+              now < protectedWorkspaceSwitch.expiresAt
+        else { return false }
+        return protectedWorkspaceSwitch.workspaceName == currentWorkspaceName &&
+            nativeWorkspaceName != currentWorkspaceName
     }
 
     func shouldSuppressAfterClose(
@@ -86,6 +122,16 @@ func protectFocusAfterWindowClose(workspaceName: String) {
 @MainActor
 func noteNativeAppActivation(appPid: Int32) {
     raceProtection.recordAppActivation(appPid: appPid)
+}
+
+@MainActor
+func protectFocusAfterWorkspaceSwitch(workspaceName: String) {
+    raceProtection.recordWorkspaceSwitch(workspaceName: workspaceName)
+}
+
+@MainActor
+func cancelFocusProtectionAfterWorkspaceSwitch() {
+    raceProtection.clearWorkspaceSwitch()
 }
 
 @MainActor
@@ -133,6 +179,17 @@ private func updateLastNativeFocusedWindow(_ window: Window?) {
 
     if nativeWorkspaceName == currentWorkspaceName {
         raceProtection.clearAppActivation(appPid: appPid)
+    } else if raceProtection.shouldSuppressAfterWorkspaceSwitch(
+        currentWorkspaceName: currentWorkspaceName,
+        nativeWorkspaceName: nativeWorkspaceName,
+    ) {
+        deferredNativeFocusTask?.cancel()
+        if let intendedFocus = focus.windowOrNil {
+            intendedFocus.nativeFocus()
+            lastKnownNativeFocusedWindowId = intendedFocus.windowId
+            updateLastNativeFocusedWindow(intendedFocus)
+        }
+        return
     } else if raceProtection.shouldSuppressAfterClose(
         currentWorkspaceName: currentWorkspaceName,
         nativeWorkspaceName: nativeWorkspaceName,

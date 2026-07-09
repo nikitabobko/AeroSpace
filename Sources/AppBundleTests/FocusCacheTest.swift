@@ -81,4 +81,54 @@ final class FocusCacheTest: XCTestCase {
             now: now,
         ))
     }
+
+    func testWorkspaceSwitchSuppressesDelayedCrossWorkspaceFocus() {
+        var protection = NativeFocusRaceProtection()
+        protection.recordWorkspaceSwitch(workspaceName: "b", now: now)
+
+        XCTAssertTrue(protection.shouldSuppressAfterWorkspaceSwitch(
+            currentWorkspaceName: "b",
+            nativeWorkspaceName: "a",
+            now: now,
+        ))
+    }
+
+    func testWorkspaceSwitchOnlyProtectsItsTarget() {
+        var protection = NativeFocusRaceProtection()
+        protection.recordWorkspaceSwitch(workspaceName: "b", now: now)
+
+        XCTAssertFalse(protection.shouldSuppressAfterWorkspaceSwitch(
+            currentWorkspaceName: "b",
+            nativeWorkspaceName: "b",
+            now: now,
+        ))
+        XCTAssertFalse(protection.shouldSuppressAfterWorkspaceSwitch(
+            currentWorkspaceName: "c",
+            nativeWorkspaceName: "a",
+            now: now,
+        ))
+    }
+
+    func testWorkspaceSwitchProtectionExpires() {
+        var protection = NativeFocusRaceProtection()
+        protection.recordWorkspaceSwitch(workspaceName: "b", now: now)
+
+        XCTAssertFalse(protection.shouldSuppressAfterWorkspaceSwitch(
+            currentWorkspaceName: "b",
+            nativeWorkspaceName: "a",
+            now: now.advanced(by: NativeFocusRaceProtection.workspaceSwitchProtectionDuration),
+        ))
+    }
+
+    func testWorkspaceSwitchProtectionCanBeCancelledForMouseIntent() {
+        var protection = NativeFocusRaceProtection()
+        protection.recordWorkspaceSwitch(workspaceName: "b", now: now)
+        protection.clearWorkspaceSwitch()
+
+        XCTAssertFalse(protection.shouldSuppressAfterWorkspaceSwitch(
+            currentWorkspaceName: "b",
+            nativeWorkspaceName: "a",
+            now: now,
+        ))
+    }
 }
