@@ -25,6 +25,7 @@ extension WorkspacesContainer {
     getStubWorkspace(forPoint: monitor.rect.topLeftCorner)
 }
 
+// todo accepting point parameter looks suboptimal
 @MainActor private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     let container = point.monitorApproximation.toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate()
     if let prev = container.prevVisibleWorkspaceName.map({ Workspace.get(byName: $0) }),
@@ -32,9 +33,7 @@ extension WorkspacesContainer {
     {
         return prev
     }
-    if let candidate = Workspace.all
-        .first(where: { !$0.isVisible && $0.workspaceMonitorInfo.rect.topLeftCorner == point })
-    {
+    if let candidate = container.mostRecentChild as? Workspace {
         return candidate
     }
     return (1 ... Int.max).lazy
