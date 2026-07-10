@@ -21,7 +21,7 @@ struct LiveFocus: AeroAny, Equatable {
         return FrozenFocus(
             windowId: windowOrNil?.windowId,
             workspaceName: workspace.name,
-            monitorId_oneBased: workspace.workspaceMonitor.monitorId_oneBased ?? 0,
+            monitorId_oneBased: workspace.workspaceMonitorInfo.monitorId_oneBased ?? 0,
         )
     }
 }
@@ -69,7 +69,7 @@ private struct FrozenFocus: AeroAny, Equatable, Sendable {
     }
 
     _focus = newFocus.frozen
-    let status = newFocus.workspace.workspaceMonitor.setVisibleWorkspace(newFocus.workspace)
+    let status = newFocus.workspace.workspaceMonitorInfo.setVisibleWorkspace(newFocus.workspace)
 
     newFocus.windowOrNil?.markAsMostRecentChild()
     return status
@@ -157,7 +157,7 @@ extension Workspace {
 @MainActor func onFocusedMonitorChanged(_ env: CmdEnv, _ io: CmdIo, _ focus: LiveFocus) async -> Int32ExitCode {
     broadcastEvent(.focusedMonitorChanged(
         workspace: focus.workspace.name,
-        monitorId_oneBased: focus.workspace.workspaceMonitor.monitorId_oneBased ?? 0,
+        monitorId_oneBased: focus.workspace.workspaceMonitorInfo.monitorId_oneBased ?? 0,
     ))
     return await config.onFocusedMonitorChanged.run(env.withFocus(focus), io)
 }

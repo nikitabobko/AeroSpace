@@ -23,7 +23,7 @@ struct MoveMouseCommand: Command {
                 guard let rect = await windowSubjectRectOrReportError(target, io) else { return .fail }
                 return moveMouse(io, rect.center)
             case .monitorLazyCenter:
-                let rect = target.workspace.workspaceMonitor.rect
+                let rect = target.workspace.workspaceMonitorInfo.rect
                 if rect.contains(mouse) {
                     return switch args.failIfNoop {
                         case true: .fail
@@ -33,7 +33,7 @@ struct MoveMouseCommand: Command {
                 }
                 return moveMouse(io, rect.center)
             case .monitorForceCenter:
-                return moveMouse(io, target.workspace.workspaceMonitor.rect.center)
+                return moveMouse(io, target.workspace.workspaceMonitorInfo.rect.center)
         }
     }
 }

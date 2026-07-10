@@ -146,7 +146,7 @@ extension FormatVar {
             case (.window(_), .window): break
 
             case (.workspace(let ws), .monitor):
-                return expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitor))
+                return expandFormatVar(obj: AeroObj.monitor(ws.workspaceMonitorInfo))
             case (.workspace, _): break
 
             case (.app(_), _): break

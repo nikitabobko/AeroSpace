@@ -13,7 +13,7 @@ struct ListWorkspacesCommand: Command {
         if !args.filteringOptions.onMonitors.isEmpty {
             let monitors: Set<CGPoint> = args.filteringOptions.onMonitors.resolveMonitors(io)
             if monitors.isEmpty { return .fail }
-            result = result.filter { monitors.contains($0.workspaceMonitor.rect.topLeftCorner) }
+            result = result.filter { monitors.contains($0.workspaceMonitorInfo.rect.topLeftCorner) }
         }
         if let empty = args.filteringOptions.empty {
             result = result.filter { $0.isEffectivelyEmpty == empty }
@@ -58,7 +58,7 @@ extension MonitorId {
     @MainActor func resolve(_ io: CmdIo, sortedMonitors: [MonitorInfo]) -> [MonitorInfo] {
         switch self {
             case .focused:
-                return [focus.workspace.workspaceMonitor]
+                return [focus.workspace.workspaceMonitorInfo]
             case .mouse:
                 return [mouseLocation.monitorApproximation]
             case .all:

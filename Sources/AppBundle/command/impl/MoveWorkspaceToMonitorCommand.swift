@@ -8,9 +8,9 @@ struct MoveWorkspaceToMonitorCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         let focusedWorkspace = target.workspace
-        let prevMonitor = focusedWorkspace.workspaceMonitor
+        let prevMonitor = focusedWorkspace.workspaceMonitorInfo
 
-        switch args.target.val.resolve(target.workspace.workspaceMonitor, wrapAround: args.wrapAround) {
+        switch args.target.val.resolve(target.workspace.workspaceMonitorInfo, wrapAround: args.wrapAround) {
             case .success(let targetMonitor):
                 if targetMonitor.monitorId_oneBased == prevMonitor.monitorId_oneBased {
                     return .succ

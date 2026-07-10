@@ -7,7 +7,7 @@ struct FocusMonitorCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
-        return switch args.target.val.resolve(target.workspace.workspaceMonitor, wrapAround: args.wrapAround) {
+        return switch args.target.val.resolve(target.workspace.workspaceMonitorInfo, wrapAround: args.wrapAround) {
             case .success(let targetMonitor): .from(bool: targetMonitor.visibleWorkspace.focusWorkspace())
             case .failure(let msg): .fail(io.err(msg))
         }

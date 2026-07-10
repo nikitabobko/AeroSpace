@@ -5,7 +5,7 @@ extension Workspace {
     @MainActor
     func layoutWorkspace() async throws { // todo revisit API
         if isEffectivelyEmpty { return }
-        let rect = workspaceMonitor.visibleRectPaddedByOuterGaps
+        let rect = workspaceMonitorInfo.visibleRectPaddedByOuterGaps
         // If monitors are aligned vertically and the monitor below has smaller width, then macOS may not allow the
         // window on the upper monitor to take full width. rect.height - 1 resolves this problem
         // But I also faced this problem in monitors horizontal configuration. ¯\_(ツ)_/¯
@@ -68,7 +68,7 @@ private struct LayoutContext {
     @MainActor
     init(_ workspace: Workspace) {
         self.workspace = workspace
-        self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor)
+        self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitorInfo)
     }
 }
 
@@ -83,7 +83,7 @@ extension Window {
             let xProportion = (windowTopLeftCorner.x - currentMonitor.visibleRect.topLeftX) / currentMonitor.visibleRect.width
             let yProportion = (windowTopLeftCorner.y - currentMonitor.visibleRect.topLeftY) / currentMonitor.visibleRect.height
 
-            let workspaceRect = workspace.workspaceMonitor.visibleRect
+            let workspaceRect = workspace.workspaceMonitorInfo.visibleRect
             var newX = workspaceRect.topLeftX + xProportion * workspaceRect.width
             var newY = workspaceRect.topLeftY + yProportion * workspaceRect.height
 
@@ -103,8 +103,8 @@ extension Window {
     @MainActor
     fileprivate func layoutFullscreen(_ context: LayoutContext) {
         let monitorRect = noOuterGapsInFullscreen
-            ? context.workspace.workspaceMonitor.visibleRect
-            : context.workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
+            ? context.workspace.workspaceMonitorInfo.visibleRect
+            : context.workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
         setAxFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height))
     }
 }

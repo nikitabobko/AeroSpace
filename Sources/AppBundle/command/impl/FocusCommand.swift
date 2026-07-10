@@ -81,7 +81,7 @@ struct FocusCommand: Command {
                 case .wrapAroundAllMonitors: .fail(io.err("Must be discarded by args parser"))
             }
         case .allMonitorsOuterFrame:
-            let currentMonitor = target.workspace.workspaceMonitor
+            let currentMonitor = target.workspace.workspaceMonitorInfo
             guard let (monitors, index) = currentMonitor.findRelativeMonitor(inDirection: direction) else {
                 return .fail(io.err(bugPrompt("Should never happen. Can't find the current monitor")))
             }
@@ -134,7 +134,7 @@ struct FocusCommand: Command {
 
         let tilingParent: TilingContainer
         let index: Int
-        if let target = center.coerce(in: workspace.workspaceMonitor.visibleRectPaddedByOuterGaps)?
+        if let target = center.coerce(in: workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps)?
             .findWindowRecursively(in: workspace.rootTilingContainer, virtual: true, fullscreenCoversAll: false)
         {
             guard let targetCenter = try? await target.getCenter(.nonCancellable) else { continue }

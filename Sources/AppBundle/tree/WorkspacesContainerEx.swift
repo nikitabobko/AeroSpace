@@ -28,12 +28,12 @@ extension WorkspacesContainer {
 @MainActor private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     let container = point.monitorApproximation.toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate()
     if let prev = container.prevVisibleWorkspaceName.map({ Workspace.get(byName: $0) }),
-       !prev.isVisible && prev.workspaceMonitor.rect.topLeftCorner == point
+       !prev.isVisible && prev.workspaceMonitorInfo.rect.topLeftCorner == point
     {
         return prev
     }
     if let candidate = Workspace.all
-        .first(where: { !$0.isVisible && $0.workspaceMonitor.rect.topLeftCorner == point })
+        .first(where: { !$0.isVisible && $0.workspaceMonitorInfo.rect.topLeftCorner == point })
     {
         return candidate
     }

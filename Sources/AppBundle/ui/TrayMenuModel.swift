@@ -39,7 +39,7 @@ enum AxPermissionStatus: Equatable {
         let dash = " - "
         let suffix = switch true {
             case !apps.isEmpty: dash + apps.sorted().joinTruncating(separator: ", ", length: 25)
-            case $0.isVisible: dash + $0.workspaceMonitor.name
+            case $0.isVisible: dash + $0.workspaceMonitorInfo.name
             default: ""
         }
         let hasFullscreenWindows = $0.allLeafWindowsRecursive.contains { $0.isFullscreen }
