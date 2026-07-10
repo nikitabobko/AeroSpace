@@ -19,6 +19,8 @@ final class Monitor: TreeNode, NonLeafTreeNodeObject {
     override func setWeight(_ targetOrientation: Orientation, _ newValue: CGFloat) {
         die("It's not possible to change weight of Monitor")
     }
+
+    @MainActor static var all: [Monitor] { Array(pointToMonitor.values) }
 }
 
 @MainActor private func rearrangeMonitors() {
@@ -104,6 +106,11 @@ extension MonitorInfo {
         let container = toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate()
         container.setVisibleWorkspace(workspace)
         return true
+    }
+
+    @MainActor func bindWorkspace(_ workspace: Workspace) {
+        let container = toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate()
+        workspace.bind(to: container, adaptiveWeight: 1, index: INDEX_BIND_LAST)
     }
 }
 
