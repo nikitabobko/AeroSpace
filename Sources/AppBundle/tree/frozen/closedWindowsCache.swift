@@ -79,7 +79,7 @@ struct FrozenWorkspace: Sendable {
 
         _ = topLeftCornerToMonitorInfo[monitor.topLeftCorner]?
             .singleOrNil()?
-            .setActiveWorkspace(Workspace.get(byName: monitor.visibleWorkspace))
+            .setVisibleWorkspace(Workspace.get(byName: monitor.visibleWorkspace))
     }
     return true
 }

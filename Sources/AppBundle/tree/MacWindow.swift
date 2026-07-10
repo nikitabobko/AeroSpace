@@ -23,7 +23,7 @@ final class MacWindow: Window {
             windowId,
             macApp,
             isStartup
-                ? (rect?.center.monitorApproximation ?? mainMonitorInfo).activeWorkspace
+                ? (rect?.center.monitorApproximation ?? mainMonitorInfo).visibleWorkspace
                 : focus.workspace,
             window: nil,
             .cancellable,

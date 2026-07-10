@@ -51,7 +51,7 @@ private struct FrozenFocus: AeroAny, Equatable, Sendable {
 
 @MainActor private var _focus: FrozenFocus = {
     let monitor = mainMonitorInfo
-    return FrozenFocus(windowId: nil, workspaceName: monitor.activeWorkspace.name, monitorId_oneBased: monitor.monitorId_oneBased ?? 0)
+    return FrozenFocus(windowId: nil, workspaceName: monitor.visibleWorkspace.name, monitorId_oneBased: monitor.monitorId_oneBased ?? 0)
 }()
 
 /// Global focus.
@@ -69,7 +69,7 @@ private struct FrozenFocus: AeroAny, Equatable, Sendable {
     }
 
     _focus = newFocus.frozen
-    let status = newFocus.workspace.workspaceMonitor.setActiveWorkspace(newFocus.workspace)
+    let status = newFocus.workspace.workspaceMonitor.setVisibleWorkspace(newFocus.workspace)
 
     newFocus.windowOrNil?.markAsMostRecentChild()
     return status

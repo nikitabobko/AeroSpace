@@ -8,7 +8,7 @@ struct SummonWorkspaceCommand: Command {
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         let workspace = Workspace.get(byName: args.target.val.raw)
         let monitor = focus.workspace.workspaceMonitor
-        if monitor.activeWorkspace == workspace {
+        if monitor.visibleWorkspace == workspace {
             return switch args.failIfNoop {
                 case true: .fail
                 case false:
@@ -16,11 +16,11 @@ struct SummonWorkspaceCommand: Command {
             }
         }
         let prevMonitor = workspace.isVisible ? workspace.workspaceMonitor : nil
-        if monitor.setActiveWorkspace(workspace) {
+        if monitor.setVisibleWorkspace(workspace) {
             if let prevMonitor {
                 let stubWorkspace = getStubWorkspace(for: prevMonitor)
                 check(
-                    prevMonitor.setActiveWorkspace(stubWorkspace),
+                    prevMonitor.setVisibleWorkspace(stubWorkspace),
                     "getStubWorkspace generated incompatible stub workspace (\(stubWorkspace)) for the monitor (\(prevMonitor)",
                 )
             }

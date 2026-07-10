@@ -9,11 +9,11 @@ struct ListMonitorsCommand: Command {
         let focus = focus
         var result = sortedMonitorInfos
         if let focused = args.focused {
-            result = result.filter { (monitor) in (monitor.activeWorkspace == focus.workspace) == focused }
+            result = result.filter { (monitor) in (monitor.visibleWorkspace == focus.workspace) == focused }
         }
         if let mouse = args.mouse {
-            let mouseWorkspace = mouseLocation.monitorApproximation.activeWorkspace
-            result = result.filter { (monitor) in (monitor.activeWorkspace == mouseWorkspace) == mouse }
+            let mouseWorkspace = mouseLocation.monitorApproximation.visibleWorkspace
+            result = result.filter { (monitor) in (monitor.visibleWorkspace == mouseWorkspace) == mouse }
         }
 
         lazy var list = result.map(AeroObj.monitor)

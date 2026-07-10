@@ -15,7 +15,7 @@ struct MoveNodeToMonitorCommand: Command {
         }
         switch args.target.val.resolve(currentMonitor, wrapAround: args.wrapAround) {
             case .success(let targetMonitor):
-                let targetWs = targetMonitor.activeWorkspace
+                let targetWs = targetMonitor.visibleWorkspace
                 let index = true == args.target.val.directionOrNil
                     .map { dir in dir.isPositive && targetWs.rootTilingContainer.orientation == dir.orientation }
                     ? 0

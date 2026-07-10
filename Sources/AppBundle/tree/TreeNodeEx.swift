@@ -30,7 +30,7 @@ extension TreeNode {
     }
 
     /// Also see: workspace
-    @MainActor var visualWorkspace: Workspace? { nodeWorkspace ?? nodeMonitorInfo?.activeWorkspace }
+    @MainActor var visualWorkspace: Workspace? { nodeWorkspace ?? nodeMonitorInfo?.visibleWorkspace }
 
     @MainActor var nodeMonitorInfo: MonitorInfo? {
         switch self.nodeCases {

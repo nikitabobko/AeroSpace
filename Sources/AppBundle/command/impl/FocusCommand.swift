@@ -87,7 +87,7 @@ struct FocusCommand: Command {
             }
 
             if let targetMonitor = monitors.getOrNil(atIndex: index) {
-                return .from(bool: targetMonitor.activeWorkspace.focusWorkspace())
+                return .from(bool: targetMonitor.visibleWorkspace.focusWorkspace())
             } else {
                 guard let wrapped = monitors.get(wrappingIndex: index) else { return .fail(io.err(bugPrompt("\(index) \(monitors)"))) }
                 return hitAllMonitorsOuterFrameBoundaries(target, io, args, direction, wrapped)
@@ -110,8 +110,8 @@ struct FocusCommand: Command {
         case .wrapAroundTheWorkspace:
             return wrapAroundTheWorkspace(target, io, direction)
         case .wrapAroundAllMonitors:
-            wrappedMonitor.activeWorkspace.findLeafWindowRecursive(snappedTo: direction.opposite)?.markAsMostRecentChild()
-            return .from(bool: wrappedMonitor.activeWorkspace.focusWorkspace())
+            wrappedMonitor.visibleWorkspace.findLeafWindowRecursive(snappedTo: direction.opposite)?.markAsMostRecentChild()
+            return .from(bool: wrappedMonitor.visibleWorkspace.focusWorkspace())
     }
 }
 

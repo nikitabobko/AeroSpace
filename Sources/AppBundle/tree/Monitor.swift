@@ -87,9 +87,9 @@ final class Monitor: TreeNode, NonLeafTreeNodeObject {
 }
 
 extension MonitorInfo {
-    @MainActor var activeWorkspace: Workspace { // todo revisit this API
-        let activeMonitor = toMonitorOrRearrangeMonitors()
-        return activeMonitor.getWorkspacesContainerOrCreate().getVisibleWorkspaceOrCreate(parent: activeMonitor)
+    @MainActor var visibleWorkspace: Workspace { // todo revisit this API
+        let monitor = toMonitorOrRearrangeMonitors()
+        return monitor.getWorkspacesContainerOrCreate().getVisibleWorkspaceOrCreate(parent: monitor)
     }
 
     @MainActor func toMonitorOrRearrangeMonitors() -> Monitor {
@@ -102,7 +102,7 @@ extension MonitorInfo {
         return self.toMonitorOrRearrangeMonitors()
     }
 
-    @MainActor func setActiveWorkspace(_ workspace: Workspace) -> Bool { // todo revisit this API (new name: setVisibleWorkspace)
+    @MainActor func setVisibleWorkspace(_ workspace: Workspace) -> Bool { // todo revisit this API (new name: setVisibleWorkspace)
         let container = toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate()
         container.setVisibleWorkspace(workspace)
         return true

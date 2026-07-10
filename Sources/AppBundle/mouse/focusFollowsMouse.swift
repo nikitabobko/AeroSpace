@@ -28,7 +28,7 @@ import AppKit
             // todo: It would be cool to somehow reuse isWindowHeuristic logic here
             if await isAxWindowUnderMouse(location) == false { return }
             try checkCancellation()
-            let workspace = location.monitorApproximation.activeWorkspace
+            let workspace = location.monitorApproximation.visibleWorkspace
             var window: Window? = nil
             for child in workspace.floatingWindowsContainer.mruChildren {
                 try checkCancellation()
