@@ -140,7 +140,7 @@ extension FormatVar {
             case (.window(let w), .workspace):
                 return w.window.nodeWorkspace.flatMap(AeroObj.workspace).map(expandFormatVar) ?? .success(.string("NULL-WORKSPACE"))
             case (.window(let w), .monitor):
-                return w.window.nodeMonitor.flatMap(AeroObj.monitor).map(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
+                return w.window.nodeMonitorInfo.flatMap(AeroObj.monitor).map(expandFormatVar) ?? .success(.string("NULL-MONITOR"))
             case (.window(let w), .app):
                 return expandFormatVar(obj: .app(w.window.app))
             case (.window(_), .window): break

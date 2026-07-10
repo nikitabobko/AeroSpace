@@ -63,7 +63,7 @@ struct MoveCommand: Command {
                     return .succ
             }
         case .allMonitorsOuterFrame:
-            guard let (monitors, index) = window.nodeMonitor?.findRelativeMonitor(inDirection: direction) else {
+            guard let (monitors, index) = window.nodeMonitorInfo?.findRelativeMonitor(inDirection: direction) else {
                 return .fail(io.err("Should never happen. Can't find the current monitor"))
             }
 

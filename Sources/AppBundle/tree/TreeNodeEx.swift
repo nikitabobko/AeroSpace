@@ -31,17 +31,17 @@ extension TreeNode {
 
     /// Also see: workspace
     @MainActor
-    var visualWorkspace: Workspace? { nodeWorkspace ?? nodeMonitor?.activeWorkspace }
+    var visualWorkspace: Workspace? { nodeWorkspace ?? nodeMonitorInfo?.activeWorkspace }
 
     @MainActor
-    var nodeMonitor: MonitorInfo? {
+    var nodeMonitorInfo: MonitorInfo? {
         switch self.nodeCases {
             case .workspace(let ws): ws.workspaceMonitor
             case .window,
                  .tilingContainer,
                  .macosFullscreenWindowsContainer,
                  .macosHiddenAppsWindowsContainer,
-                 .floatingWindowsContainer: parent?.nodeMonitor
+                 .floatingWindowsContainer: parent?.nodeMonitorInfo
             case .macosMinimizedWindowsContainer, .macosPopupWindowsContainer: nil
         }
     }

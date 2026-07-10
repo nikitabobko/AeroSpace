@@ -10,7 +10,7 @@ struct MoveNodeToMonitorCommand: Command {
         guard let window = target.windowOrNil else {
             return .fail(io.err(noWindowIsFocused))
         }
-        guard let currentMonitor = window.nodeMonitor else {
+        guard let currentMonitor = window.nodeMonitorInfo else {
             return .fail(io.err(windowIsntPartOfTree(window)))
         }
         switch args.target.val.resolve(currentMonitor, wrapAround: args.wrapAround) {
