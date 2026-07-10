@@ -20,7 +20,12 @@ import Foundation
         startUnixSocketServer()
         GlobalObserver.initObserver()
         Workspace.garbageCollectUnusedWorkspaces() // init workspaces
-        _ = Workspace.all.first?.focusWorkspace()
+        for monitor in Monitor.all {
+            _ = monitor.getWorkspacesContainerOrCreate().children.filterIsInstance(of: Workspace.self)
+                .sorted()
+                .first?
+                .focusWorkspace()
+        }
         await runHeavyCompleteRefreshSession(
             .startup,
             // It's important for the first initialization to be non cancellable
