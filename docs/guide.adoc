@@ -264,8 +264,9 @@ You can configure environment variables of `exec-*` commands and callbacks (such
 +
 [source,toml]
 ----
-[exec.env-vars]
+exec.env-vars = {
     PATH = '${HOME}/bin:${PATH}'
+}
 ----
 +
 Environment variable substitution is supported in form of `+${ENV_VAR}+`
@@ -275,10 +276,10 @@ That's why unless you override `exec` section in your config, AeroSpace falls ba
 +
 [source,toml]
 ----
-[exec]
-    inherit-env-vars = true
-[exec.env-vars]
+exec.inherit-env-vars = true
+exec.env-vars = {
     PATH = '/opt/homebrew/bin:/opt/homebrew/sbin:${PATH}'
+}
 ----
 
 [#tree]
@@ -752,14 +753,15 @@ workspaces to always appear on particular monitors
 
 [source,toml]
 ----
-[workspace-to-monitor-force-assignment]
-    1 = 1                            # Monitor sequence number from left to right. 1-based indexing
-    2 = 'main'                       # Main monitor
-    3 = 'secondary'                  # Non-main monitor in case when there are only two monitors
-    4 = 'built-in'                   # Case insensitive regex substring
-    5 = '^built-in retina display$'  # Case insensitive regex match
-    6 = ['secondary', 'dell']        # You can specify multiple patterns.
-                                     #   The first matching pattern will be used
+workspace-to-monitor-force-assignment = {
+    1 = 1,                            # Monitor sequence number from left to right. 1-based indexing
+    2 = 'main',                       # Main monitor
+    3 = 'secondary',                  # Non-main monitor in case when there are only two monitors
+    4 = 'built-in',                   # Case insensitive regex substring
+    5 = '^built-in retina display$',  # Case insensitive regex match
+    6 = ['secondary', 'dell'],        # You can specify multiple patterns.
+                                      #   The first matching pattern will be used
+}
 ----
 
 * Left hand side of the assignment is the workspace name
