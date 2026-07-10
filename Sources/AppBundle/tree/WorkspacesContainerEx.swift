@@ -2,11 +2,12 @@ import Common
 import Foundation
 
 extension WorkspacesContainer {
-    @MainActor func setVisibleWorkspace(_ workspace: Workspace) {
-        workspace.bind(to: self, adaptiveWeight: 1, index: INDEX_BIND_LAST)
-        if visibleWorkspaceNameOrStale == workspace.name { return }
+    @MainActor func setVisibleWorkspace(_ workspace: Workspace) -> Bool {
+        if !bindWorkspace(workspace) { return false }
+        if visibleWorkspaceNameOrStale == workspace.name { return true }
         prevVisibleWorkspaceName = visibleWorkspaceNameOrStale
         visibleWorkspaceNameOrStale = workspace.name
+        return true
     }
 
     @MainActor func getVisibleWorkspaceOrCreate(parent: Monitor) -> Workspace {
@@ -15,8 +16,15 @@ extension WorkspacesContainer {
         if let workspace { return workspace }
 
         let stub = getStubWorkspace(forPoint: parent.info.rect.topLeftCorner)
-        setVisibleWorkspace(stub)
+        check(setVisibleWorkspace(stub))
         return stub
+    }
+
+    @MainActor func bindWorkspace(_ workspace: Workspace) -> Bool {
+        guard let parent = parent as? Monitor else { return false }
+        if !isValidAssignment(workspace: workspace, point: parent.info.rect.topLeftCorner) { return false }
+        workspace.bind(to: self, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+        return true
     }
 }
 
@@ -29,7 +37,7 @@ extension WorkspacesContainer {
 @MainActor private func getStubWorkspace(forPoint point: CGPoint) -> Workspace {
     let container = point.monitorApproximation.toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate()
     if let prev = container.prevVisibleWorkspaceName.map({ Workspace.get(byName: $0) }),
-       !prev.isVisible && prev.workspaceMonitorInfo.rect.topLeftCorner == point
+       !prev.isVisible && prev.workspaceMonitorInfo.rect.topLeftCorner == point && prev.forceAssignedMonitorInfo == nil
     {
         return prev
     }
@@ -38,6 +46,13 @@ extension WorkspacesContainer {
     }
     return (1 ... Int.max).lazy
         .map { Workspace.get(byName: String($0)) }
-        .first { $0.isEffectivelyEmpty && !$0.isVisible && !config.persistentWorkspaces.contains($0.name) }
+        .first { $0.isEffectivelyEmpty && !$0.isVisible && !config.persistentWorkspaces.contains($0.name) && $0.forceAssignedMonitorInfo == nil }
         .orDie("Can't create empty workspace")
+}
+
+@MainActor private func isValidAssignment(workspace: Workspace, point: CGPoint) -> Bool {
+    switch workspace.forceAssignedMonitorInfo {
+        case let forceAssigned? where forceAssigned.rect.topLeftCorner != point: false
+        default: true
+    }
 }

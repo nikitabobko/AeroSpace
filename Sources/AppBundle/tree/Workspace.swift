@@ -7,12 +7,12 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
     let name: String
     nonisolated private let nameLogicalSegments: StringLogicalSegments
 
-    @MainActor
-    private init(_ name: String) {
+    @MainActor private init(_ name: String) {
         self.name = name
         self.nameLogicalSegments = name.toLogicalSegments()
         let container = mainMonitorInfo.toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate()
         super.init(parent: container, adaptiveWeight: 0, index: 0)
+        check(forceAssignedMonitorInfo?.toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate().bindWorkspace(self) != false)
     }
 
     @MainActor static var all: [Workspace] {
@@ -52,8 +52,14 @@ final class Workspace: TreeNode, NonLeafTreeNodeObject, Hashable, Comparable {
         return "Workspace(\(description))"
     }
 
-    @MainActor
-    static func garbageCollectUnusedWorkspaces() {
+    @MainActor static func forceAssignWorkspaces() {
+        for wsName in config.workspaceToMonitorForceAssignment.keys {
+            let ws = Workspace.get(byName: wsName)
+            check(ws.forceAssignedMonitorInfo?.bindWorkspace(ws) != false)
+        }
+    }
+
+    @MainActor static func garbageCollectUnusedWorkspaces() {
         for name in config.persistentWorkspaces {
             _ = get(byName: name) // Make sure that all persistent workspaces are "cached"
         }

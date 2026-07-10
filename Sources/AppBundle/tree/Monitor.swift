@@ -104,13 +104,11 @@ extension MonitorInfo {
 
     @MainActor func setVisibleWorkspace(_ workspace: Workspace) -> Bool { // todo revisit this API (new name: setVisibleWorkspace)
         let container = toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate()
-        container.setVisibleWorkspace(workspace)
-        return true
+        return container.setVisibleWorkspace(workspace)
     }
 
-    @MainActor func bindWorkspace(_ workspace: Workspace) {
-        let container = toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate()
-        workspace.bind(to: container, adaptiveWeight: 1, index: INDEX_BIND_LAST)
+    @MainActor func bindWorkspace(_ workspace: Workspace) -> Bool {
+        return toMonitorOrRearrangeMonitors().getWorkspacesContainerOrCreate().bindWorkspace(workspace)
     }
 }
 

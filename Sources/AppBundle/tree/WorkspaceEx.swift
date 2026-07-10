@@ -56,4 +56,12 @@ extension Workspace {
     @MainActor var workspaceMonitorInfo: MonitorInfo { // todo revisit this API (rename)
         return nodeMonitorInfo.orDie() // todo
     }
+
+    @MainActor var forceAssignedMonitorInfo: MonitorInfo? {
+        guard let monitorDescriptions = config.workspaceToMonitorForceAssignment[name] else { return nil }
+        let sortedMonitors = sortedMonitorInfos
+        return monitorDescriptions.lazy
+            .compactMap { $0.resolveMonitorInfo(sortedMonitors: sortedMonitors) }
+            .first
+    }
 }
