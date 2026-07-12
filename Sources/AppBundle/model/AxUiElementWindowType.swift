@@ -121,6 +121,20 @@ extension AxUiElementMock {
 
         lazy var fullscreenButton = get(Ax.fullscreenButtonAttr)
 
+        // ChatGPT/Codex quick-access popout: small panel without traffic lights.
+        // Leave it unmanaged so focusing the panel does not switch AeroSpace workspaces
+        // (legacy ChatGPT floating panel behavior). Sticky is not supported yet:
+        // https://github.com/nikitabobko/AeroSpace/issues/2
+        // Main ChatGPT/Codex windows have standard traffic-light buttons.
+        // The desktop "pet" overlay is already handled via alwaysOnTop windowLevel above.
+        if id == .codex &&
+            get(Ax.closeButtonAttr) == nil &&
+            fullscreenButton == nil &&
+            get(Ax.minimizeButtonAttr) == nil
+        {
+            return false
+        }
+
         if id == .xcode && get(Ax.identifierAttr) == "open_quickly" {
             return false
         }
