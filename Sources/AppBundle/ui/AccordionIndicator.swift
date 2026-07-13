@@ -140,10 +140,12 @@ final class AccordionIndicatorManager {
         panels.removeAll()
     }
 
-    /// Convert AeroSpace top-left Y coordinate to macOS bottom-left Y coordinate
+    /// Convert AeroSpace top-left Y to AppKit bottom-left Y. Uses the primary
+    /// monitor's height per AeroSpace's coord convention (see Rect.monitorFrameNormalized).
+    /// NSScreen.main is the *focused* screen, not the primary — using it would shift
+    /// every panel whenever focus moves between monitors of different heights.
     private func screenFlipY(_ topLeftY: CGFloat, height: CGFloat) -> CGFloat {
-        guard let screen = NSScreen.main else { return topLeftY }
-        return screen.frame.height - topLeftY - height
+        return mainMonitor.height - topLeftY - height
     }
 }
 
