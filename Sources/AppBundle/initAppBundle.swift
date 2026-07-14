@@ -3,6 +3,7 @@ import Common
 import Foundation
 
 @MainActor public func initAppBundle() {
+    checkFocusPrivateApiCrashGuard()
     Task.startUnstructured {
         initTerminationHandler()
         unsafe _isCli = false
@@ -32,6 +33,20 @@ import Foundation
             smartLayoutAtStartup()
             _ = await config.afterStartupCommand.run(.defaultEnv, .emptyStdin)
         }
+    }
+}
+
+// https://github.com/nikitabobko/AeroSpace/issues/101 (idea: comment 2568238564)
+// Best-effort guard for the private SkyLight focus API used in MacApp.nativeFocus. If the in-use flag
+// is still set at startup, a previous session most likely died inside the private call, so disable the
+// private path and fall back to the public-API behavior. Best-effort because UserDefaults flushes
+// asynchronously (a very fast crash may not be caught) and a hard kill during the brief in-use window
+// could disable it spuriously. Once disabled it stays disabled until the key is cleared, e.g.
+// `defaults delete bobko.aerospace private-focus-api-disabled-after-crash`.
+@MainActor private func checkFocusPrivateApiCrashGuard() {
+    if UserDefaults.standard.bool(forKey: privateFocusApiInUseKey) {
+        UserDefaults.standard.set(true, forKey: privateFocusApiDisabledKey)
+        UserDefaults.standard.set(false, forKey: privateFocusApiInUseKey)
     }
 }
 
