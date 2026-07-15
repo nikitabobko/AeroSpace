@@ -6,9 +6,16 @@ struct PerMonitorValue<Value: Equatable>: Equatable {
 }
 extension PerMonitorValue: Sendable where Value: Sendable {}
 
+struct PerWorkspaceValue<Value: Equatable>: Equatable {
+    let name: String
+    let value: Value
+}
+extension PerWorkspaceValue: Sendable where Value: Sendable {}
+
 enum DynamicConfigValue<Value: Equatable>: Equatable {
     case constant(Value)
     case perMonitor([PerMonitorValue<Value>], default: Value)
+    case perWorkspace([PerWorkspaceValue<Value>], default: Value)
 }
 extension DynamicConfigValue: Sendable where Value: Sendable {}
 
@@ -26,6 +33,17 @@ extension DynamicConfigValue {
                             : nil
                     }
                     .first ?? defaultValue
+            case .perWorkspace(_, let defaultValue):
+                return defaultValue
+        }
+    }
+
+    func getValue(for workspaceName: String) -> Value {
+        switch self {
+            case .constant(let value): return value
+            case .perMonitor(_, let defaultValue): return defaultValue
+            case .perWorkspace(let array, let defaultValue):
+                return array.first { $0.name == workspaceName }?.value ?? defaultValue
         }
     }
 }
@@ -51,13 +69,20 @@ func parseDynamicValue<T>(
         }
 
         if array.dropLast().isEmpty {
-            c.errors.append(.init(backtrace, "The array must contain at least one monitor pattern"))
+            c.errors.append(.init(backtrace, "The array must contain at least one monitor or workspace pattern"))
             return .constant(fallback)
         }
 
-        let rules: [PerMonitorValue<T>] = parsePerMonitorValues(array.dropLast(), backtrace, &c)
+        let items = Array(array.dropLast())
+        let firstKey = items.first?.asDictOrNil?.keys.first
 
-        return .perMonitor(rules, default: defaultValue)
+        if firstKey == "workspace" {
+            let rules: [PerWorkspaceValue<T>] = parsePerWorkspaceValues(items, backtrace, &c)
+            return .perWorkspace(rules, default: defaultValue)
+        } else {
+            let rules: [PerMonitorValue<T>] = parsePerMonitorValues(items, backtrace, &c)
+            return .perMonitor(rules, default: defaultValue)
+        }
     } else {
         c.errors.append(.init(backtrace, "Unsupported type: \(raw.tomlType), expected: \(valueType) or array"))
         return .constant(fallback)
@@ -85,5 +110,25 @@ func parsePerMonitorValues<T>(_ array: OrderedJson.JsonArray, _ backtrace: Confi
         }
 
         return PerMonitorValue(description: monitorDescription, value: value)
+    }
+}
+
+func parsePerWorkspaceValues<T>(_ array: OrderedJson.JsonArray, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> [PerWorkspaceValue<T>] {
+    array.enumerated().compactMap { (index: Int, raw: OrderedJson) -> PerWorkspaceValue<T>? in
+        var backtrace = backtrace + .index(index)
+
+        guard let (key, value) = raw.unwrapTableWithSingleKey(expectedKey: "workspace", &backtrace)
+            .flatMap({ $0.value.unwrapTableWithSingleKey(expectedKey: nil, &backtrace) })
+            .getOrNil(appendErrorTo: &c.errors)
+        else {
+            return nil
+        }
+
+        guard let value = parseSimpleType(value, ofType: T.self) else {
+            c.errors.append(.init(backtrace, "Expected type is '\(T.self)'. But actual type is '\(value.tomlType)'"))
+            return nil
+        }
+
+        return PerWorkspaceValue(name: key, value: value)
     }
 }

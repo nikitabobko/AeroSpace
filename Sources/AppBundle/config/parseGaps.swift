@@ -99,7 +99,7 @@ private let outerParser: [String: any ParserProtocol<Gaps.Outer>] = [
     "right": Parser(\.right, parseIntDynamicValue),
 ]
 
-private func parseIntDynamicValue(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> DynamicConfigValue<Int> {
+func parseIntDynamicValue(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext) -> DynamicConfigValue<Int> {
     parseDynamicValue(raw, ofType: Int.self, 0, backtrace, &c)
 }
 
