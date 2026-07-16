@@ -894,12 +894,8 @@ You can bootstrap your custom config by copying the default config from the app 
 <span class="tok-w">    </span><span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget" class="bare">https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget</a></span>
 <span class="tok-w">    </span><span class="tok-c1"># You can uncomment the following lines to open up terminal with alt + enter shortcut</span>
 <span class="tok-w">    </span><span class="tok-c1"># (like in i3)</span>
-<span class="tok-w">    </span><span class="tok-c1"># alt-enter = &#39;&#39;&#39;exec-and-forget osascript -e &#39;</span>
-<span class="tok-w">    </span><span class="tok-c1"># tell application &quot;Terminal&quot;</span>
-<span class="tok-w">    </span><span class="tok-c1">#     do script</span>
-<span class="tok-w">    </span><span class="tok-c1">#     activate</span>
-<span class="tok-w">    </span><span class="tok-c1"># end tell&#39;</span>
-<span class="tok-w">    </span><span class="tok-c1"># &#39;&#39;&#39;</span>
+<span class="tok-w">    </span><span class="tok-c1"># alt-enter = &#39;&#39;&#39;exec-and-forget osascript -e \</span>
+<span class="tok-w">    </span><span class="tok-c1"># &#39;tell application &quot;Terminal&quot; to tell (do script) to activate&#39; &#39;&#39;&#39;</span>
 
 <span class="tok-w">    </span><span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/commands#layout" class="bare">https://nikitabobko.github.io/AeroSpace/commands#layout</a></span>
 <span class="tok-w">    </span><span class="tok-n">alt-slash</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;layout tiles horizontal vertical&#39;</span>
@@ -2473,7 +2469,7 @@ See <a href="./commands#test">the test helper command documentation</a> for more
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-07-01 11:43:47 +0200
+Last updated 2026-07-16 18:01:58 +0200
 </div>
 </div>
 <style>

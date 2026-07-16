@@ -803,12 +803,8 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 <p>Terminal</p>
 <div class="listingblock">
 <div class="content">
-<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">ctrl-g</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;&#39;&#39;exec-and-forget osascript -e &#39;</span>
-<span class="tok-s1">tell application &quot;Terminal&quot;</span>
-<span class="tok-s1">    do script</span>
-<span class="tok-s1">    activate</span>
-<span class="tok-s1">end tell&#39;</span>
-<span class="tok-s1">&#39;&#39;&#39;</span></code></pre>
+<pre class="pygments highlight nowrap"><code data-lang="toml"><span></span><span class="tok-n">ctrl-g</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;&#39;&#39;exec-and-forget osascript -e \</span>
+<span class="tok-s1">&#39;tell application &quot;Terminal&quot; to tell (do script) to activate&#39; &#39;&#39;&#39;</span></code></pre>
 </div>
 </div>
 </li>
@@ -886,12 +882,8 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 
 <span class="tok-k">[mode.main.binding]</span>
 <span class="tok-w">    </span><span class="tok-c1"># See: <a href="https://nikitabobko.github.io/AeroSpace/goodies#open-a-new-window-with-applescript" class="bare">https://nikitabobko.github.io/AeroSpace/goodies#open-a-new-window-with-applescript</a></span>
-<span class="tok-w">    </span><span class="tok-n">alt-enter</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;&#39;&#39;exec-and-forget osascript -e &#39;</span>
-<span class="tok-s1">    tell application &quot;Terminal&quot;</span>
-<span class="tok-s1">        do script</span>
-<span class="tok-s1">        activate</span>
-<span class="tok-s1">    end tell&#39;</span>
-<span class="tok-s1">    &#39;&#39;&#39;</span>
+<span class="tok-w">    </span><span class="tok-n">alt-enter</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w"> </span><span class="tok-s1">&#39;&#39;&#39;exec-and-forget osascript -e \</span>
+<span class="tok-s1">    &#39;tell application &quot;Terminal&quot; to tell (do script) to activate&#39; &#39;&#39;&#39;</span>
 
 <span class="tok-w">    </span><span class="tok-c1"># i3 wraps focus by default</span>
 <span class="tok-w">    </span><span class="tok-n">alt-j</span><span class="tok-w"> </span><span class="tok-o">=</span><span class="tok-w">         </span><span class="tok-s1">&#39;focus --boundaries-action wrap-around-the-workspace left&#39;</span>
@@ -1187,7 +1179,7 @@ Namely, that any workspace already containing an instance of Safari/Terminal is 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2026-07-01 11:43:47 +0200
+Last updated 2026-07-16 18:01:58 +0200
 </div>
 </div>
 <style>
