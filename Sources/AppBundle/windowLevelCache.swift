@@ -7,7 +7,16 @@ private var cache: [UInt32: MacOsWindowLevel] = [:]
 @MainActor
 func getWindowLevel(for windowId: UInt32) -> MacOsWindowLevel? {
     if let existing = cache[windowId] { return existing }
+    return refreshWindowLevelCache()?[windowId]
+}
 
+@MainActor
+func getAllWindowLevels() -> [UInt32: MacOsWindowLevel] {
+    refreshWindowLevelCache() ?? cache
+}
+
+@MainActor
+private func refreshWindowLevelCache() -> [UInt32: MacOsWindowLevel]? {
     var result: [UInt32: MacOsWindowLevel] = [:]
     let options = CGWindowListOption(arrayLiteral: .excludeDesktopElements, .optionOnScreenOnly)
     guard let cfArray = CGWindowListCopyWindowInfo(options, CGWindowID(0)) as? [CFDictionary] else { return nil }
@@ -23,7 +32,7 @@ func getWindowLevel(for windowId: UInt32) -> MacOsWindowLevel? {
         result[windowId] = .new(windowLevel: windowLayer)
     }
     cache = result
-    return result[windowId]
+    return result
 }
 
 enum MacOsWindowLevel: Sendable, Equatable {

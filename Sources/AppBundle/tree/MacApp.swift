@@ -232,6 +232,41 @@ final class MacApp: AbstractApp {
         } ?? [:]
     }
 
+    /// Unlike 'dumpWindowAxInfo', it also dumps AX windows that are not treated as windows from AeroSpace perspective.
+    /// The only intended use case is 'debug-windows' command. https://github.com/nikitabobko/AeroSpace/issues/1235
+    func dumpAllWindowsAxInfo(_ windowLevels: [UInt32: MacOsWindowLevel], _ cm: CancellationMode) async throws -> [(windowId: UInt32?, dump: [String: Json])] {
+        try await thread?.runInLoop(cm) { [nsApp, axApp, windows, appId] job in
+            var result: [(windowId: UInt32?, dump: [String: Json])] = []
+            var enumeratedIds: Set<UInt32> = []
+            let app = axApp.threadGuarded
+            func newDump(_ windowId: UInt32?, _ ax: AXUIElement) -> [String: Json] {
+                var dump = dumpAxRecursive(ax, .window)
+                let windowLevel = windowId.flatMap { windowLevels[$0] }
+                let windowType = ax.getWindowType(axApp: app, appId, nsApp.activationPolicy, windowLevel)
+                dump["Aero.AxUiElementWindowType"] = .string(windowType.rawValue)
+                dump["Aero.AxUiElementWindowType_isDialogHeuristic"] = .bool(ax.isDialogHeuristic(appId, windowLevel))
+                return dump
+            }
+            for (windowId, ax) in app.get(Ax.windowsRawAttr) ?? [] {
+                try job.checkCancellation()
+                var dump = newDump(windowId, ax)
+                if windowId == nil {
+                    dump["Aero.debug.windowIdFailed"] = .string("_AXUIElementGetWindow failed or returned kCGNullWindowID. AeroSpace ignores such AX windows")
+                }
+                if let windowId { enumeratedIds.insert(windowId) }
+                result.append((windowId, dump))
+            }
+            // Registered AX windows that are not enumerated in kAXWindowsAttribute (e.g. windows on inactive macOS Spaces)
+            for (windowId, axWindow) in windows.threadGuarded where !enumeratedIds.contains(windowId) {
+                try job.checkCancellation()
+                var dump = newDump(windowId, axWindow.ax)
+                dump["Aero.debug.absentInAxWindowsAttr"] = .bool(true)
+                result.append((windowId, dump))
+            }
+            return result
+        } ?? []
+    }
+
     func dumpAppAxInfo(_ cm: CancellationMode) async throws -> [String: Json] {
         try await thread?.runInLoop(cm) { [axApp] job in
             dumpAxRecursive(axApp.threadGuarded, .app)
