@@ -8,7 +8,7 @@ extension PerMonitorValue: Sendable where Value: Sendable {}
 
 struct PerWorkspaceValue<Value: Equatable>: Equatable {
     let name: String
-    let value: Value
+    let value: DynamicConfigValue<Value>
 }
 extension PerWorkspaceValue: Sendable where Value: Sendable {}
 
@@ -38,12 +38,15 @@ extension DynamicConfigValue {
         }
     }
 
-    func getValue(for workspaceName: String) -> Value {
+    @MainActor func getValue(for workspaceName: String, monitor: any Monitor) -> Value {
         switch self {
             case .constant(let value): return value
-            case .perMonitor(_, let defaultValue): return defaultValue
+            case .perMonitor: return getValue(for: monitor)
             case .perWorkspace(let array, let defaultValue):
-                return array.first { $0.name == workspaceName }?.value ?? defaultValue
+                if let match = array.first(where: { $0.name == workspaceName }) {
+                    return match.value.getValue(for: monitor)
+                }
+                return defaultValue
         }
     }
 }
@@ -117,18 +120,28 @@ func parsePerWorkspaceValues<T>(_ array: OrderedJson.JsonArray, _ backtrace: Con
     array.enumerated().compactMap { (index: Int, raw: OrderedJson) -> PerWorkspaceValue<T>? in
         var backtrace = backtrace + .index(index)
 
-        guard let (key, value) = raw.unwrapTableWithSingleKey(expectedKey: "workspace", &backtrace)
-            .flatMap({ $0.value.unwrapTableWithSingleKey(expectedKey: nil, &backtrace) })
+        guard let (_, workspaceTable) = raw.unwrapTableWithSingleKey(expectedKey: "workspace", &backtrace)
             .getOrNil(appendErrorTo: &c.errors)
         else {
             return nil
         }
 
-        guard let value = parseSimpleType(value, ofType: T.self) else {
-            c.errors.append(.init(backtrace, "Expected type is '\(T.self)'. But actual type is '\(value.tomlType)'"))
+        guard let (key, value) = workspaceTable.unwrapTableWithSingleKey(expectedKey: nil, &backtrace)
+            .getOrNil(appendErrorTo: &c.errors)
+        else {
             return nil
         }
 
-        return PerWorkspaceValue(name: key, value: value)
+        let innerValue: DynamicConfigValue<T>
+        if let simpleValue = parseSimpleType(value, ofType: T.self) {
+            innerValue = .constant(simpleValue)
+        } else if value.asArrayOrNil != nil {
+            innerValue = parseDynamicValue(value, ofType: T.self, parseSimpleType(array.last!, ofType: T.self)!, backtrace, &c)
+        } else {
+            c.errors.append(.init(backtrace, "Expected type is '\(T.self)' or array. But actual type is '\(value.tomlType)'"))
+            return nil
+        }
+
+        return PerWorkspaceValue(name: key, value: innerValue)
     }
 }
