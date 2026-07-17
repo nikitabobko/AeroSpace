@@ -530,6 +530,102 @@ final class ConfigTest: XCTestCase {
         ])
     }
 
+    func testParseAccordionPadding() {
+        // Per-workspace -> per-monitor: workspace 2 on LG ULTRAWIDE gets 384, everywhere else 16.
+        let result1 = parseConfig(
+            """
+            accordion-padding = [
+                { workspace = { '2' = [{ monitor = { 'LG ULTRAWIDE' = 384 } }, 16] } },
+                16
+            ]
+            """,
+        )
+        assertEquals(result1.errors, [])
+        assertEquals(
+            result1.config.accordionPadding,
+            .perWorkspace(
+                [
+                    PerWorkspaceValue(
+                        name: "2",
+                        value: .perMonitor(
+                            [PerMonitorValue(description: .pattern("LG ULTRAWIDE")!, value: 384)],
+                            default: 16,
+                        ),
+                    ),
+                ],
+                default: 16,
+            ),
+        )
+
+        // Mixed: workspace 2 has per-monitor override, workspace 3 is a constant,
+        // every other workspace falls back to 16.
+        let result2 = parseConfig(
+            """
+            accordion-padding = [
+                { workspace = { '2' = [{ monitor."main" = 100 }, { monitor."secondary" = 200 }, 32] } },
+                { workspace = { '3' = 384 } },
+                16
+            ]
+            """,
+        )
+        assertEquals(result2.errors, [])
+        assertEquals(
+            result2.config.accordionPadding,
+            .perWorkspace(
+                [
+                    PerWorkspaceValue(
+                        name: "2",
+                        value: .perMonitor(
+                            [
+                                PerMonitorValue(description: .main, value: 100),
+                                PerMonitorValue(description: .secondary, value: 200),
+                            ],
+                            default: 32,
+                        ),
+                    ),
+                    PerWorkspaceValue(name: "3", value: .constant(384)),
+                ],
+                default: 16,
+            ),
+        )
+
+        // Plain constant and per-workspace-only forms still work.
+        let result3 = parseConfig(
+            """
+            accordion-padding = 30
+            """,
+        )
+        assertEquals(result3.errors, [])
+        assertEquals(result3.config.accordionPadding, .constant(30))
+
+        let result4 = parseConfig(
+            """
+            accordion-padding = [{ workspace = { '2' = 384 } }, 16]
+            """,
+        )
+        assertEquals(result4.errors, [])
+        assertEquals(
+            result4.config.accordionPadding,
+            .perWorkspace(
+                [PerWorkspaceValue(name: "2", value: .constant(384))],
+                default: 16,
+            ),
+        )
+
+        // Inner array missing a trailing default surfaces a clear error instead of crashing.
+        let result5 = parseConfig(
+            """
+            accordion-padding = [
+                { workspace = { '2' = [{ monitor = { 'LG ULTRAWIDE' = 384 } }] } },
+                16
+            ]
+            """,
+        )
+        assertEquals(result5.strErrors, [
+            "[ERROR] accordion-padding[0].workspace.2: The last item in the inner array must be of type Int",
+        ])
+    }
+
     func testAfterLoginCommandDeprecation() {
         let result = parseConfig(
             """
