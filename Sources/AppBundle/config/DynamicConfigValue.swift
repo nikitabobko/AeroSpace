@@ -135,8 +135,15 @@ func parsePerWorkspaceValues<T>(_ array: OrderedJson.JsonArray, _ backtrace: Con
         let innerValue: DynamicConfigValue<T>
         if let simpleValue = parseSimpleType(value, ofType: T.self) {
             innerValue = .constant(simpleValue)
-        } else if value.asArrayOrNil != nil {
-            innerValue = parseDynamicValue(value, ofType: T.self, parseSimpleType(array.last!, ofType: T.self)!, backtrace, &c)
+        } else if let innerArray = value.asArrayOrNil {
+            // `array` here is the items passed in from parseDynamicValue (i.e. outer.dropLast()),
+            // so `array.last` is not a safe Int fallback. The inner array's own trailing item is
+            // the right source for the recursive call's fallback (only consumed in error paths).
+            guard let fallback = innerArray.last.flatMap({ parseSimpleType($0, ofType: T.self) }) else {
+                c.errors.append(.init(backtrace, "The last item in the inner array must be of type \(T.self)"))
+                return nil
+            }
+            innerValue = parseDynamicValue(value, ofType: T.self, fallback, backtrace, &c)
         } else {
             c.errors.append(.init(backtrace, "Expected type is '\(T.self)' or array. But actual type is '\(value.tomlType)'"))
             return nil
