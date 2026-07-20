@@ -1,3 +1,4 @@
+// periphery:ignore:all
 extension Dictionary {
     @inlinable public func partition(_ predicate: (Dictionary<Key, Value>.Element) throws -> Bool) rethrows -> ([Key: Value], [Key: Value]) {
         var matching = [Key: Value]()
