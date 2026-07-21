@@ -10,6 +10,7 @@ struct CloseCommand: Command {
         guard let window = target.windowOrNil else {
             return .fail(io.err("Empty workspace"))
         }
+        // todo bug: getAxWindowsCount doesn't count for macos native fullscreen windows
         // Access ax directly. Not cool :(
         if await args.quitIfLastWindow.andAsync({ @MainActor @Sendable in (try? await window.macAppUnsafe.getAxWindowsCount(.nonCancellable)) == 1 }) {
             let app = window.macAppUnsafe

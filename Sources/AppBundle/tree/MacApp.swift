@@ -43,9 +43,7 @@ final class MacApp: AbstractApp {
         self.thread = thread
     }
 
-    @MainActor
-    @discardableResult
-    static func getOrRegister(_ nsApp: NSRunningApplication) async throws -> MacApp? {
+    @MainActor @discardableResult static func getOrRegister(_ nsApp: NSRunningApplication) async throws -> MacApp? {
         // Don't perceive any of the lock screen windows as real windows
         // Otherwise, false positive ax notifications might trigger that lead to gcWindows
         if nsApp.bundleIdentifier == lockScreenAppBundleId { return nil }
@@ -256,42 +254,41 @@ final class MacApp: AbstractApp {
         }
     }
 
-    @MainActor
-    static func refreshAllAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [MacApp: [UInt32]] {
-        for (_, app) in MacApp.allAppsMap { // gc dead apps
+    @MainActor static func refreshAllAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [MacApp: [UInt32]] {
+        for app in MacApp.allAppsMap.values { // gc dead apps
             try checkCancellation()
             if app.nsApp.isTerminated {
                 await app.destroy()
             }
         }
-        return try await withThrowingTaskGroup(of: (pid_t, [UInt32]).self, returning: [MacApp: [UInt32]].self) { group in
-            func refreshTheApp(_ nsApp: NSRunningApplication) {
+        return try await withThrowingTaskGroup(
+            of: (MainActorRef<MacApp>, [UInt32]).self,
+            returning: [MacApp: [UInt32]].self,
+        ) { group in
+            @MainActor func refreshTheApp(_ app: MacApp) {
                 group.addTask { @Sendable @MainActor in
-                    guard let app = try await MacApp.getOrRegister(nsApp) else { return (nsApp.processIdentifier, []) }
-                    return (nsApp.processIdentifier, try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
+                    return (MainActorRef.init(app), try await app.refreshAndGetAliveWindowIds(frontmostAppBundleId: frontmostAppBundleId))
                 }
             }
             // Register new apps
             for nsApp in NSWorkspace.shared.runningApplications {
                 try checkCancellation()
-                if nsApp.activationPolicy == .regular {
-                    refreshTheApp(nsApp)
+                if nsApp.activationPolicy == .regular, let app = try await MacApp.getOrRegister(nsApp) {
+                    refreshTheApp(app)
                 }
             }
-            for (_, app) in MacApp.allAppsMap {
+            for app in MacApp.allAppsMap.values {
                 try checkCancellation()
                 // "About this Mac" window, TouchID, and a lot of other utility windows
                 // We don't monitor them actively as we do for regular apps, but if a window of one of those utility
                 // apps got focused it will end up in allAppsMap
                 if app.nsApp.activationPolicy != .regular {
-                    refreshTheApp(app.nsApp)
+                    refreshTheApp(app)
                 }
             }
             var result: [MacApp: [UInt32]] = [:]
-            for try await (pid, windowIds) in group {
-                if let app = MacApp.allAppsMap[pid] {
-                    result[app] = windowIds
-                }
+            for try await (macAppRef, windowIds) in group {
+                result[macAppRef.value] = windowIds
             }
             return result
         }
@@ -435,4 +432,9 @@ private func disableAnimations<T>(app: AXUIElement, _ job: RunLoopJob, _ body: (
     }
     try job.checkCancellation()
     return try body()
+}
+
+final class MainActorRef<T>: Sendable {
+    @MainActor var value: T
+    @MainActor public init(_ value: T) { self.value = value }
 }
