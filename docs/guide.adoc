@@ -552,7 +552,7 @@ on-window-detected = [
 ----
 
 `on-window-detected` is an ordered list of callback objects.
-Every object has `if` (optional) and `run` (mandatory) keys inside.
+Every object has `if` and `run` (both are mandatory) keys inside.
 When a new window is detected:
 
 . AeroSpace processes the list of the callback objects in the defined order.
