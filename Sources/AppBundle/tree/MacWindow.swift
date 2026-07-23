@@ -35,7 +35,17 @@ final class MacWindow: Window {
         allWindowsMap[windowId] = window
 
         try await debugWindowsIfRecording(window, .cancellable)
-        if try await !restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window) {
+        if try await restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window) {
+            // Cache restore doesn't run on-window-detected callbacks, but subscribers received
+            // a window-closed event when the window was garbage collected into the cache.
+            // Broadcast window-detected so their bookkeeping stays balanced across lock/unlock
+            broadcastEvent(.windowDetected(
+                windowId: window.windowId,
+                workspace: window.nodeWorkspace?.name,
+                appBundleId: window.app.rawAppBundleId,
+                appName: window.app.name,
+            ))
+        } else {
             await tryOnWindowDetected(window)
         }
         return window
@@ -83,6 +93,12 @@ final class MacWindow: Window {
         if !skipClosedWindowsCache { cacheClosedWindowIfNeeded() }
         let parent = unbindFromParent().parent
         let deadWindowWorkspace = parent.nodeWorkspace
+        broadcastEvent(.windowClosed(
+            windowId: windowId,
+            workspace: deadWindowWorkspace?.name,
+            appBundleId: app.rawAppBundleId,
+            appName: app.name,
+        ))
         let focus = focus
         if let deadWindowWorkspace, deadWindowWorkspace == focus.workspace ||
             deadWindowWorkspace == prevFocusedWorkspace && prevFocusedWorkspaceDate.distance(to: .now) < 1
