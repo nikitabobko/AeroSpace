@@ -29,26 +29,36 @@ import AppKit
             if await isAxWindowUnderMouse(location) == false { return }
             try checkCancellation()
             let workspace = location.monitorApproximation.activeWorkspace
-            var window: Window? = nil
-            for child in workspace.floatingWindowsContainer.mruChildren {
-                try checkCancellation()
-                guard let child = child as? Window else { continue }
-                guard let rect = try await child.getAxRect(.cancellable) else { continue }
-                if rect.contains(location) {
-                    window = child
-                    break
-                }
-            }
-            if window == nil {
-                window = location.findWindowRecursively(in: workspace.rootTilingContainer, virtual: false, fullscreenCoversAll: true)
-            }
-            if let window {
+            if let window = try await location.windowUnderMouseToFocus(in: workspace) {
                 try await runLightSession(.focusFollowsMouse, token) {
                     _ = window.focusWindow()
                     window.nativeFocus()
                 }
             }
         }
+    }
+}
+
+extension CGPoint {
+    @MainActor
+    func windowUnderMouseToFocus(in workspace: Workspace) async throws -> Window? {
+        // The physical frame may be bigger than the requested one (e.g. AX minimum size).
+        // If the mouse is still within the focused window's real frame, keep the focus
+        if let focusedWindow = focus.windowOrNil,
+           let focusedRect = try await focusedWindow.getAxRect(.cancellable),
+           focusedRect.contains(self)
+        {
+            return nil
+        }
+        for child in workspace.floatingWindowsContainer.mruChildren {
+            try checkCancellation()
+            guard let child = child as? Window else { continue }
+            guard let rect = try await child.getAxRect(.cancellable) else { continue }
+            if rect.contains(self) {
+                return child
+            }
+        }
+        return findWindowRecursively(in: workspace.rootTilingContainer, virtual: false, fullscreenCoversAll: true)
     }
 }
 
