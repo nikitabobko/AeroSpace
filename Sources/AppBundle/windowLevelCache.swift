@@ -10,7 +10,7 @@ func getWindowLevel(for windowId: UInt32) -> MacOsWindowLevel? {
 
     var result: [UInt32: MacOsWindowLevel] = [:]
     let options = CGWindowListOption(arrayLiteral: .excludeDesktopElements, .optionOnScreenOnly)
-    guard let cfArray = CGWindowListCopyWindowInfo(options, CGWindowID(0)) as? [CFDictionary] else { return nil }
+    guard let cfArray = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [CFDictionary] else { return nil }
     for elem in cfArray {
         let dict = elem as NSDictionary
 
