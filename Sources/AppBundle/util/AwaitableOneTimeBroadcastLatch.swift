@@ -5,8 +5,8 @@ actor AwaitableOneTimeBroadcastLatch {
     private var done = false
     private var awaiters: [UniqueToken: Nullable<CheckedContinuation<(), any Error>>] = [:]
 
-    func await() async throws {
-        try checkCancellation()
+    func await(_ cm: CancellationMode) async throws {
+        try checkCancellation(cm)
         if done { return }
 
         let id = UniqueToken()
@@ -21,7 +21,9 @@ actor AwaitableOneTimeBroadcastLatch {
                 }
             }
         } onCancel: {
-            Task.startUnstructured { await self.cancel(id: id) }
+            if cm == .cancellable {
+                Task.startUnstructured { await self.cancel(id: id) }
+            }
         }
     }
 

@@ -1,16 +1,26 @@
 import CoreGraphics
 import Foundation
 
-@MainActor
-private var cache: [UInt32: MacOsWindowLevel] = [:]
+@MainActor private var cache: [UInt32: MacOsWindowLevel] = [:]
+@MainActor private var wip: AwaitableOneTimeBroadcastLatch? = nil
 
-@MainActor
-func getWindowLevel(for windowId: UInt32) -> MacOsWindowLevel? {
+@MainActor func getWindowLevel(for windowId: UInt32, _ cm: CancellationMode) async throws -> MacOsWindowLevel? {
     if let existing = cache[windowId] { return existing }
+    if let wip {
+        try await wip.await(cm)
+        return cache[windowId]
+    }
+    wip = AwaitableOneTimeBroadcastLatch()
+    cache = await computeCache()
+    wip = nil
+    await wip?.signalToAll()
+    return cache[windowId]
+}
 
+@concurrent private func computeCache() async -> [UInt32: MacOsWindowLevel] {
     var result: [UInt32: MacOsWindowLevel] = [:]
     let options = CGWindowListOption(arrayLiteral: .excludeDesktopElements, .optionAll)
-    guard let cfArray = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [CFDictionary] else { return nil }
+    guard let cfArray = CGWindowListCopyWindowInfo(options, kCGNullWindowID) as? [CFDictionary] else { return [:] }
     for elem in cfArray {
         let dict = elem as NSDictionary
 
@@ -22,8 +32,7 @@ func getWindowLevel(for windowId: UInt32) -> MacOsWindowLevel? {
 
         result[windowId] = .new(windowLevel: windowLayer)
     }
-    cache = result
-    return result[windowId]
+    return result
 }
 
 enum MacOsWindowLevel: Sendable, Equatable {

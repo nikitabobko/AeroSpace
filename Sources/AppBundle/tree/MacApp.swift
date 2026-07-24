@@ -54,7 +54,7 @@ final class MacApp: AbstractApp {
         if let existing = allAppsMap[pid] { return existing }
         try checkCancellation()
         if let wip = wipPids[pid] {
-            try await wip.await()
+            try await wip.await(.cancellable)
             return allAppsMap[pid]
         }
         let wip = AwaitableOneTimeBroadcastLatch()
@@ -93,7 +93,7 @@ final class MacApp: AbstractApp {
         thread.name = "AxAppThread \(nsApp.idForDebug)"
         thread.start()
 
-        try await wip.await()
+        try await wip.await(.cancellable)
         return allAppsMap[pid]
     }
 
