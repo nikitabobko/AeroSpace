@@ -157,6 +157,7 @@ extension FormatVar {
             case (.window(let w), .window(let f)):
                 return switch f {
                     case .windowId: .success(.int(w.window.windowId))
+                    case .windowDfsIndex: toWindowDfsIndexResult(w: w.window)
                     case .windowIsFullscreen: .success(.bool(w.window.isFullscreen))
                     case .windowTitle: .success(.string(w.title.orDie("Title wasn't prefetched")))
                     case .windowLayout, .windowParentContainerLayout: toLayoutResult(w: w.window)
@@ -256,4 +257,16 @@ private func toLayoutResult(w: Window) -> Result<Primitive, InterVarExpansionErr
         case .rootTilingContainer: .failure(.notPossible("Not possible"))
         case .shimContainerRelation: .failure(.windowParentIllegalRelation("Window cannot have a shim container relation"))
     }
+}
+
+private func toWindowDfsIndexResult(w: Window) -> Result<Primitive, InterVarExpansionError> {
+    let nullWindowDfsIndex = "NULL-WINDOW-DFS-INDEX"
+    guard let workspace = w.nodeWorkspace else { return .success(.string(nullWindowDfsIndex)) }
+    guard let rootTilingContainer = workspace.children
+        .filterIsInstance(of: TilingContainer.self)
+        .singleOrNil()
+    else { return .success(.string(nullWindowDfsIndex)) }
+
+    let dfsIndex = rootTilingContainer.allLeafWindowsRecursive.firstIndex(where: { $0 == w })
+    return .success(dfsIndex.map(Primitive.int) ?? .string(nullWindowDfsIndex))
 }

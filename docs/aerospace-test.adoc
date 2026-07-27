@@ -49,6 +49,7 @@ The way the expression is interpreted depends on the type of `<lhs>` and the inf
 include::./util/conditional-interpolation-variables-header.adoc[]
 
 %{window-id}:: Number. Window unique ID
+%{window-dfs-index}:: Number. Window DFS index within the workspace root tiling container.
 %{window-title}:: String. Window title
 %{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aerospace fullscreen` command
 %{window-layout}:: String. An alias for `%{window-parent-container-layout}`

@@ -77,6 +77,8 @@ If not specified, the default `<output-format>` is: +
 The following variables can be used inside `<output-format>`:
 
 %{window-id}:: Number. Window unique ID
+%{window-dfs-index}:: Number. Window DFS index within the workspace root tiling container.
+Floating and macOS native fullscreen/hidden windows are not part of this index and yield `NULL-WINDOW-DFS-INDEX`.
 %{window-title}:: String. Window title
 %{window-is-fullscreen}:: Boolean. Is window in fullscreen by `aerospace fullscreen` command
 %{window-layout}:: String. An alias for `%{window-parent-container-layout}`

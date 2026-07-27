@@ -74,6 +74,28 @@ final class ListWindowsTest: XCTestCase {
         }
     }
 
+    func testFormatWindowDfsIndexFollowsWorkspaceDfsOrder() {
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            let w7 = TestWindow.new(id: 7, parent: $0)
+            var w2: Window!
+            var w9: Window!
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                w2 = TestWindow.new(id: 2, parent: $0)
+                TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
+                    w9 = TestWindow.new(id: 9, parent: $0)
+                }
+            }
+
+            // DFS for this tree is: 7, 2, 9
+            let windows = [
+                AeroObj.window(.forTest(window: w9, title: nil)),
+                AeroObj.window(.forTest(window: w7, title: nil)),
+                AeroObj.window(.forTest(window: w2, title: nil)),
+            ]
+            assertSucc(windows.format([.interVar(.formatVar(.window(.windowDfsIndex)))]), ["2", "0", "1"])
+        }
+    }
+
     func testRunFocusedNoWindow() async {
         let result = await parseCommand("list-windows --focused --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
