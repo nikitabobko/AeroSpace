@@ -25,7 +25,7 @@ final class NativeTabWindowReplacementTest: XCTestCase {
         )
 
         assertEquals(container.layoutDescription, .h_tiles([.window(1), .window(4), .window(3)]))
-        assertEquals(newWindow.getWeight(.horizontal), 3)
+        assertEquals(newWindow.getWeight(.h), 3)
     }
 
     func testReplacementPrefersLastFocusedWindow() {
