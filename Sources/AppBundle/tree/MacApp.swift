@@ -149,9 +149,9 @@ final class MacApp: AbstractApp {
 
     func setAxFrame(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
-        setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { [axApp] window, job in
+        setFrameJobs[windowId] = withAxWindowAsync(windowId, .cancellable) { [axApp] window, job in
             try disableAnimations(app: axApp.threadGuarded, job) {
-                try setFrame(window, topLeft, size, job)
+                try setFrame(window.ax, topLeft, size, job, context: window.observerContext)
             }
         }
     }
@@ -159,9 +159,9 @@ final class MacApp: AbstractApp {
     func setAxFrameForTermination(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         let semaphore = DispatchSemaphore(value: 0)
-        let job = withWindowAsync(windowId, .nonCancellable) { [axApp] window, job in
+        let job = withAxWindowAsync(windowId, .nonCancellable) { [axApp] window, job in
             try? disableAnimations(app: axApp.threadGuarded, job) {
-                try setFrame(window, topLeft, size, job)
+                try setFrame(window.ax, topLeft, size, job, context: window.observerContext)
             }
             semaphore.signal()
         }
@@ -357,29 +357,44 @@ final class MacApp: AbstractApp {
             try? body(window.ax, job)
         } ?? .cancelled
     }
+
+    private func withAxWindowAsync(_ windowId: UInt32, _ cm: CancellationMode, _ body: @Sendable @escaping (AxWindow, RunLoopJob) throws -> ()) -> RunLoopJob {
+        thread?.runInLoopAsync(job: RunLoopJob(cm)) { [windows] job in
+            guard let window = windows.threadGuarded[windowId] else { return }
+            try? body(window, job)
+        } ?? .cancelled
+    }
 }
 
 private final class AxWindow {
     let windowId: UInt32
     let ax: AXUIElement
+    let observerContext: AxWindowObserverContext
     // periphery:ignore
     private let axSubscriptions: [AxSubscription] // keep subscriptions in memory
 
-    private init(windowId: UInt32, _ ax: AXUIElement, _ axSubscriptions: [AxSubscription]) {
+    private init(
+        windowId: UInt32,
+        _ ax: AXUIElement,
+        _ observerContext: AxWindowObserverContext,
+        _ axSubscriptions: [AxSubscription],
+    ) {
         self.windowId = windowId
         self.ax = ax
+        self.observerContext = observerContext
         assert(!axSubscriptions.isEmpty)
         self.axSubscriptions = axSubscriptions
     }
 
     static func new(windowId: UInt32, _ ax: AXUIElement, _ nsApp: NSRunningApplication, _ job: RunLoopJob) throws -> AxWindow? {
+        let observerContext = AxWindowObserverContext()
         let handlers: HandlerToNotifKeyMapping = unsafe [
             (refreshObs, [kAXUIElementDestroyedNotification, kAXWindowDeminiaturizedNotification, kAXWindowMiniaturizedNotification]),
             (movedObs, [kAXMovedNotification]),
             (resizedObs, [kAXResizedNotification]),
         ]
-        let subscriptions = try unsafe AxSubscription.bulkSubscribe(nsApp, ax, job, handlers)
-        return !subscriptions.isEmpty ? AxWindow(windowId: windowId, ax, subscriptions) : nil
+        let subscriptions = try unsafe AxSubscription.bulkSubscribe(nsApp, ax, job, handlers, callbackContext: observerContext)
+        return !subscriptions.isEmpty ? AxWindow(windowId: windowId, ax, observerContext, subscriptions) : nil
     }
 }
 
@@ -408,14 +423,36 @@ private func getAxRect(window: AXUIElement, job: RunLoopJob) throws -> Rect? {
     return Rect(topLeftX: topLeftCorner.x, topLeftY: topLeftCorner.y, width: size.width, height: size.height)
 }
 
-private func setFrame(_ window: AXUIElement, _ topLeft: CGPoint?, _ size: CGSize?, _ job: RunLoopJob) throws {
-    // Set size and then the position. The order is important https://github.com/nikitabobko/AeroSpace/issues/143
-    //                                                        https://github.com/nikitabobko/AeroSpace/issues/335
-    if let size { window.set(Ax.sizeAttr, size) }
-    try job.checkCancellation()
-    if let topLeft { window.set(Ax.topLeftCornerAttr, topLeft) } else { return }
-    try job.checkCancellation()
-    if let size { window.set(Ax.sizeAttr, size) }
+private func setFrame(_ window: AXUIElement, _ topLeft: CGPoint?, _ size: CGSize?, _ job: RunLoopJob, context: AxWindowObserverContext) throws {
+    do {
+        // Set size and then the position. The order is important https://github.com/nikitabobko/AeroSpace/issues/143
+        //                                                        https://github.com/nikitabobko/AeroSpace/issues/335
+        if let size {
+            context.prepareForSizeWrite()
+            if window.set(Ax.sizeAttr, size) {
+                context.recordSize(size)
+            }
+        }
+        try job.checkCancellation()
+        if let topLeft {
+            context.prepareForPositionWrite()
+            if window.set(Ax.topLeftCornerAttr, topLeft) {
+                context.recordPosition(topLeft)
+            }
+        } else {
+            return
+        }
+        try job.checkCancellation()
+        if let size {
+            context.prepareForSizeWrite()
+            if window.set(Ax.sizeAttr, size) {
+                context.recordSize(size)
+            }
+        }
+    } catch {
+        context.clearExpectations()
+        throw error
+    }
 }
 
 // Some undocumented magic

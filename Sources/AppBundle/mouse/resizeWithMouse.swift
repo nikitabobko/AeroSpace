@@ -4,21 +4,30 @@ import Common
 @MainActor
 private var resizeWithMouseTask: Task<(), any Error>? = nil
 
-func resizedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableRawPointer?) {
+func resizedObs(_: AXObserver, ax: AXUIElement, notif: CFString, refcon: UnsafeMutableRawPointer?) {
     let notif = notif as String
     let windowId = ax.containingWindowId()
+    let context = unsafe AxWindowObserverContext.fromRefcon(refcon)
+    let isExpected = context?.shouldSuppressSizeNotification(
+        isMouseDown: isLeftMouseButtonDown,
+        readActual: { ax.get(Ax.sizeAttr) },
+    ) == true
     Task.startUnstructured { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
-        guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
+        guard let windowId, let window = Window.get(byId: windowId) else {
             scheduleCancellableCompleteRefreshSession(.ax(notif))
             return
         }
-        resizeWithMouseTask?.cancel()
-        resizeWithMouseTask = Task.startUnstructured {
-            try checkCancellation()
-            try await runLightSession(.ax(notif), token) {
-                try await resizeWithMouse(window)
+        if try await isManipulatedWithMouse(window) {
+            resizeWithMouseTask?.cancel()
+            resizeWithMouseTask = Task.startUnstructured {
+                try checkCancellation()
+                try await runLightSession(.ax(notif), token) {
+                    try await resizeWithMouse(window)
+                }
             }
+        } else if !isExpected {
+            scheduleCancellableCompleteRefreshSession(.ax(notif))
         }
     }
 }

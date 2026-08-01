@@ -4,21 +4,30 @@ import Common
 @MainActor
 private var moveWithMouseTask: Task<(), any Error>? = nil
 
-func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, _: UnsafeMutableRawPointer?) {
+func movedObs(_: AXObserver, ax: AXUIElement, notif: CFString, refcon: UnsafeMutableRawPointer?) {
     let windowId = ax.containingWindowId()
+    let context = unsafe AxWindowObserverContext.fromRefcon(refcon)
+    let isExpected = context?.shouldSuppressPositionNotification(
+        isMouseDown: isLeftMouseButtonDown,
+        readActual: { ax.get(Ax.topLeftCornerAttr) },
+    ) == true
     let notif = notif as String
     Task.startUnstructured { @MainActor in
         guard let token: RunSessionGuard = .isServerEnabled else { return }
-        guard let windowId, let window = Window.get(byId: windowId), try await isManipulatedWithMouse(window) else {
+        guard let windowId, let window = Window.get(byId: windowId) else {
             scheduleCancellableCompleteRefreshSession(.ax(notif))
             return
         }
-        moveWithMouseTask?.cancel()
-        moveWithMouseTask = Task.startUnstructured {
-            try checkCancellation()
-            try await runLightSession(.ax(notif), token) {
-                try await moveWithMouse(window)
+        if try await isManipulatedWithMouse(window) {
+            moveWithMouseTask?.cancel()
+            moveWithMouseTask = Task.startUnstructured {
+                try checkCancellation()
+                try await runLightSession(.ax(notif), token) {
+                    try await moveWithMouse(window)
+                }
             }
+        } else if !isExpected {
+            scheduleCancellableCompleteRefreshSession(.ax(notif))
         }
     }
 }

@@ -6,17 +6,20 @@ final class AxSubscription {
     let obs: AXObserver
     let ax: AXUIElement
     let axThreadToken: AxAppThreadToken = axTaskLocalAppThreadToken ?? dieT("axTaskLocalAppThreadToken is not initialized")
+    private let callbackContext: AxWindowObserverContext?
     var notifKeys: Set<String> = []
 
-    private init(obs: AXObserver, ax: AXUIElement) {
+    private init(obs: AXObserver, ax: AXUIElement, callbackContext: AxWindowObserverContext?) {
         axThreadToken.checkEquals(axTaskLocalAppThreadToken)
         self.obs = obs
         self.ax = ax
+        self.callbackContext = callbackContext
     }
 
     private func subscribe(_ key: String) throws -> Bool {
         axThreadToken.checkEquals(axTaskLocalAppThreadToken)
-        if AXObserverAddNotification(obs, ax, key as CFString, nil) == .success {
+        let refcon = unsafe callbackContext.map { unsafe Unmanaged.passUnretained($0).toOpaque() }
+        if unsafe AXObserverAddNotification(obs, ax, key as CFString, refcon) == .success {
             notifKeys.insert(key)
             return true
         } else {
@@ -29,13 +32,14 @@ final class AxSubscription {
         _ ax: AXUIElement,
         _ job: RunLoopJob,
         _ handlerToNotifKeyMapping: HandlerToNotifKeyMapping,
+        callbackContext: AxWindowObserverContext? = nil,
     ) throws -> [AxSubscription] {
         var result: [AxSubscription] = []
         var visitedNotifKeys: Set<String> = []
         for unsafe (handler, notifKeys) in unsafe handlerToNotifKeyMapping {
             try job.checkCancellation()
             guard let obs = unsafe AXObserver.new(nsApp.processIdentifier, handler) else { return [] }
-            let subscription = AxSubscription(obs: obs, ax: ax)
+            let subscription = AxSubscription(obs: obs, ax: ax, callbackContext: callbackContext)
             for key: String in notifKeys {
                 try job.checkCancellation()
                 assert(visitedNotifKeys.insert(key).inserted)
