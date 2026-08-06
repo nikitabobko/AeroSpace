@@ -139,17 +139,23 @@ final class MacWindow: Window {
         }
         let p: CGPoint
         switch corner {
-            case .bottomLeftCorner:
+            case .bottomLeftCorner, .globalBottomLeftCorner:
                 guard let s = try await getAxSize(.cancellable) else { fallthrough }
                 // Zoom will jump off if you do one pixel offset https://github.com/nikitabobko/AeroSpace/issues/527
                 // todo this ad hoc won't be necessary once I implement optimization suggested by Zalim
                 let onePixelOffset = macApp.appId == .zoom ? .zero : CGPoint(x: 1, y: -1)
-                p = nodeMonitor.visibleRect.bottomLeftCorner + onePixelOffset + CGPoint(x: -s.width, y: 0)
-            case .bottomRightCorner:
+                let targetMonitor = corner == .globalBottomLeftCorner
+                    ? monitors.min(by: { ($0.rect.minX, -$0.rect.maxY) < ($1.rect.minX, -$1.rect.maxY) }) ?? nodeMonitor
+                    : nodeMonitor
+                p = targetMonitor.visibleRect.bottomLeftCorner + onePixelOffset + CGPoint(x: -s.width, y: 0)
+            case .bottomRightCorner, .globalBottomRightCorner:
                 // Zoom will jump off if you do one pixel offset https://github.com/nikitabobko/AeroSpace/issues/527
                 // todo this ad hoc won't be necessary once I implement optimization suggested by Zalim
                 let onePixelOffset = macApp.appId == .zoom ? .zero : CGPoint(x: 1, y: 1)
-                p = nodeMonitor.visibleRect.bottomRightCorner - onePixelOffset
+                let targetMonitor = corner == .globalBottomRightCorner
+                    ? monitors.max(by: { ($0.rect.maxX, $0.rect.maxY) < ($1.rect.maxX, $1.rect.maxY) }) ?? nodeMonitor
+                    : nodeMonitor
+                p = targetMonitor.visibleRect.bottomRightCorner - onePixelOffset
         }
         setAxFrame(p, nil)
     }

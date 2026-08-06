@@ -148,8 +148,45 @@ func refreshObs(_: AXObserver, _: AXUIElement, notif: CFString, _: UnsafeMutable
     }
 }
 
-enum OptimalHideCorner {
+enum OptimalHideCorner: Equatable {
     case bottomLeftCorner, bottomRightCorner
+    case globalBottomLeftCorner, globalBottomRightCorner
+}
+
+func optimalHideCorner(for monitor: Rect, among monitors: [Rect]) -> OptimalHideCorner {
+    let xOff = monitor.width * 0.1
+    let yOff = monitor.height * 0.1
+    // brc = bottomRightCorner
+    let brc1 = monitor.bottomRightCorner + CGPoint(x: 2, y: -yOff)
+    let brc2 = monitor.bottomRightCorner + CGPoint(x: -xOff, y: 2)
+    let brc3 = monitor.bottomRightCorner + CGPoint(x: 2, y: 2)
+
+    // blc = bottomLeftCorner
+    let blc1 = monitor.bottomLeftCorner + CGPoint(x: -2, y: -yOff)
+    let blc2 = monitor.bottomLeftCorner + CGPoint(x: xOff, y: 2)
+    let blc3 = monitor.bottomLeftCorner + CGPoint(x: -2, y: 2)
+
+    func contains(_ monitor: Rect, _ point: CGPoint) -> Int { monitor.contains(point) ? 1 : 0 }
+    let important = 10
+    let leftScore = monitors.sumOfInt {
+        contains($0, blc1) + contains($0, blc2) + important * contains($0, blc3)
+    }
+    let rightScore = monitors.sumOfInt {
+        contains($0, brc1) + contains($0, brc2) + important * contains($0, brc3)
+    }
+
+    if leftScore == 0 || rightScore == 0 {
+        return leftScore < rightScore ? .bottomLeftCorner : .bottomRightCorner
+    }
+
+    // Both local corners leak into another display. Park at the closest outer
+    // edge of the complete display layout, where macOS can keep only one pixel
+    // visible without exposing the window body on an adjacent monitor.
+    let globalMinX = monitors.map(\.minX).min() ?? monitor.minX
+    let globalMaxX = monitors.map(\.maxX).max() ?? monitor.maxX
+    let leftDistance = monitor.minX - globalMinX
+    let rightDistance = globalMaxX - monitor.maxX
+    return leftDistance < rightDistance ? .globalBottomLeftCorner : .globalBottomRightCorner
 }
 
 @MainActor
@@ -162,29 +199,13 @@ private func layoutWorkspaces() async throws {
         return
     }
     let monitors = monitors
+    let monitorRects = monitors.map(\.rect)
     var monitorToOptimalHideCorner: [CGPoint: OptimalHideCorner] = [:]
     for monitor in monitors {
-        let xOff = monitor.width * 0.1
-        let yOff = monitor.height * 0.1
-        // brc = bottomRightCorner
-        let brc1 = monitor.rect.bottomRightCorner + CGPoint(x: 2, y: -yOff)
-        let brc2 = monitor.rect.bottomRightCorner + CGPoint(x: -xOff, y: 2)
-        let brc3 = monitor.rect.bottomRightCorner + CGPoint(x: 2, y: 2)
-
-        // blc = bottomLeftCorner
-        let blc1 = monitor.rect.bottomLeftCorner + CGPoint(x: -2, y: -yOff)
-        let blc2 = monitor.rect.bottomLeftCorner + CGPoint(x: xOff, y: 2)
-        let blc3 = monitor.rect.bottomLeftCorner + CGPoint(x: -2, y: 2)
-
-        func contains(_ monitor: Monitor, _ point: CGPoint) -> Int { monitor.rect.contains(point) ? 1 : 0 }
-        let important = 10
-
-        let corner: OptimalHideCorner =
-            monitors.sumOfInt { contains($0, blc1) + contains($0, blc2) + important * contains($0, blc3) } <
-            monitors.sumOfInt { contains($0, brc1) + contains($0, brc2) + important * contains($0, brc3) }
-            ? .bottomLeftCorner
-            : .bottomRightCorner
-        monitorToOptimalHideCorner[monitor.rect.topLeftCorner] = corner
+        monitorToOptimalHideCorner[monitor.rect.topLeftCorner] = optimalHideCorner(
+            for: monitor.rect,
+            among: monitorRects,
+        )
     }
 
     // to reduce flicker, first unhide visible workspaces, then hide invisible ones
