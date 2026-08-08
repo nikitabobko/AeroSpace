@@ -40,6 +40,10 @@ struct ListWindowsCommand: Command {
             }
         }
 
+        if let layout = args.filteringOptions.layoutFilter {
+            windows = windows.filter { windowMatchesLayout($0, layout) }
+        }
+
         if args.outputOnlyCount {
             return .succ(io.out("\(windows.count)"))
         } else {
