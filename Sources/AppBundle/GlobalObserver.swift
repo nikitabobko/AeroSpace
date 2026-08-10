@@ -71,7 +71,9 @@ enum GlobalObserver {
                     // Detect close button clicks for unfocused windows. Yes, kAXUIElementDestroyedNotification is that unreliable
                     //  And trigger new window detection that could be delayed due to mouseDown event
                     default:
-                        scheduleCancellableCompleteRefreshSession(.globalObserverLeftMouseUp)
+                        if !TabHeaderInteractionState.shared.consumePendingGlobalMouseRefreshSuppression() {
+                            scheduleCancellableCompleteRefreshSession(.globalObserverLeftMouseUp)
+                        }
                 }
             }
         }
