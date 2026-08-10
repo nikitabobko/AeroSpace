@@ -275,6 +275,15 @@ enum Ax {
         key: kAXWindowsAttribute,
         getter: { ($0 as? NSArray)?.compactMap(windowOrNil).map { ($0.windowId, $0.ax.cast) } ?? [] },
     )
+    /// Unlike 'windowsAttr', it doesn't filter out AX elements without windowId.
+    /// The only intended use case is 'debug-windows' command. https://github.com/nikitabobko/AeroSpace/issues/1235
+    static let windowsRawAttr = ReadableAttrImpl<[WindowIdOrNilAndAxUiElement]>(
+        key: kAXWindowsAttribute,
+        getter: { ($0 as? NSArray)?.map { any in
+            let ax = any as! AXUIElement
+            return (ax.containingWindowId(), ax)
+        } ?? [] },
+    )
     static let focusedWindowAttr = ReadableAttrImpl<WindowIdAndAxUiElementMock>(
         key: kAXFocusedWindowAttribute,
         getter: windowOrNil,
@@ -329,6 +338,7 @@ private func castToAxUiElementMock(_ a: AnyObject) -> AxUiElementMock {
 }
 
 typealias WindowIdAndAxUiElement = (windowId: UInt32, ax: AXUIElement)
+typealias WindowIdOrNilAndAxUiElement = (windowId: UInt32?, ax: AXUIElement)
 typealias WindowIdAndAxUiElementMock = (windowId: UInt32, ax: AxUiElementMock)
 
 private func windowOrNil(_ any: Any?) -> WindowIdAndAxUiElementMock? {

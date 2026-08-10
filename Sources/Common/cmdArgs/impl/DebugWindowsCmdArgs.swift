@@ -6,7 +6,10 @@ public struct DebugWindowsCmdArgs: CmdArgs {
         help: debug_windows_help_generated,
         flags: [
             "--window-id": windowIdSubArgParser(),
+            "--app-bundle-id": singleValueSubArgParser(\.appBundleId, "<app-bundle-id>", Result.success),
         ],
         posArgs: [],
     )
+
+    public var appBundleId: String?
 }
