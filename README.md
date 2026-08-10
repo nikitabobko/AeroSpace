@@ -1,3 +1,4 @@
+test
 # AeroSpace Beta [![Build](https://github.com/nikitabobko/AeroSpace/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/nikitabobko/AeroSpace/actions/workflows/build.yml)
 
 <img src="./resources/Assets.xcassets/AppIcon.appiconset/icon.png" width="40%" align="right">
