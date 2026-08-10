@@ -413,6 +413,10 @@ enable-normalization-opposite-orientation-for-nested-containers = false
 
 Unless you're hardcore i3 user who knows what they are doing, it's recommended to keep the normalizations enabled.
 
+Each normalization can also be overridden on a per-workspace basis with the xref:commands.adoc#enable-normalization[`enable-normalization`] command.
+The override beats the global config for the targeted workspace and lives as long as the workspace itself; pass `reset` to remove it.
+This is the per-workspace control mentioned in https://github.com/nikitabobko/AeroSpace/issues/260[issue #260].
+
 [#floating-windows]
 === Floating windows
 

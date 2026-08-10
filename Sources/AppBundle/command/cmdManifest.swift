@@ -22,6 +22,8 @@ extension CmdArgs {
                 command = EchoCommand(args: self as! EchoCmdArgs)
             case .enable:
                 command = EnableCommand(args: self as! EnableCmdArgs)
+            case .enableNormalization:
+                command = EnableNormalizationCommand(args: self as! EnableNormalizationCmdArgs)
             case .eval:
                 command = EvalCommand(args: self as! EvalCmdArgs)
             case .execAndForget:
