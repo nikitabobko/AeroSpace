@@ -1,0 +1,30 @@
+name: label-incoming-prs
+
+on:
+  pull_request_target:
+    types: [opened]
+
+jobs:
+  label-incoming-prs:
+    name: Label incoming PRs
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+    - name: Add not-actionable label
+      run: |
+        set -e # Exit if one of commands exit with non-zero exit code
+        set -u # Treat unset variables and parameters other than the special parameters ‘@’ or ‘*’ as an error
+        set -o pipefail # Any command failed in the pipe fails the whole pipe
+
+        author="$(gh pr view "$PR" --json author --jq '.author.login')"
+
+        label() {
+          gh pr edit "$PR" --add-label not-actionable
+        }
+
+        test "$author" = nikitabobko || test "$author" = mobile-ar || test "$author" = rickyz || label
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_REPO: ${{ github.repository }}
+        PR: ${{ github.event.number }}
