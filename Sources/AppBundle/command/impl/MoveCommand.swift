@@ -61,6 +61,8 @@ struct MoveCommand: Command {
                 case .createImplicitContainer:
                     createImplicitContainerAndMoveWindow(window, workspace, direction)
                     return .succ
+                case .createImplicitContainerOrFail:
+                    return createImplicitContainerAndMoveWindowOrFail(window, workspace, direction, io)
             }
         case .allMonitorsOuterFrame:
             guard let (monitors, index) = window.nodeMonitor?.findRelativeMonitor(inDirection: direction) else {
@@ -74,7 +76,7 @@ struct MoveCommand: Command {
 
                 return MoveNodeToMonitorCommand(args: moveNodeToMonitorArgs).run(env, io)
             } else {
-                return hitAllMonitorsOuterFrameBoundaries(window, workspace, args, direction)
+                return hitAllMonitorsOuterFrameBoundaries(window, workspace, args, direction, io)
             }
     }
 }
@@ -84,6 +86,7 @@ struct MoveCommand: Command {
     _ workspace: Workspace,
     _ args: MoveCmdArgs,
     _ direction: CardinalDirection,
+    _ io: CmdIo,
 ) -> BinaryExitCode {
     switch args.boundariesAction {
         case .stop: return .succ
@@ -91,6 +94,8 @@ struct MoveCommand: Command {
         case .createImplicitContainer:
             createImplicitContainerAndMoveWindow(window, workspace, direction)
             return .succ
+        case .createImplicitContainerOrFail:
+            return createImplicitContainerAndMoveWindowOrFail(window, workspace, direction, io)
     }
 }
 
@@ -127,6 +132,29 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
         case .workspace(let parent):
             return hitWorkspaceBoundaries(window, parent, io, args, direction, env)
     }
+}
+
+@MainActor private func createImplicitContainerAndMoveWindowOrFail(
+    _ window: Window,
+    _ workspace: Workspace,
+    _ direction: CardinalDirection,
+    _ io: CmdIo,
+) -> BinaryExitCode {
+    if !config.enableNormalizationFlattenContainers {
+        io.out("Tip: create-implicit-container-or-fail will never cause the move command to fail since enable-normalization-flatten-containers is disabled")
+        createImplicitContainerAndMoveWindow(window, workspace, direction)
+        return .succ
+    }
+    let prevRoot = workspace.rootTilingContainer
+    let prevOrientation = prevRoot.orientation
+    let prevChildren = prevRoot.children
+    createImplicitContainerAndMoveWindow(window, workspace, direction)
+    workspace.normalizeContainers()
+    let newRoot = workspace.rootTilingContainer
+    if newRoot.orientation == prevOrientation && newRoot.children.count == prevChildren.count && zip(newRoot.children, prevChildren).allSatisfy({ $0 === $1 }) {
+        return .fail
+    }
+    return .succ
 }
 
 @MainActor private func createImplicitContainerAndMoveWindow(
