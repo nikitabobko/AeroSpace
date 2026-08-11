@@ -104,7 +104,7 @@ final class MacApp: AbstractApp {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         _ = withWindowAsync(windowId, .cancellable) { [windows] window, job in
             guard let closeButton = window.get(Ax.closeButtonAttr) else { return }
-            if AXUIElementPerformAction(closeButton.cast, kAXPressAction as CFString) == .success {
+            if closeButton.cast.perform(kAXPressAction) {
                 windows.threadGuarded.removeValue(forKey: windowId)
             }
         }
@@ -118,8 +118,10 @@ final class MacApp: AbstractApp {
 
     // todo merge together with detectNewWindows
     func getFocusedWindow(_ cm: CancellationMode) async throws -> Window? {
-        let windowId = try await thread?.runInLoop(cm) { [nsApp, axApp, windows] job in
-            try axApp.threadGuarded.get(Ax.focusedWindowAttr)
+        if shouldSkipAxRequests(for: pid) { return nil }
+        let windowId: UInt32? = try await thread?.runInLoop(cm) { [pid, nsApp, axApp, windows] job -> UInt32? in
+            if shouldSkipAxRequests(for: pid) { return nil }
+            return try axApp.threadGuarded.get(Ax.focusedWindowAttr)
                 .flatMap { try windows.threadGuarded.getOrRegisterAxWindow(windowId: $0.windowId, $0.ax.cast, nsApp, job) }?
                 .windowId
         }
@@ -141,7 +143,7 @@ final class MacApp: AbstractApp {
             MacApp.focusJob = withWindowAsync(windowId, .cancellable) { [nsApp] window, job in
                 // Raise firstly to make sure that by the time we activate the app, the window would be already on top
                 window.set(Ax.isMainAttr, true)
-                AXUIElementPerformAction(window, kAXRaiseAction as CFString)
+                window.perform(kAXRaiseAction)
                 nsApp.activate(options: .activateIgnoringOtherApps)
             }
         }
@@ -157,6 +159,7 @@ final class MacApp: AbstractApp {
     }
 
     func setAxFrameForTermination(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {
+        if shouldSkipAxRequests(for: pid) { return }
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
         let semaphore = DispatchSemaphore(value: 0)
         let job = withWindowAsync(windowId, .nonCancellable) { [axApp] window, job in
@@ -172,8 +175,10 @@ final class MacApp: AbstractApp {
     }
 
     func getAxWindowsCount(_ cm: CancellationMode) async throws -> Int? {
-        try await thread?.runInLoop(cm) { [axApp] job in
-            axApp.threadGuarded.get(Ax.windowsAttr)?.count
+        if shouldSkipAxRequests(for: pid) { return nil }
+        return try await thread?.runInLoop(cm) { [pid, axApp] job in
+            if shouldSkipAxRequests(for: pid) { return nil }
+            return axApp.threadGuarded.get(Ax.windowsAttr)?.count
         }
     }
 
@@ -184,6 +189,7 @@ final class MacApp: AbstractApp {
     }
 
     func getAxRectForTermination(_ windowId: UInt32) -> Rect? {
+        if shouldSkipAxRequests(for: pid) { return nil }
         let future = CompletableFuture<Rect?>()
         let job = withWindowAsync(windowId, .nonCancellable) { window, job in
             future.complete(try AppBundle.getAxRect(window: window, job: job))
@@ -233,8 +239,10 @@ final class MacApp: AbstractApp {
     }
 
     func dumpAppAxInfo(_ cm: CancellationMode) async throws -> [String: Json] {
-        try await thread?.runInLoop(cm) { [axApp] job in
-            dumpAxRecursive(axApp.threadGuarded, .app)
+        if shouldSkipAxRequests(for: pid) { return [:] }
+        return try await thread?.runInLoop(cm) { [pid, axApp] job in
+            if shouldSkipAxRequests(for: pid) { return [:] }
+            return dumpAxRecursive(axApp.threadGuarded, .app)
         } ?? [:]
     }
 
@@ -297,25 +305,41 @@ final class MacApp: AbstractApp {
         }
     }
 
-    private func refreshAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [UInt32] {
+    @MainActor private func refreshAndGetAliveWindowIds(frontmostAppBundleId: String?) async throws -> [UInt32] {
         if nsApp.isTerminated {
             await destroy()
             return []
         }
+        if shouldSkipAxRequests(for: pid) {
+            return MacWindow.allWindows.filter { $0.app.pid == pid }.map(\.windowId)
+        }
         guard let thread else { return [] }
-        let (alive, dead) = try await thread.runInLoop(.cancellable) { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32]) in
-            var alive: [UInt32: AxWindow] = windows.threadGuarded
+        let (alive, dead) = try await thread.runInLoop(.cancellable) { [pid, nsApp, windows, axApp] (job) -> ([UInt32], [UInt32]) in
+            let cached: [UInt32: AxWindow] = windows.threadGuarded
+            if shouldSkipAxRequests(for: pid) { return (Array(cached.keys), []) }
+            var alive = cached
             var dead = [UInt32: AxWindow]()
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
             // Second and third lines of defence are technically needed only to avoid potential flickering
             if frontmostAppBundleId != lockScreenAppBundleId {
-                (alive, dead) = try alive.partition {
+                for (windowId, window) in cached {
                     try job.checkCancellation()
-                    return $0.value.ax.containingWindowId() != nil
+                    let result = window.ax.containingWindowIdWithError()
+                    if result.error == .cannotComplete {
+                        return (Array(cached.keys), [])
+                    }
+                    if result.windowId == nil {
+                        alive[windowId] = nil
+                        dead[windowId] = window
+                    }
                 }
             }
 
-            for (id, window) in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
+            let reportedWindows = axApp.threadGuarded.getWithError(Ax.windowsAttr)
+            if reportedWindows.error == .cannotComplete {
+                return (Array(cached.keys), [])
+            }
+            for (id, window) in reportedWindows.value ?? [] {
                 try job.checkCancellation()
                 try alive.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
             }
@@ -345,14 +369,18 @@ final class MacApp: AbstractApp {
         _ cm: CancellationMode,
         _ body: @Sendable @escaping (AXUIElement, RunLoopJob) throws -> T?,
     ) async throws -> T? {
-        try await thread?.runInLoop(cm) { [windows] job in
+        if shouldSkipAxRequests(for: pid) { return nil }
+        return try await thread?.runInLoop(cm) { [pid, windows] job in
+            if shouldSkipAxRequests(for: pid) { return nil }
             guard let window = windows.threadGuarded[windowId] else { return nil }
             return try body(window.ax, job)
         }
     }
 
     private func withWindowAsync(_ windowId: UInt32, _ cm: CancellationMode, _ body: @Sendable @escaping (AXUIElement, RunLoopJob) throws -> ()) -> RunLoopJob {
-        thread?.runInLoopAsync(job: RunLoopJob(cm)) { [windows] job in
+        if shouldSkipAxRequests(for: pid) { return .cancelled }
+        return thread?.runInLoopAsync(job: RunLoopJob(cm)) { [pid, windows] job in
+            if shouldSkipAxRequests(for: pid) { return }
             guard let window = windows.threadGuarded[windowId] else { return }
             try? body(window.ax, job)
         } ?? .cancelled
