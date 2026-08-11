@@ -151,6 +151,11 @@ final class MacWindow: Window {
                 let onePixelOffset = macApp.appId == .zoom ? .zero : CGPoint(x: 1, y: 1)
                 p = nodeMonitor.visibleRect.bottomRightCorner - onePixelOffset
         }
+        // The window is being moved away from whatever layoutRecursive last applied to it, so that record is now
+        // stale. Without invalidating it, layoutRecursive's redundant-write skip would wrongly think the window
+        // is still at its correct tiled position on the next relayout (since the computed target rect is
+        // unchanged) and skip re-applying it, leaving tiling windows stuck hidden in the corner.
+        lastAppliedLayoutPhysicalRect = nil
         setAxFrame(p, nil)
     }
 

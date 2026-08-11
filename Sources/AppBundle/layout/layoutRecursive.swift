@@ -35,9 +35,18 @@ extension TreeNode {
                         lastAppliedLayoutPhysicalRect = nil
                         window.layoutFullscreen(context)
                     } else {
+                        // Skip the AX frame write entirely when the target rect didn't change since the last
+                        // layout pass. Besides avoiding pointless AXUIElementSetAttributeValue calls, this breaks
+                        // a resize feedback loop with apps that don't accept the imposed frame and report back a
+                        // different one (e.g. Xcode 27 Device Hub's compact view): such an app's own AX resize
+                        // notification would otherwise retrigger another relayout that recomputes and re-writes
+                        // the exact same (already applied) frame, ad infinitum.
+                        let frameChanged = lastAppliedLayoutPhysicalRect != physicalRect
                         lastAppliedLayoutPhysicalRect = physicalRect
                         window.isFullscreen = false
-                        window.setAxFrame(point, CGSize(width: width, height: height))
+                        if frameChanged {
+                            window.setAxFrame(point, CGSize(width: width, height: height))
+                        }
                     }
                 }
             case .tilingContainer(let container):
