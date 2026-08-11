@@ -118,13 +118,43 @@ final class MacApp: AbstractApp {
 
     // todo merge together with detectNewWindows
     func getFocusedWindow(_ cm: CancellationMode) async throws -> Window? {
-        let windowId = try await thread?.runInLoop(cm) { [nsApp, axApp, windows] job in
-            try axApp.threadGuarded.get(Ax.focusedWindowAttr)
-                .flatMap { try windows.threadGuarded.getOrRegisterAxWindow(windowId: $0.windowId, $0.ax.cast, nsApp, job) }?
-                .windowId
+        // Read on this (the caller's) actor, before hopping to the dedicated AX thread below,
+        // mirroring how lastNativeFocusedWindowId is written in updateFocusCache.
+        let previousFocusedWindowId = lastNativeFocusedWindowId
+        let focused = try await thread?.runInLoop(cm) { [nsApp, axApp, windows, previousFocusedWindowId] job -> (UInt32, UInt32?)? in
+            guard let axFocusedWindow = axApp.threadGuarded.get(Ax.focusedWindowAttr),
+                  let focusedWindow = try windows.threadGuarded.getOrRegisterAxWindow(
+                      windowId: axFocusedWindow.windowId,
+                      axFocusedWindow.ax.cast,
+                      nsApp,
+                      job,
+                  )
+            else {
+                return nil
+            }
+            guard let previousFocusedWindowId,
+                  previousFocusedWindowId != focusedWindow.windowId,
+                  !isLeftMouseButtonDown, // Mirrors the new-window-detection safeguard for tab-drag-out gestures below
+                  windows.threadGuarded[previousFocusedWindowId] != nil
+            else {
+                return (focusedWindow.windowId, nil)
+            }
+            // Apps that fold native tabs into one titlebar (Finder, Ghostty, Fork) keep the old
+            // tab's AX object alive after switching away from it, but drop it from AXWindows.
+            // Scoped to the just-focused-a-moment-ago window only, since that one is guaranteed
+            // to have been on the active Space - a blanket AXWindows/tracked-set intersection
+            // would not be (see windowsAttr's doc comment).
+            guard isMissingFromLiveAxWindows(previousFocusedWindowId, in: axApp.threadGuarded.get(Ax.windowsAttr) ?? []) else {
+                return (focusedWindow.windowId, nil)
+            }
+            windows.threadGuarded.removeValue(forKey: previousFocusedWindowId)
+            return (focusedWindow.windowId, previousFocusedWindowId)
         }
-        guard let windowId else { return nil }
-        return try await MacWindow.getOrRegister(windowId: windowId, macApp: self)
+        guard let (windowId, staleWindowId) = focused else { return nil }
+        if let staleWindowId {
+            setFrameJobs.removeValue(forKey: staleWindowId)?.cancel()
+        }
+        return try await MacWindow.getOrRegister(windowId: windowId, macApp: self, replacingNativeTabWindowId: staleWindowId)
     }
 
     @MainActor func nativeFocus(_ windowId: UInt32) {
@@ -303,9 +333,24 @@ final class MacApp: AbstractApp {
             return []
         }
         guard let thread else { return [] }
-        let (alive, dead) = try await thread.runInLoop(.cancellable) { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32]) in
+        // Read on this actor before hopping to the dedicated AX thread, same as in getFocusedWindow.
+        let staleTabCandidateId = lastNativeFocusedWindowId
+        let (alive, dead) = try await thread.runInLoop(.cancellable) { [nsApp, windows, axApp, staleTabCandidateId] (job) -> ([UInt32], [UInt32]) in
             var alive: [UInt32: AxWindow] = windows.threadGuarded
             var dead = [UInt32: AxWindow]()
+            let liveWindows = axApp.threadGuarded.get(Ax.windowsAttr) ?? []
+            // Same native-tab-replacement candidate as getFocusedWindow, caught here too so this
+            // periodic refresh (which can run before the focus-change notification that normally
+            // retires it) doesn't flicker the layout by reporting the stale tab as alive.
+            if !isLeftMouseButtonDown,
+               let staleTabCandidateId,
+               alive[staleTabCandidateId] != nil,
+               axApp.threadGuarded.get(Ax.focusedWindowAttr)?.windowId != staleTabCandidateId,
+               isMissingFromLiveAxWindows(staleTabCandidateId, in: liveWindows),
+               let stale = alive.removeValue(forKey: staleTabCandidateId)
+            {
+                dead[staleTabCandidateId] = stale
+            }
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
             // Second and third lines of defence are technically needed only to avoid potential flickering
             if frontmostAppBundleId != lockScreenAppBundleId {
@@ -315,7 +360,7 @@ final class MacApp: AbstractApp {
                 }
             }
 
-            for (id, window) in axApp.threadGuarded.get(Ax.windowsAttr) ?? [] {
+            for (id, window) in liveWindows {
                 try job.checkCancellation()
                 try alive.getOrRegisterAxWindow(windowId: id, window, nsApp, job)
             }
@@ -399,6 +444,12 @@ extension [UInt32: AxWindow] {
             return nil
         }
     }
+}
+
+// True if `windowId` is missing from the app's live AXWindows list, i.e. a native-tab
+// window it belonged to was replaced by a sibling tab (see getFocusedWindow).
+private func isMissingFromLiveAxWindows(_ windowId: UInt32, in liveWindows: [WindowIdAndAxUiElement]) -> Bool {
+    !liveWindows.contains { $0.windowId == windowId }
 }
 
 private func getAxRect(window: AXUIElement, job: RunLoopJob) throws -> Rect? {
