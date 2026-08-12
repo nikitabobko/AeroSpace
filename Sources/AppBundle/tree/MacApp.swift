@@ -1,5 +1,11 @@
 import AppKit
 import Common
+import PrivateApi
+
+// UserDefaults keys for the best-effort private-focus-API crash guard (see checkFocusPrivateApiCrashGuard
+// in initAppBundle.swift). https://github.com/nikitabobko/AeroSpace/issues/101
+let privateFocusApiInUseKey = "private-focus-api-in-use"
+let privateFocusApiDisabledKey = "private-focus-api-disabled-after-crash"
 
 // Potential alternative implementation
 // https://github.com/swiftlang/swift-evolution/blob/main/proposals/0392-custom-actor-executors.md
@@ -130,6 +136,21 @@ final class MacApp: AbstractApp {
     @MainActor func nativeFocus(_ windowId: UInt32) {
         if serverArgs.isReadOnly { return }
         MacApp.focusJob?.cancel()
+        // #101: the public path below can't reliably key the *requested* window of a multi-window app
+        // across monitors when "Displays have separate Spaces" is on. Use the private SkyLight API to
+        // key the exact window (see aeroMakeKeyWindow). The private call is bracketed by a best-effort
+        // crash flag so it disables itself on next launch if it ever crashes (checkFocusPrivateApiCrashGuard).
+        if NSScreen.screensHaveSeparateSpaces, monitors.count > 1,
+           !UserDefaults.standard.bool(forKey: privateFocusApiDisabledKey)
+        {
+            MacApp.focusJob = withWindowAsync(windowId, .cancellable) { [pid] window, job in
+                UserDefaults.standard.set(true, forKey: privateFocusApiInUseKey)
+                aeroMakeKeyWindow(pid, windowId)
+                UserDefaults.standard.set(false, forKey: privateFocusApiInUseKey)
+                AXUIElementPerformAction(window, kAXRaiseAction as CFString)
+            }
+            return
+        }
         // Performance optimization. If possible avoid doing AX requests
         // (important for apps which are slow at responding even such basic AX requests. E.g. Godot)
         // Beware of the macOS bug: https://github.com/nikitabobko/AeroSpace/issues/101
