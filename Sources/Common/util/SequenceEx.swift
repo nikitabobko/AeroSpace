@@ -91,6 +91,15 @@ extension Sequence {
         })
     }
 
+    @inlinable public func sortedBy(_ comparators: [(Self.Element, Self.Element) -> Bool?]) -> [Self.Element] {
+        sorted(by: { a, b in
+            for comparator in comparators {
+                if let result = comparator(a, b) { return result }
+            }
+            return false
+        })
+    }
+
     public func sumOfDouble(_ selector: (Self.Element) -> Double) -> Double {
         var result: Double = 0
         for elem in self {
