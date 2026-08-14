@@ -44,6 +44,12 @@ struct Config: ConvenienceMutable {
     var startAtLogin: Bool = false
     var autoReloadConfig: Bool = false
     var automaticallyUnhideMacosHiddenApps: Bool = false
+    var focusedWindowBorder: Bool = false
+    var focusedWindowBorderColor: String = "0xff12B981"
+    var focusedWindowBorderWidth: Int = 4
+    var focusedWindowBorderOpacity: Int = 100
+    var focusedWindowBorderRadius: Int = 10
+    var focusedWindowBorderInset: Int = 0
     var accordionPadding: Int = 30
     var enableNormalizationOppositeOrientationForNestedContainers: Bool = true
     var persistentWorkspaces: OrderedSet<String> = []
