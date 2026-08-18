@@ -9,10 +9,11 @@ struct MenuBarLabel: View {
     let color: Color?
     let style: MenuBarStyle?
 
-    let hStackSpacing = CGFloat(6)
-    let itemSize = CGFloat(40)
-    let itemBorderSize = CGFloat(3)
-    let itemCornerRadius = CGFloat(6)
+    private var itemSize: CGFloat { viewModel.experimentalUISettings.size.pointSize }
+    private var hStackSpacing: CGFloat { itemSize * 0.15 }
+    private var itemBorderSize: CGFloat { itemSize * 0.075 }
+    private var itemCornerRadius: CGFloat { itemSize * 0.15 }
+    private var itemFontSize: CGFloat { itemSize * 0.65 }
 
     private var finalColor: Color {
         return color ?? (menuColorScheme == .dark ? Color.white : Color.black)
@@ -90,7 +91,7 @@ struct MenuBarLabel: View {
     private func otherWorkspaces(with otherWorkspaces: [WorkspaceViewModel]) -> some View {
         Group {
             Text("|")
-                .font(.system(.largeTitle))
+                .font(.system(size: itemFontSize))
                 .foregroundStyle(finalColor)
                 .bold()
                 .padding(.bottom, 6)
@@ -103,7 +104,7 @@ struct MenuBarLabel: View {
 
     private func modeSeparator(with design: Font.Design) -> some View {
         Text(":")
-            .font(.system(.largeTitle, design: design))
+            .font(.system(size: itemFontSize, design: design))
             .foregroundStyle(finalColor)
             .bold()
     }
@@ -129,7 +130,7 @@ struct MenuBarLabel: View {
         // If workspace name contains emojis we use the plain emoji in text to avoid visibility issues scaling the emoji to fit the squares
         if item.name.containsEmoji() {
             Text(item.name)
-                .font(.system(.largeTitle))
+                .font(.system(size: itemFontSize))
                 .foregroundStyle(finalColor)
                 .frame(height: itemSize)
         } else {
@@ -142,7 +143,7 @@ struct MenuBarLabel: View {
                     .frame(width: itemSize, height: itemSize)
             } else {
                 let text = Text(item.name)
-                    .font(.system(.largeTitle))
+                    .font(.system(size: itemFontSize))
                     .bold()
                     .padding(.horizontal, itemBorderSize * 2)
                     .frame(height: itemSize)

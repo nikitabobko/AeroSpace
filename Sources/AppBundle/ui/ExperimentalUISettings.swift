@@ -13,6 +13,11 @@ struct ExperimentalUISettings {
             UserDefaults.standard.synchronize()
         }
     }
+
+    var size: MenuBarSize {
+        get { UserDefaults.standard.string(forKey: ExperimentalUISettingsItems.size.rawValue).flatMap(MenuBarSize.init) ?? .large }
+        set { UserDefaults.standard.setValue(newValue.rawValue, forKey: ExperimentalUISettingsItems.size.rawValue) }
+    }
 }
 
 enum MenuBarStyle: String, CaseIterable, Identifiable, Equatable, Hashable {
@@ -33,8 +38,25 @@ enum MenuBarStyle: String, CaseIterable, Identifiable, Equatable, Hashable {
     }
 }
 
+enum MenuBarSize: String, CaseIterable, Identifiable {
+    case small
+    case medium
+    case large
+
+    var id: String { rawValue }
+    var pointSize: CGFloat {
+        switch self {
+            case .small: 24
+            case .medium: 32
+            case .large: 40
+        }
+    }
+    var title: String { rawValue.capitalized }
+}
+
 enum ExperimentalUISettingsItems: String {
     case displayStyle
+    case size
 }
 
 @MainActor
@@ -44,6 +66,14 @@ func getExperimentalUISettingsMenu(viewModel: TrayMenuModel) -> some View {
         Text("Menu bar style (macOS 14 or later):")
         ForEach(MenuBarStyle.allCases, id: \.id) { style in
             MenuBarStyleButton(style: style, color: color).environmentObject(viewModel)
+        }
+        Picker("Image style size", selection: Binding(
+            get: { viewModel.experimentalUISettings.size },
+            set: { viewModel.experimentalUISettings.size = $0 },
+        )) {
+            ForEach(MenuBarSize.allCases) { size in
+                Text(size.title).tag(size)
+            }
         }
     } label: {
         Text("Experimental UI Settings (No stability guarantees)")
