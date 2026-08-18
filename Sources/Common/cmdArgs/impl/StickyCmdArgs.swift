@@ -3,7 +3,6 @@ public struct StickyCmdArgs: CmdArgs {
     public init(rawArgs: StrArrSlice) { self.commonState = .init(rawArgs) }
     public static let parser: CmdParser<Self> = .init(
         kind: .sticky,
-        allowInConfig: true,
         help: sticky_help_generated,
         flags: [
             "--fail-if-noop": trueBoolFlag(\.failIfNoop),

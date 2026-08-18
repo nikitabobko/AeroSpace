@@ -143,7 +143,7 @@ struct FocusCommandTest {
         }
         let floating = TestWindow.new(
             id: 3,
-            parent: sourceWorkspace,
+            parent: sourceWorkspace.floatingWindowsContainer,
             rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100),
         )
         floating.beforeGetAxRect = {
@@ -166,7 +166,7 @@ struct FocusCommandTest {
         }
         let floating = TestWindow.new(
             id: 3,
-            parent: workspace,
+            parent: workspace.floatingWindowsContainer,
             rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100),
         )
         let firstAxReadStarted = AwaitableOneTimeBroadcastLatch()
@@ -201,9 +201,9 @@ struct FocusCommandTest {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
             TestWindow.new(id: 2, parent: $0)
         }
-        TestWindow.new(id: 3, parent: workspace, rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100))
+        TestWindow.new(id: 3, parent: workspace.floatingWindowsContainer, rect: Rect(topLeftX: 0, topLeftY: 0, width: 100, height: 100))
 
-        await FocusCommand.new(dfsRelative: .dfsPrev).run(.defaultEnv, .emptyStdin)
+        await parseCommand("focus dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
         assertEquals(globalFocus.windowOrNil?.windowId, 3)
     }

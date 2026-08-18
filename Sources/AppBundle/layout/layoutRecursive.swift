@@ -37,8 +37,8 @@ extension TreeNode {
                     window.layoutFloatingWindow(context, windowRect)
                 }
                 // Position sticky windows from hidden workspaces that are visually on this workspace
-                let stickyWindows = windowsVisuallyOnWorkspace(workspace)
-                    .filter { $0.isSticky && $0.nodeWorkspace != workspace }
+                let stickyWindows = windowsVisuallyOnWorkspace(context.workspace)
+                    .filter { $0.isSticky && $0.nodeWorkspace != context.workspace }
                 for window in stickyWindows {
                     try await window.layoutFloatingWindow(context)
                 }

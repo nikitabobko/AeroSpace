@@ -11,7 +11,7 @@ final class TrayMenuModelTest: XCTestCase {
 
     func testFocusedWindowBadgesForFloatingAndStickyWindow() {
         let workspace = Workspace.get(byName: "a")
-        let window = TestWindow.new(id: 1, parent: workspace)
+        let window = TestWindow.new(id: 1, parent: workspace.floatingWindowsContainer)
         window.isSticky = true
 
         assertEquals(menuBarFocusedWindowBadges(for: window), [.floating, .sticky])

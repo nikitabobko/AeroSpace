@@ -7,11 +7,11 @@ final class StickyCommandTest: XCTestCase {
     override func setUp() async throws { setUpWorkspacesForTests() }
 
     func testParse() {
-        testParseCommandSucc("sticky", StickyCmdArgs(rawArgs: []))
-        testParseCommandSucc("sticky on", StickyCmdArgs(rawArgs: []).copy(\.toggle, .on))
-        testParseCommandSucc("sticky off", StickyCmdArgs(rawArgs: []).copy(\.toggle, .off))
-        testParseCommandSucc("sticky --window-id 42 off", StickyCmdArgs(rawArgs: []).copy(\.windowId, 42).copy(\.toggle, .off))
-        testParseCommandSucc("sticky --fail-if-noop on", StickyCmdArgs(rawArgs: []).copy(\.failIfNoop, true).copy(\.toggle, .on))
+        testParseSingleCommandSucc("sticky", StickyCmdArgs(rawArgs: []))
+        testParseSingleCommandSucc("sticky on", StickyCmdArgs(rawArgs: []).copy(\.toggle, .on))
+        testParseSingleCommandSucc("sticky off", StickyCmdArgs(rawArgs: []).copy(\.toggle, .off))
+        testParseSingleCommandSucc("sticky --window-id 42 off", StickyCmdArgs(rawArgs: []).copy(\.windowId, 42).copy(\.toggle, .off))
+        testParseSingleCommandSucc("sticky --fail-if-noop on", StickyCmdArgs(rawArgs: []).copy(\.failIfNoop, true).copy(\.toggle, .on))
         assertEquals(parseCommand("sticky --fail-if-noop").errorOrNil, "--fail-if-noop requires 'on' or 'off' argument")
     }
 
@@ -154,7 +154,7 @@ final class StickyCommandTest: XCTestCase {
     func testStickyOnPreservesAlreadyFloatingWindow() async throws {
         let workspaceA = Workspace.get(byName: "a")
         var window: TestWindow!
-        window = TestWindow.new(id: 1, parent: workspaceA) // Direct child of workspace = floating
+        window = TestWindow.new(id: 1, parent: workspaceA.floatingWindowsContainer) // Direct child of workspace = floating
         _ = window.focusWindow()
 
         assertTrue(window.isFloating)

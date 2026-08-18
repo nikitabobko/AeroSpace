@@ -193,13 +193,13 @@ private struct FocusTreeBuilder {
     mutating func insertFloatingWindows(from workspace: Workspace, into root: FocusTreeNode) async throws {
         var pending: [PendingFloatingFocusNode] = []
         for window in workspace.floatingWindows {
-            guard let center = try await window.getCenter() else { continue }
+            guard let center = try await window.getCenter(.nonCancellable) else { continue }
             let virtualParent: FocusTreeNode
             let parentOrientation: Orientation
             let index: Int
             if let target = center.coerce(in: workspace.workspaceMonitor.visibleRectPaddedByOuterGaps)?
-                .findIn(tree: workspace.rootTilingContainer, virtual: true),
-                let targetCenter = try await target.getCenter(),
+                .findWindowRecursively(in: workspace.rootTilingContainer, virtual: true, fullscreenCoversAll: false),
+                let targetCenter = try await target.getCenter(.nonCancellable),
                 let tilingParent = target.parent as? TilingContainer,
                 let mappedParent = nodes[ObjectIdentifier(tilingParent)]
             {

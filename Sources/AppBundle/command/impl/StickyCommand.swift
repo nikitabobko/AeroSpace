@@ -5,7 +5,8 @@ struct StickyCommand: Command {
     let args: StickyCmdArgs
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
-    func run(_ env: CmdEnv, _ io: CmdIo) async throws -> BinaryExitCode {
+    @MainActor
+    func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
         guard let window = target.windowOrNil else {
             return .fail(io.err(noWindowIsFocused))
@@ -26,7 +27,7 @@ struct StickyCommand: Command {
         window.isSticky = newState
         if newState && !window.isFloating, let workspace = window.nodeWorkspace {
             if window.lastFloatingSize == nil {
-                window.lastFloatingSize = try await window.getAxSize()
+                window.lastFloatingSize = (try? await window.getAxSize(.nonCancellable)) ?? window.lastFloatingSize
             }
             window.bindAsFloatingWindow(to: workspace)
         }

@@ -88,7 +88,7 @@ final class GlobalObserverTest: XCTestCase {
     }
 }
 
-private struct TestMonitor: Monitor {
+private struct TestMonitor: MonitorInfo {
     let monitorAppKitNsScreenScreensId = 1
     let name = "Test Monitor"
     let rect: Rect
