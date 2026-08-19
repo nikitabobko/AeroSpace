@@ -42,4 +42,8 @@ final class TestWindow: Window, CustomStringConvertible {
     }
 
     override func isMacosFullscreen(_ cm: CancellationMode) async throws -> Bool { isMacosFullscreenForTest }
+
+    override func setNativeFullscreen(_ value: Bool) {
+        isMacosFullscreenForTest = value
+    }
 }
