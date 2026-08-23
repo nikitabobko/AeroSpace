@@ -23,6 +23,14 @@ import AppKit
         focusFollowsTask?.cancel()
         focusFollowsTask = Task.startUnstructured { @MainActor in
             guard let token: RunSessionGuard = .isServerEnabled else { return }
+
+            if let frontmostApp = NSWorkspace.shared.frontmostApplication {
+                let bundleId = frontmostApp.bundleIdentifier
+                if bundleId == "com.apple.controlcenter" || bundleId == "com.apple.systemuiserver" {
+                    return
+                }
+            }
+
             try checkCancellation()
             // Ignores macOS menubar dropdown, but, unfortunately, it doesn't ignore non-native menu-like fake windows.
             // todo: It would be cool to somehow reuse isWindowHeuristic logic here
