@@ -8,6 +8,11 @@ public final class TrayMenuModel: ObservableObject {
 
     @Published var trayText: String = ""
     @Published var trayItems: [TrayItem] = []
+    /// Whether AeroSpace shows its workspace readout in the menu bar. Driven by the
+    /// `menu-bar-item` config key (see updateTrayText). When false, the menu bar item
+    /// collapses to a single compact icon (it can't be removed outright — it's the
+    /// app's only scene). For people who already run their own indicator (SketchyBar).
+    @Published var menuBarItemIsShown: Bool = true
     /// Is "layouting" enabled
     @Published var isEnabled: Bool = true
     @Published var workspaces: [WorkspaceViewModel] = []
@@ -24,6 +29,9 @@ enum AxPermissionStatus: Equatable {
 }
 
 @MainActor func updateTrayText() {
+    if TrayMenuModel.shared.menuBarItemIsShown != config.menuBarItem {
+        TrayMenuModel.shared.menuBarItemIsShown = config.menuBarItem
+    }
     let sortedMonitors = sortedMonitorInfos
     let focus = focus
     TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "(\($0.uppercased())) " } ?? "") +
