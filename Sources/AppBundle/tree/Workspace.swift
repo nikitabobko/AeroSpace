@@ -111,6 +111,14 @@ extension Workspace {
             ?? assignedMonitorPoint?.monitorApproximation
             ?? mainMonitorInfo
     }
+
+    // A workspace that has never been shown and isn't force-assigned has no monitor
+    // of its own yet — workspaceMonitor would fall back to the main monitor. Used to
+    // decide where to first place such a workspace (see setFocus).
+    @MainActor
+    var hasNoAssignedMonitor: Bool {
+        forceAssignedMonitor == nil && !isVisible && assignedMonitorPoint == nil
+    }
 }
 
 extension MonitorInfo {
