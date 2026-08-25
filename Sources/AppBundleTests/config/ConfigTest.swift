@@ -29,6 +29,26 @@ final class ConfigTest: XCTestCase {
         assertEquals(result.warnings, [])
     }
 
+    func testParseNonEmptyWorkspacesRootContainersLayoutOnStartup() {
+        // default is 'smart' (historical hardcoded behavior)
+        assertEquals(defaultConfig.nonEmptyWorkspacesRootContainersLayoutOnStartup, .smart)
+
+        let tiles = parseConfig("non-empty-workspaces-root-containers-layout-on-startup = 'tiles'")
+        assertEquals(tiles.errors, [])
+        assertEquals(tiles.config.nonEmptyWorkspacesRootContainersLayoutOnStartup, .tiles)
+
+        let accordion = parseConfig("non-empty-workspaces-root-containers-layout-on-startup = 'accordion'")
+        assertEquals(accordion.errors, [])
+        assertEquals(accordion.config.nonEmptyWorkspacesRootContainersLayoutOnStartup, .accordion)
+
+        let smart = parseConfig("non-empty-workspaces-root-containers-layout-on-startup = 'smart'")
+        assertEquals(smart.errors, [])
+        assertEquals(smart.config.nonEmptyWorkspacesRootContainersLayoutOnStartup, .smart)
+
+        let invalid = parseConfig("non-empty-workspaces-root-containers-layout-on-startup = 'nonsense'")
+        assertTrue(!invalid.errors.isEmpty)
+    }
+
     func testConfigVersionOutOfBounds() {
         let result = parseConfig(
             """
@@ -637,25 +657,6 @@ final class ConfigTest: XCTestCase {
         )
     }
 
-    func testDeprecatedNonEmptyWorkspacesRootContainersLayoutOnStartup() {
-        // The 'smart' value used to be accepted and is silently dropped now
-        let smart = parseConfig(
-            """
-            non-empty-workspaces-root-containers-layout-on-startup = 'smart'
-            """,
-        )
-        assertEquals(smart.errors, [])
-
-        let bad = parseConfig(
-            """
-            non-empty-workspaces-root-containers-layout-on-startup = 'tiles'
-            """,
-        ).strErrors
-        assertEquals(
-            bad,
-            ["[ERROR] non-empty-workspaces-root-containers-layout-on-startup: \'non-empty-workspaces-root-containers-layout-on-startup\' is deprecated. Please drop it from your config"],
-        )
-    }
 
     func testOutdatedConfigVersionWarning() {
         let result = parseConfig(

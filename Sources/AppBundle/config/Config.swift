@@ -38,7 +38,7 @@ struct Config: ConvenienceMutable {
     var afterStartupCommand: Shell<any Command> = .empty
     var _indentForNestedContainersWithTheSameOrientation: Void = ()
     var enableNormalizationFlattenContainers: Bool = true
-    var _nonEmptyWorkspacesRootContainersLayoutOnStartup: Void = ()
+    var nonEmptyWorkspacesRootContainersLayoutOnStartup: NonEmptyWorkspacesRootContainersLayoutOnStartup = .smart
     var defaultRootContainerLayout: Layout = .tiles
     var defaultRootContainerOrientation: DefaultContainerOrientation = .auto
     var startAtLogin: Bool = false
@@ -80,4 +80,13 @@ enum ConfigVersion: Int, Comparable, CaseIterable, Sendable, CustomStringConvert
 
 enum DefaultContainerOrientation: String {
     case horizontal, vertical, auto
+}
+
+enum NonEmptyWorkspacesRootContainersLayoutOnStartup: String {
+    /// Root of every non-empty workspace tiles at startup (i3/sway-like).
+    case tiles
+    /// Root of every non-empty workspace uses accordion at startup.
+    case accordion
+    /// AeroSpace's heuristic: tiles if the root has <= 3 children, else accordion.
+    case smart
 }

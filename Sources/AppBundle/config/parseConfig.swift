@@ -159,7 +159,7 @@ private let configParser: [String: any ParserProtocol<Config>] = [
     "on-window-detected": Parser(\.onWindowDetected, parseOnWindowDetectedArray),
 
     // Deprecated
-    "non-empty-workspaces-root-containers-layout-on-startup": Parser(\._nonEmptyWorkspacesRootContainersLayoutOnStartup, parseStartupRootContainerLayout),
+    "non-empty-workspaces-root-containers-layout-on-startup": Parser(\.nonEmptyWorkspacesRootContainersLayoutOnStartup, parseStartupRootContainerLayout),
     "indent-for-nested-containers-with-the-same-orientation": Parser(\._indentForNestedContainersWithTheSameOrientation, parseIndentForNestedContainersWithTheSameOrientation),
 ]
 
@@ -379,10 +379,11 @@ func parseTable<T: ConvenienceMutable>(
     }
 }
 
-private func parseStartupRootContainerLayout(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<Void> {
-    parseString(raw, backtrace)
-        .filter(.init(backtrace, "'non-empty-workspaces-root-containers-layout-on-startup' is deprecated. Please drop it from your config")) { raw in raw == "smart" }
-        .map { _ in () }
+private func parseStartupRootContainerLayout(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<NonEmptyWorkspacesRootContainersLayoutOnStartup> {
+    parseString(raw, backtrace).flatMap {
+        NonEmptyWorkspacesRootContainersLayoutOnStartup(rawValue: $0)
+            .toResult(.init(backtrace, "Can't parse 'non-empty-workspaces-root-containers-layout-on-startup' value '\($0)'. Possible values: tiles|accordion|smart"))
+    }
 }
 
 private func parseLayout(_ raw: OrderedJson, _ backtrace: ConfigBacktrace) -> ResOrConfigParseDiagnostic<Layout> {

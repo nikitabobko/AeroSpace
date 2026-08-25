@@ -50,9 +50,10 @@ import Foundation
 private func smartLayoutAtStartup() {
     let workspace = focus.workspace
     let root = workspace.rootTilingContainer
-    switch root.children.count <= 3 {
-        case true: root.layout = .tiles
-        case false: root.layout = .accordion
+    switch config.nonEmptyWorkspacesRootContainersLayoutOnStartup {
+        case .tiles: root.layout = .tiles
+        case .accordion: root.layout = .accordion
+        case .smart: root.layout = root.children.count <= 3 ? .tiles : .accordion
     }
 }
 
