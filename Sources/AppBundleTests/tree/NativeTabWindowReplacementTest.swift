@@ -51,4 +51,44 @@ final class NativeTabWindowReplacementTest: XCTestCase {
         XCTAssertTrue(untouched.isBound)
         XCTAssertFalse(staleWindow.isBound)
     }
+
+    func testDetectsNativeTabReplacement() {
+        assertEquals(
+            nativeTabReplacementCandidate(
+                previousFocusedWindowId: 1,
+                focusedWindowId: 2,
+                liveWindowIds: [2],
+                trackedWindowIds: [1, 2],
+                isMouseButtonDown: false,
+            ),
+            1,
+        )
+    }
+
+    func testDoesNotReplaceLiveOrUntrackedPreviousWindow() {
+        XCTAssertNil(nativeTabReplacementCandidate(
+            previousFocusedWindowId: 1,
+            focusedWindowId: 2,
+            liveWindowIds: [1, 2],
+            trackedWindowIds: [1, 2],
+            isMouseButtonDown: false,
+        ))
+        XCTAssertNil(nativeTabReplacementCandidate(
+            previousFocusedWindowId: 1,
+            focusedWindowId: 2,
+            liveWindowIds: [2],
+            trackedWindowIds: [2],
+            isMouseButtonDown: false,
+        ))
+    }
+
+    func testDefersNativeTabReplacementWhileDragging() {
+        XCTAssertNil(nativeTabReplacementCandidate(
+            previousFocusedWindowId: 1,
+            focusedWindowId: 2,
+            liveWindowIds: [2],
+            trackedWindowIds: [1, 2],
+            isMouseButtonDown: true,
+        ))
+    }
 }
