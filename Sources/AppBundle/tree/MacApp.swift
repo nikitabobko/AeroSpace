@@ -364,6 +364,7 @@ final class MacApp: AbstractApp {
             var alive: [UInt32: AxWindow] = windows.threadGuarded
             var dead = [UInt32: AxWindow]()
             let liveWindows = axApp.threadGuarded.get(Ax.windowsAttr) ?? []
+            let liveWindowIds = Set(liveWindows.map(\.windowId))
             let focusedWindowId = axApp.threadGuarded.get(Ax.focusedWindowAttr)?.windowId
             var retiredIds = retiredNativeTabWindowIds.threadGuarded
             if let focusedWindowId {
@@ -373,11 +374,14 @@ final class MacApp: AbstractApp {
             // Same native-tab-replacement candidate as getFocusedWindow, caught here too so this
             // periodic refresh (which can run before the focus-change notification that normally
             // retires it) doesn't flicker the layout by reporting the stale tab as alive.
-            if let focusedWindowId,
+            // liveWindowIds.contains(focusedWindowId): don't retire the old slot until the new
+            // window has actually landed in AXWindows this cycle, else it'd be GC'd with nothing
+            // to take its place (AXFocusedWindow can report it a cycle early).
+            if let focusedWindowId, liveWindowIds.contains(focusedWindowId),
                let staleTabCandidateId = nativeTabReplacementCandidate(
                    previousFocusedWindowId: staleTabCandidateId,
                    focusedWindowId: focusedWindowId,
-                   liveWindowIds: Set(liveWindows.map(\.windowId)),
+                   liveWindowIds: liveWindowIds,
                    trackedWindowIds: Set(alive.keys),
                    isMouseButtonDown: isLeftMouseButtonDown,
                ),
@@ -413,6 +417,11 @@ final class MacApp: AbstractApp {
             return (Array(alive.keys), Array(dead.keys), replacement)
         }
         windowsCount = alive.count
+        if let replacement {
+            // Keep it current for backgrounded apps too, else a second native-tab switch while
+            // still backgrounded would compare against the stale pre-switch id.
+            lastNativeFocusedWindowId = replacement.focusedWindowId
+        }
         for windowId in dead {
             setFrameJobs.removeValue(forKey: windowId)?.cancel()
         }
