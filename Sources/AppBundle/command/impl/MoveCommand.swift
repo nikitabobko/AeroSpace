@@ -35,8 +35,24 @@ struct MoveCommand: Command {
                 } else {
                     return moveOut(tilingWindow: currentWindow, direction: direction, io, args, env)
                 }
-            case .floatingWindowsContainer: // floating window
-                return .fail(io.err("moving floating windows isn't yet supported")) // todo
+            case .floatingWindowsContainer:
+                guard let rect = try? await currentWindow.getAxRect(.cancellable) else {
+                    return .fail(io.err("Can't get the floating window position"))
+                }
+                let pixels: CGFloat
+                if let floatingPixels = args.floatingPixels {
+                    pixels = CGFloat(floatingPixels)
+                } else if let monitor = currentWindow.nodeMonitor {
+                    pixels = monitor.rect.getDimension(direction.orientation) * 0.1
+                } else {
+                    return .fail(io.err("Can't find the monitor for the floating window"))
+                }
+                let signedPixels = direction.isPositive ? pixels : -pixels
+                let newTopLeft = direction.orientation == .h
+                    ? CGPoint(x: rect.topLeftX + signedPixels, y: rect.topLeftY)
+                    : CGPoint(x: rect.topLeftX, y: rect.topLeftY + signedPixels)
+                currentWindow.setAxFrame(newTopLeft, nil)
+                return .succ
             case .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer:
                 return .fail(io.err(moveOutMacosUnconventionalWindow))
             case .macosPopupWindowsContainer:
