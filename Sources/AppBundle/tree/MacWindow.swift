@@ -24,7 +24,7 @@ final class MacWindow: Window {
         if let existing = existingWindowDiscardingStaleReplacement(windowId: windowId, macApp: macApp, replacingNativeTabWindowId: replacingNativeTabWindowId) {
             return existing
         }
-        let rect = try await macApp.getAxRect(windowId, .cancellable)
+        let rect = try await macApp.getAxRect(windowId, nativeTabReplacementCancellationMode(replacingNativeTabWindowId: replacingNativeTabWindowId))
         if let replacement = try await replacementWindowIfApplicable(windowId: windowId, macApp: macApp, rect: rect, staleWindowId: replacingNativeTabWindowId) {
             return replacement
         }

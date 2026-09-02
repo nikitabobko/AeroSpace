@@ -91,4 +91,12 @@ final class NativeTabWindowReplacementTest: XCTestCase {
             isMouseButtonDown: true,
         ))
     }
+
+    func testReplacementRectFetchIsNonCancellable() {
+        XCTAssertEqual(nativeTabReplacementCancellationMode(replacingNativeTabWindowId: 2), .nonCancellable)
+    }
+
+    func testNewWindowRectFetchStaysCancellable() {
+        XCTAssertEqual(nativeTabReplacementCancellationMode(replacingNativeTabWindowId: nil), .cancellable)
+    }
 }

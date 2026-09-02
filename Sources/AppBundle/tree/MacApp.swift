@@ -518,6 +518,12 @@ func nativeTabReplacementCandidate(
     return previousFocusedWindowId
 }
 
+// The old id is already retired by this point, so a cancelled splice would strand it: it can't
+// be re-proposed, and its tree slot gets GC'd with nothing having replaced it.
+func nativeTabReplacementCancellationMode(replacingNativeTabWindowId: UInt32?) -> CancellationMode {
+    replacingNativeTabWindowId != nil ? .nonCancellable : .cancellable
+}
+
 private func getAxRect(window: AXUIElement, job: RunLoopJob) throws -> Rect? {
     guard let topLeftCorner = window.get(Ax.topLeftCornerAttr) else { return nil }
     try job.checkCancellation()
