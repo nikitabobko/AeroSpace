@@ -122,6 +122,140 @@ final class FocusCommandTest: XCTestCase {
         assertEquals(focus.windowOrNil?.windowId, 3)
     }
 
+    // https://github.com/nikitabobko/AeroSpace/issues/1311
+    // 'a' is suspended in the first getCenter of makeFloatingWindowsSeenAsTiling, 'b' unbinds the same floating window
+    // meanwhile. Before the fix, 'a' died with "is already unbound" once it was resumed
+    func testConcurrentFocusOverFloatingWindows() async throws {
+        let workspace = Workspace.get(byName: name)
+        let monitorRect = Rect(topLeftX: 0, topLeftY: 0, width: 1920, height: 1080)
+        // The tiling window covers the whole monitor, so that the second getCenter of the loop is reachable too
+        let tiling = TestWindow.new(id: 1, parent: workspace.rootTilingContainer, rect: monitorRect)
+        tiling.lastAppliedLayoutVirtualRect = monitorRect
+        let floating1 = TestWindow.new(id: 2, parent: workspace.floatingWindowsContainer, rect: Rect(topLeftX: 100, topLeftY: 100, width: 200, height: 200))
+        let floating2 = TestWindow.new(id: 3, parent: workspace.floatingWindowsContainer, rect: Rect(topLeftX: 900, topLeftY: 500, width: 200, height: 200))
+        assertEquals(tiling.focusWindow(), true)
+        assertEquals(workspace.floatingWindows.map(\.windowId), [2, 3])
+
+        let aSuspended = AwaitableOneTimeBroadcastLatch()
+        let aResume = AwaitableOneTimeBroadcastLatch()
+        floating1.onNextGetAxRectForTest = {
+            await aSuspended.signalToAll()
+            try await aResume.await()
+        }
+        let a = Task.startUnstructured { _ = await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin) }
+        try await aSuspended.await()
+        assertTrue(floating1.isBound) // 'a' hasn't unbound it yet
+
+        // floating1's hook is already consumed, so 'b' unbinds floating1 and suspends on floating2
+        let bSuspended = AwaitableOneTimeBroadcastLatch()
+        let bResume = AwaitableOneTimeBroadcastLatch()
+        floating2.onNextGetAxRectForTest = {
+            await bSuspended.signalToAll()
+            try await bResume.await()
+        }
+        let b = Task.startUnstructured { _ = await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin) }
+        try await bSuspended.await()
+        assertFalse(floating1.isBound)
+        assertTrue(floating2.isBound)
+
+        await aResume.signalToAll()
+        await a.value
+        await bResume.signalToAll()
+        await b.value
+
+        // Every floating window is bound back, none is lost, duplicated, or left in the tiling tree
+        assertTrue(floating1.parent === workspace.floatingWindowsContainer)
+        assertTrue(floating2.parent === workspace.floatingWindowsContainer)
+        assertEquals(workspace.floatingWindows.map(\.windowId).sorted(), [2, 3])
+        assertEquals(workspace.rootTilingContainer.allLeafWindowsRecursive.map(\.windowId), [1])
+        assertTrue(tiling.parent === workspace.rootTilingContainer)
+    }
+
+    // https://github.com/nikitabobko/AeroSpace/issues/1311
+    // The same race, but 'a' is suspended in the second getCenter of the loop (the AX read of the tiling window it is
+    // about to be inserted next to). That's why both suspension points must re-validate the window
+    func testConcurrentFocusOverFloatingWindows2() async throws {
+        let workspace = Workspace.get(byName: name)
+        let monitorRect = Rect(topLeftX: 0, topLeftY: 0, width: 1920, height: 1080)
+        let tiling = TestWindow.new(id: 1, parent: workspace.rootTilingContainer, rect: monitorRect)
+        tiling.lastAppliedLayoutVirtualRect = monitorRect
+        let floating1 = TestWindow.new(id: 2, parent: workspace.floatingWindowsContainer, rect: Rect(topLeftX: 100, topLeftY: 100, width: 200, height: 200))
+        let floating2 = TestWindow.new(id: 3, parent: workspace.floatingWindowsContainer, rect: Rect(topLeftX: 900, topLeftY: 500, width: 200, height: 200))
+        assertEquals(tiling.focusWindow(), true)
+
+        let aSuspended = AwaitableOneTimeBroadcastLatch()
+        let aResume = AwaitableOneTimeBroadcastLatch()
+        tiling.onNextGetAxRectForTest = {
+            await aSuspended.signalToAll()
+            try await aResume.await()
+        }
+        let a = Task.startUnstructured { _ = await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin) }
+        try await aSuspended.await()
+        assertTrue(floating1.isBound)
+
+        let bSuspended = AwaitableOneTimeBroadcastLatch()
+        let bResume = AwaitableOneTimeBroadcastLatch()
+        floating2.onNextGetAxRectForTest = {
+            await bSuspended.signalToAll()
+            try await bResume.await()
+        }
+        let b = Task.startUnstructured { _ = await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin) }
+        try await bSuspended.await()
+        assertFalse(floating1.isBound)
+
+        await aResume.signalToAll()
+        await a.value
+        await bResume.signalToAll()
+        await b.value
+
+        assertTrue(floating1.parent === workspace.floatingWindowsContainer)
+        assertTrue(floating2.parent === workspace.floatingWindowsContainer)
+        assertEquals(workspace.floatingWindows.map(\.windowId).sorted(), [2, 3])
+        assertEquals(workspace.rootTilingContainer.allLeafWindowsRecursive.map(\.windowId), [1])
+    }
+
+    // https://github.com/nikitabobko/AeroSpace/issues/1311
+    // The workspace from the report, where all the windows are floating. findWindowRecursively finds no tiling window
+    // under the floating window center, so the loop takes the branch that never reaches the second getCenter, and the
+    // first check is the only thing that stands between 'a' and the already unbound window
+    func testConcurrentFocusOverFloatingWindows3() async throws {
+        let workspace = Workspace.get(byName: name)
+        let floating1 = TestWindow.new(id: 1, parent: workspace.floatingWindowsContainer, rect: Rect(topLeftX: 100, topLeftY: 100, width: 200, height: 200))
+        let floating2 = TestWindow.new(id: 2, parent: workspace.floatingWindowsContainer, rect: Rect(topLeftX: 900, topLeftY: 500, width: 200, height: 200))
+        assertEquals(floating1.focusWindow(), true)
+        assertEquals(workspace.rootTilingContainer.allLeafWindowsRecursive.map(\.windowId), [])
+
+        let aSuspended = AwaitableOneTimeBroadcastLatch()
+        let aResume = AwaitableOneTimeBroadcastLatch()
+        floating1.onNextGetAxRectForTest = {
+            await aSuspended.signalToAll()
+            try await aResume.await()
+        }
+        let a = Task.startUnstructured { _ = await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin) }
+        try await aSuspended.await()
+        assertTrue(floating1.isBound)
+
+        let bSuspended = AwaitableOneTimeBroadcastLatch()
+        let bResume = AwaitableOneTimeBroadcastLatch()
+        floating2.onNextGetAxRectForTest = {
+            await bSuspended.signalToAll()
+            try await bResume.await()
+        }
+        let b = Task.startUnstructured { _ = await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin) }
+        try await bSuspended.await()
+        assertFalse(floating1.isBound)
+
+        await aResume.signalToAll()
+        await a.value
+        await bResume.signalToAll()
+        await b.value
+
+        assertTrue(floating1.parent === workspace.floatingWindowsContainer)
+        assertTrue(floating2.parent === workspace.floatingWindowsContainer)
+        assertEquals(workspace.floatingWindows.map(\.windowId).sorted(), [1, 2])
+        assertEquals(workspace.rootTilingContainer.allLeafWindowsRecursive.map(\.windowId), [])
+    }
+
     func testFocusAlongTheContainerOrientation() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
