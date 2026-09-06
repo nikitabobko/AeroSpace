@@ -35,6 +35,11 @@ let package = Package(
             name: "PrivateApi",
             path: "Sources/PrivateApi",
             publicHeadersPath: "include",
+            linkerSettings: [
+                // _SLPSSetFrontProcessWithOptions / SLPSPostEventRecordTo (used by aeroMakeKeyWindow for
+                // the issue #101 cross-monitor focus fix) live in the private SkyLight framework.
+                .unsafeFlags(["-F/System/Library/PrivateFrameworks", "-framework", "SkyLight"]),
+            ],
         ),
         .target(
             name: "Common",
