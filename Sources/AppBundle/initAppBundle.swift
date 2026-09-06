@@ -2,12 +2,15 @@ import AppKit
 import Common
 import Foundation
 
+private let axMessagingTimeoutSeconds: Float = 0.25
+
 @MainActor public func initAppBundle() {
     Task.startUnstructured {
         initTerminationHandler()
         unsafe _isCli = false
         initServerArgs()
         await waitForAccessibilityPermission_nonCancellable()
+        configureAxMessagingTimeout()
         if isDebug {
             await toggleReleaseServerIfDebug(.off)
             interceptTermination(SIGINT)
@@ -33,6 +36,15 @@ import Foundation
             _ = await config.afterStartupCommand.run(.defaultEnv, .emptyStdin)
         }
     }
+}
+
+private func configureAxMessagingTimeout() {
+    // The system default is long enough for one unresponsive application to
+    // stall a refresh and every command waiting behind it. Per-app AX threads
+    // isolate the blocking call; this timeout bounds how long callers wait for
+    // that thread before the failed request is retried by a future refresh.
+    let result = AXUIElementSetMessagingTimeout(AXUIElementCreateSystemWide(), axMessagingTimeoutSeconds)
+    check(result == .success, "Can't configure the Accessibility API messaging timeout: \(result.rawValue)")
 }
 
 @MainActor private func bootstrapConfig_nonCancellable() async {
