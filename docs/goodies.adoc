@@ -84,6 +84,7 @@ Here are a few third party options in alphabetical order:
 * https://github.com/acsandmann/aerospace-swipe
 * link:https://folivora.ai/[BetterTouchTool] can assign arbitrary commands to trackpad gestures.
 Beware that you might need to specify full path to aerospace executable https://community.folivora.ai/t/how-to-execute-terminal-command-to-switch-workspaces-with-aerospace/35914
+* https://github.com/pszypowicz/cyclist[Cyclist] - speed-first switching: Alt+Tab, the native Spaces swipe, and Ctrl+Arrows without animations, AeroSpace workspaces understood natively.
 * https://github.com/MediosZ/SwipeAeroSpace
 
 CAUTION: Make sure that you trust project authors before running the distributed binaries.
