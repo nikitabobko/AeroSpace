@@ -77,6 +77,7 @@ final class MacWindow: Window {
     //                        If you are unsure, it's better to pass `false`
     @MainActor
     func garbageCollect(skipClosedWindowsCache: Bool) {
+        let wasFocused = focus.windowOrNil == self
         if MacWindow.allWindowsMap.removeValue(forKey: windowId) == nil {
             return
         }
@@ -89,7 +90,11 @@ final class MacWindow: Window {
         {
             switch parent.cases {
                 case .tilingContainer, .floatingWindowsContainer, .macosHiddenAppsWindowsContainer, .macosFullscreenWindowsContainer:
-                    let deadWindowFocus = deadWindowWorkspace.toLiveFocus()
+                    let deadWindowFocus = resolveFocusAfterWindowRemoval(
+                        wasFocused: wasFocused,
+                        previousWindow: previousFocusedWindowOrNil,
+                        workspace: deadWindowWorkspace,
+                    )
                     _ = setFocus(to: deadWindowFocus)
                     // Guard against "Apple Reminders popup" bug: https://github.com/nikitabobko/AeroSpace/issues/201
                     if focus.windowOrNil?.app.pid != app.pid {
