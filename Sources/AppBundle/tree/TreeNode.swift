@@ -17,6 +17,7 @@ open class TreeNode: Equatable, AeroAny {
     // - drag window with mouse
     // - move-mouse command
     // - focus-follows-mouse
+    // - layoutRecursive: skip redundant AX frame writes when the target rect didn't change
     var lastAppliedLayoutPhysicalRect: Rect? = nil // with real inner gaps
     final var unboundStacktrace: String? = nil
     var isBound: Bool { parent != nil } // todo drop, once https://github.com/nikitabobko/AeroSpace/issues/1215 is fixed
