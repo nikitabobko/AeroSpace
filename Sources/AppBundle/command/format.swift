@@ -240,13 +240,20 @@ private func toLayoutString(tc: TilingContainer) -> String {
         case (.tiles, .v): return LayoutCmdArgs.LayoutDescription.v_tiles.rawValue
         case (.accordion, .h): return LayoutCmdArgs.LayoutDescription.h_accordion.rawValue
         case (.accordion, .v): return LayoutCmdArgs.LayoutDescription.v_accordion.rawValue
+        case (.scrolling, _): return LayoutCmdArgs.LayoutDescription.scrolling.rawValue
+        case (.tabs, _): return LayoutCmdArgs.LayoutDescription.tabs.rawValue
     }
 }
 
 private func toLayoutResult(w: Window) -> Result<Primitive, InterVarExpansionError> {
     guard let parent = w.parent else { return .failure(.nullParent("NULL-PARENT")) }
     return switch getChildParentRelation(child: w, parent: parent) {
-        case .tiling(let tc): .success(.string(toLayoutString(tc: tc)))
+        case .tiling(let tc):
+            {
+                let rootContainer = w.parentsWithSelf.compactMap { $0 as? TilingContainer }.last
+                let layoutContainer = rootContainer?.layout == .scrolling ? rootContainer ?? tc : tc
+                return .success(.string(toLayoutString(tc: layoutContainer)))
+            }()
         case .floatingWindow: .success(.string(LayoutCmdArgs.LayoutDescription.floating.rawValue))
         case .macosNativeFullscreenWindow: .success(.string("macos_native_fullscreen"))
         case .macosNativeHiddenAppWindow: .success(.string("macos_native_window_of_hidden_app"))

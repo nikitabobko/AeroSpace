@@ -141,11 +141,11 @@ struct FocusCommand: Command {
             guard let _tilingParent = target.parent as? TilingContainer else { continue }
             tilingParent = _tilingParent
             index = switch tilingParent.layout {
-                case .tiles:
+                case .tiles, .scrolling:
                     center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)
                         ? target.ownIndex.orDie() + 1
                         : target.ownIndex.orDie()
-                case .accordion:
+                case .accordion, .tabs:
                     center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)
                         ? tilingParent.children.count
                         : 0
@@ -201,6 +201,9 @@ extension TreeNode {
             case .window(let window):
                 return window
             case .tilingContainer(let container):
+                if container.layout == .tabs {
+                    return container.mostRecentChild?.findLeafWindowRecursive(snappedTo: direction)
+                }
                 if direction.orientation == container.orientation {
                     return (direction.isPositive ? container.children.last : container.children.first)?
                         .findLeafWindowRecursive(snappedTo: direction)
