@@ -53,6 +53,10 @@ extension TilingContainer {
             (child as? TilingContainer)?.normalizeOppositeOrientationForNestedContainers()
         }
     }
+
+    func setOrientation(_ newValue: Orientation) {
+        _orientation = newValue
+    }
 }
 
 enum Layout: String {
