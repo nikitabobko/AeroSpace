@@ -123,15 +123,30 @@ func refreshModel_nonCancellable() async {
 private func refresh() async throws {
     // Garbage collect terminated apps and windows before working with all windows
     let mapping = try await MacApp.refreshAllAndGetAliveWindowIds(frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier)
-    let aliveWindowIds = mapping.values.flatMap(id).toSet()
+    // A mouse-driven native-tab switch can be observed first by this periodic refresh rather
+    // than getFocusedWindow. Preserve the old tree slot before garbage collection removes it.
+    var splicedWindowIds: Set<UInt32> = []
+    for (app, refreshResult) in mapping {
+        if let replacement = refreshResult.nativeTabReplacement,
+           refreshResult.aliveWindowIds.contains(replacement.focusedWindowId)
+        {
+            _ = try await MacWindow.getOrRegister(
+                windowId: replacement.focusedWindowId,
+                macApp: app,
+                replacingNativeTabWindowId: replacement.staleWindowId,
+            )
+            splicedWindowIds.insert(replacement.focusedWindowId)
+        }
+    }
+    let aliveWindowIds = mapping.values.flatMap(\.aliveWindowIds).toSet()
 
     for window in MacWindow.allWindows {
         if !aliveWindowIds.contains(window.windowId) {
             window.garbageCollect(skipClosedWindowsCache: false)
         }
     }
-    for (app, windowIds) in mapping {
-        for windowId in windowIds {
+    for (app, refreshResult) in mapping {
+        for windowId in refreshResult.aliveWindowIds where !splicedWindowIds.contains(windowId) {
             try await MacWindow.getOrRegister(windowId: windowId, macApp: app)
         }
     }
