@@ -6,10 +6,10 @@ struct SplitCommand: Command {
     /*conforms*/ let shouldResetClosedWindowsCache = true
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
-        if config.enableNormalizationFlattenContainers {
-            return .fail(io.err("'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled. My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'."))
-        }
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
+        if target.workspace.isNormalizationEnabled(.flattenContainers) {
+            return .fail(io.err("'split' has no effect when 'enable-normalization-flatten-containers' normalization enabled. My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'. Alternatively, disable the normalization on this workspace: 'aerospace enable-normalization --workspace \(target.workspace.name) flatten-containers off'"))
+        }
         guard let window = target.windowOrNil else {
             return .fail(io.err(noWindowIsFocused))
         }

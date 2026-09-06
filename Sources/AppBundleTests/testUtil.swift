@@ -29,6 +29,7 @@ func setUpWorkspacesForTests() {
         for child in workspace.children {
             child.unbindFromParent()
         }
+        workspace.normalizationOverride = [:]
     }
     check(Workspace.get(byName: "setUpWorkspacesForTests").focusWorkspace())
     Workspace.garbageCollectUnusedWorkspaces()

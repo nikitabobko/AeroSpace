@@ -31,8 +31,9 @@ The argument configures orientation of the newly created container.
 
 *If the parent of the focused window contains only a single child* (the window itself), then `split` command changes the orientation of the parent container
 
-IMPORTANT: `split` command has no effect if `enable-normalization-flatten-containers` is turned on.
-Consider using `join-with` if you want to keep `enable-normalization-flatten-containers` enabled
+IMPORTANT: `split` command has no effect on workspaces where the `enable-normalization-flatten-containers` normalization is in effect.
+Consider using `join-with` if you want to keep `enable-normalization-flatten-containers` enabled.
+Alternatively, disable the normalization on a single workspace with `aerospace enable-normalization --workspace <workspace> flatten-containers off`
 
 // =========================================================== Options
 include::util/conditional-options-header.adoc[]
