@@ -12,9 +12,9 @@ include::util/man-attributes.adoc[]
 aerospace list-windows [-h|--help] (--workspace <workspace>...|--monitor <monitor>...)
                        [--monitor <monitor>...] [--workspace <workspace>...]
                        [--pid <pid>] [--app-bundle-id <app-bundle-id>] [--format <output-format>]
-                       [--count] [--json]
-aerospace list-windows [-h|--help] --all [--format <output-format>] [--count] [--json]
-aerospace list-windows [-h|--help] --focused [--format <output-format>] [--count] [--json]
+                       [--count] [--json] [--sort-by <sort-by>...]
+aerospace list-windows [-h|--help] --all [--format <output-format>] [--count] [--json] [--sort-by <sort-by>...]
+aerospace list-windows [-h|--help] --focused [--format <output-format>] [--count] [--json] [--sort-by <sort-by>...]
 
 // end::synopsis[]
 
@@ -64,6 +64,30 @@ Incompatible with `--format`
 --json:: Output in JSON format.
 Can be used in combination with `--format` to specify which data to include into the json.
 Incompatible with `--count`
+
+--sort-by <sort-by>...::
+Specify the order in which the windows are printed.
+`<sort-by>...` is a space-separated list of sorting criteria, applied in the order they are specified
+(the first one is the primary criterion, the second one breaks ties, and so on).
+Incompatible with `--count`
++
+If not specified, windows are sorted by application name, then by window title, then by window ID.
+Those three criteria are also always applied last, after the criteria you specify, so the output is deterministic.
+The window title is only used as a tiebreaker if it is already being fetched (that is, if `--format` prints it).
+Passing `--sort-by window-title` explicitly always fetches the title, regardless of `--format`.
++
+Possible values: +
++
+. `dfs` sorts the windows in the depth-first traversal order of the windows tree.
+Monitors and workspaces are considered a part of the bigger tree, so windows are ordered by monitor first,
+then by workspace, then by their position in the workspace tree.
+Floating windows are interleaved with tiling windows the same way the `focus` command does it.
+Windows that are not a part of the traversal (macOS-native fullscreen windows, minimized windows, windows of hidden apps,
+popup windows, and floating windows whose position could not be read) are printed after all the other windows.
+They tie with each other on `dfs`, so their relative order is decided by the remaining criteria
+. `app-name` sorts the windows by application name
+. `window-title` sorts the windows by window title
+. `window-id` sorts the windows by window ID
 
 // =========================================================== Output Format
 include::util/conditional-output-format-header.adoc[]
