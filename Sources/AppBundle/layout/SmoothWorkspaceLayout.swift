@@ -11,7 +11,7 @@ private struct SmoothWorkspaceLayoutSnapshot {
     let monitorIsHorizontal: Bool
     let style: SmoothLayoutStyle
     let customLayout: SmoothCustomLayoutBlueprint?
-    let windowIds: [UInt32]
+    var windowIds: [UInt32]
     let treeShape: SmoothTreeShape
     let usesConstraintFallback: Bool
 
@@ -29,6 +29,16 @@ private struct SmoothWorkspaceLayoutSnapshot {
             self.customLayout == customLayout &&
             self.windowIds.toSet() == windowIds.toSet() &&
             self.treeShape == treeShape
+    }
+}
+
+@MainActor
+func replaceSmoothLayoutWindowId(_ oldId: UInt32, with newId: UInt32) {
+    for name in smoothWorkspaceLayoutSnapshots.keys {
+        let ids = smoothWorkspaceLayoutSnapshots[name]!.windowIds.map {
+            $0 == oldId ? newId : $0
+        }
+        smoothWorkspaceLayoutSnapshots[name]?.windowIds = ids
     }
 }
 

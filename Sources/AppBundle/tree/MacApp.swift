@@ -12,6 +12,7 @@ final class MacApp: AbstractApp {
     private let axApp: ThreadGuardedValue<AXUIElement>
     private let appAxSubscriptions: ThreadGuardedValue<[AxSubscription]> // keep subscriptions in memory
     private let windows: ThreadGuardedValue<[UInt32: AxWindow]> = .init([:])
+    private let finderReplacements: ThreadGuardedValue<[UInt32: UInt32]> = .init([:])
     private var windowsCount = 0
     var lastNativeFocusedWindowId: UInt32? = nil
     private var thread: Thread?
@@ -76,6 +77,7 @@ final class MacApp: AbstractApp {
                 let appAxSubscriptionsThreadGuarded = app?.appAxSubscriptions
                 let windowsThreadGuarded = app?.windows
                 let axAppThreadGuarded = app?.axApp
+                let finderReplacementsThreadGuarded = app?.finderReplacements
 
                 Task.startUnstructured { @MainActor in
                     allAppsMap[pid] = app
@@ -88,6 +90,7 @@ final class MacApp: AbstractApp {
                     // Destroy AX objects in reverse order of their creation
                     appAxSubscriptionsThreadGuarded?.destroy()
                     windowsThreadGuarded?.destroy()
+                    finderReplacementsThreadGuarded?.destroy()
                     axAppThreadGuarded?.destroy()
                 }
             }
@@ -118,13 +121,25 @@ final class MacApp: AbstractApp {
 
     // todo merge together with detectNewWindows
     func getFocusedWindow(_ cm: CancellationMode) async throws -> Window? {
+        if appId == .finder {
+            _ = try await refreshAndGetAliveWindowIds(frontmostAppBundleId: nil)
+        }
         let windowId = try await thread?.runInLoop(cm) { [nsApp, axApp, windows] job in
-            try axApp.threadGuarded.get(Ax.focusedWindowAttr)
-                .flatMap { try windows.threadGuarded.getOrRegisterAxWindow(windowId: $0.windowId, $0.ax.cast, nsApp, job) }?
-                .windowId
+            guard let focused = axApp.threadGuarded.get(Ax.focusedWindowAttr) else { return nil as UInt32? }
+            if nsApp.bundleIdentifier == "com.apple.finder" {
+                return windows.threadGuarded[focused.windowId]?.windowId
+            }
+            return try windows.threadGuarded.getOrRegisterAxWindow(windowId: focused.windowId, focused.ax.cast, nsApp, job)?.windowId
         }
         guard let windowId else { return nil }
         return try await MacWindow.getOrRegister(windowId: windowId, macApp: self)
+    }
+
+    func finderWindowToReplace(_ windowId: UInt32) async throws -> UInt32? {
+        guard appId == .finder else { return nil }
+        return try await thread?.runInLoop(.cancellable) { [finderReplacements] _ in
+            finderReplacements.threadGuarded[windowId]
+        }
     }
 
     @MainActor func nativeFocus(_ windowId: UInt32) {
@@ -303,7 +318,44 @@ final class MacApp: AbstractApp {
             return []
         }
         guard let thread else { return [] }
-        let (alive, dead) = try await thread.runInLoop(.cancellable) { [nsApp, windows, axApp] (job) -> ([UInt32], [UInt32]) in
+        let (alive, dead) = try await thread.runInLoop(.cancellable) { [nsApp, windows, axApp, finderReplacements] (job) -> ([UInt32], [UInt32]) in
+            if nsApp.bundleIdentifier == "com.apple.finder",
+               frontmostAppBundleId != lockScreenAppBundleId,
+               !nsApp.isHidden,
+               let listed = axApp.threadGuarded.get(Ax.windowsAttr), !listed.isEmpty,
+               !isLeftMouseButtonDown
+            {
+                var replacements = finderReplacements.threadGuarded
+                var previous = windows.threadGuarded
+                var current: [UInt32: AxWindow] = [:]
+                let listedIds = Set(listed.map(\.windowId))
+                for (id, ax) in listed {
+                    try job.checkCancellation()
+                    let snapshot = FinderTabSnapshot(ax)
+                    if let existing = previous.removeValue(forKey: id) {
+                        existing.finderTabs = snapshot
+                        current[id] = existing
+                    } else if let newWindow = try AxWindow.new(windowId: id, ax, nsApp, job) {
+                        let candidates = previous.filter { !listedIds.contains($0.key) && snapshot.matches($0.value.finderTabs) }
+                        if candidates.count == 1, let oldId = candidates.keys.first {
+                            replacements.removeValue(forKey: oldId)
+                            replacements[id] = oldId
+                            previous.removeValue(forKey: oldId)
+                        }
+                        newWindow.finderTabs = snapshot
+                        current[id] = newWindow
+                    }
+                }
+                // AXWindows can omit real windows on other native Spaces. Only
+                // discard a live ID when we positively matched its replacement.
+                for (id, window) in previous where window.ax.containingWindowId() != nil {
+                    current[id] = window
+                }
+                let removed = Set(windows.threadGuarded.keys).subtracting(current.keys)
+                windows.threadGuarded = current
+                finderReplacements.threadGuarded = replacements.filter { current[$0.key] != nil }
+                return (Array(current.keys), Array(removed))
+            }
             var alive: [UInt32: AxWindow] = windows.threadGuarded
             var dead = [UInt32: AxWindow]()
             // Second line of defence against lock screen. See the first line of defence: closedWindowsCache
@@ -362,6 +414,7 @@ final class MacApp: AbstractApp {
 private final class AxWindow {
     let windowId: UInt32
     let ax: AXUIElement
+    var finderTabs: FinderTabSnapshot?
     // periphery:ignore
     private let axSubscriptions: [AxSubscription] // keep subscriptions in memory
 

@@ -275,6 +275,10 @@ enum Ax {
         key: kAXWindowsAttribute,
         getter: { ($0 as? NSArray)?.compactMap(windowOrNil).map { ($0.windowId, $0.ax.cast) } ?? [] },
     )
+    static let childrenAttr = ReadableAttrImpl<[AXUIElement]>(
+        key: kAXChildrenAttribute,
+        getter: { $0 as? [AXUIElement] },
+    )
     static let focusedWindowAttr = ReadableAttrImpl<WindowIdAndAxUiElementMock>(
         key: kAXFocusedWindowAttribute,
         getter: windowOrNil,

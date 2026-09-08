@@ -76,6 +76,23 @@ final class SmoothWorkspaceLayoutTest: XCTestCase {
         )
     }
 
+    func testFinderTabReplacementKeepsManualSizeAndParent() {
+        enableStyle(.dwindle)
+        let root = Workspace.get(byName: name).rootTilingContainer
+        let windows = (1 ... 4).map { TestWindow.new(id: UInt32($0), parent: root) }
+        reconcileSmoothWorkspaceLayouts()
+        windows[0].setWeight(.h, 71)
+        let binding = windows[0].unbindFromParent()
+        let replacement = TestWindow.new(id: 10, parent: binding.parent, adaptiveWeight: binding.adaptiveWeight)
+        replacement.bind(to: binding.parent, adaptiveWeight: binding.adaptiveWeight, index: binding.index)
+        replaceSmoothLayoutWindowId(1, with: 10)
+        let shape = root.layoutDescription
+        reconcileSmoothWorkspaceLayouts()
+        assertEquals(root.layoutDescription, shape)
+        assertTrue(replacement.parent === binding.parent)
+        assertEquals(replacement.getWeight(.h), 71)
+    }
+
     func testSameMembershipRebuildsMalformedTree() {
         enableStyle(.dwindle)
         let root = Workspace.get(byName: name).rootTilingContainer

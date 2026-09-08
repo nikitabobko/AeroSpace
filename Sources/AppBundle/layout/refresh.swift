@@ -129,6 +129,10 @@ private func refresh() async throws {
     let mapping = try await MacApp.refreshAllAndGetAliveWindowIds(frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier)
     let aliveWindowIds = mapping.values.flatMap(id).toSet()
 
+    // Transfer a Finder tab's slot before collecting its outgoing native ID.
+    for (app, ids) in mapping where app.appId == .finder {
+        for id in ids { try await MacWindow.getOrRegister(windowId: id, macApp: app) }
+    }
     for window in MacWindow.allWindows {
         if !aliveWindowIds.contains(window.windowId) {
             window.garbageCollect(skipClosedWindowsCache: false)

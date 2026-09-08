@@ -20,6 +20,32 @@ final class MacWindow: Window {
     @discardableResult
     static func getOrRegister(windowId: UInt32, macApp: MacApp) async throws -> MacWindow {
         if let existing = allWindowsMap[windowId] { return existing }
+        if let oldId = try await macApp.finderWindowToReplace(windowId),
+           let previous = allWindowsMap[oldId], previous.macApp === macApp, previous.parent != nil
+        {
+            // Re-check after the AX await: another refresh may have registered it.
+            if let existing = allWindowsMap[windowId] { return existing }
+            let wasFocused = focus.windowOrNil === previous
+            let binding = previous.unbindFromParent()
+            let window = MacWindow(windowId, macApp, lastFloatingSize: previous.lastFloatingSize,
+                                   parent: binding.parent, adaptiveWeight: binding.adaptiveWeight, index: binding.index)
+            window.isFullscreen = previous.isFullscreen
+            window.noOuterGapsInFullscreen = previous.noOuterGapsInFullscreen
+            window.layoutReason = previous.layoutReason
+            window.scratchpadSlot = previous.scratchpadSlot
+            window.scratchpadWasFloating = previous.scratchpadWasFloating
+            window.scratchpadIsPresented = previous.scratchpadIsPresented
+            window.scratchpadUsesNativeMinimize = previous.scratchpadUsesNativeMinimize
+            window.lastAppliedLayoutVirtualRect = previous.lastAppliedLayoutVirtualRect
+            window.lastAppliedLayoutPhysicalRect = previous.lastAppliedLayoutPhysicalRect
+            previous.scratchpadHideVerificationTask?.cancel()
+            allWindowsMap.removeValue(forKey: oldId)
+            allWindowsMap[windowId] = window
+            replaceSmoothLayoutWindowId(oldId, with: windowId)
+            resetClosedWindowsCache()
+            if wasFocused, let newFocus = window.toLiveFocusOrNil() { _ = setFocus(to: newFocus) }
+            return window
+        }
         let rect = try await macApp.getAxRect(windowId, .cancellable)
         let data = try await unbindAndGetBindingDataForNewWindow(
             windowId,
