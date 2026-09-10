@@ -53,7 +53,7 @@ struct FrozenWorkspace: Sendable {
     if !closedWindowsCache.windowIds.contains(newlyDetectedWindow.windowId) {
         return false
     }
-    let monitors = monitorInfos
+    let monitors = globalUnsortedMonitorInfos
     let topLeftCornerToMonitorInfo = monitors.grouped { $0.rect.topLeftCorner }
 
     for monitor in closedWindowsCache.monitors {

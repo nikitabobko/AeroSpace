@@ -17,7 +17,7 @@ extension DynamicConfigValue {
         switch self {
             case .constant(let value): return value
             case .perMonitor(let array, let defaultValue):
-                let sortedMonitors = sortedMonitorInfos
+                let sortedMonitors = globalSortedMonitorInfos
                 return array
                     .lazy
                     .compactMap {

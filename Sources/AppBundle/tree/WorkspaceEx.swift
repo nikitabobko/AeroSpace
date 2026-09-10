@@ -59,7 +59,7 @@ extension Workspace {
 
     @MainActor var forceAssignedMonitorInfo: MonitorInfo? {
         guard let monitorDescriptions = config.workspaceToMonitorForceAssignment[name] else { return nil }
-        let sortedMonitors = sortedMonitorInfos
+        let sortedMonitors = globalSortedMonitorInfos
         return monitorDescriptions.lazy
             .compactMap { $0.resolveMonitorInfo(sortedMonitors: sortedMonitors) }
             .first

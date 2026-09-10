@@ -162,7 +162,7 @@ private func layoutWorkspaces() async throws {
         }
         return
     }
-    let monitors = monitorInfos
+    let monitors = globalUnsortedMonitorInfos
     var monitorToOptimalHideCorner: [CGPoint: OptimalHideCorner] = [:]
     for monitor in monitors {
         let xOff = monitor.width * 0.1

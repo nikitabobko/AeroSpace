@@ -7,7 +7,7 @@ struct ListMonitorsCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         let focus = globalFocus
-        var result = sortedMonitorInfos
+        var result = globalSortedMonitorInfos
         if let focused = args.focused {
             result = result.filter { (monitor) in (monitor.visibleWorkspace == focus.workspace) == focused }
         }
