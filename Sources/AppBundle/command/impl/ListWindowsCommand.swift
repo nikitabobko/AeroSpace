@@ -6,7 +6,7 @@ struct ListWindowsCommand: Command {
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) async -> BinaryExitCode {
-        let focus = focus
+        let focus = globalFocus
         var windows: [Window] = []
 
         if args.filteringOptions.focused {

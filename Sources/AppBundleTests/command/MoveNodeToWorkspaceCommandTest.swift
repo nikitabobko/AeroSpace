@@ -42,7 +42,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         }
 
         await parseCommand("move-node-to-workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(focus.workspace.name, "a")
+        assertEquals(globalFocus.workspace.name, "a")
     }
 
     func testAnotherWindowSubject() async {
@@ -52,7 +52,7 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         }
 
         await parseCommand("move-node-to-workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
     }
 
     func testPreserveFloatingLayout() async {
@@ -75,13 +75,13 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0)
         }
 
-        assertEquals(focus.workspace, workspaceA)
+        assertEquals(globalFocus.workspace, workspaceA)
 
         await parseCommand("move-node-to-workspace --window-id 2 a").cmdOrDie
             .run(.defaultEnv, .emptyStdin)
 
-        assertEquals(focus.workspace, workspaceA)
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.workspace, workspaceA)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertEquals(Workspace.get(byName: "b").rootTilingContainer.children.count, 0)
         assertEquals(workspaceA.rootTilingContainer.children.count, 2)
     }
@@ -123,12 +123,12 @@ final class MoveNodeToWorkspaceCommandTest: XCTestCase {
         workspaceA.rootTilingContainer.apply {
             _ = TestWindow.new(id: 1, parent: $0).focusWindow()
         }
-        assertEquals(focus.workspace.name, "a")
+        assertEquals(globalFocus.workspace.name, "a")
 
         await parseCommand("move-node-to-workspace --focus-follows-window b").cmdOrDie
             .run(.defaultEnv, .emptyStdin)
-        assertEquals(focus.workspace.name, "b")
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.workspace.name, "b")
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertTrue(workspaceA.isEffectivelyEmpty)
     }
 

@@ -6,7 +6,7 @@ struct ListMonitorsCommand: Command {
     /*conforms*/ let shouldResetClosedWindowsCache = false
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
-        let focus = focus
+        let focus = globalFocus
         var result = sortedMonitorInfos
         if let focused = args.focused {
             result = result.filter { (monitor) in (monitor.visibleWorkspace == focus.workspace) == focused }

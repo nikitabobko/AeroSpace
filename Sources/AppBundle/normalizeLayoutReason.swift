@@ -3,7 +3,7 @@
         let windows: [Window] = workspace.allLeafWindowsRecursive
         try await _normalizeLayoutReason(workspace: workspace, windows: windows)
     }
-    try await _normalizeLayoutReason(workspace: focus.workspace, windows: macosMinimizedWindowsContainer.children.filterIsInstance(of: Window.self))
+    try await _normalizeLayoutReason(workspace: globalFocus.workspace, windows: macosMinimizedWindowsContainer.children.filterIsInstance(of: Window.self))
     try await validateStillPopups()
 }
 
@@ -12,7 +12,7 @@
         let popup = (node as! MacWindow)
         let windowLevel = getWindowLevel(for: popup.windowId)
         if try await popup.isWindowHeuristic(windowLevel, .cancellable) {
-            try await popup.relayoutWindow(on: focus.workspace, .cancellable)
+            try await popup.relayoutWindow(on: globalFocus.workspace, .cancellable)
             await runOnWindowDetected(ifConventional: popup)
         }
     }

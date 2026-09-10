@@ -24,7 +24,7 @@ final class MacWindow: Window {
             macApp,
             isStartup
                 ? (rect?.center.monitorApproximation ?? mainMonitorInfo).visibleWorkspace
-                : focus.workspace,
+                : globalFocus.workspace,
             window: nil,
             .cancellable,
         )
@@ -83,7 +83,7 @@ final class MacWindow: Window {
         if !skipClosedWindowsCache { cacheClosedWindowIfNeeded() }
         let parent = unbindFromParent().parent
         let deadWindowWorkspace = parent.nodeWorkspace
-        let focus = focus
+        let focus = globalFocus
         if let deadWindowWorkspace, deadWindowWorkspace == focus.workspace ||
             deadWindowWorkspace == prevFocusedWorkspace && prevFocusedWorkspaceDate.distance(to: .now) < 1
         {

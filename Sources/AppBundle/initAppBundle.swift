@@ -53,7 +53,7 @@ import Foundation
 
 @MainActor
 private func smartLayoutAtStartup() {
-    let workspace = focus.workspace
+    let workspace = globalFocus.workspace
     let root = workspace.rootTilingContainer
     switch root.children.count <= 3 {
         case true: root.layout = .tiles

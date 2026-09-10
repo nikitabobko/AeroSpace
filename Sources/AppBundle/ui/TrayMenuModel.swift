@@ -25,7 +25,7 @@ enum AxPermissionStatus: Equatable {
 
 @MainActor func updateTrayText() {
     let sortedMonitors = sortedMonitorInfos
-    let focus = focus
+    let focus = globalFocus
     TrayMenuModel.shared.trayText = (activeMode?.takeIf { $0 != mainModeId }?.first.map { "(\($0.uppercased())) " } ?? "") +
         sortedMonitors
         .map {

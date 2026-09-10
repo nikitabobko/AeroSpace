@@ -11,7 +11,7 @@ final class ShellRunTest: XCTestCase {
 
         let result = await parseCommand("true || workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "a")
+        assertEquals(globalFocus.workspace.name, "a")
     }
 
     func testOrFirstFails_runsNext() async {
@@ -19,7 +19,7 @@ final class ShellRunTest: XCTestCase {
 
         let result = await parseCommand("false || workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 
     func testOrAllFail_returnsLastExitCode() async {
@@ -32,7 +32,7 @@ final class ShellRunTest: XCTestCase {
 
         let result = await parseCommand("false || workspace b || workspace c").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 
     func testAndFirstFails_shortCircuits() async {
@@ -40,7 +40,7 @@ final class ShellRunTest: XCTestCase {
 
         let result = await parseCommand("false && workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 1)
-        assertEquals(focus.workspace.name, "a")
+        assertEquals(globalFocus.workspace.name, "a")
     }
 
     func testAndAllSucceed_returnsZero() async {
@@ -48,7 +48,7 @@ final class ShellRunTest: XCTestCase {
 
         let result = await parseCommand("true && workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 
     func testAndChainStopsOnFirstFailure() async {
@@ -56,7 +56,7 @@ final class ShellRunTest: XCTestCase {
 
         let result = await parseCommand("workspace b && false && workspace c").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 1)
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 
     func testAndReturnsLastSuccessExitCode() async {
@@ -69,7 +69,7 @@ final class ShellRunTest: XCTestCase {
 
         let result = await parseCommand("false; workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 
     func testSeqReturnsLastCommandExitCode() async {
@@ -91,7 +91,7 @@ final class ShellRunTest: XCTestCase {
 
         let result = await parseCommand("echo -- a b c | workspace --stdin next").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 
     func testPipeReturnsOnlyLastStdout() async {
@@ -125,6 +125,6 @@ final class ShellRunTest: XCTestCase {
             .cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, ["done"])
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 }

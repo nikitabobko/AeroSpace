@@ -12,13 +12,13 @@ final class CloseCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0)
         }
 
-        assertEquals(focus.windowOrNil?.windowId, 1)
-        assertEquals(focus.workspace.rootTilingContainer.children.count, 2)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.workspace.rootTilingContainer.children.count, 2)
 
         await parseCommand("close").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
-        assertEquals(focus.windowOrNil?.windowId, 2)
-        assertEquals(focus.workspace.rootTilingContainer.children.count, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 2)
+        assertEquals(globalFocus.workspace.rootTilingContainer.children.count, 1)
     }
 
     func testCloseViaWindowIdFlag() async {
@@ -27,12 +27,12 @@ final class CloseCommandTest: XCTestCase {
             TestWindow.new(id: 2, parent: $0)
         }
 
-        assertEquals(focus.windowOrNil?.windowId, 1)
-        assertEquals(focus.workspace.rootTilingContainer.children.count, 2)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.workspace.rootTilingContainer.children.count, 2)
 
         await parseCommand("close --window-id 2").cmdOrDie.run(.defaultEnv, .emptyStdin)
 
-        assertEquals(focus.windowOrNil?.windowId, 1)
-        assertEquals(focus.workspace.rootTilingContainer.children.count, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.workspace.rootTilingContainer.children.count, 1)
     }
 }

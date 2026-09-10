@@ -42,7 +42,7 @@ final class WorkspaceCommandTest: XCTestCase {
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, [])
         assertEquals(result.stderr, [])
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 
     func testDirect_alreadyFocused_succWithMessage() async {
@@ -52,7 +52,7 @@ final class WorkspaceCommandTest: XCTestCase {
         assertEquals(result.exitCode.rawValue, 0)
         assertEquals(result.stdout, [])
         assertEquals(result.stderr, ["Workspace 'a' is already focused. Tip: use --fail-if-noop to exit with non-zero code"])
-        assertEquals(focus.workspace.name, "a")
+        assertEquals(globalFocus.workspace.name, "a")
     }
 
     func testDirect_alreadyFocused_failIfNoop_fails() async {
@@ -62,7 +62,7 @@ final class WorkspaceCommandTest: XCTestCase {
         assertEquals(result.exitCode.rawValue, 2)
         assertEquals(result.stdout, [])
         assertEquals(result.stderr, [])
-        assertEquals(focus.workspace.name, "a")
+        assertEquals(globalFocus.workspace.name, "a")
     }
 
     func testAutoBackAndForth_alreadyFocused_focusesPrev() async {
@@ -73,7 +73,7 @@ final class WorkspaceCommandTest: XCTestCase {
 
         let result = await parseCommand("workspace --auto-back-and-forth a").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 
     func testAutoBackAndForth_alreadyFocused_noPrev_fails() async {
@@ -82,7 +82,7 @@ final class WorkspaceCommandTest: XCTestCase {
 
         let result = await parseCommand("workspace --auto-back-and-forth a").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 2)
-        assertEquals(focus.workspace.name, "a")
+        assertEquals(globalFocus.workspace.name, "a")
     }
 
     func testAutoBackAndForth_differentWorkspace_focusesTarget() async {
@@ -93,7 +93,7 @@ final class WorkspaceCommandTest: XCTestCase {
 
         let result = await parseCommand("workspace --auto-back-and-forth b").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 
     func testRelativeNext_stdin() async {
@@ -101,7 +101,7 @@ final class WorkspaceCommandTest: XCTestCase {
 
         let result = await parseCommand("workspace --stdin next").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 
     func testRelativePrev_stdin() async {
@@ -109,7 +109,7 @@ final class WorkspaceCommandTest: XCTestCase {
 
         let result = await parseCommand("workspace --stdin prev").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "a")
+        assertEquals(globalFocus.workspace.name, "a")
     }
 
     func testRelativeNext_wrapAround_stdin() async {
@@ -117,7 +117,7 @@ final class WorkspaceCommandTest: XCTestCase {
 
         let result = await parseCommand("workspace --wrap-around --stdin next").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "a")
+        assertEquals(globalFocus.workspace.name, "a")
     }
 
     func testRelativePrev_wrapAround_stdin() async {
@@ -125,7 +125,7 @@ final class WorkspaceCommandTest: XCTestCase {
 
         let result = await parseCommand("workspace --wrap-around --stdin prev").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "c")
+        assertEquals(globalFocus.workspace.name, "c")
     }
 
     func testRelativeNext_noNext_failsWithoutWrap() async {
@@ -134,7 +134,7 @@ final class WorkspaceCommandTest: XCTestCase {
         // "c" is the last workspace in the stdin list, no wrap-around → cannot resolve next.
         let result = await parseCommand("workspace --stdin next").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
         assertEquals(result.exitCode.rawValue, 2)
-        assertEquals(focus.workspace.name, "c")
+        assertEquals(globalFocus.workspace.name, "c")
     }
 
     func testRelativePrev_noPrev_failsWithoutWrap() async {
@@ -142,7 +142,7 @@ final class WorkspaceCommandTest: XCTestCase {
 
         let result = await parseCommand("workspace --stdin prev").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
         assertEquals(result.exitCode.rawValue, 2)
-        assertEquals(focus.workspace.name, "a")
+        assertEquals(globalFocus.workspace.name, "a")
     }
 
     func testRelativeNext_emptyStdin_fails() async {
@@ -150,7 +150,7 @@ final class WorkspaceCommandTest: XCTestCase {
 
         let result = await parseCommand("workspace --stdin next").cmdOrDie.run(.defaultEnv, CmdStdin(""))
         assertEquals(result.exitCode.rawValue, 2)
-        assertEquals(focus.workspace.name, "a")
+        assertEquals(globalFocus.workspace.name, "a")
     }
 
     func testRelativeNext_currentNotInStdin() async {
@@ -159,7 +159,7 @@ final class WorkspaceCommandTest: XCTestCase {
 
         let result = await parseCommand("workspace --stdin next").cmdOrDie.run(.defaultEnv, CmdStdin("a\nb\nc\n"))
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "a")
+        assertEquals(globalFocus.workspace.name, "a")
     }
 
     func testRelativeNext_noStdin_picksFromAllWorkspaces() async {
@@ -170,6 +170,6 @@ final class WorkspaceCommandTest: XCTestCase {
 
         let result = await parseCommand("workspace next").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(result.exitCode.rawValue, 0)
-        assertEquals(focus.workspace.name, "b")
+        assertEquals(globalFocus.workspace.name, "b")
     }
 }

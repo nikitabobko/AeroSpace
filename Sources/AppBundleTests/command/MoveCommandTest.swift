@@ -299,7 +299,7 @@ final class MoveCommandTest: XCTestCase {
                 .window(2),
             ]),
         )
-        assertEquals(focus.windowOrNil?.windowId, 2)
+        assertEquals(globalFocus.windowOrNil?.windowId, 2)
     }
 
     func testMoveOutWithNormalization_left() async {
@@ -318,7 +318,7 @@ final class MoveCommandTest: XCTestCase {
                 .window(2),
             ]),
         )
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
     }
 }
 

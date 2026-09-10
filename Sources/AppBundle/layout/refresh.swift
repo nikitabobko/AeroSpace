@@ -69,13 +69,13 @@ func runLightSession<T>(
         let nativeFocused = try await getNativeFocusedWindow(.cancellable)
         if let nativeFocused { try await debugWindowsIfRecording(nativeFocused, .cancellable) }
         updateFocusCache(nativeFocused)
-        let focusBefore = focus.windowOrNil
+        let focusBefore = globalFocus.windowOrNil
 
         await refreshModel_nonCancellable()
         let result = try await body()
         await refreshModel_nonCancellable()
 
-        let focusAfter = focus.windowOrNil
+        let focusAfter = globalFocus.windowOrNil
 
         updateTrayText()
         SecureInputPanel.shared.refresh()

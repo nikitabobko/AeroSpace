@@ -58,11 +58,11 @@ private struct FrozenFocus: AeroAny, Equatable, Sendable {
 /// Commands must be cautious about accessing this property directly. There are legitimate cases.
 /// But, in general, commands must firstly check --window-id, --workspace, AEROSPACE_WINDOW_ID env and
 /// AEROSPACE_WORKSPACE env before accessing the global focus.
-@MainActor var focus: LiveFocus { _focus.live }
+@MainActor var globalFocus: LiveFocus { _focus.live }
 
 @MainActor func setFocus(to newFocus: LiveFocus) -> Bool {
     if _focus == newFocus.frozen { return true }
-    let oldFocus = focus
+    let oldFocus = globalFocus
     // Normalize mruWindow when focus away from a workspace
     if oldFocus.workspace != newFocus.workspace {
         oldFocus.windowOrNil?.markAsMostRecentChild()
@@ -114,7 +114,7 @@ extension Workspace {
 
 // Used by focus-back-and-forth
 @MainActor private var _prevFocus: FrozenFocus? = nil
-@MainActor var prevFocus: LiveFocus? { _prevFocus?.live.takeIf { $0 != focus } }
+@MainActor var prevFocus: LiveFocus? { _prevFocus?.live.takeIf { $0 != globalFocus } }
 
 @MainActor private var onFocusChangedRecursionGuard = false
 // Should be called in refreshSession
@@ -122,7 +122,7 @@ extension Workspace {
     if refreshSessionEvent?.isStartup == true {
         return
     }
-    let focus = focus
+    let focus = globalFocus
     let frozenFocus = focus.frozen
     var hasFocusChanged = false
     var hasFocusedWorkspaceChanged = false

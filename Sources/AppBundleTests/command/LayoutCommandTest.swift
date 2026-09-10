@@ -275,7 +275,7 @@ final class LayoutCommandTest: XCTestCase {
         await parseCommand("layout floating").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([.window(2)]))
         assertEquals(workspace.floatingWindows.map(\.windowId), [1])
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
     }
 
     func testFloatingToTiling() async {

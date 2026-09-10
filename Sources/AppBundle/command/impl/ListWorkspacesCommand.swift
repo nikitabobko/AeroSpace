@@ -58,7 +58,7 @@ extension MonitorId {
     @MainActor func resolve(_ io: CmdIo, sortedMonitors: [MonitorInfo]) -> [MonitorInfo] {
         switch self {
             case .focused:
-                return [focus.workspace.workspaceMonitorInfo]
+                return [globalFocus.workspace.workspaceMonitorInfo]
             case .mouse:
                 return [mouseLocation.monitorApproximation]
             case .all:

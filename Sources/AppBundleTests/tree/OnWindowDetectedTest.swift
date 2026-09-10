@@ -11,7 +11,7 @@ final class OnWindowDetectedTest: XCTestCase {
         let focused = TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
         let detected = TestWindow.new(id: 2, parent: workspace.rootTilingContainer)
         assertEquals(focused.focusWindow(), true)
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
 
         let callback = WindowDetectedCallback(
             matcher: .command(parseCommand("test %{window-id} = 2").cmdOrDie),
@@ -27,7 +27,7 @@ final class OnWindowDetectedTest: XCTestCase {
         let focused = TestWindow.new(id: 1, parent: workspaceA.rootTilingContainer)
         let detected = TestWindow.new(id: 2, parent: workspaceA.rootTilingContainer)
         assertEquals(focused.focusWindow(), true)
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
 
         config.onWindowDetected = [
             WindowDetectedCallback(

@@ -19,28 +19,28 @@ final class SwapCommandTest: XCTestCase {
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(3), .window(2)]),
                                .window(1)]))
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
         await parseCommand("swap left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(1), .window(2)]),
                                .window(3)]))
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
         await parseCommand("swap down").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(2), .window(1)]),
                                .window(3)]))
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
         await parseCommand("swap up").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(1), .window(2)]),
                                .window(3)]))
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
     }
 
@@ -57,28 +57,28 @@ final class SwapCommandTest: XCTestCase {
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(2), .window(1)]),
                                .window(3)]))
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
         await parseCommand("swap dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(2), .window(3)]),
                                .window(1)]))
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
         await parseCommand("swap dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(2), .window(1)]),
                                .window(3)]))
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
         await parseCommand("swap dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription,
                      .h_tiles([.v_tiles([.window(1), .window(2)]),
                                .window(3)]))
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
     }
 
@@ -91,12 +91,12 @@ final class SwapCommandTest: XCTestCase {
 
         await parseCommand("swap --wrap-around left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([.window(3), .window(2), .window(1)]))
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
         await parseCommand("swap --wrap-around right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([.window(1), .window(2), .window(3)]))
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
     }
 
@@ -109,12 +109,12 @@ final class SwapCommandTest: XCTestCase {
 
         await parseCommand("swap --wrap-around dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([.window(3), .window(2), .window(1)]))
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
 
         await parseCommand("swap --wrap-around dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([.window(1), .window(2), .window(3)]))
-        assertEquals(focus.windowOrNil?.windowId, 1)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
     }
 
@@ -127,7 +127,7 @@ final class SwapCommandTest: XCTestCase {
 
         await parseCommand("swap --swap-focus right").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(root.layoutDescription, .h_tiles([.window(1), .window(3), .window(2)]))
-        assertEquals(focus.windowOrNil?.windowId, 3)
+        assertEquals(globalFocus.windowOrNil?.windowId, 3)
         assertEquals(root.mostRecentWindowRecursive?.windowId, 3)
     }
 }

@@ -7,7 +7,7 @@ struct SummonWorkspaceCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         let workspace = Workspace.get(byName: args.target.val.raw)
-        let monitor = focus.workspace.workspaceMonitorInfo
+        let monitor = globalFocus.workspace.workspaceMonitorInfo
         if monitor.visibleWorkspace == workspace {
             return switch args.failIfNoop {
                 case true: .fail
