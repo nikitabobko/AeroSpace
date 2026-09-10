@@ -23,7 +23,9 @@ done
 ./script/check-uncommitted-files.sh
 ./generate.sh --build-version "$build_version" --codesign-identity "$codesign_identity" --generate-git-hash
 
-swift build -c release --arch arm64 --arch x86_64 --product aerospace -Xswiftc -warnings-as-errors # CLI
+swift_build_cli=(build -c release --arch arm64 --arch x86_64 --product aerospace)
+swift "${swift_build_cli[@]}" -Xswiftc -warnings-as-errors # CLI
+cli_bin_path="$(swift "${swift_build_cli[@]}" --show-bin-path)"
 
 # todo: make xcodebuild use the same toolchain as swift
 # toolchain="$(plutil -extract CFBundleIdentifier raw ~/Library/Developer/Toolchains/swift-6.1-RELEASE.xctoolchain/Info.plist)"
@@ -49,7 +51,7 @@ cd -
 git checkout .
 
 cp -r "xcode/.xcode-build/Build/Products/$xcode_configuration/AeroSpace.app" .release
-cp -r .build/apple/Products/Release/aerospace .release
+cp -r "$cli_bin_path/aerospace" .release
 
 ################
 ### SIGN CLI ###
