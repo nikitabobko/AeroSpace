@@ -354,7 +354,7 @@ Accordion padding is configurable via `accordion-padding` option.
 [#normalization]
 === Normalization
 
-By default, AeroSpace does two types of tree normalizations:
+By default, AeroSpace performs two types of tree normalizations:
 
 . Containers that have only one child are "flattened".
 The root container is an exception, it is allowed to have a single window child.
