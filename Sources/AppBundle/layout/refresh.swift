@@ -123,17 +123,19 @@ func refreshModel_nonCancellable() async {
 @MainActor
 private func refresh() async throws {
     // Garbage collect terminated apps and windows before working with all windows
-    let mapping = try await MacApp.refreshAllAndGetAliveWindowIds(frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier)
-    let aliveWindowIds = mapping.values.flatMap(id).toSet()
+    let mapping = try await MacApp
+        .refreshAllAndGetAliveWindowIds(frontmostAppBundleId: NSWorkspace.shared.frontmostApplication?.bundleIdentifier)
+    let aliveWindowIds = mapping.values.flatMap { arr in arr.map { $0.id } }.toSet()
 
     for window in MacWindow.allWindows {
         if !aliveWindowIds.contains(window.windowId) {
+            window.lifeStatus = .dead
             window.garbageCollect(skipClosedWindowsCache: false)
         }
     }
     for (app, windowIds) in mapping {
-        for windowId in windowIds {
-            try await MacWindow.getOrRegister(windowId: windowId, macApp: app)
+        for (id, lifeStatus) in windowIds {
+            try await MacWindow.getOrRegister(windowId: id, macApp: app).lifeStatus = lifeStatus
         }
     }
 

@@ -8,6 +8,7 @@ open class Window: TreeNode, Hashable {
     var isFullscreen: Bool = false
     var noOuterGapsInFullscreen: Bool = false
     var layoutReason: LayoutReason = .standard
+    var lifeStatus: WindowLifeStatus = .alive
 
     @MainActor
     init(id: UInt32, _ app: any AbstractApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
@@ -40,6 +41,26 @@ open class Window: TreeNode, Hashable {
     func getCenter(_ cm: CancellationMode) async throws -> CGPoint? { try await getAxRect(cm)?.center }
 
     func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) { die("Not implemented") }
+}
+
+/// CRDT inspired tombstone-like status
+///
+/// The only difference between probablyDead and invisible is their cleanup policy:
+/// 1. invisible is never cleaned up
+/// 2. dead is cleanuped up when we can guarantee that the screen is not locked
+enum WindowLifeStatus {
+    case dead // Closed windows OR Locked screen
+    case invisible // Invisible macOS Spaces AND Background tabs
+    case alive
+
+    var isVisible: Bool {
+        switch self {
+            case .alive: true
+
+            case .dead: false
+            case .invisible: false
+        }
+    }
 }
 
 enum LayoutReason: Equatable {

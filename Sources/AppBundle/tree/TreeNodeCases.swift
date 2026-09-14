@@ -28,6 +28,13 @@ enum NonLeafTreeNodeCases {
 enum TilingTreeNodeCases {
     case window(Window)
     case tilingContainer(TilingContainer)
+
+    var isVisible: Bool {
+        switch self {
+            case .window(let it): it.lifeStatus.isVisible
+            case .tilingContainer(let it): it.lifeStatus.isVisible
+        }
+    }
 }
 
 enum WindowParentCases {

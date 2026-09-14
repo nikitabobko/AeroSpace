@@ -7,7 +7,7 @@ open class TreeNode: Equatable, AeroAny {
     fileprivate final weak var _parent: NonLeafTreeNodeObject? = nil
     final var parent: NonLeafTreeNodeObject? { _parent }
     private var adaptiveWeight: CGFloat
-    private let _mruChildren: MruStack<TreeNode> = MruStack()
+    let _mruChildren: MruStack<TreeNode> = MruStack()
     // Usages:
     // - resize with mouse
     // - makeFloatingWindowsSeenAsTiling in focus command
@@ -114,8 +114,6 @@ open class TreeNode: Equatable, AeroAny {
     }
 
     var mostRecentChild: TreeNode? { _mruChildren.mostRecent ?? children.last }
-
-    var mruChildren: MruStack<TreeNode> { _mruChildren }
 
     @discardableResult
     func unbindFromParent() -> BindingData {

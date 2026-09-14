@@ -5,8 +5,14 @@ final class MacWindow: Window {
     let macApp: MacApp
     private var prevUnhiddenProportionalPositionInsideWorkspaceRect: CGPoint?
 
-    @MainActor
-    private init(_ id: UInt32, _ actor: MacApp, lastFloatingSize: CGSize?, parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, index: Int) {
+    @MainActor private init(
+        _ id: UInt32,
+        _ actor: MacApp,
+        lastFloatingSize: CGSize?,
+        parent: NonLeafTreeNodeObject,
+        adaptiveWeight: CGFloat,
+        index: Int,
+    ) {
         self.macApp = actor
         super.init(id: id, actor, lastFloatingSize: lastFloatingSize, parent: parent, adaptiveWeight: adaptiveWeight, index: index)
     }

@@ -29,7 +29,7 @@ extension TreeNode {
         self as? Workspace ?? parent?.nodeWorkspace
     }
 
-    /// Also see: workspace
+    /// Also see: nodeWorkspace
     @MainActor var visualWorkspace: Workspace? { nodeWorkspace ?? nodeMonitorInfo?.visibleWorkspace }
 
     @MainActor var nodeMonitorInfo: MonitorInfo? {

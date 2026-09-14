@@ -5,6 +5,7 @@ final class TilingContainer: TreeNode, NonLeafTreeNodeObject { // todo consider 
     fileprivate var _orientation: Orientation
     var orientation: Orientation { _orientation }
     var layout: Layout
+    var lifeStatus: TilingContainerLifeStatus = .alive // todo tighten its visibility
 
     @MainActor
     init(parent: NonLeafTreeNodeObject, adaptiveWeight: CGFloat, _ orientation: Orientation, _ layout: Layout, index: Int) {
@@ -45,12 +46,32 @@ extension TilingContainer {
         }
     }
 
-    func normalizeOppositeOrientationForNestedContainers() {
-        if orientation == (parent as? TilingContainer)?.orientation {
-            _orientation = orientation.opposite
+    func normalizeOppositeOrientationForNestedContainersRecursive(parentOrientation: Orientation?) {
+        switch lifeStatus {
+            case .deadOrInvisible: return
+            case .alive: _orientation = parentOrientation?.opposite ?? orientation
+            case .mustBeFlattened: _orientation = parentOrientation ?? orientation
         }
         for child in children {
-            (child as? TilingContainer)?.normalizeOppositeOrientationForNestedContainers()
+            (child as? TilingContainer)?.normalizeOppositeOrientationForNestedContainersRecursive(parentOrientation: orientation)
+        }
+    }
+}
+
+/// Tombstone derived from WindowLifeStatus
+enum TilingContainerLifeStatus {
+    case deadOrInvisible
+    /// must be flattened by normalization, but cannot since it contains half-dead children
+    /// These types of containers must be transparent for ascensions and descensions
+    case mustBeFlattened
+    case alive
+
+    var isVisible: Bool {
+        switch self {
+            case .mustBeFlattened: true
+            case .alive: true
+
+            case .deadOrInvisible: false
         }
     }
 }
