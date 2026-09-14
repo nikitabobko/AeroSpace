@@ -26,7 +26,7 @@ private struct ConfigFileWatcher: ~Copyable {
 @MainActor private var currentWatcher: ConfigFileWatcher? = nil
 @MainActor private var debounceTask: Task<Void, any Error>? = nil
 
-private let debounceDelay: Duration = .milliseconds(200)
+private let debounceDelay: UInt64 = 200_000_000 // 200ms
 
 @MainActor func syncConfigFileWatcher() {
     currentWatcher = nil
@@ -34,7 +34,7 @@ private let debounceDelay: Duration = .milliseconds(200)
     currentWatcher = ConfigFileWatcher(url: configUrl) {
         debounceTask?.cancel()
         debounceTask = Task.startUnstructured {
-            try await Task.sleep(for: debounceDelay)
+            try await Task.sleep(nanoseconds: debounceDelay)
             if let token: RunSessionGuard = .isServerEnabled {
                 try await runLightSession(.configAutoReload, token) {
                     _ = await reloadConfig_nonCancellable()
