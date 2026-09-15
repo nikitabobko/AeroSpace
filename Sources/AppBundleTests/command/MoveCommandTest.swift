@@ -167,6 +167,26 @@ final class MoveCommandTest: XCTestCase {
         assertEquals(result.exitCode.rawValue, 0)
     }
 
+    func testCreateImplicitContainerFailsInScrollingLayout() async {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
+        }
+        workspace.rootTilingContainer.layout = .scrolling
+
+        let result = await parseCommand("move --boundaries-action create-implicit-container up").cmdOrDie
+            .run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.stderr, ["move --boundaries-action create-implicit-container doesn't support the scrolling layout"])
+        assertEquals(
+            workspace.layoutDescription,
+            .workspace([
+                .scrolling([.window(1), .window(2)]),
+            ]),
+        )
+    }
+
     func testStop_onRootNode() async {
         let workspace = Workspace.get(byName: name)
         workspace.rootTilingContainer.apply {
@@ -342,6 +362,10 @@ extension TreeNode {
                         container.orientation == .h
                             ? .h_accordion(container.children.map(\.layoutDescription))
                             : .v_accordion(container.children.map(\.layoutDescription))
+                    case .scrolling:
+                        .scrolling(container.children.map(\.layoutDescription))
+                    case .tabs:
+                        .tabs(container.children.map(\.layoutDescription))
                 }
         }
     }
@@ -354,6 +378,8 @@ enum LayoutDescription: Equatable {
     case h_accordion([LayoutDescription])
     case v_accordion([LayoutDescription])
     case floatingWindowsContainer([LayoutDescription])
+    case scrolling([LayoutDescription])
+    case tabs([LayoutDescription])
     case window(UInt32)
     case macosPopupWindowsContainer
     case macosMinimized
