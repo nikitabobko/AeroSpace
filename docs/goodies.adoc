@@ -81,6 +81,7 @@ aerospace eval 'list-workspaces --monitor mouse --visible | workspace --stdin ne
 Use the software of your choice to assign trackpad gestures to the respective commands.
 Here are a few third party options in alphabetical order:
 
+* https://github.com/jomatsu/aerokit (menu-bar app; also bundles a workspace switcher with previews and Exposé-style overviews)
 * https://github.com/acsandmann/aerospace-swipe
 * link:https://folivora.ai/[BetterTouchTool] can assign arbitrary commands to trackpad gestures.
 Beware that you might need to specify full path to aerospace executable https://community.folivora.ai/t/how-to-execute-terminal-command-to-switch-workspaces-with-aerospace/35914
