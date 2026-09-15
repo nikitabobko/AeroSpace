@@ -33,6 +33,16 @@ final class ListWindowsTest: XCTestCase {
         assertNil(parseCommand("list-windows --all --format '%{window-title}' --json").errorOrNil)
     }
 
+    func testParseLayoutFilter() {
+        // Valid tokens parse cleanly
+        assertNil(parseCommand("list-windows --workspace a --layout floating --format '%{window-id}'").errorOrNil)
+        assertNil(parseCommand("list-windows --workspace a --layout tiling --format '%{window-id}'").errorOrNil)
+        assertNil(parseCommand("list-windows --workspace a --layout h_tiles --format '%{window-id}'").errorOrNil)
+        // Invalid token is rejected with the documented error shape
+        let err = parseCommand("list-windows --workspace a --layout bogus --format '%{window-id}'").errorOrNil
+        assertTrue(err?.starts(with: "ERROR: Can't parse '--layout' argument") ?? false)
+    }
+
     func testInterpolationVariablesConsistency() {
         for kind in AeroObjKind.allCases {
             switch kind {
@@ -182,5 +192,19 @@ final class ListWindowsTest: XCTestCase {
         let mismatching = await parseCommand("list-windows --monitor all --app-bundle-id com.unknown.app --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(mismatching.exitCode.rawValue, 0)
         assertEquals(mismatching.stdout, [])
+    }
+
+    func testRunFilterByLayout() async {
+        let workspace = Workspace.get(byName: "a")
+        TestWindow.new(id: 1, parent: workspace.rootTilingContainer) // tiling
+        TestWindow.new(id: 2, parent: workspace.floatingWindowsContainer) // floating
+
+        let floating = await parseCommand("list-windows --workspace a --layout floating --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(floating.exitCode.rawValue, 0)
+        assertEquals(floating.stdout, ["2"])
+
+        let tiling = await parseCommand("list-windows --workspace a --layout tiling --format '%{window-id}'").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(tiling.exitCode.rawValue, 0)
+        assertEquals(tiling.stdout, ["1"])
     }
 }
