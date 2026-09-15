@@ -6,8 +6,8 @@ set -o pipefail # Any command failed in the pipe fails the whole pipe
 
 sw_vers -productVersion
 # Xcode version affects the target macOS SDK that we compile against + different Xcodes bundle different Swift verions
-if sw_vers -productVersion | grep -q "^14"; then # macOS 14
+if sw_vers -productVersion | grep -qE "^14"; then # macOS 14
   sudo xcode-select -s "$XCODE_16_DEVELOPER_DIR"
-else
+elif sw_vers -productVersion | grep -qE "^(15|26)"; then # macOS 15 ; macOS 26
   sudo xcode-select -s "$XCODE_26_DEVELOPER_DIR"
 fi
