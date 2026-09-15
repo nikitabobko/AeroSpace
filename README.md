@@ -136,11 +136,11 @@ A notes on how to setup the project, build it, how to run the tests, etc. can be
   Ricing issues are not a priority, and they are mostly ignored.
   The ricing stance can change only with the appearance of more maintainers.
 
-## macOS compatibility table
+## macOS compatibility
 
 * AeroSpace binary runs on: macOS 13+
 * AeroSpace debug build from sources is supported on: macOS 14+
-* AeroSpace release build from sources is supported on: macOS 15+ (Requires Xcode 26+)
+* AeroSpace release build from sources is supported on: macOS 15+ (Requires: Swift 6.4, Xcode 26.6+)
 
 ## Sponsorship
 
