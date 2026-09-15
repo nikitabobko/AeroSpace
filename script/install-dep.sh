@@ -104,10 +104,18 @@ fi
 
 if test $all == 1 || test $periphery == 1; then
     # https://github.com/peripheryapp/periphery/releases
-    periphery_version=3.7.2
-    lazy-download-zip-and-link-bin \
-        periphery \
-        https://github.com/peripheryapp/periphery/releases/download/$periphery_version/periphery-$periphery_version.zip \
-        '3c1fa5214ffc3e7d184e898a4b96597b45f436982dd6e5e51295aaefa3cab601  .deps/periphery/dist/zip.zip' \
-        periphery
+    periphery_commit=85a24b9ea801c0e57a73679ec5b3a44812ea5f22
+    periphery_repo=https://github.com/nikitabobko/periphery.git
+    input_hash_marker="periphery/$(echo $periphery_commit $periphery_repo | shasum | awk '{print $1}').marker"
+
+    if ! test -f "$input_hash_marker"; then
+        echo "building periphery from sources"
+        test -d periphery || git clone --depth 1 $periphery_repo
+        cd periphery
+            git fetch --depth 1 $periphery_repo $periphery_commit
+            git checkout -f $periphery_commit
+            swift build
+        cd -
+        touch "$input_hash_marker"
+    fi
 fi
