@@ -1,4 +1,6 @@
 # https://github.com/nicklockwood/SwiftFormat/blob/main/Rules.md
+--exclude periphery
+
 --indentcase true
 --patternlet inline
 --indentstrings true
