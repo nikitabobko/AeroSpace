@@ -14,7 +14,7 @@ jobs:
 
   build-debug:
     strategy:
-      # fail-fast: false # Disable fail-fast in matrix
+      fail-fast: false # Disable fail-fast in matrix
       matrix:
         # https://docs.github.com/en/actions/reference/runners/github-hosted-runners#standard-github-hosted-runners-for-public-repositories
         # https://github.com/actions/runner-images/blob/main/images/macos/macos-14-arm64-Readme.md
@@ -43,7 +43,7 @@ jobs:
   # 2. The latest Xcode version is not available on old macOS, and old Xcode versions bundle too old Swift version
   build-release:
     strategy:
-      # fail-fast: false # Disable fail-fast in matrix
+      fail-fast: false # Disable fail-fast in matrix
       matrix:
         os: [macos-15, macos-26, xcode-27]
     name: build-release
