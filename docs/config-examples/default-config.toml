@@ -61,6 +61,12 @@ on-mode-changed = []
 
 focus-follows-mouse.enabled = false
 
+# Hold a modifier to see every open window and the workspace it lives on.
+# 'none' disables the overview. Other possible values are the same modifiers that bindings accept
+# See: https://nikitabobko.github.io/AeroSpace/guide#overview
+overview.hold-modifier = 'none'
+overview.hold-delay-ms = 500
+
 # Possible values: (qwerty|dvorak|colemak)
 # See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
 key-mapping.preset = 'qwerty'

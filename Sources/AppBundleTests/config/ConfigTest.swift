@@ -733,6 +733,48 @@ final class ConfigTest: XCTestCase {
         assertEquals(colemakResult.config.keyMapping, KeyMapping(preset: .colemak, rawKeyNotationToKeyCode: [:]))
         assertEquals(colemakResult.config.keyMapping.resolve()["f"], .e)
     }
+
+    func testParseOverview() {
+        assertNil(defaultConfig.overview.holdModifier)
+        assertEquals(defaultConfig.overview.holdDelayMs, 500)
+
+        let result = parseConfig(
+            """
+            overview.hold-modifier = 'alt-shift'
+            overview.hold-delay-ms = 200
+            """,
+        )
+        assertEquals(result.errors, [])
+        assertEquals(result.config.overview.holdModifier, [.option, .shift])
+        assertEquals(result.config.overview.holdDelayMs, 200)
+
+        let none = parseConfig(
+            """
+            overview.hold-modifier = 'none'
+            """,
+        )
+        assertEquals(none.errors, [])
+        assertNil(none.config.overview.holdModifier)
+    }
+
+    func testParseOverviewErrors() {
+        assertEquals(
+            parseConfig(
+                """
+                overview.hold-modifier = 'alt-unicorn'
+                """,
+            ).strErrors,
+            ["[ERROR] overview.hold-modifier: Can't parse modifiers in 'alt-unicorn'"],
+        )
+        assertEquals(
+            parseConfig(
+                """
+                overview.hold-delay-ms = 100500
+                """,
+            ).strErrors,
+            ["[ERROR] overview.hold-delay-ms: hold-delay-ms must be in [0, 5000] range"],
+        )
+    }
 }
 
 extension ParseConfigResult {
