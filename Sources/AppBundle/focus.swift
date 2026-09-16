@@ -69,7 +69,13 @@ private struct FrozenFocus: AeroAny, Equatable, Sendable {
     }
 
     _focus = newFocus.frozen
-    let status = newFocus.workspace.workspaceMonitor.setActiveWorkspace(newFocus.workspace)
+    // default-workspace-monitor = focused: a brand-new workspace (no monitor of its
+    // own yet) opens on the monitor we're switching FROM (where the user is), not the
+    // main monitor. i3/sway-like. oldFocus.workspace is visible, so its monitor resolves.
+    let targetMonitor = config.defaultWorkspaceMonitor == .focused && newFocus.workspace.hasNoAssignedMonitor
+        ? oldFocus.workspace.workspaceMonitor
+        : newFocus.workspace.workspaceMonitor
+    let status = targetMonitor.setActiveWorkspace(newFocus.workspace)
 
     newFocus.windowOrNil?.markAsMostRecentChild()
     return status

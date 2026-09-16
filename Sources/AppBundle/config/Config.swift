@@ -41,6 +41,7 @@ struct Config: ConvenienceMutable {
     var _nonEmptyWorkspacesRootContainersLayoutOnStartup: Void = ()
     var defaultRootContainerLayout: Layout = .tiles
     var defaultRootContainerOrientation: DefaultContainerOrientation = .auto
+    var defaultWorkspaceMonitor: DefaultWorkspaceMonitor = .main
     var startAtLogin: Bool = false
     var autoReloadConfig: Bool = false
     var automaticallyUnhideMacosHiddenApps: Bool = false
@@ -80,4 +81,12 @@ enum ConfigVersion: Int, Comparable, CaseIterable, Sendable, CustomStringConvert
 
 enum DefaultContainerOrientation: String {
     case horizontal, vertical, auto
+}
+
+// Which monitor a workspace opens on when it has no monitor yet (never shown and
+// no force-assignment). `main` = the main monitor (default, historical behavior).
+// `focused` = the currently focused monitor, sway-style (workspace opens where you
+// are instead of jumping to main).
+enum DefaultWorkspaceMonitor: String {
+    case main, focused
 }

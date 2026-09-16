@@ -34,6 +34,13 @@ default-root-container-layout = 'tiles'
 #               tall monitor (anything higher than wide) gets vertical orientation
 default-root-container-orientation = 'auto'
 
+# Which monitor a workspace opens on when it has no monitor yet (it has never been
+# shown, and it's not covered by [workspace-to-monitor-force-assignment])
+# Possible values: main|focused
+#   'main'    new/unassigned workspaces open on the main monitor (default)
+#   'focused' they open on the currently focused monitor (i3/sway-style)
+default-workspace-monitor = 'main'
+
 # Mouse follows focus when focused monitor changes
 # Drop it from your config, if you don't like this behavior
 # See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
