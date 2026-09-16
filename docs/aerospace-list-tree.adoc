@@ -1,0 +1,64 @@
+= aerospace-list-tree(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-list-tree
+// tag::purpose[]
+:manpurpose: Print the tiling tree of the specified workspaces
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace list-tree [-h|--help] (--workspace <workspace>...|--focused) [--json]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+`list-windows` reports which layout a window's immediate parent has, but not how the
+containers nest. This command prints the structure itself, which is what scripts need in
+order to reason about the tree instead of rebuilding it blindly.
+
+Only the tiling tree is printed. Floating, minimized and fullscreen windows are not part
+of it, the same way they are not affected by
+xref:aerospace-flatten-workspace-tree.adoc[`flatten-workspace-tree`].
+
+Workspaces are printed in name order, each rooted at its own workspace line.
+
+// =========================================================== Options
+include::util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+--focused::
+Print the tree of the focused workspace.
+Incompatible with `--workspace`
+
+--workspace <workspace>...::
+Print the tree of either of the specified workspaces.
+Incompatible with `--focused`
+
+--json:: Output in JSON format.
+
+// =========================================================== Examples
+== Examples
+
+[source,bash]
+----
+$ aerospace list-tree --focused
+workspace 1
+  h_tiles
+    window 8412
+    v_tiles
+      window 8420
+      window 8503
+----
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]
