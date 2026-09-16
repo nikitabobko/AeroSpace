@@ -17,7 +17,7 @@ func waitForAccessibilityPermission_nonCancellable() async {
             resetAccessibility() // Because macOS doesn't reset it for us when the app signature changes...
         }
         TrayMenuModel.shared.axPermissionStatus = .waiting
-        try? await Task.sleep(for: .seconds(1))
+        try? await Task.sleep(nanoseconds: 1_000_000_000) // 1 second
     }
 }
 

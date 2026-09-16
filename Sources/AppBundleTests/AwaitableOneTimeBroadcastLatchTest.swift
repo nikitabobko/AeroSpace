@@ -12,7 +12,7 @@ final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
     func testAwaitOnFreshLatchSuspendsUntilSignal() async throws {
         let latch = AwaitableOneTimeBroadcastLatch()
         let task = Task.startUnstructured { try await latch.await() }
-        try await Task.sleep(for: .milliseconds(50))
+        try await Task.sleep(nanoseconds: 50_000_000) // 50ms
         assertFalse(task.isCancelled)
         await latch.signalToAll()
         try await task.value
@@ -22,7 +22,7 @@ final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
         let latch = AwaitableOneTimeBroadcastLatch()
         let count = 20
         let tasks = (0 ..< count).map { _ in Task.startUnstructured { try await latch.await() } }
-        try await Task.sleep(for: .milliseconds(50))
+        try await Task.sleep(nanoseconds: 50_000_000) // 50ms
         await latch.signalToAll()
         for task in tasks { try await task.value }
     }
@@ -45,7 +45,7 @@ final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
     func testCancellingPendingAwaiterThrows() async throws {
         let latch = AwaitableOneTimeBroadcastLatch()
         let task = Task.startUnstructured { try await latch.await() }
-        try await Task.sleep(for: .milliseconds(50))
+        try await Task.sleep(nanoseconds: 50_000_000) // 50ms
         task.cancel()
         await assertThrowsCancellation(task)
     }
@@ -54,7 +54,7 @@ final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
         let latch = AwaitableOneTimeBroadcastLatch()
         let cancelled = Task.startUnstructured { try await latch.await() }
         let survivors = (0 ..< 5).map { _ in Task.startUnstructured { try await latch.await() } }
-        try await Task.sleep(for: .milliseconds(50))
+        try await Task.sleep(nanoseconds: 50_000_000) // 50ms
         cancelled.cancel()
         await assertThrowsCancellation(cancelled)
         await latch.signalToAll()
@@ -75,7 +75,7 @@ final class AwaitableOneTimeBroadcastLatchTest: XCTestCase {
         let latch = AwaitableOneTimeBroadcastLatch()
         let cancelled = Task.startUnstructured { try await latch.await() }
         let lateJoiner = Task.startUnstructured { try await latch.await() }
-        try await Task.sleep(for: .milliseconds(50))
+        try await Task.sleep(nanoseconds: 50_000_000) // 50ms
         cancelled.cancel()
         await assertThrowsCancellation(cancelled)
         await latch.signalToAll()
