@@ -1,0 +1,46 @@
+= aerospace-get_tree(1)
+include::util/man-attributes.adoc[]
+:manname: aerospace-get_tree
+// tag::purpose[]
+:manpurpose: Print the whole window tree as JSON
+// end::purpose[]
+
+// =========================================================== Synopsis
+== Synopsis
+[verse]
+// tag::synopsis[]
+aerospace get_tree [-h|--help]
+
+// end::synopsis[]
+
+// =========================================================== Description
+== Description
+
+// tag::body[]
+{manpurpose}
+
+The tree starts at a `root` node, whose `monitors` are `monitor` nodes, whose `workspaces` are `workspace` nodes, containing the window tree.
+
+Node types and their fields:
+
+* `root` — `type`, `monitors`
+* `monitor` — `type`, `id` (same 1-based NSScreen id as in `list-monitors`), `name`, `workspaces`
+* `workspace` — `type`, `name`, `layout` (`tiles` or `accordion`, of the workspace root container), `orientation` (`horizontal` or `vertical`), `focused`, `visible`, `nodes` (tiling children), `floating-windows`
+* `container` — `type`, `layout` (`tiles` or `accordion`), `orientation`, `nodes`
+* `window` — `type`, `window-id`, `window-title`, `app-bundle-id`, `app-pid`, `focused`, `fullscreen`
+* `group` — `type`, `name` (`macos-fullscreen`, `macos-minimized`, `macos-hidden-apps` or `macos-popup`), `nodes`
+
+Notes:
+
+* The root tiling container of the workspace is flattened into the workspace node
+* Windows in macOS native fullscreen/minimized/hidden-app states are detached from the tiling tree. They are represented as `group` nodes appended to the workspace `nodes`. Empty groups are omitted
+
+// =========================================================== Options
+include::./util/conditional-options-header.adoc[]
+
+-h, --help:: Print help
+
+// end::body[]
+
+// =========================================================== Footer
+include::util/man-footer.adoc[]
