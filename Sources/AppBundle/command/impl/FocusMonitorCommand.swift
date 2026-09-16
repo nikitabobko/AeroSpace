@@ -7,9 +7,25 @@ struct FocusMonitorCommand: Command {
 
     func run(_ env: CmdEnv, _ io: CmdIo) -> BinaryExitCode {
         guard let target = args.resolveTargetOrReportError(env, io) else { return .fail }
-        return switch args.target.val.resolve(target.workspace.workspaceMonitor, wrapAround: args.wrapAround) {
-            case .success(let targetMonitor): .from(bool: targetMonitor.activeWorkspace.focusWorkspace())
-            case .failure(let msg): .fail(io.err(msg))
+        switch args.target.val.resolve(target.workspace.workspaceMonitor, wrapAround: args.wrapAround) {
+            case .success(let targetMonitor):
+                let success = targetMonitor.activeWorkspace.focusWorkspace()
+                // Re-assert macOS focus unconditionally.
+                //
+                // setFocus() returns early when the model already equals the
+                // request, and runLightSession only pushes focus out to macOS
+                // when it observes a change. So if the model and macOS have
+                // drifted apart -- which happens whenever focus lands on an
+                // empty workspace, since there is no window for
+                // syncFocusToMacOs to focus -- focus-monitor does nothing at
+                // all, and the user has to focus some other monitor first to
+                // make the model disagree before coming back. An explicit
+                // focus-monitor should take effect regardless of what the
+                // model believes.
+                focus.windowOrNil?.nativeFocus()
+                return .from(bool: success)
+            case .failure(let msg):
+                return .fail(io.err(msg))
         }
     }
 }
