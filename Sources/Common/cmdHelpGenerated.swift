@@ -131,7 +131,8 @@ let move_workspace_to_monitor_help_generated = """
 let move_help_generated = """
     USAGE: move [-h|--help] [--window-id <window-id>] [--boundaries <boundary>]
                 [--boundaries-action <boundary-action>] [--fail-if-fullscreen]
-                [--fail-if-macos-native-fullscreen] (left|down|up|right)
+                [--fail-if-macos-native-fullscreen] [--floating-pixels <pixels>]
+                (left|down|up|right)
     """
 let reload_config_help_generated = """
     USAGE: reload-config [-h|--help] [--no-gui] [--dry-run] [--warnings-as-errors]
