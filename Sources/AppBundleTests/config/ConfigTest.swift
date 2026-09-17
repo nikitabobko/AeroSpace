@@ -265,23 +265,25 @@ final class ConfigTest: XCTestCase {
     }
 
     func testSplitCommandAndFlattenContainersNormalization() {
-        let errors = parseConfig(
+        let result = parseConfig(
             """
+            config-version = 2
             enable-normalization-flatten-containers = true
             [mode.main.binding]
             [mode.foo.binding]
                 alt-s = 'split horizontal'
             """,
-        ).strErrors
+        )
         let expected = """
-            [ERROR] The config contains:
+            [WARNING] The config contains:
             1. usage of 'split' command
             2. enable-normalization-flatten-containers = true
-            These two settings don't play nicely together. 'split' command has no effect when enable-normalization-flatten-containers is disabled.
+            These two settings don't play nicely together: 'split' has no effect on workspaces where the flatten-containers normalization is enabled.
 
-            My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'.
+            My recommendation: keep the normalizations enabled, and prefer 'join-with' over 'split'. Alternatively, disable the normalization on a single workspace with 'aerospace enable-normalization flatten-containers off'.
             """
-        assertEquals(errors, [expected])
+        assertEquals(result.strErrors, [])
+        assertEquals(result.strWarnings, [expected])
     }
 
     func testParseWorkspaceToMonitorAssignment() {
