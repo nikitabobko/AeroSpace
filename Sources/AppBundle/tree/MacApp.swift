@@ -163,9 +163,17 @@ final class MacApp: AbstractApp {
                 // both sides covers either ordering, at the cost of one extra
                 // AX round trip.
                 window.set(Ax.isMainAttr, true)
+                window.set(Ax.isFocusedAttr, true)
                 AXUIElementPerformAction(window, kAXRaiseAction as CFString)
                 nsApp.activate(options: .activateIgnoringOtherApps)
+                // Re-assert after activation. Activating an app makes macOS
+                // restore that app's own focused window, so whatever was set
+                // beforehand is undone -- raising alone does not survive it,
+                // and kAXMain is not what decides where keystrokes go. Setting
+                // kAXFocused after the app is frontmost is what actually moves
+                // focus to the requested window rather than the app's own.
                 window.set(Ax.isMainAttr, true)
+                window.set(Ax.isFocusedAttr, true)
                 AXUIElementPerformAction(window, kAXRaiseAction as CFString)
             }
         }

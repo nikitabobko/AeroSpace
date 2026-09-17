@@ -240,6 +240,14 @@ enum Ax {
         key: kAXFocusedAttribute,
         getter: { $0 as? Bool },
     )
+    // Writable twin of isFocused. kAXMain marks a window as the app's main
+    // window, which is not the same thing as the app's focused window, and only
+    // the latter decides where keystrokes land after the app is activated.
+    static let isFocusedAttr = WritableAttrImpl<Bool>(
+        key: kAXFocusedAttribute,
+        getter: { $0 as? Bool },
+        setter: { $0 as CFTypeRef },
+    )
     static let isMainAttr = WritableAttrImpl<Bool>(
         key: kAXMainAttribute,
         getter: { $0 as? Bool },
