@@ -40,6 +40,14 @@ struct MenuBarLabel: View {
 
     var menuBarContent: some View {
         return HStack(spacing: hStackSpacing) {
+            if viewModel.lastReloadConfigContainedWarnings {
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .symbolRenderingMode(.monochrome)
+                    .foregroundStyle(finalColor)
+                    .frame(width: itemSize, height: itemSize)
+            }
             let style = style ?? viewModel.experimentalUISettings.displayStyle
             switch style {
                 case .monospacedText: getText(for: .monospaced)
