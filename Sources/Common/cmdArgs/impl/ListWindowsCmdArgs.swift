@@ -2,6 +2,7 @@ import OrderedCollections
 
 private let workspace = "<workspace>"
 private let workspaces = "\(workspace)..."
+private let sortBys = "<sort-by>..."
 
 public struct ListWindowsCmdArgs: CmdArgs {
     /*conforms*/ public var commonState: CmdArgsCommonState
@@ -18,6 +19,9 @@ public struct ListWindowsCmdArgs: CmdArgs {
             "--pid": singleValueSubArgParser(\.filteringOptions.pidFilter, "<pid>") { Int32($0).toResult("Can't convert to Int32") },
             "--app-bundle-id": singleValueSubArgParser(\.filteringOptions.appIdFilter, "<app-bundle-id>", Result.success),
 
+            // Sorting flags
+            "--sort-by": ArgParser(\.sortBy, parseSortBy),
+
             // Formatting flags
             "--format": formatParser(\._format, for: .window),
             "--count": trueBoolFlag(\.outputOnlyCount),
@@ -29,6 +33,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
             ["--all", "--focused", "--monitor"],
             ["--count", "--format"],
             ["--count", "--json"],
+            ["--count", "--sort-by"],
         ],
     )
 
@@ -38,6 +43,7 @@ public struct ListWindowsCmdArgs: CmdArgs {
     public var _format: [InterToken<InterVar>] = []
     public var outputOnlyCount: Bool = false
     public var json: Bool = false
+    public var sortBy: [SortBy] = []
 
     public struct FilteringOptions: ConvenienceMutable, Equatable, Sendable {
         public var monitors: [MonitorId] = []
@@ -122,6 +128,30 @@ public enum WorkspaceFilter: Equatable, Sendable {
     case focused
     case visible
     case name(WorkspaceName)
+}
+
+private func parseSortBy(input: SubArgParserInput) -> ParsedCliArgs<[SortBy]> {
+    let args = input.nonFlagArgs()
+    if args.isEmpty {
+        return .fail("\(sortBys) is mandatory. Possible values: \(SortBy.unionLiteral)", advanceBy: args.count)
+    }
+    var result: [SortBy] = []
+    var i = 0
+    for raw in args {
+        switch parseEnum(raw, SortBy.self) {
+            case .success(let parsed): result.append(parsed)
+            case .failure(let msg): return .fail(msg, advanceBy: i + 1)
+        }
+        i += 1
+    }
+    return .succ(result, advanceBy: args.count)
+}
+
+public enum SortBy: String, CaseIterable, Equatable, Sendable {
+    case dfs = "dfs"
+    case appName = "app-name"
+    case windowTitle = "window-title"
+    case windowId = "window-id"
 }
 
 public enum FormatVar: RawRepresentable, Equatable, CaseIterable, Sendable {

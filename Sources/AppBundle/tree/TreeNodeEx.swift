@@ -2,17 +2,19 @@ import AppKit
 import Common
 
 extension TreeNode {
-    private func visit(node: TreeNode, result: inout [Window]) {
+    private func visit(node: TreeNode, childrenOf: (TreeNode) -> [TreeNode], result: inout [Window]) {
         if let node = node as? Window {
             result.append(node)
         }
-        for child in node.children {
-            visit(node: child, result: &result)
+        for child in childrenOf(node) {
+            visit(node: child, childrenOf: childrenOf, result: &result)
         }
     }
-    var allLeafWindowsRecursive: [Window] {
+    var allLeafWindowsRecursive: [Window] { allLeafWindowsRecursive(childrenOf: \.children) }
+
+    func allLeafWindowsRecursive(childrenOf: (TreeNode) -> [TreeNode]) -> [Window] {
         var result: [Window] = []
-        visit(node: self, result: &result)
+        visit(node: self, childrenOf: childrenOf, result: &result)
         return result
     }
 
