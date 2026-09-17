@@ -10,6 +10,7 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace debug-windows [-h|--help] [--window-id <window-id>]
+aerospace debug-windows [-h|--help] --app-bundle-id <app-bundle-id>
 
 // end::synopsis[]
 
@@ -28,6 +29,11 @@ The intended usage is the following:
 . Focus problematic window or make the window appear.
 . Run the command one more time to stop the debug session recording and print the results
 
+If the problematic window can't be focused, or if AeroSpace doesn't detect the window at all,
+use `--app-bundle-id` flag to dump debug information about all AX windows of the application,
+including AX windows that are not treated as windows from AeroSpace perspective.
+You can get the app-bundle-id of running applications with `aerospace list-apps` command.
+
 `debug-windows` command is *not stable API*.
 Please *don't rely on* the command existence and output format.
 The only intended use case is to report bugs about incorrect windows handling.
@@ -39,6 +45,11 @@ include::util/conditional-options-header.adoc[]
 
 --window-id <window-id>::
 Print debug information of the specified window right away.
+Usage of this flag disables interactive mode.
+
+--app-bundle-id <app-bundle-id>::
+Print debug information of all AX windows of the specified application right away,
+including AX windows that are not treated as windows from AeroSpace perspective.
 Usage of this flag disables interactive mode.
 
 // end::body[]
