@@ -29,6 +29,7 @@ public struct MoveCmdArgs: CmdArgs {
         case stop = "stop"
         case fail = "fail"
         case createImplicitContainer = "create-implicit-container"
+        case createImplicitContainerOrFail = "create-implicit-container-or-fail"
     }
 }
 
