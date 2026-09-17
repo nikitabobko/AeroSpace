@@ -133,16 +133,40 @@ final class MacApp: AbstractApp {
         // Performance optimization. If possible avoid doing AX requests
         // (important for apps which are slow at responding even such basic AX requests. E.g. Godot)
         // Beware of the macOS bug: https://github.com/nikitabobko/AeroSpace/issues/101
-        if (!NSScreen.screensHaveSeparateSpaces || monitorInfos.count == 1) &&
+        // The shortcut below activates the app without raising the requested
+        // window, trusting the app to restore the right one. With more than one
+        // monitor it often does not: the app brings back whatever window it
+        // considers key, which may be on another monitor, and focus visibly
+        // lands somewhere the user did not ask for (#101).
+        //
+        // The previous guard exempted multi-monitor setups only when
+        // "Displays have separate Spaces" was enabled. It also happens with
+        // that setting off, so require a single monitor outright. On one
+        // monitor there is no other monitor to land on, and the AX round trip
+        // this saves only matters for apps that are slow to answer.
+        if monitorInfos.count == 1 &&
             (lastNativeFocusedWindowId == windowId || windowsCount == 1)
         {
             nsApp.activate(options: .activateIgnoringOtherApps)
         } else {
             MacApp.focusJob = withWindowAsync(windowId, .cancellable) { [nsApp] window, job in
-                // Raise firstly to make sure that by the time we activate the app, the window would be already on top
+                // Raise, activate, then raise again.
+                //
+                // Raising first is not enough on its own: activating an app
+                // makes macOS restore that app's own key window, which undoes
+                // the raise. With two windows of one app on two monitors --
+                // Firefox with a window on each, say -- the result is that
+                // focus lands on the other monitor, which is #101.
+                //
+                // Raising only after activating is not reliable either, since
+                // the app may not be frontmost yet at that point. Doing it on
+                // both sides covers either ordering, at the cost of one extra
+                // AX round trip.
                 window.set(Ax.isMainAttr, true)
                 AXUIElementPerformAction(window, kAXRaiseAction as CFString)
                 nsApp.activate(options: .activateIgnoringOtherApps)
+                window.set(Ax.isMainAttr, true)
+                AXUIElementPerformAction(window, kAXRaiseAction as CFString)
             }
         }
     }
