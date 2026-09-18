@@ -243,6 +243,42 @@ final class MacApp: AbstractApp {
         }
     }
 
+    /// Performance optimization. Query all the windows of all the apps in parallel (one job per app)
+    /// instead of sequentially awaiting several AX requests per window
+    @MainActor
+    static func getMacosNativeStates(_ windows: [MacWindow]) async throws -> [UInt32: MacosNativeWindowState] {
+        var windowIdsByPid: [pid_t: [UInt32]] = [:]
+        for window in windows {
+            windowIdsByPid[window.macApp.pid, default: []].append(window.windowId)
+        }
+        return try await withThrowingTaskGroup(of: [UInt32: MacosNativeWindowState].self) { group in
+            for (pid, windowIds) in windowIdsByPid {
+                group.addTask { @Sendable @MainActor in
+                    try await MacApp.allAppsMap[pid]?.getMacosNativeStates(windowIds, .cancellable) ?? [:]
+                }
+            }
+            var result: [UInt32: MacosNativeWindowState] = [:]
+            for try await states in group {
+                result.merge(states) { _, new in new }
+            }
+            return result
+        }
+    }
+
+    private func getMacosNativeStates(_ windowIds: [UInt32], _ cm: CancellationMode) async throws -> [UInt32: MacosNativeWindowState] {
+        try await thread?.runInLoop(cm) { [windows] job in
+            var result: [UInt32: MacosNativeWindowState] = [:]
+            for windowId in windowIds {
+                try job.checkCancellation()
+                guard let window = windows.threadGuarded[windowId] else { continue }
+                let isFullscreen = window.ax.get(Ax.isFullscreenAttr) == true
+                let isMinimized = !isFullscreen && window.ax.get(Ax.minimizedAttr) == true
+                result[windowId] = MacosNativeWindowState(isFullscreen: isFullscreen, isMinimized: isMinimized)
+            }
+            return result
+        } ?? [:]
+    }
+
     func isMacosNativeFullscreen(_ windowId: UInt32, _ cm: CancellationMode) async throws -> Bool? {
         try await withWindow(windowId, cm) { window, job in
             window.get(Ax.isFullscreenAttr)
@@ -356,6 +392,11 @@ final class MacApp: AbstractApp {
             try? body(window.ax, job)
         } ?? .cancelled
     }
+}
+
+struct MacosNativeWindowState: Sendable {
+    let isFullscreen: Bool
+    let isMinimized: Bool
 }
 
 private final class AxWindow {
