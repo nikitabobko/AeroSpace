@@ -149,11 +149,10 @@ final class MacApp: AbstractApp {
 
     func setAxFrame(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {
         setFrameJobs.removeValue(forKey: windowId)?.cancel()
-        setFrameJobs[windowId] = withWindowAsync(windowId, .cancellable) { [axApp] window, job in
-            try disableAnimations(app: axApp.threadGuarded, job) {
-                try setFrame(window, topLeft, size, job)
-            }
-        }
+        setFrameJobs[windowId] = thread?.runInLoopAsync(job: RunLoopJob(.cancellable)) { [windows, axApp] job in
+            guard let window = windows.threadGuarded[windowId] else { return }
+            try? window.setFrameIfNeeded(app: axApp.threadGuarded, topLeft, size, job)
+        } ?? .cancelled
     }
 
     func setAxFrameForTermination(_ windowId: UInt32, _ topLeft: CGPoint?, _ size: CGSize?) {
@@ -362,6 +361,9 @@ final class MacApp: AbstractApp {
 private final class AxWindow {
     let windowId: UInt32
     let ax: AXUIElement
+    // The last frame request that changed the window, and the frame that the window settled at as the result
+    // (the window may refuse to take the exact frame. E.g. min size, or terminals that snap to the cell grid)
+    private var settledFrame: (topLeft: CGPoint?, size: CGSize?, result: Rect)? = nil
     // periphery:ignore
     private let axSubscriptions: [AxSubscription] // keep subscriptions in memory
 
@@ -370,6 +372,47 @@ private final class AxWindow {
         self.ax = ax
         assert(!axSubscriptions.isEmpty)
         self.axSubscriptions = axSubscriptions
+    }
+
+    // Performance and flickering optimization. Layout is re-applied on every refresh session (which happens a lot.
+    // E.g. on every focus change, and as an "echo" of our own frame changes), but most of the time the windows
+    // already have the requested frames. Reading the frame is cheap and invisible. Setting the frame forces the app
+    // to re-layout and redraw, which is slow, and makes some apps visibly jitter
+    func setFrameIfNeeded(app: AXUIElement, _ topLeft: CGPoint?, _ size: CGSize?, _ job: RunLoopJob) throws {
+        guard let before = try getAxRect(window: ax, job: job) else {
+            return try disableAnimations(app: app, job) { try setFrame(ax, topLeft, size, job) }
+        }
+        try job.checkCancellation()
+        let isPositionOk = topLeft.map { before.topLeftCorner.isCloseTo($0) } ?? true
+        let isSizeOk = size.map { before.size.isCloseTo($0) } ?? true
+        if isPositionOk && isSizeOk { return }
+        // The window has already refused to take the exact frame, and nothing has changed since then
+        if let settledFrame, settledFrame.topLeft == topLeft, settledFrame.size == size, settledFrame.result.isIdentical(to: before) {
+            return
+        }
+        settledFrame = nil
+        let after: Rect? = try disableAnimations(app: app, job) {
+            // Set size and then the position. The order is important https://github.com/nikitabobko/AeroSpace/issues/143
+            //                                                        https://github.com/nikitabobko/AeroSpace/issues/335
+            if let size, !isSizeOk { ax.set(Ax.sizeAttr, size) }
+            try job.checkCancellation()
+            if let topLeft, !isPositionOk { ax.set(Ax.topLeftCornerAttr, topLeft) }
+            try job.checkCancellation()
+            var after = try getAxRect(window: ax, job: job)
+            // macOS may change the size when the window is moved. Set the size for the second time only if it's needed
+            if let size, let afterMove = after, !afterMove.size.isCloseTo(size) {
+                try job.checkCancellation()
+                ax.set(Ax.sizeAttr, size)
+                try job.checkCancellation()
+                after = try getAxRect(window: ax, job: job)
+            }
+            return after
+        }
+        // If the request didn't change anything at all (the app might be busy or might be playing window opening
+        // animation), don't remember the result to retry on the next layout
+        if let after, !after.isIdentical(to: before) {
+            settledFrame = (topLeft, size, after)
+        }
     }
 
     static func new(windowId: UInt32, _ ax: AXUIElement, _ nsApp: NSRunningApplication, _ job: RunLoopJob) throws -> AxWindow? {
@@ -433,4 +476,18 @@ private func disableAnimations<T>(app: AXUIElement, _ job: RunLoopJob, _ body: (
     }
     try job.checkCancellation()
     return try body()
+}
+
+extension CGPoint {
+    fileprivate func isCloseTo(_ other: CGPoint) -> Bool { abs(x - other.x) < 1 && abs(y - other.y) < 1 }
+}
+
+extension CGSize {
+    fileprivate func isCloseTo(_ other: CGSize) -> Bool { abs(width - other.width) < 1 && abs(height - other.height) < 1 }
+}
+
+extension Rect {
+    fileprivate func isIdentical(to other: Rect) -> Bool {
+        topLeftX == other.topLeftX && topLeftY == other.topLeftY && width == other.width && height == other.height
+    }
 }
