@@ -19,18 +19,14 @@ final class MacWindow: Window {
     static func getOrRegister(windowId: UInt32, macApp: MacApp) async throws -> MacWindow {
         if let existing = allWindowsMap[windowId] { return existing }
         let rect = try await macApp.getAxRect(windowId, .cancellable)
-        let data = try await unbindAndGetBindingDataForNewWindow(
-            windowId,
-            macApp,
-            isStartup
-                ? (rect?.center.monitorApproximation ?? mainMonitorInfo).activeWorkspace
-                : focus.workspace,
-            window: nil,
-            .cancellable,
-        )
+        let workspace = isStartup
+            ? (rect?.center.monitorApproximation ?? mainMonitorInfo).activeWorkspace
+            : focus.workspace
+        let windowType = try await macApp.getAxUiElementWindowType(windowId, getWindowLevel(for: windowId), .cancellable)
 
         // atomic synchronous section
         if let existing = allWindowsMap[windowId] { return existing }
+        let data = unbindAndGetBindingDataForNewWindow(windowType, workspace, window: nil)
         let window = MacWindow(windowId, macApp, lastFloatingSize: rect?.size, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
         allWindowsMap[windowId] = window
 
@@ -202,18 +198,22 @@ final class MacWindow: Window {
 extension Window {
     @MainActor
     func relayoutWindow(on workspace: Workspace, _ cm: CancellationMode, forceTile: Bool = false) async throws {
-        let data = forceTile
-            ? unbindAndGetBindingDataForNewTilingWindow(workspace, window: self)
-            : try await unbindAndGetBindingDataForNewWindow(self.asMacWindow().windowId, self.asMacWindow().macApp, workspace, window: self, cm)
+        let data: BindingData
+        if forceTile {
+            data = unbindAndGetBindingDataForNewTilingWindow(workspace, window: self)
+        } else {
+            let macWindow = self.asMacWindow()
+            let windowType = try await macWindow.macApp.getAxUiElementWindowType(macWindow.windowId, getWindowLevel(for: macWindow.windowId), cm)
+            data = unbindAndGetBindingDataForNewWindow(windowType, workspace, window: self)
+        }
         bind(to: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
     }
 }
 
 // The function is private because it's unsafe. It leaves the window in unbound state
 @MainActor
-private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace, window: Window?, _ cm: CancellationMode) async throws -> BindingData {
-    let windowLevel = getWindowLevel(for: windowId)
-    return switch try await macApp.getAxUiElementWindowType(windowId, windowLevel, cm) {
+private func unbindAndGetBindingDataForNewWindow(_ windowType: AxUiElementWindowType, _ workspace: Workspace, window: Window?) -> BindingData {
+    switch windowType {
         case .popup: BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         case .dialog: BindingData(parent: workspace.floatingWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
         case .window: unbindAndGetBindingDataForNewTilingWindow(workspace, window: window)
@@ -224,20 +224,7 @@ private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: M
 @MainActor
 private func unbindAndGetBindingDataForNewTilingWindow(_ workspace: Workspace, window: Window?) -> BindingData {
     window?.unbindFromParent() // It's important to unbind to get correct data from below
-    let mruWindow = workspace.mostRecentWindowRecursive
-    if let mruWindow, let tilingParent = mruWindow.parent as? TilingContainer {
-        return BindingData(
-            parent: tilingParent,
-            adaptiveWeight: WEIGHT_AUTO,
-            index: mruWindow.ownIndex.orDie() + 1,
-        )
-    } else {
-        return BindingData(
-            parent: workspace.rootTilingContainer,
-            adaptiveWeight: WEIGHT_AUTO,
-            index: INDEX_BIND_LAST,
-        )
-    }
+    return workspace.prepareTilingWindowInsertion()
 }
 
 @MainActor
