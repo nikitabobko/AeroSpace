@@ -66,7 +66,7 @@ struct LayoutCommand: Command {
                         window.lastFloatingSize = (try? await window.getAxSize(.nonCancellable)) ?? window.lastFloatingSize
                         guard let workspace = container.nodeWorkspace else { return .fail(io.err(bugPrompt())) }
                         do {
-                            try await window.relayoutWindow(on: workspace, .nonCancellable, forceTile: true)
+                            try await window.relayoutWindow(on: workspace, .nonCancellable, forceTile: true, autoTile: true)
                         } catch {
                             return .fail(io.err(bugPrompt()))
                         }
