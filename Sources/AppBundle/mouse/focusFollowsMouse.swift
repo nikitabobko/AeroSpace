@@ -26,7 +26,7 @@ import AppKit
             try checkCancellation()
             // Ignores macOS menubar dropdown, but, unfortunately, it doesn't ignore non-native menu-like fake windows.
             // todo: It would be cool to somehow reuse isWindowHeuristic logic here
-            if await isAxWindowUnderMouse(location) == false { return }
+            if await shouldFocusFollowMouse(location) == false { return }
             try checkCancellation()
             let workspace = location.monitorApproximation.activeWorkspace
             var window: Window? = nil
@@ -53,12 +53,22 @@ import AppKit
 }
 
 @concurrent
-private nonisolated func isAxWindowUnderMouse(_ location: CGPoint) async -> Bool? {
+private nonisolated func shouldFocusFollowMouse(_ location: CGPoint) async -> Bool? {
     let systemwide = AXUIElementCreateSystemWide()
     var element: AXUIElement?
     if unsafe AXUIElementCopyElementAtPosition(systemwide, Float(location.x), Float(location.y), &element) != .success {
         return nil
     }
     guard let element else { return nil }
-    return element.get(Ax.parentWindowRecursive) != nil || element.get(Ax.roleAttr) == kAXWindowRole
+    return element.shouldFocusFollowMouse()
+}
+
+extension AxUiElementMock {
+    func shouldFocusFollowMouse() -> Bool {
+        let window = get(Ax.roleAttr) == kAXWindowRole ? self : get(Ax.parentWindowRecursive)
+        guard let window else { return false }
+        // Native fullscreen lives in a separate macOS Space. Looking through the desktop's
+        // tiling tree here would focus a window behind it and switch away from that Space.
+        return window.get(Ax.isFullscreenAttr) != true
+    }
 }
