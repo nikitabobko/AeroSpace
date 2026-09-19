@@ -328,7 +328,8 @@ The default is `false`, which preserves insertion into the existing container.
 
 The first two windows follow the container's orientation. When the most recently
 focused window belongs to a `tiles` container with two or more children, a new
-window splits that tile in the opposite direction. For example, two side-by-side
+window splits that tile in the opposite direction. If a floating window is focused, the most recently focused tile
+is split. For example, two side-by-side
 windows become a full-height window next to two vertically stacked windows.
 The new window goes below the previous window for a vertical split, or to its
 right for a horizontal split. Further splits alternate direction; this does not

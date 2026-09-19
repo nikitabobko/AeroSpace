@@ -83,7 +83,7 @@ final class AutoTilingTest: XCTestCase {
         ]))
     }
 
-    func testFloatingFocusKeepsRootInsertion() {
+    func testFloatingFocusSplitsMostRecentTile() {
         let workspace = Workspace.get(byName: name)
         openWindow(1, on: workspace)
         openWindow(2, on: workspace)
@@ -91,7 +91,7 @@ final class AutoTilingTest: XCTestCase {
         assertTrue(floating.focusWindow())
         openWindow(4, on: workspace)
         assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
-            .window(1), .window(2), .window(4),
+            .window(1), .v_tiles([.window(2), .window(4)]),
         ]))
         assertTrue(floating.isFloating)
     }
