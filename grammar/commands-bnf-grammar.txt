@@ -73,7 +73,7 @@ aerospace -h;
 
     | reload-config [--no-gui | --dry-run]...
 
-    | resize [--window-id <window_id>] (smart|smart-opposite|width|height) [+|-]<number> [--window-id <window_id>]
+    | resize [--window-id <window_id>] (smart|smart-opposite|width|height|split-left|split-right|split-up|split-down) [+|-]<number> [--window-id <window_id>]
 
     | run-callback [--for-every-window|--window-id <window_id>]... on-window-detected [--for-every-window|--window-id <window_id>]...
     | run-callback (on-focus-changed|on-focused-monitor-changed)
