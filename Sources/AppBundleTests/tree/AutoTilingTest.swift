@@ -131,6 +131,21 @@ final class AutoTilingTest: XCTestCase {
         ]))
     }
 
+    func testFloatingToTilingSplitsMostRecentTile() async {
+        let workspace = Workspace.get(byName: name)
+        openWindow(1, on: workspace)
+        let second = openWindow(2, on: workspace)
+        assertTrue(second.focusWindow())
+        let floating = TestWindow.new(id: 3, parent: workspace.floatingWindowsContainer)
+        assertTrue(floating.focusWindow())
+
+        await parseCommand("layout tiling").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
+            .window(1), .v_tiles([.window(2), .window(3)]),
+        ]))
+    }
+
     func testMovingWindowToWorkspaceSplitsMostRecentTile() async {
         let target = Workspace.get(byName: "b")
         let first = openWindow(1, on: target)

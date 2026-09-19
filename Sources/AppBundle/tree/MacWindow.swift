@@ -197,11 +197,12 @@ final class MacWindow: Window {
 }
 
 extension Window {
+    /// - Parameter autoTile: enable-auto-tiling. The window (re)enters the tiling tree the same way as a new window
     @MainActor
-    func relayoutWindow(on workspace: Workspace, _ cm: CancellationMode, forceTile: Bool = false) async throws {
+    func relayoutWindow(on workspace: Workspace, _ cm: CancellationMode, forceTile: Bool = false, autoTile: Bool = false) async throws {
         let data: BindingData
         if forceTile {
-            data = unbindAndGetBindingDataForNewTilingWindow(workspace, window: self)
+            data = unbindAndGetBindingDataForNewTilingWindow(workspace, window: self, autoTile: autoTile)
         } else {
             let macWindow = self.asMacWindow()
             let windowType = try await macWindow.macApp.getAxUiElementWindowType(macWindow.windowId, getWindowLevel(for: macWindow.windowId), cm)
@@ -223,9 +224,9 @@ private func unbindAndGetBindingDataForNewWindow(_ windowType: AxUiElementWindow
 
 // The function is private because it's unsafe. It leaves the window in unbound state
 @MainActor
-private func unbindAndGetBindingDataForNewTilingWindow(_ workspace: Workspace, window: Window?) -> BindingData {
+private func unbindAndGetBindingDataForNewTilingWindow(_ workspace: Workspace, window: Window?, autoTile: Bool = false) -> BindingData {
     window?.unbindFromParent() // It's important to unbind to get correct data from below
-    return workspace.prepareTilingWindowInsertion(autoTile: window == nil)
+    return workspace.prepareTilingWindowInsertion(autoTile: window == nil || autoTile)
 }
 
 @MainActor

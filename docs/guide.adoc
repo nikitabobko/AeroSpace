@@ -343,11 +343,14 @@ the two windows. Both normalizations can stay enabled. Accordion containers reta
 their existing insertion behavior. Window detection rules and restored window
 positions still take precedence.
 
-Moving a tiled window to another workspace or monitor
-(`move-node-to-workspace`, `move-node-to-monitor`) splits the most recently focused tile of the target workspace in the
-same way. Moving windows inside a workspace (`move`), moving them with mouse, and toggling an existing window from
-floating to tiling do not trigger automatic splitting. Changing the setting
-does not rearrange existing windows.
+The following actions place the window in the same way as a newly opened window:
+
+* Moving a tiled window to another workspace or monitor (`move-node-to-workspace`, `move-node-to-monitor`)
+* Making a floating window tiling (`layout tiling`)
+* Exiting macOS native fullscreen, unminimizing, or unhiding the app
+
+Moving windows inside a workspace (`move`) and moving them with mouse don't trigger automatic splitting.
+Changing the setting does not rearrange existing windows.
 
 [#layouts]
 === Layouts
