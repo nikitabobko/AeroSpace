@@ -146,6 +146,38 @@ final class AutoTilingTest: XCTestCase {
         ]))
     }
 
+    func testDropOntoTheCenterSwapsAndDropOntoTheSideSplits() {
+        let workspace = Workspace.get(byName: name)
+        let first = openWindow(1, on: workspace)
+        let second = openWindow(2, on: workspace)
+        let third = openWindow(3, on: workspace)
+        // [1 | 2/3]
+        first.lastAppliedLayoutPhysicalRect = Rect(topLeftX: 0, topLeftY: 0, width: 1000, height: 1000)
+        second.lastAppliedLayoutPhysicalRect = Rect(topLeftX: 1000, topLeftY: 0, width: 1000, height: 500)
+
+        dropTilingWindow(third, onto: first, at: CGPoint(x: 500, y: 500)) // The center
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
+            .window(3), .v_tiles([.window(2), .window(1)]),
+        ]))
+
+        // The bottom side of 2 => 3 goes below 2. 2 and 1 are already stacked => 3 takes the half of 2
+        second.setWeight(.v, 400)
+        dropTilingWindow(third, onto: second, at: CGPoint(x: 1500, y: 480))
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .v_tiles([.window(2), .window(3), .window(1)]))
+        assertEquals(second.getWeight(.v), 200)
+        assertEquals(third.getWeight(.v), 200)
+
+        // The left side of 1 => a container is created, 3 goes to the left of 1
+        first.lastAppliedLayoutPhysicalRect = Rect(topLeftX: 0, topLeftY: 500, width: 2000, height: 500)
+        dropTilingWindow(third, onto: first, at: CGPoint(x: 100, y: 750))
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .v_tiles([
+            .window(2), .h_tiles([.window(3), .window(1)]),
+        ]))
+    }
+
     func testMovingWindowToWorkspaceSplitsMostRecentTile() async {
         let target = Workspace.get(byName: "b")
         let first = openWindow(1, on: target)

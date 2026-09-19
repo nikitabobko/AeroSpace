@@ -33,7 +33,7 @@ extension Workspace {
         // If the tile has never been laid out, alternate the orientation
         let orientation: Orientation = window.lastAppliedLayoutPhysicalRect.map { $0.width >= $0.height ? .h : .v }
             ?? parent.orientation.opposite
-        return window.prepareSplit(orientation)
+        return window.prepareSplit(orientation, insertBefore: false)
     }
 }
 
@@ -42,13 +42,13 @@ extension Window {
     /// affected. `nil` if the window isn't a tile of a `tiles` container.
     /// May create a container. The caller must bind the new window before normalization runs.
     @MainActor
-    func prepareSplit(_ orientation: Orientation) -> BindingData? {
+    func prepareSplit(_ orientation: Orientation, insertBefore: Bool) -> BindingData? {
         guard let parent = parent as? TilingContainer, parent.layout == .tiles, let index = ownIndex else { return nil }
         if parent.orientation == orientation {
             // A nested container of the same orientation is pointless. Share the space of the tile with a new sibling
             let weight = getWeight(orientation)
             setWeight(orientation, weight / 2)
-            return BindingData(parent: parent, adaptiveWeight: weight / 2, index: index + 1)
+            return BindingData(parent: parent, adaptiveWeight: weight / 2, index: insertBefore ? index : index + 1)
         }
         let previousBinding = unbindFromParent()
         let split = TilingContainer(
@@ -59,6 +59,6 @@ extension Window {
             index: previousBinding.index,
         )
         bind(to: split, adaptiveWeight: 1, index: 0)
-        return BindingData(parent: split, adaptiveWeight: 1, index: 1)
+        return BindingData(parent: split, adaptiveWeight: 1, index: insertBefore ? 0 : 1)
     }
 }

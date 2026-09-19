@@ -349,8 +349,15 @@ The following actions place the window in the same way as a newly opened window:
 * Making a floating window tiling (`layout tiling`)
 * Exiting macOS native fullscreen, unminimizing, or unhiding the app
 
-Moving windows inside a workspace (`move`) and moving them with mouse don't trigger automatic splitting.
+Moving windows inside a workspace (`move`) doesn't trigger automatic splitting.
 Changing the setting does not rearrange existing windows.
+
+Dragging a tiling window with mouse is also different when automatic tiling is enabled. The tree is changed once the
+window is dropped, instead of swapping the windows while dragging:
+
+* Dropping the window onto the center of another tile swaps the windows
+* Dropping the window onto a side of another tile (30% from the edge) splits that tile. The dropped window takes the half
+where it was dropped
 
 [#layouts]
 === Layouts

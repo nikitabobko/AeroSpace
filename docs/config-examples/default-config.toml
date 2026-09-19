@@ -36,7 +36,7 @@ default-root-container-orientation = 'auto'
 
 # Split the most recent tile (along its longer side) instead of adding one more sibling.
 # Applies to newly detected tiled windows, to windows moved to another workspace/monitor,
-# and to floating windows that become tiling.
+# to floating windows that become tiling, and to windows dropped with mouse onto a side of a tile.
 # Works with both normalizations enabled.
 enable-auto-tiling = false
 
