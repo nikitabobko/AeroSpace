@@ -29,15 +29,26 @@ extension Workspace {
         guard let window = mruTile, let parent = window.parent as? TilingContainer,
               parent.layout == .tiles && parent.children.count >= 2
         else { return nil }
-        let previousBinding = window.unbindFromParent()
+        return window.prepareSplit(parent.orientation.opposite)
+    }
+}
+
+extension Window {
+    /// Make room for one more window next to this tile. The tile gives up half of its space, the other tiles aren't
+    /// affected. `nil` if the window isn't a tile of a `tiles` container.
+    /// Creates a container. The caller must bind the new window before normalization runs.
+    @MainActor
+    func prepareSplit(_ orientation: Orientation) -> BindingData? {
+        guard let parent = parent as? TilingContainer, parent.layout == .tiles else { return nil }
+        let previousBinding = unbindFromParent()
         let split = TilingContainer(
             parent: parent,
             adaptiveWeight: previousBinding.adaptiveWeight,
-            parent.orientation.opposite,
+            orientation,
             .tiles,
             index: previousBinding.index,
         )
-        window.bind(to: split, adaptiveWeight: 1, index: 0)
+        bind(to: split, adaptiveWeight: 1, index: 0)
         return BindingData(parent: split, adaptiveWeight: 1, index: 1)
     }
 }
