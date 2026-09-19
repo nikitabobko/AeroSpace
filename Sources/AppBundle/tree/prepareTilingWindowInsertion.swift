@@ -11,10 +11,10 @@ extension Workspace {
         return BindingData(parent: parent, adaptiveWeight: WEIGHT_AUTO, index: window.ownIndex.orDie() + 1)
     }
 
-    /// Split the most recent tile in the opposite direction to make room for one more window.
+    /// Split the most recent tile to make room for one more window.
     /// `nil` if auto tiling is disabled, or if there is nothing to split (the window is going to be the first or
     /// the second window in the container).
-    /// Creates a container. The caller must bind the window before normalization runs.
+    /// May create a container. The caller must bind the window before normalization runs.
     @MainActor
     func prepareAutoTilingSplit() -> BindingData? {
         guard config.enableAutoTiling else { return nil }
@@ -29,17 +29,27 @@ extension Workspace {
         guard let window = mruTile, let parent = window.parent as? TilingContainer,
               parent.layout == .tiles && parent.children.count >= 2
         else { return nil }
-        return window.prepareSplit(parent.orientation.opposite)
+        // Split the tile along its longer side: wide tiles are split side by side, tall tiles are stacked.
+        // If the tile has never been laid out, alternate the orientation
+        let orientation: Orientation = window.lastAppliedLayoutPhysicalRect.map { $0.width >= $0.height ? .h : .v }
+            ?? parent.orientation.opposite
+        return window.prepareSplit(orientation)
     }
 }
 
 extension Window {
     /// Make room for one more window next to this tile. The tile gives up half of its space, the other tiles aren't
     /// affected. `nil` if the window isn't a tile of a `tiles` container.
-    /// Creates a container. The caller must bind the new window before normalization runs.
+    /// May create a container. The caller must bind the new window before normalization runs.
     @MainActor
     func prepareSplit(_ orientation: Orientation) -> BindingData? {
-        guard let parent = parent as? TilingContainer, parent.layout == .tiles else { return nil }
+        guard let parent = parent as? TilingContainer, parent.layout == .tiles, let index = ownIndex else { return nil }
+        if parent.orientation == orientation {
+            // A nested container of the same orientation is pointless. Share the space of the tile with a new sibling
+            let weight = getWeight(orientation)
+            setWeight(orientation, weight / 2)
+            return BindingData(parent: parent, adaptiveWeight: weight / 2, index: index + 1)
+        }
         let previousBinding = unbindFromParent()
         let split = TilingContainer(
             parent: parent,

@@ -329,17 +329,21 @@ The default is `false`, which preserves insertion into the existing container.
 The first two windows follow the container's orientation (if only one tiled window is left in the workspace, the
 root container is reset to its default orientation). When the most recently
 focused window belongs to a `tiles` container with two or more children, a new
-window splits that tile in the opposite direction. If a floating window is focused, the most recently focused tile
-is split. For example, two side-by-side
-windows become a full-height window next to two vertically stacked windows.
+window splits that tile. If a floating window is focused, the most recently focused tile
+is split.
+
+The tile is split along its longer side: a tile that is wider than tall is split side by side, a tile that is taller
+than wide is stacked. For example, on a regular monitor two side-by-side windows become a full-height window next to
+two vertically stacked windows, while on an ultrawide monitor they become three columns.
 The new window goes below the previous window for a vertical split, or to its
-right for a horizontal split. Further splits alternate direction; this does not
-impose a permanent two-column limit.
+right for a horizontal split. This does not impose a permanent two-column limit.
 
 The split preserves the tile's share of its parent and divides it equally between
 the two windows. Both normalizations can stay enabled. Accordion containers retain
 their existing insertion behavior. Window detection rules and restored window
-positions still take precedence. Moving a tiled window to another workspace or monitor
+positions still take precedence.
+
+Moving a tiled window to another workspace or monitor
 (`move-node-to-workspace`, `move-node-to-monitor`) splits the most recently focused tile of the target workspace in the
 same way. Moving windows inside a workspace (`move`), moving them with mouse, and toggling an existing window from
 floating to tiling do not trigger automatic splitting. Changing the setting

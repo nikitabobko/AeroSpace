@@ -112,6 +112,25 @@ final class AutoTilingTest: XCTestCase {
         assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([.window(2), .window(4)]))
     }
 
+    func testWideTileIsSplitSideBySideAndTallTileIsStacked() {
+        let workspace = Workspace.get(byName: name)
+        openWindow(1, on: workspace)
+        let second = openWindow(2, on: workspace)
+        second.setWeight(.h, 600)
+        // Ultrawide monitor: the columns are still wider than tall => one more column that takes half of the tile
+        second.lastAppliedLayoutPhysicalRect = Rect(topLeftX: 1720, topLeftY: 0, width: 1720, height: 1440)
+        let third = openWindow(3, on: workspace)
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([.window(1), .window(2), .window(3)]))
+        assertEquals(second.getWeight(.h), 300)
+        assertEquals(third.getWeight(.h), 300)
+        // The column is taller than wide now => stack
+        third.lastAppliedLayoutPhysicalRect = Rect(topLeftX: 2580, topLeftY: 0, width: 860, height: 1440)
+        openWindow(4, on: workspace)
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([
+            .window(1), .window(2), .v_tiles([.window(3), .window(4)]),
+        ]))
+    }
+
     func testMovingWindowToWorkspaceSplitsMostRecentTile() async {
         let target = Workspace.get(byName: "b")
         let first = openWindow(1, on: target)
