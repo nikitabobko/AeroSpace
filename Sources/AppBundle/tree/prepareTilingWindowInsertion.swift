@@ -18,6 +18,12 @@ extension Workspace {
     @MainActor
     func prepareAutoTilingSplit() -> BindingData? {
         guard config.enableAutoTiling else { return nil }
+        // The root might have inherited the orientation of a collapsed stack ([A | B/C] -> close A -> close C).
+        // The second window must go next to the first one in the default orientation, the same as in a fresh workspace
+        let root = rootTilingContainer
+        if root.layout == .tiles && root.children.count == 1 && root.children.first is Window {
+            root.changeOrientation(defaultRootContainerOrientation)
+        }
         // If a floating window is focused, split the most recent tile instead of adding one more sibling to the root
         let mruTile = mostRecentWindowRecursive?.takeIf { $0.parent is TilingContainer } ?? rootTilingContainer.mostRecentWindowRecursive
         guard let window = mruTile, let parent = window.parent as? TilingContainer,

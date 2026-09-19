@@ -326,7 +326,8 @@ The tree structure can be changed with three commands:
 Set `enable-auto-tiling = true` to automatically split tiles when opening windows.
 The default is `false`, which preserves insertion into the existing container.
 
-The first two windows follow the container's orientation. When the most recently
+The first two windows follow the container's orientation (if only one tiled window is left in the workspace, the
+root container is reset to its default orientation). When the most recently
 focused window belongs to a `tiles` container with two or more children, a new
 window splits that tile in the opposite direction. If a floating window is focused, the most recently focused tile
 is split. For example, two side-by-side

@@ -96,6 +96,22 @@ final class AutoTilingTest: XCTestCase {
         assertTrue(floating.isFloating)
     }
 
+    func testSecondWindowOpensNextToTheLastWindowOfCollapsedStack() {
+        let workspace = Workspace.get(byName: name)
+        let first = openWindow(1, on: workspace)
+        let second = openWindow(2, on: workspace)
+        let third = openWindow(3, on: workspace)
+        // [1 | 2/3] -> close 1 -> the vertical stack becomes the root -> close 3 -> single window in the vertical root
+        first.closeAxWindow()
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .v_tiles([.window(2), .window(3)]))
+        third.closeAxWindow()
+        workspace.normalizeContainers()
+        assertTrue(second.focusWindow())
+        openWindow(4, on: workspace)
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([.window(2), .window(4)]))
+    }
+
     func testMovingWindowToWorkspaceSplitsMostRecentTile() async {
         let target = Workspace.get(byName: "b")
         let first = openWindow(1, on: target)
