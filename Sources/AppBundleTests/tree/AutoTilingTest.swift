@@ -96,6 +96,47 @@ final class AutoTilingTest: XCTestCase {
         assertTrue(floating.isFloating)
     }
 
+    func testMovingWindowToWorkspaceSplitsMostRecentTile() async {
+        let target = Workspace.get(byName: "b")
+        let first = openWindow(1, on: target)
+        openWindow(2, on: target)
+        assertTrue(first.focusWindow())
+        let source = Workspace.get(byName: "a")
+        let moved = openWindow(3, on: source)
+        assertTrue(moved.focusWindow())
+
+        await parseCommand("move-node-to-workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        target.normalizeContainers()
+        assertEquals(target.rootTilingContainer.layoutDescription, .h_tiles([
+            .v_tiles([.window(1), .window(3)]), .window(2),
+        ]))
+        XCTAssertTrue(source.isEffectivelyEmpty)
+    }
+
+    func testMovingWindowToWorkspaceWithSingleTileKeepsSiblingInsertion() async {
+        let target = Workspace.get(byName: "b")
+        openWindow(1, on: target)
+        let moved = openWindow(2, on: Workspace.get(byName: "a"))
+        assertTrue(moved.focusWindow())
+
+        await parseCommand("move-node-to-workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        target.normalizeContainers()
+        assertEquals(target.rootTilingContainer.layoutDescription, .h_tiles([.window(1), .window(2)]))
+    }
+
+    func testMovingWindowToWorkspaceDoesNotSplitWhenDisabled() async {
+        config.enableAutoTiling = false
+        let target = Workspace.get(byName: "b")
+        openWindow(1, on: target)
+        openWindow(2, on: target)
+        let moved = openWindow(3, on: Workspace.get(byName: "a"))
+        assertTrue(moved.focusWindow())
+
+        await parseCommand("move-node-to-workspace b").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        target.normalizeContainers()
+        assertEquals(target.rootTilingContainer.layoutDescription, .h_tiles([.window(1), .window(2), .window(3)]))
+    }
+
     func testRetilingExistingWindowDoesNotSplit() async throws {
         let workspace = Workspace.get(byName: name)
         openWindow(1, on: workspace)

@@ -338,8 +338,10 @@ impose a permanent two-column limit.
 The split preserves the tile's share of its parent and divides it equally between
 the two windows. Both normalizations can stay enabled. Accordion containers retain
 their existing insertion behavior. Window detection rules and restored window
-positions still take precedence. Moving windows and toggling an existing window
-from floating to tiling do not trigger automatic splitting. Changing the setting
+positions still take precedence. Moving a tiled window to another workspace or monitor
+(`move-node-to-workspace`, `move-node-to-monitor`) splits the most recently focused tile of the target workspace in the
+same way. Moving windows inside a workspace (`move`), moving them with mouse, and toggling an existing window from
+floating to tiling do not trigger automatic splitting. Changing the setting
 does not rearrange existing windows.
 
 [#layouts]
