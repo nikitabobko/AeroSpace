@@ -87,6 +87,94 @@ final class WindowVisibilityTest: XCTestCase {
         assertEquals(hiddenPage.isHiddenInCorner, true)
     }
 
+    func testPeekPageIsLaidOutInsteadOfHiddenAndStillRestores() async throws {
+        config.scrollingPeekWidth = 40
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+        root.layout = .scrolling
+        let tabs = TilingContainer(parent: root, adaptiveWeight: 1, .v, .tabs, index: INDEX_BIND_LAST)
+        let inactiveTab = TestWindow.new(id: 1, parent: tabs)
+        let activeTab = TestWindow.new(id: 2, parent: tabs)
+        let rightPage = TestWindow.new(id: 3, parent: root)
+        let peekPage = TestWindow.new(id: 4, parent: root)
+        let parkedPage = TestWindow.new(id: 5, parent: root)
+        assertEquals(activeTab.focusWindow(), true)
+        root.scrollingIndex = 0
+
+        _ = try await workspace.layoutWorkspace()
+
+        // The peek page is laid out, only the page behind it is parked off-screen
+        assertEquals(activeTab.isHiddenInCorner, false)
+        assertEquals(inactiveTab.isHiddenInCorner, true)
+        assertEquals(rightPage.isHiddenInCorner, false)
+        assertEquals(peekPage.isHiddenInCorner, false)
+        assertEquals(parkedPage.isHiddenInCorner, true)
+        XCTAssertNil(parkedPage.lastAppliedLayoutPhysicalRect)
+
+        let parkedSize = try await parkedPage.getAxSize(.nonCancellable)
+        let corner = workspace.workspaceMonitor.optimalHideCorner(monitors: monitorInfos)
+        for window in workspace.allLeafWindowsRecursive {
+            try await window.hideInCorner(corner)
+        }
+        _ = try await workspace.layoutWorkspace()
+
+        // A parked page keeps its saved size, a peek page is restored just like a fully visible one
+        assertEquals(peekPage.isHiddenInCorner, false)
+        assertEquals(parkedPage.isHiddenInCorner, true)
+        assertEquals(try await parkedPage.getAxSize(.nonCancellable), parkedSize)
+
+        root.scrollingIndex = 1
+        _ = try await workspace.layoutWorkspace()
+        assertEquals(activeTab.isHiddenInCorner, true)
+        assertEquals(rightPage.isHiddenInCorner, false)
+        assertEquals(peekPage.isHiddenInCorner, false)
+        assertEquals(parkedPage.isHiddenInCorner, false) // Now the peek page
+
+        root.scrollingIndex = 0
+        _ = try await workspace.layoutWorkspace()
+        assertEquals(parkedPage.isHiddenInCorner, true)
+        XCTAssertNil(parkedPage.lastAppliedLayoutPhysicalRect)
+
+        // Disabling the window manager must restore every page, peeking or parked, onto the monitor
+        let wasEnabled = TrayMenuModel.shared.isEnabled
+        defer { TrayMenuModel.shared.isEnabled = wasEnabled }
+        TrayMenuModel.shared.isEnabled = false
+        _ = try await workspace.layoutWorkspace()
+        for window in workspace.allLeafWindowsRecursive {
+            assertEquals(window.isHiddenInCorner, false)
+            let rect = try await window.getAxRect(.nonCancellable).orDie()
+            assertEquals(workspace.workspaceMonitor.visibleRect.contains(rect.center), true)
+        }
+    }
+
+    func testRightSpillBandSuppressesScrollingPeek() {
+        let monitor = mainMonitorInfo
+        let rect = monitor.rect
+        func at(x: CGFloat, y: CGFloat) -> VisibilityTestMonitor {
+            VisibilityTestMonitor(rect: Rect(topLeftX: x, topLeftY: y, width: rect.width, height: rect.height))
+        }
+        let right = at(x: rect.maxX, y: rect.minY)
+        let left = at(x: rect.minX - rect.width, y: rect.minY)
+        let distantRight = at(x: rect.maxX + 10000, y: rect.minY)
+        let partiallyOverlappingRight = at(x: rect.maxX, y: rect.minY - rect.height + 1)
+        let aboveRight = at(x: rect.maxX, y: rect.minY - rect.height)
+        let belowRight = at(x: rect.maxX, y: rect.maxY)
+        let straddlingRight = at(x: rect.maxX - 10, y: rect.minY)
+
+        assertEquals(monitor.hasMonitorInRightSpillBand(monitors: []), false)
+        assertEquals(monitor.hasMonitorInRightSpillBand(monitors: [monitor]), false)
+        assertEquals(monitor.hasMonitorInRightSpillBand(monitors: [monitor, right]), true)
+        assertEquals(monitor.hasMonitorInRightSpillBand(monitors: [monitor, left]), false)
+        assertEquals(monitor.hasMonitorInRightSpillBand(monitors: [monitor, left, right]), true)
+        // Distance doesn't make a right hand side monitor safe: apps may refuse the requested width
+        assertEquals(monitor.hasMonitorInRightSpillBand(monitors: [monitor, distantRight]), true)
+        // One point of vertical overlap is enough, but merely touching the band's edge isn't
+        assertEquals(monitor.hasMonitorInRightSpillBand(monitors: [monitor, partiallyOverlappingRight]), true)
+        assertEquals(monitor.hasMonitorInRightSpillBand(monitors: [monitor, straddlingRight]), true)
+        assertEquals(monitor.hasMonitorInRightSpillBand(monitors: [monitor, aboveRight]), false)
+        assertEquals(monitor.hasMonitorInRightSpillBand(monitors: [monitor, belowRight]), false)
+    }
+
     func testHiddenTabRestoresWhenMadeFloating() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer
