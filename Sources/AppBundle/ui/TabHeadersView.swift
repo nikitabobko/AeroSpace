@@ -139,8 +139,7 @@ private struct TabHeaderStripView: View {
             TabHeaderInteractionState.shared.markInteraction()
             try await runLightSession(.menuBarButton, token) {
                 guard focus.windowOrNil != window else { return }
-                guard window.focusWindow() else { return }
-                window.nativeFocus()
+                _ = window.focusWindow()
             }
         }
     }
