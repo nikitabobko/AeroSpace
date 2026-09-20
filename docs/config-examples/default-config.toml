@@ -26,6 +26,18 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 # You can set 0 to disable the padding feature
 accordion-padding = 30
 
+# The 'scrolling-peek-width' specifies how many points of the next page are kept visible
+# at the right edge of the 'scrolling' layout, instead of the page being fully hidden.
+# The two fully visible pages shrink so that (2 * page + peek) fills the viewport.
+# The peek is a reservation inside the viewport, so what you actually see is
+# 'peek - gaps.inner.horizontal / 2 + gaps.outer.right' points wide: a window manager
+# cannot clip windows, so the peeking page also paints over the right outer gap.
+# You can set 0 to disable the peek feature.
+# The peek is automatically disabled when another monitor sits to the right of this one
+# (a window manager cannot clip windows, so the peeking window would bleed onto it), when
+# there is no next page, and when the requested width doesn't leave room for two pages.
+scrolling-peek-width = 0
+
 # Possible values: tiles|accordion|scrolling
 default-root-container-layout = 'tiles'
 
