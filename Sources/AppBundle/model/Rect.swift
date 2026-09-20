@@ -58,7 +58,7 @@ extension Rect {
     var nsRect: NSRect {
         NSRect(
             x: topLeftX,
-            y: mainMonitor.height - topLeftY - height,
+            y: mainMonitorInfo.height - topLeftY - height,
             width: width,
             height: height,
         )
