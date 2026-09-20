@@ -87,28 +87,127 @@ final class ScrollCommandTest: XCTestCase {
         root.layout = .scrolling
         root.scrollingIndex = 1
 
-        _ = try await workspace.layoutWorkspace()
-
         let workspaceRect = workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
         let pageWidth = workspaceRect.width / 2
         let expectedHeight = workspaceRect.height - 1
         let windows = root.children.compactMap { $0 as? TestWindow }
 
-        // Off-screen pages must be hidden, otherwise their negative/overflow
-        // physicalX bleeds onto adjacent monitors.
-        XCTAssertNil(windows[0].lastAppliedLayoutPhysicalRect)
-        assertEquals(windows[0].isHiddenInCorner, true)
+        // The viewport shows the last two pages, so there is no next page to peek at and the peek reserves
+        // nothing. The geometry must be identical whether or not the peek is configured.
+        for peekWidth in [0, 40] {
+            config.scrollingPeekWidth = peekWidth
+            _ = try await workspace.layoutWorkspace()
 
-        let rect2 = windows[1].lastAppliedLayoutPhysicalRect.orDie("window 2 should be laid out")
-        let rect3 = windows[2].lastAppliedLayoutPhysicalRect.orDie("window 3 should be laid out")
+            // Off-screen pages must be hidden, otherwise their negative/overflow
+            // physicalX bleeds onto adjacent monitors.
+            XCTAssertNil(windows[0].lastAppliedLayoutPhysicalRect)
+            assertEquals(windows[0].isHiddenInCorner, true)
 
-        assertEquals(rect2.topLeftX, workspaceRect.topLeftX)
-        assertEquals(rect2.width, pageWidth)
-        assertEquals(windows[1].isHiddenInCorner, false)
-        assertEquals(rect3.topLeftX, workspaceRect.topLeftX + pageWidth)
-        assertEquals(rect3.width, pageWidth)
-        assertEquals(rect3.height, expectedHeight)
-        assertEquals(windows[2].isHiddenInCorner, false)
+            let rect2 = windows[1].lastAppliedLayoutPhysicalRect.orDie("window 2 should be laid out")
+            let rect3 = windows[2].lastAppliedLayoutPhysicalRect.orDie("window 3 should be laid out")
+
+            assertEquals(rect2.topLeftX, workspaceRect.topLeftX)
+            assertEquals(rect2.width, pageWidth)
+            assertEquals(windows[1].isHiddenInCorner, false)
+            assertEquals(rect3.topLeftX, workspaceRect.topLeftX + pageWidth)
+            assertEquals(rect3.width, pageWidth)
+            assertEquals(rect3.height, expectedHeight)
+            assertEquals(rect3.maxX, workspaceRect.maxX)
+            assertEquals(windows[2].isHiddenInCorner, false)
+        }
+    }
+
+    func testScrollingLayoutPeeksAtTheNextPage() async throws {
+        config.scrollingPeekWidth = 40
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TestWindow.new(id: 2, parent: $0)
+            TestWindow.new(id: 3, parent: $0)
+            TestWindow.new(id: 4, parent: $0)
+            TestWindow.new(id: 5, parent: $0)
+        }
+        root.layout = .scrolling
+        root.scrollingIndex = 1
+
+        _ = try await workspace.layoutWorkspace()
+
+        let workspaceRect = workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
+        let rawGap = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor).inner.horizontal.toDouble()
+        let peek = CGFloat(config.scrollingPeekWidth)
+        let pageWidth = (workspaceRect.width - peek) / 2
+        let expectedHeight = workspaceRect.height - 1
+        let windows = root.children.compactMap { $0 as? TestWindow }
+
+        // Two full pages plus the peek fill the viewport exactly
+        assertEquals(2 * pageWidth + peek, workspaceRect.width)
+
+        for index in [0, 4] {
+            XCTAssertNil(windows[index].lastAppliedLayoutPhysicalRect)
+            assertEquals(windows[index].isHiddenInCorner, true)
+        }
+
+        for index in 1 ... 3 {
+            let rect = windows[index].lastAppliedLayoutPhysicalRect.orDie("window \(index + 1) should be laid out")
+            let virtual = windows[index].lastAppliedLayoutVirtualRect.orDie()
+            let lPadding = index == 1 ? 0 : rawGap / 2
+            let rPadding = index == 3 ? 0 : rawGap / 2
+
+            assertEquals(windows[index].isHiddenInCorner, false)
+            assertEquals(rect.topLeftX, workspaceRect.topLeftX + CGFloat(index - 1) * pageWidth + lPadding)
+            assertEquals(rect.topLeftY, workspaceRect.topLeftY)
+            assertEquals(rect.width, pageWidth - lPadding - rPadding)
+            assertEquals(rect.height, expectedHeight)
+
+            // Virtual rects stay on the un-gapped page grid, peek page included
+            assertEquals(virtual.topLeftX, workspaceRect.topLeftX + CGFloat(index) * pageWidth)
+            assertEquals(virtual.width, pageWidth)
+        }
+
+        let rightRect = windows[2].lastAppliedLayoutPhysicalRect.orDie()
+        let peekRect = windows[3].lastAppliedLayoutPhysicalRect.orDie()
+        // Only 'peek' points of the third page are inside the viewport, the rest overflows to the right
+        assertEquals(workspaceRect.maxX - peekRect.topLeftX, peek - rawGap / 2)
+        assertEquals(peekRect.maxX - workspaceRect.maxX, pageWidth - peek)
+        assertEquals(peekRect.topLeftX - rightRect.maxX, rawGap)
+    }
+
+    func testScrollingLayoutPeekFallsBackToTwoPages() async throws {
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+        root.layout = .scrolling
+        let first = TestWindow.new(id: 1, parent: root)
+        let second = TestWindow.new(id: 2, parent: root)
+        let third = TestWindow.new(id: 3, parent: root)
+        root.scrollingIndex = 0
+
+        let workspaceRect = workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
+        let pageWidth = workspaceRect.width / 2
+
+        // Values that can't produce a sliver plus two pages disable the peek instead of being capped
+        for peekWidth in [0, -40, Int(workspaceRect.width / 3) + 1, Int(workspaceRect.width), Int.max] {
+            config.scrollingPeekWidth = peekWidth
+            _ = try await workspace.layoutWorkspace()
+
+            assertEquals(first.lastAppliedLayoutPhysicalRect.orDie().topLeftX, workspaceRect.topLeftX)
+            assertEquals(first.lastAppliedLayoutPhysicalRect.orDie().width, pageWidth)
+            assertEquals(second.lastAppliedLayoutPhysicalRect.orDie().topLeftX, workspaceRect.topLeftX + pageWidth)
+            assertEquals(second.lastAppliedLayoutPhysicalRect.orDie().width, pageWidth)
+            assertEquals(first.isHiddenInCorner, false)
+            assertEquals(second.isHiddenInCorner, false)
+            assertEquals(third.isHiddenInCorner, true)
+            XCTAssertNil(third.lastAppliedLayoutPhysicalRect)
+        }
+
+        // A valid peek still reserves nothing when there is no next page to peek at
+        third.closeAxWindow()
+        config.scrollingPeekWidth = 40
+        _ = try await workspace.layoutWorkspace()
+
+        assertEquals(root.children.count, 2)
+        assertEquals(first.lastAppliedLayoutPhysicalRect.orDie().width, pageWidth)
+        assertEquals(second.lastAppliedLayoutPhysicalRect.orDie().width, pageWidth)
+        assertEquals(second.lastAppliedLayoutPhysicalRect.orDie().maxX, workspaceRect.maxX)
     }
 
     func testScrollCommandsMoveViewportAndFocus() async {

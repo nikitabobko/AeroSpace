@@ -42,4 +42,23 @@ extension MonitorInfo {
             ? .bottomLeftCorner
             : .bottomRightCorner
     }
+
+    /// Whether another monitor intersects the infinite strip that extends rightwards from this monitor's physical
+    /// right edge, within this monitor's vertical band.
+    ///
+    /// The scrolling layout's peek page is the only page that is allowed to overflow the workspace rect on purpose.
+    /// A window manager sets AX frames, it cannot clip, so that overflow is real pixels. The check is deliberately
+    /// conservative: distance doesn't make a right hand side monitor safe, because apps may refuse the requested
+    /// width and end up much wider than the peek reserves. Overflowing into this monitor's own outer gap is fine,
+    /// that's why the physical ``rect`` is used rather than ``visibleRect``.
+    func hasMonitorInRightSpillBand(monitors: [MonitorInfo]) -> Bool {
+        let ownRect = rect
+        return monitors.contains { monitor in
+            let otherRect = monitor.rect
+            // MonitorInfo isn't Equatable. Identify self by origin, same as optimalHideCorner does
+            guard otherRect.topLeftCorner != ownRect.topLeftCorner else { return false }
+            return max(ownRect.maxX, otherRect.minX) < otherRect.maxX
+                && max(ownRect.minY, otherRect.minY) < min(ownRect.maxY, otherRect.maxY)
+        }
+    }
 }
