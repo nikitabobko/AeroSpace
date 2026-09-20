@@ -38,6 +38,45 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(result.stderr, ["The 'scrolling' layout is only supported for workspace root containers"])
     }
 
+    func testJoiningLastTwoPagesPreservesScrollingRootDuringNormalization() async {
+        config.enableNormalizationFlattenContainers = true
+        config.enableNormalizationOppositeOrientationForNestedContainers = true
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+        root.layout = .scrolling
+        let first = TestWindow.new(id: 1, parent: root)
+        let second = TestWindow.new(id: 2, parent: root)
+        assertEquals(first.focusWindow(), true)
+
+        let result = await parseCommand("join-with right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer, root)
+        assertEquals(root.layoutDescription, .scrolling([.v_tiles([.window(1), .window(2)])]))
+
+        second.closeAxWindow()
+        workspace.normalizeContainers()
+        assertEquals(workspace.rootTilingContainer, root)
+        assertEquals(root.layoutDescription, .scrolling([.window(1)]))
+    }
+
+    func testClosingLastOtherPagePreservesTabbedScrollingPage() {
+        config.enableNormalizationFlattenContainers = true
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+        root.layout = .scrolling
+        let tabs = TilingContainer(parent: root, adaptiveWeight: 1, .v, .tabs, index: INDEX_BIND_LAST)
+        TestWindow.new(id: 1, parent: tabs)
+        TestWindow.new(id: 2, parent: tabs)
+        let otherPage = TestWindow.new(id: 3, parent: root)
+
+        otherPage.closeAxWindow()
+        workspace.normalizeContainers()
+
+        assertEquals(workspace.rootTilingContainer, root)
+        assertEquals(root.layoutDescription, .scrolling([.tabs([.window(1), .window(2)])]))
+    }
+
     func testScrollingLayoutGeometry() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer.apply {
