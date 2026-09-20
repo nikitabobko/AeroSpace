@@ -6,6 +6,51 @@ import XCTest
 final class WindowVisibilityTest: XCTestCase {
     override func setUp() async throws { setUpWorkspacesForTests() }
 
+    func testNewDialogFollowsAppWindowOnAnotherWorkspace() async {
+        let ownerWorkspace = Workspace.get(byName: "owner")
+        let owner = TestWindow.new(id: 1, parent: ownerWorkspace.rootTilingContainer)
+        let activeWorkspace = Workspace.get(byName: "current")
+        assertEquals(TestWindow.new(id: 2, parent: activeWorkspace.rootTilingContainer).focusWindow(), true)
+
+        let binding = unbindAndGetBindingDataForNewWindow(.dialog, activeWorkspace, window: nil, appLastFocusedWindow: owner)
+        let dialog = TestWindow.new(id: 3, parent: binding.parent)
+        assertEquals(dialog.nodeWorkspace, ownerWorkspace)
+        assertEquals(dialog.isFloating, true)
+        assertEquals(focus.workspace, activeWorkspace)
+
+        // Explicit user callbacks must still be able to override the default placement.
+        config.onWindowDetected = [WindowDetectedCallback(matcher: .command(.empty), rawRun: parseCommand("move-node-to-workspace current").cmdOrDie)]
+        await tryOnWindowDetected(dialog)
+        assertEquals(dialog.nodeWorkspace, activeWorkspace)
+    }
+
+    func testDialogWithoutKnownOwnerUsesCurrentWorkspace() {
+        let workspace = Workspace.get(byName: name)
+        let binding = unbindAndGetBindingDataForNewWindow(.dialog, workspace, window: nil, appLastFocusedWindow: nil)
+        assertEquals(binding.parent, workspace.floatingWindowsContainer)
+    }
+
+    func testDialogRelayoutKeepsExplicitTargetWorkspace() {
+        let ownerWorkspace = Workspace.get(byName: "owner")
+        let owner = TestWindow.new(id: 1, parent: ownerWorkspace.rootTilingContainer)
+        let dialog = TestWindow.new(id: 2, parent: ownerWorkspace.floatingWindowsContainer)
+        let targetWorkspace = Workspace.get(byName: "destination")
+
+        let binding = unbindAndGetBindingDataForNewWindow(.dialog, targetWorkspace, window: dialog, appLastFocusedWindow: owner)
+
+        assertEquals(binding.parent, targetWorkspace.floatingWindowsContainer)
+    }
+
+    func testNewRegularWindowStillUsesCurrentWorkspace() {
+        let ownerWorkspace = Workspace.get(byName: "owner")
+        let owner = TestWindow.new(id: 1, parent: ownerWorkspace.rootTilingContainer)
+        let workspace = Workspace.get(byName: name)
+
+        let binding = unbindAndGetBindingDataForNewWindow(.window, workspace, window: nil, appLastFocusedWindow: owner)
+
+        assertEquals(binding.parent, workspace.rootTilingContainer)
+    }
+
     func testOffscreenFloatingDialogsOnActiveWorkspaceAreRecoveredWithoutTakingFocus() async throws {
         let workspace = Workspace.get(byName: name)
         let focusedWindow = TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
