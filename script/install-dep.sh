@@ -106,7 +106,8 @@ if test $all == 1 || test $periphery == 1; then
     # https://github.com/peripheryapp/periphery/releases
     periphery_commit=85a24b9ea801c0e57a73679ec5b3a44812ea5f22
     periphery_repo=https://github.com/nikitabobko/periphery.git
-    input_hash_marker="periphery/$(echo $periphery_commit $periphery_repo | shasum | awk '{print $1}').marker"
+    input_hash_marker_parent_dir=periphery
+    input_hash_marker="$input_hash_marker_parent_dir/$(echo $periphery_commit $periphery_repo | shasum | awk '{print $1}').marker"
 
     if ! test -f "$input_hash_marker"; then
         echo "building periphery from sources"
@@ -116,6 +117,7 @@ if test $all == 1 || test $periphery == 1; then
             git checkout -f $periphery_commit
             swift build
         cd -
+        rm "$input_hash_marker_parent_dir/*.marker"
         touch "$input_hash_marker"
     fi
 fi
