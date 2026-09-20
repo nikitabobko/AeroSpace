@@ -47,25 +47,32 @@ final class TabsLayoutCommandTest: XCTestCase {
         assertNil((root.children[0] as! TestWindow).lastAppliedLayoutPhysicalRect)
     }
 
-    func testTabsLayoutSkipsRedundantFrameUpdates() async throws {
+    func testLayoutRestoresWindowsMovedOutsideTheLayout() async throws {
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
             assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 3, parent: $0)
         }
-        root.layout = .tabs
+        for layout: Layout in [.tiles, .tabs, .scrolling] {
+            root.layout = layout
+            _ = try await workspace.layoutWorkspace()
+            var expectedFrames: [Rect] = []
+            for window in root.children.compactMap({ $0 as? TestWindow }) {
+                let rect = try await window.getAxRect(.nonCancellable).orDie()
+                expectedFrames.append(rect)
+                // Simulate an app or a workspace transition moving the actual window.
+                window.setAxFrame(rect.topLeftCorner + CGPoint(x: 100, y: 100), rect.size)
+            }
 
-        let activeWindow = root.children[1] as! TestWindow
-        let inactiveWindow = root.children[0] as! TestWindow
+            _ = try await workspace.layoutWorkspace()
 
-        _ = try await workspace.layoutWorkspace()
-        let activeCallsAfterFirstLayout = activeWindow.setAxFrameCalls
-        let inactiveCallsAfterFirstLayout = inactiveWindow.setAxFrameCalls
-
-        _ = try await workspace.layoutWorkspace()
-
-        assertEquals(activeWindow.setAxFrameCalls, activeCallsAfterFirstLayout)
-        assertEquals(inactiveWindow.setAxFrameCalls, inactiveCallsAfterFirstLayout)
+            for (window, expected) in zip(root.children.compactMap { $0 as? TestWindow }, expectedFrames) {
+                let actual = try await window.getAxRect(.nonCancellable).orDie()
+                assertEquals(actual.topLeftCorner, expected.topLeftCorner)
+                assertEquals(actual.size, expected.size)
+            }
+        }
     }
 
     func testLayoutWorkspaceReturnsTabHeaderSnapshot() async throws {

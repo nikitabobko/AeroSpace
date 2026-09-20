@@ -34,10 +34,12 @@ struct TabHeaderSnapshot: Identifiable {
 final class LayoutContext {
     let workspace: Workspace
     let resolvedGaps: ResolvedGaps
+    let hideCorner: OptimalHideCorner
     var tabHeaderSnapshots: [TabHeaderSnapshot] = []
 
     init(_ workspace: Workspace) {
         self.workspace = workspace
+        self.hideCorner = workspace.workspaceMonitor.optimalHideCorner(monitors: monitorInfos)
         self.resolvedGaps = ResolvedGaps(gaps: config.gaps, monitor: workspace.workspaceMonitor)
     }
 }
