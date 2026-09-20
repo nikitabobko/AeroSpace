@@ -58,18 +58,18 @@ final class ScrollCommandTest: XCTestCase {
         // Off-screen pages must be hidden, otherwise their negative/overflow
         // physicalX bleeds onto adjacent monitors.
         XCTAssertNil(windows[0].lastAppliedLayoutPhysicalRect)
-        assertEquals(windows[0].isHiddenForTabs, true)
+        assertEquals(windows[0].isHiddenInCorner, true)
 
         let rect2 = windows[1].lastAppliedLayoutPhysicalRect.orDie("window 2 should be laid out")
         let rect3 = windows[2].lastAppliedLayoutPhysicalRect.orDie("window 3 should be laid out")
 
         assertEquals(rect2.topLeftX, workspaceRect.topLeftX)
         assertEquals(rect2.width, pageWidth)
-        assertEquals(windows[1].isHiddenForTabs, false)
+        assertEquals(windows[1].isHiddenInCorner, false)
         assertEquals(rect3.topLeftX, workspaceRect.topLeftX + pageWidth)
         assertEquals(rect3.width, pageWidth)
         assertEquals(rect3.height, expectedHeight)
-        assertEquals(windows[2].isHiddenForTabs, false)
+        assertEquals(windows[2].isHiddenInCorner, false)
     }
 
     func testScrollCommandsMoveViewportAndFocus() async {

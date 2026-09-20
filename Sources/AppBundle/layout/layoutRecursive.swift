@@ -31,6 +31,7 @@ extension TreeNode {
                 try await workspace.floatingWindowsContainer.layoutRecursive(point, width: width, height: height, virtual: virtual, context)
             case .floatingWindowsContainer(let container):
                 let windows = container.children.filterIsInstance(of: Window.self)
+                windows.forEach { $0.unhideFromCorner() }
                 // todo make it parallel among different workspaces. Get rid of 'try await'
                 let rects = try await windows.mapConcurrently { try await $0.getAxRect(.cancellable) } // Probably not idempotent
                 for (window, windowRect) in zip(windows, rects) {
@@ -40,26 +41,24 @@ extension TreeNode {
                 }
             case .window(let window):
                 if window.windowId != currentlyManipulatedWithMouseWindowId {
-                    let previousPhysicalRect = lastAppliedLayoutPhysicalRect
+                    window.unhideFromCorner()
                     lastAppliedLayoutVirtualRect = virtual
                     if window.isFullscreen && window == context.workspace.rootTilingContainer.mostRecentWindowRecursive {
                         lastAppliedLayoutPhysicalRect = nil
-                        window.isHiddenForTabs = false
                         window.layoutFullscreen(context)
                     } else {
                         lastAppliedLayoutPhysicalRect = physicalRect
                         window.isFullscreen = false
-                        let wasHiddenForTabs = window.isHiddenForTabs
-                        window.isHiddenForTabs = false
-                        if wasHiddenForTabs || !rectEquals(previousPhysicalRect, physicalRect) {
-                            window.setAxFrame(point, CGSize(width: width, height: height))
-                        }
+                        window.setAxFrame(point, CGSize(width: width, height: height))
                     }
                 }
             case .tilingContainer(let container):
                 lastAppliedLayoutPhysicalRect = physicalRect
                 lastAppliedLayoutVirtualRect = virtual
-                switch container.layout {
+                // Restore every page/tab as overlapping windows without changing their saved layout or weights.
+                let layout = !TrayMenuModel.shared.isEnabled && (container.layout == .scrolling || container.layout == .tabs)
+                    ? Layout.accordion : container.layout
+                switch layout {
                     case .tiles:
                         try await container.layoutTiles(point, width: width, height: height, virtual: virtual, context)
                     case .accordion:
@@ -76,17 +75,7 @@ extension TreeNode {
     }
 }
 
-private func rectEquals(_ lhs: Rect?, _ rhs: Rect) -> Bool {
-    guard let lhs else { return false }
-    return lhs.topLeftX == rhs.topLeftX &&
-        lhs.topLeftY == rhs.topLeftY &&
-        lhs.width == rhs.width &&
-        lhs.height == rhs.height
-}
-
 extension Window {
-    static let tabsHiddenPoint = CGPoint(x: -20000, y: -20000)
-
     @MainActor
     fileprivate func layoutFloatingWindow(_ context: LayoutContext, _ windowRect: Rect?) {
         let workspace = context.workspace
@@ -119,18 +108,6 @@ extension Window {
             ? context.workspace.workspaceMonitorInfo.visibleRect
             : context.workspace.workspaceMonitorInfo.visibleRectPaddedByOuterGaps
         setAxFrame(monitorRect.topLeftCorner, CGSize(width: monitorRect.width, height: monitorRect.height))
-    }
-
-    @MainActor
-    fileprivate func hideForTabs() {
-        if isHiddenForTabs { return }
-        let size = lastAppliedLayoutPhysicalRect?.size
-            ?? lastAppliedLayoutVirtualRect?.size
-            ?? lastFloatingSize
-            ?? CGSize(width: 1, height: 1)
-        lastAppliedLayoutPhysicalRect = nil
-        isHiddenForTabs = true
-        setAxFrame(Self.tabsHiddenPoint, size)
     }
 }
 
@@ -225,7 +202,7 @@ extension TilingContainer {
                     // Off-screen pages must be parked off-screen, otherwise their
                     // negative/overflowing physicalX bleeds onto adjacent monitors.
                     guard isLeftVisiblePage || isRightVisiblePage else {
-                        try await child.hideSubtreeForTabs()
+                        try await child.hideSubtree(in: context.hideCorner)
                         continue
                     }
                     let virtualX = virtual.topLeftX + CGFloat(index) * pageWidth
@@ -311,7 +288,7 @@ extension TilingContainer {
             }
         }
         for child in children where child != activeChild {
-            try await child.hideSubtreeForTabs()
+            try await child.hideSubtree(in: context.hideCorner)
         }
         let contentPoint = hasVisibleHeader ? point + CGPoint(x: 0, y: headerHeight) : point
         let contentHeight = hasVisibleHeader ? height - headerHeight : height
@@ -324,14 +301,14 @@ extension TilingContainer {
 
 extension TreeNode {
     @MainActor
-    fileprivate func hideSubtreeForTabs() async throws {
+    fileprivate func hideSubtree(in corner: OptimalHideCorner) async throws {
         switch nodeCases {
             case .window(let window):
-                window.hideForTabs()
+                try await window.hideInCorner(corner)
             case .tilingContainer(let container):
                 container.lastAppliedLayoutPhysicalRect = nil
                 for child in container.children {
-                    try await child.hideSubtreeForTabs()
+                    try await child.hideSubtree(in: corner)
                 }
             case .workspace, .macosMinimizedWindowsContainer, .macosFullscreenWindowsContainer,
                  .macosPopupWindowsContainer, .macosHiddenAppsWindowsContainer, .floatingWindowsContainer:
