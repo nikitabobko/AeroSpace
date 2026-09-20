@@ -3,32 +3,20 @@ import SwiftUI
 
 @MainActor
 final class TabHeadersPanel: NSPanelHud {
-    private var hostingView = NSHostingView(rootView: AnyView(EmptyView()))
-    private weak var hostingContainerView: NSView?
+    private let hostingView: NSHostingView<TabHeaderStripView>
 
-    override init() {
+    init(snapshot: TabHeaderSnapshot) {
+        self.hostingView = NSHostingView(rootView: TabHeaderStripView(snapshot: snapshot))
         super.init()
         self.ignoresMouseEvents = false
         self.hasShadow = false
         self.backgroundColor = .clear
         self.isOpaque = false
-        self.contentView = NSView(frame: .zero)
+        self.contentView = hostingView
     }
 
     func update(snapshot: TabHeaderSnapshot) {
-        let rootView = AnyView(TabHeaderStripView(snapshot: snapshot))
-        if contentView == nil {
-            contentView = NSView(frame: .zero)
-        }
-        guard let contentView else { return }
-        if hostingContainerView !== contentView {
-            hostingView.removeFromSuperview()
-            hostingView = NSHostingView(rootView: rootView)
-            contentView.addSubview(hostingView)
-            hostingContainerView = contentView
-        } else {
-            hostingView.rootView = rootView
-        }
+        hostingView.rootView = TabHeaderStripView(snapshot: snapshot)
         hostingView.frame = NSRect(origin: .zero, size: snapshot.headerFrame.size)
         setFrame(snapshot.headerFrame.nsRect, display: true)
         orderFrontRegardless()
@@ -54,7 +42,7 @@ final class TabHeadersPanelController {
             if let existing = panels[snapshot.id] {
                 panel = existing
             } else {
-                panel = TabHeadersPanel()
+                panel = TabHeadersPanel(snapshot: snapshot)
                 panels[snapshot.id] = panel
             }
             panel.update(snapshot: snapshot)
