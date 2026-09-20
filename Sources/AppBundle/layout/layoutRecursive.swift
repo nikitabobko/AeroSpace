@@ -78,7 +78,10 @@ extension Window {
         let workspace = context.workspace
         let windowRect = try await getAxRect(.cancellable) // Probably not idempotent
         let currentMonitor = windowRect?.center.monitorApproximation
-        if let currentMonitor, let windowRect, workspace != currentMonitor.visibleWorkspace {
+        // Dialogs can inherit an off-screen position even when they belong to the active workspace.
+        if let currentMonitor, let windowRect,
+           workspace != currentMonitor.visibleWorkspace || (!isLeftMouseButtonDown && !currentMonitor.visibleRect.contains(windowRect.center))
+        {
             let windowTopLeftCorner = windowRect.topLeftCorner
             let xProportion = (windowTopLeftCorner.x - currentMonitor.visibleRect.topLeftX) / currentMonitor.visibleRect.width
             let yProportion = (windowTopLeftCorner.y - currentMonitor.visibleRect.topLeftY) / currentMonitor.visibleRect.height
