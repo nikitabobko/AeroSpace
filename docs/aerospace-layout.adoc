@@ -48,6 +48,8 @@ Possible values:
 +
 * `h_tiles|v_tiles|h_accordion|v_accordion` - Change both tiling layout and orientation in one go
 * `tiles|accordion` - Change tiling layout but preserve orientation
+* `scrolling` - Switch the workspace root container to the scrolling layout (root container only, always horizontal)
+* `tabs` - Switch the current tiling container to the tabs layout
 * `horizontal|vertical` - Change orientation but preserve layout
 * `tiling|floating` - Toggle between floating/tiling mode
 +
@@ -64,6 +66,12 @@ include::./util/conditional-examples-header.adoc[]
 
 * Toggle between `tiles` and `accordion` layouts (order of args doesn't matter): +
 `aerospace layout tiles accordion`
+
+* Switch the workspace root container to the scrolling layout: +
+`aerospace layout scrolling`
+
+* Return from scrolling layout to ordinary tiling: +
+`aerospace layout tiles`
 
 * Switch to `tiles` layout. Toggle the layout orientation if already in `tiles` layout: +
 `aerospace layout tiles horizontal vertical`
