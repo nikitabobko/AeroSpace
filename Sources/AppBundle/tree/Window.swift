@@ -5,6 +5,11 @@ open class Window: TreeNode, Hashable {
     let windowId: UInt32
     let app: any AbstractApp
     var lastFloatingSize: CGSize?
+    /// The window is already bound to the tree, but its `on-window-detected` callbacks haven't
+    /// run yet. Until they have, its place in the tree isn't settled: a callback may still move it
+    /// to another workspace, or make it floating. Laying it out in the meantime applies geometry
+    /// that is about to be thrown away, and takes space away from its siblings for a frame.
+    var isAwaitingOnWindowDetected: Bool = false
     var isFullscreen: Bool = false
     var noOuterGapsInFullscreen: Bool = false
     var layoutReason: LayoutReason = .standard
