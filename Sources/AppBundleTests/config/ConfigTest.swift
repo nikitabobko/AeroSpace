@@ -29,6 +29,22 @@ final class ConfigTest: XCTestCase {
         assertEquals(result.warnings, [])
     }
 
+    func testParseMenuBarItem() {
+        // default is true (menu bar item shown)
+        assertEquals(defaultConfig.menuBarItem, true)
+
+        let hidden = parseConfig("menu-bar-item = false")
+        assertEquals(hidden.errors, [])
+        assertEquals(hidden.config.menuBarItem, false)
+
+        let shown = parseConfig("menu-bar-item = true")
+        assertEquals(shown.errors, [])
+        assertEquals(shown.config.menuBarItem, true)
+
+        let invalid = parseConfig("menu-bar-item = 'nonsense'")
+        assertTrue(!invalid.errors.isEmpty)
+    }
+
     func testConfigVersionOutOfBounds() {
         let result = parseConfig(
             """
