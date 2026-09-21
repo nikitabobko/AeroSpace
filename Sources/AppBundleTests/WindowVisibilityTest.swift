@@ -6,6 +6,30 @@ import XCTest
 final class WindowVisibilityTest: XCTestCase {
     override func setUp() async throws { setUpWorkspacesForTests() }
 
+    func testPeekPageRestoresWhenMadeFloating() async throws {
+        config.scrollingPeekWidth = 40
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+        root.layout = .scrolling
+        let first = TestWindow.new(id: 1, parent: root)
+        TestWindow.new(id: 2, parent: root)
+        let third = TestWindow.new(id: 3, parent: root)
+        assertEquals(first.focusWindow(), true)
+        _ = try await workspace.layoutWorkspace()
+
+        let result = await parseCommand("layout --window-id 3 floating").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(third.focusWindow(), true)
+        _ = try await workspace.layoutWorkspace()
+
+        let rect = try await third.getAxRect(.nonCancellable).orDie()
+        let viewport = workspace.workspaceMonitor.visibleRect
+        assertEquals(third.isFloating, true)
+        XCTAssertGreaterThanOrEqual(rect.minX, viewport.minX)
+        XCTAssertLessThanOrEqual(rect.maxX, viewport.maxX)
+        assertEquals(viewport.contains(rect.center), true)
+    }
+
     func testNewDialogFollowsAppWindowOnAnotherWorkspace() async {
         let ownerWorkspace = Workspace.get(byName: "owner")
         let owner = TestWindow.new(id: 1, parent: ownerWorkspace.rootTilingContainer)

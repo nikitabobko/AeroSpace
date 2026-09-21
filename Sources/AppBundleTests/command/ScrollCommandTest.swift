@@ -119,6 +119,8 @@ final class ScrollCommandTest: XCTestCase {
 
     func testScrollingLayoutPeeksAtTheNextPage() async throws {
         config.scrollingPeekWidth = 40
+        config.gaps.inner.horizontal = .constant(16)
+        config.gaps.outer.right = .constant(12)
         let workspace = Workspace.get(byName: name)
         let root = workspace.rootTilingContainer.apply {
             TestWindow.new(id: 1, parent: $0)
@@ -166,8 +168,9 @@ final class ScrollCommandTest: XCTestCase {
 
         let rightRect = windows[2].lastAppliedLayoutPhysicalRect.orDie()
         let peekRect = windows[3].lastAppliedLayoutPhysicalRect.orDie()
-        // Only 'peek' points of the third page are inside the viewport, the rest overflows to the right
+        // The inner gap reduces the visible sliver, while the window also covers the right outer gap.
         assertEquals(workspaceRect.maxX - peekRect.topLeftX, peek - rawGap / 2)
+        assertEquals(workspace.workspaceMonitor.visibleRect.maxX - peekRect.topLeftX, 44)
         assertEquals(peekRect.maxX - workspaceRect.maxX, pageWidth - peek)
         assertEquals(peekRect.topLeftX - rightRect.maxX, rawGap)
     }
@@ -208,6 +211,54 @@ final class ScrollCommandTest: XCTestCase {
         assertEquals(first.lastAppliedLayoutPhysicalRect.orDie().width, pageWidth)
         assertEquals(second.lastAppliedLayoutPhysicalRect.orDie().width, pageWidth)
         assertEquals(second.lastAppliedLayoutPhysicalRect.orDie().maxX, workspaceRect.maxX)
+    }
+
+    func testScrollingPeekFallsBackWhenGapsLeaveNoRoom() async throws {
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+        root.layout = .scrolling
+        TestWindow.new(id: 1, parent: root)
+        let second = TestWindow.new(id: 2, parent: root)
+        let third = TestWindow.new(id: 3, parent: root)
+        let viewport = workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
+        let largeGap = Int(viewport.width * 0.6)
+
+        for (gap, peek, isVisible) in [(-1, 40, false), (79, 40, true), (80, 40, false), (largeGap, largeGap / 2 + 1, false)] {
+            config.gaps.inner.horizontal = .constant(gap)
+            config.scrollingPeekWidth = peek
+            _ = try await workspace.layoutWorkspace()
+
+            assertEquals(third.isHiddenInCorner, !isVisible)
+            if isVisible {
+                assertEquals(third.lastAppliedLayoutPhysicalRect.orDie().topLeftX, viewport.maxX - 0.5)
+            } else {
+                XCTAssertNil(third.lastAppliedLayoutPhysicalRect)
+                assertEquals(second.lastAppliedLayoutPhysicalRect.orDie().maxX, viewport.maxX)
+            }
+        }
+    }
+
+    func testFocusingPeekPageFullyRevealsIt() async throws {
+        config.scrollingPeekWidth = 40
+        let workspace = Workspace.get(byName: name)
+        let root = workspace.rootTilingContainer
+        root.layout = .scrolling
+        let first = TestWindow.new(id: 1, parent: root)
+        TestWindow.new(id: 2, parent: root)
+        let third = TestWindow.new(id: 3, parent: root)
+        assertEquals(first.focusWindow(), true)
+        _ = try await workspace.layoutWorkspace()
+        let viewport = workspace.workspaceMonitor.visibleRectPaddedByOuterGaps
+        XCTAssertGreaterThan(third.lastAppliedLayoutPhysicalRect.orDie().maxX, viewport.maxX)
+
+        assertEquals(third.focusWindow(), true)
+        _ = try await workspace.layoutWorkspace()
+
+        assertEquals(root.scrollingIndex, 1)
+        assertEquals(first.isHiddenInCorner, true)
+        let rect = third.lastAppliedLayoutPhysicalRect.orDie()
+        assertEquals(rect.maxX, viewport.maxX)
+        assertEquals(rect.width, viewport.width / 2)
     }
 
     func testScrollCommandsMoveViewportAndFocus() async {
