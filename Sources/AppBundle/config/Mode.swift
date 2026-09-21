@@ -1,13 +1,12 @@
 import Common
-import HotKey
 
 struct Mode: ConvenienceMutable, Equatable, Sendable {
-    var bindings: [String: HotkeyBinding]
+    var bindings: [HotkeyBinding]
 
-    static let zero = Mode(bindings: [:])
+    static let zero = Mode(bindings: [])
 }
 
-func parseModes(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext, _ mapping: [String: Key]) -> [String: Mode] {
+func parseModes(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext, _ mapping: KeyMapping) -> [String: Mode] {
     guard let rawTable = raw.asDictOrNil else {
         c.errors += [expectedActualTypeDiagnostic(expected: .table, actual: raw.tomlType, backtrace)]
         return [:]
@@ -22,7 +21,7 @@ func parseModes(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout Con
     return result
 }
 
-func parseMode(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext, _ mapping: [String: Key]) -> Mode {
+func parseMode(_ raw: OrderedJson, _ backtrace: ConfigBacktrace, _ c: inout ConfigParserContext, _ mapping: KeyMapping) -> Mode {
     guard let rawTable: OrderedJson.JsonDict = raw.asDictOrNil else {
         c.errors += [expectedActualTypeDiagnostic(expected: .table, actual: raw.tomlType, backtrace)]
         return .zero
