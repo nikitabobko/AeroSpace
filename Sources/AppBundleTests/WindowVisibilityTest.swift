@@ -6,6 +6,96 @@ import XCTest
 final class WindowVisibilityTest: XCTestCase {
     override func setUp() async throws { setUpWorkspacesForTests() }
 
+    func testNewDialogFollowsAppWindowOnAnotherWorkspace() async {
+        let ownerWorkspace = Workspace.get(byName: "owner")
+        let owner = TestWindow.new(id: 1, parent: ownerWorkspace.rootTilingContainer)
+        let activeWorkspace = Workspace.get(byName: "current")
+        assertEquals(TestWindow.new(id: 2, parent: activeWorkspace.rootTilingContainer).focusWindow(), true)
+
+        let binding = unbindAndGetBindingDataForNewWindow(.dialog, activeWorkspace, window: nil, appLastFocusedWindow: owner)
+        let dialog = TestWindow.new(id: 3, parent: binding.parent)
+        assertEquals(dialog.nodeWorkspace, ownerWorkspace)
+        assertEquals(dialog.isFloating, true)
+        assertEquals(focus.workspace, activeWorkspace)
+
+        // Explicit user callbacks must still be able to override the default placement.
+        config.onWindowDetected = [WindowDetectedCallback(matcher: .command(.empty), rawRun: parseCommand("move-node-to-workspace current").cmdOrDie)]
+        await tryOnWindowDetected(dialog)
+        assertEquals(dialog.nodeWorkspace, activeWorkspace)
+    }
+
+    func testDialogWithoutKnownOwnerUsesCurrentWorkspace() {
+        let workspace = Workspace.get(byName: name)
+        let binding = unbindAndGetBindingDataForNewWindow(.dialog, workspace, window: nil, appLastFocusedWindow: nil)
+        assertEquals(binding.parent, workspace.floatingWindowsContainer)
+    }
+
+    func testDialogRelayoutKeepsExplicitTargetWorkspace() {
+        let ownerWorkspace = Workspace.get(byName: "owner")
+        let owner = TestWindow.new(id: 1, parent: ownerWorkspace.rootTilingContainer)
+        let dialog = TestWindow.new(id: 2, parent: ownerWorkspace.floatingWindowsContainer)
+        let targetWorkspace = Workspace.get(byName: "destination")
+
+        let binding = unbindAndGetBindingDataForNewWindow(.dialog, targetWorkspace, window: dialog, appLastFocusedWindow: owner)
+
+        assertEquals(binding.parent, targetWorkspace.floatingWindowsContainer)
+    }
+
+    func testNewRegularWindowStillUsesCurrentWorkspace() {
+        let ownerWorkspace = Workspace.get(byName: "owner")
+        let owner = TestWindow.new(id: 1, parent: ownerWorkspace.rootTilingContainer)
+        let workspace = Workspace.get(byName: name)
+
+        let binding = unbindAndGetBindingDataForNewWindow(.window, workspace, window: nil, appLastFocusedWindow: owner)
+
+        assertEquals(binding.parent, workspace.rootTilingContainer)
+    }
+
+    func testOffscreenFloatingDialogsOnActiveWorkspaceAreRecoveredWithoutTakingFocus() async throws {
+        let workspace = Workspace.get(byName: name)
+        let focusedWindow = TestWindow.new(id: 1, parent: workspace.rootTilingContainer)
+        assertEquals(focusedWindow.focusWindow(), true)
+        let monitorRect = workspace.workspaceMonitor.visibleRect
+        let size = CGSize(width: 600, height: 400)
+        let origins = [
+            CGPoint(x: monitorRect.minX - size.width + 20, y: monitorRect.minY),
+            CGPoint(x: monitorRect.maxX - 20, y: monitorRect.minY),
+            CGPoint(x: monitorRect.minX, y: monitorRect.minY - size.height + 20),
+            CGPoint(x: monitorRect.minX, y: monitorRect.maxY - 20),
+            CGPoint(x: -20000, y: -20000),
+        ]
+        for (index, origin) in origins.enumerated() {
+            let dialog = TestWindow.new(
+                id: UInt32(index + 2),
+                parent: workspace.floatingWindowsContainer,
+                rect: Rect(topLeftX: origin.x, topLeftY: origin.y, width: size.width, height: size.height),
+            )
+
+            _ = try await workspace.layoutWorkspace()
+
+            let actual = try await dialog.getAxRect(.nonCancellable).orDie()
+            assertEquals(actual.size, size)
+            XCTAssertGreaterThanOrEqual(actual.minX, monitorRect.minX)
+            XCTAssertGreaterThanOrEqual(actual.minY, monitorRect.minY)
+            XCTAssertLessThanOrEqual(actual.maxX, monitorRect.maxX)
+            XCTAssertLessThanOrEqual(actual.maxY, monitorRect.maxY)
+            assertEquals(focus.windowOrNil, focusedWindow)
+        }
+    }
+
+    func testFloatingWindowWithVisibleCenterKeepsItsPosition() async throws {
+        let workspace = Workspace.get(byName: name)
+        assertEquals(workspace.focusWorkspace(), true)
+        let original = Rect(topLeftX: -20, topLeftY: 100, width: 600, height: 400)
+        let window = TestWindow.new(id: 1, parent: workspace.floatingWindowsContainer, rect: original)
+
+        _ = try await workspace.layoutWorkspace()
+
+        let actual = try await window.getAxRect(.nonCancellable).orDie()
+        assertEquals(actual.topLeftCorner, original.topLeftCorner)
+        assertEquals(actual.size, original.size)
+    }
+
     func testDisablingRestoresHiddenPagesAndTabsAndPreservesTheirLayouts() async throws {
         let wasEnabled = TrayMenuModel.shared.isEnabled
         defer { TrayMenuModel.shared.isEnabled = wasEnabled }

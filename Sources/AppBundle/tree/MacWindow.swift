@@ -142,13 +142,35 @@ extension Window {
     }
 }
 
-// The function is private because it's unsafe. It leaves the window in unbound state
 @MainActor
 private func unbindAndGetBindingDataForNewWindow(_ windowId: UInt32, _ macApp: MacApp, _ workspace: Workspace, window: Window?, _ cm: CancellationMode) async throws -> BindingData {
     let windowLevel = getWindowLevel(for: windowId)
-    return switch try await macApp.getAxUiElementWindowType(windowId, windowLevel, cm) {
+    let windowType = try await macApp.getAxUiElementWindowType(windowId, windowLevel, cm)
+    return unbindAndGetBindingDataForNewWindow(
+        windowType,
+        workspace,
+        window: window,
+        appLastFocusedWindow: macApp.lastNativeFocusedWindowId.flatMap { Window.get(byId: $0) },
+    )
+}
+
+// May leave the window unbound; the caller must apply the returned binding.
+@MainActor
+func unbindAndGetBindingDataForNewWindow(
+    _ windowType: AxUiElementWindowType,
+    _ workspace: Workspace,
+    window: Window?,
+    appLastFocusedWindow: Window?,
+) -> BindingData {
+    return switch windowType {
         case .popup: BindingData(parent: macosPopupWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
-        case .dialog: BindingData(parent: workspace.floatingWindowsContainer, adaptiveWeight: WEIGHT_AUTO, index: INDEX_BIND_LAST)
+        case .dialog:
+            // New dialogs follow their app's last focused window; explicit re-layouts keep their target workspace.
+            BindingData(
+                parent: (window == nil ? appLastFocusedWindow?.nodeWorkspace ?? workspace : workspace).floatingWindowsContainer,
+                adaptiveWeight: WEIGHT_AUTO,
+                index: INDEX_BIND_LAST,
+            )
         case .window: unbindAndGetBindingDataForNewTilingWindow(workspace, window: window)
     }
 }
