@@ -16,7 +16,10 @@ final class AxSubscription {
 
     private func subscribe(_ key: String) throws -> Bool {
         axThreadToken.checkEquals(axTaskLocalAppThreadToken)
-        if AXObserverAddNotification(obs, ax, key as CFString, nil) == .success {
+        if shouldSkipAxRequests(for: axThreadToken.pid) { return false }
+        let error = AXObserverAddNotification(obs, ax, key as CFString, nil)
+        recordAxError(error)
+        if error == .success {
             notifKeys.insert(key)
             return true
         } else {
