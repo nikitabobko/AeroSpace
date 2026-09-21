@@ -169,7 +169,12 @@ Source: [reddit](https://www.reddit.com/r/MacOS/comments/k6hiwk/keyboard_modifie
 
 In alphabetical order:
 
-- [Amethyst](https://github.com/ianyh/Amethyst) - tiling window manager à la xmonad
-- [InstantSpaceSwitcher](https://github.com/jurplel/InstantSpaceSwitcher) - Instant space switching by synthesizing trackpad gesture with an artificially high velocity
-- [rift](https://github.com/acsandmann/rift) - virtual workspaces + private APIs
-- [yabai](https://github.com/koekeishiya/yabai) - a tiling window manager for macOS based on binary space partitioning
+- [Amethyst](https://github.com/ianyh/Amethyst) -
+  Beginners friendly GUI-configurable tiling window manager with automatic layouts à la xmonad.
+- [InstantSpaceSwitcher](https://github.com/jurplel/InstantSpaceSwitcher) -
+  Instant space switching by synthesizing trackpad gesture with an artificially high velocity.
+- [rift](https://github.com/acsandmann/rift) -
+  Virtual workspaces + private APIs.
+- [yabai](https://github.com/koekeishiya/yabai) -
+  A window manager that provides tight integration with native macOS Spaces and goes all the way to private APIs and code injection.
+  yabai is a source of inspiration for a lot of other OSS projects.
