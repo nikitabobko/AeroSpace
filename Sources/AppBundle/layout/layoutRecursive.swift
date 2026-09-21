@@ -187,26 +187,11 @@ extension TilingContainer {
                 try await children[0].layoutRecursive(point, width: width, height: height, virtual: virtual, context)
             default:
                 let rawGap = context.resolvedGaps.inner.horizontal.toDouble()
-                // 'scrolling-peek-width' reserves a sliver of the viewport for the page after the two full ones, so
-                // that the next page announces itself instead of the viewport ending in a hard cut.
-                //
-                // A window manager sets AX frames, it cannot clip, so the peek page's frame really does extend past
-                // the right edge of the viewport by pageWidth - peek. That's fine over this monitor's own outer gap
-                // and over the dead space beyond a single display, but it must never be painted onto a second
-                // display, hence context.suppressScrollingPeek. Every other off-screen page must still be parked
-                // off-screen, otherwise its negative/overflowing physicalX bleeds onto adjacent monitors.
-                let requestedPeek = CGFloat(max(0, config.scrollingPeekWidth))
-                let candidatePageWidth = (width - requestedPeek) / 2
-                let hasPeekPage = scrollingIndex + 2 < children.count
-                    && !context.suppressScrollingPeek
-                    && rawGap >= 0
-                    && requestedPeek > rawGap / 2 // Otherwise the gap eats the whole sliver
-                    && candidatePageWidth > max(requestedPeek, rawGap) // Stay a sliver, and keep pages positive
-                // Infeasible requests fall back to the plain two-page layout rather than being capped arbitrarily
-                let peek = hasPeekPage ? requestedPeek : 0
+                let peek = resolvedScrollingPeekWidth(viewportWidth: width, gap: rawGap, context)
                 let pageWidth = (width - peek) / 2
-                let lastVisibleIndex = scrollingIndex + (hasPeekPage ? 2 : 1)
+                let lastVisibleIndex = scrollingIndex + (peek > 0 ? 2 : 1)
                 for (index, child) in children.enumerated() {
+                    // Park every page beyond the peek to avoid spilling onto adjacent monitors.
                     guard index >= scrollingIndex && index <= lastVisibleIndex else {
                         try await child.hideSubtree(in: context.hideCorner)
                         continue
@@ -224,6 +209,21 @@ extension TilingContainer {
                     )
                 }
         }
+    }
+
+    @MainActor
+    private func resolvedScrollingPeekWidth(viewportWidth: CGFloat, gap: CGFloat, _ context: LayoutContext) -> CGFloat {
+        let peek = CGFloat(config.scrollingPeekWidth)
+        let pageWidth = (viewportWidth - peek) / 2
+        // Invalid geometry keeps the original two-page layout. The gap must leave a visible sliver,
+        // and each full page must remain wider than both the peek and its padding.
+        guard scrollingIndex + 2 < children.count,
+              !context.suppressScrollingPeek,
+              gap >= 0,
+              peek > gap / 2,
+              pageWidth > max(peek, gap)
+        else { return 0 }
+        return peek
     }
 
     @MainActor
