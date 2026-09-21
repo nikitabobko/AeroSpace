@@ -131,6 +131,9 @@ struct FocusCommand: Command {
     for window in workspace.floatingWindows {
         // todo bug: we shouldn't access ax api here. What if the window was moved but it wasn't committed to ax yet?
         guard let center = try? await window.getCenter(.nonCancellable) else { continue }
+        // getCenter is a suspension point. Another focus command could have unbound the window in the meantime
+        // https://github.com/nikitabobko/AeroSpace/issues/1311
+        guard window.parent === workspace.floatingWindowsContainer else { continue }
 
         let tilingParent: TilingContainer
         let index: Int
@@ -138,6 +141,9 @@ struct FocusCommand: Command {
             .findWindowRecursively(in: workspace.rootTilingContainer, virtual: true, fullscreenCoversAll: false)
         {
             guard let targetCenter = try? await target.getCenter(.nonCancellable) else { continue }
+            // getCenter is a suspension point. Another focus command could have unbound the window in the meantime
+            // https://github.com/nikitabobko/AeroSpace/issues/1311
+            guard window.parent === workspace.floatingWindowsContainer else { continue }
             guard let _tilingParent = target.parent as? TilingContainer else { continue }
             tilingParent = _tilingParent
             index = switch tilingParent.layout {
