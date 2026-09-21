@@ -111,6 +111,13 @@ include::aerospace-fullscreen.adoc[tags=synopsis]
 include::aerospace-fullscreen.adoc[tags=purpose]
 include::aerospace-fullscreen.adoc[tags=body]
 
+== get_tree
+----
+include::aerospace-get_tree.adoc[tags=synopsis]
+----
+include::aerospace-get_tree.adoc[tags=purpose]
+include::aerospace-get_tree.adoc[tags=body]
+
 == join-with
 ----
 include::aerospace-join-with.adoc[tags=synopsis]
