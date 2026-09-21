@@ -16,9 +16,27 @@ final class MacWindow: Window {
 
     @MainActor
     @discardableResult
-    static func getOrRegister(windowId: UInt32, macApp: MacApp) async throws -> MacWindow {
-        if let existing = allWindowsMap[windowId] { return existing }
+    static func getOrRegister(
+        windowId: UInt32,
+        macApp: MacApp,
+        replacingNativeTabWindowIds: [UInt32] = [],
+        lastFocusedWindowId: UInt32? = nil,
+    ) async throws -> MacWindow {
+        if let existing = allWindowsMap[windowId] {
+            discardNativeTabWindows(replacingNativeTabWindowIds, from: macApp)
+            return existing
+        }
         let rect = try await macApp.getAxRect(windowId, .cancellable)
+        if let replacement = registerNativeTabReplacement(
+            windowId: windowId,
+            macApp: macApp,
+            rect: rect,
+            staleWindowIds: replacingNativeTabWindowIds,
+            lastFocusedWindowId: lastFocusedWindowId,
+        ) {
+            try await debugWindowsIfRecording(replacement, .cancellable)
+            return replacement
+        }
         let data = try await unbindAndGetBindingDataForNewWindow(
             windowId,
             macApp,
@@ -30,15 +48,78 @@ final class MacWindow: Window {
         )
 
         // atomic synchronous section
-        if let existing = allWindowsMap[windowId] { return existing }
+        if let existing = allWindowsMap[windowId] {
+            discardNativeTabWindows(replacingNativeTabWindowIds, from: macApp)
+            return existing
+        }
+        if let replacement = registerNativeTabReplacement(
+            windowId: windowId,
+            macApp: macApp,
+            rect: rect,
+            staleWindowIds: replacingNativeTabWindowIds,
+            lastFocusedWindowId: lastFocusedWindowId,
+        ) {
+            try await debugWindowsIfRecording(replacement, .cancellable)
+            return replacement
+        }
         let window = MacWindow(windowId, macApp, lastFloatingSize: rect?.size, parent: data.parent, adaptiveWeight: data.adaptiveWeight, index: data.index)
         allWindowsMap[windowId] = window
+        discardNativeTabWindows(replacingNativeTabWindowIds, from: macApp)
 
         try await debugWindowsIfRecording(window, .cancellable)
         if try await !restoreClosedWindowsCacheIfNeeded(newlyDetectedWindow: window) {
             await tryOnWindowDetected(window)
         }
         return window
+    }
+
+    @MainActor
+    private static func registerNativeTabReplacement(
+        windowId: UInt32,
+        macApp: MacApp,
+        rect: Rect?,
+        staleWindowIds: [UInt32],
+        lastFocusedWindowId: UInt32?,
+    ) -> MacWindow? {
+        let staleWindows = staleWindowIds.compactMap { allWindowsMap[$0] }.filter { $0.macApp === macApp }
+        guard let (oldAbstractWindow, bindingData) = takeNativeTabReplacementBinding(
+            from: staleWindows,
+            lastFocusedWindowId: lastFocusedWindowId,
+        ) else {
+            return nil
+        }
+        let oldWindow = oldAbstractWindow as! MacWindow
+        _ = allWindowsMap.removeValue(forKey: oldWindow.windowId)
+
+        let window = MacWindow(
+            windowId,
+            macApp,
+            lastFloatingSize: oldWindow.lastFloatingSize ?? rect?.size,
+            parent: bindingData.parent,
+            adaptiveWeight: bindingData.adaptiveWeight,
+            index: bindingData.index,
+        )
+        window.isFullscreen = oldWindow.isFullscreen
+        window.noOuterGapsInFullscreen = oldWindow.noOuterGapsInFullscreen
+        window.layoutReason = oldWindow.layoutReason
+        window.lastAppliedLayoutVirtualRect = oldWindow.lastAppliedLayoutVirtualRect
+        window.lastAppliedLayoutPhysicalRect = oldWindow.lastAppliedLayoutPhysicalRect
+        window.prevUnhiddenProportionalPositionInsideWorkspaceRect = oldWindow.prevUnhiddenProportionalPositionInsideWorkspaceRect
+        allWindowsMap[windowId] = window
+        discardNativeTabWindows(staleWindowIds, from: macApp)
+        // A replacement tab is the same logical window, so don't run on-window-detected again.
+        return window
+    }
+
+    @MainActor
+    private static func discardNativeTabWindows(_ windowIds: [UInt32], from macApp: MacApp) {
+        for windowId in windowIds {
+            guard let window = allWindowsMap[windowId], window.macApp === macApp else { continue }
+            allWindowsMap.removeValue(forKey: windowId)
+            if window.isBound {
+                window.unbindFromParent()
+            }
+        }
     }
 
     // var description: String {
@@ -197,6 +278,19 @@ final class MacWindow: Window {
     override func getAxRect(_ cm: CancellationMode) async throws -> Rect? {
         try await macApp.getAxRect(windowId, cm)
     }
+}
+
+@MainActor
+func takeNativeTabReplacementBinding(
+    from staleWindows: [Window],
+    lastFocusedWindowId: UInt32?,
+) -> (window: Window, bindingData: BindingData)? {
+    let staleWindows = staleWindows.filter(\.isBound)
+    let lastFocusedWindow = lastFocusedWindowId.flatMap { id in
+        staleWindows.first { $0.windowId == id }
+    }
+    guard let replacement = lastFocusedWindow ?? staleWindows.singleOrNil() else { return nil }
+    return (replacement, replacement.unbindFromParent())
 }
 
 extension Window {
