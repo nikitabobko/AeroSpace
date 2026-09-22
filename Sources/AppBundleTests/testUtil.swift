@@ -20,6 +20,7 @@ func setUpWorkspacesForTests() {
     config.enableNormalizationFlattenContainers = false // Make layout tests more predictable
     config.enableNormalizationOppositeOrientationForNestedContainers = false // Make layout tests more predictable
     config.defaultRootContainerOrientation = .horizontal // Make default layout predictable
+    config.onFocusedMonitorChanged = .empty // Default config moves the mouse. Don't move the real mouse in tests
 
     // Don't create any bindings and workspaces for tests
     config.modes = [mainModeId: Mode(bindings: [:])]
@@ -30,14 +31,36 @@ func setUpWorkspacesForTests() {
             child.unbindFromParent()
         }
     }
+    monitorInfosForTests = [testMonitorInfo]
+    rearrangeWorkspacesOnMonitors()
     check(Workspace.get(byName: "setUpWorkspacesForTests").focusWorkspace())
+    check(mainMonitorInfo.setActiveWorkspace(focus.workspace))
     Workspace.garbageCollectUnusedWorkspaces()
     check(focus.workspace.isEffectivelyEmpty)
     check(focus.workspace === Workspace.all.singleOrNil(), Workspace.all.map(\.description).joined(separator: ", "))
-    check(mainMonitorInfo.setActiveWorkspace(focus.workspace))
 
     TestApp.shared.focusedWindow = nil
     TestApp.shared.windows = []
+}
+
+/// Replaces the single test monitor with monitors of the given rects. The monitor at (0, 0) is the main monitor.
+/// Like on real monitors reconfiguration, visible workspaces stay on the closest monitors (e.g. the main monitor keeps its
+/// workspace), and the rest of the monitors get empty workspaces
+@MainActor
+@discardableResult
+func setUpMonitorsForTests(_ rects: [Rect]) -> [MonitorInfo] {
+    check(rects.count(where: { $0.topLeftCorner == .zero }) == 1, "Exactly one (main) monitor must be at (0, 0). rects: \(rects)")
+    monitorInfosForTests = rects.enumerated().map { (index, rect) in
+        MonitorInfoImpl(
+            monitorAppKitNsScreenScreensId: index + 1,
+            name: "Test Monitor \(index + 1)",
+            rect: rect,
+            visibleRect: rect,
+            isMain: rect.topLeftCorner == .zero,
+        )
+    }
+    rearrangeWorkspacesOnMonitors()
+    return monitorInfosForTests
 }
 
 extension ParsedCmd {
