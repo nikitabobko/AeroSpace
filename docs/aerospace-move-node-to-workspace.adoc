@@ -10,10 +10,10 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace move-node-to-workspace [-h|--help] [--focus-follows-window] [--wrap-around]
-                                 [--stdin|--no-stdin]
+                                 [--stdin|--no-stdin] [--root]
                                  (next|prev)
 aerospace move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-if-noop]
-                                 [--window-id <window-id>] [--] <workspace-name>
+                                 [--window-id <window-id>] [--root] [--] <workspace-name>
 
 // end::synopsis[]
 
@@ -30,14 +30,24 @@ include::./util/conditional-options-header.adoc[]
 
 -h, --help:: Print help
 --wrap-around:: Make it possible to jump between first and last workspaces using (next|prev)
---fail-if-noop:: Exit with non-zero code if move window to workspace it already belongs to
+
+--fail-if-noop::
+Exit with non-zero code if move window to workspace it already belongs to.
+In combination with `--root`, also exit with non-zero code if the workspace doesn't have tiling windows.
 
 --focus-follows-window::
 Make sure that the window in question receives focus after moving.
+In combination with `--root`, the most recently focused window of the moved tiling root node receives focus.
 This flag is a shortcut for manually running `aerospace-workspace`/`aerospace-focus` after `move-node-to-workspace` successful execution.
 
 --window-id <window-id>::
 include::./util/window-id-flag-desc.adoc[]
+
+--root::
+Instead of the focused window, move the workspace tiling root node (all tiling windows of the workspace together with their layout) to the specified workspace.
+The root node is moved the same way as a tiling window: it becomes the last child of the tiling root node of the target workspace.
+If the target workspace doesn't have tiling windows, xref:guide.adoc#normalization[`enable-normalization-flatten-containers`] makes the moved node the new tiling root node of the target workspace, so the layout is preserved.
+Floating windows are not moved.
 
 --stdin::
 Read the list of workspaces from stdin.
