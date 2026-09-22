@@ -5,6 +5,9 @@ include::util/header.adoc[]
 
 Commands documentation is also available as manpages.
 
+Options that take a value can be specified either as `--option value` or as `--option=value`.
+For example, `list-workspaces --monitor focused --empty=no` is the same as `list-workspaces --monitor focused --empty no`.
+
 == balance-sizes
 ----
 include::aerospace-balance-sizes.adoc[tags=synopsis]

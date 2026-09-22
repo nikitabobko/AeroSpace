@@ -9,6 +9,8 @@ final class MoveCommandTest: XCTestCase {
     func testParse() {
         assertNil(parseCommand("move --fail-if-fullscreen left").errorOrNil)
         assertNil(parseCommand("move --fail-if-macos-native-fullscreen --window-id 1 right").errorOrNil)
+        assertNil(parseCommand("move --fail-if-macos-native-fullscreen --window-id=1 right").errorOrNil)
+        assertEquals(parseCommand("move --window-id=foo right").errorOrNil, "ERROR: Failed to parse 'foo' CLI argument: Can't convert 'foo' to UInt32")
     }
 
     func testFailIfFullscreen() async {
@@ -250,6 +252,24 @@ final class MoveCommandTest: XCTestCase {
         }
 
         let result = await parseCommand("move --boundaries-action fail left").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(
+            workspace.layoutDescription,
+            .workspace([
+                .h_tiles([.window(1), .window(2), .window(3)]),
+            ]),
+        )
+        assertEquals(result.exitCode.rawValue, 2)
+    }
+
+    func testFail_gnuStyleEquals() async {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
+            TestWindow.new(id: 3, parent: $0)
+        }
+
+        let result = await parseCommand("move --boundaries=workspace --boundaries-action=fail left").cmdOrDie.run(.defaultEnv, .emptyStdin)
         assertEquals(
             workspace.layoutDescription,
             .workspace([
