@@ -16,6 +16,12 @@ final class TestApp: AbstractApp {
         self.name = rawAppBundleId
     }
 
+    init(name: String, pid: Int32 = 0, rawAppBundleId: String? = nil) {
+        self.pid = pid
+        self.rawAppBundleId = rawAppBundleId ?? "bobko.AeroSpace.test-app.\(name)"
+        self.name = name
+    }
+
     var _windows: [Window] = []
     var windows: [Window] {
         get { _windows }
