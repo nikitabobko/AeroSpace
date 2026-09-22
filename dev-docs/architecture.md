@@ -46,7 +46,7 @@ todo
 ../Sources/Common/cmdArgs/
 
 Command checklist:
-- [ ] Documentation in `../docs/aerospace-*` and `../docs/commands.adoc`
+- [ ] Documentation in `../docs/aerospace-*` (`../docs/commands.adoc` is generated from them by `../generate.sh`)
   - [ ] Check that site looks alright `./.site/commands.html`
   - [ ] Check that man page looks alright `./.man`
 - [ ] Do `--window-id` and/or `--workspace` flags make sense for the command?
