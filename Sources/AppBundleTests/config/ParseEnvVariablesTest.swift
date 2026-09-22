@@ -27,6 +27,12 @@ final class ParseEnvVariablesTest: XCTestCase {
         assertEquals(result2.config.execConfig.envVariables, testEnv)
     }
 
+    func testDefaultPath() {
+        assertEquals(parseConfig("").config.execConfig.envVariables, testEnv + ["PATH": getDefaultExecPath(isIntelMac: isIntelMac, inheritedPath: "AEROSPACE_TEST_PATH")])
+        assertEquals(getDefaultExecPath(isIntelMac: false, inheritedPath: "/usr/bin:/bin"), "/opt/homebrew/bin:/opt/homebrew/sbin:/usr/bin:/bin")
+        assertEquals(getDefaultExecPath(isIntelMac: true, inheritedPath: "/usr/bin:/bin"), "/usr/local/bin:/usr/local/sbin:/opt/homebrew/bin:/opt/homebrew/sbin:/usr/bin:/bin")
+    }
+
     func testAddVars() {
         let result = parseConfig(
             """

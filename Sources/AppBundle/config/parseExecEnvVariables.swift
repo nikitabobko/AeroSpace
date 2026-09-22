@@ -11,7 +11,20 @@ private let rawExecConfigParser: [String: any ParserProtocol<RawExecConfig>] = [
     "env-vars": Parser(\.overriddenVars, parseEnvVariables),
 ]
 
-let defaultOverriddenEnvVars = ["PATH": "/opt/homebrew/bin:/opt/homebrew/sbin:\(env["PATH"] ?? "")"]
+let defaultOverriddenEnvVars = ["PATH": getDefaultExecPath(isIntelMac: isIntelMac, inheritedPath: env["PATH"] ?? "")]
+
+// GUI apps on macOS don't have Homebrew's prefix in their PATH https://docs.brew.sh/FAQ#my-mac-apps-dont-find-homebrew-utilities
+// Homebrew's prefix is /opt/homebrew on Apple Silicon and /usr/local on Intel https://docs.brew.sh/Installation
+func getDefaultExecPath(isIntelMac: Bool, inheritedPath: String) -> String {
+    (isIntelMac ? "/usr/local/bin:/usr/local/sbin:" : "") + "/opt/homebrew/bin:/opt/homebrew/sbin:\(inheritedPath)"
+}
+
+// "hw.optional.arm64" is 1 on Apple Silicon (even under Rosetta), and it's absent on Intel
+let isIntelMac: Bool = {
+    var isArm64: Int32 = 0
+    var size = MemoryLayout<Int32>.size
+    return unsafe sysctlbyname("hw.optional.arm64", &isArm64, &size, nil, 0) != 0 || isArm64 == 0
+}()
 
 struct ExecConfig: Equatable {
     var envVariables: [String: String] = env + defaultOverriddenEnvVars
