@@ -9,6 +9,7 @@ final class MoveCommandTest: XCTestCase {
     func testParse() {
         assertNil(parseCommand("move --fail-if-fullscreen left").errorOrNil)
         assertNil(parseCommand("move --fail-if-macos-native-fullscreen --window-id 1 right").errorOrNil)
+        assertNil(parseCommand("move --parent left").errorOrNil)
     }
 
     func testFailIfFullscreen() async {
@@ -319,6 +320,162 @@ final class MoveCommandTest: XCTestCase {
             ]),
         )
         assertEquals(focus.windowOrNil?.windowId, 1)
+    }
+
+    func testMoveParent_swap() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
+                TestWindow.new(id: 3, parent: $0)
+            }
+        }
+
+        let result = await parseCommand("move --parent left").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(
+            root.layoutDescription,
+            .h_tiles([
+                .v_tiles([
+                    .window(2),
+                    .window(3),
+                ]),
+                .window(1),
+            ]),
+        )
+        assertEquals(focus.windowOrNil?.windowId, 2)
+    }
+
+    func testMoveParent_moveIn() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            TestWindow.new(id: 0, parent: $0)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+                TestWindow.new(id: 2, parent: $0)
+            }
+            TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow.new(id: 3, parent: $0)
+                TestWindow.new(id: 4, parent: $0)
+            }
+        }
+
+        await parseCommand("move --parent right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(
+            root.layoutDescription,
+            .h_tiles([
+                .window(0),
+                .h_tiles([
+                    .v_tiles([
+                        .window(1),
+                        .window(2),
+                    ]),
+                    .window(3),
+                    .window(4),
+                ]),
+            ]),
+        )
+        assertEquals(focus.windowOrNil?.windowId, 1)
+    }
+
+    func testMoveParent_moveOut() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow.new(id: 2, parent: $0)
+                TilingContainer.newHTiles(parent: $0, adaptiveWeight: 1).apply {
+                    assertEquals(TestWindow.new(id: 3, parent: $0).focusWindow(), true)
+                    TestWindow.new(id: 4, parent: $0)
+                }
+            }
+        }
+
+        await parseCommand("move --parent left").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(
+            root.layoutDescription,
+            .h_tiles([
+                .window(1),
+                .h_tiles([
+                    .window(3),
+                    .window(4),
+                ]),
+                .v_tiles([
+                    .window(2),
+                ]),
+            ]),
+        )
+        assertEquals(focus.windowOrNil?.windowId, 3)
+    }
+
+    func testMoveParent_createImplicitContainer() async {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
+                TestWindow.new(id: 3, parent: $0)
+            }
+        }
+
+        let result = await parseCommand("move --parent up").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(
+            workspace.layoutDescription,
+            .workspace([
+                .v_tiles([
+                    .v_tiles([.window(2), .window(3)]),
+                    .h_tiles([.window(1)]),
+                ]),
+            ]),
+        )
+    }
+
+    func testMoveParent_allMonitorsOuterFrame_createImplicitContainer() async {
+        let workspace = Workspace.get(byName: name)
+        workspace.rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                assertEquals(TestWindow.new(id: 2, parent: $0).focusWindow(), true)
+                TestWindow.new(id: 3, parent: $0)
+            }
+        }
+
+        // There is only one monitor in tests
+        let result = await parseCommand("move --parent --boundaries all-monitors-outer-frame right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 0)
+        assertEquals(
+            workspace.layoutDescription,
+            .workspace([
+                .h_tiles([
+                    .h_tiles([.window(1)]),
+                    .v_tiles([.window(2), .window(3)]),
+                ]),
+            ]),
+        )
+    }
+
+    func testMoveParent_failsIfParentIsRootContainer() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0)
+        }
+
+        let result = await parseCommand("move --parent right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.stderr, ["Can't move the parent container of window 1: it's the root container of the workspace"])
+        assertEquals(root.layoutDescription, .h_tiles([.window(1), .window(2)]))
+    }
+
+    func testMoveParent_failsForFloatingWindow() async {
+        let workspace = Workspace.get(byName: name).apply {
+            TestWindow.new(id: 1, parent: $0.rootTilingContainer)
+            assertEquals(TestWindow.new(id: 2, parent: $0.floatingWindowsContainer).focusWindow(), true)
+        }
+
+        let result = await parseCommand("move --parent right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(result.exitCode.rawValue, 2)
+        assertEquals(result.stderr, ["Can't move the parent container of window 2: the window isn't a tiling window"])
+        assertEquals(workspace.rootTilingContainer.layoutDescription, .h_tiles([.window(1)]))
+        assertEquals(workspace.floatingWindowsContainer.layoutDescription, .floatingWindowsContainer([.window(2)]))
     }
 }
 

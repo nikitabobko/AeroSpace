@@ -10,10 +10,10 @@ include::util/man-attributes.adoc[]
 [verse]
 // tag::synopsis[]
 aerospace move-node-to-workspace [-h|--help] [--focus-follows-window] [--wrap-around]
-                                 [--stdin|--no-stdin]
+                                 [--stdin|--no-stdin] [--parent]
                                  (next|prev)
 aerospace move-node-to-workspace [-h|--help] [--focus-follows-window] [--fail-if-noop]
-                                 [--window-id <window-id>] [--] <workspace-name>
+                                 [--window-id <window-id>] [--parent] [--] <workspace-name>
 
 // end::synopsis[]
 
@@ -38,6 +38,10 @@ This flag is a shortcut for manually running `aerospace-workspace`/`aerospace-fo
 
 --window-id <window-id>::
 include::./util/window-id-flag-desc.adoc[]
+
+--parent::
+Move the parent container of the window instead of the window itself.
+The command fails if the window isn't a tiling window, or if its parent container is the root container of the workspace.
 
 --stdin::
 Read the list of workspaces from stdin.
