@@ -19,6 +19,8 @@ aerospace -h;
     | config --all-keys
     | config --config-path
 
+    | cycle-size [--axis <resize_axis>] <size>... [--axis <resize_axis>]
+
     | debug-windows [--window-id <window_id>]
 
     | echo [--stderr|--window <window_id>]... --
@@ -123,8 +125,10 @@ aerospace -h;
 <mode_id> ::= {{{ aerospace config --get mode --keys }}};
 <workspace> ::= {{{ aerospace list-workspaces --monitor all --empty no }}};
 <number> ::= {{{ true }}};
+<size> ::= {{{ true }}};
 <monitor_pattern> ::= {{{ true }}};
 <layouts> ::= h_tiles|v_tiles|h_accordion|v_accordion|tiles|accordion|horizontal|vertical|tiling|floating;
+<resize_axis> ::= smart|smart-opposite|height|width;
 
 <list_workspaces1_flag> ::= --visible [no] | --empty [no] | --format <output_format> | --format <output_format> | --count | --json;
 
