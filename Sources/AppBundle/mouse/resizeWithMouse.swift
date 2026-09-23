@@ -47,10 +47,10 @@ private func resizeWithMouse(_ window: Window) async throws { // todo cover with
         case .tilingContainer:
             guard let rect = try await window.getAxRect(.cancellable) else { return }
             guard let lastAppliedLayoutRect = window.lastAppliedLayoutPhysicalRect else { return }
-            let (lParent, lOwnIndex) = window.closestParent(hasChildrenInDirection: .left, withLayout: .tiles) ?? (nil, nil)
-            let (dParent, dOwnIndex) = window.closestParent(hasChildrenInDirection: .down, withLayout: .tiles) ?? (nil, nil)
-            let (uParent, uOwnIndex) = window.closestParent(hasChildrenInDirection: .up, withLayout: .tiles) ?? (nil, nil)
-            let (rParent, rOwnIndex) = window.closestParent(hasChildrenInDirection: .right, withLayout: .tiles) ?? (nil, nil)
+            let (lParent, lOwnIndex, _) = window.closestParent(hasVisibleChildrenInDirection: .left, withLayout: .tiles) ?? (nil, nil, nil)
+            let (dParent, dOwnIndex, _) = window.closestParent(hasVisibleChildrenInDirection: .down, withLayout: .tiles) ?? (nil, nil, nil)
+            let (uParent, uOwnIndex, _) = window.closestParent(hasVisibleChildrenInDirection: .up, withLayout: .tiles) ?? (nil, nil, nil)
+            let (rParent, rOwnIndex, _) = window.closestParent(hasVisibleChildrenInDirection: .right, withLayout: .tiles) ?? (nil, nil, nil)
             let table: [(CGFloat, TilingContainer?, Int?, Int?)] = [
                 (lastAppliedLayoutRect.minX - rect.minX, lParent, 0,                        lOwnIndex),               // Horizontal, to the left of the window
                 (rect.maxY - lastAppliedLayoutRect.maxY, dParent, dOwnIndex.map { $0 + 1 }, dParent?.children.count), // Vertical, to the down of the window

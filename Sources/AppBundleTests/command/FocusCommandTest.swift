@@ -256,6 +256,69 @@ final class FocusCommandTest: XCTestCase {
         assertEquals(globalFocus.windowOrNil?.windowId, 1)
     }
 
+    func testFocusSkipsTombstones() async {
+        Workspace.get(byName: name).rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                $0.lifeStatus = .deadOrInvisible
+                TestWindow.new(id: 3, parent: $0).lifeStatus = .invisible
+            }
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow.new(id: 4, parent: $0).lifeStatus = .invisible
+                TestWindow.new(id: 5, parent: $0)
+                TestWindow.new(id: 6, parent: $0).lifeStatus = .dead
+            }
+            TestWindow.new(id: 7, parent: $0)
+        }
+
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
+
+        // Directional
+        await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 5)
+        await parseCommand("focus down").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 5)
+        await parseCommand("focus up").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 5)
+        await parseCommand("focus right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 7)
+        await parseCommand("focus left").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 5)
+        await parseCommand("focus left").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
+        await parseCommand("focus --boundaries-action wrap-around-the-workspace left").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 7)
+        await parseCommand("focus --boundaries-action wrap-around-the-workspace right").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
+
+        // DFS relative
+        await parseCommand("focus dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 5)
+        await parseCommand("focus dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 7)
+        await parseCommand("focus --boundaries-action wrap-around-the-workspace dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
+        await parseCommand("focus --boundaries-action wrap-around-the-workspace dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 7)
+        await parseCommand("focus dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 5)
+
+        // DFS index
+        await parseCommand("focus --dfs-index 0").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
+        await parseCommand("focus --dfs-index 1").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 5)
+        await parseCommand("focus --dfs-index 2").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 7)
+        assertEquals(await parseCommand("focus --dfs-index 3").cmdOrDie.run(.defaultEnv, .emptyStdin).exitCode.rawValue, 2)
+        assertEquals(globalFocus.windowOrNil?.windowId, 7)
+
+        // --window-id still focuses tombstones
+        await parseCommand("focus --window-id 2").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(globalFocus.windowOrNil?.windowId, 2)
+    }
+
     func testFocusDfsRelativeWrapping() async {
         Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)

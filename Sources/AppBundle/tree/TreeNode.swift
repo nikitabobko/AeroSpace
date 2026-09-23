@@ -115,6 +115,14 @@ open class TreeNode: Equatable, AeroAny {
 
     var mostRecentChild: TreeNode? { _mruChildren.mostRecent ?? children.last }
 
+    var mostRecentVisibleChild: TreeNode? {
+        _mruChildren.first { $0.tilingTreeNodeCasesOrDie().isVisible } ?? visibleChildren.last
+    }
+
+    var visibleChildren: [TreeNode] {
+        children.filter { $0.tilingTreeNodeCasesOrDie().isVisible }
+    }
+
     @discardableResult
     func unbindFromParent() -> BindingData {
         unbindIfBound() ?? dieT("\(self) is already unbound. The stacktrace where it was unbound:\n\(unboundStacktrace.prettyDescription)")

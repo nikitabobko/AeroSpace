@@ -17,11 +17,11 @@ struct SwapCommand: Command {
         let targetWindow: Window?
         switch args.target.val {
             case .direction(let direction):
-                switch currentWindow.closestParent(hasChildrenInDirection: direction, withLayout: nil) {
-                    case let (parent, ownIndex)?:
-                        targetWindow = parent.children[ownIndex + direction.focusOffset].findLeafWindowRecursive(snappedTo: direction.opposite)
+                switch currentWindow.closestParent(hasVisibleChildrenInDirection: direction, withLayout: nil) {
+                    case let (parent, _, neighborIndex)?:
+                        targetWindow = parent.children[neighborIndex].findVisibleLeafWindowRecursive(snappedTo: direction.opposite)
                     case nil where args.wrapAround:
-                        targetWindow = target.workspace.findLeafWindowRecursive(snappedTo: direction.opposite)
+                        targetWindow = target.workspace.findVisibleLeafWindowRecursive(snappedTo: direction.opposite)
                     case nil:
                         return .fail
                 }

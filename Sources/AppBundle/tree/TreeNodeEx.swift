@@ -16,6 +16,10 @@ extension TreeNode {
         return result
     }
 
+    var allVisibleLeafWindowsRecursive: [Window] {
+        allLeafWindowsRecursive.filter { $0.lifeStatus.isVisible }
+    }
+
     var ownIndex: Int? {
         guard let parent else { return nil }
         return parent.children.firstIndex(of: self).orDie()
@@ -79,13 +83,15 @@ extension TreeNode {
         set { setWeight(.v, newValue) }
     }
 
-    /// Returns closest parent that has children in the specified direction relative to `self`
+    /// Returns closest parent that has visible (non-tombstone) children in the specified direction relative to `self`
+    ///
+    /// `neighborIndex` is the index of the closest visible child of `parent` in the specified direction
     func closestParent(
-        hasChildrenInDirection direction: CardinalDirection,
+        hasVisibleChildrenInDirection direction: CardinalDirection,
         withLayout layout: Layout?,
-    ) -> (parent: TilingContainer, ownIndex: Int)? {
-        let innermostChild = parentsWithSelf.first(where: { (node: TreeNode) -> Bool in
-            return switch node.parent?.cases {
+    ) -> (parent: TilingContainer, ownIndex: Int, neighborIndex: Int)? {
+        for node in parentsWithSelf {
+            switch node.parent?.cases {
                 // stop searching. We didn't find it, or something went wrong
                 case .workspace, nil, .macosMinimizedWindowsContainer,
                      .floatingWindowsContainer,
@@ -94,22 +100,19 @@ extension TreeNode {
                      .monitor,
                      .workspacesContainer,
                      .macosPopupWindowsContainer:
-                    true
+                    return nil
                 case .tilingContainer(let parent):
-                    (layout == nil || parent.layout == layout) &&
-                        parent.orientation == direction.orientation &&
-                        (node.ownIndex.map { parent.children.indices.contains($0 + direction.focusOffset) } ?? true)
+                    if (layout == nil || parent.layout == layout) && parent.orientation == direction.orientation {
+                        guard let ownIndex = node.ownIndex else { return nil }
+                        let candidates = direction.isPositive
+                            ? stride(from: ownIndex + 1, to: parent.children.count, by: 1)
+                            : stride(from: ownIndex - 1, to: -1, by: -1)
+                        if let neighborIndex = candidates.first(where: { parent.children[$0].tilingTreeNodeCasesOrDie().isVisible }) {
+                            return (parent, ownIndex, neighborIndex)
+                        }
+                    }
             }
-        })
-        guard let innermostChild else { return nil }
-        switch innermostChild.parent?.cases {
-            case .tilingContainer(let parent):
-                check(parent.orientation == direction.orientation)
-                return innermostChild.ownIndex.map { (parent, $0) }
-            case .workspace, .floatingWindowsContainer, nil, .macosMinimizedWindowsContainer,
-                 .macosFullscreenWindowsContainer, .macosHiddenAppsWindowsContainer, .macosPopupWindowsContainer,
-                 .monitor, .workspacesContainer:
-                return nil
         }
+        return nil
     }
 }
