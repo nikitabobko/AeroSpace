@@ -237,7 +237,7 @@ private func unbindAndGetBindingDataForNewTilingWindow(_ workspace: Workspace, w
         return BindingData(
             parent: tilingParent,
             adaptiveWeight: WEIGHT_AUTO,
-            index: mruWindow.ownIndex.orDie() + 1,
+            index: mruWindow.ownIndex(in: .all).orDie() + 1,
         )
     } else {
         return BindingData(

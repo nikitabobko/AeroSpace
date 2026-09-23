@@ -21,7 +21,7 @@ struct MoveCommand: Command {
         switch currentWindow.windowParentCases {
             case nil: return .fail
             case .tilingContainer(let parent):
-                guard let indexOfCurrent = currentWindow.ownIndex else { return .fail(io.err(bugPrompt())) }
+                guard let indexOfCurrent = currentWindow.ownIndex(in: .all) else { return .fail(io.err(bugPrompt())) }
                 let indexOfSiblingTarget = indexOfCurrent + direction.focusOffset
                 if parent.orientation == direction.orientation && parent.children.indices.contains(indexOfSiblingTarget) {
                     switch parent.children[indexOfSiblingTarget].tilingTreeNodeCasesOrDie() {
@@ -123,7 +123,7 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
         case .unbound: return .fail
         case .tilingContainer(let parent):
             check(parent.orientation == direction.orientation)
-            guard let ownIndex = innerMostTilingContainer.ownIndex else { return .fail(io.err(bugPrompt())) }
+            guard let ownIndex = innerMostTilingContainer.ownIndex(in: .all) else { return .fail(io.err(bugPrompt())) }
             window.bind(to: parent, adaptiveWeight: WEIGHT_AUTO, index: ownIndex + direction.insertionOffset)
             return .succ
         case .workspace(let parent):
@@ -152,7 +152,7 @@ private let moveOutMacosUnconventionalWindow = "moving macOS fullscreen, minimiz
             window.bind(to: deepTarget, adaptiveWeight: WEIGHT_AUTO, index: 0)
         case .window(let deepTarget):
             guard let parent = deepTarget.parent as? TilingContainer else { return .fail(io.err(bugPrompt())) }
-            guard let deepTargetIndex = deepTarget.ownIndex else { return .fail(io.err(bugPrompt())) }
+            guard let deepTargetIndex = deepTarget.ownIndex(in: .all) else { return .fail(io.err(bugPrompt())) }
             window.bind(to: parent, adaptiveWeight: WEIGHT_AUTO, index: deepTargetIndex + 1)
     }
     return .succ

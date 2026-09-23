@@ -143,8 +143,8 @@ struct FocusCommand: Command {
             index = switch tilingParent.layout {
                 case .tiles:
                     center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)
-                        ? target.ownIndex.orDie() + 1
-                        : target.ownIndex.orDie()
+                        ? target.ownIndex(in: .all).orDie() + 1
+                        : target.ownIndex(in: .all).orDie()
                 case .accordion:
                     center.getProjection(tilingParent.orientation) >= targetCenter.getProjection(tilingParent.orientation)
                         ? tilingParent.children.count

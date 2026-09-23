@@ -20,9 +20,12 @@ extension TreeNode {
         allLeafWindowsRecursive.filter { $0.lifeStatus.isVisible }
     }
 
-    var ownIndex: Int? {
+    func ownIndex(in scope: VisibilityScope) -> Int? {
         guard let parent else { return nil }
-        return parent.children.firstIndex(of: self).orDie()
+        return switch scope {
+            case .all: parent.children.firstIndex(of: self)
+            case .visibleOnly: parent.visibleChildren.firstIndex(of: self)
+        }
     }
 
     var parents: [NonLeafTreeNodeObject] { parent.flatMap { [$0] + $0.parents } ?? [] }
@@ -103,7 +106,7 @@ extension TreeNode {
                     return nil
                 case .tilingContainer(let parent):
                     if (layout == nil || parent.layout == layout) && parent.orientation == direction.orientation {
-                        guard let ownIndex = node.ownIndex else { return nil }
+                        guard let ownIndex = node.ownIndex(in: .all) else { return nil }
                         let candidates = direction.isPositive
                             ? stride(from: ownIndex + 1, to: parent.children.count, by: 1)
                             : stride(from: ownIndex - 1, to: -1, by: -1)
@@ -115,4 +118,9 @@ extension TreeNode {
         }
         return nil
     }
+}
+
+enum VisibilityScope {
+    case all
+    case visibleOnly
 }

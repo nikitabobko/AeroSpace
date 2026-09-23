@@ -115,7 +115,7 @@ extension TilingContainer {
         var point = point
         var virtualPoint = virtual.topLeftCorner
 
-        let visibleChildren = children.filter { $0.tilingTreeNodeCasesOrDie().isVisible }
+        let visibleChildren = visibleChildren
 
         guard let delta = ((orientation == .h ? width : height) - CGFloat(visibleChildren.sumOfDouble { $0.getWeight(orientation) }))
             .div(visibleChildren.count) else { return }
@@ -149,9 +149,9 @@ extension TilingContainer {
 
     @MainActor
     fileprivate func layoutAccordion(_ point: CGPoint, width: CGFloat, height: CGFloat, virtual: Rect, _ context: LayoutContext) async throws {
-        let visibleChildren = children.filter { $0.tilingTreeNodeCasesOrDie().isVisible }
+        let visibleChildren = visibleChildren
 
-        guard let mruIndex: Int = mostRecentChild?.ownIndex else { return }
+        guard let mruIndex: Int = mostRecentChild?.ownIndex(in: .all) else { return }
         for (index, child) in visibleChildren.enumerated() {
             let padding = CGFloat(config.accordionPadding)
             let (lPadding, rPadding): (CGFloat, CGFloat) = switch index {
