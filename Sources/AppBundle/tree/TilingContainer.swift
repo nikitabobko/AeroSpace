@@ -34,13 +34,9 @@ extension TilingContainer {
             return
         }
         if config.enableNormalizationOppositeOrientationForNestedContainers {
-            var orientation = targetOrientation
             parentsWithSelf
                 .filterIsInstance(of: TilingContainer.self)
-                .forEach {
-                    $0._orientation = orientation
-                    orientation = orientation.opposite
-                }
+                .forEach { $0._orientation.flip() }
         } else {
             _orientation = targetOrientation
         }
