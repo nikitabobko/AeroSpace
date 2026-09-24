@@ -22,8 +22,9 @@ struct LayoutCommand: Command {
                 switch window.windowParentCases {
                     case .floatingWindowsContainer(let it):
                         node = .floatingWindowsContainer(it)
-                    case .tilingContainer(let it):
-                        node = .tilingContainer(it)
+                    case .tilingContainer:
+                        guard let (parent, _) = window.nearestAliveTilingParent() else { return .fail(io.err(bugPrompt())) }
+                        node = .tilingContainer(parent)
                     case .macosFullscreenWindowsContainer,
                          .macosHiddenAppsWindowsContainer,
                          .macosMinimizedWindowsContainer:

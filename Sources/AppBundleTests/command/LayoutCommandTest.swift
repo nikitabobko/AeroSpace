@@ -410,6 +410,32 @@ final class LayoutCommandTest: XCTestCase {
         assertEquals(root.layoutDescription, .h_tiles([.window(1), .h_tiles([.window(2), .window(3)]), .window(4)]))
     }
 
+    func testWindowInsideMustBeFlattenedContainer_targetsAliveAncestor() async {
+        config.enableNormalizationFlattenContainers = true
+
+        var mustBeFlattened: TilingContainer!
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            TestWindow.new(id: 1, parent: $0)
+            mustBeFlattened = TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                $0.lifeStatus = .mustBeFlattened
+                TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
+                assertEquals(TestWindow.new(id: 3, parent: $0).focusWindow(), true)
+            }
+        }
+
+        let noop = await parseCommand("layout horizontal --fail-if-noop").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(noop.exitCode.rawValue, 2)
+        assertEquals(mustBeFlattened.orientation, .v)
+
+        await parseCommand("layout vertical").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.orientation, .v)
+        assertEquals(mustBeFlattened.orientation, .v)
+
+        await parseCommand("layout accordion").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layout, .accordion)
+        assertEquals(mustBeFlattened.layout, .tiles)
+    }
+
     func testRoot_withWindowIdFlag_targetsThatWindowsWorkspaceRoot() async {
         let focusedRoot = Workspace.get(byName: "a").rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
