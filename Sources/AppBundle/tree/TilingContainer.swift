@@ -54,24 +54,6 @@ extension TilingContainer {
     }
 }
 
-/// Tombstone derived from WindowLifeStatus
-enum TilingContainerLifeStatus {
-    case deadOrInvisible
-    /// must be flattened by normalization, but cannot since it contains half-dead children
-    /// These types of containers must be transparent for ascensions and descensions
-    case mustBeFlattened
-    case alive
-
-    var isVisible: Bool {
-        switch self {
-            case .mustBeFlattened: true
-            case .alive: true
-
-            case .deadOrInvisible: false
-        }
-    }
-}
-
 enum Layout: String {
     case tiles
     case accordion

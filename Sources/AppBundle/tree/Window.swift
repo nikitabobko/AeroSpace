@@ -43,26 +43,6 @@ open class Window: TreeNode, Hashable {
     func setAxFrame(_ topLeft: CGPoint?, _ size: CGSize?) { die("Not implemented") }
 }
 
-/// CRDT inspired tombstone-like status
-///
-/// The only difference between probablyDead and invisible is their cleanup policy:
-/// 1. invisible is never cleaned up
-/// 2. dead is cleanuped up when we can guarantee that the screen is not locked
-enum WindowLifeStatus {
-    case dead // Closed windows OR Locked screen
-    case invisible // Invisible macOS Spaces AND Background tabs
-    case alive
-
-    var isVisible: Bool {
-        switch self {
-            case .alive: true
-
-            case .dead: false
-            case .invisible: false
-        }
-    }
-}
-
 enum LayoutReason: Equatable {
     case standard
     /// Reason for the cur temp layout is macOS native fullscreen, minimize, or hide
