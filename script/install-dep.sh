@@ -111,9 +111,9 @@ if test $all == 1 || test $periphery == 1; then
 
     if ! test -f "$input_hash_marker"; then
         echo "building periphery from sources"
-        test -d periphery || git clone --depth 1 $periphery_repo
+        test -d periphery || git clone $periphery_repo
         cd periphery
-            git fetch --depth 1 $periphery_repo $periphery_commit
+            git fetch $periphery_repo $periphery_commit
             git checkout -f $periphery_commit
             swift build
         cd -
