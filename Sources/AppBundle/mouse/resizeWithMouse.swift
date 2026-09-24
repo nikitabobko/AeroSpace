@@ -59,7 +59,6 @@ private func resizeWithMouse(_ window: Window) async throws { // todo cover with
             ]
             for (diff, parent, startIndex, untilIndex) in table {
                 if let parent, let startIndex, let untilIndex, untilIndex - startIndex > 0 && abs(diff) > 5 { // 5 pixels should be enough to fight with accumulated floating precision error
-                    let siblingDiff = diff.div(untilIndex - startIndex).orDie()
                     let orientation = parent.orientation
 
                     window.parentsWithSelf.lazy
@@ -69,7 +68,10 @@ private func resizeWithMouse(_ window: Window) async throws { // todo cover with
                             return parent?.orientation == orientation && parent?.layout == .tiles
                         }
                         .forEach { $0.setWeight(orientation, $0.getWeightBeforeResize(orientation) + diff) }
-                    for sibling in parent.children[startIndex ..< untilIndex] {
+                    let visibleSiblings = (parent.children.slice(startIndex ..< untilIndex) ?? [])
+                        .filter { $0.tilingTreeNodeCasesOrDie().isVisible }
+                    guard let siblingDiff = diff.div(visibleSiblings.count) else { return }
+                    for sibling in visibleSiblings {
                         sibling.setWeight(orientation, sibling.getWeightBeforeResize(orientation) - siblingDiff)
                     }
                 }
