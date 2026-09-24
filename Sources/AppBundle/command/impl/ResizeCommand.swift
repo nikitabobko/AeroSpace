@@ -44,10 +44,11 @@ struct ResizeCommand: Command {
             case .subtract(let unit): -CGFloat(unit)
         }
 
-        guard let childDiff = diff.div(parent.children.count - 1) else { return .fail }
-        parent.children.lazy
-            .filter { $0 != node }
-            .forEach { $0.setWeight(parent.orientation, $0.getWeight(parent.orientation) - childDiff) }
+        let visibleSiblings = parent.visibleChildren.filter { $0 != node }
+        guard let childDiff = diff.div(visibleSiblings.count) else { return .fail }
+        for sibling in visibleSiblings {
+            sibling.setWeight(parent.orientation, sibling.getWeight(parent.orientation) - childDiff)
+        }
 
         node.setWeight(orientation, node.getWeight(orientation) + diff)
         return .succ
