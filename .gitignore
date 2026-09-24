@@ -1,5 +1,5 @@
 # Ignore everything in the root by default.
-# New root entries must be explicitly added with `git add -f`
+# New root files must be explicitly added with `git add -f`
 # New root directories must be explicitly listed below
 /*
 
@@ -17,7 +17,6 @@
 !/xcode
 
 # Top level important files
-!/*.sh
 !/.editorconfig
 !/.gitattributes
 !/.gitignore
