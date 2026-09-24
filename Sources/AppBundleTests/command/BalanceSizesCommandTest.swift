@@ -45,4 +45,48 @@ final class BalanceSizesCommandTest: XCTestCase {
         // The total is unchanged, so the following layout pass doesn't scale the windows up
         assertEquals(window1.hWeight + window2.hWeight + window3.hWeight, 12)
     }
+
+    func testBalanceSizesSkipsTombstones() async {
+        var invisibleWindow: Window!
+        var invisibleContainer: TilingContainer!
+        var invisibleNestedWindow: Window!
+        var nestedWindows: [Window] = []
+        let workspace = Workspace.get(byName: name).apply { wsp in
+            wsp.rootTilingContainer.apply {
+                let orientation = wsp.rootTilingContainer.orientation
+                TestWindow.new(id: 1, parent: $0).setWeight(orientation, 1)
+                invisibleWindow = TestWindow.new(id: 2, parent: $0).apply {
+                    $0.setWeight(orientation, 10)
+                    $0.lifeStatus = .invisible
+                }
+                TestWindow.new(id: 3, parent: $0).setWeight(orientation, 3)
+                invisibleContainer = TilingContainer.newVTiles(parent: $0, adaptiveWeight: 20).apply {
+                    $0.lifeStatus = .deadOrInvisible
+                    invisibleNestedWindow = TestWindow.new(id: 4, parent: $0).apply {
+                        $0.setWeight(.v, 40)
+                        $0.lifeStatus = .dead
+                    }
+                }
+                TilingContainer.newVTiles(parent: $0, adaptiveWeight: 5).apply {
+                    nestedWindows.append(TestWindow.new(id: 5, parent: $0).apply { $0.setWeight(.v, 1) })
+                    nestedWindows.append(TestWindow.new(id: 6, parent: $0).apply { $0.setWeight(.v, 5) })
+                }
+            }
+        }
+        let orientation = workspace.rootTilingContainer.orientation
+
+        await parseCommand("balance-sizes").cmdOrDie
+            .run(.defaultEnv.withWorkspaceName(name), .emptyStdin)
+
+        // (1 + 3 + 5) / 3
+        for child in workspace.rootTilingContainer.visibleChildren {
+            assertEquals(child.getWeight(orientation), 3)
+        }
+        for window in nestedWindows {
+            assertEquals(window.getWeight(.v), 3)
+        }
+        assertEquals(invisibleWindow.getWeight(orientation), 10)
+        assertEquals(invisibleContainer.getWeight(orientation), 20)
+        assertEquals(invisibleNestedWindow.getWeight(.v), 40)
+    }
 }
