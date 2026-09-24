@@ -24,8 +24,8 @@ The `test` utility evaluates the expression and, if it evaluates to true, return
 
 The utility is inspired by the builtin `/bin/test` utility.
 
-`<lhs> = <rhs>`:: Tests that `<lhs>` equals to `<rhs>`
-`<lhs> ~= <rhs>`:: Tests that `<lhs>` contains case insensitive `<rhs>` regex. The command fails if `<lhs>` is not a string
+`<lhs> = <rhs>`:: Tests that `<lhs>` equals to `<rhs>`.
+`<lhs> ~= <rhs>`:: Tests that `<lhs>` contains case insensitive `<rhs>` regex. The command fails if `<lhs>` is not of type string.
 
 // =========================================================== Examples
 include::./util/conditional-examples-header.adoc[]
