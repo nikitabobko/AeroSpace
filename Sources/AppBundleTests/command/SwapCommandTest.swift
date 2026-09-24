@@ -82,6 +82,44 @@ final class SwapCommandTest: XCTestCase {
         assertEquals(root.mostRecentWindowRecursive?.windowId, 1)
     }
 
+    func testSwap_DfsRelativeSkipsTombstones() async {
+        let root = Workspace.get(byName: name).rootTilingContainer.apply {
+            assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
+            TestWindow.new(id: 2, parent: $0).lifeStatus = .dead
+            TilingContainer.newVTiles(parent: $0, adaptiveWeight: 1).apply {
+                TestWindow.new(id: 3, parent: $0).lifeStatus = .invisible
+                TestWindow.new(id: 4, parent: $0)
+            }
+            TestWindow.new(id: 5, parent: $0)
+        }
+
+        await parseCommand("swap dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layoutDescription,
+                     .h_tiles([.window(4), .window(2), .v_tiles([.window(3), .window(1)]), .window(5)]))
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
+
+        await parseCommand("swap dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layoutDescription,
+                     .h_tiles([.window(4), .window(2), .v_tiles([.window(3), .window(5)]), .window(1)]))
+
+        assertEquals(await parseCommand("swap dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin).exitCode.rawValue, 2)
+        assertEquals(root.layoutDescription,
+                     .h_tiles([.window(4), .window(2), .v_tiles([.window(3), .window(5)]), .window(1)]))
+
+        await parseCommand("swap --wrap-around dfs-next").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layoutDescription,
+                     .h_tiles([.window(1), .window(2), .v_tiles([.window(3), .window(5)]), .window(4)]))
+
+        await parseCommand("swap --wrap-around dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layoutDescription,
+                     .h_tiles([.window(4), .window(2), .v_tiles([.window(3), .window(5)]), .window(1)]))
+
+        await parseCommand("swap dfs-prev").cmdOrDie.run(.defaultEnv, .emptyStdin)
+        assertEquals(root.layoutDescription,
+                     .h_tiles([.window(4), .window(2), .v_tiles([.window(3), .window(1)]), .window(5)]))
+        assertEquals(globalFocus.windowOrNil?.windowId, 1)
+    }
+
     func testSwap_DirectionalWrapping() async {
         let root = Workspace.get(byName: name).rootTilingContainer.apply {
             assertEquals(TestWindow.new(id: 1, parent: $0).focusWindow(), true)
